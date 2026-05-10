@@ -63,13 +63,22 @@ export function toolListingSignals(fields = {}, text = "") {
 
   const patterns = [
     ["hosted_app", /\bhosted\s+(app|application|product|service|platform)\b/i],
-    ["desktop_app", /\b(desktop app|desktop application|native app|web app|mobile app)\b/i],
-    ["runtime_app", /\b(local ai agent runtime|agentic ai runtime|ai runtime|runs on your machine)\b/i],
+    [
+      "desktop_app",
+      /\b(desktop app|desktop application|native app|web app|mobile app)\b/i,
+    ],
+    [
+      "runtime_app",
+      /\b(local ai agent runtime|agentic ai runtime|ai runtime|runs on your machine)\b/i,
+    ],
     ["product", /\b(product|commercial product|software product)\b/i],
     ["software", /\b(software|application)\b/i],
     ["saas", /\b(saas|software as a service)\b/i],
     ["service", /\b(service|platform|workspace|dashboard|interface)\b/i],
-    ["subscription", /\b(subscription|pricing|paid plan|pro plan|free trial|free to try|no credit card)\b/i],
+    [
+      "subscription",
+      /\b(subscription|pricing|paid plan|pro plan|free trial|free to try|no credit card)\b/i,
+    ],
     ["features_page", /\b(features page|demo url|product url|website url)\b/i],
     ["placement", /\b(featured|sponsored|affiliate|preferred placement)\b/i],
   ];
@@ -100,8 +109,7 @@ export function looksLikeMcpServerSubmission(fields = {}, text = "") {
   return (
     /\bmcp\s+(server|endpoint|tool|transport|config|configuration)\b/i.test(
       body,
-    ) ||
-    /\bclaude\s+mcp\s+add\b/i.test(body)
+    ) || /\bclaude\s+mcp\s+add\b/i.test(body)
   );
 }
 
