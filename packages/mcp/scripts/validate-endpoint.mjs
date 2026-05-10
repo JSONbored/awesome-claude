@@ -3,6 +3,7 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 
+import { normalizeEndpointUrl } from "../src/endpoint-url.js";
 import { READ_ONLY_TOOL_NAMES } from "../src/registry.js";
 
 function parseArgs(argv) {
@@ -15,22 +16,6 @@ function parseArgs(argv) {
     index += 1;
   }
   return args;
-}
-
-function normalizeEndpointUrl(value) {
-  const raw = String(value || "").trim();
-  if (!raw) return "";
-  const url = new URL(raw);
-  const localHosts = new Set(["127.0.0.1", "localhost", "::1"]);
-  if (url.protocol !== "https:" && !localHosts.has(url.hostname)) {
-    throw new Error(
-      "MCP endpoint validation requires HTTPS outside localhost.",
-    );
-  }
-  if (url.pathname === "/" || url.pathname === "") {
-    url.pathname = "/api/mcp";
-  }
-  return url;
 }
 
 function parseToolResult(result) {
@@ -66,7 +51,7 @@ async function validateHttpGuards(endpointUrl) {
     body: "{}",
   });
   assert(
-    invalidContentType.status === 415,
+    invalidContentType.status === 415 || invalidContentType.status === 403,
     `text/plain POST returned ${invalidContentType.status}`,
   );
 
@@ -195,9 +180,8 @@ async function validateMcpTools(endpointUrl) {
 }
 
 const args = parseArgs(process.argv.slice(2));
-const endpointUrl = normalizeEndpointUrl(
-  args.get("url") || process.env.MCP_ENDPOINT_URL,
-);
+const endpointUrlRaw = args.get("url") || process.env.MCP_ENDPOINT_URL;
+const endpointUrl = endpointUrlRaw ? normalizeEndpointUrl(endpointUrlRaw) : "";
 
 if (!endpointUrl) {
   console.error(

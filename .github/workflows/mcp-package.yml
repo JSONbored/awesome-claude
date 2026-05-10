@@ -1,0 +1,60 @@
+name: MCP Package
+
+on:
+  pull_request:
+    paths:
+      - "packages/mcp/**"
+      - "apps/web/src/app/api/mcp/**"
+      - "scripts/validate-mcp-package.mjs"
+      - "tests/mcp-*.test.ts"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/mcp-package.yml"
+      - ".github/workflows/publish-mcp-npm.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-mcp-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    concurrency:
+      group: mcp-package-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build registry artifacts
+        run: pnpm --filter web run prebuild
+
+      - name: Test MCP package
+        run: pnpm test:mcp
+
+      - name: Validate dev MCP endpoint
+        run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
+
+      - name: Dry-run MCP package tarball
+        run: pnpm --filter @heyclaude/mcp pack --dry-run --json
+
+      - name: Validate packed MCP package
+        env:
+          MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclaude-dev.zeronode.workers.dev/api/mcp
+        run: pnpm validate:mcp-package

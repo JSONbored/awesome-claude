@@ -32,28 +32,7 @@ accounts.
 
 ## Local Stdio
 
-```bash
-pnpm --filter @heyclaude/mcp start
-```
-
-By default the server reads from `apps/web/public/data`. Set
-`HEYCLAUDE_DATA_DIR=/absolute/path/to/data` to point at another generated data
-directory.
-
-Example local MCP client config:
-
-```json
-{
-  "mcpServers": {
-    "heyclaude": {
-      "command": "pnpm",
-      "args": ["--filter", "@heyclaude/mcp", "start"]
-    }
-  }
-}
-```
-
-After package publication, the stdio command can be:
+The published package defaults to the live HeyClaude MCP endpoint:
 
 ```json
 {
@@ -66,25 +45,53 @@ After package publication, the stdio command can be:
 }
 ```
 
-## Remote HTTP
-
-The web app also exposes a Streamable HTTP endpoint:
-
-- production: `https://heyclau.de/api/mcp`
-- dev: `https://heyclaude-dev.zeronode.workers.dev/api/mcp`
-
-Use a remote MCP adapter such as `mcp-remote` when a client only supports stdio:
+Use a custom endpoint when testing a preview/dev deployment:
 
 ```json
 {
   "mcpServers": {
     "heyclaude": {
       "command": "npx",
-      "args": ["-y", "mcp-remote", "https://heyclau.de/api/mcp"]
+      "args": [
+        "-y",
+        "@heyclaude/mcp",
+        "--url",
+        "https://heyclaude-dev.zeronode.workers.dev/api/mcp"
+      ]
     }
   }
 }
 ```
+
+Local artifact mode is explicit and intended for development:
+
+```bash
+pnpm --filter @heyclaude/mcp start:local
+```
+
+Set `HEYCLAUDE_DATA_DIR=/absolute/path/to/data`, or pass
+`--local --data-dir /absolute/path/to/data`, to point at a generated data
+directory.
+
+Example local MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "heyclaude": {
+      "command": "pnpm",
+      "args": ["--filter", "@heyclaude/mcp", "start:local"]
+    }
+  }
+}
+```
+
+## Remote HTTP
+
+The web app also exposes a Streamable HTTP endpoint:
+
+- production: `https://heyclau.de/api/mcp`
+- dev: `https://heyclaude-dev.zeronode.workers.dev/api/mcp`
 
 Validate a deployed endpoint with the SDK-level contract check:
 
@@ -107,17 +114,19 @@ checks the HTTP guards used by the remote route.
 
 ## npm Release Prep
 
-Do not publish until the web branch has shipped and the production endpoint has
-been verified. The release checklist is:
+MCP releases are package-scoped. Website/catalog changes do not create repo-wide
+semver releases. The initial public package version is `0.1.0`, and GitHub
+release tags use `mcp-vX.Y.Z`.
+
+Do not publish until the web branch has shipped, the production endpoint has
+been verified, and the package smoke test passes. The release checklist is:
 
 ```bash
 pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
 pnpm --filter @heyclaude/mcp test
 pnpm --filter @heyclaude/mcp pack --dry-run
+MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package
 ```
 
-Then publish from `packages/mcp` with npm credentials:
-
-```bash
-npm publish --access public
-```
+Publishing should happen through the manual `Publish MCP Package` GitHub
+workflow with npm trusted publishing/provenance enabled for `@heyclaude/mcp`.

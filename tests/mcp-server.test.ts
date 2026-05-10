@@ -52,9 +52,16 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(packageJson.private).not.toBe(true);
     expect(packageJson.bin).toHaveProperty("heyclaude-mcp", "./src/cli.js");
     expect(packageJson.files).toContain("scripts/**/*.mjs");
+    expect(packageJson.scripts).not.toHaveProperty("preinstall");
+    expect(packageJson.scripts).not.toHaveProperty("install");
+    expect(packageJson.scripts).not.toHaveProperty("postinstall");
     expect(packageJson.scripts).toHaveProperty(
       "validate:endpoint",
       "node scripts/validate-endpoint.mjs",
+    );
+    expect(packageJson.scripts).toHaveProperty(
+      "validate:package",
+      "node ../../scripts/validate-mcp-package.mjs",
     );
     expect(packageJson.dependencies).not.toHaveProperty("@heyclaude/registry");
     expect(packageJson.dependencies).toHaveProperty(
@@ -65,6 +72,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       "workspace:*",
     );
     expect(packageJson.exports).toHaveProperty("./server");
+    expect(packageJson.exports).toHaveProperty("./remote-proxy");
     expect(packageJson.exports).toHaveProperty("./submissions");
   });
 

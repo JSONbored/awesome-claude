@@ -5,13 +5,14 @@ import {
   ListToolsRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
+import { packageVersion } from "./package-metadata.js";
 import { callRegistryTool, TOOL_DEFINITIONS } from "./registry.js";
 
 export function createHeyClaudeMcpServer(options = {}) {
   const server = new Server(
     {
       name: "heyclaude-registry",
-      version: "0.1.0",
+      version: packageVersion,
     },
     {
       capabilities: {

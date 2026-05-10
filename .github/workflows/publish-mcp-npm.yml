@@ -1,0 +1,119 @@
+name: Publish MCP Package
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish-mcp-npm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: npm-production
+    concurrency:
+      group: mcp-package-release
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate release version
+        id: release
+        run: |
+          set -euo pipefail
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::MCP package releases must run from main."
+            exit 1
+          fi
+          RELEASE_VERSION="$(node -p "require('./packages/mcp/package.json').version")"
+          if ! printf '%s' "$RELEASE_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::packages/mcp/package.json version must be strict semver without a v prefix."
+            exit 1
+          fi
+          tag="mcp-v$RELEASE_VERSION"
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "::error::Release tag already exists: $tag"
+            exit 1
+          fi
+          if npm view "@heyclaude/mcp@$RELEASE_VERSION" version >/dev/null 2>&1; then
+            echo "::error::npm package version already exists: @heyclaude/mcp@$RELEASE_VERSION"
+            exit 1
+          fi
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Build registry artifacts
+        run: pnpm --filter web run prebuild
+
+      - name: Test MCP package
+        run: pnpm test:mcp
+
+      - name: Validate production MCP endpoint
+        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
+
+      - name: Dry-run MCP package tarball
+        run: pnpm --filter @heyclaude/mcp pack --dry-run --json
+
+      - name: Validate packed MCP package
+        env:
+          MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclau.de/api/mcp
+        run: pnpm validate:mcp-package
+
+      - name: Publish to npm
+        working-directory: packages/mcp
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN || '' }}
+          NPM_CONFIG_PROVENANCE: "true"
+        run: npm publish --access public --provenance
+
+      - name: Create MCP release tag
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$RELEASE_TAG" -m "@heyclaude/mcp v$RELEASE_VERSION"
+          git push origin "$RELEASE_TAG"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          set -euo pipefail
+          notes_file="$(mktemp)"
+          {
+            printf "## Summary\n\n"
+            printf -- "- Published \`@heyclaude/mcp@%s\` to npm with provenance.\n" "$RELEASE_VERSION"
+            printf -- "- Release tag: \`%s\`\n" "$RELEASE_TAG"
+            printf -- "- npm package: https://www.npmjs.com/package/@heyclaude/mcp/v/%s\n\n" "$RELEASE_VERSION"
+            printf "## Validation\n\n"
+            printf -- "- \`pnpm test:mcp\`\n"
+            printf -- "- \`pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp\`\n"
+            printf -- "- \`pnpm --filter @heyclaude/mcp pack --dry-run --json\`\n"
+            printf -- "- \`MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package\`\n"
+          } > "$notes_file"
+          gh release create "$RELEASE_TAG" \
+            --title "@heyclaude/mcp v$RELEASE_VERSION" \
+            --notes-file "$notes_file"

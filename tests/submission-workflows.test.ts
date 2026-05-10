@@ -333,13 +333,13 @@ diff --git a/README.md b/README.md
     });
   });
 
-  it("serializes release tagging and keeps shell-consumed outputs in env", () => {
+  it("uses package-scoped MCP releases and keeps shell-consumed outputs in env", () => {
     const releaseSource = fs.readFileSync(
-      path.join(repoRoot, ".github/workflows/tag-release-from-main.yml"),
+      path.join(repoRoot, ".github/workflows/publish-mcp-npm.yml"),
       "utf8",
     );
-    const changelogSource = fs.readFileSync(
-      path.join(repoRoot, ".github/workflows/changelog-release-pr.yml"),
+    const packageSource = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/mcp-package.yml"),
       "utf8",
     );
     const jobsSource = fs.readFileSync(
@@ -347,17 +347,18 @@ diff --git a/README.md b/README.md
       "utf8",
     );
 
+    expect(releaseSource).toContain("group: mcp-package-release");
+    expect(releaseSource).toContain("id-token: write");
+    expect(releaseSource).toContain("environment: npm-production");
     expect(releaseSource).toContain(
-      "group: tag-release-from-main-${{ github.ref }}",
+      "require('./packages/mcp/package.json').version",
     );
-    expect(releaseSource).toContain(
-      "RELEASE_TAG: ${{ steps.version.outputs.tag }}",
+    expect(releaseSource).toContain('tag="mcp-v$RELEASE_VERSION"');
+    expect(releaseSource).toContain("npm publish --access public --provenance");
+    expect(packageSource).toContain("MCP_PACKAGE_REMOTE_SMOKE_URL");
+    expect(packageSource).toContain(
+      "pnpm --filter @heyclaude/mcp pack --dry-run --json",
     );
-    expect(releaseSource).toContain('tag="$RELEASE_TAG"');
-    expect(changelogSource).toContain(
-      "NEXT_TAG: ${{ steps.version.outputs.next }}",
-    );
-    expect(changelogSource).toContain('--tag "$NEXT_TAG"');
     expect(jobsSource).toContain(
       "SOURCE_BASE_URL: ${{ steps.source-check.outputs.base-url }}",
     );
