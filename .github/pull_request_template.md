@@ -9,6 +9,7 @@
 - [ ] New content file(s) added under `content/<category>/`
 - [ ] Existing content updated
 - [ ] Submission issue resolved (link it here): #
+- [ ] Direct content submissions include `submittedBy` and `submittedByUrl` frontmatter matching the PR author.
 - [ ] I did not modify `README.md`; CI regenerates it for validation, and maintainer automation owns committed README updates.
 
 ## Schema and Quality Checks

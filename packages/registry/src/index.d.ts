@@ -528,11 +528,41 @@ export type SubmissionClassificationWarning = {
   detail?: string;
 };
 
+export type SubmissionProvenanceFinding = {
+  id: string;
+  severity: "info" | "warning" | "error";
+  summary: string;
+  detail?: string;
+  blocking?: boolean;
+};
+
+export type SubmissionRiskContributor = {
+  login: string;
+  htmlUrl?: string;
+  id?: number | string | null;
+};
+
+export type SubmissionContentProvenance = {
+  filename: string;
+  submittedBy?: string;
+  submittedByUrl?: string;
+  submissionIssueNumber?: number | null;
+  submissionIssueUrl?: string;
+  importPrNumber?: number | null;
+  importPrUrl?: string;
+};
+
 export type SubmissionRiskReport = {
   schemaVersion: number;
   kind: "submission-risk";
   generatedAt: string;
   subject: Record<string, unknown>;
+  provenanceStatus: "not_applicable" | "passed" | "failed";
+  provenanceFindings: SubmissionProvenanceFinding[];
+  contentProvenance: SubmissionContentProvenance[];
+  effectiveContributor: SubmissionRiskContributor | null;
+  contributorSource: string;
+  pullRequestActor: SubmissionRiskContributor | null;
   riskTier: SubmissionRiskTier;
   reviewFlags: SubmissionRiskFlag[];
   trustSignals: string[];

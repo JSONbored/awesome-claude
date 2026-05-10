@@ -19,7 +19,7 @@
     "adapterGeneratedCount": 68,
     "recentlyVerifiedCount": 356,
     "staleVerificationCount": 0,
-    "provenanceCount": 3,
+    "provenanceCount": 4,
     "provenancePercent": 1,
     "claimedOrReviewedCount": 3,
     "recommendedFixCount": 1,
@@ -41,7 +41,7 @@
       "sourceAvailable": 46,
       "checksumPresent": 41,
       "adapterGenerated": 0,
-      "provenancePresent": 3,
+      "provenancePresent": 4,
       "recommendedFixes": 1
     },
     "tools": {
@@ -8417,8 +8417,8 @@
       "packageVerified": false,
       "lastVerifiedAt": "2026-05-09T00:00:00.000Z",
       "verificationAgeDays": 0,
-      "hasProvenance": false,
-      "submittedBy": "",
+      "hasProvenance": true,
+      "submittedBy": "kriptoburak",
       "reviewedBy": "",
       "claimStatus": "unclaimed",
       "recommendations": []

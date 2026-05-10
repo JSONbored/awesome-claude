@@ -13,6 +13,7 @@ on:
       - "packages/registry/src/submission-risk.js"
       - "scripts/analyze-submission-risk.mjs"
       - "scripts/ci/fail-critical-risk-report.mjs"
+      - "scripts/ci/fail-provenance-report.mjs"
 
 permissions:
   contents: read
@@ -51,12 +52,57 @@ jobs:
           script: |
             const fs = require("node:fs");
             const pr = context.payload.pull_request;
+            const repositoryFullName = context.payload.repository.full_name;
+            const headRepositoryFullName = pr.head?.repo?.full_name || "";
+            const headRef = pr.head?.ref || "";
+            const isSameRepository = headRepositoryFullName === repositoryFullName;
+            const sourceType =
+              isSameRepository && /^automation\/submission-\d+-/.test(headRef)
+                ? "automation_import"
+                : isSameRepository
+                  ? "same_repo_direct"
+                  : "external_direct";
+            const frontmatterValue = (value) => {
+              const trimmed = String(value || "").trim();
+              if (!trimmed) return "";
+              if (
+                (trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
+                (trimmed.startsWith("'") && trimmed.endsWith("'"))
+              ) {
+                return trimmed.slice(1, -1);
+              }
+              return trimmed;
+            };
+            const normalizeGitHubLogin = (value) => {
+              const text = String(value || "").trim();
+              if (!text) return "";
+              try {
+                const url = new URL(text);
+                if (url.protocol === "https:" && url.hostname === "github.com") {
+                  return url.pathname.split("/").filter(Boolean)[0] || "";
+                }
+              } catch {}
+              return text.replace(/^@+/, "").trim();
+            };
+            const readFrontmatter = (content) => {
+              const lines = String(content || "").split(/\r?\n/);
+              if (lines[0]?.trim() !== "---") return {};
+              const data = {};
+              for (const line of lines.slice(1)) {
+                if (line.trim() === "---") break;
+                const match = /^([A-Za-z0-9_]+):\s*(.*)$/.exec(line);
+                if (match) data[match[1]] = frontmatterValue(match[2]);
+              }
+              return data;
+            };
             const files = await github.paginate(github.rest.pulls.listFiles, {
               ...context.repo,
               pull_number: pr.number,
               per_page: 100
             });
             const contentFiles = [];
+            const submissionIssueNumbers = new Set();
+            const submittedByHandles = new Set();
             for (const file of files) {
               const isContentMdx = /^content\/[^/]+\/[^/]+\.mdx$/i.test(file.filename);
               if (!isContentMdx || file.status === "removed") {
@@ -96,6 +142,13 @@ jobs:
                   deletions: file.deletions,
                   content
                 });
+                const frontmatter = readFrontmatter(content);
+                const issueNumber = Number(frontmatter.submissionIssueNumber);
+                if (Number.isInteger(issueNumber) && issueNumber > 0) {
+                  submissionIssueNumbers.add(issueNumber);
+                }
+                const submittedBy = normalizeGitHubLogin(frontmatter.submittedBy);
+                if (submittedBy) submittedByHandles.add(submittedBy);
               } catch (error) {
                 core.warning(`Could not read ${file.filename}: ${error.message}`);
                 contentFiles.push({
@@ -107,13 +160,63 @@ jobs:
                 });
               }
             }
-            const { data: contributor } = await github.rest.users.getByUsername({
+            const { data: pullRequestActor } = await github.rest.users.getByUsername({
               username: pr.user.login
             });
+            const frontmatterContributors = [];
+            for (const login of [...submittedByHandles].sort()) {
+              try {
+                const { data: contributor } = await github.rest.users.getByUsername({
+                  username: login
+                });
+                frontmatterContributors.push(contributor);
+              } catch (error) {
+                core.warning(`Could not resolve submittedBy @${login}: ${error.message}`);
+                frontmatterContributors.push({ login, error: error.message });
+              }
+            }
+            const submissionIssueContributors = [];
+            for (const issueNumber of [...submissionIssueNumbers].sort((a, b) => a - b)) {
+              try {
+                const { data: issue } = await github.rest.issues.get({
+                  ...context.repo,
+                  issue_number: issueNumber
+                });
+                let contributor = null;
+                if (issue.user?.login) {
+                  const response = await github.rest.users.getByUsername({
+                    username: issue.user.login
+                  });
+                  contributor = response.data;
+                }
+                submissionIssueContributors.push({
+                  issueNumber,
+                  issue,
+                  contributor
+                });
+              } catch (error) {
+                core.warning(`Could not resolve submission issue #${issueNumber}: ${error.message}`);
+                submissionIssueContributors.push({
+                  issueNumber,
+                  issue: null,
+                  contributor: null,
+                  error: error.message
+                });
+              }
+            }
             fs.mkdirSync(".github/tmp", { recursive: true });
             fs.writeFileSync(
               ".github/tmp/pr-risk-input.json",
-              JSON.stringify({ pullRequest: pr, contributor, files: contentFiles }, null, 2),
+              JSON.stringify({
+                pullRequest: pr,
+                pullRequestActor,
+                contributor: pullRequestActor,
+                frontmatterContributors,
+                sourceType,
+                repositoryFullName,
+                submissionIssueContributors,
+                files: contentFiles
+              }, null, 2),
               "utf8"
             );
 
@@ -197,6 +300,9 @@ jobs:
                 body
               });
             }
+
+      - name: Fail when submission provenance is invalid
+        run: node scripts/ci/fail-provenance-report.mjs .github/tmp/submission-risk.json
 
       - name: Fail when submission risk is critical
         run: node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json

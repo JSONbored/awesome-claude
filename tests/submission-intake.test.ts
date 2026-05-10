@@ -1061,6 +1061,7 @@ Multi-model AI workspace for verified answers.`,
 
   it("formats direct content PR risk without executing submitted files", () => {
     const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
       pullRequest: {
         number: 326,
         title: "Add Xquik MCP server listing",
@@ -1081,6 +1082,8 @@ title: Xquik MCP Server
 slug: xquik-mcp-server
 category: mcp
 description: Remote MCP server for X and Twitter automation, tweet search, webhooks, and confirmation-gated posting.
+submittedBy: kriptoburak
+submittedByUrl: https://github.com/kriptoburak
 repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
@@ -1100,6 +1103,8 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       ]),
     );
     expect(report.recommendedLabels).toEqual(["risk-high"]);
+    expect(report.provenanceStatus).toBe("passed");
+    expect(report.effectiveContributor?.login).toBe("kriptoburak");
     expect(formatSubmissionRiskMarkdown(report)).toContain(
       "<!-- submission-risk-report -->",
     );
@@ -1110,6 +1115,7 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
 
   it("warns when direct PR product listings are outside content/tools", () => {
     const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
       pullRequest: {
         number: 327,
         title: "Add MultipleChat listing",
@@ -1126,6 +1132,8 @@ slug: multiplechat
 category: agents
 description: Hosted SaaS product for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface.
 cardDescription: Multi-model AI workspace for verified answers.
+submittedBy: multiplechat
+submittedByUrl: https://github.com/multiplechat
 websiteUrl: https://multiplechat.ai/
 documentationUrl: https://multiplechat.ai/features
 pricingModel: freemium
@@ -1152,6 +1160,7 @@ Free to try with no credit card. Includes document, presentation, Excel, and ima
 
   it("accepts direct PR tools listings with required review metadata", () => {
     const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
       pullRequest: {
         number: 328,
         title: "Add MultipleChat tools listing",
@@ -1168,6 +1177,8 @@ slug: multiplechat
 category: tools
 description: Hosted multi-model AI workspace for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface.
 cardDescription: Multi-model AI workspace for verified answers.
+submittedBy: multiplechat
+submittedByUrl: https://github.com/multiplechat
 websiteUrl: https://multiplechat.ai/
 documentationUrl: https://multiplechat.ai/features
 pricingModel: freemium
@@ -1187,6 +1198,7 @@ Review source claims and screenshots before publishing.`,
 
   it("warns when direct content PRs include generated README changes", () => {
     const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
       pullRequest: {
         number: 329,
         title: "Add Example MCP listing",
@@ -1202,6 +1214,8 @@ title: Example MCP
 slug: example-mcp
 category: mcp
 description: MCP server for testing generated README guidance.
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
 repoUrl: https://github.com/example/example-mcp
 documentationUrl: https://example.com/docs
 installCommand: "npx -y example-mcp"
@@ -1225,6 +1239,303 @@ Run the install command.`,
     );
     expect(formatSubmissionRiskMarkdown(report)).toContain(
       "README.md changes are not accepted in direct content PRs",
+    );
+  });
+
+  it("attributes automation import PR risk to the original issue submitter", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "automation_import",
+      pullRequest: {
+        number: 337,
+        title: "feat(content): add mcp memesio-mcp-server",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/337",
+        user: { login: "github-actions[bot]" },
+        head: {
+          ref: "automation/submission-325-memesio-mcp-server",
+          repo: { full_name: "JSONbored/claudepro-directory" },
+        },
+      },
+      pullRequestActor: {
+        login: "github-actions[bot]",
+        created_at: "2018-07-30T09:30:17Z",
+      },
+      contributor: {
+        login: "github-actions[bot]",
+        created_at: "2018-07-30T09:30:17Z",
+      },
+      submissionIssueContributors: [
+        {
+          issueNumber: 325,
+          issue: { number: 325, user: { login: "vy35" } },
+          contributor: {
+            login: "vy35",
+            html_url: "https://github.com/vy35",
+            created_at: "2020-01-01T00:00:00Z",
+            public_repos: 4,
+          },
+        },
+      ],
+      files: [
+        {
+          filename: "content/mcp/memesio-mcp-server.mdx",
+          status: "added",
+          content: `---
+title: Memesio MCP Server
+slug: memesio-mcp-server
+category: mcp
+description: Hosted meme generation MCP server that requires API credentials.
+submittedBy: vy35
+submittedByUrl: https://github.com/vy35
+submissionIssueNumber: 325
+submissionIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/325
+documentationUrl: https://memesio.com/developers/mcp
+brandDomain: memesio.com
+installCommand: "npx -y mcp-remote https://memesio.com/mcp --header x-api-key:\${MEMESIO_API_KEY}"
+usageSnippet: "Use an API key to generate memes."
+---
+## Usage
+Run the install command.`,
+        },
+        {
+          filename: "README.md",
+          status: "modified",
+          content: "# HeyClaude\n\nGenerated catalog update.",
+        },
+      ],
+    });
+
+    const markdown = formatSubmissionRiskMarkdown(report);
+
+    expect(report.provenanceStatus).toBe("passed");
+    expect(report.effectiveContributor?.login).toBe("vy35");
+    expect(report.pullRequestActor?.login).toBe("github-actions[bot]");
+    expect(report.contributorSource).toBe("submission_issue_author");
+    expect(report.trustSignals).toEqual(
+      expect.arrayContaining([
+        "Contributor analyzed: @vy35",
+        "PR opened by: @github-actions[bot]",
+        "Submission issue: #325",
+      ]),
+    );
+    expect(report.classificationWarnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "generated_readme_change" }),
+      ]),
+    );
+    expect(markdown).toContain("Contributor analyzed: @vy35");
+    expect(markdown).toContain("PR opened by: @github-actions[bot]");
+    expect(markdown).toContain(
+      "content/mcp/memesio-mcp-server.mdx: by @vy35 via issue #325",
+    );
+  });
+
+  it("uses content frontmatter provenance for same-repo maintainer PRs", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "same_repo_direct",
+      pullRequest: {
+        number: 342,
+        title: "fix(submission): attribute PR risk to original submitters",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/342",
+        user: { login: "JSONbored" },
+      },
+      pullRequestActor: {
+        login: "JSONbored",
+        html_url: "https://github.com/JSONbored",
+        created_at: "2019-05-01T00:00:00Z",
+      },
+      contributor: {
+        login: "JSONbored",
+        html_url: "https://github.com/JSONbored",
+      },
+      frontmatterContributors: [
+        {
+          login: "kriptoburak",
+          html_url: "https://github.com/kriptoburak",
+          created_at: "2014-09-12T23:53:37Z",
+          public_repos: 313,
+        },
+      ],
+      files: [
+        {
+          filename: "content/mcp/xquik-mcp-server.mdx",
+          status: "modified",
+          content: `---
+title: Xquik MCP Server
+slug: xquik-mcp-server
+category: mcp
+description: Remote MCP server for X and Twitter automation, tweet search, webhooks, and confirmation-gated posting.
+submittedBy: kriptoburak
+submittedByUrl: https://github.com/kriptoburak
+importPrNumber: 326
+importPrUrl: https://github.com/JSONbored/claudepro-directory/pull/326
+repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
+documentationUrl: https://docs.xquik.com/mcp/overview
+installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
+usageSnippet: "Use an API key for Xquik social media posting workflows."
+---
+## Security Notes
+Review payloads before posting tweets, replies, DMs, or profile updates.`,
+        },
+        {
+          filename: "README.md",
+          status: "modified",
+          content: "# HeyClaude\n\nGenerated catalog update.",
+        },
+      ],
+    });
+
+    const markdown = formatSubmissionRiskMarkdown(report);
+
+    expect(report.provenanceStatus).toBe("passed");
+    expect(report.effectiveContributor?.login).toBe("kriptoburak");
+    expect(report.pullRequestActor?.login).toBe("JSONbored");
+    expect(report.contributorSource).toBe("content_frontmatter");
+    expect(report.trustSignals).toEqual(
+      expect.arrayContaining([
+        "Contributor analyzed: @kriptoburak",
+        "PR opened by: @JSONbored",
+      ]),
+    );
+    expect(report.classificationWarnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "generated_readme_change" }),
+      ]),
+    );
+    expect(markdown).toContain("Contributor analyzed: @kriptoburak");
+    expect(markdown).toContain("PR opened by: @JSONbored");
+    expect(markdown).toContain(
+      "content/mcp/xquik-mcp-server.mdx: by @kriptoburak via PR #326",
+    );
+  });
+
+  it("fails automation import provenance when content submitter does not match the issue author", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "automation_import",
+      pullRequest: {
+        number: 338,
+        title: "feat(content): add mcp example",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/338",
+        user: { login: "github-actions[bot]" },
+      },
+      pullRequestActor: { login: "github-actions[bot]" },
+      submissionIssueContributors: [
+        {
+          issueNumber: 324,
+          issue: { number: 324, user: { login: "vy35" } },
+          contributor: { login: "vy35", html_url: "https://github.com/vy35" },
+        },
+      ],
+      files: [
+        {
+          filename: "content/mcp/example-import.mdx",
+          status: "added",
+          content: `---
+title: Example Import
+slug: example-import
+category: mcp
+description: Example imported MCP server.
+submittedBy: someone-else
+submittedByUrl: https://github.com/someone-else
+submissionIssueNumber: 324
+submissionIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/324
+documentationUrl: https://example.com/docs
+installCommand: "npx -y example-import"
+usageSnippet: "claude mcp add example-import -- npx -y example-import"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(report.provenanceStatus).toBe("failed");
+    expect(report.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "import_submitter_mismatch_content/mcp/example-import.mdx",
+          blocking: true,
+        }),
+      ]),
+    );
+  });
+
+  it("fails external direct content PRs without submitter provenance", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 330,
+        title: "Add Example MCP listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/330",
+        user: { login: "contributor" },
+      },
+      files: [
+        {
+          filename: "content/mcp/no-provenance.mdx",
+          status: "added",
+          content: `---
+title: No Provenance MCP
+slug: no-provenance
+category: mcp
+description: Example MCP server without submitter provenance.
+documentationUrl: https://example.com/docs
+installCommand: "npx -y no-provenance"
+usageSnippet: "claude mcp add no-provenance -- npx -y no-provenance"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(report.provenanceStatus).toBe("failed");
+    expect(report.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "missing_direct_pr_submitter_content/mcp/no-provenance.mdx",
+          blocking: true,
+        }),
+      ]),
+    );
+  });
+
+  it("fails external direct content PRs when submittedBy differs from the PR author", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 331,
+        title: "Add Example MCP listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/331",
+        user: { login: "contributor" },
+      },
+      files: [
+        {
+          filename: "content/mcp/wrong-provenance.mdx",
+          status: "added",
+          content: `---
+title: Wrong Provenance MCP
+slug: wrong-provenance
+category: mcp
+description: Example MCP server with mismatched submitter provenance.
+submittedBy: someone-else
+submittedByUrl: https://github.com/someone-else
+documentationUrl: https://example.com/docs
+installCommand: "npx -y wrong-provenance"
+usageSnippet: "claude mcp add wrong-provenance -- npx -y wrong-provenance"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(report.provenanceStatus).toBe("failed");
+    expect(report.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_submitter_mismatch_content/mcp/wrong-provenance.mdx",
+          blocking: true,
+        }),
+      ]),
     );
   });
 

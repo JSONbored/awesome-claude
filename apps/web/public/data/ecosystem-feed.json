@@ -20775,6 +20775,10 @@
       "title": "Xquik MCP Server",
       "description": "Remote X and Twitter MCP server for tweet search, follower export, media, webhooks, and confirmation-gated write workflows.",
       "url": "https://heyclau.de/mcp/xquik-mcp-server",
+      "submittedBy": "kriptoburak",
+      "submittedByUrl": "https://github.com/kriptoburak",
+      "importPrNumber": 326,
+      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/326",
       "brandName": "Xquik",
       "brandDomain": "xquik.com",
       "brandAssetSource": "manual",
@@ -21199,5 +21203,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "a366807ea51dca8413da80af0089903992f1caad2821dfdd8e7da0212e81b146"
+  "signature": "c673f9bf540cde6ac99236c128e86b58c54f180b6c9ad9b930cdf2711dbd7ca7"
 }

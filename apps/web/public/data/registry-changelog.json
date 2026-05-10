@@ -14,7 +14,7 @@
       "canonicalUrl": "https://heyclau.de/mcp/xquik-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
-      "artifactHash": "4ffa03543786a6a164665a5eccc221d3197d693b25f0df0f41ffbe1981c39c63"
+      "artifactHash": "ee61697cb261229d7d218fb953fbea64df4f47478a71cc966618a95e411bd9c2"
     },
     {
       "key": "skills:heyclaude-content-submission-factory",
@@ -4590,5 +4590,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "fff64a79e2799b644911c69830e080072faba89d3c289982bd8f5ca291f9c972"
+  "signature": "0739cd07839775bccd60ddb374364ee8b6f55351f9fb5b9a6b4a92cecb4e6dd1"
 }

@@ -101,6 +101,36 @@ function githubRepoFromUrl(value) {
   }
 }
 
+function githubLoginFromUrl(value) {
+  try {
+    const url = new URL(normalizeText(value));
+    if (url.protocol !== "https:" || url.hostname !== "github.com") return "";
+    const [login] = url.pathname.split("/").filter(Boolean);
+    return login || "";
+  } catch {
+    return "";
+  }
+}
+
+function normalizeGitHubLogin(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  return githubLoginFromUrl(text) || text.replace(/^@+/, "").trim();
+}
+
+function sameGitHubLogin(left, right) {
+  const normalizedLeft = normalizeGitHubLogin(left).toLowerCase();
+  const normalizedRight = normalizeGitHubLogin(right).toLowerCase();
+  return Boolean(
+    normalizedLeft && normalizedRight && normalizedLeft === normalizedRight,
+  );
+}
+
+function githubUserReference(value) {
+  const login = normalizeGitHubLogin(value);
+  return login ? `@${login}` : normalizeText(value);
+}
+
 function splitList(value) {
   return normalizeText(value)
     .split(/[\n,]+/)
@@ -163,7 +193,9 @@ function collectUrls(value) {
 function contributorSignals(contributor = {}, report) {
   const login = normalizeText(contributor.login || contributor.name);
   if (login) {
-    report.trustSignals.push(`Contributor: ${login}`);
+    report.trustSignals.push(
+      `Contributor analyzed: ${githubUserReference(login)}`,
+    );
   }
 
   const createdAt = Date.parse(contributor.created_at || contributor.createdAt);
@@ -206,6 +238,20 @@ function addClassificationWarning(report, id, summary, detail = "") {
     return;
   }
   report.classificationWarnings.push({ id, summary, detail });
+}
+
+function addProvenanceFinding(
+  report,
+  severity,
+  id,
+  summary,
+  detail = "",
+  blocking = severity === "error",
+) {
+  if (report.provenanceFindings.some((finding) => finding.id === id)) {
+    return;
+  }
+  report.provenanceFindings.push({ id, severity, summary, detail, blocking });
 }
 
 function addSourceSignals(report, fields, text) {
@@ -557,6 +603,12 @@ function baseReport(subject) {
     kind: "submission-risk",
     generatedAt: new Date().toISOString(),
     subject,
+    provenanceStatus: "not_applicable",
+    provenanceFindings: [],
+    contentProvenance: [],
+    effectiveContributor: null,
+    contributorSource: "",
+    pullRequestActor: null,
     riskTier: "low",
     reviewFlags: [],
     trustSignals: [],
@@ -588,15 +640,22 @@ export function analyzeIssueSubmissionRisk(
     category: validationReport?.category || fields.category || "",
     slug: fields.slug || "",
   });
+  const contributor = options.contributor || issue.user || issue.author || {};
+  const contributorLogin = normalizeText(contributor.login || contributor.name);
+  if (contributorLogin) {
+    report.provenanceStatus = "passed";
+    report.effectiveContributor = {
+      login: contributorLogin,
+      htmlUrl: normalizeText(contributor.html_url || contributor.url),
+    };
+    report.contributorSource = "issue_author";
+  }
 
   addSchemaSignals(report, validationReport);
   addSourceSignals(report, fields, text);
   addContentRiskSignals(report, fields, text);
   addToolListingClassificationSignals(report, fields, text);
-  contributorSignals(
-    options.contributor || issue.user || issue.author || {},
-    report,
-  );
+  contributorSignals(contributor, report);
 
   return finalizeReport(report, validationReport);
 }
@@ -624,18 +683,38 @@ function frontmatterFields(data = {}, category = "") {
   };
 }
 
+function frontmatterProvenance(data = {}) {
+  const submissionIssueNumber = Number(data.submissionIssueNumber);
+  const importPrNumber = Number(data.importPrNumber);
+  return {
+    submittedBy: normalizeText(data.submittedBy),
+    submittedByUrl: normalizeText(data.submittedByUrl),
+    submissionIssueNumber:
+      Number.isInteger(submissionIssueNumber) && submissionIssueNumber > 0
+        ? submissionIssueNumber
+        : null,
+    submissionIssueUrl: normalizeText(data.submissionIssueUrl),
+    importPrNumber:
+      Number.isInteger(importPrNumber) && importPrNumber > 0
+        ? importPrNumber
+        : null,
+    importPrUrl: normalizeText(data.importPrUrl),
+  };
+}
+
 function prFileCategory(filename) {
   const parts = normalizeText(filename).split("/");
   return parts[0] === "content" && parts.length >= 3 ? parts[1] : "";
 }
 
-function addGeneratedArtifactSignals(report, files, contentFiles) {
+function addGeneratedArtifactSignals(report, files, contentFiles, sourceType) {
   const hasRootReadmeChange = files.some(
     (file) =>
       normalizeText(file.filename).toLowerCase() === "readme.md" &&
       normalizeText(file.status) !== "removed",
   );
   if (!hasRootReadmeChange || !contentFiles.length) return;
+  if (sourceType !== "external_direct") return;
 
   addClassificationWarning(
     report,
@@ -645,6 +724,295 @@ function addGeneratedArtifactSignals(report, files, contentFiles) {
   );
 }
 
+function prSourceType(input = {}) {
+  if (input.sourceType) return normalizeText(input.sourceType);
+  const headRef = normalizeText(input.pullRequest?.head?.ref);
+  if (/^automation\/submission-\d+-/.test(headRef)) return "automation_import";
+  return "direct_pr";
+}
+
+function contributorSummary(contributor = {}) {
+  const login = normalizeText(contributor.login || contributor.name);
+  if (!login) return null;
+  return {
+    login,
+    htmlUrl: normalizeText(contributor.html_url || contributor.url),
+    id: contributor.id ?? null,
+  };
+}
+
+function issueContributorMap(input = {}) {
+  const map = new Map();
+  const contributors = Array.isArray(input.submissionIssueContributors)
+    ? input.submissionIssueContributors
+    : [];
+  for (const item of contributors) {
+    const issueNumberValue = Number(item.issueNumber || item.issue?.number);
+    if (!Number.isInteger(issueNumberValue) || issueNumberValue <= 0) continue;
+    map.set(issueNumberValue, {
+      issue: item.issue || {},
+      contributor: item.contributor || item.issue?.user || {},
+    });
+  }
+  return map;
+}
+
+function frontmatterContributorMap(input = {}) {
+  const map = new Map();
+  const contributors = Array.isArray(input.frontmatterContributors)
+    ? input.frontmatterContributors
+    : [];
+  for (const contributor of contributors) {
+    const login = normalizeGitHubLogin(contributor?.login || contributor?.name);
+    if (login) map.set(login.toLowerCase(), contributor);
+  }
+  return map;
+}
+
+function issueUrlMatchesNumber(url, number) {
+  const text = normalizeText(url);
+  if (!text) return false;
+  try {
+    const parts = new URL(text).pathname.split("/").filter(Boolean);
+    const issuesIndex = parts.indexOf("issues");
+    return issuesIndex >= 0 && parts[issuesIndex + 1] === String(number);
+  } catch {
+    return false;
+  }
+}
+
+function validatePrProvenance(report, entries, input, sourceType) {
+  if (!entries.length) return;
+
+  report.contentProvenance = entries.map((entry) => ({
+    filename: entry.filename,
+    ...entry.provenance,
+  }));
+
+  const prActor = contributorSummary(
+    input.pullRequestActor || input.pullRequest?.user || {},
+  );
+  report.pullRequestActor = prActor;
+  if (prActor?.login) {
+    report.trustSignals.push(
+      `PR opened by: ${githubUserReference(prActor.login)}`,
+    );
+  }
+
+  const issuesByNumber = issueContributorMap(input);
+  const contributorsByLogin = frontmatterContributorMap(input);
+  let contributorSource =
+    sourceType === "automation_import"
+      ? "submission_issue_author"
+      : sourceType === "external_direct"
+        ? "pull_request_author"
+        : "pull_request_or_maintainer";
+  let effectiveContributor =
+    sourceType === "automation_import"
+      ? null
+      : contributorSummary(input.contributor || input.pullRequest?.user || {});
+
+  if (sourceType === "automation_import") {
+    const issueNumbers = [
+      ...new Set(
+        entries
+          .map((entry) => entry.provenance.submissionIssueNumber)
+          .filter(Boolean),
+      ),
+    ];
+    if (issueNumbers.length === 1) {
+      effectiveContributor = contributorSummary(
+        issuesByNumber.get(issueNumbers[0])?.contributor || {},
+      );
+    }
+  } else if (sourceType === "same_repo_direct") {
+    const submittedLogins = [
+      ...new Set(
+        entries
+          .map((entry) => normalizeGitHubLogin(entry.provenance.submittedBy))
+          .filter(Boolean)
+          .map((login) => login.toLowerCase()),
+      ),
+    ];
+    if (submittedLogins.length === 1) {
+      const submittedLogin = submittedLogins[0];
+      const contributor = contributorsByLogin.get(submittedLogin);
+      const provenance = entries.find((entry) =>
+        sameGitHubLogin(entry.provenance.submittedBy, submittedLogin),
+      )?.provenance;
+      effectiveContributor = contributorSummary(
+        contributor || {
+          login: provenance?.submittedBy || submittedLogin,
+          html_url: provenance?.submittedByUrl,
+        },
+      );
+      contributorSource = "content_frontmatter";
+    }
+  }
+
+  if (!effectiveContributor) {
+    effectiveContributor = contributorSummary(input.contributor || {});
+  }
+
+  report.effectiveContributor = effectiveContributor;
+  report.contributorSource = contributorSource;
+
+  if (sourceType === "automation_import") {
+    for (const entry of entries) {
+      const provenance = entry.provenance;
+      const required = [
+        ["submittedBy", provenance.submittedBy],
+        ["submittedByUrl", provenance.submittedByUrl],
+        ["submissionIssueNumber", provenance.submissionIssueNumber],
+        ["submissionIssueUrl", provenance.submissionIssueUrl],
+      ].filter(([, value]) => !value);
+
+      if (required.length) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `missing_import_provenance_${entry.filename}`,
+          "Automation import content is missing required issue provenance",
+          `${entry.filename}: ${required.map(([field]) => field).join(", ")}`,
+        );
+        continue;
+      }
+
+      const issueContributor = issuesByNumber.get(
+        provenance.submissionIssueNumber,
+      )?.contributor;
+      const issueLogin = normalizeText(issueContributor?.login);
+      if (!issueLogin) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `missing_issue_contributor_${provenance.submissionIssueNumber}`,
+          "Could not resolve the original issue submitter for import provenance",
+          `Issue #${provenance.submissionIssueNumber}`,
+        );
+      } else if (!sameGitHubLogin(provenance.submittedBy, issueLogin)) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `import_submitter_mismatch_${entry.filename}`,
+          "Imported content submitter does not match the linked issue author",
+          `${entry.filename}: submittedBy=${provenance.submittedBy}, issueAuthor=${issueLogin}`,
+        );
+      }
+
+      if (
+        provenance.submittedByUrl &&
+        !sameGitHubLogin(provenance.submittedByUrl, provenance.submittedBy)
+      ) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `import_submitter_url_mismatch_${entry.filename}`,
+          "Imported content submitter URL does not match submittedBy",
+          `${entry.filename}: ${provenance.submittedByUrl}`,
+        );
+      }
+
+      if (
+        provenance.submissionIssueUrl &&
+        !issueUrlMatchesNumber(
+          provenance.submissionIssueUrl,
+          provenance.submissionIssueNumber,
+        )
+      ) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `import_issue_url_mismatch_${entry.filename}`,
+          "Imported content submission issue URL does not match submissionIssueNumber",
+          `${entry.filename}: ${provenance.submissionIssueUrl}`,
+        );
+      }
+    }
+  } else if (sourceType === "external_direct") {
+    for (const entry of entries) {
+      const provenance = entry.provenance;
+      if (!provenance.submittedBy || !provenance.submittedByUrl) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `missing_direct_pr_submitter_${entry.filename}`,
+          "Direct contributor PR content must include submittedBy and submittedByUrl",
+          `${entry.filename}: add submittedBy: ${prActor?.login || "<your GitHub handle>"} and submittedByUrl: https://github.com/${prActor?.login || "<your GitHub handle>"}`,
+        );
+        continue;
+      }
+
+      if (
+        prActor?.login &&
+        !sameGitHubLogin(provenance.submittedBy, prActor.login)
+      ) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `direct_pr_submitter_mismatch_${entry.filename}`,
+          "Direct contributor PR submittedBy must match the PR author",
+          `${entry.filename}: submittedBy=${provenance.submittedBy}, prAuthor=${prActor.login}`,
+        );
+      }
+
+      if (
+        provenance.submittedByUrl &&
+        !sameGitHubLogin(provenance.submittedByUrl, provenance.submittedBy)
+      ) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `direct_pr_submitter_url_mismatch_${entry.filename}`,
+          "Direct contributor PR submittedByUrl must match submittedBy",
+          `${entry.filename}: ${provenance.submittedByUrl}`,
+        );
+      }
+    }
+  } else if (sourceType === "same_repo_direct") {
+    for (const entry of entries) {
+      const provenance = entry.provenance;
+      if (provenance.submittedBy && !provenance.submittedByUrl) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `missing_same_repo_submitter_url_${entry.filename}`,
+          "Content provenance with submittedBy must also include submittedByUrl",
+          `${entry.filename}: submittedBy=${provenance.submittedBy}`,
+        );
+      }
+
+      if (
+        provenance.submittedByUrl &&
+        !sameGitHubLogin(provenance.submittedByUrl, provenance.submittedBy)
+      ) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `same_repo_submitter_url_mismatch_${entry.filename}`,
+          "Content submittedByUrl must match submittedBy",
+          `${entry.filename}: ${provenance.submittedByUrl}`,
+        );
+      }
+    }
+  }
+
+  report.provenanceStatus = report.provenanceFindings.some(
+    (finding) => finding.blocking,
+  )
+    ? "failed"
+    : "passed";
+
+  if (sourceType === "automation_import") {
+    const issues = entries
+      .map((entry) => entry.provenance.submissionIssueNumber)
+      .filter(Boolean);
+    for (const issueNumberValue of [...new Set(issues)]) {
+      report.trustSignals.push(`Submission issue: #${issueNumberValue}`);
+    }
+  }
+}
+
 export function analyzeDirectContentRisk(input = {}) {
   const files = Array.isArray(input.files) ? input.files : [];
   const contentFiles = files.filter(
@@ -652,6 +1020,7 @@ export function analyzeDirectContentRisk(input = {}) {
       /^content\/[^/]+\/[^/]+\.mdx$/i.test(normalizeText(file.filename)) &&
       normalizeText(file.status) !== "removed",
   );
+  const sourceType = prSourceType(input);
   const report = baseReport({
     type: "pull_request",
     number: input.pullRequest?.number ?? input.number ?? null,
@@ -662,6 +1031,7 @@ export function analyzeDirectContentRisk(input = {}) {
         input.pullRequest?.user?.login ||
         input.author,
     ),
+    sourceType,
     contentFiles: contentFiles.map((file) => file.filename),
   });
 
@@ -674,8 +1044,9 @@ export function analyzeDirectContentRisk(input = {}) {
     );
   }
 
-  addGeneratedArtifactSignals(report, files, contentFiles);
+  addGeneratedArtifactSignals(report, files, contentFiles, sourceType);
 
+  const entries = [];
   for (const file of contentFiles) {
     const content = normalizeText(file.content);
     if (!content) {
@@ -704,14 +1075,20 @@ export function analyzeDirectContentRisk(input = {}) {
     }
     const category = prFileCategory(file.filename);
     const fields = frontmatterFields(parsed.data, category);
+    const provenance = frontmatterProvenance(parsed.data);
+    entries.push({ filename: file.filename, fields, provenance });
     report.trustSignals.push(`Content file: ${file.filename}`);
     addSourceSignals(report, fields, content);
     addContentRiskSignals(report, fields, content);
     addToolListingClassificationSignals(report, fields, content);
   }
 
+  validatePrProvenance(report, entries, input, sourceType);
   contributorSignals(
-    input.contributor || input.pullRequest?.user || {},
+    report.effectiveContributor ||
+      input.contributor ||
+      input.pullRequest?.user ||
+      {},
     report,
   );
   return finalizeReport(report, null);
@@ -726,6 +1103,52 @@ export function formatSubmissionRiskMarkdown(report) {
     `- Recommended action: \`${report.recommendedAction}\``,
     `- Recommended labels: ${report.recommendedLabels.map((label) => `\`${label}\``).join(", ") || "none"}`,
   ];
+
+  if (report.provenanceStatus && report.provenanceStatus !== "not_applicable") {
+    lines.push("", "### Provenance");
+    lines.push(`- Status: \`${report.provenanceStatus}\``);
+    if (report.effectiveContributor?.login) {
+      lines.push(
+        `- Contributor analyzed: ${githubUserReference(report.effectiveContributor.login)}`,
+      );
+    }
+    if (
+      report.pullRequestActor?.login &&
+      !sameGitHubLogin(
+        report.pullRequestActor.login,
+        report.effectiveContributor?.login,
+      )
+    ) {
+      lines.push(
+        `- PR opened by: ${githubUserReference(report.pullRequestActor.login)}`,
+      );
+    }
+    if (report.contributorSource) {
+      lines.push(`- Contributor source: \`${report.contributorSource}\``);
+    }
+    for (const provenance of report.contentProvenance || []) {
+      const parts = [];
+      if (provenance.submittedBy) {
+        parts.push(`by ${githubUserReference(provenance.submittedBy)}`);
+      }
+      if (provenance.submissionIssueNumber) {
+        parts.push(`via issue #${provenance.submissionIssueNumber}`);
+      } else if (provenance.importPrNumber) {
+        parts.push(`via PR #${provenance.importPrNumber}`);
+      }
+      if (parts.length) {
+        lines.push(`- ${provenance.filename}: ${parts.join(" ")}`);
+      }
+    }
+    for (const finding of report.provenanceFindings || []) {
+      const detail = finding.detail
+        ? ` - ${compactWhitespace(finding.detail)}`
+        : "";
+      lines.push(
+        `- \`${finding.severity}\` ${finding.summary} (\`${finding.id}\`)${detail}`,
+      );
+    }
+  }
 
   if (report.reviewFlags.length) {
     lines.push("", "### Review flags");

@@ -2,6 +2,8 @@
 URL: https://heyclau.de/mcp/xquik-mcp-server
 Category: mcp
 Author: Xquik-dev
+Submitted by: kriptoburak
+Import PR: https://github.com/JSONbored/claudepro-directory/pull/326
 Date added: 2026-05-09
 Documentation: https://docs.xquik.com/mcp/overview
 Repository: https://github.com/Xquik-dev/x-twitter-scraper
@@ -13,6 +15,8 @@ Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/con
 - Brand domain: xquik.com
 - Brand asset source: manual
 - Author: Xquik-dev
+- Submitted by: kriptoburak
+- Import PR: https://github.com/JSONbored/claudepro-directory/pull/326
 - Last verified: 2026-05-09
 - Robots: indexable
 ## Summary
