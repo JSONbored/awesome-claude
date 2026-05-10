@@ -2,10 +2,10 @@
 title: ContrastAPI Security Tools
 slug: contrastapi-mcp-server
 category: mcp
-description: "41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport."
-cardDescription: "41 remote security tools for CVE, KEV, CWE, MITRE ATLAS, D3FEND, domain audit, IP threat intel, and dependency scanning."
+description: "49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion), CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt, redirect-chain, email/brand/SEO), MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier; Pro tier with API key. Streamable-HTTP transport."
+cardDescription: "49 remote security tools for CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IP threat intel, IOC enrichment, web intelligence, and dependency scanning."
 seoTitle: ContrastAPI MCP Server for Claude Security Research
-seoDescription: "Use ContrastAPI with Claude for 41 MCP security tools covering CVE, KEV, CWE, EPSS, MITRE ATLAS, D3FEND, domain audit, and IOC enrichment."
+seoDescription: "Use ContrastAPI with Claude for 49 MCP security tools covering CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IOC enrichment, and web intelligence."
 author: UPinar
 authorProfileUrl: https://github.com/UPinar
 dateAdded: "2026-04-20"
@@ -46,21 +46,26 @@ tags:
   - dependency-scanner
   - mitre-atlas
   - d3fend
+  - risk-scoring
+  - web-intelligence
 keywords:
   - contrastapi mcp
   - claude security mcp
   - cve lookup
   - kev lookup
   - cwe lookup
+  - cve risk score
+  - cvss vector parser
   - mitre atlas
   - d3fend
   - threat intelligence
   - dependency scanner
+  - web intelligence
 ---
 
 ## Overview
 
-41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attack knowledge, and MITRE D3FEND defensive techniques. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport.
+49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion) and CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt parser, redirect-chain walker, email validation, brand-asset scraper, SEO audit), MITRE ATLAS AI/ML attack knowledge, and MITRE D3FEND defensive techniques. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
 
 ## Usage
 
@@ -69,7 +74,7 @@ claude mcp list
 
 ## Auth Requirements
 
-None required for free tier (100 credits/hour per IP). Optional X-API-Key header for Pro tier (1000/hr). See https://api.contrastcyber.com/pricing
+None required for the anonymous tier (rate-limited per IP). Optional X-API-Key header for Pro tier with higher limits. See https://api.contrastcyber.com/pricing
 
 ## Verification
 
