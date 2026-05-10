@@ -629,6 +629,22 @@ function prFileCategory(filename) {
   return parts[0] === "content" && parts.length >= 3 ? parts[1] : "";
 }
 
+function addGeneratedArtifactSignals(report, files, contentFiles) {
+  const hasRootReadmeChange = files.some(
+    (file) =>
+      normalizeText(file.filename).toLowerCase() === "readme.md" &&
+      normalizeText(file.status) !== "removed",
+  );
+  if (!hasRootReadmeChange || !contentFiles.length) return;
+
+  addClassificationWarning(
+    report,
+    "generated_readme_change",
+    "README.md is generated from content entries; verify direct PR README changes came from pnpm generate:readme",
+    "Issue-first imports regenerate README/catalog output automatically.",
+  );
+}
+
 export function analyzeDirectContentRisk(input = {}) {
   const files = Array.isArray(input.files) ? input.files : [];
   const contentFiles = files.filter(
@@ -657,6 +673,8 @@ export function analyzeDirectContentRisk(input = {}) {
       "No added or modified content MDX files were available for risk analysis",
     );
   }
+
+  addGeneratedArtifactSignals(report, files, contentFiles);
 
   for (const file of contentFiles) {
     const content = normalizeText(file.content);

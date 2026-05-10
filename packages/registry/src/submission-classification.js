@@ -63,10 +63,9 @@ export function toolListingSignals(fields = {}, text = "") {
 
   const patterns = [
     ["hosted_app", /\bhosted\s+(app|application|product|service|platform)\b/i],
-    [
-      "desktop_app",
-      /\b(desktop app|desktop application|native app|web app|mobile app)\b/i,
-    ],
+    ["desktop_app", /\b(desktop app|desktop application|native app)\b/i],
+    ["web_app", /\b(web app|web application)\b/i],
+    ["mobile_app", /\b(mobile app|mobile application)\b/i],
     [
       "runtime_app",
       /\b(local ai agent runtime|agentic ai runtime|ai runtime|runs on your machine)\b/i,
@@ -122,6 +121,8 @@ export function looksLikeToolAppListing(fields = {}, text = "") {
   const hardSignals = new Set([
     "hosted_app",
     "desktop_app",
+    "web_app",
+    "mobile_app",
     "runtime_app",
     "product",
     "software",

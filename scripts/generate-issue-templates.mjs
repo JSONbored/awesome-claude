@@ -116,6 +116,7 @@ function renderIssueTemplate(category) {
     `        Use this form for free, maintainer-reviewed ${label.toLowerCase()} submissions.`,
     "        Products, hosted apps, services, paid listings, sponsorships, claims, and jobs use the dedicated website lead forms.",
     "        Include official source/docs URLs only. Contributor affiliate, referral, tracking, or local package-hosting requests are rejected.",
+    "        Do not open a separate README change for issue submissions; accepted imports regenerate the README and registry artifacts automatically.",
     ...spec.fields.flatMap((field) => linesForField(field, category)),
     "  - type: checkboxes",
     "    id: acknowledgements",
@@ -127,6 +128,8 @@ function renderIssueTemplate(category) {
     "        - label: I confirm external links are official source/docs links and not affiliate, referral, or tracking URLs.",
     "          required: true",
     "        - label: I understand maintainers review accepted submissions before an import PR is opened.",
+    "          required: true",
+    "        - label: I understand accepted imports regenerate the README and registry artifacts automatically.",
     "          required: true",
   ];
   return `${lines.join("\n")}\n`;

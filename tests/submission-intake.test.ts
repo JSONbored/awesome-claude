@@ -298,6 +298,12 @@ claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp`),
       expect(source).toContain(
         "maintainers review accepted submissions before an import PR is opened",
       );
+      expect(source).toContain(
+        "Do not open a separate README change for issue submissions",
+      );
+      expect(source).toContain(
+        "I understand accepted imports regenerate the README and registry artifacts automatically",
+      );
       expect(source).toContain("not affiliate, referral, or tracking URLs");
     }
   });
@@ -1132,6 +1138,49 @@ Review source claims and screenshots before publishing.`,
 
     expect(report.riskTier).toBe("low");
     expect(report.classificationWarnings).toEqual([]);
+  });
+
+  it("warns when direct content PRs include generated README changes", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 329,
+        title: "Add Example MCP listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/329",
+        user: { login: "contributor" },
+      },
+      files: [
+        {
+          filename: "content/mcp/example-mcp.mdx",
+          status: "added",
+          content: `---
+title: Example MCP
+slug: example-mcp
+category: mcp
+description: MCP server for testing generated README guidance.
+repoUrl: https://github.com/example/example-mcp
+documentationUrl: https://example.com/docs
+installCommand: "npx -y example-mcp"
+usageSnippet: "claude mcp add example-mcp -- npx -y example-mcp"
+---
+## Usage
+Run the install command.`,
+        },
+        {
+          filename: "README.md",
+          status: "modified",
+          content: "# HeyClaude\n\nManual catalog update.",
+        },
+      ],
+    });
+
+    expect(report.classificationWarnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "generated_readme_change" }),
+      ]),
+    );
+    expect(formatSubmissionRiskMarkdown(report)).toContain(
+      "README.md is generated from content entries",
+    );
   });
 
   it("collects source URLs without regex backtracking on punctuation-heavy text", () => {

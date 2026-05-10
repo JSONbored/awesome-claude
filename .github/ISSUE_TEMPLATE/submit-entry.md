@@ -24,3 +24,4 @@ Describe what this is, why it matters, and how someone would use it.
 
 - Anything maintainers should know
 - Screenshots or examples if relevant
+- Do not open a separate README change for issue submissions; accepted imports regenerate the README and registry artifacts automatically.

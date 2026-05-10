@@ -78,9 +78,10 @@ jobs:
           for (const entry of queue.entries) {
             const issue = entry.url ? `[#${entry.number}](${entry.url})` : `#${entry.number}`;
             const notes = entry.errors.length ? entry.errors.join("<br>") : entry.importPath;
+            const riskTier = entry.riskTier || "-";
             const risk = entry.riskFlags?.length
-              ? `${entry.riskTier} (${entry.riskFlags.join(", ")})`
-              : entry.riskTier || "-";
+              ? `${riskTier} (${entry.riskFlags.join(", ")})`
+              : riskTier;
             lines.push(`| ${issue} | ${entry.status} | ${risk} | ${entry.ageDays ?? 0}d | ${entry.category || "-"} | ${entry.slug || "-"} | ${entry.actionDue || "-"} | ${notes || "-"} |`);
           }
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);

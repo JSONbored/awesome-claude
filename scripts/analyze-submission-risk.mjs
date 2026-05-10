@@ -47,9 +47,9 @@ const prPath = argValue("--pr-json");
 const outputPath = argValue("--output");
 const markdownOutputPath = argValue("--markdown-output");
 
-if ((!issuePath && !prPath) || !outputPath) {
+if ((!issuePath && !prPath) || (issuePath && prPath) || !outputPath) {
   console.error(
-    "Usage: node scripts/analyze-submission-risk.mjs (--issue-json <path> [--validation-json <path>] [--contributor-json <path>] | --pr-json <path>) --output <path> [--markdown-output <path>]",
+    "Usage: node scripts/analyze-submission-risk.mjs (--issue-json <path> [--validation-json <path>] [--contributor-json <path>] | --pr-json <path>) --output <path> [--markdown-output <path>]. --issue-json and --pr-json are mutually exclusive.",
   );
   process.exit(1);
 }

@@ -16,8 +16,11 @@ stale; it does not publish content directly.
   open an import PR.
 - `import-pr-open`: an import PR exists; stale automation must not close it.
 - `risk-low` / `risk-medium` / `risk-high`: deterministic security/safety
-  review labels. They are advisory except when a report is `critical`, which
-  blocks the workflow until fixed.
+  review labels. They are advisory except when the report tier is `critical`,
+  which is produced by critical findings such as obvious malware, exposed
+  secrets, unsafe executable install pipelines, or non-HTTPS executable sources;
+  there is no separate `critical` label, and critical reports block the workflow
+  until fixed.
 
 ## Queue States
 
