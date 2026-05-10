@@ -56,6 +56,8 @@ describe("submission automation workflows", () => {
       "contains(github.event.issue.labels.*.name, 'content-submission')",
     );
     expect(source).toContain("scripts/import-submission-issue.mjs");
+    expect(source).toContain("Format imported content");
+    expect(source).toContain("pnpm exec prettier --write");
     expect(source).toContain("pnpm --filter web run prebuild");
     expect(source).toContain("pnpm generate:readme");
     expect(source).toContain("pnpm validate:content:strict");

@@ -74,6 +74,13 @@ jobs:
           node scripts/import-submission-issue.mjs \
             --issue-json .github/tmp/issue.json
 
+      - name: Format imported content
+        run: |
+          changed_mdx="$(git diff --name-only --diff-filter=ACM | grep -E '^content/.+\.mdx$' || true)"
+          if [ -n "$changed_mdx" ]; then
+            printf '%s\n' "$changed_mdx" | xargs pnpm exec prettier --write
+          fi
+
       - name: Build registry artifacts
         run: pnpm --filter web run prebuild
 
