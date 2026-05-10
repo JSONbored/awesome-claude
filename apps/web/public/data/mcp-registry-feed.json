@@ -136,7 +136,7 @@
     {
       "name": "contrastapi-mcp-server",
       "title": "ContrastAPI Security Tools",
-      "description": "41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport.",
+      "description": "49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion), CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt, redirect-chain, email/brand/SEO), MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.",
       "websiteUrl": "https://api.contrastcyber.com",
       "submittedBy": "UPinar",
       "submittedByUrl": "https://github.com/UPinar",

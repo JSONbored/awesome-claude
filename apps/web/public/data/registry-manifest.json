@@ -3167,37 +3167,37 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "e71f6eacbf7cef77aff43ba98ac1371be84195885c5cf2652942ea4d5c72dabe"
+      "sha256": "e98a5769ad0ccf58fd398f06d644045a1ef1c8f558b3bfb71474f3af5549d536"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "5df2a6a5fe56d25bed754689966f78f4283a71acee71eb4686bf73e98406a7e9"
+      "sha256": "8bfef9e77ed575bfaf1b009bfa278272db989ef3e886ffd7b0dbe9aaa145728f"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "9703c1c415276f34e78169a0fd480479ece8b22662e18b4d6088b02abc566aac"
+      "sha256": "3c78c4c6c0e8b3a0634aab7fa1cc27d529e1f9180be043b2ab0354a9537f9574"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "e97c9b0463d37c4d2c6602590fbae838d2e11edc424c1060642d94497855eb89"
+      "sha256": "f127df3baffe267468ef8f18da54c3d2d7181d70b783e173f531b21116d1c92e"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "2cf4cfe2bbe1ff19782be4b524bd4a76ebcdf8097e74be100befdeb7c760451e"
+      "sha256": "7dbcc00aa25c33c921f11616357f48f2f7eb3d750556a78ba6cc3032a0ab093f"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "aad3ba725c11b32db4cb72f086ebc393faef1fe62e6ee1eee7d24d407c74a65a"
+      "sha256": "504eda931c338e0aade412cbd35156d4989d5bfce0372e1e2717a57a41d3ec56"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "1a95b384538bcd49a69228aa723deb6d006cbcd1a75f796673801b12c4be9d9b"
+      "sha256": "b1a5d053e1f7e180a4cf67ee20a1eaa187737539c73a801f5f2bb2cb06fc95e1"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
@@ -3227,12 +3227,12 @@
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "c0ee31f86c950824b45801e10368a43e70d57ccd5c25d95be34bc449b5006415"
+      "sha256": "a18935481b83755d87184176bad11f7adf36d6c524d906304d7c7d62ae1f8476"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "3bfd4bbcd47387b2dfa900a987984cf42ee5c2b1d9d4b831cbd7b8e89e8fcbc8"
+      "sha256": "5dbbbfd2d0def732c837950a5b8f467d291c23fec3c348e2d3f8a1f87fd33b40"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -4957,17 +4957,17 @@
     "entries/mcp/contrastapi-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "5af5129bcb2f5fbca90dab6cd1fd926325193674e6586415202ce1276eb164e9"
+      "sha256": "4bc93c875fdd17be122e924259cdd3912723fa09d920d8b6f0f0f86210fa4d2d"
     },
     "llms/mcp/contrastapi-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fcontrastapi-mcp-server.txt",
       "type": "text",
-      "sha256": "db93eefb2e2d00db9ae395f79c6f9e4974faf2d9f546cb55273fd93d65524739"
+      "sha256": "e4f53f900e8feede3347f5756aac78412bcf0cedd249f112f0148e3292eb18af"
     },
     "raycast/mcp/contrastapi-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "8be2b87c843dcd5591da427e9a85be98ffe00820feaf16a8e683ecf3e804de47"
+      "sha256": "ba381559ac201b8d4e3efde0a9fba4dd3e25db95ead03e744d418f64d0d183ea"
     },
     "entries/tools/crewai.json": {
       "path": "/data/entries%2Ftools%2Fcrewai.json",
@@ -9312,7 +9312,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "8f0c30a66a985b8ff72e45d0d33e7acc12d6748e28a10bd2f5860136629ff5a1"
+      "sha256": "e395060cf5a5f5e2530040ce9f90e0154a76c62e67d2388ce3be20041be405d8"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",

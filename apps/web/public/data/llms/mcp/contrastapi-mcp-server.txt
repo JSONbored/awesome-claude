@@ -24,7 +24,7 @@ Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/con
 - Last verified: 2026-04-30T04:13:44-06:00
 - Robots: indexable
 ## Summary
-41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport.
+49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion), CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt, redirect-chain, email/brand/SEO), MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
 ## Tags
 - security
 - mcp-server
@@ -38,16 +38,18 @@ Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/con
 - dependency-scanner
 - mitre-atlas
 - d3fend
+- risk-scoring
+- web-intelligence
 ## Content
 ## Overview
-41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attack knowledge, and MITRE D3FEND defensive techniques. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport.
+49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion) and CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt parser, redirect-chain walker, email validation, brand-asset scraper, SEO audit), MITRE ATLAS AI/ML attack knowledge, and MITRE D3FEND defensive techniques. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
 
 ## Usage
 claude mcp add --transport http contrastapi https://api.contrastcyber.com/mcp/
 claude mcp list
 
 ## Auth Requirements
-None required for free tier (100 credits/hour per IP). Optional X-API-Key header for Pro tier (1000/hr). See https://api.contrastcyber.com/pricing
+None required for the anonymous tier (rate-limited per IP). Optional X-API-Key header for Pro tier with higher limits. See https://api.contrastcyber.com/pricing
 
 ## Verification
 1. `claude mcp list` shows contrastapi as connected

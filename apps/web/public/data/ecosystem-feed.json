@@ -6017,7 +6017,7 @@
       "category": "mcp",
       "slug": "contrastapi-mcp-server",
       "title": "ContrastAPI Security Tools",
-      "description": "41 remote security tools for CVE, KEV, CWE, MITRE ATLAS, D3FEND, domain audit, IP threat intel, and dependency scanning.",
+      "description": "49 remote security tools for CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IP threat intel, IOC enrichment, web intelligence, and dependency scanning.",
       "url": "https://heyclau.de/mcp/contrastapi-mcp-server",
       "submittedBy": "UPinar",
       "submittedByUrl": "https://github.com/UPinar",
@@ -6050,7 +6050,9 @@
         "domain-audit",
         "dependency-scanner",
         "mitre-atlas",
-        "d3fend"
+        "d3fend",
+        "risk-scoring",
+        "web-intelligence"
       ],
       "qualityScore": 93,
       "provenance": {
@@ -21197,5 +21199,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "908b29bde48a5e46705e48e5e6c914cce829bde876e30d938ad20dd0bad95a49"
+  "signature": "a366807ea51dca8413da80af0089903992f1caad2821dfdd8e7da0212e81b146"
 }

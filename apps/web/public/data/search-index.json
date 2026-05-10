@@ -6957,8 +6957,8 @@
       "slug": "contrastapi-mcp-server",
       "title": "ContrastAPI Security Tools",
       "seoTitle": "ContrastAPI MCP Server for Claude Security Research",
-      "description": "41 remote security tools for CVE, KEV, CWE, MITRE ATLAS, D3FEND, domain audit, IP threat intel, and dependency scanning.",
-      "seoDescription": "Use ContrastAPI with Claude for 41 MCP security tools covering CVE, KEV, CWE, EPSS, MITRE ATLAS, D3FEND, domain audit, and IOC enrichment.",
+      "description": "49 remote security tools for CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IP threat intel, IOC enrichment, web intelligence, and dependency scanning.",
+      "seoDescription": "Use ContrastAPI with Claude for 49 MCP security tools covering CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IOC enrichment, and web intelligence.",
       "tags": [
         "security",
         "mcp-server",
@@ -6971,7 +6971,9 @@
         "domain-audit",
         "dependency-scanner",
         "mitre-atlas",
-        "d3fend"
+        "d3fend",
+        "risk-scoring",
+        "web-intelligence"
       ],
       "keywords": [
         "contrastapi mcp",
@@ -6979,13 +6981,13 @@
         "cve lookup",
         "kev lookup",
         "cwe lookup",
+        "cve risk score",
+        "cvss vector parser",
         "mitre atlas",
         "d3fend",
         "threat intelligence",
         "dependency scanner",
-        "security",
-        "mcp-server",
-        "cve"
+        "web intelligence"
       ],
       "author": "UPinar",
       "submittedBy": "UPinar",
