@@ -13,6 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -51,6 +52,7 @@ jobs:
         run: node scripts/build-readme-refresh-body.mjs --output "$RUNNER_TEMP/readme-refresh-body.md"
 
       - name: Create README update PR
+        id: cpr
         uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
         with:
           branch: automation/readme-refresh
@@ -62,3 +64,10 @@ jobs:
             automation
           add-paths: |
             README.md
+
+      - name: Trigger content validation for README PR
+        if: ${{ steps.cpr.outputs.pull-request-url != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VALIDATION_REF: automation/readme-refresh
+        run: gh workflow run content-validation.yml --ref "$VALIDATION_REF"

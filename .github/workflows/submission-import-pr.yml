@@ -6,6 +6,7 @@ on:
       - labeled
 
 permissions:
+  actions: write
   contents: write
   issues: write
   pull-requests: write
@@ -148,6 +149,13 @@ jobs:
 
             ## Notes
             - Closes #${{ steps.metadata.outputs.issue_number }} after merge.
+
+      - name: Trigger content validation for import PR
+        if: ${{ steps.cpr.outputs.pull-request-url != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VALIDATION_REF: ${{ steps.metadata.outputs.branch }}
+        run: gh workflow run content-validation.yml --ref "$VALIDATION_REF"
 
       - name: Link PR on submission issue
         if: ${{ steps.cpr.outputs.pull-request-url != '' }}

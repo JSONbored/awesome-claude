@@ -61,6 +61,11 @@ describe("submission automation workflows", () => {
     expect(source).toContain("pnpm validate:content:strict");
     expect(source).toContain("peter-evans/create-pull-request@");
     expect(source).toContain("branch=automation/submission-");
+    expect(source).toContain("actions: write");
+    expect(source).toContain("Trigger content validation for import PR");
+    expect(source).toContain(
+      'gh workflow run content-validation.yml --ref "$VALIDATION_REF"',
+    );
     expect(source).toContain("pr_title=feat(content): add");
     expect(source).toContain("issue_author=");
     expect(source).toContain("issue_author_id=");
@@ -118,6 +123,11 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Build README refresh body");
     expect(source).toContain(
       "body-path: ${{ runner.temp }}/readme-refresh-body.md",
+    );
+    expect(source).toContain("actions: write");
+    expect(source).toContain("Trigger content validation for README PR");
+    expect(source).toContain(
+      'gh workflow run content-validation.yml --ref "$VALIDATION_REF"',
     );
     expect(source).toContain(".github/workflows/readme-refresh-pr.yml");
     expect(source).not.toContain("body: |");
