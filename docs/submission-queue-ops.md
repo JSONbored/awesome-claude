@@ -15,6 +15,9 @@ stale; it does not publish content directly.
 - `accepted` / `import-approved`: maintainer-reviewed approval labels that can
   open an import PR.
 - `import-pr-open`: an import PR exists; stale automation must not close it.
+- `risk-low` / `risk-medium` / `risk-high`: deterministic security/safety
+  review labels. They are advisory except when a report is `critical`, which
+  blocks the workflow until fixed.
 
 ## Queue States
 
@@ -31,10 +34,24 @@ stale; it does not publish content directly.
 ## Automation
 
 - `Submission Queue` runs weekly and on demand. It writes a GitHub Actions
-  summary from `pnpm submission:queue`.
+  summary from `pnpm submission:queue`, including deterministic security/safety
+  tier and review flags for each submission-shaped issue.
 - `Submission Stale Manager` runs weekly and on demand. Manual dispatch defaults
   to dry-run and does not accept runtime inputs. Scheduled runs can add labels,
   upsert one reminder comment, and close only eligible stale submissions.
+- `Submission Issue Validation` posts both schema validation and
+  security/safety review comments. The review is deterministic: it checks URLs,
+  install commands, malware/abuse terms, suspicious executable paths, sensitive
+  capability words, contributor metadata, and source signals without executing
+  submitted code. Regulated-domain status, category fit, and promotional tone
+  are not treated as security risk.
+- `Submission PR Risk Review` runs on direct content PRs through
+  `pull_request_target`, but only checks out trusted base-repo code. It reads PR
+  content through the GitHub API as data and never executes fork code.
+- Product-shaped tools, hosted apps, services, SaaS products, subscriptions, and
+  sponsored/featured placement interest route through
+  `https://heyclau.de/tools/submit` unless a maintainer explicitly approves a
+  `content/tools` editorial entry.
 - Stale automation never imports content, creates PRs, or touches issues with
   `accepted`, `import-approved`, or `import-pr-open`.
 
@@ -49,6 +66,14 @@ stale; it does not publish content directly.
 5. For `close_eligible`, close as not planned only after the stale reminder has
    already been applied.
 6. Apply `accepted` or `import-approved` only after maintainer source review.
+
+Direct content PRs are allowed for advanced contributors, but they must pass the
+same content validation and deterministic security/safety review. A `risk-high`
+label does not automatically reject a PR; it means maintainers need to verify
+source, permissions, install safety, and user-consent boundaries before merge.
+Direct product/app PRs belong under `content/tools/` and should include
+`websiteUrl`, `documentationUrl`, `pricingModel`, `disclosure`,
+`applicationCategory`, and `operatingSystem` before merge.
 
 Authors can reopen or resubmit closed stale submissions when the missing fields
 or source details are ready.

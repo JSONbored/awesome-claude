@@ -38,6 +38,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/submission-labels.js"
     },
+    "./submission-risk": {
+      "types": "./src/index.d.ts",
+      "default": "./src/submission-risk.js"
+    },
     "./submission-spec": {
       "types": "./src/index.d.ts",
       "default": "./src/submission-spec.js"

@@ -35,6 +35,7 @@
     "mcp:start": "pnpm --filter @heyclaude/mcp start",
     "validate:mcp-endpoint": "pnpm --filter @heyclaude/mcp validate:endpoint",
     "test:mcp": "vitest run tests/mcp-server.test.ts",
+    "submission:risk": "node scripts/analyze-submission-risk.mjs",
     "submission:queue": "node scripts/build-submission-queue.mjs",
     "submission:stale": "node scripts/manage-stale-submissions.mjs",
     "test": "vitest run",

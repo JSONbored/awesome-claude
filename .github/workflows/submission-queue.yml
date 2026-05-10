@@ -72,13 +72,16 @@ jobs:
             `- Close eligible: ${queue.summary.closeEligible}`,
             `- Skipped: ${queue.summary.skipped}`,
             "",
-            "| Issue | Status | Age | Category | Slug | Action | Notes |",
-            "| --- | --- | ---: | --- | --- | --- | --- |",
+            "| Issue | Status | Security | Age | Category | Slug | Action | Notes |",
+            "| --- | --- | --- | ---: | --- | --- | --- | --- |",
           ];
           for (const entry of queue.entries) {
             const issue = entry.url ? `[#${entry.number}](${entry.url})` : `#${entry.number}`;
             const notes = entry.errors.length ? entry.errors.join("<br>") : entry.importPath;
-            lines.push(`| ${issue} | ${entry.status} | ${entry.ageDays ?? 0}d | ${entry.category || "-"} | ${entry.slug || "-"} | ${entry.actionDue || "-"} | ${notes || "-"} |`);
+            const risk = entry.riskFlags?.length
+              ? `${entry.riskTier} (${entry.riskFlags.join(", ")})`
+              : entry.riskTier || "-";
+            lines.push(`| ${issue} | ${entry.status} | ${risk} | ${entry.ageDays ?? 0}d | ${entry.category || "-"} | ${entry.slug || "-"} | ${entry.actionDue || "-"} | ${notes || "-"} |`);
           }
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
           NODE

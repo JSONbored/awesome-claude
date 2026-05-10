@@ -49,6 +49,23 @@ jobs:
               "utf8"
             );
 
+      - name: Write contributor payload
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const login = context.payload.issue.user?.login;
+            if (!login) return;
+            const { data: user } = await github.rest.users.getByUsername({
+              username: login
+            });
+            fs.mkdirSync(".github/tmp", { recursive: true });
+            fs.writeFileSync(
+              ".github/tmp/contributor.json",
+              JSON.stringify(user, null, 2),
+              "utf8"
+            );
+
       - name: Validate submission issue
         id: validate
         continue-on-error: true
@@ -62,6 +79,16 @@ jobs:
         run: |
           test -f .github/tmp/submission-validation.json
 
+      - name: Analyze submission risk
+        if: always()
+        run: |
+          node scripts/analyze-submission-risk.mjs \
+            --issue-json .github/tmp/issue.json \
+            --validation-json .github/tmp/submission-validation.json \
+            --contributor-json .github/tmp/contributor.json \
+            --output .github/tmp/submission-risk.json \
+            --markdown-output .github/tmp/submission-risk.md
+
       - name: Auto-label submission issue
         if: always()
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
@@ -73,10 +100,21 @@ jobs:
             const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
             if (report.skipped) return;
 
-            const currentLabels = (context.payload.issue.labels || [])
+            const { data: issue } = await github.rest.issues.get({
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            const managedValidationLabels = new Set([
+              "needs-author-input",
+              "source-needs-verification",
+              "stale-submission"
+            ]);
+            const currentLabels = (issue.labels || [])
               .map((label) => typeof label === "string" ? label : label.name)
               .filter(Boolean);
-            const labels = new Set(currentLabels);
+            const labels = new Set(
+              currentLabels.filter((label) => !managedValidationLabels.has(label))
+            );
             for (const label of report.recommendedLabels || []) {
               if (label) labels.add(label);
             }
@@ -90,6 +128,55 @@ jobs:
             } catch (error) {
               core.warning(`Could not apply submission labels: ${error.message}`);
             }
+
+      - name: Auto-label submission risk
+        if: always()
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const reportPath = ".github/tmp/submission-risk.json";
+            if (!fs.existsSync(reportPath)) return;
+            const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+            const definitions = report.labelDefinitions || {};
+            for (const [name, definition] of Object.entries(definitions)) {
+              try {
+                await github.rest.issues.updateLabel({
+                  ...context.repo,
+                  name,
+                  color: definition.color,
+                  description: definition.description
+                });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                await github.rest.issues.createLabel({
+                  ...context.repo,
+                  name,
+                  color: definition.color,
+                  description: definition.description
+                });
+              }
+            }
+
+            const { data: issue } = await github.rest.issues.get({
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            const riskLabels = new Set(Object.keys(definitions));
+            const currentLabels = (issue.labels || [])
+              .map((label) => typeof label === "string" ? label : label.name)
+              .filter(Boolean);
+            const labels = new Set(
+              currentLabels.filter((label) => !riskLabels.has(label))
+            );
+            for (const label of report.recommendedLabels || []) {
+              if (label) labels.add(label);
+            }
+            await github.rest.issues.setLabels({
+              ...context.repo,
+              issue_number: context.issue.number,
+              labels: [...labels].filter(Boolean)
+            });
 
       - name: Preview import output
         if: always()
@@ -203,6 +290,46 @@ jobs:
                 body
               });
             }
+
+      - name: Post risk report comment
+        if: always()
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const reportPath = ".github/tmp/submission-risk.md";
+            if (!fs.existsSync(reportPath)) return;
+            const body = fs.readFileSync(reportPath, "utf8");
+            const marker = "<!-- submission-risk-report -->";
+            const { owner, repo } = context.repo;
+            const issue_number = context.issue.number;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner,
+              repo,
+              issue_number,
+              per_page: 100
+            });
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number,
+                body
+              });
+            }
+
+      - name: Fail when submission risk is critical
+        if: always()
+        run: |
+          node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json
 
       - name: Fail when submission issue is invalid
         if: always()

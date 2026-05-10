@@ -1,0 +1,191 @@
+name: Submission PR Risk Review
+
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - reopened
+      - synchronize
+    paths:
+      - "content/**"
+      - ".github/workflows/submission-pr-risk.yml"
+      - "packages/registry/src/submission-risk.js"
+      - "scripts/analyze-submission-risk.mjs"
+      - "scripts/ci/fail-critical-risk-report.mjs"
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  analyze-submission-pr-risk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: submission-pr-risk-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout base repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Write PR risk input
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const pr = context.payload.pull_request;
+            const files = await github.paginate(github.rest.pulls.listFiles, {
+              ...context.repo,
+              pull_number: pr.number,
+              per_page: 100
+            });
+            const contentFiles = [];
+            for (const file of files) {
+              const isContentMdx = /^content\/[^/]+\/[^/]+\.mdx$/i.test(file.filename);
+              if (!isContentMdx || file.status === "removed") {
+                contentFiles.push({
+                  filename: file.filename,
+                  status: file.status,
+                  additions: file.additions,
+                  deletions: file.deletions
+                });
+                continue;
+              }
+              try {
+                const { data } = await github.rest.repos.getContent({
+                  owner: pr.head.repo.owner.login,
+                  repo: pr.head.repo.name,
+                  path: file.filename,
+                  ref: pr.head.sha
+                });
+                const content = data.content
+                  ? Buffer.from(data.content, "base64").toString("utf8")
+                  : "";
+                contentFiles.push({
+                  filename: file.filename,
+                  status: file.status,
+                  additions: file.additions,
+                  deletions: file.deletions,
+                  content
+                });
+              } catch (error) {
+                core.warning(`Could not read ${file.filename}: ${error.message}`);
+                contentFiles.push({
+                  filename: file.filename,
+                  status: file.status,
+                  additions: file.additions,
+                  deletions: file.deletions,
+                  content: ""
+                });
+              }
+            }
+            const { data: contributor } = await github.rest.users.getByUsername({
+              username: pr.user.login
+            });
+            fs.mkdirSync(".github/tmp", { recursive: true });
+            fs.writeFileSync(
+              ".github/tmp/pr-risk-input.json",
+              JSON.stringify({ pullRequest: pr, contributor, files: contentFiles }, null, 2),
+              "utf8"
+            );
+
+      - name: Analyze direct content PR risk
+        run: |
+          node scripts/analyze-submission-risk.mjs \
+            --pr-json .github/tmp/pr-risk-input.json \
+            --output .github/tmp/submission-risk.json \
+            --markdown-output .github/tmp/submission-risk.md
+
+      - name: Label PR risk
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const report = JSON.parse(
+              fs.readFileSync(".github/tmp/submission-risk.json", "utf8")
+            );
+            const definitions = report.labelDefinitions || {};
+            for (const [name, definition] of Object.entries(definitions)) {
+              try {
+                await github.rest.issues.updateLabel({
+                  ...context.repo,
+                  name,
+                  color: definition.color,
+                  description: definition.description
+                });
+              } catch (error) {
+                if (error.status !== 404) throw error;
+                await github.rest.issues.createLabel({
+                  ...context.repo,
+                  name,
+                  color: definition.color,
+                  description: definition.description
+                });
+              }
+            }
+            const { data: issue } = await github.rest.issues.get({
+              ...context.repo,
+              issue_number: context.payload.pull_request.number
+            });
+            const riskLabels = new Set(Object.keys(definitions));
+            const currentLabels = (issue.labels || [])
+              .map((label) => typeof label === "string" ? label : label.name)
+              .filter(Boolean);
+            const labels = new Set(
+              currentLabels.filter((label) => !riskLabels.has(label))
+            );
+            for (const label of report.recommendedLabels || []) {
+              if (label) labels.add(label);
+            }
+            await github.rest.issues.setLabels({
+              ...context.repo,
+              issue_number: context.payload.pull_request.number,
+              labels: [...labels].filter(Boolean)
+            });
+
+      - name: Post PR risk report
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const body = fs.readFileSync(".github/tmp/submission-risk.md", "utf8");
+            const marker = "<!-- submission-risk-report -->";
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              ...context.repo,
+              issue_number: context.payload.pull_request.number,
+              per_page: 100
+            });
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: existing.id,
+                body
+              });
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.payload.pull_request.number,
+                body
+              });
+            }
+
+      - name: Fail when submission risk is critical
+        run: node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json

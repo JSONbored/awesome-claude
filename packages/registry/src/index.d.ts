@@ -513,6 +513,40 @@ export type SubmissionValidationReport = {
   fields: Record<string, string>;
 };
 
+export type SubmissionRiskTier = "low" | "medium" | "high" | "critical";
+
+export type SubmissionRiskFlag = {
+  id: string;
+  severity: "info" | "low" | "medium" | "high" | "critical";
+  summary: string;
+  detail?: string;
+};
+
+export type SubmissionClassificationWarning = {
+  id: string;
+  summary: string;
+  detail?: string;
+};
+
+export type SubmissionRiskReport = {
+  schemaVersion: number;
+  kind: "submission-risk";
+  generatedAt: string;
+  subject: Record<string, unknown>;
+  riskTier: SubmissionRiskTier;
+  reviewFlags: SubmissionRiskFlag[];
+  trustSignals: string[];
+  sourceUrls: string[];
+  classificationWarnings: SubmissionClassificationWarning[];
+  recommendedLabels: string[];
+  recommendedAction:
+    | "maintainer_review"
+    | "request_author_input"
+    | "block_until_resolved";
+  humanReviewNotes: string[];
+  labelDefinitions: Record<string, { color: string; description: string }>;
+};
+
 export type SubmissionQueueEntry = {
   number: number | null;
   title: string;
@@ -532,6 +566,9 @@ export type SubmissionQueueEntry = {
   staleState: "not_applicable" | "fresh" | "reminder_due" | "close_eligible";
   ageDays: number;
   sourceNeedsVerification: boolean;
+  riskTier: SubmissionRiskTier;
+  riskFlags: string[];
+  riskRecommendedAction: string;
   actionDue: "" | "author_input" | "verify_source" | "remind" | "close";
   category: string;
   slug: string;
@@ -984,8 +1021,17 @@ export const COMMUNITY_CATEGORY_LABELS: Record<string, string>;
 export const SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL: string;
 export const SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL: string;
 export const SUBMISSION_STALE_LABEL: string;
+export const SUBMISSION_RISK_LOW_LABEL: string;
+export const SUBMISSION_RISK_MEDIUM_LABEL: string;
+export const SUBMISSION_RISK_HIGH_LABEL: string;
 export const SUBMISSION_PROTECTED_REVIEW_LABELS: string[];
+export const SUBMISSION_MANAGED_VALIDATION_LABELS: string[];
+export const SUBMISSION_RISK_LABELS: string[];
 export const SUBMISSION_STALE_LABEL_DEFINITIONS: Record<
+  string,
+  { color: string; description: string }
+>;
+export const SUBMISSION_RISK_LABEL_DEFINITIONS: Record<
   string,
   { color: string; description: string }
 >;
@@ -1002,3 +1048,16 @@ export function buildSubmissionQueue(
 export function validateSubmission(
   issue: Record<string, unknown>,
 ): SubmissionValidationReport;
+export const SUBMISSION_RISK_SCHEMA_VERSION: number;
+export const SUBMISSION_RISK_COMMENT_MARKER: string;
+export function analyzeIssueSubmissionRisk(
+  issue?: Record<string, unknown>,
+  validationReport?: SubmissionValidationReport | null,
+  options?: { contributor?: Record<string, unknown> },
+): SubmissionRiskReport;
+export function analyzeDirectContentRisk(
+  input?: Record<string, unknown>,
+): SubmissionRiskReport;
+export function formatSubmissionRiskMarkdown(
+  report: SubmissionRiskReport,
+): string;

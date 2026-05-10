@@ -1,6 +1,14 @@
 import categorySpec from "./category-spec.json" with { type: "json" };
 import { normalizeBrandDomain } from "./brand-assets.js";
 import {
+  looksLikeToolAppListing,
+  missingToolListingReviewFields,
+  TOOLS_CATEGORY,
+  toolListingApprovalMessage,
+  toolListingRoutingMessage,
+} from "./submission-classification.js";
+import { analyzeIssueSubmissionRisk } from "./submission-risk.js";
+import {
   recommendedLabelsForCategory,
   SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL,
   SUBMISSION_PROTECTED_REVIEW_LABELS,
@@ -37,9 +45,15 @@ export const HEADING_KEY_MAP = {
   github: "github_url",
   "source-url": "github_url",
   website: "docs_url",
+  "website-url": "website_url",
+  "product-url": "website_url",
+  "canonical-product-url": "website_url",
   "docs-url": "docs_url",
   documentation: "docs_url",
   "documentation-url": "docs_url",
+  "demo-url": "docs_url",
+  "features-page": "docs_url",
+  "features-url": "docs_url",
   "brand-name": "brand_name",
   brand: "brand_name",
   provider: "brand_name",
@@ -56,6 +70,7 @@ export const HEADING_KEY_MAP = {
   "description-1-3-sentences": "description",
   "card-description": "card_description",
   "card-description-short-preview": "card_description",
+  "full-copyable-content": "full_copyable_content",
   "full-copyable-agent-prompt-config": "full_copyable_content",
   "full-copyable-command-content": "full_copyable_content",
   "full-copyable-hook-script-config": "full_copyable_content",
@@ -82,6 +97,12 @@ export const HEADING_KEY_MAP = {
   "verification-steps-optional": "verification_steps",
   "verification-steps": "verification_steps",
   "download-url-optional": "download_url",
+  "affiliate-url": "affiliate_url",
+  "pricing-model": "pricing_model",
+  pricing: "pricing_model",
+  disclosure: "disclosure",
+  "application-category": "application_category",
+  "operating-system": "operating_system",
   "install-command-required-unless-download-url-is-provided": "install_command",
   "script-language": "script_language",
   "skill-type": "skill_type",
@@ -263,9 +284,19 @@ function mapJsonData(data) {
     githubUrl: "github_url",
     repoUrl: "github_url",
     website: "docs_url",
+    websiteUrl: "website_url",
+    productUrl: "website_url",
+    canonicalProductUrl: "website_url",
     docs: "docs_url",
     docsUrl: "docs_url",
     documentationUrl: "docs_url",
+    demoUrl: "docs_url",
+    featuresUrl: "docs_url",
+    affiliateUrl: "affiliate_url",
+    pricingModel: "pricing_model",
+    disclosure: "disclosure",
+    applicationCategory: "application_category",
+    operatingSystem: "operating_system",
     brandName: "brand_name",
     brandDomain: "brand_domain",
     npm: "download_url",
@@ -572,6 +603,24 @@ function isValidPublicContact(value) {
   }
 }
 
+const TOOL_PRICING_MODELS = new Set([
+  "free",
+  "freemium",
+  "paid",
+  "open-source",
+  "subscription",
+  "usage-based",
+  "contact-sales",
+]);
+
+const TOOL_DISCLOSURES = new Set([
+  "editorial",
+  "heyclaude_pick",
+  "affiliate",
+  "sponsored",
+  "claimed",
+]);
+
 export function recommendedSubmissionLabels(
   issue,
   report = validateSubmission(issue),
@@ -677,6 +726,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
     .filter(looksLikeSubmissionIssue)
     .map((issue) => {
       const report = validateSubmission(issue);
+      const risk = analyzeIssueSubmissionRisk(issue, report);
       const status = submissionQueueStatus(report, issue, options);
       const staleState = submissionStaleState(issue, report, options);
       return {
@@ -697,6 +747,9 @@ export function buildSubmissionQueue(issues = [], options = {}) {
           report,
           issue,
         ),
+        riskTier: risk.riskTier,
+        riskFlags: risk.reviewFlags.map((flag) => flag.id),
+        riskRecommendedAction: risk.recommendedAction,
         actionDue:
           status === "close_eligible"
             ? "close"
@@ -844,11 +897,17 @@ export function validateSubmission(issue) {
     );
   }
 
-  for (const field of ["github_url", "docs_url", "download_url"]) {
+  for (const field of [
+    "github_url",
+    "docs_url",
+    "download_url",
+    "website_url",
+    "affiliate_url",
+  ]) {
     if (!isHttpsUrl(fields[field])) {
       errors.push(`${field} must be a valid https URL`);
     }
-    if (isLikelyAffiliateUrl(fields[field])) {
+    if (field !== "affiliate_url" && isLikelyAffiliateUrl(fields[field])) {
       errors.push(
         `Contributor submissions cannot include affiliate/referral URLs: ${field}`,
       );
@@ -857,6 +916,43 @@ export function validateSubmission(issue) {
 
   if (fields.brand_domain && !normalizeBrandDomain(fields.brand_domain)) {
     errors.push("brand_domain must be a canonical domain such as asana.com");
+  }
+
+  const productLike = looksLikeToolAppListing(fields, issue.body ?? "");
+  if (category !== TOOLS_CATEGORY && productLike) {
+    errors.push(
+      `${toolListingRoutingMessage()}. Change the category to tools for maintainer-reviewed editorial listing prep, or submit the tools/app lead form instead.`,
+    );
+  }
+
+  if (category === TOOLS_CATEGORY) {
+    if (!hasProtectedSubmissionLabel(issue)) {
+      errors.push(toolListingApprovalMessage());
+    }
+
+    const missingToolFields = missingToolListingReviewFields(fields);
+    for (const field of missingToolFields) {
+      errors.push(`Tools listings require ${field}`);
+    }
+
+    const pricingModel = String(fields.pricing_model || "")
+      .trim()
+      .toLowerCase();
+    const disclosure = String(fields.disclosure || "")
+      .trim()
+      .toLowerCase();
+
+    if (pricingModel && !TOOL_PRICING_MODELS.has(pricingModel)) {
+      errors.push("pricing_model is not recognized");
+    }
+    if (disclosure && !TOOL_DISCLOSURES.has(disclosure)) {
+      errors.push(
+        "disclosure must be editorial, heyclaude_pick, affiliate, sponsored, or claimed",
+      );
+    }
+    if (disclosure === "affiliate" && !normalizeValue(fields.affiliate_url)) {
+      errors.push("affiliate tools listings require affiliate_url");
+    }
   }
 
   if (
