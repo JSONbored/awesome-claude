@@ -109,9 +109,13 @@ jobs:
           const title = report.fields?.name || slug;
           const issueAuthor = issue.user?.login || "";
           const issueAuthorId = issue.user?.id || "";
+          const issueAuthorHandle = issueAuthor ? `@${issueAuthor}` : "unknown submitter";
+          const issueUrl = issue.html_url || issue.url || "";
           console.log(`issue_number=${issue.number}`);
           console.log(`issue_author=${issueAuthor}`);
+          console.log(`issue_author_handle=${issueAuthorHandle}`);
           console.log(`issue_author_id=${issueAuthorId}`);
+          console.log(`issue_url=${issueUrl}`);
           console.log(`category=${category}`);
           console.log(`slug=${slug}`);
           console.log(`entry_title=${title}`);
@@ -138,12 +142,12 @@ jobs:
             README.md
           body: |
             ## Summary
-            - Imports accepted submission #${{ steps.metadata.outputs.issue_number }} for `${{ steps.metadata.outputs.category }}/${{ steps.metadata.outputs.slug }}`
+            - Imports accepted submission #${{ steps.metadata.outputs.issue_number }} by ${{ steps.metadata.outputs.issue_author_handle }} for `${{ steps.metadata.outputs.category }}/${{ steps.metadata.outputs.slug }}`
 
             ## What changed
             - Added the reviewed content file
             - Regenerated registry artifacts and README output
-            - Preserved issue-first review before publication
+            - Preserved issue-first review and original submitter attribution before publication
 
             ## Validation
             - `pnpm validate:content:strict`
@@ -155,6 +159,7 @@ jobs:
             - `pnpm test:seo-jsonld`
 
             ## Notes
+            - Original submitter: ${{ steps.metadata.outputs.issue_author_handle }} via #${{ steps.metadata.outputs.issue_number }}
             - Closes #${{ steps.metadata.outputs.issue_number }} after merge.
 
       - name: Trigger content validation for import PR
@@ -172,5 +177,5 @@ jobs:
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: Number("${{ steps.metadata.outputs.issue_number }}"),
-              body: `Maintainer-approved import PR opened: ${{ steps.cpr.outputs.pull-request-url }}`
+              body: `Maintainer-approved import PR opened for ${{ steps.metadata.outputs.issue_author_handle }}: ${{ steps.cpr.outputs.pull-request-url }}`
             });

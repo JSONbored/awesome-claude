@@ -70,8 +70,16 @@ describe("submission automation workflows", () => {
     );
     expect(source).toContain("pr_title=feat(content): add");
     expect(source).toContain("issue_author=");
+    expect(source).toContain("issue_author_handle=");
     expect(source).toContain("issue_author_id=");
+    expect(source).toContain("Original submitter:");
+    expect(source).toContain(
+      "by ${{ steps.metadata.outputs.issue_author_handle }}",
+    );
     expect(source).toContain("Co-authored-by:");
+    expect(source).toContain(
+      "Maintainer-approved import PR opened for ${{ steps.metadata.outputs.issue_author_handle }}",
+    );
     expect(source).toContain("content/**");
     expect(source).toContain("apps/web/public/data/**");
     expect(source).toContain("README.md");
