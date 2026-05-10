@@ -9,7 +9,7 @@
   "homepage": "https://heyclau.de",
   "repository": {
     "type": "git",
-    "url": "https://github.com/JSONbored/claudepro-directory.git",
+    "url": "git+https://github.com/JSONbored/claudepro-directory.git",
     "directory": "packages/mcp"
   },
   "bugs": {
@@ -62,7 +62,7 @@
     }
   },
   "bin": {
-    "heyclaude-mcp": "./src/cli.js"
+    "heyclaude-mcp": "src/cli.js"
   },
   "engines": {
     "node": ">=20"

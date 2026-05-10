@@ -50,7 +50,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     };
 
     expect(packageJson.private).not.toBe(true);
-    expect(packageJson.bin).toHaveProperty("heyclaude-mcp", "./src/cli.js");
+    expect(packageJson.bin).toHaveProperty("heyclaude-mcp", "src/cli.js");
     expect(packageJson.files).toContain("scripts/**/*.mjs");
     expect(packageJson.scripts).not.toHaveProperty("preinstall");
     expect(packageJson.scripts).not.toHaveProperty("install");
