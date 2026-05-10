@@ -9,4 +9,6 @@ overrides:
   ip-address: 10.2.0
   postcss: 8.5.14
 allowBuilds:
+  esbuild: true
+  sharp: true
   workerd: true
