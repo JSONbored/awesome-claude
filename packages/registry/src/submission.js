@@ -89,6 +89,7 @@ export const HEADING_KEY_MAP = {
   usage: "usage_snippet",
   configuration: "config_snippet",
   config: "config_snippet",
+  "config-snippet": "config_snippet",
   trigger: "trigger",
   "config-snippet-optional": "config_snippet",
   "script-language-optional": "script_language",

@@ -757,6 +757,51 @@ Review build logs, identify the failing step, and summarize the likely fix.`),
     expect(report.fields.full_copyable_content).toContain("Review build logs");
   });
 
+  it("preserves MCP config snippet headings during import", () => {
+    const body = buildSubmissionIssueDraft({
+      name: "Config Snippet MCP",
+      slug: "config-snippet-mcp",
+      category: "mcp",
+      docs_url: "https://example.com/mcp",
+      description:
+        "Hosted MCP server submitted with a client configuration snippet.",
+      card_description: "Config snippet import coverage.",
+      install_command:
+        "claude mcp add --transport http config-snippet https://example.com/mcp",
+      usage_snippet: "claude mcp status config-snippet",
+      config_snippet: `\`\`\`json
+{
+  "mcpServers": {
+    "config-snippet": {
+      "type": "http",
+      "url": "https://example.com/mcp"
+    }
+  }
+}
+\`\`\``,
+    }).body;
+
+    const report = validateSubmission(issue(body));
+    expect(report.ok).toBe(true);
+    expect(report.fields.config_snippet).toContain('"mcpServers"');
+
+    const output = importSubmissionDryRun({
+      number: 779,
+      html_url: "https://github.com/JSONbored/claudepro-directory/issues/779",
+      created_at: "2026-05-10T00:00:00Z",
+      user: {
+        login: "content-author",
+        html_url: "https://github.com/content-author",
+      },
+      body,
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+    });
+
+    expect(output).toContain("configSnippet: |-");
+    expect(output).toContain('"mcpServers"');
+    expect(output).toContain('"url": "https://example.com/mcp"');
+  });
+
   it("adds deterministic security/safety context to the maintainer queue", () => {
     const legal = issue(`### Name
 Spain Legal by Legal Fournier
