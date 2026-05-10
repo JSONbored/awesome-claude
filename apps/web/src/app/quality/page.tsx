@@ -38,6 +38,12 @@ export default async function QualityPage() {
     .filter((entry) => entry.warnings.length)
     .sort((left, right) => left.scores.total - right.scores.total)
     .slice(0, 12);
+  const trustEntries = Array.isArray(trustReport.entries)
+    ? trustReport.entries
+    : [];
+  const trustImprovementQueue = trustEntries
+    .filter((entry) => (entry.recommendations?.length ?? 0) > 0)
+    .slice(0, 12);
   const jsonLd = [
     buildBreadcrumbJsonLd([
       { name: "Home", url: siteConfig.url },
@@ -227,10 +233,11 @@ export default async function QualityPage() {
           </Link>
         </div>
         <div className="mt-4 space-y-2">
-          {trustReport.entries
-            .filter((entry) => entry.recommendations.length)
-            .slice(0, 12)
-            .map((entry) => (
+          {trustImprovementQueue.map((entry) => {
+            const recommendationCount = entry.recommendations?.length ?? 0;
+            const firstRecommendation =
+              entry.recommendations?.[0] ?? "Review trust metadata.";
+            return (
               <Link
                 key={entry.key}
                 href={`/${entry.category}/${entry.slug}`}
@@ -242,14 +249,15 @@ export default async function QualityPage() {
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {categoryLabels[entry.category] ?? entry.category} -{" "}
-                    {entry.recommendations[0]}
+                    {firstRecommendation}
                   </span>
                 </span>
                 <span className="shrink-0 text-muted-foreground">
-                  {entry.recommendations.length}
+                  {recommendationCount}
                 </span>
               </Link>
-            ))}
+            );
+          })}
         </div>
       </section>
     </div>

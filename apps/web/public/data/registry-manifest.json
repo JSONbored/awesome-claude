@@ -3194,7 +3194,7 @@
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "868d2e46eadeb556dae379724b97f6113cc9c4f900ed074072f9789ecff9dd4f"
+      "sha256": "0ccd81f01222111859fc77a6b73c335e998ee4fedd5154be7565bdab8127cab4"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",

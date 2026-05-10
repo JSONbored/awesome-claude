@@ -7,7 +7,7 @@ import {
   SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL,
   SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL,
   SUBMISSION_STALE_LABEL,
-  SUBMISSION_STALE_LABEL_DEFINITIONS,
+  SUBMISSION_VALIDATION_LABEL_DEFINITIONS,
 } from "@heyclaude/registry/submission-labels";
 import { pathToFileURL } from "node:url";
 
@@ -79,7 +79,7 @@ async function githubPaginate(path) {
 
 async function ensureLabels(owner, repo) {
   for (const [name, definition] of Object.entries(
-    SUBMISSION_STALE_LABEL_DEFINITIONS,
+    SUBMISSION_VALIDATION_LABEL_DEFINITIONS,
   )) {
     const path = `/repos/${owner}/${repo}/labels/${encodeURIComponent(name)}`;
     try {
@@ -208,25 +208,24 @@ function normalizeIssue(issue) {
 async function urlNeedsVerification(url) {
   if (!url) return false;
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-    try {
-      let response = await fetch(url, {
-        method: "HEAD",
-        redirect: "follow",
-        signal: controller.signal,
-      });
-      if (response.status === 405 || response.status === 403) {
-        response = await fetch(url, {
-          method: "GET",
+    const fetchWithTimeout = async (method) => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8000);
+      try {
+        return await fetch(url, {
+          method,
           redirect: "follow",
           signal: controller.signal,
         });
+      } finally {
+        clearTimeout(timeout);
       }
-      return response.status === 404 || response.status === 410;
-    } finally {
-      clearTimeout(timeout);
+    };
+    let response = await fetchWithTimeout("HEAD");
+    if (response.status === 405 || response.status === 403) {
+      response = await fetchWithTimeout("GET");
     }
+    return response.status === 404 || response.status === 410;
   } catch {
     return false;
   }

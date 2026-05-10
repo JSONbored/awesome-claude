@@ -108,12 +108,55 @@ function splitList(value) {
     .filter(Boolean);
 }
 
+const MAX_URL_SCAN_LENGTH = 200_000;
+const MAX_COLLECTED_URLS = 50;
+const URL_PREFIXES = ["https://", "http://"];
+const URL_TERMINATORS = new Set([
+  " ",
+  "\n",
+  "\r",
+  "\t",
+  "<",
+  ">",
+  '"',
+  "'",
+  ")",
+  "]",
+  "`",
+]);
+const TRAILING_URL_PUNCTUATION = new Set([".", ",", ";", ":"]);
+
+function trimTrailingUrlPunctuation(value) {
+  let end = value.length;
+  while (end > 0 && TRAILING_URL_PUNCTUATION.has(value[end - 1])) {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
 function collectUrls(value) {
   const urls = new Set();
-  const pattern = /https?:\/\/[^\s<>"')\]]+/gi;
-  for (const match of normalizeText(value).matchAll(pattern)) {
-    urls.add(match[0].replace(/[.,;:]+$/, ""));
+  const text = normalizeText(value).slice(0, MAX_URL_SCAN_LENGTH);
+  let index = 0;
+
+  while (index < text.length && urls.size < MAX_COLLECTED_URLS) {
+    let start = -1;
+    for (const prefix of URL_PREFIXES) {
+      const next = text.indexOf(prefix, index);
+      if (next >= 0 && (start < 0 || next < start)) start = next;
+    }
+    if (start < 0) break;
+
+    let end = start;
+    while (end < text.length && !URL_TERMINATORS.has(text[end])) {
+      end += 1;
+    }
+
+    const url = trimTrailingUrlPunctuation(text.slice(start, end));
+    if (url) urls.add(url);
+    index = Math.max(end, start + 1);
   }
+
   return [...urls];
 }
 
@@ -263,6 +306,7 @@ function addContentRiskSignals(report, fields, text) {
       fields.configSnippet,
     ].join("\n"),
   );
+  const executableSourceUrls = collectUrls(installText);
 
   if (
     /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
@@ -277,10 +321,7 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
-  if (
-    /https?:\/\/[^\s|]+/i.test(installText) &&
-    /http:\/\//i.test(installText)
-  ) {
+  if (executableSourceUrls.some((url) => url.startsWith("http://"))) {
     addFlag(
       report,
       "critical",
@@ -394,9 +435,7 @@ function addContentRiskSignals(report, fields, text) {
     /\b(mail|email|calendar|messages|filesystem|browser|macos|accessibility|screen|ui automation)\b/i.test(
       text,
     ) ||
-    /\b(local workspace|workspace automation|desktop app|daemon)\b/i.test(
-      text,
-    )
+    /\b(local workspace|workspace automation|desktop app|daemon)\b/i.test(text)
   ) {
     addFlag(
       report,
@@ -572,9 +611,7 @@ function frontmatterFields(data = {}, category = "") {
     github_url: normalizeText(data.repoUrl),
     website_url: normalizeText(data.websiteUrl),
     affiliate_url: normalizeText(data.affiliateUrl),
-    docs_url: normalizeText(
-      data.documentationUrl || data.projectUrl,
-    ),
+    docs_url: normalizeText(data.documentationUrl || data.projectUrl),
     pricing_model: normalizeText(data.pricingModel),
     disclosure: normalizeText(data.disclosure),
     application_category: normalizeText(data.applicationCategory),

@@ -122,7 +122,16 @@ function buildSubmissionUrl(siteUrl: string, fields: Record<string, string>) {
 
 function buildIssueDraftUrl(githubUrl: string, fields: Record<string, string>) {
   const draft = buildSubmissionIssueDraft(fields);
-  const issueUrl = new URL(`${githubUrl}/issues/new`);
+  let issueUrl: URL;
+  try {
+    issueUrl = new URL(`${githubUrl.replace(/\/$/, "")}/issues/new`);
+  } catch {
+    return {
+      issueUrl: "",
+      issueTitle: draft.title,
+      issueBody: draft.body,
+    };
+  }
   const model = buildSubmissionFieldModel("skills");
   issueUrl.searchParams.set("template", "submit-skill.yml");
   issueUrl.searchParams.set("title", draft.title);

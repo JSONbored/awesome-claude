@@ -95,9 +95,11 @@ function extractServers(payload: unknown) {
   if (isRecord(payload.mcpServers)) {
     return { servers: payload.mcpServers, wrapped: false };
   }
-  const directServerShape = Object.values(payload).every(
-    (value) => isRecord(value) && ("command" in value || "url" in value),
-  );
+  const directServerShape =
+    Object.keys(payload).length > 0 &&
+    Object.values(payload).every(
+      (value) => isRecord(value) && ("command" in value || "url" in value),
+    );
   if (directServerShape) return { servers: payload, wrapped: true };
   return {
     servers: {},
@@ -286,6 +288,15 @@ export function validateMcpConfigText(input: string): McpConfigValidation {
   }
   if (normalizedInput.length > 100_000) {
     errors.push("Config is too large for browser-side validation.");
+    const result = {
+      ok: false,
+      errors,
+      warnings,
+      servers: [],
+      fixedConfigText: "",
+      redactedSecretCount: 0,
+    };
+    return { ...result, reportText: buildReportText(result) };
   }
 
   let parsed: unknown;

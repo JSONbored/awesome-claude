@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -36,6 +36,7 @@ export function McpConfigValidatorClient() {
     validateMcpConfigText(sampleConfig),
   );
   const [copied, setCopied] = useState<string | null>(null);
+  const copiedTimeoutRef = useRef<number | null>(null);
   const { pushToast } = useToast();
   const verdict = useMemo(() => {
     if (result.ok) {
@@ -52,6 +53,14 @@ export function McpConfigValidatorClient() {
     };
   }, [result.ok]);
 
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const validate = () => {
     setResult(validateMcpConfigText(configText));
   };
@@ -61,7 +70,13 @@ export function McpConfigValidatorClient() {
     try {
       await navigator.clipboard.writeText(value);
       setCopied(key);
-      window.setTimeout(() => setCopied(null), 1400);
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+      copiedTimeoutRef.current = window.setTimeout(() => {
+        setCopied(null);
+        copiedTimeoutRef.current = null;
+      }, 1400);
       pushToast({
         variant: "success",
         title: "Copied to clipboard",
@@ -239,8 +254,8 @@ function ResultList(props: {
         {props.title}
       </p>
       <ul className="mt-2 space-y-1 text-sm leading-6">
-        {props.items.map((item) => (
-          <li key={item}>{item}</li>
+        {props.items.map((item, index) => (
+          <li key={`${item}-${index}`}>{item}</li>
         ))}
       </ul>
     </div>

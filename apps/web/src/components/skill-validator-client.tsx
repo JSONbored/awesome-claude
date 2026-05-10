@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -44,6 +44,7 @@ function isLikelyText(path: string) {
 export function SkillValidatorClient() {
   const [state, setState] = useState<ValidatorState>({ status: "idle" });
   const [copied, setCopied] = useState(false);
+  const copiedTimeoutRef = useRef<number | null>(null);
   const facts = state.status === "ready" ? state.result.facts : [];
   const verdict = useMemo(() => {
     if (state.status !== "ready") return null;
@@ -60,6 +61,14 @@ export function SkillValidatorClient() {
       className: "border-destructive/50 bg-destructive/10 text-destructive",
     };
   }, [state]);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+    };
+  }, []);
 
   async function onFileSelected(file: File | undefined) {
     if (!file) return;
@@ -118,7 +127,13 @@ export function SkillValidatorClient() {
     try {
       await navigator.clipboard.writeText(state.result.issueBody);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 1400);
+      if (copiedTimeoutRef.current !== null) {
+        window.clearTimeout(copiedTimeoutRef.current);
+      }
+      copiedTimeoutRef.current = window.setTimeout(() => {
+        setCopied(false);
+        copiedTimeoutRef.current = null;
+      }, 1400);
     } catch {
       setCopied(false);
     }
@@ -329,8 +344,8 @@ function ResultList(props: {
         {props.title}
       </p>
       <ul className="mt-2 space-y-1 text-sm leading-6">
-        {props.items.map((item) => (
-          <li key={item}>{item}</li>
+        {props.items.map((item, index) => (
+          <li key={`${item}-${index}`}>{item}</li>
         ))}
       </ul>
     </div>

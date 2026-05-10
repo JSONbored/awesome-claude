@@ -14,9 +14,24 @@ function argValue(flag) {
   return process.argv[idx + 1] ?? "";
 }
 
-function readJson(filePath, fallback = null) {
-  if (!filePath || !fs.existsSync(filePath)) return fallback;
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+function readJson(filePath, { fallback = null, required = false } = {}) {
+  if (!filePath || !fs.existsSync(filePath)) {
+    if (required) {
+      throw new Error(
+        `Required JSON input does not exist: ${filePath || "(missing path)"}`,
+      );
+    }
+    return fallback;
+  }
+  try {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (error) {
+    throw new Error(
+      `Could not parse JSON input ${filePath}: ${
+        error instanceof Error ? error.message : String(error)
+      }`,
+    );
+  }
 }
 
 function writeFile(filePath, contents) {
@@ -40,19 +55,26 @@ if ((!issuePath && !prPath) || !outputPath) {
 }
 
 let report;
-if (issuePath) {
-  const issue = readJson(issuePath);
-  const validationReport =
-    readJson(validationPath) || validateSubmission(issue);
-  const contributor = readJson(contributorPath, {});
-  report = analyzeIssueSubmissionRisk(issue, validationReport, { contributor });
-} else {
-  report = analyzeDirectContentRisk(readJson(prPath));
+try {
+  if (issuePath) {
+    const issue = readJson(issuePath, { required: true });
+    const validationReport =
+      readJson(validationPath) || validateSubmission(issue);
+    const contributor = readJson(contributorPath, { fallback: {} });
+    report = analyzeIssueSubmissionRisk(issue, validationReport, {
+      contributor,
+    });
+  } else {
+    report = analyzeDirectContentRisk(readJson(prPath, { required: true }));
+  }
+
+  writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`);
+  writeFile(markdownOutputPath, formatSubmissionRiskMarkdown(report));
+
+  console.log(
+    `Submission security/safety risk: ${report.riskTier} (${report.reviewFlags.length} flags)`,
+  );
+} catch (error) {
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
 }
-
-writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`);
-writeFile(markdownOutputPath, formatSubmissionRiskMarkdown(report));
-
-console.log(
-  `Submission security/safety risk: ${report.riskTier} (${report.reviewFlags.length} flags)`,
-);

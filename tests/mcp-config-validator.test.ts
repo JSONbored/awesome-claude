@@ -31,7 +31,7 @@ describe("MCP config validator", () => {
     expect(result.reportText).toContain("Redacted secrets: 1");
   });
 
-  it("blocks invalid JSON, missing packages, unsafe server names, and shell pipelines", () => {
+  it("blocks unsafe server names and shell pipelines", () => {
     const result = validateMcpConfigText(`{
       "mcpServers": {
         "../bad": {
@@ -44,6 +44,28 @@ describe("MCP config validator", () => {
     expect(result.ok).toBe(false);
     expect(result.errors.join("\n")).toContain("Server name must be");
     expect(result.errors.join("\n")).toContain("not a shell pipeline");
+  });
+
+  it("does not parse oversized configs after the size limit trips", () => {
+    const result = validateMcpConfigText("x".repeat(100_001));
+
+    expect(result.ok).toBe(false);
+    expect(result.errors).toEqual([
+      "Config is too large for browser-side validation.",
+    ]);
+    expect(result.reportText).toContain("Errors: 1");
+  });
+
+  it("treats an empty object as missing mcpServers instead of a bare server map", () => {
+    const result = validateMcpConfigText("{}");
+
+    expect(result.ok).toBe(false);
+    expect(result.warnings).not.toContain(
+      "Input looked like a bare servers object; output wraps it in mcpServers.",
+    );
+    expect(result.errors).toContain(
+      "Config must include an mcpServers object.",
+    );
   });
 
   it("reports non-string commands and detects package runners", () => {

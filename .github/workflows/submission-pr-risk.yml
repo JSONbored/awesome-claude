@@ -68,6 +68,17 @@ jobs:
                 });
                 continue;
               }
+              if (!pr.head?.repo || !pr.head?.sha) {
+                core.warning(`Could not read ${file.filename}: pull request head metadata is unavailable.`);
+                contentFiles.push({
+                  filename: file.filename,
+                  status: file.status,
+                  additions: file.additions,
+                  deletions: file.deletions,
+                  content: ""
+                });
+                continue;
+              }
               try {
                 const { data } = await github.rest.repos.getContent({
                   owner: pr.head.repo.owner.login,

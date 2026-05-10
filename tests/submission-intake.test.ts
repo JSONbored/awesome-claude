@@ -1134,6 +1134,30 @@ Review source claims and screenshots before publishing.`,
     expect(report.classificationWarnings).toEqual([]);
   });
 
+  it("collects source URLs without regex backtracking on punctuation-heavy text", () => {
+    const report = analyzeDirectContentRisk({
+      files: [
+        {
+          filename: "content/mcp/punctuation-heavy-source.mdx",
+          status: "added",
+          content: `---
+title: Punctuation Heavy Source
+slug: punctuation-heavy-source
+category: mcp
+description: Test entry with an inline source URL.
+---
+Review the canonical docs at https://example.com/docs${",".repeat(20_000)}
+and keep scanning bounded.`,
+        },
+      ],
+    });
+
+    expect(report.sourceUrls).toContain("https://example.com/docs");
+    expect(report.sourceUrls).not.toContain(
+      `https://example.com/docs${",".repeat(20_000)}`,
+    );
+  });
+
   it("blocks obviously unsafe submissions without treating category or legal domain as risk", () => {
     const legalIssue = issue(`### Name
 Legal Research Helper

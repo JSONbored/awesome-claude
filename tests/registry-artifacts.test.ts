@@ -79,6 +79,7 @@ describe("registry artifacts", () => {
       brandedCount: number;
       sourceAvailableCount: number;
       checksumPresentCount: number;
+      recommendedFixCount: number;
       entriesNeedingAttention: number;
     };
     queues: Record<string, any[]>;
@@ -201,16 +202,31 @@ describe("registry artifacts", () => {
     expect(rebuilt.summary.brandedCount).toBe(
       trustReportPayload.summary.brandedCount,
     );
+    expect(rebuilt.summary).toEqual(trustReportPayload.summary);
     expect(trustReportPayload.summary.sourceAvailableCount).toBeGreaterThan(0);
     expect(trustReportPayload.summary.checksumPresentCount).toBeGreaterThan(0);
+    expect(trustReportPayload.summary.recommendedFixCount).toBe(
+      trustReportPayload.entries.reduce(
+        (sum, entry) => sum + entry.recommendations.length,
+        0,
+      ),
+    );
+    expect(trustReportPayload.summary.entriesNeedingAttention).toBe(
+      trustReportPayload.entries.filter(
+        (entry) => entry.recommendations.length > 0,
+      ).length,
+    );
     expect(trustReportPayload.entries).toHaveLength(contentEntries.length);
     expect(trustReportPayload.entries[0]).toHaveProperty("recommendations");
+    for (const entry of trustReportPayload.entries) {
+      expect(Number.isNaN(Date.parse(entry.lastVerifiedAt))).toBe(false);
+    }
     expect(Array.isArray(trustReportPayload.queues.missingBrand)).toBe(true);
     expect(Array.isArray(trustReportPayload.queues.missingSource)).toBe(true);
     expect(manifest.artifacts.registryTrust).toBe(
       "/data/registry-trust-report.json",
     );
-    expect(manifest.trustSummary).toMatchObject(trustReportPayload.summary);
+    expect(manifest.trustSummary).toEqual(trustReportPayload.summary);
   });
 
   it("preserves UGC provenance across registry surfaces", () => {

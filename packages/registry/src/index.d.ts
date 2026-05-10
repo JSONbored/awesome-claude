@@ -1027,7 +1027,7 @@ export const SUBMISSION_RISK_HIGH_LABEL: string;
 export const SUBMISSION_PROTECTED_REVIEW_LABELS: string[];
 export const SUBMISSION_MANAGED_VALIDATION_LABELS: string[];
 export const SUBMISSION_RISK_LABELS: string[];
-export const SUBMISSION_STALE_LABEL_DEFINITIONS: Record<
+export const SUBMISSION_VALIDATION_LABEL_DEFINITIONS: Record<
   string,
   { color: string; description: string }
 >;

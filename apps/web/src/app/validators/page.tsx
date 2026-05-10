@@ -52,7 +52,7 @@ export default function ValidatorsPage() {
       path: "/validators",
       name: "Claude and MCP validators",
       description:
-        "Internal HeyClaude validation utilities for Agent Skill packages and MCP configuration JSON.",
+        "Use HeyClaude validators for Agent Skill packages and MCP configuration JSON before submitting resources or configuring Claude-compatible AI tools.",
       breadcrumbId: `${siteConfig.url}/validators#breadcrumb`,
     }),
   ];

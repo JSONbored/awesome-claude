@@ -51,7 +51,7 @@ export default function SkillValidatorPage() {
           items={[
             { label: "Home", href: "/" },
             { label: "Validators", href: "/validators" },
-            { label: "Skill package" },
+            { label: "Skill package validator" },
           ]}
         />
         <span className="eyebrow">Validator</span>

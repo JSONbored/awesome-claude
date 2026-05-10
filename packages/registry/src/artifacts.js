@@ -290,6 +290,12 @@ function lastVerifiedForEntry(entry) {
   );
 }
 
+function normalizedIsoTimestamp(value) {
+  const timestamp = Date.parse(String(value || ""));
+  if (!Number.isFinite(timestamp)) return "";
+  return new Date(timestamp).toISOString();
+}
+
 export function buildEntryTrustSignals(entry) {
   const platformCompatibility = buildSkillPlatformCompatibility(entry);
   const adapterGenerated = platformCompatibility.some(
@@ -383,7 +389,7 @@ function entryTrustReportRow(entry, generatedAt) {
     adapterGenerated: trustSignals.adapterGenerated,
     firstPartyEditorial: trustSignals.firstPartyEditorial,
     packageVerified: trustSignals.packageVerified,
-    lastVerifiedAt: trustSignals.lastVerifiedAt,
+    lastVerifiedAt: normalizedIsoTimestamp(trustSignals.lastVerifiedAt),
     verificationAgeDays: ageDays,
     hasProvenance,
     submittedBy: entry.submittedBy || "",

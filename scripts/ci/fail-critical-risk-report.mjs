@@ -7,7 +7,17 @@ if (!fs.existsSync(reportPath)) {
   process.exit(1);
 }
 
-const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+let report;
+try {
+  report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+} catch (error) {
+  console.error(
+    `Could not parse security/safety risk report ${reportPath}: ${
+      error instanceof Error ? error.message : String(error)
+    }`,
+  );
+  process.exit(1);
+}
 
 if (report.riskTier === "critical") {
   console.error("Submission security/safety review found critical blockers:");
