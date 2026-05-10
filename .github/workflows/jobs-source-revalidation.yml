@@ -61,10 +61,13 @@ jobs:
           echo "Running jobs source revalidation in $mode mode against $base_url"
 
       - name: Check job sources
+        env:
+          SOURCE_BASE_URL: ${{ steps.source-check.outputs.base-url }}
+          SOURCE_CHECK_MODE: ${{ steps.source-check.outputs.mode }}
         run: |
           set +e
-          args=(--base-url "${{ steps.source-check.outputs.base-url }}" --output jobs-source-check.json)
-          if [ "${{ steps.source-check.outputs.mode }}" = "apply" ]; then
+          args=(--base-url "$SOURCE_BASE_URL" --output jobs-source-check.json)
+          if [ "$SOURCE_CHECK_MODE" = "apply" ]; then
             args+=(--apply --allow-unhealthy)
           else
             args+=(--dry-run --fail-on-unhealthy)

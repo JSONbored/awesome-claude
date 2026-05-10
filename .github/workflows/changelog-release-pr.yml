@@ -45,6 +45,8 @@ jobs:
 
       - name: Generate changelog
         shell: bash
+        env:
+          NEXT_TAG: ${{ steps.version.outputs.next }}
         run: |
           set -euo pipefail
           docker run --rm \
@@ -52,7 +54,7 @@ jobs:
             -w /repo \
             orhunp/git-cliff@sha256:7e7ac04e12af99e941001ecbf7260e6e91b98ed335d3088405a51eba0450c7f7 \
             --config .git-cliff.toml \
-            --tag "${{ steps.version.outputs.next }}" \
+            --tag "$NEXT_TAG" \
             --output CHANGELOG.md
 
       - name: Create release PR

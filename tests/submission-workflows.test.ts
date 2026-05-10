@@ -2,6 +2,11 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+import {
+  buildReadmeRefreshBody,
+  extractReadmeEntryChanges,
+  summarizeReadmeEntryChange,
+} from "../scripts/build-readme-refresh-body.mjs";
 import { planStaleSubmissionAction } from "../scripts/manage-stale-submissions.mjs";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -100,6 +105,104 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Regenerate README for pull request validation");
     expect(source).toContain("pnpm generate:readme");
     expect(source).toContain("pnpm validate:readme");
+  });
+
+  it("uses generated README refresh body metadata instead of a static PR body", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/readme-refresh-pr.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain("fetch-depth: 0");
+    expect(source).toContain("scripts/build-readme-refresh-body.mjs");
+    expect(source).toContain("Build README refresh body");
+    expect(source).toContain(
+      "body-path: ${{ runner.temp }}/readme-refresh-body.md",
+    );
+    expect(source).toContain(".github/workflows/readme-refresh-pr.yml");
+    expect(source).not.toContain("body: |");
+  });
+
+  it("extracts every pending README catalog entry from the diff", () => {
+    const changes = extractReadmeEntryChanges(`
+diff --git a/README.md b/README.md
+@@ -1,2 +1,3 @@
++- **[Xquik MCP Server](https://heyclau.de/mcp/xquik-mcp-server)** - Remote X and Twitter MCP server.
++- **[Memesio MCP Server](https://heyclau.de/mcp/memesio-mcp-server)** - Hosted meme generation MCP server.
+-- **[Existing Tool](https://heyclau.de/tools/existing-tool)** - Old copy.
++- **[Existing Tool](https://heyclau.de/tools/existing-tool)** - New copy.
+`);
+
+    expect(changes).toMatchObject([
+      {
+        changeType: "added",
+        category: "mcp",
+        slug: "memesio-mcp-server",
+      },
+      {
+        changeType: "added",
+        category: "mcp",
+        slug: "xquik-mcp-server",
+      },
+      {
+        changeType: "updated",
+        category: "tools",
+        slug: "existing-tool",
+      },
+    ]);
+  });
+
+  it("summarizes direct PR and issue-import README provenance", () => {
+    expect(
+      summarizeReadmeEntryChange({
+        change: {
+          changeType: "added",
+          title: "Xquik MCP Server",
+        },
+        associatedPullRequest: {
+          number: 326,
+          user: { login: "kriptoburak" },
+        },
+      }),
+    ).toBe("Added Xquik MCP Server content submission (#326) by @kriptoburak");
+
+    expect(
+      summarizeReadmeEntryChange({
+        change: {
+          changeType: "added",
+          title: "Memesio MCP Server",
+        },
+        frontmatter: {
+          title: "Memesio MCP Server",
+          submittedBy: "vy35",
+          submissionIssueNumber: 325,
+        },
+        associatedPullRequest: {
+          number: 330,
+          user: { login: "JSONbored" },
+        },
+      }),
+    ).toBe(
+      "Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+    );
+
+    const body = buildReadmeRefreshBody([
+      {
+        summary:
+          "Added Xquik MCP Server content submission (#326) by @kriptoburak",
+      },
+      {
+        summary:
+          "Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+      },
+    ]);
+
+    expect(body).toContain(
+      "- Added Xquik MCP Server content submission (#326) by @kriptoburak",
+    );
+    expect(body).toContain(
+      "- Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+    );
   });
 
   it("shows security/safety context in submission queue summaries", () => {
@@ -208,5 +311,56 @@ describe("submission automation workflows", () => {
         allowedVersions: "24.x",
       }),
     );
+  });
+
+  it("keeps required validation checks wired for README and changelog PRs", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain('- "README.md"');
+    expect(source).toContain('- "CHANGELOG.md"');
+  });
+
+  it("disables Renovate lock-file maintenance PRs", () => {
+    const renovate = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "renovate.json"), "utf8"),
+    );
+
+    expect(renovate.lockFileMaintenance).toMatchObject({
+      enabled: false,
+    });
+  });
+
+  it("serializes release tagging and keeps shell-consumed outputs in env", () => {
+    const releaseSource = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/tag-release-from-main.yml"),
+      "utf8",
+    );
+    const changelogSource = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/changelog-release-pr.yml"),
+      "utf8",
+    );
+    const jobsSource = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/jobs-source-revalidation.yml"),
+      "utf8",
+    );
+
+    expect(releaseSource).toContain(
+      "group: tag-release-from-main-${{ github.ref }}",
+    );
+    expect(releaseSource).toContain(
+      "RELEASE_TAG: ${{ steps.version.outputs.tag }}",
+    );
+    expect(releaseSource).toContain('tag="$RELEASE_TAG"');
+    expect(changelogSource).toContain(
+      "NEXT_TAG: ${{ steps.version.outputs.next }}",
+    );
+    expect(changelogSource).toContain('--tag "$NEXT_TAG"');
+    expect(jobsSource).toContain(
+      "SOURCE_BASE_URL: ${{ steps.source-check.outputs.base-url }}",
+    );
+    expect(jobsSource).toContain('args=(--base-url "$SOURCE_BASE_URL"');
   });
 });

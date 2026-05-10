@@ -11,8 +11,7 @@
   "separateMajorMinor": true,
   "separateMultipleMajor": true,
   "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": ["before 6am on monday"]
+    "enabled": false
   },
   "packageRules": [
     {
