@@ -1179,7 +1179,7 @@ Run the install command.`,
       ]),
     );
     expect(formatSubmissionRiskMarkdown(report)).toContain(
-      "README.md is generated from content entries",
+      "README.md changes are not accepted in direct content PRs",
     );
   });
 

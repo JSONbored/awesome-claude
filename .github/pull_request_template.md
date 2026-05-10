@@ -9,13 +9,12 @@
 - [ ] New content file(s) added under `content/<category>/`
 - [ ] Existing content updated
 - [ ] Submission issue resolved (link it here): #
-- [ ] I did not hand-edit generated catalog output; `README.md` changes, if present, came from `pnpm generate:readme`
+- [ ] I did not modify `README.md`; CI regenerates it for validation, and maintainer automation owns committed README updates.
 
 ## Schema and Quality Checks
 
 - [ ] `pnpm validate:content` passed
 - [ ] `pnpm validate:packages` passed
-- [ ] `pnpm validate:readme` passed
 - [ ] `pnpm audit:content` ran and I reviewed findings
 - [ ] No forbidden fields were added (`viewCount`, `copyCount`, `popularityScore`)
 - [ ] Install/use/copy paths are practical and complete

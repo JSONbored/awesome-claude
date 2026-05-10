@@ -640,8 +640,8 @@ function addGeneratedArtifactSignals(report, files, contentFiles) {
   addClassificationWarning(
     report,
     "generated_readme_change",
-    "README.md is generated from content entries; verify direct PR README changes came from pnpm generate:readme",
-    "Issue-first imports regenerate README/catalog output automatically.",
+    "README.md changes are not accepted in direct content PRs; maintainer automation regenerates README output",
+    "Remove README.md from the contributor PR. CI regenerates it for validation, and the post-merge README Refresh PR owns committed updates.",
   );
 }
 
