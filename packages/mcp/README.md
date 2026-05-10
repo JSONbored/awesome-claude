@@ -1,5 +1,19 @@
 # HeyClaude MCP Server
 
+<p align="center">
+  <a href="https://heyclau.de">
+    <img src="https://heyclau.de/heyclaude-wordmark.svg" alt="HeyClaude" width="300">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://heyclau.de">Website</a> •
+  <a href="https://github.com/JSONbored/claudepro-directory">GitHub</a> •
+  <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
+  <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
+  <a href="https://github.com/JSONbored/claudepro-directory/releases/tag/mcp-v0.1.1">v0.1.1 release</a>
+</p>
+
 Read-only Model Context Protocol server for the HeyClaude registry.
 
 It exposes the same public registry surface used by the website and Raycast:
@@ -117,6 +131,9 @@ checks the HTTP guards used by the remote route.
 MCP releases are package-scoped. Website/catalog changes do not create repo-wide
 semver releases. The initial public package version is `0.1.0`, and GitHub
 release tags use `mcp-vX.Y.Z`.
+
+The npm package artifact is hosted on npmjs.com. GitHub Releases track the
+matching package-scoped source tag and release notes, such as `mcp-v0.1.1`.
 
 Do not publish until the web branch has shipped, the production endpoint has
 been verified, and the package smoke test passes. The release checklist is:

@@ -76,6 +76,31 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(packageJson.exports).toHaveProperty("./submissions");
   });
 
+  it("keeps npm package README branding, links, and release convention current", () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
+    ) as {
+      version: string;
+    };
+    const readme = fs.readFileSync(
+      path.join(repoRoot, "packages/mcp/README.md"),
+      "utf8",
+    );
+
+    expect(readme).toContain("https://heyclau.de/heyclaude-wordmark.svg");
+    expect(readme).toContain(
+      "https://github.com/JSONbored/claudepro-directory",
+    );
+    expect(readme).toContain("https://www.npmjs.com/package/@heyclaude/mcp");
+    expect(readme).toContain("https://heyclau.de/api/mcp");
+    expect(readme).toContain(
+      `https://github.com/JSONbored/claudepro-directory/releases/tag/mcp-v${packageJson.version}`,
+    );
+    expect(readme).toContain("`mcp-vX.Y.Z`");
+    expect(readme).toContain("npmjs.com");
+    expect(readme).toContain("GitHub Releases track");
+  });
+
   it("exposes only read-only registry and submission helper tools", () => {
     expect(TOOL_DEFINITIONS.map((tool) => tool.name)).toEqual(
       READ_ONLY_TOOL_NAMES,
