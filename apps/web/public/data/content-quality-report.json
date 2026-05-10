@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 382,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 102,
@@ -18,7 +18,7 @@
       "warningCount": 22
     },
     "mcp": {
-      "count": 45,
+      "count": 46,
       "averageScore": 90,
       "warningCount": 3
     },
@@ -10989,6 +10989,37 @@
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
+        ]
+      },
+      "warnings": []
+    },
+    {
+      "key": "mcp:xquik-mcp-server",
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "scores": {
+        "total": 93,
+        "usefulness": 100,
+        "source": 75,
+        "copyability": 90,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper"
         ]
       },
       "warnings": []

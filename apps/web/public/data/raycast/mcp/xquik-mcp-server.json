@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 2,
+  "key": "mcp:xquik-mcp-server",
+  "category": "mcp",
+  "slug": "xquik-mcp-server",
+  "title": "Xquik MCP Server",
+  "author": "Xquik-dev",
+  "brandName": "Xquik",
+  "brandDomain": "xquik.com",
+  "brandAssetSource": "manual",
+  "copyText": "Install:\nnpx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"\n\nConfig:\n{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}\n\nUsage:\n{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}",
+  "detailMarkdown": "# Xquik MCP Server\n\nRemote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated write actions.\n\n## Install\n```bash\nnpx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"\n```\n\n## Config\n```json\n{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}\n```\n\n## Usage\nexport XQUIK_API_KEY=xq_YOUR_KEY_HERE\nnpx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
+  "webUrl": "https://heyclau.de/mcp/xquik-mcp-server",
+  "canonicalUrl": "https://heyclau.de/mcp/xquik-mcp-server",
+  "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
+  "seoTitle": "Xquik MCP Server for Claude X and Twitter Automation",
+  "seoDescription": "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP.",
+  "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
+  "documentationUrl": "https://docs.xquik.com/mcp/overview"
+}

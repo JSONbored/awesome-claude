@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "mcp-registry-feed",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 45,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 46,
   "servers": [
     {
       "name": "airtable-mcp-server",
@@ -618,6 +618,22 @@
       "installCommand": "claude mcp add --transport http workato YOUR_WORKATO_MCP_URL && claude mcp list",
       "configSnippet": "{\n  \"workato\": {\n    \"url\": \"https://your-workspace.workato.com/mcp\",\n    \"transport\": \"http\"\n  }\n}",
       "heyclaudeUrl": "https://heyclau.de/mcp/workato-mcp-server"
+    },
+    {
+      "name": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "description": "Remote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated write actions.",
+      "websiteUrl": "https://docs.xquik.com/mcp/overview",
+      "brandName": "Xquik",
+      "brandDomain": "xquik.com",
+      "brandAssetSource": "manual",
+      "repository": {
+        "url": "https://github.com/Xquik-dev/x-twitter-scraper",
+        "source": "github"
+      },
+      "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
+      "configSnippet": "{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}",
+      "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
     },
     {
       "name": "zapier-mcp-server",

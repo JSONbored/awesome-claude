@@ -2,10 +2,10 @@
 title: Xquik MCP Server
 slug: xquik-mcp-server
 category: mcp
-description: "Remote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated posting."
-cardDescription: "Remote X and Twitter automation MCP server for tweet search, followers, media, webhooks, and posting workflows."
+description: "Remote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated write actions."
+cardDescription: "Remote X and Twitter MCP server for tweet search, follower export, media, webhooks, and confirmation-gated write workflows."
 seoTitle: Xquik MCP Server for Claude X and Twitter Automation
-seoDescription: "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X posting through MCP."
+seoDescription: "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP."
 author: Xquik-dev
 authorProfileUrl: https://github.com/Xquik-dev
 dateAdded: "2026-05-09"
@@ -15,10 +15,10 @@ brandAssetSource: manual
 repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installable: true
-installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:${XQUIK_API_KEY}"
+installCommand: 'npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"'
 usageSnippet: |-
   export XQUIK_API_KEY=xq_YOUR_KEY_HERE
-  npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:${XQUIK_API_KEY}
+  npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
 copySnippet: |-
   {
     "mcpServers": {
@@ -59,6 +59,7 @@ estimatedSetupTime: 3 minutes
 difficulty: beginner
 prerequisites:
   - Xquik account and API key from https://dashboard.xquik.com/account
+  - Connected X account before using write actions such as posts, DMs, profile updates, or follows
   - MCP client with stdio support through mcp-remote or direct Streamable HTTP support
   - Network access to https://xquik.com/mcp
 tags:
@@ -89,20 +90,20 @@ robotsFollow: true
 
 ## Overview
 
-Xquik MCP Server connects Claude and other MCP clients to Xquik's X and Twitter automation platform. Agents can search tweets, fetch profile timelines, export followers, retrieve media metadata, manage monitors, configure webhooks, and run confirmation-gated tweet and reply workflows through a remote MCP endpoint.
+Xquik MCP Server connects Claude and other MCP clients to Xquik's X and Twitter automation platform. Agents can search tweets, fetch profile timelines, export followers, retrieve media metadata, manage monitors, configure webhooks, and run confirmation-gated X write workflows through a remote MCP endpoint.
 
-The server exposes a discovery tool for exploring the public API catalog before making authenticated Xquik requests. This makes it useful for social listening workflows, analytics pipelines, media collection, campaign monitoring, and controlled posting flows that need human confirmation before write actions.
+The server exposes `explore` for searching the API catalog and `xquik` for authenticated API calls. This makes it useful for social listening workflows, analytics pipelines, media collection, campaign monitoring, and controlled write flows that need human confirmation before account actions.
 
 ## Usage
 
 ```bash
 export XQUIK_API_KEY=xq_YOUR_KEY_HERE
-npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:${XQUIK_API_KEY}
+npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
 ```
 
 ## Auth Requirements
 
-Xquik requires an API key. Create one from the Xquik dashboard, then pass it as the `x-api-key` header in your MCP client configuration. Treat the API key as a secret and use a key scoped to the workflow you are building.
+Xquik supports API-key authentication through the `x-api-key` header and OAuth 2.1 for clients that support browser-based MCP connectors. Create an API key from the Xquik dashboard, keep it out of prompts and logs, and connect an X account only when you need write workflows.
 
 ## Capabilities
 
@@ -110,7 +111,7 @@ Xquik requires an API key. Create one from the Xquik dashboard, then pass it as 
 - Fetch user profiles, profile timelines, followers, and following data.
 - Retrieve media metadata and downloadable media URLs.
 - Create monitors and HMAC-signed webhook delivery workflows.
-- Run confirmation-gated tweet and reply workflows for connected accounts.
+- Run confirmation-gated write workflows for connected X accounts, including posts, replies, DMs, follows, profile updates, and media actions.
 
 ## Verification
 
@@ -122,5 +123,6 @@ Xquik requires an API key. Create one from the Xquik dashboard, then pass it as 
 ## Security Notes
 
 - Keep `XQUIK_API_KEY` out of prompts, logs, and shared configuration files.
-- Review the exact payload before any posting, reply, DM, or profile update workflow.
+- Review the exact payload before any post, reply, DM, follow, profile update, media upload, or billing/top-up workflow.
 - Prefer read-only exploration first, then authorize write actions only when needed.
+- Treat webhooks and monitors as ongoing external delivery workflows; verify destination URLs and HMAC signature handling before enabling them.

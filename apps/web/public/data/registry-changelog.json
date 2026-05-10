@@ -1,9 +1,21 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 382,
   "entries": [
+    {
+      "key": "mcp:xquik-mcp-server",
+      "type": "added",
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "dateAdded": "2026-05-09",
+      "canonicalUrl": "https://heyclau.de/mcp/xquik-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
+      "artifactHash": "4ffa03543786a6a164665a5eccc221d3197d693b25f0df0f41ffbe1981c39c63"
+    },
     {
       "key": "skills:heyclaude-content-submission-factory",
       "type": "added",
@@ -4578,5 +4590,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "e9918d091664f3230e894fefd347cd9478f15e07109d8fa2a5394359b71c93d9"
+  "signature": "9202f817ad7f42d6429dadaa86f9fa55b513fe925370ff71ce3e2935d6494179"
 }

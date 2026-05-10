@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 245,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 246,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -5248,6 +5248,19 @@
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/workflow-completion-report.sh && chmod +x .claude/hooks/workflow-completion-report.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/workflow-completion-report"
+    },
+    {
+      "name": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "description": "Remote X and Twitter MCP server for tweet search, follower export, media, webhooks, and confirmation-gated write workflows.",
+      "category": "mcp",
+      "brandName": "Xquik",
+      "brandDomain": "xquik.com",
+      "brandAssetSource": "manual",
+      "sourceUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
+      "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
+      "platformCompatibility": [],
+      "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
     },
     {
       "name": "zapier-mcp-server",

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 382,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -20767,6 +20767,66 @@
       }
     },
     {
+      "key": "mcp:xquik-mcp-server",
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "description": "Remote X and Twitter MCP server for tweet search, follower export, media, webhooks, and confirmation-gated write workflows.",
+      "url": "https://heyclau.de/mcp/xquik-mcp-server",
+      "brandName": "Xquik",
+      "brandDomain": "xquik.com",
+      "brandAssetSource": "manual",
+      "websiteUrl": "",
+      "documentationUrl": "https://docs.xquik.com/mcp/overview",
+      "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "x",
+        "twitter",
+        "tweet-search",
+        "social-media",
+        "automation",
+        "webhooks",
+        "mcp-server"
+      ],
+      "qualityScore": 93,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-09",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "key": "tools:zapier-ai",
       "category": "tools",
       "slug": "zapier-ai",
@@ -21137,5 +21197,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "0a8f06dbfe0e3835c9853d56362c891ee4eb62ada3e6196de7fe495206a915ca"
+  "signature": "908b29bde48a5e46705e48e5e6c914cce829bde876e30d938ad20dd0bad95a49"
 }

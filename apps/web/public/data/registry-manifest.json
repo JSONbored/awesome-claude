@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "totalEntries": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "totalEntries": 382,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -21,7 +21,7 @@
       "label": "Agents"
     },
     "mcp": {
-      "count": 45,
+      "count": 46,
       "label": "MCP Servers"
     },
     "tools": {
@@ -3059,6 +3059,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/workspace-project-depth-indicator"
     },
     {
+      "key": "mcp:xquik-mcp-server",
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "canonicalUrl": "https://heyclau.de/mcp/xquik-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server"
+    },
+    {
       "key": "tools:zapier-ai",
       "category": "tools",
       "slug": "zapier-ai",
@@ -3116,16 +3124,16 @@
     "duplicateBodyGroupCount": 0
   },
   "trustSummary": {
-    "brandedCount": 138,
+    "brandedCount": 139,
     "brandedPercent": 36,
     "brandfetchCount": 137,
-    "sourceAvailableCount": 381,
+    "sourceAvailableCount": 382,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 29,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 355,
+    "recentlyVerifiedCount": 356,
     "staleVerificationCount": 0,
     "provenanceCount": 3,
     "provenancePercent": 1,
@@ -3159,47 +3167,47 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "6e98862fb536e115a7882b541ee902589001050c7cc074efa2c69e7cd43ce715"
+      "sha256": "e71f6eacbf7cef77aff43ba98ac1371be84195885c5cf2652942ea4d5c72dabe"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "f983ff88a40c2bdd3570e9e49fc46502710e6a1ee888246fab01d7164f50e659"
+      "sha256": "5df2a6a5fe56d25bed754689966f78f4283a71acee71eb4686bf73e98406a7e9"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "577cfceb051259112d81daff8814ed36d677d24acaf56966b4891376f626c64c"
+      "sha256": "9703c1c415276f34e78169a0fd480479ece8b22662e18b4d6088b02abc566aac"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "58f0cbc7038b4a1ad59fb7af4ba68632a451560756bfc916e35be77e55f03079"
+      "sha256": "e97c9b0463d37c4d2c6602590fbae838d2e11edc424c1060642d94497855eb89"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "37472c35a6c94a56faa32da8b7663a1f7f6cc255d2148dedf0a03a525c21d448"
+      "sha256": "2cf4cfe2bbe1ff19782be4b524bd4a76ebcdf8097e74be100befdeb7c760451e"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "354e9bc72ab6548d5cbb584b54bcb7b60a6627c1959c72a3feccbb84179a3ec4"
+      "sha256": "aad3ba725c11b32db4cb72f086ebc393faef1fe62e6ee1eee7d24d407c74a65a"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "2daf877806fd4c52557e78faa9322a4a1100488664438d68de740d5a97585914"
+      "sha256": "1a95b384538bcd49a69228aa723deb6d006cbcd1a75f796673801b12c4be9d9b"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "0ccd81f01222111859fc77a6b73c335e998ee4fedd5154be7565bdab8127cab4"
+      "sha256": "f9338bf961eb83f82fbde4f52a9f9aa861576efc8d68ed2ba56b404d855c62b1"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "7c654a905c45e253017c136ce90b0375a58c0fdaf75fb2196a5e0784cc8ef44f"
+      "sha256": "a036326d818637dc54999edc9b17d3d8454f8eb3cdf05105a287499c9deb5158"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3209,22 +3217,22 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "2b2eb533ce7d07d57e0f478b93498ab993075d832909e46498086c9101fc3f87"
+      "sha256": "74491946157c0d3ccd6e5857f605430b3313ac45e7103f17d6b119bea805e341"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "10fae2ebf2770a3175f5437eda44ff2b76708aa3cc1f3c7b75d6a28ae7bfff60"
+      "sha256": "f77958fa4921c71067108a14c595cfee7bd07832f5be980f2d9e8f249ee4074a"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "9a4df5436692781d99bf7d1c5e7cd7c0a83f45086e2431dab7bc371e4a494c54"
+      "sha256": "c0ee31f86c950824b45801e10368a43e70d57ccd5c25d95be34bc449b5006415"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "194ce679b84135aa399b95bdc4652ceeb7d0c45a1f0be2c9d0ae2a5973cae1ce"
+      "sha256": "3bfd4bbcd47387b2dfa900a987984cf42ee5c2b1d9d4b831cbd7b8e89e8fcbc8"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -9181,6 +9189,21 @@
       "type": "json",
       "sha256": "edf7a88afbdb1fae1fe8894911fcc36474fbf3a28d6d235feb0a11cab836ee03"
     },
+    "entries/mcp/xquik-mcp-server.json": {
+      "path": "/data/entries%2Fmcp%2Fxquik-mcp-server.json",
+      "type": "json",
+      "sha256": "4ffa03543786a6a164665a5eccc221d3197d693b25f0df0f41ffbe1981c39c63"
+    },
+    "llms/mcp/xquik-mcp-server.txt": {
+      "path": "/data/llms%2Fmcp%2Fxquik-mcp-server.txt",
+      "type": "text",
+      "sha256": "9494fe6475a6c139ce8e52f4a559a74e7df107a0f62fcf14c112a44865eb7cfe"
+    },
+    "raycast/mcp/xquik-mcp-server.json": {
+      "path": "/data/raycast%2Fmcp%2Fxquik-mcp-server.json",
+      "type": "json",
+      "sha256": "e0d9a04e752a3d86346127006285357814b49b2a2e5edb2b9672c64c4dd96087"
+    },
     "entries/tools/zapier-ai.json": {
       "path": "/data/entries%2Ftools%2Fzapier-ai.json",
       "type": "json",
@@ -9289,7 +9312,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "a7526fd0e78394cafe3d453eea2ee5367fa21f34b6b8e06e9fd6eb239d1cfc74"
+      "sha256": "8f0c30a66a985b8ff72e45d0d33e7acc12d6748e28a10bd2f5860136629ff5a1"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",

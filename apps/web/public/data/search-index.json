@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "search-index",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 382,
   "entries": [
     {
       "category": "commands",
@@ -24205,6 +24205,71 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "title": "Xquik MCP Server",
+      "seoTitle": "Xquik MCP Server for Claude X and Twitter Automation",
+      "description": "Remote X and Twitter MCP server for tweet search, follower export, media, webhooks, and confirmation-gated write workflows.",
+      "seoDescription": "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP.",
+      "tags": [
+        "x",
+        "twitter",
+        "tweet-search",
+        "social-media",
+        "automation",
+        "webhooks",
+        "mcp-server"
+      ],
+      "keywords": [
+        "xquik mcp",
+        "x twitter mcp",
+        "twitter automation mcp",
+        "tweet search mcp",
+        "follower export",
+        "x api alternative",
+        "social media automation",
+        "model context protocol",
+        "x",
+        "twitter",
+        "tweet-search",
+        "social-media"
+      ],
+      "author": "Xquik-dev",
+      "brandName": "Xquik",
+      "brandDomain": "xquik.com",
+      "brandAssetSource": "manual",
+      "dateAdded": "2026-05-09",
+      "installable": true,
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "https://docs.xquik.com/mcp/overview",
+      "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
+      "url": "https://heyclau.de/mcp/xquik-mcp-server",
+      "canonicalUrl": "https://heyclau.de/mcp/xquik-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://docs.xquik.com/mcp/overview",
+          "https://github.com/Xquik-dev/x-twitter-scraper",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-09",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []

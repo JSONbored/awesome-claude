@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 381,
+  "generatedAt": "2026-05-09T00:00:00.000Z",
+  "count": 382,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -29373,6 +29373,85 @@
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
+          "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "mcp:xquik-mcp-server",
+      "category": "mcp",
+      "slug": "xquik-mcp-server",
+      "url": "https://heyclau.de/mcp/xquik-mcp-server",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/mcp/xquik-mcp-server#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "MCP Servers",
+              "item": "https://heyclau.de/mcp"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Xquik MCP Server",
+              "item": "https://heyclau.de/mcp/xquik-mcp-server"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/mcp/xquik-mcp-server#webpage",
+          "name": "Xquik MCP Server",
+          "description": "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP.",
+          "url": "https://heyclau.de/mcp/xquik-mcp-server",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/mcp/xquik-mcp-server#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/mcp/xquik-mcp-server#entry",
+          "name": "Xquik MCP Server",
+          "headline": "Xquik MCP Server",
+          "description": "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP.",
+          "url": "https://heyclau.de/mcp/xquik-mcp-server",
+          "datePublished": "2026-05-09",
+          "dateModified": "2026-05-09",
+          "keywords": "xquik mcp, x twitter mcp, twitter automation mcp, tweet search mcp, follower export, x api alternative, social media automation, model context protocol, x, twitter, tweet-search, social-media, x, twitter, tweet-search, social-media, automation, webhooks, mcp-server",
+          "genre": "MCP Servers",
+          "author": {
+            "@type": "Person",
+            "name": "Xquik-dev",
+            "url": "https://github.com/Xquik-dev"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://docs.xquik.com/mcp/overview",
+            "https://github.com/Xquik-dev/x-twitter-scraper"
+          ],
+          "isBasedOn": [
+            "https://docs.xquik.com/mcp/overview",
+            "https://github.com/Xquik-dev/x-twitter-scraper",
+            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+          ],
+          "codeRepository": "https://github.com/Xquik-dev/x-twitter-scraper",
           "runtimePlatform": "Claude Code"
         }
       ]
