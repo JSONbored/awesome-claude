@@ -33,6 +33,11 @@ const skill = firstSkill();
 
 describe("HeyClaude read-only MCP helpers", () => {
   it("keeps the MCP package publishable without private workspace dependencies", () => {
+    const rootPackageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"),
+    ) as {
+      dependencies?: Record<string, string>;
+    };
     const packageJson = JSON.parse(
       fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
     ) as {
@@ -52,7 +57,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       "node scripts/validate-endpoint.mjs",
     );
     expect(packageJson.dependencies).not.toHaveProperty("@heyclaude/registry");
-    expect(packageJson.dependencies).toHaveProperty("zod", "4.3.6");
+    expect(packageJson.dependencies).toHaveProperty(
+      "zod",
+      rootPackageJson.dependencies?.zod,
+    );
     expect(Object.values(packageJson.dependencies ?? {})).not.toContain(
       "workspace:*",
     );

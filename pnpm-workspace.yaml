@@ -1,3 +1,12 @@
 packages:
   - apps/*
   - packages/*
+overrides:
+  fast-uri: 3.1.2
+  fast-xml-builder: 1.2.0
+  fast-xml-parser: 5.7.3
+  hono: 4.12.18
+  ip-address: 10.2.0
+  postcss: 8.5.14
+allowBuilds:
+  workerd: true

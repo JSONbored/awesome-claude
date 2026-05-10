@@ -1,13 +1,13 @@
 {
   "name": "heyclaude",
   "private": true,
-  "packageManager": "pnpm@10.33.2",
+  "packageManager": "pnpm@11.0.9",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "8.5.0",
     "@heyclaude/registry": "workspace:*",
     "gray-matter": "4.0.3",
-    "yaml": "2.8.3",
-    "zod": "4.3.6"
+    "yaml": "2.8.4",
+    "zod": "4.4.3"
   },
   "scripts": {
     "dev": "pnpm --filter web dev",
@@ -61,25 +61,15 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "20.5.2",
-    "@commitlint/config-conventional": "20.5.0",
+    "@commitlint/cli": "21.0.0",
+    "@commitlint/config-conventional": "21.0.0",
     "@playwright/test": "1.59.1",
     "husky": "9.1.7",
     "prettier": "3.8.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
-    "react-email": "6.0.5",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "react-email": "6.1.1",
     "tsx": "4.21.0",
     "vitest": "4.1.5"
-  },
-  "pnpm": {
-    "overrides": {
-      "fast-uri": "3.1.2",
-      "fast-xml-builder": "1.2.0",
-      "fast-xml-parser": "5.7.2",
-      "hono": "4.12.18",
-      "ip-address": "10.2.0",
-      "postcss": "8.5.12"
-    }
   }
 }

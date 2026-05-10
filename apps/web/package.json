@@ -32,26 +32,26 @@
     "fflate": "0.8.2",
     "geist": "1.7.0",
     "lucide-react": "1.14.0",
-    "marked": "18.0.2",
-    "next": "16.2.4",
+    "marked": "18.0.3",
+    "next": "16.2.6",
     "radix-ui": "1.4.3",
-    "react": "19.2.5",
-    "react-dom": "19.2.5",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
     "sanitize-html": "2.17.3",
     "server-only": "0.0.1",
-    "svix": "1.92.2",
+    "svix": "1.93.0",
     "tailwind-merge": "3.5.0"
   },
   "devDependencies": {
-    "@opennextjs/cloudflare": "1.19.4",
-    "@tailwindcss/postcss": "4.2.4",
-    "@types/node": "25.6.0",
+    "@opennextjs/cloudflare": "1.19.8",
+    "@tailwindcss/postcss": "4.3.0",
+    "@types/node": "25.6.2",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@types/sanitize-html": "2.16.1",
-    "postcss": "8.5.12",
-    "tailwindcss": "4.2.4",
+    "postcss": "8.5.14",
+    "tailwindcss": "4.3.0",
     "typescript": "6.0.3",
-    "wrangler": "4.86.0"
+    "wrangler": "4.90.0"
   }
 }
