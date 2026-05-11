@@ -10,10 +10,6 @@ on:
     paths:
       - "content/**"
       - ".github/workflows/submission-pr-risk.yml"
-      - "packages/registry/src/submission-risk.js"
-      - "scripts/analyze-submission-risk.mjs"
-      - "scripts/ci/fail-critical-risk-report.mjs"
-      - "scripts/ci/fail-provenance-report.mjs"
 
 permissions:
   contents: read
@@ -29,45 +25,62 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - name: Resolve current base commit
-        id: base-commit
+      - name: Analyze PR content through GitHub API
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
-            const base = context.payload.pull_request.base;
-            const { data } = await github.rest.repos.getBranch({
-              owner: base.repo.owner.login,
-              repo: base.repo.name,
-              branch: base.ref
-            });
-            core.setOutput("sha", data.commit.sha);
-
-      - name: Checkout base repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          ref: ${{ steps.base-commit.outputs.sha }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
-
-      - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
-        with:
-          node-version: 24.15.0
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Write PR risk input
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
-        with:
-          script: |
-            const fs = require("node:fs");
             const pr = context.payload.pull_request;
             const repositoryFullName = context.payload.repository.full_name;
             const headRepositoryFullName = pr.head?.repo?.full_name || "";
             const headRef = pr.head?.ref || "";
+            const RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
+            const RISK_LABEL_DEFINITIONS = {
+              "risk-low": {
+                color: "0e8a16",
+                description:
+                  "Automated submission security/safety review found only low-risk signals"
+              },
+              "risk-medium": {
+                color: "fbca04",
+                description:
+                  "Automated submission security/safety review found signals that need maintainer review"
+              },
+              "risk-high": {
+                color: "d93f0b",
+                description:
+                  "Automated submission security/safety review found high-risk or critical signals"
+              }
+            };
+            const SEVERITY_WEIGHT = {
+              info: 0,
+              low: 1,
+              medium: 3,
+              high: 6,
+              critical: 100
+            };
+            const RISK_LABEL_BY_TIER = {
+              low: "risk-low",
+              medium: "risk-medium",
+              high: "risk-high",
+              critical: "risk-high"
+            };
+            const TOOLS_CATEGORY = "tools";
+            const TOOLS_LISTING_FLOW_URL = "https://heyclau.de/tools/submit";
+            const URL_PREFIXES = ["https://", "http://"];
+            const URL_TERMINATORS = new Set([
+              " ",
+              "\n",
+              "\r",
+              "\t",
+              "<",
+              ">",
+              "\"",
+              "'",
+              ")",
+              "]",
+              "`"
+            ]);
+            const TRAILING_URL_PUNCTUATION = new Set([".", ",", ";", ":"]);
             const isSameRepository = headRepositoryFullName === repositoryFullName;
             const sourceType =
               isSameRepository && /^automation\/submission-\d+-/.test(headRef)
@@ -75,6 +88,11 @@ jobs:
                 : isSameRepository
                   ? "same_repo_direct"
                   : "external_direct";
+
+            const normalizeText = (value) => String(value ?? "").trim();
+            const compactWhitespace = (value) =>
+              normalizeText(value).replace(/\s+/g, " ");
+            const lower = (value) => normalizeText(value).toLowerCase();
             const frontmatterValue = (value) => {
               const trimmed = String(value || "").trim();
               if (!trimmed) return "";
@@ -86,28 +104,1009 @@ jobs:
               }
               return trimmed;
             };
-            const normalizeGitHubLogin = (value) => {
-              const text = String(value || "").trim();
-              if (!text) return "";
-              try {
-                const url = new URL(text);
-                if (url.protocol === "https:" && url.hostname === "github.com") {
-                  return url.pathname.split("/").filter(Boolean)[0] || "";
+            const trimTrailingUrlPunctuation = (value) => {
+              let end = value.length;
+              while (end > 0 && TRAILING_URL_PUNCTUATION.has(value[end - 1])) {
+                end -= 1;
+              }
+              return value.slice(0, end);
+            };
+            const collectUrls = (value) => {
+              const urls = new Set();
+              const text = normalizeText(value).slice(0, 200000);
+              let index = 0;
+              while (index < text.length && urls.size < 50) {
+                let start = -1;
+                for (const prefix of URL_PREFIXES) {
+                  const next = text.indexOf(prefix, index);
+                  if (next >= 0 && (start < 0 || next < start)) start = next;
                 }
-              } catch {}
-              return text.replace(/^@+/, "").trim();
+                if (start < 0) break;
+                let end = start;
+                while (end < text.length && !URL_TERMINATORS.has(text[end])) {
+                  end += 1;
+                }
+                const url = trimTrailingUrlPunctuation(text.slice(start, end));
+                if (url) urls.add(url);
+                index = Math.max(end, start + 1);
+              }
+              return [...urls];
+            };
+            const splitList = (value) =>
+              normalizeText(value)
+                .split(/[\n,]+/)
+                .map((item) => item.trim())
+                .filter(Boolean);
+            const hostname = (value) => {
+              try {
+                return new URL(normalizeText(value)).hostname.replace(/^www\./, "");
+              } catch {
+                return "";
+              }
+            };
+            const githubRepoFromUrl = (value) => {
+              try {
+                const url = new URL(normalizeText(value));
+                if (url.protocol !== "https:" || url.hostname !== "github.com") {
+                  return "";
+                }
+                const [owner, repoName] = url.pathname.split("/").filter(Boolean);
+                return owner && repoName ? `${owner}/${repoName}` : "";
+              } catch {
+                return "";
+              }
+            };
+            const githubLoginFromUrl = (value) => {
+              try {
+                const url = new URL(normalizeText(value));
+                if (url.protocol !== "https:" || url.hostname !== "github.com") {
+                  return "";
+                }
+                const [login] = url.pathname.split("/").filter(Boolean);
+                return login || "";
+              } catch {
+                return "";
+              }
+            };
+            const normalizeGitHubLogin = (value) => {
+              const text = normalizeText(value);
+              if (!text) return "";
+              return githubLoginFromUrl(text) || text.replace(/^@+/, "").trim();
+            };
+            const sameGitHubLogin = (left, right) => {
+              const normalizedLeft = normalizeGitHubLogin(left).toLowerCase();
+              const normalizedRight = normalizeGitHubLogin(right).toLowerCase();
+              return Boolean(
+                normalizedLeft &&
+                  normalizedRight &&
+                  normalizedLeft === normalizedRight
+              );
+            };
+            const githubUserReference = (value) => {
+              const login = normalizeGitHubLogin(value);
+              return login ? `@${login}` : normalizeText(value);
             };
             const readFrontmatter = (content) => {
               const lines = String(content || "").split(/\r?\n/);
               if (lines[0]?.trim() !== "---") return {};
               const data = {};
+              let blockKey = "";
               for (const line of lines.slice(1)) {
                 if (line.trim() === "---") break;
                 const match = /^([A-Za-z0-9_]+):\s*(.*)$/.exec(line);
-                if (match) data[match[1]] = frontmatterValue(match[2]);
+                if (match) {
+                  blockKey = "";
+                  const value = frontmatterValue(match[2]);
+                  data[match[1]] = value;
+                  if (/^[>|]/.test(value)) {
+                    data[match[1]] = "";
+                    blockKey = match[1];
+                  }
+                  continue;
+                }
+                if (blockKey && (/^\s+/.test(line) || !line.trim())) {
+                  data[blockKey] += `${line.replace(/^\s{2}/, "")}\n`;
+                }
               }
               return data;
             };
+            const prFileCategory = (filename) => {
+              const parts = normalizeText(filename).split("/");
+              return parts[0] === "content" && parts.length >= 3 ? parts[1] : "";
+            };
+            const frontmatterFields = (data = {}, category = "") => ({
+              category: normalizeText(data.category || category),
+              slug: normalizeText(data.slug),
+              name: normalizeText(data.title || data.name),
+              description: normalizeText(data.description),
+              card_description: normalizeText(data.cardDescription),
+              github_url: normalizeText(data.repoUrl),
+              website_url: normalizeText(data.websiteUrl),
+              affiliate_url: normalizeText(data.affiliateUrl),
+              docs_url: normalizeText(data.documentationUrl || data.projectUrl),
+              pricing_model: normalizeText(data.pricingModel),
+              disclosure: normalizeText(data.disclosure),
+              application_category: normalizeText(data.applicationCategory),
+              operating_system: normalizeText(data.operatingSystem),
+              download_url: normalizeText(data.downloadUrl),
+              install_command: normalizeText(data.installCommand),
+              usage_snippet: normalizeText(data.usageSnippet),
+              full_copyable_content: normalizeText(data.copySnippet),
+              brand_domain: normalizeText(data.brandDomain)
+            });
+            const frontmatterProvenance = (data = {}) => {
+              const submissionIssueNumber = Number(data.submissionIssueNumber);
+              const importPrNumber = Number(data.importPrNumber);
+              return {
+                submittedBy: normalizeText(data.submittedBy),
+                submittedByUrl: normalizeText(data.submittedByUrl),
+                submissionIssueNumber:
+                  Number.isInteger(submissionIssueNumber) &&
+                  submissionIssueNumber > 0
+                    ? submissionIssueNumber
+                    : null,
+                submissionIssueUrl: normalizeText(data.submissionIssueUrl),
+                importPrNumber:
+                  Number.isInteger(importPrNumber) && importPrNumber > 0
+                    ? importPrNumber
+                    : null,
+                importPrUrl: normalizeText(data.importPrUrl)
+              };
+            };
+            const addFlag = (report, severity, id, summary, detail = "") => {
+              if (report.reviewFlags.some((flag) => flag.id === id)) return;
+              report.reviewFlags.push({ id, severity, summary, detail });
+            };
+            const addClassificationWarning = (
+              report,
+              id,
+              summary,
+              detail = ""
+            ) => {
+              if (report.classificationWarnings.some((warning) => warning.id === id)) {
+                return;
+              }
+              report.classificationWarnings.push({ id, summary, detail });
+            };
+            const addProvenanceFinding = (
+              report,
+              severity,
+              id,
+              summary,
+              detail = "",
+              blocking = severity === "error"
+            ) => {
+              if (report.provenanceFindings.some((finding) => finding.id === id)) {
+                return;
+              }
+              report.provenanceFindings.push({
+                id,
+                severity,
+                summary,
+                detail,
+                blocking
+              });
+            };
+            const baseReport = (subject) => ({
+              schemaVersion: 1,
+              kind: "submission-risk",
+              generatedAt: new Date().toISOString(),
+              subject,
+              provenanceStatus: "not_applicable",
+              provenanceFindings: [],
+              contentProvenance: [],
+              effectiveContributor: null,
+              contributorSource: "",
+              pullRequestActor: null,
+              riskTier: "low",
+              reviewFlags: [],
+              trustSignals: [],
+              sourceUrls: [],
+              classificationWarnings: [],
+              recommendedLabels: [],
+              recommendedAction: "maintainer_review",
+              humanReviewNotes: [],
+              labelDefinitions: RISK_LABEL_DEFINITIONS
+            });
+            const contributorSummary = (contributor = {}) => {
+              const login = normalizeText(contributor.login || contributor.name);
+              if (!login) return null;
+              return {
+                login,
+                htmlUrl: normalizeText(contributor.html_url || contributor.url),
+                id: contributor.id ?? null
+              };
+            };
+            const contributorSignals = (contributor = {}, report) => {
+              const login = normalizeText(contributor.login || contributor.name);
+              if (login) {
+                report.trustSignals.push(
+                  `Contributor analyzed: ${githubUserReference(login)}`
+                );
+              }
+              const createdAt = Date.parse(
+                contributor.created_at || contributor.createdAt
+              );
+              if (Number.isFinite(createdAt)) {
+                const ageDays = Math.floor((Date.now() - createdAt) / 86400000);
+                if (ageDays < 7) {
+                  addFlag(
+                    report,
+                    "high",
+                    "new_contributor_account",
+                    "Contributor account is less than 7 days old"
+                  );
+                } else if (ageDays < 30) {
+                  addFlag(
+                    report,
+                    "medium",
+                    "young_contributor_account",
+                    "Contributor account is less than 30 days old"
+                  );
+                } else {
+                  report.trustSignals.push(`Contributor account age: ${ageDays} days`);
+                }
+              }
+              const publicRepos = Number(
+                contributor.public_repos ?? contributor.publicRepos
+              );
+              if (Number.isFinite(publicRepos) && publicRepos > 0) {
+                report.trustSignals.push(`Contributor public repos: ${publicRepos}`);
+              }
+            };
+            const addSourceSignals = (report, fields, text) => {
+              const urls = [
+                fields.github_url,
+                fields.docs_url,
+                fields.download_url,
+                fields.website_url
+              ]
+                .flatMap((value) => splitList(value))
+                .filter(Boolean);
+              for (const url of collectUrls(text)) urls.push(url);
+              const uniqueUrls = [...new Set(urls)];
+              report.sourceUrls = [
+                ...new Set([...(report.sourceUrls || []), ...uniqueUrls])
+              ];
+              const sourceFields = [
+                fields.github_url,
+                fields.docs_url,
+                fields.download_url,
+                fields.website_url
+              ].filter(Boolean);
+              if (sourceFields.length === 0) {
+                addFlag(
+                  report,
+                  "high",
+                  "no_canonical_source",
+                  "No canonical source, docs, repository, or download URL was provided"
+                );
+              }
+              for (const url of sourceFields) {
+                try {
+                  if (new URL(url).protocol !== "https:") {
+                    addFlag(
+                      report,
+                      "medium",
+                      "non_https_source_url",
+                      "A submitted source URL is not HTTPS",
+                      normalizeText(url)
+                    );
+                  }
+                } catch {
+                  addFlag(
+                    report,
+                    "medium",
+                    "invalid_source_url",
+                    "A submitted source URL could not be parsed",
+                    normalizeText(url)
+                  );
+                }
+              }
+              const githubSources = sourceFields.map(githubRepoFromUrl).filter(Boolean);
+              if (githubSources.length) {
+                report.trustSignals.push(`GitHub source: ${githubSources.join(", ")}`);
+              }
+              const docsHost = hostname(fields.docs_url);
+              if (docsHost) report.trustSignals.push(`Docs host: ${docsHost}`);
+              if (fields.brand_domain) {
+                report.trustSignals.push(`Brand domain: ${fields.brand_domain}`);
+              }
+            };
+            const addContentRiskSignals = (report, fields, text) => {
+              const installText = lower(
+                [
+                  fields.install_command,
+                  fields.usage_snippet,
+                  fields.full_copyable_content
+                ].join("\n")
+              );
+              const executableSourceUrls = collectUrls(installText);
+              if (
+                /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "critical",
+                  "embedded_secret",
+                  "Submission appears to include a real secret or API token"
+                );
+              }
+              if (executableSourceUrls.some((url) => url.startsWith("http://"))) {
+                addFlag(
+                  report,
+                  "critical",
+                  "non_https_executable_source",
+                  "Install or usage instructions execute or fetch from a non-HTTPS URL"
+                );
+              }
+              if (
+                /rm\s+-rf\s+(\/|~|\$home)\b/i.test(installText) ||
+                /\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(sh|bash)\b/i.test(
+                  installText
+                ) ||
+                /\b(invoke-expression|iex)\b/i.test(installText) ||
+                /\bbase64\s+(-d|--decode)\b[\s\S]{0,80}\|[\s\S]{0,40}\b(sh|bash)\b/i.test(
+                  installText
+                ) ||
+                /\bpowershell\b[\s\S]{0,80}\b-encodedcommand\b/i.test(installText)
+              ) {
+                addFlag(
+                  report,
+                  "critical",
+                  "unsafe_install_pipeline",
+                  "Install instructions include a destructive or remote-code execution pipeline"
+                );
+              }
+              if (
+                /\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
+                  text
+                ) ||
+                /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "critical",
+                  "malicious_data_theft_capability",
+                  "Submission appears to advertise credential, token, session, or wallet theft"
+                );
+              }
+              if (
+                /\b(ransomware|trojan|keylogger|credential stealer|password stealer|cookie stealer|backdoor|botnet|worm|cryptojacker|malware)\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "high",
+                  "malware_or_abuse_surface",
+                  "Submission uses malware or abuse tooling terms that need security review"
+                );
+              }
+              if (
+                /\b(csam|child sexual abuse|child exploitation)\b/i.test(text) ||
+                /\b(porn|pornographic|explicit sexual|xxx|onlyfans)\b/i.test(text) ||
+                /\bterrorist recruitment|violent extremist recruitment\b/i.test(text)
+              ) {
+                addFlag(
+                  report,
+                  "critical",
+                  "prohibited_content",
+                  "Submission appears to include clearly unacceptable content"
+                );
+              }
+              if (
+                /\b(api[-_ ]?key|token|oauth|bearer|authorization|x-api-key)\b/i.test(
+                  text
+                ) ||
+                /\b(?:api|access|developer|agent)\s+keys?\b/i.test(text) ||
+                /\bkeyed\s+(?:api|agent|tool|action|workflow)s?\b/i.test(text)
+              ) {
+                addFlag(
+                  report,
+                  "medium",
+                  "requires_credentials",
+                  "Submission requires API keys, tokens, OAuth, or authorization headers"
+                );
+              }
+              if (
+                /\b(private key|wallet|kyc|usdc|x402|payment|crypto|on-chain|attestation)\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "high",
+                  "financial_or_identity_sensitive",
+                  "Submission touches wallet, payment, KYC, or identity-proof flows"
+                );
+              }
+              if (
+                /\b(tweet|twitter|x\.com|post|reply|dm|social media)\b/i.test(text) &&
+                /\b(write|send|create|delete|posting|automation|webhook)\b/i.test(text)
+              ) {
+                addFlag(
+                  report,
+                  "high",
+                  "external_write_capability",
+                  "Submission can automate public social or external write actions"
+                );
+              }
+              if (
+                /\b(mail|email|calendar|messages|filesystem|browser|macos|accessibility|screen|ui automation)\b/i.test(
+                  text
+                ) ||
+                /\b(local workspace|workspace automation|desktop app|daemon)\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "high",
+                  "local_or_personal_data_access",
+                  "Submission can access local apps, personal data, browser state, or automation surfaces"
+                );
+              }
+              if (
+                /\b(delete|destroy|purge|remove)\b/i.test(text) &&
+                /\b(file|email|record|database|tweet|message|resource)\b/i.test(text)
+              ) {
+                addFlag(
+                  report,
+                  "high",
+                  "destructive_actions",
+                  "Submission includes delete or destructive-operation capability"
+                );
+              }
+              if (/\b(dmg|exe|pkg|msi|appimage|binary|installer|download)\b/i.test(text)) {
+                addFlag(
+                  report,
+                  "medium",
+                  "downloadable_binary_or_installer",
+                  "Submission references downloadable binaries or installer-style assets"
+                );
+              }
+            };
+            const toolListingSignals = (fields = {}, text = "") => {
+              const body = lower(
+                [
+                  text,
+                  fields.name,
+                  fields.description,
+                  fields.card_description,
+                  fields.pricing_model,
+                  fields.disclosure,
+                  fields.website_url,
+                  fields.docs_url
+                ].join("\n")
+              );
+              const signals = [];
+              const patterns = [
+                ["hosted_app", /\bhosted\s+(app|application|product|service|platform)\b/i],
+                ["desktop_app", /\b(desktop app|desktop application|native app)\b/i],
+                ["web_app", /\b(web app|web application)\b/i],
+                ["mobile_app", /\b(mobile app|mobile application)\b/i],
+                ["runtime_app", /\b(local ai agent runtime|agentic ai runtime|ai runtime|runs on your machine)\b/i],
+                ["product", /\b(product|commercial product|software product)\b/i],
+                ["software", /\b(software|application)\b/i],
+                ["saas", /\b(saas|software as a service)\b/i],
+                ["service", /\b(service|platform|workspace|dashboard|interface)\b/i],
+                ["subscription", /\b(subscription|pricing|paid plan|pro plan|free trial|free to try|no credit card)\b/i],
+                ["features_page", /\b(features page|demo url|product url|website url)\b/i],
+                ["placement", /\b(featured|sponsored|affiliate|preferred placement)\b/i]
+              ];
+              if (fields.website_url) signals.push("website_url");
+              if (fields.pricing_model) signals.push("pricing_model");
+              if (fields.disclosure) signals.push("disclosure");
+              for (const [signal, pattern] of patterns) {
+                if (pattern.test(body)) signals.push(signal);
+              }
+              return [...new Set(signals)];
+            };
+            const looksLikeMcpServerSubmission = (fields = {}, text = "") => {
+              const body = lower(
+                [
+                  text,
+                  fields.name,
+                  fields.description,
+                  fields.card_description,
+                  fields.install_command,
+                  fields.usage_snippet
+                ].join("\n")
+              );
+              return (
+                /\bmcp\s+(server|endpoint|tool|transport|config|configuration)\b/i.test(
+                  body
+                ) || /\bclaude\s+mcp\s+add\b/i.test(body)
+              );
+            };
+            const looksLikeToolAppListing = (fields = {}, text = "") => {
+              if (
+                lower(fields.category) === "mcp" &&
+                looksLikeMcpServerSubmission(fields, text)
+              ) {
+                return false;
+              }
+              const signals = toolListingSignals(fields, text);
+              const hardSignals = new Set([
+                "hosted_app",
+                "desktop_app",
+                "web_app",
+                "mobile_app",
+                "runtime_app",
+                "product",
+                "software",
+                "saas",
+                "subscription",
+                "features_page",
+                "placement"
+              ]);
+              return (
+                signals.length >= 2 ||
+                signals.some((signal) => hardSignals.has(signal))
+              );
+            };
+            const missingToolListingReviewFields = (fields = {}) => {
+              const required = [
+                ["websiteUrl", fields.website_url],
+                ["documentationUrl", fields.docs_url],
+                ["pricingModel", fields.pricing_model],
+                ["disclosure", fields.disclosure],
+                ["applicationCategory", fields.application_category],
+                ["operatingSystem", fields.operating_system]
+              ];
+              return required
+                .filter(([, value]) => !normalizeText(value))
+                .map(([label]) => label);
+            };
+            const addToolListingClassificationSignals = (report, fields, text) => {
+              const category = normalizeText(fields.category);
+              if (category && category !== TOOLS_CATEGORY) {
+                if (looksLikeToolAppListing(fields, text)) {
+                  addClassificationWarning(
+                    report,
+                    "tools_category_routing",
+                    "This looks like a hosted tool/app/service/product and should route to tools listing review",
+                    `Use content/tools or ${TOOLS_LISTING_FLOW_URL}`
+                  );
+                }
+                return;
+              }
+              if (category === TOOLS_CATEGORY) {
+                const missing = missingToolListingReviewFields(fields);
+                if (missing.length) {
+                  addClassificationWarning(
+                    report,
+                    "tools_listing_metadata_missing",
+                    "Tools listings should include website, docs/demo, pricing, disclosure, application category, and operating system fields",
+                    missing.join(", ")
+                  );
+                }
+              }
+            };
+            const tierFromFlags = (flags) => {
+              if (flags.some((flag) => flag.severity === "critical")) {
+                return "critical";
+              }
+              const score = flags.reduce(
+                (total, flag) => total + (SEVERITY_WEIGHT[flag.severity] ?? 0),
+                0
+              );
+              if (score >= 7) return "high";
+              if (score >= 3) return "medium";
+              return "low";
+            };
+            const riskNotes = (report) => {
+              const notes = [
+                "This deterministic security/safety review is advisory unless the tier is critical.",
+                "Schema-valid does not mean publish-valid; maintainer source and safety review is still required.",
+                "Category fit, regulated-domain status, and promotional tone are not treated as security risk by this check."
+              ];
+              if (report.riskTier === "critical") {
+                notes.push("Critical findings should block import or merge until resolved.");
+              }
+              if (report.reviewFlags.some((flag) => flag.id === "no_canonical_source")) {
+                notes.push("Ask for a canonical source, docs, repository, or package URL.");
+              }
+              if (
+                report.reviewFlags.some((flag) =>
+                  ["external_write_capability", "destructive_actions"].includes(flag.id)
+                )
+              ) {
+                notes.push("Confirm user-consent and permission boundaries before listing.");
+              }
+              return notes;
+            };
+            const finalizeReport = (report) => {
+              report.riskTier = tierFromFlags(report.reviewFlags);
+              report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
+              report.recommendedAction =
+                report.riskTier === "critical"
+                  ? "block_until_resolved"
+                  : "maintainer_review";
+              report.humanReviewNotes = riskNotes(report);
+              report.labelDefinitions = RISK_LABEL_DEFINITIONS;
+              return report;
+            };
+            const issueContributorMap = (items = []) => {
+              const map = new Map();
+              for (const item of items) {
+                const issueNumberValue = Number(item.issueNumber || item.issue?.number);
+                if (!Number.isInteger(issueNumberValue) || issueNumberValue <= 0) {
+                  continue;
+                }
+                map.set(issueNumberValue, {
+                  issue: item.issue || {},
+                  contributor: item.contributor || item.issue?.user || {}
+                });
+              }
+              return map;
+            };
+            const frontmatterContributorMap = (items = []) => {
+              const map = new Map();
+              for (const contributor of items) {
+                const login = normalizeGitHubLogin(
+                  contributor?.login || contributor?.name
+                );
+                if (login) map.set(login.toLowerCase(), contributor);
+              }
+              return map;
+            };
+            const issueUrlMatchesNumber = (url, number) => {
+              const text = normalizeText(url);
+              if (!text) return false;
+              try {
+                const parts = new URL(text).pathname.split("/").filter(Boolean);
+                const issuesIndex = parts.indexOf("issues");
+                return issuesIndex >= 0 && parts[issuesIndex + 1] === String(number);
+              } catch {
+                return false;
+              }
+            };
+            const validatePrProvenance = (
+              report,
+              entries,
+              pullRequestActor,
+              frontmatterContributors,
+              submissionIssueContributors
+            ) => {
+              if (!entries.length) return;
+              report.contentProvenance = entries.map((entry) => ({
+                filename: entry.filename,
+                ...entry.provenance
+              }));
+              const prActor = contributorSummary(pullRequestActor || pr.user || {});
+              report.pullRequestActor = prActor;
+              if (prActor?.login) {
+                report.trustSignals.push(
+                  `PR opened by: ${githubUserReference(prActor.login)}`
+                );
+              }
+              const issuesByNumber = issueContributorMap(
+                submissionIssueContributors
+              );
+              const contributorsByLogin = frontmatterContributorMap(
+                frontmatterContributors
+              );
+              let contributorSource =
+                sourceType === "automation_import"
+                  ? "submission_issue_author"
+                  : sourceType === "external_direct"
+                    ? "pull_request_author"
+                    : "pull_request_or_maintainer";
+              let effectiveContributor =
+                sourceType === "automation_import"
+                  ? null
+                  : contributorSummary(pullRequestActor || pr.user || {});
+              if (sourceType === "automation_import") {
+                const issueNumbers = [
+                  ...new Set(
+                    entries
+                      .map((entry) => entry.provenance.submissionIssueNumber)
+                      .filter(Boolean)
+                  )
+                ];
+                if (issueNumbers.length === 1) {
+                  effectiveContributor = contributorSummary(
+                    issuesByNumber.get(issueNumbers[0])?.contributor || {}
+                  );
+                }
+              } else if (sourceType === "same_repo_direct") {
+                const submittedLogins = [
+                  ...new Set(
+                    entries
+                      .map((entry) =>
+                        normalizeGitHubLogin(entry.provenance.submittedBy)
+                      )
+                      .filter(Boolean)
+                      .map((login) => login.toLowerCase())
+                  )
+                ];
+                if (submittedLogins.length === 1) {
+                  const submittedLogin = submittedLogins[0];
+                  const contributor = contributorsByLogin.get(submittedLogin);
+                  const provenance = entries.find((entry) =>
+                    sameGitHubLogin(entry.provenance.submittedBy, submittedLogin)
+                  )?.provenance;
+                  effectiveContributor = contributorSummary(
+                    contributor || {
+                      login: provenance?.submittedBy || submittedLogin,
+                      html_url: provenance?.submittedByUrl
+                    }
+                  );
+                  contributorSource = "content_frontmatter";
+                }
+              }
+              if (!effectiveContributor) {
+                effectiveContributor = contributorSummary(pullRequestActor || {});
+              }
+              report.effectiveContributor = effectiveContributor;
+              report.contributorSource = contributorSource;
+              if (sourceType === "automation_import") {
+                for (const entry of entries) {
+                  const provenance = entry.provenance;
+                  const required = [
+                    ["submittedBy", provenance.submittedBy],
+                    ["submittedByUrl", provenance.submittedByUrl],
+                    ["submissionIssueNumber", provenance.submissionIssueNumber],
+                    ["submissionIssueUrl", provenance.submissionIssueUrl]
+                  ].filter(([, value]) => !value);
+                  if (required.length) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `missing_import_provenance_${entry.filename}`,
+                      "Automation import content is missing required issue provenance",
+                      `${entry.filename}: ${required
+                        .map(([field]) => field)
+                        .join(", ")}`
+                    );
+                    continue;
+                  }
+                  const issueContributor = issuesByNumber.get(
+                    provenance.submissionIssueNumber
+                  )?.contributor;
+                  const issueLogin = normalizeText(issueContributor?.login);
+                  if (!issueLogin) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `missing_issue_contributor_${provenance.submissionIssueNumber}`,
+                      "Could not resolve the original issue submitter for import provenance",
+                      `Issue #${provenance.submissionIssueNumber}`
+                    );
+                  } else if (!sameGitHubLogin(provenance.submittedBy, issueLogin)) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `import_submitter_mismatch_${entry.filename}`,
+                      "Imported content submitter does not match the linked issue author",
+                      `${entry.filename}: submittedBy=${provenance.submittedBy}, issueAuthor=${issueLogin}`
+                    );
+                  }
+                  if (
+                    provenance.submittedByUrl &&
+                    !sameGitHubLogin(
+                      provenance.submittedByUrl,
+                      provenance.submittedBy
+                    )
+                  ) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `import_submitter_url_mismatch_${entry.filename}`,
+                      "Imported content submitter URL does not match submittedBy",
+                      `${entry.filename}: ${provenance.submittedByUrl}`
+                    );
+                  }
+                  if (
+                    provenance.submissionIssueUrl &&
+                    !issueUrlMatchesNumber(
+                      provenance.submissionIssueUrl,
+                      provenance.submissionIssueNumber
+                    )
+                  ) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `import_issue_url_mismatch_${entry.filename}`,
+                      "Imported content submission issue URL does not match submissionIssueNumber",
+                      `${entry.filename}: ${provenance.submissionIssueUrl}`
+                    );
+                  }
+                }
+              } else if (sourceType === "external_direct") {
+                for (const entry of entries) {
+                  const provenance = entry.provenance;
+                  if (!provenance.submittedBy || !provenance.submittedByUrl) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `missing_direct_pr_submitter_${entry.filename}`,
+                      "Direct contributor PR content must include submittedBy and submittedByUrl",
+                      `${entry.filename}: add submittedBy: ${
+                        prActor?.login || "<your GitHub handle>"
+                      } and submittedByUrl: https://github.com/${
+                        prActor?.login || "<your GitHub handle>"
+                      }`
+                    );
+                    continue;
+                  }
+                  if (
+                    prActor?.login &&
+                    !sameGitHubLogin(provenance.submittedBy, prActor.login)
+                  ) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `direct_pr_submitter_mismatch_${entry.filename}`,
+                      "Direct contributor PR submittedBy must match the PR author",
+                      `${entry.filename}: submittedBy=${provenance.submittedBy}, prAuthor=${prActor.login}`
+                    );
+                  }
+                  if (
+                    provenance.submittedByUrl &&
+                    !sameGitHubLogin(
+                      provenance.submittedByUrl,
+                      provenance.submittedBy
+                    )
+                  ) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `direct_pr_submitter_url_mismatch_${entry.filename}`,
+                      "Direct contributor PR submittedByUrl must match submittedBy",
+                      `${entry.filename}: ${provenance.submittedByUrl}`
+                    );
+                  }
+                }
+              } else if (sourceType === "same_repo_direct") {
+                for (const entry of entries) {
+                  const provenance = entry.provenance;
+                  if (provenance.submittedBy && !provenance.submittedByUrl) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `missing_same_repo_submitter_url_${entry.filename}`,
+                      "Content provenance with submittedBy must also include submittedByUrl",
+                      `${entry.filename}: submittedBy=${provenance.submittedBy}`
+                    );
+                  }
+                  if (
+                    provenance.submittedByUrl &&
+                    !sameGitHubLogin(
+                      provenance.submittedByUrl,
+                      provenance.submittedBy
+                    )
+                  ) {
+                    addProvenanceFinding(
+                      report,
+                      "error",
+                      `same_repo_submitter_url_mismatch_${entry.filename}`,
+                      "Content submittedByUrl must match submittedBy",
+                      `${entry.filename}: ${provenance.submittedByUrl}`
+                    );
+                  }
+                }
+              }
+              report.provenanceStatus = report.provenanceFindings.some(
+                (finding) => finding.blocking
+              )
+                ? "failed"
+                : "passed";
+              if (sourceType === "automation_import") {
+                const issues = entries
+                  .map((entry) => entry.provenance.submissionIssueNumber)
+                  .filter(Boolean);
+                for (const issueNumberValue of [...new Set(issues)]) {
+                  report.trustSignals.push(`Submission issue: #${issueNumberValue}`);
+                }
+              }
+            };
+            const formatRiskMarkdown = (report) => {
+              const lines = [
+                RISK_COMMENT_MARKER,
+                `## Submission security/safety review: ${report.riskTier}`,
+                "",
+                `- Recommended action: \`${report.recommendedAction}\``,
+                `- Recommended labels: ${
+                  report.recommendedLabels.map((label) => `\`${label}\``).join(", ") ||
+                  "none"
+                }`
+              ];
+              if (
+                report.provenanceStatus &&
+                report.provenanceStatus !== "not_applicable"
+              ) {
+                lines.push("", "### Provenance");
+                lines.push(`- Status: \`${report.provenanceStatus}\``);
+                if (report.effectiveContributor?.login) {
+                  lines.push(
+                    `- Contributor analyzed: ${githubUserReference(
+                      report.effectiveContributor.login
+                    )}`
+                  );
+                }
+                if (
+                  report.pullRequestActor?.login &&
+                  !sameGitHubLogin(
+                    report.pullRequestActor.login,
+                    report.effectiveContributor?.login
+                  )
+                ) {
+                  lines.push(
+                    `- PR opened by: ${githubUserReference(
+                      report.pullRequestActor.login
+                    )}`
+                  );
+                }
+                if (report.contributorSource) {
+                  lines.push(`- Contributor source: \`${report.contributorSource}\``);
+                }
+                for (const provenance of report.contentProvenance || []) {
+                  const parts = [];
+                  if (provenance.submittedBy) {
+                    parts.push(`by ${githubUserReference(provenance.submittedBy)}`);
+                  }
+                  if (provenance.submissionIssueNumber) {
+                    parts.push(`via issue #${provenance.submissionIssueNumber}`);
+                  } else if (provenance.importPrNumber) {
+                    parts.push(`via PR #${provenance.importPrNumber}`);
+                  }
+                  if (parts.length) {
+                    lines.push(`- ${provenance.filename}: ${parts.join(" ")}`);
+                  }
+                }
+                for (const finding of report.provenanceFindings || []) {
+                  const detail = finding.detail
+                    ? ` - ${compactWhitespace(finding.detail)}`
+                    : "";
+                  lines.push(
+                    `- \`${finding.severity}\` ${finding.summary} (\`${finding.id}\`)${detail}`
+                  );
+                }
+              }
+              lines.push("", "### Review flags");
+              if (report.reviewFlags.length) {
+                for (const flag of report.reviewFlags) {
+                  const detail = flag.detail
+                    ? ` - ${compactWhitespace(flag.detail)}`
+                    : "";
+                  lines.push(
+                    `- \`${flag.severity}\` ${flag.summary} (\`${flag.id}\`)${detail}`
+                  );
+                }
+              } else {
+                lines.push("- No deterministic security/safety flags found.");
+              }
+              if (report.classificationWarnings.length) {
+                lines.push("", "### Classification warnings");
+                for (const warning of report.classificationWarnings) {
+                  const detail = warning.detail
+                    ? ` - ${compactWhitespace(warning.detail)}`
+                    : "";
+                  lines.push(`- ${warning.summary} (\`${warning.id}\`)${detail}`);
+                }
+              }
+              if (report.trustSignals.length) {
+                lines.push("", "### Trust signals");
+                for (const signal of report.trustSignals.slice(0, 12)) {
+                  lines.push(`- ${compactWhitespace(signal)}`);
+                }
+              }
+              if (report.humanReviewNotes.length) {
+                lines.push("", "### Maintainer notes");
+                for (const note of report.humanReviewNotes) {
+                  lines.push(`- ${note}`);
+                }
+              }
+              return `${lines.join("\n")}\n`;
+            };
+
             const files = await github.paginate(github.rest.pulls.listFiles, {
               ...context.repo,
               pull_number: pr.number,
@@ -139,6 +1138,8 @@ jobs:
                 continue;
               }
               try {
+                // The PR head file is read as data only. This privileged workflow
+                // never checks out PR code and never runs contributor-controlled files.
                 const { data } = await github.rest.repos.getContent({
                   owner: pr.head.repo.owner.login,
                   repo: pr.head.repo.name,
@@ -217,36 +1218,83 @@ jobs:
                 });
               }
             }
-            fs.mkdirSync(".github/tmp", { recursive: true });
-            fs.writeFileSync(
-              ".github/tmp/pr-risk-input.json",
-              JSON.stringify({
-                pullRequest: pr,
-                pullRequestActor,
-                contributor: pullRequestActor,
-                frontmatterContributors,
-                sourceType,
-                repositoryFullName,
-                submissionIssueContributors,
-                files: contentFiles
-              }, null, 2),
-              "utf8"
+            const contentMdxFiles = contentFiles.filter(
+              (file) =>
+                /^content\/[^/]+\/[^/]+\.mdx$/i.test(normalizeText(file.filename)) &&
+                normalizeText(file.status) !== "removed"
             );
-
-      - name: Analyze direct content PR risk
-        run: |
-          node scripts/analyze-submission-risk.mjs \
-            --pr-json .github/tmp/pr-risk-input.json \
-            --output .github/tmp/submission-risk.json \
-            --markdown-output .github/tmp/submission-risk.md
-
-      - name: Label PR risk
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
-        with:
-          script: |
-            const fs = require("node:fs");
-            const report = JSON.parse(
-              fs.readFileSync(".github/tmp/submission-risk.json", "utf8")
+            const report = baseReport({
+              type: "pull_request",
+              number: pr.number,
+              title: normalizeText(pr.title),
+              url: normalizeText(pr.html_url),
+              author: normalizeText(pullRequestActor.login || pr.user?.login),
+              sourceType,
+              contentFiles: contentMdxFiles.map((file) => file.filename)
+            });
+            if (!contentMdxFiles.length) {
+              addFlag(
+                report,
+                "low",
+                "no_content_mdx_files",
+                "No added or modified content MDX files were available for risk analysis"
+              );
+            }
+            const hasRootReadmeChange = contentFiles.some(
+              (file) =>
+                normalizeText(file.filename).toLowerCase() === "readme.md" &&
+                normalizeText(file.status) !== "removed"
+            );
+            if (
+              hasRootReadmeChange &&
+              contentMdxFiles.length &&
+              sourceType === "external_direct"
+            ) {
+              addClassificationWarning(
+                report,
+                "generated_readme_change",
+                "README.md changes are not accepted in direct content PRs; maintainer automation regenerates README output",
+                "Remove README.md from the contributor PR. CI regenerates it for validation, and the post-merge README Refresh PR owns committed updates."
+              );
+            }
+            const entries = [];
+            for (const file of contentMdxFiles) {
+              const content = normalizeText(file.content);
+              if (!content) {
+                addFlag(
+                  report,
+                  "medium",
+                  "missing_pr_file_content",
+                  "PR content file could not be read through the GitHub API",
+                  file.filename
+                );
+                continue;
+              }
+              const frontmatter = readFrontmatter(content);
+              const category = prFileCategory(file.filename);
+              const fields = frontmatterFields(frontmatter, category);
+              const provenance = frontmatterProvenance(frontmatter);
+              entries.push({ filename: file.filename, fields, provenance });
+              report.trustSignals.push(`Content file: ${file.filename}`);
+              addSourceSignals(report, fields, content);
+              addContentRiskSignals(report, fields, content);
+              addToolListingClassificationSignals(report, fields, content);
+            }
+            validatePrProvenance(
+              report,
+              entries,
+              pullRequestActor,
+              frontmatterContributors,
+              submissionIssueContributors
+            );
+            contributorSignals(
+              report.effectiveContributor || pullRequestActor || pr.user || {},
+              report
+            );
+            finalizeReport(report);
+            const markdownReport = formatRiskMarkdown(report);
+            core.info(
+              `Submission security/safety risk: ${report.riskTier} (${report.reviewFlags.length} flags)`
             );
             const definitions = report.labelDefinitions || {};
             for (const [name, definition] of Object.entries(definitions)) {
@@ -286,36 +1334,46 @@ jobs:
               issue_number: context.payload.pull_request.number,
               labels: [...labels].filter(Boolean)
             });
-
-      - name: Post PR risk report
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
-        with:
-          script: |
-            const fs = require("node:fs");
-            const body = fs.readFileSync(".github/tmp/submission-risk.md", "utf8");
-            const marker = "<!-- submission-risk-report -->";
             const comments = await github.paginate(github.rest.issues.listComments, {
               ...context.repo,
               issue_number: context.payload.pull_request.number,
               per_page: 100
             });
-            const existing = comments.find((comment) => comment.body?.includes(marker));
+            const existing = comments.find((comment) =>
+              comment.body?.includes(RISK_COMMENT_MARKER)
+            );
             if (existing) {
               await github.rest.issues.updateComment({
                 ...context.repo,
                 comment_id: existing.id,
-                body
+                body: markdownReport
               });
             } else {
               await github.rest.issues.createComment({
                 ...context.repo,
                 issue_number: context.payload.pull_request.number,
-                body
+                body: markdownReport
               });
             }
-
-      - name: Fail when submission provenance is invalid
-        run: node scripts/ci/fail-provenance-report.mjs .github/tmp/submission-risk.json
-
-      - name: Fail when submission risk is critical
-        run: node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json
+            const failures = [];
+            const provenanceBlockers = (report.provenanceFindings || []).filter(
+              (finding) => finding.blocking
+            );
+            if (report.provenanceStatus === "failed" || provenanceBlockers.length) {
+              failures.push("Submission provenance validation found blockers:");
+              for (const finding of provenanceBlockers) {
+                failures.push(`- ${finding.summary} (${finding.id})`);
+                if (finding.detail) failures.push(`  ${finding.detail}`);
+              }
+            }
+            if (report.riskTier === "critical") {
+              failures.push("Submission security/safety review found critical blockers:");
+              for (const flag of report.reviewFlags || []) {
+                if (flag.severity === "critical") {
+                  failures.push(`- ${flag.summary} (${flag.id})`);
+                }
+              }
+            }
+            if (failures.length) {
+              core.setFailed(failures.join("\n"));
+            }

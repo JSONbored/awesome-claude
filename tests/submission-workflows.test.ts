@@ -34,22 +34,25 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("pull_request_target:");
-    expect(source).toContain("Resolve current base commit");
-    expect(source).toContain("github.rest.repos.getBranch");
-    expect(source).toContain("Checkout base repository");
-    expect(source).toContain("ref: ${{ steps.base-commit.outputs.sha }}");
+    expect(source).toContain("Analyze PR content through GitHub API");
+    expect(source).not.toContain("actions/checkout");
+    expect(source).not.toContain("pnpm install");
+    expect(source).not.toContain("Setup Node.js");
+    expect(source).not.toContain("Setup pnpm");
     expect(source).not.toContain(
       "ref: ${{ github.event.pull_request.base.sha }}",
     );
     expect(source).toContain("github.rest.repos.getContent");
     expect(source).toContain("pr.head.sha");
+    expect(source).toContain("read as data only");
+    expect(source).toContain("never checks out PR code");
     expect(source).toContain("sourceType");
     expect(source).toContain("automation_import");
     expect(source).toContain("submissionIssueContributors");
-    expect(source).toContain("Fail when submission provenance is invalid");
-    expect(source).toContain("scripts/ci/fail-provenance-report.mjs");
-    expect(source).toContain("Analyze direct content PR risk");
-    expect(source).toContain("Fail when submission risk is critical");
+    expect(source).toContain("Submission provenance validation found blockers");
+    expect(source).toContain(
+      "Submission security/safety review found critical blockers",
+    );
     expect(source).not.toContain("git checkout");
   });
 
