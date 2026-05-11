@@ -2,7 +2,7 @@
 The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.
 
 Base URL: https://heyclau.de
-Total entries: 383
+Total entries: 384
 
 ## Entry Index
 - [/cursor-rules - Cursor Rules Generator for Claude Code](https://heyclau.de/commands/cursor-rules) (commands)
@@ -333,6 +333,7 @@ Total entries: 383
 - [Smithery](https://heyclau.de/tools/smithery) (tools)
 - [Socket MCP Server for Claude](https://heyclau.de/mcp/socket-mcp-server) (mcp)
 - [Sourcegraph Cody](https://heyclau.de/tools/sourcegraph-cody) (tools)
+- [Spain Legal by Legal Fournier](https://heyclau.de/mcp/legal-fournier-spain-legal-mcp) (mcp)
 - [Square MCP Server for Claude](https://heyclau.de/mcp/square-mcp-server) (mcp)
 - [Stagehand](https://heyclau.de/tools/stagehand) (tools)
 - [Starship Powerline Theme - Statuslines](https://heyclau.de/statuslines/starship-powerline-theme) (statuslines)
@@ -138389,6 +138390,49 @@ Cody is strongest when repository-scale context and search quality matter more t
 
 ## Disclosure
 Editorial listing. No paid placement or affiliate link is used.
+---
+
+# Spain Legal by Legal Fournier
+URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+Category: mcp
+Author: Legal Fournier
+Submitted by: vy35
+Submission issue: https://github.com/JSONbored/claudepro-directory/issues/324
+Date added: 2026-05-08
+Documentation: https://legalfournier.com/en/mcp/spain-legal/
+Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+- Source URLs: https://legalfournier.com/en/mcp/spain-legal/, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
+- Brand: Legal Fournier
+- Brand domain: legalfournier.com
+- Brand asset source: brandfetch
+- Author: Legal Fournier
+- Submitted by: vy35
+- Submission issue: https://github.com/JSONbored/claudepro-directory/issues/324
+- Reviewed by: JSONbored
+- Claim status: unclaimed
+- Last verified: 2026-05-08
+- Robots: indexable
+## Summary
+Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
+## Tags
+- mcp
+- legal
+- immigration
+- spain
+- visa
+- residency
+- nie
+- beckham-law
+## Content
+## Overview
+Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
+
+## Usage
+claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal
+claude mcp list
+claude mcp status legal-fournier-spain-legal
 ---
 
 # Square MCP Server for Claude

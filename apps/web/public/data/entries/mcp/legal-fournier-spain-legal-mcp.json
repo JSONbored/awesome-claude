@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "key": "mcp:legal-fournier-spain-legal-mcp",
+  "entry": {
+    "category": "mcp",
+    "slug": "legal-fournier-spain-legal-mcp",
+    "title": "Spain Legal by Legal Fournier",
+    "description": "Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.",
+    "seoTitle": "Spain Legal by Legal Fournier - MCP Servers for Claude",
+    "seoDescription": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+    "author": "Legal Fournier",
+    "dateAdded": "2026-05-08",
+    "contentUpdatedAt": "2026-05-08",
+    "submittedBy": "vy35",
+    "submittedByUrl": "https://github.com/vy35",
+    "submittedAt": "2026-05-08T18:13:53.000Z",
+    "submissionIssueNumber": 324,
+    "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+    "reviewedBy": "JSONbored",
+    "reviewedAt": "2026-05-10T21:02:21.000Z",
+    "claimStatus": "unclaimed",
+    "tags": [
+      "mcp",
+      "legal",
+      "immigration",
+      "spain",
+      "visa",
+      "residency",
+      "nie",
+      "beckham-law"
+    ],
+    "keywords": [
+      "mcp",
+      "legal",
+      "immigration",
+      "spain",
+      "visa",
+      "residency",
+      "nie",
+      "beckham-law",
+      "mcp servers",
+      "claude",
+      "heyclaude",
+      "spain legal by legal fournier"
+    ],
+    "documentationUrl": "https://legalfournier.com/en/mcp/spain-legal/",
+    "brandName": "Legal Fournier",
+    "brandDomain": "legalfournier.com",
+    "brandIconUrl": "/api/brand-assets/icon/legalfournier.com",
+    "brandAssetSource": "brandfetch",
+    "cardDescription": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+    "installable": true,
+    "installCommand": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal",
+    "usageSnippet": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal\nclaude mcp list\nclaude mcp status legal-fournier-spain-legal",
+    "copySnippet": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal\nclaude mcp list\nclaude mcp status legal-fournier-spain-legal",
+    "configSnippet": "{\n  \"mcpServers\": {\n    \"legal-fournier-spain-legal\": {\n      \"type\": \"http\",\n      \"url\": \"https://legalfournier.com/mcp/spain-legal\"\n    }\n  }\n}",
+    "hasPrerequisites": false,
+    "hasTroubleshooting": false,
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "downloadUrl": "",
+    "downloadTrust": null,
+    "downloadSha256": null,
+    "body": "## Overview\n\nSpain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.\n\n## Usage\n\nclaude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal\nclaude mcp list\nclaude mcp status legal-fournier-spain-legal",
+    "sections": [
+      {
+        "title": "Overview",
+        "id": "overview",
+        "markdown": "Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Usage",
+        "id": "usage",
+        "markdown": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal\nclaude mcp list\nclaude mcp status legal-fournier-spain-legal",
+        "codeBlocks": []
+      }
+    ],
+    "headings": [
+      {
+        "depth": 2,
+        "text": "Overview",
+        "id": "overview"
+      },
+      {
+        "depth": 2,
+        "text": "Usage",
+        "id": "usage"
+      }
+    ],
+    "codeBlocks": [],
+    "filePath": "content/mcp/legal-fournier-spain-legal-mcp.mdx",
+    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx",
+    "repoUrl": null,
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null
+  },
+  "trustSignals": {
+    "firstPartyEditorial": false,
+    "packageVerified": false,
+    "packageTrust": null,
+    "packageChecksum": "",
+    "checksumPresent": false,
+    "sourceUrlCount": 2,
+    "sourceUrls": [
+      "https://legalfournier.com/en/mcp/spain-legal/",
+      "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+    ],
+    "sourceStatus": "available",
+    "lastVerifiedAt": "2026-05-08",
+    "adapterGenerated": false,
+    "platforms": [],
+    "supportLevels": []
+  }
+}

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "mcp-registry-feed",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 47,
+  "count": 48,
   "servers": [
     {
       "name": "airtable-mcp-server",
@@ -578,6 +578,27 @@
       "installCommand": "claude mcp add --transport http socket https://mcp.socket.dev/ && claude mcp list",
       "configSnippet": "{\n  \"socket\": {\n    \"url\": \"https://mcp.socket.dev/\",\n    \"transport\": \"http\"\n  }\n}",
       "heyclaudeUrl": "https://heyclau.de/mcp/socket-mcp-server"
+    },
+    {
+      "name": "legal-fournier-spain-legal-mcp",
+      "title": "Spain Legal by Legal Fournier",
+      "description": "Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.",
+      "websiteUrl": "https://legalfournier.com/en/mcp/spain-legal/",
+      "submittedBy": "vy35",
+      "submittedByUrl": "https://github.com/vy35",
+      "submittedAt": "2026-05-08T18:13:53.000Z",
+      "submissionIssueNumber": 324,
+      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-10T21:02:21.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Legal Fournier",
+      "brandDomain": "legalfournier.com",
+      "brandIconUrl": "/api/brand-assets/icon/legalfournier.com",
+      "brandAssetSource": "brandfetch",
+      "installCommand": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal",
+      "configSnippet": "{\n  \"mcpServers\": {\n    \"legal-fournier-spain-legal\": {\n      \"type\": \"http\",\n      \"url\": \"https://legalfournier.com/mcp/spain-legal\"\n    }\n  }\n}",
+      "heyclaudeUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp"
     },
     {
       "name": "square-mcp-server",

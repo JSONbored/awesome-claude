@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "registry-manifest",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "totalEntries": 383,
+  "totalEntries": 384,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -21,7 +21,7 @@
       "label": "Agents"
     },
     "mcp": {
-      "count": 47,
+      "count": 48,
       "label": "MCP Servers"
     },
     "tools": {
@@ -2683,6 +2683,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/sourcegraph-cody"
     },
     {
+      "key": "mcp:legal-fournier-spain-legal-mcp",
+      "category": "mcp",
+      "slug": "legal-fournier-spain-legal-mcp",
+      "canonicalUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/legal-fournier-spain-legal-mcp.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/legal-fournier-spain-legal-mcp"
+    },
+    {
       "key": "mcp:square-mcp-server",
       "category": "mcp",
       "slug": "square-mcp-server",
@@ -3132,20 +3140,20 @@
     "duplicateBodyGroupCount": 0
   },
   "trustSummary": {
-    "brandedCount": 140,
+    "brandedCount": 141,
     "brandedPercent": 37,
-    "brandfetchCount": 138,
-    "sourceAvailableCount": 383,
+    "brandfetchCount": 139,
+    "sourceAvailableCount": 384,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 28,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 357,
+    "recentlyVerifiedCount": 358,
     "staleVerificationCount": 0,
-    "provenanceCount": 5,
-    "provenancePercent": 1,
-    "claimedOrReviewedCount": 4,
+    "provenanceCount": 6,
+    "provenancePercent": 2,
+    "claimedOrReviewedCount": 5,
     "recommendedFixCount": 1,
     "entriesNeedingAttention": 1
   },
@@ -3175,47 +3183,47 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "99a23eceac600801f72e1af78ba8a0884774f1545eedd0ae1f679420060ccf71"
+      "sha256": "69b7862438807839fb8924bcb3dcca23e2f4b65d966bae2552cd07be26191e01"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "4eb9075bcb854007cbe7086ff56359636ae3eb303696ec56c6febf6dabff772b"
+      "sha256": "4d57e4aae1f1fa7316f235c6bbc43f52227acd393b7aaa724db7e1b459218555"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "6b89c2b24e2ad66c043a96d07972dc72b5ffeadcb38cc7e08a42c8fb3cc38fe3"
+      "sha256": "5c917e6c7ec786449d4e93c0efb15f1f1a01051b1d2c6bf99cd36e5f95764415"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "090099fb2dfd1d3df67cc8075fba132fe375ec2c9af2e96ee3ae063f9ab68649"
+      "sha256": "4aedfe64b25b8e18bc6d9752b5977a591805733151403c18c8d729faf14abd3d"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "54f80e733f2388a4f5b0b86e143a27ccc3c8bc024192b2bb3f844bfd4b3274ce"
+      "sha256": "7926c9910f678bfa40472647c086108c3c91df693cf76030c0907aee75b86b02"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "8ac52fb902a5f3fb3515f9216261bef5c1ec74a33ea20c3284860d3e7056a16e"
+      "sha256": "a7e5c77c0646897022e98b95457a9e4579810df81fdf4312ae583dd0359d93c1"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "f474b60ec5449b9b5a9ae8adde763d31a914ee2eb6b8616dde7fd39bc7f534f2"
+      "sha256": "beb1a6bfeb3faea8517b81118fafb0980aa24527a77a1611dfe118145e912676"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "6466283703dbfca21d34c066b506d2188e35e18d1fef3e464ff864d6e0b4a6ee"
+      "sha256": "1eb23cfacd485bfd52d16c5afaf2ed840710dfd58d34a6610205519af1b0df4d"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "629ce74708edb97fcbb86d1ac937fbdb3e640fb44549487edbffe03c7b0d6779"
+      "sha256": "48e5227ec89798561d18b8c3542e493fd1df0b0a659db214abd054301f5d0041"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3225,7 +3233,7 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "ad9bb61016a26de45a940f330da1a0c04ddd9e3b332af8f12a85b8794f0a248f"
+      "sha256": "e14c8013975295d104f3a3d87b6cfeff2b0b65ae79fc6f3b2d298c0374d9fb37"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
@@ -3235,12 +3243,12 @@
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "2dfcafc41bf6937f21f740fc17198b4f5e76f372f0da83f4cfa01c1285fb9ff6"
+      "sha256": "8379b9704a68d8cf7ad49dbc5dbfa4af65be2ad311fd67cb1f9aa2ae4e8e3907"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "c15a56d369413b4c91fbbca9ff8a90ca11e38d0403b27bd519bf91be09921772"
+      "sha256": "4cd166d23db6a9b6f2ac2988a2fdd5d151293226440681c8b4404cf12dde5c42"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -8437,6 +8445,21 @@
       "type": "json",
       "sha256": "565094a6c9696b2ffd2e4d30eaae336cf1b937a72e8578eff7df7c3ea7c440c4"
     },
+    "entries/mcp/legal-fournier-spain-legal-mcp.json": {
+      "path": "/data/entries%2Fmcp%2Flegal-fournier-spain-legal-mcp.json",
+      "type": "json",
+      "sha256": "7b533fe913644fa2131ff5e6011c5acc582c850766ba7af8d4beed872f86d897"
+    },
+    "llms/mcp/legal-fournier-spain-legal-mcp.txt": {
+      "path": "/data/llms%2Fmcp%2Flegal-fournier-spain-legal-mcp.txt",
+      "type": "text",
+      "sha256": "355677ad5c6801612e294408b2c5840b8b8aa72026df64ca9acef9691e3fc139"
+    },
+    "raycast/mcp/legal-fournier-spain-legal-mcp.json": {
+      "path": "/data/raycast%2Fmcp%2Flegal-fournier-spain-legal-mcp.json",
+      "type": "json",
+      "sha256": "008a04940cb797f01ea8e480b87b34d6bdd28e5f2d49cdb341218129edf9ba9c"
+    },
     "entries/mcp/square-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsquare-mcp-server.json",
       "type": "json",
@@ -9335,7 +9358,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "a350df5766cd2a378ce39a5b233df015673bd076732fba1d72168e63ca787051"
+      "sha256": "6e0cb6f5cd4ca2e67b23f7ee9e59f76e6fc5bd13fe6579c987bfaad5dc31a44b"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",
