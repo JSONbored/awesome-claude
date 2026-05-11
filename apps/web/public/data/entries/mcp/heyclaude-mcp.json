@@ -232,7 +232,7 @@
     ],
     "filePath": "content/mcp/heyclaude-mcp.mdx",
     "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx",
-    "repoUrl": null,
+    "repoUrl": "https://github.com/JSONbored/claudepro-directory",
     "githubStars": null,
     "githubForks": null,
     "repoUpdatedAt": null
@@ -243,9 +243,10 @@
     "packageTrust": null,
     "packageChecksum": "",
     "checksumPresent": false,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 3,
     "sourceUrls": [
       "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+      "https://github.com/JSONbored/claudepro-directory",
       "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
     ],
     "sourceStatus": "available",

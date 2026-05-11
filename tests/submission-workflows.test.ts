@@ -34,7 +34,13 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("pull_request_target:");
+    expect(source).toContain("Resolve current base commit");
+    expect(source).toContain("github.rest.repos.getBranch");
     expect(source).toContain("Checkout base repository");
+    expect(source).toContain("ref: ${{ steps.base-commit.outputs.sha }}");
+    expect(source).not.toContain(
+      "ref: ${{ github.event.pull_request.base.sha }}",
+    );
     expect(source).toContain("github.rest.repos.getContent");
     expect(source).toContain("pr.head.sha");
     expect(source).toContain("sourceType");
@@ -375,6 +381,8 @@ diff --git a/README.md b/README.md
     expect(releaseSource).toContain("group: mcp-package-release");
     expect(releaseSource).toContain("id-token: write");
     expect(releaseSource).toContain("environment: npm-production");
+    expect(releaseSource).not.toContain("NODE_AUTH_TOKEN");
+    expect(releaseSource).not.toContain("NPM_TOKEN");
     expect(releaseSource).toContain(
       "require('./packages/mcp/package.json').version",
     );

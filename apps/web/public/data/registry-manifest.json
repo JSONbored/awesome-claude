@@ -3175,42 +3175,42 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "ffd44fb002ae52417749bb9950206f6155a7a51445b30aeb75e84ccc54cbc7b2"
+      "sha256": "9ec40d46da2d5292b5efc3f0ee9cd991fc7ccd171e6970a63760186ddf4b9680"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "2391c32412cebbbfc465ce5ed0d9fce84d443c496f3630cc490e056b7c1bec64"
+      "sha256": "dd9c44f64930bfe3ad6cfe821b303dc0749e2edd1c20acb5cd6d7338298f18e3"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "dc2566b3c1159bb631119e62920b363e3401ef1789e62fc000c4c6181ff7790e"
+      "sha256": "7eb0c7471137566efc21c5f811c8f5bb3a410dd0a89f3efe9d18c6e357f59272"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "c7da7d967a0841d218c54f27326ef825f629b8ad48d8bf88076d199f0395c261"
+      "sha256": "ef924e1484f96564f15cbb0c756175bd06d7e725820921bf65b7264dd621ce77"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "c01b329e1de7b557f69efe4438af06413d938ae565efbca3b2732adbbbe1b9bd"
+      "sha256": "661867c3fc717e54c84abe661261714c4619481d156999919383dd5c8faa0db0"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "a7639a85086c00f0e49cfcb3abe93f0fe041c119a316b2ff9804dde08529dcf9"
+      "sha256": "6e56c3446ddc77376000dfc355dc1b14a17d8ef3063d8b6bf4dc36d89c516085"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "96aa9dbae0cccc679a388bc6f895d9c1983e585f464f522420f83029cf7c3f0b"
+      "sha256": "e3536ea3ae158bc121c3168baf8713ea3cfc4fc3f81901ef29a5715445386258"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "f7f2d1295602e13fc8f1b2271a71171c26e7d131825da062c99663dc940200f5"
+      "sha256": "31855b50d64fa6645601517a19e0c6381de7e64a52be2b8e28a2f951537bdb8f"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
@@ -3225,7 +3225,7 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "a30d95fd8e8048acd79c956ec301650354b524f3596cfe12e0cc89c1772f7327"
+      "sha256": "02d3dbf5229cd0d38e62b0e2ea9134aa5c382dc69ac2afbaa4f33d336c537c6e"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
@@ -3235,12 +3235,12 @@
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "a7b465f3c59b08a5bbb9b40a0f6753d1434ec0f010355948404c29d3dcd9bcac"
+      "sha256": "27b31b5858eae8fb5d798b264007429a8fe7e3a0514950d7df4b9f81b5e649cb"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "141e0eeeb61930515ff5df6432513e6d78c0efd03e75041101ee88c5b48bb7f9"
+      "sha256": "3f383145ae198ff5de0a31f17587316f3713c20cc304f9e6ad261880830063d4"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -4965,17 +4965,17 @@
     "entries/mcp/contrastapi-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "4bc93c875fdd17be122e924259cdd3912723fa09d920d8b6f0f0f86210fa4d2d"
+      "sha256": "2e4925b837e614e14d3317152e2e598e52c1da2bbd944b10a6b6d0cab9bd5199"
     },
     "llms/mcp/contrastapi-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fcontrastapi-mcp-server.txt",
       "type": "text",
-      "sha256": "e4f53f900e8feede3347f5756aac78412bcf0cedd249f112f0148e3292eb18af"
+      "sha256": "e0bc9786421389f1cbc6abe82d43ce624c4ce93993f0f8016a40701f344ec460"
     },
     "raycast/mcp/contrastapi-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "ba381559ac201b8d4e3efde0a9fba4dd3e25db95ead03e744d418f64d0d183ea"
+      "sha256": "4c5d88d72d6843ca0e41d5e2d3c1554e25a39f7a141e949fbe5c8ff02ba08440"
     },
     "entries/tools/crewai.json": {
       "path": "/data/entries%2Ftools%2Fcrewai.json",
@@ -6225,17 +6225,17 @@
     "entries/mcp/heyclaude-mcp.json": {
       "path": "/data/entries%2Fmcp%2Fheyclaude-mcp.json",
       "type": "json",
-      "sha256": "40184e885ca6dc1f8514d1ba72bd6df31b02da3446622760323ab65e5c2a217a"
+      "sha256": "196e338232767b3f9075e2324f8e9562f6a9eda272246f5915001b43197baf1f"
     },
     "llms/mcp/heyclaude-mcp.txt": {
       "path": "/data/llms%2Fmcp%2Fheyclaude-mcp.txt",
       "type": "text",
-      "sha256": "2c15d665c09f844fd7c31cdc7fa7b4fe2073ceafd109eddecd6f549e2e044ae3"
+      "sha256": "bc2bb96d315b4e8cbbb957934fded4dfccfa39ae7480633b3285b1369e68269e"
     },
     "raycast/mcp/heyclaude-mcp.json": {
       "path": "/data/raycast%2Fmcp%2Fheyclaude-mcp.json",
       "type": "json",
-      "sha256": "c79e3caafd4faf0e6e2a80021f7ab17635b11c1499f073c386432fcc3af9f2c3"
+      "sha256": "8c9e9de7569d6362cacc1fc3c58aa0cf8dd5168f23476f796aa5750578aa74ea"
     },
     "entries/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-skill-submission-factory.json",
@@ -9335,7 +9335,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "bba4b56e57fc379e9514c1db189df5e0d727b7e68a20679c981c05db34ec0f4b"
+      "sha256": "5a9c382cfde1180051b219144bae5fe187a98593eb8513fe0fa1a9db60d4e781"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",

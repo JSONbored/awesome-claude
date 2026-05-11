@@ -14827,13 +14827,15 @@
             "@id": "https://heyclau.de/#website"
           },
           "sameAs": [
-            "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp"
+            "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+            "https://github.com/JSONbored/claudepro-directory"
           ],
           "isBasedOn": [
             "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+            "https://github.com/JSONbored/claudepro-directory",
             "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
           ],
-          "codeRepository": null,
+          "codeRepository": "https://github.com/JSONbored/claudepro-directory",
           "runtimePlatform": "Claude Code"
         }
       ]

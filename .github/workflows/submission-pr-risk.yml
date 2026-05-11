@@ -29,10 +29,23 @@ jobs:
       cancel-in-progress: true
 
     steps:
+      - name: Resolve current base commit
+        id: base-commit
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const base = context.payload.pull_request.base;
+            const { data } = await github.rest.repos.getBranch({
+              owner: base.repo.owner.login,
+              repo: base.repo.name,
+              branch: base.ref
+            });
+            core.setOutput("sha", data.commit.sha);
+
       - name: Checkout base repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
-          ref: ${{ github.event.pull_request.base.sha }}
+          ref: ${{ steps.base-commit.outputs.sha }}
 
       - name: Setup pnpm
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d

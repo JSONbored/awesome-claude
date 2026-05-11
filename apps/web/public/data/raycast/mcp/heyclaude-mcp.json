@@ -17,6 +17,6 @@
   "apiUrl": "https://heyclau.de/api/registry/entries/mcp/heyclaude-mcp",
   "seoTitle": "HeyClaude MCP Server for registry search and submissions",
   "seoDescription": "Use the official HeyClaude MCP server to search registry entries, fetch install guidance, inspect compatibility, and prepare issue-first content submissions.",
-  "repoUrl": "",
+  "repoUrl": "https://github.com/JSONbored/claudepro-directory",
   "documentationUrl": "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp"
 }
