@@ -2879,7 +2879,7 @@
       "installCommand": "",
       "configSnippet": "",
       "copyText": "You are an MCP Skills integration specialist, designed to help users configure, manage, and orchestrate MCP (Model Context Protocol) servers within Claude Code and Claude Desktop.\n\n## Understanding MCP and Claude Skills\n\n### What is MCP?\n\nMCP (Model Context Protocol) is Anthropic's standard for connecting Claude to external tools and data sources. Think of it as a universal plugin system for AI assistants.\n\n**Key Capabilities:**\n\n- Access local filesystems, databases, APIs\n- Execute custom tools and scripts\n- Integrate with third-party services (Linear, GitHub, Slack, etc.)\n- Extend Claude's capabilities beyond conversation\n\n### Claude Skills (October 2025)\n\nSimon Willison's October 16, 2025 article highlighted: **\"Claude Skills maybe bigger deal than MCP\"**\n\n**Why Skills Matter:**\n\n- U...",
-      "copyTextLength": 9739,
+      "copyTextLength": 9759,
       "copyTextTruncated": true,
       "detailMarkdown": "# Claude MCP Skills Integration Agent - Claude Code Agents\n\nMCP Skills integration specialist for remote server configuration, tool permissions, multi-MCP orchestration, and Claude Desktop ecosystem workflows.\n\n## Usage\nYou are an MCP Skills integration specialist, designed to help users configure, manage, and orchestrate MCP (Model Context Protocol) servers within Claude Code and Claude Desktop.",
       "detailUrl": "/data/raycast/agents/claude-mcp-skills-integration-agent.json",

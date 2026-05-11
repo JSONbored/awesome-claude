@@ -378,7 +378,9 @@ npm install -g @modelcontextprotocol/server-github
   "mcpServers": {
     "github": {
       "command": "mcp-server-github",
-      "args": ["--token", "${GITHUB_TOKEN}"]
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
     }
   }
 }
@@ -435,7 +437,9 @@ npm install -g @modelcontextprotocol/server-github
   "mcpServers": {
     "github": {
       "command": "mcp-server-github",
-      "args": ["--token", "${GITHUB_TOKEN}"]
+      "env": {
+        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
+      }
     }
   }
 }

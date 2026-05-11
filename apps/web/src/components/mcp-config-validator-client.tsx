@@ -130,7 +130,7 @@ export function McpConfigValidatorClient() {
             onClick={() =>
               copyValue("fixed", result.fixedConfigText, "Fixed MCP config")
             }
-            disabled={!result.fixedConfigText}
+            disabled={!result.ok || !result.fixedConfigText}
           >
             {copied === "fixed" ? (
               <CheckCircle2 className="mr-2 size-4 text-primary" />

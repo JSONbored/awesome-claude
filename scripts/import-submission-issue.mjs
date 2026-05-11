@@ -141,10 +141,31 @@ function githubIdentityFromIssueAuthor(issue) {
   };
 }
 
+function trustedWebsiteIssueAuthors() {
+  const configured = [
+    process.env.SUBMISSION_WEBSITE_ISSUE_AUTHORS,
+    process.env.SUBMISSION_REVIEWED_BY,
+  ]
+    .filter(Boolean)
+    .flatMap((value) => String(value).split(","))
+    .map(normalizeGitHubHandle)
+    .filter(Boolean);
+  return new Set(configured.length ? configured : ["JSONbored"]);
+}
+
+function isTrustedWebsiteIssueAuthor(issue) {
+  const author = githubIdentityFromIssueAuthor(issue)?.name;
+  if (!author) return false;
+  const trusted = trustedWebsiteIssueAuthors();
+  return trusted.has(author);
+}
+
 function submissionIdentity(issue, fields) {
   const submittedVia = normalizeValue(fields.submitted_via).toLowerCase();
   const contactIdentity = githubIdentityFromPublicContact(fields.contact_email);
-  if (submittedVia === "website") return contactIdentity;
+  if (submittedVia === "website" && isTrustedWebsiteIssueAuthor(issue)) {
+    return contactIdentity;
+  }
   return githubIdentityFromIssueAuthor(issue) || contactIdentity;
 }
 

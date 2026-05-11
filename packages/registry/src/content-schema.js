@@ -153,6 +153,13 @@ function isIsoDateOrDateTime(value) {
   );
 }
 
+function isGitHubLogin(value) {
+  const normalized = String(value || "")
+    .trim()
+    .replace(/^@/, "");
+  return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/.test(normalized);
+}
+
 export function deriveSeoFields(data = {}, category = "") {
   const label = categorySpec.categories[category]?.label || category;
   const title = compactText(data.title || data.name || data.slug || "Entry");
@@ -799,6 +806,10 @@ export function validateEntry(category, data, inferred = {}) {
     ) {
       semanticErrors.push(`${field} must be a positive integer`);
     }
+  }
+
+  if (merged.submittedBy && !isGitHubLogin(merged.submittedBy)) {
+    semanticErrors.push("submittedBy must be a GitHub username");
   }
 
   const claimStatus = String(merged.claimStatus || "")

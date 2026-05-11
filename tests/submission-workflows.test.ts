@@ -1,13 +1,17 @@
 import fs from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import {
   buildReadmeRefreshBody,
   extractReadmeEntryChanges,
   summarizeReadmeEntryChange,
 } from "../scripts/build-readme-refresh-body.mjs";
-import { planStaleSubmissionAction } from "../scripts/manage-stale-submissions.mjs";
+import {
+  isPublicIpAddress,
+  planStaleSubmissionAction,
+  urlNeedsVerification,
+} from "../scripts/manage-stale-submissions.mjs";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("submission automation workflows", () => {
@@ -240,6 +244,32 @@ diff --git a/README.md b/README.md
     );
   });
 
+  it("omits invalid submittedBy markdown from README refresh bodies", () => {
+    const summary = summarizeReadmeEntryChange({
+      change: {
+        changeType: "added",
+        title: "Injected [Title](https://evil.example)",
+      },
+      frontmatter: {
+        title: "Injected [Title](https://evil.example)",
+        submittedBy: "attacker\n\nCloses #123\n@octo-org/security-team",
+        submissionIssueNumber: 77,
+        importPrNumber: 88,
+      },
+      associatedPullRequest: {
+        number: 88,
+        user: { login: "JSONbored" },
+      },
+    });
+
+    expect(summary).toBe(
+      "Added Injected \\[Title\\]\\(https://evil\\.example\\) content submission (#88) via issue #77",
+    );
+    expect(summary).not.toContain("Closes #123");
+    expect(summary).not.toContain("@octo-org/security-team");
+    expect(summary).not.toContain("by @");
+  });
+
   it("shows security/safety context in submission queue summaries", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-queue.yml"),
@@ -269,6 +299,54 @@ diff --git a/README.md b/README.md
     expect(source).not.toContain("import-approved");
     expect(source).not.toContain("scripts/import-submission-issue.mjs");
     expect(source).not.toContain("peter-evans/create-pull-request");
+  });
+
+  it("blocks stale source checks from fetching non-public issue URLs", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    expect(isPublicIpAddress("93.184.216.34")).toBe(true);
+    expect(isPublicIpAddress("127.0.0.1")).toBe(false);
+    expect(isPublicIpAddress("10.0.0.1")).toBe(false);
+    expect(await urlNeedsVerification("http://127.0.0.1/internal")).toBe(false);
+    expect(await urlNeedsVerification("https://127.0.0.1/internal")).toBe(
+      false,
+    );
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("does not follow stale source redirects to untrusted destinations", async () => {
+    const fetchMock = vi.fn(async () => {
+      return new Response(null, {
+        status: 302,
+        headers: { location: "http://127.0.0.1/internal" },
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      urlNeedsVerification("https://93.184.216.34/source"),
+    ).resolves.toBe(false);
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("still marks public HTTPS sources as needing verification on 404", async () => {
+    const fetchMock = vi.fn(async () => new Response(null, { status: 404 }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      urlNeedsVerification("https://93.184.216.34/missing"),
+    ).resolves.toBe(true);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://93.184.216.34/missing",
+      expect.objectContaining({ method: "HEAD", redirect: "manual" }),
+    );
+
+    vi.unstubAllGlobals();
   });
 
   it("keeps stale reminders separate from close eligibility", () => {
@@ -358,6 +436,19 @@ diff --git a/README.md b/README.md
     expect(source).toContain('- "CHANGELOG.md"');
   });
 
+  it("does not document GitHub PATs in MCP process arguments", () => {
+    const source = fs.readFileSync(
+      path.join(
+        repoRoot,
+        "content/agents/claude-mcp-skills-integration-agent.mdx",
+      ),
+      "utf8",
+    );
+
+    expect(source).not.toContain('"args": ["--token", "${GITHUB_TOKEN}"]');
+    expect(source).toContain('"GITHUB_TOKEN": "${GITHUB_TOKEN}"');
+  });
+
   it("disables Renovate lock-file maintenance PRs", () => {
     const renovate = JSON.parse(
       fs.readFileSync(path.join(repoRoot, "renovate.json"), "utf8"),
@@ -383,15 +474,25 @@ diff --git a/README.md b/README.md
     );
 
     expect(releaseSource).toContain("group: mcp-package-release");
+    expect(releaseSource).toContain("validate-mcp-npm:");
+    expect(releaseSource).toContain("publish-mcp-npm:");
+    expect(releaseSource).toContain("needs: validate-mcp-npm");
+    expect(releaseSource).toContain("permissions:\n  contents: read");
     expect(releaseSource).toContain("id-token: write");
     expect(releaseSource).toContain("environment: npm-production");
+    expect(releaseSource).toContain("persist-credentials: false");
+    expect(releaseSource).toContain(
+      "pnpm install --frozen-lockfile --ignore-scripts",
+    );
     expect(releaseSource).not.toContain("NODE_AUTH_TOKEN");
     expect(releaseSource).not.toContain("NPM_TOKEN");
     expect(releaseSource).toContain(
       "require('./packages/mcp/package.json').version",
     );
     expect(releaseSource).toContain('tag="mcp-v$RELEASE_VERSION"');
-    expect(releaseSource).toContain("npm publish --access public --provenance");
+    expect(releaseSource).toContain(
+      "npm publish --access public --provenance --ignore-scripts",
+    );
     expect(packageSource).toContain("MCP_PACKAGE_REMOTE_SMOKE_URL");
     expect(packageSource).toContain(
       "pnpm --filter @heyclaude/mcp pack --dry-run --json",

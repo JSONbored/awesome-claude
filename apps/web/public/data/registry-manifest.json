@@ -3183,7 +3183,7 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "dedbc9393fb2c511762e8433f2bf1d6ddb1abae136406c0d06764fdbdeab290a"
+      "sha256": "5bdd3ea63f2bfa32a7c26909af954407d4ef90d31d9ae3e5af15f183dc7a30e1"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
@@ -3193,7 +3193,7 @@
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "9bcf0d8cc325b921d757207a9a12ff1045825acff6c879e9568be900eb5da6b6"
+      "sha256": "ea5f5fb4c4bd4f8085425aac93e7c878c296ffe1e782604a91340d2031d1c354"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
@@ -3213,7 +3213,7 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "3e9cae2103f994f190214affdce339803d20808056eb6d77a146b15280ca0769"
+      "sha256": "8db6b57b442899fb1e7a041ed96527a743ced6f64696719d9eccd6ec84c54b00"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
@@ -3248,7 +3248,7 @@
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "71361a19225814fcf98c89cfd4e83be4283b44b94002ea06ebfa3d2912a4e51b"
+      "sha256": "d3fe861fd2d4722c14f8a22e183cac40ee5caa71d5b38fec19b7b8fbcb869764"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -4448,17 +4448,17 @@
     "entries/agents/claude-mcp-skills-integration-agent.json": {
       "path": "/data/entries%2Fagents%2Fclaude-mcp-skills-integration-agent.json",
       "type": "json",
-      "sha256": "72e397d6eec95536e2a57b844a7e1044ac24d0621d0357cd0f3ef43e80683bf0"
+      "sha256": "507c81385bbd5867df8703eaf28804ebaea42bc472d78bb99bc162997857b516"
     },
     "llms/agents/claude-mcp-skills-integration-agent.txt": {
       "path": "/data/llms%2Fagents%2Fclaude-mcp-skills-integration-agent.txt",
       "type": "text",
-      "sha256": "1ac84cfb239cfa05916c1ad39d68be4f54a84a8f587e941f95d39aab44af86f5"
+      "sha256": "61c2eeabef77b533f11ca904be68caecb9981d66dac623b16ee0b9f31952bdf2"
     },
     "raycast/agents/claude-mcp-skills-integration-agent.json": {
       "path": "/data/raycast%2Fagents%2Fclaude-mcp-skills-integration-agent.json",
       "type": "json",
-      "sha256": "511146e8140b843a56b9fb49ff510c3e2282ab405a397f4d419aaba526ed5f60"
+      "sha256": "432b33876d91103afa0b74c683bcd2a275b1e3c8e546767a976ef660a2a8a3e7"
     },
     "entries/guides/business-process-automation.json": {
       "path": "/data/entries%2Fguides%2Fbusiness-process-automation.json",
@@ -9353,7 +9353,7 @@
     "feeds/categories/agents.json": {
       "path": "/data/feeds%2Fcategories%2Fagents.json",
       "type": "json",
-      "sha256": "0aae4644ee36ff86ec7ea1efaf8182021dbf076ee107a23a845936b6ff807f5d"
+      "sha256": "e7ceb6011c9e2e4e4a7e67261af5668a8848d9c60c264bf9a3529d58be14d003"
     },
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",

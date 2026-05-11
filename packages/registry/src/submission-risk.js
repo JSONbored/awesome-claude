@@ -39,6 +39,43 @@ function compactWhitespace(value) {
   return normalizeText(value).replace(/\s+/g, " ");
 }
 
+const GITHUB_LOGIN_PATTERN =
+  /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
+
+function isGitHubLogin(value) {
+  return GITHUB_LOGIN_PATTERN.test(normalizeText(value));
+}
+
+function neutralizeMarkdownControl(value) {
+  return normalizeText(value)
+    .replace(/@/g, "&#64;")
+    .replace(/(^|\s)#(?=\d)/g, "$1&#35;");
+}
+
+function escapeMarkdownText(value) {
+  return neutralizeMarkdownControl(compactWhitespace(value)).replace(
+    /([\\`*_{}\[\]()#+\-.!|>])/g,
+    "\\$1",
+  );
+}
+
+function markdownCodeSpan(value) {
+  const text = compactWhitespace(value).slice(0, 1000);
+  if (!text) return "";
+  const maxBackticks = Math.max(
+    0,
+    ...(text.match(/`+/g) || []).map((match) => match.length),
+  );
+  const fence = "`".repeat(maxBackticks + 1);
+  const padding = text.startsWith("`") || text.endsWith("`") ? " " : "";
+  return `${fence}${padding}${text}${padding}${fence}`;
+}
+
+function markdownDetail(value) {
+  const detail = markdownCodeSpan(value);
+  return detail ? ` - ${detail}` : "";
+}
+
 function lower(value) {
   return normalizeText(value).toLowerCase();
 }
@@ -115,7 +152,8 @@ function githubLoginFromUrl(value) {
 function normalizeGitHubLogin(value) {
   const text = normalizeText(value);
   if (!text) return "";
-  return githubLoginFromUrl(text) || text.replace(/^@+/, "").trim();
+  const login = githubLoginFromUrl(text) || text.replace(/^@+/, "").trim();
+  return isGitHubLogin(login) ? login : "";
 }
 
 function sameGitHubLogin(left, right) {
@@ -128,7 +166,7 @@ function sameGitHubLogin(left, right) {
 
 function githubUserReference(value) {
   const login = normalizeGitHubLogin(value);
-  return login ? `@${login}` : normalizeText(value);
+  return login ? `@${login}` : markdownCodeSpan(value);
 }
 
 function splitList(value) {
@@ -1137,15 +1175,14 @@ export function formatSubmissionRiskMarkdown(report) {
         parts.push(`via PR #${provenance.importPrNumber}`);
       }
       if (parts.length) {
-        lines.push(`- ${provenance.filename}: ${parts.join(" ")}`);
+        lines.push(
+          `- ${markdownCodeSpan(provenance.filename)}: ${parts.join(" ")}`,
+        );
       }
     }
     for (const finding of report.provenanceFindings || []) {
-      const detail = finding.detail
-        ? ` - ${compactWhitespace(finding.detail)}`
-        : "";
       lines.push(
-        `- \`${finding.severity}\` ${finding.summary} (\`${finding.id}\`)${detail}`,
+        `- \`${finding.severity}\` ${escapeMarkdownText(finding.summary)} (\`${finding.id}\`)${markdownDetail(finding.detail)}`,
       );
     }
   }
@@ -1153,9 +1190,8 @@ export function formatSubmissionRiskMarkdown(report) {
   if (report.reviewFlags.length) {
     lines.push("", "### Review flags");
     for (const flag of report.reviewFlags) {
-      const detail = flag.detail ? ` - ${compactWhitespace(flag.detail)}` : "";
       lines.push(
-        `- \`${flag.severity}\` ${flag.summary} (\`${flag.id}\`)${detail}`,
+        `- \`${flag.severity}\` ${escapeMarkdownText(flag.summary)} (\`${flag.id}\`)${markdownDetail(flag.detail)}`,
       );
     }
   } else {
@@ -1169,24 +1205,23 @@ export function formatSubmissionRiskMarkdown(report) {
   if (report.classificationWarnings.length) {
     lines.push("", "### Classification warnings");
     for (const warning of report.classificationWarnings) {
-      const detail = warning.detail
-        ? ` - ${compactWhitespace(warning.detail)}`
-        : "";
-      lines.push(`- ${warning.summary} (\`${warning.id}\`)${detail}`);
+      lines.push(
+        `- ${escapeMarkdownText(warning.summary)} (\`${warning.id}\`)${markdownDetail(warning.detail)}`,
+      );
     }
   }
 
   if (report.trustSignals.length) {
     lines.push("", "### Trust signals");
     for (const signal of report.trustSignals.slice(0, 12)) {
-      lines.push(`- ${compactWhitespace(signal)}`);
+      lines.push(`- ${escapeMarkdownText(signal)}`);
     }
   }
 
   if (report.humanReviewNotes.length) {
     lines.push("", "### Maintainer notes");
     for (const note of report.humanReviewNotes) {
-      lines.push(`- ${note}`);
+      lines.push(`- ${escapeMarkdownText(note)}`);
     }
   }
 

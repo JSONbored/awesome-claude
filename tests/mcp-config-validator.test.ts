@@ -31,6 +31,38 @@ describe("MCP config validator", () => {
     expect(result.reportText).toContain("Redacted secrets: 1");
   });
 
+  it("recursively redacts header secrets and malformed env values from fixed snippets", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          remote: {
+            url: "https://example.com/mcp",
+            headers: {
+              Authorization: "Bearer live_remote_bearer_token_do_not_leak",
+              "x-api-key": "sk-liveapikeyvaluedonotleak",
+            },
+            env: "LIVE_ENV_STRING_SECRET_DO_NOT_LEAK",
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(false);
+    expect(result.errors.join("\n")).toContain(
+      "remote: env must be an object of environment variables.",
+    );
+    expect(result.fixedConfigText).not.toContain(
+      "live_remote_bearer_token_do_not_leak",
+    );
+    expect(result.fixedConfigText).not.toContain("sk-liveapikeyvaluedonotleak");
+    expect(result.fixedConfigText).not.toContain(
+      "LIVE_ENV_STRING_SECRET_DO_NOT_LEAK",
+    );
+    expect(result.fixedConfigText).toContain("${AUTHORIZATION}");
+    expect(result.fixedConfigText).toContain("${X_API_KEY}");
+    expect(result.fixedConfigText).toContain("${ENV}");
+  });
+
   it("blocks unsafe server names and shell pipelines", () => {
     const result = validateMcpConfigText(`{
       "mcpServers": {

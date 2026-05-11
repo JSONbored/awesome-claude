@@ -9,6 +9,8 @@ import {
   SUBMISSION_STALE_LABEL,
   SUBMISSION_VALIDATION_LABEL_DEFINITIONS,
 } from "@heyclaude/registry/submission-labels";
+import { lookup } from "node:dns/promises";
+import net from "node:net";
 import { pathToFileURL } from "node:url";
 
 const apiBaseUrl = "https://api.github.com";
@@ -205,27 +207,131 @@ function normalizeIssue(issue) {
   };
 }
 
-async function urlNeedsVerification(url) {
+function isPrivateOrReservedIpv4(address) {
+  const parts = address.split(".").map((part) => Number(part));
+  if (parts.length !== 4 || parts.some((part) => !Number.isInteger(part))) {
+    return true;
+  }
+  const [a, b] = parts;
+  return (
+    a === 0 ||
+    a === 10 ||
+    a === 127 ||
+    a >= 224 ||
+    (a === 100 && b >= 64 && b <= 127) ||
+    (a === 169 && b === 254) ||
+    (a === 172 && b >= 16 && b <= 31) ||
+    (a === 192 && b === 0) ||
+    (a === 192 && b === 168) ||
+    (a === 198 && (b === 18 || b === 19))
+  );
+}
+
+function isPrivateOrReservedIpv6(address) {
+  const normalized = address.toLowerCase();
+  return (
+    normalized === "::" ||
+    normalized === "::1" ||
+    normalized.startsWith("fc") ||
+    normalized.startsWith("fd") ||
+    normalized.startsWith("fe8") ||
+    normalized.startsWith("fe9") ||
+    normalized.startsWith("fea") ||
+    normalized.startsWith("feb")
+  );
+}
+
+export function isPublicIpAddress(address) {
+  const family = net.isIP(address);
+  if (family === 4) return !isPrivateOrReservedIpv4(address);
+  if (family === 6) return !isPrivateOrReservedIpv6(address);
+  return false;
+}
+
+async function safePublicHttpsUrl(value) {
+  let parsed;
+  try {
+    parsed = new URL(String(value || ""));
+  } catch {
+    return "";
+  }
+
+  if (parsed.protocol !== "https:" || parsed.username || parsed.password) {
+    return "";
+  }
+
+  const hostname = parsed.hostname.toLowerCase();
+  if (
+    !hostname ||
+    hostname === "localhost" ||
+    hostname.endsWith(".localhost")
+  ) {
+    return "";
+  }
+
+  if (net.isIP(hostname)) {
+    return isPublicIpAddress(hostname) ? parsed.toString() : "";
+  }
+
+  try {
+    const records = await lookup(hostname, { all: true, verbatim: false });
+    if (
+      !records.length ||
+      records.some((record) => !isPublicIpAddress(record.address))
+    ) {
+      return "";
+    }
+  } catch {
+    return "";
+  }
+
+  return parsed.toString();
+}
+
+async function fetchUrlForVerification(url, method) {
+  let currentUrl = await safePublicHttpsUrl(url);
+  if (!currentUrl) return null;
+
+  for (let redirectCount = 0; redirectCount <= 3; redirectCount += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    try {
+      const response = await fetch(currentUrl, {
+        method,
+        redirect: "manual",
+        signal: controller.signal,
+      });
+      if (
+        response.status >= 300 &&
+        response.status < 400 &&
+        response.headers.has("location")
+      ) {
+        const nextUrl = new URL(
+          response.headers.get("location"),
+          currentUrl,
+        ).toString();
+        currentUrl = await safePublicHttpsUrl(nextUrl);
+        if (!currentUrl) return null;
+        continue;
+      }
+      return response;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  return null;
+}
+
+export async function urlNeedsVerification(url) {
   if (!url) return false;
   try {
-    const fetchWithTimeout = async (method) => {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      try {
-        return await fetch(url, {
-          method,
-          redirect: "follow",
-          signal: controller.signal,
-        });
-      } finally {
-        clearTimeout(timeout);
-      }
-    };
-    let response = await fetchWithTimeout("HEAD");
+    let response = await fetchUrlForVerification(url, "HEAD");
+    if (!response) return false;
     if (response.status === 405 || response.status === 403) {
-      response = await fetchWithTimeout("GET");
+      response = await fetchUrlForVerification(url, "GET");
     }
-    return response.status === 404 || response.status === 410;
+    return response?.status === 404 || response?.status === 410;
   } catch {
     return false;
   }

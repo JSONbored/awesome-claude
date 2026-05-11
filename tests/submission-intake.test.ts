@@ -21,7 +21,10 @@ import {
   formatSubmissionRiskMarkdown,
 } from "@heyclaude/registry/submission-risk";
 import { categorySpec } from "@heyclaude/registry";
-import { deriveSeoFields } from "@heyclaude/registry/content-schema";
+import {
+  deriveSeoFields,
+  validateEntry,
+} from "@heyclaude/registry/content-schema";
 import {
   buildIssueTemplateSpec,
   buildSubmissionFieldModel,
@@ -212,6 +215,41 @@ describe("submission intake", () => {
       "submittedByUrl: https://github.com/JSONbored",
     );
     expect(output).not.toContain("maintainer@example.com");
+  });
+
+  it("does not trust submitted_via from direct GitHub issue bodies", () => {
+    const output = importSubmissionDryRun({
+      number: 779,
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/779",
+      created_at: "2026-04-28T12:34:56Z",
+      user: {
+        login: "attacker-user",
+        html_url: "https://github.com/attacker-user",
+      },
+      body: buildSubmissionIssueDraft({
+        name: "Spoofed Website MCP",
+        slug: "spoofed-website-mcp",
+        category: "mcp",
+        author: "Example Team",
+        contact_email: "victim-user",
+        submitted_via: "website",
+        docs_url: "https://example.com/docs",
+        description:
+          "MCP server submitted through a direct GitHub issue with a forged website marker.",
+        card_description: "Direct issue provenance spoof coverage.",
+        install_command: "npx -y spoofed-website-mcp",
+        usage_snippet:
+          "claude mcp add spoofed-website-mcp -- npx -y spoofed-website-mcp",
+      }).body,
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+    });
+
+    expect(output).toContain("submittedBy: attacker-user");
+    expect(output).toContain(
+      'submittedByUrl: "https://github.com/attacker-user"',
+    );
+    expect(output).not.toContain("submittedBy: victim-user");
+    expect(output).not.toContain("https://github.com/victim-user");
   });
 
   it("normalizes brand domains and rejects unsafe brand values", () => {
@@ -1238,7 +1276,7 @@ Run the install command.`,
       ]),
     );
     expect(formatSubmissionRiskMarkdown(report)).toContain(
-      "README.md changes are not accepted in direct content PRs",
+      "README\\.md changes are not accepted in direct content PRs",
     );
   });
 
@@ -1325,7 +1363,7 @@ Run the install command.`,
     expect(markdown).toContain("Contributor analyzed: @vy35");
     expect(markdown).toContain("PR opened by: @github-actions[bot]");
     expect(markdown).toContain(
-      "content/mcp/memesio-mcp-server.mdx: by @vy35 via issue #325",
+      "`content/mcp/memesio-mcp-server.mdx`: by @vy35 via issue #325",
     );
   });
 
@@ -1404,7 +1442,7 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(markdown).toContain("Contributor analyzed: @kriptoburak");
     expect(markdown).toContain("PR opened by: @JSONbored");
     expect(markdown).toContain(
-      "content/mcp/xquik-mcp-server.mdx: by @kriptoburak via PR #326",
+      "`content/mcp/xquik-mcp-server.mdx`: by @kriptoburak via PR #326",
     );
   });
 
@@ -1560,6 +1598,62 @@ and keep scanning bounded.`,
     expect(report.sourceUrls).toContain("https://example.com/docs");
     expect(report.sourceUrls).not.toContain(
       `https://example.com/docs${",".repeat(20_000)}`,
+    );
+  });
+
+  it("renders untrusted risk details as inert Markdown in bot comments", () => {
+    const maliciousIssue = issue(`### Name
+Malicious Source MCP
+
+### Slug
+malicious-source-mcp
+
+### Category
+mcp
+
+### GitHub URL
+[maintainer approval](https://evil.example) @octocat #123
+
+### Description
+MCP server with malicious source markdown in the URL field.
+
+### Card description
+Malicious source markdown coverage.
+
+### Install command
+npx -y malicious-source-mcp
+
+### Usage snippet
+claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
+
+    const report = analyzeIssueSubmissionRisk(
+      maliciousIssue,
+      validateSubmission(maliciousIssue),
+    );
+    const markdown = formatSubmissionRiskMarkdown(report);
+
+    expect(markdown).toContain(
+      "`[maintainer approval](https://evil.example) @octocat #123`",
+    );
+    expect(markdown).not.toContain("- [maintainer approval]");
+    expect(markdown).not.toContain(" - @octocat");
+  });
+
+  it("rejects non-GitHub submittedBy provenance in content metadata", () => {
+    const result = validateEntry("mcp", {
+      title: "Injected Submitter MCP",
+      slug: "injected-submitter-mcp",
+      description:
+        "MCP server metadata fixture for validating submittedBy provenance constraints.",
+      documentationUrl: "https://example.com/docs",
+      installCommand: "npx -y injected-submitter-mcp",
+      usageSnippet:
+        "claude mcp add injected-submitter-mcp -- npx -y injected-submitter-mcp",
+      submittedBy: "attacker\n\nCloses #123\n@octo-org/security-team",
+    });
+
+    expect(result.semanticErrors).toContain(
+      "submittedBy must be a GitHub username",
     );
   });
 

@@ -13,6 +13,17 @@ const categoryRank = new Map(
 const readmeLinePrefix = "- **[";
 const readmeUrlPrefix = "https://heyclau.de/";
 const readmeUrlSuffix = ")** - ";
+const githubLoginPattern =
+  /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
+
+function escapeMarkdownText(value) {
+  return String(value || "")
+    .replace(/@/g, "&#64;")
+    .replace(/(^|\s)#(?=\d)/g, "$1&#35;")
+    .replace(/([\\`*_{}\[\]()#+\-.!|>])/g, "\\$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 function cleanGithubHandle(value) {
   const raw = String(value || "").trim();
@@ -28,7 +39,7 @@ function cleanGithubHandle(value) {
     // Treat non-URL values as GitHub logins.
   }
 
-  return handle ? `@${handle}` : "";
+  return githubLoginPattern.test(handle) ? `@${handle}` : "";
 }
 
 function parseReadmeEntryLine(line) {
@@ -182,7 +193,7 @@ export function summarizeReadmeEntryChange({
   associatedPullRequest = null,
 }) {
   const action = change.changeType === "updated" ? "Updated" : "Added";
-  const title = String(frontmatter.title || change.title);
+  const title = escapeMarkdownText(frontmatter.title || change.title);
   const issueNumber = frontmatter.submissionIssueNumber;
   const pullRequestNumber =
     frontmatter.importPrNumber ?? associatedPullRequest?.number;

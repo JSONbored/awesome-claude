@@ -285,6 +285,82 @@ describe("central API router security", () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it("rejects Brandfetch icon redirects outside the trusted asset CDN", async () => {
+    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json([
+          {
+            domain: "example.com",
+            icon: "https://cdn.brandfetch.io/example/icon.png",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        new Response(null, {
+          status: 302,
+          headers: {
+            location: "https://attacker.example/icon.png",
+          },
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } =
+      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "brand_asset_invalid" },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("rejects SVG Brandfetch icon responses from trusted hosts", async () => {
+    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json([
+          {
+            domain: "example.com",
+            icon: "https://cdn.brandfetch.io/example/icon.svg",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        new Response("<svg><script>alert(1)</script></svg>", {
+          headers: {
+            "content-length": "37",
+            "content-type": "image/svg+xml",
+          },
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } =
+      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "brand_asset_invalid" },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
   it("rejects oversized Brandfetch icon responses before buffering", async () => {
     envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
     process.env.BRANDFETCH_CLIENT_ID = "test-client";

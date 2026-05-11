@@ -15,6 +15,12 @@ const TRUSTED_BRAND_ASSET_HOSTS = new Set([
   "asset.brandfetch.io",
   "cdn.brandfetch.io",
 ]);
+const TRUSTED_BRAND_ASSET_CONTENT_TYPES = new Set([
+  "image/avif",
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+]);
 
 function brandfetchClientId() {
   try {
@@ -70,6 +76,39 @@ function normalizeTrustedBrandAssetUrl(value: string) {
   } catch {
     return "";
   }
+}
+
+async function fetchTrustedBrandAsset(value: string) {
+  let upstreamUrl = normalizeTrustedBrandAssetUrl(value);
+  if (!upstreamUrl) return null;
+
+  for (let redirectCount = 0; redirectCount <= 3; redirectCount += 1) {
+    const upstream = await fetch(upstreamUrl, {
+      headers: {
+        accept: "image/avif,image/webp,image/png,image/jpeg,image/*;q=0.8",
+      },
+      redirect: "manual",
+      signal: AbortSignal.timeout(6000),
+    });
+
+    if (
+      upstream.status >= 300 &&
+      upstream.status < 400 &&
+      upstream.headers.has("location")
+    ) {
+      const nextUrl = new URL(
+        upstream.headers.get("location") || "",
+        upstreamUrl,
+      ).toString();
+      upstreamUrl = normalizeTrustedBrandAssetUrl(nextUrl);
+      if (!upstreamUrl) return null;
+      continue;
+    }
+
+    return upstream;
+  }
+
+  return null;
 }
 
 async function readArrayBufferWithinLimit(
@@ -132,24 +171,21 @@ export const GET = createApiHandler(
       return apiError("brand_asset_not_found", 404, { requestId });
     }
 
-    const upstreamUrl = normalizeTrustedBrandAssetUrl(upstreamCandidate);
-    if (!upstreamUrl) {
+    const upstream = await fetchTrustedBrandAsset(upstreamCandidate);
+    if (!upstream) {
       return apiError("brand_asset_invalid", 502, { requestId });
     }
-
-    const upstream = await fetch(upstreamUrl, {
-      headers: {
-        accept: "image/avif,image/webp,image/png,image/svg+xml,image/*;q=0.8",
-      },
-      signal: AbortSignal.timeout(6000),
-    });
 
     if (!upstream.ok) {
       return apiError("brand_asset_not_found", 404, { requestId });
     }
 
     const contentType = upstream.headers.get("content-type") || "image/png";
-    if (!contentType.toLowerCase().startsWith("image/")) {
+    const normalizedContentType = contentType
+      .toLowerCase()
+      .split(";")[0]
+      .trim();
+    if (!TRUSTED_BRAND_ASSET_CONTENT_TYPES.has(normalizedContentType)) {
       return apiError("brand_asset_invalid", 502, { requestId });
     }
 
@@ -163,7 +199,7 @@ export const GET = createApiHandler(
 
     const headers = applySecurityHeaders(new Headers());
     headers.set("cache-control", CACHE_CONTROL);
-    headers.set("content-type", contentType);
+    headers.set("content-type", normalizedContentType);
     headers.set("x-brand-asset-source", "brandfetch");
 
     return new Response(body, {

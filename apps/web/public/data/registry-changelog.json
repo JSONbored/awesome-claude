@@ -1958,7 +1958,7 @@
       "canonicalUrl": "https://heyclau.de/agents/claude-mcp-skills-integration-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/claude-mcp-skills-integration-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/claude-mcp-skills-integration-agent",
-      "artifactHash": "72e397d6eec95536e2a57b844a7e1044ac24d0621d0357cd0f3ef43e80683bf0"
+      "artifactHash": "507c81385bbd5867df8703eaf28804ebaea42bc472d78bb99bc162997857b516"
     },
     {
       "key": "agents:claude-md-knowledge-manager-agent",
@@ -4614,5 +4614,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "32b1a458b37a033f04ec28820966718ab62b4ed978d3a3defe65cc449792cec1"
+  "signature": "06409c64585ecfdc9fc33395c5df552272488b32ce078b5b104594cd5af5829e"
 }
