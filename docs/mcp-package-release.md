@@ -19,6 +19,9 @@ or protocol behavior changes.
 
 The publish workflow uses npm trusted publishing/provenance and should run only
 from `main` with the `npm-production` environment approval.
+The steady-state workflow intentionally does not pass `NODE_AUTH_TOKEN`; npm
+should authenticate the approved GitHub Actions run through OIDC trusted
+publishing.
 
 Configure npm trusted publishing for:
 

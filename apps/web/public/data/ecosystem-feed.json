@@ -10426,7 +10426,7 @@
       "brandAssetSource": "manual",
       "websiteUrl": "",
       "documentationUrl": "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-      "repoUrl": "",
+      "repoUrl": "https://github.com/JSONbored/claudepro-directory",
       "pricingModel": "",
       "disclosure": "editorial",
       "tags": [
@@ -10439,15 +10439,16 @@
         "compatibility",
         "feeds"
       ],
-      "qualityScore": 86,
+      "qualityScore": 93,
       "provenance": {
-        "sourceQuality": "docs",
+        "sourceQuality": "repo-and-docs",
         "hasExternalSource": false,
-        "hasRepository": false,
+        "hasRepository": true,
         "hasDocumentation": true,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+          "https://github.com/JSONbored/claudepro-directory",
           "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "externalSourceUrls": []
@@ -10458,9 +10459,10 @@
         "packageTrust": null,
         "packageChecksum": "",
         "checksumPresent": false,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 3,
         "sourceUrls": [
           "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+          "https://github.com/JSONbored/claudepro-directory",
           "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "sourceStatus": "available",
@@ -21203,5 +21205,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "c673f9bf540cde6ac99236c128e86b58c54f180b6c9ad9b930cdf2711dbd7ca7"
+  "signature": "8efffb0b0fb9512a2f029412d3b7b6ba6084c3a6a5701c6370d41c3c25fb459a"
 }

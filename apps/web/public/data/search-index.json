@@ -12117,7 +12117,7 @@
       "platforms": [],
       "supportLevels": [],
       "documentationUrl": "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-      "repoUrl": "",
+      "repoUrl": "https://github.com/JSONbored/claudepro-directory",
       "url": "https://heyclau.de/mcp/heyclaude-mcp",
       "canonicalUrl": "https://heyclau.de/mcp/heyclaude-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/heyclaude-mcp.txt",
@@ -12128,9 +12128,10 @@
         "packageTrust": null,
         "packageChecksum": "",
         "checksumPresent": false,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 3,
         "sourceUrls": [
           "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+          "https://github.com/JSONbored/claudepro-directory",
           "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "sourceStatus": "available",

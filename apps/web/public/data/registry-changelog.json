@@ -698,7 +698,7 @@
       "canonicalUrl": "https://heyclau.de/mcp/contrastapi-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/contrastapi-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/contrastapi-mcp-server",
-      "artifactHash": "4bc93c875fdd17be122e924259cdd3912723fa09d920d8b6f0f0f86210fa4d2d"
+      "artifactHash": "2e4925b837e614e14d3317152e2e598e52c1da2bbd944b10a6b6d0cab9bd5199"
     },
     {
       "key": "collections:agent-operator-growth-master-pack",
@@ -1202,7 +1202,7 @@
       "canonicalUrl": "https://heyclau.de/mcp/heyclaude-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/heyclaude-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/heyclaude-mcp",
-      "artifactHash": "40184e885ca6dc1f8514d1ba72bd6df31b02da3446622760323ab65e5c2a217a"
+      "artifactHash": "196e338232767b3f9075e2324f8e9562f6a9eda272246f5915001b43197baf1f"
     },
     {
       "key": "guides:build-mcp-server",
@@ -4590,5 +4590,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "0739cd07839775bccd60ddb374364ee8b6f55351f9fb5b9a6b4a92cecb4e6dd1"
+  "signature": "87bfcaf316b8b6877ca55526243f22c99020750905d26f717090321c0adcc4aa"
 }

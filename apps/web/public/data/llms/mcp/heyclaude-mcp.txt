@@ -4,10 +4,11 @@ Category: mcp
 Author: HeyClaude Team
 Date added: 2025-11-25
 Documentation: https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp
+Repository: https://github.com/JSONbored/claudepro-directory
 Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/heyclaude-mcp
-- Source URLs: https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx
+- Source URLs: https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp, https://github.com/JSONbored/claudepro-directory, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx
 - Brand: HeyClaude
 - Brand domain: heyclau.de
 - Brand asset source: manual

@@ -577,7 +577,7 @@
     "metadataOnly": false,
     "missingRequired": [],
     "missingRecommended": [],
-    "issues": ["uses_default_directory_repo_url"]
+    "issues": []
   },
   {
     "category": "mcp",
@@ -821,8 +821,28 @@
   },
   {
     "category": "mcp",
+    "filePath": "content/mcp/xquik-mcp-server.mdx",
+    "slug": "xquik-mcp-server",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": []
+  },
+  {
+    "category": "mcp",
     "filePath": "content/mcp/zapier-mcp-server.mdx",
     "slug": "zapier-mcp-server",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": []
+  },
+  {
+    "category": "mcp",
+    "filePath": "content/mcp/zyntra-mail.mdx",
+    "slug": "zyntra-mail",
     "sourceType": "external",
     "metadataOnly": false,
     "missingRequired": [],
