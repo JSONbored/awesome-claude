@@ -3116,10 +3116,10 @@ Added complete newsletter subscription infrastructure with Resend integration, f
 
 **Email Infrastructure:**
 
-- **Domain:** `mail.claudepro.directory` (subdomain for deliverability)
+- **Domain:** `mail.heyclau.de` (subdomain for deliverability)
 - **Integration:** Resend <> Vercel Marketplace direct integration
 - **DNS:** Managed via Resend <> Cloudflare integration
-- **From Address:** `hello@mail.claudepro.directory`
+- **From Address:** `hello@mail.heyclau.de`
 
 **Rate Limiting:**
 
@@ -3452,7 +3452,7 @@ pipeline.expire(dailyKey, 604800, "NX"); // Only set if key doesn't have TTL
 - **Security**: No timezone-based data corruption across global edge deployments
 - **Reliability**: Input validation prevents invalid Redis data from breaking calculations
 - **Performance**: <100ms Redis queries for 200+ items with atomic operations
-- **Users**: Discover new popular content on [trending page](https://claudepro.directory/trending) within 24 hours with accurate growth metrics
+- **Users**: Discover new popular content on [trending page](https://heyclau.de/trending) within 24 hours with accurate growth metrics
 
 ### Added
 
@@ -3539,7 +3539,7 @@ Redesigned the view counter display to be more prominent and visually appealing.
 
 ### For Users
 
-See view counts displayed prominently on all config cards across [AI Agents](https://claudepro.directory/agents), [MCP Servers](https://claudepro.directory/mcp), and other category pages.
+See view counts displayed prominently on all config cards across [AI Agents](https://heyclau.de/agents), [MCP Servers](https://heyclau.de/mcp), and other category pages.
 
 ### Related Changes
 
@@ -3600,7 +3600,7 @@ if (!statsRedis.isConnected()) {
 
 ### For Users
 
-The [trending page](https://claudepro.directory/trending) now loads instantly with accurate data refreshed every 5 minutes.
+The [trending page](https://heyclau.de/trending) now loads instantly with accurate data refreshed every 5 minutes.
 
 ### Related Changes
 
@@ -3642,7 +3642,7 @@ Added `'strict-dynamic'` directive to Content Security Policy configuration. Thi
 Content-Security-Policy: script-src 'nonce-xyz123' 'strict-dynamic'
 ```
 
-**Impact**: View tracking analytics now work correctly across the site. See live stats on the [trending page](https://claudepro.directory/trending).
+**Impact**: View tracking analytics now work correctly across the site. See live stats on the [trending page](https://heyclau.de/trending).
 
 ---
 
@@ -3665,7 +3665,7 @@ Content-Security-Policy: script-src 'nonce-xyz123' 'strict-dynamic'
 
 ### For Users
 
-Browse and discover [MCP Servers](https://claudepro.directory/mcp) including the new Reddit integration for Claude Desktop.
+Browse and discover [MCP Servers](https://heyclau.de/mcp) including the new Reddit integration for Claude Desktop.
 
 ---
 
@@ -3675,7 +3675,7 @@ Browse and discover [MCP Servers](https://claudepro.directory/mcp) including the
 
 ### What Changed
 
-Completely refactored the [submission flow](https://claudepro.directory/submit) to eliminate all GitHub API dependencies. Users now fill the form and get redirected to GitHub with a pre-filled issue they can review before submitting.
+Completely refactored the [submission flow](https://heyclau.de/submit) to eliminate all GitHub API dependencies. Users now fill the form and get redirected to GitHub with a pre-filled issue they can review before submitting.
 
 ### Architecture Improvements
 
@@ -3717,7 +3717,7 @@ window.open(url.toString(), "_blank");
 
 ### For Users
 
-[Submit your configurations](https://claudepro.directory/submit) faster with simplified GitHub integration - no account required until final submission.
+[Submit your configurations](https://heyclau.de/submit) faster with simplified GitHub integration - no account required until final submission.
 
 ---
 

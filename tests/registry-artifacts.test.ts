@@ -263,10 +263,9 @@ describe("registry artifacts", () => {
         submittedByUrl: "https://github.com/UPinar",
         submissionIssueNumber: 304,
         submissionIssueUrl:
-          "https://github.com/JSONbored/claudepro-directory/issues/304",
+          "https://github.com/JSONbored/awesome-claude/issues/304",
         importPrNumber: 311,
-        importPrUrl:
-          "https://github.com/JSONbored/claudepro-directory/pull/311",
+        importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/311",
         reviewedBy: "JSONbored",
         claimStatus: "unclaimed",
       });
@@ -274,10 +273,10 @@ describe("registry artifacts", () => {
 
     expect(llmsText).toContain("- Submitted by: UPinar");
     expect(llmsText).toContain(
-      "- Submission issue: https://github.com/JSONbored/claudepro-directory/issues/304",
+      "- Submission issue: https://github.com/JSONbored/awesome-claude/issues/304",
     );
     expect(llmsText).toContain(
-      "- Import PR: https://github.com/JSONbored/claudepro-directory/pull/311",
+      "- Import PR: https://github.com/JSONbored/awesome-claude/pull/311",
     );
 
     const zyntraEntry = directoryEntries.find(
@@ -288,9 +287,9 @@ describe("registry artifacts", () => {
       submittedByUrl: "https://github.com/dd77ss",
       submissionIssueNumber: 310,
       submissionIssueUrl:
-        "https://github.com/JSONbored/claudepro-directory/issues/310",
+        "https://github.com/JSONbored/awesome-claude/issues/310",
       importPrNumber: 314,
-      importPrUrl: "https://github.com/JSONbored/claudepro-directory/pull/314",
+      importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/314",
       reviewedBy: "JSONbored",
       claimStatus: "unclaimed",
     });

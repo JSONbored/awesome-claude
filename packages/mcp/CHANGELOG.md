@@ -1,5 +1,11 @@
 # @heyclaude/mcp Changelog
 
+## 0.1.2 - Repository Rename
+
+- Update package metadata, README links, and release provenance for the
+  `JSONbored/awesome-claude` GitHub repository.
+- Keep published package behavior unchanged.
+
 ## 0.1.1 - Package Page Polish
 
 - Add npm-facing package README branding, repository links, npm links, and

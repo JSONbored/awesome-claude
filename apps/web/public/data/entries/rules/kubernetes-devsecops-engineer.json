@@ -488,7 +488,7 @@
       }
     ],
     "filePath": "content/rules/kubernetes-devsecops-engineer.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -503,7 +503,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://kubernetes.io/docs/concepts/security/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

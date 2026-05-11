@@ -7,7 +7,7 @@ import {
 } from "./brand-assets.js";
 
 const DEFAULT_DIRECTORY_REPO_URL =
-  "https://github.com/JSONbored/claudepro-directory";
+  "https://github.com/JSONbored/awesome-claude";
 const DEFAULT_SITE_URL = "https://heyclau.de";
 
 export const CATEGORY_SCHEMAS = Object.fromEntries(

@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://supabase.com/docs
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/supabase-realtime-database.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/supabase-realtime-database.mdx
 Download: /downloads/skills/supabase-realtime-database.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/supabase-realtime-database
-- Source URLs: https://supabase.com/docs, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/supabase-realtime-database.mdx
+- Source URLs: https://supabase.com/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/supabase-realtime-database.mdx
 - Brand: Supabase
 - Brand domain: supabase.com
 - Brand asset source: brandfetch

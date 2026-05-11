@@ -262,7 +262,7 @@
       }
     ],
     "filePath": "content/skills/model-routing-cost-latency-optimizer.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -277,7 +277,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://platform.openai.com/docs/guides/latency-optimization",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-10",

@@ -5,11 +5,11 @@ Author: JSONbored
 Date added: 2026-04-10
 Documentation: https://github.com/openclaw/openclaw
 Repository: https://github.com/openclaw/openclaw
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-agent-ops-hardening.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx
 Download: /downloads/skills/openclaw-agent-ops-hardening.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/openclaw-agent-ops-hardening
-- Source URLs: https://github.com/openclaw/openclaw, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-agent-ops-hardening.mdx
+- Source URLs: https://github.com/openclaw/openclaw, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx
 - Package URL: /downloads/skills/openclaw-agent-ops-hardening.zip
 - Package SHA256: a2287d07c870f3070dc22382f0e2a409b098c5115c844429796bfa4424baf21d
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)

@@ -14,9 +14,9 @@ export const siteConfig = {
   name: "HeyClaude",
   shortName: "heyclaude",
   description:
-    "A community-built directory for Claude agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and jobs.",
+    "An unofficial community-built awesome Claude directory for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and jobs.",
   url: "https://heyclau.de",
-  githubUrl: "https://github.com/JSONbored/claudepro-directory",
+  githubUrl: "https://github.com/JSONbored/awesome-claude",
   jobsEmail: "jobs@heyclau.de",
   twitterUrl: process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/jsonbored",
   discordUrl:

@@ -1,6 +1,6 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
 export const GITHUB_NEW_ISSUE_URL =
-  "https://github.com/JSONbored/claudepro-directory/issues/new";
+  "https://github.com/JSONbored/awesome-claude/issues/new";
 
 const defaultLabels = ["content-submission", "needs-review"];
 

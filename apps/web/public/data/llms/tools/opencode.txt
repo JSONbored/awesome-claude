@@ -5,10 +5,10 @@ Author: SST
 Date added: 2026-04-27
 Documentation: https://opencode.ai
 Repository: https://github.com/sst/opencode
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/opencode
-- Source URLs: https://opencode.ai, https://github.com/sst/opencode, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx
+- Source URLs: https://opencode.ai, https://github.com/sst/opencode, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx
 - Brand: OpenCode
 - Brand domain: opencode.ai
 - Brand asset source: brandfetch

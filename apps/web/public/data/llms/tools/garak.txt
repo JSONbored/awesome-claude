@@ -5,10 +5,10 @@ Author: NVIDIA
 Date added: 2026-04-27
 Documentation: https://github.com/NVIDIA/garak
 Repository: https://github.com/NVIDIA/garak
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/garak
-- Source URLs: https://github.com/NVIDIA/garak, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx
+- Source URLs: https://github.com/NVIDIA/garak, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx
 - Brand: Garak
 - Brand domain: github.com
 - Brand asset source: brandfetch

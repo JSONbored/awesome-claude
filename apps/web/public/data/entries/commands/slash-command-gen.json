@@ -618,7 +618,7 @@
       }
     ],
     "filePath": "content/commands/slash-command-gen.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/slash-command-gen.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/slash-command-gen.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -633,7 +633,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://docs.claude.com/en/docs/claude-code/slash-commands",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/slash-command-gen.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/slash-command-gen.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-27T01:30:00-06:00",

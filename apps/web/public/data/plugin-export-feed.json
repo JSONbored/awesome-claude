@@ -307,7 +307,7 @@
       "title": "AI Code Review Security Agent - Agents",
       "description": "AI-powered code review specialist focusing on security vulnerabilities, OWASP Top 10, static analysis, secrets detection, and automated s...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-code-review-security-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/ai-code-review-security-agent"
@@ -317,7 +317,7 @@
       "title": "AI DevOps Engineer Agent - Automate Infrastructure & CI/CD",
       "description": "Deploy AI-powered DevOps automation with predictive analytics, self-healing systems, and intelligent CI/CD optimization for modern infras...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/ai-devops-automation-engineer-agent"
@@ -389,7 +389,7 @@
       "title": "API Builder Agent for Claude",
       "description": "Specialized agent for designing, building, and optimizing RESTful APIs and GraphQL services with modern best practices",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/api-builder-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/api-builder-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/api-builder-agent"
@@ -481,7 +481,7 @@
       "title": "Auto Save Backup - Hooks",
       "description": "Automatically creates timestamped backups of files before modification to prevent data loss.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/auto-save-backup.sh && chmod +x .claude/hooks/auto-save-backup.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/auto-save-backup"
@@ -495,7 +495,7 @@
       "brandDomain": "microsoft.com",
       "brandIconUrl": "/api/brand-assets/icon/microsoft.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/autogen-conversation-agent-builder.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/autogen-conversation-agent-builder.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/autogen-conversation-agent-builder"
@@ -543,7 +543,7 @@
       "title": "Backend Architect Agent - Agents",
       "description": "Expert backend architect specializing in scalable system design, microservices, API development, and infrastructure planning",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/backend-architect-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/backend-architect-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/backend-architect-agent"
@@ -739,7 +739,7 @@
       "brandDomain": "anthropic.com",
       "brandIconUrl": "/api/brand-assets/icon/anthropic.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/desktop-mcp-setup.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/desktop-mcp-setup.mdx",
       "installCommand": "claude mcp add --transport http server-name https://api.example.com/mcp && claude mcp list",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/mcp/desktop-mcp-setup"
@@ -855,7 +855,7 @@
       "brandDomain": "aws.amazon.com",
       "brandIconUrl": "/api/brand-assets/icon/aws.amazon.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/cloud-backup-on-session-stop.sh && chmod +x .claude/hooks/cloud-backup-on-session-stop.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/cloud-backup-on-session-stop"
@@ -869,7 +869,7 @@
       "brandDomain": "azure.microsoft.com",
       "brandIconUrl": "/api/brand-assets/icon/azure.microsoft.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/cloud-infrastructure-architect-agent"
@@ -1013,7 +1013,7 @@
       "title": "Code Complexity Alert Monitor - Hooks",
       "description": "Alerts when code complexity exceeds thresholds in real-time using cyclomatic complexity analysis, line count monitoring, function count a...",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/code-complexity-alert-monitor.sh && chmod +x .claude/hooks/code-complexity-alert-monitor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/code-complexity-alert-monitor"
@@ -1221,9 +1221,9 @@
       "submittedByUrl": "https://github.com/UPinar",
       "submittedAt": "2026-04-20T15:29:10.000Z",
       "submissionIssueNumber": 304,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/304",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/304",
       "importPrNumber": 311,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/311",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/311",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T11:16:21.000Z",
       "claimStatus": "unclaimed",
@@ -1241,7 +1241,7 @@
       "title": "CSS Unused Selector Detector - Hooks",
       "description": "Detects unused CSS selectors when stylesheets are modified to keep CSS lean using PurgeCSS, PostCSS, and content analysis.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/css-unused-selector-detector.sh && chmod +x .claude/hooks/css-unused-selector-detector.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/css-unused-selector-detector"
@@ -1366,7 +1366,7 @@
       "title": "Data Pipeline Engineering Agent - Agents",
       "description": "Modern data pipeline specialist focused on real-time streaming, ETL/ELT orchestration, data quality validation, and scalable data infrast...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/data-pipeline-engineering-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/data-pipeline-engineering-agent"
@@ -1376,7 +1376,7 @@
       "title": "Database Connection Cleanup - Hooks",
       "description": "Closes all database connections and cleans up resources when Claude Code session ends using PostgreSQL pg_terminate_backend, MySQL KILL,...",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/database-connection-cleanup.sh && chmod +x .claude/hooks/database-connection-cleanup.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/database-connection-cleanup"
@@ -1436,7 +1436,7 @@
       "title": "Debugging Assistant Agent - Agents",
       "description": "Advanced debugging agent that helps identify, analyze, and resolve software bugs with systematic troubleshooting methodologies",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/debugging-assistant-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/debugging-assistant-agent"
@@ -1446,7 +1446,7 @@
       "title": "Dependency Security Audit",
       "description": "Performs a comprehensive security audit of all dependencies when Claude Code session ends using npm audit (npm 10.x+), yarn audit (Yarn 4...",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/dependency-security-audit-on-stop.sh && chmod +x .claude/hooks/dependency-security-audit-on-stop.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/dependency-security-audit-on-stop"
@@ -1518,7 +1518,7 @@
       "title": "Doc Auto Generator",
       "description": "Automatically generates or updates project documentation when session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-auto-generator-on-stop.sh && chmod +x .claude/hooks/documentation-auto-generator-on-stop.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/documentation-auto-generator-on-stop"
@@ -1691,7 +1691,7 @@
       "title": "Domain Specialist AI Agents - Agents",
       "description": "Industry-specific AI agents for healthcare, legal, and financial domains with specialized knowledge, compliance automation, and regulator...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/domain-specialist-ai-agents.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/domain-specialist-ai-agents"
@@ -1701,7 +1701,7 @@
       "title": "Environment Cleanup Handler - Hooks",
       "description": "Cleans up temporary files, caches, and resources when Claude session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/environment-cleanup-handler.sh && chmod +x .claude/hooks/environment-cleanup-handler.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/environment-cleanup-handler"
@@ -1721,7 +1721,7 @@
       "title": "Error Rate Monitor - Hooks",
       "description": "Tracks error patterns and alerts when error rates spike.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/error-rate-monitor.sh && chmod +x .claude/hooks/error-rate-monitor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/error-rate-monitor"
@@ -1827,7 +1827,7 @@
       "title": "Extended Thinking Orchestrator - Agents",
       "description": "Orchestrate Extended Thinking modes with adaptive budget allocation.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/extended-thinking-orchestrator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/extended-thinking-orchestrator"
@@ -1899,7 +1899,7 @@
       "title": "File Size Warning Monitor - Hooks",
       "description": "Alerts when files exceed size thresholds that could impact performance.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/file-size-warning-monitor.sh && chmod +x .claude/hooks/file-size-warning-monitor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/file-size-warning-monitor"
@@ -1923,7 +1923,7 @@
       "title": "Final Bundle Size Reporter - Hooks",
       "description": "Analyzes and reports final bundle sizes when the development session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/final-bundle-size-reporter.sh && chmod +x .claude/hooks/final-bundle-size-reporter.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/final-bundle-size-reporter"
@@ -1957,7 +1957,7 @@
       "title": "Full Stack AI Development Agent - Agents",
       "description": "Full-stack AI development specialist bridging frontend, backend, and AI/ML with AI-assisted coding workflows, intelligent code generation...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/full-stack-ai-development-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/full-stack-ai-development-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/full-stack-ai-development-agent"
@@ -1977,7 +1977,7 @@
       "title": "Git Auto Commit On Stop - Hooks",
       "description": "Automatically commits all changes with a summary when Claude Code session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/git-auto-commit-on-stop.sh && chmod +x .claude/hooks/git-auto-commit-on-stop.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/git-auto-commit-on-stop"
@@ -1987,7 +1987,7 @@
       "title": "Git Branch Protection - Hooks",
       "description": "Prevents direct edits to protected branches like main or master, enforcing PR-based workflows.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/git-branch-protection.sh && chmod +x .claude/hooks/git-branch-protection.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/git-branch-protection"
@@ -2203,7 +2203,7 @@
       "brandDomain": "github.com",
       "brandIconUrl": "/api/brand-assets/icon/github.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/github-copilot-interop-bridge.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/github-copilot-interop-bridge"
@@ -2227,7 +2227,7 @@
       "title": "Go Module Tidy - Hooks",
       "description": "Automatically runs go mod tidy when Go files or go.mod are modified to keep dependencies clean.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/go-module-tidy.sh && chmod +x .claude/hooks/go-module-tidy.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/go-module-tidy"
@@ -2290,7 +2290,7 @@
       "title": "GraphQL Schema Validator - Hooks",
       "description": "Validates GraphQL schema files and checks for breaking changes when modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/graphql-schema-validator.sh && chmod +x .claude/hooks/graphql-schema-validator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/graphql-schema-validator"
@@ -2352,7 +2352,7 @@
       "brandDomain": "heyclau.de",
       "brandIconUrl": "/favicon.svg",
       "brandAssetSource": "manual",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude",
       "installCommand": "npx -y mcp-remote https://heyclau.de/api/mcp",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/mcp/heyclaude-mcp"
@@ -2496,7 +2496,7 @@
       "title": "I18n Translation Validator - Hooks",
       "description": "Validates translation files for missing keys and ensures consistency across different language files.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/i18n-translation-validator.sh && chmod +x .claude/hooks/i18n-translation-validator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/i18n-translation-validator"
@@ -2644,7 +2644,7 @@
       "title": "Jest Snapshot Auto Updater - Hooks",
       "description": "Automatically updates Jest snapshots when component files are modified significantly.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/jest-snapshot-auto-updater.sh && chmod +x .claude/hooks/jest-snapshot-auto-updater.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/jest-snapshot-auto-updater"
@@ -2716,7 +2716,7 @@
       "title": "JSON Schema Validator - Hooks",
       "description": "Validates JSON files against their schemas when modified to ensure data integrity.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/json-schema-validator.sh && chmod +x .claude/hooks/json-schema-validator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/json-schema-validator"
@@ -2730,7 +2730,7 @@
       "brandDomain": "kubernetes.io",
       "brandIconUrl": "/api/brand-assets/icon/kubernetes.io",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/kubernetes-manifest-validator.sh && chmod +x .claude/hooks/kubernetes-manifest-validator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/kubernetes-manifest-validator"
@@ -2754,7 +2754,7 @@
       "title": "Life Sciences Research Specialist - Agents",
       "description": "Automate biomedical research workflows with Claude for Life Sciences.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/life-sciences-research-specialist.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/life-sciences-research-specialist"
@@ -2874,7 +2874,7 @@
       "title": "Markdown Link Checker - Hooks",
       "description": "Validates all links in markdown files to detect broken links and references.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/markdown-link-checker.sh && chmod +x .claude/hooks/markdown-link-checker.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/markdown-link-checker"
@@ -3042,7 +3042,7 @@
       "submittedByUrl": "https://github.com/vy35",
       "submittedAt": "2026-05-08T18:13:55.000Z",
       "submissionIssueNumber": 325,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/325",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/325",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-05-10T21:02:24.000Z",
       "claimStatus": "unclaimed",
@@ -3060,7 +3060,7 @@
       "title": "Memory Usage Monitor - Hooks",
       "description": "Monitors memory usage and alerts when thresholds are exceeded.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/memory-usage-monitor.sh && chmod +x .claude/hooks/memory-usage-monitor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/memory-usage-monitor"
@@ -3194,7 +3194,7 @@
       "brandDomain": "langchain.com",
       "brandIconUrl": "/api/brand-assets/icon/langchain.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/multi-agent-orchestration-specialist.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/multi-agent-orchestration-specialist"
@@ -3377,7 +3377,7 @@
       "title": "Nextjs Route Analyzer - Hooks",
       "description": "Analyzes Next.js page routes and generates a route map when pages are added or modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/nextjs-route-analyzer.sh && chmod +x .claude/hooks/nextjs-route-analyzer.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/nextjs-route-analyzer"
@@ -3598,7 +3598,7 @@
       "title": "Package Vulnerability Scanner - Hooks",
       "description": "Scans for security vulnerabilities when package.json or requirements.txt files are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/package-vulnerability-scanner.sh && chmod +x .claude/hooks/package-vulnerability-scanner.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/package-vulnerability-scanner"
@@ -3680,7 +3680,7 @@
       "title": "Performance Benchmark Report - Hooks",
       "description": "Runs performance benchmarks and generates comparison report when session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/performance-benchmark-report.sh && chmod +x .claude/hooks/performance-benchmark-report.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/performance-benchmark-report"
@@ -3690,7 +3690,7 @@
       "title": "Performance Impact Monitor - Hooks",
       "description": "Monitors and alerts on performance-impacting changes in real-time.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/performance-impact-monitor.sh && chmod +x .claude/hooks/performance-impact-monitor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/performance-impact-monitor"
@@ -3850,7 +3850,7 @@
       "title": "Plugin Ecosystem Architect - Agents",
       "description": "Design and publish Claude Code plugins for the October 2025 marketplace launch.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/plugin-ecosystem-architect.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/plugin-ecosystem-architect.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/plugin-ecosystem-architect"
@@ -3932,7 +3932,7 @@
       "title": "Product Management AI Agent - Agents",
       "description": "AI-powered product management specialist focused on user story generation, product analytics, roadmap prioritization, A/B testing, and da...",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/product-management-ai-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/product-management-ai-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/product-management-ai-agent"
@@ -3942,7 +3942,7 @@
       "title": "Production Reliability Engineer - Agents",
       "description": "Ensure production deployment reliability with SRE best practices.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/production-reliability-engineer.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/production-reliability-engineer.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/production-reliability-engineer"
@@ -4000,7 +4000,7 @@
       "title": "Prompt Optimization Specialist - Agents",
       "description": "Optimize agent prompts and system instructions with meta-prompting techniques.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/prompt-optimization-specialist.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/prompt-optimization-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/prompt-optimization-specialist"
@@ -4014,9 +4014,9 @@
       "submittedByUrl": "https://github.com/MohamedAbdallah-14",
       "submittedAt": "2026-04-25T15:44:14.000Z",
       "submissionIssueNumber": 305,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/305",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/305",
       "importPrNumber": 311,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/311",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/311",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T11:16:21.000Z",
       "claimStatus": "unclaimed",
@@ -4126,7 +4126,7 @@
       "title": "Python Import Optimizer - Hooks",
       "description": "Automatically sorts and optimizes Python imports using isort when Python files are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/python-import-optimizer.sh && chmod +x .claude/hooks/python-import-optimizer.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/python-import-optimizer"
@@ -4136,7 +4136,7 @@
       "title": "Python Linter Integration - Hooks",
       "description": "Automatically runs pylint on Python files after editing to enforce code quality standards.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/python-linter-integration.sh && chmod +x .claude/hooks/python-linter-integration.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/python-linter-integration"
@@ -4199,7 +4199,7 @@
       "title": "React Test Generator",
       "description": "Automatically creates or updates test files when React components are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/react-component-test-generator.sh && chmod +x .claude/hooks/react-component-test-generator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/react-component-test-generator"
@@ -4209,7 +4209,7 @@
       "title": "Real Time Activity Tracker - Hooks",
       "description": "Tracks all Claude Code activities in real-time and logs them for monitoring and debugging.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/real-time-activity-tracker.sh && chmod +x .claude/hooks/real-time-activity-tracker.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/real-time-activity-tracker"
@@ -4237,7 +4237,7 @@
       "brandDomain": "redis.io",
       "brandIconUrl": "/api/brand-assets/icon/redis.io",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/redis-cache-invalidator.sh && chmod +x .claude/hooks/redis-cache-invalidator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/redis-cache-invalidator"
@@ -4309,7 +4309,7 @@
       "title": "Rust Cargo Check - Hooks",
       "description": "Automatically runs cargo check and clippy when Rust files are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/rust-cargo-check.sh && chmod +x .claude/hooks/rust-cargo-check.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/rust-cargo-check"
@@ -4367,7 +4367,7 @@
       "title": "SCSS Auto Compiler - Hooks",
       "description": "Automatically compiles SCSS/Sass files to CSS when they are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/scss-auto-compiler.sh && chmod +x .claude/hooks/scss-auto-compiler.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/scss-auto-compiler"
@@ -4391,7 +4391,7 @@
       "brandDomain": "microsoft.com",
       "brandIconUrl": "/api/brand-assets/icon/microsoft.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/semantic-kernel-enterprise-agent"
@@ -4401,7 +4401,7 @@
       "title": "Sensitive Data Alert Scanner - Hooks",
       "description": "Scans for potential sensitive data exposure and alerts immediately.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/sensitive-data-alert-scanner.sh && chmod +x .claude/hooks/sensitive-data-alert-scanner.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/sensitive-data-alert-scanner"
@@ -4425,7 +4425,7 @@
       "title": "Session Metrics Collector - Hooks",
       "description": "Collects and reports detailed metrics about the coding session when Claude stops.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/session-metrics-collector.sh && chmod +x .claude/hooks/session-metrics-collector.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/session-metrics-collector"
@@ -4439,7 +4439,7 @@
       "brandDomain": "slack.com",
       "brandIconUrl": "/api/brand-assets/icon/slack.com",
       "brandAssetSource": "brandfetch",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/slack-progress-notifier.sh && chmod +x .claude/hooks/slack-progress-notifier.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/slack-progress-notifier"
@@ -4487,7 +4487,7 @@
       "submittedByUrl": "https://github.com/vy35",
       "submittedAt": "2026-05-08T18:13:53.000Z",
       "submissionIssueNumber": 324,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/324",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-05-10T21:02:21.000Z",
       "claimStatus": "unclaimed",
@@ -4620,7 +4620,7 @@
       "title": "Svelte Component Compiler - Hooks",
       "description": "Automatically compiles and validates Svelte components when they are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/svelte-component-compiler"
@@ -4688,7 +4688,7 @@
       "title": "Team Summary Email Generator - Hooks",
       "description": "Generates and sends a comprehensive summary email to the team when session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/team-summary-email-generator.sh && chmod +x .claude/hooks/team-summary-email-generator.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/team-summary-email-generator"
@@ -4698,7 +4698,7 @@
       "title": "Technical Doc Writer",
       "description": "Specialized in creating clear, comprehensive technical documentation for APIs, software, and complex systems",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/technical-documentation-writer-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/technical-documentation-writer-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/technical-documentation-writer-agent"
@@ -4708,7 +4708,7 @@
       "title": "Terraform Plan Executor - Hooks",
       "description": "Automatically runs terraform plan when .tf files are modified to preview infrastructure changes.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/terraform-plan-executor.sh && chmod +x .claude/hooks/terraform-plan-executor.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/terraform-plan-executor"
@@ -4728,7 +4728,7 @@
       "title": "Test Coverage Final Report - Hooks",
       "description": "Generates a comprehensive test coverage report when the coding session ends.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/test-coverage-final-report.sh && chmod +x .claude/hooks/test-coverage-final-report.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/test-coverage-final-report"
@@ -4748,7 +4748,7 @@
       "title": "Token Cost Budget Optimizer - Agents",
       "description": "Analyze and optimize token costs with real-time budget tracking.",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/token-cost-budget-optimizer.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/token-cost-budget-optimizer.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/token-cost-budget-optimizer"
@@ -4806,7 +4806,7 @@
       "title": "TypeScript Checker",
       "description": "Automatically runs TypeScript compiler checks after editing .ts or .tsx files to catch type errors early.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/typescript-compilation-checker.sh && chmod +x .claude/hooks/typescript-compilation-checker.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/typescript-compilation-checker"
@@ -4816,7 +4816,7 @@
       "title": "UI UX Design Expert Agent - Agents",
       "description": "Specialized in creating beautiful, intuitive user interfaces and exceptional user experiences",
       "category": "agents",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ui-ux-design-expert-agent.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ui-ux-design-expert-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/agents/ui-ux-design-expert-agent"
@@ -5095,7 +5095,7 @@
       "title": "Vue Composition API Linter - Hooks",
       "description": "Lints Vue 3 components for Composition API best practices and common issues.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/vue-composition-api-linter.sh && chmod +x .claude/hooks/vue-composition-api-linter.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/vue-composition-api-linter"
@@ -5163,7 +5163,7 @@
       "title": "Webpack Bundle Analyzer - Hooks",
       "description": "Analyzes webpack bundle size when webpack config or entry files are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/webpack-bundle-analyzer.sh && chmod +x .claude/hooks/webpack-bundle-analyzer.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/webpack-bundle-analyzer"
@@ -5288,7 +5288,7 @@
       "title": "Workflow Completion Report - Hooks",
       "description": "Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx",
+      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/workflow-completion-report.sh && chmod +x .claude/hooks/workflow-completion-report.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/workflow-completion-report"
@@ -5301,7 +5301,7 @@
       "submittedBy": "kriptoburak",
       "submittedByUrl": "https://github.com/kriptoburak",
       "importPrNumber": 326,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/326",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/326",
       "brandName": "Xquik",
       "brandDomain": "xquik.com",
       "brandAssetSource": "manual",
@@ -5429,9 +5429,9 @@
       "submittedByUrl": "https://github.com/dd77ss",
       "submittedAt": "2026-04-28T18:34:47.000Z",
       "submissionIssueNumber": 310,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/310",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/310",
       "importPrNumber": 314,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/314",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/314",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T12:14:24.000Z",
       "claimStatus": "unclaimed",

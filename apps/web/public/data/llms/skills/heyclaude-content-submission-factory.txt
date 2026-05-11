@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2026-04-30
 Documentation: https://heyclau.de/submit
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-content-submission-factory.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx
 Download: /downloads/skills/heyclaude-content-submission-factory.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/heyclaude-content-submission-factory
-- Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-content-submission-factory.mdx
+- Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-content-submission-factory.zip
 - Package SHA256: 88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
@@ -30,7 +30,7 @@ This skill is pinned to HeyClaude issue-first submission behavior verified on **
 ## Retrieval Sources
 - https://heyclau.de/submit
 - https://heyclau.de/submissions
-- https://github.com/JSONbored/claudepro-directory/issues/new/choose
+- https://github.com/JSONbored/awesome-claude/issues/new/choose
 
 ## Core Workflow
 1. Identify the best HeyClaude category from the evidence, not from the submitter's guess.
@@ -96,7 +96,7 @@ mcpValidation:
   schemaChecked: true
   duplicateSearch: "No likely duplicate found."
   submitUrl: https://heyclau.de/submit?...
-  githubIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/new?...
+  githubIssueUrl: https://github.com/JSONbored/awesome-claude/issues/new?...
 maintainerNotes: Why this belongs in HeyClaude and what still needs review.
 ```
 ```yaml
@@ -119,7 +119,7 @@ mcpValidation:
   schemaChecked: true
   duplicateSearch: "No likely duplicate found."
   submitUrl: https://heyclau.de/submit?...
-  githubIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/new?...
+  githubIssueUrl: https://github.com/JSONbored/awesome-claude/issues/new?...
 maintainerNotes: Why this belongs in HeyClaude and what still needs review.
 ```
 

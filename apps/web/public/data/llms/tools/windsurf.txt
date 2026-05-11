@@ -4,10 +4,10 @@ Category: tools
 Author: Windsurf
 Date added: 2026-04-27
 Documentation: https://docs.windsurf.com
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/windsurf
-- Source URLs: https://docs.windsurf.com, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx, https://windsurf.com
+- Source URLs: https://docs.windsurf.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx, https://windsurf.com
 - Brand: Windsurf
 - Brand domain: windsurf.com
 - Brand asset source: brandfetch

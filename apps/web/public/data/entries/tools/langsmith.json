@@ -71,7 +71,7 @@
     ],
     "codeBlocks": [],
     "filePath": "content/tools/langsmith.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -86,7 +86,7 @@
     "sourceUrlCount": 3,
     "sourceUrls": [
       "https://docs.smith.langchain.com",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
       "https://www.langchain.com/langsmith"
     ],
     "sourceStatus": "available",

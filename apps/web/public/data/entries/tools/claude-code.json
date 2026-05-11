@@ -68,7 +68,7 @@
     ],
     "codeBlocks": [],
     "filePath": "content/tools/claude-code.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -83,7 +83,7 @@
     "sourceUrlCount": 3,
     "sourceUrls": [
       "https://docs.anthropic.com/en/docs/claude-code/overview",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
       "https://www.anthropic.com/claude-code"
     ],
     "sourceStatus": "available",

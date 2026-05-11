@@ -6,7 +6,7 @@ import { validateSubmission } from "@heyclaude/registry/submission";
 describe("skill package validator", () => {
   it("accepts a review-ready Agent Skill package shape", () => {
     const result = validateSkillPackageFiles({
-      githubUrl: "https://github.com/JSONbored/claudepro-directory",
+      githubUrl: "https://github.com/JSONbored/awesome-claude",
       siteUrl: "https://heyclau.de",
       packageSha256: "a".repeat(64),
       files: [
@@ -58,7 +58,7 @@ Use the helper in \`scripts/check.sh\` before submitting.
 
   it("rejects missing frontmatter and missing referenced resources", () => {
     const result = validateSkillPackageFiles({
-      githubUrl: "https://github.com/JSONbored/claudepro-directory",
+      githubUrl: "https://github.com/JSONbored/awesome-claude",
       files: [
         {
           path: "SKILL.md",

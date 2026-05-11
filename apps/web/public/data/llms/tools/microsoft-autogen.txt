@@ -5,10 +5,10 @@ Author: Microsoft
 Date added: 2026-04-27
 Documentation: https://microsoft.github.io/autogen/
 Repository: https://github.com/microsoft/autogen
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/microsoft-autogen
-- Source URLs: https://microsoft.github.io/autogen/, https://github.com/microsoft/autogen, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx
+- Source URLs: https://microsoft.github.io/autogen/, https://github.com/microsoft/autogen, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx
 - Brand: Microsoft
 - Brand domain: microsoft.github.io
 - Brand asset source: brandfetch

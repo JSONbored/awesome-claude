@@ -336,7 +336,7 @@
       }
     ],
     "filePath": "content/skills/postgresql-query-optimization.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/postgresql-query-optimization.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -351,7 +351,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://www.postgresql.org/docs/current/performance-tips.html",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/postgresql-query-optimization.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2025-10-16",

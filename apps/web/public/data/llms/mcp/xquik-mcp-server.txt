@@ -3,20 +3,20 @@ URL: https://heyclau.de/mcp/xquik-mcp-server
 Category: mcp
 Author: Xquik-dev
 Submitted by: kriptoburak
-Import PR: https://github.com/JSONbored/claudepro-directory/pull/326
+Import PR: https://github.com/JSONbored/awesome-claude/pull/326
 Date added: 2026-05-09
 Documentation: https://docs.xquik.com/mcp/overview
 Repository: https://github.com/Xquik-dev/x-twitter-scraper
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/xquik-mcp-server
-- Source URLs: https://docs.xquik.com/mcp/overview, https://github.com/Xquik-dev/x-twitter-scraper, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx
+- Source URLs: https://docs.xquik.com/mcp/overview, https://github.com/Xquik-dev/x-twitter-scraper, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx
 - Brand: Xquik
 - Brand domain: xquik.com
 - Brand asset source: manual
 - Author: Xquik-dev
 - Submitted by: kriptoburak
-- Import PR: https://github.com/JSONbored/claudepro-directory/pull/326
+- Import PR: https://github.com/JSONbored/awesome-claude/pull/326
 - Last verified: 2026-05-09
 - Robots: indexable
 ## Summary

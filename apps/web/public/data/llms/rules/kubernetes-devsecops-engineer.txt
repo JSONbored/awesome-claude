@@ -4,10 +4,10 @@ Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://kubernetes.io/docs/concepts/security/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/rules/kubernetes-devsecops-engineer
-- Source URLs: https://kubernetes.io/docs/concepts/security/, https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx
+- Source URLs: https://kubernetes.io/docs/concepts/security/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx
 - Brand: Kubernetes
 - Brand domain: kubernetes.io
 - Brand asset source: brandfetch

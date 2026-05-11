@@ -58,7 +58,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://cursor.com/docs/context/rules",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/cursor-rules.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/cursor-rules.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -117,7 +117,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/debug",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/debug.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/debug.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -176,7 +176,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/docs.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/docs.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -235,7 +235,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/explain",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/explain.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/explain.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -294,7 +294,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/optimize",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/optimize.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/optimize.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -353,7 +353,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/refactor",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -412,7 +412,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/refactor",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor-code.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor-code.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -471,7 +471,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/review",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/review.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/review.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -529,7 +529,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/security",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -593,7 +593,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/security-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security-audit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security-audit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -652,7 +652,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/test",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/test-advanced.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/test-advanced.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -716,7 +716,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/zod-audit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/zod-audit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -775,7 +775,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/accessibility-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/accessibility-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -835,7 +835,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/accessibility-first-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/accessibility-first-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -908,7 +908,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://openai.com/index/new-tools-and-features-in-the-responses-api/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/agent-evals-regression-gate.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/agent-evals-regression-gate.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -980,7 +980,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1039,7 +1039,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/agent-skills-framework-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/agent-skills-framework-engineer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1099,7 +1099,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/skills",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/skills-installer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/skills-installer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1172,7 +1172,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://opentelemetry.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -1259,7 +1259,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.ycombinator.com/library",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -1331,7 +1331,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-code-review-security-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1389,7 +1389,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1450,7 +1450,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://epoch.ai/data-insights/context-windows",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1513,7 +1513,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.anthropic.com/claude/docs/prompt-engineering",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1586,7 +1586,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.google.com/search/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -1657,7 +1657,7 @@
         "sourceUrls": [
           "https://aider.chat/docs",
           "https://github.com/Aider-AI/aider",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/aider.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx",
           "https://aider.chat"
         ],
         "sourceStatus": "available",
@@ -1721,7 +1721,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/domdomegg/airtable-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/airtable-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/airtable-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1780,7 +1780,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/api-builder-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/api-builder-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1840,7 +1840,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://swagger.io/specification/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-design-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-design-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1899,7 +1899,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/api-development-starter-kit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/api-development-starter-kit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1958,7 +1958,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://swagger.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2019,7 +2019,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://swagger.io/specification/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-first-development-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-first-development-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2078,7 +2078,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/api-latency-breakdown.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/api-latency-breakdown.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2134,7 +2134,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.apify.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/apify.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx",
           "https://apify.com"
         ],
         "sourceStatus": "available",
@@ -2191,7 +2191,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.arcade.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arcade-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arcade-ai.mdx",
           "https://www.arcade.dev"
         ],
         "sourceStatus": "available",
@@ -2249,7 +2249,7 @@
         "sourceUrls": [
           "https://arize.com/docs/phoenix",
           "https://github.com/Arize-ai/phoenix",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arize-phoenix.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arize-phoenix.mdx",
           "https://phoenix.arize.com"
         ],
         "sourceStatus": "available",
@@ -2313,7 +2313,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/asana-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/asana-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-28T13:43:35-06:00",
@@ -2385,7 +2385,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openai/whisper",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/audio-transcription-summarization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -2458,7 +2458,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://prettier.io/docs/en/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-code-formatter-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-code-formatter-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2515,7 +2515,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2577,7 +2577,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2635,7 +2635,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://microsoft.github.io/autogen/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/autogen-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/autogen-workflow.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2698,7 +2698,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.aws.amazon.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/aws-cloud-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/aws-cloud-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2761,7 +2761,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://aws.amazon.com/cloudformation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/aws-cloudformation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/aws-cloudformation-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2824,7 +2824,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2887,7 +2887,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/awslabs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/aws-services-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/aws-services-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2945,7 +2945,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/backend-architect-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/backend-architect-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3008,7 +3008,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/backend-development-suite.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/backend-development-suite.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3081,7 +3081,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -3156,7 +3156,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://biomejs.dev/linter/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/biome-strict-linting-rules.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3216,7 +3216,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/block-timer-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/block-timer-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3272,7 +3272,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://support.bolt.new",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx",
           "https://bolt.new"
         ],
         "sourceStatus": "available",
@@ -3336,7 +3336,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://box.dev/guides/box-mcp/remote/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/box-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/box-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3392,7 +3392,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://www.braintrust.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/braintrust.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx",
           "https://www.braintrust.dev"
         ],
         "sourceStatus": "available",
@@ -3466,7 +3466,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev/docs/best-practices",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/browser-agent-workflow-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/browser-agent-workflow-automation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -3537,7 +3537,7 @@
         "sourceUrls": [
           "https://docs.browser-use.com",
           "https://github.com/browser-use/browser-use",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browser-use.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
           "https://browser-use.com"
         ],
         "sourceStatus": "available",
@@ -3594,7 +3594,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.browserbase.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browserbase.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx",
           "https://www.browserbase.com"
         ],
         "sourceStatus": "available",
@@ -3654,7 +3654,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/build-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/build-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3727,7 +3727,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://bun.sh/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
@@ -3800,7 +3800,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/burn-rate-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/burn-rate-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3859,7 +3859,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3922,7 +3922,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.canva.dev/docs/connect/canva-mcp-server-setup/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/canva-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/canva-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3982,7 +3982,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/catppuccin/catppuccin",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4039,7 +4039,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/chatgpt-migration-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/chatgpt-migration-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4099,7 +4099,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/checkpointing",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/checkpoint-manager.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/checkpoint-manager.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4156,7 +4156,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4212,7 +4212,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-agent-development-framework.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-agent-development-framework.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4270,7 +4270,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/healthcare-hipaa-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/healthcare-hipaa-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4323,7 +4323,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.anthropic.com/en/docs/claude-code/overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
           "https://www.anthropic.com/claude-code"
         ],
         "sourceStatus": "available",
@@ -4390,7 +4390,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.docker.com/reference/cli/docker/container/stats/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/docker-health-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/docker-health-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4447,7 +4447,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/multi-directory-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4508,7 +4508,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4565,7 +4565,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/wsl-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/wsl-setup-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4626,7 +4626,7 @@
         "checksumPresent": true,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/desktop-mcp-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/desktop-mcp-setup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-28T23:02:39-06:00",
@@ -4683,7 +4683,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/financial-services-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/financial-services-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4743,7 +4743,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.anthropic.com/en/docs/about-claude/models",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4801,7 +4801,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4861,7 +4861,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/introduction",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4918,7 +4918,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/business-process-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/business-process-automation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4975,7 +4975,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-rate-limits-fix.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-rate-limits-fix.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5036,7 +5036,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5097,7 +5097,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-copilot-python.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5157,7 +5157,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/claude-md",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/claudemd-builder.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/claudemd-builder.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5217,7 +5217,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/custom-instructions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5289,7 +5289,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://matplotlib.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cli-data-viz-quickstart.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cli-data-viz-quickstart.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -5366,7 +5366,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/hauptsacheNet/clickup-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/clickup-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5423,7 +5423,7 @@
         "sourceUrls": [
           "https://docs.cline.bot",
           "https://github.com/cline/cline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx",
           "https://cline.bot"
         ],
         "sourceStatus": "available",
@@ -5486,7 +5486,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5549,7 +5549,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5606,7 +5606,7 @@
         "sourceUrls": [
           "https://developers.cloudflare.com/agents/",
           "https://github.com/cloudflare/agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cloudflare-agents-sdk.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -5669,7 +5669,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudflare-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudflare-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5747,7 +5747,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers-ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -5839,7 +5839,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -5916,7 +5916,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://cloudinary.com/documentation/cloudinary_llm_mcp#mcp_servers",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudinary-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudinary-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5974,7 +5974,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6032,7 +6032,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/code-quality-toolkit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/code-quality-toolkit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6105,7 +6105,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -6177,7 +6177,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/rules/code-review",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/code-review-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6236,7 +6236,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://google.github.io/eng-practices/review/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/code-reviewer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/code-reviewer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6295,7 +6295,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-test-runner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6357,7 +6357,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://refactoring.guru/refactoring/catalog",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6413,7 +6413,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.coderabbit.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/coderabbit.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx",
           "https://www.coderabbit.ai"
         ],
         "sourceStatus": "available",
@@ -6487,7 +6487,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -6574,7 +6574,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -6649,7 +6649,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/migration-workflow-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/migration-workflow-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6705,7 +6705,7 @@
         "sourceUrls": [
           "https://docs.composio.dev",
           "https://github.com/ComposioHQ/composio",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx",
           "https://composio.dev"
         ],
         "sourceStatus": "available",
@@ -6765,7 +6765,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/content-creation-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/content-creation-workflow.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6825,7 +6825,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/analysis",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/context-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/context-analyzer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6885,7 +6885,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://epoch.ai/data-insights/context-windows",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/context-window-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/context-window-optimizer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -6942,7 +6942,7 @@
         "sourceUrls": [
           "https://docs.continue.dev",
           "https://github.com/continuedev/continue",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx",
           "https://continue.dev"
         ],
         "sourceStatus": "available",
@@ -6994,9 +6994,9 @@
       "submittedByUrl": "https://github.com/UPinar",
       "submittedAt": "2026-04-20T15:29:10.000Z",
       "submissionIssueNumber": 304,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/304",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/304",
       "importPrNumber": 311,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/311",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/311",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T11:16:21.000Z",
       "claimStatus": "unclaimed",
@@ -7026,7 +7026,7 @@
         "sourceUrls": [
           "https://api.contrastcyber.com",
           "https://github.com/UPinar/contrastapi",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/contrastapi-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-30T04:13:44-06:00",
@@ -7083,7 +7083,7 @@
         "sourceUrls": [
           "https://docs.crewai.com",
           "https://github.com/crewAIInc/crewAI",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
           "https://www.crewai.com"
         ],
         "sourceStatus": "available",
@@ -7142,7 +7142,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7215,7 +7215,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pandas.pydata.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/csv-excel-data-wrangler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/csv-excel-data-wrangler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -7285,7 +7285,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.cursor.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cursor.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cursor.mdx",
           "https://cursor.com"
         ],
         "sourceStatus": "available",
@@ -7364,7 +7364,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://cursor.sh/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
@@ -7437,7 +7437,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7500,7 +7500,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.daloopa.com/docs/daloopa-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/daloopa-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/daloopa-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7559,7 +7559,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/data-engineering-suite.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/data-engineering-suite.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7618,7 +7618,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7676,7 +7676,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7737,7 +7737,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.postgresql.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7796,7 +7796,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://knexjs.org/guide/migrations.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-migration-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7855,7 +7855,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.postgresql.org/docs/current/runtime-config-logging.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-query-performance-logger.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7914,7 +7914,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.postgresql.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-specialist-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-specialist-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -7973,7 +7973,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/nadeesha/ts-prune",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dead-code-eliminator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8031,7 +8031,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/debugging-troubleshooting-system.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/debugging-troubleshooting-system.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8089,7 +8089,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/debugging-assistant-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8147,7 +8147,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8206,7 +8206,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8265,7 +8265,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-update-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8321,7 +8321,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.devin.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx",
           "https://devin.ai"
         ],
         "sourceStatus": "available",
@@ -8386,7 +8386,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://kubernetes.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/devops-sre-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/devops-sre-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8449,7 +8449,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://discord.com/developers/docs/resources/webhook",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/discord-activity-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8512,7 +8512,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/saseq/discord-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/discord-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/discord-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8570,7 +8570,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8648,7 +8648,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.docker.com/compose/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docker-compose-production-blueprints.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docker-compose-production-blueprints.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -8724,7 +8724,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.docker.com/compose/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8787,7 +8787,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://aquasecurity.github.io/trivy/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-image-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-image-security-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8850,7 +8850,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.docker.com/engine/api/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/docker-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/docker-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8909,7 +8909,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-coverage-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-coverage-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -8968,7 +8968,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9040,7 +9040,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docxtpl.readthedocs.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docx-report-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docx-report-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -9112,7 +9112,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/domain-specialist-ai-agents.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9170,7 +9170,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9229,7 +9229,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://12factor.net/config",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9287,7 +9287,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9360,7 +9360,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -9447,7 +9447,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://ethereum.org/developers/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -9517,7 +9517,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.exa.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx",
           "https://exa.ai"
         ],
         "sourceStatus": "available",
@@ -9576,7 +9576,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/extended-thinking-orchestrator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9649,7 +9649,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://fastapi.tiangolo.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/fastapi-python-backend.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fastapi-python-backend.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
@@ -9726,7 +9726,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://help.figma.com/hc/en-us/articles/32132100833559",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/figma-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/figma-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9784,7 +9784,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9847,7 +9847,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/filesystem-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/filesystem-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9905,7 +9905,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -9962,7 +9962,7 @@
         "sourceUrls": [
           "https://docs.firecrawl.dev",
           "https://github.com/mendableai/firecrawl",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
           "https://www.firecrawl.dev"
         ],
         "sourceStatus": "available",
@@ -10026,7 +10026,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/fireflies-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/fireflies-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10085,7 +10085,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/five-hour-window-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/five-hour-window-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10144,7 +10144,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-environment-variables.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-environment-variables.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10201,7 +10201,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-installation-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-installation-errors.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10260,7 +10260,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-memory-leak-performance.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-memory-leak-performance.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10317,7 +10317,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-mcp-connection-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-mcp-connection-errors.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10376,7 +10376,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://react.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/frontend-specialist-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/frontend-specialist-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10435,7 +10435,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/full-stack-ai-development-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/full-stack-ai-development-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10491,7 +10491,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/NVIDIA/garak",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -10550,7 +10550,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.ai/commands/test-gen",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/generate-tests.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/generate-tests.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10607,7 +10607,7 @@
         "sourceUrls": [
           "https://docs.giskard.ai",
           "https://github.com/Giskard-AI/giskard",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx",
           "https://www.giskard.ai"
         ],
         "sourceStatus": "available",
@@ -10666,7 +10666,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10723,7 +10723,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10786,7 +10786,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/git-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/git-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10845,7 +10845,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pre-commit.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-pre-commit-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10902,7 +10902,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.conventionalcommits.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/git-smart-commit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/git-smart-commit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -10962,7 +10962,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://git-scm.com/docs/git-status",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/git-status-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/git-status-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11035,7 +11035,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://git-cliff.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -11127,7 +11127,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.github.com/en/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-ai-cicd.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-ai-cicd.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -11219,7 +11219,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.github.com/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -11296,7 +11296,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.github.com/en/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/github-actions-workflow-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/github-actions-workflow-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11351,7 +11351,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.github.com/en/copilot",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/github-copilot.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx",
           "https://github.com/features/copilot"
         ],
         "sourceStatus": "available",
@@ -11414,7 +11414,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/github-copilot-interop-bridge.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11477,7 +11477,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.npmjs.com/package/@modelcontextprotocol/server-github",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/github-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/github-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11536,7 +11536,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://go.dev/doc/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/go-golang-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/go-golang-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11597,7 +11597,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://go.dev/doc/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/golang-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/golang-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11655,7 +11655,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11733,7 +11733,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://ai.google.dev/gemini-api/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/google-workspace-gemini-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/google-workspace-gemini-automation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -11802,7 +11802,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://graphite.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/graphite-diamond.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx",
           "https://graphite.dev/diamond"
         ],
         "sourceStatus": "available",
@@ -11862,7 +11862,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.apollographql.com/docs/federation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/graphql-federation-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/graphql-federation-specialist.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11920,7 +11920,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -11977,7 +11977,7 @@
         "sourceUrls": [
           "https://docs.helicone.ai",
           "https://github.com/Helicone/helicone",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/helicone.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
           "https://www.helicone.ai"
         ],
         "sourceStatus": "available",
@@ -12051,7 +12051,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-30",
@@ -12116,8 +12116,8 @@
       "verificationStatus": "",
       "platforms": [],
       "supportLevels": [],
-      "documentationUrl": "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-      "repoUrl": "https://github.com/JSONbored/claudepro-directory",
+      "documentationUrl": "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
+      "repoUrl": "https://github.com/JSONbored/awesome-claude",
       "url": "https://heyclau.de/mcp/heyclaude-mcp",
       "canonicalUrl": "https://heyclau.de/mcp/heyclaude-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/heyclaude-mcp.txt",
@@ -12130,9 +12130,9 @@
         "checksumPresent": false,
         "sourceUrlCount": 3,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-          "https://github.com/JSONbored/claudepro-directory",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
+          "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
+          "https://github.com/JSONbored/awesome-claude",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-30T02:43:14-06:00",
@@ -12205,7 +12205,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27",
@@ -12279,7 +12279,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/hooks",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/hooks-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/hooks-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12342,7 +12342,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.hubspot.com/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hubspot-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hubspot-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12405,7 +12405,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://huggingface.co/settings/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hugging-face-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hugging-face-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12478,7 +12478,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://typicode.github.io/husky/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -12548,7 +12548,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.hyperbrowser.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/hyperbrowser.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/hyperbrowser.mdx",
           "https://www.hyperbrowser.ai"
         ],
         "sourceStatus": "available",
@@ -12607,7 +12607,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12680,7 +12680,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://tesseract-ocr.github.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/image-ocr-table-extraction.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/image-ocr-table-extraction.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -12767,7 +12767,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.indexnow.org/documentation",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -12844,7 +12844,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.intercom.com/docs/guides/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/intercom-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/intercom-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12907,7 +12907,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://invideo.io/ai/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/invideo-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -12970,7 +12970,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jam.dev/docs/debug-a-jam/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jam-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jam-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13028,7 +13028,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13091,7 +13091,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.atlassian.com/platform/remote-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jira-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jira-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13164,7 +13164,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://ajv.js.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/json-schema-validation-transformation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -13236,7 +13236,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13299,7 +13299,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://kubernetes.io/docs/concepts/security/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13361,7 +13361,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13424,7 +13424,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/feiskyer/mcp-kubernetes-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/kubernetes-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13480,7 +13480,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.lakera.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lakera-guard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx",
           "https://www.lakera.ai/guard"
         ],
         "sourceStatus": "available",
@@ -13538,7 +13538,7 @@
         "sourceUrls": [
           "https://langfuse.com/docs",
           "https://github.com/langfuse/langfuse",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
           "https://langfuse.com"
         ],
         "sourceStatus": "available",
@@ -13596,7 +13596,7 @@
         "sourceUrls": [
           "https://langchain-ai.github.io/langgraph/",
           "https://github.com/langchain-ai/langgraph",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
           "https://www.langchain.com/langgraph"
         ],
         "sourceStatus": "available",
@@ -13653,7 +13653,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.smith.langchain.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
           "https://www.langchain.com/langsmith"
         ],
         "sourceStatus": "available",
@@ -13712,7 +13712,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/life-sciences-research-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13775,7 +13775,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://linear.app/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/linear-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/linear-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13834,7 +13834,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -13906,7 +13906,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/BurntSushi/ripgrep",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/log-parsing-incident-timeline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -13976,7 +13976,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.lovable.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lovable.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx",
           "https://lovable.dev"
         ],
         "sourceStatus": "available",
@@ -14033,7 +14033,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://www.make.com/en/help",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/make.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx",
           "https://www.make.com"
         ],
         "sourceStatus": "available",
@@ -14106,7 +14106,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/remarkjs/remark",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -14178,7 +14178,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -14235,7 +14235,7 @@
         "sourceUrls": [
           "https://mastra.ai/docs",
           "https://github.com/mastra-ai/mastra",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/mastra.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
           "https://mastra.ai"
         ],
         "sourceStatus": "available",
@@ -14309,7 +14309,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -14396,7 +14396,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-security-hardening.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-security-hardening.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -14469,7 +14469,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mcp-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mcp-setup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -14527,7 +14527,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -14600,7 +14600,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-tool-contract-testing.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-tool-contract-testing.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -14657,7 +14657,7 @@
       "submittedByUrl": "https://github.com/vy35",
       "submittedAt": "2026-05-08T18:13:55.000Z",
       "submissionIssueNumber": 325,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/325",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/325",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-05-10T21:02:24.000Z",
       "claimStatus": "unclaimed",
@@ -14686,7 +14686,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://memesio.com/developers/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/memesio-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/memesio-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-05-08",
@@ -14744,7 +14744,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -14801,7 +14801,7 @@
         "sourceUrls": [
           "https://microsoft.github.io/autogen/",
           "https://github.com/microsoft/autogen",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -14859,7 +14859,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/powerline/powerline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/minimal-powerline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -14931,7 +14931,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://mintlify.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mintlify-documentation-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mintlify-documentation-automation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -15004,7 +15004,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://mintlify.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mintlify-docs.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mintlify-docs.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15065,7 +15065,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developer.apple.com/documentation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-developer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-developer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15126,7 +15126,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developer.apple.com/documentation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-development-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-development-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -15199,7 +15199,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://platform.openai.com/docs/guides/latency-optimization",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -15272,7 +15272,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/model-switch-history-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/model-switch-history-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15335,7 +15335,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developer.monday.com/apps/docs/mondaycom-mcp-integration",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/monday-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/monday-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15395,7 +15395,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://turbo.build/repo/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/monorepo-workspace-manager.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/monorepo-workspace-manager.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15457,7 +15457,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15516,7 +15516,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-line-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-line-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15575,7 +15575,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.anthropic.com/claude/docs/models-overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-provider-token-counter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-provider-token-counter.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15634,7 +15634,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -15691,7 +15691,7 @@
         "sourceUrls": [
           "https://docs.n8n.io",
           "https://github.com/n8n-io/n8n",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/n8n.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx",
           "https://n8n.io"
         ],
         "sourceStatus": "available",
@@ -15770,7 +15770,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.n8n.io/advanced-ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -15862,7 +15862,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.n8n.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -15954,7 +15954,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.n8n.io/hosting/securing/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16031,7 +16031,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/netlify-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/netlify-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16090,7 +16090,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/nextjs-15-performance-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/nextjs-15-performance-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16148,7 +16148,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16211,7 +16211,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.notion.com/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/notion-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/notion-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16271,7 +16271,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16344,7 +16344,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16431,7 +16431,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16518,7 +16518,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -16589,7 +16589,7 @@
         "sourceUrls": [
           "https://opencode.ai",
           "https://github.com/sst/opencode",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -16667,7 +16667,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://opennext.js.org/cloudflare/get-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16739,7 +16739,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16812,7 +16812,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://web.dev/articles/vitals",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16885,7 +16885,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/parallel-subagent-distributor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/parallel-subagent-distributor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -16948,7 +16948,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.paypal.ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/paypal-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/paypal-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17006,7 +17006,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17064,7 +17064,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17123,7 +17123,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://web.dev/vitals/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17182,7 +17182,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://web.dev/performance/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/performance-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/performance-optimizer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17238,7 +17238,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://pipedream.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/pipedream.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/pipedream.mdx",
           "https://pipedream.com"
         ],
         "sourceStatus": "available",
@@ -17302,7 +17302,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://plaid.com/blog/plaid-mcp-ai-assistant-claude/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/plaid-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/plaid-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17362,7 +17362,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/extended-thinking",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/plan-mode.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/plan-mode.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17434,7 +17434,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-e2e-testing.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-e2e-testing.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -17521,7 +17521,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev/docs/getting-started-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -17594,7 +17594,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/playwright-test-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/playwright-test-runner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27T01:30:00-06:00",
@@ -17652,7 +17652,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/plugin-ecosystem-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/plugin-ecosystem-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17715,7 +17715,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/postgresql-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/postgresql-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17788,7 +17788,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.postgresql.org/docs/current/performance-tips.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/postgresql-query-optimization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -17861,7 +17861,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.prisma.io/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/prisma-schema-sync.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/prisma-schema-sync.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17919,7 +17919,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/product-management-ai-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/product-management-ai-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -17982,7 +17982,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/production-codebase-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/production-codebase-auditor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18041,7 +18041,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/production-reliability-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/production-reliability-engineer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27T01:30:00-06:00",
@@ -18100,7 +18100,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/production-readiness-toolkit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/production-readiness-toolkit.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18158,7 +18158,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/developer-productivity-booster.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/developer-productivity-booster.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18231,7 +18231,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -18303,7 +18303,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/prompt-optimization-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/prompt-optimization-specialist.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18347,9 +18347,9 @@
       "submittedByUrl": "https://github.com/MohamedAbdallah-14",
       "submittedAt": "2026-04-25T15:44:14.000Z",
       "submissionIssueNumber": 305,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/305",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/305",
       "importPrNumber": 311,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/311",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/311",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T11:16:21.000Z",
       "claimStatus": "unclaimed",
@@ -18375,7 +18375,7 @@
         "sourceUrls": [
           "https://github.com/MohamedAbdallah-14/prompt-to-asset#readme",
           "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/prompt-to-asset.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/prompt-to-asset.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-30T04:13:44-06:00",
@@ -18431,7 +18431,7 @@
         "sourceUrls": [
           "https://www.promptfoo.dev/docs",
           "https://github.com/promptfoo/promptfoo",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/promptfoo.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
           "https://www.promptfoo.dev"
         ],
         "sourceStatus": "available",
@@ -18488,7 +18488,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.protectai.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/protect-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx",
           "https://protectai.com"
         ],
         "sourceStatus": "available",
@@ -18562,7 +18562,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -18649,7 +18649,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -18723,7 +18723,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pandas.pydata.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18783,7 +18783,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pandas.pydata.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -18841,7 +18841,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18898,7 +18898,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -18958,7 +18958,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://rich.readthedocs.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/python-rich-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/python-rich-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19014,7 +19014,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://developers.raycast.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/raycast.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx",
           "https://www.raycast.com"
         ],
         "sourceStatus": "available",
@@ -19093,7 +19093,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.raycast.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -19166,7 +19166,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://react.dev/reference/react",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19225,7 +19225,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19284,7 +19284,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-next-js-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-next-js-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -19343,7 +19343,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://react.dev/reference/rsc/server-components",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-server-components-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-server-components-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19401,7 +19401,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19459,7 +19459,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19517,7 +19517,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/real-time-cost-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/real-time-cost-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19580,7 +19580,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/karanb192/reddit-mcp-buddy",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/reddit-mcp-buddy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/reddit-mcp-buddy.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19642,7 +19642,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19705,7 +19705,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/redis/mcp-redis",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/redis-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/redis-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -19761,7 +19761,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.replit.com/replitai/agent",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx",
           "https://replit.com/ai"
         ],
         "sourceStatus": "available",
@@ -19835,7 +19835,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/rest-api-client-harness.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/rest-api-client-harness.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -19906,7 +19906,7 @@
         "sourceUrls": [
           "https://docs.roocode.com",
           "https://github.com/RooCodeInc/Roo-Code",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/roo-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
           "https://roocode.com"
         ],
         "sourceStatus": "available",
@@ -19965,7 +19965,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20038,7 +20038,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://stripe.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -20110,7 +20110,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20169,7 +20169,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20228,7 +20228,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor-penetration-tester.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor-penetration-tester.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -20287,7 +20287,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/security-scanner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20346,7 +20346,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-first-react-components.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-first-react-components.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20409,7 +20409,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20467,7 +20467,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20530,7 +20530,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.sentry.io/product/sentry-mcp/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/sentry-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/sentry-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20589,7 +20589,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-health-score.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-health-score.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20647,7 +20647,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20706,7 +20706,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-timer-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-timer-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20765,7 +20765,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/simple-text-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/simple-text-statusline.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20827,7 +20827,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -20887,7 +20887,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/slash-command-gen.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/slash-command-gen.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27T01:30:00-06:00",
@@ -20947,7 +20947,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27T01:30:00-06:00",
@@ -21003,7 +21003,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://smithery.ai/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/smithery.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/smithery.mdx",
           "https://smithery.ai"
         ],
         "sourceStatus": "available",
@@ -21067,7 +21067,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/SocketDev/socket-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/socket-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21122,7 +21122,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://sourcegraph.com/docs/cody",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/sourcegraph-cody.mdx",
           "https://sourcegraph.com/cody"
         ],
         "sourceStatus": "available",
@@ -21168,7 +21168,7 @@
       "submittedByUrl": "https://github.com/vy35",
       "submittedAt": "2026-05-08T18:13:53.000Z",
       "submissionIssueNumber": 324,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/324",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-05-10T21:02:21.000Z",
       "claimStatus": "unclaimed",
@@ -21197,7 +21197,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://legalfournier.com/en/mcp/spain-legal/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-05-08",
@@ -21260,7 +21260,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developer.squareup.com/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/square-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/square-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21317,7 +21317,7 @@
         "sourceUrls": [
           "https://docs.stagehand.dev",
           "https://github.com/browserbase/stagehand",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
           "https://www.stagehand.dev"
         ],
         "sourceStatus": "available",
@@ -21375,7 +21375,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/starship-powerline-theme.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/starship-powerline-theme.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21438,7 +21438,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.stripe.com/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stripe-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stripe-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21501,7 +21501,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://stytch.com/docs/workspace-management/stytch-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stytch-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stytch-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21561,7 +21561,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/subagent-create.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/subagent-create.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21621,7 +21621,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/subagent-factory-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/subagent-factory-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21699,7 +21699,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://supabase.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/supabase-realtime-database.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/supabase-realtime-database.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -21771,7 +21771,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21844,7 +21844,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://kit.svelte.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
@@ -21918,7 +21918,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/testing",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/tdd-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/tdd-workflow.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -21976,7 +21976,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22033,7 +22033,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/technical-documentation-writer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/technical-documentation-writer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22092,7 +22092,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.terraform.io/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/terraform-infrastructure-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/terraform-infrastructure-architect.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22150,7 +22150,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22209,7 +22209,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/test-automation-engineer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/test-automation-engineer-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22267,7 +22267,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22326,7 +22326,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22386,7 +22386,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://vitest.dev/guide/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/test-driven-development-enforcer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/test-driven-development-enforcer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22444,7 +22444,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/token-cost-budget-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/token-cost-budget-optimizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22501,7 +22501,7 @@
         "sourceUrls": [
           "https://trigger.dev/docs",
           "https://github.com/triggerdotdev/trigger.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/trigger-dev.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
           "https://trigger.dev"
         ],
         "sourceStatus": "available",
@@ -22575,7 +22575,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://trpc.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/trpc-type-safe-api.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/trpc-type-safe-api.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -22648,7 +22648,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.typescriptlang.org/docs/handbook/2/basic-types.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22704,7 +22704,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22762,7 +22762,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -22835,7 +22835,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.unraid.net/API/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-automation-operator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-automation-operator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -22922,7 +22922,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.unraid.net/API/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -23014,7 +23014,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://forums.unraid.net/forum/64-docker-engine/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -23084,7 +23084,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-v0.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx",
           "https://v0.dev"
         ],
         "sourceStatus": "available",
@@ -23144,7 +23144,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/v0-generate.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/v0-generate.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23217,7 +23217,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/v0-rapid-prototyping.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/v0-rapid-prototyping.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -23287,7 +23287,7 @@
         "sourceUrls": [
           "https://ai-sdk.dev/docs",
           "https://github.com/vercel/ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-ai-sdk.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
           "https://ai-sdk.dev"
         ],
         "sourceStatus": "available",
@@ -23351,7 +23351,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://vercel.com/docs/mcp/vercel-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/vercel-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/vercel-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23424,7 +23424,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://vitejs.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/vite-build-optimization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/vite-build-optimization.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
@@ -23496,7 +23496,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23555,7 +23555,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG22/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/wcag-accessibility-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23611,7 +23611,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://weave-docs.wandb.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/weave.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx",
           "https://wandb.ai/site/weave"
         ],
         "sourceStatus": "available",
@@ -23671,7 +23671,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/web-interface",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/web-async-agent-coordinator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/web-async-agent-coordinator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23744,7 +23744,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://webassembly.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/webassembly-module-development.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/webassembly-module-development.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -23816,7 +23816,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -23888,7 +23888,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/mozilla/readability",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/website-crawler-summarizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-15",
@@ -23957,7 +23957,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.windsurf.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx",
           "https://windsurf.com"
         ],
         "sourceStatus": "available",
@@ -24036,7 +24036,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.codeium.com/windsurf",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/windsurf-collaborative-development.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/windsurf-collaborative-development.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -24113,7 +24113,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.codeium.com/windsurf",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -24169,7 +24169,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.workato.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/workato.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/workato.mdx",
           "https://www.workato.com"
         ],
         "sourceStatus": "available",
@@ -24233,7 +24233,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.workato.com/mcp.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/workato-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/workato-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -24291,7 +24291,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -24350,7 +24350,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -24393,7 +24393,7 @@
       "submittedBy": "kriptoburak",
       "submittedByUrl": "https://github.com/kriptoburak",
       "importPrNumber": 326,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/326",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/326",
       "brandName": "Xquik",
       "brandDomain": "xquik.com",
       "brandAssetSource": "manual",
@@ -24419,7 +24419,7 @@
         "sourceUrls": [
           "https://docs.xquik.com/mcp/overview",
           "https://github.com/Xquik-dev/x-twitter-scraper",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-05-09",
@@ -24475,7 +24475,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://help.zapier.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zapier-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx",
           "https://zapier.com/ai"
         ],
         "sourceStatus": "available",
@@ -24539,7 +24539,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://help.zapier.com/hc/en-us/articles/36265392843917",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zapier-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zapier-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -24596,7 +24596,7 @@
         "sourceUrls": [
           "https://zed.dev/docs",
           "https://github.com/zed-industries/zed",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx",
           "https://zed.dev"
         ],
         "sourceStatus": "available",
@@ -24670,7 +24670,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -24757,7 +24757,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://zod.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zod-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zod-schema-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
@@ -24811,9 +24811,9 @@
       "submittedByUrl": "https://github.com/dd77ss",
       "submittedAt": "2026-04-28T18:34:47.000Z",
       "submissionIssueNumber": 310,
-      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/310",
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/310",
       "importPrNumber": 314,
-      "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/314",
+      "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/314",
       "reviewedBy": "JSONbored",
       "reviewedAt": "2026-04-30T12:14:24.000Z",
       "claimStatus": "unclaimed",
@@ -24842,7 +24842,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.zyntra.app/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zyntra-mail.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zyntra-mail.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-30",

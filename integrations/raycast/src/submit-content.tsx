@@ -129,7 +129,7 @@ export default function Command() {
             />
             <Action.OpenInBrowser
               title="Open GitHub Issue Chooser"
-              url="https://github.com/JSONbored/claudepro-directory/issues/new/choose"
+              url="https://github.com/JSONbored/awesome-claude/issues/new/choose"
               icon={Icon.Globe}
             />
           </ActionPanel.Section>

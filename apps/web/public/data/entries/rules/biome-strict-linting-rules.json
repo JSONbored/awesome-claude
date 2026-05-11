@@ -348,7 +348,7 @@
       }
     ],
     "filePath": "content/rules/biome-strict-linting-rules.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/biome-strict-linting-rules.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -363,7 +363,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://biomejs.dev/linter/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/biome-strict-linting-rules.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

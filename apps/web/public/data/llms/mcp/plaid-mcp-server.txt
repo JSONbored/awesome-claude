@@ -4,11 +4,11 @@ Category: mcp
 Author: Plaid
 Date added: 2025-09-18
 Documentation: https://plaid.com/blog/plaid-mcp-ai-assistant-claude/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/plaid-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/plaid-mcp-server.mdx
 Download: /downloads/mcp/plaid-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/plaid-mcp-server
-- Source URLs: https://plaid.com/blog/plaid-mcp-ai-assistant-claude/, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/plaid-mcp-server.mdx
+- Source URLs: https://plaid.com/blog/plaid-mcp-ai-assistant-claude/, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/plaid-mcp-server.mdx
 - Brand: Plaid
 - Brand domain: plaid.com
 - Brand asset source: brandfetch

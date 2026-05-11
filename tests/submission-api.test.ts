@@ -49,7 +49,7 @@ function githubIssueResponse(number = 42) {
   return new Response(
     JSON.stringify({
       number,
-      html_url: `https://github.com/JSONbored/claudepro-directory/issues/${number}`,
+      html_url: `https://github.com/JSONbored/awesome-claude/issues/${number}`,
     }),
     {
       status: 201,
@@ -77,12 +77,12 @@ describe("website submission API", () => {
     directoryEntriesMock.mockResolvedValue([]);
     envMock.value = {
       GITHUB_SUBMISSIONS_TOKEN: "test-token",
-      GITHUB_SUBMISSIONS_REPO: "JSONbored/claudepro-directory",
+      GITHUB_SUBMISSIONS_REPO: "JSONbored/awesome-claude",
     };
     process.env.GITHUB_SUBMISSIONS_TOKEN = "test-token";
     process.env.GITHUB_SUBMISSION_TOKEN = "";
     process.env.GITHUB_TOKEN = "";
-    process.env.GITHUB_SUBMISSIONS_REPO = "JSONbored/claudepro-directory";
+    process.env.GITHUB_SUBMISSIONS_REPO = "JSONbored/awesome-claude";
     process.env.GITHUB_SUBMISSION_REPO = "";
     process.env.GITHUB_REPOSITORY = "";
     process.env.TURNSTILE_SECRET_KEY = "";
@@ -111,7 +111,7 @@ describe("website submission API", () => {
       ok: true,
       category: "mcp",
       slug: "direct-submit-api-asset",
-      issueUrl: "https://github.com/JSONbored/claudepro-directory/issues/42",
+      issueUrl: "https://github.com/JSONbored/awesome-claude/issues/42",
       issueNumber: 42,
     });
 
@@ -179,7 +179,7 @@ describe("website submission API", () => {
               {
                 number: 77,
                 html_url:
-                  "https://github.com/JSONbored/claudepro-directory/issues/77",
+                  "https://github.com/JSONbored/awesome-claude/issues/77",
                 title: "Submit MCP Server: Direct Submit API Asset",
                 body: "### Category\nmcp\n\n### Slug\ndirect-submit-api-asset",
               },
@@ -279,7 +279,7 @@ describe("website submission API", () => {
       error: { code: "submissions_not_configured" },
     });
     expect(String(body.error.details.fallbackUrl)).toContain(
-      "https://github.com/JSONbored/claudepro-directory/issues/new",
+      "https://github.com/JSONbored/awesome-claude/issues/new",
     );
     expect(fetch).not.toHaveBeenCalled();
   });

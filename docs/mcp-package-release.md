@@ -26,7 +26,7 @@ publishing.
 Configure npm trusted publishing for:
 
 - package: `@heyclaude/mcp`
-- repository: `JSONbored/claudepro-directory`
+- repository: `JSONbored/awesome-claude`
 - workflow file: `publish-mcp-npm.yml`
 
 If npm requires a first package publish before trusted publishing can be

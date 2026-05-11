@@ -52,7 +52,7 @@ export function buildSourceProvenance(entry) {
     .map(clean)
     .filter(Boolean);
   const externalSourceUrls = sourceUrls.filter(
-    (url) => !url.includes("github.com/JSONbored/claudepro-directory"),
+    (url) => !url.includes("github.com/JSONbored/awesome-claude"),
   );
   const firstPartyPackage = entry.downloadTrust === "first-party";
   const hasExternalSource = externalSourceUrls.length > 0;

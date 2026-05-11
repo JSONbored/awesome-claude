@@ -160,7 +160,7 @@
     ],
     "codeBlocks": [],
     "filePath": "content/rules/production-codebase-auditor.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/production-codebase-auditor.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/production-codebase-auditor.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -175,7 +175,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/production-codebase-auditor.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/production-codebase-auditor.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

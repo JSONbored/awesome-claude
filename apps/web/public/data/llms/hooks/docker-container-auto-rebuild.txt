@@ -4,10 +4,10 @@ Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Documentation: https://docs.docker.com/compose/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/docker-container-auto-rebuild
-- Source URLs: https://docs.docker.com/compose/, https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx
+- Source URLs: https://docs.docker.com/compose/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx
 - Brand: Docker
 - Brand domain: docker.com
 - Brand asset source: brandfetch

@@ -74,7 +74,7 @@
           ],
           "isBasedOn": [
             "https://cursor.com/docs/context/rules",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/cursor-rules.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/cursor-rules.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -152,7 +152,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/debug",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/debug.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/debug.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -229,7 +229,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/docs.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/docs.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -307,7 +307,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/explain",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/explain.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/explain.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -385,7 +385,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/optimize",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/optimize.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/optimize.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -462,7 +462,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/refactor",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -539,7 +539,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/refactor",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor-code.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor-code.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -616,7 +616,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/review",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/review.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/review.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -693,7 +693,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/security",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -770,7 +770,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/security-audit",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security-audit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security-audit.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -847,7 +847,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/test",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/test-advanced.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/test-advanced.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -925,7 +925,7 @@
           ],
           "isBasedOn": [
             "https://owasp.org/www-project-top-ten/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/zod-audit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/zod-audit.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -1002,7 +1002,7 @@
           ],
           "isBasedOn": [
             "https://www.w3.org/WAI/WCAG21/quickref/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/accessibility-checker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/accessibility-checker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -1080,7 +1080,7 @@
           ],
           "isBasedOn": [
             "https://www.w3.org/WAI/WCAG21/quickref/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/accessibility-first-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/accessibility-first-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -1158,7 +1158,7 @@
           ],
           "isBasedOn": [
             "https://openai.com/index/new-tools-and-features-in-the-responses-api/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/agent-evals-regression-gate.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/agent-evals-regression-gate.mdx"
           ],
           "additionalProperty": [
             {
@@ -1242,7 +1242,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
           ]
         }
       ]
@@ -1317,7 +1317,7 @@
           ],
           "isBasedOn": [
             "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/agent-skills-framework-engineer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/agent-skills-framework-engineer.mdx"
           ]
         }
       ]
@@ -1392,7 +1392,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/skills",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/skills-installer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/skills-installer.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -1469,7 +1469,7 @@
           ],
           "isBasedOn": [
             "https://opentelemetry.io/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
           ],
           "additionalProperty": [
             {
@@ -1556,7 +1556,7 @@
           ],
           "isBasedOn": [
             "https://www.ycombinator.com/library",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -1640,7 +1640,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-code-review-security-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx"
           ]
         }
       ]
@@ -1712,7 +1712,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
           ]
         }
       ]
@@ -1787,7 +1787,7 @@
           ],
           "isBasedOn": [
             "https://epoch.ai/data-insights/context-windows",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -1865,7 +1865,7 @@
           ],
           "isBasedOn": [
             "https://docs.anthropic.com/claude/docs/prompt-engineering",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
           ]
         }
       ]
@@ -1940,7 +1940,7 @@
           ],
           "isBasedOn": [
             "https://developers.google.com/search/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
           ],
           "additionalProperty": [
             {
@@ -2028,7 +2028,7 @@
           "isBasedOn": [
             "https://aider.chat/docs",
             "https://github.com/Aider-AI/aider",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/aider.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx",
             "https://aider.chat"
           ]
         }
@@ -2105,7 +2105,7 @@
           "isBasedOn": [
             "https://github.com/domdomegg/airtable-mcp-server",
             "https://github.com/domdomegg/airtable-mcp-server",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/airtable-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/airtable-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/domdomegg/airtable-mcp-server",
           "runtimePlatform": "Claude Code",
@@ -2186,7 +2186,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/api-builder-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/api-builder-agent.mdx"
           ]
         }
       ]
@@ -2261,7 +2261,7 @@
           ],
           "isBasedOn": [
             "https://swagger.io/specification/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-design-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-design-expert.mdx"
           ]
         }
       ]
@@ -2333,7 +2333,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/api-development-starter-kit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/api-development-starter-kit.mdx"
           ]
         }
       ]
@@ -2408,7 +2408,7 @@
           ],
           "isBasedOn": [
             "https://swagger.io/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -2486,7 +2486,7 @@
           ],
           "isBasedOn": [
             "https://swagger.io/specification/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-first-development-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-first-development-architect.mdx"
           ]
         }
       ]
@@ -2561,7 +2561,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/api-latency-breakdown.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/api-latency-breakdown.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -2638,7 +2638,7 @@
           ],
           "isBasedOn": [
             "https://docs.apify.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/apify.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx",
             "https://apify.com"
           ]
         }
@@ -2713,7 +2713,7 @@
           ],
           "isBasedOn": [
             "https://docs.arcade.dev",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arcade-ai.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arcade-ai.mdx",
             "https://www.arcade.dev"
           ]
         }
@@ -2790,7 +2790,7 @@
           "isBasedOn": [
             "https://arize.com/docs/phoenix",
             "https://github.com/Arize-ai/phoenix",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arize-phoenix.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arize-phoenix.mdx",
             "https://phoenix.arize.com"
           ]
         }
@@ -2865,7 +2865,7 @@
           ],
           "isBasedOn": [
             "https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/asana-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/asana-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -2951,7 +2951,7 @@
           "isBasedOn": [
             "https://github.com/openai/whisper",
             "https://github.com/openai/whisper",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/audio-transcription-summarization.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx"
           ],
           "additionalProperty": [
             {
@@ -3038,7 +3038,7 @@
           ],
           "isBasedOn": [
             "https://prettier.io/docs/en/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-code-formatter-hook.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-code-formatter-hook.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -3113,7 +3113,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -3188,7 +3188,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
           ]
         }
       ]
@@ -3263,7 +3263,7 @@
           ],
           "isBasedOn": [
             "https://microsoft.github.io/autogen/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/autogen-workflow.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/autogen-workflow.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -3341,7 +3341,7 @@
           ],
           "isBasedOn": [
             "https://docs.aws.amazon.com/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/aws-cloud-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/aws-cloud-architect.mdx"
           ]
         }
       ]
@@ -3416,7 +3416,7 @@
           ],
           "isBasedOn": [
             "https://aws.amazon.com/cloudformation/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/aws-cloudformation-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/aws-cloudformation-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -3491,7 +3491,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
           ]
         }
       ]
@@ -3567,7 +3567,7 @@
           "isBasedOn": [
             "https://github.com/awslabs/mcp",
             "https://github.com/awslabs/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/aws-services-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/aws-services-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/awslabs/mcp",
           "runtimePlatform": "Claude Code",
@@ -3648,7 +3648,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/backend-architect-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/backend-architect-agent.mdx"
           ]
         }
       ]
@@ -3720,7 +3720,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/backend-development-suite.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/backend-development-suite.mdx"
           ]
         }
       ]
@@ -3795,7 +3795,7 @@
           ],
           "isBasedOn": [
             "https://docs.base.org/get-started/deploy-smart-contracts",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
           ],
           "additionalProperty": [
             {
@@ -3882,7 +3882,7 @@
           ],
           "isBasedOn": [
             "https://biomejs.dev/linter/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/biome-strict-linting-rules.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx"
           ]
         }
       ]
@@ -3957,7 +3957,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/block-timer-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/block-timer-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -4034,7 +4034,7 @@
           ],
           "isBasedOn": [
             "https://support.bolt.new",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx",
             "https://bolt.new"
           ]
         }
@@ -4109,7 +4109,7 @@
           ],
           "isBasedOn": [
             "https://box.dev/guides/box-mcp/remote/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/box-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/box-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -4192,7 +4192,7 @@
           ],
           "isBasedOn": [
             "https://www.braintrust.dev/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/braintrust.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx",
             "https://www.braintrust.dev"
           ]
         }
@@ -4268,7 +4268,7 @@
           ],
           "isBasedOn": [
             "https://playwright.dev/docs/best-practices",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/browser-agent-workflow-automation.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/browser-agent-workflow-automation.mdx"
           ],
           "additionalProperty": [
             {
@@ -4356,7 +4356,7 @@
           "isBasedOn": [
             "https://docs.browser-use.com",
             "https://github.com/browser-use/browser-use",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browser-use.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
             "https://browser-use.com"
           ]
         }
@@ -4431,7 +4431,7 @@
           ],
           "isBasedOn": [
             "https://docs.browserbase.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browserbase.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx",
             "https://www.browserbase.com"
           ]
         }
@@ -4504,7 +4504,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/build-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/build-mcp-server.mdx"
           ]
         }
       ]
@@ -4579,7 +4579,7 @@
           ],
           "isBasedOn": [
             "https://bun.sh/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
           ],
           "additionalProperty": [
             {
@@ -4666,7 +4666,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/burn-rate-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/burn-rate-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -4744,7 +4744,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -4821,7 +4821,7 @@
           ],
           "isBasedOn": [
             "https://www.canva.dev/docs/connect/canva-mcp-server-setup/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/canva-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/canva-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -4907,7 +4907,7 @@
           "isBasedOn": [
             "https://github.com/catppuccin/catppuccin",
             "https://github.com/catppuccin/catppuccin",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
           ],
           "codeRepository": "https://github.com/catppuccin/catppuccin",
           "programmingLanguage": "bash",
@@ -4982,7 +4982,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/chatgpt-migration-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/chatgpt-migration-guide.mdx"
           ]
         }
       ]
@@ -5057,7 +5057,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/checkpointing",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/checkpoint-manager.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/checkpoint-manager.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -5131,7 +5131,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
           ]
         }
       ]
@@ -5203,7 +5203,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-agent-development-framework.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-agent-development-framework.mdx"
           ]
         }
       ]
@@ -5275,7 +5275,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/healthcare-hipaa-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/healthcare-hipaa-guide.mdx"
           ]
         }
       ]
@@ -5349,7 +5349,7 @@
           ],
           "isBasedOn": [
             "https://docs.anthropic.com/en/docs/claude-code/overview",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
             "https://www.anthropic.com/claude-code"
           ]
         }
@@ -5425,7 +5425,7 @@
           ],
           "isBasedOn": [
             "https://docs.docker.com/reference/cli/docker/container/stats/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/docker-health-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/docker-health-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -5500,7 +5500,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/multi-directory-setup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx"
           ]
         }
       ]
@@ -5572,7 +5572,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
           ]
         }
       ]
@@ -5644,7 +5644,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/wsl-setup-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/wsl-setup-guide.mdx"
           ]
         }
       ]
@@ -5716,7 +5716,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/desktop-mcp-setup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/desktop-mcp-setup.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -5797,7 +5797,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/financial-services-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/financial-services-guide.mdx"
           ]
         }
       ]
@@ -5872,7 +5872,7 @@
           ],
           "isBasedOn": [
             "https://docs.anthropic.com/en/docs/about-claude/models",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
           ]
         }
       ]
@@ -5944,7 +5944,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
           ]
         }
       ]
@@ -6019,7 +6019,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/introduction",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
           ]
         }
       ]
@@ -6091,7 +6091,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/business-process-automation.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/business-process-automation.mdx"
           ]
         }
       ]
@@ -6163,7 +6163,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-rate-limits-fix.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-rate-limits-fix.mdx"
           ]
         }
       ]
@@ -6235,7 +6235,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
           ]
         }
       ]
@@ -6307,7 +6307,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-copilot-python.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx"
           ]
         }
       ]
@@ -6382,7 +6382,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/claude-md",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/claudemd-builder.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/claudemd-builder.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -6460,7 +6460,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/custom-instructions",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
           ]
         }
       ]
@@ -6535,7 +6535,7 @@
           ],
           "isBasedOn": [
             "https://matplotlib.org/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cli-data-viz-quickstart.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cli-data-viz-quickstart.mdx"
           ],
           "additionalProperty": [
             {
@@ -6623,7 +6623,7 @@
           "isBasedOn": [
             "https://github.com/hauptsacheNet/clickup-mcp",
             "https://github.com/hauptsacheNet/clickup-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/clickup-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/hauptsacheNet/clickup-mcp",
           "runtimePlatform": "Claude Code",
@@ -6708,7 +6708,7 @@
           "isBasedOn": [
             "https://docs.cline.bot",
             "https://github.com/cline/cline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx",
             "https://cline.bot"
           ]
         }
@@ -6781,7 +6781,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -6856,7 +6856,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
           ]
         }
       ]
@@ -6932,7 +6932,7 @@
           "isBasedOn": [
             "https://developers.cloudflare.com/agents/",
             "https://github.com/cloudflare/agents",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cloudflare-agents-sdk.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx",
             "https://developers.cloudflare.com/agents/"
           ]
         }
@@ -7007,7 +7007,7 @@
           ],
           "isBasedOn": [
             "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudflare-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudflare-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -7091,7 +7091,7 @@
           ],
           "isBasedOn": [
             "https://developers.cloudflare.com/workers-ai/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
           ],
           "additionalProperty": [
             {
@@ -7178,7 +7178,7 @@
           ],
           "isBasedOn": [
             "https://developers.cloudflare.com/workers/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -7264,7 +7264,7 @@
           ],
           "isBasedOn": [
             "https://cloudinary.com/documentation/cloudinary_llm_mcp#mcp_servers",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudinary-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudinary-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -7345,7 +7345,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -7420,7 +7420,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/code-quality-toolkit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/code-quality-toolkit.mdx"
           ]
         }
       ]
@@ -7495,7 +7495,7 @@
           ],
           "isBasedOn": [
             "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -7582,7 +7582,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/rules/code-review",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/code-review-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-expert.mdx"
           ]
         }
       ]
@@ -7657,7 +7657,7 @@
           ],
           "isBasedOn": [
             "https://google.github.io/eng-practices/review/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/code-reviewer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/code-reviewer-agent.mdx"
           ]
         }
       ]
@@ -7732,7 +7732,7 @@
           ],
           "isBasedOn": [
             "https://jestjs.io/docs/getting-started",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-test-runner-hook.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-test-runner-hook.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -7810,7 +7810,7 @@
           ],
           "isBasedOn": [
             "https://refactoring.guru/refactoring/catalog",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
           ]
         }
       ]
@@ -7884,7 +7884,7 @@
           ],
           "isBasedOn": [
             "https://docs.coderabbit.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/coderabbit.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx",
             "https://www.coderabbit.ai"
           ]
         }
@@ -7962,7 +7962,7 @@
           "isBasedOn": [
             "https://github.com/openai/codex",
             "https://github.com/openai/codex",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -8051,7 +8051,7 @@
           "isBasedOn": [
             "https://github.com/openai/codex",
             "https://github.com/openai/codex",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -8135,7 +8135,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/migration-workflow-guide.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/migration-workflow-guide.mdx"
           ]
         }
       ]
@@ -8211,7 +8211,7 @@
           "isBasedOn": [
             "https://docs.composio.dev",
             "https://github.com/ComposioHQ/composio",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx",
             "https://composio.dev"
           ]
         }
@@ -8284,7 +8284,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/content-creation-workflow.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/content-creation-workflow.mdx"
           ]
         }
       ]
@@ -8359,7 +8359,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/analysis",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/context-analyzer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/context-analyzer.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -8436,7 +8436,7 @@
           ],
           "isBasedOn": [
             "https://epoch.ai/data-insights/context-windows",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/context-window-optimizer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/context-window-optimizer-agent.mdx"
           ]
         }
       ]
@@ -8512,7 +8512,7 @@
           "isBasedOn": [
             "https://docs.continue.dev",
             "https://github.com/continuedev/continue",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx",
             "https://continue.dev"
           ]
         }
@@ -8590,7 +8590,7 @@
           "isBasedOn": [
             "https://api.contrastcyber.com",
             "https://github.com/UPinar/contrastapi",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/contrastapi-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/UPinar/contrastapi",
           "runtimePlatform": "Claude Code"
@@ -8668,7 +8668,7 @@
           "isBasedOn": [
             "https://docs.crewai.com",
             "https://github.com/crewAIInc/crewAI",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
             "https://www.crewai.com"
           ]
         }
@@ -8741,7 +8741,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -8819,7 +8819,7 @@
           ],
           "isBasedOn": [
             "https://pandas.pydata.org/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/csv-excel-data-wrangler.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/csv-excel-data-wrangler.mdx"
           ],
           "additionalProperty": [
             {
@@ -8905,7 +8905,7 @@
           ],
           "isBasedOn": [
             "https://docs.cursor.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cursor.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cursor.mdx",
             "https://cursor.com"
           ]
         }
@@ -8981,7 +8981,7 @@
           ],
           "isBasedOn": [
             "https://cursor.sh/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
           ],
           "additionalProperty": [
             {
@@ -9068,7 +9068,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -9145,7 +9145,7 @@
           ],
           "isBasedOn": [
             "https://docs.daloopa.com/docs/daloopa-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/daloopa-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/daloopa-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -9226,7 +9226,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/data-engineering-suite.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/data-engineering-suite.mdx"
           ]
         }
       ]
@@ -9298,7 +9298,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
           ]
         }
       ]
@@ -9370,7 +9370,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -9448,7 +9448,7 @@
           ],
           "isBasedOn": [
             "https://www.postgresql.org/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-expert.mdx"
           ]
         }
       ]
@@ -9523,7 +9523,7 @@
           ],
           "isBasedOn": [
             "https://knexjs.org/guide/migrations.html",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-migration-runner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -9601,7 +9601,7 @@
           ],
           "isBasedOn": [
             "https://www.postgresql.org/docs/current/runtime-config-logging.html",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-query-performance-logger.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -9679,7 +9679,7 @@
           ],
           "isBasedOn": [
             "https://www.postgresql.org/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-specialist-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-specialist-agent.mdx"
           ]
         }
       ]
@@ -9756,7 +9756,7 @@
           "isBasedOn": [
             "https://github.com/nadeesha/ts-prune",
             "https://github.com/nadeesha/ts-prune",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dead-code-eliminator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx"
           ],
           "codeRepository": "https://github.com/nadeesha/ts-prune",
           "programmingLanguage": "bash",
@@ -9831,7 +9831,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/debugging-troubleshooting-system.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/debugging-troubleshooting-system.mdx"
           ]
         }
       ]
@@ -9903,7 +9903,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/debugging-assistant-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx"
           ]
         }
       ]
@@ -9975,7 +9975,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10053,7 +10053,7 @@
           ],
           "isBasedOn": [
             "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10131,7 +10131,7 @@
           ],
           "isBasedOn": [
             "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-update-checker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10208,7 +10208,7 @@
           ],
           "isBasedOn": [
             "https://docs.devin.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx",
             "https://devin.ai"
           ]
         }
@@ -10284,7 +10284,7 @@
           ],
           "isBasedOn": [
             "https://kubernetes.io/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/devops-sre-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/devops-sre-expert.mdx"
           ]
         }
       ]
@@ -10359,7 +10359,7 @@
           ],
           "isBasedOn": [
             "https://discord.com/developers/docs/resources/webhook",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/discord-activity-notifier.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10438,7 +10438,7 @@
           "isBasedOn": [
             "https://github.com/saseq/discord-mcp",
             "https://github.com/saseq/discord-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/discord-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/discord-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/saseq/discord-mcp",
           "runtimePlatform": "Claude Code",
@@ -10519,7 +10519,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10597,7 +10597,7 @@
           ],
           "isBasedOn": [
             "https://docs.docker.com/compose/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docker-compose-production-blueprints.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docker-compose-production-blueprints.mdx"
           ],
           "additionalProperty": [
             {
@@ -10684,7 +10684,7 @@
           ],
           "isBasedOn": [
             "https://docs.docker.com/compose/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10762,7 +10762,7 @@
           ],
           "isBasedOn": [
             "https://aquasecurity.github.io/trivy/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-image-security-scanner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-image-security-scanner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -10840,7 +10840,7 @@
           ],
           "isBasedOn": [
             "https://docs.docker.com/engine/api/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/docker-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/docker-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -10924,7 +10924,7 @@
           ],
           "isBasedOn": [
             "https://jsdoc.app/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-coverage-checker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-coverage-checker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -11002,7 +11002,7 @@
           ],
           "isBasedOn": [
             "https://jsdoc.app/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -11080,7 +11080,7 @@
           ],
           "isBasedOn": [
             "https://docxtpl.readthedocs.io/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docx-report-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docx-report-generator.mdx"
           ],
           "additionalProperty": [
             {
@@ -11164,7 +11164,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/domain-specialist-ai-agents.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx"
           ]
         }
       ]
@@ -11236,7 +11236,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -11314,7 +11314,7 @@
           ],
           "isBasedOn": [
             "https://12factor.net/config",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -11389,7 +11389,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -11467,7 +11467,7 @@
           ],
           "isBasedOn": [
             "https://docs.base.org/get-started/deploy-smart-contracts",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -11554,7 +11554,7 @@
           ],
           "isBasedOn": [
             "https://ethereum.org/developers/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
           ],
           "additionalProperty": [
             {
@@ -11640,7 +11640,7 @@
           ],
           "isBasedOn": [
             "https://docs.exa.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx",
             "https://exa.ai"
           ]
         }
@@ -11713,7 +11713,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/extended-thinking-orchestrator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx"
           ]
         }
       ]
@@ -11788,7 +11788,7 @@
           ],
           "isBasedOn": [
             "https://fastapi.tiangolo.com/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/fastapi-python-backend.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fastapi-python-backend.mdx"
           ],
           "additionalProperty": [
             {
@@ -11874,7 +11874,7 @@
           ],
           "isBasedOn": [
             "https://help.figma.com/hc/en-us/articles/32132100833559",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/figma-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/figma-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -11955,7 +11955,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -12032,7 +12032,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/examples",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/filesystem-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/filesystem-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -12113,7 +12113,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -12192,7 +12192,7 @@
           "isBasedOn": [
             "https://docs.firecrawl.dev",
             "https://github.com/mendableai/firecrawl",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
             "https://www.firecrawl.dev"
           ]
         }
@@ -12267,7 +12267,7 @@
           ],
           "isBasedOn": [
             "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/fireflies-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/fireflies-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -12351,7 +12351,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/five-hour-window-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/five-hour-window-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -12426,7 +12426,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-environment-variables.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-environment-variables.mdx"
           ]
         }
       ]
@@ -12498,7 +12498,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-installation-errors.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-installation-errors.mdx"
           ]
         }
       ]
@@ -12570,7 +12570,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-memory-leak-performance.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-memory-leak-performance.mdx"
           ]
         }
       ]
@@ -12642,7 +12642,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-mcp-connection-errors.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-mcp-connection-errors.mdx"
           ]
         }
       ]
@@ -12717,7 +12717,7 @@
           ],
           "isBasedOn": [
             "https://react.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/frontend-specialist-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/frontend-specialist-agent.mdx"
           ]
         }
       ]
@@ -12789,7 +12789,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/full-stack-ai-development-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/full-stack-ai-development-agent.mdx"
           ]
         }
       ]
@@ -12865,7 +12865,7 @@
           "isBasedOn": [
             "https://github.com/NVIDIA/garak",
             "https://github.com/NVIDIA/garak",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx",
             "https://github.com/NVIDIA/garak"
           ]
         }
@@ -12941,7 +12941,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.ai/commands/test-gen",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/generate-tests.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/generate-tests.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -13019,7 +13019,7 @@
           "isBasedOn": [
             "https://docs.giskard.ai",
             "https://github.com/Giskard-AI/giskard",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx",
             "https://www.giskard.ai"
           ]
         }
@@ -13092,7 +13092,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -13167,7 +13167,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -13244,7 +13244,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/examples",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/git-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/git-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -13328,7 +13328,7 @@
           ],
           "isBasedOn": [
             "https://pre-commit.com/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-pre-commit-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -13406,7 +13406,7 @@
           ],
           "isBasedOn": [
             "https://www.conventionalcommits.org/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/git-smart-commit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/git-smart-commit.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -13483,7 +13483,7 @@
           ],
           "isBasedOn": [
             "https://git-scm.com/docs/git-status",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/git-status-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/git-status-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -13561,7 +13561,7 @@
           ],
           "isBasedOn": [
             "https://git-cliff.org/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -13648,7 +13648,7 @@
           ],
           "isBasedOn": [
             "https://docs.github.com/en/actions",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-ai-cicd.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-ai-cicd.mdx"
           ],
           "additionalProperty": [
             {
@@ -13735,7 +13735,7 @@
           ],
           "isBasedOn": [
             "https://docs.github.com/actions",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -13822,7 +13822,7 @@
           ],
           "isBasedOn": [
             "https://docs.github.com/en/actions",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/github-actions-workflow-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/github-actions-workflow-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -13899,7 +13899,7 @@
           ],
           "isBasedOn": [
             "https://docs.github.com/en/copilot",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/github-copilot.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx",
             "https://github.com/features/copilot"
           ]
         }
@@ -13972,7 +13972,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/github-copilot-interop-bridge.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx"
           ]
         }
       ]
@@ -14046,7 +14046,7 @@
           ],
           "isBasedOn": [
             "https://www.npmjs.com/package/@modelcontextprotocol/server-github",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/github-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/github-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -14130,7 +14130,7 @@
           ],
           "isBasedOn": [
             "https://go.dev/doc/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/go-golang-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/go-golang-expert.mdx"
           ]
         }
       ]
@@ -14205,7 +14205,7 @@
           ],
           "isBasedOn": [
             "https://go.dev/doc/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/golang-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/golang-expert.mdx"
           ]
         }
       ]
@@ -14277,7 +14277,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -14355,7 +14355,7 @@
           ],
           "isBasedOn": [
             "https://ai.google.dev/gemini-api/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/google-workspace-gemini-automation.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/google-workspace-gemini-automation.mdx"
           ],
           "additionalProperty": [
             {
@@ -14441,7 +14441,7 @@
           ],
           "isBasedOn": [
             "https://graphite.dev",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/graphite-diamond.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx",
             "https://graphite.dev/diamond"
           ]
         }
@@ -14517,7 +14517,7 @@
           ],
           "isBasedOn": [
             "https://www.apollographql.com/docs/federation/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/graphql-federation-specialist.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/graphql-federation-specialist.mdx"
           ]
         }
       ]
@@ -14589,7 +14589,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -14668,7 +14668,7 @@
           "isBasedOn": [
             "https://docs.helicone.ai",
             "https://github.com/Helicone/helicone",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/helicone.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
             "https://www.helicone.ai"
           ]
         }
@@ -14744,7 +14744,7 @@
           ],
           "isBasedOn": [
             "https://heyclau.de/submit",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
           ],
           "additionalProperty": [
             {
@@ -14827,15 +14827,15 @@
             "@id": "https://heyclau.de/#website"
           },
           "sameAs": [
-            "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-            "https://github.com/JSONbored/claudepro-directory"
+            "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
+            "https://github.com/JSONbored/awesome-claude"
           ],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-            "https://github.com/JSONbored/claudepro-directory",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
+            "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
+            "https://github.com/JSONbored/awesome-claude",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/heyclaude-mcp.mdx"
           ],
-          "codeRepository": "https://github.com/JSONbored/claudepro-directory",
+          "codeRepository": "https://github.com/JSONbored/awesome-claude",
           "runtimePlatform": "Claude Code"
         }
       ]
@@ -14910,7 +14910,7 @@
           ],
           "isBasedOn": [
             "https://heyclau.de/submit",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
           ],
           "additionalProperty": [
             {
@@ -14997,7 +14997,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/hooks",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/hooks-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/hooks-generator.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -15073,7 +15073,7 @@
           ],
           "isBasedOn": [
             "https://developers.hubspot.com/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hubspot-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hubspot-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -15156,7 +15156,7 @@
           ],
           "isBasedOn": [
             "https://huggingface.co/settings/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hugging-face-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hugging-face-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -15240,7 +15240,7 @@
           ],
           "isBasedOn": [
             "https://typicode.github.io/husky/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -15326,7 +15326,7 @@
           ],
           "isBasedOn": [
             "https://docs.hyperbrowser.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/hyperbrowser.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/hyperbrowser.mdx",
             "https://www.hyperbrowser.ai"
           ]
         }
@@ -15399,7 +15399,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -15477,7 +15477,7 @@
           ],
           "isBasedOn": [
             "https://tesseract-ocr.github.io/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/image-ocr-table-extraction.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/image-ocr-table-extraction.mdx"
           ],
           "additionalProperty": [
             {
@@ -15564,7 +15564,7 @@
           ],
           "isBasedOn": [
             "https://www.indexnow.org/documentation",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
           ],
           "additionalProperty": [
             {
@@ -15650,7 +15650,7 @@
           ],
           "isBasedOn": [
             "https://developers.intercom.com/docs/guides/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/intercom-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/intercom-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -15733,7 +15733,7 @@
           ],
           "isBasedOn": [
             "https://invideo.io/ai/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/invideo-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -15816,7 +15816,7 @@
           ],
           "isBasedOn": [
             "https://jam.dev/docs/debug-a-jam/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jam-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jam-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -15897,7 +15897,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -15974,7 +15974,7 @@
           ],
           "isBasedOn": [
             "https://www.atlassian.com/platform/remote-mcp-server",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jira-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jira-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -16058,7 +16058,7 @@
           ],
           "isBasedOn": [
             "https://ajv.js.org/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/json-schema-validation-transformation.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx"
           ],
           "additionalProperty": [
             {
@@ -16142,7 +16142,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -16220,7 +16220,7 @@
           ],
           "isBasedOn": [
             "https://kubernetes.io/docs/concepts/security/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
           ]
         }
       ]
@@ -16292,7 +16292,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -16371,7 +16371,7 @@
           "isBasedOn": [
             "https://github.com/feiskyer/mcp-kubernetes-server",
             "https://github.com/feiskyer/mcp-kubernetes-server",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/kubernetes-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/feiskyer/mcp-kubernetes-server",
           "runtimePlatform": "Claude Code",
@@ -16454,7 +16454,7 @@
           ],
           "isBasedOn": [
             "https://docs.lakera.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lakera-guard.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx",
             "https://www.lakera.ai/guard"
           ]
         }
@@ -16531,7 +16531,7 @@
           "isBasedOn": [
             "https://langfuse.com/docs",
             "https://github.com/langfuse/langfuse",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
             "https://langfuse.com"
           ]
         }
@@ -16608,7 +16608,7 @@
           "isBasedOn": [
             "https://langchain-ai.github.io/langgraph/",
             "https://github.com/langchain-ai/langgraph",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
             "https://www.langchain.com/langgraph"
           ]
         }
@@ -16683,7 +16683,7 @@
           ],
           "isBasedOn": [
             "https://docs.smith.langchain.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
             "https://www.langchain.com/langsmith"
           ]
         }
@@ -16756,7 +16756,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/life-sciences-research-specialist.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx"
           ]
         }
       ]
@@ -16830,7 +16830,7 @@
           ],
           "isBasedOn": [
             "https://linear.app/docs/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/linear-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/linear-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -16914,7 +16914,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -16994,7 +16994,7 @@
           "isBasedOn": [
             "https://github.com/BurntSushi/ripgrep",
             "https://github.com/BurntSushi/ripgrep",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/log-parsing-incident-timeline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx"
           ],
           "additionalProperty": [
             {
@@ -17080,7 +17080,7 @@
           ],
           "isBasedOn": [
             "https://docs.lovable.dev",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lovable.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx",
             "https://lovable.dev"
           ]
         }
@@ -17155,7 +17155,7 @@
           ],
           "isBasedOn": [
             "https://www.make.com/en/help",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/make.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx",
             "https://www.make.com"
           ]
         }
@@ -17233,7 +17233,7 @@
           "isBasedOn": [
             "https://github.com/remarkjs/remark",
             "https://github.com/remarkjs/remark",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
           ],
           "additionalProperty": [
             {
@@ -17317,7 +17317,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -17396,7 +17396,7 @@
           "isBasedOn": [
             "https://mastra.ai/docs",
             "https://github.com/mastra-ai/mastra",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/mastra.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
             "https://mastra.ai"
           ]
         }
@@ -17472,7 +17472,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -17559,7 +17559,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/specification/2025-06-18",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-security-hardening.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-security-hardening.mdx"
           ],
           "additionalProperty": [
             {
@@ -17646,7 +17646,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mcp-setup.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mcp-setup.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -17720,7 +17720,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -17798,7 +17798,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/specification/2025-06-18/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-tool-contract-testing.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-tool-contract-testing.mdx"
           ],
           "additionalProperty": [
             {
@@ -17885,7 +17885,7 @@
           ],
           "isBasedOn": [
             "https://memesio.com/developers/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/memesio-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/memesio-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -17959,7 +17959,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -18038,7 +18038,7 @@
           "isBasedOn": [
             "https://microsoft.github.io/autogen/",
             "https://github.com/microsoft/autogen",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx",
             "https://microsoft.github.io/autogen/"
           ]
         }
@@ -18116,7 +18116,7 @@
           "isBasedOn": [
             "https://github.com/powerline/powerline",
             "https://github.com/powerline/powerline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/minimal-powerline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx"
           ],
           "codeRepository": "https://github.com/powerline/powerline",
           "programmingLanguage": "bash",
@@ -18194,7 +18194,7 @@
           ],
           "isBasedOn": [
             "https://mintlify.com/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mintlify-documentation-automation.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mintlify-documentation-automation.mdx"
           ],
           "additionalProperty": [
             {
@@ -18281,7 +18281,7 @@
           ],
           "isBasedOn": [
             "https://mintlify.com/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mintlify-docs.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mintlify-docs.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -18359,7 +18359,7 @@
           ],
           "isBasedOn": [
             "https://developer.apple.com/documentation/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-developer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-developer.mdx"
           ]
         }
       ]
@@ -18434,7 +18434,7 @@
           ],
           "isBasedOn": [
             "https://developer.apple.com/documentation/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-development-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-development-expert.mdx"
           ]
         }
       ]
@@ -18509,7 +18509,7 @@
           ],
           "isBasedOn": [
             "https://platform.openai.com/docs/guides/latency-optimization",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
           ],
           "additionalProperty": [
             {
@@ -18596,7 +18596,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/model-switch-history-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/model-switch-history-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -18673,7 +18673,7 @@
           ],
           "isBasedOn": [
             "https://developer.monday.com/apps/docs/mondaycom-mcp-integration",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/monday-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/monday-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -18757,7 +18757,7 @@
           ],
           "isBasedOn": [
             "https://turbo.build/repo/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/monorepo-workspace-manager.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/monorepo-workspace-manager.mdx"
           ]
         }
       ]
@@ -18829,7 +18829,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
           ]
         }
       ]
@@ -18901,7 +18901,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-line-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-line-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -18979,7 +18979,7 @@
           ],
           "isBasedOn": [
             "https://docs.anthropic.com/claude/docs/models-overview",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-provider-token-counter.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-provider-token-counter.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -19057,7 +19057,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -19136,7 +19136,7 @@
           "isBasedOn": [
             "https://docs.n8n.io",
             "https://github.com/n8n-io/n8n",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/n8n.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx",
             "https://n8n.io"
           ]
         }
@@ -19212,7 +19212,7 @@
           ],
           "isBasedOn": [
             "https://docs.n8n.io/advanced-ai/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
           ],
           "additionalProperty": [
             {
@@ -19299,7 +19299,7 @@
           ],
           "isBasedOn": [
             "https://docs.n8n.io/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -19386,7 +19386,7 @@
           ],
           "isBasedOn": [
             "https://docs.n8n.io/hosting/securing/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -19472,7 +19472,7 @@
           ],
           "isBasedOn": [
             "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/netlify-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/netlify-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -19556,7 +19556,7 @@
           ],
           "isBasedOn": [
             "https://nextjs.org/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/nextjs-15-performance-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/nextjs-15-performance-architect.mdx"
           ]
         }
       ]
@@ -19628,7 +19628,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -19705,7 +19705,7 @@
           ],
           "isBasedOn": [
             "https://developers.notion.com/docs/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/notion-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/notion-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -19789,7 +19789,7 @@
           ],
           "isBasedOn": [
             "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -19869,7 +19869,7 @@
           "isBasedOn": [
             "https://github.com/openclaw/openclaw",
             "https://github.com/openclaw/openclaw",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
           ],
           "additionalProperty": [
             {
@@ -19958,7 +19958,7 @@
           "isBasedOn": [
             "https://github.com/openclaw/openclaw",
             "https://github.com/openclaw/openclaw",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -20047,7 +20047,7 @@
           "isBasedOn": [
             "https://github.com/openclaw/openclaw",
             "https://github.com/openclaw/openclaw",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -20135,7 +20135,7 @@
           "isBasedOn": [
             "https://opencode.ai",
             "https://github.com/sst/opencode",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx",
             "https://opencode.ai"
           ]
         }
@@ -20211,7 +20211,7 @@
           ],
           "isBasedOn": [
             "https://opennext.js.org/cloudflare/get-started",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -20295,7 +20295,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -20373,7 +20373,7 @@
           ],
           "isBasedOn": [
             "https://web.dev/articles/vitals",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
           ],
           "additionalProperty": [
             {
@@ -20460,7 +20460,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/sub-agents",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/parallel-subagent-distributor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/parallel-subagent-distributor.mdx"
           ]
         }
       ]
@@ -20534,7 +20534,7 @@
           ],
           "isBasedOn": [
             "https://www.paypal.ai/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/paypal-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/paypal-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -20615,7 +20615,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -20690,7 +20690,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -20768,7 +20768,7 @@
           ],
           "isBasedOn": [
             "https://web.dev/vitals/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-monitor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-monitor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -20846,7 +20846,7 @@
           ],
           "isBasedOn": [
             "https://web.dev/performance/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/performance-optimizer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/performance-optimizer-agent.mdx"
           ]
         }
       ]
@@ -20920,7 +20920,7 @@
           ],
           "isBasedOn": [
             "https://pipedream.com/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/pipedream.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/pipedream.mdx",
             "https://pipedream.com"
           ]
         }
@@ -20995,7 +20995,7 @@
           ],
           "isBasedOn": [
             "https://plaid.com/blog/plaid-mcp-ai-assistant-claude/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/plaid-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/plaid-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -21079,7 +21079,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/extended-thinking",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/plan-mode.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/plan-mode.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -21156,7 +21156,7 @@
           ],
           "isBasedOn": [
             "https://playwright.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-e2e-testing.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-e2e-testing.mdx"
           ],
           "additionalProperty": [
             {
@@ -21243,7 +21243,7 @@
           ],
           "isBasedOn": [
             "https://playwright.dev/docs/getting-started-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
           ],
           "additionalProperty": [
             {
@@ -21330,7 +21330,7 @@
           ],
           "isBasedOn": [
             "https://playwright.dev",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/playwright-test-runner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/playwright-test-runner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -21405,7 +21405,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/plugin-ecosystem-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/plugin-ecosystem-architect.mdx"
           ]
         }
       ]
@@ -21479,7 +21479,7 @@
           ],
           "isBasedOn": [
             "https://modelcontextprotocol.io/examples",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/postgresql-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/postgresql-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -21563,7 +21563,7 @@
           ],
           "isBasedOn": [
             "https://www.postgresql.org/docs/current/performance-tips.html",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/postgresql-query-optimization.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx"
           ],
           "additionalProperty": [
             {
@@ -21650,7 +21650,7 @@
           ],
           "isBasedOn": [
             "https://www.prisma.io/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/prisma-schema-sync.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/prisma-schema-sync.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -21725,7 +21725,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/product-management-ai-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/product-management-ai-agent.mdx"
           ]
         }
       ]
@@ -21800,7 +21800,7 @@
           ],
           "isBasedOn": [
             "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/production-codebase-auditor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/production-codebase-auditor.mdx"
           ]
         }
       ]
@@ -21872,7 +21872,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/production-reliability-engineer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/production-reliability-engineer.mdx"
           ]
         }
       ]
@@ -21944,7 +21944,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/production-readiness-toolkit.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/production-readiness-toolkit.mdx"
           ]
         }
       ]
@@ -22016,7 +22016,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/developer-productivity-booster.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/developer-productivity-booster.mdx"
           ]
         }
       ]
@@ -22091,7 +22091,7 @@
           ],
           "isBasedOn": [
             "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
           ],
           "additionalProperty": [
             {
@@ -22175,7 +22175,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/prompt-optimization-specialist.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/prompt-optimization-specialist.mdx"
           ]
         }
       ]
@@ -22252,7 +22252,7 @@
           "isBasedOn": [
             "https://github.com/MohamedAbdallah-14/prompt-to-asset#readme",
             "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/prompt-to-asset.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/prompt-to-asset.mdx"
           ],
           "codeRepository": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
           "runtimePlatform": "Claude Code"
@@ -22330,7 +22330,7 @@
           "isBasedOn": [
             "https://www.promptfoo.dev/docs",
             "https://github.com/promptfoo/promptfoo",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/promptfoo.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
             "https://www.promptfoo.dev"
           ]
         }
@@ -22405,7 +22405,7 @@
           ],
           "isBasedOn": [
             "https://docs.protectai.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/protect-ai.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx",
             "https://protectai.com"
           ]
         }
@@ -22481,7 +22481,7 @@
           ],
           "isBasedOn": [
             "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -22568,7 +22568,7 @@
           ],
           "isBasedOn": [
             "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
           ],
           "additionalProperty": [
             {
@@ -22655,7 +22655,7 @@
           ],
           "isBasedOn": [
             "https://pandas.pydata.org/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science.mdx"
           ]
         }
       ]
@@ -22730,7 +22730,7 @@
           ],
           "isBasedOn": [
             "https://pandas.pydata.org/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science-expert.mdx"
           ]
         }
       ]
@@ -22802,7 +22802,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -22877,7 +22877,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -22955,7 +22955,7 @@
           ],
           "isBasedOn": [
             "https://rich.readthedocs.io/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/python-rich-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/python-rich-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -23032,7 +23032,7 @@
           ],
           "isBasedOn": [
             "https://developers.raycast.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/raycast.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx",
             "https://www.raycast.com"
           ]
         }
@@ -23108,7 +23108,7 @@
           ],
           "isBasedOn": [
             "https://developers.raycast.com/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -23195,7 +23195,7 @@
           ],
           "isBasedOn": [
             "https://react.dev/reference/react",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
           ]
         }
       ]
@@ -23270,7 +23270,7 @@
           ],
           "isBasedOn": [
             "https://nextjs.org/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-expert.mdx"
           ]
         }
       ]
@@ -23345,7 +23345,7 @@
           ],
           "isBasedOn": [
             "https://nextjs.org/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-next-js-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-next-js-expert.mdx"
           ]
         }
       ]
@@ -23420,7 +23420,7 @@
           ],
           "isBasedOn": [
             "https://react.dev/reference/rsc/server-components",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-server-components-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-server-components-expert.mdx"
           ]
         }
       ]
@@ -23492,7 +23492,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -23567,7 +23567,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -23642,7 +23642,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/real-time-cost-tracker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/real-time-cost-tracker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -23722,7 +23722,7 @@
           "isBasedOn": [
             "https://github.com/karanb192/reddit-mcp-buddy",
             "https://github.com/karanb192/reddit-mcp-buddy",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/reddit-mcp-buddy.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/reddit-mcp-buddy.mdx"
           ],
           "codeRepository": "https://github.com/karanb192/reddit-mcp-buddy",
           "runtimePlatform": "Claude Code",
@@ -23803,7 +23803,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -23883,7 +23883,7 @@
           "isBasedOn": [
             "https://github.com/redis/mcp-redis",
             "https://github.com/redis/mcp-redis",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/redis-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/redis-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/redis/mcp-redis",
           "runtimePlatform": "Claude Code",
@@ -23966,7 +23966,7 @@
           ],
           "isBasedOn": [
             "https://docs.replit.com/replitai/agent",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx",
             "https://replit.com/ai"
           ]
         }
@@ -24042,7 +24042,7 @@
           ],
           "isBasedOn": [
             "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/rest-api-client-harness.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/rest-api-client-harness.mdx"
           ],
           "additionalProperty": [
             {
@@ -24130,7 +24130,7 @@
           "isBasedOn": [
             "https://docs.roocode.com",
             "https://github.com/RooCodeInc/Roo-Code",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/roo-code.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
             "https://roocode.com"
           ]
         }
@@ -24203,7 +24203,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -24281,7 +24281,7 @@
           ],
           "isBasedOn": [
             "https://stripe.com/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
           ],
           "additionalProperty": [
             {
@@ -24365,7 +24365,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -24443,7 +24443,7 @@
           ],
           "isBasedOn": [
             "https://owasp.org/www-project-top-ten/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor.mdx"
           ]
         }
       ]
@@ -24518,7 +24518,7 @@
           ],
           "isBasedOn": [
             "https://owasp.org/www-project-top-ten/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor-penetration-tester.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor-penetration-tester.mdx"
           ]
         }
       ]
@@ -24593,7 +24593,7 @@
           ],
           "isBasedOn": [
             "https://owasp.org/www-project-top-ten/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/security-scanner-hook.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -24671,7 +24671,7 @@
           ],
           "isBasedOn": [
             "https://owasp.org/www-project-top-ten/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-first-react-components.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-first-react-components.mdx"
           ]
         }
       ]
@@ -24743,7 +24743,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
           ]
         }
       ]
@@ -24815,7 +24815,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -24893,7 +24893,7 @@
           ],
           "isBasedOn": [
             "https://docs.sentry.io/product/sentry-mcp/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/sentry-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/sentry-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -24977,7 +24977,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-health-score.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-health-score.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -25052,7 +25052,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -25127,7 +25127,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-timer-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-timer-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -25202,7 +25202,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/simple-text-statusline.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/simple-text-statusline.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -25277,7 +25277,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -25355,7 +25355,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/slash-commands",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/slash-command-gen.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/slash-command-gen.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -25432,7 +25432,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/slash-commands",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
           ]
         }
       ]
@@ -25506,7 +25506,7 @@
           ],
           "isBasedOn": [
             "https://smithery.ai/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/smithery.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/smithery.mdx",
             "https://smithery.ai"
           ]
         }
@@ -25583,7 +25583,7 @@
           "isBasedOn": [
             "https://github.com/SocketDev/socket-mcp",
             "https://github.com/SocketDev/socket-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/socket-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/SocketDev/socket-mcp",
           "runtimePlatform": "Claude Code",
@@ -25666,7 +25666,7 @@
           ],
           "isBasedOn": [
             "https://sourcegraph.com/docs/cody",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/sourcegraph-cody.mdx",
             "https://sourcegraph.com/cody"
           ]
         }
@@ -25741,7 +25741,7 @@
           ],
           "isBasedOn": [
             "https://legalfournier.com/en/mcp/spain-legal/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -25817,7 +25817,7 @@
           ],
           "isBasedOn": [
             "https://developer.squareup.com/docs/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/square-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/square-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -25902,7 +25902,7 @@
           "isBasedOn": [
             "https://docs.stagehand.dev",
             "https://github.com/browserbase/stagehand",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
             "https://www.stagehand.dev"
           ]
         }
@@ -25975,7 +25975,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/starship-powerline-theme.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/starship-powerline-theme.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -26052,7 +26052,7 @@
           ],
           "isBasedOn": [
             "https://docs.stripe.com/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stripe-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stripe-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -26135,7 +26135,7 @@
           ],
           "isBasedOn": [
             "https://stytch.com/docs/workspace-management/stytch-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stytch-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stytch-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -26219,7 +26219,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/sub-agents",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/subagent-create.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/subagent-create.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -26296,7 +26296,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/sub-agents",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/subagent-factory-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/subagent-factory-agent.mdx"
           ]
         }
       ]
@@ -26371,7 +26371,7 @@
           ],
           "isBasedOn": [
             "https://supabase.com/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/supabase-realtime-database.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/supabase-realtime-database.mdx"
           ],
           "additionalProperty": [
             {
@@ -26455,7 +26455,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -26533,7 +26533,7 @@
           ],
           "isBasedOn": [
             "https://kit.svelte.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
           ],
           "additionalProperty": [
             {
@@ -26620,7 +26620,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/testing",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/tdd-workflow.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/tdd-workflow.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"
@@ -26694,7 +26694,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -26769,7 +26769,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/technical-documentation-writer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/technical-documentation-writer-agent.mdx"
           ]
         }
       ]
@@ -26844,7 +26844,7 @@
           ],
           "isBasedOn": [
             "https://www.terraform.io/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/terraform-infrastructure-architect.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/terraform-infrastructure-architect.mdx"
           ]
         }
       ]
@@ -26916,7 +26916,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -26994,7 +26994,7 @@
           ],
           "isBasedOn": [
             "https://playwright.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/test-automation-engineer-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/test-automation-engineer-agent.mdx"
           ]
         }
       ]
@@ -27066,7 +27066,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -27144,7 +27144,7 @@
           ],
           "isBasedOn": [
             "https://jestjs.io/docs/getting-started",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-runner-hook.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -27222,7 +27222,7 @@
           ],
           "isBasedOn": [
             "https://vitest.dev/guide/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/test-driven-development-enforcer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/test-driven-development-enforcer.mdx"
           ]
         }
       ]
@@ -27294,7 +27294,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/token-cost-budget-optimizer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/token-cost-budget-optimizer.mdx"
           ]
         }
       ]
@@ -27370,7 +27370,7 @@
           "isBasedOn": [
             "https://trigger.dev/docs",
             "https://github.com/triggerdotdev/trigger.dev",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/trigger-dev.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
             "https://trigger.dev"
           ]
         }
@@ -27446,7 +27446,7 @@
           ],
           "isBasedOn": [
             "https://trpc.io/docs/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/trpc-type-safe-api.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/trpc-type-safe-api.mdx"
           ],
           "additionalProperty": [
             {
@@ -27533,7 +27533,7 @@
           ],
           "isBasedOn": [
             "https://www.typescriptlang.org/docs/handbook/2/basic-types.html",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
           ]
         }
       ]
@@ -27605,7 +27605,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -27680,7 +27680,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
           ]
         }
       ]
@@ -27755,7 +27755,7 @@
           ],
           "isBasedOn": [
             "https://docs.unraid.net/API/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-automation-operator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-automation-operator.mdx"
           ],
           "additionalProperty": [
             {
@@ -27842,7 +27842,7 @@
           ],
           "isBasedOn": [
             "https://docs.unraid.net/API/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -27929,7 +27929,7 @@
           ],
           "isBasedOn": [
             "https://forums.unraid.net/forum/64-docker-engine/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -28015,7 +28015,7 @@
           ],
           "isBasedOn": [
             "https://v0.dev/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-v0.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx",
             "https://v0.dev"
           ]
         }
@@ -28091,7 +28091,7 @@
           ],
           "isBasedOn": [
             "https://v0.dev/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/v0-generate.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/v0-generate.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "text",
@@ -28169,7 +28169,7 @@
           ],
           "isBasedOn": [
             "https://v0.dev/docs",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/v0-rapid-prototyping.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/v0-rapid-prototyping.mdx"
           ],
           "additionalProperty": [
             {
@@ -28257,7 +28257,7 @@
           "isBasedOn": [
             "https://ai-sdk.dev/docs",
             "https://github.com/vercel/ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-ai-sdk.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
             "https://ai-sdk.dev"
           ]
         }
@@ -28332,7 +28332,7 @@
           ],
           "isBasedOn": [
             "https://vercel.com/docs/mcp/vercel-mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/vercel-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/vercel-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -28416,7 +28416,7 @@
           ],
           "isBasedOn": [
             "https://vitejs.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/vite-build-optimization.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/vite-build-optimization.mdx"
           ],
           "additionalProperty": [
             {
@@ -28500,7 +28500,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -28578,7 +28578,7 @@
           ],
           "isBasedOn": [
             "https://www.w3.org/WAI/WCAG22/quickref/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/wcag-accessibility-auditor.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx"
           ]
         }
       ]
@@ -28652,7 +28652,7 @@
           ],
           "isBasedOn": [
             "https://weave-docs.wandb.ai",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/weave.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx",
             "https://wandb.ai/site/weave"
           ]
         }
@@ -28728,7 +28728,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/web-interface",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/web-async-agent-coordinator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/web-async-agent-coordinator.mdx"
           ]
         }
       ]
@@ -28803,7 +28803,7 @@
           ],
           "isBasedOn": [
             "https://webassembly.org/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/webassembly-module-development.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/webassembly-module-development.mdx"
           ],
           "additionalProperty": [
             {
@@ -28887,7 +28887,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -28967,7 +28967,7 @@
           "isBasedOn": [
             "https://github.com/mozilla/readability",
             "https://github.com/mozilla/readability",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/website-crawler-summarizer.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx"
           ],
           "additionalProperty": [
             {
@@ -29053,7 +29053,7 @@
           ],
           "isBasedOn": [
             "https://docs.windsurf.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx",
             "https://windsurf.com"
           ]
         }
@@ -29129,7 +29129,7 @@
           ],
           "isBasedOn": [
             "https://docs.codeium.com/windsurf",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/windsurf-collaborative-development.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/windsurf-collaborative-development.mdx"
           ],
           "additionalProperty": [
             {
@@ -29216,7 +29216,7 @@
           ],
           "isBasedOn": [
             "https://docs.codeium.com/windsurf",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
           ]
         }
       ]
@@ -29290,7 +29290,7 @@
           ],
           "isBasedOn": [
             "https://docs.workato.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/workato.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/workato.mdx",
             "https://www.workato.com"
           ]
         }
@@ -29365,7 +29365,7 @@
           ],
           "isBasedOn": [
             "https://docs.workato.com/mcp.html",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/workato-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/workato-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -29446,7 +29446,7 @@
           },
           "sameAs": [],
           "isBasedOn": [
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -29524,7 +29524,7 @@
           ],
           "isBasedOn": [
             "https://docs.claude.com/en/docs/claude-code/statusline",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
@@ -29604,7 +29604,7 @@
           "isBasedOn": [
             "https://docs.xquik.com/mcp/overview",
             "https://github.com/Xquik-dev/x-twitter-scraper",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/Xquik-dev/x-twitter-scraper",
           "runtimePlatform": "Claude Code"
@@ -29680,7 +29680,7 @@
           ],
           "isBasedOn": [
             "https://help.zapier.com",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zapier-ai.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx",
             "https://zapier.com/ai"
           ]
         }
@@ -29755,7 +29755,7 @@
           ],
           "isBasedOn": [
             "https://help.zapier.com/hc/en-us/articles/36265392843917",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zapier-mcp-server.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zapier-mcp-server.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code",
@@ -29840,7 +29840,7 @@
           "isBasedOn": [
             "https://zed.dev/docs",
             "https://github.com/zed-industries/zed",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx",
             "https://zed.dev"
           ]
         }
@@ -29916,7 +29916,7 @@
           ],
           "isBasedOn": [
             "https://developers.cloudflare.com/workers/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
           ],
           "additionalProperty": [
             {
@@ -30003,7 +30003,7 @@
           ],
           "isBasedOn": [
             "https://zod.dev/",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zod-schema-validator.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zod-schema-validator.mdx"
           ],
           "additionalProperty": [
             {
@@ -30090,7 +30090,7 @@
           ],
           "isBasedOn": [
             "https://docs.zyntra.app/mcp",
-            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zyntra-mail.mdx"
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zyntra-mail.mdx"
           ],
           "codeRepository": null,
           "runtimePlatform": "Claude Code"

@@ -4,10 +4,10 @@ Category: tools
 Author: Exa
 Date added: 2026-04-27
 Documentation: https://docs.exa.ai
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/exa
-- Source URLs: https://docs.exa.ai, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx, https://exa.ai
+- Source URLs: https://docs.exa.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx, https://exa.ai
 - Brand: Exa
 - Brand domain: exa.ai
 - Brand asset source: brandfetch

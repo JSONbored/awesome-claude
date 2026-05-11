@@ -57,7 +57,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/accessibility-checker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/accessibility-checker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/accessibility-checker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -74,7 +74,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/accessibility-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/accessibility-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -135,7 +135,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/api-endpoint-documentation-generator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/api-endpoint-documentation-generator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/api-endpoint-documentation-generator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -152,7 +152,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://swagger.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -213,7 +213,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/auto-code-formatter-hook.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-code-formatter-hook.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-code-formatter-hook.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -230,7 +230,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://prettier.io/docs/en/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-code-formatter-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-code-formatter-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -289,7 +289,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/auto-save-backup.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -305,7 +305,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -370,7 +370,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/aws-cloudformation-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/aws-cloudformation-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/aws-cloudformation-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -387,7 +387,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://aws.amazon.com/cloudformation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/aws-cloudformation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/aws-cloudformation-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -451,7 +451,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/cloud-backup-on-session-stop.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -467,7 +467,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -527,7 +527,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/code-complexity-alert-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -543,7 +543,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -604,7 +604,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/code-test-runner-hook.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-test-runner-hook.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-test-runner-hook.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -621,7 +621,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-test-runner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -681,7 +681,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/css-unused-selector-detector.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -697,7 +697,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -757,7 +757,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/database-connection-cleanup.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -773,7 +773,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -834,7 +834,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/database-migration-runner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-migration-runner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -851,7 +851,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://knexjs.org/guide/migrations.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-migration-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -912,7 +912,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/database-query-performance-logger.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-query-performance-logger.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -929,7 +929,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.postgresql.org/docs/current/runtime-config-logging.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-query-performance-logger.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -990,7 +990,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/dead-code-eliminator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dead-code-eliminator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx",
       "repoUrl": "https://github.com/nadeesha/ts-prune",
       "githubStars": null,
       "githubForks": null,
@@ -1007,7 +1007,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/nadeesha/ts-prune",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dead-code-eliminator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1067,7 +1067,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/dependency-security-audit-on-stop.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1083,7 +1083,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1144,7 +1144,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/dependency-security-scanner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1161,7 +1161,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1222,7 +1222,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/dependency-update-checker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-update-checker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1239,7 +1239,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-update-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1304,7 +1304,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/discord-activity-notifier.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/discord-activity-notifier.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1321,7 +1321,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://discord.com/developers/docs/resources/webhook",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/discord-activity-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1381,7 +1381,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/documentation-auto-generator-on-stop.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1397,7 +1397,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1461,7 +1461,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/docker-container-auto-rebuild.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1478,7 +1478,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.docker.com/compose/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1543,7 +1543,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/docker-image-security-scanner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-image-security-scanner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-image-security-scanner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1560,7 +1560,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://aquasecurity.github.io/trivy/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-image-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-image-security-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1621,7 +1621,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/documentation-coverage-checker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-coverage-checker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-coverage-checker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1638,7 +1638,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-coverage-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-coverage-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1699,7 +1699,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/documentation-generator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-generator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1716,7 +1716,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1776,7 +1776,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/environment-cleanup-handler.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1792,7 +1792,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1853,7 +1853,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/environment-variable-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1870,7 +1870,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://12factor.net/config",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1930,7 +1930,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/error-rate-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1946,7 +1946,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2006,7 +2006,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/file-size-warning-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2022,7 +2022,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2082,7 +2082,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/final-bundle-size-reporter.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2098,7 +2098,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2158,7 +2158,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/git-auto-commit-on-stop.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2174,7 +2174,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2233,7 +2233,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/git-branch-protection.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2249,7 +2249,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2310,7 +2310,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/git-pre-commit-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-pre-commit-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2327,7 +2327,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://pre-commit.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-pre-commit-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2392,7 +2392,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/github-actions-workflow-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/github-actions-workflow-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/github-actions-workflow-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2409,7 +2409,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://docs.github.com/en/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/github-actions-workflow-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/github-actions-workflow-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2469,7 +2469,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/go-module-tidy.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2485,7 +2485,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2545,7 +2545,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/graphql-schema-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2561,7 +2561,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2621,7 +2621,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/i18n-translation-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2637,7 +2637,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2697,7 +2697,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/jest-snapshot-auto-updater.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2713,7 +2713,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2773,7 +2773,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/json-schema-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2789,7 +2789,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2853,7 +2853,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/kubernetes-manifest-validator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2869,7 +2869,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -2929,7 +2929,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/markdown-link-checker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2945,7 +2945,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3005,7 +3005,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/memory-usage-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3021,7 +3021,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3081,7 +3081,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/nextjs-route-analyzer.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3097,7 +3097,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3157,7 +3157,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/package-vulnerability-scanner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3173,7 +3173,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3233,7 +3233,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/performance-benchmark-report.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3249,7 +3249,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3309,7 +3309,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/performance-impact-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3325,7 +3325,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3386,7 +3386,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/performance-monitor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-monitor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-monitor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3403,7 +3403,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://web.dev/vitals/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-monitor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3464,7 +3464,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/playwright-test-runner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/playwright-test-runner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/playwright-test-runner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3481,7 +3481,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://playwright.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/playwright-test-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/playwright-test-runner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27T01:30:00-06:00",
@@ -3542,7 +3542,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/prisma-schema-sync.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/prisma-schema-sync.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/prisma-schema-sync.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3559,7 +3559,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://www.prisma.io/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/prisma-schema-sync.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/prisma-schema-sync.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3619,7 +3619,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/python-import-optimizer.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3635,7 +3635,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3694,7 +3694,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/python-linter-integration.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3710,7 +3710,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3770,7 +3770,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/react-component-test-generator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3786,7 +3786,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3846,7 +3846,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/real-time-activity-tracker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3862,7 +3862,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -3926,7 +3926,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/redis-cache-invalidator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3942,7 +3942,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4002,7 +4002,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/rust-cargo-check.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4018,7 +4018,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4078,7 +4078,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/scss-auto-compiler.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4094,7 +4094,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4155,7 +4155,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/security-scanner-hook.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/security-scanner-hook.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4172,7 +4172,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/security-scanner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4232,7 +4232,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/sensitive-data-alert-scanner.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4248,7 +4248,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4308,7 +4308,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/session-metrics-collector.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4324,7 +4324,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4388,7 +4388,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/slack-progress-notifier.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4404,7 +4404,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4464,7 +4464,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/svelte-component-compiler.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4480,7 +4480,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4540,7 +4540,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/team-summary-email-generator.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4556,7 +4556,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4616,7 +4616,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/terraform-plan-executor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4632,7 +4632,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4692,7 +4692,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/test-coverage-final-report.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4708,7 +4708,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4769,7 +4769,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/test-runner-hook.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-runner-hook.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4786,7 +4786,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4844,7 +4844,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/typescript-compilation-checker.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4860,7 +4860,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4920,7 +4920,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/vue-composition-api-linter.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -4936,7 +4936,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -4996,7 +4996,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/webpack-bundle-analyzer.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -5012,7 +5012,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -5072,7 +5072,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/hooks/workflow-completion-report.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -5088,7 +5088,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

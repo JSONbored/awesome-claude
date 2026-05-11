@@ -4,10 +4,10 @@ Category: tools
 Author: StackBlitz
 Date added: 2026-04-27
 Documentation: https://support.bolt.new
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/bolt-new
-- Source URLs: https://support.bolt.new, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx, https://bolt.new
+- Source URLs: https://support.bolt.new, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx, https://bolt.new
 - Brand: Bolt
 - Brand domain: bolt.new
 - Brand asset source: brandfetch

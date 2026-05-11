@@ -341,7 +341,7 @@
       }
     ],
     "filePath": "content/skills/cloudflare-workers-ai-edge.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-ai-edge.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -356,7 +356,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://developers.cloudflare.com/workers-ai/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2025-10-16",

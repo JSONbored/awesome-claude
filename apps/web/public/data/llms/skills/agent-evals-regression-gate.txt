@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2026-04-10
 Documentation: https://openai.com/index/new-tools-and-features-in-the-responses-api/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/agent-evals-regression-gate.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/agent-evals-regression-gate.mdx
 Download: /downloads/skills/agent-evals-regression-gate.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/agent-evals-regression-gate
-- Source URLs: https://openai.com/index/new-tools-and-features-in-the-responses-api/, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/agent-evals-regression-gate.mdx
+- Source URLs: https://openai.com/index/new-tools-and-features-in-the-responses-api/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/agent-evals-regression-gate.mdx
 - Package URL: /downloads/skills/agent-evals-regression-gate.zip
 - Package SHA256: c11d9b5eecae8fa09374644ee91dd77197ecbc11f5f60519b9b161f4754214d3
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)

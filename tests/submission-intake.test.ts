@@ -138,7 +138,7 @@ describe("submission intake", () => {
     const output = importSubmissionDryRun(
       {
         number: 777,
-        html_url: "https://github.com/JSONbored/claudepro-directory/issues/777",
+        html_url: "https://github.com/JSONbored/awesome-claude/issues/777",
         created_at: "2026-04-28T12:34:56Z",
         user: {
           login: "content-author",
@@ -172,7 +172,7 @@ describe("submission intake", () => {
     expect(output).toContain('submittedAt: "2026-04-28T12:34:56Z"');
     expect(output).toContain("submissionIssueNumber: 777");
     expect(output).toContain(
-      'submissionIssueUrl: "https://github.com/JSONbored/claudepro-directory/issues/777"',
+      'submissionIssueUrl: "https://github.com/JSONbored/awesome-claude/issues/777"',
     );
     expect(output).toContain("reviewedBy: JSONbored");
     expect(output).toContain("claimStatus: unclaimed");
@@ -181,7 +181,7 @@ describe("submission intake", () => {
   it("does not publish website token owners as submitters", () => {
     const output = importSubmissionDryRun({
       number: 778,
-      html_url: "https://github.com/JSONbored/claudepro-directory/issues/778",
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/778",
       created_at: "2026-04-28T12:34:56Z",
       user: {
         login: "JSONbored",
@@ -787,7 +787,7 @@ Review build logs, identify the failing step, and summarize the likely fix.`),
 
     const output = importSubmissionDryRun({
       number: 779,
-      html_url: "https://github.com/JSONbored/claudepro-directory/issues/779",
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/779",
       created_at: "2026-05-10T00:00:00Z",
       user: {
         login: "content-author",
@@ -1065,7 +1065,7 @@ Multi-model AI workspace for verified answers.`,
       pullRequest: {
         number: 326,
         title: "Add Xquik MCP server listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/326",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/326",
         user: { login: "kriptoburak" },
       },
       contributor: {
@@ -1119,7 +1119,7 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       pullRequest: {
         number: 327,
         title: "Add MultipleChat listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/327",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/327",
         user: { login: "multiplechat" },
       },
       files: [
@@ -1164,7 +1164,7 @@ Free to try with no credit card. Includes document, presentation, Excel, and ima
       pullRequest: {
         number: 328,
         title: "Add MultipleChat tools listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/328",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/328",
         user: { login: "multiplechat" },
       },
       files: [
@@ -1202,7 +1202,7 @@ Review source claims and screenshots before publishing.`,
       pullRequest: {
         number: 329,
         title: "Add Example MCP listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/329",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/329",
         user: { login: "contributor" },
       },
       files: [
@@ -1248,11 +1248,11 @@ Run the install command.`,
       pullRequest: {
         number: 337,
         title: "feat(content): add mcp memesio-mcp-server",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/337",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/337",
         user: { login: "github-actions[bot]" },
         head: {
           ref: "automation/submission-325-memesio-mcp-server",
-          repo: { full_name: "JSONbored/claudepro-directory" },
+          repo: { full_name: "JSONbored/awesome-claude" },
         },
       },
       pullRequestActor: {
@@ -1287,7 +1287,7 @@ description: Hosted meme generation MCP server that requires API credentials.
 submittedBy: vy35
 submittedByUrl: https://github.com/vy35
 submissionIssueNumber: 325
-submissionIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/325
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/325
 documentationUrl: https://memesio.com/developers/mcp
 brandDomain: memesio.com
 installCommand: "npx -y mcp-remote https://memesio.com/mcp --header x-api-key:\${MEMESIO_API_KEY}"
@@ -1335,7 +1335,7 @@ Run the install command.`,
       pullRequest: {
         number: 342,
         title: "fix(submission): attribute PR risk to original submitters",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/342",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/342",
         user: { login: "JSONbored" },
       },
       pullRequestActor: {
@@ -1367,7 +1367,7 @@ description: Remote MCP server for X and Twitter automation, tweet search, webho
 submittedBy: kriptoburak
 submittedByUrl: https://github.com/kriptoburak
 importPrNumber: 326
-importPrUrl: https://github.com/JSONbored/claudepro-directory/pull/326
+importPrUrl: https://github.com/JSONbored/awesome-claude/pull/326
 repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
@@ -1414,7 +1414,7 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       pullRequest: {
         number: 338,
         title: "feat(content): add mcp example",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/338",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/338",
         user: { login: "github-actions[bot]" },
       },
       pullRequestActor: { login: "github-actions[bot]" },
@@ -1437,7 +1437,7 @@ description: Example imported MCP server.
 submittedBy: someone-else
 submittedByUrl: https://github.com/someone-else
 submissionIssueNumber: 324
-submissionIssueUrl: https://github.com/JSONbored/claudepro-directory/issues/324
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/324
 documentationUrl: https://example.com/docs
 installCommand: "npx -y example-import"
 usageSnippet: "claude mcp add example-import -- npx -y example-import"
@@ -1465,7 +1465,7 @@ Run the install command.`,
       pullRequest: {
         number: 330,
         title: "Add Example MCP listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/330",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/330",
         user: { login: "contributor" },
       },
       files: [
@@ -1504,7 +1504,7 @@ Run the install command.`,
       pullRequest: {
         number: 331,
         title: "Add Example MCP listing",
-        html_url: "https://github.com/JSONbored/claudepro-directory/pull/331",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/331",
         user: { login: "contributor" },
       },
       files: [

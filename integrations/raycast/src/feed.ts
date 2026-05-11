@@ -11,7 +11,7 @@ import {
 export const FEED_URL = "https://heyclau.de/data/raycast-index.json";
 export const SUBMIT_URL = "https://heyclau.de/submit";
 export const GITHUB_NEW_ISSUE_URL =
-  "https://github.com/JSONbored/claudepro-directory/issues/new";
+  "https://github.com/JSONbored/awesome-claude/issues/new";
 export const CACHE_KEY = "heyclaude-raycast-index";
 export const DETAIL_CACHE_PREFIX = "heyclaude-raycast-detail";
 export const FAVORITES_KEY = "favorite-entry-keys";

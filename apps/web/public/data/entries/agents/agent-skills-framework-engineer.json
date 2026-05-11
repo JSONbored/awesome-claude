@@ -421,7 +421,7 @@
       }
     ],
     "filePath": "content/agents/agent-skills-framework-engineer.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/agent-skills-framework-engineer.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/agent-skills-framework-engineer.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -436,7 +436,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/agent-skills-framework-engineer.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/agent-skills-framework-engineer.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

@@ -48,6 +48,14 @@ const ignoredFiles = new Set([
   "tests/cleanup-policy.test.ts",
 ]);
 
+const oldDomainPattern = new RegExp(
+  `\\b${["claude", "pro"].join("")}\\.directory\\b`,
+  "i",
+);
+const oldBrandPattern = new RegExp(
+  `\\b${["Claude", " Pro ", "Directory"].join("")}\\b`,
+);
+
 const forbiddenPatterns = [
   {
     pattern: /\blegacy-vote-seed\b/,
@@ -62,11 +70,11 @@ const forbiddenPatterns = [
     label: "submission compatibility shim reference",
   },
   {
-    pattern: /\bclaudepro\.directory\b/i,
+    pattern: oldDomainPattern,
     label: "old domain reference",
   },
   {
-    pattern: /\bClaude Pro Directory\b/,
+    pattern: oldBrandPattern,
     label: "old brand reference",
   },
   {

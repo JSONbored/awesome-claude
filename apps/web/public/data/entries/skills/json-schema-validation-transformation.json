@@ -345,7 +345,7 @@
       }
     ],
     "filePath": "content/skills/json-schema-validation-transformation.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/json-schema-validation-transformation.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -360,7 +360,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://ajv.js.org/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/json-schema-validation-transformation.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2025-10-15",

@@ -5,11 +5,11 @@ Author: Socket
 Date added: 2025-09-18
 Documentation: https://github.com/SocketDev/socket-mcp
 Repository: https://github.com/SocketDev/socket-mcp
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/socket-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx
 Download: /downloads/mcp/socket-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/socket-mcp-server
-- Source URLs: https://github.com/SocketDev/socket-mcp, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/socket-mcp-server.mdx
+- Source URLs: https://github.com/SocketDev/socket-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx
 - Brand: Socket
 - Brand domain: socket.dev
 - Brand asset source: brandfetch

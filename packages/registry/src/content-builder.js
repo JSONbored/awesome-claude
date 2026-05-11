@@ -14,7 +14,7 @@ import {
 import { buildBrandAssetMetadata } from "./brand-assets.js";
 
 export const DEFAULT_DIRECTORY_REPO_URL =
-  "https://github.com/JSONbored/claudepro-directory";
+  "https://github.com/JSONbored/awesome-claude";
 
 export function buildGitHubUrl(filePath, repoRoot) {
   const relative = path.relative(repoRoot, filePath).replaceAll(path.sep, "/");

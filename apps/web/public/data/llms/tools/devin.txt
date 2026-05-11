@@ -4,10 +4,10 @@ Category: tools
 Author: Cognition
 Date added: 2026-04-27
 Documentation: https://docs.devin.ai
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/devin
-- Source URLs: https://docs.devin.ai, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx, https://devin.ai
+- Source URLs: https://docs.devin.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx, https://devin.ai
 - Brand: Devin
 - Brand domain: devin.ai
 - Brand asset source: brandfetch

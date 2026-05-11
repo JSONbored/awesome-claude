@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2026-04-11
 Documentation: https://typicode.github.io/husky/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/husky-commit-governance-capability-pack.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx
 Download: /downloads/skills/husky-commit-governance-capability-pack.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/husky-commit-governance-capability-pack
-- Source URLs: https://typicode.github.io/husky/, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/husky-commit-governance-capability-pack.mdx
+- Source URLs: https://typicode.github.io/husky/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx
 - Package URL: /downloads/skills/husky-commit-governance-capability-pack.zip
 - Package SHA256: aef3f6a1d69042ef5f12ff5dc7958397dd7c5de9bbbcf55d4b7211f0e0eef66b
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)

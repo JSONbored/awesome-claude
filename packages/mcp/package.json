@@ -1,6 +1,6 @@
 {
   "name": "@heyclaude/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "type": "module",
   "description": "Read-only MCP server for the HeyClaude registry.",
   "license": "MIT",
@@ -9,14 +9,15 @@
   "homepage": "https://heyclau.de",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JSONbored/claudepro-directory.git",
+    "url": "git+https://github.com/JSONbored/awesome-claude.git",
     "directory": "packages/mcp"
   },
   "bugs": {
-    "url": "https://github.com/JSONbored/claudepro-directory/issues"
+    "url": "https://github.com/JSONbored/awesome-claude/issues"
   },
   "keywords": [
     "heyclaude",
+    "awesome-claude",
     "mcp",
     "model-context-protocol",
     "claude",

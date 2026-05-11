@@ -422,7 +422,7 @@
       }
     ],
     "filePath": "content/rules/wcag-accessibility-auditor.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/wcag-accessibility-auditor.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -437,7 +437,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://www.w3.org/WAI/WCAG22/quickref/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/wcag-accessibility-auditor.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

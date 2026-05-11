@@ -52,7 +52,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/build-mcp-server.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/build-mcp-server.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/build-mcp-server.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -68,7 +68,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/build-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/build-mcp-server.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -122,7 +122,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/chatgpt-migration-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/chatgpt-migration-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/chatgpt-migration-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -138,7 +138,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/chatgpt-migration-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/chatgpt-migration-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -192,7 +192,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-4-extended-thinking-tutorial.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -208,7 +208,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -261,7 +261,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-agent-development-framework.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-agent-development-framework.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-agent-development-framework.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -277,7 +277,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-agent-development-framework.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-agent-development-framework.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -332,7 +332,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/healthcare-hipaa-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/healthcare-hipaa-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/healthcare-hipaa-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -348,7 +348,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/healthcare-hipaa-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/healthcare-hipaa-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -402,7 +402,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/multi-directory-setup.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/multi-directory-setup.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -418,7 +418,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/multi-directory-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -476,7 +476,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-vs-cursor-codeium.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-cursor-codeium.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-cursor-codeium.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -492,7 +492,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -546,7 +546,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/wsl-setup-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/wsl-setup-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/wsl-setup-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -562,7 +562,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/wsl-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/wsl-setup-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -616,7 +616,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/financial-services-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/financial-services-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/financial-services-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -632,7 +632,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/financial-services-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/financial-services-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -687,7 +687,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-mcp-server-setup-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-mcp-server-setup-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -703,7 +703,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -757,7 +757,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/business-process-automation.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/business-process-automation.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/business-process-automation.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -773,7 +773,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/business-process-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/business-process-automation.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -827,7 +827,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-rate-limits-fix.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-rate-limits-fix.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-rate-limits-fix.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -843,7 +843,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-rate-limits-fix.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-rate-limits-fix.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -901,7 +901,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-vs-codewhisperer-gemini.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -917,7 +917,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -975,7 +975,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/claude-vs-copilot-python.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-copilot-python.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -991,7 +991,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-copilot-python.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1049,7 +1049,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/migration-workflow-guide.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/migration-workflow-guide.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/migration-workflow-guide.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1065,7 +1065,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/migration-workflow-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/migration-workflow-guide.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1121,7 +1121,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/fix-environment-variables.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-environment-variables.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-environment-variables.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1137,7 +1137,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-environment-variables.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-environment-variables.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1191,7 +1191,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/fix-installation-errors.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-installation-errors.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-installation-errors.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1207,7 +1207,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-installation-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-installation-errors.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1263,7 +1263,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/fix-memory-leak-performance.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-memory-leak-performance.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-memory-leak-performance.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1279,7 +1279,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-memory-leak-performance.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-memory-leak-performance.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
@@ -1333,7 +1333,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/guides/fix-mcp-connection-errors.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-mcp-connection-errors.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-mcp-connection-errors.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1349,7 +1349,7 @@
         "checksumPresent": false,
         "sourceUrlCount": 1,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-mcp-connection-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-mcp-connection-errors.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

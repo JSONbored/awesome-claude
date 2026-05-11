@@ -4,11 +4,11 @@ Category: mcp
 Author: invideo
 Date added: 2025-09-18
 Documentation: https://invideo.io/ai/mcp
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/invideo-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx
 Download: /downloads/mcp/invideo-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/invideo-mcp-server
-- Source URLs: https://invideo.io/ai/mcp, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/invideo-mcp-server.mdx
+- Source URLs: https://invideo.io/ai/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx
 - Brand: Invideo
 - Brand domain: invideo.io
 - Brand asset source: brandfetch

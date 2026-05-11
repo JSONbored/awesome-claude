@@ -5,10 +5,10 @@ Author: Firecrawl
 Date added: 2026-04-27
 Documentation: https://docs.firecrawl.dev
 Repository: https://github.com/mendableai/firecrawl
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/firecrawl
-- Source URLs: https://docs.firecrawl.dev, https://github.com/mendableai/firecrawl, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx, https://www.firecrawl.dev
+- Source URLs: https://docs.firecrawl.dev, https://github.com/mendableai/firecrawl, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx, https://www.firecrawl.dev
 - Brand: Firecrawl
 - Brand domain: firecrawl.dev
 - Brand asset source: brandfetch

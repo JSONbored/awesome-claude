@@ -5,10 +5,10 @@ Author: Cline
 Date added: 2026-04-27
 Documentation: https://docs.cline.bot
 Repository: https://github.com/cline/cline
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/cline
-- Source URLs: https://docs.cline.bot, https://github.com/cline/cline, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx, https://cline.bot
+- Source URLs: https://docs.cline.bot, https://github.com/cline/cline, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx, https://cline.bot
 - Brand: Cline
 - Brand domain: cline.bot
 - Brand asset source: brandfetch

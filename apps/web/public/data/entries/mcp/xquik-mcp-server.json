@@ -15,7 +15,7 @@
     "submittedBy": "kriptoburak",
     "submittedByUrl": "https://github.com/kriptoburak",
     "importPrNumber": 326,
-    "importPrUrl": "https://github.com/JSONbored/claudepro-directory/pull/326",
+    "importPrUrl": "https://github.com/JSONbored/awesome-claude/pull/326",
     "tags": [
       "x",
       "twitter",
@@ -150,7 +150,7 @@
       }
     ],
     "filePath": "content/mcp/xquik-mcp-server.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx",
     "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
     "githubStars": null,
     "githubForks": null,
@@ -166,7 +166,7 @@
     "sourceUrls": [
       "https://docs.xquik.com/mcp/overview",
       "https://github.com/Xquik-dev/x-twitter-scraper",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-05-09",

@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2025-10-23
 Documentation: https://cursor.sh/docs
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
 Download: /downloads/skills/cursor-windsurf-ai-ide-setup.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/cursor-windsurf-ai-ide-setup
-- Source URLs: https://cursor.sh/docs, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
+- Source URLs: https://cursor.sh/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
 - Brand: Windsurf
 - Brand domain: windsurf.com
 - Brand asset source: brandfetch

@@ -19,6 +19,14 @@ const strictRecommended = process.argv.includes("--strict-recommended");
 const failures = [];
 const warnings = [];
 let filesChecked = 0;
+const oldBrandOrDomainPattern = new RegExp(
+  `${["claude", "pro"].join("")}\\.directory|${[
+    "Claude",
+    " Pro ",
+    "Directory",
+  ].join("")}`,
+  "i",
+);
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
   const categoryDir = path.join(contentRoot, category);
@@ -47,7 +55,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
       failures.push(`${entry}: metadata-only content is not allowed`);
     }
 
-    if (/claudepro\.directory|Claude Pro Directory/i.test(source)) {
+    if (oldBrandOrDomainPattern.test(source)) {
       failures.push(`${entry}: old brand/domain references are not allowed`);
     }
 

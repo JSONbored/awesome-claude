@@ -8,10 +8,10 @@
 
 <p align="center">
   <a href="https://heyclau.de">Website</a> •
-  <a href="https://github.com/JSONbored/claudepro-directory">GitHub</a> •
+  <a href="https://github.com/JSONbored/awesome-claude">GitHub</a> •
   <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
   <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
-  <a href="https://github.com/JSONbored/claudepro-directory/releases/tag/mcp-v0.1.1">v0.1.1 release</a>
+  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.1.2">v0.1.2 release</a>
 </p>
 
 Read-only Model Context Protocol server for the HeyClaude registry.
@@ -133,7 +133,7 @@ semver releases. The initial public package version is `0.1.0`, and GitHub
 release tags use `mcp-vX.Y.Z`.
 
 The npm package artifact is hosted on npmjs.com. GitHub Releases track the
-matching package-scoped source tag and release notes, such as `mcp-v0.1.1`.
+matching package-scoped source tag and release notes, such as `mcp-v0.1.2`.
 
 Do not publish until the web branch has shipped, the production endpoint has
 been verified, and the package smoke test passes. The release checklist is:

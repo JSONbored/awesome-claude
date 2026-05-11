@@ -71,7 +71,7 @@
     ],
     "codeBlocks": [],
     "filePath": "content/tools/microsoft-autogen.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx",
     "repoUrl": "https://github.com/microsoft/autogen",
     "githubStars": null,
     "githubForks": null,
@@ -87,7 +87,7 @@
     "sourceUrls": [
       "https://microsoft.github.io/autogen/",
       "https://github.com/microsoft/autogen",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T23:21:14-06:00",

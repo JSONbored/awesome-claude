@@ -16,7 +16,7 @@ import { logApiError, logApiInfo, logApiWarn } from "@/lib/api-logs";
 import { getDirectoryEntries } from "@/lib/content";
 
 const GITHUB_API_VERSION = "2022-11-28";
-const DEFAULT_REPO = "JSONbored/claudepro-directory";
+const DEFAULT_REPO = "JSONbored/awesome-claude";
 function envValue(env: Record<string, unknown>, names: string[]) {
   for (const name of names) {
     const value = String(env[name] ?? process.env[name] ?? "").trim();

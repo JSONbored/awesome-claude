@@ -5,10 +5,10 @@ Author: Zed Industries
 Date added: 2026-04-27
 Documentation: https://zed.dev/docs
 Repository: https://github.com/zed-industries/zed
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/zed
-- Source URLs: https://zed.dev/docs, https://github.com/zed-industries/zed, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx, https://zed.dev
+- Source URLs: https://zed.dev/docs, https://github.com/zed-industries/zed, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx, https://zed.dev
 - Brand: Zed
 - Brand domain: zed.dev
 - Brand asset source: brandfetch

@@ -5,11 +5,11 @@ Author: JSONbored
 Date added: 2025-10-15
 Documentation: https://github.com/openai/whisper
 Repository: https://github.com/openai/whisper
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/audio-transcription-summarization.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx
 Download: /downloads/skills/audio-transcription-summarization.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/audio-transcription-summarization
-- Source URLs: https://github.com/openai/whisper, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/audio-transcription-summarization.mdx
+- Source URLs: https://github.com/openai/whisper, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx
 - Package URL: /downloads/skills/audio-transcription-summarization.zip
 - Package SHA256: 227f513fd69287b909f5b20d191418d4bc515aa4593508058a42e6d3bdf1ba4c
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)

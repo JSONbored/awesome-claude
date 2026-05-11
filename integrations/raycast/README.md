@@ -59,7 +59,7 @@ Raycast `Cache` stores the latest successful registry feed, entry details, and j
 - Submit content: [heyclau.de/submit](https://heyclau.de/submit)
 - Jobs: [heyclau.de/jobs](https://heyclau.de/jobs)
 - API docs: [heyclau.de/api-docs](https://heyclau.de/api-docs)
-- GitHub: [JSONbored/claudepro-directory](https://github.com/JSONbored/claudepro-directory)
+- GitHub: [JSONbored/awesome-claude](https://github.com/JSONbored/awesome-claude)
 
 ## Validation
 

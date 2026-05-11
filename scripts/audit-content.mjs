@@ -19,6 +19,14 @@ const contentRoot = path.join(repoRoot, "content");
 const reportPath = path.join(repoRoot, "content/data/content-audit.json");
 
 const report = [];
+const oldBrandOrDomainPattern = new RegExp(
+  `${["claude", "pro"].join("")}\\.directory|${[
+    "Claude",
+    " Pro ",
+    "Directory",
+  ].join("")}`,
+  "i",
+);
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
   const categoryDir = path.join(contentRoot, category);
@@ -63,7 +71,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
       issues.push("missing_keywords");
     }
 
-    if (/claudepro\.directory|Claude Pro Directory/i.test(source)) {
+    if (oldBrandOrDomainPattern.test(source)) {
       issues.push("old_brand_or_domain_reference");
     }
 

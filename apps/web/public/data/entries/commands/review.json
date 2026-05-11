@@ -403,7 +403,7 @@
       }
     ],
     "filePath": "content/commands/review.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/review.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/review.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -418,7 +418,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://docs.claude.ai/commands/review",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/review.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/review.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

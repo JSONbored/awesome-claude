@@ -278,7 +278,7 @@
       }
     ],
     "filePath": "content/hooks/environment-variable-validator.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -293,7 +293,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://12factor.net/config",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

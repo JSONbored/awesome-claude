@@ -4,11 +4,11 @@ Category: mcp
 Author: GitHub
 Date added: 2025-09-18
 Documentation: https://www.npmjs.com/package/@modelcontextprotocol/server-github
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/github-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/github-mcp-server.mdx
 Download: /downloads/mcp/github-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/github-mcp-server
-- Source URLs: https://www.npmjs.com/package/@modelcontextprotocol/server-github, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/github-mcp-server.mdx
+- Source URLs: https://www.npmjs.com/package/@modelcontextprotocol/server-github, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/github-mcp-server.mdx
 - Brand: GitHub
 - Brand domain: github.com
 - Brand asset source: brandfetch

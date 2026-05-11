@@ -262,7 +262,7 @@
       }
     ],
     "filePath": "content/skills/prompt-injection-defense-guardrails.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/prompt-injection-defense-guardrails.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -277,7 +277,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-10",

@@ -5,10 +5,10 @@
   <img src="apps/web/public/heyclaude-wordmark.svg" alt="HeyClaude" width="300">
 </picture>
 
-**Discover and share the best Claude configurations**
+**An awesome Claude directory for agents, MCP servers, skills, hooks, commands, tools, and AI workflows.**
 384+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
 
-[Website](https://heyclau.de) • [Browse](https://heyclau.de/browse) • [Jobs](https://heyclau.de/jobs) • [Submit](https://heyclau.de/submit) • [API](https://heyclau.de/api-docs) • [MCP](packages/mcp) • [Discussions](https://github.com/JSONbored/claudepro-directory/discussions)
+[Website](https://heyclau.de) • [Browse](https://heyclau.de/browse) • [Jobs](https://heyclau.de/jobs) • [Submit](https://heyclau.de/submit) • [API](https://heyclau.de/api-docs) • [MCP](packages/mcp) • [Discussions](https://github.com/JSONbored/awesome-claude/discussions)
 
 [Feeds](https://heyclau.de/api/registry/feed) • [RSS](https://heyclau.de/feed.xml) • [Atom](https://heyclau.de/atom.xml) • [LLM export](https://heyclau.de/llms-full.txt) • [Raycast](integrations/raycast) • [MCP endpoint](https://heyclau.de/api/mcp) • [Claim/update](https://heyclau.de/claim)
 
@@ -18,7 +18,7 @@
 
 ## What is HeyClaude?
 
-HeyClaude is a fast, GitHub-native directory for Claude assets.
+HeyClaude is an unofficial, community-built awesome Claude directory and browsable registry.
 
 - No paid database required for the public site
 - Content lives in-repo as files
@@ -534,7 +534,7 @@ Get a free API key on https://app.zyntra.app/
 
 ## 📈 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=JSONbored/claudepro-directory&type=Date)](https://www.star-history.com/#JSONbored/claudepro-directory&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=JSONbored/awesome-claude&type=Date)](https://www.star-history.com/#JSONbored/awesome-claude&Date)
 
 ## 📊 Activity
 
@@ -544,12 +544,12 @@ Get a free API key on https://app.zyntra.app/
 
 Thanks to everyone who has contributed to making HeyClaude better.
 
-<a href="https://github.com/JSONbored/claudepro-directory/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=JSONbored/claudepro-directory" alt="HeyClaude contributors" />
+<a href="https://github.com/JSONbored/awesome-claude/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=JSONbored/awesome-claude" alt="HeyClaude contributors" />
 </a>
 
 ---
 
-[Website](https://heyclau.de) • [GitHub](https://github.com/JSONbored/claudepro-directory) • [Discord](https://discord.gg/Ax3Py4YDrq) • [Twitter](https://x.com/jsonbored) • [License](LICENSE)
+[Website](https://heyclau.de) • [GitHub](https://github.com/JSONbored/awesome-claude) • [Discord](https://discord.gg/Ax3Py4YDrq) • [Twitter](https://x.com/jsonbored) • [License](LICENSE)
 
 </div>

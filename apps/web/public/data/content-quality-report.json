@@ -86,7 +86,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://cursor.com/docs/context/rules",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/cursor-rules.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/cursor-rules.mdx"
         ],
         "externalSourceUrls": [
           "https://cursor.com/docs/context/rules"
@@ -115,7 +115,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/debug",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/debug.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/debug.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/debug"
@@ -144,7 +144,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/docs.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/docs.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/docs"
@@ -173,7 +173,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/explain",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/explain.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/explain.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/explain"
@@ -202,7 +202,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/optimize",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/optimize.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/optimize.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/optimize"
@@ -231,7 +231,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/refactor",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/refactor"
@@ -260,7 +260,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/refactor",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/refactor-code.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/refactor-code.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/refactor"
@@ -289,7 +289,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/review",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/review.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/review.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/review"
@@ -318,7 +318,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/security",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/security"
@@ -347,7 +347,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/security-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/security-audit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security-audit.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/security-audit"
@@ -376,7 +376,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/test",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/test-advanced.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/test-advanced.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/test"
@@ -405,7 +405,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/zod-audit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/zod-audit.mdx"
         ],
         "externalSourceUrls": [
           "https://owasp.org/www-project-top-ten/"
@@ -434,7 +434,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/accessibility-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/accessibility-checker.mdx"
         ],
         "externalSourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/"
@@ -465,7 +465,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/accessibility-first-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/accessibility-first-statusline.mdx"
         ],
         "externalSourceUrls": [
           "https://www.w3.org/WAI/WCAG21/quickref/"
@@ -494,7 +494,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://openai.com/index/new-tools-and-features-in-the-responses-api/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/agent-evals-regression-gate.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/agent-evals-regression-gate.mdx"
         ],
         "externalSourceUrls": [
           "https://openai.com/index/new-tools-and-features-in-the-responses-api/"
@@ -522,7 +522,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/agent-operator-growth-master-pack.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -551,7 +551,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/agent-skills-framework-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/agent-skills-framework-engineer.mdx"
         ],
         "externalSourceUrls": [
           "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk"
@@ -580,7 +580,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/skills",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/skills-installer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/skills-installer.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/skills"
@@ -609,7 +609,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://opentelemetry.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-agent-observability-incident-response.mdx"
         ],
         "externalSourceUrls": [
           "https://opentelemetry.io/docs/"
@@ -638,7 +638,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.ycombinator.com/library",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://www.ycombinator.com/library"
@@ -666,7 +666,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-code-review-security-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -694,7 +694,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -723,7 +723,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://epoch.ai/data-insights/context-windows",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/ai-model-performance-dashboard.mdx"
         ],
         "externalSourceUrls": [
           "https://epoch.ai/data-insights/context-windows"
@@ -752,7 +752,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.anthropic.com/claude/docs/prompt-engineering",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/ai-prompt-engineering-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.anthropic.com/claude/docs/prompt-engineering"
@@ -781,7 +781,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.google.com/search/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.google.com/search/docs"
@@ -811,7 +811,7 @@
         "sourceUrls": [
           "https://aider.chat/docs",
           "https://github.com/Aider-AI/aider",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/aider.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx",
           "https://aider.chat"
         ],
         "externalSourceUrls": [
@@ -844,7 +844,7 @@
         "sourceUrls": [
           "https://github.com/domdomegg/airtable-mcp-server",
           "https://github.com/domdomegg/airtable-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/airtable-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/airtable-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/domdomegg/airtable-mcp-server",
@@ -873,7 +873,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/api-builder-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/api-builder-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -902,7 +902,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://swagger.io/specification/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-design-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-design-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://swagger.io/specification/"
@@ -930,7 +930,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/api-development-starter-kit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/api-development-starter-kit.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -959,7 +959,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://swagger.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/api-endpoint-documentation-generator.mdx"
         ],
         "externalSourceUrls": [
           "https://swagger.io/docs/"
@@ -988,7 +988,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://swagger.io/specification/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/api-first-development-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/api-first-development-architect.mdx"
         ],
         "externalSourceUrls": [
           "https://swagger.io/specification/"
@@ -1017,7 +1017,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/api-latency-breakdown.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/api-latency-breakdown.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -1046,7 +1046,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.apify.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/apify.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx",
           "https://apify.com"
         ],
         "externalSourceUrls": [
@@ -1077,7 +1077,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.arcade.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arcade-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arcade-ai.mdx",
           "https://www.arcade.dev"
         ],
         "externalSourceUrls": [
@@ -1109,7 +1109,7 @@
         "sourceUrls": [
           "https://arize.com/docs/phoenix",
           "https://github.com/Arize-ai/phoenix",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arize-phoenix.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arize-phoenix.mdx",
           "https://phoenix.arize.com"
         ],
         "externalSourceUrls": [
@@ -1141,7 +1141,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/asana-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/asana-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server"
@@ -1171,7 +1171,7 @@
         "sourceUrls": [
           "https://github.com/openai/whisper",
           "https://github.com/openai/whisper",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/audio-transcription-summarization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openai/whisper",
@@ -1203,7 +1203,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://prettier.io/docs/en/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-code-formatter-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-code-formatter-hook.mdx"
         ],
         "externalSourceUrls": [
           "https://prettier.io/docs/en/"
@@ -1231,7 +1231,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/auto-save-backup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1259,7 +1259,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/autogen-conversation-agent-builder.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1288,7 +1288,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://microsoft.github.io/autogen/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/autogen-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/autogen-workflow.mdx"
         ],
         "externalSourceUrls": [
           "https://microsoft.github.io/autogen/"
@@ -1317,7 +1317,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.aws.amazon.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/aws-cloud-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/aws-cloud-architect.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.aws.amazon.com/"
@@ -1346,7 +1346,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://aws.amazon.com/cloudformation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/aws-cloudformation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/aws-cloudformation-validator.mdx"
         ],
         "externalSourceUrls": [
           "https://aws.amazon.com/cloudformation/"
@@ -1374,7 +1374,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1404,7 +1404,7 @@
         "sourceUrls": [
           "https://github.com/awslabs/mcp",
           "https://github.com/awslabs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/aws-services-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/aws-services-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/awslabs/mcp",
@@ -1433,7 +1433,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/backend-architect-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/backend-architect-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1461,7 +1461,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/backend-development-suite.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/backend-development-suite.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1490,7 +1490,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/base-l2-smart-contract-launchpad.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts"
@@ -1519,7 +1519,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://biomejs.dev/linter/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/biome-strict-linting-rules.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx"
         ],
         "externalSourceUrls": [
           "https://biomejs.dev/linter/"
@@ -1548,7 +1548,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/block-timer-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/block-timer-tracker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -1577,7 +1577,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://support.bolt.new",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx",
           "https://bolt.new"
         ],
         "externalSourceUrls": [
@@ -1608,7 +1608,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://box.dev/guides/box-mcp/remote/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/box-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/box-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://box.dev/guides/box-mcp/remote/"
@@ -1637,7 +1637,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.braintrust.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/braintrust.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx",
           "https://www.braintrust.dev"
         ],
         "externalSourceUrls": [
@@ -1668,7 +1668,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://playwright.dev/docs/best-practices",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/browser-agent-workflow-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/browser-agent-workflow-automation.mdx"
         ],
         "externalSourceUrls": [
           "https://playwright.dev/docs/best-practices"
@@ -1698,7 +1698,7 @@
         "sourceUrls": [
           "https://docs.browser-use.com",
           "https://github.com/browser-use/browser-use",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browser-use.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
           "https://browser-use.com"
         ],
         "externalSourceUrls": [
@@ -1730,7 +1730,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.browserbase.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browserbase.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx",
           "https://www.browserbase.com"
         ],
         "externalSourceUrls": [
@@ -1760,7 +1760,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/build-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/build-mcp-server.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1789,7 +1789,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://bun.sh/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/bun-runtime-modern-javascript.mdx"
         ],
         "externalSourceUrls": [
           "https://bun.sh/docs"
@@ -1820,7 +1820,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/burn-rate-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/burn-rate-monitor.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -1849,7 +1849,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/cache-efficiency-monitor.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -1878,7 +1878,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.canva.dev/docs/connect/canva-mcp-server-setup/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/canva-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/canva-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://www.canva.dev/docs/connect/canva-mcp-server-setup/"
@@ -1908,7 +1908,7 @@
         "sourceUrls": [
           "https://github.com/catppuccin/catppuccin",
           "https://github.com/catppuccin/catppuccin",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/catppuccin-mocha-theme.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/catppuccin/catppuccin",
@@ -1937,7 +1937,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/chatgpt-migration-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/chatgpt-migration-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -1966,7 +1966,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/checkpointing",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/checkpoint-manager.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/checkpoint-manager.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/checkpointing"
@@ -1994,7 +1994,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2022,7 +2022,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-agent-development-framework.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-agent-development-framework.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2050,7 +2050,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/healthcare-hipaa-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/healthcare-hipaa-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2079,7 +2079,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.anthropic.com/en/docs/claude-code/overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
           "https://www.anthropic.com/claude-code"
         ],
         "externalSourceUrls": [
@@ -2110,7 +2110,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.docker.com/reference/cli/docker/container/stats/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/docker-health-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/docker-health-statusline.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.docker.com/reference/cli/docker/container/stats/"
@@ -2138,7 +2138,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/multi-directory-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2166,7 +2166,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-cursor-codeium.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2194,7 +2194,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/wsl-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/wsl-setup-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2222,7 +2222,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": true,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/desktop-mcp-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/desktop-mcp-setup.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2248,7 +2248,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/financial-services-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/financial-services-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2277,7 +2277,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.anthropic.com/en/docs/about-claude/models",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.anthropic.com/en/docs/about-claude/models"
@@ -2305,7 +2305,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2334,7 +2334,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://modelcontextprotocol.io/introduction",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/introduction"
@@ -2362,7 +2362,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/business-process-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/business-process-automation.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2390,7 +2390,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-rate-limits-fix.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-rate-limits-fix.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2418,7 +2418,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-codewhisperer-gemini.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2446,7 +2446,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/claude-vs-copilot-python.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2475,7 +2475,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/claude-md",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/claudemd-builder.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/claudemd-builder.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/claude-md"
@@ -2504,7 +2504,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/custom-instructions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-md-knowledge-manager-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/custom-instructions"
@@ -2533,7 +2533,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://matplotlib.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cli-data-viz-quickstart.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cli-data-viz-quickstart.mdx"
         ],
         "externalSourceUrls": [
           "https://matplotlib.org/"
@@ -2565,7 +2565,7 @@
         "sourceUrls": [
           "https://github.com/hauptsacheNet/clickup-mcp",
           "https://github.com/hauptsacheNet/clickup-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/clickup-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/hauptsacheNet/clickup-mcp",
@@ -2596,7 +2596,7 @@
         "sourceUrls": [
           "https://docs.cline.bot",
           "https://github.com/cline/cline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx",
           "https://cline.bot"
         ],
         "externalSourceUrls": [
@@ -2627,7 +2627,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2653,7 +2653,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2683,7 +2683,7 @@
         "sourceUrls": [
           "https://developers.cloudflare.com/agents/",
           "https://github.com/cloudflare/agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cloudflare-agents-sdk.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx",
           "https://developers.cloudflare.com/agents/"
         ],
         "externalSourceUrls": [
@@ -2715,7 +2715,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudflare-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudflare-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/"
@@ -2744,7 +2744,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers-ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.cloudflare.com/workers-ai/"
@@ -2775,7 +2775,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.cloudflare.com/workers/"
@@ -2804,7 +2804,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://cloudinary.com/documentation/cloudinary_llm_mcp#mcp_servers",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/cloudinary-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/cloudinary-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://cloudinary.com/documentation/cloudinary_llm_mcp#mcp_servers"
@@ -2832,7 +2832,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2858,7 +2858,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/code-quality-toolkit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/code-quality-toolkit.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -2887,7 +2887,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews"
@@ -2916,7 +2916,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/rules/code-review",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/code-review-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/rules/code-review"
@@ -2945,7 +2945,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://google.github.io/eng-practices/review/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/code-reviewer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/code-reviewer-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://google.github.io/eng-practices/review/"
@@ -2974,7 +2974,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/code-test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-test-runner-hook.mdx"
         ],
         "externalSourceUrls": [
           "https://jestjs.io/docs/getting-started"
@@ -3003,7 +3003,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://refactoring.guru/refactoring/catalog",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/codebase-migration-refactoring-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://refactoring.guru/refactoring/catalog"
@@ -3032,7 +3032,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.coderabbit.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/coderabbit.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx",
           "https://www.coderabbit.ai"
         ],
         "externalSourceUrls": [
@@ -3064,7 +3064,7 @@
         "sourceUrls": [
           "https://github.com/openai/codex",
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openai/codex",
@@ -3095,7 +3095,7 @@
         "sourceUrls": [
           "https://github.com/openai/codex",
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openai/codex",
@@ -3124,7 +3124,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/migration-workflow-guide.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/migration-workflow-guide.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3154,7 +3154,7 @@
         "sourceUrls": [
           "https://docs.composio.dev",
           "https://github.com/ComposioHQ/composio",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx",
           "https://composio.dev"
         ],
         "externalSourceUrls": [
@@ -3185,7 +3185,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/content-creation-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/content-creation-workflow.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3214,7 +3214,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/analysis",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/context-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/context-analyzer.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/analysis"
@@ -3243,7 +3243,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://epoch.ai/data-insights/context-windows",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/context-window-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/context-window-optimizer-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://epoch.ai/data-insights/context-windows"
@@ -3273,7 +3273,7 @@
         "sourceUrls": [
           "https://docs.continue.dev",
           "https://github.com/continuedev/continue",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx",
           "https://continue.dev"
         ],
         "externalSourceUrls": [
@@ -3306,7 +3306,7 @@
         "sourceUrls": [
           "https://api.contrastcyber.com",
           "https://github.com/UPinar/contrastapi",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/contrastapi-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://api.contrastcyber.com",
@@ -3339,7 +3339,7 @@
         "sourceUrls": [
           "https://docs.crewai.com",
           "https://github.com/crewAIInc/crewAI",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
           "https://www.crewai.com"
         ],
         "externalSourceUrls": [
@@ -3370,7 +3370,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/css-unused-selector-detector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3399,7 +3399,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://pandas.pydata.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/csv-excel-data-wrangler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/csv-excel-data-wrangler.mdx"
         ],
         "externalSourceUrls": [
           "https://pandas.pydata.org/"
@@ -3430,7 +3430,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.cursor.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cursor.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cursor.mdx",
           "https://cursor.com"
         ],
         "externalSourceUrls": [
@@ -3461,7 +3461,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://cursor.sh/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx"
         ],
         "externalSourceUrls": [
           "https://cursor.sh/docs"
@@ -3492,7 +3492,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/daily-usage-percentage-tracker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -3521,7 +3521,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.daloopa.com/docs/daloopa-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/daloopa-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/daloopa-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.daloopa.com/docs/daloopa-mcp"
@@ -3549,7 +3549,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/data-engineering-suite.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/data-engineering-suite.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3577,7 +3577,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3605,7 +3605,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-connection-cleanup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3632,7 +3632,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.postgresql.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://www.postgresql.org/docs/"
@@ -3661,7 +3661,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://knexjs.org/guide/migrations.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-migration-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx"
         ],
         "externalSourceUrls": [
           "https://knexjs.org/guide/migrations.html"
@@ -3690,7 +3690,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.postgresql.org/docs/current/runtime-config-logging.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/database-query-performance-logger.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx"
         ],
         "externalSourceUrls": [
           "https://www.postgresql.org/docs/current/runtime-config-logging.html"
@@ -3721,7 +3721,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.postgresql.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/database-specialist-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-specialist-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://www.postgresql.org/docs/"
@@ -3751,7 +3751,7 @@
         "sourceUrls": [
           "https://github.com/nadeesha/ts-prune",
           "https://github.com/nadeesha/ts-prune",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dead-code-eliminator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/nadeesha/ts-prune",
@@ -3780,7 +3780,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/debugging-troubleshooting-system.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/debugging-troubleshooting-system.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3808,7 +3808,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/debugging-assistant-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3836,7 +3836,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -3863,7 +3863,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit"
@@ -3894,7 +3894,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-update-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.npmjs.com/cli/v8/commands/npm-audit"
@@ -3925,7 +3925,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.devin.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx",
           "https://devin.ai"
         ],
         "externalSourceUrls": [
@@ -3956,7 +3956,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://kubernetes.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/devops-sre-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/devops-sre-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://kubernetes.io/docs/"
@@ -3985,7 +3985,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://discord.com/developers/docs/resources/webhook",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/discord-activity-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx"
         ],
         "externalSourceUrls": [
           "https://discord.com/developers/docs/resources/webhook"
@@ -4017,7 +4017,7 @@
         "sourceUrls": [
           "https://github.com/saseq/discord-mcp",
           "https://github.com/saseq/discord-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/discord-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/discord-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/saseq/discord-mcp",
@@ -4046,7 +4046,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4073,7 +4073,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.docker.com/compose/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docker-compose-production-blueprints.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docker-compose-production-blueprints.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.docker.com/compose/"
@@ -4102,7 +4102,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.docker.com/compose/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.docker.com/compose/"
@@ -4133,7 +4133,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://aquasecurity.github.io/trivy/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/docker-image-security-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-image-security-scanner.mdx"
         ],
         "externalSourceUrls": [
           "https://aquasecurity.github.io/trivy/"
@@ -4164,7 +4164,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.docker.com/engine/api/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/docker-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/docker-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.docker.com/engine/api/"
@@ -4193,7 +4193,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-coverage-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-coverage-checker.mdx"
         ],
         "externalSourceUrls": [
           "https://jsdoc.app/"
@@ -4224,7 +4224,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://jsdoc.app/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/documentation-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx"
         ],
         "externalSourceUrls": [
           "https://jsdoc.app/"
@@ -4255,7 +4255,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docxtpl.readthedocs.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/docx-report-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docx-report-generator.mdx"
         ],
         "externalSourceUrls": [
           "https://docxtpl.readthedocs.io/"
@@ -4285,7 +4285,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/domain-specialist-ai-agents.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4313,7 +4313,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-cleanup-handler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4342,7 +4342,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://12factor.net/config",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/environment-variable-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx"
         ],
         "externalSourceUrls": [
           "https://12factor.net/config"
@@ -4370,7 +4370,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/error-rate-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4399,7 +4399,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts"
@@ -4428,7 +4428,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://ethereum.org/developers/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-solidity-security-foundry.mdx"
         ],
         "externalSourceUrls": [
           "https://ethereum.org/developers/docs/"
@@ -4457,7 +4457,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.exa.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx",
           "https://exa.ai"
         ],
         "externalSourceUrls": [
@@ -4487,7 +4487,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/extended-thinking-orchestrator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4516,7 +4516,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://fastapi.tiangolo.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/fastapi-python-backend.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fastapi-python-backend.mdx"
         ],
         "externalSourceUrls": [
           "https://fastapi.tiangolo.com/"
@@ -4547,7 +4547,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://help.figma.com/hc/en-us/articles/32132100833559",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/figma-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/figma-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://help.figma.com/hc/en-us/articles/32132100833559"
@@ -4575,7 +4575,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/file-size-warning-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4604,7 +4604,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/filesystem-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/filesystem-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/examples"
@@ -4632,7 +4632,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/final-bundle-size-reporter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4660,7 +4660,7 @@
         "sourceUrls": [
           "https://docs.firecrawl.dev",
           "https://github.com/mendableai/firecrawl",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
           "https://www.firecrawl.dev"
         ],
         "externalSourceUrls": [
@@ -4692,7 +4692,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/fireflies-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/fireflies-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol"
@@ -4721,7 +4721,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/five-hour-window-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/five-hour-window-tracker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -4749,7 +4749,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-environment-variables.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-environment-variables.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4777,7 +4777,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-installation-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-installation-errors.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4805,7 +4805,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-memory-leak-performance.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-memory-leak-performance.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4833,7 +4833,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/guides/fix-mcp-connection-errors.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/fix-mcp-connection-errors.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4862,7 +4862,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://react.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/frontend-specialist-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/frontend-specialist-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://react.dev/"
@@ -4890,7 +4890,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/full-stack-ai-development-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/full-stack-ai-development-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -4920,7 +4920,7 @@
         "sourceUrls": [
           "https://github.com/NVIDIA/garak",
           "https://github.com/NVIDIA/garak",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx",
           "https://github.com/NVIDIA/garak"
         ],
         "externalSourceUrls": [
@@ -4952,7 +4952,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.ai/commands/test-gen",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/generate-tests.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/generate-tests.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.ai/commands/test-gen"
@@ -4982,7 +4982,7 @@
         "sourceUrls": [
           "https://docs.giskard.ai",
           "https://github.com/Giskard-AI/giskard",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx",
           "https://www.giskard.ai"
         ],
         "externalSourceUrls": [
@@ -5013,7 +5013,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5039,7 +5039,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-branch-protection.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5066,7 +5066,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/git-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/git-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/examples"
@@ -5095,7 +5095,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://pre-commit.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/git-pre-commit-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx"
         ],
         "externalSourceUrls": [
           "https://pre-commit.com/"
@@ -5124,7 +5124,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.conventionalcommits.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/git-smart-commit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/git-smart-commit.mdx"
         ],
         "externalSourceUrls": [
           "https://www.conventionalcommits.org/"
@@ -5153,7 +5153,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://git-scm.com/docs/git-status",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/git-status-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/git-status-statusline.mdx"
         ],
         "externalSourceUrls": [
           "https://git-scm.com/docs/git-status"
@@ -5182,7 +5182,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://git-cliff.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://git-cliff.org/docs/"
@@ -5211,7 +5211,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.github.com/en/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-ai-cicd.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-ai-cicd.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.github.com/en/actions"
@@ -5240,7 +5240,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.github.com/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.github.com/actions"
@@ -5269,7 +5269,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.github.com/en/actions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/github-actions-workflow-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/github-actions-workflow-validator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.github.com/en/actions"
@@ -5298,7 +5298,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.github.com/en/copilot",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/github-copilot.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx",
           "https://github.com/features/copilot"
         ],
         "externalSourceUrls": [
@@ -5328,7 +5328,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/github-copilot-interop-bridge.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5357,7 +5357,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.npmjs.com/package/@modelcontextprotocol/server-github",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/github-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/github-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://www.npmjs.com/package/@modelcontextprotocol/server-github"
@@ -5386,7 +5386,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://go.dev/doc/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/go-golang-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/go-golang-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://go.dev/doc/"
@@ -5415,7 +5415,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://go.dev/doc/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/golang-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/golang-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://go.dev/doc/"
@@ -5443,7 +5443,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/go-module-tidy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5470,7 +5470,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://ai.google.dev/gemini-api/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/google-workspace-gemini-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/google-workspace-gemini-automation.mdx"
         ],
         "externalSourceUrls": [
           "https://ai.google.dev/gemini-api/docs"
@@ -5499,7 +5499,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://graphite.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/graphite-diamond.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx",
           "https://graphite.dev/diamond"
         ],
         "externalSourceUrls": [
@@ -5530,7 +5530,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.apollographql.com/docs/federation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/graphql-federation-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/graphql-federation-specialist.mdx"
         ],
         "externalSourceUrls": [
           "https://www.apollographql.com/docs/federation/"
@@ -5558,7 +5558,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/graphql-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5586,7 +5586,7 @@
         "sourceUrls": [
           "https://docs.helicone.ai",
           "https://github.com/Helicone/helicone",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/helicone.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
           "https://www.helicone.ai"
         ],
         "externalSourceUrls": [
@@ -5618,7 +5618,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
         ],
         "externalSourceUrls": [
           "https://heyclau.de/submit"
@@ -5646,9 +5646,9 @@
         "hasDocumentation": true,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
-          "https://github.com/JSONbored/claudepro-directory",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
+          "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
+          "https://github.com/JSONbored/awesome-claude",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5677,7 +5677,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
         ],
         "externalSourceUrls": [
           "https://heyclau.de/submit"
@@ -5706,7 +5706,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/hooks",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/hooks-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/hooks-generator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/hooks"
@@ -5735,7 +5735,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.hubspot.com/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hubspot-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hubspot-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.hubspot.com/mcp"
@@ -5764,7 +5764,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://huggingface.co/settings/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/hugging-face-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hugging-face-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://huggingface.co/settings/mcp"
@@ -5793,7 +5793,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://typicode.github.io/husky/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://typicode.github.io/husky/"
@@ -5822,7 +5822,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.hyperbrowser.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/hyperbrowser.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/hyperbrowser.mdx",
           "https://www.hyperbrowser.ai"
         ],
         "externalSourceUrls": [
@@ -5852,7 +5852,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/i18n-translation-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -5879,7 +5879,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://tesseract-ocr.github.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/image-ocr-table-extraction.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/image-ocr-table-extraction.mdx"
         ],
         "externalSourceUrls": [
           "https://tesseract-ocr.github.io/"
@@ -5910,7 +5910,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.indexnow.org/documentation",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx"
         ],
         "externalSourceUrls": [
           "https://www.indexnow.org/documentation"
@@ -5939,7 +5939,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.intercom.com/docs/guides/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/intercom-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/intercom-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.intercom.com/docs/guides/mcp"
@@ -5968,7 +5968,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://invideo.io/ai/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/invideo-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://invideo.io/ai/mcp"
@@ -5997,7 +5997,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://jam.dev/docs/debug-a-jam/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jam-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jam-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://jam.dev/docs/debug-a-jam/mcp"
@@ -6025,7 +6025,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6052,7 +6052,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.atlassian.com/platform/remote-mcp-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/jira-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jira-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://www.atlassian.com/platform/remote-mcp-server"
@@ -6081,7 +6081,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://ajv.js.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/json-schema-validation-transformation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx"
         ],
         "externalSourceUrls": [
           "https://ajv.js.org/"
@@ -6111,7 +6111,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/json-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6138,7 +6138,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://kubernetes.io/docs/concepts/security/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/kubernetes-devsecops-engineer.mdx"
         ],
         "externalSourceUrls": [
           "https://kubernetes.io/docs/concepts/security/"
@@ -6166,7 +6166,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6194,7 +6194,7 @@
         "sourceUrls": [
           "https://github.com/feiskyer/mcp-kubernetes-server",
           "https://github.com/feiskyer/mcp-kubernetes-server",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/kubernetes-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/feiskyer/mcp-kubernetes-server",
@@ -6224,7 +6224,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.lakera.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lakera-guard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx",
           "https://www.lakera.ai/guard"
         ],
         "externalSourceUrls": [
@@ -6256,7 +6256,7 @@
         "sourceUrls": [
           "https://langfuse.com/docs",
           "https://github.com/langfuse/langfuse",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
           "https://langfuse.com"
         ],
         "externalSourceUrls": [
@@ -6289,7 +6289,7 @@
         "sourceUrls": [
           "https://langchain-ai.github.io/langgraph/",
           "https://github.com/langchain-ai/langgraph",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
           "https://www.langchain.com/langgraph"
         ],
         "externalSourceUrls": [
@@ -6321,7 +6321,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.smith.langchain.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
           "https://www.langchain.com/langsmith"
         ],
         "externalSourceUrls": [
@@ -6351,7 +6351,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/life-sciences-research-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6380,7 +6380,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://linear.app/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/linear-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/linear-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://linear.app/docs/mcp"
@@ -6409,7 +6409,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/lines-per-minute-tracker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -6439,7 +6439,7 @@
         "sourceUrls": [
           "https://github.com/BurntSushi/ripgrep",
           "https://github.com/BurntSushi/ripgrep",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/log-parsing-incident-timeline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/BurntSushi/ripgrep",
@@ -6469,7 +6469,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.lovable.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lovable.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx",
           "https://lovable.dev"
         ],
         "externalSourceUrls": [
@@ -6500,7 +6500,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.make.com/en/help",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/make.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx",
           "https://www.make.com"
         ],
         "externalSourceUrls": [
@@ -6532,7 +6532,7 @@
         "sourceUrls": [
           "https://github.com/remarkjs/remark",
           "https://github.com/remarkjs/remark",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/remarkjs/remark",
@@ -6561,7 +6561,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/markdown-link-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6589,7 +6589,7 @@
         "sourceUrls": [
           "https://mastra.ai/docs",
           "https://github.com/mastra-ai/mastra",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/mastra.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
           "https://mastra.ai"
         ],
         "externalSourceUrls": [
@@ -6621,7 +6621,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices"
@@ -6650,7 +6650,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-server-security-hardening.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-security-hardening.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18"
@@ -6679,7 +6679,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mcp-setup.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mcp-setup.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/mcp"
@@ -6707,7 +6707,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/mcp-server-status-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6734,7 +6734,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mcp-tool-contract-testing.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-tool-contract-testing.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/"
@@ -6763,7 +6763,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://memesio.com/developers/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/memesio-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/memesio-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://memesio.com/developers/mcp"
@@ -6793,7 +6793,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/memory-usage-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -6821,7 +6821,7 @@
         "sourceUrls": [
           "https://microsoft.github.io/autogen/",
           "https://github.com/microsoft/autogen",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx",
           "https://microsoft.github.io/autogen/"
         ],
         "externalSourceUrls": [
@@ -6854,7 +6854,7 @@
         "sourceUrls": [
           "https://github.com/powerline/powerline",
           "https://github.com/powerline/powerline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/minimal-powerline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/powerline/powerline",
@@ -6884,7 +6884,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://mintlify.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/mintlify-documentation-automation.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mintlify-documentation-automation.mdx"
         ],
         "externalSourceUrls": [
           "https://mintlify.com/docs"
@@ -6913,7 +6913,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://mintlify.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/mintlify-docs.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mintlify-docs.mdx"
         ],
         "externalSourceUrls": [
           "https://mintlify.com/docs"
@@ -6942,7 +6942,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://developer.apple.com/documentation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-developer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-developer.mdx"
         ],
         "externalSourceUrls": [
           "https://developer.apple.com/documentation/"
@@ -6971,7 +6971,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://developer.apple.com/documentation/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/mobile-app-development-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/mobile-app-development-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://developer.apple.com/documentation/"
@@ -7000,7 +7000,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://platform.openai.com/docs/guides/latency-optimization",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx"
         ],
         "externalSourceUrls": [
           "https://platform.openai.com/docs/guides/latency-optimization"
@@ -7029,7 +7029,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/model-switch-history-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/model-switch-history-tracker.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -7058,7 +7058,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developer.monday.com/apps/docs/mondaycom-mcp-integration",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/monday-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/monday-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developer.monday.com/apps/docs/mondaycom-mcp-integration"
@@ -7087,7 +7087,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://turbo.build/repo/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/monorepo-workspace-manager.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/monorepo-workspace-manager.mdx"
         ],
         "externalSourceUrls": [
           "https://turbo.build/repo/docs"
@@ -7115,7 +7115,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7143,7 +7143,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-line-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-line-statusline.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7170,7 +7170,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.anthropic.com/claude/docs/models-overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-provider-token-counter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-provider-token-counter.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.anthropic.com/claude/docs/models-overview"
@@ -7199,7 +7199,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-session-overlap-indicator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -7229,7 +7229,7 @@
         "sourceUrls": [
           "https://docs.n8n.io",
           "https://github.com/n8n-io/n8n",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/n8n.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx",
           "https://n8n.io"
         ],
         "externalSourceUrls": [
@@ -7261,7 +7261,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.n8n.io/advanced-ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-ai-agent-workflow-architect.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.n8n.io/advanced-ai/"
@@ -7290,7 +7290,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.n8n.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.n8n.io/"
@@ -7319,7 +7319,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.n8n.io/hosting/securing/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.n8n.io/hosting/securing/"
@@ -7348,7 +7348,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/netlify-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/netlify-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/"
@@ -7377,7 +7377,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/nextjs-15-performance-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/nextjs-15-performance-architect.mdx"
         ],
         "externalSourceUrls": [
           "https://nextjs.org/docs"
@@ -7405,7 +7405,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/nextjs-route-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7432,7 +7432,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.notion.com/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/notion-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/notion-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.notion.com/docs/mcp"
@@ -7461,7 +7461,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/oh-my-zsh-robbyrussell.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/ohmyzsh/ohmyzsh/wiki/Themes#robbyrussell"
@@ -7491,7 +7491,7 @@
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openclaw/openclaw",
@@ -7522,7 +7522,7 @@
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openclaw/openclaw",
@@ -7553,7 +7553,7 @@
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/openclaw/openclaw",
@@ -7584,7 +7584,7 @@
         "sourceUrls": [
           "https://opencode.ai",
           "https://github.com/sst/opencode",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx",
           "https://opencode.ai"
         ],
         "externalSourceUrls": [
@@ -7616,7 +7616,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://opennext.js.org/cloudflare/get-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://opennext.js.org/cloudflare/get-started"
@@ -7644,7 +7644,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/package-vulnerability-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7671,7 +7671,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://web.dev/articles/vitals",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/pagespeed-insights-optimizer.mdx"
         ],
         "externalSourceUrls": [
           "https://web.dev/articles/vitals"
@@ -7700,7 +7700,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/parallel-subagent-distributor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/parallel-subagent-distributor.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents"
@@ -7729,7 +7729,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.paypal.ai/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/paypal-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/paypal-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://www.paypal.ai/"
@@ -7757,7 +7757,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-benchmark-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7783,7 +7783,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-impact-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -7810,7 +7810,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://web.dev/vitals/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/performance-monitor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-monitor.mdx"
         ],
         "externalSourceUrls": [
           "https://web.dev/vitals/"
@@ -7839,7 +7839,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://web.dev/performance/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/performance-optimizer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/performance-optimizer-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://web.dev/performance/"
@@ -7868,7 +7868,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://pipedream.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/pipedream.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/pipedream.mdx",
           "https://pipedream.com"
         ],
         "externalSourceUrls": [
@@ -7899,7 +7899,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://plaid.com/blog/plaid-mcp-ai-assistant-claude/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/plaid-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/plaid-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://plaid.com/blog/plaid-mcp-ai-assistant-claude/"
@@ -7928,7 +7928,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/extended-thinking",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/plan-mode.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/plan-mode.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/extended-thinking"
@@ -7957,7 +7957,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://playwright.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-e2e-testing.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-e2e-testing.mdx"
         ],
         "externalSourceUrls": [
           "https://playwright.dev/"
@@ -7986,7 +7986,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://playwright.dev/docs/getting-started-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-mcp-browser-automation-engineer.mdx"
         ],
         "externalSourceUrls": [
           "https://playwright.dev/docs/getting-started-mcp"
@@ -8015,7 +8015,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://playwright.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/playwright-test-runner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/playwright-test-runner.mdx"
         ],
         "externalSourceUrls": [
           "https://playwright.dev"
@@ -8043,7 +8043,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/plugin-ecosystem-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/plugin-ecosystem-architect.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8072,7 +8072,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://modelcontextprotocol.io/examples",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/postgresql-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/postgresql-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://modelcontextprotocol.io/examples"
@@ -8101,7 +8101,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://www.postgresql.org/docs/current/performance-tips.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/postgresql-query-optimization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx"
         ],
         "externalSourceUrls": [
           "https://www.postgresql.org/docs/current/performance-tips.html"
@@ -8130,7 +8130,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.prisma.io/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/prisma-schema-sync.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/prisma-schema-sync.mdx"
         ],
         "externalSourceUrls": [
           "https://www.prisma.io/docs"
@@ -8158,7 +8158,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/product-management-ai-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/product-management-ai-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8187,7 +8187,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/production-codebase-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/production-codebase-auditor.mdx"
         ],
         "externalSourceUrls": [
           "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts#method-1-claude-md-files-project-level-instructions"
@@ -8215,7 +8215,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/production-reliability-engineer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/production-reliability-engineer.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8243,7 +8243,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/production-readiness-toolkit.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/production-readiness-toolkit.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8272,7 +8272,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/collections/developer-productivity-booster.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/collections/developer-productivity-booster.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8302,7 +8302,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://genai.owasp.org/llmrisk/llm01-prompt-injection/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx"
         ],
         "externalSourceUrls": [
           "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
@@ -8330,7 +8330,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/prompt-optimization-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/prompt-optimization-specialist.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8360,7 +8360,7 @@
         "sourceUrls": [
           "https://github.com/MohamedAbdallah-14/prompt-to-asset#readme",
           "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/prompt-to-asset.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/prompt-to-asset.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/MohamedAbdallah-14/prompt-to-asset#readme",
@@ -8393,7 +8393,7 @@
         "sourceUrls": [
           "https://www.promptfoo.dev/docs",
           "https://github.com/promptfoo/promptfoo",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/promptfoo.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
           "https://www.promptfoo.dev"
         ],
         "externalSourceUrls": [
@@ -8425,7 +8425,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.protectai.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/protect-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx",
           "https://protectai.com"
         ],
         "externalSourceUrls": [
@@ -8456,7 +8456,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API"
@@ -8485,7 +8485,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx"
         ],
         "externalSourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API"
@@ -8514,7 +8514,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://pandas.pydata.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science.mdx"
         ],
         "externalSourceUrls": [
           "https://pandas.pydata.org/docs/"
@@ -8543,7 +8543,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://pandas.pydata.org/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/python-data-science-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://pandas.pydata.org/docs/"
@@ -8571,7 +8571,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-import-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8597,7 +8597,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/python-linter-integration.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8624,7 +8624,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://rich.readthedocs.io/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/python-rich-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/python-rich-statusline.mdx"
         ],
         "externalSourceUrls": [
           "https://rich.readthedocs.io/"
@@ -8653,7 +8653,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://developers.raycast.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/raycast.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx",
           "https://www.raycast.com"
         ],
         "externalSourceUrls": [
@@ -8684,7 +8684,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.raycast.com/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.raycast.com/"
@@ -8713,7 +8713,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://react.dev/reference/react",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-19-concurrent-features-specialist.mdx"
         ],
         "externalSourceUrls": [
           "https://react.dev/reference/react"
@@ -8742,7 +8742,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://nextjs.org/docs"
@@ -8771,7 +8771,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://nextjs.org/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-next-js-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-next-js-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://nextjs.org/docs"
@@ -8800,7 +8800,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://react.dev/reference/rsc/server-components",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/react-server-components-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-server-components-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://react.dev/reference/rsc/server-components"
@@ -8828,7 +8828,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/react-component-test-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8854,7 +8854,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/real-time-activity-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8880,7 +8880,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/real-time-cost-tracker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/real-time-cost-tracker.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8908,7 +8908,7 @@
         "sourceUrls": [
           "https://github.com/karanb192/reddit-mcp-buddy",
           "https://github.com/karanb192/reddit-mcp-buddy",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/reddit-mcp-buddy.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/reddit-mcp-buddy.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/karanb192/reddit-mcp-buddy",
@@ -8937,7 +8937,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/redis-cache-invalidator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -8965,7 +8965,7 @@
         "sourceUrls": [
           "https://github.com/redis/mcp-redis",
           "https://github.com/redis/mcp-redis",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/redis-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/redis-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/redis/mcp-redis",
@@ -8995,7 +8995,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.replit.com/replitai/agent",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx",
           "https://replit.com/ai"
         ],
         "externalSourceUrls": [
@@ -9026,7 +9026,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/rest-api-client-harness.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/rest-api-client-harness.mdx"
         ],
         "externalSourceUrls": [
           "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview"
@@ -9058,7 +9058,7 @@
         "sourceUrls": [
           "https://docs.roocode.com",
           "https://github.com/RooCodeInc/Roo-Code",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/roo-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
           "https://roocode.com"
         ],
         "externalSourceUrls": [
@@ -9089,7 +9089,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/rust-cargo-check.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9116,7 +9116,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://stripe.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/saas-pricing-experimentation-engine.mdx"
         ],
         "externalSourceUrls": [
           "https://stripe.com/docs"
@@ -9144,7 +9144,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/scss-auto-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9171,7 +9171,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor.mdx"
         ],
         "externalSourceUrls": [
           "https://owasp.org/www-project-top-ten/"
@@ -9200,7 +9200,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-auditor-penetration-tester.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-auditor-penetration-tester.mdx"
         ],
         "externalSourceUrls": [
           "https://owasp.org/www-project-top-ten/"
@@ -9229,7 +9229,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/security-scanner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx"
         ],
         "externalSourceUrls": [
           "https://owasp.org/www-project-top-ten/"
@@ -9258,7 +9258,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://owasp.org/www-project-top-ten/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/security-first-react-components.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-first-react-components.mdx"
         ],
         "externalSourceUrls": [
           "https://owasp.org/www-project-top-ten/"
@@ -9286,7 +9286,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9314,7 +9314,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9341,7 +9341,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.sentry.io/product/sentry-mcp/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/sentry-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/sentry-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.sentry.io/product/sentry-mcp/"
@@ -9370,7 +9370,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-health-score.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-health-score.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -9398,7 +9398,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/session-metrics-collector.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9424,7 +9424,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/session-timer-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-timer-statusline.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9450,7 +9450,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/simple-text-statusline.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/simple-text-statusline.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9476,7 +9476,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/slack-progress-notifier.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9503,7 +9503,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/slash-command-gen.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/slash-command-gen.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands"
@@ -9532,7 +9532,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/slash-command-orchestrator-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/slash-commands"
@@ -9561,7 +9561,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://smithery.ai/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/smithery.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/smithery.mdx",
           "https://smithery.ai"
         ],
         "externalSourceUrls": [
@@ -9593,7 +9593,7 @@
         "sourceUrls": [
           "https://github.com/SocketDev/socket-mcp",
           "https://github.com/SocketDev/socket-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/socket-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/SocketDev/socket-mcp",
@@ -9623,7 +9623,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://sourcegraph.com/docs/cody",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/sourcegraph-cody.mdx",
           "https://sourcegraph.com/cody"
         ],
         "externalSourceUrls": [
@@ -9654,7 +9654,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://legalfournier.com/en/mcp/spain-legal/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
         ],
         "externalSourceUrls": [
           "https://legalfournier.com/en/mcp/spain-legal/"
@@ -9685,7 +9685,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developer.squareup.com/docs/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/square-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/square-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://developer.squareup.com/docs/mcp"
@@ -9715,7 +9715,7 @@
         "sourceUrls": [
           "https://docs.stagehand.dev",
           "https://github.com/browserbase/stagehand",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
           "https://www.stagehand.dev"
         ],
         "externalSourceUrls": [
@@ -9746,7 +9746,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/starship-powerline-theme.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/starship-powerline-theme.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9773,7 +9773,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.stripe.com/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stripe-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stripe-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.stripe.com/mcp"
@@ -9802,7 +9802,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://stytch.com/docs/workspace-management/stytch-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/stytch-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stytch-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://stytch.com/docs/workspace-management/stytch-mcp"
@@ -9831,7 +9831,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/subagent-create.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/subagent-create.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents"
@@ -9860,7 +9860,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/subagent-factory-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/subagent-factory-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/sub-agents"
@@ -9889,7 +9889,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://supabase.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/supabase-realtime-database.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/supabase-realtime-database.mdx"
         ],
         "externalSourceUrls": [
           "https://supabase.com/docs"
@@ -9917,7 +9917,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/svelte-component-compiler.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -9944,7 +9944,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://kit.svelte.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/svelte-sveltekit-fullstack.mdx"
         ],
         "externalSourceUrls": [
           "https://kit.svelte.dev/"
@@ -9975,7 +9975,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/testing",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/tdd-workflow.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/tdd-workflow.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/testing"
@@ -10003,7 +10003,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/team-summary-email-generator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10029,7 +10029,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/technical-documentation-writer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/technical-documentation-writer-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10058,7 +10058,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.terraform.io/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/terraform-infrastructure-architect.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/terraform-infrastructure-architect.mdx"
         ],
         "externalSourceUrls": [
           "https://www.terraform.io/docs"
@@ -10086,7 +10086,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/terraform-plan-executor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10113,7 +10113,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://playwright.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/test-automation-engineer-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/test-automation-engineer-agent.mdx"
         ],
         "externalSourceUrls": [
           "https://playwright.dev/"
@@ -10141,7 +10141,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-coverage-final-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10168,7 +10168,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://jestjs.io/docs/getting-started",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/test-runner-hook.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx"
         ],
         "externalSourceUrls": [
           "https://jestjs.io/docs/getting-started"
@@ -10197,7 +10197,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://vitest.dev/guide/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/test-driven-development-enforcer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/test-driven-development-enforcer.mdx"
         ],
         "externalSourceUrls": [
           "https://vitest.dev/guide/"
@@ -10225,7 +10225,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/token-cost-budget-optimizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/token-cost-budget-optimizer.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10255,7 +10255,7 @@
         "sourceUrls": [
           "https://trigger.dev/docs",
           "https://github.com/triggerdotdev/trigger.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/trigger-dev.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
           "https://trigger.dev"
         ],
         "externalSourceUrls": [
@@ -10287,7 +10287,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://trpc.io/docs/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/trpc-type-safe-api.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/trpc-type-safe-api.mdx"
         ],
         "externalSourceUrls": [
           "https://trpc.io/docs/"
@@ -10318,7 +10318,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.typescriptlang.org/docs/handbook/2/basic-types.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx"
         ],
         "externalSourceUrls": [
           "https://www.typescriptlang.org/docs/handbook/2/basic-types.html"
@@ -10346,7 +10346,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/typescript-compilation-checker.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10372,7 +10372,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ui-ux-design-expert-agent.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10401,7 +10401,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.unraid.net/API/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-automation-operator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-automation-operator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.unraid.net/API/"
@@ -10430,7 +10430,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.unraid.net/API/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.unraid.net/API/"
@@ -10459,7 +10459,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://forums.unraid.net/forum/64-docker-engine/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://forums.unraid.net/forum/64-docker-engine/"
@@ -10488,7 +10488,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-v0.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx",
           "https://v0.dev"
         ],
         "externalSourceUrls": [
@@ -10519,7 +10519,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/commands/v0-generate.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/commands/v0-generate.mdx"
         ],
         "externalSourceUrls": [
           "https://v0.dev/docs"
@@ -10548,7 +10548,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/v0-rapid-prototyping.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/v0-rapid-prototyping.mdx"
         ],
         "externalSourceUrls": [
           "https://v0.dev/docs"
@@ -10580,7 +10580,7 @@
         "sourceUrls": [
           "https://ai-sdk.dev/docs",
           "https://github.com/vercel/ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-ai-sdk.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
           "https://ai-sdk.dev"
         ],
         "externalSourceUrls": [
@@ -10612,7 +10612,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://vercel.com/docs/mcp/vercel-mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/vercel-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/vercel-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://vercel.com/docs/mcp/vercel-mcp"
@@ -10641,7 +10641,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://vitejs.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/vite-build-optimization.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/vite-build-optimization.mdx"
         ],
         "externalSourceUrls": [
           "https://vitejs.dev/"
@@ -10669,7 +10669,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/vue-composition-api-linter.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10696,7 +10696,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://www.w3.org/WAI/WCAG22/quickref/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/wcag-accessibility-auditor.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx"
         ],
         "externalSourceUrls": [
           "https://www.w3.org/WAI/WCAG22/quickref/"
@@ -10725,7 +10725,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://weave-docs.wandb.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/weave.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx",
           "https://wandb.ai/site/weave"
         ],
         "externalSourceUrls": [
@@ -10756,7 +10756,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/web-interface",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/agents/web-async-agent-coordinator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/web-async-agent-coordinator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/web-interface"
@@ -10785,7 +10785,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://webassembly.org/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/webassembly-module-development.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/webassembly-module-development.mdx"
         ],
         "externalSourceUrls": [
           "https://webassembly.org/"
@@ -10815,7 +10815,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -10843,7 +10843,7 @@
         "sourceUrls": [
           "https://github.com/mozilla/readability",
           "https://github.com/mozilla/readability",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/website-crawler-summarizer.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx"
         ],
         "externalSourceUrls": [
           "https://github.com/mozilla/readability",
@@ -10873,7 +10873,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.windsurf.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx",
           "https://windsurf.com"
         ],
         "externalSourceUrls": [
@@ -10904,7 +10904,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.codeium.com/windsurf",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/windsurf-collaborative-development.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/windsurf-collaborative-development.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.codeium.com/windsurf"
@@ -10933,7 +10933,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.codeium.com/windsurf",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.codeium.com/windsurf"
@@ -10962,7 +10962,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.workato.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/workato.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/workato.mdx",
           "https://www.workato.com"
         ],
         "externalSourceUrls": [
@@ -10993,7 +10993,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://docs.workato.com/mcp.html",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/workato-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/workato-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.workato.com/mcp.html"
@@ -11021,7 +11021,7 @@
         "hasDocumentation": false,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/workflow-completion-report.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx"
         ],
         "externalSourceUrls": []
       },
@@ -11048,7 +11048,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/workspace-project-depth-indicator.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
@@ -11078,7 +11078,7 @@
         "sourceUrls": [
           "https://docs.xquik.com/mcp/overview",
           "https://github.com/Xquik-dev/x-twitter-scraper",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/xquik-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.xquik.com/mcp/overview",
@@ -11108,7 +11108,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://help.zapier.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zapier-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx",
           "https://zapier.com/ai"
         ],
         "externalSourceUrls": [
@@ -11139,7 +11139,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://help.zapier.com/hc/en-us/articles/36265392843917",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zapier-mcp-server.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zapier-mcp-server.mdx"
         ],
         "externalSourceUrls": [
           "https://help.zapier.com/hc/en-us/articles/36265392843917"
@@ -11169,7 +11169,7 @@
         "sourceUrls": [
           "https://zed.dev/docs",
           "https://github.com/zed-industries/zed",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx",
           "https://zed.dev"
         ],
         "externalSourceUrls": [
@@ -11201,7 +11201,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
         ],
         "externalSourceUrls": [
           "https://developers.cloudflare.com/workers/"
@@ -11230,7 +11230,7 @@
         "hasFirstPartyPackage": true,
         "sourceUrls": [
           "https://zod.dev/",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/zod-schema-validator.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zod-schema-validator.mdx"
         ],
         "externalSourceUrls": [
           "https://zod.dev/"
@@ -11259,7 +11259,7 @@
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://docs.zyntra.app/mcp",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/zyntra-mail.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zyntra-mail.mdx"
         ],
         "externalSourceUrls": [
           "https://docs.zyntra.app/mcp"

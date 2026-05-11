@@ -5,10 +5,10 @@ Author: Giskard
 Date added: 2026-04-27
 Documentation: https://docs.giskard.ai
 Repository: https://github.com/Giskard-AI/giskard
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/giskard
-- Source URLs: https://docs.giskard.ai, https://github.com/Giskard-AI/giskard, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx, https://www.giskard.ai
+- Source URLs: https://docs.giskard.ai, https://github.com/Giskard-AI/giskard, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx, https://www.giskard.ai
 - Brand: Giskard
 - Brand domain: giskard.ai
 - Brand asset source: brandfetch

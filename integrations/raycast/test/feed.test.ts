@@ -305,10 +305,7 @@ describe("Raycast feed helpers", () => {
 
     const suggestUrl = new URL(buildSuggestChangeUrl(sampleEntry));
     assert.equal(suggestUrl.origin, "https://github.com");
-    assert.equal(
-      suggestUrl.pathname,
-      "/JSONbored/claudepro-directory/issues/new",
-    );
+    assert.equal(suggestUrl.pathname, "/JSONbored/awesome-claude/issues/new");
     assert.equal(suggestUrl.searchParams.get("template"), "submit-mcp.yml");
     assert.equal(suggestUrl.searchParams.get("category"), "mcp");
     assert.equal(suggestUrl.searchParams.get("slug"), "context7");
@@ -369,8 +366,8 @@ describe("Raycast feed helpers", () => {
       "https://heyclau.de/submit?utm_source=raycast&utm_medium=extension&utm_content=submit-content",
     );
     assert.equal(
-      withRaycastUtm("https://github.com/JSONbored/claudepro-directory"),
-      "https://github.com/JSONbored/claudepro-directory",
+      withRaycastUtm("https://github.com/JSONbored/awesome-claude"),
+      "https://github.com/JSONbored/awesome-claude",
     );
     assert.equal(
       markdownLink("Context7", "https://heyclau.de/mcp/context7"),

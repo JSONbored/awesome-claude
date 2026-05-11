@@ -5,10 +5,10 @@ Author: Langfuse
 Date added: 2026-04-27
 Documentation: https://langfuse.com/docs
 Repository: https://github.com/langfuse/langfuse
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/langfuse
-- Source URLs: https://langfuse.com/docs, https://github.com/langfuse/langfuse, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx, https://langfuse.com
+- Source URLs: https://langfuse.com/docs, https://github.com/langfuse/langfuse, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx, https://langfuse.com
 - Brand: Langfuse
 - Brand domain: langfuse.com
 - Brand asset source: brandfetch

@@ -180,14 +180,14 @@ test.describe("site regression", () => {
     await expect(suggestChange).toBeVisible();
     await expect(suggestChange).toHaveAttribute(
       "href",
-      /github\.com\/JSONbored\/claudepro-directory\/issues\/new/,
+      /github\.com\/JSONbored\/awesome-claude\/issues\/new/,
     );
 
     const editOnGitHub = page.getByRole("link", { name: /Edit on GitHub/i });
     if ((await editOnGitHub.count()) > 0) {
       await expect(editOnGitHub.first()).toHaveAttribute(
         "href",
-        /github\.com\/JSONbored\/claudepro-directory\/(edit|blob)\//,
+        /github\.com\/JSONbored\/awesome-claude\/(edit|blob)\//,
       );
     }
   });

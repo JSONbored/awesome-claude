@@ -229,7 +229,7 @@
       }
     ],
     "filePath": "content/statuslines/docker-health-statusline.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/docker-health-statusline.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/docker-health-statusline.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -244,7 +244,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://docs.docker.com/reference/cli/docker/container/stats/",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/statuslines/docker-health-statusline.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/docker-health-statusline.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

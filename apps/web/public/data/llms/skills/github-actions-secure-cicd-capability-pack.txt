@@ -4,11 +4,11 @@ Category: skills
 Author: JSONbored
 Date added: 2026-04-10
 Documentation: https://docs.github.com/actions
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx
 Download: /downloads/skills/github-actions-secure-cicd-capability-pack.zip
 ## Citation Facts
 - Canonical URL: https://heyclau.de/skills/github-actions-secure-cicd-capability-pack
-- Source URLs: https://docs.github.com/actions, https://github.com/JSONbored/claudepro-directory/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx
+- Source URLs: https://docs.github.com/actions, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx
 - Brand: GitHub
 - Brand domain: github.com
 - Brand asset source: brandfetch

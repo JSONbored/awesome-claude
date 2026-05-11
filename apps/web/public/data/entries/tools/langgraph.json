@@ -71,7 +71,7 @@
     ],
     "codeBlocks": [],
     "filePath": "content/tools/langgraph.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
     "repoUrl": "https://github.com/langchain-ai/langgraph",
     "githubStars": null,
     "githubForks": null,
@@ -87,7 +87,7 @@
     "sourceUrls": [
       "https://langchain-ai.github.io/langgraph/",
       "https://github.com/langchain-ai/langgraph",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
       "https://www.langchain.com/langgraph"
     ],
     "sourceStatus": "available",

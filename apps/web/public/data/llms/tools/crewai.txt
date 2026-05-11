@@ -5,10 +5,10 @@ Author: CrewAI
 Date added: 2026-04-27
 Documentation: https://docs.crewai.com
 Repository: https://github.com/crewAIInc/crewAI
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/crewai
-- Source URLs: https://docs.crewai.com, https://github.com/crewAIInc/crewAI, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx, https://www.crewai.com
+- Source URLs: https://docs.crewai.com, https://github.com/crewAIInc/crewAI, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx, https://www.crewai.com
 - Brand: CrewAI
 - Brand domain: crewai.com
 - Brand asset source: brandfetch

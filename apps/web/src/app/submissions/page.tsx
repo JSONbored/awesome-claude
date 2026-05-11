@@ -38,7 +38,7 @@ export const metadata: Metadata = buildPageMetadata({
 async function getSubmissionQueue() {
   try {
     const response = await fetch(
-      "https://api.github.com/repos/JSONbored/claudepro-directory/issues?state=open&per_page=100",
+      "https://api.github.com/repos/JSONbored/awesome-claude/issues?state=open&per_page=100",
       {
         headers: {
           accept: "application/vnd.github+json",

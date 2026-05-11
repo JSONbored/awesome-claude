@@ -4,11 +4,11 @@ Category: mcp
 Author: Canva
 Date added: 2025-09-18
 Documentation: https://www.canva.dev/docs/connect/canva-mcp-server-setup/
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/canva-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/canva-mcp-server.mdx
 Download: /downloads/mcp/canva-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/canva-mcp-server
-- Source URLs: https://www.canva.dev/docs/connect/canva-mcp-server-setup/, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/canva-mcp-server.mdx
+- Source URLs: https://www.canva.dev/docs/connect/canva-mcp-server-setup/, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/canva-mcp-server.mdx
 - Brand: Canva
 - Brand domain: canva.com
 - Brand asset source: brandfetch

@@ -4,10 +4,10 @@ Category: tools
 Author: Replit
 Date added: 2026-04-27
 Documentation: https://docs.replit.com/replitai/agent
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/replit-agent
-- Source URLs: https://docs.replit.com/replitai/agent, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx, https://replit.com/ai
+- Source URLs: https://docs.replit.com/replitai/agent, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx, https://replit.com/ai
 - Brand: Replit
 - Brand domain: replit.com
 - Brand asset source: brandfetch

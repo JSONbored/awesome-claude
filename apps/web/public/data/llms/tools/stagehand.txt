@@ -5,10 +5,10 @@ Author: Browserbase
 Date added: 2026-04-27
 Documentation: https://docs.stagehand.dev
 Repository: https://github.com/browserbase/stagehand
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/stagehand
-- Source URLs: https://docs.stagehand.dev, https://github.com/browserbase/stagehand, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx, https://www.stagehand.dev
+- Source URLs: https://docs.stagehand.dev, https://github.com/browserbase/stagehand, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx, https://www.stagehand.dev
 - Brand: Stagehand
 - Brand domain: stagehand.dev
 - Brand asset source: brandfetch

@@ -5,10 +5,10 @@ Author: Composio
 Date added: 2026-04-27
 Documentation: https://docs.composio.dev
 Repository: https://github.com/ComposioHQ/composio
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/composio
-- Source URLs: https://docs.composio.dev, https://github.com/ComposioHQ/composio, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx, https://composio.dev
+- Source URLs: https://docs.composio.dev, https://github.com/ComposioHQ/composio, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx, https://composio.dev
 - Brand: Composio
 - Brand domain: composio.dev
 - Brand asset source: brandfetch

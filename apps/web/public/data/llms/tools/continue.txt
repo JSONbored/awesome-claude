@@ -5,10 +5,10 @@ Author: Continue
 Date added: 2026-04-27
 Documentation: https://docs.continue.dev
 Repository: https://github.com/continuedev/continue
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/tools/continue
-- Source URLs: https://docs.continue.dev, https://github.com/continuedev/continue, https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx, https://continue.dev
+- Source URLs: https://docs.continue.dev, https://github.com/continuedev/continue, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx, https://continue.dev
 - Brand: Continue
 - Brand domain: continue.dev
 - Brand asset source: brandfetch

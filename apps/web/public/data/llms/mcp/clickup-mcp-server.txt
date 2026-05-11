@@ -5,11 +5,11 @@ Author: hauptsacheNet
 Date added: 2025-09-18
 Documentation: https://github.com/hauptsacheNet/clickup-mcp
 Repository: https://github.com/hauptsacheNet/clickup-mcp
-Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/clickup-mcp-server.mdx
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx
 Download: /downloads/mcp/clickup-mcp-server.mcpb
 ## Citation Facts
 - Canonical URL: https://heyclau.de/mcp/clickup-mcp-server
-- Source URLs: https://github.com/hauptsacheNet/clickup-mcp, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/clickup-mcp-server.mdx
+- Source URLs: https://github.com/hauptsacheNet/clickup-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx
 - Brand: ClickUp
 - Brand domain: clickup.com
 - Brand asset source: brandfetch

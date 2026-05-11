@@ -47,7 +47,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/aider.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/aider.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx",
       "repoUrl": "https://github.com/Aider-AI/aider",
       "githubStars": null,
       "githubForks": null,
@@ -65,7 +65,7 @@
         "sourceUrls": [
           "https://aider.chat/docs",
           "https://github.com/Aider-AI/aider",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/aider.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx",
           "https://aider.chat"
         ],
         "sourceStatus": "available",
@@ -117,7 +117,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/apify.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/apify.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -134,7 +134,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.apify.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/apify.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx",
           "https://apify.com"
         ],
         "sourceStatus": "available",
@@ -186,7 +186,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/arcade-ai.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arcade-ai.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arcade-ai.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -203,7 +203,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.arcade.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arcade-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arcade-ai.mdx",
           "https://www.arcade.dev"
         ],
         "sourceStatus": "available",
@@ -255,7 +255,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/arize-phoenix.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arize-phoenix.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arize-phoenix.mdx",
       "repoUrl": "https://github.com/Arize-ai/phoenix",
       "githubStars": null,
       "githubForks": null,
@@ -273,7 +273,7 @@
         "sourceUrls": [
           "https://arize.com/docs/phoenix",
           "https://github.com/Arize-ai/phoenix",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/arize-phoenix.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/arize-phoenix.mdx",
           "https://phoenix.arize.com"
         ],
         "sourceStatus": "available",
@@ -325,7 +325,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/bolt-new.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -342,7 +342,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://support.bolt.new",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/bolt-new.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx",
           "https://bolt.new"
         ],
         "sourceStatus": "available",
@@ -394,7 +394,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/braintrust.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/braintrust.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -411,7 +411,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://www.braintrust.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/braintrust.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx",
           "https://www.braintrust.dev"
         ],
         "sourceStatus": "available",
@@ -463,7 +463,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/browser-use.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browser-use.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
       "repoUrl": "https://github.com/browser-use/browser-use",
       "githubStars": null,
       "githubForks": null,
@@ -481,7 +481,7 @@
         "sourceUrls": [
           "https://docs.browser-use.com",
           "https://github.com/browser-use/browser-use",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browser-use.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
           "https://browser-use.com"
         ],
         "sourceStatus": "available",
@@ -533,7 +533,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/browserbase.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browserbase.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -550,7 +550,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.browserbase.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/browserbase.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx",
           "https://www.browserbase.com"
         ],
         "sourceStatus": "available",
@@ -599,7 +599,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/claude-code.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -616,7 +616,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.anthropic.com/en/docs/claude-code/overview",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/claude-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx",
           "https://www.anthropic.com/claude-code"
         ],
         "sourceStatus": "available",
@@ -668,7 +668,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/cline.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx",
       "repoUrl": "https://github.com/cline/cline",
       "githubStars": null,
       "githubForks": null,
@@ -686,7 +686,7 @@
         "sourceUrls": [
           "https://docs.cline.bot",
           "https://github.com/cline/cline",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cline.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cline.mdx",
           "https://cline.bot"
         ],
         "sourceStatus": "available",
@@ -738,7 +738,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/cloudflare-agents-sdk.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cloudflare-agents-sdk.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx",
       "repoUrl": "https://github.com/cloudflare/agents",
       "githubStars": null,
       "githubForks": null,
@@ -756,7 +756,7 @@
         "sourceUrls": [
           "https://developers.cloudflare.com/agents/",
           "https://github.com/cloudflare/agents",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cloudflare-agents-sdk.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -807,7 +807,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/coderabbit.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/coderabbit.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -824,7 +824,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.coderabbit.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/coderabbit.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx",
           "https://www.coderabbit.ai"
         ],
         "sourceStatus": "available",
@@ -875,7 +875,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/composio.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx",
       "repoUrl": "https://github.com/ComposioHQ/composio",
       "githubStars": null,
       "githubForks": null,
@@ -893,7 +893,7 @@
         "sourceUrls": [
           "https://docs.composio.dev",
           "https://github.com/ComposioHQ/composio",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/composio.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/composio.mdx",
           "https://composio.dev"
         ],
         "sourceStatus": "available",
@@ -945,7 +945,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/continue.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx",
       "repoUrl": "https://github.com/continuedev/continue",
       "githubStars": null,
       "githubForks": null,
@@ -963,7 +963,7 @@
         "sourceUrls": [
           "https://docs.continue.dev",
           "https://github.com/continuedev/continue",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/continue.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/continue.mdx",
           "https://continue.dev"
         ],
         "sourceStatus": "available",
@@ -1015,7 +1015,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/crewai.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
       "repoUrl": "https://github.com/crewAIInc/crewAI",
       "githubStars": null,
       "githubForks": null,
@@ -1033,7 +1033,7 @@
         "sourceUrls": [
           "https://docs.crewai.com",
           "https://github.com/crewAIInc/crewAI",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/crewai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
           "https://www.crewai.com"
         ],
         "sourceStatus": "available",
@@ -1085,7 +1085,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/cursor.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cursor.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cursor.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1102,7 +1102,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.cursor.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/cursor.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cursor.mdx",
           "https://cursor.com"
         ],
         "sourceStatus": "available",
@@ -1154,7 +1154,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/devin.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1171,7 +1171,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.devin.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/devin.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/devin.mdx",
           "https://devin.ai"
         ],
         "sourceStatus": "available",
@@ -1223,7 +1223,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/exa.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1240,7 +1240,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.exa.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/exa.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx",
           "https://exa.ai"
         ],
         "sourceStatus": "available",
@@ -1292,7 +1292,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/firecrawl.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
       "repoUrl": "https://github.com/mendableai/firecrawl",
       "githubStars": null,
       "githubForks": null,
@@ -1310,7 +1310,7 @@
         "sourceUrls": [
           "https://docs.firecrawl.dev",
           "https://github.com/mendableai/firecrawl",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/firecrawl.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
           "https://www.firecrawl.dev"
         ],
         "sourceStatus": "available",
@@ -1362,7 +1362,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/garak.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx",
       "repoUrl": "https://github.com/NVIDIA/garak",
       "githubStars": null,
       "githubForks": null,
@@ -1379,7 +1379,7 @@
         "sourceUrlCount": 2,
         "sourceUrls": [
           "https://github.com/NVIDIA/garak",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/garak.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -1430,7 +1430,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/giskard.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx",
       "repoUrl": "https://github.com/Giskard-AI/giskard",
       "githubStars": null,
       "githubForks": null,
@@ -1448,7 +1448,7 @@
         "sourceUrls": [
           "https://docs.giskard.ai",
           "https://github.com/Giskard-AI/giskard",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/giskard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/giskard.mdx",
           "https://www.giskard.ai"
         ],
         "sourceStatus": "available",
@@ -1499,7 +1499,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/github-copilot.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/github-copilot.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1516,7 +1516,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.github.com/en/copilot",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/github-copilot.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx",
           "https://github.com/features/copilot"
         ],
         "sourceStatus": "available",
@@ -1567,7 +1567,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/graphite-diamond.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/graphite-diamond.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1584,7 +1584,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://graphite.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/graphite-diamond.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx",
           "https://graphite.dev/diamond"
         ],
         "sourceStatus": "available",
@@ -1636,7 +1636,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/helicone.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/helicone.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
       "repoUrl": "https://github.com/Helicone/helicone",
       "githubStars": null,
       "githubForks": null,
@@ -1654,7 +1654,7 @@
         "sourceUrls": [
           "https://docs.helicone.ai",
           "https://github.com/Helicone/helicone",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/helicone.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
           "https://www.helicone.ai"
         ],
         "sourceStatus": "available",
@@ -1706,7 +1706,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/hyperbrowser.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/hyperbrowser.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/hyperbrowser.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1723,7 +1723,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.hyperbrowser.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/hyperbrowser.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/hyperbrowser.mdx",
           "https://www.hyperbrowser.ai"
         ],
         "sourceStatus": "available",
@@ -1775,7 +1775,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/lakera-guard.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lakera-guard.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -1792,7 +1792,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.lakera.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lakera-guard.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx",
           "https://www.lakera.ai/guard"
         ],
         "sourceStatus": "available",
@@ -1844,7 +1844,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/langfuse.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
       "repoUrl": "https://github.com/langfuse/langfuse",
       "githubStars": null,
       "githubForks": null,
@@ -1862,7 +1862,7 @@
         "sourceUrls": [
           "https://langfuse.com/docs",
           "https://github.com/langfuse/langfuse",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langfuse.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
           "https://langfuse.com"
         ],
         "sourceStatus": "available",
@@ -1914,7 +1914,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/langgraph.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
       "repoUrl": "https://github.com/langchain-ai/langgraph",
       "githubStars": null,
       "githubForks": null,
@@ -1932,7 +1932,7 @@
         "sourceUrls": [
           "https://langchain-ai.github.io/langgraph/",
           "https://github.com/langchain-ai/langgraph",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langgraph.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
           "https://www.langchain.com/langgraph"
         ],
         "sourceStatus": "available",
@@ -1984,7 +1984,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/langsmith.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2001,7 +2001,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.smith.langchain.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/langsmith.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx",
           "https://www.langchain.com/langsmith"
         ],
         "sourceStatus": "available",
@@ -2053,7 +2053,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/lovable.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lovable.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2070,7 +2070,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.lovable.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/lovable.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx",
           "https://lovable.dev"
         ],
         "sourceStatus": "available",
@@ -2122,7 +2122,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/make.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/make.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2139,7 +2139,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://www.make.com/en/help",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/make.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx",
           "https://www.make.com"
         ],
         "sourceStatus": "available",
@@ -2191,7 +2191,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/mastra.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/mastra.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
       "repoUrl": "https://github.com/mastra-ai/mastra",
       "githubStars": null,
       "githubForks": null,
@@ -2209,7 +2209,7 @@
         "sourceUrls": [
           "https://mastra.ai/docs",
           "https://github.com/mastra-ai/mastra",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/mastra.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
           "https://mastra.ai"
         ],
         "sourceStatus": "available",
@@ -2261,7 +2261,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/microsoft-autogen.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx",
       "repoUrl": "https://github.com/microsoft/autogen",
       "githubStars": null,
       "githubForks": null,
@@ -2279,7 +2279,7 @@
         "sourceUrls": [
           "https://microsoft.github.io/autogen/",
           "https://github.com/microsoft/autogen",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/microsoft-autogen.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -2330,7 +2330,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/n8n.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/n8n.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx",
       "repoUrl": "https://github.com/n8n-io/n8n",
       "githubStars": null,
       "githubForks": null,
@@ -2348,7 +2348,7 @@
         "sourceUrls": [
           "https://docs.n8n.io",
           "https://github.com/n8n-io/n8n",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/n8n.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx",
           "https://n8n.io"
         ],
         "sourceStatus": "available",
@@ -2400,7 +2400,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/opencode.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx",
       "repoUrl": "https://github.com/sst/opencode",
       "githubStars": null,
       "githubForks": null,
@@ -2418,7 +2418,7 @@
         "sourceUrls": [
           "https://opencode.ai",
           "https://github.com/sst/opencode",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/opencode.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
@@ -2469,7 +2469,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/pipedream.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/pipedream.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/pipedream.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2486,7 +2486,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://pipedream.com/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/pipedream.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/pipedream.mdx",
           "https://pipedream.com"
         ],
         "sourceStatus": "available",
@@ -2537,7 +2537,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/promptfoo.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/promptfoo.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
       "repoUrl": "https://github.com/promptfoo/promptfoo",
       "githubStars": null,
       "githubForks": null,
@@ -2555,7 +2555,7 @@
         "sourceUrls": [
           "https://www.promptfoo.dev/docs",
           "https://github.com/promptfoo/promptfoo",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/promptfoo.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
           "https://www.promptfoo.dev"
         ],
         "sourceStatus": "available",
@@ -2607,7 +2607,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/protect-ai.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/protect-ai.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2624,7 +2624,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.protectai.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/protect-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx",
           "https://protectai.com"
         ],
         "sourceStatus": "available",
@@ -2676,7 +2676,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/raycast.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/raycast.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2693,7 +2693,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://developers.raycast.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/raycast.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx",
           "https://www.raycast.com"
         ],
         "sourceStatus": "available",
@@ -2745,7 +2745,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/replit-agent.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2762,7 +2762,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.replit.com/replitai/agent",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/replit-agent.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/replit-agent.mdx",
           "https://replit.com/ai"
         ],
         "sourceStatus": "available",
@@ -2814,7 +2814,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/roo-code.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/roo-code.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
       "repoUrl": "https://github.com/RooCodeInc/Roo-Code",
       "githubStars": null,
       "githubForks": null,
@@ -2832,7 +2832,7 @@
         "sourceUrls": [
           "https://docs.roocode.com",
           "https://github.com/RooCodeInc/Roo-Code",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/roo-code.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
           "https://roocode.com"
         ],
         "sourceStatus": "available",
@@ -2884,7 +2884,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/smithery.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/smithery.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/smithery.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2901,7 +2901,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://smithery.ai/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/smithery.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/smithery.mdx",
           "https://smithery.ai"
         ],
         "sourceStatus": "available",
@@ -2952,7 +2952,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/sourcegraph-cody.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/sourcegraph-cody.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -2969,7 +2969,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://sourcegraph.com/docs/cody",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/sourcegraph-cody.mdx",
           "https://sourcegraph.com/cody"
         ],
         "sourceStatus": "available",
@@ -3021,7 +3021,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/stagehand.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
       "repoUrl": "https://github.com/browserbase/stagehand",
       "githubStars": null,
       "githubForks": null,
@@ -3039,7 +3039,7 @@
         "sourceUrls": [
           "https://docs.stagehand.dev",
           "https://github.com/browserbase/stagehand",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/stagehand.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
           "https://www.stagehand.dev"
         ],
         "sourceStatus": "available",
@@ -3091,7 +3091,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/trigger-dev.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/trigger-dev.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
       "repoUrl": "https://github.com/triggerdotdev/trigger.dev",
       "githubStars": null,
       "githubForks": null,
@@ -3109,7 +3109,7 @@
         "sourceUrls": [
           "https://trigger.dev/docs",
           "https://github.com/triggerdotdev/trigger.dev",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/trigger-dev.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
           "https://trigger.dev"
         ],
         "sourceStatus": "available",
@@ -3161,7 +3161,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/vercel-v0.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-v0.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3178,7 +3178,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://v0.dev/docs",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-v0.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx",
           "https://v0.dev"
         ],
         "sourceStatus": "available",
@@ -3229,7 +3229,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/vercel-ai-sdk.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-ai-sdk.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
       "repoUrl": "https://github.com/vercel/ai",
       "githubStars": null,
       "githubForks": null,
@@ -3247,7 +3247,7 @@
         "sourceUrls": [
           "https://ai-sdk.dev/docs",
           "https://github.com/vercel/ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/vercel-ai-sdk.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
           "https://ai-sdk.dev"
         ],
         "sourceStatus": "available",
@@ -3299,7 +3299,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/weave.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/weave.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3316,7 +3316,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://weave-docs.wandb.ai",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/weave.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx",
           "https://wandb.ai/site/weave"
         ],
         "sourceStatus": "available",
@@ -3367,7 +3367,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/windsurf.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3384,7 +3384,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.windsurf.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/windsurf.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx",
           "https://windsurf.com"
         ],
         "sourceStatus": "available",
@@ -3436,7 +3436,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/workato.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/workato.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/workato.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3453,7 +3453,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://docs.workato.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/workato.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/workato.mdx",
           "https://www.workato.com"
         ],
         "sourceStatus": "available",
@@ -3505,7 +3505,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/zapier-ai.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zapier-ai.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx",
       "repoUrl": null,
       "githubStars": null,
       "githubForks": null,
@@ -3522,7 +3522,7 @@
         "sourceUrlCount": 3,
         "sourceUrls": [
           "https://help.zapier.com",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zapier-ai.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx",
           "https://zapier.com/ai"
         ],
         "sourceStatus": "available",
@@ -3574,7 +3574,7 @@
       "downloadTrust": null,
       "downloadSha256": null,
       "filePath": "content/tools/zed.mdx",
-      "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx",
       "repoUrl": "https://github.com/zed-industries/zed",
       "githubStars": null,
       "githubForks": null,
@@ -3592,7 +3592,7 @@
         "sourceUrls": [
           "https://zed.dev/docs",
           "https://github.com/zed-industries/zed",
-          "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/zed.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx",
           "https://zed.dev"
         ],
         "sourceStatus": "available",

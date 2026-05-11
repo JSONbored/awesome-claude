@@ -278,7 +278,7 @@
       }
     ],
     "filePath": "content/hooks/dependency-security-scanner.mdx",
-    "githubUrl": "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx",
     "repoUrl": null,
     "githubStars": null,
     "githubForks": null,
@@ -293,7 +293,7 @@
     "sourceUrlCount": 2,
     "sourceUrls": [
       "https://docs.npmjs.com/cli/v8/commands/npm-audit",
-      "https://github.com/JSONbored/claudepro-directory/blob/main/content/hooks/dependency-security-scanner.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-26T18:18:28-06:00",

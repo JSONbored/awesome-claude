@@ -16,7 +16,7 @@ describe("PR preview artifact validation flow", () => {
     expect(
       selectPreviewUrl([
         {
-          url: "https://github.com/JSONbored/claudepro-directory/actions/runs/1",
+          url: "https://github.com/JSONbored/awesome-claude/actions/runs/1",
           source: "status",
         },
         {
