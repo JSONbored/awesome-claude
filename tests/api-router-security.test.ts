@@ -30,7 +30,9 @@ function submissionRequest(
 describe("central API router security", () => {
   beforeEach(() => {
     vi.resetModules();
+    vi.unstubAllGlobals();
     envMock.value = {};
+    delete process.env.BRANDFETCH_CLIENT_ID;
   });
 
   it("normalizes forbidden-origin errors and attaches security headers", async () => {
@@ -253,6 +255,72 @@ describe("central API router security", () => {
       "API_REGISTRY_RATE_LIMIT",
     );
     expect(routerSource).toContain("binding.limit({ key })");
+  });
+
+  it("rejects Brandfetch icons outside the trusted asset CDN", async () => {
+    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi.fn(async () =>
+      Response.json([
+        {
+          domain: "example.com",
+          icon: "https://attacker.example/icon.svg",
+        },
+      ]),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } =
+      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "brand_asset_invalid" },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("rejects oversized Brandfetch icon responses before buffering", async () => {
+    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
+    process.env.BRANDFETCH_CLIENT_ID = "test-client";
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        Response.json([
+          {
+            domain: "example.com",
+            icon: "https://cdn.brandfetch.io/example/icon.png",
+          },
+        ]),
+      )
+      .mockResolvedValueOnce(
+        new Response(null, {
+          headers: {
+            "content-length": String(1024 * 1024 + 1),
+            "content-type": "image/png",
+          },
+        }),
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const { GET } =
+      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+    const response = await GET(
+      new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
+      { params: { kind: "icon", domain: "example.com" } },
+    );
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "brand_asset_too_large" },
+    });
+    expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
   it("requires admin tokens for reviewed D1 jobs endpoints", async () => {

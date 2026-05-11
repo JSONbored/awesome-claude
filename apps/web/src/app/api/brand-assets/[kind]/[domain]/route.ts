@@ -10,6 +10,11 @@ import {
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const CACHE_CONTROL = "public, max-age=86400, stale-while-revalidate=604800";
+const MAX_BRAND_ASSET_BYTES = 1024 * 1024;
+const TRUSTED_BRAND_ASSET_HOSTS = new Set([
+  "asset.brandfetch.io",
+  "cdn.brandfetch.io",
+]);
 
 function brandfetchClientId() {
   try {
@@ -54,6 +59,57 @@ async function resolveBrandIconUrl(domain: string, clientId: string) {
   return typeof exact?.icon === "string" ? exact.icon : "";
 }
 
+function normalizeTrustedBrandAssetUrl(value: string) {
+  try {
+    const parsed = new URL(value);
+    if (parsed.protocol !== "https:") return "";
+    if (!TRUSTED_BRAND_ASSET_HOSTS.has(parsed.hostname.toLowerCase())) {
+      return "";
+    }
+    return parsed.toString();
+  } catch {
+    return "";
+  }
+}
+
+async function readArrayBufferWithinLimit(
+  response: Response,
+  maxBytes: number,
+) {
+  const declaredLength = Number(response.headers.get("content-length"));
+  if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
+    return null;
+  }
+
+  if (!response.body) {
+    const buffer = await response.arrayBuffer();
+    return buffer.byteLength <= maxBytes ? buffer : null;
+  }
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let receivedBytes = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    receivedBytes += value.byteLength;
+    if (receivedBytes > maxBytes) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(receivedBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return body.buffer;
+}
+
 export const GET = createApiHandler(
   "brandAsset.read",
   async ({ params, requestId }) => {
@@ -68,15 +124,24 @@ export const GET = createApiHandler(
       return apiError("brand_asset_not_configured", 503, { requestId });
     }
 
-    const upstreamUrl = await resolveBrandIconUrl(normalizedDomain, clientId);
-    if (!upstreamUrl) {
+    const upstreamCandidate = await resolveBrandIconUrl(
+      normalizedDomain,
+      clientId,
+    );
+    if (!upstreamCandidate) {
       return apiError("brand_asset_not_found", 404, { requestId });
+    }
+
+    const upstreamUrl = normalizeTrustedBrandAssetUrl(upstreamCandidate);
+    if (!upstreamUrl) {
+      return apiError("brand_asset_invalid", 502, { requestId });
     }
 
     const upstream = await fetch(upstreamUrl, {
       headers: {
         accept: "image/avif,image/webp,image/png,image/svg+xml,image/*;q=0.8",
       },
+      signal: AbortSignal.timeout(6000),
     });
 
     if (!upstream.ok) {
@@ -88,12 +153,20 @@ export const GET = createApiHandler(
       return apiError("brand_asset_invalid", 502, { requestId });
     }
 
+    const body = await readArrayBufferWithinLimit(
+      upstream,
+      MAX_BRAND_ASSET_BYTES,
+    );
+    if (!body) {
+      return apiError("brand_asset_too_large", 502, { requestId });
+    }
+
     const headers = applySecurityHeaders(new Headers());
     headers.set("cache-control", CACHE_CONTROL);
     headers.set("content-type", contentType);
     headers.set("x-brand-asset-source", "brandfetch");
 
-    return new Response(await upstream.arrayBuffer(), {
+    return new Response(body, {
       status: 200,
       headers,
     });

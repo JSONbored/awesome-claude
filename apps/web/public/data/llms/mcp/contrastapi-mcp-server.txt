@@ -24,7 +24,7 @@ Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/con
 - Last verified: 2026-04-30T04:13:44-06:00
 - Robots: indexable
 ## Summary
-49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion), CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt, redirect-chain, email/brand/SEO), MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
+49 remote MCP security tools for CVE/KEV/CWE/EPSS lookup, composite CVSS+EPSS+KEV+PoC risk scoring, CVSS v3.x vector parsing, domain/IP/IOC enrichment, dependency and web intelligence checks, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier available; Pro tier uses an API key.
 ## Tags
 - security
 - mcp-server

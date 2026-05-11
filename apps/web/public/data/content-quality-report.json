@@ -5632,21 +5632,22 @@
       "slug": "heyclaude-mcp",
       "title": "HeyClaude MCP Server",
       "scores": {
-        "total": 86,
+        "total": 93,
         "usefulness": 100,
-        "source": 40,
+        "source": 75,
         "copyability": 90,
         "freshness": 100,
         "seo": 100
       },
       "provenance": {
-        "sourceQuality": "docs",
+        "sourceQuality": "repo-and-docs",
         "hasExternalSource": false,
-        "hasRepository": false,
+        "hasRepository": true,
         "hasDocumentation": true,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
           "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+          "https://github.com/JSONbored/claudepro-directory",
           "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/heyclaude-mcp.mdx"
         ],
         "externalSourceUrls": []

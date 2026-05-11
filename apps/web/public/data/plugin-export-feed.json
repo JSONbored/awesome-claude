@@ -2352,7 +2352,7 @@
       "brandDomain": "heyclau.de",
       "brandIconUrl": "/favicon.svg",
       "brandAssetSource": "manual",
-      "sourceUrl": "https://github.com/JSONbored/claudepro-directory/tree/main/packages/mcp",
+      "sourceUrl": "https://github.com/JSONbored/claudepro-directory",
       "installCommand": "npx -y mcp-remote https://heyclau.de/api/mcp",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/mcp/heyclaude-mcp"
