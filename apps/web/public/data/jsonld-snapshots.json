@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -17810,6 +17810,83 @@
               "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
             }
           ]
+        }
+      ]
+    },
+    {
+      "key": "mcp:memesio-mcp-server",
+      "category": "mcp",
+      "slug": "memesio-mcp-server",
+      "url": "https://heyclau.de/mcp/memesio-mcp-server",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/mcp/memesio-mcp-server#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "MCP Servers",
+              "item": "https://heyclau.de/mcp"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Memesio MCP Server",
+              "item": "https://heyclau.de/mcp/memesio-mcp-server"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/mcp/memesio-mcp-server#webpage",
+          "name": "Memesio MCP Server",
+          "description": "Hosted MCP server for meme template search, captioned meme rendering, share links, and optional keyed AI meme generation.",
+          "url": "https://heyclau.de/mcp/memesio-mcp-server",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/mcp/memesio-mcp-server#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/mcp/memesio-mcp-server#entry",
+          "name": "Memesio MCP Server",
+          "headline": "Memesio MCP Server",
+          "description": "Hosted MCP server for meme template search, captioned meme rendering, share links, and optional keyed AI meme generation.",
+          "url": "https://heyclau.de/mcp/memesio-mcp-server",
+          "datePublished": "2026-05-08",
+          "dateModified": "2026-05-08",
+          "keywords": "mcp, memes, image-generation, templates, social-media, api, content, mcp servers, claude, heyclaude, memesio mcp server, mcp, memes, image-generation, templates, social-media, api, content",
+          "genre": "MCP Servers",
+          "author": {
+            "@type": "Person",
+            "name": "Memesio",
+            "url": "https://github.com/Memesio"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://memesio.com/developers/mcp"
+          ],
+          "isBasedOn": [
+            "https://memesio.com/developers/mcp",
+            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/memesio-mcp-server.mdx"
+          ],
+          "codeRepository": null,
+          "runtimePlatform": "Claude Code"
         }
       ]
     },

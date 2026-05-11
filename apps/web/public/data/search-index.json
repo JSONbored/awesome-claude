@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "search-index",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "category": "commands",
@@ -14620,6 +14620,78 @@
           "adapter",
           "manual-context"
         ]
+      }
+    },
+    {
+      "category": "mcp",
+      "slug": "memesio-mcp-server",
+      "title": "Memesio MCP Server",
+      "seoTitle": "Memesio MCP Server - MCP Servers for Claude",
+      "description": "Hosted MCP server for meme template search, captioned meme rendering, share links, and optional keyed AI meme generation.",
+      "seoDescription": "Hosted MCP server for meme template search, captioned meme rendering, share links, and optional keyed AI meme generation.",
+      "tags": [
+        "mcp",
+        "memes",
+        "image-generation",
+        "templates",
+        "social-media",
+        "api",
+        "content"
+      ],
+      "keywords": [
+        "mcp",
+        "memes",
+        "image-generation",
+        "templates",
+        "social-media",
+        "api",
+        "content",
+        "mcp servers",
+        "claude",
+        "heyclaude",
+        "memesio mcp server"
+      ],
+      "author": "Memesio",
+      "submittedBy": "vy35",
+      "submittedByUrl": "https://github.com/vy35",
+      "submittedAt": "2026-05-08T18:13:55.000Z",
+      "submissionIssueNumber": 325,
+      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/325",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-10T21:02:24.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Memesio",
+      "brandDomain": "memesio.com",
+      "brandIconUrl": "/api/brand-assets/icon/memesio.com",
+      "brandAssetSource": "brandfetch",
+      "dateAdded": "2026-05-08",
+      "installable": true,
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "https://memesio.com/developers/mcp",
+      "repoUrl": "",
+      "url": "https://heyclau.de/mcp/memesio-mcp-server",
+      "canonicalUrl": "https://heyclau.de/mcp/memesio-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/memesio-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/memesio-mcp-server",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://memesio.com/developers/mcp",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/memesio-mcp-server.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-08",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
       }
     },
     {

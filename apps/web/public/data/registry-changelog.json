@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "registry-changelog",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "key": "mcp:xquik-mcp-server",
@@ -15,6 +15,18 @@
       "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
       "artifactHash": "ee61697cb261229d7d218fb953fbea64df4f47478a71cc966618a95e411bd9c2"
+    },
+    {
+      "key": "mcp:memesio-mcp-server",
+      "type": "added",
+      "category": "mcp",
+      "slug": "memesio-mcp-server",
+      "title": "Memesio MCP Server",
+      "dateAdded": "2026-05-08",
+      "canonicalUrl": "https://heyclau.de/mcp/memesio-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/memesio-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/memesio-mcp-server",
+      "artifactHash": "f817863642212239a75748541d0669635de5a581f52d59ea1bf579e46e2fb657"
     },
     {
       "key": "skills:heyclaude-content-submission-factory",
@@ -4590,5 +4602,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "0739cd07839775bccd60ddb374364ee8b6f55351f9fb5b9a6b4a92cecb4e6dd1"
+  "signature": "b98265e273e94de60e16a140b42481d1884ad64f88e7d3324a3d011305ec6974"
 }
