@@ -33,6 +33,9 @@ jobs:
             const repositoryFullName = context.payload.repository.full_name;
             const headRepositoryFullName = pr.head?.repo?.full_name || "";
             const headRef = pr.head?.ref || "";
+            // Keep Markdown/login sanitizer helpers in sync with
+            // packages/registry/src/submission-risk.js. This pull_request_target
+            // workflow intentionally avoids checking out or executing PR code.
             const RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
             const RISK_LABEL_DEFINITIONS = {
               "risk-low": {
@@ -98,8 +101,8 @@ jobs:
               GITHUB_LOGIN_PATTERN.test(normalizeText(value));
             const neutralizeMarkdownControl = (value) =>
               normalizeText(value)
-                .replace(/@/g, "&#64;")
-                .replace(/(^|\s)#(?=\d)/g, "$1&#35;");
+                .replace(/#(?=\d)/g, "&#35;")
+                .replace(/@/g, "&#64;");
             const escapeMarkdownText = (value) =>
               neutralizeMarkdownControl(compactWhitespace(value)).replace(
                 /([\\`*_{}\[\]()#+\-.!|>])/g,

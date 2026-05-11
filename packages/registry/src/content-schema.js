@@ -157,7 +157,9 @@ function isGitHubLogin(value) {
   const normalized = String(value || "")
     .trim()
     .replace(/^@/, "");
-  return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/.test(normalized);
+  return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/.test(
+    normalized,
+  );
 }
 
 export function deriveSeoFields(data = {}, category = "") {

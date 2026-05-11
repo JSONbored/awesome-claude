@@ -82,9 +82,16 @@ function sanitizeConfigValue(key: string, value: unknown): SanitizedValue {
 
   const normalized = String(value ?? "");
   const redacted = redactEnvValue(key, normalized);
+  if (redacted !== normalized) {
+    return {
+      value: redacted,
+      redactedCount: 1,
+    };
+  }
+
   return {
-    value: redacted,
-    redactedCount: redacted === normalized ? 0 : 1,
+    value,
+    redactedCount: 0,
   };
 }
 
@@ -178,31 +185,14 @@ function validateServer(name: string, raw: unknown) {
   const env = isRecord(raw.env) ? raw.env : {};
   const envKeys = Object.keys(env).sort();
   const sanitizedRaw = sanitizeConfigValue("", raw);
-  const sanitizedEnv = Object.fromEntries(
-    Object.entries(env).map(([key, value]) => [
-      key,
-      redactEnvValue(key, value),
-    ]),
-  );
-  const envRedactions = Object.entries(env).filter(
-    ([key, value]) => String(value ?? "") !== String(sanitizedEnv[key] ?? ""),
-  ).length;
+  const sanitizedRawValue = isRecord(sanitizedRaw.value)
+    ? sanitizedRaw.value
+    : {};
   const sanitized = {
-    ...(isRecord(sanitizedRaw.value) ? sanitizedRaw.value : {}),
+    ...sanitizedRawValue,
     ...(command ? { command } : {}),
-    ...(args.length
-      ? {
-          args: args.map(
-            (arg) => sanitizeConfigValue("args", arg).value as string,
-          ),
-        }
-      : {}),
-    ...(envKeys.length ? { env: sanitizedEnv } : {}),
   };
-  const redactedSecretCount = Math.max(
-    sanitizedRaw.redactedCount,
-    envRedactions,
-  );
+  const redactedSecretCount = sanitizedRaw.redactedCount;
 
   if (!command && !url) {
     errors.push(

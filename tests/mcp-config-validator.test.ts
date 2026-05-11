@@ -63,6 +63,35 @@ describe("MCP config validator", () => {
     expect(result.fixedConfigText).toContain("${ENV}");
   });
 
+  it("preserves non-sensitive primitive values in fixed snippets", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          typed: {
+            command: "npx",
+            args: ["-y", "@example/typed-mcp"],
+            disabled: false,
+            retries: 2,
+            metadata: {
+              enabled: true,
+              score: 3,
+              empty: null,
+            },
+          },
+        },
+      }),
+    );
+
+    const fixed = JSON.parse(result.fixedConfigText);
+    expect(fixed.mcpServers.typed.disabled).toBe(false);
+    expect(fixed.mcpServers.typed.retries).toBe(2);
+    expect(fixed.mcpServers.typed.metadata).toEqual({
+      enabled: true,
+      score: 3,
+      empty: null,
+    });
+  });
+
   it("blocks unsafe server names and shell pipelines", () => {
     const result = validateMcpConfigText(`{
       "mcpServers": {

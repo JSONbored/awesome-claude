@@ -464,6 +464,10 @@ diff --git a/README.md b/README.md
       path.join(repoRoot, ".github/workflows/publish-mcp-npm.yml"),
       "utf8",
     );
+    const releaseValidatorSource = fs.readFileSync(
+      path.join(repoRoot, "scripts/validate-mcp-release.sh"),
+      "utf8",
+    );
     const packageSource = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/mcp-package.yml"),
       "utf8",
@@ -484,12 +488,23 @@ diff --git a/README.md b/README.md
     expect(releaseSource).toContain(
       "pnpm install --frozen-lockfile --ignore-scripts",
     );
+    expect(
+      releaseSource.match(/bash scripts\/validate-mcp-release\.sh/g),
+    ).toHaveLength(2);
     expect(releaseSource).not.toContain("NODE_AUTH_TOKEN");
     expect(releaseSource).not.toContain("NPM_TOKEN");
+    expect(releaseSource).not.toContain("x-access-token");
     expect(releaseSource).toContain(
+      'GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GH_TOKEN}"',
+    );
+    expect(releaseValidatorSource).toContain(
       "require('./packages/mcp/package.json').version",
     );
-    expect(releaseSource).toContain('tag="mcp-v$RELEASE_VERSION"');
+    expect(releaseValidatorSource).toContain(
+      'release_tag="mcp-v$release_version"',
+    );
+    expect(releaseValidatorSource).toContain('echo "version=$release_version"');
+    expect(releaseValidatorSource).toContain('echo "tag=$release_tag"');
     expect(releaseSource).toContain(
       "npm publish --access public --provenance --ignore-scripts",
     );

@@ -1637,6 +1637,13 @@ claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
     );
     expect(markdown).not.toContain("- [maintainer approval]");
     expect(markdown).not.toContain(" - @octocat");
+
+    const trustMarkdown = formatSubmissionRiskMarkdown({
+      ...report,
+      trustSignals: ["Reference bait: word#123 @octocat"],
+    });
+    expect(trustMarkdown).toContain("word&\\#35;123");
+    expect(trustMarkdown).toContain("&\\#64;octocat");
   });
 
   it("rejects non-GitHub submittedBy provenance in content metadata", () => {
@@ -1653,6 +1660,21 @@ claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
     });
 
     expect(result.semanticErrors).toContain(
+      "submittedBy must be a GitHub username",
+    );
+
+    const botResult = validateEntry("mcp", {
+      title: "Bot Submitter MCP",
+      slug: "bot-submitter-mcp",
+      description:
+        "MCP server metadata fixture for validating bot submittedBy provenance constraints.",
+      documentationUrl: "https://example.com/docs",
+      installCommand: "npx -y bot-submitter-mcp",
+      usageSnippet:
+        "claude mcp add bot-submitter-mcp -- npx -y bot-submitter-mcp",
+      submittedBy: "dependabot[bot]",
+    });
+    expect(botResult.semanticErrors).not.toContain(
       "submittedBy must be a GitHub username",
     );
   });

@@ -36,28 +36,7 @@ jobs:
 
       - name: Validate release version
         id: release
-        run: |
-          set -euo pipefail
-          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
-            echo "::error::MCP package releases must run from main."
-            exit 1
-          fi
-          RELEASE_VERSION="$(node -p "require('./packages/mcp/package.json').version")"
-          if ! printf '%s' "$RELEASE_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::packages/mcp/package.json version must be strict semver without a v prefix."
-            exit 1
-          fi
-          tag="mcp-v$RELEASE_VERSION"
-          if git rev-parse "$tag" >/dev/null 2>&1; then
-            echo "::error::Release tag already exists: $tag"
-            exit 1
-          fi
-          if npm view "@heyclaude/mcp@$RELEASE_VERSION" version >/dev/null 2>&1; then
-            echo "::error::npm package version already exists: @heyclaude/mcp@$RELEASE_VERSION"
-            exit 1
-          fi
-          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        run: bash scripts/validate-mcp-release.sh
 
       - name: Build registry artifacts
         run: pnpm --filter web run prebuild
@@ -103,28 +82,7 @@ jobs:
 
       - name: Validate release version
         id: release
-        run: |
-          set -euo pipefail
-          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
-            echo "::error::MCP package releases must run from main."
-            exit 1
-          fi
-          RELEASE_VERSION="$(node -p "require('./packages/mcp/package.json').version")"
-          if ! printf '%s' "$RELEASE_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::packages/mcp/package.json version must be strict semver without a v prefix."
-            exit 1
-          fi
-          tag="mcp-v$RELEASE_VERSION"
-          if git rev-parse "$tag" >/dev/null 2>&1; then
-            echo "::error::Release tag already exists: $tag"
-            exit 1
-          fi
-          if npm view "@heyclaude/mcp@$RELEASE_VERSION" version >/dev/null 2>&1; then
-            echo "::error::npm package version already exists: @heyclaude/mcp@$RELEASE_VERSION"
-            exit 1
-          fi
-          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+        run: bash scripts/validate-mcp-release.sh
 
       - name: Publish to npm
         working-directory: packages/mcp
@@ -142,7 +100,11 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$RELEASE_TAG" -m "@heyclaude/mcp v$RELEASE_VERSION"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RELEASE_TAG"
+          git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          GIT_CONFIG_COUNT=1 \
+            GIT_CONFIG_KEY_0="http.https://github.com/.extraheader" \
+            GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GH_TOKEN}" \
+            git push origin "$RELEASE_TAG"
 
       - name: Create GitHub release
         env:
