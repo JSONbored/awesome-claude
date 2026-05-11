@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "content-quality-report",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 102,
@@ -18,9 +18,9 @@
       "warningCount": 22
     },
     "mcp": {
-      "count": 46,
+      "count": 47,
       "averageScore": 90,
-      "warningCount": 3
+      "warningCount": 4
     },
     "tools": {
       "count": 52,
@@ -9600,6 +9600,37 @@
         ]
       },
       "warnings": []
+    },
+    {
+      "key": "mcp:legal-fournier-spain-legal-mcp",
+      "category": "mcp",
+      "slug": "legal-fournier-spain-legal-mcp",
+      "title": "Spain Legal by Legal Fournier",
+      "scores": {
+        "total": 86,
+        "usefulness": 100,
+        "source": 40,
+        "copyability": 90,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://legalfournier.com/en/mcp/spain-legal/",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://legalfournier.com/en/mcp/spain-legal/"
+        ]
+      },
+      "warnings": [
+        "Description is long for browse/search display."
+      ]
     },
     {
       "key": "mcp:square-mcp-server",

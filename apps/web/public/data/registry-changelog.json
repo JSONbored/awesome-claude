@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "registry-changelog",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "key": "mcp:xquik-mcp-server",
@@ -15,6 +15,18 @@
       "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
       "artifactHash": "ee61697cb261229d7d218fb953fbea64df4f47478a71cc966618a95e411bd9c2"
+    },
+    {
+      "key": "mcp:legal-fournier-spain-legal-mcp",
+      "type": "added",
+      "category": "mcp",
+      "slug": "legal-fournier-spain-legal-mcp",
+      "title": "Spain Legal by Legal Fournier",
+      "dateAdded": "2026-05-08",
+      "canonicalUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/legal-fournier-spain-legal-mcp.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/legal-fournier-spain-legal-mcp",
+      "artifactHash": "7b533fe913644fa2131ff5e6011c5acc582c850766ba7af8d4beed872f86d897"
     },
     {
       "key": "skills:heyclaude-content-submission-factory",
@@ -4590,5 +4602,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "0739cd07839775bccd60ddb374364ee8b6f55351f9fb5b9a6b4a92cecb4e6dd1"
+  "signature": "fb19d39b4a33a77b7db5896110c227dbe21678c3268538025c3fd69a966be22f"
 }

@@ -1,0 +1,41 @@
+# Spain Legal by Legal Fournier
+URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+Category: mcp
+Author: Legal Fournier
+Submitted by: vy35
+Submission issue: https://github.com/JSONbored/claudepro-directory/issues/324
+Date added: 2026-05-08
+Documentation: https://legalfournier.com/en/mcp/spain-legal/
+Directory source: https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+- Source URLs: https://legalfournier.com/en/mcp/spain-legal/, https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
+- Brand: Legal Fournier
+- Brand domain: legalfournier.com
+- Brand asset source: brandfetch
+- Author: Legal Fournier
+- Submitted by: vy35
+- Submission issue: https://github.com/JSONbored/claudepro-directory/issues/324
+- Reviewed by: JSONbored
+- Claim status: unclaimed
+- Last verified: 2026-05-08
+- Robots: indexable
+## Summary
+Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
+## Tags
+- mcp
+- legal
+- immigration
+- spain
+- visa
+- residency
+- nie
+- beckham-law
+## Content
+## Overview
+Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
+
+## Usage
+claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal
+claude mcp list
+claude mcp status legal-fournier-spain-legal

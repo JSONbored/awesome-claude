@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -25590,6 +25590,82 @@
             "https://github.com/JSONbored/claudepro-directory/blob/main/content/tools/sourcegraph-cody.mdx",
             "https://sourcegraph.com/cody"
           ]
+        }
+      ]
+    },
+    {
+      "key": "mcp:legal-fournier-spain-legal-mcp",
+      "category": "mcp",
+      "slug": "legal-fournier-spain-legal-mcp",
+      "url": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "MCP Servers",
+              "item": "https://heyclau.de/mcp"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Spain Legal by Legal Fournier",
+              "item": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp#webpage",
+          "name": "Spain Legal by Legal Fournier",
+          "description": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+          "url": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp#entry",
+          "name": "Spain Legal by Legal Fournier",
+          "headline": "Spain Legal by Legal Fournier",
+          "description": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+          "url": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+          "datePublished": "2026-05-08",
+          "dateModified": "2026-05-08",
+          "keywords": "mcp, legal, immigration, spain, visa, residency, nie, beckham-law, mcp servers, claude, heyclaude, spain legal by legal fournier, mcp, legal, immigration, spain, visa, residency, nie, beckham-law",
+          "genre": "MCP Servers",
+          "author": {
+            "@type": "Person",
+            "name": "Legal Fournier"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://legalfournier.com/en/mcp/spain-legal/"
+          ],
+          "isBasedOn": [
+            "https://legalfournier.com/en/mcp/spain-legal/",
+            "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+          ],
+          "codeRepository": null,
+          "runtimePlatform": "Claude Code"
         }
       ]
     },

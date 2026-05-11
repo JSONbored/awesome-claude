@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 382,
+  "count": 383,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -18088,6 +18088,73 @@
       }
     },
     {
+      "key": "mcp:legal-fournier-spain-legal-mcp",
+      "category": "mcp",
+      "slug": "legal-fournier-spain-legal-mcp",
+      "title": "Spain Legal by Legal Fournier",
+      "description": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+      "url": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp",
+      "submittedBy": "vy35",
+      "submittedByUrl": "https://github.com/vy35",
+      "submittedAt": "2026-05-08T18:13:53.000Z",
+      "submissionIssueNumber": 324,
+      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-10T21:02:21.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Legal Fournier",
+      "brandDomain": "legalfournier.com",
+      "brandIconUrl": "/api/brand-assets/icon/legalfournier.com",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "",
+      "documentationUrl": "https://legalfournier.com/en/mcp/spain-legal/",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "mcp",
+        "legal",
+        "immigration",
+        "spain",
+        "visa",
+        "residency",
+        "nie",
+        "beckham-law"
+      ],
+      "qualityScore": 86,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://legalfournier.com/en/mcp/spain-legal/",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://legalfournier.com/en/mcp/spain-legal/"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://legalfournier.com/en/mcp/spain-legal/",
+          "https://github.com/JSONbored/claudepro-directory/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-08",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "key": "mcp:square-mcp-server",
       "category": "mcp",
       "slug": "square-mcp-server",
@@ -21203,5 +21270,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "c673f9bf540cde6ac99236c128e86b58c54f180b6c9ad9b930cdf2711dbd7ca7"
+  "signature": "4eeaf7a2a0a94d0273ce43542315fa82562644ba40606d0cb5d9f10b5fb13ae0"
 }

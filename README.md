@@ -6,7 +6,7 @@
 </picture>
 
 **Discover and share the best Claude configurations**
-382+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
+383+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
 
 [Website](https://heyclau.de) • [Browse](https://heyclau.de/browse) • [Jobs](https://heyclau.de/jobs) • [Submit](https://heyclau.de/submit) • [API](https://heyclau.de/api-docs) • [MCP](packages/mcp) • [Discussions](https://github.com/JSONbored/claudepro-directory/discussions)
 
@@ -31,7 +31,7 @@ HeyClaude is a fast, GitHub-native directory for Claude assets.
 | Section                     | Entries | Scope                                                                     |
 | --------------------------- | ------: | ------------------------------------------------------------------------- |
 | [Agents](#ai-agents)        |      39 | Specialized Claude agents and expert roles.                               |
-| [MCP Servers](#mcp-servers) |      46 | Model Context Protocol servers and integrations.                          |
+| [MCP Servers](#mcp-servers) |      47 | Model Context Protocol servers and integrations.                          |
 | [Tools](#tools)             |      52 | Apps, developer tools, services, and products for Claude-native builders. |
 | [Skills](#skills)           |      68 | Installable skill packs and reusable capabilities.                        |
 | [Rules](#rules)             |      29 | Prompt guardrails, project rules, and operating constraints.              |
@@ -154,7 +154,7 @@ contributors should not include manual README edits in content PRs.
 - **[UI UX Design Expert Agent - Agents](https://heyclau.de/agents/ui-ux-design-expert-agent)** - Specialized in creating beautiful, intuitive user interfaces and exceptional user experiences
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (46)
+## 🔌 MCP Servers (47)
 
 - **[Airtable MCP Server for Claude](https://heyclau.de/mcp/airtable-mcp-server)** - Read and write records, manage bases and tables in Airtable directly from Claude
 - **[Asana MCP Server for Claude](https://heyclau.de/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
@@ -164,7 +164,7 @@ contributors should not include manual README edits in content PRs.
 - **[Clickup MCP Server for Claude](https://heyclau.de/mcp/clickup-mcp-server)** - Task management and project tracking with ClickUp integration
 - **[Cloudflare MCP Server - MCP Servers](https://heyclau.de/mcp/cloudflare-mcp-server)** - Build applications, analyze traffic, and manage security settings through Cloudflare
 - **[Cloudinary MCP Server - MCP Servers](https://heyclau.de/mcp/cloudinary-mcp-server)** - Upload, manage, transform, and analyze media assets in the cloud
-- **[ContrastAPI Security Tools](https://heyclau.de/mcp/contrastapi-mcp-server)** - 41 security intelligence tools over remote MCP: CVE, KEV, CWE, EPSS, domain audit, IP threat reports, IOC enrichment, dependency scanning, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Free tier: 100 credits/hour, no API key required. Streamable-HTTP transport.
+- **[ContrastAPI Security Tools](https://heyclau.de/mcp/contrastapi-mcp-server)** - 49 security intelligence tools over remote MCP: CVE/KEV/CWE/EPSS lookup with composite risk score (CVSS+EPSS+KEV+PoC fusion), CVSS v3.x vector parser, domain audit, IP threat reports, IOC enrichment, dependency scanning, web intelligence (robots.txt, redirect-chain, email/brand/SEO), MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier; Pro tier with API key. Streamable-HTTP transport.
 - **[Daloopa MCP Server for Claude](https://heyclau.de/mcp/daloopa-mcp-server)** - Access high-quality fundamental financial data from SEC filings and investor presentations
 - **[Claude Desktop MCP Setup](https://heyclau.de/mcp/desktop-mcp-setup)** - Master Claude Desktop MCP server setup in 20 minutes. Complete config JSON tutorial with filesystem integration, troubleshooting, and proven solutions.
 - **[Discord MCP Server for Claude](https://heyclau.de/mcp/discord-mcp-server)** - Discord bot integration for community management, moderation, and server automation
@@ -182,6 +182,7 @@ contributors should not include manual README edits in content PRs.
 - **[Jam MCP Server for Claude](https://heyclau.de/mcp/jam-mcp-server)** - Debug faster with AI agents that access video recordings, console logs, and network requests
 - **[Jira MCP Server for Claude](https://heyclau.de/mcp/jira-mcp-server)** - Manage Jira tickets and Confluence documentation
 - **[Kubernetes MCP Server - MCP Servers](https://heyclau.de/mcp/kubernetes-mcp-server)** - Kubernetes cluster management and container orchestration through MCP integration
+- **[Spain Legal by Legal Fournier](https://heyclau.de/mcp/legal-fournier-spain-legal-mcp)** - Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
 - **[Linear MCP Server for Claude](https://heyclau.de/mcp/linear-mcp-server)** - Integrate with Linear's issue tracking and project management system
 - **[Monday MCP Server for Claude](https://heyclau.de/mcp/monday-mcp-server)** - Manage monday.com boards, items, and CRM activities
 - **[Netlify MCP Server for Claude](https://heyclau.de/mcp/netlify-mcp-server)** - Create, deploy, and manage websites on Netlify platform

@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
   "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 246,
+  "count": 247,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -4455,6 +4455,28 @@
       "installCommand": "claude mcp add --transport http socket https://mcp.socket.dev/ && claude mcp list",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/mcp/socket-mcp-server"
+    },
+    {
+      "name": "legal-fournier-spain-legal-mcp",
+      "title": "Spain Legal by Legal Fournier",
+      "description": "Read-only Spain legal MCP for visa screening, Beckham eligibility, NIE/TIE, residency, nationality, EU family routes, and handoff preparation.",
+      "category": "mcp",
+      "submittedBy": "vy35",
+      "submittedByUrl": "https://github.com/vy35",
+      "submittedAt": "2026-05-08T18:13:53.000Z",
+      "submissionIssueNumber": 324,
+      "submissionIssueUrl": "https://github.com/JSONbored/claudepro-directory/issues/324",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-10T21:02:21.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Legal Fournier",
+      "brandDomain": "legalfournier.com",
+      "brandIconUrl": "/api/brand-assets/icon/legalfournier.com",
+      "brandAssetSource": "brandfetch",
+      "sourceUrl": "https://legalfournier.com/en/mcp/spain-legal/",
+      "installCommand": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal",
+      "platformCompatibility": [],
+      "heyclaudeUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp"
     },
     {
       "name": "square-mcp-server",
