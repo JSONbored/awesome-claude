@@ -1514,6 +1514,135 @@ Run the install command.`,
     expect(formatSubmissionRiskMarkdown(report)).toContain("GitHub sources");
   });
 
+  it("falls back to sourceRepositories when GitHub source repositories are empty", () => {
+    const body = buildSubmissionIssueDraft({
+      name: "Fallback Source MCP",
+      slug: "fallback-source-mcp",
+      category: "mcp",
+      docs_url: "https://example.com/docs",
+      description: "MCP server with fallback repository metadata.",
+      card_description: "Fallback repository metadata.",
+      install_command: "npx -y fallback-source-mcp",
+      usage_snippet:
+        "claude mcp add fallback-source-mcp -- npx -y fallback-source-mcp",
+    }).body;
+    const submissionIssue = issue(body);
+    const issueReport = analyzeIssueSubmissionRisk(
+      submissionIssue,
+      validateSubmission(submissionIssue),
+      {
+        githubSourceRepositories: [],
+        sourceRepositories: [
+          {
+            full_name: "fallback/issue-source",
+            stargazers_count: 9,
+          },
+        ],
+      },
+    );
+    const directReport = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      githubSourceRepositories: [],
+      sourceRepositories: [
+        {
+          full_name: "fallback/direct-source",
+          stargazers_count: 12,
+        },
+      ],
+      pullRequest: {
+        number: 333,
+        title: "Add Fallback Source MCP",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/333",
+        user: { login: "fallback-user" },
+      },
+      files: [
+        {
+          filename: "content/mcp/fallback-source-mcp.mdx",
+          status: "added",
+          content: `---
+title: Fallback Source MCP
+slug: fallback-source-mcp
+category: mcp
+description: MCP server with fallback source metadata.
+submittedBy: fallback-user
+submittedByUrl: https://github.com/fallback-user
+documentationUrl: https://example.com/docs
+installCommand: "npx -y fallback-source-mcp"
+usageSnippet: "claude mcp add fallback-source-mcp -- npx -y fallback-source-mcp"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(issueReport.contributionAnalysis.githubSourceRepos).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fullName: "fallback/issue-source",
+          stargazersCount: 9,
+        }),
+      ]),
+    );
+    expect(directReport.contributionAnalysis.githubSourceRepos).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fullName: "fallback/direct-source",
+          stargazersCount: 12,
+        }),
+      ]),
+    );
+  });
+
+  it("preserves richer PR actor metadata for direct contributor analysis", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 334,
+        title: "Add Rich Actor MCP",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/334",
+        user: { login: "rich-actor" },
+      },
+      pullRequestActor: {
+        login: "rich-actor",
+        html_url: "https://github.com/rich-actor",
+        created_at: "2021-01-01T00:00:00Z",
+        public_repos: 7,
+      },
+      files: [
+        {
+          filename: "content/mcp/rich-actor-mcp.mdx",
+          status: "added",
+          content: `---
+title: Rich Actor MCP
+slug: rich-actor-mcp
+category: mcp
+description: MCP server submitted by a direct PR actor.
+submittedBy: rich-actor
+submittedByUrl: https://github.com/rich-actor
+documentationUrl: https://example.com/docs
+installCommand: "npx -y rich-actor-mcp"
+usageSnippet: "claude mcp add rich-actor-mcp -- npx -y rich-actor-mcp"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(report.provenanceStatus).toBe("passed");
+    expect(report.effectiveContributor?.login).toBe("rich-actor");
+    expect(report.contributorSource).toBe("pull_request_actor");
+    expect(report.contributorAnalysis).toMatchObject({
+      login: "rich-actor",
+      source: "pull_request_actor",
+      publicRepos: 7,
+    });
+    expect(report.contributorAnalysis.reviewSignals).toContain(
+      "established_account",
+    );
+  });
+
   it("attributes automation import PR risk to the original issue submitter", () => {
     const report = analyzeDirectContentRisk({
       sourceType: "automation_import",

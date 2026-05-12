@@ -973,6 +973,16 @@ function selectContributor(contributor, fallbackContributor = {}) {
   return contributor || fallbackContributor;
 }
 
+function selectSourceRepositories(input = {}) {
+  const githubSourceRepositories = Array.isArray(input.githubSourceRepositories)
+    ? input.githubSourceRepositories
+    : [];
+  if (githubSourceRepositories.length) return githubSourceRepositories;
+  return Array.isArray(input.sourceRepositories)
+    ? input.sourceRepositories
+    : [];
+}
+
 export function analyzeIssueSubmissionRisk(
   issue = {},
   validationReport = null,
@@ -992,9 +1002,7 @@ export function analyzeIssueSubmissionRisk(
     category: validationReport?.category || fields.category || "",
     slug: fields.slug || "",
   });
-  for (const repo of options.githubSourceRepositories ||
-    options.sourceRepositories ||
-    []) {
+  for (const repo of selectSourceRepositories(options)) {
     addGithubSourceRepo(report, repo);
   }
   const fallbackContributor =
@@ -1383,38 +1391,40 @@ function validatePrProvenance(report, entries, input, sourceType) {
 
 function contributorAnalysisTarget(report, input = {}) {
   const pullRequestUser = input.pullRequest?.user || {};
-  if (report.effectiveContributor) {
-    return {
-      contributor: report.effectiveContributor,
-      source: report.contributorSource,
-      fallback: pullRequestUser,
-    };
-  }
-  if (report.contributorSource === "submission_issue_author") {
+  if (
+    report.contributorSource === "submission_issue_author" &&
+    !report.effectiveContributor
+  ) {
     return {
       contributor: {},
       source: report.contributorSource,
       fallback: {},
     };
   }
-  if (contributorSummary(input.contributor)) {
+  const candidates = [
+    [input.contributor, report.contributorSource || "provided_contributor"],
+    [input.pullRequestActor, "pull_request_actor"],
+    [pullRequestUser, "pr_user"],
+  ];
+  for (const [contributor, source] of candidates) {
+    const summary = contributorSummary(contributor);
+    if (!summary) continue;
+    if (
+      report.effectiveContributor &&
+      !sameGitHubLogin(summary.login, report.effectiveContributor.login)
+    ) {
+      continue;
+    }
     return {
-      contributor: input.contributor,
-      source: report.contributorSource || "provided_contributor",
+      contributor,
+      source,
       fallback: pullRequestUser,
     };
   }
-  if (contributorSummary(input.pullRequestActor)) {
+  if (report.effectiveContributor) {
     return {
-      contributor: input.pullRequestActor,
-      source: "pull_request_actor",
-      fallback: pullRequestUser,
-    };
-  }
-  if (contributorSummary(pullRequestUser)) {
-    return {
-      contributor: pullRequestUser,
-      source: "pr_user",
+      contributor: report.effectiveContributor,
+      source: report.contributorSource,
       fallback: pullRequestUser,
     };
   }
@@ -1447,9 +1457,7 @@ export function analyzeDirectContentRisk(input = {}) {
     contentFiles: contentFiles.map((file) => file.filename),
   });
 
-  for (const repo of input.githubSourceRepositories ||
-    input.sourceRepositories ||
-    []) {
+  for (const repo of selectSourceRepositories(input)) {
     addGithubSourceRepo(report, repo);
   }
 
@@ -1524,7 +1532,14 @@ export function analyzeDirectContentRisk(input = {}) {
   validatePrProvenance(report, entries, input, sourceType);
   const analysisTarget = contributorAnalysisTarget(report, input);
   const analysisContributor = contributorSummary(analysisTarget.contributor);
-  if (!report.effectiveContributor && analysisContributor) {
+  if (
+    analysisContributor &&
+    (!report.effectiveContributor ||
+      sameGitHubLogin(
+        analysisContributor.login,
+        report.effectiveContributor.login,
+      ))
+  ) {
     report.effectiveContributor = analysisContributor;
     report.contributorSource = analysisTarget.source;
   }

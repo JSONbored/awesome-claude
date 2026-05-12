@@ -1282,31 +1282,42 @@ jobs:
               pullRequestActor,
               prUser = {}
             ) => {
-              if (report.effectiveContributor) {
-                return {
-                  contributor: report.effectiveContributor,
-                  source: report.contributorSource,
-                  fallback: prUser || {}
-                };
-              }
-              if (report.contributorSource === "submission_issue_author") {
+              if (
+                report.contributorSource === "submission_issue_author" &&
+                !report.effectiveContributor
+              ) {
                 return {
                   contributor: {},
                   source: report.contributorSource,
                   fallback: {}
                 };
               }
-              if (contributorSummary(pullRequestActor)) {
+              const candidates = [
+                [pullRequestActor, "pull_request_actor"],
+                [prUser, "pr_user"]
+              ];
+              for (const [contributor, source] of candidates) {
+                const summary = contributorSummary(contributor);
+                if (!summary) continue;
+                if (
+                  report.effectiveContributor &&
+                  !sameGitHubLogin(
+                    summary.login,
+                    report.effectiveContributor.login
+                  )
+                ) {
+                  continue;
+                }
                 return {
-                  contributor: pullRequestActor,
-                  source: "pull_request_actor",
+                  contributor,
+                  source,
                   fallback: prUser || {}
                 };
               }
-              if (contributorSummary(prUser)) {
+              if (report.effectiveContributor) {
                 return {
-                  contributor: prUser,
-                  source: "pr_user",
+                  contributor: report.effectiveContributor,
+                  source: report.contributorSource,
                   fallback: prUser || {}
                 };
               }
@@ -1705,7 +1716,14 @@ jobs:
             const analysisContributor = contributorSummary(
               analysisTarget.contributor
             );
-            if (!report.effectiveContributor && analysisContributor) {
+            if (
+              analysisContributor &&
+              (!report.effectiveContributor ||
+                sameGitHubLogin(
+                  analysisContributor.login,
+                  report.effectiveContributor.login
+                ))
+            ) {
               report.effectiveContributor = analysisContributor;
               report.contributorSource = analysisTarget.source;
             }
