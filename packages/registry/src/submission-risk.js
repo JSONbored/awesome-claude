@@ -965,6 +965,14 @@ function baseReport(subject) {
   };
 }
 
+function selectContributor(contributor, fallbackContributor = {}) {
+  if (normalizeGitHubLogin(contributor?.login)) return contributor;
+  if (normalizeGitHubLogin(fallbackContributor.login)) {
+    return fallbackContributor;
+  }
+  return contributor || fallbackContributor;
+}
+
 export function analyzeIssueSubmissionRisk(
   issue = {},
   validationReport = null,
@@ -991,11 +999,10 @@ export function analyzeIssueSubmissionRisk(
   }
   const fallbackContributor =
     issue.user || (typeof issue.author === "object" ? issue.author : {}) || {};
-  const contributor = normalizeGitHubLogin(options.contributor?.login)
-    ? options.contributor
-    : normalizeGitHubLogin(fallbackContributor.login)
-      ? fallbackContributor
-      : options.contributor || fallbackContributor;
+  const contributor = selectContributor(
+    options.contributor,
+    fallbackContributor,
+  );
   const contributorProfile = contributorSummary(contributor);
   if (contributorProfile) {
     report.provenanceStatus = "passed";
