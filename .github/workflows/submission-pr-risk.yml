@@ -1105,8 +1105,14 @@ jobs:
                   contributorSource = "content_frontmatter";
                 }
               }
-              if (!effectiveContributor) {
+              if (
+                !effectiveContributor &&
+                contributorSource !== "submission_issue_author"
+              ) {
                 effectiveContributor = contributorSummary(pullRequestActor || {});
+                if (effectiveContributor) {
+                  contributorSource = "pull_request_actor";
+                }
               }
               report.effectiveContributor = effectiveContributor;
               report.contributorSource = contributorSource;
@@ -1270,6 +1276,45 @@ jobs:
                   report.trustSignals.push(`Submission issue: #${issueNumberValue}`);
                 }
               }
+            };
+            const contributorAnalysisTarget = (
+              report,
+              pullRequestActor,
+              prUser = {}
+            ) => {
+              if (report.effectiveContributor) {
+                return {
+                  contributor: report.effectiveContributor,
+                  source: report.contributorSource,
+                  fallback: prUser || {}
+                };
+              }
+              if (report.contributorSource === "submission_issue_author") {
+                return {
+                  contributor: {},
+                  source: report.contributorSource,
+                  fallback: {}
+                };
+              }
+              if (contributorSummary(pullRequestActor)) {
+                return {
+                  contributor: pullRequestActor,
+                  source: "pull_request_actor",
+                  fallback: prUser || {}
+                };
+              }
+              if (contributorSummary(prUser)) {
+                return {
+                  contributor: prUser,
+                  source: "pr_user",
+                  fallback: prUser || {}
+                };
+              }
+              return {
+                contributor: {},
+                source: report.contributorSource,
+                fallback: prUser || {}
+              };
             };
             const formatRiskMarkdown = (report) => {
               const lines = [
@@ -1652,11 +1697,23 @@ jobs:
               frontmatterContributors,
               submissionIssueContributors
             );
+            const analysisTarget = contributorAnalysisTarget(
+              report,
+              pullRequestActor,
+              pr.user || {}
+            );
+            const analysisContributor = contributorSummary(
+              analysisTarget.contributor
+            );
+            if (!report.effectiveContributor && analysisContributor) {
+              report.effectiveContributor = analysisContributor;
+              report.contributorSource = analysisTarget.source;
+            }
             applyContributorAnalysis(
               report,
-              report.effectiveContributor || pullRequestActor || pr.user || {},
-              report.contributorSource,
-              pr.user || {}
+              analysisTarget.contributor,
+              analysisTarget.source,
+              analysisTarget.fallback
             );
             finalizeReport(report);
             const markdownReport = formatRiskMarkdown(report);

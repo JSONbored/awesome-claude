@@ -54,8 +54,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain("### Contribution");
     expect(source).toContain("contributorAnalysis");
     expect(source).toContain("contributionAnalysis");
+    expect(source).toContain("contributorAnalysisTarget");
+    expect(source).toContain('contributorSource !== "submission_issue_author"');
+    expect(source).toContain("analysisTarget.fallback");
     expect(source).toContain("analysis.accountAgeDays < 30");
     expect(source).not.toContain("} else if (ageDays < 30)");
+    expect(source).not.toContain(
+      "report.effectiveContributor || pullRequestActor || pr.user",
+    );
     expect(source).toContain("github.rest.repos.get");
     expect(source).toContain("sourceType");
     expect(source).toContain("automation_import");

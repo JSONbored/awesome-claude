@@ -1197,8 +1197,22 @@ function validatePrProvenance(report, entries, input, sourceType) {
     }
   }
 
-  if (!effectiveContributor) {
-    effectiveContributor = contributorSummary(input.contributor || {});
+  if (
+    !effectiveContributor &&
+    contributorSource !== "submission_issue_author"
+  ) {
+    const fallbackCandidates = [
+      [input.contributor, contributorSource || "provided_contributor"],
+      [input.pullRequestActor, "pull_request_actor"],
+      [input.pullRequest?.user, "pr_user"],
+    ];
+    for (const [candidate, source] of fallbackCandidates) {
+      effectiveContributor = contributorSummary(candidate || {});
+      if (effectiveContributor) {
+        contributorSource = source;
+        break;
+      }
+    }
   }
 
   report.effectiveContributor = effectiveContributor;
@@ -1360,6 +1374,50 @@ function validatePrProvenance(report, entries, input, sourceType) {
   }
 }
 
+function contributorAnalysisTarget(report, input = {}) {
+  const pullRequestUser = input.pullRequest?.user || {};
+  if (report.effectiveContributor) {
+    return {
+      contributor: report.effectiveContributor,
+      source: report.contributorSource,
+      fallback: pullRequestUser,
+    };
+  }
+  if (report.contributorSource === "submission_issue_author") {
+    return {
+      contributor: {},
+      source: report.contributorSource,
+      fallback: {},
+    };
+  }
+  if (contributorSummary(input.contributor)) {
+    return {
+      contributor: input.contributor,
+      source: report.contributorSource || "provided_contributor",
+      fallback: pullRequestUser,
+    };
+  }
+  if (contributorSummary(input.pullRequestActor)) {
+    return {
+      contributor: input.pullRequestActor,
+      source: "pull_request_actor",
+      fallback: pullRequestUser,
+    };
+  }
+  if (contributorSummary(pullRequestUser)) {
+    return {
+      contributor: pullRequestUser,
+      source: "pr_user",
+      fallback: pullRequestUser,
+    };
+  }
+  return {
+    contributor: {},
+    source: report.contributorSource,
+    fallback: pullRequestUser,
+  };
+}
+
 export function analyzeDirectContentRisk(input = {}) {
   const files = Array.isArray(input.files) ? input.files : [];
   const contentFiles = files.filter(
@@ -1457,14 +1515,17 @@ export function analyzeDirectContentRisk(input = {}) {
   }
 
   validatePrProvenance(report, entries, input, sourceType);
+  const analysisTarget = contributorAnalysisTarget(report, input);
+  const analysisContributor = contributorSummary(analysisTarget.contributor);
+  if (!report.effectiveContributor && analysisContributor) {
+    report.effectiveContributor = analysisContributor;
+    report.contributorSource = analysisTarget.source;
+  }
   applyContributorAnalysis(
     report,
-    report.effectiveContributor ||
-      input.contributor ||
-      input.pullRequest?.user ||
-      {},
-    report.contributorSource,
-    input.pullRequest?.user || {},
+    analysisTarget.contributor,
+    analysisTarget.source,
+    analysisTarget.fallback,
   );
   return finalizeReport(report, null);
 }

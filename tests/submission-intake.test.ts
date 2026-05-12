@@ -1601,6 +1601,78 @@ Run the install command.`,
     );
   });
 
+  it("does not attribute unresolved automation imports to the PR actor", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "automation_import",
+      pullRequest: {
+        number: 343,
+        title: "feat(content): add mcp unresolved-import",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/343",
+        user: { login: "github-actions[bot]" },
+      },
+      pullRequestActor: {
+        login: "github-actions[bot]",
+        created_at: "2018-07-30T09:30:17Z",
+      },
+      submissionIssueContributors: [
+        {
+          issueNumber: 343,
+          issue: null,
+          contributor: null,
+          error: "not found",
+        },
+      ],
+      files: [
+        {
+          filename: "content/mcp/unresolved-import.mdx",
+          status: "added",
+          content: `---
+title: Unresolved Import
+slug: unresolved-import
+category: mcp
+description: Imported MCP server with unresolved issue contributor metadata.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+submissionIssueNumber: 343
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/343
+documentationUrl: https://example.com/docs
+installCommand: "npx -y unresolved-import"
+usageSnippet: "claude mcp add unresolved-import -- npx -y unresolved-import"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+    const markdown = formatSubmissionRiskMarkdown(report);
+
+    expect(report.provenanceStatus).toBe("failed");
+    expect(report.effectiveContributor).toBeNull();
+    expect(report.contributorSource).toBe("submission_issue_author");
+    expect(report.contributorAnalysis).toMatchObject({
+      login: "",
+      source: "submission_issue_author",
+      resolutionStatus: "unresolved",
+    });
+    expect(report.contributorAnalysis.reviewSignals).toContain(
+      "identity_unresolved",
+    );
+    expect(report.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "missing_issue_contributor_343",
+          blocking: true,
+        }),
+      ]),
+    );
+    expect(report.trustSignals).not.toContain(
+      "Contributor analyzed: @github-actions[bot]",
+    );
+    expect(markdown).not.toContain(
+      "Contributor analyzed: @github-actions[bot]",
+    );
+  });
+
   it("uses content frontmatter provenance for same-repo maintainer PRs", () => {
     const report = analyzeDirectContentRisk({
       sourceType: "same_repo_direct",
