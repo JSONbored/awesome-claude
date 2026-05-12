@@ -983,6 +983,20 @@ macOS MCP automation for native apps.`);
         ?.riskFlags,
     ).toContain("requires_credentials");
     expect(
+      queue.entries.find((entry) => entry.slug === "memesio-mcp-server")
+        ?.riskSummary,
+    ).toContain("credentials_or_auth");
+    expect(
+      queue.entries.find((entry) => entry.slug === "christian-merjudio")
+        ?.sourceState,
+    ).toBe("missing");
+    expect(
+      queue.entries.find((entry) => entry.slug === "christian-merjudio")
+        ?.maintainerActions,
+    ).toContain(
+      "Ask for a canonical source, docs, repository, or package URL.",
+    );
+    expect(
       queue.entries.find((entry) => entry.slug === "friday-studio")?.riskFlags,
     ).not.toContain("possible_category_mismatch");
     expect(
@@ -1149,6 +1163,144 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(formatSubmissionRiskMarkdown(report)).toContain(
       "Submission security/safety review",
     );
+    expect(report.contributorAnalysis).toMatchObject({
+      login: "kriptoburak",
+      source: "pull_request_author",
+      resolutionStatus: "resolved",
+      publicRepos: 313,
+    });
+    expect(report.contributionAnalysis.capabilityRiskBuckets).toEqual(
+      expect.arrayContaining(["credentials_or_auth", "external_write"]),
+    );
+    expect(report.contributionAnalysis.sourceState).toBe("provided");
+  });
+
+  it("keeps malformed contributor payloads from becoming GitHub mentions", () => {
+    const body = buildSubmissionIssueDraft({
+      name: "Malformed Contributor MCP",
+      slug: "malformed-contributor-mcp",
+      category: "mcp",
+      docs_url: "https://example.com/docs",
+      description:
+        "MCP server submitted through issue validation with contributor metadata.",
+      card_description: "Contributor metadata regression coverage.",
+      install_command: "npx -y malformed-contributor-mcp",
+      usage_snippet:
+        "claude mcp add malformed-contributor-mcp -- npx -y malformed-contributor-mcp",
+    }).body;
+    const validIssue = {
+      ...issue(body),
+      user: { login: "zjg678", html_url: "https://github.com/zjg678" },
+      author: { login: "zjg678" },
+    };
+    const report = analyzeIssueSubmissionRisk(
+      validIssue,
+      validateSubmission(validIssue),
+      {
+        contributor: {
+          login: "&Analyze user profile system implementation #64;zjg678",
+          name: "&Analyze user profile system implementation #64;zjg678",
+        },
+      },
+    );
+    const markdown = formatSubmissionRiskMarkdown(report);
+
+    expect(report.effectiveContributor?.login).toBe("zjg678");
+    expect(report.contributorAnalysis.login).toBe("zjg678");
+    expect(markdown).toContain("Contributor analyzed: @zjg678");
+    expect(markdown).not.toContain("@&Analyze");
+
+    const malformedIssue = {
+      ...issue(body),
+      user: {
+        login: "&Analyze user profile system implementation #64;zjg678",
+      },
+      author: {
+        login: "&Analyze user profile system implementation #64;zjg678",
+      },
+    };
+    const malformed = analyzeIssueSubmissionRisk(
+      malformedIssue,
+      validateSubmission(malformedIssue),
+      {
+        contributor: {
+          login: "&Analyze user profile system implementation #64;zjg678",
+        },
+      },
+    );
+    const malformedMarkdown = formatSubmissionRiskMarkdown(malformed);
+
+    expect(malformed.effectiveContributor).toBeNull();
+    expect(malformed.contributorAnalysis.resolutionStatus).toBe("unresolved");
+    expect(malformedMarkdown).toContain(
+      "`&Analyze user profile system implementation #64;zjg678`",
+    );
+    expect(malformedMarkdown).not.toContain("@zjg678");
+  });
+
+  it("captures structured contributor states for maintainer review", () => {
+    const body = buildSubmissionIssueDraft({
+      name: "Contributor State MCP",
+      slug: "contributor-state-mcp",
+      category: "mcp",
+      docs_url: "https://example.com/docs",
+      description: "MCP server for contributor analysis coverage.",
+      card_description: "Contributor analysis coverage.",
+      install_command: "npx -y contributor-state-mcp",
+      usage_snippet:
+        "claude mcp add contributor-state-mcp -- npx -y contributor-state-mcp",
+    }).body;
+    const baseIssue = issue(body);
+    const newReport = analyzeIssueSubmissionRisk(
+      baseIssue,
+      validateSubmission(baseIssue),
+      {
+        contributor: {
+          login: "new-user",
+          created_at: new Date().toISOString(),
+          public_repos: 0,
+        },
+      },
+    );
+    const youngReport = analyzeIssueSubmissionRisk(
+      baseIssue,
+      validateSubmission(baseIssue),
+      {
+        contributor: {
+          login: "young-user",
+          created_at: new Date(Date.now() - 14 * 86_400_000).toISOString(),
+          public_repos: 1,
+        },
+      },
+    );
+    const establishedBotReport = analyzeIssueSubmissionRisk(
+      baseIssue,
+      validateSubmission(baseIssue),
+      {
+        contributor: {
+          login: "dependabot[bot]",
+          type: "Bot",
+          created_at: "2018-01-01T00:00:00Z",
+          public_repos: 12,
+        },
+      },
+    );
+
+    expect(newReport.reviewFlags.map((flag) => flag.id)).toContain(
+      "new_contributor_account",
+    );
+    expect(newReport.contributorAnalysis.reviewSignals).toEqual(
+      expect.arrayContaining(["new_account", "no_public_repositories"]),
+    );
+    expect(youngReport.reviewFlags.map((flag) => flag.id)).toContain(
+      "young_contributor_account",
+    );
+    expect(youngReport.contributorAnalysis.reviewSignals).toContain(
+      "young_account",
+    );
+    expect(establishedBotReport.contributorAnalysis.reviewSignals).toEqual(
+      expect.arrayContaining(["bot_account", "established_account"]),
+    );
   });
 
   it("warns when direct PR product listings are outside content/tools", () => {
@@ -1275,9 +1427,91 @@ Run the install command.`,
         expect.objectContaining({ id: "generated_readme_change" }),
       ]),
     );
+    expect(report.contributionAnalysis.capabilityRiskBuckets).toContain(
+      "classification_review",
+    );
+    expect(report.contributionAnalysis.maintainerActionItems).toContain(
+      "Confirm this belongs in the submitted category.",
+    );
     expect(formatSubmissionRiskMarkdown(report)).toContain(
       "README\\.md changes are not accepted in direct content PRs",
     );
+  });
+
+  it("captures multiple content files and GitHub source metadata when provided", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 332,
+        title: "Add Example MCP listings",
+        html_url: "https://github.com/JSONbored/awesome-claude/pull/332",
+        user: { login: "source-owner" },
+      },
+      contributor: {
+        login: "source-owner",
+        html_url: "https://github.com/source-owner",
+        created_at: "2020-01-01T00:00:00Z",
+        public_repos: 3,
+      },
+      githubSourceRepositories: [
+        {
+          full_name: "source-owner/example-one",
+          html_url: "https://github.com/source-owner/example-one",
+          default_branch: "main",
+          visibility: "public",
+          stargazers_count: 42,
+          forks_count: 5,
+        },
+      ],
+      files: [
+        {
+          filename: "content/mcp/example-one.mdx",
+          status: "added",
+          content: `---
+title: Example One
+slug: example-one
+category: mcp
+description: Example MCP server with repository metadata.
+submittedBy: source-owner
+submittedByUrl: https://github.com/source-owner
+repoUrl: https://github.com/source-owner/example-one
+documentationUrl: https://example.com/one/docs
+installCommand: "npx -y example-one"
+usageSnippet: "claude mcp add example-one -- npx -y example-one"
+---
+## Usage
+Run the install command.`,
+        },
+        {
+          filename: "content/mcp/example-two.mdx",
+          status: "added",
+          content: `---
+title: Example Two
+slug: example-two
+category: mcp
+description: Second Example MCP server in the same PR.
+submittedBy: source-owner
+submittedByUrl: https://github.com/source-owner
+documentationUrl: https://example.com/two/docs
+installCommand: "npx -y example-two"
+usageSnippet: "claude mcp add example-two -- npx -y example-two"
+---
+## Usage
+Run the install command.`,
+        },
+      ],
+    });
+
+    expect(report.contributionAnalysis.contentFiles).toHaveLength(2);
+    expect(report.contributionAnalysis.githubSourceRepos).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          fullName: "source-owner/example-one",
+          stargazersCount: 42,
+        }),
+      ]),
+    );
+    expect(formatSubmissionRiskMarkdown(report)).toContain("GitHub sources");
   });
 
   it("attributes automation import PR risk to the original issue submitter", () => {
@@ -1495,6 +1729,10 @@ Run the install command.`,
         }),
       ]),
     );
+    expect(report.contributionAnalysis.provenanceState).toBe("failed");
+    expect(report.contributionAnalysis.capabilityRiskBuckets).toContain(
+      "provenance_review",
+    );
   });
 
   it("fails external direct content PRs without submitter provenance", () => {
@@ -1574,6 +1812,9 @@ Run the install command.`,
           blocking: true,
         }),
       ]),
+    );
+    expect(report.contributionAnalysis.maintainerActionItems).toContain(
+      "Resolve provenance blockers before merge.",
     );
   });
 

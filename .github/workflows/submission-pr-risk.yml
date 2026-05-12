@@ -220,6 +220,13 @@ jobs:
               const login = normalizeGitHubLogin(value);
               return login ? `@${login}` : markdownCodeSpan(value);
             };
+            const uniquePush = (list, value) => {
+              const normalized = normalizeText(value);
+              if (normalized && !list.includes(normalized)) list.push(normalized);
+            };
+            const uniquePushMany = (list, values) => {
+              for (const value of values || []) uniquePush(list, value);
+            };
             const readFrontmatter = (content) => {
               const lines = String(content || "").split(/\r?\n/);
               if (lines[0]?.trim() !== "---") return {};
@@ -331,6 +338,8 @@ jobs:
               contentProvenance: [],
               effectiveContributor: null,
               contributorSource: "",
+              contributorAnalysis: baseContributorAnalysis(),
+              contributionAnalysis: baseContributionAnalysis(),
               pullRequestActor: null,
               riskTier: "low",
               reviewFlags: [],
@@ -342,35 +351,122 @@ jobs:
               humanReviewNotes: [],
               labelDefinitions: RISK_LABEL_DEFINITIONS
             });
+            const baseContributorAnalysis = (source = "") => ({
+              login: "",
+              rawLogin: "",
+              source,
+              profileUrl: "",
+              id: null,
+              accountType: "unknown",
+              resolutionStatus: "unresolved",
+              accountAgeDays: null,
+              publicRepos: null,
+              reviewSignals: [],
+              warnings: []
+            });
+            const contributorProfileUrl = (contributor = {}, login = "") => {
+              const url = normalizeText(contributor.html_url || contributor.htmlUrl);
+              if (url && sameGitHubLogin(url, login)) return url;
+              return login ? `https://github.com/${login}` : "";
+            };
             const contributorSummary = (contributor = {}) => {
-              const login = normalizeText(contributor.login || contributor.name);
+              const login = normalizeGitHubLogin(contributor.login);
               if (!login) return null;
               return {
                 login,
-                htmlUrl: normalizeText(contributor.html_url || contributor.url),
-                id: contributor.id ?? null
+                htmlUrl: contributorProfileUrl(contributor, login),
+                id: contributor.id ?? null,
+                accountType: normalizeText(contributor.type) || undefined,
+                createdAt: normalizeText(contributor.created_at || contributor.createdAt),
+                publicRepos: contributor.public_repos ?? contributor.publicRepos ?? null,
+                error: normalizeText(contributor.error)
               };
             };
-            const contributorSignals = (contributor = {}, report) => {
-              const login = normalizeText(contributor.login || contributor.name);
-              if (login) {
-                report.trustSignals.push(
-                  `Contributor analyzed: ${githubUserReference(login)}`
-                );
-              }
-              const createdAt = Date.parse(
-                contributor.created_at || contributor.createdAt
+            const contributorAnalysis = (contributor = {}, source = "", fallback = {}) => {
+              const profile = contributorSummary(contributor) || contributorSummary(fallback);
+              const analysis = baseContributorAnalysis(source);
+              const rawLogin = normalizeText(
+                contributor.login || fallback.login || contributor.name || fallback.name
               );
+              analysis.rawLogin = rawLogin;
+              if (!profile) {
+                analysis.reviewSignals.push("identity_unresolved");
+                analysis.warnings.push(
+                  rawLogin
+                    ? `Unresolved GitHub contributor login: ${rawLogin}`
+                    : "No GitHub contributor login was available"
+                );
+                return analysis;
+              }
+              analysis.login = profile.login;
+              analysis.profileUrl = profile.htmlUrl;
+              analysis.id = profile.id;
+              analysis.accountType =
+                profile.accountType || (profile.login.endsWith("[bot]") ? "Bot" : "User");
+              analysis.resolutionStatus = profile.error
+                ? "metadata_unavailable"
+                : "resolved";
+              if (profile.error) {
+                analysis.reviewSignals.push("profile_metadata_unavailable");
+                analysis.warnings.push(`GitHub profile metadata unavailable: ${profile.error}`);
+              }
+              if (analysis.accountType.toLowerCase() === "bot") {
+                analysis.reviewSignals.push("bot_account");
+              }
+              const createdAt = Date.parse(profile.createdAt);
               if (Number.isFinite(createdAt)) {
                 const ageDays = Math.floor((Date.now() - createdAt) / 86400000);
-                if (ageDays < 7) {
+                analysis.accountAgeDays = ageDays;
+                if (ageDays < 7) analysis.reviewSignals.push("new_account");
+                else if (ageDays < 30) analysis.reviewSignals.push("young_account");
+                else analysis.reviewSignals.push("established_account");
+              } else {
+                analysis.reviewSignals.push("account_age_unknown");
+              }
+              const hasPublicRepos =
+                profile.publicRepos !== null &&
+                profile.publicRepos !== undefined &&
+                profile.publicRepos !== "";
+              const publicRepos = Number(profile.publicRepos);
+              if (hasPublicRepos && Number.isFinite(publicRepos)) {
+                analysis.publicRepos = publicRepos;
+                if (publicRepos <= 0) analysis.reviewSignals.push("no_public_repositories");
+              } else {
+                analysis.reviewSignals.push("public_repository_count_unknown");
+              }
+              return analysis;
+            };
+            const applyContributorAnalysis = (
+              report,
+              contributor = {},
+              source = "",
+              fallback = {}
+            ) => {
+              const analysis = contributorAnalysis(contributor, source, fallback);
+              report.contributorAnalysis = analysis;
+              if (analysis.login) {
+                report.trustSignals.push(
+                  `Contributor analyzed: ${githubUserReference(analysis.login)}`
+                );
+              } else {
+                const raw = normalizeText(
+                  contributor.login || fallback.login || contributor.name
+                );
+                if (raw) {
+                  report.trustSignals.push(
+                    `Contributor identity unresolved: ${githubUserReference(raw)}`
+                  );
+                }
+              }
+              if (analysis.accountAgeDays !== null) {
+                if (analysis.accountAgeDays < 7) {
                   addFlag(
                     report,
                     "high",
                     "new_contributor_account",
                     "Contributor account is less than 7 days old"
                   );
-                } else if (ageDays < 30) {
+                } else if (analysis.accountAgeDays < 30) {
                   addFlag(
                     report,
                     "medium",
@@ -378,15 +474,80 @@ jobs:
                     "Contributor account is less than 30 days old"
                   );
                 } else {
-                  report.trustSignals.push(`Contributor account age: ${ageDays} days`);
+                  report.trustSignals.push(
+                    `Contributor account age: ${analysis.accountAgeDays} days`
+                  );
                 }
               }
-              const publicRepos = Number(
-                contributor.public_repos ?? contributor.publicRepos
-              );
-              if (Number.isFinite(publicRepos) && publicRepos > 0) {
-                report.trustSignals.push(`Contributor public repos: ${publicRepos}`);
+              if (Number.isFinite(analysis.publicRepos) && analysis.publicRepos > 0) {
+                report.trustSignals.push(`Contributor public repos: ${analysis.publicRepos}`);
               }
+            };
+            const CAPABILITY_BUCKET_BY_FLAG = {
+              embedded_secret: "unsafe_install_or_secret",
+              non_https_executable_source: "unsafe_install_or_secret",
+              unsafe_install_pipeline: "unsafe_install_or_secret",
+              malicious_data_theft_capability: "abuse_or_malware",
+              malware_or_abuse_surface: "abuse_or_malware",
+              prohibited_content: "abuse_or_malware",
+              requires_credentials: "credentials_or_auth",
+              financial_or_identity_sensitive: "financial_or_identity",
+              external_write_capability: "external_write",
+              local_or_personal_data_access: "local_or_personal_data",
+              destructive_actions: "destructive_actions",
+              downloadable_binary_or_installer: "binary_or_installer",
+              no_canonical_source: "source_review",
+              non_https_source_url: "source_review",
+              invalid_source_url: "source_review",
+              missing_pr_file_content: "content_review",
+              invalid_frontmatter: "content_review"
+            };
+            const baseContributionAnalysis = () => ({
+              schemaState: "not_checked",
+              sourceState: "unknown",
+              contentFiles: [],
+              sourceUrls: [],
+              githubSourceRepos: [],
+              capabilityRiskBuckets: [],
+              provenanceState: "not_applicable",
+              maintainerActionItems: []
+            });
+            const addContentFileAnalysis = (report, file = {}) => {
+              const existing = report.contributionAnalysis.contentFiles.find(
+                (entry) => entry.filename === file.filename
+              );
+              if (existing) Object.assign(existing, file);
+              else report.contributionAnalysis.contentFiles.push(file);
+            };
+            const addGithubSourceRepo = (report, repo) => {
+              const fullName = normalizeText(repo.fullName || repo.full_name || repo);
+              if (!fullName) return;
+              const existing = report.contributionAnalysis.githubSourceRepos.find(
+                (entry) => entry.fullName.toLowerCase() === fullName.toLowerCase()
+              );
+              const next = {
+                fullName,
+                url: normalizeText(repo.htmlUrl || repo.html_url),
+                defaultBranch: normalizeText(repo.defaultBranch || repo.default_branch),
+                visibility: normalizeText(repo.visibility),
+                archived: repo.archived === undefined ? undefined : Boolean(repo.archived),
+                disabled: repo.disabled === undefined ? undefined : Boolean(repo.disabled),
+                stargazersCount:
+                  repo.stargazersCount ?? repo.stargazers_count ?? repo.stars ?? null,
+                forksCount: repo.forksCount ?? repo.forks_count ?? null
+              };
+              if (existing) {
+                for (const [key, value] of Object.entries(next)) {
+                  if (value !== "" && value !== null && value !== undefined) {
+                    existing[key] = value;
+                  }
+                }
+              } else {
+                report.contributionAnalysis.githubSourceRepos.push(next);
+              }
+            };
+            const setMaintainerAction = (report, action) => {
+              uniquePush(report.contributionAnalysis.maintainerActionItems, action);
             };
             const addSourceSignals = (report, fields, text) => {
               const urls = [
@@ -402,6 +563,7 @@ jobs:
               report.sourceUrls = [
                 ...new Set([...(report.sourceUrls || []), ...uniqueUrls])
               ];
+              uniquePushMany(report.contributionAnalysis.sourceUrls, uniqueUrls);
               const sourceFields = [
                 fields.github_url,
                 fields.docs_url,
@@ -440,6 +602,7 @@ jobs:
               const githubSources = sourceFields.map(githubRepoFromUrl).filter(Boolean);
               if (githubSources.length) {
                 report.trustSignals.push(`GitHub source: ${githubSources.join(", ")}`);
+                for (const source of githubSources) addGithubSourceRepo(report, source);
               }
               const docsHost = hostname(fields.docs_url);
               if (docsHost) report.trustSignals.push(`Docs host: ${docsHost}`);
@@ -755,6 +918,72 @@ jobs:
               }
               return notes;
             };
+            const finalizeContributionAnalysis = (report) => {
+              const analysis = report.contributionAnalysis;
+              analysis.sourceState = report.reviewFlags.some(
+                (flag) => flag.id === "no_canonical_source"
+              )
+                ? "missing"
+                : report.reviewFlags.some((flag) =>
+                    ["non_https_source_url", "invalid_source_url"].includes(flag.id)
+                  )
+                  ? "needs_verification"
+                  : analysis.sourceUrls.length
+                    ? "provided"
+                    : "unknown";
+              analysis.provenanceState = report.provenanceStatus || "not_applicable";
+              for (const flag of report.reviewFlags) {
+                uniquePush(analysis.capabilityRiskBuckets, CAPABILITY_BUCKET_BY_FLAG[flag.id]);
+              }
+              if (report.classificationWarnings.length) {
+                uniquePush(analysis.capabilityRiskBuckets, "classification_review");
+              }
+              if (report.provenanceFindings.some((finding) => finding.blocking)) {
+                uniquePush(analysis.capabilityRiskBuckets, "provenance_review");
+              }
+              if (analysis.sourceState === "missing") {
+                setMaintainerAction(
+                  report,
+                  "Ask for a canonical source, docs, repository, or package URL."
+                );
+              } else if (analysis.sourceState === "needs_verification") {
+                setMaintainerAction(report, "Verify source URLs before import or merge.");
+              }
+              if (analysis.capabilityRiskBuckets.includes("credentials_or_auth")) {
+                setMaintainerAction(report, "Check credential scope and setup instructions.");
+              }
+              if (
+                analysis.capabilityRiskBuckets.some((bucket) =>
+                  ["external_write", "destructive_actions"].includes(bucket)
+                )
+              ) {
+                setMaintainerAction(
+                  report,
+                  "Confirm user-consent and permission boundaries before listing."
+                );
+              }
+              if (analysis.capabilityRiskBuckets.includes("local_or_personal_data")) {
+                setMaintainerAction(
+                  report,
+                  "Review local app, browser, workspace, or personal data access."
+                );
+              }
+              if (analysis.capabilityRiskBuckets.includes("binary_or_installer")) {
+                setMaintainerAction(report, "Verify binary or installer provenance.");
+              }
+              if (analysis.capabilityRiskBuckets.includes("classification_review")) {
+                setMaintainerAction(report, "Confirm this belongs in the submitted category.");
+              }
+              if (analysis.capabilityRiskBuckets.includes("provenance_review")) {
+                setMaintainerAction(report, "Resolve provenance blockers before merge.");
+              }
+              if (report.riskTier === "critical") {
+                setMaintainerAction(
+                  report,
+                  "Block import or merge until critical findings are resolved."
+                );
+              }
+            };
             const finalizeReport = (report) => {
               report.riskTier = tierFromFlags(report.reviewFlags);
               report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
@@ -762,6 +991,7 @@ jobs:
                 report.riskTier === "critical"
                   ? "block_until_resolved"
                   : "maintainer_review";
+              finalizeContributionAnalysis(report);
               report.humanReviewNotes = riskNotes(report);
               report.labelDefinitions = RISK_LABEL_DEFINITIONS;
               return report;
@@ -904,7 +1134,7 @@ jobs:
                   const issueContributor = issuesByNumber.get(
                     provenance.submissionIssueNumber
                   )?.contributor;
-                  const issueLogin = normalizeText(issueContributor?.login);
+                  const issueLogin = normalizeGitHubLogin(issueContributor?.login);
                   if (!issueLogin) {
                     addProvenanceFinding(
                       report,
@@ -1058,13 +1288,6 @@ jobs:
               ) {
                 lines.push("", "### Provenance");
                 lines.push(`- Status: \`${report.provenanceStatus}\``);
-                if (report.effectiveContributor?.login) {
-                  lines.push(
-                    `- Contributor analyzed: ${githubUserReference(
-                      report.effectiveContributor.login
-                    )}`
-                  );
-                }
                 if (
                   report.pullRequestActor?.login &&
                   !sameGitHubLogin(
@@ -1077,9 +1300,6 @@ jobs:
                       report.pullRequestActor.login
                     )}`
                   );
-                }
-                if (report.contributorSource) {
-                  lines.push(`- Contributor source: \`${report.contributorSource}\``);
                 }
                 for (const provenance of report.contentProvenance || []) {
                   const parts = [];
@@ -1105,6 +1325,73 @@ jobs:
                   );
                 }
               }
+              const contributor = report.contributorAnalysis || baseContributorAnalysis();
+              if (
+                contributor.login ||
+                contributor.rawLogin ||
+                contributor.warnings?.length
+              ) {
+                lines.push("", "### Contributor");
+                const analyzed = contributor.login
+                  ? githubUserReference(contributor.login)
+                  : markdownCodeSpan(contributor.rawLogin);
+                if (analyzed) lines.push(`- Contributor analyzed: ${analyzed}`);
+                if (contributor.source) lines.push(`- Source: \`${contributor.source}\``);
+                lines.push(`- Resolution: \`${contributor.resolutionStatus}\``);
+                if (contributor.accountType) {
+                  lines.push(`- Account type: \`${contributor.accountType}\``);
+                }
+                if (contributor.profileUrl) {
+                  lines.push(`- Profile: ${markdownCodeSpan(contributor.profileUrl)}`);
+                }
+                if (contributor.accountAgeDays !== null) {
+                  lines.push(`- Account age: ${contributor.accountAgeDays} days`);
+                }
+                if (contributor.publicRepos !== null) {
+                  lines.push(`- Public repos: ${contributor.publicRepos}`);
+                }
+                if (contributor.reviewSignals?.length) {
+                  lines.push(
+                    `- Signals: ${contributor.reviewSignals
+                      .map((signal) => `\`${signal}\``)
+                      .join(", ")}`
+                  );
+                }
+                for (const warning of contributor.warnings || []) {
+                  lines.push(`- Warning: ${escapeMarkdownText(warning)}`);
+                }
+              }
+              const contribution = report.contributionAnalysis || baseContributionAnalysis();
+              lines.push("", "### Contribution");
+              lines.push(`- Schema: \`${contribution.schemaState}\``);
+              lines.push(`- Sources: \`${contribution.sourceState}\``);
+              if (contribution.contentFiles?.length) {
+                const listedFiles = contribution.contentFiles
+                  .slice(0, 8)
+                  .map((file) => markdownCodeSpan(file.filename))
+                  .join(", ");
+                lines.push(`- Content files: ${listedFiles}`);
+              }
+              if (contribution.sourceUrls?.length) {
+                lines.push(`- Source URLs: ${contribution.sourceUrls.length}`);
+              }
+              if (contribution.githubSourceRepos?.length) {
+                const repos = contribution.githubSourceRepos
+                  .slice(0, 8)
+                  .map((repo) => markdownCodeSpan(repo.fullName))
+                  .join(", ");
+                lines.push(`- GitHub sources: ${repos}`);
+              }
+              if (contribution.capabilityRiskBuckets?.length) {
+                lines.push(
+                  `- Capability buckets: ${contribution.capabilityRiskBuckets
+                    .map((bucket) => `\`${bucket}\``)
+                    .join(", ")}`
+                );
+              } else {
+                lines.push("- Capability buckets: none");
+              }
+              lines.push(`- Provenance: \`${contribution.provenanceState}\``);
               lines.push("", "### Review flags");
               if (report.reviewFlags.length) {
                 for (const flag of report.reviewFlags) {
@@ -1133,9 +1420,17 @@ jobs:
                   lines.push(`- ${escapeMarkdownText(signal)}`);
                 }
               }
-              if (report.humanReviewNotes.length) {
-                lines.push("", "### Maintainer notes");
-                for (const note of report.humanReviewNotes) {
+              const maintainerChecks = [
+                ...(contribution.maintainerActionItems || []),
+                ...(report.humanReviewNotes || [])
+              ].filter(
+                (item, index, list) =>
+                  normalizeText(item) &&
+                  list.findIndex((candidate) => candidate === item) === index
+              );
+              if (maintainerChecks.length) {
+                lines.push("", "### Maintainer checks");
+                for (const note of maintainerChecks) {
                   lines.push(`- ${escapeMarkdownText(note)}`);
                 }
               }
@@ -1310,10 +1605,45 @@ jobs:
               const fields = frontmatterFields(frontmatter, category);
               const provenance = frontmatterProvenance(frontmatter);
               entries.push({ filename: file.filename, fields, provenance });
+              addContentFileAnalysis(report, {
+                filename: file.filename,
+                status: normalizeText(file.status),
+                category,
+                slug: fields.slug,
+                sourceUrls: [
+                  fields.github_url,
+                  fields.docs_url,
+                  fields.download_url,
+                  fields.website_url
+                ].filter(Boolean),
+                githubSources: [
+                  fields.github_url,
+                  fields.docs_url,
+                  fields.download_url,
+                  fields.website_url
+                ]
+                  .map(githubRepoFromUrl)
+                  .filter(Boolean)
+              });
               report.trustSignals.push(`Content file: ${file.filename}`);
               addSourceSignals(report, fields, content);
               addContentRiskSignals(report, fields, content);
               addToolListingClassificationSignals(report, fields, content);
+            }
+            for (const sourceRepo of [...report.contributionAnalysis.githubSourceRepos]) {
+              const [owner, repoName] = sourceRepo.fullName.split("/");
+              if (!owner || !repoName) continue;
+              try {
+                const { data: repoData } = await github.rest.repos.get({
+                  owner,
+                  repo: repoName
+                });
+                addGithubSourceRepo(report, repoData);
+              } catch (error) {
+                core.warning(
+                  `Could not enrich GitHub source ${sourceRepo.fullName}: ${error.message}`
+                );
+              }
             }
             validatePrProvenance(
               report,
@@ -1322,9 +1652,11 @@ jobs:
               frontmatterContributors,
               submissionIssueContributors
             );
-            contributorSignals(
+            applyContributorAnalysis(
+              report,
               report.effectiveContributor || pullRequestActor || pr.user || {},
-              report
+              report.contributorSource,
+              pr.user || {}
             );
             finalizeReport(report);
             const markdownReport = formatRiskMarkdown(report);

@@ -72,17 +72,25 @@ jobs:
             `- Close eligible: ${queue.summary.closeEligible}`,
             `- Skipped: ${queue.summary.skipped}`,
             "",
-            "| Issue | Status | Security | Age | Category | Slug | Action | Notes |",
-            "| --- | --- | --- | ---: | --- | --- | --- | --- |",
+            "| Issue | Status | Security | Source | Contributor | Age | Category | Slug | Action | Notes |",
+            "| --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |",
           ];
+          const cell = (value) => String(value || "-").replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>");
           for (const entry of queue.entries) {
             const issue = entry.url ? `[#${entry.number}](${entry.url})` : `#${entry.number}`;
-            const notes = entry.errors.length ? entry.errors.join("<br>") : entry.importPath;
+            const notes = entry.maintainerActions?.length
+              ? entry.maintainerActions.slice(0, 3).join("<br>")
+              : entry.errors.length
+                ? entry.errors.join("<br>")
+                : entry.importPath;
             const riskTier = entry.riskTier || "-";
-            const risk = entry.riskFlags?.length
+            const risk = entry.riskSummary || (entry.riskFlags?.length
               ? `${riskTier} (${entry.riskFlags.join(", ")})`
-              : riskTier;
-            lines.push(`| ${issue} | ${entry.status} | ${risk} | ${entry.ageDays ?? 0}d | ${entry.category || "-"} | ${entry.slug || "-"} | ${entry.actionDue || "-"} | ${notes || "-"} |`);
+              : riskTier);
+            const contributor = entry.contributorReview?.length
+              ? entry.contributorReview.join(", ")
+              : "-";
+            lines.push(`| ${issue} | ${cell(entry.status)} | ${cell(risk)} | ${cell(entry.sourceState)} | ${cell(contributor)} | ${entry.ageDays ?? 0}d | ${cell(entry.category)} | ${cell(entry.slug)} | ${cell(entry.actionDue)} | ${cell(notes)} |`);
           }
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
           NODE

@@ -540,6 +540,10 @@ export type SubmissionRiskContributor = {
   login: string;
   htmlUrl?: string;
   id?: number | string | null;
+  accountType?: string;
+  createdAt?: string;
+  publicRepos?: number | string | null;
+  error?: string;
 };
 
 export type SubmissionContentProvenance = {
@@ -552,6 +556,47 @@ export type SubmissionContentProvenance = {
   importPrUrl?: string;
 };
 
+export type SubmissionContributorAnalysis = {
+  login: string;
+  rawLogin: string;
+  source: string;
+  profileUrl: string;
+  id: number | string | null;
+  accountType: string;
+  resolutionStatus: "resolved" | "metadata_unavailable" | "unresolved";
+  accountAgeDays: number | null;
+  publicRepos: number | null;
+  reviewSignals: string[];
+  warnings: string[];
+};
+
+export type SubmissionContributionAnalysis = {
+  schemaState: "not_checked" | "skipped" | "passed" | "failed";
+  sourceState: "unknown" | "missing" | "needs_verification" | "provided";
+  contentFiles: Array<{
+    filename: string;
+    status?: string;
+    category?: string;
+    slug?: string;
+    sourceUrls?: string[];
+    githubSources?: string[];
+  }>;
+  sourceUrls: string[];
+  githubSourceRepos: Array<{
+    fullName: string;
+    url?: string;
+    defaultBranch?: string;
+    visibility?: string;
+    archived?: boolean;
+    disabled?: boolean;
+    stargazersCount?: number | string | null;
+    forksCount?: number | string | null;
+  }>;
+  capabilityRiskBuckets: string[];
+  provenanceState: "not_applicable" | "passed" | "failed";
+  maintainerActionItems: string[];
+};
+
 export type SubmissionRiskReport = {
   schemaVersion: number;
   kind: "submission-risk";
@@ -562,6 +607,8 @@ export type SubmissionRiskReport = {
   contentProvenance: SubmissionContentProvenance[];
   effectiveContributor: SubmissionRiskContributor | null;
   contributorSource: string;
+  contributorAnalysis: SubmissionContributorAnalysis;
+  contributionAnalysis: SubmissionContributionAnalysis;
   pullRequestActor: SubmissionRiskContributor | null;
   riskTier: SubmissionRiskTier;
   reviewFlags: SubmissionRiskFlag[];
@@ -598,6 +645,10 @@ export type SubmissionQueueEntry = {
   sourceNeedsVerification: boolean;
   riskTier: SubmissionRiskTier;
   riskFlags: string[];
+  riskSummary: string;
+  contributorReview: string[];
+  sourceState: SubmissionContributionAnalysis["sourceState"];
+  maintainerActions: string[];
   riskRecommendedAction: string;
   actionDue: "" | "author_input" | "verify_source" | "remind" | "close";
   category: string;
@@ -1083,7 +1134,11 @@ export const SUBMISSION_RISK_COMMENT_MARKER: string;
 export function analyzeIssueSubmissionRisk(
   issue?: Record<string, unknown>,
   validationReport?: SubmissionValidationReport | null,
-  options?: { contributor?: Record<string, unknown> },
+  options?: {
+    contributor?: Record<string, unknown>;
+    githubSourceRepositories?: Array<Record<string, unknown>>;
+    sourceRepositories?: Array<Record<string, unknown>>;
+  },
 ): SubmissionRiskReport;
 export function analyzeDirectContentRisk(
   input?: Record<string, unknown>,

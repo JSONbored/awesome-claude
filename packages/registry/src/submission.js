@@ -730,6 +730,12 @@ export function buildSubmissionQueue(issues = [], options = {}) {
       const risk = analyzeIssueSubmissionRisk(issue, report);
       const status = submissionQueueStatus(report, issue, options);
       const staleState = submissionStaleState(issue, report, options);
+      const contributorReview =
+        risk.contributorAnalysis?.reviewSignals?.slice(0, 4) || [];
+      const capabilityBuckets =
+        risk.contributionAnalysis?.capabilityRiskBuckets || [];
+      const maintainerActions =
+        risk.contributionAnalysis?.maintainerActionItems || [];
       return {
         number: issue.number ?? null,
         title: String(issue.title || ""),
@@ -750,6 +756,12 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         ),
         riskTier: risk.riskTier,
         riskFlags: risk.reviewFlags.map((flag) => flag.id),
+        riskSummary: capabilityBuckets.length
+          ? `${risk.riskTier}: ${capabilityBuckets.join(", ")}`
+          : risk.riskTier,
+        contributorReview,
+        sourceState: risk.contributionAnalysis?.sourceState || "unknown",
+        maintainerActions,
         riskRecommendedAction: risk.recommendedAction,
         actionDue:
           status === "close_eligible"
