@@ -6,7 +6,7 @@
 </picture>
 
 **An awesome Claude directory for agents, MCP servers, skills, hooks, commands, tools, and AI workflows.**
-384+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
+385+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
 
 [Website](https://heyclau.de) • [Browse](https://heyclau.de/browse) • [Jobs](https://heyclau.de/jobs) • [Submit](https://heyclau.de/submit) • [API](https://heyclau.de/api-docs) • [MCP](packages/mcp) • [Discussions](https://github.com/JSONbored/awesome-claude/discussions)
 
@@ -31,7 +31,7 @@ HeyClaude is an unofficial, community-built awesome Claude directory and browsab
 | Section                     | Entries | Scope                                                                     |
 | --------------------------- | ------: | ------------------------------------------------------------------------- |
 | [Agents](#ai-agents)        |      39 | Specialized Claude agents and expert roles.                               |
-| [MCP Servers](#mcp-servers) |      48 | Model Context Protocol servers and integrations.                          |
+| [MCP Servers](#mcp-servers) |      49 | Model Context Protocol servers and integrations.                          |
 | [Tools](#tools)             |      52 | Apps, developer tools, services, and products for Claude-native builders. |
 | [Skills](#skills)           |      68 | Installable skill packs and reusable capabilities.                        |
 | [Rules](#rules)             |      29 | Prompt guardrails, project rules, and operating constraints.              |
@@ -154,7 +154,7 @@ contributors should not include manual README edits in content PRs.
 - **[UI UX Design Expert Agent - Agents](https://heyclau.de/agents/ui-ux-design-expert-agent)** - Specialized in creating beautiful, intuitive user interfaces and exceptional user experiences
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (48)
+## 🔌 MCP Servers (49)
 
 - **[Airtable MCP Server for Claude](https://heyclau.de/mcp/airtable-mcp-server)** - Read and write records, manage bases and tables in Airtable directly from Claude
 - **[Asana MCP Server for Claude](https://heyclau.de/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
@@ -188,6 +188,7 @@ contributors should not include manual README edits in content PRs.
 - **[Monday MCP Server for Claude](https://heyclau.de/mcp/monday-mcp-server)** - Manage monday.com boards, items, and CRM activities
 - **[Netlify MCP Server for Claude](https://heyclau.de/mcp/netlify-mcp-server)** - Create, deploy, and manage websites on Netlify platform
 - **[Notion MCP Server for Claude](https://heyclau.de/mcp/notion-mcp-server)** - Read docs, update pages, and manage tasks in Notion workspaces
+- **[Packrift MCP Server](https://heyclau.de/mcp/packrift-mcp-server)** - Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.
 - **[Paypal MCP Server for Claude](https://heyclau.de/mcp/paypal-mcp-server)** - Integrate PayPal commerce capabilities, payment processing, and transaction management
 - **[Plaid MCP Server for Claude](https://heyclau.de/mcp/plaid-mcp-server)** - Analyze, troubleshoot, and optimize Plaid integrations for banking data and financial account linking
 - **[Postgresql MCP Server - MCP Servers](https://heyclau.de/mcp/postgresql-mcp-server)** - Official MCP server providing read-only access to PostgreSQL databases with schema inspection and query capabilities

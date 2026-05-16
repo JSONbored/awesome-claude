@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 384,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "count": 385,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -20299,6 +20299,85 @@
           ],
           "codeRepository": null,
           "programmingLanguage": "bash",
+          "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "mcp:packrift-mcp-server",
+      "category": "mcp",
+      "slug": "packrift-mcp-server",
+      "url": "https://heyclau.de/mcp/packrift-mcp-server",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/mcp/packrift-mcp-server#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "MCP Servers",
+              "item": "https://heyclau.de/mcp"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Packrift MCP Server",
+              "item": "https://heyclau.de/mcp/packrift-mcp-server"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/mcp/packrift-mcp-server#webpage",
+          "name": "Packrift MCP Server",
+          "description": "Remote MCP server for Packrift packaging catalog search, pricing and inventory context, and ecommerce cart URL creation.",
+          "url": "https://heyclau.de/mcp/packrift-mcp-server",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/mcp/packrift-mcp-server#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/mcp/packrift-mcp-server#entry",
+          "name": "Packrift MCP Server",
+          "headline": "Packrift MCP Server",
+          "description": "Remote MCP server for Packrift packaging catalog search, pricing and inventory context, and ecommerce cart URL creation.",
+          "url": "https://heyclau.de/mcp/packrift-mcp-server",
+          "datePublished": "2026-05-10",
+          "dateModified": "2026-05-10",
+          "keywords": "mcp, ecommerce, packaging, catalog, inventory, ai-agents, mcp servers, claude, heyclaude, packrift mcp server, mcp, ecommerce, packaging, catalog, inventory, ai-agents",
+          "genre": "MCP Servers",
+          "author": {
+            "@type": "Person",
+            "name": "Packrift",
+            "url": "https://github.com/Packrift"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://packrift.com/pages/agents",
+            "https://github.com/Packrift/packrift-mcp"
+          ],
+          "isBasedOn": [
+            "https://packrift.com/pages/agents",
+            "https://github.com/Packrift/packrift-mcp",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx"
+          ],
+          "codeRepository": "https://github.com/Packrift/packrift-mcp",
           "runtimePlatform": "Claude Code"
         }
       ]

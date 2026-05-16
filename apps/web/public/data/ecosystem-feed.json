@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 384,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "count": 385,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -14398,6 +14398,74 @@
       }
     },
     {
+      "key": "mcp:packrift-mcp-server",
+      "category": "mcp",
+      "slug": "packrift-mcp-server",
+      "title": "Packrift MCP Server",
+      "description": "Remote MCP server for Packrift packaging catalog search, pricing and inventory context, and ecommerce cart URL creation.",
+      "url": "https://heyclau.de/mcp/packrift-mcp-server",
+      "submittedBy": "Packrift",
+      "submittedByUrl": "https://github.com/Packrift",
+      "submittedAt": "2026-05-10T20:42:43.000Z",
+      "submissionIssueNumber": 334,
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/334",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-16T22:38:10.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Packrift",
+      "brandDomain": "packrift.com",
+      "brandIconUrl": "/api/brand-assets/icon/packrift.com",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "",
+      "documentationUrl": "https://packrift.com/pages/agents",
+      "repoUrl": "https://github.com/Packrift/packrift-mcp",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "mcp",
+        "ecommerce",
+        "packaging",
+        "catalog",
+        "inventory",
+        "ai-agents"
+      ],
+      "qualityScore": 93,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://packrift.com/pages/agents",
+          "https://github.com/Packrift/packrift-mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://packrift.com/pages/agents",
+          "https://github.com/Packrift/packrift-mcp"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://packrift.com/pages/agents",
+          "https://github.com/Packrift/packrift-mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-10",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "key": "skills:pagespeed-insights-optimizer",
       "category": "skills",
       "slug": "pagespeed-insights-optimizer",
@@ -21338,5 +21406,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "3c5a3069cf2af4b554d6bf4bd7eca85a6660208d66adb046b9cf1e3e77a96789"
+  "signature": "bb7e0a1a099f50bb6522fa36524b0c4119e27f8ae5a1ac0d8749457fb1e1f9c9"
 }

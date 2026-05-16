@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 248,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "count": 249,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -3602,6 +3602,28 @@
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/package-vulnerability-scanner.sh && chmod +x .claude/hooks/package-vulnerability-scanner.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/package-vulnerability-scanner"
+    },
+    {
+      "name": "packrift-mcp-server",
+      "title": "Packrift MCP Server",
+      "description": "Remote MCP server for Packrift packaging catalog search, pricing and inventory context, and ecommerce cart URL creation.",
+      "category": "mcp",
+      "submittedBy": "Packrift",
+      "submittedByUrl": "https://github.com/Packrift",
+      "submittedAt": "2026-05-10T20:42:43.000Z",
+      "submissionIssueNumber": 334,
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/334",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-16T22:38:10.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Packrift",
+      "brandDomain": "packrift.com",
+      "brandIconUrl": "/api/brand-assets/icon/packrift.com",
+      "brandAssetSource": "brandfetch",
+      "sourceUrl": "https://github.com/Packrift/packrift-mcp",
+      "installCommand": "No local install package is required for the hosted endpoint. Configure the remote MCP URL: https://mcp.packrift.com/mcp",
+      "platformCompatibility": [],
+      "heyclaudeUrl": "https://heyclau.de/mcp/packrift-mcp-server"
     },
     {
       "name": "pagespeed-insights-optimizer",

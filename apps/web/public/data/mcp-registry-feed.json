@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "mcp-registry-feed",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 48,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "count": 49,
   "servers": [
     {
       "name": "airtable-mcp-server",
@@ -452,6 +452,31 @@
       "installCommand": "claude mcp list && claude mcp status notion",
       "configSnippet": "{\n  \"notion\": {\n    \"url\": \"https://mcp.notion.com/mcp\",\n    \"transport\": \"http\"\n  }\n}",
       "heyclaudeUrl": "https://heyclau.de/mcp/notion-mcp-server"
+    },
+    {
+      "name": "packrift-mcp-server",
+      "title": "Packrift MCP Server",
+      "description": "Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.",
+      "websiteUrl": "https://packrift.com/pages/agents",
+      "submittedBy": "Packrift",
+      "submittedByUrl": "https://github.com/Packrift",
+      "submittedAt": "2026-05-10T20:42:43.000Z",
+      "submissionIssueNumber": 334,
+      "submissionIssueUrl": "https://github.com/JSONbored/awesome-claude/issues/334",
+      "reviewedBy": "JSONbored",
+      "reviewedAt": "2026-05-16T22:38:10.000Z",
+      "claimStatus": "unclaimed",
+      "brandName": "Packrift",
+      "brandDomain": "packrift.com",
+      "brandIconUrl": "/api/brand-assets/icon/packrift.com",
+      "brandAssetSource": "brandfetch",
+      "repository": {
+        "url": "https://github.com/Packrift/packrift-mcp",
+        "source": "github"
+      },
+      "installCommand": "No local install package is required for the hosted endpoint. Configure the remote MCP URL: https://mcp.packrift.com/mcp",
+      "configSnippet": "{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}",
+      "heyclaudeUrl": "https://heyclau.de/mcp/packrift-mcp-server"
     },
     {
       "name": "paypal-mcp-server",

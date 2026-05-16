@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "totalEntries": 384,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "totalEntries": 385,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -21,7 +21,7 @@
       "label": "Agents"
     },
     "mcp": {
-      "count": 48,
+      "count": 49,
       "label": "MCP Servers"
     },
     "tools": {
@@ -2131,6 +2131,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/package-vulnerability-scanner"
     },
     {
+      "key": "mcp:packrift-mcp-server",
+      "category": "mcp",
+      "slug": "packrift-mcp-server",
+      "canonicalUrl": "https://heyclau.de/mcp/packrift-mcp-server",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/packrift-mcp-server.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/packrift-mcp-server"
+    },
+    {
       "key": "skills:pagespeed-insights-optimizer",
       "category": "skills",
       "slug": "pagespeed-insights-optimizer",
@@ -3140,20 +3148,20 @@
     "duplicateBodyGroupCount": 0
   },
   "trustSummary": {
-    "brandedCount": 141,
+    "brandedCount": 142,
     "brandedPercent": 37,
-    "brandfetchCount": 139,
-    "sourceAvailableCount": 384,
+    "brandfetchCount": 140,
+    "sourceAvailableCount": 385,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 28,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 358,
+    "recentlyVerifiedCount": 359,
     "staleVerificationCount": 0,
-    "provenanceCount": 6,
+    "provenanceCount": 7,
     "provenancePercent": 2,
-    "claimedOrReviewedCount": 5,
+    "claimedOrReviewedCount": 6,
     "recommendedFixCount": 1,
     "entriesNeedingAttention": 1
   },
@@ -3183,47 +3191,47 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "5bdd3ea63f2bfa32a7c26909af954407d4ef90d31d9ae3e5af15f183dc7a30e1"
+      "sha256": "c5ad246fdc6204be7992cce5983bb37ecf6fb4ef63dc81b864bce89a8474e388"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "c9643c8de9d25c6f41828ffdcf855bebb3e41fe987dfab630ddc5946d88e60ca"
+      "sha256": "2a381d8c1fb5a28966a5aaac91ba59aa86ac52e6537f5f179815a0232859e660"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "ea5f5fb4c4bd4f8085425aac93e7c878c296ffe1e782604a91340d2031d1c354"
+      "sha256": "5e4f4518c8aed45a54d73eaa199f8698380339684ffc9e9f3b2fdc5fe27eb4f6"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "f6a6c2beebafd9863b4207b32d374d80691c0bd05e1109dc9f7ce4facabc7f18"
+      "sha256": "b894bc2618a239686e38d34ce02b26554ea3ff819dcb26615a90d7983904b533"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "458b94e5bd2d9879b921ce883878389da86c7fba774ae3a02090d20f291e5bea"
+      "sha256": "750881baf63bace87668e849da9235e741db6087d440309601cf8db42ef4d605"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "3eb8d34722b65425f5da5d6247b1ed7e8648eecdbf691bd0346c2507182b46c2"
+      "sha256": "a9afbc174003ebb639e050b048ea046d8b5f6233260fd8ed5393415db92d7ba4"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "8db6b57b442899fb1e7a041ed96527a743ced6f64696719d9eccd6ec84c54b00"
+      "sha256": "0e0b61dbacba9bbd5bdc9e7b6097e59c585eb7caf846754a2dca59f132a85b8b"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "1eb23cfacd485bfd52d16c5afaf2ed840710dfd58d34a6610205519af1b0df4d"
+      "sha256": "d46a99507fa05586cf8a3cd378dbcf05808dcd320f6d502eb4a6414a51b25a49"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "48e5227ec89798561d18b8c3542e493fd1df0b0a659db214abd054301f5d0041"
+      "sha256": "2ef0d87aed9fc055e560a1653394d8b2982882467de330704f9f3de7ec54c517"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3233,22 +3241,22 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "3bbb6e14db0e0e32a10a7659d8bbdbc09657ca012f92ce296532bc4ae7846e4e"
+      "sha256": "acf449e4ce2008aacafad1e238aecb9a853bffa6a5e32c8e8b23879b812eecb4"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "f77958fa4921c71067108a14c595cfee7bd07832f5be980f2d9e8f249ee4074a"
+      "sha256": "aa2945b61d923e02f83cd732737889c02594a111c276df9718d0a04751141baf"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "09c0ee87354a19142bd360f2902508a692c9ea69e849dc007dca33e45a3a259c"
+      "sha256": "c76dbf790e37e4cb248bb22cbad5d9c89fd7a123e86f19098b0f8fdcad74d31d"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "d3fe861fd2d4722c14f8a22e183cac40ee5caa71d5b38fec19b7b8fbcb869764"
+      "sha256": "64ce98a18b97b00ddf8f9cd70cd2a63b0f59cc5713a314e90eb213fa74383f08"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -7360,6 +7368,21 @@
       "type": "json",
       "sha256": "49af85c75d8f05427a6e699ab6c9b2065a3fd843eca387b9d80199e5ab54eeac"
     },
+    "entries/mcp/packrift-mcp-server.json": {
+      "path": "/data/entries%2Fmcp%2Fpackrift-mcp-server.json",
+      "type": "json",
+      "sha256": "d222aa869e17b5d165de84c3c3df7c046d0edb5d264505d0041efee484e41f41"
+    },
+    "llms/mcp/packrift-mcp-server.txt": {
+      "path": "/data/llms%2Fmcp%2Fpackrift-mcp-server.txt",
+      "type": "text",
+      "sha256": "1b0e3e85bfb57f2a4e16e1a758d9d1697da2c353841a22350579d771d239c4bb"
+    },
+    "raycast/mcp/packrift-mcp-server.json": {
+      "path": "/data/raycast%2Fmcp%2Fpackrift-mcp-server.json",
+      "type": "json",
+      "sha256": "4b94171fe14aae71cd4de2658d6aba117c54b5a4c20d387ee73480b4ebca4adf"
+    },
     "entries/skills/pagespeed-insights-optimizer.json": {
       "path": "/data/entries%2Fskills%2Fpagespeed-insights-optimizer.json",
       "type": "json",
@@ -9358,7 +9381,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "cbbf84fe1c8763bca806952d888a631c5e1ddd835a40e12d375425483adec532"
+      "sha256": "3efb6913af82968999615b988447d6d77d8522f437f201e863c2aab369891025"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",

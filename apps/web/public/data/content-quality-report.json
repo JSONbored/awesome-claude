@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-05-09T00:00:00.000Z",
-  "count": 384,
+  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "count": 385,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 102,
@@ -18,9 +18,9 @@
       "warningCount": 22
     },
     "mcp": {
-      "count": 48,
+      "count": 49,
       "averageScore": 90,
-      "warningCount": 5
+      "warningCount": 6
     },
     "tools": {
       "count": 52,
@@ -7649,6 +7649,39 @@
         "externalSourceUrls": []
       },
       "warnings": []
+    },
+    {
+      "key": "mcp:packrift-mcp-server",
+      "category": "mcp",
+      "slug": "packrift-mcp-server",
+      "title": "Packrift MCP Server",
+      "scores": {
+        "total": 93,
+        "usefulness": 100,
+        "source": 75,
+        "copyability": 90,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://packrift.com/pages/agents",
+          "https://github.com/Packrift/packrift-mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://packrift.com/pages/agents",
+          "https://github.com/Packrift/packrift-mcp"
+        ]
+      },
+      "warnings": [
+        "Description is long for browse/search display."
+      ]
     },
     {
       "key": "skills:pagespeed-insights-optimizer",

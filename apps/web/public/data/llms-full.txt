@@ -2,7 +2,7 @@
 The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.
 
 Base URL: https://heyclau.de
-Total entries: 384
+Total entries: 385
 
 ## Entry Index
 - [/cursor-rules - Cursor Rules Generator for Claude Code](https://heyclau.de/commands/cursor-rules) (commands)
@@ -264,6 +264,7 @@ Total entries: 384
 - [OpenCode](https://heyclau.de/tools/opencode) (tools)
 - [OpenNext Cloudflare Capability Pack Skill](https://heyclau.de/skills/opennext-cloudflare-capability-pack) (skills)
 - [Package Vulnerability Scanner - Hooks](https://heyclau.de/hooks/package-vulnerability-scanner) (hooks)
+- [Packrift MCP Server](https://heyclau.de/mcp/packrift-mcp-server) (mcp)
 - [PageSpeed Insights Optimization Skill for AI Agents](https://heyclau.de/skills/pagespeed-insights-optimizer) (skills)
 - [Parallel Subagent Distributor - Agents](https://heyclau.de/agents/parallel-subagent-distributor) (agents)
 - [Paypal MCP Server for Claude](https://heyclau.de/mcp/paypal-mcp-server) (mcp)
@@ -108106,6 +108107,53 @@ Install bundler-audit: `gem install bundler-audit`. Verify Ruby and gem installa
 ### Composer audit not available for PHP projects
 
 Composer audit requires Composer 2.4+. Update Composer: `composer self-update`. Verify Composer version: `composer --version`. Test with various composer.json structures. Ensure Composer is properly installed.
+---
+
+# Packrift MCP Server
+URL: https://heyclau.de/mcp/packrift-mcp-server
+Category: mcp
+Author: Packrift
+Submitted by: Packrift
+Submission issue: https://github.com/JSONbored/awesome-claude/issues/334
+Date added: 2026-05-10
+Documentation: https://packrift.com/pages/agents
+Repository: https://github.com/Packrift/packrift-mcp
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/mcp/packrift-mcp-server
+- Source URLs: https://packrift.com/pages/agents, https://github.com/Packrift/packrift-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx
+- Brand: Packrift
+- Brand domain: packrift.com
+- Brand asset source: brandfetch
+- Author: Packrift
+- Submitted by: Packrift
+- Submission issue: https://github.com/JSONbored/awesome-claude/issues/334
+- Reviewed by: JSONbored
+- Claim status: unclaimed
+- Last verified: 2026-05-10
+- Robots: indexable
+## Summary
+Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.
+## Tags
+- mcp
+- ecommerce
+- packaging
+- catalog
+- inventory
+- ai-agents
+## Content
+## Overview
+Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.
+
+## Usage
+{
+  "mcpServers": {
+    "packrift": {
+      "type": "http",
+      "url": "https://mcp.packrift.com/mcp"
+    }
+  }
+}
 ---
 
 # PageSpeed Insights Optimization Skill for AI Agents
