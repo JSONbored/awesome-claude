@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { OPTIONS, POST } from "../apps/web/src/app/api/mcp/route";
+import { GET, OPTIONS, POST } from "../apps/web/src/app/api/mcp/route";
 
 function mcpRequest(body: unknown, headers: Record<string, string> = {}) {
   return new Request("https://heyclau.de/api/mcp", {
@@ -32,6 +32,30 @@ describe("HeyClaude remote MCP route", () => {
       "POST",
     );
     expect(response.headers.get("cache-control")).toBe("no-store");
+  });
+
+  it("returns 405 for optional GET SSE streams on the stateless Worker endpoint", async () => {
+    const response = await GET(
+      new Request("https://heyclau.de/api/mcp", {
+        method: "GET",
+        headers: {
+          host: "heyclau.de",
+          accept: "text/event-stream",
+          "mcp-protocol-version": "2025-11-25",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(405);
+    expect(response.headers.get("allow")).toBe("POST, DELETE, OPTIONS");
+    expect(response.headers.get("access-control-allow-methods")).not.toContain(
+      "GET",
+    );
+    expect(await json(response)).toMatchObject({
+      jsonrpc: "2.0",
+      error: { code: -32000, message: "Method not allowed." },
+      id: null,
+    });
   });
 
   it("rejects browser origins outside the HeyClaude allowlist", async () => {

@@ -25,7 +25,7 @@ const DATA_ORIGIN = "https://heyclau.de";
 
 const mcpCorsHeaders = {
   "access-control-allow-origin": "*",
-  "access-control-allow-methods": "GET, POST, DELETE, OPTIONS",
+  "access-control-allow-methods": "POST, DELETE, OPTIONS",
   "access-control-allow-headers":
     "content-type, accept, mcp-session-id, mcp-protocol-version, mcp-method, mcp-name, last-event-id",
   "access-control-expose-headers": "mcp-session-id, mcp-protocol-version",
@@ -99,6 +99,28 @@ function mcpError(
 ) {
   logApiWarn(request, `${route.id}.${code}`);
   return applyMcpHeaders(apiError(code, status, { requestId, message }));
+}
+
+function mcpMethodNotAllowed() {
+  return applyMcpHeaders(
+    new Response(
+      JSON.stringify({
+        jsonrpc: "2.0",
+        error: {
+          code: -32000,
+          message: "Method not allowed.",
+        },
+        id: null,
+      }),
+      {
+        status: 405,
+        headers: {
+          allow: "POST, DELETE, OPTIONS",
+          "content-type": "application/json",
+        },
+      },
+    ),
+  );
 }
 
 async function validateMcpRequest(request: Request) {
@@ -178,8 +200,8 @@ export function OPTIONS(request: Request) {
   return applyMcpHeaders(new Response(null, { status: 204 }));
 }
 
-export async function GET(request: Request) {
-  return handleMcpRequest(request);
+export async function GET() {
+  return mcpMethodNotAllowed();
 }
 
 export async function POST(request: Request) {
