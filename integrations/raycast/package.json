@@ -189,12 +189,12 @@
     "publish": "ray publish"
   },
   "dependencies": {
-    "@raycast/api": "1.104.16",
+    "@raycast/api": "1.104.17",
     "@raycast/utils": "2.2.4"
   },
   "devDependencies": {
     "@raycast/eslint-config": "2.1.1",
-    "tsx": "4.21.0",
+    "tsx": "4.22.0",
     "typescript": "6.0.3"
   }
 }
