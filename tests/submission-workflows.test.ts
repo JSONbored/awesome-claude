@@ -1,4 +1,6 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 
@@ -26,9 +28,51 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Analyze submission risk");
     expect(source).toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");
+    expect(source).toContain("Summarize invalid submission issue");
+    expect(source).toContain("--informational");
     expect(source).toContain("managedValidationLabels");
+    expect(source).not.toContain("if (report.skipped) return;");
     expect(source).not.toContain("peter-evans/create-pull-request");
     expect(source).not.toContain("labels.*.name, 'submission'");
+  });
+
+  it("does not fail issue CI for invalid user submissions", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-report-"));
+    const reportPath = path.join(tmpDir, "submission-validation.json");
+    fs.writeFileSync(
+      reportPath,
+      JSON.stringify({
+        ok: false,
+        skipped: false,
+        errors: ["Missing required field: usage_snippet"],
+      }),
+      "utf8",
+    );
+
+    expect(() =>
+      execFileSync(
+        process.execPath,
+        [
+          "scripts/ci/fail-invalid-submission-report.mjs",
+          "--report",
+          reportPath,
+        ],
+        { cwd: repoRoot, encoding: "utf8" },
+      ),
+    ).toThrow();
+
+    const output = execFileSync(
+      process.execPath,
+      [
+        "scripts/ci/fail-invalid-submission-report.mjs",
+        "--report",
+        reportPath,
+        "--informational",
+      ],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+
+    expect(output).toContain("issue workflow is informational");
   });
 
   it("reviews direct content PRs without executing fork code", () => {

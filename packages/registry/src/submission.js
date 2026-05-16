@@ -173,8 +173,7 @@ function singularLabel(value) {
 
 function looksLikeSubmitTitle(value) {
   const title = normalizeValue(value).toLowerCase();
-  const normalized = title.startsWith("[") ? title.slice(1) : title;
-  return normalized === "submit" || normalized.startsWith("submit ");
+  return /^(?:\[submit\]|submit)(?:\s|:|-|$)/.test(title);
 }
 
 function isIsoDate(value) {
@@ -337,6 +336,34 @@ function parseBoldFieldLine(line) {
   };
 }
 
+function parsePlainFieldLine(line) {
+  const trimmed = String(line || "").trim();
+  if (
+    !trimmed.endsWith(":") ||
+    trimmed.startsWith("#") ||
+    trimmed.startsWith("- ") ||
+    trimmed.startsWith("**")
+  ) {
+    return null;
+  }
+  const label = trimmed.slice(0, -1).trim();
+  return label ? { label, value: "" } : null;
+}
+
+function normalizePlainFieldValue(lines) {
+  return normalizeValue(
+    lines
+      .map((line) => {
+        const trimmed = String(line || "").trim();
+        if (trimmed.startsWith("- ") && !parseBulletLine(trimmed)) {
+          return trimmed.slice(2).trim();
+        }
+        return String(line || "").trimStart();
+      })
+      .join("\n"),
+  );
+}
+
 export function parseIssueFormBody(body) {
   const sections = {};
   const text = String(body || "");
@@ -368,12 +395,42 @@ export function parseIssueFormBody(body) {
       const valueLines = [match.value];
       for (let j = i + 1; j < lines.length; j += 1) {
         const nextLine = lines[j];
-        if (parseBulletLine(nextLine)) break;
+        if (
+          parseBulletLine(nextLine) ||
+          parsePlainFieldLine(nextLine) ||
+          parseBoldFieldLine(nextLine)
+        ) {
+          break;
+        }
         valueLines.push(nextLine.trimStart());
         i = j;
       }
       sections[fieldKey(match.label)] = normalizeValue(valueLines.join("\n"));
     }
+  }
+
+  const plainLines = text.split("\n");
+  for (let i = 0; i < plainLines.length; i += 1) {
+    const match = parsePlainFieldLine(plainLines[i]);
+    if (!match) continue;
+    const key = fieldKey(match.label);
+    if (sections[key]) continue;
+
+    const valueLines = [];
+    for (let j = i + 1; j < plainLines.length; j += 1) {
+      const nextLine = plainLines[j];
+      if (
+        parsePlainFieldLine(nextLine) ||
+        parseBoldFieldLine(nextLine) ||
+        parseBulletLine(nextLine)
+      ) {
+        break;
+      }
+      valueLines.push(nextLine);
+    }
+
+    const value = normalizePlainFieldValue(valueLines);
+    if (value) sections[key] = value;
   }
 
   for (const line of text.split("\n")) {
@@ -514,14 +571,21 @@ export function looksLikeSubmissionIssue(issue = {}) {
   if (looksLikeSubmitTitle(title)) return true;
 
   const normalizedBody = body.toLowerCase();
-  return (
-    (normalizedBody.includes("### category") ||
-      normalizedBody.includes("**category:**") ||
-      normalizedBody.includes("content type")) &&
-    (normalizedBody.includes("### name") ||
-      normalizedBody.includes("**name:**") ||
-      normalizedBody.includes("json data"))
-  );
+  const hasCategoryField =
+    normalizedBody.includes("### category") ||
+    normalizedBody.includes("**category:**") ||
+    normalizedBody.includes("\ncategory:") ||
+    normalizedBody.startsWith("category:") ||
+    normalizedBody.includes("content type");
+  const hasNameOrSourceField =
+    normalizedBody.includes("### name") ||
+    normalizedBody.includes("**name:**") ||
+    normalizedBody.includes("\nname:") ||
+    normalizedBody.startsWith("name:") ||
+    normalizedBody.includes("json data") ||
+    normalizedBody.includes("github url") ||
+    normalizedBody.includes("docs url");
+  return hasCategoryField && hasNameOrSourceField;
 }
 
 export function isLikelyAffiliateUrl(value) {
@@ -636,7 +700,7 @@ export function recommendedSubmissionLabels(
     labels.add("content-submission");
     labels.add("needs-review");
   }
-  if (!report?.skipped && report && !report.ok) {
+  if (report && (report.skipped || !report.ok)) {
     labels.add(SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL);
   }
   if (submissionSourceNeedsVerification(report, issue)) {

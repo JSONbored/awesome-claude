@@ -450,6 +450,72 @@ claude mcp add prompt-to-asset -- npx -y prompt-to-asset`,
     ]);
   });
 
+  it("routes freeform submit issues into author input instead of skipping them", () => {
+    const freeform = {
+      ...issue(
+        `Category:
+- mcp
+
+Canonical source and docs:
+- GitHub URL: https://github.com/zjg678/suppr-mcp
+- Docs URL: https://github.com/zjg678/suppr-mcp#readme
+
+Install command:
+\`\`\`bash
+npx -y suppr-mcp
+\`\`\``,
+        [],
+      ),
+      title: "Submit MCP Server: Suppr MCP Server",
+    };
+
+    expect(looksLikeSubmissionIssue(freeform)).toBe(true);
+    expect(parseIssueFormBody(freeform.body)).toMatchObject({
+      category: "mcp",
+      github_url: "https://github.com/zjg678/suppr-mcp",
+      docs_url: "https://github.com/zjg678/suppr-mcp#readme",
+    });
+
+    const report = validateSubmission(freeform);
+    expect(report.skipped).toBe(false);
+    expect(report.ok).toBe(false);
+    expect(recommendedSubmissionLabels(freeform, report)).toEqual(
+      expect.arrayContaining([
+        "community-mcp",
+        "content-submission",
+        "needs-author-input",
+        "needs-review",
+      ]),
+    );
+  });
+
+  it("routes Submit-colon titles into submission review labels", () => {
+    const colonTitle = {
+      ...issue(
+        `Category:
+- mcp
+
+GitHub URL:
+https://github.com/Fifty-Five-and-Five/ultrathink-mcp`,
+        [],
+      ),
+      title: "Submit: Ultrathink MCP Server",
+    };
+
+    expect(looksLikeSubmissionIssue(colonTitle)).toBe(true);
+    const report = validateSubmission(colonTitle);
+    expect(report.skipped).toBe(false);
+    expect(report.ok).toBe(false);
+    expect(recommendedSubmissionLabels(colonTitle, report)).toEqual(
+      expect.arrayContaining([
+        "community-mcp",
+        "content-submission",
+        "needs-author-input",
+        "needs-review",
+      ]),
+    );
+  });
+
   it("builds a maintainer submission queue", () => {
     const valid = issue(`### Name
 ContrastAPI

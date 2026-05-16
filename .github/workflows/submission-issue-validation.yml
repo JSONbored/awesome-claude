@@ -14,7 +14,14 @@ permissions:
 
 jobs:
   validate-submission:
-    if: contains(github.event.issue.labels.*.name, 'content-submission') || startsWith(github.event.issue.title, 'Submit') || startsWith(github.event.issue.title, '[Submit]') || contains(github.event.issue.body, '### Category') || contains(github.event.issue.body, '**Category:**')
+    if: >-
+      contains(github.event.issue.labels.*.name, 'content-submission') ||
+      startsWith(github.event.issue.title, 'Submit') ||
+      startsWith(github.event.issue.title, '[Submit]') ||
+      contains(github.event.issue.body, '### Category') ||
+      contains(github.event.issue.body, '**Category:**') ||
+      contains(github.event.issue.body, 'Category:') ||
+      contains(github.event.issue.body, 'Content Type:')
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
@@ -98,7 +105,6 @@ jobs:
             const reportPath = ".github/tmp/submission-validation.json";
             if (!fs.existsSync(reportPath)) return;
             const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
-            if (report.skipped) return;
 
             const { data: issue } = await github.rest.issues.get({
               ...context.repo,
@@ -219,12 +225,13 @@ jobs:
             if (!fs.existsSync(reportPath)) return;
 
             const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
-            if (report.skipped) return;
 
             const marker = "<!-- submission-validation-report -->";
-            const heading = report.ok
-              ? "## Submission validation: passed"
-              : "## Submission validation: failed";
+            const heading = report.skipped
+              ? "## Submission validation: needs more detail"
+              : report.ok
+                ? "## Submission validation: passed"
+                : "## Submission validation: failed";
 
             const lines = [
               marker,
@@ -243,6 +250,15 @@ jobs:
             if (report.warnings?.length) {
               lines.push("", "### Warnings");
               for (const warning of report.warnings) lines.push(`- ${warning}`);
+            }
+
+            if (report.skipped) {
+              lines.push(
+                "",
+                "### Next steps",
+                "- This looks like a submission, but it did not resolve to a supported category/schema.",
+                "- Please update the issue with the category-specific form fields or resubmit through the matching submission form."
+              );
             }
 
             const previewPath = ".github/tmp/submission-import-preview.md";
@@ -331,7 +347,7 @@ jobs:
         run: |
           node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json
 
-      - name: Fail when submission issue is invalid
+      - name: Summarize invalid submission issue
         if: always()
         run: |
-          node scripts/ci/fail-invalid-submission-report.mjs
+          node scripts/ci/fail-invalid-submission-report.mjs --informational
