@@ -58,7 +58,7 @@
     "downloadUrl": "",
     "downloadTrust": null,
     "downloadSha256": null,
-    "body": "## Overview\n\nPackrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.\n\n## Usage\n\n{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}",
+    "body": "## Overview\n\nPackrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.\n\n## Usage\n\n```json\n{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}\n```",
     "sections": [
       {
         "title": "Overview",
@@ -69,8 +69,13 @@
       {
         "title": "Usage",
         "id": "usage",
-        "markdown": "{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}",
-        "codeBlocks": []
+        "markdown": "```json\n{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}\n```",
+        "codeBlocks": [
+          {
+            "language": "json",
+            "code": "{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}"
+          }
+        ]
       }
     ],
     "headings": [
@@ -85,7 +90,12 @@
         "id": "usage"
       }
     ],
-    "codeBlocks": [],
+    "codeBlocks": [
+      {
+        "language": "json",
+        "code": "{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}"
+      }
+    ],
     "filePath": "content/mcp/packrift-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx",
     "repoUrl": "https://github.com/Packrift/packrift-mcp",

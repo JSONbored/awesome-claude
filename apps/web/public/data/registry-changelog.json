@@ -14,7 +14,7 @@
       "canonicalUrl": "https://heyclau.de/mcp/packrift-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/packrift-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/packrift-mcp-server",
-      "artifactHash": "d222aa869e17b5d165de84c3c3df7c046d0edb5d264505d0041efee484e41f41"
+      "artifactHash": "69f2bd73e10675f81cf6a50a9866c388101ce5c44bc9a1cb0809c654537657c1"
     },
     {
       "key": "mcp:xquik-mcp-server",
@@ -4626,5 +4626,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "bac4fd3f91a8b7529a6fdcb7745dd76fb95601cc6402502ec8898a320a6f4773"
+  "signature": "234087fa70374f11eecfcaf30e7cd0dff2beef7223fc57954f144d5001dc2b23"
 }

@@ -3221,7 +3221,7 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "0e0b61dbacba9bbd5bdc9e7b6097e59c585eb7caf846754a2dca59f132a85b8b"
+      "sha256": "f0c7d064c8e847be40929d0cb92a82ff3869c128151ae0c4fdb1b8ba06f4b1b5"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
@@ -3256,7 +3256,7 @@
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "64ce98a18b97b00ddf8f9cd70cd2a63b0f59cc5713a314e90eb213fa74383f08"
+      "sha256": "e89ab1a94ec2908be894504031de60f2b69dca00c94cbf8cd43ef28c854f509e"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -7371,12 +7371,12 @@
     "entries/mcp/packrift-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpackrift-mcp-server.json",
       "type": "json",
-      "sha256": "d222aa869e17b5d165de84c3c3df7c046d0edb5d264505d0041efee484e41f41"
+      "sha256": "69f2bd73e10675f81cf6a50a9866c388101ce5c44bc9a1cb0809c654537657c1"
     },
     "llms/mcp/packrift-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fpackrift-mcp-server.txt",
       "type": "text",
-      "sha256": "1b0e3e85bfb57f2a4e16e1a758d9d1697da2c353841a22350579d771d239c4bb"
+      "sha256": "94a2ef6ec8ae44d2d10084ff4c540686dff7c1849b1bfafa2e13f499baccf464"
     },
     "raycast/mcp/packrift-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpackrift-mcp-server.json",
