@@ -217,6 +217,40 @@ describe("submission intake", () => {
     expect(output).not.toContain("maintainer@example.com");
   });
 
+  it("does not trust website public contact handles as submitter provenance", () => {
+    const output = importSubmissionDryRun({
+      number: 780,
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/780",
+      created_at: "2026-04-28T12:34:56Z",
+      user: {
+        login: "JSONbored",
+        html_url: "https://github.com/JSONbored",
+      },
+      body: buildSubmissionIssueDraft({
+        name: "Website Contact Spoof MCP",
+        slug: "website-contact-spoof-mcp",
+        category: "mcp",
+        author: "Example Team",
+        contact_email: "victim-user",
+        submitted_via: "website",
+        docs_url: "https://example.com/docs",
+        description:
+          "MCP server submitted through the website with an unverified public contact handle.",
+        card_description: "Website public contact provenance spoof coverage.",
+        install_command: "npx -y website-contact-spoof-mcp",
+        usage_snippet:
+          "claude mcp add website-contact-spoof-mcp -- npx -y website-contact-spoof-mcp",
+      }).body,
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+    });
+
+    expect(output).not.toContain("submittedBy:");
+    expect(output).not.toContain("submittedByUrl:");
+    expect(output).not.toContain("submittedBy: victim-user");
+    expect(output).not.toContain("https://github.com/victim-user");
+    expect(output).not.toContain("submittedBy: JSONbored");
+  });
+
   it("does not trust submitted_via from direct GitHub issue bodies", () => {
     const output = importSubmissionDryRun({
       number: 779,

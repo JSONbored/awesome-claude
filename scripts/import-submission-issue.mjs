@@ -164,7 +164,7 @@ function submissionIdentity(issue, fields) {
   const submittedVia = normalizeValue(fields.submitted_via).toLowerCase();
   const contactIdentity = githubIdentityFromPublicContact(fields.contact_email);
   if (submittedVia === "website" && isTrustedWebsiteIssueAuthor(issue)) {
-    return contactIdentity;
+    return null;
   }
   return githubIdentityFromIssueAuthor(issue) || contactIdentity;
 }
