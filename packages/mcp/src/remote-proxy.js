@@ -34,7 +34,11 @@ function createTimeoutFetch(timeoutMs) {
     }
 
     try {
-      return await fetch(url, { ...init, signal: controller.signal });
+      return await fetch(url, {
+        ...init,
+        redirect: "error",
+        signal: controller.signal,
+      });
     } finally {
       clearTimeout(timeout);
       if (inputSignal) {
