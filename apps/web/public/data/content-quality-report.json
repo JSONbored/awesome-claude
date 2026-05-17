@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 102,
@@ -28,7 +28,7 @@
       "warningCount": 0
     },
     "skills": {
-      "count": 68,
+      "count": 69,
       "averageScore": 90,
       "warningCount": 15
     },
@@ -11085,6 +11085,37 @@
         ],
         "externalSourceUrls": [
           "https://docs.claude.com/en/docs/claude-code/statusline"
+        ]
+      },
+      "warnings": []
+    },
+    {
+      "key": "skills:x-social-manager",
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "scores": {
+        "total": 92,
+        "usefulness": 100,
+        "source": 75,
+        "copyability": 85,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/rabden/X-twitter-social-manager-skill"
         ]
       },
       "warnings": []

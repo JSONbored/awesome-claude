@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "raycast-index",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "category": "commands",
@@ -15135,6 +15135,76 @@
       "downloadTrust": null,
       "verificationStatus": "",
       "platformCompatibility": []
+    },
+    {
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "description": "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines.",
+      "tags": [
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation"
+      ],
+      "author": "rabden",
+      "installCommand": "npx skills add rabden/X-twitter-social-manager-skill",
+      "configSnippet": "",
+      "copyText": "Install:\nnpx skills add rabden/X-twitter-social-manager-skill\n\nUsage:\nUse this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.\n\nAsset:\n# Trigger\n\"Use the X/Twitter social media manager skill to draft a post, thread, or reply.\"\n\n# Required output\n1) Cinematic hook and full draft within 280-character limit\n2) Research backing and topic summary\n3) Tone check matching authentic personal developer voice (avoiding AI clichés)\n4) Gated approval check (\"yes\" to publish)",
+      "copyTextLength": 527,
+      "copyTextTruncated": false,
+      "detailMarkdown": "# X/Twitter Social Media Manager Skill\n\nPersonal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.\n\n## Install\n```bash\nnpx skills add rabden/X-twitter-social-manager-skill\n```\n\n## Usage\nUse this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.",
+      "detailUrl": "/data/raycast/skills/x-social-manager.json",
+      "webUrl": "https://heyclau.de/skills/x-social-manager",
+      "canonicalUrl": "https://heyclau.de/skills/x-social-manager",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/x-social-manager.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/x-social-manager",
+      "seoTitle": "X/Twitter Social Media Manager Skill",
+      "seoDescription": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+      "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "downloadTrust": "external",
+      "verificationStatus": "validated",
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/x-social-manager.mdc",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-05-17"
+        }
+      ]
     },
     {
       "category": "mcp",

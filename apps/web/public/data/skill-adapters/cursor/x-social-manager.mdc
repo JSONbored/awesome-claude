@@ -1,0 +1,14 @@
+---
+description: "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines."
+globs:
+alwaysApply: false
+---
+# X/Twitter Social Media Manager Skill
+Personal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.
+Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.
+## Install
+```bash
+npx skills add rabden/X-twitter-social-manager-skill
+```
+## Source
+https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip

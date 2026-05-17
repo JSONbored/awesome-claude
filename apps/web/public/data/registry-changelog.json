@@ -1,9 +1,21 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "entries": [
+    {
+      "key": "skills:x-social-manager",
+      "type": "added",
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "dateAdded": "2026-05-17",
+      "canonicalUrl": "https://heyclau.de/skills/x-social-manager",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/x-social-manager.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/x-social-manager",
+      "artifactHash": "d0dae4101f16f913ab84e1ce95b6a6b0666c7349afac6fefb496759ef8f0c9c1"
+    },
     {
       "key": "mcp:packrift-mcp-server",
       "type": "added",
@@ -4626,5 +4638,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "234087fa70374f11eecfcaf30e7cd0dff2beef7223fc57954f144d5001dc2b23"
+  "signature": "4598d31166cb3b8f9ef1cc04b4b43efb158e578635c25e96553f9d5699e96f11"
 }

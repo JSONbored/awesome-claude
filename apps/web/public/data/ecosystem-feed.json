@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -20972,6 +20972,74 @@
       }
     },
     {
+      "key": "skills:x-social-manager",
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "description": "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines.",
+      "url": "https://heyclau.de/skills/x-social-manager",
+      "websiteUrl": "",
+      "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation"
+      ],
+      "qualityScore": 92,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/rabden/X-twitter-social-manager-skill"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "external",
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-17",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
       "key": "mcp:xquik-mcp-server",
       "category": "mcp",
       "slug": "xquik-mcp-server",
@@ -21406,5 +21474,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "bb7e0a1a099f50bb6522fa36524b0c4119e27f8ae5a1ac0d8749457fb1e1f9c9"
+  "signature": "5e0bd4d97ba13bb10906e5784220cde3e0f1ba38776a943c31c52d836e5f96c1"
 }

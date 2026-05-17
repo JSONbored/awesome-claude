@@ -651,8 +651,28 @@
   },
   {
     "category": "mcp",
+    "filePath": "content/mcp/legal-fournier-spain-legal-mcp.mdx",
+    "slug": "legal-fournier-spain-legal-mcp",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": []
+  },
+  {
+    "category": "mcp",
     "filePath": "content/mcp/linear-mcp-server.mdx",
     "slug": "linear-mcp-server",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": []
+  },
+  {
+    "category": "mcp",
+    "filePath": "content/mcp/memesio-mcp-server.mdx",
+    "slug": "memesio-mcp-server",
     "sourceType": "external",
     "metadataOnly": false,
     "missingRequired": [],
@@ -688,6 +708,16 @@
     "missingRequired": [],
     "missingRecommended": [],
     "issues": []
+  },
+  {
+    "category": "mcp",
+    "filePath": "content/mcp/packrift-mcp-server.mdx",
+    "slug": "packrift-mcp-server",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": ["description_too_long"]
   },
   {
     "category": "mcp",
@@ -2023,6 +2053,16 @@
     "category": "skills",
     "filePath": "content/skills/windsurf-collaborative-development.mdx",
     "slug": "windsurf-collaborative-development",
+    "sourceType": "external",
+    "metadataOnly": false,
+    "missingRequired": [],
+    "missingRecommended": [],
+    "issues": []
+  },
+  {
+    "category": "skills",
+    "filePath": "content/skills/x-social-manager.mdx",
+    "slug": "x-social-manager",
     "sourceType": "external",
     "metadataOnly": false,
     "missingRequired": [],

@@ -1,0 +1,271 @@
+{
+  "schemaVersion": 1,
+  "key": "skills:x-social-manager",
+  "entry": {
+    "category": "skills",
+    "slug": "x-social-manager",
+    "title": "X/Twitter Social Media Manager Skill",
+    "description": "Personal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.",
+    "seoTitle": "X/Twitter Social Media Manager Skill",
+    "seoDescription": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+    "author": "rabden",
+    "authorProfileUrl": "https://github.com/rabden",
+    "dateAdded": "2026-05-17",
+    "contentUpdatedAt": "2026-05-17",
+    "tags": [
+      "twitter",
+      "x",
+      "social-media",
+      "ai-agents",
+      "automation"
+    ],
+    "keywords": [
+      "twitter agent",
+      "x poster",
+      "social manager",
+      "cinematic-ui",
+      "marketing-automation",
+      "twitter",
+      "x",
+      "social-media",
+      "ai-agents",
+      "automation",
+      "skills",
+      "claude"
+    ],
+    "readingTime": 6,
+    "difficultyScore": 65,
+    "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+    "cardDescription": "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines.",
+    "installable": true,
+    "installCommand": "npx skills add rabden/X-twitter-social-manager-skill",
+    "usageSnippet": "Use this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.",
+    "copySnippet": "# Trigger\n\"Use the X/Twitter social media manager skill to draft a post, thread, or reply.\"\n\n# Required output\n1) Cinematic hook and full draft within 280-character limit\n2) Research backing and topic summary\n3) Tone check matching authentic personal developer voice (avoiding AI clichés)\n4) Gated approval check (\"yes\" to publish)",
+    "skillType": "capability-pack",
+    "skillLevel": "expert",
+    "verificationStatus": "validated",
+    "verifiedAt": "2026-05-17",
+    "retrievalSources": [
+      "https://github.com/rabden/X-twitter-social-manager-skill"
+    ],
+    "testedPlatforms": [
+      "Claude",
+      "Codex",
+      "OpenClaw",
+      "Cursor",
+      "Windsurf",
+      "Gemini"
+    ],
+    "prerequisites": [
+      "Target X/Twitter account and branding identity",
+      "Optional browser-based session for interactions and analytics",
+      "API keys or tokens for automated operations (TWITTER_AUTH_TOKEN)"
+    ],
+    "hasPrerequisites": true,
+    "hasTroubleshooting": true,
+    "hasBreakingChanges": false,
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "packageVerified": true,
+    "downloadUrl": "https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip",
+    "skillPackage": {
+      "format": "agent-skill",
+      "entrypoint": "SKILL.md",
+      "downloadUrl": "https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip",
+      "sha256": null
+    },
+    "platformCompatibility": [
+      {
+        "platform": "Claude",
+        "supportLevel": "native-skill",
+        "installPath": ".claude/skills/<skill-name>/SKILL.md",
+        "verifiedAt": "2026-05-17"
+      },
+      {
+        "platform": "Codex",
+        "supportLevel": "native-skill",
+        "installPath": ".agents/skills/<skill-name>/SKILL.md",
+        "verifiedAt": "2026-05-17"
+      },
+      {
+        "platform": "Windsurf",
+        "supportLevel": "native-skill",
+        "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+        "verifiedAt": "2026-05-17"
+      },
+      {
+        "platform": "Gemini",
+        "supportLevel": "native-skill",
+        "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+        "verifiedAt": "2026-05-17"
+      },
+      {
+        "platform": "Cursor",
+        "supportLevel": "adapter",
+        "installPath": ".cursor/rules/<skill-name>.mdc",
+        "adapterPath": "/data/skill-adapters/cursor/x-social-manager.mdc",
+        "verifiedAt": "2026-05-17"
+      },
+      {
+        "platform": "Generic AGENTS",
+        "supportLevel": "manual-context",
+        "installPath": "AGENTS.md or tool-specific context file",
+        "verifiedAt": "2026-05-17"
+      }
+    ],
+    "downloadTrust": "external",
+    "downloadSha256": null,
+    "body": "## Knowledge Freshness\n\nThis capability pack is pinned to configuration templates verified on **2026-05-17**.\nWhen X API contracts or developer boundaries shift, adapt the credential and character limit checks accordingly.\n\n## Retrieval Sources\n\n- https://github.com/rabden/X-twitter-social-manager-skill\n- https://github.com/rabden/X-twitter-social-manager-skill/blob/main/SKILL.md\n\n## Core Workflow\n\n1. **Research & Contextualize**: Run research on selected topics, extracting key hooks and engaging details.\n2. **Draft & Filter**: Craft posts with a strict 280-character limit. Enforce a 60/40 engagement-to-showcase ratio.\n3. **Refine Tone**: Strip away any corporate or AI-sounding patterns (like \"delve\", \"testament\", \"elevate\") and replace with cinematic, developer-focused, natural speech.\n4. **Approve**: Render the final preview and wait for explicit user approval (\"yes\") before any publishing attempt.\n\n## Overview\n\nThis skill teaches AI agents to act as high-fidelity personal brand social media managers on X/Twitter. It is highly optimized for technical builders, frontend developers, and creative technologists who want to maintain an authentic, high-quality, and consistent presence.\n\n## Capability Scope\n\n- **Topic Research Pipeline**: Deep pre-drafting search and summarization.\n- **Cinematic Post Composer**: Advanced hooks, structured spacing, and character limit guardrails.\n- **Authentic Reply Engine**: Context-rich replies matching real developer behavior.\n- **Dynamic Memory Loop**: Self-improving strategy file reflecting performance analytics.\n\n## Compatibility\n\n### Native\n\n- **Claude Code / Claude**: native skill usage via `SKILL.md`.\n- **Codex/OpenAI workflows**: compatible with Agent Skills-style `SKILL.md` content as reusable workflow instructions.\n\n### Manual Adaptation\n\n- **Gemini CLI**: native skill usage via `.gemini/skills/x-social-manager/SKILL.md` or `.agents/skills/x-social-manager/SKILL.md`.\n- **Cursor**: use the generated `.cursor/rules/x-social-manager.mdc` rule file.\n\n## Production Rules\n\n- **Zero Untrusted Automated Posting**: Never post to X without an explicit user confirmation.\n- **Respect Boundaries**: Strictly respect the 280-character limit and avoid multi-paragraph threads unless explicitly requested.\n- **Engage First**: Keep a strong mix of high-value community engagement alongside direct product showcase posts (60/40 ratio).\n\n## Troubleshooting\n\n**Issue:** Posts exceed the 280-character limit  \n**Fix:** Run strict pre-flight length validation using double-byte counting for emojis and URLs.\n\n**Issue:** Output sounds robotic or generic  \n**Fix:** Apply the voice filter rules in `references/user-profile.md` to strip corporate transitions and AI buzzwords.\n\n**Issue:** Browser automation block during posting  \n**Fix:** Set up high-quality user-agent headers and reuse existing cookie sessions via `TWITTER_AUTH_TOKEN`.\n\n## Output Contract\n\n1. Render a visual preview of the post or reply showing exactly how it will appear on X.\n2. Explicitly display the character count of each draft.\n3. Detail the research sources and why the selected topic resonates with the current strategy.\n4. Provide a clear `[Y/N]` prompt for execution.",
+    "sections": [
+      {
+        "title": "Knowledge Freshness",
+        "id": "knowledge-freshness",
+        "markdown": "This capability pack is pinned to configuration templates verified on **2026-05-17**.\nWhen X API contracts or developer boundaries shift, adapt the credential and character limit checks accordingly.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Retrieval Sources",
+        "id": "retrieval-sources",
+        "markdown": "- https://github.com/rabden/X-twitter-social-manager-skill\n- https://github.com/rabden/X-twitter-social-manager-skill/blob/main/SKILL.md",
+        "codeBlocks": []
+      },
+      {
+        "title": "Core Workflow",
+        "id": "core-workflow",
+        "markdown": "1. **Research & Contextualize**: Run research on selected topics, extracting key hooks and engaging details.\n2. **Draft & Filter**: Craft posts with a strict 280-character limit. Enforce a 60/40 engagement-to-showcase ratio.\n3. **Refine Tone**: Strip away any corporate or AI-sounding patterns (like \"delve\", \"testament\", \"elevate\") and replace with cinematic, developer-focused, natural speech.\n4. **Approve**: Render the final preview and wait for explicit user approval (\"yes\") before any publishing attempt.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Overview",
+        "id": "overview",
+        "markdown": "This skill teaches AI agents to act as high-fidelity personal brand social media managers on X/Twitter. It is highly optimized for technical builders, frontend developers, and creative technologists who want to maintain an authentic, high-quality, and consistent presence.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Capability Scope",
+        "id": "capability-scope",
+        "markdown": "- **Topic Research Pipeline**: Deep pre-drafting search and summarization.\n- **Cinematic Post Composer**: Advanced hooks, structured spacing, and character limit guardrails.\n- **Authentic Reply Engine**: Context-rich replies matching real developer behavior.\n- **Dynamic Memory Loop**: Self-improving strategy file reflecting performance analytics.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Compatibility",
+        "id": "compatibility",
+        "markdown": "### Native\n\n- **Claude Code / Claude**: native skill usage via `SKILL.md`.\n- **Codex/OpenAI workflows**: compatible with Agent Skills-style `SKILL.md` content as reusable workflow instructions.\n\n### Manual Adaptation\n\n- **Gemini CLI**: native skill usage via `.gemini/skills/x-social-manager/SKILL.md` or `.agents/skills/x-social-manager/SKILL.md`.\n- **Cursor**: use the generated `.cursor/rules/x-social-manager.mdc` rule file.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Production Rules",
+        "id": "production-rules",
+        "markdown": "- **Zero Untrusted Automated Posting**: Never post to X without an explicit user confirmation.\n- **Respect Boundaries**: Strictly respect the 280-character limit and avoid multi-paragraph threads unless explicitly requested.\n- **Engage First**: Keep a strong mix of high-value community engagement alongside direct product showcase posts (60/40 ratio).",
+        "codeBlocks": []
+      },
+      {
+        "title": "Troubleshooting",
+        "id": "troubleshooting",
+        "markdown": "**Issue:** Posts exceed the 280-character limit  \n**Fix:** Run strict pre-flight length validation using double-byte counting for emojis and URLs.\n\n**Issue:** Output sounds robotic or generic  \n**Fix:** Apply the voice filter rules in `references/user-profile.md` to strip corporate transitions and AI buzzwords.\n\n**Issue:** Browser automation block during posting  \n**Fix:** Set up high-quality user-agent headers and reuse existing cookie sessions via `TWITTER_AUTH_TOKEN`.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Output Contract",
+        "id": "output-contract",
+        "markdown": "1. Render a visual preview of the post or reply showing exactly how it will appear on X.\n2. Explicitly display the character count of each draft.\n3. Detail the research sources and why the selected topic resonates with the current strategy.\n4. Provide a clear `[Y/N]` prompt for execution.",
+        "codeBlocks": []
+      }
+    ],
+    "headings": [
+      {
+        "depth": 2,
+        "text": "Knowledge Freshness",
+        "id": "knowledge-freshness"
+      },
+      {
+        "depth": 2,
+        "text": "Retrieval Sources",
+        "id": "retrieval-sources"
+      },
+      {
+        "depth": 2,
+        "text": "Core Workflow",
+        "id": "core-workflow"
+      },
+      {
+        "depth": 2,
+        "text": "Overview",
+        "id": "overview"
+      },
+      {
+        "depth": 2,
+        "text": "Capability Scope",
+        "id": "capability-scope"
+      },
+      {
+        "depth": 2,
+        "text": "Compatibility",
+        "id": "compatibility"
+      },
+      {
+        "depth": 3,
+        "text": "Native",
+        "id": "native"
+      },
+      {
+        "depth": 3,
+        "text": "Manual Adaptation",
+        "id": "manual-adaptation"
+      },
+      {
+        "depth": 2,
+        "text": "Production Rules",
+        "id": "production-rules"
+      },
+      {
+        "depth": 2,
+        "text": "Troubleshooting",
+        "id": "troubleshooting"
+      },
+      {
+        "depth": 2,
+        "text": "Output Contract",
+        "id": "output-contract"
+      }
+    ],
+    "codeBlocks": [],
+    "filePath": "content/skills/x-social-manager.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx",
+    "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null
+  },
+  "trustSignals": {
+    "firstPartyEditorial": false,
+    "packageVerified": true,
+    "packageTrust": "external",
+    "packageChecksum": "",
+    "checksumPresent": false,
+    "sourceUrlCount": 2,
+    "sourceUrls": [
+      "https://github.com/rabden/X-twitter-social-manager-skill",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+    ],
+    "sourceStatus": "available",
+    "lastVerifiedAt": "2026-05-17",
+    "adapterGenerated": true,
+    "platforms": [
+      "Claude",
+      "Codex",
+      "Windsurf",
+      "Gemini",
+      "Cursor",
+      "Generic AGENTS"
+    ],
+    "supportLevels": [
+      "native-skill",
+      "native-skill",
+      "native-skill",
+      "native-skill",
+      "adapter",
+      "manual-context"
+    ]
+  }
+}

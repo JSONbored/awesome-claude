@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -29608,6 +29608,90 @@
           "codeRepository": null,
           "programmingLanguage": "bash",
           "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "skills:x-social-manager",
+      "category": "skills",
+      "slug": "x-social-manager",
+      "url": "https://heyclau.de/skills/x-social-manager",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/skills/x-social-manager#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Skills",
+              "item": "https://heyclau.de/skills"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "X/Twitter Social Media Manager Skill",
+              "item": "https://heyclau.de/skills/x-social-manager"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/skills/x-social-manager#webpage",
+          "name": "X/Twitter Social Media Manager Skill",
+          "description": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+          "url": "https://heyclau.de/skills/x-social-manager",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/skills/x-social-manager#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/skills/x-social-manager#entry",
+          "name": "X/Twitter Social Media Manager Skill",
+          "headline": "X/Twitter Social Media Manager Skill",
+          "description": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+          "url": "https://heyclau.de/skills/x-social-manager",
+          "datePublished": "2026-05-17",
+          "dateModified": "2026-05-17",
+          "keywords": "twitter agent, x poster, social manager, cinematic-ui, marketing-automation, twitter, x, social-media, ai-agents, automation, skills, claude, twitter, x, social-media, ai-agents, automation",
+          "genre": "Skills",
+          "author": {
+            "@type": "Person",
+            "name": "rabden",
+            "url": "https://github.com/rabden"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://github.com/rabden/X-twitter-social-manager-skill",
+            "https://github.com/rabden/X-twitter-social-manager-skill"
+          ],
+          "isBasedOn": [
+            "https://github.com/rabden/X-twitter-social-manager-skill",
+            "https://github.com/rabden/X-twitter-social-manager-skill",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+          ],
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Platform compatibility",
+              "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
+            }
+          ]
         }
       ]
     },

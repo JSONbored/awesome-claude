@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "search-index",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "category": "commands",
@@ -24428,6 +24428,93 @@
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
+      }
+    },
+    {
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "seoTitle": "X/Twitter Social Media Manager Skill",
+      "description": "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines.",
+      "seoDescription": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+      "tags": [
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation"
+      ],
+      "keywords": [
+        "twitter agent",
+        "x poster",
+        "social manager",
+        "cinematic-ui",
+        "marketing-automation",
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation",
+        "skills",
+        "claude"
+      ],
+      "author": "rabden",
+      "dateAdded": "2026-05-17",
+      "installable": true,
+      "downloadTrust": "external",
+      "verificationStatus": "validated",
+      "platforms": [
+        "Claude",
+        "Codex",
+        "Windsurf",
+        "Gemini",
+        "Cursor",
+        "Generic AGENTS"
+      ],
+      "supportLevels": [
+        "native-skill",
+        "native-skill",
+        "native-skill",
+        "native-skill",
+        "adapter",
+        "manual-context"
+      ],
+      "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "url": "https://heyclau.de/skills/x-social-manager",
+      "canonicalUrl": "https://heyclau.de/skills/x-social-manager",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/x-social-manager.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/x-social-manager",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "external",
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-17",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
       }
     },
     {

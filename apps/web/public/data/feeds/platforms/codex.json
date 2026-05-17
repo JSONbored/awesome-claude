@@ -3,8 +3,8 @@
   "kind": "platform-feed",
   "platform": "Codex",
   "platformSlug": "codex",
-  "generatedAt": "2026-04-30T00:00:00.000Z",
-  "count": 68,
+  "generatedAt": "2026-05-17T00:00:00.000Z",
+  "count": 69,
   "entries": [
     {
       "category": "skills",
@@ -10407,6 +10407,161 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-16",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
+      "category": "skills",
+      "slug": "x-social-manager",
+      "title": "X/Twitter Social Media Manager Skill",
+      "description": "Personal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.",
+      "seoTitle": "X/Twitter Social Media Manager Skill",
+      "seoDescription": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+      "author": "rabden",
+      "authorProfileUrl": "https://github.com/rabden",
+      "dateAdded": "2026-05-17",
+      "contentUpdatedAt": "2026-05-17",
+      "tags": [
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation"
+      ],
+      "keywords": [
+        "twitter agent",
+        "x poster",
+        "social manager",
+        "cinematic-ui",
+        "marketing-automation",
+        "twitter",
+        "x",
+        "social-media",
+        "ai-agents",
+        "automation",
+        "skills",
+        "claude"
+      ],
+      "readingTime": 6,
+      "difficultyScore": 65,
+      "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "cardDescription": "Cinematic X/Twitter management skill featuring researched topics, authentic voice crafting, and structured scheduling guidelines.",
+      "installable": true,
+      "installCommand": "npx skills add rabden/X-twitter-social-manager-skill",
+      "usageSnippet": "Use this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.",
+      "copySnippet": "# Trigger\n\"Use the X/Twitter social media manager skill to draft a post, thread, or reply.\"\n\n# Required output\n1) Cinematic hook and full draft within 280-character limit\n2) Research backing and topic summary\n3) Tone check matching authentic personal developer voice (avoiding AI clichés)\n4) Gated approval check (\"yes\" to publish)",
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-05-17",
+      "retrievalSources": [
+        "https://github.com/rabden/X-twitter-social-manager-skill"
+      ],
+      "testedPlatforms": [
+        "Claude",
+        "Codex",
+        "OpenClaw",
+        "Cursor",
+        "Windsurf",
+        "Gemini"
+      ],
+      "prerequisites": [
+        "Target X/Twitter account and branding identity",
+        "Optional browser-based session for interactions and analytics",
+        "API keys or tokens for automated operations (TWITTER_AUTH_TOKEN)"
+      ],
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false,
+      "robotsIndex": true,
+      "robotsFollow": true,
+      "packageVerified": true,
+      "downloadUrl": "https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip",
+      "skillPackage": {
+        "format": "agent-skill",
+        "entrypoint": "SKILL.md",
+        "downloadUrl": "https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip",
+        "sha256": null
+      },
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/x-social-manager.mdc",
+          "verifiedAt": "2026-05-17"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-05-17"
+        }
+      ],
+      "downloadTrust": "external",
+      "downloadSha256": null,
+      "filePath": "content/skills/x-social-manager.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx",
+      "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "canonicalUrl": "https://heyclau.de/skills/x-social-manager",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/x-social-manager.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/x-social-manager",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "external",
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://github.com/rabden/X-twitter-social-manager-skill",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-17",
         "adapterGenerated": true,
         "platforms": [
           "Claude",

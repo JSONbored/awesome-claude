@@ -1,0 +1,80 @@
+# X/Twitter Social Media Manager Skill
+URL: https://heyclau.de/skills/x-social-manager
+Category: skills
+Author: rabden
+Date added: 2026-05-17
+Documentation: https://github.com/rabden/X-twitter-social-manager-skill
+Repository: https://github.com/rabden/X-twitter-social-manager-skill
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx
+Download: https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/skills/x-social-manager
+- Source URLs: https://github.com/rabden/X-twitter-social-manager-skill, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/x-social-manager.mdx
+- Package URL: https://github.com/rabden/X-twitter-social-manager-skill/archive/refs/tags/v1.0.0.zip
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: rabden
+- Last verified: 2026-05-17
+- Robots: indexable
+## Summary
+Personal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.
+## Tags
+- twitter
+- x
+- social-media
+- ai-agents
+- automation
+## Content
+## Knowledge Freshness
+This capability pack is pinned to configuration templates verified on **2026-05-17**.
+When X API contracts or developer boundaries shift, adapt the credential and character limit checks accordingly.
+
+## Retrieval Sources
+- https://github.com/rabden/X-twitter-social-manager-skill
+- https://github.com/rabden/X-twitter-social-manager-skill/blob/main/SKILL.md
+
+## Core Workflow
+1. **Research & Contextualize**: Run research on selected topics, extracting key hooks and engaging details.
+2. **Draft & Filter**: Craft posts with a strict 280-character limit. Enforce a 60/40 engagement-to-showcase ratio.
+3. **Refine Tone**: Strip away any corporate or AI-sounding patterns (like "delve", "testament", "elevate") and replace with cinematic, developer-focused, natural speech.
+4. **Approve**: Render the final preview and wait for explicit user approval ("yes") before any publishing attempt.
+
+## Overview
+This skill teaches AI agents to act as high-fidelity personal brand social media managers on X/Twitter. It is highly optimized for technical builders, frontend developers, and creative technologists who want to maintain an authentic, high-quality, and consistent presence.
+
+## Capability Scope
+- **Topic Research Pipeline**: Deep pre-drafting search and summarization.
+- **Cinematic Post Composer**: Advanced hooks, structured spacing, and character limit guardrails.
+- **Authentic Reply Engine**: Context-rich replies matching real developer behavior.
+- **Dynamic Memory Loop**: Self-improving strategy file reflecting performance analytics.
+
+## Compatibility
+### Native
+
+- **Claude Code / Claude**: native skill usage via `SKILL.md`.
+- **Codex/OpenAI workflows**: compatible with Agent Skills-style `SKILL.md` content as reusable workflow instructions.
+
+### Manual Adaptation
+
+- **Gemini CLI**: native skill usage via `.gemini/skills/x-social-manager/SKILL.md` or `.agents/skills/x-social-manager/SKILL.md`.
+- **Cursor**: use the generated `.cursor/rules/x-social-manager.mdc` rule file.
+
+## Production Rules
+- **Zero Untrusted Automated Posting**: Never post to X without an explicit user confirmation.
+- **Respect Boundaries**: Strictly respect the 280-character limit and avoid multi-paragraph threads unless explicitly requested.
+- **Engage First**: Keep a strong mix of high-value community engagement alongside direct product showcase posts (60/40 ratio).
+
+## Troubleshooting
+**Issue:** Posts exceed the 280-character limit  
+**Fix:** Run strict pre-flight length validation using double-byte counting for emojis and URLs.
+
+**Issue:** Output sounds robotic or generic  
+**Fix:** Apply the voice filter rules in `references/user-profile.md` to strip corporate transitions and AI buzzwords.
+
+**Issue:** Browser automation block during posting  
+**Fix:** Set up high-quality user-agent headers and reuse existing cookie sessions via `TWITTER_AUTH_TOKEN`.
+
+## Output Contract
+1. Render a visual preview of the post or reply showing exactly how it will appear on X.
+2. Explicitly display the character count of each draft.
+3. Detail the research sources and why the selected topic resonates with the current strategy.
+4. Provide a clear `[Y/N]` prompt for execution.

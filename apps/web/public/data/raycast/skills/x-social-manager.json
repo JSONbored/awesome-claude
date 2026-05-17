@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 2,
+  "key": "skills:x-social-manager",
+  "category": "skills",
+  "slug": "x-social-manager",
+  "title": "X/Twitter Social Media Manager Skill",
+  "author": "rabden",
+  "copyText": "Install:\nnpx skills add rabden/X-twitter-social-manager-skill\n\nUsage:\nUse this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.\n\nAsset:\n# Trigger\n\"Use the X/Twitter social media manager skill to draft a post, thread, or reply.\"\n\n# Required output\n1) Cinematic hook and full draft within 280-character limit\n2) Research backing and topic summary\n3) Tone check matching authentic personal developer voice (avoiding AI clichés)\n4) Gated approval check (\"yes\" to publish)",
+  "detailMarkdown": "# X/Twitter Social Media Manager Skill\n\nPersonal X/Twitter social media manager skill for content strategy, cinematic showcase posts, and authentic interactive replies.\n\n## Install\n```bash\nnpx skills add rabden/X-twitter-social-manager-skill\n```\n\n## Usage\nUse this skill when crafting X/Twitter posts, threads, replies, or analyzing audience growth and engagement patterns.",
+  "webUrl": "https://heyclau.de/skills/x-social-manager",
+  "canonicalUrl": "https://heyclau.de/skills/x-social-manager",
+  "llmsUrl": "https://heyclau.de/data/llms/skills/x-social-manager.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/skills/x-social-manager",
+  "seoTitle": "X/Twitter Social Media Manager Skill",
+  "seoDescription": "Re-usable AI agent skill for standard X accounts with 280-char limits, 60/40 engagement-to-showcase ratio, and authentic replies.",
+  "repoUrl": "https://github.com/rabden/X-twitter-social-manager-skill",
+  "documentationUrl": "https://github.com/rabden/X-twitter-social-manager-skill"
+}
