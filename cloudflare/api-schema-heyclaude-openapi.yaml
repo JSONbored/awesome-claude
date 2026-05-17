@@ -2357,9 +2357,11 @@ paths:
         - MCP
       summary: Read-only HeyClaude MCP endpoint
       description:
-        Exposes read-only HeyClaude MCP tools over Streamable HTTP for registry search, entry
-        detail, compatibility lookup, install guidance, platform adapters, and feed discovery. This
-        endpoint does not publish registry content or create submissions.
+        Exposes no-key read-only HeyClaude MCP tools, resources, and prompts over Streamable
+        HTTP for registry search, discovery, entry detail, copyable assets, comparison,
+        compatibility lookup, install guidance, platform adapters, feed discovery, client setup, and
+        maintainer-reviewed submission draft helpers. This endpoint does not publish registry
+        content or create submissions.
       responses:
         "200":
           description: Request accepted.

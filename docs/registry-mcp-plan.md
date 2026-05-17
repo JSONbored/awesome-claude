@@ -20,14 +20,55 @@ Set `HEYCLAUDE_DATA_DIR=/absolute/path/to/data`, or pass
 `--local --data-dir /absolute/path/to/data`, to read from another generated
 artifact directory.
 
-## V1 Tools
+## Tools
 
 - `search_registry`
+- `server_info`
+- `list_category_entries`
+- `get_recent_updates`
+- `get_related_entries`
 - `get_entry_detail`
+- `get_copyable_asset`
+- `compare_entries`
+- `get_registry_stats`
+- `get_client_setup`
 - `get_compatibility`
 - `get_install_guidance`
 - `get_platform_adapter`
 - `list_distribution_feeds`
+- `get_submission_schema`
+- `validate_submission_draft`
+- `search_duplicate_entries`
+- `build_submission_urls`
+- `get_category_submission_guidance`
+- `prepare_submission_draft`
+- `get_submission_examples`
+- `review_submission_draft`
+
+## Resources
+
+- `heyclaude://feeds/directory`
+- `heyclaude://category/{category}`
+- `heyclaude://entry/{category}/{slug}`
+
+## Prompts
+
+- `find_best_asset`
+- `prepare_submission`
+- `review_submission_before_issue`
+- `install_asset_safely`
+
+## Access and rate limits
+
+The public MCP endpoint does not require an API key. That is intentional: the
+tool surface is read-only and all submission helpers generate local validation
+reports, issue drafts, and URLs for maintainer review. They do not create
+GitHub issues or publish registry content.
+
+Production uses the dedicated `API_MCP_RATE_LIMIT` Cloudflare binding at
+`60 requests/minute/IP`, plus the route-level 64 KiB body limit and strict JSON
+request validation. Local and preview runs keep an in-process limiter fallback
+when Cloudflare's binding is unavailable.
 
 ## Exclusions
 

@@ -64,6 +64,12 @@ async function smokeMcpServer(command, args, label) {
       toolNames.includes("search_registry"),
       `${label} smoke did not expose search_registry.`,
     );
+    if (toolNames.includes("get_registry_stats")) {
+      assert(
+        tools.tools.every((tool) => tool.annotations?.readOnlyHint === true),
+        `${label} smoke tools did not all advertise read-only annotations.`,
+      );
+    }
 
     const search = await client.callTool(
       {
@@ -77,6 +83,92 @@ async function smokeMcpServer(command, args, label) {
     assert(text, `${label} smoke did not return a text tool result.`);
     const result = JSON.parse(text);
     assert(result.ok === true, `${label} smoke search did not return ok.`);
+    if (toolNames.includes("get_registry_stats")) {
+      assert(
+        search.structuredContent?.policy?.readOnly === true,
+        `${label} smoke search did not include structured read-only policy.`,
+      );
+
+      const stats = await client.callTool(
+        { name: "get_registry_stats", arguments: {} },
+        undefined,
+        { timeout: 30000 },
+      );
+      assert(
+        stats.structuredContent?.ok === true,
+        `${label} smoke registry stats did not return structured ok.`,
+      );
+      assert(
+        stats.structuredContent?.policy?.apiKeyRequired === false,
+        `${label} smoke registry stats did not expose no-key policy.`,
+      );
+
+      const setup = await client.callTool(
+        { name: "get_client_setup", arguments: { client: "codex" } },
+        undefined,
+        { timeout: 30000 },
+      );
+      assert(
+        setup.structuredContent?.snippets?.codex?.config?.mcpServers?.heyclaude
+          ?.command === "npx",
+        `${label} smoke client setup did not return Codex npx config.`,
+      );
+
+      const resources = await client.listResources(undefined, {
+        timeout: 30000,
+      });
+      assert(
+        resources.resources.some(
+          (resource) => resource.uri === "heyclaude://feeds/directory",
+        ),
+        `${label} smoke did not expose directory resource.`,
+      );
+      const resourceTemplates = await client.listResourceTemplates(undefined, {
+        timeout: 30000,
+      });
+      assert(
+        resourceTemplates.resourceTemplates.some(
+          (resource) =>
+            resource.uriTemplate === "heyclaude://entry/{category}/{slug}",
+        ),
+        `${label} smoke did not expose entry resource template.`,
+      );
+      const directory = await client.readResource(
+        { uri: "heyclaude://feeds/directory" },
+        { timeout: 30000 },
+      );
+      assert(
+        directory.contents.some(
+          (content) =>
+            content.mimeType === "application/json" &&
+            String(content.text || "").includes('"entries"'),
+        ),
+        `${label} smoke did not read directory resource JSON.`,
+      );
+
+      const prompts = await client.listPrompts(undefined, { timeout: 30000 });
+      assert(
+        prompts.prompts.some((prompt) => prompt.name === "find_best_asset"),
+        `${label} smoke did not expose workflow prompts.`,
+      );
+      const prompt = await client.getPrompt(
+        {
+          name: "install_asset_safely",
+          arguments: {
+            category: "skills",
+            slug: "agent-evals-regression-gate",
+            platform: "Codex",
+          },
+        },
+        { timeout: 30000 },
+      );
+      assert(
+        prompt.messages.some((message) =>
+          String(message.content?.text || "").includes("get_copyable_asset"),
+        ),
+        `${label} smoke did not return install_asset_safely prompt content.`,
+      );
+    }
   } finally {
     await client.close().catch(() => {});
   }

@@ -8,6 +8,13 @@ const pathPart = z
   .regex(/^[a-z0-9-]+$/, "Use lowercase slug-safe path parts only.");
 
 const platform = z.string().trim().min(1).max(80);
+const clientName = z.enum([
+  "codex",
+  "claude-desktop",
+  "cursor",
+  "windsurf",
+  "remote-http",
+]);
 const submissionCategory = z.enum([
   "agents",
   "rules",
@@ -77,10 +84,73 @@ export const SearchRegistryInputSchema = z
   })
   .strict();
 
+export const ServerInfoInputSchema = z.object({}).strict();
+
+export const ListCategoryEntriesInputSchema = z
+  .object({
+    category: pathPart.optional(),
+    platform: platform.optional(),
+    tag: z.string().trim().min(1).max(80).optional(),
+    query: z.string().trim().max(240).optional(),
+    offset: z.number().int().min(0).max(5000).optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
+export const RecentUpdatesInputSchema = z
+  .object({
+    category: pathPart.optional(),
+    since: z.string().trim().min(4).max(40).optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
+export const RelatedEntriesInputSchema = z
+  .object({
+    category: pathPart,
+    slug: pathPart,
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
 export const EntryDetailInputSchema = z
   .object({
     category: pathPart,
     slug: pathPart,
+  })
+  .strict();
+
+export const CopyableAssetInputSchema = z
+  .object({
+    category: pathPart,
+    slug: pathPart,
+    platform: platform.optional(),
+  })
+  .strict();
+
+export const CompareEntriesInputSchema = z
+  .object({
+    entries: z
+      .array(
+        z
+          .object({
+            category: pathPart,
+            slug: pathPart,
+          })
+          .strict(),
+      )
+      .min(2)
+      .max(5),
+    platform: platform.optional(),
+  })
+  .strict();
+
+export const RegistryStatsInputSchema = z.object({}).strict();
+
+export const ClientSetupInputSchema = z
+  .object({
+    client: clientName.optional(),
+    endpointUrl: z.string().trim().url().max(500).optional(),
   })
   .strict();
 
@@ -145,9 +215,36 @@ export const CategorySubmissionGuidanceInputSchema = z
   })
   .strict();
 
+export const PrepareSubmissionDraftInputSchema = z
+  .object({
+    fields: SubmissionFieldsSchema,
+  })
+  .strict();
+
+export const GetSubmissionExamplesInputSchema = z
+  .object({
+    category: submissionCategory.optional(),
+  })
+  .strict();
+
+export const ReviewSubmissionDraftInputSchema = z
+  .object({
+    fields: SubmissionFieldsSchema,
+    duplicateLimit: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
+
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
+  server_info: ServerInfoInputSchema,
+  list_category_entries: ListCategoryEntriesInputSchema,
+  get_recent_updates: RecentUpdatesInputSchema,
+  get_related_entries: RelatedEntriesInputSchema,
   get_entry_detail: EntryDetailInputSchema,
+  get_copyable_asset: CopyableAssetInputSchema,
+  compare_entries: CompareEntriesInputSchema,
+  get_registry_stats: RegistryStatsInputSchema,
+  get_client_setup: ClientSetupInputSchema,
   get_compatibility: CompatibilityInputSchema,
   get_install_guidance: InstallGuidanceInputSchema,
   get_platform_adapter: PlatformAdapterInputSchema,
@@ -157,6 +254,9 @@ export const TOOL_INPUT_SCHEMAS = {
   search_duplicate_entries: SearchDuplicateEntriesInputSchema,
   build_submission_urls: BuildSubmissionUrlsInputSchema,
   get_category_submission_guidance: CategorySubmissionGuidanceInputSchema,
+  prepare_submission_draft: PrepareSubmissionDraftInputSchema,
+  get_submission_examples: GetSubmissionExamplesInputSchema,
+  review_submission_draft: ReviewSubmissionDraftInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {
@@ -178,6 +278,25 @@ export function jsonSchemaForTool(name) {
     throw new Error(`Unknown HeyClaude MCP tool schema: ${name}`);
   }
   return stripUnsupportedJsonSchemaFields(z.toJSONSchema(schema));
+}
+
+export function jsonSchemaForToolOutput(name) {
+  if (!TOOL_INPUT_SCHEMAS[name]) {
+    throw new Error(`Unknown HeyClaude MCP tool output schema: ${name}`);
+  }
+
+  return {
+    type: "object",
+    properties: {
+      ok: { type: "boolean" },
+      policy: {
+        type: "object",
+        additionalProperties: true,
+      },
+    },
+    required: ["ok"],
+    additionalProperties: true,
+  };
 }
 
 export function parseToolArguments(name, args = {}) {

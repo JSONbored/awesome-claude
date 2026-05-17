@@ -483,7 +483,8 @@ export type ApiRouteDefinition = {
     binding?:
       | "API_REGISTRY_RATE_LIMIT"
       | "API_DYNAMIC_RATE_LIMIT"
-      | "API_STRICT_RATE_LIMIT";
+      | "API_STRICT_RATE_LIMIT"
+      | "API_MCP_RATE_LIMIT";
   };
   querySchema?: z.ZodTypeAny;
   paramsSchema?: z.ZodTypeAny;
@@ -615,7 +616,7 @@ export const apiRouteDefinitions = {
     path: "/api/mcp",
     summary: "Read-only HeyClaude MCP endpoint",
     description:
-      "Exposes read-only HeyClaude MCP tools over Streamable HTTP for registry search, entry detail, compatibility lookup, install guidance, platform adapters, and feed discovery. This endpoint does not publish registry content or create submissions.",
+      "Exposes no-key read-only HeyClaude MCP tools, resources, and prompts over Streamable HTTP for registry search, discovery, entry detail, copyable assets, comparison, compatibility lookup, install guidance, platform adapters, feed discovery, client setup, and maintainer-reviewed submission draft helpers. This endpoint does not publish registry content or create submissions.",
     tags: ["MCP"],
     originCheck: true,
     requiresJsonBody: true,
@@ -624,7 +625,7 @@ export const apiRouteDefinitions = {
       scope: "mcp-streamable",
       limit: 60,
       windowMs: 60_000,
-      binding: "API_REGISTRY_RATE_LIMIT",
+      binding: "API_MCP_RATE_LIMIT",
     },
   }),
   "brandAsset.read": route({

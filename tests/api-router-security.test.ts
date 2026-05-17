@@ -248,12 +248,18 @@ describe("central API router security", () => {
     expect(wranglerConfig).toContain('"name": "API_REGISTRY_RATE_LIMIT"');
     expect(wranglerConfig).toContain('"name": "API_DYNAMIC_RATE_LIMIT"');
     expect(wranglerConfig).toContain('"name": "API_STRICT_RATE_LIMIT"');
+    expect(wranglerConfig).toContain('"name": "API_MCP_RATE_LIMIT"');
     expect(apiRouteDefinitions["submissions.create"].rateLimit?.binding).toBe(
       "API_STRICT_RATE_LIMIT",
     );
     expect(apiRouteDefinitions["registry.search"].rateLimit?.binding).toBe(
       "API_REGISTRY_RATE_LIMIT",
     );
+    expect(apiRouteDefinitions["mcp.streamable"].rateLimit).toMatchObject({
+      binding: "API_MCP_RATE_LIMIT",
+      limit: 60,
+      windowMs: 60_000,
+    });
     expect(routerSource).toContain("binding.limit({ key })");
   });
 

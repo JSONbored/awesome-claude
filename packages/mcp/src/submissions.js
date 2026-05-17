@@ -472,6 +472,232 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
   };
 }
 
+function singularLabel(value) {
+  const label = normalizeText(value || "Entry");
+  return label.endsWith("s") ? label.slice(0, -1) : label;
+}
+
+function exampleValueForField(fieldId, category, label) {
+  switch (fieldId) {
+    case "name":
+    case "title":
+      return `Example ${singularLabel(label)}`;
+    case "slug":
+      return `example-${category || "entry"}`;
+    case "category":
+      return category;
+    case "github_url":
+      return `https://github.com/example/example-${category || "entry"}`;
+    case "docs_url":
+    case "source_url":
+      return `https://example.com/${category || "entry"}/docs`;
+    case "download_url":
+      return `https://example.com/${category || "entry"}/download.zip`;
+    case "brand_name":
+      return "Example";
+    case "brand_domain":
+      return "example.com";
+    case "author":
+      return "@example";
+    case "contact_email":
+      return "@example";
+    case "tags":
+      return "claude, workflow, example";
+    case "description":
+      return `A practical ${singularLabel(label).toLowerCase()} for Claude users that includes source-backed setup and usage details.`;
+    case "card_description":
+      return `Practical ${singularLabel(label).toLowerCase()} for Claude workflows.`;
+    case "full_copyable_content":
+      return `# Example ${singularLabel(label)}\n\nUse this complete content as the copyable public artifact.`;
+    case "install_command":
+      return `npx -y example-${category || "entry"}`;
+    case "usage_snippet":
+      return `Use this ${singularLabel(label).toLowerCase()} to speed up a Claude workflow.`;
+    case "command_syntax":
+      return `/example-${category || "entry"} <input>`;
+    case "trigger":
+      return "PostToolUse";
+    case "guide_content":
+      return `# Example ${singularLabel(label)}\n\nExplain the setup, usage, verification, and troubleshooting steps.`;
+    case "items":
+      return `- Example ${singularLabel(label)} item\n- Source-backed companion resource`;
+    case "script_language":
+      return "bash";
+    case "skill_type":
+      return "workflow";
+    case "skill_level":
+      return "intermediate";
+    case "verification_status":
+      return "validated";
+    case "verified_at":
+      return "2026-05-17";
+    case "config_snippet":
+      return JSON.stringify({ example: true }, null, 2);
+    case "retrieval_sources":
+      return "- https://example.com/docs";
+    case "tested_platforms":
+      return "Claude Code, Codex, Cursor";
+    case "prerequisites":
+      return "- Node.js 20+\n- Claude-compatible MCP client";
+    case "troubleshooting_section":
+      return "If setup fails, verify the install command and source URL first.";
+    case "installation_order":
+      return "Install dependencies, configure the entry, then run the verification step.";
+    case "estimated_setup_time":
+      return "10 minutes";
+    case "difficulty":
+      return "intermediate";
+    default:
+      return `Example ${fieldId.replaceAll("_", " ")}`;
+  }
+}
+
+function exampleForCategory(spec, category) {
+  const model = modelFor(spec, category);
+  const fields = Object.fromEntries(
+    (model?.fields || []).map((field) => [
+      field.id,
+      exampleValueForField(field.id, category, model?.label),
+    ]),
+  );
+  fields.category = category;
+
+  const minimalFields = {};
+  for (const field of requiredFields(model)) {
+    minimalFields[field] = fields[field];
+  }
+  minimalFields.category = category;
+
+  for (const field of [
+    "name",
+    "description",
+    "github_url",
+    "docs_url",
+    "install_command",
+    "usage_snippet",
+    "download_url",
+    "guide_content",
+    "items",
+  ]) {
+    if (fields[field]) minimalFields[field] = fields[field];
+  }
+
+  return {
+    category,
+    label: model?.label || category,
+    template: model?.template || templateFor(spec, category)?.template || "",
+    requiredFields: requiredFields(model),
+    minimalFields,
+    completeFields: fields,
+    notes: [
+      "Use canonical source URLs and avoid affiliate/referral links.",
+      "The generated issue draft is a maintainer-reviewed submission, not automatic publication.",
+    ],
+  };
+}
+
+export function getSubmissionExamplesFromSpec(spec, args = {}) {
+  const category = selectedCategory(spec, args.category);
+  if (args.category && !category) {
+    return {
+      ok: false,
+      error: {
+        code: "not_found",
+        message: `No HeyClaude submission examples found for ${args.category}.`,
+      },
+    };
+  }
+
+  const categories = category ? [category] : categoryKeys(spec);
+  return {
+    ok: true,
+    categories: categories.map((key) => exampleForCategory(spec, key)),
+    reviewModel:
+      "Examples are draft helpers only; maintainers review accepted submissions before import.",
+  };
+}
+
+export function prepareSubmissionDraftFromSpec(spec, args = {}) {
+  const fields = normalizeSubmissionFields(args.fields || {});
+  const validation = validateAgainstSpec(spec, fields);
+  const issueDraft = validation.category
+    ? buildIssueDraftFromSpec(spec, validation.normalized)
+    : null;
+  const urls = buildSubmissionUrlsFromSpec(spec, {
+    fields: validation.normalized,
+    includeIssueBody: true,
+  });
+
+  return {
+    ok: true,
+    valid: validation.valid,
+    category: validation.category,
+    slug: validation.normalized.slug || "",
+    normalizedFields: validation.normalized,
+    requiredFields: validation.requiredFields || [],
+    missingRequiredFields: validation.missingRequiredFields || [],
+    errors: validation.errors,
+    warnings: validation.warnings,
+    issueDraft,
+    submitUrl: urls.submitUrl,
+    githubIssueUrl: urls.githubIssueUrl,
+    reviewChecklist: [
+      "Confirm category fit and required fields before opening the issue.",
+      "Check for existing registry entries with the same source, slug, or title.",
+      "Verify source URLs, install commands, and copied content before maintainer approval.",
+      "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
+    ],
+    submissionPolicy:
+      "This tool prepares a review issue only. HeyClaude does not auto-publish MCP-submitted content.",
+  };
+}
+
+export function reviewSubmissionDraftFromSpec(spec, args = {}, entries = []) {
+  const validation = validateAgainstSpec(spec, args.fields || {});
+  const duplicateArgs = {
+    category: validation.category,
+    slug: validation.normalized.slug,
+    title: validation.normalized.title || validation.normalized.name,
+    name: validation.normalized.name,
+    sourceUrl:
+      validation.normalized.github_url ||
+      validation.normalized.docs_url ||
+      validation.normalized.source_url,
+    brandDomain: validation.normalized.brand_domain,
+    limit: args.duplicateLimit || 5,
+  };
+  const duplicates = searchDuplicateEntries(entries, duplicateArgs);
+  const recommendedAction = validation.valid
+    ? duplicates.count > 0
+      ? "review_possible_duplicate"
+      : "open_review_issue"
+    : "fix_required_fields";
+
+  return {
+    ok: true,
+    valid: validation.valid,
+    category: validation.category,
+    slug: validation.normalized.slug || "",
+    recommendedAction,
+    errors: validation.errors,
+    warnings: validation.warnings,
+    missingRequiredFields: validation.missingRequiredFields || [],
+    duplicateReview: duplicates,
+    reviewChecklist: [
+      "Schema-valid is not publish-valid; maintainer review is still required.",
+      "Check category fit against the actual artifact, not only the submitter's selected category.",
+      "Verify source availability, install commands, and any credential/payment-sensitive behavior.",
+      "Reject or request edits for affiliate/referral links, unsupported claims, or unclear paid/sponsored positioning.",
+    ],
+    nextSteps: validation.valid
+      ? [
+          "Open or update the canonical GitHub submission issue.",
+          "Apply maintainer review labels only after source and duplicate checks.",
+        ]
+      : ["Fix required fields and validation errors before opening an issue."],
+  };
+}
+
 function entrySourceUrls(entry) {
   return [
     entry.documentationUrl,

@@ -2,11 +2,24 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import {
   CallToolRequestSchema,
+  GetPromptRequestSchema,
+  ListPromptsRequestSchema,
+  ListResourcesRequestSchema,
+  ListResourceTemplatesRequestSchema,
   ListToolsRequestSchema,
+  ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 
 import { packageVersion } from "./package-metadata.js";
-import { callRegistryTool, TOOL_DEFINITIONS } from "./registry.js";
+import {
+  callRegistryTool,
+  getRegistryPrompt,
+  listRegistryPrompts,
+  listRegistryResources,
+  listRegistryResourceTemplates,
+  readRegistryResource,
+  TOOL_DEFINITIONS,
+} from "./registry.js";
 
 export function createHeyClaudeMcpServer(options = {}) {
   const server = new Server(
@@ -16,6 +29,8 @@ export function createHeyClaudeMcpServer(options = {}) {
     },
     {
       capabilities: {
+        prompts: {},
+        resources: {},
         tools: {},
       },
     },
@@ -33,6 +48,10 @@ export function createHeyClaudeMcpServer(options = {}) {
     );
     return {
       isError: result.ok === false,
+      structuredContent:
+        result && typeof result === "object" && !Array.isArray(result)
+          ? result
+          : { result },
       content: [
         {
           type: "text",
@@ -41,6 +60,26 @@ export function createHeyClaudeMcpServer(options = {}) {
       ],
     };
   });
+
+  server.setRequestHandler(ListResourcesRequestSchema, async (request) =>
+    listRegistryResources(request.params || {}, options),
+  );
+
+  server.setRequestHandler(ListResourceTemplatesRequestSchema, async () =>
+    listRegistryResourceTemplates(),
+  );
+
+  server.setRequestHandler(ReadResourceRequestSchema, async (request) =>
+    readRegistryResource(request.params || {}, options),
+  );
+
+  server.setRequestHandler(ListPromptsRequestSchema, async () =>
+    listRegistryPrompts(),
+  );
+
+  server.setRequestHandler(GetPromptRequestSchema, async (request) =>
+    getRegistryPrompt(request.params || {}),
+  );
 
   return server;
 }

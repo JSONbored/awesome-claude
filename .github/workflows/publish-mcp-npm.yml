@@ -45,7 +45,7 @@ jobs:
         run: pnpm test:mcp
 
       - name: Validate production MCP endpoint
-        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
+        run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools
 
       - name: Dry-run MCP package tarball
         run: pnpm --filter @heyclaude/mcp pack --dry-run --json
@@ -119,7 +119,7 @@ jobs:
             printf -- "- npm package: https://www.npmjs.com/package/@heyclaude/mcp/v/%s\n\n" "$RELEASE_VERSION"
             printf "## Validation\n\n"
             printf -- "- \`pnpm test:mcp\`\n"
-            printf -- "- \`pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp\`\n"
+            printf -- "- \`pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools\`\n"
             printf -- "- \`pnpm --filter @heyclaude/mcp pack --dry-run --json\`\n"
             printf -- "- \`MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package\`\n"
           } > "$notes_file"

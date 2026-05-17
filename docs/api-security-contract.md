@@ -12,6 +12,7 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - `/api/registry/diff`
 - `/api/registry/entries/{category}/{slug}`
 - `/api/registry/entries/{category}/{slug}/llms`
+- `/api/mcp`
 - `/data/*.json` registry artifacts
 - `/data/feeds/index.json`
 - `/data/feeds/categories/{category}.json`
@@ -59,9 +60,11 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - Production submissions should set `SUBMISSIONS_REQUIRE_TURNSTILE=1` and
   `TURNSTILE_SECRET_KEY`; if the requirement is enabled without a secret, the
   endpoint fails closed instead of accepting direct website submissions.
-- Cloudflare rate-limit bindings are configured for registry, dynamic, and
-  strict routes. In-process limits remain a local/dev fallback when the Worker
-  binding is unavailable.
+- Cloudflare rate-limit bindings are configured for registry, dynamic, strict,
+  and MCP routes. The public no-key MCP endpoint uses a dedicated
+  `API_MCP_RATE_LIMIT` binding with a `60 requests/minute/IP` production cap.
+  In-process limits remain a local/dev fallback when the Worker binding is
+  unavailable.
 - Next and Worker responses attach security headers in code as well as static
   asset headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.

@@ -1,10 +1,18 @@
 import fs from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
+import { createRemoteMcpProxyServerFromClient } from "../packages/mcp/src/remote-proxy.js";
+import { createHeyClaudeMcpServer } from "../packages/mcp/src/server.js";
 import {
   callRegistryTool,
+  getRegistryPrompt,
+  listRegistryPrompts,
+  listRegistryResources,
+  listRegistryResourceTemplates,
   READ_ONLY_TOOL_NAMES,
+  readRegistryResource,
   TOOL_DEFINITIONS,
 } from "../packages/mcp/src/registry.js";
 import {
@@ -15,6 +23,15 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 const dataDir = path.join(repoRoot, "apps/web/public/data");
+const packageRequire = createRequire(
+  path.join(repoRoot, "packages/mcp/package.json"),
+);
+const { Client } = await import(
+  packageRequire.resolve("@modelcontextprotocol/sdk/client/index.js")
+);
+const { InMemoryTransport } = await import(
+  packageRequire.resolve("@modelcontextprotocol/sdk/inMemory.js")
+);
 
 function firstSkill() {
   const payload = JSON.parse(
@@ -30,6 +47,206 @@ function firstSkill() {
 }
 
 const skill = firstSkill();
+
+function secondSkill() {
+  const payload = JSON.parse(
+    fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+  ) as {
+    entries: Array<{ category: string; slug: string; title: string }>;
+  };
+  const entry = payload.entries.find(
+    (candidate) =>
+      candidate.category === skill.category && candidate.slug !== skill.slug,
+  );
+  if (!entry) throw new Error("Expected at least two skill entries.");
+  return entry;
+}
+
+const otherSkill = secondSkill();
+
+const validMcpSubmissionFields = {
+  category: "mcp",
+  name: "Example Protocol MCP",
+  docs_url: "https://example.com/docs",
+  description:
+    "Example MCP server submission used to verify the protocol-level tool surface.",
+  install_command: "npx -y example-protocol-mcp",
+  usage_snippet: "Add this server to your MCP client configuration.",
+};
+
+function validToolArguments(name: string) {
+  const argsByTool: Record<string, unknown> = {
+    search_registry: { query: "mcp", limit: 1 },
+    server_info: {},
+    list_category_entries: { category: "mcp", limit: 1 },
+    get_recent_updates: { limit: 1 },
+    get_related_entries: {
+      category: skill.category,
+      slug: skill.slug,
+      limit: 1,
+    },
+    get_entry_detail: { category: skill.category, slug: skill.slug },
+    get_copyable_asset: {
+      category: skill.category,
+      slug: skill.slug,
+      platform: "claude",
+    },
+    compare_entries: {
+      entries: [
+        { category: skill.category, slug: skill.slug },
+        { category: otherSkill.category, slug: otherSkill.slug },
+      ],
+      platform: "claude",
+    },
+    get_registry_stats: {},
+    get_client_setup: { client: "codex" },
+    get_compatibility: { slug: skill.slug },
+    get_install_guidance: {
+      category: skill.category,
+      slug: skill.slug,
+      platform: "claude",
+    },
+    get_platform_adapter: { slug: skill.slug, platform: "cursor-rules" },
+    list_distribution_feeds: {},
+    get_submission_schema: { category: "mcp" },
+    validate_submission_draft: { fields: validMcpSubmissionFields },
+    search_duplicate_entries: {
+      category: skill.category,
+      slug: skill.slug,
+      limit: 1,
+    },
+    build_submission_urls: { fields: validMcpSubmissionFields },
+    get_category_submission_guidance: { category: "mcp" },
+    prepare_submission_draft: { fields: validMcpSubmissionFields },
+    get_submission_examples: { category: "mcp" },
+    review_submission_draft: { fields: validMcpSubmissionFields },
+  };
+  if (!(name in argsByTool)) {
+    throw new Error(`Missing protocol test arguments for ${name}.`);
+  }
+  return argsByTool[name];
+}
+
+async function withMcpClient<T>(run: (client: any) => Promise<T>) {
+  const server = createHeyClaudeMcpServer({ dataDir });
+  return withMcpClientForServer(server, run);
+}
+
+async function withMcpClientForServer<T>(
+  server: any,
+  run: (client: any) => Promise<T>,
+) {
+  const [clientTransport, serverTransport] =
+    InMemoryTransport.createLinkedPair();
+  const client = new Client({
+    name: "heyclaude-protocol-test",
+    version: "0.0.0",
+  });
+
+  await server.connect(serverTransport);
+  await client.connect(clientTransport);
+  try {
+    return await run(client);
+  } finally {
+    await client.close().catch(() => {});
+    await server.close().catch(() => {});
+  }
+}
+
+function fakeRemoteClient() {
+  const directoryResource = {
+    uri: "heyclaude://feeds/directory",
+    name: "directory",
+    title: "directory",
+    mimeType: "application/json",
+  };
+  return {
+    getServerCapabilities() {
+      return { tools: {}, resources: {}, prompts: {} };
+    },
+    async listTools() {
+      return {
+        tools: [
+          {
+            name: "search_registry",
+            description: "Remote search.",
+            inputSchema: { type: "object", additionalProperties: true },
+            outputSchema: {
+              type: "object",
+              properties: { ok: { type: "boolean" } },
+              required: ["ok"],
+              additionalProperties: true,
+            },
+            annotations: {
+              readOnlyHint: false,
+              destructiveHint: true,
+              idempotentHint: false,
+            },
+          },
+        ],
+      };
+    },
+    async callTool() {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ ok: true, count: 0, entries: [] }),
+          },
+        ],
+      };
+    },
+    async listResources() {
+      return { resources: [directoryResource] };
+    },
+    async listResourceTemplates() {
+      return {
+        resourceTemplates: [
+          {
+            uriTemplate: "heyclaude://entry/{category}/{slug}",
+            name: "entry",
+            title: "entry",
+            mimeType: "application/json",
+          },
+        ],
+      };
+    },
+    async readResource() {
+      return {
+        contents: [
+          {
+            uri: directoryResource.uri,
+            mimeType: "application/json",
+            text: JSON.stringify({ ok: true, entries: [] }),
+          },
+        ],
+      };
+    },
+    async listPrompts() {
+      return {
+        prompts: [
+          {
+            name: "find_best_asset",
+            description: "Remote prompt.",
+            arguments: [],
+          },
+        ],
+      };
+    },
+    async getPrompt() {
+      return {
+        description: "Remote prompt.",
+        messages: [
+          {
+            role: "user",
+            content: { type: "text", text: "Use remote discovery tools." },
+          },
+        ],
+      };
+    },
+    async close() {},
+  };
+}
 
 describe("HeyClaude read-only MCP helpers", () => {
   it("keeps the MCP package publishable without private workspace dependencies", () => {
@@ -105,10 +322,21 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
     expect(Object.keys(TOOL_INPUT_SCHEMAS)).toEqual(READ_ONLY_TOOL_NAMES);
     for (const tool of TOOL_DEFINITIONS) {
-      expect(tool.name).not.toMatch(/create|publish|write|delete|pr/i);
-      expect(tool.description).toMatch(
-        /read-only|fetch|search|list|validate|build|guidance/i,
+      expect(tool.name).not.toMatch(
+        /create_issue|create_pull_request|publish_content|write_file|delete/i,
       );
+      expect(tool.description).toMatch(
+        /read-only|fetch|search|list|validate|build|guidance|review/i,
+      );
+      expect(tool.annotations).toMatchObject({
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+      });
+      expect(tool.outputSchema).toMatchObject({
+        type: "object",
+        required: ["ok"],
+      });
       expect(tool.inputSchema).toEqual(jsonSchemaForTool(tool.name));
       expect(tool.inputSchema).toMatchObject({
         type: "object",
@@ -116,6 +344,188 @@ describe("HeyClaude read-only MCP helpers", () => {
       });
       expect(JSON.stringify(tool.inputSchema)).not.toContain("$schema");
     }
+  });
+
+  it("serves every public tool with structured output through the MCP SDK", async () => {
+    await withMcpClient(async (client) => {
+      const tools = await client.listTools();
+      expect(tools.tools.map((tool) => tool.name)).toEqual(
+        READ_ONLY_TOOL_NAMES,
+      );
+      for (const tool of tools.tools) {
+        expect(tool.outputSchema).toMatchObject({
+          type: "object",
+          required: ["ok"],
+        });
+        expect(tool.annotations).toMatchObject({
+          readOnlyHint: true,
+          destructiveHint: false,
+          idempotentHint: true,
+        });
+      }
+
+      for (const name of READ_ONLY_TOOL_NAMES) {
+        const result = await client.callTool({
+          name,
+          arguments: validToolArguments(name),
+        });
+        expect(result.isError).not.toBe(true);
+        expect(result.structuredContent).toMatchObject({
+          ok: true,
+          policy: {
+            apiKeyRequired: false,
+            readOnly: true,
+            createsIssues: false,
+            createsPullRequests: false,
+            publishesContent: false,
+            writesLocalFiles: false,
+          },
+        });
+        const text = result.content?.find((item) => item.type === "text")?.text;
+        expect(text).toBeTruthy();
+        expect(JSON.parse(String(text))).toEqual(result.structuredContent);
+      }
+    });
+  });
+
+  it("serves resources and prompts through the MCP SDK", async () => {
+    await withMcpClient(async (client) => {
+      const resources = await client.listResources();
+      expect(resources.resources).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            uri: "heyclaude://feeds/directory",
+            mimeType: "application/json",
+          }),
+          expect.objectContaining({ uri: "heyclaude://category/skills" }),
+        ]),
+      );
+
+      const templates = await client.listResourceTemplates();
+      expect(templates.resourceTemplates).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            uriTemplate: "heyclaude://entry/{category}/{slug}",
+          }),
+          expect.objectContaining({
+            uriTemplate: "heyclaude://category/{category}",
+          }),
+        ]),
+      );
+
+      const entryResource = await client.readResource({
+        uri: `heyclaude://entry/${skill.category}/${skill.slug}`,
+      });
+      const entryPayload = JSON.parse(entryResource.contents[0].text);
+      expect(entryPayload).toMatchObject({
+        ok: true,
+        key: `${skill.category}:${skill.slug}`,
+        policy: { readOnly: true },
+      });
+
+      const prompts = await client.listPrompts();
+      expect(prompts.prompts.map((prompt) => prompt.name)).toEqual([
+        "find_best_asset",
+        "prepare_submission",
+        "review_submission_before_issue",
+        "install_asset_safely",
+      ]);
+
+      const prompt = await client.getPrompt({
+        name: "find_best_asset",
+        arguments: {
+          use_case: "find an MCP server for code review",
+          category: "mcp",
+          platform: "Codex",
+        },
+      });
+      expect(prompt.messages[0].content.text).toContain("compare_entries");
+      expect(prompt.messages[0].content.text).toContain(
+        "Do not invent popularity metrics",
+      );
+    });
+  });
+
+  it("normalizes remote proxy tools, annotations, and structured output", async () => {
+    const { server } = await createRemoteMcpProxyServerFromClient(
+      fakeRemoteClient(),
+      {
+        url: "https://example.com/api/mcp",
+        timeoutMs: 1000,
+      },
+    );
+
+    await withMcpClientForServer(server, async (client) => {
+      const tools = await client.listTools();
+      expect(tools.tools).toEqual([
+        expect.objectContaining({
+          name: "search_registry",
+          annotations: expect.objectContaining({
+            readOnlyHint: true,
+            destructiveHint: false,
+            idempotentHint: true,
+            openWorldHint: false,
+          }),
+        }),
+      ]);
+
+      const result = await client.callTool({
+        name: "search_registry",
+        arguments: { query: "mcp" },
+      });
+      expect(result.isError).not.toBe(true);
+      expect(result.structuredContent).toMatchObject({
+        ok: true,
+        count: 0,
+        policy: {
+          apiKeyRequired: false,
+          readOnly: true,
+          createsIssues: false,
+          createsPullRequests: false,
+          publishesContent: false,
+          writesLocalFiles: false,
+        },
+      });
+
+      const resources = await client.listResources();
+      expect(resources.resources[0]).toMatchObject({
+        uri: "heyclaude://feeds/directory",
+      });
+      const prompts = await client.listPrompts();
+      expect(prompts.prompts[0]).toMatchObject({ name: "find_best_asset" });
+    });
+  });
+
+  it("reports public no-key MCP server metadata and durable rate-limit policy", async () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
+    ) as { name: string; version: string };
+
+    const info = await callRegistryTool("server_info", {}, { dataDir });
+    expect(info).toMatchObject({
+      ok: true,
+      package: {
+        name: packageJson.name,
+        version: packageJson.version,
+      },
+      endpoint: {
+        auth: "none",
+        requestBodyLimitBytes: 64 * 1024,
+        rateLimit: {
+          binding: "API_MCP_RATE_LIMIT",
+          limit: 60,
+          windowSeconds: 60,
+        },
+      },
+      policy: {
+        apiKeyRequired: false,
+        readOnly: true,
+        createsIssues: false,
+        createsPullRequests: false,
+        publishesContent: false,
+      },
+    });
+    expect(info.tools).toEqual(READ_ONLY_TOOL_NAMES);
   });
 
   it("validates MCP tool arguments from shared Zod schemas", async () => {
@@ -191,6 +601,85 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result.entries[0].platforms).toContain("Cursor");
   });
 
+  it("lists category entries with bounded pagination and filters", async () => {
+    const result = await callRegistryTool(
+      "list_category_entries",
+      {
+        category: "skills",
+        platform: "cursor-rules",
+        tag: "evals",
+        limit: 2,
+      },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      category: "skills",
+      platform: "Cursor",
+      tag: "evals",
+      count: expect.any(Number),
+      limit: 2,
+      offset: 0,
+    });
+    expect(result.entries.length).toBeLessThanOrEqual(2);
+    expect(result.entries[0]).toMatchObject({
+      category: "skills",
+      canonicalUrl: expect.stringContaining("/skills/"),
+      dateAdded: expect.any(String),
+    });
+    expect(result.entries[0].tags).toContain("evals");
+    expect(result.entries[0].platforms).toContain("Cursor");
+  });
+
+  it("lists recent updates from generated registry metadata", async () => {
+    const result = await callRegistryTool(
+      "get_recent_updates",
+      { limit: 5 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({ ok: true, count: 5 });
+    const dates = result.entries.map((entry: any) => entry.updatedAt);
+    expect(dates).toEqual([...dates].sort().reverse());
+    expect(result.entries[0]).toMatchObject({
+      key: expect.stringContaining(":"),
+      updateKind: expect.stringMatching(/added|upstream_update/),
+    });
+
+    const since = await callRegistryTool(
+      "get_recent_updates",
+      { since: result.entries[0].updatedAt, limit: 5 },
+      { dataDir },
+    );
+    expect(since).toMatchObject({
+      ok: true,
+      since: result.entries[0].updatedAt,
+    });
+  });
+
+  it("returns related entries without returning the requested entry", async () => {
+    const result = await callRegistryTool(
+      "get_related_entries",
+      { category: skill.category, slug: skill.slug, limit: 5 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      key: `${skill.category}:${skill.slug}`,
+      count: expect.any(Number),
+    });
+    expect(result.entries.length).toBeGreaterThan(0);
+    expect(result.entries.map((entry: any) => entry.key)).not.toContain(
+      `${skill.category}:${skill.slug}`,
+    );
+    expect(result.entries[0]).toMatchObject({
+      relatedScore: expect.any(Number),
+      relatedReasons: expect.arrayContaining([expect.any(String)]),
+    });
+  });
+
   it("fetches entry detail and install guidance without write capabilities", async () => {
     const detail = await callRegistryTool(
       "get_entry_detail",
@@ -214,6 +703,168 @@ describe("HeyClaude read-only MCP helpers", () => {
       platform: "Claude",
     });
     expect(guidance).not.toHaveProperty("writePath");
+  });
+
+  it("returns category-aware copyable assets and comparison metadata", async () => {
+    const asset = await callRegistryTool(
+      "get_copyable_asset",
+      { category: skill.category, slug: skill.slug, platform: "claude" },
+      { dataDir },
+    );
+    expect(asset).toMatchObject({
+      ok: true,
+      key: `${skill.category}:${skill.slug}`,
+      primaryAsset: {
+        type: expect.stringMatching(/install_command|full_content|usage/),
+        content: expect.any(String),
+      },
+      source: {
+        sourceHosts: expect.any(Array),
+      },
+      policy: {
+        readOnly: true,
+        writesLocalFiles: false,
+      },
+    });
+    expect(JSON.stringify(asset)).not.toMatch(
+      /createIssue|createPullRequest|publish_content|writePath/i,
+    );
+
+    const directory = JSON.parse(
+      fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+    ) as {
+      entries: Array<{ category: string; slug: string }>;
+    };
+    const second = directory.entries.find(
+      (entry) => entry.category === skill.category && entry.slug !== skill.slug,
+    );
+    expect(second).toBeTruthy();
+    const compared = await callRegistryTool(
+      "compare_entries",
+      {
+        entries: [
+          { category: skill.category, slug: skill.slug },
+          { category: second?.category, slug: second?.slug },
+        ],
+        platform: "claude",
+      },
+      { dataDir },
+    );
+    expect(compared).toMatchObject({
+      ok: true,
+      count: 2,
+      platform: "Claude",
+      entries: [
+        expect.objectContaining({
+          key: `${skill.category}:${skill.slug}`,
+          installComplexity: expect.stringMatching(/unknown|low|medium|higher/),
+        }),
+        expect.any(Object),
+      ],
+      policy: { readOnly: true },
+    });
+  });
+
+  it("returns registry stats and client setup snippets without auth requirements", async () => {
+    const stats = await callRegistryTool("get_registry_stats", {}, { dataDir });
+    expect(stats).toMatchObject({
+      ok: true,
+      package: { name: "@heyclaude/mcp" },
+      registry: {
+        totalEntries: expect.any(Number),
+        categories: expect.any(Object),
+      },
+      sourceSignals: {
+        entriesWithGithubStats: expect.any(Number),
+        installableEntries: expect.any(Number),
+      },
+      policy: { apiKeyRequired: false, readOnly: true },
+    });
+
+    const setup = await callRegistryTool(
+      "get_client_setup",
+      { client: "codex" },
+      { dataDir },
+    );
+    expect(setup).toMatchObject({
+      ok: true,
+      apiKeyRequired: false,
+      snippets: {
+        codex: {
+          config: {
+            mcpServers: {
+              heyclaude: {
+                command: "npx",
+                args: ["-y", "@heyclaude/mcp"],
+              },
+            },
+          },
+        },
+      },
+      policy: { createsIssues: false },
+    });
+  });
+
+  it("exposes registry resources and workflow prompts through MCP helpers", async () => {
+    await expect(listRegistryResources({}, { dataDir })).resolves.toMatchObject(
+      {
+        resources: expect.arrayContaining([
+          expect.objectContaining({
+            uri: "heyclaude://feeds/directory",
+            mimeType: "application/json",
+          }),
+          expect.objectContaining({
+            uri: "heyclaude://category/skills",
+          }),
+        ]),
+      },
+    );
+    expect(listRegistryResourceTemplates()).toMatchObject({
+      resourceTemplates: expect.arrayContaining([
+        expect.objectContaining({
+          uriTemplate: "heyclaude://entry/{category}/{slug}",
+        }),
+      ]),
+    });
+    await expect(
+      readRegistryResource(
+        { uri: `heyclaude://entry/${skill.category}/${skill.slug}` },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      contents: [
+        {
+          mimeType: "application/json",
+          text: expect.stringContaining(`"${skill.slug}"`),
+        },
+      ],
+    });
+
+    expect(listRegistryPrompts()).toMatchObject({
+      prompts: expect.arrayContaining([
+        expect.objectContaining({ name: "find_best_asset" }),
+        expect.objectContaining({ name: "install_asset_safely" }),
+      ]),
+    });
+    expect(
+      getRegistryPrompt({
+        name: "install_asset_safely",
+        arguments: {
+          category: skill.category,
+          slug: skill.slug,
+          platform: "Claude",
+        },
+      }),
+    ).toMatchObject({
+      messages: [
+        {
+          role: "user",
+          content: {
+            text: expect.stringContaining("get_install_guidance"),
+          },
+        },
+      ],
+    });
   });
 
   it("returns compatibility and generated Cursor adapter content", async () => {
@@ -334,6 +985,78 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(JSON.stringify(urls)).not.toMatch(/token|secret|authorization/i);
   });
 
+  it("prepares and reviews submission drafts without GitHub writes", async () => {
+    const fields = {
+      category: "mcp",
+      name: "Example Draft MCP",
+      docs_url: "https://example.com/docs",
+      description:
+        "Example MCP server submission used to test stronger draft tooling.",
+      install_command: "npx -y example-draft-mcp",
+      usage_snippet: "Add this server to your MCP client configuration.",
+    };
+
+    const prepared = await callRegistryTool(
+      "prepare_submission_draft",
+      { fields },
+      { dataDir },
+    );
+    expect(prepared).toMatchObject({
+      ok: true,
+      valid: true,
+      category: "mcp",
+      issueDraft: {
+        title: "Submit MCP Server: Example Draft MCP",
+        labels: expect.arrayContaining(["content-submission", "community-mcp"]),
+        body: expect.stringContaining("### Install command"),
+      },
+      githubIssueUrl: expect.stringContaining("template=submit-mcp.yml"),
+      submissionPolicy: expect.stringContaining("does not auto-publish"),
+    });
+
+    const reviewed = await callRegistryTool(
+      "review_submission_draft",
+      { fields },
+      { dataDir },
+    );
+    expect(reviewed).toMatchObject({
+      ok: true,
+      valid: true,
+      recommendedAction: expect.stringMatching(
+        /open_review_issue|review_possible_duplicate/,
+      ),
+      duplicateReview: { ok: true },
+      reviewChecklist: expect.arrayContaining([
+        expect.stringContaining("maintainer review"),
+      ]),
+    });
+    expect(JSON.stringify({ prepared, reviewed })).not.toMatch(
+      /token|secret|authorization|createIssue|createPullRequest/i,
+    );
+  });
+
+  it("returns category submission examples for faster valid drafts", async () => {
+    const examples = await callRegistryTool(
+      "get_submission_examples",
+      { category: "guides" },
+      { dataDir },
+    );
+    expect(examples).toMatchObject({
+      ok: true,
+      categories: [
+        {
+          category: "guides",
+          requiredFields: expect.arrayContaining(["guide_content"]),
+          minimalFields: {
+            category: "guides",
+            guide_content: expect.stringContaining("# Example"),
+          },
+        },
+      ],
+      reviewModel: expect.stringContaining("maintainers review"),
+    });
+  });
+
   it("finds likely duplicate entries before submission", async () => {
     const duplicate = await callRegistryTool(
       "search_duplicate_entries",
@@ -377,6 +1100,30 @@ describe("HeyClaude read-only MCP helpers", () => {
         details: [
           expect.objectContaining({
             path: "fields",
+            code: "unrecognized_keys",
+          }),
+        ],
+      },
+    });
+
+    await expect(
+      callRegistryTool(
+        "compare_entries",
+        {
+          entries: [
+            { category: "skills", slug: skill.slug },
+            { category: "skills", slug: skill.slug, writePath: "/tmp/x" },
+          ],
+        },
+        { dataDir },
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        details: [
+          expect.objectContaining({
+            path: "entries.1",
             code: "unrecognized_keys",
           }),
         ],
