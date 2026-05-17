@@ -7,35 +7,19 @@ import {
 } from "@/lib/api/router";
 import { logApiWarn } from "@/lib/api-logs";
 import { getSiteDb } from "@/lib/db";
-
-const EVENT_TYPES = new Set(["copy", "open", "install", "download", "vote"]);
-
-function normalizeEventType(value: unknown) {
-  const normalized = String(value ?? "")
-    .trim()
-    .toLowerCase();
-  return EVENT_TYPES.has(normalized) ? normalized : "";
-}
-
-function normalizeEntryKey(value: unknown) {
-  const normalized = String(value ?? "")
-    .trim()
-    .toLowerCase();
-  return /^[a-z0-9-]+:[a-z0-9-]+$/.test(normalized) ? normalized : "";
-}
-
-function normalizeSessionId(value: unknown) {
-  const normalized = String(value ?? "").trim();
-  return normalized.length <= 128 ? normalized : "";
-}
+import {
+  normalizeIntentEntryKey,
+  normalizeIntentEventType,
+  normalizeIntentSessionId,
+} from "@/lib/intent-events";
 
 export const POST = createApiHandler(
   "intentEvents.create",
   async ({ request, body, requestId }) => {
     const payload = body as InferApiBody<typeof intentEventsBodySchema>;
-    const eventType = normalizeEventType(payload.type);
-    const entryKey = normalizeEntryKey(payload.entryKey);
-    const sessionId = normalizeSessionId(payload.sessionId);
+    const eventType = normalizeIntentEventType(payload.type);
+    const entryKey = normalizeIntentEntryKey(payload.entryKey);
+    const sessionId = normalizeIntentSessionId(payload.sessionId);
     if (!eventType) {
       return apiError("invalid_payload", 400, { requestId });
     }

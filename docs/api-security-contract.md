@@ -24,6 +24,7 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - `/api/votes/query`
 - `/api/votes/toggle`
 - `/api/community-signals`
+- `/api/community-signals/query`
 - `/api/intent-events`
 - `/api/newsletter/subscribe`
 - `/api/newsletter/webhook`

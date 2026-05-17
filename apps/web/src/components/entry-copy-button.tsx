@@ -14,6 +14,8 @@ type EntryCopyButtonProps = {
   className?: string;
   iconOnly?: boolean;
   title?: string;
+  intentType?: "copy" | "install" | "download";
+  entryKey?: string;
 };
 
 export function EntryCopyButton({
@@ -23,6 +25,8 @@ export function EntryCopyButton({
   className,
   iconOnly = false,
   title,
+  intentType,
+  entryKey,
 }: EntryCopyButtonProps) {
   const [copied, setCopied] = useState(false);
   const { pushToast } = useToast();
@@ -39,6 +43,21 @@ export function EntryCopyButton({
     try {
       await navigator.clipboard.writeText(value);
       setCopied(true);
+      const resolvedEntryKey =
+        entryKey ?? (entry ? `${entry.category}:${entry.slug}` : "");
+      const resolvedIntentType =
+        intentType ??
+        (label.toLowerCase().includes("install") ? "install" : "copy");
+      if (resolvedEntryKey) {
+        window.dispatchEvent(
+          new CustomEvent("heyclaude:intent", {
+            detail: {
+              type: resolvedIntentType,
+              entryKey: resolvedEntryKey,
+            },
+          }),
+        );
+      }
       pushToast({
         variant: "success",
         title: "Copied",

@@ -94,7 +94,7 @@ export default async function HomePage() {
       </section>
       <section className="container-shell grid gap-4 py-10 md:grid-cols-3">
         {[
-          ["Trending", "/trending", growthSurfaces.trendingCandidates.length],
+          ["Trending", "/trending", growthSurfaces.practicalPicks.length],
           ["Newly added", "/browse?sort=newest", growthSurfaces.newest.length],
           ["API", "/api-docs", directoryEntries.length],
         ].map(([label, href, count]) => (

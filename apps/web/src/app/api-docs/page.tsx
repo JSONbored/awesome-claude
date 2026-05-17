@@ -114,6 +114,11 @@ const examples = [
     href: "/api/community-signals?targetKind=tool&targetKey=tool:cursor",
     code: "curl 'https://heyclau.de/api/community-signals?targetKind=tool&targetKey=tool:cursor'",
   },
+  {
+    title: "Batch Community Signals",
+    href: "/api/community-signals/query",
+    code: 'curl -X POST https://heyclau.de/api/community-signals/query -H \'content-type: application/json\' -d \'{"targets":[{"targetKind":"entry","targetKey":"entry:mcp/asana-mcp-server"}]}\'',
+  },
 ];
 
 export default function ApiDocsPage() {

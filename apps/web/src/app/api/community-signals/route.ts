@@ -9,108 +9,24 @@ import {
   type InferApiBody,
   type InferApiQuery,
 } from "@/lib/api/router";
-import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
-
-const SIGNAL_TYPES = ["used", "works", "broken"] as const;
-const TARGET_KINDS = ["entry", "tool"] as const;
-const ZERO_COUNTS = { used: 0, works: 0, broken: 0 };
-
-type SignalType = (typeof SIGNAL_TYPES)[number];
-type TargetKind = (typeof TARGET_KINDS)[number];
-type SignalCounts = Record<SignalType, number>;
-
-type SignalRow = {
-  signal_type: SignalType;
-  count: number;
-};
-
-function normalizeTargetKind(
-  value: string | null | undefined,
-): TargetKind | null {
-  return value && (TARGET_KINDS as readonly string[]).includes(value)
-    ? (value as TargetKind)
-    : null;
-}
-
-function normalizeSignalType(
-  value: string | null | undefined,
-): SignalType | null {
-  return value && (SIGNAL_TYPES as readonly string[]).includes(value)
-    ? (value as SignalType)
-    : null;
-}
-
-function normalizeTargetKey(value: string | null | undefined): string | null {
-  const normalized = (value || "").trim().toLowerCase();
-  return /^(entry|tool):[a-z0-9][a-z0-9-]*(\/[a-z0-9][a-z0-9-]*)?$/.test(
-    normalized,
-  )
-    ? normalized
-    : null;
-}
-
-function normalizeClientId(value: string | null | undefined): string | null {
-  const normalized = (value || "").trim();
-  return /^[a-zA-Z0-9_-]{16,96}$/.test(normalized) ? normalized : null;
-}
-
-function isExpectedUnavailableD1Error(error: unknown) {
-  const message = error instanceof Error ? error.message : String(error ?? "");
-  return (
-    message.includes("no such table: community_signals") ||
-    message.includes("SITE_DB")
-  );
-}
-
-async function readCounts(
-  db: D1DatabaseLike,
-  targetKind: TargetKind,
-  targetKey: string,
-): Promise<SignalCounts> {
-  const counts = { ...ZERO_COUNTS };
-  const { results } = await db
-    .prepare(
-      `SELECT signal_type, COUNT(*) AS count
-       FROM community_signals
-       WHERE target_kind = ? AND target_key = ?
-       GROUP BY signal_type`,
-    )
-    .bind(targetKind, targetKey)
-    .all<SignalRow>();
-
-  for (const row of results || []) {
-    if (SIGNAL_TYPES.includes(row.signal_type)) {
-      counts[row.signal_type] = Number(row.count) || 0;
-    }
-  }
-
-  return counts;
-}
-
-async function safeCounts(targetKind: TargetKind, targetKey: string) {
-  try {
-    const db = await getSiteDb();
-    if (!db) {
-      return { available: false, counts: { ...ZERO_COUNTS } };
-    }
-    return {
-      available: true,
-      counts: await readCounts(db, targetKind, targetKey),
-    };
-  } catch (error) {
-    if (!isExpectedUnavailableD1Error(error)) {
-      console.warn("[community-signals] failed to read counts", error);
-    }
-    return { available: false, counts: { ...ZERO_COUNTS } };
-  }
-}
+import { logApiWarn } from "@/lib/api-logs";
+import {
+  normalizeCommunityClientId,
+  normalizeCommunitySignalType,
+  normalizeCommunityTargetKey,
+  normalizeCommunityTargetKind,
+  queryCommunitySignalCounts,
+  safeCommunitySignalCounts,
+  ZERO_COMMUNITY_SIGNAL_COUNTS,
+} from "@/lib/community-signals";
+import { getSiteDb } from "@/lib/db";
 
 export const GET = createApiHandler(
   "communitySignals.read",
   async ({ query, requestId }) => {
     const payload = query as InferApiQuery<typeof communitySignalsQuerySchema>;
-    const targetKind = normalizeTargetKind(payload.targetKind);
-    const targetKey = normalizeTargetKey(payload.targetKey);
+    const targetKind = normalizeCommunityTargetKind(payload.targetKind);
+    const targetKey = normalizeCommunityTargetKey(payload.targetKey);
 
     if (!targetKind || !targetKey) {
       return apiError("invalid_payload", 400, {
@@ -120,25 +36,27 @@ export const GET = createApiHandler(
       });
     }
 
-    const { available, counts } = await safeCounts(targetKind, targetKey);
+    const { available, counts } = await safeCommunitySignalCounts([
+      { targetKind, targetKey },
+    ]);
     return apiJson({
       ok: true,
       available,
       targetKind,
       targetKey,
-      counts,
+      counts: counts[targetKey] || { ...ZERO_COMMUNITY_SIGNAL_COUNTS },
     });
   },
 );
 
 export const POST = createApiHandler(
   "communitySignals.write",
-  async ({ body, requestId }) => {
+  async ({ body, request, requestId }) => {
     const payload = body as InferApiBody<typeof communitySignalsBodySchema>;
-    const targetKind = normalizeTargetKind(payload.targetKind);
-    const targetKey = normalizeTargetKey(payload.targetKey);
-    const signalType = normalizeSignalType(payload.signalType);
-    const clientId = normalizeClientId(payload.clientId);
+    const targetKind = normalizeCommunityTargetKind(payload.targetKind);
+    const targetKey = normalizeCommunityTargetKey(payload.targetKey);
+    const signalType = normalizeCommunitySignalType(payload.signalType);
+    const clientId = normalizeCommunityClientId(payload.clientId);
 
     if (!targetKind || !targetKey || !signalType || !clientId) {
       return apiError("invalid_payload", 400, {
@@ -148,7 +66,7 @@ export const POST = createApiHandler(
     }
 
     try {
-      const db = await getSiteDb();
+      const db = getSiteDb();
       if (!db) {
         return apiJson(
           {
@@ -157,7 +75,7 @@ export const POST = createApiHandler(
             available: false,
             targetKind,
             targetKey,
-            counts: { ...ZERO_COUNTS },
+            counts: { ...ZERO_COMMUNITY_SIGNAL_COUNTS },
           },
           { status: 200 },
         );
@@ -190,6 +108,9 @@ export const POST = createApiHandler(
           .run();
       }
 
+      const counts = await queryCommunitySignalCounts(db, [
+        { targetKind, targetKey },
+      ]);
       return apiJson(
         {
           ok: true,
@@ -197,16 +118,27 @@ export const POST = createApiHandler(
           available: true,
           targetKind,
           targetKey,
-          counts: await readCounts(db, targetKind, targetKey),
+          counts: counts[targetKey] || { ...ZERO_COMMUNITY_SIGNAL_COUNTS },
         },
         { status: 200 },
       );
     } catch (error) {
-      if (!isExpectedUnavailableD1Error(error)) {
-        console.warn("[community-signals] failed to store signal", error);
+      const message = error instanceof Error ? error.message : String(error);
+      if (
+        !message.includes("no such table: community_signals") &&
+        !message.includes("SITE_DB")
+      ) {
+        logApiWarn(request, "community_signals.store_failed", {
+          error: message,
+          signalType,
+          targetKey,
+          targetKind,
+        });
       }
 
-      const { counts } = await safeCounts(targetKind, targetKey);
+      const { counts } = await safeCommunitySignalCounts([
+        { targetKind, targetKey },
+      ]);
       return apiJson(
         {
           ok: true,
@@ -214,7 +146,7 @@ export const POST = createApiHandler(
           available: false,
           targetKind,
           targetKey,
-          counts,
+          counts: counts[targetKey] || { ...ZERO_COMMUNITY_SIGNAL_COUNTS },
         },
         { status: 200 },
       );

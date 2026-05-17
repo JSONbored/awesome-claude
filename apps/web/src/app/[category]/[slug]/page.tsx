@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 
 import { BrandAsset } from "@/components/brand-asset";
+import { CommunitySignalPanel } from "@/components/community-signal-panel";
 import { ContentSections } from "@/components/content-sections";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DetailToc } from "@/components/detail-toc";
@@ -560,6 +561,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
                 <EntryCopyButton
                   text={entry.installCommand}
                   label="Copy install"
+                  intentType="install"
+                  entryKey={`${entry.category}:${entry.slug}`}
                   className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
                 />
               ) : null}
@@ -567,6 +570,8 @@ export default async function DetailPage({ params }: DetailPageProps) {
                 <EntryCopyButton
                   text={entry.configSnippet}
                   label="Copy config"
+                  intentType="copy"
+                  entryKey={`${entry.category}:${entry.slug}`}
                   className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
                 />
               ) : null}
@@ -891,6 +896,11 @@ export default async function DetailPage({ params }: DetailPageProps) {
             </div>
           </div>
         </div>
+
+        <CommunitySignalPanel
+          targetKind="entry"
+          targetKey={`entry:${entry.category}/${entry.slug}`}
+        />
 
         {entry.category === "skills" && entry.platformCompatibility?.length ? (
           <div className="surface-panel p-4">

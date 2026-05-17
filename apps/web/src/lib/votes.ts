@@ -58,6 +58,34 @@ export async function queryVoteCounts(db: D1DatabaseLike, keys: string[]) {
   return counts;
 }
 
+export async function safeVoteCounts(keys: string[]) {
+  try {
+    const db = getVotesDb();
+    if (!db) {
+      return {
+        available: false,
+        counts: getFallbackVoteCounts(keys),
+      };
+    }
+    return {
+      available: true,
+      counts: await queryVoteCounts(db, keys),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    if (
+      !message.includes("no such table: votes_entries") &&
+      !message.includes("SITE_DB")
+    ) {
+      console.warn("[votes] failed to read counts", error);
+    }
+    return {
+      available: false,
+      counts: getFallbackVoteCounts(keys),
+    };
+  }
+}
+
 export async function queryVotesByClient(
   db: D1DatabaseLike,
   keys: string[],

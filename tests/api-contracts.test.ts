@@ -38,6 +38,7 @@ const apiRoutes = [
   "/api/admin/jobs/health",
   "/api/intent-events",
   "/api/community-signals",
+  "/api/community-signals/query",
   "/api/github-stats",
   "/feed.xml",
   "/atom.xml",

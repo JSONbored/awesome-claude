@@ -80,4 +80,28 @@ describe("dynamic API route fallback behavior", () => {
       counts: { used: 0, works: 0, broken: 0 },
     });
   });
+
+  it("returns batch community-signal fallbacks when SITE_DB is unavailable", async () => {
+    const { POST } = await import("@/app/api/community-signals/query/route");
+
+    const response = await POST(
+      jsonRequest("/api/community-signals/query", {
+        targets: [
+          {
+            targetKind: "entry",
+            targetKey: "entry:mcp/asana-mcp-server",
+          },
+        ],
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      available: false,
+      counts: {
+        "entry:mcp/asana-mcp-server": { used: 0, works: 0, broken: 0 },
+      },
+    });
+  });
 });

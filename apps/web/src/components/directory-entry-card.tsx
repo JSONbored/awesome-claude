@@ -30,6 +30,12 @@ type DirectoryEntryCardProps = {
   entry: DirectoryEntry;
   voteCount?: number;
   hasVoted?: boolean;
+  communitySignals?: {
+    used?: number;
+    works?: number;
+    broken?: number;
+  };
+  intentCount?: number;
   onToggleVote?: (
     entry: DirectoryEntry,
     nextVote: boolean,
@@ -77,6 +83,8 @@ export function DirectoryEntryCard({
   entry,
   voteCount,
   hasVoted: hasVotedProp = false,
+  communitySignals,
+  intentCount = 0,
   onToggleVote,
 }: DirectoryEntryCardProps) {
   const baseVotes = 0;
@@ -93,6 +101,16 @@ export function DirectoryEntryCard({
     () => getDistributionBadges(entry),
     [entry],
   );
+  const visibleSignals = [
+    communitySignals?.used ? `Used ${compactCount(communitySignals.used)}` : "",
+    communitySignals?.works
+      ? `Works ${compactCount(communitySignals.works)}`
+      : "",
+    communitySignals?.broken
+      ? `Broken ${compactCount(communitySignals.broken)}`
+      : "",
+    intentCount ? `30d actions ${compactCount(intentCount)}` : "",
+  ].filter(Boolean);
   const repoHref = entry.repoUrl || entry.githubUrl;
   const isGitHubRepo = Boolean(repoHref && /github\.com/i.test(repoHref));
   const isGitHubSource = Boolean(
@@ -333,6 +351,14 @@ export function DirectoryEntryCard({
               title={badge.title}
             >
               {badge.label}
+            </span>
+          ))}
+          {visibleSignals.map((signal) => (
+            <span
+              key={signal}
+              className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] font-medium text-primary"
+            >
+              {signal}
             </span>
           ))}
         </div>

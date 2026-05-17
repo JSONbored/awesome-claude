@@ -433,6 +433,10 @@ export const communitySignalsBodySchema = communitySignalsQuerySchema.extend({
   active: z.boolean().optional().default(true),
 });
 
+export const communitySignalsBatchQueryBodySchema = z.object({
+  targets: z.array(communitySignalsQuerySchema).max(100).optional().default([]),
+});
+
 export const ogQuerySchema = z.object({
   title: z.string().trim().max(120).optional().default("HeyClaude"),
   description: z
@@ -920,6 +924,24 @@ export const apiRouteDefinitions = {
     rateLimit: {
       scope: "community-signals-write",
       limit: 45,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "communitySignals.query": route({
+    id: "communitySignals.query",
+    method: "POST",
+    path: "/api/community-signals/query",
+    summary: "Read community signal counts for multiple targets",
+    description:
+      "Returns aggregate used/works/broken counts for up to 100 entry or tool targets without exposing client identifiers.",
+    tags: ["Dynamic"],
+    originCheck: true,
+    bodySchema: communitySignalsBatchQueryBodySchema,
+    bodyLimitBytes: 16 * 1024,
+    rateLimit: {
+      scope: "community-signals-query",
+      limit: 90,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",
     },

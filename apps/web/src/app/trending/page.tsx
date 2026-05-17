@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DirectoryEntryCard } from "@/components/directory-entry-card";
 import { JsonLd } from "@/components/json-ld";
+import { entryCommunityTarget } from "@/lib/community-signals";
 import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { buildPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
@@ -10,6 +11,9 @@ import {
   buildBreadcrumbJsonLd,
   buildCollectionPageJsonLd,
 } from "@heyclaude/registry/seo";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Popular, trending, and new Claude resources",
@@ -36,8 +40,9 @@ export default async function TrendingPage() {
   ];
 
   const groups = [
+    ["Community trending", surfaces.communityTrending],
     ["Popular by source signals", surfaces.popularBySourceSignals],
-    ["Trending candidates", surfaces.trendingCandidates],
+    ["Practical picks", surfaces.practicalPicks],
     ["Newly added", surfaces.newest],
     ["Recently updated upstream", surfaces.recentlyUpdated],
   ] as const;
@@ -52,27 +57,48 @@ export default async function TrendingPage() {
         <span className="eyebrow">Discovery</span>
         <h1 className="section-title">Popular, trending, and new resources.</h1>
         <p className="max-w-3xl text-sm leading-8 text-muted-foreground">
-          These surfaces use visible registry fields, upstream source signals,
-          and freshness data. They do not claim private usage popularity unless
-          those metrics are explicitly collected and labeled.
+          These surfaces use visible registry fields, source-backed repository
+          signals when present, and aggregate community actions from the last 30
+          days. Empty signal groups are hidden instead of implying popularity
+          that has not been measured.
         </p>
       </div>
 
-      {groups.map(([title, entries]) => (
-        <section key={title} className="space-y-4">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-            {title}
-          </h2>
-          <div className="space-y-4">
-            {entries.slice(0, 4).map((entry) => (
-              <DirectoryEntryCard
-                key={`${title}:${entry.category}:${entry.slug}`}
-                entry={entry}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
+      {groups
+        .filter(([, entries]) => entries.length > 0)
+        .map(([title, entries]) => (
+          <section key={title} className="space-y-4">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              {title}
+            </h2>
+            <div className="space-y-4">
+              {entries.slice(0, 4).map((entry) => {
+                const key = `${entry.category}:${entry.slug}`;
+                const signalKey = entryCommunityTarget(
+                  entry.category,
+                  entry.slug,
+                );
+                const intentCounts = surfaces.intentCounts[key];
+                const intentCount = intentCounts
+                  ? intentCounts.copy +
+                    intentCounts.open +
+                    intentCounts.install +
+                    intentCounts.download +
+                    intentCounts.vote
+                  : 0;
+                return (
+                  <DirectoryEntryCard
+                    key={`${title}:${entry.category}:${entry.slug}`}
+                    entry={entry}
+                    voteCount={surfaces.voteCounts[key] ?? 0}
+                    communitySignals={surfaces.communitySignals[signalKey]}
+                    intentCount={intentCount}
+                  />
+                );
+              })}
+            </div>
+          </section>
+        ))}
     </div>
   );
 }

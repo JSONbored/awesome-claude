@@ -9,8 +9,18 @@ import {
   isValidEntryKey,
   queryVoteCounts,
   queryVotesByClient,
+  safeVoteCounts,
   toggleVote,
 } from "../apps/web/src/lib/votes";
+import {
+  getFallbackCommunitySignalCounts,
+  queryCommunitySignalCounts,
+} from "../apps/web/src/lib/community-signals";
+import {
+  getFallbackIntentEventCounts,
+  queryIntentEventCounts,
+  safeIntentEventCounts,
+} from "../apps/web/src/lib/intent-events";
 import {
   buildPublicJobsIndex,
   normalizeJobLocation,
@@ -32,6 +42,17 @@ class FakeD1 implements D1DatabaseLike {
   voteCounts = new Map<string, number>();
   votesByClient = new Set<string>();
   jobRows: QueryResult[] = [];
+  communitySignalRows: Array<{
+    target_kind: string;
+    target_key: string;
+    signal_type: string;
+    client_id: string;
+  }> = [];
+  intentEventRows: Array<{
+    entry_key: string;
+    event_type: string;
+    created_at: string;
+  }> = [];
   runCalls: Array<{ query: string; values: unknown[] }> = [];
 
   prepare(query: string) {
@@ -191,6 +212,36 @@ class FakeD1 implements D1DatabaseLike {
         .filter((key) => this.votesByClient.has(`${key}:${clientId}`))
         .map((key) => ({ entry_key: key })) as T[];
     }
+    if (query.includes("FROM community_signals")) {
+      const targets = new Set<string>();
+      for (let index = 0; index < values.length; index += 2) {
+        targets.add(`${String(values[index])}:${String(values[index + 1])}`);
+      }
+      const grouped = new Map<string, number>();
+      for (const row of this.communitySignalRows) {
+        const target = `${row.target_kind}:${row.target_key}`;
+        if (!targets.has(target)) continue;
+        const groupKey = `${row.target_kind}\u0000${row.target_key}\u0000${row.signal_type}`;
+        grouped.set(groupKey, (grouped.get(groupKey) ?? 0) + 1);
+      }
+      return [...grouped].map(([key, count]) => {
+        const [target_kind, target_key, signal_type] = key.split("\u0000");
+        return { target_kind, target_key, signal_type, count };
+      }) as T[];
+    }
+    if (query.includes("FROM intent_events")) {
+      const keys = new Set(values.slice(0, -1).map(String));
+      const grouped = new Map<string, number>();
+      for (const row of this.intentEventRows) {
+        if (!keys.has(row.entry_key)) continue;
+        const groupKey = `${row.entry_key}\u0000${row.event_type}`;
+        grouped.set(groupKey, (grouped.get(groupKey) ?? 0) + 1);
+      }
+      return [...grouped].map(([key, count]) => {
+        const [entry_key, event_type] = key.split("\u0000");
+        return { entry_key, event_type, count };
+      }) as T[];
+    }
     return [];
   }
 }
@@ -233,6 +284,116 @@ describe("D1 dynamic state helpers", () => {
     ).resolves.toEqual({
       count: 0,
       voted: false,
+    });
+  });
+
+  it("queries batch community signal counts without exposing clients", async () => {
+    const db = new FakeD1();
+    db.communitySignalRows = [
+      {
+        target_kind: "entry",
+        target_key: "entry:mcp/example-server",
+        signal_type: "used",
+        client_id: "client-a",
+      },
+      {
+        target_kind: "entry",
+        target_key: "entry:mcp/example-server",
+        signal_type: "used",
+        client_id: "client-b",
+      },
+      {
+        target_kind: "entry",
+        target_key: "entry:mcp/example-server",
+        signal_type: "works",
+        client_id: "client-a",
+      },
+      {
+        target_kind: "tool",
+        target_key: "tool:cursor",
+        signal_type: "broken",
+        client_id: "client-c",
+      },
+    ];
+
+    await expect(
+      queryCommunitySignalCounts(db, [
+        { targetKind: "entry", targetKey: "entry:mcp/example-server" },
+        { targetKind: "tool", targetKey: "tool:cursor" },
+      ]),
+    ).resolves.toEqual({
+      "entry:mcp/example-server": { used: 2, works: 1, broken: 0 },
+      "tool:cursor": { used: 0, works: 0, broken: 1 },
+    });
+  });
+
+  it("aggregates 30-day intent events by entry key", async () => {
+    const db = new FakeD1();
+    db.intentEventRows = [
+      {
+        entry_key: "mcp:example-server",
+        event_type: "copy",
+        created_at: "2026-05-01T00:00:00Z",
+      },
+      {
+        entry_key: "mcp:example-server",
+        event_type: "install",
+        created_at: "2026-05-01T00:00:00Z",
+      },
+      {
+        entry_key: "mcp:example-server",
+        event_type: "install",
+        created_at: "2026-05-02T00:00:00Z",
+      },
+    ];
+
+    await expect(
+      queryIntentEventCounts(db, ["mcp:example-server"]),
+    ).resolves.toEqual({
+      "mcp:example-server": {
+        copy: 1,
+        open: 0,
+        install: 2,
+        download: 0,
+        vote: 0,
+      },
+    });
+  });
+
+  it("returns zero dynamic discovery fallbacks when D1 is unavailable", async () => {
+    expect(
+      getFallbackCommunitySignalCounts([
+        { targetKind: "entry", targetKey: "entry:mcp/example-server" },
+      ]),
+    ).toEqual({
+      "entry:mcp/example-server": { used: 0, works: 0, broken: 0 },
+    });
+    expect(getFallbackIntentEventCounts(["mcp:example-server"])).toEqual({
+      "mcp:example-server": {
+        copy: 0,
+        open: 0,
+        install: 0,
+        download: 0,
+        vote: 0,
+      },
+    });
+    await expect(safeVoteCounts(["mcp:example-server"])).resolves.toEqual({
+      available: false,
+      counts: { "mcp:example-server": 0 },
+    });
+    await expect(
+      safeIntentEventCounts(["mcp:example-server"]),
+    ).resolves.toEqual({
+      available: false,
+      counts: {
+        "mcp:example-server": {
+          copy: 0,
+          open: 0,
+          install: 0,
+          download: 0,
+          vote: 0,
+        },
+      },
     });
   });
 
