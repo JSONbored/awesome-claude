@@ -63,6 +63,39 @@ describe("MCP config validator", () => {
     expect(result.fixedConfigText).toContain("${ENV}");
   });
 
+  it("redacts secrets from remote URLs and command args in reports and fixed snippets", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          remoteWithUrlSecret: {
+            url: "https://user:password@example.com/mcp?api_key=sk-12345678901234567890&mode=read",
+          },
+          stdioWithArgSecrets: {
+            command: "npx",
+            args: [
+              "-y",
+              "@example/mcp",
+              "token=ghp_12345678901234567890",
+              "https://example.com/sse?authorization=Bearer%20abcdef1234567890",
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.redactedSecretCount).toBe(3);
+    for (const output of [result.fixedConfigText, result.reportText]) {
+      expect(output).not.toContain("user:password");
+      expect(output).not.toContain("sk-12345678901234567890");
+      expect(output).not.toContain("ghp_12345678901234567890");
+      expect(output).not.toContain("abcdef1234567890");
+      expect(output).toContain("${URL_USERNAME}");
+      expect(output).toContain("${URL_PASSWORD}");
+      expect(output).toContain("${API_KEY}");
+    }
+  });
+
   it("preserves non-sensitive primitive values in fixed snippets", () => {
     const result = validateMcpConfigText(
       JSON.stringify({

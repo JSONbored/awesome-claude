@@ -27,6 +27,13 @@ const SECRET_VALUE_PATTERN =
   /\b(ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{40,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})\b/;
 const SHELL_OPERATOR_PATTERN = /(?:&&|\|\||[;|`<>]|\$\()/;
 
+function decodePlaceholderTokens(value: string) {
+  return value
+    .replace(/%24%7B/gi, "${")
+    .replace(/%7B/gi, "{")
+    .replace(/%7D/gi, "}");
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
@@ -52,6 +59,64 @@ function redactEnvValue(key: string, value: unknown) {
   if (!normalized || PLACEHOLDER_PATTERN.test(normalized)) return normalized;
   const placeholderKey = key || "SECRET";
   return `\${${placeholderKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_")}}`;
+}
+
+function redactUrlValue(value: string) {
+  try {
+    const parsed = new URL(value);
+    let redacted = false;
+    if (parsed.username) {
+      parsed.username = "${URL_USERNAME}";
+      redacted = true;
+    }
+    if (parsed.password) {
+      parsed.password = "${URL_PASSWORD}";
+      redacted = true;
+    }
+    for (const [key, queryValue] of parsed.searchParams.entries()) {
+      if (
+        SENSITIVE_ENV_PATTERN.test(key) ||
+        SECRET_VALUE_PATTERN.test(queryValue)
+      ) {
+        parsed.searchParams.set(
+          key,
+          `\${${key.toUpperCase().replace(/[^A-Z0-9_]/g, "_") || "SECRET"}}`,
+        );
+        redacted = true;
+      }
+    }
+    return {
+      value: decodePlaceholderTokens(parsed.toString()),
+      redactedCount: redacted ? 1 : 0,
+    };
+  } catch {
+    return { value, redactedCount: 0 };
+  }
+}
+
+function redactArgValue(value: string) {
+  const normalized = value.trim();
+  if (!normalized) return { value, redactedCount: 0 };
+  if (/^https?:\/\//i.test(normalized)) return redactUrlValue(normalized);
+  const equalIndex = normalized.indexOf("=");
+  if (equalIndex > 0) {
+    const rawKey = normalized.slice(0, equalIndex);
+    const rawValue = normalized.slice(equalIndex + 1);
+    if (
+      SENSITIVE_ENV_PATTERN.test(rawKey) ||
+      SECRET_VALUE_PATTERN.test(rawValue)
+    ) {
+      const placeholder = rawKey.toUpperCase().replace(/[^A-Z0-9_]/g, "_");
+      return {
+        value: `${rawKey}=\${${placeholder || "SECRET"}}`,
+        redactedCount: 1,
+      };
+    }
+  }
+  if (SECRET_VALUE_PATTERN.test(normalized)) {
+    return { value: "${SECRET}", redactedCount: 1 };
+  }
+  return { value, redactedCount: 0 };
 }
 
 type SanitizedValue = {
@@ -81,6 +146,12 @@ function sanitizeConfigValue(key: string, value: unknown): SanitizedValue {
   }
 
   const normalized = String(value ?? "");
+  if (typeof value === "string" && key.toLowerCase() === "url") {
+    return redactUrlValue(normalized);
+  }
+  if (typeof value === "string" && key.toLowerCase() === "args") {
+    return redactArgValue(normalized);
+  }
   const redacted = redactEnvValue(key, normalized);
   if (redacted !== normalized) {
     return {
@@ -188,6 +259,7 @@ function validateServer(name: string, raw: unknown) {
   const sanitizedRawValue = isRecord(sanitizedRaw.value)
     ? sanitizedRaw.value
     : {};
+  const sanitizedArgs = asStringArray(sanitizedRawValue.args);
   const sanitized = {
     ...sanitizedRawValue,
     ...(command ? { command } : {}),
@@ -275,8 +347,9 @@ function validateServer(name: string, raw: unknown) {
         ? ("stdio" as const)
         : ("unknown" as const),
     command,
-    url,
-    packageName: command ? packageFromRunner(command, args) : "",
+    url:
+      typeof sanitizedRawValue.url === "string" ? sanitizedRawValue.url : url,
+    packageName: command ? packageFromRunner(command, sanitizedArgs) : "",
     envKeys,
     errors,
     warnings: [...new Set(warnings)],
