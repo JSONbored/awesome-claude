@@ -48,17 +48,10 @@ function isGitHubLogin(value) {
   return GITHUB_LOGIN_PATTERN.test(normalizeText(value));
 }
 
-function neutralizeMarkdownControl(value) {
-  return normalizeText(value)
-    .replace(/#(?=\d)/g, "&#35;")
-    .replace(/@/g, "&#64;");
-}
-
 function escapeMarkdownText(value) {
-  return neutralizeMarkdownControl(compactWhitespace(value)).replace(
-    /([\\`*_{}\[\]()#+\-.!|>])/g,
-    "\\$1",
-  );
+  return compactWhitespace(value)
+    .replace(/([\\`*_{}\[\]()#+\-.!|>])/g, "\\$1")
+    .replace(/@/g, "\\@");
 }
 
 function markdownCodeSpan(value) {
@@ -76,6 +69,20 @@ function markdownCodeSpan(value) {
 function markdownDetail(value) {
   const detail = markdownCodeSpan(value);
   return detail ? ` - ${detail}` : "";
+}
+
+function markdownLabelValue(value) {
+  const text = compactWhitespace(value);
+  if (!text) return "";
+  const delimiter = text.indexOf(":");
+  if (delimiter > 0 && delimiter <= 48) {
+    const label = text.slice(0, delimiter);
+    const detail = text.slice(delimiter + 1).trim();
+    return detail
+      ? `${escapeMarkdownText(label)}: ${markdownCodeSpan(detail)}`
+      : escapeMarkdownText(label);
+  }
+  return markdownCodeSpan(text);
 }
 
 function lower(value) {
@@ -380,21 +387,6 @@ function applyContributorAnalysis(
 ) {
   const analysis = contributorAnalysis(contributor, source, fallback);
   report.contributorAnalysis = analysis;
-
-  if (analysis.login) {
-    report.trustSignals.push(
-      `Contributor analyzed: ${githubUserReference(analysis.login)}`,
-    );
-  } else {
-    const raw = normalizeText(
-      contributor.login || fallback.login || contributor.name,
-    );
-    if (raw) {
-      report.trustSignals.push(
-        `Contributor identity unresolved: ${githubUserReference(raw)}`,
-      );
-    }
-  }
 
   if (analysis.accountAgeDays !== null) {
     if (analysis.accountAgeDays < 7) {
@@ -1692,7 +1684,8 @@ export function formatSubmissionRiskMarkdown(report) {
   if (report.trustSignals.length) {
     lines.push("", "### Trust signals");
     for (const signal of report.trustSignals.slice(0, 12)) {
-      lines.push(`- ${escapeMarkdownText(signal)}`);
+      const formatted = markdownLabelValue(signal);
+      if (formatted) lines.push(`- ${formatted}`);
     }
   }
 

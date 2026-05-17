@@ -99,15 +99,10 @@ jobs:
               /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
             const isGitHubLogin = (value) =>
               GITHUB_LOGIN_PATTERN.test(normalizeText(value));
-            const neutralizeMarkdownControl = (value) =>
-              normalizeText(value)
-                .replace(/#(?=\d)/g, "&#35;")
-                .replace(/@/g, "&#64;");
             const escapeMarkdownText = (value) =>
-              neutralizeMarkdownControl(compactWhitespace(value)).replace(
-                /([\\`*_{}\[\]()#+\-.!|>])/g,
-                "\\$1"
-              );
+              compactWhitespace(value)
+                .replace(/([\\`*_{}\[\]()#+\-.!|>])/g, "\\$1")
+                .replace(/@/g, "\\@");
             const markdownCodeSpan = (value) => {
               const text = compactWhitespace(value).slice(0, 1000);
               if (!text) return "";
@@ -123,6 +118,19 @@ jobs:
             const markdownDetail = (value) => {
               const detail = markdownCodeSpan(value);
               return detail ? ` - ${detail}` : "";
+            };
+            const markdownLabelValue = (value) => {
+              const text = compactWhitespace(value);
+              if (!text) return "";
+              const delimiter = text.indexOf(":");
+              if (delimiter > 0 && delimiter <= 48) {
+                const label = text.slice(0, delimiter);
+                const detail = text.slice(delimiter + 1).trim();
+                return detail
+                  ? `${escapeMarkdownText(label)}: ${markdownCodeSpan(detail)}`
+                  : escapeMarkdownText(label);
+              }
+              return markdownCodeSpan(text);
             };
             const lower = (value) => normalizeText(value).toLowerCase();
             const frontmatterValue = (value) => {
@@ -444,20 +452,6 @@ jobs:
             ) => {
               const analysis = contributorAnalysis(contributor, source, fallback);
               report.contributorAnalysis = analysis;
-              if (analysis.login) {
-                report.trustSignals.push(
-                  `Contributor analyzed: ${githubUserReference(analysis.login)}`
-                );
-              } else {
-                const raw = normalizeText(
-                  contributor.login || fallback.login || contributor.name
-                );
-                if (raw) {
-                  report.trustSignals.push(
-                    `Contributor identity unresolved: ${githubUserReference(raw)}`
-                  );
-                }
-              }
               if (analysis.accountAgeDays !== null) {
                 if (analysis.accountAgeDays < 7) {
                   addFlag(
@@ -1473,7 +1467,8 @@ jobs:
               if (report.trustSignals.length) {
                 lines.push("", "### Trust signals");
                 for (const signal of report.trustSignals.slice(0, 12)) {
-                  lines.push(`- ${escapeMarkdownText(signal)}`);
+                  const formatted = markdownLabelValue(signal);
+                  if (formatted) lines.push(`- ${formatted}`);
                 }
               }
               const maintainerChecks = [

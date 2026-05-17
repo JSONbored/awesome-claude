@@ -1320,6 +1320,11 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(report.effectiveContributor?.login).toBe("zjg678");
     expect(report.contributorAnalysis.login).toBe("zjg678");
     expect(markdown).toContain("Contributor analyzed: @zjg678");
+    expect(markdown).not.toContain(
+      "Analyze user profile system implementation",
+    );
+    expect(markdown).not.toContain("&#64;");
+    expect(markdown).not.toContain("&#35;");
     expect(markdown).not.toContain("@&Analyze");
 
     const malformedIssue = {
@@ -1825,11 +1830,11 @@ Run the install command.`,
     expect(report.contributorSource).toBe("submission_issue_author");
     expect(report.trustSignals).toEqual(
       expect.arrayContaining([
-        "Contributor analyzed: @vy35",
         "PR opened by: @github-actions[bot]",
         "Submission issue: #325",
       ]),
     );
+    expect(report.trustSignals).not.toContain("Contributor analyzed: @vy35");
     expect(report.classificationWarnings).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: "generated_readme_change" }),
@@ -1976,10 +1981,10 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(report.pullRequestActor?.login).toBe("JSONbored");
     expect(report.contributorSource).toBe("content_frontmatter");
     expect(report.trustSignals).toEqual(
-      expect.arrayContaining([
-        "Contributor analyzed: @kriptoburak",
-        "PR opened by: @JSONbored",
-      ]),
+      expect.arrayContaining(["PR opened by: @JSONbored"]),
+    );
+    expect(report.trustSignals).not.toContain(
+      "Contributor analyzed: @kriptoburak",
     );
     expect(report.classificationWarnings).not.toEqual(
       expect.arrayContaining([
@@ -2196,8 +2201,11 @@ claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
       ...report,
       trustSignals: ["Reference bait: word#123 @octocat"],
     });
-    expect(trustMarkdown).toContain("word&\\#35;123");
-    expect(trustMarkdown).toContain("&\\#64;octocat");
+    expect(trustMarkdown).toContain("- Reference bait: `word#123 @octocat`");
+    expect(trustMarkdown).not.toContain("&#35;");
+    expect(trustMarkdown).not.toContain("&\\#35;");
+    expect(trustMarkdown).not.toContain("&#64;");
+    expect(trustMarkdown).not.toContain("&\\#64;");
   });
 
   it("rejects non-GitHub submittedBy provenance in content metadata", () => {
