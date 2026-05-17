@@ -555,9 +555,8 @@ diff --git a/README.md b/README.md
     expect(releaseSource).not.toContain("NODE_AUTH_TOKEN");
     expect(releaseSource).not.toContain("NPM_TOKEN");
     expect(releaseSource).not.toContain("x-access-token");
-    expect(releaseSource).toContain(
-      'GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GH_TOKEN}"',
-    );
+    expect(releaseSource).not.toContain("AUTHORIZATION: bearer");
+    expect(releaseSource).toContain("gh auth setup-git");
     expect(releaseValidatorSource).toContain(
       "require('./packages/mcp/package.json').version",
     );

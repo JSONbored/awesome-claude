@@ -101,10 +101,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git tag -a "$RELEASE_TAG" -m "@heyclaude/mcp v$RELEASE_VERSION"
           git remote set-url origin "https://github.com/${GITHUB_REPOSITORY}.git"
-          GIT_CONFIG_COUNT=1 \
-            GIT_CONFIG_KEY_0="http.https://github.com/.extraheader" \
-            GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GH_TOKEN}" \
-            git push origin "$RELEASE_TAG"
+          gh auth setup-git
+          git push origin "$RELEASE_TAG"
 
       - name: Create GitHub release
         env:
