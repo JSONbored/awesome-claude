@@ -786,6 +786,117 @@ export function submissionQueueStatus(report, issue = {}, options = {}) {
   return "import_ready";
 }
 
+function submissionQueueNextAction(status, issue = {}, riskTier = "low") {
+  const labels = new Set(issueLabels(issue));
+  if (labels.has("import-pr-open")) return "skip";
+  if (labels.has("accepted") || labels.has("import-approved")) return "import";
+  if (status === "skipped") return "skip";
+  if (status === "close_eligible") return "close_stale";
+  if (status === "stale_reminder_due") return "send_stale_reminder";
+  if (status === "needs_author_input") return "request_author_input";
+  if (status === "source_needs_verification") return "verify_source";
+  if (riskTier === "high" || riskTier === "critical") return "review_risk";
+  if (status === "maintainer_review") return "review_risk";
+  return "import";
+}
+
+function formatRiskSummary(riskTier, capabilityBuckets = []) {
+  const tier = String(riskTier || "low");
+  const label = `${tier[0]?.toUpperCase() || "L"}${tier.slice(1)} risk`;
+  return capabilityBuckets.length
+    ? `${label}: ${capabilityBuckets.join(", ")}`
+    : label;
+}
+
+function firstSubmissionSourceUrl(fields = {}) {
+  return (
+    normalizeValue(fields.github_url) ||
+    normalizeValue(fields.docs_url) ||
+    normalizeValue(fields.source_url) ||
+    normalizeValue(fields.download_url) ||
+    normalizeValue(fields.website_url) ||
+    ""
+  );
+}
+
+function buildSubmissionReviewChecklist({
+  report,
+  risk,
+  status,
+  sourceNeedsVerification,
+  maintainerActions,
+}) {
+  const items = [];
+  if (report?.skipped) {
+    items.push("Confirm whether this is a supported HeyClaude category.");
+  } else {
+    items.push("Confirm the category, slug, and public-facing metadata.");
+  }
+  if (!report?.ok) {
+    items.push("Wait for the author to fix required fields before import.");
+  }
+  if (sourceNeedsVerification) {
+    items.push(
+      "Verify the canonical source, docs, repository, or package URL.",
+    );
+  }
+  if (risk.riskTier === "high" || risk.riskTier === "critical") {
+    items.push(
+      "Review high-risk permissions, auth, local data, or payment scope.",
+    );
+  } else if (risk.riskTier === "medium") {
+    items.push("Review medium-risk capability and source signals.");
+  }
+  for (const action of maintainerActions) {
+    if (!items.includes(action)) items.push(action);
+  }
+  if (status === "import_ready") {
+    items.push("Apply import-approved only after source and category review.");
+  }
+  return items.slice(0, 7);
+}
+
+function buildSubmissionCommentDraft({ entry, report }) {
+  const title = entry.name || entry.title || "this submission";
+  if (entry.nextAction === "request_author_input") {
+    const problems = [...(report.errors || []), ...(report.warnings || [])]
+      .filter(Boolean)
+      .slice(0, 8)
+      .map((item) => `- ${item}`)
+      .join("\n");
+    return [
+      `Thanks for submitting ${title}. I can't continue review until the issue has the required metadata.`,
+      "",
+      problems ||
+        "- Please update the issue body with the required fields from the category template.",
+      "",
+      "Please edit the issue body with the missing details. Once it is updated, the validator can re-check it and maintainer review can continue.",
+    ].join("\n");
+  }
+  if (entry.nextAction === "verify_source") {
+    return [
+      `Thanks for submitting ${title}. This needs source verification before it can be imported.`,
+      "",
+      "Please make sure the issue includes the canonical GitHub repository, documentation URL, package URL, or other official source maintainers should review.",
+    ].join("\n");
+  }
+  if (entry.nextAction === "send_stale_reminder") {
+    return [
+      `This submission is still waiting on author input before review can continue.`,
+      "",
+      "Please update the issue with the missing details. If there is no update after the stale window, maintainers may close it as not planned. You can reopen or resubmit when the details are ready.",
+    ].join("\n");
+  }
+  if (entry.nextAction === "close_stale") {
+    return [
+      "Closing this submission as not planned because it has been waiting on required author input past the stale window.",
+      "",
+      "You can reopen or resubmit when the missing fields or source details are ready.",
+    ].join("\n");
+  }
+  return "";
+}
+
 export function buildSubmissionQueue(issues = [], options = {}) {
   const entries = issues
     .filter(looksLikeSubmissionIssue)
@@ -800,7 +911,21 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         risk.contributionAnalysis?.capabilityRiskBuckets || [];
       const maintainerActions =
         risk.contributionAnalysis?.maintainerActionItems || [];
-      return {
+      const recommendedLabels = recommendedSubmissionLabels(issue, report);
+      const labels = issueLabels(issue);
+      const missingLabels = recommendedLabels.filter(
+        (label) => !labels.includes(label),
+      );
+      const nextAction = submissionQueueNextAction(
+        status,
+        issue,
+        risk.riskTier,
+      );
+      const sourceNeedsVerification = submissionSourceNeedsVerification(
+        report,
+        issue,
+      );
+      const entry = {
         number: issue.number ?? null,
         title: String(issue.title || ""),
         url: String(issue.url || ""),
@@ -809,20 +934,17 @@ export function buildSubmissionQueue(issues = [], options = {}) {
             ? issue.author
             : String(issue.author?.login || ""),
         updatedAt: String(issue.updatedAt || issue.updated_at || ""),
-        labels: issueLabels(issue),
-        recommendedLabels: recommendedSubmissionLabels(issue, report),
+        labels,
+        recommendedLabels,
+        missingLabels,
         status,
+        nextAction,
         staleState,
         ageDays: submissionAgeDays(issue, options),
-        sourceNeedsVerification: submissionSourceNeedsVerification(
-          report,
-          issue,
-        ),
+        sourceNeedsVerification,
         riskTier: risk.riskTier,
         riskFlags: risk.reviewFlags.map((flag) => flag.id),
-        riskSummary: capabilityBuckets.length
-          ? `${risk.riskTier}: ${capabilityBuckets.join(", ")}`
-          : risk.riskTier,
+        riskSummary: formatRiskSummary(risk.riskTier, capabilityBuckets),
         contributorReview,
         sourceState: risk.contributionAnalysis?.sourceState || "unknown",
         maintainerActions,
@@ -840,6 +962,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         category: report.category || "",
         slug: report.fields?.slug || "",
         name: report.fields?.name || "",
+        sourceUrl: firstSubmissionSourceUrl(report.fields),
         errors: report.errors || [],
         warnings: report.warnings || [],
         importPath:
@@ -847,6 +970,15 @@ export function buildSubmissionQueue(issues = [], options = {}) {
             ? `content/${report.category}/${report.fields.slug}.mdx`
             : "",
       };
+      entry.reviewChecklist = buildSubmissionReviewChecklist({
+        report,
+        risk,
+        status,
+        sourceNeedsVerification,
+        maintainerActions,
+      });
+      entry.commentDraft = buildSubmissionCommentDraft({ entry, report });
+      return entry;
     })
     .sort((left, right) => {
       const statusOrder = {
@@ -866,7 +998,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
     });
 
   return {
-    schemaVersion: 1,
+    schemaVersion: 2,
     kind: "submission-queue",
     generatedAt: new Date().toISOString(),
     count: entries.length,
@@ -887,6 +1019,9 @@ export function buildSubmissionQueue(issues = [], options = {}) {
       ).length,
       closeEligible: entries.filter(
         (entry) => entry.status === "close_eligible",
+      ).length,
+      highRisk: entries.filter(
+        (entry) => entry.riskTier === "high" || entry.riskTier === "critical",
       ).length,
       needsChanges: entries.filter((entry) =>
         [

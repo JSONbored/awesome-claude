@@ -34,6 +34,32 @@ stale; it does not publish content directly.
   received the stale reminder label.
 - `skipped`: not a core submission category.
 
+## Workbench Fields
+
+The public `/submissions` page is a read-only maintainer workbench backed by
+the same queue contract as CI. It can suggest actions, labels, and comments, but
+it must not comment on issues, close issues, approve imports, or publish
+content.
+
+Each queue entry includes:
+
+- `nextAction`: `import`, `review_risk`, `verify_source`,
+  `request_author_input`, `send_stale_reminder`, `close_stale`, or `skip`.
+- `missingLabels`: recommended queue labels not currently present on the
+  GitHub issue.
+- `reviewChecklist`: deterministic maintainer checks assembled from schema,
+  source, stale, and security/safety signals.
+- `commentDraft`: copyable maintainer reply text for author-input, source
+  verification, stale-reminder, and stale-close cases.
+- `sourceUrl`: the first submitted GitHub, docs, source, download, or website
+  URL available for maintainer review.
+
+`nextAction=import` is not automatic approval. It means the issue is either
+schema-valid and ready for maintainer review, or already carries a protected
+approval label such as `accepted` or `import-approved`. Maintainers still need
+to verify source fit, category fit, and risk signals before an import PR is
+opened.
+
 ## Automation
 
 - `Submission Queue` runs weekly and on demand. It writes a GitHub Actions
@@ -61,14 +87,18 @@ stale; it does not publish content directly.
 ## Maintainer Flow
 
 1. Review `/submissions` or the `Submission Queue` workflow summary.
-2. For `needs_author_input`, wait for the author to update the issue.
-3. For `source_needs_verification`, verify canonical source/package URLs before
+2. Use the filter tabs to focus on import-ready, author-input,
+   source-verification, stale, close-eligible, or high-risk submissions.
+3. Apply missing labels only when they match the current maintainer decision.
+4. For `needs_author_input`, use the copyable draft as a starting point and wait
+   for the author to update the issue.
+5. For `source_needs_verification`, verify canonical source/package URLs before
    approving.
-4. For `stale_reminder_due`, let the manager add `stale-submission` and post the
+6. For `stale_reminder_due`, let the manager add `stale-submission` and post the
    reminder.
-5. For `close_eligible`, close as not planned only after the stale reminder has
+7. For `close_eligible`, close as not planned only after the stale reminder has
    already been applied.
-6. Apply `accepted` or `import-approved` only after maintainer source review.
+8. Apply `accepted` or `import-approved` only after maintainer source review.
 
 Direct content PRs are allowed for advanced contributors, but they must pass the
 same content validation and deterministic security/safety review. A `risk-high`

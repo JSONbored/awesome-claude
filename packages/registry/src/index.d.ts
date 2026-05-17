@@ -632,6 +632,7 @@ export type SubmissionQueueEntry = {
   updatedAt: string;
   labels: string[];
   recommendedLabels: string[];
+  missingLabels: string[];
   status:
     | "import_ready"
     | "maintainer_review"
@@ -640,6 +641,14 @@ export type SubmissionQueueEntry = {
     | "stale_reminder_due"
     | "close_eligible"
     | "skipped";
+  nextAction:
+    | "import"
+    | "review_risk"
+    | "verify_source"
+    | "request_author_input"
+    | "send_stale_reminder"
+    | "close_stale"
+    | "skip";
   staleState: "not_applicable" | "fresh" | "reminder_due" | "close_eligible";
   ageDays: number;
   sourceNeedsVerification: boolean;
@@ -654,8 +663,11 @@ export type SubmissionQueueEntry = {
   category: string;
   slug: string;
   name: string;
+  sourceUrl: string;
   errors: string[];
   warnings: string[];
+  reviewChecklist: string[];
+  commentDraft: string;
   importPath: string;
 };
 
@@ -671,6 +683,7 @@ export type SubmissionQueue = {
     sourceNeedsVerification: number;
     staleReminderDue: number;
     closeEligible: number;
+    highRisk: number;
     needsChanges: number;
     skipped: number;
   };

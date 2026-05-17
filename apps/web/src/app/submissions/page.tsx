@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { buildSubmissionQueue } from "@heyclaude/registry/submission";
+import type { SubmissionQueueEntry } from "@heyclaude/registry";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { EntryCopyButton } from "@/components/entry-copy-button";
 import { JsonLd } from "@/components/json-ld";
 import { buildPageMetadata } from "@/lib/seo";
 import { siteConfig } from "@/lib/site";
@@ -23,6 +25,31 @@ type GitHubIssue = {
   labels: Array<string | { name?: string }>;
   pull_request?: unknown;
 };
+
+type SubmissionFilter =
+  | "all"
+  | "import_ready"
+  | "maintainer_review"
+  | "needs_author_input"
+  | "source_needs_verification"
+  | "stale_reminder_due"
+  | "close_eligible"
+  | "high_risk";
+
+type SubmissionsPageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const FILTERS: Array<{ key: SubmissionFilter; label: string }> = [
+  { key: "all", label: "All" },
+  { key: "import_ready", label: "Import ready" },
+  { key: "maintainer_review", label: "Maintainer review" },
+  { key: "needs_author_input", label: "Author input" },
+  { key: "source_needs_verification", label: "Source review" },
+  { key: "stale_reminder_due", label: "Reminder due" },
+  { key: "close_eligible", label: "Close eligible" },
+  { key: "high_risk", label: "High risk" },
+];
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
@@ -92,131 +119,424 @@ function statusLabel(status: string) {
   return "Skipped";
 }
 
-export default async function SubmissionsPage() {
-  const { available, error, queue } = await getSubmissionQueue();
-  const jsonLd = [
-    buildBreadcrumbJsonLd([
-      { name: "Home", url: siteConfig.url },
-      { name: "Submissions", url: `${siteConfig.url}/submissions` },
-    ]),
-    buildCollectionPageJsonLd({
-      siteUrl: siteConfig.url,
-      path: "/submissions",
-      name: "Submission queue",
-      description:
-        "Open content submissions grouped by import readiness and validation status.",
-      breadcrumbId: `${siteConfig.url}/submissions#breadcrumb`,
-    }),
-  ];
+function nextActionLabel(action: SubmissionQueueEntry["nextAction"]) {
+  if (action === "import") return "Import after approval";
+  if (action === "review_risk") return "Review risk";
+  if (action === "verify_source") return "Verify source";
+  if (action === "request_author_input") return "Request author input";
+  if (action === "send_stale_reminder") return "Send stale reminder";
+  if (action === "close_stale") return "Close stale submission";
+  return "Skip";
+}
 
-  return (
-    <div className="container-shell space-y-8 py-12">
-      <JsonLd data={jsonLd} />
-      <div className="space-y-4 border-b border-border/80 pb-8">
-        <Breadcrumbs
-          items={[{ label: "Home", href: "/" }, { label: "Submissions" }]}
-        />
-        <span className="eyebrow">Submission queue</span>
-        <h1 className="section-title">Submission queue.</h1>
-        <p className="max-w-3xl text-sm leading-8 text-muted-foreground">
-          This page runs open public GitHub issues through the same registry
-          submission queue contract used by CI. Accepted submissions require
-          maintainer approval before automation opens a content import PR for
-          review.
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <Link
-            href="/submit"
-            className="inline-flex items-center rounded-full border border-primary/40 bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
-          >
-            Submit free resource
-          </Link>
-          <a
-            href={`${siteConfig.githubUrl}/issues?q=is%3Aissue+is%3Aopen+label%3Acontent-submission`}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground transition hover:border-primary/40"
-          >
-            Open GitHub queue
-          </a>
-        </div>
-      </div>
+function normalizeFilter(value: string | string[] | undefined) {
+  const normalized = Array.isArray(value) ? value[0] : value;
+  return FILTERS.some((filter) => filter.key === normalized)
+    ? (normalized as SubmissionFilter)
+    : "all";
+}
 
-      <section className="grid gap-4 md:grid-cols-3">
-        {[
-          ["Import ready", queue.summary.importReady],
-          ["Needs author input", queue.summary.needsAuthorInput],
-          ["Source verification", queue.summary.sourceNeedsVerification],
-          ["Tracked issues", queue.count],
-        ].map(([label, value]) => (
-          <div key={label} className="surface-panel p-5">
-            <p className="text-xs uppercase tracking-[0.18em] text-primary">
-              {label}
-            </p>
-            <p className="mt-2 text-3xl font-semibold text-foreground">
-              {value}
-            </p>
+function isHighRisk(entry: SubmissionQueueEntry) {
+  return entry.riskTier === "high" || entry.riskTier === "critical";
+}
+
+function filterEntries(
+  entries: SubmissionQueueEntry[],
+  filter: SubmissionFilter,
+) {
+  if (filter === "all") return entries;
+  if (filter === "high_risk") return entries.filter(isHighRisk);
+  return entries.filter((entry) => entry.status === filter);
+}
+
+function filterCount(
+  entries: SubmissionQueueEntry[],
+  filter: SubmissionFilter,
+) {
+  return filterEntries(entries, filter).length;
+}
+
+function riskClass(entry: SubmissionQueueEntry) {
+  if (entry.riskTier === "critical" || entry.riskTier === "high") {
+    return "border-destructive/40 bg-destructive/10 text-destructive";
+  }
+  if (entry.riskTier === "medium") {
+    return "border-yellow-500/40 bg-yellow-500/10 text-yellow-300";
+  }
+  return "border-emerald-500/35 bg-emerald-500/10 text-emerald-300";
+}
+
+function safeHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+function submissionFormHref(category: string) {
+  const params = new URLSearchParams();
+  const normalizedCategory = category.trim();
+  if (normalizedCategory) params.set("category", normalizedCategory);
+  const query = params.toString();
+  return query ? `/submit?${query}` : "/submit";
+}
+
+type SubmissionPageLogger = {
+  info: (event: string, meta?: Record<string, unknown>) => void;
+  error: (event: string, meta?: Record<string, unknown>) => void;
+};
+
+function writeSubmissionPageLog(
+  level: "info" | "error",
+  event: string,
+  requestId: string,
+  meta: Record<string, unknown> = {},
+) {
+  const payload = {
+    ts: new Date().toISOString(),
+    level,
+    event,
+    requestId,
+    ...meta,
+  };
+  const line = JSON.stringify(payload);
+  if (level === "error") {
+    console.error(line);
+    return;
+  }
+  console.info(line);
+}
+
+function createSubmissionPageLogger(requestId: string): SubmissionPageLogger {
+  return {
+    info(event, meta = {}) {
+      writeSubmissionPageLog("info", event, requestId, meta);
+    },
+    error(event, meta = {}) {
+      writeSubmissionPageLog("error", event, requestId, meta);
+    },
+  };
+}
+
+async function withDuration<T>(
+  callback: (context: {
+    getDurationMs: () => number;
+    logger: SubmissionPageLogger;
+    requestId: string;
+  }) => Promise<T>,
+) {
+  const startedAt = Date.now();
+  const requestId = crypto.randomUUID();
+  const logger = createSubmissionPageLogger(requestId);
+  const getDurationMs = () => Date.now() - startedAt;
+
+  try {
+    return await callback({ getDurationMs, logger, requestId });
+  } catch (error) {
+    logger.error("submissions.page.failed", {
+      durationMs: getDurationMs(),
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    throw error;
+  }
+}
+
+export default async function SubmissionsPage({
+  searchParams,
+}: SubmissionsPageProps) {
+  return withDuration(async ({ getDurationMs, logger }) => {
+    const params = await searchParams;
+    const activeFilter = normalizeFilter(params?.filter);
+    const { available, error, queue } = await getSubmissionQueue();
+    const entries = filterEntries(queue.entries, activeFilter);
+    const jsonLd = [
+      buildBreadcrumbJsonLd([
+        { name: "Home", url: siteConfig.url },
+        { name: "Submissions", url: `${siteConfig.url}/submissions` },
+      ]),
+      buildCollectionPageJsonLd({
+        siteUrl: siteConfig.url,
+        path: "/submissions",
+        name: "Submission queue",
+        description:
+          "Open content submissions grouped by import readiness and validation status.",
+        breadcrumbId: `${siteConfig.url}/submissions#breadcrumb`,
+      }),
+    ];
+
+    logger.info("submissions.page.summary", {
+      activeFilter,
+      available,
+      durationMs: getDurationMs(),
+      error: error || undefined,
+      queueLength: queue.entries.length,
+    });
+
+    return (
+      <div className="container-shell space-y-8 py-12">
+        <JsonLd data={jsonLd} />
+        <div className="space-y-4 border-b border-border/80 pb-8">
+          <Breadcrumbs
+            items={[{ label: "Home", href: "/" }, { label: "Submissions" }]}
+          />
+          <span className="eyebrow">Maintainer workbench</span>
+          <h1 className="section-title">Submission queue.</h1>
+          <p className="max-w-3xl text-sm leading-8 text-muted-foreground">
+            Open GitHub issues are grouped into maintainer review states with
+            suggested labels, source checks, risk signals, and copyable reply
+            drafts. This page is read-only and never imports, closes, or
+            comments on submissions.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link
+              href="/submit"
+              className="inline-flex items-center rounded-full border border-primary/40 bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90"
+            >
+              Submit free resource
+            </Link>
+            <a
+              href={`${siteConfig.githubUrl}/issues?q=is%3Aissue+is%3Aopen+label%3Acontent-submission`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full border border-border bg-card px-4 py-2 text-sm text-foreground transition hover:border-primary/40"
+            >
+              Open GitHub queue
+            </a>
           </div>
-        ))}
-      </section>
+        </div>
 
-      {!available ? (
-        <section className="surface-panel p-5 text-sm leading-7 text-muted-foreground">
-          GitHub issue status is temporarily unavailable: {error}. Use the
-          GitHub queue link above for the current source of truth.
+        <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            ["Import ready", queue.summary.importReady],
+            ["Needs author input", queue.summary.needsAuthorInput],
+            ["Source verification", queue.summary.sourceNeedsVerification],
+            ["High risk", queue.summary.highRisk],
+            ["Reminder due", queue.summary.staleReminderDue],
+            ["Close eligible", queue.summary.closeEligible],
+            ["Maintainer review", queue.summary.maintainerReview],
+            ["Tracked issues", queue.count],
+          ].map(([label, value]) => (
+            <div key={label} className="surface-panel p-5">
+              <p className="text-xs uppercase tracking-[0.18em] text-primary">
+                {label}
+              </p>
+              <p className="mt-2 text-3xl font-semibold text-foreground">
+                {value}
+              </p>
+            </div>
+          ))}
         </section>
-      ) : null}
 
-      <section className="space-y-3">
-        {queue.entries.length ? (
-          queue.entries.map((entry) => (
-            <article key={entry.number} className="surface-panel p-5">
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div className="space-y-2">
-                  <p className="text-xs uppercase tracking-[0.18em] text-primary">
-                    {statusLabel(entry.status)}
-                  </p>
-                  <h2 className="text-xl font-semibold tracking-tight text-foreground">
-                    <a
-                      href={entry.url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="hover:text-primary"
-                    >
-                      #{entry.number} {entry.title}
-                    </a>
-                  </h2>
-                  <p className="text-sm text-muted-foreground">
-                    {entry.category || "unknown"} / {entry.slug || "no slug"}
-                    {entry.ageDays ? ` / ${entry.ageDays}d waiting` : ""}
-                  </p>
-                </div>
-                {entry.importPath ? (
-                  <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground">
-                    {entry.importPath}
-                  </span>
-                ) : null}
-              </div>
-              {entry.errors.length ? (
-                <ul className="mt-4 list-disc space-y-1 pl-5 text-sm leading-7 text-muted-foreground">
-                  {entry.errors.map((issue) => (
-                    <li key={issue}>{issue}</li>
-                  ))}
-                </ul>
-              ) : null}
-              {entry.actionDue ? (
-                <p className="mt-4 text-sm leading-7 text-muted-foreground">
-                  Next action: {entry.actionDue.replaceAll("_", " ")}
-                </p>
-              ) : null}
-            </article>
-          ))
-        ) : (
-          <section className="surface-panel p-8 text-sm leading-7 text-muted-foreground">
-            No open submission-shaped issues are currently tracked.
+        <nav className="flex flex-wrap gap-2" aria-label="Submission filters">
+          {FILTERS.map((filter) => {
+            const active = filter.key === activeFilter;
+            const href =
+              filter.key === "all"
+                ? "/submissions"
+                : `/submissions?filter=${filter.key}`;
+            return (
+              <Link
+                key={filter.key}
+                href={href}
+                className={`inline-flex items-center rounded-full border px-3 py-1.5 text-xs transition ${
+                  active
+                    ? "border-primary bg-primary text-primary-foreground"
+                    : "border-border bg-card text-muted-foreground hover:border-primary/50 hover:text-foreground"
+                }`}
+              >
+                {filter.label}
+                <span className="ml-2 rounded-full bg-background/35 px-1.5 py-0.5 text-[10px]">
+                  {filterCount(queue.entries, filter.key)}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {!available ? (
+          <section className="surface-panel p-5 text-sm leading-7 text-muted-foreground">
+            GitHub issue status is temporarily unavailable: {error}. Use the
+            GitHub queue link above for the current source of truth.
           </section>
-        )}
-      </section>
-    </div>
-  );
+        ) : null}
+
+        <section className="space-y-3">
+          {entries.length ? (
+            entries.map((entry) => {
+              const sourceHref = safeHttpUrl(entry.sourceUrl);
+              const submitHref = submissionFormHref(entry.category || "mcp");
+
+              return (
+                <article key={entry.number} className="surface-panel p-5">
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-primary">
+                          {statusLabel(entry.status)}
+                        </span>
+                        <span
+                          className={`rounded-full border px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] ${riskClass(entry)}`}
+                        >
+                          {entry.riskSummary}
+                        </span>
+                      </div>
+                      <h2 className="text-xl font-semibold tracking-tight text-foreground">
+                        <a
+                          href={entry.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:text-primary"
+                        >
+                          #{entry.number} {entry.title}
+                        </a>
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {entry.category || "unknown"} /{" "}
+                        {entry.slug || "no slug"}
+                        {entry.author ? ` / @${entry.author}` : ""}
+                        {entry.ageDays ? ` / ${entry.ageDays}d waiting` : ""}
+                      </p>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground">
+                        {nextActionLabel(entry.nextAction)}
+                      </span>
+                      {entry.importPath ? (
+                        <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground">
+                          {entry.importPath}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+
+                  <div className="mt-5 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+                    <div className="space-y-4">
+                      {entry.errors.length || entry.warnings.length ? (
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Validation
+                          </p>
+                          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-7 text-muted-foreground">
+                            {[...entry.errors, ...entry.warnings].map(
+                              (issue) => (
+                                <li key={issue}>{issue}</li>
+                              ),
+                            )}
+                          </ul>
+                        </div>
+                      ) : null}
+
+                      {entry.reviewChecklist.length ? (
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Review checklist
+                          </p>
+                          <ul className="mt-2 list-disc space-y-1 pl-5 text-sm leading-7 text-muted-foreground">
+                            {entry.reviewChecklist.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
+
+                      {entry.commentDraft ? (
+                        <div className="rounded-lg border border-border bg-background/60 p-4">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                              Suggested reply
+                            </p>
+                            <EntryCopyButton
+                              text={entry.commentDraft}
+                              label="Copy reply"
+                              className="directory-link-chip"
+                            />
+                          </div>
+                          <p className="mt-3 whitespace-pre-line text-sm leading-7 text-muted-foreground">
+                            {entry.commentDraft}
+                          </p>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    <div className="space-y-4 rounded-lg border border-border bg-background/40 p-4">
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                          Labels
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {entry.labels.map((label) => (
+                            <span
+                              key={label}
+                              className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground"
+                            >
+                              {label}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      {entry.missingLabels.length ? (
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Missing suggested labels
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {entry.missingLabels.map((label) => (
+                              <span
+                                key={label}
+                                className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] text-primary"
+                              >
+                                {label}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                          Source state
+                        </p>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {entry.sourceState}
+                        </p>
+                        {sourceHref ? (
+                          <a
+                            href={sourceHref}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-2 inline-flex text-sm text-primary hover:underline"
+                          >
+                            Open submitted source
+                          </a>
+                        ) : null}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <a
+                          href={entry.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="directory-link-chip"
+                        >
+                          Open issue
+                        </a>
+                        <Link href={submitHref} className="directory-link-chip">
+                          Submit form
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <section className="surface-panel p-8 text-sm leading-7 text-muted-foreground">
+              No open submission-shaped issues match this filter.
+            </section>
+          )}
+        </section>
+      </div>
+    );
+  });
 }

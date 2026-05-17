@@ -568,12 +568,30 @@ npx unslop --help`);
       { now: "2026-04-30T00:00:00Z" },
     );
     expect(queue.count).toBe(2);
+    expect(queue.schemaVersion).toBe(2);
     expect(queue.summary.importReady).toBe(1);
     expect(queue.summary.needsChanges).toBe(1);
     expect(queue.entries[0].status).toBe("import_ready");
+    expect(queue.entries[0].nextAction).toBe("import");
     expect(queue.entries[0].importPath).toBe("content/mcp/contrastapi.mdx");
+    expect(queue.entries[0].sourceUrl).toBe(
+      "https://github.com/example/contrastapi",
+    );
+    expect(queue.entries[0].missingLabels).toEqual(
+      expect.arrayContaining(["community-mcp", "needs-review"]),
+    );
+    expect(queue.entries[0].reviewChecklist).toEqual(
+      expect.arrayContaining([
+        "Confirm the category, slug, and public-facing metadata.",
+        "Apply import-approved only after source and category review.",
+      ]),
+    );
     expect(queue.entries[1].status).toBe("needs_author_input");
+    expect(queue.entries[1].nextAction).toBe("request_author_input");
     expect(queue.entries[1].actionDue).toBe("author_input");
+    expect(queue.entries[1].commentDraft).toContain(
+      "can't continue review until the issue has the required metadata",
+    );
   });
 
   it("tracks stale author-input states without touching maintainer-approved issues", () => {
@@ -631,6 +649,27 @@ npx unslop --help`;
         now: "2026-04-30T00:00:00Z",
       }),
     ).toBe("maintainer_review");
+
+    const queue = buildSubmissionQueue(
+      [fresh, reminderDue, closeEligible, approved],
+      { now: "2026-04-30T00:00:00Z" },
+    );
+    expect(
+      queue.entries.find((entry) => entry.status === "stale_reminder_due")
+        ?.nextAction,
+    ).toBe("send_stale_reminder");
+    expect(
+      queue.entries.find((entry) => entry.status === "close_eligible")
+        ?.nextAction,
+    ).toBe("close_stale");
+    expect(
+      queue.entries.find((entry) => entry.status === "maintainer_review")
+        ?.nextAction,
+    ).toBe("import");
+    expect(
+      queue.entries.find((entry) => entry.status === "close_eligible")
+        ?.commentDraft,
+    ).toContain("Closing this submission as not planned");
   });
 
   it("separates source verification from author-input failures", () => {
@@ -672,6 +711,13 @@ claude mcp add source-review-mcp -- npx -y source-review-mcp`,
     ).toBe("source_needs_verification");
     expect(recommendedSubmissionLabels(sourceProblem)).toContain(
       "source-needs-verification",
+    );
+    const queue = buildSubmissionQueue([sourceProblem], {
+      now: "2026-04-30T00:00:00Z",
+    });
+    expect(queue.entries[0].nextAction).toBe("verify_source");
+    expect(queue.entries[0].commentDraft).toContain(
+      "needs source verification before it can be imported",
     );
   });
 
