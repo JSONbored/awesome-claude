@@ -556,3 +556,5 @@ Thanks to everyone who has contributed to making HeyClaude better.
 [Website](https://heyclau.de) • [GitHub](https://github.com/JSONbored/awesome-claude) • [Discord](https://discord.gg/Ax3Py4YDrq) • [Twitter](https://x.com/jsonbored) • [License](LICENSE)
 
 </div>
+
+- [Septim Agents Pack](https://septimlabs.com/agents?utm_source=awesome-list&utm_campaign=jsonbored) - 15 named Claude Code sub-agents (Atlas, Luca, Canon, Ember, Tally, Nova, Ward, Mira, Juno, Pip, Hart, Halo, Beacon, Loom, Lynx) covering the full exec layer for solo founders. Drops into `~/.claude/agents/`. Open-source sample at [github.com/septimlabs-code/septim-agents-pack-sample](https://github.com/septimlabs-code/septim-agents-pack-sample). $49 lifetime.
