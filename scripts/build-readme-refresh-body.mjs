@@ -171,16 +171,41 @@ async function fetchAssociatedPullRequest({ repository, commitSha, token }) {
 }
 
 function readContentFrontmatter(repoRoot, change) {
-  const relativePath = path.join(
+  const categoryDir = path.join(repoRoot, "content", change.category);
+  const directRelativePath = path.join(
     "content",
     change.category,
     `${change.slug}.mdx`,
   );
-  const contentPath = path.join(repoRoot, relativePath);
+  const directPath = path.join(repoRoot, directRelativePath);
+
+  let relativePath = directRelativePath;
+  let contentPath = directPath;
+
   if (!fs.existsSync(contentPath)) {
-    throw new Error(
-      `README entry ${change.key} does not map to ${relativePath}.`,
-    );
+    if (!fs.existsSync(categoryDir)) {
+      throw new Error(
+        `README entry ${change.key} does not map to ${directRelativePath}.`,
+      );
+    }
+
+    const candidate = fs.readdirSync(categoryDir).find((name) => {
+      if (!name.endsWith(".mdx")) return false;
+      {
+        const source = fs.readFileSync(path.join(categoryDir, name), "utf8");
+        const { data } = matter(source);
+        return String(data.slug ?? name.replace(/\.mdx$/, "")) === change.slug;
+      }
+    });
+
+    if (!candidate) {
+      throw new Error(
+        `README entry ${change.key} does not map to ${directRelativePath}.`,
+      );
+    }
+
+    relativePath = path.join("content", change.category, candidate);
+    contentPath = path.join(repoRoot, relativePath);
   }
 
   const { data } = matter(fs.readFileSync(contentPath, "utf8"));

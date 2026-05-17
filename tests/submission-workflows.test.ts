@@ -7,6 +7,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   buildReadmeRefreshBody,
   extractReadmeEntryChanges,
+  resolveReadmeEntryChange,
   summarizeReadmeEntryChange,
 } from "../scripts/build-readme-refresh-body.mjs";
 import {
@@ -298,6 +299,39 @@ diff --git a/README.md b/README.md
     );
     expect(body).toContain(
       "- Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+    );
+  });
+
+  it("resolves README entries when frontmatter slug differs from filename", async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-readme-"));
+    const categoryDir = path.join(tmpDir, "content", "mcp");
+    fs.mkdirSync(categoryDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(categoryDir, "example-file.mdx"),
+      `---
+title: Example Entry
+slug: example
+description: Example description
+---
+`,
+      "utf8",
+    );
+
+    const resolved = await resolveReadmeEntryChange(
+      {
+        changeType: "added",
+        category: "mcp",
+        slug: "example",
+        title: "Example Entry",
+        description: "Example description",
+        key: "mcp/example",
+      },
+      { repoRoot: tmpDir, repository: "", token: "" },
+    );
+
+    expect(resolved.relativePath).toBe("content/mcp/example-file.mdx");
+    expect(resolved.summary).toContain(
+      "Added Example Entry content submission",
     );
   });
 
