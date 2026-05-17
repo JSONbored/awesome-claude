@@ -55,6 +55,14 @@
         "period": 60,
       },
     },
+    {
+      "name": "API_MCP_RATE_LIMIT",
+      "namespace_id": "1001004",
+      "simple": {
+        "limit": 60,
+        "period": 60,
+      },
+    },
   ],
   "vars": {
     "NEXT_PUBLIC_DISCORD_URL": "https://discord.com/invite/Ax3Py4YDrq",
@@ -117,6 +125,14 @@
         {
           "name": "API_STRICT_RATE_LIMIT",
           "namespace_id": "1002003",
+          "simple": {
+            "limit": 60,
+            "period": 60,
+          },
+        },
+        {
+          "name": "API_MCP_RATE_LIMIT",
+          "namespace_id": "1002004",
           "simple": {
             "limit": 60,
             "period": 60,

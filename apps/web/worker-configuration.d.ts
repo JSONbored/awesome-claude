@@ -10,6 +10,7 @@ declare namespace Cloudflare {
     API_REGISTRY_RATE_LIMIT: RateLimit;
     API_DYNAMIC_RATE_LIMIT: RateLimit;
     API_STRICT_RATE_LIMIT: RateLimit;
+    API_MCP_RATE_LIMIT: RateLimit;
     ASSETS: Fetcher;
     NEXT_PUBLIC_DISCORD_URL: "https://discord.com/invite/Ax3Py4YDrq";
     NEXT_PUBLIC_TWITTER_URL: "https://x.com/jsonbored";
@@ -29,6 +30,7 @@ declare namespace Cloudflare {
     API_REGISTRY_RATE_LIMIT: RateLimit;
     API_DYNAMIC_RATE_LIMIT: RateLimit;
     API_STRICT_RATE_LIMIT: RateLimit;
+    API_MCP_RATE_LIMIT: RateLimit;
     ASSETS: Fetcher;
     NEXT_PUBLIC_DISCORD_URL: "https://discord.com/invite/Ax3Py4YDrq";
     NEXT_PUBLIC_TWITTER_URL: "https://x.com/jsonbored";

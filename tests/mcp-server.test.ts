@@ -105,9 +105,11 @@ describe("HeyClaude read-only MCP helpers", () => {
     );
     expect(Object.keys(TOOL_INPUT_SCHEMAS)).toEqual(READ_ONLY_TOOL_NAMES);
     for (const tool of TOOL_DEFINITIONS) {
-      expect(tool.name).not.toMatch(/create|publish|write|delete|pr/i);
+      expect(tool.name).not.toMatch(
+        /create_issue|create_pull_request|publish_content|write_file|delete/i,
+      );
       expect(tool.description).toMatch(
-        /read-only|fetch|search|list|validate|build|guidance/i,
+        /read-only|fetch|search|list|validate|build|guidance|review/i,
       );
       expect(tool.inputSchema).toEqual(jsonSchemaForTool(tool.name));
       expect(tool.inputSchema).toMatchObject({
@@ -116,6 +118,38 @@ describe("HeyClaude read-only MCP helpers", () => {
       });
       expect(JSON.stringify(tool.inputSchema)).not.toContain("$schema");
     }
+  });
+
+  it("reports public no-key MCP server metadata and durable rate-limit policy", async () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
+    ) as { name: string; version: string };
+
+    const info = await callRegistryTool("server_info", {}, { dataDir });
+    expect(info).toMatchObject({
+      ok: true,
+      package: {
+        name: packageJson.name,
+        version: packageJson.version,
+      },
+      endpoint: {
+        auth: "none",
+        requestBodyLimitBytes: 64 * 1024,
+        rateLimit: {
+          binding: "API_MCP_RATE_LIMIT",
+          limit: 60,
+          windowSeconds: 60,
+        },
+      },
+      policy: {
+        apiKeyRequired: false,
+        readOnly: true,
+        createsIssues: false,
+        createsPullRequests: false,
+        publishesContent: false,
+      },
+    });
+    expect(info.tools).toEqual(READ_ONLY_TOOL_NAMES);
   });
 
   it("validates MCP tool arguments from shared Zod schemas", async () => {
@@ -189,6 +223,75 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
     expect(result.entries[0].platforms).toContain("Cursor");
+  });
+
+  it("lists category entries with bounded pagination and filters", async () => {
+    const result = await callRegistryTool(
+      "list_category_entries",
+      {
+        category: "skills",
+        platform: "cursor-rules",
+        tag: "evals",
+        limit: 2,
+      },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      category: "skills",
+      platform: "Cursor",
+      tag: "evals",
+      count: expect.any(Number),
+      limit: 2,
+      offset: 0,
+    });
+    expect(result.entries.length).toBeLessThanOrEqual(2);
+    expect(result.entries[0]).toMatchObject({
+      category: "skills",
+      canonicalUrl: expect.stringContaining("/skills/"),
+      dateAdded: expect.any(String),
+    });
+    expect(result.entries[0].tags).toContain("evals");
+    expect(result.entries[0].platforms).toContain("Cursor");
+  });
+
+  it("lists recent updates from generated registry metadata", async () => {
+    const result = await callRegistryTool(
+      "get_recent_updates",
+      { limit: 5 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({ ok: true, count: 5 });
+    const dates = result.entries.map((entry: any) => entry.updatedAt);
+    expect(dates).toEqual([...dates].sort().reverse());
+    expect(result.entries[0]).toMatchObject({
+      key: expect.stringContaining(":"),
+      updateKind: expect.stringMatching(/added|upstream_update/),
+    });
+  });
+
+  it("returns related entries without returning the requested entry", async () => {
+    const result = await callRegistryTool(
+      "get_related_entries",
+      { category: skill.category, slug: skill.slug, limit: 5 },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      key: `${skill.category}:${skill.slug}`,
+      count: expect.any(Number),
+    });
+    expect(result.entries.length).toBeGreaterThan(0);
+    expect(result.entries.map((entry: any) => entry.key)).not.toContain(
+      `${skill.category}:${skill.slug}`,
+    );
+    expect(result.entries[0]).toMatchObject({
+      relatedScore: expect.any(Number),
+      relatedReasons: expect.arrayContaining([expect.any(String)]),
+    });
   });
 
   it("fetches entry detail and install guidance without write capabilities", async () => {
@@ -332,6 +435,78 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(urls.githubIssueUrl).toContain("template=submit-skill.yml");
     expect(urls.issueDraft.body).toContain("### Brand domain");
     expect(JSON.stringify(urls)).not.toMatch(/token|secret|authorization/i);
+  });
+
+  it("prepares and reviews submission drafts without GitHub writes", async () => {
+    const fields = {
+      category: "mcp",
+      name: "Example Draft MCP",
+      docs_url: "https://example.com/docs",
+      description:
+        "Example MCP server submission used to test stronger draft tooling.",
+      install_command: "npx -y example-draft-mcp",
+      usage_snippet: "Add this server to your MCP client configuration.",
+    };
+
+    const prepared = await callRegistryTool(
+      "prepare_submission_draft",
+      { fields },
+      { dataDir },
+    );
+    expect(prepared).toMatchObject({
+      ok: true,
+      valid: true,
+      category: "mcp",
+      issueDraft: {
+        title: "Submit MCP Server: Example Draft MCP",
+        labels: expect.arrayContaining(["content-submission", "community-mcp"]),
+        body: expect.stringContaining("### Install command"),
+      },
+      githubIssueUrl: expect.stringContaining("template=submit-mcp.yml"),
+      submissionPolicy: expect.stringContaining("does not auto-publish"),
+    });
+
+    const reviewed = await callRegistryTool(
+      "review_submission_draft",
+      { fields },
+      { dataDir },
+    );
+    expect(reviewed).toMatchObject({
+      ok: true,
+      valid: true,
+      recommendedAction: expect.stringMatching(
+        /open_review_issue|review_possible_duplicate/,
+      ),
+      duplicateReview: { ok: true },
+      reviewChecklist: expect.arrayContaining([
+        expect.stringContaining("maintainer review"),
+      ]),
+    });
+    expect(JSON.stringify({ prepared, reviewed })).not.toMatch(
+      /token|secret|authorization|createIssue|createPullRequest/i,
+    );
+  });
+
+  it("returns category submission examples for faster valid drafts", async () => {
+    const examples = await callRegistryTool(
+      "get_submission_examples",
+      { category: "guides" },
+      { dataDir },
+    );
+    expect(examples).toMatchObject({
+      ok: true,
+      categories: [
+        {
+          category: "guides",
+          requiredFields: expect.arrayContaining(["guide_content"]),
+          minimalFields: {
+            category: "guides",
+            guide_content: expect.stringContaining("# Example"),
+          },
+        },
+      ],
+      reviewModel: expect.stringContaining("maintainers review"),
+    });
   });
 
   it("finds likely duplicate entries before submission", async () => {

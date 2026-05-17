@@ -21,6 +21,26 @@ export function searchRegistry(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function getServerInfo(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function listCategoryEntries(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function getRecentUpdates(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function getRelatedEntries(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function getEntryDetail(
   args?: Record<string, unknown>,
   options?: RegistryArtifactLoaders,
@@ -71,6 +91,21 @@ export function getCategorySubmissionGuidance(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function prepareSubmissionDraft(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function getSubmissionExamples(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function reviewSubmissionDraft(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function callRegistryTool(
   name: string,
   args?: Record<string, unknown>,
@@ -79,6 +114,10 @@ export function callRegistryTool(
 
 export {
   SearchRegistryInputSchema,
+  ServerInfoInputSchema,
+  ListCategoryEntriesInputSchema,
+  RecentUpdatesInputSchema,
+  RelatedEntriesInputSchema,
   EntryDetailInputSchema,
   CompatibilityInputSchema,
   InstallGuidanceInputSchema,
@@ -90,6 +129,9 @@ export {
   SearchDuplicateEntriesInputSchema,
   BuildSubmissionUrlsInputSchema,
   CategorySubmissionGuidanceInputSchema,
+  PrepareSubmissionDraftInputSchema,
+  GetSubmissionExamplesInputSchema,
+  ReviewSubmissionDraftInputSchema,
   TOOL_INPUT_SCHEMAS,
   jsonSchemaForTool,
   parseToolArguments,

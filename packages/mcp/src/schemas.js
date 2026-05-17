@@ -77,6 +77,34 @@ export const SearchRegistryInputSchema = z
   })
   .strict();
 
+export const ServerInfoInputSchema = z.object({}).strict();
+
+export const ListCategoryEntriesInputSchema = z
+  .object({
+    category: pathPart.optional(),
+    platform: platform.optional(),
+    tag: z.string().trim().min(1).max(80).optional(),
+    query: z.string().trim().max(240).optional(),
+    offset: z.number().int().min(0).max(5000).optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
+export const RecentUpdatesInputSchema = z
+  .object({
+    category: pathPart.optional(),
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
+export const RelatedEntriesInputSchema = z
+  .object({
+    category: pathPart,
+    slug: pathPart,
+    limit: z.number().int().min(1).max(25).optional(),
+  })
+  .strict();
+
 export const EntryDetailInputSchema = z
   .object({
     category: pathPart,
@@ -145,8 +173,31 @@ export const CategorySubmissionGuidanceInputSchema = z
   })
   .strict();
 
+export const PrepareSubmissionDraftInputSchema = z
+  .object({
+    fields: SubmissionFieldsSchema,
+  })
+  .strict();
+
+export const GetSubmissionExamplesInputSchema = z
+  .object({
+    category: submissionCategory.optional(),
+  })
+  .strict();
+
+export const ReviewSubmissionDraftInputSchema = z
+  .object({
+    fields: SubmissionFieldsSchema,
+    duplicateLimit: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
+
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
+  server_info: ServerInfoInputSchema,
+  list_category_entries: ListCategoryEntriesInputSchema,
+  get_recent_updates: RecentUpdatesInputSchema,
+  get_related_entries: RelatedEntriesInputSchema,
   get_entry_detail: EntryDetailInputSchema,
   get_compatibility: CompatibilityInputSchema,
   get_install_guidance: InstallGuidanceInputSchema,
@@ -157,6 +208,9 @@ export const TOOL_INPUT_SCHEMAS = {
   search_duplicate_entries: SearchDuplicateEntriesInputSchema,
   build_submission_urls: BuildSubmissionUrlsInputSchema,
   get_category_submission_guidance: CategorySubmissionGuidanceInputSchema,
+  prepare_submission_draft: PrepareSubmissionDraftInputSchema,
+  get_submission_examples: GetSubmissionExamplesInputSchema,
+  review_submission_draft: ReviewSubmissionDraftInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {

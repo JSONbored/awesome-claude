@@ -45,6 +45,11 @@ publishing.
    - `npm exec -y @heyclaude/mcp@<version> -- --version`
    - GitHub release `mcp-v<version>`
 
+For release publishing, endpoint validation should use `--strict-tools` after
+the matching Worker code has shipped. Pull-request checks intentionally allow a
+lagging dev Worker as long as the deployed endpoint still exposes the baseline
+read-only MCP tools.
+
 ## Local Auth Check
 
 Local npm auth is only needed for npm scope/package bootstrap work. Check with:
@@ -53,3 +58,18 @@ Local npm auth is only needed for npm scope/package bootstrap work. Check with:
 npm login --registry=https://registry.npmjs.org/
 npm whoami
 ```
+
+## Troubleshooting
+
+If `npm publish --provenance` signs provenance successfully and then fails with
+`E404 Not Found - PUT https://registry.npmjs.org/@heyclaude%2fmcp`, the GitHub
+workflow is reaching npm but the package or scope is rejecting publish access.
+Check the npm package access and trusted publisher settings for:
+
+- package: `@heyclaude/mcp`
+- repository: `JSONbored/awesome-claude`
+- workflow file: `publish-mcp-npm.yml`
+- environment: `npm-production`
+
+Do not create a GitHub release tag manually unless the matching npm package
+version is visible on npm.

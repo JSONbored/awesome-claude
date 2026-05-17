@@ -84,6 +84,10 @@ describe("HeyClaude remote MCP route", () => {
     );
     expect(toolNames).toEqual([
       "search_registry",
+      "server_info",
+      "list_category_entries",
+      "get_recent_updates",
+      "get_related_entries",
       "get_entry_detail",
       "get_compatibility",
       "get_install_guidance",
@@ -94,8 +98,13 @@ describe("HeyClaude remote MCP route", () => {
       "search_duplicate_entries",
       "build_submission_urls",
       "get_category_submission_guidance",
+      "prepare_submission_draft",
+      "get_submission_examples",
+      "review_submission_draft",
     ]);
-    expect(toolNames.join(" ")).not.toMatch(/create|publish|write|delete/i);
+    expect(toolNames.join(" ")).not.toMatch(
+      /create_issue|create_pull_request|publish_content|write_file|delete/i,
+    );
   });
 
   it("searches public registry artifacts without write capabilities", async () => {
@@ -117,6 +126,61 @@ describe("HeyClaude remote MCP route", () => {
     expect(result).toMatchObject({ ok: true, count: 2 });
     expect(result.entries[0]).toHaveProperty("canonicalUrl");
     expect(JSON.stringify(result)).not.toMatch(/admin|token|secret/i);
+  });
+
+  it("serves MCP server metadata and category browse tools", async () => {
+    const infoResponse = await POST(
+      mcpRequest({
+        jsonrpc: "2.0",
+        id: 33,
+        method: "tools/call",
+        params: { name: "server_info", arguments: {} },
+      }),
+    );
+    expect(infoResponse.status).toBe(200);
+    const infoPayload = await json(infoResponse);
+    const info = JSON.parse(infoPayload.result.content[0].text);
+    expect(info).toMatchObject({
+      ok: true,
+      endpoint: {
+        auth: "none",
+        rateLimit: {
+          binding: "API_MCP_RATE_LIMIT",
+          limit: 60,
+        },
+      },
+      policy: {
+        apiKeyRequired: false,
+        createsIssues: false,
+        publishesContent: false,
+      },
+    });
+
+    const listResponse = await POST(
+      mcpRequest({
+        jsonrpc: "2.0",
+        id: 34,
+        method: "tools/call",
+        params: {
+          name: "list_category_entries",
+          arguments: { category: "mcp", limit: 2 },
+        },
+      }),
+    );
+    expect(listResponse.status).toBe(200);
+    const listPayload = await json(listResponse);
+    const list = JSON.parse(listPayload.result.content[0].text);
+    expect(list).toMatchObject({
+      ok: true,
+      category: "mcp",
+      count: 2,
+      entries: [
+        expect.objectContaining({
+          canonicalUrl: expect.stringContaining("/mcp/"),
+        }),
+        expect.any(Object),
+      ],
+    });
   });
 
   it("returns schema validation errors for malformed MCP tool arguments", async () => {
@@ -202,5 +266,46 @@ describe("HeyClaude remote MCP route", () => {
       reviewModel: expect.stringContaining("Issue-first"),
     });
     expect(JSON.stringify(result)).not.toMatch(/token|secret|authorization/i);
+  });
+
+  it("prepares submission drafts without creating GitHub issues", async () => {
+    const response = await POST(
+      mcpRequest({
+        jsonrpc: "2.0",
+        id: 6,
+        method: "tools/call",
+        params: {
+          name: "prepare_submission_draft",
+          arguments: {
+            fields: {
+              category: "guides",
+              name: "Example Guide",
+              docs_url: "https://example.com/guide",
+              description:
+                "Example guide submission used to verify draft-only MCP helpers.",
+              guide_content:
+                "# Example Guide\n\nA complete public guide body for maintainer review.",
+            },
+          },
+        },
+      }),
+    );
+    expect(response.status).toBe(200);
+
+    const payload = await json(response);
+    expect(payload.result.isError).toBe(false);
+    const result = JSON.parse(payload.result.content[0].text);
+    expect(result).toMatchObject({
+      ok: true,
+      valid: true,
+      githubIssueUrl: expect.stringContaining("template=submit-guide.yml"),
+      issueDraft: {
+        body: expect.stringContaining("### Guide content"),
+      },
+      submissionPolicy: expect.stringContaining("does not auto-publish"),
+    });
+    expect(JSON.stringify(result)).not.toMatch(
+      /token|secret|authorization|createIssue|createPullRequest/i,
+    );
   });
 });

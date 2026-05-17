@@ -11,7 +11,7 @@
   <a href="https://github.com/JSONbored/awesome-claude">GitHub</a> •
   <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
   <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
-  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.1.2">v0.1.2 release</a>
+  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.2.0">v0.2.0 release</a>
 </p>
 
 Read-only Model Context Protocol server for the HeyClaude registry.
@@ -22,10 +22,22 @@ adapters, feed discovery, and safe submission-draft helpers. It does not create
 GitHub issues, open pull requests, write local files, publish content, or manage
 accounts.
 
+No API key is required for the public endpoint. Abuse controls are handled with
+strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
+`API_MCP_RATE_LIMIT` binding capped at 60 requests/minute/IP in production.
+
 ## Tools
 
 - `search_registry` - search public registry entries by query, category, and
   platform.
+- `server_info` - fetch package version, registry generation, tool list, public
+  access policy, and rate-limit metadata.
+- `list_category_entries` - browse entries with bounded pagination and optional
+  category, platform, tag, and query filters.
+- `get_recent_updates` - list recently added or upstream-updated entries from
+  generated registry metadata.
+- `get_related_entries` - find related entries based on category, tags,
+  platforms, keywords, and source metadata.
 - `get_entry_detail` - fetch an entry detail payload by category and slug.
 - `get_compatibility` - fetch skill platform compatibility metadata.
 - `get_install_guidance` - fetch install commands, config, package, and platform
@@ -43,6 +55,12 @@ accounts.
   URLs for human review.
 - `get_category_submission_guidance` - fetch category-specific contribution
   guidance and required fields.
+- `prepare_submission_draft` - normalize and validate fields, then return a
+  canonical issue title/body plus prefilled URLs.
+- `get_submission_examples` - fetch category-specific example fields and
+  templates for more complete submissions.
+- `review_submission_draft` - review schema errors, duplicate risk, and
+  maintainer checklist items before a submission issue is opened.
 
 ## Local Stdio
 
@@ -123,8 +141,11 @@ checks the HTTP guards used by the remote route.
 - Submission helpers generate URLs and validation reports only.
 - No GitHub OAuth, tokens, issue creation, PR creation, or repo writes.
 - No local project-file writes or config mutations.
-- Remote endpoint uses route-level rate limits and Cloudflare rate-limit bindings
-  when available.
+- Remote endpoint requires JSON POST bodies, rejects payloads above 64 KiB, and
+  uses the dedicated `API_MCP_RATE_LIMIT` Cloudflare binding at
+  60 requests/minute/IP in production.
+- Submission tools prepare review drafts only; HeyClaude does not auto-publish
+  MCP-submitted content.
 
 ## npm Release Prep
 
@@ -139,7 +160,7 @@ Do not publish until the web branch has shipped, the production endpoint has
 been verified, and the package smoke test passes. The release checklist is:
 
 ```bash
-pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp
+pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools
 pnpm --filter @heyclaude/mcp test
 pnpm --filter @heyclaude/mcp pack --dry-run
 MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package

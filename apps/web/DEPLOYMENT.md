@@ -13,10 +13,12 @@ Configured in [`wrangler.jsonc`](./wrangler.jsonc):
 
 - `SITE_DB` (D1) for durable upvotes, reviewed jobs listings, listing leads, commercial placements, community signals, and future dynamic site state.
 - Shared between `prod` and `dev` environments in the current setup.
-- `API_REGISTRY_RATE_LIMIT`, `API_DYNAMIC_RATE_LIMIT`, and
-  `API_STRICT_RATE_LIMIT` for Cloudflare-native per-route rate limiting. The
-  app also keeps an in-process development fallback, but production should rely
-  on the Worker bindings configured in `wrangler.jsonc`.
+- `API_REGISTRY_RATE_LIMIT`, `API_DYNAMIC_RATE_LIMIT`,
+  `API_STRICT_RATE_LIMIT`, and `API_MCP_RATE_LIMIT` for Cloudflare-native
+  per-route rate limiting. The MCP binding is intentionally separate so the
+  public no-key MCP endpoint keeps a durable `60 requests/minute/IP` production
+  cap. The app also keeps an in-process development fallback, but production
+  should rely on the Worker bindings configured in `wrangler.jsonc`.
 
 ## D1 setup
 

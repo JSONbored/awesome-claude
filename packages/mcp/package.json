@@ -1,6 +1,6 @@
 {
   "name": "@heyclaude/mcp",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "description": "Read-only MCP server for the HeyClaude registry.",
   "license": "MIT",

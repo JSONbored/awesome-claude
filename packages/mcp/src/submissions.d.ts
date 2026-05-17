@@ -21,6 +21,19 @@ export function validateSubmissionDraftFromSpec(
   spec: Record<string, unknown>,
   args?: Record<string, unknown>,
 ): Record<string, unknown>;
+export function prepareSubmissionDraftFromSpec(
+  spec: Record<string, unknown>,
+  args?: Record<string, unknown>,
+): Record<string, unknown>;
+export function getSubmissionExamplesFromSpec(
+  spec: Record<string, unknown>,
+  args?: Record<string, unknown>,
+): Record<string, unknown>;
+export function reviewSubmissionDraftFromSpec(
+  spec: Record<string, unknown>,
+  args?: Record<string, unknown>,
+  entries?: Array<Record<string, unknown>>,
+): Record<string, unknown>;
 export function searchDuplicateEntries(
   entries?: Array<Record<string, unknown>>,
   args?: Record<string, unknown>,
