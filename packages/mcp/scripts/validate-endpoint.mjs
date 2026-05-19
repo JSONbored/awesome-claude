@@ -319,9 +319,7 @@ async function validateMcpTools(endpointUrl, options = {}) {
         "prepare_submission_draft did not return a canonical issue body.",
       );
       assert(
-        String(prepared.submissionPolicy || "").includes(
-          "does not auto-publish",
-        ),
+        String(prepared.submissionPolicy || "").includes("does not auto-merge"),
         "prepare_submission_draft did not expose the maintainer-reviewed policy.",
       );
     }

@@ -57,8 +57,9 @@ export default function SkillValidatorPage() {
         <span className="eyebrow">Validator</span>
         <h1 className="section-title">Agent Skill package validator</h1>
         <p className="max-w-3xl text-base leading-8 text-muted-foreground">
-          Check an installable skill package locally, then open a review-ready
-          GitHub issue when the package passes.
+          Check a skill package locally, then open a source-backed GitHub issue
+          when the structure passes. Passing this validator is not a malware
+          verdict and does not make the ZIP publishable as a public download.
         </p>
       </div>
       <SkillValidatorClient />

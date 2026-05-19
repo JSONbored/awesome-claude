@@ -63,7 +63,8 @@ artifact directory.
 The public MCP endpoint does not require an API key. That is intentional: the
 tool surface is read-only and all submission helpers generate local validation
 reports, issue drafts, and URLs for maintainer review. They do not create
-GitHub issues or publish registry content.
+GitHub issues, open pull requests, publish registry content, or host package
+artifacts.
 
 Production uses the dedicated `API_MCP_RATE_LIMIT` Cloudflare binding at
 `60 requests/minute/IP`, plus the route-level 64 KiB body limit and strict JSON
@@ -75,8 +76,10 @@ when Cloudflare's binding is unavailable.
 - No content publishing.
 - No issue creation.
 - No pull request creation.
+- No package upload, mirroring, or public download hosting.
 - No local project-file writes.
 - No account, token, or GitHub OAuth handling.
 
-Submissions remain issue-first and maintainer-reviewed through the website and
-GitHub issue templates.
+Submissions remain issue-first through the website and GitHub issue templates.
+Source-backed issues may auto-open review PRs after repository gates pass, but
+maintainers still review before merge.

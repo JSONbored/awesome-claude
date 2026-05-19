@@ -368,13 +368,16 @@ claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp`),
         expect(source).toContain("      required: true");
       }
       expect(source).toContain(
-        "maintainers review accepted submissions before an import PR is opened",
+        "eligible submissions may auto-open an import PR",
       );
       expect(source).toContain(
         "Do not open a separate README change for issue submissions",
       );
       expect(source).toContain(
-        "I understand accepted imports regenerate the README and registry artifacts automatically",
+        "I understand imports regenerate the README and registry artifacts automatically",
+      );
+      expect(source).toContain(
+        "community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads",
       );
       expect(source).toContain("not affiliate, referral, or tracking URLs");
     }
@@ -617,9 +620,11 @@ npx unslop --help`);
     expect(queue.entries[0].reviewChecklist).toEqual(
       expect.arrayContaining([
         "Confirm the category, slug, and public-facing metadata.",
-        "Apply import-approved only after source and category review.",
+        "Auto-import may open a PR after gates pass; maintainer review still gates merge.",
       ]),
     );
+    expect(queue.entries[0].autoImportEligible).toBe(true);
+    expect(queue.entries[0].policyDecision).toBe("auto_import_eligible");
     expect(queue.entries[1].status).toBe("needs_author_input");
     expect(queue.entries[1].nextAction).toBe("request_author_input");
     expect(queue.entries[1].actionDue).toBe("author_input");
@@ -807,7 +812,7 @@ Test local package.
 Test local package.
 
 ### Download URL (optional)
-/downloads/skills/local-package.zip
+https://heyclau.de/downloads/skills/local-package.zip
 
 ### Skill type
 general
@@ -824,6 +829,172 @@ Use it.`),
     expect(report.ok).toBe(false);
     expect(report.errors).toContain(
       "Community submissions cannot request local /downloads hosting",
+    );
+  });
+
+  it("accepts source-backed skill submissions without package downloads", () => {
+    const submission = issue(`### Name
+Source Skill
+
+### Slug
+source-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/source-skill
+
+### Description
+Source-backed skill submission for testing.
+
+### Card description
+Source-backed skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Full copyable content
+# Source Skill
+
+Use this source-backed skill content.
+
+### Usage snippet
+Use the full copyable skill content.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.policyDecision).toBe("auto_import_eligible");
+    expect(risk.policyMatrix.source.status).toBe("pass");
+    expect(risk.policyMatrix.package.status).toBe("pass");
+    expect(formatSubmissionRiskMarkdown(risk)).toContain("Policy matrix");
+  });
+
+  it("keeps archive package URLs in maintainer review", () => {
+    const submission = issue(`### Name
+Archive Skill
+
+### Slug
+archive-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### Download URL (optional)
+https://example.com/archive-skill.tgz
+
+### Description
+Archive-backed skill submission for testing.
+
+### Card description
+Archive-backed skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Usage snippet
+Use the archive only after review.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.reviewFlags.map((flag) => flag.id)).toContain(
+      "community_archive_download",
+    );
+    expect(risk.policyMatrix.package.status).toBe("warn");
+    expect(risk.policyDecision).toBe("maintainer_review");
+  });
+
+  it("flags direct contributor package artifact changes", () => {
+    const risk = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 123,
+        user: { login: "external-author" },
+      },
+      files: [
+        {
+          filename: "content/skills/direct-artifact.zip",
+          status: "added",
+        },
+        {
+          filename: "content/skills/direct-artifact.mdx",
+          status: "added",
+          content: `---
+title: Direct Artifact
+slug: direct-artifact
+description: Direct package artifact submission.
+cardDescription: Direct package artifact submission.
+repoUrl: https://github.com/example/direct-artifact
+submittedBy: external-author
+submittedByUrl: https://github.com/external-author
+---
+Use source review instead of hosted package artifacts.
+`,
+        },
+      ],
+    });
+
+    expect(risk.classificationWarnings.map((warning) => warning.id)).toContain(
+      "community_package_artifact_change",
+    );
+    expect(risk.policyMatrix.quality.status).toBe("warn");
+    expect(risk.policyDecision).toBe("maintainer_review");
+  });
+
+  it("flags nested package artifacts from external fork PR metadata", () => {
+    const risk = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 123,
+        user: { login: "external-author" },
+        head: { repo: { full_name: "external-author/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        {
+          filename: "content/skills/direct-artifact/packages/payload.zip",
+          status: "added",
+        },
+        {
+          filename: "content/skills/direct-artifact.mdx",
+          status: "added",
+          content: `---
+title: Direct Artifact
+slug: direct-artifact
+description: Direct package artifact submission.
+cardDescription: Direct package artifact submission.
+repoUrl: https://github.com/example/direct-artifact
+submittedBy: external-author
+submittedByUrl: https://github.com/external-author
+---
+Use source review instead of hosted package artifacts.
+`,
+        },
+      ],
+    });
+
+    expect(risk.subject.sourceType).toBe("external_direct");
+    expect(risk.classificationWarnings.map((warning) => warning.id)).toContain(
+      "community_package_artifact_change",
     );
   });
 

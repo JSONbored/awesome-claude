@@ -157,6 +157,28 @@ export function SiteFooter() {
           >
             Issues
           </a>
+          <a
+            href={`${siteConfig.githubUrl}/blob/main/CONTRIBUTING.md`}
+            target="_blank"
+            rel="noreferrer"
+            className="block transition hover:text-foreground"
+          >
+            Contributing
+          </a>
+          <a
+            href={`${siteConfig.githubUrl}/blob/main/CODE_OF_CONDUCT.md`}
+            target="_blank"
+            rel="noreferrer"
+            className="block transition hover:text-foreground"
+          >
+            Code of conduct
+          </a>
+          <Link
+            href="/legal"
+            className="block transition hover:text-foreground"
+          >
+            Legal
+          </Link>
         </div>
         <NewsletterSignup />
       </div>

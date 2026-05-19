@@ -253,8 +253,9 @@ export function SkillValidatorClient() {
         </h2>
         <p className="mt-3 text-sm leading-7 text-muted-foreground">
           Valid packages can continue into the normal HeyClaude skill submission
-          flow with the package metadata already filled in. Maintainers still
-          review before anything is published.
+          flow with the package metadata already filled in. The ZIP is reviewed
+          as source material; community packages are not directly published as
+          HeyClaude-hosted downloads.
         </p>
         {state.status === "ready" ? (
           <div className="mt-4 space-y-3">
@@ -317,7 +318,8 @@ export function SkillValidatorClient() {
           <span>
             HeyClaude uses the same package shape for Claude, Codex, Windsurf,
             Gemini, Cursor adapters, and generic AGENTS context. The generated
-            draft uses the canonical skills submission schema.
+            draft uses the canonical skills submission schema. This validator
+            checks structure and references, not malware or runtime safety.
           </span>
         </div>
       </aside>

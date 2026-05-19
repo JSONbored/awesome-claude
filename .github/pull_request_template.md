@@ -10,12 +10,14 @@
 - [ ] Existing content updated
 - [ ] Submission issue resolved (link it here): #
 - [ ] Direct content submissions include `submittedBy` and `submittedByUrl` frontmatter matching the PR author.
-- [ ] I did not modify `README.md`; CI regenerates it for validation, and maintainer automation owns committed README updates.
+- [ ] I did not modify `README.md`, generated registry outputs, or `apps/web/public/downloads/**` unless this is a maintainer/internal automation branch.
+- [ ] I did not request HeyClaude-hosted `/downloads/...` package hosting for community-submitted ZIP/MCPB artifacts.
 
 ## Schema and Quality Checks
 
 - [ ] `pnpm validate:content` passed
 - [ ] `pnpm validate:packages` passed
+- [ ] `pnpm scan:packages` passed when package artifacts changed
 - [ ] `pnpm audit:content` ran and I reviewed findings
 - [ ] No forbidden fields were added (`viewCount`, `copyCount`, `popularityScore`)
 - [ ] Install/use/copy paths are practical and complete

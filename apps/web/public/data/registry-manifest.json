@@ -3236,7 +3236,7 @@
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
       "type": "json",
-      "sha256": "cd33178d3098471ecdf062c4d4fa8b6d573ab1f9cf16309791ab3cb87bd8ef38"
+      "sha256": "8d3492e575e1b17386b600d64004e043ed0d18cb3ef17e2c3e3823e091b97926"
     },
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",

@@ -1626,6 +1626,21 @@ jobs:
                 normalizeText(file.filename).toLowerCase() === "readme.md" &&
                 normalizeText(file.status) !== "removed"
             );
+            const generatedFiles = contentFiles
+              .map((file) => normalizeText(file.filename))
+              .filter(
+                (filename) =>
+                  filename.startsWith("apps/web/public/data/") ||
+                  filename.startsWith("apps/web/src/generated/") ||
+                  filename.startsWith("apps/web/public/downloads/")
+              );
+            const packageArtifactFiles = contentFiles
+              .map((file) => normalizeText(file.filename))
+              .filter(
+                (filename) =>
+                  /^content\/skills\/.+\.zip$/i.test(filename) ||
+                  /^content\/mcp\/.+\.mcpb$/i.test(filename)
+              );
             if (
               hasRootReadmeChange &&
               contentMdxFiles.length &&
@@ -1636,6 +1651,22 @@ jobs:
                 "generated_readme_change",
                 "README.md changes are not accepted in direct content PRs; maintainer automation regenerates README output",
                 "Remove README.md from the contributor PR. CI regenerates it for validation, and the post-merge README Refresh PR owns committed updates."
+              );
+            }
+            if (generatedFiles.length && sourceType === "external_direct") {
+              addClassificationWarning(
+                report,
+                "generated_registry_artifact_change",
+                "Generated registry artifacts and public download mirrors are not accepted in direct contributor PRs",
+                generatedFiles.slice(0, 10).join(", ")
+              );
+            }
+            if (packageArtifactFiles.length && sourceType === "external_direct") {
+              addClassificationWarning(
+                report,
+                "community_package_artifact_change",
+                "Community PRs cannot add or modify HeyClaude-hosted ZIP/MCPB package artifacts",
+                packageArtifactFiles.slice(0, 10).join(", ")
               );
             }
             const entries = [];

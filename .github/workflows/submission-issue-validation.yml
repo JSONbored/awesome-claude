@@ -9,8 +9,10 @@ on:
       - labeled
 
 permissions:
+  actions: write
+  contents: write
   issues: write
-  contents: read
+  pull-requests: write
 
 jobs:
   validate-submission:
@@ -96,8 +98,18 @@ jobs:
             --output .github/tmp/submission-risk.json \
             --markdown-output .github/tmp/submission-risk.md
 
-      - name: Auto-label submission issue
+      - name: Precheck auto-import eligibility
+        id: auto_import_precheck
         if: always()
+        run: |
+          node scripts/ci/check-auto-import-eligibility.mjs \
+            --issue-json .github/tmp/issue.json \
+            --validation-json .github/tmp/submission-validation.json \
+            --risk-json .github/tmp/submission-risk.json \
+            --output .github/tmp/auto-import-precheck.json
+
+      - name: Auto-label submission issue
+        if: ${{ always() && steps.auto_import_precheck.outputs.eligible != 'true' }}
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
@@ -136,7 +148,7 @@ jobs:
             }
 
       - name: Auto-label submission risk
-        if: always()
+        if: ${{ always() && steps.auto_import_precheck.outputs.eligible != 'true' }}
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
@@ -346,6 +358,156 @@ jobs:
         if: always()
         run: |
           node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json
+
+      - name: Check auto-import eligibility
+        id: auto_import
+        if: ${{ !failure() && !cancelled() }}
+        run: |
+          node scripts/ci/check-auto-import-eligibility.mjs \
+            --issue-json .github/tmp/issue.json \
+            --validation-json .github/tmp/submission-validation.json \
+            --risk-json .github/tmp/submission-risk.json \
+            --output .github/tmp/auto-import-eligibility.json
+
+      - name: Import auto-eligible submission
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        env:
+          SUBMISSION_REVIEWED_BY: auto-import-gates
+          SUBMISSION_REVIEWED_AT: ${{ github.event.issue.updated_at }}
+        run: |
+          node scripts/import-submission-issue.mjs \
+            --issue-json .github/tmp/issue.json
+
+      - name: Format auto-imported content
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        run: |
+          changed_mdx="$(git diff --name-only --diff-filter=ACM | grep -E '^content/.+\.mdx$' || true)"
+          if [ -n "$changed_mdx" ]; then
+            printf '%s\n' "$changed_mdx" | xargs pnpm exec prettier --write
+          fi
+
+      - name: Build auto-import registry artifacts
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        run: pnpm --filter web run prebuild
+
+      - name: Refresh auto-import README
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        run: pnpm generate:readme
+
+      - name: Validate auto-imported content
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        run: |
+          pnpm validate:content:strict
+          pnpm validate:issue-templates
+          pnpm validate:packages
+          pnpm scan:packages
+          pnpm validate:raycast-feed
+          pnpm test:submission-intake
+          pnpm test:registry-artifacts
+          pnpm test:seo-jsonld
+
+      - name: Build auto-import PR metadata
+        id: auto_metadata
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const outputPath = process.env.GITHUB_OUTPUT;
+          function setOutput(name, value) {
+            if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+              throw new Error(`Unsafe GitHub Actions output name: ${name}`);
+            }
+            const normalized = String(value ?? "").replace(/[\r\n]/g, " ");
+            fs.appendFileSync(outputPath, `${name}=${normalized}\n`);
+          }
+          const issue = JSON.parse(fs.readFileSync(".github/tmp/issue.json", "utf8"));
+          const report = JSON.parse(fs.readFileSync(".github/tmp/submission-validation.json", "utf8"));
+          const category = report.category || "content";
+          const slug = report.fields?.slug || `issue-${issue.number}`;
+          const title = report.fields?.name || slug;
+          const issueAuthor = issue.user?.login || "";
+          const issueAuthorId = issue.user?.id || "";
+          const issueAuthorHandle = issueAuthor ? `@${issueAuthor}` : "unknown submitter";
+          const issueUrl = issue.html_url || issue.url || "";
+          setOutput("issue_number", issue.number);
+          setOutput("issue_author", issueAuthor);
+          setOutput("issue_author_handle", issueAuthorHandle);
+          setOutput("issue_author_id", issueAuthorId);
+          setOutput("issue_url", issueUrl);
+          setOutput("category", category);
+          setOutput("slug", slug);
+          setOutput("entry_title", title);
+          setOutput("branch", `automation/submission-${issue.number}-${slug}`);
+          setOutput("commit_title", `feat(content): add ${category} ${slug}`);
+          setOutput("pr_title", `feat(content): add ${category} ${slug}`);
+          NODE
+
+      - name: Create auto-import PR
+        id: auto_cpr
+        if: ${{ !failure() && !cancelled() && steps.auto_import.outputs.eligible == 'true' }}
+        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
+        with:
+          branch: ${{ steps.auto_metadata.outputs.branch }}
+          title: ${{ steps.auto_metadata.outputs.pr_title }}
+          commit-message: |
+            ${{ steps.auto_metadata.outputs.commit_title }}
+
+            Co-authored-by: ${{ steps.auto_metadata.outputs.issue_author }} <${{ steps.auto_metadata.outputs.issue_author_id }}+${{ steps.auto_metadata.outputs.issue_author }}@users.noreply.github.com>
+          delete-branch: true
+          add-paths: |
+            content/**
+            apps/web/public/data/**
+            apps/web/src/generated/**
+            README.md
+          body: |
+            ## Summary
+            - Auto-imports gated submission #${{ steps.auto_metadata.outputs.issue_number }} by ${{ steps.auto_metadata.outputs.issue_author_handle }} for `${{ steps.auto_metadata.outputs.category }}/${{ steps.auto_metadata.outputs.slug }}`
+
+            ## What changed
+            - Added the content file from a schema-valid, source-backed submission
+            - Regenerated registry artifacts and README output
+            - Preserved issue-first review and original submitter attribution before publication
+
+            ## Why
+            - The issue passed the auto-import eligibility gates. This opens a reviewable PR only; it does not auto-merge or publish the entry.
+
+            ## Validation
+            - `pnpm validate:content:strict`
+            - `pnpm validate:issue-templates`
+            - `pnpm validate:packages`
+            - `pnpm scan:packages`
+            - `pnpm validate:raycast-feed`
+            - `pnpm test:submission-intake`
+            - `pnpm test:registry-artifacts`
+            - `pnpm test:seo-jsonld`
+
+            ## Notes
+            - Original submitter: ${{ steps.auto_metadata.outputs.issue_author_handle }} via #${{ steps.auto_metadata.outputs.issue_number }}
+            - Maintainer review still gates merge.
+            - Closes #${{ steps.auto_metadata.outputs.issue_number }} after merge.
+
+      - name: Trigger content validation for auto-import PR
+        if: ${{ !failure() && !cancelled() && steps.auto_cpr.outputs.pull-request-url != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VALIDATION_REF: ${{ steps.auto_metadata.outputs.branch }}
+        run: gh workflow run content-validation.yml --ref "$VALIDATION_REF"
+
+      - name: Link auto-import PR on submission issue
+        if: ${{ !failure() && !cancelled() && steps.auto_cpr.outputs.pull-request-url != '' }}
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: Number("${{ steps.auto_metadata.outputs.issue_number }}"),
+              labels: ["import-pr-open"]
+            });
+            await github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: Number("${{ steps.auto_metadata.outputs.issue_number }}"),
+              body: `Auto-import PR opened after eligibility gates passed for ${{ steps.auto_metadata.outputs.issue_author_handle }}: ${{ steps.auto_cpr.outputs.pull-request-url }}`
+            });
 
       - name: Summarize invalid submission issue
         if: always()
