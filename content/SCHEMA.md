@@ -59,7 +59,7 @@ Use these when applicable:
 
 - `mcp`: prefer `installCommand`, `usageSnippet`
 - `tools`: use `websiteUrl`, `pricingModel`, and `disclosure`; products and services should go through `/tools/submit`
-- `skills`: prefer `installCommand`, `usageSnippet`
+- `skills`: prefer source-backed `installCommand`, `usageSnippet`, `copySnippet`, `retrievalSources`, and capability metadata
 - `hooks`: prefer `trigger`, `usageSnippet`, `copySnippet`
 - `statuslines`: prefer `scriptLanguage`, `copySnippet`
 - `commands`: prefer `usageSnippet`, `copySnippet`
@@ -71,17 +71,20 @@ Use these when applicable:
 
 - Free Claude resources should start with `/submit` or the generated GitHub issue forms.
 - Pull requests are for advanced contributors who can add MDX directly and run the full gate.
-- Maintainers manually review and import accepted submissions; issue validation is not auto-publish.
+- Fully valid, source-backed, non-artifact issues may auto-open an import PR after gates pass. Maintainer review still gates merge.
 - Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content issue templates.
 - Contributor links must be official source/docs/release URLs. Affiliate, referral, tracking, or local package-hosting requests are rejected.
+- Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads. Maintainer-built packages require package trust metadata.
 
 ## Workflow
 
 1. Run `pnpm validate:content:strict`
 2. Run `pnpm validate:issue-templates`
-3. Run `pnpm audit:content`
-4. Run `pnpm validate:clean`
-5. Run `pnpm --filter web run prebuild` to regenerate registry artifacts
-6. Run `pnpm test:registry-artifacts`
-7. Fix missing fields and semantic audit issues
-8. Regenerate issue templates and README when category/content counts change
+3. Run `pnpm validate:packages`
+4. Run `pnpm scan:packages`
+5. Run `pnpm audit:content`
+6. Run `pnpm validate:clean`
+7. Run `pnpm --filter web run prebuild` to regenerate registry artifacts
+8. Run `pnpm test:registry-artifacts`
+9. Fix missing fields and semantic audit issues
+10. Regenerate issue templates and README when category/content counts change

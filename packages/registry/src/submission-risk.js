@@ -248,6 +248,47 @@ function collectUrls(value) {
   return [...urls];
 }
 
+const ARCHIVE_PACKAGE_EXTENSIONS = new Set([
+  ".zip",
+  ".mcpb",
+  ".tar",
+  ".tar.gz",
+  ".tgz",
+  ".tar.bz2",
+  ".tbz2",
+  ".tar.xz",
+  ".txz",
+  ".7z",
+  ".rar",
+  ".gz",
+  ".bz2",
+  ".xz",
+  ".deb",
+  ".rpm",
+  ".dmg",
+  ".exe",
+  ".pkg",
+  ".msi",
+  ".appimage",
+]);
+
+function urlPathname(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  try {
+    return new URL(text).pathname.toLowerCase();
+  } catch {
+    return text.split(/[?#]/)[0].toLowerCase();
+  }
+}
+
+function isArchivePackageUrl(value) {
+  const pathname = urlPathname(value);
+  return [...ARCHIVE_PACKAGE_EXTENSIONS].some((extension) =>
+    pathname.endsWith(extension),
+  );
+}
+
 function addFlag(report, severity, id, summary, detail = "") {
   if (report.reviewFlags.some((flag) => flag.id === id)) return;
   report.reviewFlags.push({ id, severity, summary, detail });
@@ -419,6 +460,8 @@ function applyContributorAnalysis(
 
 const CAPABILITY_BUCKET_BY_FLAG = {
   embedded_secret: "unsafe_install_or_secret",
+  community_local_download_request: "package_policy",
+  community_archive_download: "package_policy",
   non_https_executable_source: "unsafe_install_or_secret",
   unsafe_install_pipeline: "unsafe_install_or_secret",
   malicious_data_theft_capability: "abuse_or_malware",
@@ -709,6 +752,26 @@ function addContentRiskSignals(report, fields, text) {
     );
   }
 
+  const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
+  const downloadPath = urlPathname(downloadUrl);
+  if (downloadPath.startsWith("/downloads/")) {
+    addFlag(
+      report,
+      "high",
+      "community_local_download_request",
+      "Community submissions cannot request HeyClaude-hosted package downloads",
+      downloadUrl,
+    );
+  } else if (isArchivePackageUrl(downloadUrl)) {
+    addFlag(
+      report,
+      "medium",
+      "community_archive_download",
+      "Submitted package archive URLs require maintainer package review and are not auto-import eligible",
+      downloadUrl,
+    );
+  }
+
   if (
     /rm\s+-rf\s+(\/|~|\$home)\b/i.test(installText) ||
     /\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(sh|bash)\b/i.test(
@@ -918,6 +981,148 @@ function riskNotes(report) {
   return notes;
 }
 
+function hasReviewFlag(report, ids) {
+  const idSet = new Set(Array.isArray(ids) ? ids : [ids]);
+  return report.reviewFlags.some((flag) => idSet.has(flag.id));
+}
+
+function flagIds(report, ids) {
+  const idSet = new Set(Array.isArray(ids) ? ids : [ids]);
+  return report.reviewFlags
+    .filter((flag) => idSet.has(flag.id))
+    .map((flag) => flag.id);
+}
+
+function policyGate(status, summary, detail = []) {
+  return {
+    status,
+    summary,
+    detail: Array.isArray(detail)
+      ? detail.filter(Boolean)
+      : [detail].filter(Boolean),
+  };
+}
+
+function buildPolicyMatrix(report, validationReport) {
+  const contribution =
+    report.contributionAnalysis || baseContributionAnalysis();
+  const criticalFlags = report.reviewFlags
+    .filter((flag) => flag.severity === "critical")
+    .map((flag) => flag.id);
+  const highFlags = report.reviewFlags
+    .filter((flag) => flag.severity === "high")
+    .map((flag) => flag.id);
+  const packageFlags = flagIds(report, [
+    "community_local_download_request",
+    "community_archive_download",
+    "downloadable_binary_or_installer",
+  ]);
+
+  const schema =
+    validationReport?.skipped || contribution.schemaState === "skipped"
+      ? policyGate(
+          "block",
+          "Submission did not resolve to a supported category.",
+        )
+      : validationReport && !validationReport.ok
+        ? policyGate("block", "Submission schema validation is failing.")
+        : contribution.schemaState === "passed"
+          ? policyGate("pass", "Required submission fields are present.")
+          : policyGate("warn", "Submission schema has not been checked.");
+
+  const source =
+    contribution.sourceState === "missing"
+      ? policyGate("block", "Canonical source, docs, or repo URL is missing.")
+      : contribution.sourceState === "needs_verification"
+        ? policyGate("block", "Source URL format or trust needs verification.")
+        : contribution.sourceState === "provided"
+          ? policyGate("pass", "Canonical source signal is present.")
+          : policyGate("warn", "Source state is unknown.");
+
+  const packageGate = hasReviewFlag(report, "community_local_download_request")
+    ? policyGate(
+        "block",
+        "Community content cannot request HeyClaude local package hosting.",
+        packageFlags,
+      )
+    : hasReviewFlag(report, "community_archive_download")
+      ? policyGate(
+          "warn",
+          "Package archive URLs require maintainer quarantine review before publication.",
+          packageFlags,
+        )
+      : hasReviewFlag(report, "downloadable_binary_or_installer")
+        ? policyGate(
+            "warn",
+            "Installer or binary package references need maintainer review.",
+            packageFlags,
+          )
+        : policyGate("pass", "No community-hosted package artifact requested.");
+
+  const provenance =
+    contribution.provenanceState === "failed" ||
+    report.provenanceStatus === "failed"
+      ? policyGate("block", "Submission provenance failed validation.")
+      : contribution.provenanceState === "passed" ||
+          report.provenanceStatus === "passed"
+        ? policyGate("pass", "Contributor provenance is consistent.")
+        : policyGate(
+            "pass",
+            "Provenance is not required for this intake path.",
+          );
+
+  const capability = criticalFlags.length
+    ? policyGate(
+        "block",
+        "Critical unsafe capability signals block import.",
+        criticalFlags,
+      )
+    : highFlags.length
+      ? policyGate(
+          "warn",
+          "High-risk capability signals require maintainer review.",
+          highFlags,
+        )
+      : report.reviewFlags.length
+        ? policyGate(
+            "warn",
+            "Automated review found non-blocking capability signals.",
+            report.reviewFlags.map((flag) => flag.id),
+          )
+        : policyGate("pass", "No deterministic capability flags found.");
+
+  const quality = report.classificationWarnings.length
+    ? policyGate(
+        "warn",
+        "Category fit or generated-artifact hygiene needs review.",
+        report.classificationWarnings.map((warning) => warning.id),
+      )
+    : policyGate("pass", "No classification or quality warnings found.");
+
+  return {
+    schema,
+    source,
+    package: packageGate,
+    provenance,
+    capability,
+    quality,
+  };
+}
+
+function policyDecisionForReport(report) {
+  const matrix = report.policyMatrix || {};
+  const gates = Object.values(matrix);
+  if (gates.some((gate) => gate?.status === "block")) return "blocked";
+  if (report.subject?.type !== "issue") return "maintainer_review";
+  const sourcePass = matrix.source?.status === "pass";
+  const packagePass = matrix.package?.status === "pass";
+  const qualityPass = matrix.quality?.status === "pass";
+  const riskAllowed = report.riskTier === "low" || report.riskTier === "medium";
+  return sourcePass && packagePass && qualityPass && riskAllowed
+    ? "auto_import_eligible"
+    : "maintainer_review";
+}
+
 function finalizeReport(report, validationReport) {
   report.riskTier = tierFromFlags(report.reviewFlags);
   report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
@@ -926,6 +1131,8 @@ function finalizeReport(report, validationReport) {
     validationReport,
   );
   finalizeContributionAnalysis(report, validationReport);
+  report.policyMatrix = buildPolicyMatrix(report, validationReport);
+  report.policyDecision = policyDecisionForReport(report);
   report.humanReviewNotes = riskNotes(report);
   report.labelDefinitions = SUBMISSION_RISK_LABEL_DEFINITIONS;
   return report;
@@ -952,6 +1159,8 @@ function baseReport(subject) {
     classificationWarnings: [],
     recommendedLabels: [],
     recommendedAction: "maintainer_review",
+    policyMatrix: {},
+    policyDecision: "maintainer_review",
     humanReviewNotes: [],
     labelDefinitions: SUBMISSION_RISK_LABEL_DEFINITIONS,
   };
@@ -1072,27 +1281,75 @@ function prFileCategory(filename) {
 }
 
 function addGeneratedArtifactSignals(report, files, contentFiles, sourceType) {
+  if (sourceType !== "external_direct") return;
+
   const hasRootReadmeChange = files.some(
     (file) =>
       normalizeText(file.filename).toLowerCase() === "readme.md" &&
       normalizeText(file.status) !== "removed",
   );
-  if (!hasRootReadmeChange || !contentFiles.length) return;
-  if (sourceType !== "external_direct") return;
+  const generatedFiles = files
+    .map((file) => normalizeText(file.filename))
+    .filter(
+      (filename) =>
+        filename.startsWith("apps/web/public/data/") ||
+        filename.startsWith("apps/web/src/generated/") ||
+        filename.startsWith("apps/web/public/downloads/"),
+    );
+  const packageArtifactFiles = files
+    .map((file) => normalizeText(file.filename))
+    .filter(
+      (filename) =>
+        /^content\/skills\/.+\.zip$/i.test(filename) ||
+        /^content\/mcp\/.+\.mcpb$/i.test(filename),
+    );
 
-  addClassificationWarning(
-    report,
-    "generated_readme_change",
-    "README.md changes are not accepted in direct content PRs; maintainer automation regenerates README output",
-    "Remove README.md from the contributor PR. CI regenerates it for validation, and the post-merge README Refresh PR owns committed updates.",
-  );
+  if (hasRootReadmeChange) {
+    addClassificationWarning(
+      report,
+      "generated_readme_change",
+      "README.md changes are not accepted in direct content PRs; maintainer automation regenerates README output",
+      "Remove README.md from the contributor PR. CI regenerates it for validation, and maintainer/internal branches own committed README updates.",
+    );
+  }
+
+  if (generatedFiles.length) {
+    addClassificationWarning(
+      report,
+      "generated_registry_artifact_change",
+      "Generated registry artifacts and public download mirrors are not accepted in direct contributor PRs",
+      generatedFiles.slice(0, 10).join(", "),
+    );
+  }
+
+  if (packageArtifactFiles.length) {
+    addClassificationWarning(
+      report,
+      "community_package_artifact_change",
+      "Community PRs cannot add or modify HeyClaude-hosted ZIP/MCPB package artifacts",
+      packageArtifactFiles.slice(0, 10).join(", "),
+    );
+  }
 }
 
 function prSourceType(input = {}) {
   if (input.sourceType) return normalizeText(input.sourceType);
   const headRef = normalizeText(input.pullRequest?.head?.ref);
   if (/^automation\/submission-\d+-/.test(headRef)) return "automation_import";
-  return "direct_pr";
+  const headRepo = normalizeText(
+    input.pullRequest?.head?.repo?.full_name ||
+      input.pullRequest?.head?.repo?.fullName,
+  );
+  const baseRepo = normalizeText(
+    input.pullRequest?.base?.repo?.full_name ||
+      input.pullRequest?.base?.repo?.fullName,
+  );
+  if (headRepo && baseRepo) {
+    return headRepo.toLowerCase() === baseRepo.toLowerCase()
+      ? "same_repo_direct"
+      : "external_direct";
+  }
+  return "same_repo_direct";
 }
 
 function issueContributorMap(input = {}) {
@@ -1552,6 +1809,7 @@ export function formatSubmissionRiskMarkdown(report) {
     "",
     `- Recommended action: \`${report.recommendedAction}\``,
     `- Recommended labels: ${report.recommendedLabels.map((label) => `\`${label}\``).join(", ") || "none"}`,
+    `- Policy decision: \`${report.policyDecision || "maintainer_review"}\``,
   ];
 
   if (report.provenanceStatus && report.provenanceStatus !== "not_applicable") {
@@ -1656,6 +1914,22 @@ export function formatSubmissionRiskMarkdown(report) {
     lines.push("- Capability buckets: none");
   }
   lines.push(`- Provenance: \`${contribution.provenanceState}\``);
+
+  const policyMatrix = report.policyMatrix || {};
+  if (Object.keys(policyMatrix).length) {
+    lines.push("", "### Policy matrix");
+    for (const [name, gate] of Object.entries(policyMatrix)) {
+      if (!gate) continue;
+      lines.push(
+        `- ${escapeMarkdownText(name)}: \`${gate.status}\` - ${escapeMarkdownText(gate.summary || "")}`,
+      );
+      if (Array.isArray(gate.detail) && gate.detail.length) {
+        lines.push(
+          `  - Signals: ${gate.detail.map((item) => markdownCodeSpan(item)).join(", ")}`,
+        );
+      }
+    }
+  }
 
   if (report.reviewFlags.length) {
     lines.push("", "### Review flags");

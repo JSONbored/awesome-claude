@@ -424,8 +424,14 @@ export function SubmitForm() {
 
     if (category === "skills") {
       items.push({
-        label: "Install command or download URL",
-        ready: hasText(installCommand) || hasText(downloadUrl),
+        label: "Source, install command, or copyable content",
+        ready:
+          hasText(installCommand) ||
+          hasText(downloadUrl) ||
+          hasText(githubUrl) ||
+          hasText(docsUrl) ||
+          hasText(assetContent) ||
+          hasText(retrievalSources),
       });
       if (skillType === "capability-pack") {
         items.push(
@@ -437,7 +443,10 @@ export function SubmitForm() {
     return items;
   }, [
     category,
+    assetContent,
     downloadUrl,
+    docsUrl,
+    githubUrl,
     installCommand,
     retrievalSources,
     selectedFields,
@@ -1018,7 +1027,13 @@ export function SubmitForm() {
       <div className="rounded-xl border border-border bg-background px-4 py-3 text-xs leading-6 text-muted-foreground">
         This creates a reviewable GitHub issue from the website. If the direct
         submission endpoint is unavailable, use the fallback link below to open
-        the same schema-aligned issue body in GitHub.
+        the same schema-aligned issue body in GitHub. Community package uploads
+        are review/quarantine material, not public HeyClaude downloads.
+        Continued submissions are covered by the{" "}
+        <a href="/legal" className="text-primary underline underline-offset-4">
+          legal disclaimer
+        </a>
+        .
       </div>
 
       {turnstileSiteKey ? <div ref={turnstileRef} /> : null}

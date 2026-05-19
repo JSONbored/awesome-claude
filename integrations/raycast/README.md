@@ -42,6 +42,10 @@ It does not request accounts, OAuth, GitHub tokens, API keys, local project-file
 
 The extension can create Raycast-native Quicklinks and Snippets only when you explicitly trigger those Raycast actions.
 
+## Submission Safety
+
+Raycast submission actions remain source-first. They help draft reviewed issues with canonical source/docs URLs and do not upload, host, or publish community ZIP/MCPB artifacts. Eligible submissions may auto-open a GitHub PR after repository gates pass, but maintainers still review before merge.
+
 ## Data and Privacy
 
 The extension reads public HeyClaude data:

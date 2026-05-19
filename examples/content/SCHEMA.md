@@ -37,7 +37,8 @@ Upvotes are now owned by D1 (`votes_entries`) and not contributor metadata.
 ## Downloadable package policy
 
 - Local package URLs (`/downloads/...`) must include `packageVerified: true`.
-- Community submissions should provide external source/release URLs.
+- Community submissions should provide source/docs/release URLs, install commands, retrieval sources, or full copyable content.
+- Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads.
 - Skills local packages must be `.zip` under `/downloads/skills/...`.
 - MCP local packages must be `.mcpb` under `/downloads/mcp/...`.
 
@@ -78,7 +79,7 @@ pnpm build
 
 - Use issues first for free Claude resources. The issue validator checks category fields, required copyable assets, slug shape, local package requests, and affiliate/referral URLs.
 - Use pull requests only when you are comfortable adding MDX directly and running the full gate.
-- Maintainers manually import or merge accepted submissions. GitHub issue validation does not auto-publish content.
+- Fully valid, source-backed, non-artifact issues may auto-open an import PR after gates pass. Maintainers still review before merge.
 - Tool/app/service promotions, listing claims, and jobs use the D1-backed website lead forms, not the free resource issue templates.
 
 For vote-state sync checks:

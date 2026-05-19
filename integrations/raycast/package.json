@@ -196,5 +196,8 @@
     "@raycast/eslint-config": "2.1.1",
     "tsx": "4.22.0",
     "typescript": "6.0.3"
+  },
+  "overrides": {
+    "brace-expansion": "5.0.6"
   }
 }

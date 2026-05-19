@@ -616,7 +616,7 @@ export const apiRouteDefinitions = {
     path: "/api/mcp",
     summary: "Read-only HeyClaude MCP endpoint",
     description:
-      "Exposes no-key read-only HeyClaude MCP tools, resources, and prompts over Streamable HTTP for registry search, discovery, entry detail, copyable assets, comparison, compatibility lookup, install guidance, platform adapters, feed discovery, client setup, and maintainer-reviewed submission draft helpers. This endpoint does not publish registry content or create submissions.",
+      "Exposes no-key read-only HeyClaude MCP tools, resources, and prompts over Streamable HTTP for registry search, discovery, entry detail, copyable assets, comparison, compatibility lookup, install guidance, platform adapters, feed discovery, client setup, and submission draft helpers. This endpoint does not publish registry content, create submissions, open PRs, or host package artifacts.",
     tags: ["MCP"],
     originCheck: true,
     requiresJsonBody: true,
@@ -715,7 +715,7 @@ export const apiRouteDefinitions = {
     path: "/api/submissions",
     summary: "Create a reviewable content submission issue",
     description:
-      "Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub issue for maintainer review. This endpoint never writes content files or publishes registry entries directly.",
+      "Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub issue for review. Eligible source-backed submissions may later auto-open a PR from GitHub automation, but this endpoint never writes content files, publishes registry entries, or hosts community ZIP/MCPB artifacts directly.",
     tags: ["Submissions"],
     originCheck: true,
     bodySchema: submissionBodySchema,
@@ -733,6 +733,8 @@ export const apiRouteDefinitions = {
     method: "GET",
     path: "/api/download",
     summary: "Download generated registry packages",
+    description:
+      "Serves maintainer-built package artifacts from constrained /downloads paths. Community-submitted archives are not exposed through this endpoint unless maintainers rebuild and verify the artifact.",
     tags: ["Distribution"],
     querySchema: downloadQuerySchema,
     responseContentType: "application/octet-stream",

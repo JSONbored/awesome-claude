@@ -62,7 +62,9 @@ export default function SubmitPage() {
             </p>
             <p className="max-w-xl text-sm leading-7 text-muted-foreground">
               Skill submissions now support both general skills and deep
-              capability packs with verification metadata and retrieval sources.
+              capability packs with verification metadata, retrieval sources,
+              and source-backed copyable content. Community ZIPs are not
+              published as HeyClaude-hosted downloads.
             </p>
             <p className="max-w-xl text-sm leading-7 text-muted-foreground">
               Hiring opportunities are handled through the{" "}
@@ -108,8 +110,9 @@ export default function SubmitPage() {
 
           <div className="rounded-2xl border border-border/80 bg-card/70 px-5 py-4 text-sm leading-7 text-muted-foreground">
             If you are sharing something installable, include the real command
-            or the exact config somebody would need to use it. The goal is to
-            keep new entries useful on day one, not just listed.
+            or the exact config somebody would need to use it. Source-backed,
+            non-artifact submissions can move to an import PR after automated
+            gates pass; maintainer review still gates merge.
           </div>
 
           <div className="rounded-2xl border border-border/80 bg-card/70 px-5 py-4 text-sm leading-7 text-muted-foreground">
@@ -124,6 +127,20 @@ export default function SubmitPage() {
                 className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground transition hover:border-primary/40"
               >
                 Content examples
+              </a>
+              <a
+                href={`${siteConfig.githubUrl}/blob/main/CONTRIBUTING.md`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground transition hover:border-primary/40"
+              >
+                Contributing
+              </a>
+              <a
+                href="/legal"
+                className="inline-flex items-center rounded-full border border-border bg-background px-3 py-1.5 text-xs text-foreground transition hover:border-primary/40"
+              >
+                Legal
               </a>
               <a
                 href={`${siteConfig.githubUrl}/blob/main/examples/content/SCHEMA.md`}

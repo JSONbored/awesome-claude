@@ -19,8 +19,8 @@ Read-only Model Context Protocol server for the HeyClaude registry.
 It exposes the same public registry surface used by the website and Raycast:
 search, entry details, platform compatibility, install guidance, generated
 adapters, feed discovery, and safe submission-draft helpers. It does not create
-GitHub issues, open pull requests, write local files, publish content, or manage
-accounts.
+GitHub issues, open pull requests, write local files, publish content, host
+packages, or manage accounts.
 
 No API key is required for the public endpoint. Abuse controls are handled with
 strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
@@ -168,8 +168,13 @@ checks the HTTP guards used by the remote route.
 - Remote endpoint requires JSON POST bodies, rejects payloads above 64 KiB, and
   uses the dedicated `API_MCP_RATE_LIMIT` Cloudflare binding at
   60 requests/minute/IP in production.
-- Submission tools prepare review drafts only; HeyClaude does not auto-publish
-  MCP-submitted content.
+- Submission tools prepare review drafts only; HeyClaude does not auto-merge or
+  publish MCP-submitted content.
+- Source-backed, non-artifact submissions may auto-open a review PR after
+  repository gates pass, but the MCP server does not perform that action and
+  maintainers still review before merge.
+- Community ZIP/MCPB artifacts are review/quarantine material only. Public
+  HeyClaude-hosted downloads are maintainer-built package artifacts.
 
 ## npm Release Prep
 

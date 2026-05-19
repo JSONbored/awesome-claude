@@ -166,6 +166,32 @@ function compactWhitespace(value) {
   return output.trim();
 }
 
+function splitList(value) {
+  const items = [];
+  let current = "";
+  for (const char of String(value || "")) {
+    if (char === "\n" || char === ",") {
+      const next = current.trim();
+      if (next) items.push(next);
+      current = "";
+      continue;
+    }
+    current += char;
+  }
+  const next = current.trim();
+  if (next) items.push(next);
+  return items;
+}
+
+function isIsoDate(value) {
+  const text = normalizeText(value);
+  if (text.length !== 10) return false;
+  return [...text].every((char, index) => {
+    if (index === 4 || index === 7) return char === "-";
+    return char >= "0" && char <= "9";
+  });
+}
+
 function tagsToText(value) {
   return Array.isArray(value)
     ? value.map(normalizeText).filter(Boolean).join(", ")
@@ -235,6 +261,23 @@ function fieldLabels(model) {
   return new Map((model?.fields || []).map((field) => [field.id, field.label]));
 }
 
+function fieldOptions(model, fieldId) {
+  const field = (model?.fields || []).find((item) => item.id === fieldId);
+  return new Set((field?.options || []).map(normalizeLower).filter(Boolean));
+}
+
+function validateSelectOptions(model, normalized, errors) {
+  for (const field of model?.fields || []) {
+    if (!Array.isArray(field.options) || !field.options.length) continue;
+    const value = normalizeLower(normalized[field.id]);
+    if (!value) continue;
+    const validValues = new Set(field.options.map(normalizeLower));
+    if (!validValues.has(value)) {
+      errors.push(`Invalid ${field.id}: ${value}`);
+    }
+  }
+}
+
 function selectedCategory(spec, category) {
   const normalized = normalizeLower(category);
   return categoryKeys(spec).includes(normalized) ? normalized : "";
@@ -300,18 +343,53 @@ function validateAgainstSpec(spec, fields = {}) {
   if (normalized.brand_domain && !isCanonicalDomain(normalized.brand_domain)) {
     errors.push("brand_domain must be a canonical domain such as asana.com.");
   }
+
+  validateSelectOptions(model, normalized, errors);
+
   if (
     category === "skills" &&
     !normalizeText(normalized.install_command) &&
-    !normalizeText(normalized.download_url)
+    !normalizeText(normalized.download_url) &&
+    !normalizeText(normalized.github_url) &&
+    !normalizeText(normalized.docs_url) &&
+    !normalizeText(normalized.full_copyable_content) &&
+    !normalizeText(normalized.retrieval_sources)
   ) {
-    errors.push("Skills submissions require install_command or download_url.");
+    errors.push(
+      "Skills submissions require install_command, source URL, retrieval_sources, or full_copyable_content.",
+    );
   }
   if (category === "collections" && !normalizeText(normalized.items)) {
     errors.push("Collections submissions require items.");
   }
   if (category === "guides" && !normalizeText(normalized.guide_content)) {
     errors.push("Guide submissions require guide_content.");
+  }
+  if (category === "skills") {
+    const skillType = normalizeLower(normalized.skill_type);
+    const skillLevel = normalizeLower(normalized.skill_level);
+    const verifiedAt = normalizeText(normalized.verified_at);
+    const retrievalSources = normalizeText(normalized.retrieval_sources);
+    if (verifiedAt && !isIsoDate(verifiedAt)) {
+      errors.push("verified_at must use YYYY-MM-DD format.");
+    }
+    if (skillType === "capability-pack") {
+      if (!verifiedAt)
+        errors.push("capability-pack skills require verified_at.");
+      if (!retrievalSources) {
+        errors.push("capability-pack skills require retrieval_sources.");
+      }
+      if (skillLevel && skillLevel !== "expert") {
+        errors.push("capability-pack skills must use skill_level=expert.");
+      }
+    }
+    if (retrievalSources) {
+      for (const url of splitList(retrievalSources)) {
+        if (!isHttpsUrl(url)) {
+          errors.push(`retrieval_sources must use https URLs: ${url}`);
+        }
+      }
+    }
   }
   if (!normalized.github_url && !normalized.docs_url) {
     warnings.push("No github_url/docs_url provided.");
@@ -415,7 +493,9 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
       missingRequiredFields: validation.missingRequiredFields || [],
     },
     reviewModel:
-      "Issue-first: maintainers review accepted submissions before an import PR is opened.",
+      "Issue-first: source-backed submissions may auto-open a PR after gates pass; maintainers still review before merge.",
+    artifactPolicy:
+      "Community ZIP/MCPB artifacts are review material only and are not published as HeyClaude-hosted downloads.",
   };
 }
 
@@ -466,9 +546,12 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
       ? [
           "Check for duplicate registry entries.",
           "Open the generated HeyClaude submit URL or GitHub issue URL.",
-          "Maintainers review accepted submissions before an import PR is opened.",
+          "Source-backed, non-artifact submissions may auto-open a PR after gates pass.",
+          "Maintainers still review before merge.",
         ]
       : ["Fix validation errors before opening a public submission issue."],
+    artifactPolicy:
+      "Do not request HeyClaude /downloads hosting for community-submitted ZIP/MCPB artifacts.",
   };
 }
 
@@ -576,6 +659,7 @@ function exampleForCategory(spec, category) {
     "install_command",
     "usage_snippet",
     "download_url",
+    "full_copyable_content",
     "guide_content",
     "items",
   ]) {
@@ -591,7 +675,8 @@ function exampleForCategory(spec, category) {
     completeFields: fields,
     notes: [
       "Use canonical source URLs and avoid affiliate/referral links.",
-      "The generated issue draft is a maintainer-reviewed submission, not automatic publication.",
+      "The generated issue draft can become a reviewable PR after gates pass, but it is not automatic publication.",
+      "Community package archives are quarantine/review material, not public HeyClaude-hosted downloads.",
     ],
   };
 }
@@ -613,7 +698,7 @@ export function getSubmissionExamplesFromSpec(spec, args = {}) {
     ok: true,
     categories: categories.map((key) => exampleForCategory(spec, key)),
     reviewModel:
-      "Examples are draft helpers only; maintainers review accepted submissions before import.",
+      "Examples are draft helpers only; maintainers review generated PRs before merge.",
   };
 }
 
@@ -645,10 +730,13 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       "Confirm category fit and required fields before opening the issue.",
       "Check for existing registry entries with the same source, slug, or title.",
       "Verify source URLs, install commands, and copied content before maintainer approval.",
+      "Use source-backed or copyable-content submissions; do not request public /downloads hosting for community ZIPs.",
       "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
     ],
     submissionPolicy:
-      "This tool prepares a review issue only. HeyClaude does not auto-publish MCP-submitted content.",
+      "This tool prepares a review issue only. Eligible issues may auto-open PRs, but HeyClaude does not auto-merge or publish MCP-submitted content.",
+    artifactPolicy:
+      "Community ZIP/MCPB artifacts are quarantine/review material only. Maintainer-built packages are the only HeyClaude-hosted downloads.",
   };
 }
 
@@ -687,14 +775,17 @@ export function reviewSubmissionDraftFromSpec(spec, args = {}, entries = []) {
       "Schema-valid is not publish-valid; maintainer review is still required.",
       "Check category fit against the actual artifact, not only the submitter's selected category.",
       "Verify source availability, install commands, and any credential/payment-sensitive behavior.",
+      "Keep packages source-backed unless maintainers explicitly rebuild and verify a first-party artifact.",
       "Reject or request edits for affiliate/referral links, unsupported claims, or unclear paid/sponsored positioning.",
     ],
     nextSteps: validation.valid
       ? [
           "Open or update the canonical GitHub submission issue.",
-          "Apply maintainer review labels only after source and duplicate checks.",
+          "Let auto-import gates open a PR when eligible, or apply maintainer review labels after source and duplicate checks.",
         ]
       : ["Fix required fields and validation errors before opening an issue."],
+    artifactPolicy:
+      "Community-submitted ZIP/MCPB packages must not be treated as trusted public downloads.",
   };
 }
 

@@ -1,8 +1,9 @@
 # Submission Queue Operations
 
-HeyClaude content submissions stay issue-first and maintainer-reviewed. The
-queue automation helps maintainers see which submissions are ready, blocked, or
-stale; it does not publish content directly.
+HeyClaude content submissions stay issue-first and review-gated. The queue
+automation helps maintainers see which submissions are ready, blocked, or stale.
+Fully valid, source-backed, non-artifact submissions can auto-open an import PR
+after policy gates pass, but automation does not auto-merge or publish content.
 
 ## Labels
 
@@ -21,6 +22,26 @@ stale; it does not publish content directly.
   secrets, unsafe executable install pipelines, or non-HTTPS executable sources;
   there is no separate `critical` label, and critical reports block the workflow
   until fixed.
+
+## Policy Matrix
+
+Risk labels are triage hints. The import decision uses a policy matrix:
+
+- `schema`: required fields and category model.
+- `source`: canonical source, docs, repository, or package URL.
+- `package`: local download, archive, installer, and quarantine policy.
+- `provenance`: original submitter and import attribution checks.
+- `capability`: auth, local data, external write, payment, destructive, malware,
+  or other capability signals.
+- `quality`: category fit and generated-artifact hygiene.
+
+Policy decisions:
+
+- `auto_import_eligible`: schema passed, source/package/quality gates passed,
+  no blocking gate, and risk is low or medium.
+- `maintainer_review`: valid enough to review, but a warning gate or stronger
+  risk signal needs human judgment.
+- `blocked`: at least one policy gate blocks import.
 
 ## Queue States
 
@@ -51,14 +72,16 @@ Each queue entry includes:
   source, stale, and security/safety signals.
 - `commentDraft`: copyable maintainer reply text for author-input, source
   verification, stale-reminder, and stale-close cases.
+- `policyMatrix`: explainable gate status for schema, source, package,
+  provenance, capability, and quality.
+- `policyDecision`: `auto_import_eligible`, `maintainer_review`, or `blocked`.
+- `autoImportEligible`: whether the submission can auto-open an import PR.
 - `sourceUrl`: the first submitted GitHub, docs, source, download, or website
   URL available for maintainer review.
 
-`nextAction=import` is not automatic approval. It means the issue is either
-schema-valid and ready for maintainer review, or already carries a protected
-approval label such as `accepted` or `import-approved`. Maintainers still need
-to verify source fit, category fit, and risk signals before an import PR is
-opened.
+`nextAction=import` is not automatic merge approval. It means the issue is
+either explicitly approved by a maintainer or it passed the auto-import gates.
+Maintainers still review the generated PR before merge.
 
 ## Automation
 
@@ -72,8 +95,13 @@ opened.
   security/safety review comments. The review is deterministic: it checks URLs,
   install commands, malware/abuse terms, suspicious executable paths, sensitive
   capability words, contributor metadata, and source signals without executing
-  submitted code. Regulated-domain status, category fit, and promotional tone
-  are not treated as security risk.
+  submitted code. It can auto-open a PR only when the policy decision is
+  `auto_import_eligible`; otherwise it leaves the issue in maintainer review.
+  Regulated-domain status, category fit, and promotional tone are not treated as
+  security risk.
+- `Package Artifact Scan` validates reviewed package archives with archive
+  safety limits and optional ClamAV, Trivy, and OSV-Scanner checks. Scans are
+  quarantine signals, not a warranty.
 - `Submission PR Risk Review` runs on direct content PRs through
   `pull_request_target`, but only checks out trusted base-repo code. It reads PR
   content through the GitHub API as data and never executes fork code.
@@ -83,6 +111,9 @@ opened.
   `content/tools` editorial entry.
 - Stale automation never imports content, creates PRs, or touches issues with
   `accepted`, `import-approved`, or `import-pr-open`.
+- External contributor PRs cannot change `README.md`,
+  `apps/web/public/data/**`, `apps/web/src/generated/**`, or
+  `apps/web/public/downloads/**`.
 
 ## Maintainer Flow
 
@@ -98,7 +129,8 @@ opened.
    reminder.
 7. For `close_eligible`, close as not planned only after the stale reminder has
    already been applied.
-8. Apply `accepted` or `import-approved` only after maintainer source review.
+8. Apply `accepted` or `import-approved` only after maintainer source review
+   when the auto-import gates did not already open a PR.
 
 Direct content PRs are allowed for advanced contributors, but they must pass the
 same content validation and deterministic security/safety review. A `risk-high`

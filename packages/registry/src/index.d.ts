@@ -597,6 +597,24 @@ export type SubmissionContributionAnalysis = {
   maintainerActionItems: string[];
 };
 
+export type SubmissionPolicyGateStatus = "pass" | "warn" | "block";
+
+export type SubmissionPolicyGate = {
+  status: SubmissionPolicyGateStatus;
+  summary: string;
+  detail: string[];
+};
+
+export type SubmissionPolicyMatrix = Record<
+  "schema" | "source" | "package" | "provenance" | "capability" | "quality",
+  SubmissionPolicyGate
+>;
+
+export type SubmissionPolicyDecision =
+  | "auto_import_eligible"
+  | "maintainer_review"
+  | "blocked";
+
 export type SubmissionRiskReport = {
   schemaVersion: number;
   kind: "submission-risk";
@@ -620,6 +638,8 @@ export type SubmissionRiskReport = {
     | "maintainer_review"
     | "request_author_input"
     | "block_until_resolved";
+  policyMatrix: SubmissionPolicyMatrix;
+  policyDecision: SubmissionPolicyDecision;
   humanReviewNotes: string[];
   labelDefinitions: Record<string, { color: string; description: string }>;
 };
@@ -655,6 +675,9 @@ export type SubmissionQueueEntry = {
   riskTier: SubmissionRiskTier;
   riskFlags: string[];
   riskSummary: string;
+  policyMatrix: SubmissionPolicyMatrix;
+  policyDecision: SubmissionPolicyDecision;
+  autoImportEligible: boolean;
   contributorReview: string[];
   sourceState: SubmissionContributionAnalysis["sourceState"];
   maintainerActions: string[];
