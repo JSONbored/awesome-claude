@@ -387,7 +387,8 @@ describe("HeyClaude remote MCP route", () => {
       issueDraft: {
         body: expect.stringContaining("### Guide content"),
       },
-      submissionPolicy: expect.stringContaining("does not auto-publish"),
+      submissionPolicy: expect.stringContaining("does not auto-merge"),
+      artifactPolicy: expect.stringContaining("quarantine/review"),
     });
     expect(JSON.stringify(result)).not.toMatch(
       /token|secret|authorization|createIssue|createPullRequest/i,

@@ -92,6 +92,7 @@ jobs:
           pnpm validate:content:strict
           pnpm validate:issue-templates
           pnpm validate:packages
+          pnpm scan:packages
           pnpm validate:raycast-feed
           pnpm test:submission-intake
           pnpm test:registry-artifacts
@@ -100,8 +101,16 @@ jobs:
       - name: Build PR metadata
         id: metadata
         run: |
-          node - <<'NODE' >> "$GITHUB_OUTPUT"
+          node - <<'NODE'
           const fs = require("node:fs");
+          const outputPath = process.env.GITHUB_OUTPUT;
+          function setOutput(name, value) {
+            if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(name)) {
+              throw new Error(`Unsafe GitHub Actions output name: ${name}`);
+            }
+            const normalized = String(value ?? "").replace(/[\r\n]/g, " ");
+            fs.appendFileSync(outputPath, `${name}=${normalized}\n`);
+          }
           const issue = JSON.parse(fs.readFileSync(".github/tmp/issue.json", "utf8"));
           const report = JSON.parse(fs.readFileSync(".github/tmp/submission-validation.json", "utf8"));
           const category = report.category || "content";
@@ -111,17 +120,17 @@ jobs:
           const issueAuthorId = issue.user?.id || "";
           const issueAuthorHandle = issueAuthor ? `@${issueAuthor}` : "unknown submitter";
           const issueUrl = issue.html_url || issue.url || "";
-          console.log(`issue_number=${issue.number}`);
-          console.log(`issue_author=${issueAuthor}`);
-          console.log(`issue_author_handle=${issueAuthorHandle}`);
-          console.log(`issue_author_id=${issueAuthorId}`);
-          console.log(`issue_url=${issueUrl}`);
-          console.log(`category=${category}`);
-          console.log(`slug=${slug}`);
-          console.log(`entry_title=${title}`);
-          console.log(`branch=automation/submission-${issue.number}-${slug}`);
-          console.log(`commit_title=feat(content): add ${category} ${slug}`);
-          console.log(`pr_title=feat(content): add ${category} ${slug}`);
+          setOutput("issue_number", issue.number);
+          setOutput("issue_author", issueAuthor);
+          setOutput("issue_author_handle", issueAuthorHandle);
+          setOutput("issue_author_id", issueAuthorId);
+          setOutput("issue_url", issueUrl);
+          setOutput("category", category);
+          setOutput("slug", slug);
+          setOutput("entry_title", title);
+          setOutput("branch", `automation/submission-${issue.number}-${slug}`);
+          setOutput("commit_title", `feat(content): add ${category} ${slug}`);
+          setOutput("pr_title", `feat(content): add ${category} ${slug}`);
           NODE
 
       - name: Create content import PR
@@ -153,6 +162,7 @@ jobs:
             - `pnpm validate:content:strict`
             - `pnpm validate:issue-templates`
             - `pnpm validate:packages`
+            - `pnpm scan:packages`
             - `pnpm validate:raycast-feed`
             - `pnpm test:submission-intake`
             - `pnpm test:registry-artifacts`
@@ -174,6 +184,11 @@ jobs:
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: Number("${{ steps.metadata.outputs.issue_number }}"),
+              labels: ["import-pr-open"]
+            });
             await github.rest.issues.createComment({
               ...context.repo,
               issue_number: Number("${{ steps.metadata.outputs.issue_number }}"),

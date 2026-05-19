@@ -57,6 +57,9 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - Website submissions require origin checks, payload limits, schema validation,
   honeypot discard logging, existing-content duplicate checks, pending
   GitHub-issue duplicate checks, and GitHub issue creation only.
+- Website submissions do not accept or publish package uploads. Community
+  ZIP/MCPB artifacts are review/quarantine material only; public downloads are
+  maintainer-built artifacts after review.
 - Production submissions should set `SUBMISSIONS_REQUIRE_TURNSTILE=1` and
   `TURNSTILE_SECRET_KEY`; if the requirement is enabled without a secret, the
   endpoint fails closed instead of accepting direct website submissions.
@@ -69,7 +72,9 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
   asset headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
 - No endpoint may import content into the registry, create pull requests, or
-  publish submissions without maintainer review.
+  publish submissions directly. GitHub automation may auto-open PRs for
+  source-backed submissions after policy gates pass, and maintainer review still
+  gates merge.
 - Job lead intake is intentionally shallow. Paid job publication remains gated
   by the token-protected D1 admin flow, which requires enriched reviewed listing
   content before active paid rows can publish.

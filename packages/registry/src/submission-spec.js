@@ -250,6 +250,7 @@ export function buildSubmissionFieldModel(category) {
     fieldIds.push(
       "install_command",
       "download_url",
+      "full_copyable_content",
       "retrieval_sources",
       "tested_platforms",
     );

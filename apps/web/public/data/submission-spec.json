@@ -334,7 +334,7 @@
       "schemaVersion": 2,
       "category": "skills",
       "label": "Skills",
-      "description": "Installable skill packs and reusable capabilities.",
+      "description": "Source-backed skill packs and reusable capabilities.",
       "template": "submit-skill.yml",
       "fields": [
         {
@@ -479,6 +479,14 @@
           "required": false,
           "placeholder": "https://...",
           "helpText": "Community submissions cannot request local /downloads hosting."
+        },
+        {
+          "id": "full_copyable_content",
+          "label": "Full copyable content",
+          "type": "textarea",
+          "required": false,
+          "render": "markdown",
+          "placeholder": "Paste the complete usable prompt, config, script, or rule."
         },
         {
           "id": "retrieval_sources",
@@ -1514,6 +1522,13 @@
           "label": "Download URL",
           "type": "url",
           "required": false
+        },
+        {
+          "id": "full_copyable_content",
+          "label": "Full copyable content",
+          "type": "textarea",
+          "required": false,
+          "render": "markdown"
         },
         {
           "id": "retrieval_sources",

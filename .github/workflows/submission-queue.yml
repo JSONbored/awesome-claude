@@ -72,8 +72,8 @@ jobs:
             `- Close eligible: ${queue.summary.closeEligible}`,
             `- Skipped: ${queue.summary.skipped}`,
             "",
-            "| Issue | Status | Security | Source | Contributor | Age | Category | Slug | Action | Notes |",
-            "| --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |",
+            "| Issue | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
+            "| --- | --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |",
           ];
           const cell = (value) => String(value || "-").replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>");
           for (const entry of queue.entries) {
@@ -90,7 +90,7 @@ jobs:
             const contributor = entry.contributorReview?.length
               ? entry.contributorReview.join(", ")
               : "-";
-            lines.push(`| ${issue} | ${cell(entry.status)} | ${cell(risk)} | ${cell(entry.sourceState)} | ${cell(contributor)} | ${entry.ageDays ?? 0}d | ${cell(entry.category)} | ${cell(entry.slug)} | ${cell(entry.actionDue)} | ${cell(notes)} |`);
+            lines.push(`| ${issue} | ${cell(entry.status)} | ${cell(risk)} | ${cell(entry.policyDecision)} | ${cell(entry.sourceState)} | ${cell(contributor)} | ${entry.ageDays ?? 0}d | ${cell(entry.category)} | ${cell(entry.slug)} | ${cell(entry.actionDue)} | ${cell(notes)} |`);
           }
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
           NODE
