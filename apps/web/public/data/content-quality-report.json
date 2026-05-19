@@ -828,11 +828,11 @@
       "slug": "airtable-mcp-server",
       "title": "Airtable MCP Server for Claude",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -1155,11 +1155,11 @@
       "slug": "audio-transcription-summarization",
       "title": "Audio Transcription + Summarization Skill",
       "scores": {
-        "total": 95,
+        "total": 97,
         "usefulness": 100,
         "source": 100,
         "copyability": 85,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -1388,11 +1388,11 @@
       "slug": "aws-services-mcp-server",
       "title": "AWS Services MCP Server - MCP Servers",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -1892,11 +1892,11 @@
       "slug": "catppuccin-mocha-theme",
       "title": "Catppuccin Mocha Theme - Statuslines",
       "scores": {
-        "total": 87,
+        "total": 88,
         "usefulness": 100,
         "source": 75,
         "copyability": 70,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -2549,11 +2549,11 @@
       "slug": "clickup-mcp-server",
       "title": "Clickup MCP Server for Claude",
       "scores": {
-        "total": 94,
+        "total": 96,
         "usefulness": 85,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -3735,11 +3735,11 @@
       "slug": "dead-code-eliminator",
       "title": "Dead Code Eliminator - Hooks",
       "scores": {
-        "total": 91,
+        "total": 93,
         "usefulness": 100,
         "source": 75,
         "copyability": 90,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -4001,11 +4001,11 @@
       "slug": "discord-mcp-server",
       "title": "Discord MCP Server for Claude",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -6178,11 +6178,11 @@
       "slug": "kubernetes-mcp-server",
       "title": "Kubernetes MCP Server - MCP Servers",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -6423,11 +6423,11 @@
       "slug": "log-parsing-incident-timeline",
       "title": "Log Parsing + Incident Timeline Skill",
       "scores": {
-        "total": 95,
+        "total": 97,
         "usefulness": 100,
         "source": 100,
         "copyability": 85,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -6516,11 +6516,11 @@
       "slug": "markdown-knowledge-base-composer",
       "title": "Markdown Knowledge Base Composer Skill",
       "scores": {
-        "total": 95,
+        "total": 97,
         "usefulness": 100,
         "source": 100,
         "copyability": 85,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -6838,11 +6838,11 @@
       "slug": "minimal-powerline",
       "title": "Minimal Powerline - Statuslines",
       "scores": {
-        "total": 87,
+        "total": 88,
         "usefulness": 100,
         "source": 75,
         "copyability": 70,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -8925,11 +8925,11 @@
       "slug": "reddit-mcp-buddy",
       "title": "Reddit MCP Buddy for Claude",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -8982,11 +8982,11 @@
       "slug": "redis-mcp-server",
       "title": "Redis MCP Server for Claude",
       "scores": {
-        "total": 98,
+        "total": 100,
         "usefulness": 100,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -9610,11 +9610,11 @@
       "slug": "socket-mcp-server",
       "title": "Socket MCP Server for Claude",
       "scores": {
-        "total": 94,
+        "total": 96,
         "usefulness": 85,
         "source": 100,
         "copyability": 100,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {
@@ -10860,11 +10860,11 @@
       "slug": "website-crawler-summarizer",
       "title": "Website Crawler + Summarizer Skill",
       "scores": {
-        "total": 95,
+        "total": 97,
         "usefulness": 100,
         "source": 100,
         "copyability": 85,
-        "freshness": 85,
+        "freshness": 100,
         "seo": 100
       },
       "provenance": {

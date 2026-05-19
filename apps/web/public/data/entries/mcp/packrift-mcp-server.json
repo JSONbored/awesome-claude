@@ -99,9 +99,9 @@
     "filePath": "content/mcp/packrift-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx",
     "repoUrl": "https://github.com/Packrift/packrift-mcp",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null
+    "githubStars": 0,
+    "githubForks": 1,
+    "repoUpdatedAt": "2026-05-19T11:41:33Z"
   },
   "trustSignals": {
     "firstPartyEditorial": false,
