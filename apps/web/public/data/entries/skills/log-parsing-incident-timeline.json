@@ -367,9 +367,9 @@
     "filePath": "content/skills/log-parsing-incident-timeline.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx",
     "repoUrl": "https://github.com/BurntSushi/ripgrep",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null
+    "githubStars": 63927,
+    "githubForks": 2568,
+    "repoUpdatedAt": "2026-05-19T11:22:40Z"
   },
   "trustSignals": {
     "firstPartyEditorial": false,

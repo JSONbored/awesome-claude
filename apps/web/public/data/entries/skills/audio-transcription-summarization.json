@@ -307,9 +307,9 @@
     "filePath": "content/skills/audio-transcription-summarization.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx",
     "repoUrl": "https://github.com/openai/whisper",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null
+    "githubStars": 99754,
+    "githubForks": 12214,
+    "repoUpdatedAt": "2026-05-19T11:32:31Z"
   },
   "trustSignals": {
     "firstPartyEditorial": false,

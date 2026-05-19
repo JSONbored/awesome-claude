@@ -73,9 +73,9 @@
     "filePath": "content/tools/langgraph.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx",
     "repoUrl": "https://github.com/langchain-ai/langgraph",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null
+    "githubStars": 32402,
+    "githubForks": 5495,
+    "repoUpdatedAt": "2026-05-19T11:43:29Z"
   },
   "trustSignals": {
     "firstPartyEditorial": false,
