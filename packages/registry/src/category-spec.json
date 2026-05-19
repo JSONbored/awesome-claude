@@ -148,9 +148,9 @@
     },
     "skills": {
       "label": "Skills",
-      "description": "Installable skill packs and reusable capabilities.",
-      "seoDescription": "Find installable Agent Skill packages for Claude, Codex, Windsurf, Gemini, Cursor adapters, and reusable AI workflows with validation metadata.",
-      "usageHint": "Install or download the skill pack, then reuse the included files, prompts, or scripts directly.",
+      "description": "Source-backed skill packs and reusable capabilities.",
+      "seoDescription": "Find source-backed Agent Skill packages for Claude, Codex, Windsurf, Gemini, Cursor adapters, and reusable AI workflows with validation metadata.",
+      "usageHint": "Review the source, install command, retrieval sources, or copyable skill content before reusing prompts or scripts.",
       "template": "submit-skill.yml",
       "contentRequired": ["title", "slug", "description", "cardDescription"],
       "contentRecommended": [
@@ -176,7 +176,7 @@
       "supportsSkillMetadata": true,
       "supportsDownloadUrl": true,
       "quickstart": [
-        "Install or download the skill pack.",
+        "Review the source, install command, or full copyable content.",
         "Review retrieval sources and tested platforms.",
         "Invoke it only for the workflows listed in the skill scope."
       ]

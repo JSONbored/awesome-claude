@@ -18,7 +18,7 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("submission automation workflows", () => {
-  it("keeps issue validation as preview-only until maintainer approval", () => {
+  it("keeps issue validation review-gated while allowing auto-import PRs", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-issue-validation.yml"),
       "utf8",
@@ -27,13 +27,18 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Preview import output");
     expect(source).toContain("--dry-run");
     expect(source).toContain("Analyze submission risk");
+    expect(source).toContain("Precheck auto-import eligibility");
+    expect(source).toContain("Check auto-import eligibility");
+    expect(source).toContain("steps.auto_import.outputs.eligible == 'true'");
+    expect(source).toContain("Create auto-import PR");
+    expect(source).toContain("Maintainer review still gates merge");
     expect(source).toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");
     expect(source).toContain("Summarize invalid submission issue");
     expect(source).toContain("--informational");
     expect(source).toContain("managedValidationLabels");
     expect(source).not.toContain("if (report.skipped) return;");
-    expect(source).not.toContain("peter-evans/create-pull-request");
+    expect(source).toContain("peter-evans/create-pull-request");
     expect(source).not.toContain("labels.*.name, 'submission'");
   });
 
@@ -74,6 +79,143 @@ describe("submission automation workflows", () => {
     );
 
     expect(output).toContain("issue workflow is informational");
+  });
+
+  it("detects auto-import eligibility from validation and policy gates", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-auto-import-"),
+    );
+    const issuePath = path.join(tmpDir, "issue.json");
+    const validationPath = path.join(tmpDir, "validation.json");
+    const riskPath = path.join(tmpDir, "risk.json");
+    const outputPath = path.join(tmpDir, "eligibility.json");
+
+    fs.writeFileSync(
+      issuePath,
+      JSON.stringify({
+        number: 987654,
+        labels: [{ name: "content-submission" }],
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      validationPath,
+      JSON.stringify({
+        ok: true,
+        skipped: false,
+        category: "mcp",
+        fields: { slug: "auto-import-eligibility-test" },
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      riskPath,
+      JSON.stringify({
+        riskTier: "low",
+        policyDecision: "auto_import_eligible",
+        policyMatrix: {
+          schema: { status: "pass" },
+          source: { status: "pass" },
+          package: { status: "pass" },
+          provenance: { status: "pass" },
+          capability: { status: "pass" },
+          quality: { status: "pass" },
+        },
+      }),
+      "utf8",
+    );
+
+    execFileSync(
+      process.execPath,
+      [
+        "scripts/ci/check-auto-import-eligibility.mjs",
+        "--issue-json",
+        issuePath,
+        "--validation-json",
+        validationPath,
+        "--risk-json",
+        riskPath,
+        "--output",
+        outputPath,
+      ],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+
+    const result = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+    expect(result.eligible).toBe(true);
+    expect(result.importPath).toBe(
+      "content/mcp/auto-import-eligibility-test.mdx",
+    );
+  });
+
+  it("sanitizes auto-import GitHub output values", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-auto-import-output-"),
+    );
+    const issuePath = path.join(tmpDir, "issue.json");
+    const validationPath = path.join(tmpDir, "validation.json");
+    const riskPath = path.join(tmpDir, "risk.json");
+    const outputPath = path.join(tmpDir, "eligibility.json");
+    const githubOutputPath = path.join(tmpDir, "github-output");
+
+    fs.writeFileSync(
+      issuePath,
+      JSON.stringify({
+        number: 987655,
+        labels: [{ name: "content-submission" }],
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      validationPath,
+      JSON.stringify({
+        ok: true,
+        skipped: false,
+        category: "mcp",
+        fields: { slug: "bad-slug\neligible=true" },
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      riskPath,
+      JSON.stringify({
+        riskTier: "low",
+        policyDecision: "auto_import_eligible",
+        policyMatrix: {
+          schema: { status: "pass" },
+          source: { status: "pass" },
+          package: { status: "pass" },
+          provenance: { status: "pass" },
+          capability: { status: "pass" },
+          quality: { status: "pass" },
+        },
+      }),
+      "utf8",
+    );
+
+    execFileSync(
+      process.execPath,
+      [
+        "scripts/ci/check-auto-import-eligibility.mjs",
+        "--issue-json",
+        issuePath,
+        "--validation-json",
+        validationPath,
+        "--risk-json",
+        riskPath,
+        "--output",
+        outputPath,
+      ],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+        env: { ...process.env, GITHUB_OUTPUT: githubOutputPath },
+      },
+    );
+
+    const outputLines = fs.readFileSync(githubOutputPath, "utf8").split("\n");
+    expect(outputLines).toContain("eligible=false");
+    expect(outputLines).not.toContain("eligible=true");
   });
 
   it("reviews direct content PRs without executing fork code", () => {
@@ -137,17 +279,20 @@ describe("submission automation workflows", () => {
     expect(source).toContain("pnpm --filter web run prebuild");
     expect(source).toContain("pnpm generate:readme");
     expect(source).toContain("pnpm validate:content:strict");
+    expect(source).toContain("pnpm scan:packages");
     expect(source).toContain("peter-evans/create-pull-request@");
-    expect(source).toContain("branch=automation/submission-");
+    expect(source).toContain('setOutput("branch", `automation/submission-');
     expect(source).toContain("actions: write");
     expect(source).toContain("Trigger content validation for import PR");
     expect(source).toContain(
       'gh workflow run content-validation.yml --ref "$VALIDATION_REF"',
     );
-    expect(source).toContain("pr_title=feat(content): add");
-    expect(source).toContain("issue_author=");
-    expect(source).toContain("issue_author_handle=");
-    expect(source).toContain("issue_author_id=");
+    expect(source).toContain('setOutput("pr_title", `feat(content): add');
+    expect(source).toContain('setOutput("issue_author", issueAuthor)');
+    expect(source).toContain(
+      'setOutput("issue_author_handle", issueAuthorHandle)',
+    );
+    expect(source).toContain('setOutput("issue_author_id", issueAuthorId)');
     expect(source).toContain("Original submitter:");
     expect(source).toContain(
       "by ${{ steps.metadata.outputs.issue_author_handle }}",
@@ -180,20 +325,23 @@ describe("submission automation workflows", () => {
     expect(source).toContain("pnpm resend:sync-templates -- --dry-run");
   });
 
-  it("keeps contributor README edits out of direct content PRs", () => {
+  it("keeps contributor generated artifact edits out of direct content PRs", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/content-validation.yml"),
       "utf8",
     );
 
-    expect(source).toContain("Reject external PR README changes");
-    expect(source).toContain("README.md is generated by maintainer automation");
+    expect(source).toContain("Reject external generated artifact changes");
+    expect(source).toContain("Generated artifacts and package artifacts");
+    expect(source).toContain("package artifacts are maintainer-owned");
     expect(source).toContain(
       "HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}",
     );
     expect(source).toContain('[ "$HEAD_REPO" = "$GITHUB_REPOSITORY" ]');
     expect(source).toContain("exit 0");
-    expect(source).toContain("Remove README.md from external contributor PRs");
+    expect(source).toContain("apps/web/public/downloads");
+    expect(source).toContain("content/skills/.+\\.zip$");
+    expect(source).toContain("content/mcp/.+\\.mcpb$");
     expect(source).toContain("Regenerate README for pull request validation");
     expect(source).toContain("pnpm generate:readme");
     expect(source).toContain("pnpm validate:readme");
@@ -368,11 +516,12 @@ description: Example description
     );
 
     expect(source).toContain(
-      "| Issue | Status | Security | Source | Contributor | Age | Category | Slug | Action | Notes |",
+      "| Issue | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
     );
     expect(source).toContain("entry.riskSummary");
     expect(source).toContain("entry.riskFlags");
     expect(source).toContain("entry.riskTier");
+    expect(source).toContain("entry.policyDecision");
     expect(source).toContain("entry.sourceState");
     expect(source).toContain("entry.contributorReview");
     expect(source).toContain("entry.maintainerActions");

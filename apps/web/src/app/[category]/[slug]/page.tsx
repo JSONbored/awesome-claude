@@ -694,7 +694,14 @@ export default async function DetailPage({ params }: DetailPageProps) {
                     </p>
                     <p className="mt-1 text-[11px] text-muted-foreground">
                       Review source code and permissions before running
-                      downloadable files.
+                      downloadable files. See the{" "}
+                      <Link
+                        href="/legal"
+                        className="text-primary underline underline-offset-4"
+                      >
+                        legal disclaimer
+                      </Link>
+                      .
                     </p>
                   </div>
                 )}

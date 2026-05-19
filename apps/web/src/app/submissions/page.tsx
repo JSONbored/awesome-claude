@@ -286,9 +286,9 @@ export default async function SubmissionsPage({
           <h1 className="section-title">Submission queue.</h1>
           <p className="max-w-3xl text-sm leading-8 text-muted-foreground">
             Open GitHub issues are grouped into maintainer review states with
-            suggested labels, source checks, risk signals, and copyable reply
-            drafts. This page is read-only and never imports, closes, or
-            comments on submissions.
+            suggested labels, source checks, risk signals, policy gates, and
+            copyable reply drafts. This page is read-only and never imports,
+            closes, or comments on submissions.
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -382,6 +382,14 @@ export default async function SubmissionsPage({
                         >
                           {entry.riskSummary}
                         </span>
+                        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                          {entry.policyDecision || "unknown"}
+                        </span>
+                        {entry.autoImportEligible ? (
+                          <span className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-primary">
+                            Auto PR eligible
+                          </span>
+                        ) : null}
                       </div>
                       <h2 className="text-xl font-semibold tracking-tight text-foreground">
                         <a
@@ -439,6 +447,32 @@ export default async function SubmissionsPage({
                               <li key={item}>{item}</li>
                             ))}
                           </ul>
+                        </div>
+                      ) : null}
+
+                      {entry.policyMatrix &&
+                      Object.keys(entry.policyMatrix).length ? (
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                            Policy matrix
+                          </p>
+                          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                            {Object.entries(entry.policyMatrix).map(
+                              ([name, gate]) => (
+                                <div
+                                  key={name}
+                                  className="rounded-lg border border-border bg-background/60 px-3 py-2"
+                                >
+                                  <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                                    {name} / {gate?.status || "unknown"}
+                                  </p>
+                                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                                    {gate?.summary || "No summary available."}
+                                  </p>
+                                </div>
+                              ),
+                            )}
+                          </div>
                         </div>
                       ) : null}
 

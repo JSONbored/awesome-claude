@@ -29,7 +29,7 @@
     "@modelcontextprotocol/sdk": "1.29.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
-    "fflate": "0.8.2",
+    "fflate": "0.8.3",
     "geist": "1.7.0",
     "lucide-react": "1.16.0",
     "marked": "18.0.3",
@@ -52,6 +52,6 @@
     "postcss": "8.5.14",
     "tailwindcss": "4.3.0",
     "typescript": "6.0.3",
-    "wrangler": "4.91.0"
+    "wrangler": "4.92.0"
   }
 }

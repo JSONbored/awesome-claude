@@ -630,6 +630,16 @@ function isHttpsUrl(value) {
   }
 }
 
+function urlPathname(value) {
+  const normalized = normalizeValue(value);
+  if (!normalized) return "";
+  try {
+    return new URL(normalized).pathname.toLowerCase();
+  } catch {
+    return normalized.split(/[?#]/)[0].toLowerCase();
+  }
+}
+
 function isValidPublicContact(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return true;
@@ -786,7 +796,12 @@ export function submissionQueueStatus(report, issue = {}, options = {}) {
   return "import_ready";
 }
 
-function submissionQueueNextAction(status, issue = {}, riskTier = "low") {
+function submissionQueueNextAction(
+  status,
+  issue = {},
+  riskTier = "low",
+  policyDecision = "maintainer_review",
+) {
   const labels = new Set(issueLabels(issue));
   if (labels.has("import-pr-open")) return "skip";
   if (labels.has("accepted") || labels.has("import-approved")) return "import";
@@ -795,9 +810,10 @@ function submissionQueueNextAction(status, issue = {}, riskTier = "low") {
   if (status === "stale_reminder_due") return "send_stale_reminder";
   if (status === "needs_author_input") return "request_author_input";
   if (status === "source_needs_verification") return "verify_source";
+  if (policyDecision === "blocked") return "review_risk";
   if (riskTier === "high" || riskTier === "critical") return "review_risk";
   if (status === "maintainer_review") return "review_risk";
-  return "import";
+  return policyDecision === "auto_import_eligible" ? "import" : "review_risk";
 }
 
 function formatRiskSummary(riskTier, capabilityBuckets = []) {
@@ -851,7 +867,15 @@ function buildSubmissionReviewChecklist({
     if (!items.includes(action)) items.push(action);
   }
   if (status === "import_ready") {
-    items.push("Apply import-approved only after source and category review.");
+    if (risk.policyDecision === "auto_import_eligible") {
+      items.push(
+        "Auto-import may open a PR after gates pass; maintainer review still gates merge.",
+      );
+    } else {
+      items.push(
+        "Apply import-approved only after source and category review.",
+      );
+    }
   }
   return items.slice(0, 7);
 }
@@ -920,6 +944,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         status,
         issue,
         risk.riskTier,
+        risk.policyDecision,
       );
       const sourceNeedsVerification = submissionSourceNeedsVerification(
         report,
@@ -945,6 +970,9 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         riskTier: risk.riskTier,
         riskFlags: risk.reviewFlags.map((flag) => flag.id),
         riskSummary: formatRiskSummary(risk.riskTier, capabilityBuckets),
+        policyMatrix: risk.policyMatrix || {},
+        policyDecision: risk.policyDecision || "maintainer_review",
+        autoImportEligible: risk.policyDecision === "auto_import_eligible",
         contributorReview,
         sourceState: risk.contributionAnalysis?.sourceState || "unknown",
         maintainerActions,
@@ -1099,11 +1127,7 @@ export function validateSubmission(issue) {
     errors.push("Card description is too short for review");
   }
 
-  if (
-    String(fields.download_url ?? "")
-      .trim()
-      .startsWith("/downloads/")
-  ) {
+  if (urlPathname(fields.download_url).startsWith("/downloads/")) {
     errors.push(
       "Community submissions cannot request local /downloads hosting",
     );
@@ -1167,12 +1191,19 @@ export function validateSubmission(issue) {
     }
   }
 
-  if (
-    category === "skills" &&
-    !normalizeValue(fields.install_command) &&
-    !normalizeValue(fields.download_url)
-  ) {
-    errors.push("Skills submissions require install_command or download_url");
+  if (category === "skills") {
+    const hasSkillInstallPath =
+      normalizeValue(fields.install_command) ||
+      normalizeValue(fields.download_url) ||
+      normalizeValue(fields.github_url) ||
+      normalizeValue(fields.docs_url) ||
+      normalizeValue(fields.full_copyable_content) ||
+      normalizeValue(fields.retrieval_sources);
+    if (!hasSkillInstallPath) {
+      errors.push(
+        "Skills submissions require install_command, source URL, retrieval_sources, or full_copyable_content",
+      );
+    }
   }
 
   if (category === "collections" && !normalizeValue(fields.items)) {

@@ -943,8 +943,8 @@ describe("HeyClaude read-only MCP helpers", () => {
       description:
         "Create a complete HeyClaude-ready skill submission draft from source material.",
       usage_snippet: "Use this skill to prepare a reviewed submission.",
-      skill_type: "workflow",
-      skill_level: "intermediate",
+      skill_type: "general",
+      skill_level: "advanced",
       verification_status: "validated",
       download_url: "https://example.com/example-skill.zip",
       tags: ["heyclaude", "submissions"],
@@ -985,6 +985,41 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(JSON.stringify(urls)).not.toMatch(/token|secret|authorization/i);
   });
 
+  it("rejects MCP skill drafts that fail registry skill rules", async () => {
+    const invalid = await callRegistryTool(
+      "validate_submission_draft",
+      {
+        fields: {
+          category: "skills",
+          name: "Invalid Submission Skill",
+          docs_url: "https://example.com/docs",
+          description:
+            "Invalid skill draft used to test MCP-side registry validation parity.",
+          card_description: "Invalid skill draft.",
+          skill_type: "capability-pack",
+          skill_level: "advanced",
+          verification_status: "validated",
+          retrieval_sources: "http://example.com/source",
+          usage_snippet: "Use this draft only for validation testing.",
+        },
+      },
+      { dataDir },
+    );
+
+    expect(invalid).toMatchObject({
+      ok: true,
+      valid: false,
+      category: "skills",
+    });
+    expect(invalid.errors).toEqual(
+      expect.arrayContaining([
+        "capability-pack skills require verified_at.",
+        "capability-pack skills must use skill_level=expert.",
+        "retrieval_sources must use https URLs: http://example.com/source",
+      ]),
+    );
+  });
+
   it("prepares and reviews submission drafts without GitHub writes", async () => {
     const fields = {
       category: "mcp",
@@ -1011,7 +1046,8 @@ describe("HeyClaude read-only MCP helpers", () => {
         body: expect.stringContaining("### Install command"),
       },
       githubIssueUrl: expect.stringContaining("template=submit-mcp.yml"),
-      submissionPolicy: expect.stringContaining("does not auto-publish"),
+      submissionPolicy: expect.stringContaining("does not auto-merge"),
+      artifactPolicy: expect.stringContaining("quarantine/review"),
     });
 
     const reviewed = await callRegistryTool(

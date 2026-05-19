@@ -20,6 +20,7 @@
     "validate:content:strict": "node scripts/validate-content.mjs --strict-recommended",
     "validate:category-spec": "node scripts/validate-category-spec.mjs",
     "validate:packages": "node scripts/validate-download-packages.mjs",
+    "scan:packages": "node scripts/scan-download-packages.mjs",
     "validate:raycast-feed": "node scripts/validate-raycast-feed.mjs",
     "brand:enrich": "node scripts/enrich-brand-assets.mjs",
     "validate:deployment-artifacts": "node scripts/validate-deployment-artifacts.mjs",
@@ -71,7 +72,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-email": "6.1.4",
-    "tsx": "4.22.0",
+    "tsx": "4.22.1",
     "vitest": "4.1.6"
   }
 }
