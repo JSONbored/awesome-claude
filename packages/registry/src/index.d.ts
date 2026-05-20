@@ -79,6 +79,9 @@ export type RegistryTrustReportEntry = {
   adapterGenerated: boolean;
   firstPartyEditorial: boolean;
   packageVerified: boolean;
+  packageTrust: DownloadTrust;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
   lastVerifiedAt: string;
   verificationAgeDays: number | null;
   hasProvenance: boolean;
@@ -112,6 +115,13 @@ export type RegistryTrustReport = {
     provenanceCount: number;
     provenancePercent: number;
     claimedOrReviewedCount: number;
+    claimedOrReviewedPercent: number;
+    safetyNotesCount: number;
+    safetyNotesPercent: number;
+    privacyNotesCount: number;
+    privacyNotesPercent: number;
+    firstPartyPackageCount: number;
+    firstPartyPackagePercent: number;
     recommendedFixCount: number;
     entriesNeedingAttention: number;
   };
@@ -124,6 +134,9 @@ export type RegistryTrustReport = {
       checksumPresent: number;
       adapterGenerated: number;
       provenancePresent: number;
+      safetyNotesPresent: number;
+      privacyNotesPresent: number;
+      firstPartyPackage: number;
       recommendedFixes: number;
     }
   >;

@@ -368,6 +368,12 @@ function entryTrustReportRow(entry, generatedAt) {
   const trustSignals = buildEntryTrustSignals(entry);
   const ageDays = verificationAgeDays(entry, generatedAt);
   const hasBrand = Boolean(entry.brandDomain || entry.brandIconUrl);
+  const hasSafetyNotes = Array.isArray(entry.safetyNotes)
+    ? entry.safetyNotes.length > 0
+    : false;
+  const hasPrivacyNotes = Array.isArray(entry.privacyNotes)
+    ? entry.privacyNotes.length > 0
+    : false;
   const hasProvenance = Boolean(
     entry.submittedBy ||
     entry.reviewedBy ||
@@ -414,6 +420,9 @@ function entryTrustReportRow(entry, generatedAt) {
     adapterGenerated: trustSignals.adapterGenerated,
     firstPartyEditorial: trustSignals.firstPartyEditorial,
     packageVerified: trustSignals.packageVerified,
+    packageTrust: trustSignals.packageTrust,
+    hasSafetyNotes,
+    hasPrivacyNotes,
     lastVerifiedAt: normalizedIsoTimestamp(trustSignals.lastVerifiedAt),
     verificationAgeDays: ageDays,
     hasProvenance,
@@ -451,6 +460,18 @@ function buildTrustCategoryBreakdown(entries, rows) {
           provenancePresent: booleanCount(
             categoryRows,
             (entry) => entry.hasProvenance,
+          ),
+          safetyNotesPresent: booleanCount(
+            categoryRows,
+            (entry) => entry.hasSafetyNotes,
+          ),
+          privacyNotesPresent: booleanCount(
+            categoryRows,
+            (entry) => entry.hasPrivacyNotes,
+          ),
+          firstPartyPackage: booleanCount(
+            categoryRows,
+            (entry) => entry.packageTrust === "first-party",
           ),
           recommendedFixes: categoryRows.reduce(
             (sum, entry) => sum + entry.recommendations.length,
@@ -500,6 +521,15 @@ export function buildRegistryTrustReport(entries) {
     rows,
     (entry) => entry.claimStatus === "verified" || Boolean(entry.reviewedBy),
   );
+  const safetyNotesCount = booleanCount(rows, (entry) => entry.hasSafetyNotes);
+  const privacyNotesCount = booleanCount(
+    rows,
+    (entry) => entry.hasPrivacyNotes,
+  );
+  const firstPartyPackageCount = booleanCount(
+    rows,
+    (entry) => entry.packageTrust === "first-party",
+  );
 
   const needsAttention = rows
     .filter((entry) => entry.recommendations.length)
@@ -534,6 +564,13 @@ export function buildRegistryTrustReport(entries) {
       provenanceCount,
       provenancePercent: percentage(provenanceCount, total),
       claimedOrReviewedCount,
+      claimedOrReviewedPercent: percentage(claimedOrReviewedCount, total),
+      safetyNotesCount,
+      safetyNotesPercent: percentage(safetyNotesCount, total),
+      privacyNotesCount,
+      privacyNotesPercent: percentage(privacyNotesCount, total),
+      firstPartyPackageCount,
+      firstPartyPackagePercent: percentage(firstPartyPackageCount, total),
       recommendedFixCount: rows.reduce(
         (sum, entry) => sum + entry.recommendations.length,
         0,

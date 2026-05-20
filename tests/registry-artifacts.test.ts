@@ -82,6 +82,10 @@ describe("registry artifacts", () => {
       brandedCount: number;
       sourceAvailableCount: number;
       checksumPresentCount: number;
+      claimedOrReviewedPercent: number;
+      safetyNotesCount: number;
+      privacyNotesCount: number;
+      firstPartyPackageCount: number;
       recommendedFixCount: number;
       entriesNeedingAttention: number;
     };
@@ -208,6 +212,9 @@ describe("registry artifacts", () => {
     expect(rebuilt.summary).toEqual(trustReportPayload.summary);
     expect(trustReportPayload.summary.sourceAvailableCount).toBeGreaterThan(0);
     expect(trustReportPayload.summary.checksumPresentCount).toBeGreaterThan(0);
+    expect(trustReportPayload.summary).toHaveProperty("safetyNotesCount");
+    expect(trustReportPayload.summary).toHaveProperty("privacyNotesCount");
+    expect(trustReportPayload.summary).toHaveProperty("firstPartyPackageCount");
     expect(trustReportPayload.summary.recommendedFixCount).toBe(
       trustReportPayload.entries.reduce(
         (sum, entry) => sum + entry.recommendations.length,

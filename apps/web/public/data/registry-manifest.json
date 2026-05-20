@@ -3162,6 +3162,13 @@
     "provenanceCount": 7,
     "provenancePercent": 2,
     "claimedOrReviewedCount": 6,
+    "claimedOrReviewedPercent": 2,
+    "safetyNotesCount": 0,
+    "safetyNotesPercent": 0,
+    "privacyNotesCount": 0,
+    "privacyNotesPercent": 0,
+    "firstPartyPackageCount": 109,
+    "firstPartyPackagePercent": 28,
     "recommendedFixCount": 1,
     "entriesNeedingAttention": 1
   },
@@ -3226,7 +3233,7 @@
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "d46a99507fa05586cf8a3cd378dbcf05808dcd320f6d502eb4a6414a51b25a49"
+      "sha256": "bb8d385325a959615c2d2ef498422e8eb7fe172f137d84bc3d9ceec6ff76ad54"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",

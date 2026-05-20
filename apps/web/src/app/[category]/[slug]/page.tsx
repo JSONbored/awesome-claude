@@ -286,6 +286,56 @@ export default async function DetailPage({ params }: DetailPageProps) {
     }),
   ];
   const sourceSignals = getSourceSignals(entry);
+  const trustSummaryItems = [
+    {
+      label: "Source",
+      value:
+        entry.trustSignals?.sourceStatus === "available"
+          ? `${entry.trustSignals.sourceUrlCount || 1} source link${
+              (entry.trustSignals.sourceUrlCount || 1) === 1 ? "" : "s"
+            }`
+          : "Source missing",
+      tone:
+        entry.trustSignals?.sourceStatus === "available" ? "positive" : "warn",
+    },
+    {
+      label: "Package",
+      value: entry.downloadUrl
+        ? entry.downloadTrust === "first-party" || entry.packageVerified
+          ? "Verified package"
+          : "External package"
+        : "No package download",
+      tone:
+        !entry.downloadUrl ||
+        entry.downloadTrust === "first-party" ||
+        entry.packageVerified
+          ? "positive"
+          : "warn",
+    },
+    {
+      label: "Safety",
+      value: safetyNotes.length ? `${safetyNotes.length} note(s)` : "No notes",
+      tone: safetyNotes.length ? "warn" : "neutral",
+    },
+    {
+      label: "Privacy",
+      value: privacyNotes.length
+        ? `${privacyNotes.length} note(s)`
+        : "No notes",
+      tone: privacyNotes.length ? "warn" : "neutral",
+    },
+    {
+      label: "Review",
+      value:
+        entry.claimStatus === "verified" || entry.reviewedBy
+          ? "Reviewed or claimed"
+          : "Unclaimed",
+      tone:
+        entry.claimStatus === "verified" || entry.reviewedBy
+          ? "positive"
+          : "neutral",
+    },
+  ];
   const renderedBody = await renderMarkdown(entry.body || "");
 
   return (
@@ -423,6 +473,45 @@ export default async function DetailPage({ params }: DetailPageProps) {
             tone="privacy"
           />
         ) : null}
+
+        <section className="surface-panel p-5">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+                Trust and safety
+              </p>
+              <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
+                Review source, package, and disclosure signals.
+              </h2>
+            </div>
+            <Link
+              href="/quality"
+              className="text-sm font-medium text-primary underline underline-offset-4"
+            >
+              Registry quality
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {trustSummaryItems.map((item) => (
+              <div
+                key={item.label}
+                className="rounded-xl border border-border bg-background p-3"
+              >
+                <p className="flex items-center gap-2 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  {item.tone === "positive" ? (
+                    <CheckCircle2 className="size-3.5 text-primary" />
+                  ) : item.tone === "warn" ? (
+                    <AlertTriangle className="size-3.5 text-destructive" />
+                  ) : (
+                    <ShieldCheck className="size-3.5" />
+                  )}
+                  {item.label}
+                </p>
+                <p className="mt-2 text-sm text-foreground">{item.value}</p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         {primarySnippet && snippetTitle ? (
           <SnippetCard
