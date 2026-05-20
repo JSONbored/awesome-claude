@@ -78,7 +78,9 @@ if (issue.pull_request) {
 }
 
 if (!maintainerApprovalLabel) {
-  reasons.push("maintainer approval label required: accepted or import-approved");
+  reasons.push(
+    "maintainer approval label required: accepted or import-approved",
+  );
 }
 
 const blockingLabel = hasBlockingLabel(labels);
