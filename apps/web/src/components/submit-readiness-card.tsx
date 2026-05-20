@@ -49,7 +49,11 @@ export function SubmitReadinessCard({
           Submission readiness
         </span>
         <div className="flex flex-wrap items-center gap-2">
-          {preflight?.state === "loading" ? <span>Checking...</span> : null}
+          {preflight?.state === "loading" ? (
+            <span role="status" aria-live="polite">
+              Checking...
+            </span>
+          ) : null}
           {preflight?.risk?.tier ? (
             <span className="rounded-full border border-border bg-card px-2 py-0.5">
               {preflight.risk.tier} risk
@@ -100,9 +104,10 @@ export function SubmitReadinessCard({
         <div className="mt-3 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2">
           <p className="font-medium text-foreground">Fix before submitting</p>
           <ul className="mt-1 list-disc space-y-1 pl-4">
-            {blockers.slice(0, 4).map((item) => (
-              <li key={`${item.code}-${item.message}`}>{item.message}</li>
+            {blockers.slice(0, 4).map((item, index) => (
+              <li key={`${item.code}-${index}`}>{item.message}</li>
             ))}
+            {blockers.length > 4 ? <li>+{blockers.length - 4} more</li> : null}
           </ul>
         </div>
       ) : null}
@@ -110,9 +115,10 @@ export function SubmitReadinessCard({
         <div className="mt-3 rounded-lg border border-border bg-card/70 px-3 py-2">
           <p className="font-medium text-foreground">Review notes</p>
           <ul className="mt-1 list-disc space-y-1 pl-4">
-            {warnings.slice(0, 5).map((item) => (
-              <li key={`${item.code}-${item.message}`}>{item.message}</li>
+            {warnings.slice(0, 5).map((item, index) => (
+              <li key={`${item.code}-${index}`}>{item.message}</li>
             ))}
+            {warnings.length > 5 ? <li>+{warnings.length - 5} more</li> : null}
           </ul>
         </div>
       ) : null}
@@ -130,7 +136,9 @@ export function SubmitReadinessCard({
                 >
                   {item.title}
                 </a>{" "}
-                <span>({item.reasons.join(", ")})</span>
+                {item.reasons?.length ? (
+                  <span>({item.reasons.join(", ")})</span>
+                ) : null}
               </li>
             ))}
           </ul>
