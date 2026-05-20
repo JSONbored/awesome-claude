@@ -317,6 +317,8 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("pull_request_target:");
+    expect(source).not.toContain("- edited");
+    expect(source).not.toContain("pull-requests: write");
     expect(source).toContain("Analyze PR content through GitHub API");
     expect(source).not.toContain("actions/checkout");
     expect(source).not.toContain("pnpm install");
@@ -349,7 +351,20 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "Submission security/safety review found critical blockers",
     );
-    expect(source).toContain("REQUEST_CHANGES");
+    expect(source).toContain("Direct content PR risk blockers");
+    expect(source).toContain("### Blocking findings");
+    expect(source).toContain(
+      "const subjectContentFiles = report.subject?.contentFiles",
+    );
+    expect(source).not.toContain("Array.isArray(report.contentFiles)");
+    expect(source).toContain("Could not sync submission risk labels");
+    expect(source).toContain(
+      "No content MDX files changed; skipping PR label/comment sync.",
+    );
+    expect(source).toContain("existing.body !== markdownReport");
+    expect(source).not.toContain("REQUEST_CHANGES");
+    expect(source).not.toContain("pulls.createReview");
+    expect(source).not.toContain("heyclaude-submission-bot-review");
     expect(source).toContain("ARCHIVE_PACKAGE_EXTENSIONS");
     expect(source).toContain("HEYCLAUDE_HOSTNAME");
     expect(source).toContain("const downloadHost = hostname(downloadUrl)");
@@ -359,7 +374,6 @@ describe("submission automation workflows", () => {
     expect(source).toContain("isArchivePackageUrl(downloadUrl)");
     expect(source).toContain("missing_safety_notes");
     expect(source).toContain("missing_privacy_notes");
-    expect(source).toContain("review.body?.includes(REVIEW_MARKER)");
     expect(source).not.toContain("git checkout");
   });
 
