@@ -139,11 +139,15 @@ components:
           type: array
           items:
             type: string
+            minLength: 1
+            maxLength: 320
           maxItems: 8
         privacyNotes:
           type: array
           items:
             type: string
+            minLength: 1
+            maxLength: 320
           maxItems: 8
         dateAdded:
           type: string
@@ -944,11 +948,15 @@ paths:
                           type: array
                           items:
                             type: string
+                            minLength: 1
+                            maxLength: 320
                           maxItems: 8
                         privacyNotes:
                           type: array
                           items:
                             type: string
+                            minLength: 1
+                            maxLength: 320
                           maxItems: 8
                         dateAdded:
                           type: string

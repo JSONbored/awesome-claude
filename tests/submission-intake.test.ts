@@ -2630,6 +2630,27 @@ claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
     );
   });
 
+  it("rejects non-string safety and privacy note metadata", () => {
+    const result = validateEntry("mcp", {
+      title: "Typed Notes MCP",
+      slug: "typed-notes-mcp",
+      description:
+        "MCP server metadata fixture for validating safety/privacy note item types.",
+      documentationUrl: "https://example.com/docs",
+      installCommand: "npx -y typed-notes-mcp",
+      usageSnippet: "claude mcp add typed-notes-mcp -- npx -y typed-notes-mcp",
+      safetyNotes: ["Valid safety note", 123] as unknown as string[],
+      privacyNotes: [false] as unknown as string[],
+    });
+
+    expect(result.semanticErrors).toEqual(
+      expect.arrayContaining([
+        "safetyNotes must contain only strings",
+        "privacyNotes must contain only strings",
+      ]),
+    );
+  });
+
   it("blocks obviously unsafe submissions without treating category or legal domain as risk", () => {
     const legalIssue = issue(`### Name
 Legal Research Helper

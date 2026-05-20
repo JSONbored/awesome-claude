@@ -839,7 +839,11 @@ export function validateEntry(category, data, inferred = {}) {
       );
     }
     for (const item of value) {
-      const text = String(item || "").trim();
+      if (typeof item !== "string") {
+        semanticErrors.push(`${field} must contain only strings`);
+        continue;
+      }
+      const text = item.trim();
       if (!text) {
         semanticErrors.push(`${field} cannot include blank items`);
       } else if (text.length > MAX_NOTE_LENGTH) {
