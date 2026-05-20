@@ -15,6 +15,31 @@ import {
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const strictRecommended = process.argv.includes("--strict-recommended");
+const selectedCategories = new Set();
+
+for (let index = 2; index < process.argv.length; index += 1) {
+  const arg = process.argv[index];
+  if (arg === "--category" || arg === "--categories") {
+    const value = process.argv[index + 1] || "";
+    for (const category of value.split(",")) {
+      const normalized = category.trim();
+      if (normalized) selectedCategories.add(normalized);
+    }
+    index += 1;
+  } else if (arg.startsWith("--category=")) {
+    const value = arg.slice("--category=".length);
+    for (const category of value.split(",")) {
+      const normalized = category.trim();
+      if (normalized) selectedCategories.add(normalized);
+    }
+  } else if (arg.startsWith("--categories=")) {
+    const value = arg.slice("--categories=".length);
+    for (const category of value.split(",")) {
+      const normalized = category.trim();
+      if (normalized) selectedCategories.add(normalized);
+    }
+  }
+}
 
 const failures = [];
 const warnings = [];
@@ -29,6 +54,10 @@ const oldBrandOrDomainPattern = new RegExp(
 );
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
+  if (selectedCategories.size > 0 && !selectedCategories.has(category)) {
+    continue;
+  }
+
   const categoryDir = path.join(contentRoot, category);
   if (!fs.existsSync(categoryDir)) continue;
 
@@ -192,6 +221,10 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 }
 
 console.log(`Validated ${filesChecked} content files.`);
+
+if (selectedCategories.size > 0) {
+  console.log(`Selected categories: ${[...selectedCategories].join(", ")}`);
+}
 
 if (warnings.length > 0) {
   console.log(`Warnings (${warnings.length}):`);
