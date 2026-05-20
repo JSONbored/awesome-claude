@@ -224,7 +224,8 @@ const OPTIONAL_FIELDS = [
     type: "textarea",
     required: false,
     placeholder:
-      "Execution, permissions, destructive actions, background workers, network access, or install risk.",
+      "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
+    helpText: "Optional. Up to 8 notes, 320 characters per note.",
   },
   {
     id: "privacy_notes",
@@ -232,7 +233,8 @@ const OPTIONAL_FIELDS = [
     type: "textarea",
     required: false,
     placeholder:
-      "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
+      "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
+    helpText: "Optional. Up to 8 notes, 320 characters per note.",
   },
 ];
 

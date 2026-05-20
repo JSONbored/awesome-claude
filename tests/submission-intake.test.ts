@@ -960,6 +960,63 @@ Reads the configured API key from the local environment and sends requests to th
     expect(risk.policyDecision).toBe("auto_import_eligible");
   });
 
+  it("preserves commas inside newline-delimited safety and privacy notes", () => {
+    const submission = issue(`### Name
+Comma Notes MCP
+
+### Slug
+comma-notes-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/comma-notes-mcp
+
+### Description
+MCP server that reads local files, uses API keys, and runs background jobs.
+
+### Card description
+MCP server with note parsing coverage.
+
+### Install command
+npx -y comma-notes-mcp
+
+### Usage snippet
+Set COMMA_NOTES_API_KEY before use.
+
+### Safety notes
+Runs a background worker, scheduled by the local CLI
+Writes logs to the configured workspace
+
+### Privacy notes
+Reads local project files, including package metadata
+Sends selected context to the configured third-party API`);
+    const report = validateSubmission(submission);
+    const output = importSubmissionDryRun({
+      number: 778,
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/778",
+      created_at: "2026-04-28T12:34:56Z",
+      user: {
+        login: "source-owner",
+        html_url: "https://github.com/source-owner",
+      },
+      body: submission.body,
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+    });
+
+    expect(report.ok).toBe(true);
+    expect(output).toContain(
+      "- Runs a background worker, scheduled by the local CLI",
+    );
+    expect(output).toContain(
+      "- Reads local project files, including package metadata",
+    );
+  });
+
   it("keeps archive package URLs in maintainer review", () => {
     const submission = issue(`### Name
 Archive Skill

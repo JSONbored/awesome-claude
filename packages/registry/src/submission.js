@@ -210,6 +210,13 @@ function splitList(value) {
   return items;
 }
 
+function splitNoteList(value) {
+  return normalizeValue(value)
+    .split(/\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function containsForbiddenCounter(value) {
   const text = String(value || "").toLowerCase();
   return (
@@ -1291,7 +1298,7 @@ export function validateSubmission(issue) {
   }
 
   for (const field of ["safety_notes", "privacy_notes"]) {
-    const notes = splitList(fields[field]);
+    const notes = splitNoteList(fields[field]);
     if (!notes.length) continue;
     if (notes.length > 8) {
       errors.push(`${field} must include 8 items or fewer`);
