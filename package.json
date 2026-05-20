@@ -1,7 +1,7 @@
 {
   "name": "heyclaude",
   "private": true,
-  "packageManager": "pnpm@11.1.2",
+  "packageManager": "pnpm@11.1.3",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "8.5.0",
     "@heyclaude/registry": "workspace:*",
@@ -72,7 +72,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-email": "6.1.4",
-    "tsx": "4.22.1",
+    "tsx": "4.22.2",
     "vitest": "4.1.6"
   }
 }
