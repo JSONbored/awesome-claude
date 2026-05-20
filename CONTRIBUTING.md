@@ -12,7 +12,7 @@ Use the website form:
 
 - [heyclau.de/submit](https://heyclau.de/submit)
 
-This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may auto-open an import PR after policy gates pass. Auto-import does not auto-merge.
+This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may be approved for an import PR after policy gates pass. Automation does not auto-merge.
 
 ### 2. Open a GitHub submission issue
 
@@ -21,6 +21,13 @@ Use GitHub issue templates when the website is not convenient:
 - [New submission issue](https://github.com/JSONbored/awesome-claude/issues/new/choose)
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
+
+For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful safety/privacy behavior in the submission fields:
+
+- `safety_notes`: code execution, package install risk, write/delete actions, background workers, network access, account writes, or destructive behavior.
+- `privacy_notes`: local file access, logs, credentials, telemetry, third-party API calls, retained data, or user data exposure.
+
+Use `prerequisites` only for setup requirements. Use `disclosure` only for commercial/tool listing status.
 
 ### 3. Open a direct PR
 
@@ -87,6 +94,7 @@ Maintainers may ask for:
 - category changes
 - removal of generated files
 - security or provenance clarification
+- safety/privacy notes for sensitive behavior
 - source-only resubmission instead of uploaded artifacts
 
 Submissions may be closed when they are incomplete, promotional without enough utility, unsafe to list, off-topic, duplicated, or abandoned.

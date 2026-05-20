@@ -132,6 +132,10 @@ const prefilledFieldSetters: Record<
   verified_at: (value, setters) => setters.verifiedAt(value),
   retrieval_sources: (value, setters) => setters.retrievalSources(value),
   tested_platforms: (value, setters) => setters.testedPlatforms(value),
+  safety_notes: (value, setters) => setters.safetyNotes(value),
+  safetyNotes: (value, setters) => setters.safetyNotes(value),
+  privacy_notes: (value, setters) => setters.privacyNotes(value),
+  privacyNotes: (value, setters) => setters.privacyNotes(value),
   command_syntax: (value, setters) => setters.commandSyntax(value),
   trigger: (value, setters) => setters.trigger(value),
   script_language: (value, setters) => setters.scriptLanguage(value),
@@ -171,6 +175,8 @@ export function SubmitForm() {
   const [testedPlatforms, setTestedPlatforms] = useState(
     defaultTestedPlatforms,
   );
+  const [safetyNotes, setSafetyNotes] = useState("");
+  const [privacyNotes, setPrivacyNotes] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({
@@ -205,6 +211,8 @@ export function SubmitForm() {
       verifiedAt: setVerifiedAt,
       retrievalSources: setRetrievalSources,
       testedPlatforms: setTestedPlatforms,
+      safetyNotes: setSafetyNotes,
+      privacyNotes: setPrivacyNotes,
       commandSyntax: setCommandSyntax,
       trigger: setTrigger,
       scriptLanguage: setScriptLanguage,
@@ -348,6 +356,8 @@ export function SubmitForm() {
         verified_at: verifiedAt,
         retrieval_sources: retrievalSources,
         tested_platforms: testedPlatforms,
+        safety_notes: safetyNotes,
+        privacy_notes: privacyNotes,
       }) as Record<string, string>,
     [
       assetContent,
@@ -367,6 +377,7 @@ export function SubmitForm() {
       publicContact,
       retrievalSources,
       scriptLanguage,
+      safetyNotes,
       skillLevel,
       skillType,
       tags,
@@ -376,6 +387,7 @@ export function SubmitForm() {
       usageSnippet,
       verificationStatus,
       verifiedAt,
+      privacyNotes,
     ],
   );
 
@@ -985,6 +997,46 @@ export function SubmitForm() {
             />
           </div>
         </>
+      ) : null}
+
+      {selectedFieldIds.has("safety_notes") ? (
+        <div className="space-y-1">
+          <label htmlFor="submit-safety-notes" className="submit-label">
+            Safety notes
+          </label>
+          <textarea
+            id="submit-safety-notes"
+            value={safetyNotes}
+            onChange={(event) => setSafetyNotes(event.target.value)}
+            placeholder="One per line: execution risk, permissions, destructive actions, background workers, network access, package/install risk."
+            className="submit-textarea"
+          />
+          <p className="text-xs leading-6 text-muted-foreground">
+            Optional for simple copy-only entries, but expected when the entry
+            runs code, writes files, installs packages, or changes external
+            services. Use up to 8 lines, 320 chars per line.
+          </p>
+        </div>
+      ) : null}
+
+      {selectedFieldIds.has("privacy_notes") ? (
+        <div className="space-y-1">
+          <label htmlFor="submit-privacy-notes" className="submit-label">
+            Privacy notes
+          </label>
+          <textarea
+            id="submit-privacy-notes"
+            value={privacyNotes}
+            onChange={(event) => setPrivacyNotes(event.target.value)}
+            placeholder="One per line: local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
+            className="submit-textarea"
+          />
+          <p className="text-xs leading-6 text-muted-foreground">
+            Optional for entries that do not handle user data, but expected when
+            files, credentials, telemetry, logs, or third-party APIs are
+            involved. Use up to 8 lines, 320 chars per line.
+          </p>
+        </div>
       ) : null}
 
       <div className="space-y-1">

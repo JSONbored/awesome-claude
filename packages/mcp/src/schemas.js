@@ -28,6 +28,17 @@ const submissionCategory = z.enum([
 ]);
 const optionalText = z.string().trim().max(4000).optional();
 const optionalLongText = z.string().trim().max(24000).optional();
+const notesShape = z
+  .string()
+  .trim()
+  .refine((value) => {
+    const lines = value
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+    return lines.length <= 8 && lines.every((line) => line.length <= 320);
+  }, "Use at most 8 non-empty lines, 320 characters per line.")
+  .optional();
 const optionalTags = z
   .union([
     z.string().trim().max(1000),
@@ -68,6 +79,8 @@ export const SubmissionFieldsSchema = z
     retrieval_sources: optionalLongText,
     tested_platforms: optionalText,
     prerequisites: optionalLongText,
+    safety_notes: notesShape,
+    privacy_notes: notesShape,
     troubleshooting_section: optionalLongText,
     installation_order: optionalText,
     estimated_setup_time: optionalText,

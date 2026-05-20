@@ -198,6 +198,8 @@ export type ContentEntry = {
   platformCompatibility?: SkillPlatformCompatibility[];
   skillPackage?: SkillPackage;
   prerequisites?: string[];
+  safetyNotes?: string[];
+  privacyNotes?: string[];
   hasPrerequisites?: boolean;
   hasTroubleshooting?: boolean;
   hasBreakingChanges?: boolean;
@@ -640,6 +642,7 @@ export type SubmissionRiskReport = {
     | "block_until_resolved";
   policyMatrix: SubmissionPolicyMatrix;
   policyDecision: SubmissionPolicyDecision;
+  requestChangesReasons: string[];
   humanReviewNotes: string[];
   labelDefinitions: Record<string, { color: string; description: string }>;
 };
@@ -731,6 +734,8 @@ export type SearchDocument = {
   tags: string[];
   keywords: string[];
   author: string;
+  safetyNotes?: string[];
+  privacyNotes?: string[];
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
@@ -1138,6 +1143,7 @@ export const COMMUNITY_CATEGORY_LABELS: Record<string, string>;
 export const SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL: string;
 export const SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL: string;
 export const SUBMISSION_STALE_LABEL: string;
+export const SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL: string;
 export const SUBMISSION_RISK_LOW_LABEL: string;
 export const SUBMISSION_RISK_MEDIUM_LABEL: string;
 export const SUBMISSION_RISK_HIGH_LABEL: string;
@@ -1182,3 +1188,6 @@ export function analyzeDirectContentRisk(
 export function formatSubmissionRiskMarkdown(
   report: SubmissionRiskReport,
 ): string;
+export function directContentRequestChangesReasons(
+  report: SubmissionRiskReport,
+): string[];

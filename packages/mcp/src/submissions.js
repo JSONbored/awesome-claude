@@ -493,7 +493,7 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
       missingRequiredFields: validation.missingRequiredFields || [],
     },
     reviewModel:
-      "Issue-first: source-backed submissions may auto-open a PR after gates pass; maintainers still review before merge.",
+      "Issue-first: source-backed submissions may be approved for a PR after gates pass; maintainers still review before merge.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are review material only and are not published as HeyClaude-hosted downloads.",
   };
@@ -546,7 +546,7 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
       ? [
           "Check for duplicate registry entries.",
           "Open the generated HeyClaude submit URL or GitHub issue URL.",
-          "Source-backed, non-artifact submissions may auto-open a PR after gates pass.",
+          "Source-backed, non-artifact submissions may be approved for a PR after gates pass.",
           "Maintainers still review before merge.",
         ]
       : ["Fix validation errors before opening a public submission issue."],
@@ -622,6 +622,10 @@ function exampleValueForField(fieldId, category, label) {
       return "Claude Code, Codex, Cursor";
     case "prerequisites":
       return "- Node.js 20+\n- Claude-compatible MCP client";
+    case "safety_notes":
+      return "- Runs user-configured code with local workspace permissions";
+    case "privacy_notes":
+      return "- Reads local project files and may send selected context to the configured API";
     case "troubleshooting_section":
       return "If setup fails, verify the install command and source URL first.";
     case "installation_order":
@@ -730,11 +734,12 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       "Confirm category fit and required fields before opening the issue.",
       "Check for existing registry entries with the same source, slug, or title.",
       "Verify source URLs, install commands, and copied content before maintainer approval.",
+      "Add safety_notes/privacy_notes when a submission runs code, handles credentials, reads local data, writes externally, or uses background workers.",
       "Use source-backed or copyable-content submissions; do not request public /downloads hosting for community ZIPs.",
       "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
     ],
     submissionPolicy:
-      "This tool prepares a review issue only. Eligible issues may auto-open PRs, but HeyClaude does not auto-merge or publish MCP-submitted content.",
+      "This tool prepares a review issue only. Eligible issues need maintainer approval before import PRs open, and HeyClaude does not auto-merge or publish MCP-submitted content.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are quarantine/review material only. Maintainer-built packages are the only HeyClaude-hosted downloads.",
   };
@@ -781,7 +786,7 @@ export function reviewSubmissionDraftFromSpec(spec, args = {}, entries = []) {
     nextSteps: validation.valid
       ? [
           "Open or update the canonical GitHub submission issue.",
-          "Let auto-import gates open a PR when eligible, or apply maintainer review labels after source and duplicate checks.",
+          "Apply maintainer review labels after source and duplicate checks so eligible issues can open an import PR.",
         ]
       : ["Fix required fields and validation errors before opening an issue."],
     artifactPolicy:

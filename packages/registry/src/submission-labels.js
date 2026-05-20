@@ -3,6 +3,7 @@ export const SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL = "needs-author-input";
 export const SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL =
   "source-needs-verification";
 export const SUBMISSION_STALE_LABEL = "stale-submission";
+export const SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL = "auto-import-eligible";
 export const SUBMISSION_RISK_LOW_LABEL = "risk-low";
 export const SUBMISSION_RISK_MEDIUM_LABEL = "risk-medium";
 export const SUBMISSION_RISK_HIGH_LABEL = "risk-high";
@@ -15,6 +16,7 @@ export const SUBMISSION_MANAGED_VALIDATION_LABELS = [
   SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL,
   SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL,
   SUBMISSION_STALE_LABEL,
+  SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL,
 ];
 export const SUBMISSION_RISK_LABELS = [
   SUBMISSION_RISK_LOW_LABEL,
@@ -37,6 +39,11 @@ export const SUBMISSION_VALIDATION_LABEL_DEFINITIONS = {
     color: "cfd3d7",
     description:
       "Submission has been waiting on author input past the reminder window",
+  },
+  [SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL]: {
+    color: "0e8a16",
+    description:
+      "Submission passed deterministic gates and awaits maintainer-approved import PR",
   },
 };
 

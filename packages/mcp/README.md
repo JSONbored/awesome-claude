@@ -170,7 +170,7 @@ checks the HTTP guards used by the remote route.
   60 requests/minute/IP in production.
 - Submission tools prepare review drafts only; HeyClaude does not auto-merge or
   publish MCP-submitted content.
-- Source-backed, non-artifact submissions may auto-open a review PR after
+- Source-backed, non-artifact submissions may be approved for a review PR after
   repository gates pass, but the MCP server does not perform that action and
   maintainers still review before merge.
 - Community ZIP/MCPB artifacts are review/quarantine material only. Public

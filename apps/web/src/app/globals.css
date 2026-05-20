@@ -355,6 +355,44 @@
   @apply overflow-hidden rounded-3xl border bg-card/92 shadow-sm backdrop-blur;
 }
 
+.entry-notice-card {
+  @apply overflow-hidden rounded-3xl border bg-card/92 px-5 py-5 shadow-sm backdrop-blur;
+}
+
+.entry-notice-card-safety {
+  border-color: color-mix(in oklab, var(--destructive) 36%, var(--border));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--destructive) 12%, var(--card)) 0%,
+    var(--card) 100%
+  );
+}
+
+.entry-notice-card-privacy {
+  border-color: color-mix(in oklab, var(--accent) 38%, var(--border));
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--accent) 12%, var(--card)) 0%,
+    var(--card) 100%
+  );
+}
+
+.entry-notice-card-icon {
+  @apply inline-flex size-9 shrink-0 items-center justify-center rounded-full border;
+}
+
+.entry-notice-card-safety .entry-notice-card-icon {
+  border-color: color-mix(in oklab, var(--destructive) 40%, var(--border));
+  background: color-mix(in oklab, var(--destructive) 18%, var(--card));
+  color: color-mix(in oklab, var(--destructive) 82%, black 18%);
+}
+
+.entry-notice-card-privacy .entry-notice-card-icon {
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--border));
+  background: color-mix(in oklab, var(--accent) 18%, var(--card));
+  color: color-mix(in oklab, var(--accent) 82%, black 18%);
+}
+
 .checklist-card-prerequisites {
   border-color: color-mix(in oklab, var(--primary) 28%, var(--border));
   background: linear-gradient(

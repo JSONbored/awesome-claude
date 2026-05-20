@@ -315,6 +315,8 @@ function entryMatchesQuery(entry, query) {
     entry.submittedBy,
     entry.brandName,
     entry.brandDomain,
+    ...notes(entry.safetyNotes),
+    ...notes(entry.privacyNotes),
     ...(entry.tags || []),
     ...(entry.keywords || []),
   ]
@@ -348,6 +350,8 @@ function toSearchResult(entry) {
     brandDomain: entry.brandDomain || "",
     submittedBy: entry.submittedBy || "",
     claimStatus: entry.claimStatus || "",
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
     url: entry.url || `${SITE_URL}/${entry.category}/${entry.slug}`,
     canonicalUrl:
       entry.canonicalUrl ||
@@ -363,6 +367,8 @@ function toEntrySummary(entry) {
     repoUpdatedAt: entry.repoUpdatedAt || null,
     verificationStatus: entry.verificationStatus || "",
     installable: Boolean(entry.installable),
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
     supportLevels: entry.supportLevels || [],
   };
 }
@@ -408,6 +414,12 @@ function unique(values = []) {
   return values.filter(
     (value, index, list) => value && list.indexOf(value) === index,
   );
+}
+
+function notes(values) {
+  return Array.isArray(values)
+    ? values.map((value) => String(value || "").trim()).filter(Boolean)
+    : [];
 }
 
 function normalizeDateFloor(value) {
@@ -835,6 +847,8 @@ export async function getCopyableAsset(args = {}, options = {}) {
     configSnippet: entry.configSnippet || "",
     usageSnippet: entry.usageSnippet || "",
     downloadUrl: entry.downloadUrl || "",
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
     platformCompatibility: compatibility,
     source: sourceSummary(entry),
   };
@@ -1312,6 +1326,8 @@ export async function getInstallGuidance(args = {}, options = {}) {
     downloadUrl: entry.downloadUrl || "",
     documentationUrl: entry.documentationUrl || "",
     repoUrl: entry.repoUrl || "",
+    safetyNotes: notes(entry.safetyNotes),
+    privacyNotes: notes(entry.privacyNotes),
     platform: platform || "",
     selectedCompatibility,
     platformCompatibility: compatibility,

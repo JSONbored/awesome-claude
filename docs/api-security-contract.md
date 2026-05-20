@@ -72,9 +72,9 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
   asset headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
 - No endpoint may import content into the registry, create pull requests, or
-  publish submissions directly. GitHub automation may auto-open PRs for
-  source-backed submissions after policy gates pass, and maintainer review still
-  gates merge.
+  publish submissions directly. GitHub automation may open PRs for source-backed
+  submissions only after policy gates pass and a maintainer approval label is
+  applied. Maintainer review still gates merge.
 - Job lead intake is intentionally shallow. Paid job publication remains gated
   by the token-protected D1 admin flow, which requires enriched reviewed listing
   content before active paid rows can publish.

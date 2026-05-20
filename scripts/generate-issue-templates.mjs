@@ -39,6 +39,10 @@ const fieldPlaceholders = {
   download_url: "https://github.com/owner/repo/releases/latest",
   retrieval_sources: "https://example.com/docs\nhttps://github.com/owner/repo",
   tested_platforms: "Claude Code, Claude Desktop, Codex",
+  safety_notes:
+    "Runs a background worker\nWrites to local logs\nCan modify files in the configured workspace",
+  privacy_notes:
+    "Reads local project files\nMay send selected context to the configured third-party API",
   guide_content: "Paste the full guide content.",
   items: "mcp/example\nskills/example",
   script_language: "bash",
@@ -71,6 +75,16 @@ function linesForField(field, category) {
   if (field.id === "contact_email") {
     descriptionParts.push(
       "Optional public contact. Do not include private contact details.",
+    );
+  }
+  if (field.id === "safety_notes") {
+    descriptionParts.push(
+      "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services. Use one note per line, up to 8 notes and 320 characters per note.",
+    );
+  }
+  if (field.id === "privacy_notes") {
+    descriptionParts.push(
+      "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties. Use one note per line, up to 8 notes and 320 characters per note.",
     );
   }
   if (descriptionParts.length) {
@@ -128,7 +142,7 @@ function renderIssueTemplate(category) {
     "          required: true",
     "        - label: I confirm external links are official source/docs links and not affiliate, referral, or tracking URLs.",
     "          required: true",
-    "        - label: I understand eligible submissions may auto-open an import PR, but maintainers still review before merge.",
+    "        - label: I understand eligible submissions may be approved for an import PR, but maintainers still review before merge.",
     "          required: true",
     "        - label: I understand imports regenerate the README and registry artifacts automatically.",
     "          required: true",

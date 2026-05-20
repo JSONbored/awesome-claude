@@ -18,6 +18,7 @@ import {
 import {
   analyzeDirectContentRisk,
   analyzeIssueSubmissionRisk,
+  directContentRequestChangesReasons,
   formatSubmissionRiskMarkdown,
 } from "@heyclaude/registry/submission-risk";
 import { categorySpec } from "@heyclaude/registry";
@@ -368,7 +369,7 @@ claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp`),
         expect(source).toContain("      required: true");
       }
       expect(source).toContain(
-        "eligible submissions may auto-open an import PR",
+        "eligible submissions may be approved for an import PR",
       );
       expect(source).toContain(
         "Do not open a separate README change for issue submissions",
@@ -880,6 +881,142 @@ Use the full copyable skill content.`);
     expect(formatSubmissionRiskMarkdown(risk)).toContain("Policy matrix");
   });
 
+  it("downgrades sensitive auto-imports when privacy notes are missing", () => {
+    const submission = issue(`### Name
+Credential MCP
+
+### Slug
+credential-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/credential-mcp
+
+### Description
+MCP server that uses API keys for authenticated read-only API access.
+
+### Card description
+Credential-backed MCP server.
+
+### Install command
+npx -y credential-mcp
+
+### Usage snippet
+Set CREDENTIAL_MCP_API_KEY before use.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.riskTier).toBe("medium");
+    expect(risk.classificationWarnings.map((warning) => warning.id)).toContain(
+      "missing_privacy_notes",
+    );
+    expect(risk.policyMatrix.quality.status).toBe("warn");
+    expect(risk.policyDecision).toBe("maintainer_review");
+  });
+
+  it("keeps sensitive source-backed submissions eligible when notes disclose behavior", () => {
+    const submission = issue(`### Name
+Credential MCP
+
+### Slug
+credential-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/credential-mcp
+
+### Description
+MCP server that uses API keys for authenticated read-only API access.
+
+### Card description
+Credential-backed MCP server.
+
+### Install command
+npx -y credential-mcp
+
+### Usage snippet
+Set CREDENTIAL_MCP_API_KEY before use.
+
+### Privacy notes
+Reads the configured API key from the local environment and sends requests to the upstream API only.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(
+      risk.classificationWarnings.map((warning) => warning.id),
+    ).not.toContain("missing_privacy_notes");
+    expect(risk.policyDecision).toBe("auto_import_eligible");
+  });
+
+  it("preserves commas inside newline-delimited safety and privacy notes", () => {
+    const submission = issue(`### Name
+Comma Notes MCP
+
+### Slug
+comma-notes-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/comma-notes-mcp
+
+### Description
+MCP server that reads local files, uses API keys, and runs background jobs.
+
+### Card description
+MCP server with note parsing coverage.
+
+### Install command
+npx -y comma-notes-mcp
+
+### Usage snippet
+Set COMMA_NOTES_API_KEY before use.
+
+### Safety notes
+Runs a background worker, scheduled by the local CLI
+Writes logs to the configured workspace
+
+### Privacy notes
+Reads local project files, including package metadata
+Sends selected context to the configured third-party API`);
+    const report = validateSubmission(submission);
+    const output = importSubmissionDryRun({
+      number: 778,
+      html_url: "https://github.com/JSONbored/awesome-claude/issues/778",
+      created_at: "2026-04-28T12:34:56Z",
+      user: {
+        login: "source-owner",
+        html_url: "https://github.com/source-owner",
+      },
+      body: submission.body,
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+    });
+
+    expect(report.ok).toBe(true);
+    expect(output).toContain(
+      "- Runs a background worker, scheduled by the local CLI",
+    );
+    expect(output).toContain(
+      "- Reads local project files, including package metadata",
+    );
+  });
+
   it("keeps archive package URLs in maintainer review", () => {
     const submission = issue(`### Name
 Archive Skill
@@ -922,6 +1059,56 @@ Use the archive only after review.`);
     );
     expect(risk.policyMatrix.package.status).toBe("warn");
     expect(risk.policyDecision).toBe("maintainer_review");
+  });
+
+  it("does not treat external /downloads URLs as HeyClaude-hosted packages", () => {
+    const submission = issue(`### Name
+External Download Skill
+
+### Slug
+external-download-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/external-download-skill
+
+### Download URL (optional)
+https://example.com/downloads/source
+
+### Description
+Source-backed skill submission with an external download path.
+
+### Card description
+External source-backed skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Full copyable content
+# External Download Skill
+
+Use this source-backed skill content.
+
+### Usage snippet
+Use the source only after review.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "community_local_download_request",
+    );
   });
 
   it("flags direct contributor package artifact changes", () => {
@@ -1457,6 +1644,10 @@ repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
 usageSnippet: "Use an API key for Xquik social media posting workflows."
+safetyNotes:
+  - "Can post, reply, send DMs, or update profiles through the configured Xquik account."
+privacyNotes:
+  - "Reads the configured API key and sends social media workflow requests to Xquik."
 ---
 ## Security Notes
 Review payloads before posting tweets, replies, DMs, or profile updates.`,
@@ -1490,6 +1681,49 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       expect.arrayContaining(["credentials_or_auth", "external_write"]),
     );
     expect(report.contributionAnalysis.sourceState).toBe("provided");
+  });
+
+  it("requests changes for direct PRs that omit required safety/privacy notes", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 382,
+        title: "Add risky hook",
+        user: { login: "hook-author" },
+      },
+      files: [
+        {
+          filename: "content/hooks/risky-hook.mdx",
+          status: "added",
+          content: `---
+title: Risky Hook
+slug: risky-hook
+category: hooks
+description: Hook that runs a background worker, reads local workspace files, and can delete generated files.
+cardDescription: Background hook with local file access.
+repoUrl: https://github.com/example/risky-hook
+submittedBy: hook-author
+submittedByUrl: https://github.com/hook-author
+trigger: SessionStart
+installCommand: "python risky-hook.py"
+---
+Runs a background worker against the local workspace and can delete generated files.`,
+        },
+      ],
+    });
+
+    expect(report.classificationWarnings.map((warning) => warning.id)).toEqual(
+      expect.arrayContaining(["missing_safety_notes", "missing_privacy_notes"]),
+    );
+    expect(report.requestChangesReasons).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("safetyNotes disclosure"),
+        expect.stringContaining("privacyNotes disclosure"),
+      ]),
+    );
+    expect(directContentRequestChangesReasons(report)).toEqual(
+      report.requestChangesReasons,
+    );
   });
 
   it("keeps malformed contributor payloads from becoming GitHub mentions", () => {
@@ -2443,6 +2677,27 @@ claude mcp add malicious-source-mcp -- npx -y malicious-source-mcp`);
     });
     expect(botResult.semanticErrors).not.toContain(
       "submittedBy must be a GitHub username",
+    );
+  });
+
+  it("rejects non-string safety and privacy note metadata", () => {
+    const result = validateEntry("mcp", {
+      title: "Typed Notes MCP",
+      slug: "typed-notes-mcp",
+      description:
+        "MCP server metadata fixture for validating safety/privacy note item types.",
+      documentationUrl: "https://example.com/docs",
+      installCommand: "npx -y typed-notes-mcp",
+      usageSnippet: "claude mcp add typed-notes-mcp -- npx -y typed-notes-mcp",
+      safetyNotes: ["Valid safety note", 123] as unknown as string[],
+      privacyNotes: [false] as unknown as string[],
+    });
+
+    expect(result.semanticErrors).toEqual(
+      expect.arrayContaining([
+        "safetyNotes must contain only strings",
+        "privacyNotes must contain only strings",
+      ]),
     );
   });
 

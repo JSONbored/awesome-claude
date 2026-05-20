@@ -18,10 +18,13 @@ function issueLabels(issue = {}) {
     .filter(Boolean);
 }
 
+function approvalLabel(labels) {
+  const approvalLabels = new Set(["accepted", "import-approved"]);
+  return labels.find((label) => approvalLabels.has(label)) || "";
+}
+
 function hasBlockingLabel(labels) {
   const blocked = new Set([
-    "accepted",
-    "import-approved",
     "import-pr-open",
     "needs-author-input",
     "source-needs-verification",
@@ -57,6 +60,7 @@ const issuePath = argValue("--issue-json");
 const validationPath = argValue("--validation-json");
 const riskPath = argValue("--risk-json");
 const outputPath = argValue("--output");
+const failOnIneligible = process.argv.includes("--fail-on-ineligible");
 
 const issue = readJson(issuePath, "issue JSON");
 const validation = readJson(validationPath, "validation JSON");
@@ -67,9 +71,16 @@ const category = validation.category || risk.subject?.category || "";
 const slug = validation.fields?.slug || risk.subject?.slug || "";
 const importPath = safeImportPath(category, slug);
 const reasons = [];
+const maintainerApprovalLabel = approvalLabel(labels);
 
 if (issue.pull_request) {
   reasons.push("auto import is only available for issues, not pull requests");
+}
+
+if (!maintainerApprovalLabel) {
+  reasons.push(
+    "maintainer approval label required: accepted or import-approved",
+  );
 }
 
 const blockingLabel = hasBlockingLabel(labels);
@@ -115,6 +126,7 @@ const result = {
   eligible: reasons.length === 0,
   reasons,
   issueNumber: issue.number || null,
+  approvalLabel: maintainerApprovalLabel,
   category,
   slug,
   importPath,
@@ -137,4 +149,5 @@ if (result.eligible) {
 } else {
   console.log(`Submission #${issue.number} is not auto-import eligible:`);
   for (const reason of reasons) console.log(`- ${reason}`);
+  if (failOnIneligible) process.exitCode = 1;
 }

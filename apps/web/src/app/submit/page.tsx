@@ -63,8 +63,8 @@ export default function SubmitPage() {
             <p className="max-w-xl text-sm leading-7 text-muted-foreground">
               Skill submissions now support both general skills and deep
               capability packs with verification metadata, retrieval sources,
-              and source-backed copyable content. Community ZIPs are not
-              published as HeyClaude-hosted downloads.
+              safety/privacy notes, and source-backed copyable content.
+              Community ZIPs are not published as HeyClaude-hosted downloads.
             </p>
             <p className="max-w-xl text-sm leading-7 text-muted-foreground">
               Hiring opportunities are handled through the{" "}
@@ -110,9 +110,12 @@ export default function SubmitPage() {
 
           <div className="rounded-2xl border border-border/80 bg-card/70 px-5 py-4 text-sm leading-7 text-muted-foreground">
             If you are sharing something installable, include the real command
-            or the exact config somebody would need to use it. Source-backed,
-            non-artifact submissions can move to an import PR after automated
-            gates pass; maintainer review still gates merge.
+            or the exact config somebody would need to use it. If it reads local
+            files, handles credentials, writes/deletes data, runs in the
+            background, or calls third-party APIs, include the safety/privacy
+            notes too. Source-backed, non-artifact submissions can move to an
+            import PR after automated gates pass; maintainer review still gates
+            merge.
           </div>
 
           <div className="rounded-2xl border border-border/80 bg-card/70 px-5 py-4 text-sm leading-7 text-muted-foreground">

@@ -38,6 +38,12 @@ function listValue(values) {
   return values?.length ? values.join(", ") : "";
 }
 
+function bulletList(values) {
+  return Array.isArray(values) && values.length
+    ? values.map((value) => `- ${clean(value)}`).filter((line) => line !== "-")
+    : [];
+}
+
 function entrySourceUrls(entry) {
   return [
     entry.documentationUrl,
@@ -70,6 +76,8 @@ export function buildEntryCitationFacts(entry, params = {}) {
     ["Brand asset source", clean(entry.brandAssetSource)],
     ["Package URL", clean(entry.downloadUrl)],
     ["Package SHA256", clean(entry.downloadSha256)],
+    ["Safety notes", listValue(entry.safetyNotes)],
+    ["Privacy notes", listValue(entry.privacyNotes)],
     [
       "Platform compatibility",
       listValue(
@@ -127,6 +135,12 @@ export function renderEntryLlms(entry, params = {}) {
       ? entry.tags.map((tag) => `- ${tag}`).join("\n")
       : "- none",
     "",
+    entry.safetyNotes?.length ? "## Safety Notes" : "",
+    ...bulletList(entry.safetyNotes),
+    entry.safetyNotes?.length ? "" : "",
+    entry.privacyNotes?.length ? "## Privacy Notes" : "",
+    ...bulletList(entry.privacyNotes),
+    entry.privacyNotes?.length ? "" : "",
     "## Content",
     sectionText(entry),
     "",

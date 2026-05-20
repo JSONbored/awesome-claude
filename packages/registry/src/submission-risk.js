@@ -24,12 +24,32 @@ const SEVERITY_WEIGHT = {
   critical: 100,
 };
 
+const HEYCLAUDE_HOSTNAME = "heyclau.de";
+
 const RISK_LABEL_BY_TIER = {
   low: SUBMISSION_RISK_LOW_LABEL,
   medium: SUBMISSION_RISK_MEDIUM_LABEL,
   high: SUBMISSION_RISK_HIGH_LABEL,
   critical: SUBMISSION_RISK_HIGH_LABEL,
 };
+
+const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
+  "unsafe_install_pipeline",
+  "financial_or_identity_sensitive",
+  "external_write_capability",
+  "destructive_actions",
+  "downloadable_binary_or_installer",
+  "community_archive_download",
+  "community_local_download_request",
+  "background_worker_or_daemon",
+]);
+
+const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
+  "requires_credentials",
+  "local_or_personal_data_access",
+  "malicious_data_theft_capability",
+  "embedded_secret",
+]);
 
 function normalizeText(value) {
   return String(value ?? "").trim();
@@ -194,6 +214,15 @@ function splitList(value) {
     .split(/[\n,]+/)
     .map((item) => item.trim())
     .filter(Boolean);
+}
+
+function stringList(value) {
+  return Array.isArray(value)
+    ? value.map((item) => normalizeText(item)).filter(Boolean)
+    : normalizeText(value)
+        .split(/\n+/)
+        .map((item) => item.trim())
+        .filter(Boolean);
 }
 
 const MAX_URL_SCAN_LENGTH = 200_000;
@@ -472,6 +501,7 @@ const CAPABILITY_BUCKET_BY_FLAG = {
   external_write_capability: "external_write",
   local_or_personal_data_access: "local_or_personal_data",
   destructive_actions: "destructive_actions",
+  background_worker_or_daemon: "background_automation",
   downloadable_binary_or_installer: "binary_or_installer",
   no_canonical_source: "source_review",
   non_https_source_url: "source_review",
@@ -754,7 +784,11 @@ function addContentRiskSignals(report, fields, text) {
 
   const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
   const downloadPath = urlPathname(downloadUrl);
-  if (downloadPath.startsWith("/downloads/")) {
+  const downloadHost = hostname(downloadUrl);
+  const isHeyClaudeDownloadRequest =
+    downloadPath.startsWith("/downloads/") &&
+    (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME);
+  if (isHeyClaudeDownloadRequest) {
     addFlag(
       report,
       "high",
@@ -888,6 +922,19 @@ function addContentRiskSignals(report, fields, text) {
   }
 
   if (
+    /\b(background worker|background process|daemon|launch agent|startup|cron|sessionstart|scheduled job)\b/i.test(
+      text,
+    )
+  ) {
+    addFlag(
+      report,
+      "medium",
+      "background_worker_or_daemon",
+      "Submission describes background workers, daemons, scheduled jobs, or startup/session automation",
+    );
+  }
+
+  if (
     /\b(delete|destroy|purge|remove)\b/i.test(text) &&
     /\b(file|email|record|database|tweet|message|resource)\b/i.test(text)
   ) {
@@ -933,6 +980,36 @@ function addToolListingClassificationSignals(report, fields, text) {
         missing.join(", "),
       );
     }
+  }
+}
+
+function addDisclosureNoteSignals(report, fields) {
+  const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
+  const safetyRequired = [...flags].filter((id) =>
+    SAFETY_NOTE_REQUIRED_FLAGS.has(id),
+  );
+  const privacyRequired = [...flags].filter((id) =>
+    PRIVACY_NOTE_REQUIRED_FLAGS.has(id),
+  );
+  const safetyNotes = stringList(fields.safety_notes || fields.safetyNotes);
+  const privacyNotes = stringList(fields.privacy_notes || fields.privacyNotes);
+
+  if (safetyRequired.length && !safetyNotes.length) {
+    addClassificationWarning(
+      report,
+      "missing_safety_notes",
+      "Sensitive execution, install, package, background, or write behavior needs safetyNotes/safety_notes disclosure before auto-import",
+      safetyRequired.join(", "),
+    );
+  }
+
+  if (privacyRequired.length && !privacyNotes.length) {
+    addClassificationWarning(
+      report,
+      "missing_privacy_notes",
+      "Credential, local data, telemetry, or third-party data behavior needs privacyNotes/privacy_notes disclosure before auto-import",
+      privacyRequired.join(", "),
+    );
   }
 }
 
@@ -1123,6 +1200,64 @@ function policyDecisionForReport(report) {
     : "maintainer_review";
 }
 
+export function directContentRequestChangesReasons(report = {}) {
+  if (report.subject?.type !== "pull_request") return [];
+  const reasons = [];
+  const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
+  const warnings = new Set(
+    (report.classificationWarnings || []).map((warning) => warning.id),
+  );
+
+  for (const finding of report.provenanceFindings || []) {
+    if (finding.blocking) {
+      reasons.push(
+        `Provenance validation failed: ${finding.summary} (${finding.id}).`,
+      );
+    }
+  }
+
+  const flagReasons = {
+    invalid_frontmatter: "Content frontmatter could not be parsed.",
+    missing_pr_file_content:
+      "Content file could not be read through the GitHub API.",
+    community_local_download_request:
+      "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    non_https_executable_source:
+      "Install or usage instructions fetch executable content from a non-HTTPS URL.",
+    unsafe_install_pipeline:
+      "Install instructions include a destructive or remote-code execution pipeline.",
+    embedded_secret:
+      "Submission appears to include a real secret or API token.",
+    prohibited_content:
+      "Submission appears to include clearly unacceptable content.",
+  };
+  for (const [id, reason] of Object.entries(flagReasons)) {
+    if (flags.has(id)) reasons.push(`${reason} (${id}).`);
+  }
+
+  const warningReasons = {
+    category_path_mismatch:
+      "Content category frontmatter must match the content path.",
+    generated_readme_change:
+      "Direct contributor PRs should not edit README.md; maintainer automation regenerates it.",
+    generated_registry_artifact_change:
+      "Direct contributor PRs should not edit generated registry/data/download artifacts.",
+    community_package_artifact_change:
+      "Community PRs cannot add HeyClaude-hosted ZIP/MCPB package artifacts.",
+    unsafe_package_verified_true:
+      "External contributor PRs cannot mark packages as packageVerified: true.",
+    missing_safety_notes:
+      "Sensitive execution, install, package, background, or write behavior needs safetyNotes disclosure.",
+    missing_privacy_notes:
+      "Credential, local data, telemetry, or third-party data behavior needs privacyNotes disclosure.",
+  };
+  for (const [id, reason] of Object.entries(warningReasons)) {
+    if (warnings.has(id)) reasons.push(`${reason} (${id}).`);
+  }
+
+  return [...new Set(reasons)];
+}
+
 function finalizeReport(report, validationReport) {
   report.riskTier = tierFromFlags(report.reviewFlags);
   report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
@@ -1133,6 +1268,7 @@ function finalizeReport(report, validationReport) {
   finalizeContributionAnalysis(report, validationReport);
   report.policyMatrix = buildPolicyMatrix(report, validationReport);
   report.policyDecision = policyDecisionForReport(report);
+  report.requestChangesReasons = directContentRequestChangesReasons(report);
   report.humanReviewNotes = riskNotes(report);
   report.labelDefinitions = SUBMISSION_RISK_LABEL_DEFINITIONS;
   return report;
@@ -1161,6 +1297,7 @@ function baseReport(subject) {
     recommendedAction: "maintainer_review",
     policyMatrix: {},
     policyDecision: "maintainer_review",
+    requestChangesReasons: [],
     humanReviewNotes: [],
     labelDefinitions: SUBMISSION_RISK_LABEL_DEFINITIONS,
   };
@@ -1223,6 +1360,7 @@ export function analyzeIssueSubmissionRisk(
   addSourceSignals(report, fields, text);
   addContentRiskSignals(report, fields, text);
   addToolListingClassificationSignals(report, fields, text);
+  addDisclosureNoteSignals(report, fields);
   applyContributorAnalysis(
     report,
     contributor,
@@ -1253,6 +1391,8 @@ function frontmatterFields(data = {}, category = "") {
     usage_snippet: normalizeText(data.usageSnippet),
     full_copyable_content: normalizeText(data.copySnippet),
     brand_domain: normalizeText(data.brandDomain),
+    safety_notes: stringList(data.safetyNotes).join("\n"),
+    privacy_notes: stringList(data.privacyNotes).join("\n"),
   };
 }
 
@@ -1751,6 +1891,25 @@ export function analyzeDirectContentRisk(input = {}) {
     const category = prFileCategory(file.filename);
     const fields = frontmatterFields(parsed.data, category);
     const provenance = frontmatterProvenance(parsed.data);
+    if (fields.category && fields.category !== category) {
+      addClassificationWarning(
+        report,
+        "category_path_mismatch",
+        "Content category frontmatter must match the content file path",
+        `${file.filename}: ${fields.category} != ${category}`,
+      );
+    }
+    if (
+      sourceType === "external_direct" &&
+      parsed.data?.packageVerified === true
+    ) {
+      addClassificationWarning(
+        report,
+        "unsafe_package_verified_true",
+        "External contributor PRs cannot mark packageVerified: true",
+        file.filename,
+      );
+    }
     entries.push({ filename: file.filename, fields, provenance });
     addContentFileAnalysis(report, {
       filename: file.filename,
@@ -1776,6 +1935,7 @@ export function analyzeDirectContentRisk(input = {}) {
     addSourceSignals(report, fields, content);
     addContentRiskSignals(report, fields, content);
     addToolListingClassificationSignals(report, fields, content);
+    addDisclosureNoteSignals(report, fields);
   }
 
   validatePrProvenance(report, entries, input, sourceType);
@@ -1952,6 +2112,13 @@ export function formatSubmissionRiskMarkdown(report) {
       lines.push(
         `- ${escapeMarkdownText(warning.summary)} (\`${warning.id}\`)${markdownDetail(warning.detail)}`,
       );
+    }
+  }
+
+  if (report.requestChangesReasons?.length) {
+    lines.push("", "### Requested changes blockers");
+    for (const reason of report.requestChangesReasons) {
+      lines.push(`- ${escapeMarkdownText(reason)}`);
     }
   }
 

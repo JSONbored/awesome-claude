@@ -28,6 +28,7 @@ export const CATEGORY_REQUIREMENTS = Object.fromEntries(
 
 export const COMMON_REQUIRED_FIELDS = categorySpec.commonIssueRequiredFields;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const HEYCLAUDE_HOSTNAME = "heyclau.de";
 
 export const SUBMISSION_STALE_POLICY = {
   reminderDays: 7,
@@ -116,6 +117,14 @@ export const HEADING_KEY_MAP = {
   "items-category-slug-list": "items",
   "guide-content-markdown": "guide_content",
   prerequisites: "prerequisites",
+  "safety-notes": "safety_notes",
+  "safety-notes-optional": "safety_notes",
+  safetynotes: "safety_notes",
+  safety_notes: "safety_notes",
+  "privacy-notes": "privacy_notes",
+  "privacy-notes-optional": "privacy_notes",
+  privacynotes: "privacy_notes",
+  privacy_notes: "privacy_notes",
   "troubleshooting-section": "troubleshooting_section",
   "installation-order": "installation_order",
   "estimated-setup-time": "estimated_setup_time",
@@ -200,6 +209,13 @@ function splitList(value) {
   const next = current.trim();
   if (next) items.push(next);
   return items;
+}
+
+function splitNoteList(value) {
+  return normalizeValue(value)
+    .split(/\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function containsForbiddenCounter(value) {
@@ -302,6 +318,10 @@ function mapJsonData(data) {
     npm: "download_url",
     install: "install_command",
     installCommand: "install_command",
+    safetyNotes: "safety_notes",
+    safety_notes: "safety_notes",
+    privacyNotes: "privacy_notes",
+    privacy_notes: "privacy_notes",
     license: "license",
   };
 
@@ -484,7 +504,14 @@ export function normalizeSubmissionPayloadFields(fields = {}) {
   for (const [key, value] of Object.entries(fields || {})) {
     if (value === undefined || value === null) continue;
     if (Array.isArray(value)) {
-      normalized[key] = value.map(String).join(", ");
+      const separator =
+        key === "safety_notes" ||
+        key === "privacy_notes" ||
+        key === "safetyNotes" ||
+        key === "privacyNotes"
+          ? "\n"
+          : ", ";
+      normalized[key] = value.map(String).join(separator);
       continue;
     }
     if (typeof value === "object") continue;
@@ -637,6 +664,16 @@ function urlPathname(value) {
     return new URL(normalized).pathname.toLowerCase();
   } catch {
     return normalized.split(/[?#]/)[0].toLowerCase();
+  }
+}
+
+function urlHostname(value) {
+  const normalized = normalizeValue(value);
+  if (!normalized) return "";
+  try {
+    return new URL(normalized).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
   }
 }
 
@@ -1127,7 +1164,12 @@ export function validateSubmission(issue) {
     errors.push("Card description is too short for review");
   }
 
-  if (urlPathname(fields.download_url).startsWith("/downloads/")) {
+  const downloadPath = urlPathname(fields.download_url);
+  const downloadHost = urlHostname(fields.download_url);
+  if (
+    downloadPath.startsWith("/downloads/") &&
+    (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME)
+  ) {
     errors.push(
       "Community submissions cannot request local /downloads hosting",
     );
@@ -1269,6 +1311,19 @@ export function validateSubmission(issue) {
   const fullCopyable = String(fields.full_copyable_content ?? "");
   if (containsForbiddenCounter(fullCopyable)) {
     errors.push("Forbidden counters detected in full_copyable_content");
+  }
+
+  for (const field of ["safety_notes", "privacy_notes"]) {
+    const notes = splitNoteList(fields[field]);
+    if (!notes.length) continue;
+    if (notes.length > 8) {
+      errors.push(`${field} must include 8 items or fewer`);
+    }
+    for (const note of notes) {
+      if (note.length > 320) {
+        errors.push(`${field} items must be 320 characters or fewer`);
+      }
+    }
   }
 
   if (!fields.github_url && !fields.docs_url) {

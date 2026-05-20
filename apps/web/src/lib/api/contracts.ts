@@ -188,6 +188,8 @@ export const registrySearchResultSchema = registryBrandAssetSchema
     tags: z.array(z.string()).max(32),
     keywords: z.array(z.string()).max(64),
     author: z.string(),
+    safetyNotes: z.array(z.string().min(1).max(320)).max(8).optional(),
+    privacyNotes: z.array(z.string().min(1).max(320)).max(8).optional(),
     dateAdded: z.string(),
     installable: z.boolean(),
     downloadTrust: z.string().nullable().optional(),
@@ -715,7 +717,7 @@ export const apiRouteDefinitions = {
     path: "/api/submissions",
     summary: "Create a reviewable content submission issue",
     description:
-      "Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub issue for review. Eligible source-backed submissions may later auto-open a PR from GitHub automation, but this endpoint never writes content files, publishes registry entries, or hosts community ZIP/MCPB artifacts directly.",
+      "Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub issue for review. Eligible source-backed submissions may later be approved for a PR from GitHub automation, but this endpoint never writes content files, publishes registry entries, or hosts community ZIP/MCPB artifacts directly.",
     tags: ["Submissions"],
     originCheck: true,
     bodySchema: submissionBodySchema,

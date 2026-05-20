@@ -33,6 +33,13 @@ function splitList(value) {
     .filter(Boolean);
 }
 
+function splitNoteList(value) {
+  return normalizeValue(value)
+    .split(/\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function unique(values) {
   return [...new Set(values)];
 }
@@ -294,6 +301,8 @@ function buildContent(issue, report) {
   const tags = unique(splitList(fields.tags).map(normalizeTag).filter(Boolean));
   const retrievalSources = unique(splitList(fields.retrieval_sources));
   const testedPlatforms = unique(splitList(fields.tested_platforms));
+  const safetyNotes = unique(splitNoteList(fields.safety_notes));
+  const privacyNotes = unique(splitNoteList(fields.privacy_notes));
   const downloadUrl = normalizeValue(fields.download_url);
   const seo = deriveSeoFields(
     {
@@ -353,6 +362,8 @@ function buildContent(issue, report) {
     verifiedAt: fields.verified_at,
     retrievalSources,
     testedPlatforms,
+    safetyNotes,
+    privacyNotes,
     tags,
     keywords: seo.keywords,
     robotsIndex: !isDraftSkill,

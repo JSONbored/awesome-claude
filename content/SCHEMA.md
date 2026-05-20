@@ -54,6 +54,17 @@ Use these when applicable:
 - `copySnippet`
 - `scriptLanguage`
 - `trigger`
+- `prerequisites`
+- `safetyNotes`
+- `privacyNotes`
+
+Use the three note-style fields for different jobs:
+
+- `prerequisites`: setup requirements a user should complete first, such as installed runtimes, accounts, environment variables, or Claude client support.
+- `safetyNotes`: execution, permission, destructive-action, background-worker, network-access, package/install, account-write, or automation risks.
+- `privacyNotes`: local files, logs, credentials, telemetry, third-party data handling, retained data, or user data exposure.
+
+`safetyNotes` and `privacyNotes` are optional arrays of short strings. They are expected when a hook, MCP server, skill, command, or statusline handles sensitive behavior. Do not use `disclosure` for these warnings; `disclosure` is reserved for tool/commercial listing status.
 
 ## Category notes
 
@@ -71,10 +82,11 @@ Use these when applicable:
 
 - Free Claude resources should start with `/submit` or the generated GitHub issue forms.
 - Pull requests are for advanced contributors who can add MDX directly and run the full gate.
-- Fully valid, source-backed, non-artifact issues may auto-open an import PR after gates pass. Maintainer review still gates merge.
+- Fully valid, source-backed, non-artifact issues may be approved for an import PR after gates pass. Maintainer review still gates merge.
 - Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content issue templates.
 - Contributor links must be official source/docs/release URLs. Affiliate, referral, tracking, or local package-hosting requests are rejected.
 - Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads. Maintainer-built packages require package trust metadata.
+- Risk-bearing submissions may be blocked or sent back when execution, permission, credential, local-data, background-worker, external-write, or package behavior is not disclosed with `safetyNotes` / `privacyNotes`.
 
 ## Workflow
 

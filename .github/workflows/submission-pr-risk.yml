@@ -37,6 +37,7 @@ jobs:
             // packages/registry/src/submission-risk.js. This pull_request_target
             // workflow intentionally avoids checking out or executing PR code.
             const RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
+            const REVIEW_MARKER = "<!-- heyclaude-submission-bot-review -->";
             const RISK_LABEL_DEFINITIONS = {
               "risk-low": {
                 color: "0e8a16",
@@ -67,8 +68,25 @@ jobs:
               high: "risk-high",
               critical: "risk-high"
             };
+            const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
+              "unsafe_install_pipeline",
+              "financial_or_identity_sensitive",
+              "external_write_capability",
+              "destructive_actions",
+              "downloadable_binary_or_installer",
+              "community_archive_download",
+              "community_local_download_request",
+              "background_worker_or_daemon"
+            ]);
+            const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
+              "requires_credentials",
+              "local_or_personal_data_access",
+              "malicious_data_theft_capability",
+              "embedded_secret"
+            ]);
             const TOOLS_CATEGORY = "tools";
             const TOOLS_LISTING_FLOW_URL = "https://heyclau.de/tools/submit";
+            const HEYCLAUDE_HOSTNAME = "heyclau.de";
             const URL_PREFIXES = ["https://", "http://"];
             const URL_TERMINATORS = new Set([
               " ",
@@ -136,6 +154,8 @@ jobs:
             const frontmatterValue = (value) => {
               const trimmed = String(value || "").trim();
               if (!trimmed) return "";
+              if (trimmed === "true") return true;
+              if (trimmed === "false") return false;
               if (
                 (trimmed.startsWith("\"") && trimmed.endsWith("\"")) ||
                 (trimmed.startsWith("'") && trimmed.endsWith("'"))
@@ -172,11 +192,56 @@ jobs:
               }
               return [...urls];
             };
+            const ARCHIVE_PACKAGE_EXTENSIONS = new Set([
+              ".zip",
+              ".mcpb",
+              ".tar",
+              ".tar.gz",
+              ".tgz",
+              ".tar.bz2",
+              ".tbz2",
+              ".tar.xz",
+              ".txz",
+              ".7z",
+              ".rar",
+              ".gz",
+              ".bz2",
+              ".xz",
+              ".deb",
+              ".rpm",
+              ".dmg",
+              ".exe",
+              ".pkg",
+              ".msi",
+              ".appimage"
+            ]);
+            const urlPathname = (value) => {
+              const text = normalizeText(value);
+              if (!text) return "";
+              try {
+                return new URL(text).pathname.toLowerCase();
+              } catch {
+                return text.split(/[?#]/)[0].toLowerCase();
+              }
+            };
+            const isArchivePackageUrl = (value) => {
+              const pathname = urlPathname(value);
+              return [...ARCHIVE_PACKAGE_EXTENSIONS].some((extension) =>
+                pathname.endsWith(extension)
+              );
+            };
             const splitList = (value) =>
               normalizeText(value)
                 .split(/[\n,]+/)
                 .map((item) => item.trim())
                 .filter(Boolean);
+            const stringList = (value) =>
+              Array.isArray(value)
+                ? value.map((item) => normalizeText(item)).filter(Boolean)
+                : normalizeText(value)
+                    .split(/\n+/)
+                    .map((item) => item.trim())
+                    .filter(Boolean);
             const hostname = (value) => {
               try {
                 return new URL(normalizeText(value)).hostname.replace(/^www\./, "");
@@ -250,7 +315,14 @@ jobs:
                   if (/^[>|]/.test(value)) {
                     data[match[1]] = "";
                     blockKey = match[1];
+                  } else if (value === "") {
+                    data[match[1]] = "";
+                    blockKey = match[1];
                   }
+                  continue;
+                }
+                if (blockKey && /^\s*-\s+/.test(line)) {
+                  data[blockKey] += `${line.replace(/^\s*-\s+/, "")}\n`;
                   continue;
                 }
                 if (blockKey && (/^\s+/.test(line) || !line.trim())) {
@@ -281,7 +353,9 @@ jobs:
               install_command: normalizeText(data.installCommand),
               usage_snippet: normalizeText(data.usageSnippet),
               full_copyable_content: normalizeText(data.copySnippet),
-              brand_domain: normalizeText(data.brandDomain)
+              brand_domain: normalizeText(data.brandDomain),
+              safety_notes: stringList(data.safetyNotes).join("\n"),
+              privacy_notes: stringList(data.privacyNotes).join("\n")
             });
             const frontmatterProvenance = (data = {}) => {
               const submissionIssueNumber = Number(data.submissionIssueNumber);
@@ -356,6 +430,7 @@ jobs:
               classificationWarnings: [],
               recommendedLabels: [],
               recommendedAction: "maintainer_review",
+              requestChangesReasons: [],
               humanReviewNotes: [],
               labelDefinitions: RISK_LABEL_DEFINITIONS
             });
@@ -489,6 +564,7 @@ jobs:
               external_write_capability: "external_write",
               local_or_personal_data_access: "local_or_personal_data",
               destructive_actions: "destructive_actions",
+              background_worker_or_daemon: "background_automation",
               downloadable_binary_or_installer: "binary_or_installer",
               no_canonical_source: "source_review",
               non_https_source_url: "source_review",
@@ -633,6 +709,29 @@ jobs:
                   "Install or usage instructions execute or fetch from a non-HTTPS URL"
                 );
               }
+              const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
+              const downloadPath = urlPathname(downloadUrl);
+              const downloadHost = hostname(downloadUrl);
+              const isHeyClaudeDownloadRequest =
+                downloadPath.startsWith("/downloads/") &&
+                (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME);
+              if (isHeyClaudeDownloadRequest) {
+                addFlag(
+                  report,
+                  "high",
+                  "community_local_download_request",
+                  "Community submissions cannot request HeyClaude-hosted package downloads",
+                  downloadUrl
+                );
+              } else if (isArchivePackageUrl(downloadUrl)) {
+                addFlag(
+                  report,
+                  "medium",
+                  "community_archive_download",
+                  "Submitted package archive URLs require maintainer package review and are not auto-import eligible",
+                  downloadUrl
+                );
+              }
               if (
                 /rm\s+-rf\s+(\/|~|\$home)\b/i.test(installText) ||
                 /\b(curl|wget)\b[\s\S]{0,120}\|[\s\S]{0,40}\b(sudo\s+)?(sh|bash)\b/i.test(
@@ -740,6 +839,18 @@ jobs:
                   "high",
                   "local_or_personal_data_access",
                   "Submission can access local apps, personal data, browser state, or automation surfaces"
+                );
+              }
+              if (
+                /\b(background worker|background process|daemon|launch agent|startup|cron|sessionstart|scheduled job)\b/i.test(
+                  text
+                )
+              ) {
+                addFlag(
+                  report,
+                  "medium",
+                  "background_worker_or_daemon",
+                  "Submission describes background workers, daemons, scheduled jobs, or startup/session automation"
                 );
               }
               if (
@@ -879,6 +990,35 @@ jobs:
                 }
               }
             };
+            const addDisclosureNoteSignals = (report, fields) => {
+              const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
+              const safetyRequired = [...flags].filter((id) =>
+                SAFETY_NOTE_REQUIRED_FLAGS.has(id)
+              );
+              const privacyRequired = [...flags].filter((id) =>
+                PRIVACY_NOTE_REQUIRED_FLAGS.has(id)
+              );
+              const safetyNotes = stringList(fields.safety_notes || fields.safetyNotes);
+              const privacyNotes = stringList(
+                fields.privacy_notes || fields.privacyNotes
+              );
+              if (safetyRequired.length && !safetyNotes.length) {
+                addClassificationWarning(
+                  report,
+                  "missing_safety_notes",
+                  "Sensitive execution, install, package, background, or write behavior needs safetyNotes/safety_notes disclosure before auto-import",
+                  safetyRequired.join(", ")
+                );
+              }
+              if (privacyRequired.length && !privacyNotes.length) {
+                addClassificationWarning(
+                  report,
+                  "missing_privacy_notes",
+                  "Credential, local data, telemetry, or third-party data behavior needs privacyNotes/privacy_notes disclosure before auto-import",
+                  privacyRequired.join(", ")
+                );
+              }
+            };
             const tierFromFlags = (flags) => {
               if (flags.some((flag) => flag.severity === "critical")) {
                 return "critical";
@@ -978,6 +1118,57 @@ jobs:
                 );
               }
             };
+            const directContentRequestChangesReasons = (report) => {
+              const reasons = [];
+              const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
+              const warnings = new Set(
+                (report.classificationWarnings || []).map((warning) => warning.id)
+              );
+              for (const finding of report.provenanceFindings || []) {
+                if (finding.blocking) {
+                  reasons.push(
+                    `Provenance validation failed: ${finding.summary} (${finding.id}).`
+                  );
+                }
+              }
+              const flagReasons = {
+                invalid_frontmatter: "Content frontmatter could not be parsed.",
+                missing_pr_file_content:
+                  "Content file could not be read through the GitHub API.",
+                community_local_download_request:
+                  "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+                non_https_executable_source:
+                  "Install or usage instructions fetch executable content from a non-HTTPS URL.",
+                unsafe_install_pipeline:
+                  "Install instructions include a destructive or remote-code execution pipeline.",
+                embedded_secret: "Submission appears to include a real secret or API token.",
+                prohibited_content:
+                  "Submission appears to include clearly unacceptable content."
+              };
+              for (const [id, reason] of Object.entries(flagReasons)) {
+                if (flags.has(id)) reasons.push(`${reason} (${id}).`);
+              }
+              const warningReasons = {
+                category_path_mismatch:
+                  "Content category frontmatter must match the content path.",
+                generated_readme_change:
+                  "Direct contributor PRs should not edit README.md; maintainer automation regenerates it.",
+                generated_registry_artifact_change:
+                  "Direct contributor PRs should not edit generated registry/data/download artifacts.",
+                community_package_artifact_change:
+                  "Community PRs cannot add HeyClaude-hosted ZIP/MCPB package artifacts.",
+                unsafe_package_verified_true:
+                  "External contributor PRs cannot mark packages as packageVerified: true.",
+                missing_safety_notes:
+                  "Sensitive execution, install, package, background, or write behavior needs safetyNotes disclosure.",
+                missing_privacy_notes:
+                  "Credential, local data, telemetry, or third-party data behavior needs privacyNotes disclosure."
+              };
+              for (const [id, reason] of Object.entries(warningReasons)) {
+                if (warnings.has(id)) reasons.push(`${reason} (${id}).`);
+              }
+              return [...new Set(reasons)];
+            };
             const finalizeReport = (report) => {
               report.riskTier = tierFromFlags(report.reviewFlags);
               report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
@@ -986,6 +1177,7 @@ jobs:
                   ? "block_until_resolved"
                   : "maintainer_review";
               finalizeContributionAnalysis(report);
+              report.requestChangesReasons = directContentRequestChangesReasons(report);
               report.humanReviewNotes = riskNotes(report);
               report.labelDefinitions = RISK_LABEL_DEFINITIONS;
               return report;
@@ -1464,6 +1656,12 @@ jobs:
                   );
                 }
               }
+              if (report.requestChangesReasons?.length) {
+                lines.push("", "### Requested changes blockers");
+                for (const reason of report.requestChangesReasons) {
+                  lines.push(`- ${escapeMarkdownText(reason)}`);
+                }
+              }
               if (report.trustSignals.length) {
                 lines.push("", "### Trust signals");
                 for (const signal of report.trustSignals.slice(0, 12)) {
@@ -1686,6 +1884,25 @@ jobs:
               const category = prFileCategory(file.filename);
               const fields = frontmatterFields(frontmatter, category);
               const provenance = frontmatterProvenance(frontmatter);
+              if (fields.category && fields.category !== category) {
+                addClassificationWarning(
+                  report,
+                  "category_path_mismatch",
+                  "Content category frontmatter must match the content file path",
+                  `${file.filename}: ${fields.category} != ${category}`
+                );
+              }
+              if (
+                sourceType === "external_direct" &&
+                frontmatter.packageVerified === true
+              ) {
+                addClassificationWarning(
+                  report,
+                  "unsafe_package_verified_true",
+                  "External contributor PRs cannot mark packageVerified: true",
+                  file.filename
+                );
+              }
               entries.push({ filename: file.filename, fields, provenance });
               addContentFileAnalysis(report, {
                 filename: file.filename,
@@ -1711,6 +1928,7 @@ jobs:
               addSourceSignals(report, fields, content);
               addContentRiskSignals(report, fields, content);
               addToolListingClassificationSignals(report, fields, content);
+              addDisclosureNoteSignals(report, fields);
             }
             for (const sourceRepo of [...report.contributionAnalysis.githubSourceRepos]) {
               const [owner, repoName] = sourceRepo.fullName.split("/");
@@ -1840,6 +2058,42 @@ jobs:
                 if (flag.severity === "critical") {
                   failures.push(`- ${flag.summary} (${flag.id})`);
                 }
+              }
+            }
+            const requestChangeReasons = report.requestChangesReasons || [];
+            if (requestChangeReasons.length) {
+              failures.push("HeyClaude Submission Bot requested changes:");
+              for (const reason of requestChangeReasons) {
+                failures.push(`- ${reason}`);
+              }
+              const reviewBody = [
+                REVIEW_MARKER,
+                "## HeyClaude Submission Bot requested changes",
+                "",
+                "Thanks for the submission. The bot found deterministic blockers that need to be fixed before maintainer review can continue:",
+                "",
+                ...requestChangeReasons.map((reason) => `- ${reason}`),
+                "",
+                "This is a review gate only; maintainers still make the final merge decision."
+              ].join("\n");
+              const reviews = await github.paginate(github.rest.pulls.listReviews, {
+                ...context.repo,
+                pull_number: context.payload.pull_request.number,
+                per_page: 100
+              });
+              const existingReview = reviews.find(
+                (review) =>
+                  review.commit_id === pr.head.sha &&
+                  review.body?.includes(REVIEW_MARKER)
+              );
+              if (!existingReview) {
+                await github.rest.pulls.createReview({
+                  ...context.repo,
+                  pull_number: context.payload.pull_request.number,
+                  commit_id: pr.head.sha,
+                  event: "REQUEST_CHANGES",
+                  body: reviewBody
+                });
               }
             }
             if (failures.length) {

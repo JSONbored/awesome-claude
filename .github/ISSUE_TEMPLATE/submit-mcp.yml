@@ -128,6 +128,22 @@ body:
       render: "markdown"
     validations:
       required: false
+  - type: textarea
+    id: safety_notes
+    attributes:
+      label: "Safety notes"
+      description: "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services. Use one note per line, up to 8 notes and 320 characters per note."
+      placeholder: "Runs a background worker\nWrites to local logs\nCan modify files in the configured workspace"
+    validations:
+      required: false
+  - type: textarea
+    id: privacy_notes
+    attributes:
+      label: "Privacy notes"
+      description: "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties. Use one note per line, up to 8 notes and 320 characters per note."
+      placeholder: "Reads local project files\nMay send selected context to the configured third-party API"
+    validations:
+      required: false
   - type: checkboxes
     id: acknowledgements
     attributes:
@@ -137,7 +153,7 @@ body:
           required: true
         - label: I confirm external links are official source/docs links and not affiliate, referral, or tracking URLs.
           required: true
-        - label: I understand eligible submissions may auto-open an import PR, but maintainers still review before merge.
+        - label: I understand eligible submissions may be approved for an import PR, but maintainers still review before merge.
           required: true
         - label: I understand imports regenerate the README and registry artifacts automatically.
           required: true

@@ -18,27 +18,35 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("submission automation workflows", () => {
-  it("keeps issue validation review-gated while allowing auto-import PRs", () => {
+  it("keeps public issue validation read-only for imports", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-issue-validation.yml"),
       "utf8",
     );
 
+    expect(source).toContain("contents: read");
+    expect(source).toContain("issues: write");
+    expect(source).not.toContain("actions: write");
+    expect(source).not.toContain("contents: write");
+    expect(source).not.toContain("pull-requests: write");
     expect(source).toContain("Preview import output");
     expect(source).toContain("--dry-run");
     expect(source).toContain("Analyze submission risk");
     expect(source).toContain("Precheck auto-import eligibility");
-    expect(source).toContain("Check auto-import eligibility");
-    expect(source).toContain("steps.auto_import.outputs.eligible == 'true'");
-    expect(source).toContain("Create auto-import PR");
-    expect(source).toContain("Maintainer review still gates merge");
+    expect(source).toContain("auto-import-eligible");
+    expect(source).toContain("HeyClaude Submission Bot");
+    expect(source).toContain("steps.auto_import_precheck.outputs.eligible");
+    expect(source).toContain("managedValidationLabels");
+    expect(source).toContain("issues.setLabels");
     expect(source).toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");
     expect(source).toContain("Summarize invalid submission issue");
     expect(source).toContain("--informational");
-    expect(source).toContain("managedValidationLabels");
     expect(source).not.toContain("if (report.skipped) return;");
-    expect(source).toContain("peter-evans/create-pull-request");
+    expect(source).not.toContain("Import auto-eligible submission");
+    expect(source).not.toContain("Create auto-import PR");
+    expect(source).not.toContain("peter-evans/create-pull-request");
+    expect(source).not.toContain("gh workflow run content-validation.yml");
     expect(source).not.toContain("labels.*.name, 'submission'");
   });
 
@@ -94,7 +102,7 @@ describe("submission automation workflows", () => {
       issuePath,
       JSON.stringify({
         number: 987654,
-        labels: [{ name: "content-submission" }],
+        labels: [{ name: "content-submission" }, { name: "import-approved" }],
       }),
       "utf8",
     );
@@ -143,9 +151,93 @@ describe("submission automation workflows", () => {
 
     const result = JSON.parse(fs.readFileSync(outputPath, "utf8"));
     expect(result.eligible).toBe(true);
+    expect(result.approvalLabel).toBe("import-approved");
     expect(result.importPath).toBe(
       "content/mcp/auto-import-eligibility-test.mdx",
     );
+  });
+
+  it("requires maintainer approval before auto-import eligibility", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-auto-import-approval-"),
+    );
+    const issuePath = path.join(tmpDir, "issue.json");
+    const validationPath = path.join(tmpDir, "validation.json");
+    const riskPath = path.join(tmpDir, "risk.json");
+    const outputPath = path.join(tmpDir, "eligibility.json");
+
+    fs.writeFileSync(
+      issuePath,
+      JSON.stringify({
+        number: 987653,
+        labels: [{ name: "content-submission" }],
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      validationPath,
+      JSON.stringify({
+        ok: true,
+        skipped: false,
+        category: "rules",
+        fields: { slug: "approval-required-test" },
+      }),
+      "utf8",
+    );
+    fs.writeFileSync(
+      riskPath,
+      JSON.stringify({
+        riskTier: "low",
+        policyDecision: "auto_import_eligible",
+        policyMatrix: {
+          schema: { status: "pass" },
+          source: { status: "pass" },
+          package: { status: "pass" },
+          provenance: { status: "pass" },
+          capability: { status: "pass" },
+          quality: { status: "pass" },
+        },
+      }),
+      "utf8",
+    );
+
+    execFileSync(
+      process.execPath,
+      [
+        "scripts/ci/check-auto-import-eligibility.mjs",
+        "--issue-json",
+        issuePath,
+        "--validation-json",
+        validationPath,
+        "--risk-json",
+        riskPath,
+        "--output",
+        outputPath,
+      ],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+
+    const result = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+    expect(result.eligible).toBe(false);
+    expect(result.reasons).toContain(
+      "maintainer approval label required: accepted or import-approved",
+    );
+    expect(() =>
+      execFileSync(
+        process.execPath,
+        [
+          "scripts/ci/check-auto-import-eligibility.mjs",
+          "--issue-json",
+          issuePath,
+          "--validation-json",
+          validationPath,
+          "--risk-json",
+          riskPath,
+          "--fail-on-ineligible",
+        ],
+        { cwd: repoRoot, encoding: "utf8" },
+      ),
+    ).toThrow();
   });
 
   it("sanitizes auto-import GitHub output values", () => {
@@ -162,7 +254,7 @@ describe("submission automation workflows", () => {
       issuePath,
       JSON.stringify({
         number: 987655,
-        labels: [{ name: "content-submission" }],
+        labels: [{ name: "content-submission" }, { name: "import-approved" }],
       }),
       "utf8",
     );
@@ -257,6 +349,17 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "Submission security/safety review found critical blockers",
     );
+    expect(source).toContain("REQUEST_CHANGES");
+    expect(source).toContain("ARCHIVE_PACKAGE_EXTENSIONS");
+    expect(source).toContain("HEYCLAUDE_HOSTNAME");
+    expect(source).toContain("const downloadHost = hostname(downloadUrl)");
+    expect(source).toContain("const isHeyClaudeDownloadRequest");
+    expect(source).toContain("community_archive_download");
+    expect(source).toContain("community_local_download_request");
+    expect(source).toContain("isArchivePackageUrl(downloadUrl)");
+    expect(source).toContain("missing_safety_notes");
+    expect(source).toContain("missing_privacy_notes");
+    expect(source).toContain("review.body?.includes(REVIEW_MARKER)");
     expect(source).not.toContain("git checkout");
   });
 
@@ -274,6 +377,9 @@ describe("submission automation workflows", () => {
       "contains(github.event.issue.labels.*.name, 'content-submission')",
     );
     expect(source).toContain("scripts/import-submission-issue.mjs");
+    expect(source).toContain("Analyze submission risk");
+    expect(source).toContain("Check approved import eligibility");
+    expect(source).toContain("--fail-on-ineligible");
     expect(source).toContain("Format imported content");
     expect(source).toContain("pnpm exec prettier --write");
     expect(source).toContain("pnpm --filter web run prebuild");

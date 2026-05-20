@@ -30,6 +30,9 @@ export const SKILL_LEVEL_VALUES = categorySpec.skillLevelValues;
 export const VERIFICATION_STATUS_VALUES = categorySpec.verificationStatusValues;
 export const CLAIM_STATUS_VALUES = ["unclaimed", "pending", "verified"];
 const DEFAULT_TESTED_PLATFORMS = categorySpec.defaultTestedPlatforms;
+const NOTE_LIST_FIELDS = new Set(["safetyNotes", "privacyNotes"]);
+const MAX_NOTE_ITEMS = 8;
+const MAX_NOTE_LENGTH = 320;
 
 export function headingId(text) {
   let cleaned = "";
@@ -823,6 +826,34 @@ export function validateEntry(category, data, inferred = {}) {
     );
   }
 
+  for (const field of NOTE_LIST_FIELDS) {
+    const value = merged[field];
+    if (value === undefined || value === null || value === "") continue;
+    if (!Array.isArray(value)) {
+      semanticErrors.push(`${field} must be a list of non-empty strings`);
+      continue;
+    }
+    if (value.length > MAX_NOTE_ITEMS) {
+      semanticErrors.push(
+        `${field} must include ${MAX_NOTE_ITEMS} items or fewer`,
+      );
+    }
+    for (const item of value) {
+      if (typeof item !== "string") {
+        semanticErrors.push(`${field} must contain only strings`);
+        continue;
+      }
+      const text = item.trim();
+      if (!text) {
+        semanticErrors.push(`${field} cannot include blank items`);
+      } else if (text.length > MAX_NOTE_LENGTH) {
+        semanticErrors.push(
+          `${field} items must be ${MAX_NOTE_LENGTH} characters or fewer`,
+        );
+      }
+    }
+  }
+
   if (category === "tools") {
     const websiteUrl = String(merged.websiteUrl || "").trim();
     const affiliateUrl = String(merged.affiliateUrl || "").trim();
@@ -935,6 +966,8 @@ export function orderFrontmatter(data) {
     "retrievalSources",
     "testedPlatforms",
     "prerequisites",
+    "safetyNotes",
+    "privacyNotes",
     "tags",
     "keywords",
     "robotsIndex",

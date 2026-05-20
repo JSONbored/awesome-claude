@@ -45,6 +45,8 @@ const utilityFilterOptions = [
   { value: "draft", label: "Draft" },
   { value: "hook-trigger", label: "Hook Trigger" },
   { value: "prerequisites", label: "Prerequisites" },
+  { value: "safety-notes", label: "Safety Notes" },
+  { value: "privacy-notes", label: "Privacy Notes" },
   { value: "troubleshooting", label: "Troubleshooting" },
 ] as const;
 const platformFilterOptions = [
@@ -133,6 +135,10 @@ function matchesUtilityFilter(entry: DirectoryEntry, filter: string) {
       return Boolean(entry.trigger);
     case "prerequisites":
       return Boolean(entry.hasPrerequisites || entry.prerequisites?.length);
+    case "safety-notes":
+      return Boolean(entry.safetyNotes?.length);
+    case "privacy-notes":
+      return Boolean(entry.privacyNotes?.length);
     case "troubleshooting":
       return entry.hasTroubleshooting === true;
     default:
@@ -348,6 +354,8 @@ export function BrowseDirectory({
           item.platform,
           item.supportLevel,
         ]),
+        ...(entry.safetyNotes ?? []),
+        ...(entry.privacyNotes ?? []),
         ...entry.tags,
         ...entry.keywords,
       ]

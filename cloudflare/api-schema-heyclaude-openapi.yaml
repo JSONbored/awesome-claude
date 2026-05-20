@@ -135,6 +135,20 @@ components:
           maxItems: 64
         author:
           type: string
+        safetyNotes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 320
+          maxItems: 8
+        privacyNotes:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 320
+          maxItems: 8
         dateAdded:
           type: string
         installable:
@@ -930,6 +944,20 @@ paths:
                           maxItems: 64
                         author:
                           type: string
+                        safetyNotes:
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 320
+                          maxItems: 8
+                        privacyNotes:
+                          type: array
+                          items:
+                            type: string
+                            minLength: 1
+                            maxLength: 320
+                          maxItems: 8
                         dateAdded:
                           type: string
                         installable:
@@ -3968,9 +3996,9 @@ paths:
       summary: Create a reviewable content submission issue
       description:
         Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub
-        issue for review. Eligible source-backed submissions may later auto-open a PR from GitHub
-        automation, but this endpoint never writes content files, publishes registry entries, or
-        hosts community ZIP/MCPB artifacts directly.
+        issue for review. Eligible source-backed submissions may later be approved for a PR from
+        GitHub automation, but this endpoint never writes content files, publishes registry entries,
+        or hosts community ZIP/MCPB artifacts directly.
       requestBody:
         content:
           application/json:
