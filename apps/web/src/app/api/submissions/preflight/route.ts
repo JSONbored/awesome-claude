@@ -10,7 +10,7 @@ export const POST = createApiHandler(
     if (String(payload.honeypot ?? "").trim()) {
       logApiInfo(request, "submissions.preflight.honeypot_discarded");
       return apiJson(
-        { ok: true, queued: false },
+        { ok: true, valid: false, queued: false },
         { headers: { "cache-control": "no-store" } },
       );
     }

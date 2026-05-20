@@ -32,8 +32,9 @@ function request(
   body: Record<string, unknown>,
   ip = "203.0.113.10",
   headers: Record<string, string> = {},
+  url = "https://heyclau.de/api/submissions",
 ) {
-  return new Request("https://heyclau.de/api/submissions", {
+  return new Request(url, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -43,6 +44,19 @@ function request(
     },
     body: JSON.stringify(body),
   });
+}
+
+function preflightRequest(
+  body: Record<string, unknown>,
+  ip = "203.0.113.10",
+  headers: Record<string, string> = {},
+) {
+  return request(
+    body,
+    ip,
+    headers,
+    "https://heyclau.de/api/submissions/preflight",
+  );
 }
 
 function githubIssueResponse(number = 42) {
@@ -212,7 +226,7 @@ describe("website submission API", () => {
   it("preflights valid submissions without GitHub writes", async () => {
     const { POST } = await import("@/app/api/submissions/preflight/route");
     const response = await POST(
-      request({ fields: validFields() }, "203.0.113.20"),
+      preflightRequest({ fields: validFields() }, "203.0.113.20"),
     );
 
     expect(response.status).toBe(200);
@@ -249,7 +263,7 @@ describe("website submission API", () => {
     ]);
     const { POST } = await import("@/app/api/submissions/preflight/route");
     const response = await POST(
-      request({ fields: validFields() }, "203.0.113.21"),
+      preflightRequest({ fields: validFields() }, "203.0.113.21"),
     );
 
     expect(response.status).toBe(200);
@@ -271,7 +285,7 @@ describe("website submission API", () => {
   it("preflights product-shaped submissions toward the tools flow", async () => {
     const { POST } = await import("@/app/api/submissions/preflight/route");
     const response = await POST(
-      request({
+      preflightRequest({
         fields: validFields({
           name: "Paid SaaS AI Platform",
           slug: "paid-saas-ai-platform",
@@ -300,7 +314,7 @@ describe("website submission API", () => {
   it("preflights local download requests as blockers", async () => {
     const { POST } = await import("@/app/api/submissions/preflight/route");
     const response = await POST(
-      request({
+      preflightRequest({
         fields: validFields({
           category: "skills",
           skill_type: "general",
@@ -327,7 +341,7 @@ describe("website submission API", () => {
   it("preflights risky drafts with expected safety and privacy notes", async () => {
     const { POST } = await import("@/app/api/submissions/preflight/route");
     const response = await POST(
-      request({
+      preflightRequest({
         fields: validFields({
           name: "Workspace Sync Hook",
           slug: "workspace-sync-hook",

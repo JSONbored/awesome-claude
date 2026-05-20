@@ -266,6 +266,73 @@ export const submissionPreflightBodySchema = z.object({
   honeypot: z.string().max(256).optional().default(""),
 });
 
+const submissionPreflightNoteSchema = z.object({
+  code: z.string(),
+  message: z.string(),
+});
+
+const submissionPreflightDuplicateSchema = z.object({
+  key: z.string(),
+  category: z.string(),
+  slug: z.string(),
+  title: z.string(),
+  url: z.string(),
+  reasons: z.array(z.string()),
+});
+
+const submissionPreflightSuccessResponseSchema = z
+  .object({
+    ok: z.literal(true),
+    valid: z.boolean(),
+    routeSuggestion: z.enum(["github_issue", "fix_required", "tools_form"]),
+    category: z.string(),
+    slug: z.string(),
+    fallbackUrl: z.string().url(),
+    issuePreview: z.object({
+      title: z.string(),
+      labels: z.array(z.string()),
+      body: z.string(),
+    }),
+    schema: z.object({
+      ok: z.boolean(),
+      skipped: z.boolean(),
+      errors: z.array(z.string()),
+      warnings: z.array(z.string()),
+      fields: z.record(z.string(), z.unknown()),
+    }),
+    risk: z.object({
+      tier: z.string().optional(),
+      policyDecision: z.string().optional(),
+      policyMatrix: z.record(z.string(), z.unknown()),
+      reviewFlags: z.array(z.string()),
+      classificationWarnings: z.array(z.unknown()),
+    }),
+    expectedNotes: z.object({
+      safety: z.boolean(),
+      privacy: z.boolean(),
+      reasons: z.array(z.string()),
+    }),
+    blockers: z.array(submissionPreflightNoteSchema),
+    warnings: z.array(submissionPreflightNoteSchema),
+    duplicates: z.array(submissionPreflightDuplicateSchema),
+    nextAction: z.object({
+      label: z.string(),
+      url: z.string(),
+    }),
+  })
+  .passthrough();
+
+const submissionPreflightDiscardResponseSchema = z.object({
+  ok: z.literal(true),
+  valid: z.literal(false),
+  queued: z.literal(false),
+});
+
+export const submissionPreflightResponseSchema = z.union([
+  submissionPreflightSuccessResponseSchema,
+  submissionPreflightDiscardResponseSchema,
+]);
+
 export const downloadQuerySchema = z.object({
   asset: z.string().trim().max(256),
 });
@@ -745,6 +812,7 @@ export const apiRouteDefinitions = {
     tags: ["Submissions"],
     originCheck: true,
     bodySchema: submissionPreflightBodySchema,
+    responseSchema: submissionPreflightResponseSchema,
     bodyLimitBytes: 64 * 1024,
     rateLimit: {
       scope: "submissions-preflight",

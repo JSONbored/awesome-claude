@@ -4297,8 +4297,197 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                additionalProperties: {}
+                anyOf:
+                  - type: object
+                    properties:
+                      ok:
+                        type: boolean
+                        enum:
+                          - true
+                      valid:
+                        type: boolean
+                      routeSuggestion:
+                        type: string
+                        enum:
+                          - github_issue
+                          - fix_required
+                          - tools_form
+                      category:
+                        type: string
+                      slug:
+                        type: string
+                      fallbackUrl:
+                        type: string
+                        format: uri
+                      issuePreview:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                          body:
+                            type: string
+                        required:
+                          - title
+                          - labels
+                          - body
+                      schema:
+                        type: object
+                        properties:
+                          ok:
+                            type: boolean
+                          skipped:
+                            type: boolean
+                          errors:
+                            type: array
+                            items:
+                              type: string
+                          warnings:
+                            type: array
+                            items:
+                              type: string
+                          fields:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - ok
+                          - skipped
+                          - errors
+                          - warnings
+                          - fields
+                      risk:
+                        type: object
+                        properties:
+                          tier:
+                            type: string
+                          policyDecision:
+                            type: string
+                          policyMatrix:
+                            type: object
+                            additionalProperties: {}
+                          reviewFlags:
+                            type: array
+                            items:
+                              type: string
+                          classificationWarnings:
+                            type: array
+                            items: {}
+                        required:
+                          - policyMatrix
+                          - reviewFlags
+                          - classificationWarnings
+                      expectedNotes:
+                        type: object
+                        properties:
+                          safety:
+                            type: boolean
+                          privacy:
+                            type: boolean
+                          reasons:
+                            type: array
+                            items:
+                              type: string
+                        required:
+                          - safety
+                          - privacy
+                          - reasons
+                      blockers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                            message:
+                              type: string
+                          required:
+                            - code
+                            - message
+                      warnings:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                            message:
+                              type: string
+                          required:
+                            - code
+                            - message
+                      duplicates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                            category:
+                              type: string
+                            slug:
+                              type: string
+                            title:
+                              type: string
+                            url:
+                              type: string
+                            reasons:
+                              type: array
+                              items:
+                                type: string
+                          required:
+                            - key
+                            - category
+                            - slug
+                            - title
+                            - url
+                            - reasons
+                      nextAction:
+                        type: object
+                        properties:
+                          label:
+                            type: string
+                          url:
+                            type: string
+                        required:
+                          - label
+                          - url
+                    required:
+                      - ok
+                      - valid
+                      - routeSuggestion
+                      - category
+                      - slug
+                      - fallbackUrl
+                      - issuePreview
+                      - schema
+                      - risk
+                      - expectedNotes
+                      - blockers
+                      - warnings
+                      - duplicates
+                      - nextAction
+                    additionalProperties: {}
+                  - type: object
+                    properties:
+                      ok:
+                        type: boolean
+                        enum:
+                          - true
+                      valid:
+                        type: boolean
+                        enum:
+                          - false
+                      queued:
+                        type: boolean
+                        enum:
+                          - false
+                    required:
+                      - ok
+                      - valid
+                      - queued
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:
