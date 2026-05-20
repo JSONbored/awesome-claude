@@ -81,5 +81,5 @@ when Cloudflare's binding is unavailable.
 - No account, token, or GitHub OAuth handling.
 
 Submissions remain issue-first through the website and GitHub issue templates.
-Source-backed issues may auto-open review PRs after repository gates pass, but
-maintainers still review before merge.
+Source-backed issues may be approved for review PRs after repository gates pass,
+but maintainers still review before merge.

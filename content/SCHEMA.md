@@ -82,7 +82,7 @@ Use the three note-style fields for different jobs:
 
 - Free Claude resources should start with `/submit` or the generated GitHub issue forms.
 - Pull requests are for advanced contributors who can add MDX directly and run the full gate.
-- Fully valid, source-backed, non-artifact issues may auto-open an import PR after gates pass. Maintainer review still gates merge.
+- Fully valid, source-backed, non-artifact issues may be approved for an import PR after gates pass. Maintainer review still gates merge.
 - Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content issue templates.
 - Contributor links must be official source/docs/release URLs. Affiliate, referral, tracking, or local package-hosting requests are rejected.
 - Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads. Maintainer-built packages require package trust metadata.

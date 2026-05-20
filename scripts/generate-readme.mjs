@@ -163,8 +163,8 @@ Option B (direct): open a category issue form in GitHub under \`.github/ISSUE_TE
 Option C (advanced): open a pull request with content files directly.
 
 Free Claude resources use issue-first intake by default. Fully valid,
-source-backed, non-artifact submissions can auto-open an import PR after policy
-gates pass. Maintainer review still gates merge.
+source-backed, non-artifact submissions can be approved for an import PR after
+policy gates pass. Maintainer review still gates merge.
 Tool/app/service
 promotion, listing claims, and jobs use the website lead forms instead of GitHub
 content issues.

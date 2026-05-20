@@ -142,7 +142,7 @@ function renderIssueTemplate(category) {
     "          required: true",
     "        - label: I confirm external links are official source/docs links and not affiliate, referral, or tracking URLs.",
     "          required: true",
-    "        - label: I understand eligible submissions may auto-open an import PR, but maintainers still review before merge.",
+    "        - label: I understand eligible submissions may be approved for an import PR, but maintainers still review before merge.",
     "          required: true",
     "        - label: I understand imports regenerate the README and registry artifacts automatically.",
     "          required: true",

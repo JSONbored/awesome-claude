@@ -57,6 +57,23 @@ jobs:
               "utf8"
             );
 
+      - name: Write contributor payload
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const fs = require("node:fs");
+            const login = context.payload.issue.user?.login;
+            if (!login) return;
+            const { data: user } = await github.rest.users.getByUsername({
+              username: login
+            });
+            fs.mkdirSync(".github/tmp", { recursive: true });
+            fs.writeFileSync(
+              ".github/tmp/contributor.json",
+              JSON.stringify(user, null, 2),
+              "utf8"
+            );
+
       - name: Validate submission issue
         run: |
           node scripts/validate-submission-issue.mjs \
@@ -65,6 +82,27 @@ jobs:
 
       - name: Fail when submission issue is invalid
         run: node scripts/ci/fail-invalid-submission-report.mjs
+
+      - name: Analyze submission risk
+        run: |
+          node scripts/analyze-submission-risk.mjs \
+            --issue-json .github/tmp/issue.json \
+            --validation-json .github/tmp/submission-validation.json \
+            --contributor-json .github/tmp/contributor.json \
+            --output .github/tmp/submission-risk.json \
+            --markdown-output .github/tmp/submission-risk.md
+
+      - name: Fail when submission risk is critical
+        run: node scripts/ci/fail-critical-risk-report.mjs .github/tmp/submission-risk.json
+
+      - name: Check approved import eligibility
+        run: |
+          node scripts/ci/check-auto-import-eligibility.mjs \
+            --issue-json .github/tmp/issue.json \
+            --validation-json .github/tmp/submission-validation.json \
+            --risk-json .github/tmp/submission-risk.json \
+            --output .github/tmp/auto-import-eligibility.json \
+            --fail-on-ineligible
 
       - name: Import accepted submission
         env:

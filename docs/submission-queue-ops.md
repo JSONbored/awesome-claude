@@ -2,8 +2,9 @@
 
 HeyClaude content submissions stay issue-first and review-gated. The queue
 automation helps maintainers see which submissions are ready, blocked, or stale.
-Fully valid, source-backed, non-artifact submissions can auto-open an import PR
-after policy gates pass, but automation does not auto-merge or publish content.
+Fully valid, source-backed, non-artifact submissions can be approved for an
+import PR after policy gates pass, but automation does not auto-merge or publish
+content.
 
 ## Labels
 
@@ -13,8 +14,8 @@ after policy gates pass, but automation does not auto-merge or publish content.
 - `source-needs-verification`: the submitted source URL is missing, ambiguous,
   unavailable, or otherwise needs maintainer review.
 - `stale-submission`: the issue has waited at least 7 days for author input.
-- `auto-import-eligible`: deterministic gates passed and the issue may open an
-  import PR. This is not approval to merge.
+- `auto-import-eligible`: deterministic gates passed and a maintainer-approved
+  import PR may be opened. This is not approval to merge.
 - `accepted` / `import-approved`: maintainer-reviewed approval labels that can
   open an import PR.
 - `import-pr-open`: an import PR exists; stale automation must not close it.
@@ -83,12 +84,13 @@ Each queue entry includes:
 - `policyMatrix`: explainable gate status for schema, source, package,
   provenance, capability, and quality.
 - `policyDecision`: `auto_import_eligible`, `maintainer_review`, or `blocked`.
-- `autoImportEligible`: whether the submission can auto-open an import PR.
+- `autoImportEligible`: whether deterministic gates passed and the submission is
+  ready for maintainer-approved import.
 - `sourceUrl`: the first submitted GitHub, docs, source, download, or website
   URL available for maintainer review.
 
-`nextAction=import` is not automatic merge approval. It means the issue is
-either explicitly approved by a maintainer or it passed the auto-import gates.
+`nextAction=import` is not automatic merge approval. It means deterministic
+gates passed and a maintainer can explicitly approve the import PR path.
 Maintainers still review the generated PR before merge.
 
 ## Automation
@@ -103,12 +105,12 @@ Maintainers still review the generated PR before merge.
   security/safety review comments. The review is deterministic: it checks URLs,
   install commands, malware/abuse terms, suspicious executable paths, sensitive
   capability words, contributor metadata, and source signals without executing
-  submitted code. It can auto-open a PR only when the policy decision is
-  `auto_import_eligible`; otherwise it leaves the issue in maintainer review.
-  Regulated-domain status, category fit, and promotional tone are not treated as
-  security risk.
+  submitted code. It does not create branches, open PRs, or dispatch validation
+  workflows from public issue events. Regulated-domain status, category fit, and
+  promotional tone are not treated as security risk.
 - `HeyClaude Submission Bot` may label issues, keep stable validation/risk
-  comments updated, and open import PRs after deterministic gates pass. It never
+  comments updated, and open import PRs only after a maintainer applies
+  `accepted` or `import-approved` and deterministic gates pass. It never
   auto-approves, auto-merges, or publishes content.
 - `Package Artifact Scan` validates reviewed package archives with archive
   safety limits and optional ClamAV, Trivy, and OSV-Scanner checks. Scans are
@@ -144,8 +146,8 @@ Maintainers still review the generated PR before merge.
    reminder.
 7. For `close_eligible`, close as not planned only after the stale reminder has
    already been applied.
-8. Apply `accepted` or `import-approved` only after maintainer source review
-   when the auto-import gates did not already open a PR.
+8. Apply `accepted` or `import-approved` only after maintainer source review and
+   when the deterministic gates indicate the issue is import-ready.
 
 Direct content PRs are allowed for advanced contributors, but they must pass the
 same content validation and deterministic security/safety review. A `risk-high`

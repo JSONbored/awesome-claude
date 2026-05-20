@@ -369,7 +369,7 @@ claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp`),
         expect(source).toContain("      required: true");
       }
       expect(source).toContain(
-        "eligible submissions may auto-open an import PR",
+        "eligible submissions may be approved for an import PR",
       );
       expect(source).toContain(
         "Do not open a separate README change for issue submissions",

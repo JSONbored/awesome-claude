@@ -12,7 +12,7 @@ Use the website form:
 
 - [heyclau.de/submit](https://heyclau.de/submit)
 
-This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may auto-open an import PR after policy gates pass. Auto-import does not auto-merge.
+This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may be approved for an import PR after policy gates pass. Automation does not auto-merge.
 
 ### 2. Open a GitHub submission issue
 
