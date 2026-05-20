@@ -608,7 +608,12 @@ function entryTrustSummary(entry) {
       downloadUrl: source.downloadUrl,
       downloadTrust: packageTrust,
       packageVerified: Boolean(entry.packageVerified),
-      checksum: entry.checksum || entry.packageChecksum || "",
+      checksum:
+        entry.checksum ||
+        entry.packageChecksum ||
+        entry.downloadSha256 ||
+        entry.skillPackage?.sha256 ||
+        "",
     },
     disclosures: {
       safetyNotes,
