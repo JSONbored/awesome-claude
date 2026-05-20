@@ -1,9 +1,18 @@
 "use client";
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Check,
+  ClipboardCopy,
+  Download,
+  Link2,
+  Star,
+  Trash2,
+} from "lucide-react";
 
 import { DirectoryEntryCard } from "@/components/directory-entry-card";
 import { SearchBar } from "@/components/search-bar";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -24,11 +33,14 @@ type BrowseDirectoryProps = {
   initialUtilityFilter?: string;
   initialPlatformFilter?: string;
   initialSortMode?: string;
+  initialCollection?: string;
   syncUrl?: boolean;
   limit?: number;
   entriesUrl?: string;
 };
 
+const COLLECTION_STORAGE_KEY = "heyclaude-local-collection-v1";
+const COLLECTION_QUERY_PARAM = "collection";
 const VOTE_QUERY_BATCH_SIZE = 120;
 const VOTE_QUERY_MAX_ATTEMPTS = 3;
 const VOTE_QUERY_RETRY_DELAYS_MS = [250, 900, 1800] as const;
@@ -91,6 +103,17 @@ function normalizePlatformFilter(value?: string) {
 function readDirectoryEntries(payload: DirectoryEntriesPayload) {
   if (Array.isArray(payload.entries)) return payload.entries;
   return [];
+}
+
+function normalizeCollectionKeys(value?: string | null) {
+  return String(value || "")
+    .split(",")
+    .map((item) => item.trim().toLowerCase())
+    .filter((item, index, list) => {
+      if (!/^[a-z0-9-]+:[a-z0-9-]+$/.test(item)) return false;
+      return list.indexOf(item) === index;
+    })
+    .slice(0, 24);
 }
 
 function normalizeSortMode(value?: string) {
@@ -160,6 +183,7 @@ export function BrowseDirectory({
   initialUtilityFilter: initialUtilityFilterProp = "all",
   initialPlatformFilter: initialPlatformFilterProp = "all",
   initialSortMode: initialSortModeProp = "popular",
+  initialCollection = "",
   syncUrl = false,
   limit,
   entriesUrl,
@@ -189,9 +213,16 @@ export function BrowseDirectory({
     Record<string, number>
   >({});
   const [votedByMe, setVotedByMe] = useState<Record<string, boolean>>({});
+  const [collectionKeys, setCollectionKeys] = useState<string[]>([]);
+  const [collectionHydrated, setCollectionHydrated] = useState(false);
+  const [collectionAction, setCollectionAction] = useState<string | null>(null);
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const deferredQuery = useDeferredValue(query);
   const normalizedQuery = deferredQuery.trim().toLowerCase();
+  const initialCollectionKeys = useMemo(
+    () => normalizeCollectionKeys(initialCollection),
+    [initialCollection],
+  );
 
   useEffect(() => {
     setAllEntries(entries);
@@ -231,6 +262,12 @@ export function BrowseDirectory({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entriesUrl, isDefaultQuery]);
 
+  useEffect(() => {
+    if (!entriesUrl || initialCollectionKeys.length === 0) return;
+    void loadFullEntriesIfNeeded();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entriesUrl, initialCollectionKeys.length]);
+
   useBrowseUrlSync({
     enabled: syncUrl,
     query,
@@ -248,6 +285,40 @@ export function BrowseDirectory({
     setPlatformFilter,
     setSortMode,
   });
+
+  useEffect(() => {
+    const urlKeys =
+      initialCollectionKeys.length > 0
+        ? initialCollectionKeys
+        : normalizeCollectionKeys(
+            new URLSearchParams(window.location.search).get(
+              COLLECTION_QUERY_PARAM,
+            ),
+          );
+    const storedKeys = normalizeCollectionKeys(
+      window.localStorage.getItem(COLLECTION_STORAGE_KEY),
+    );
+    setCollectionKeys(urlKeys.length > 0 ? urlKeys : storedKeys);
+    setCollectionHydrated(true);
+  }, [initialCollectionKeys]);
+
+  useEffect(() => {
+    if (!collectionHydrated) return;
+    if (collectionKeys.length > 0) {
+      window.localStorage.setItem(
+        COLLECTION_STORAGE_KEY,
+        collectionKeys.join(","),
+      );
+    } else {
+      window.localStorage.removeItem(COLLECTION_STORAGE_KEY);
+    }
+  }, [collectionHydrated, collectionKeys]);
+
+  useEffect(() => {
+    if (!collectionAction) return;
+    const timer = window.setTimeout(() => setCollectionAction(null), 1600);
+    return () => window.clearTimeout(timer);
+  }, [collectionAction]);
 
   useEffect(() => {
     const baseScores: Record<string, number> = {};
@@ -394,6 +465,16 @@ export function BrowseDirectory({
     utilityFilter,
   ]);
 
+  const entryByKey = useMemo(() => {
+    return new Map(allEntries.map((entry) => [getEntryKey(entry), entry]));
+  }, [allEntries]);
+
+  const collectionEntries = useMemo(() => {
+    return collectionKeys
+      .map((key) => entryByKey.get(key))
+      .filter((entry): entry is DirectoryEntry => Boolean(entry));
+  }, [collectionKeys, entryByKey]);
+
   useEffect(() => {
     setVisibleCount(limit ?? filteredEntries.length);
   }, [
@@ -520,6 +601,73 @@ export function BrowseDirectory({
     }
   };
 
+  const toggleCollectionEntry = (entry: DirectoryEntry) => {
+    const key = getEntryKey(entry);
+    setCollectionKeys((current) => {
+      if (current.includes(key)) {
+        return current.filter((item) => item !== key);
+      }
+      return [...current, key].slice(0, 24);
+    });
+  };
+
+  const buildCollectionUrl = () => {
+    const url = new URL(window.location.href);
+    url.pathname = "/browse";
+    url.search = "";
+    if (collectionKeys.length > 0) {
+      url.searchParams.set(COLLECTION_QUERY_PARAM, collectionKeys.join(","));
+    }
+    return url.toString();
+  };
+
+  const buildCollectionMarkdown = () => {
+    return [
+      "# HeyClaude collection",
+      "",
+      ...collectionEntries.map((entry) => {
+        const href = `${window.location.origin}/${entry.category}/${entry.slug}`;
+        return `- [${entry.title}](${href}) - ${entry.cardDescription || entry.description}`;
+      }),
+      "",
+    ].join("\n");
+  };
+
+  const copyCollection = async (kind: "markdown" | "share") => {
+    const value =
+      kind === "share" ? buildCollectionUrl() : buildCollectionMarkdown();
+    await navigator.clipboard.writeText(value.trim());
+    setCollectionAction(kind);
+  };
+
+  const exportCollectionJson = () => {
+    const payload = {
+      schemaVersion: 1,
+      kind: "heyclaude-local-collection",
+      generatedAt: new Date().toISOString(),
+      entries: collectionEntries.map((entry) => ({
+        key: getEntryKey(entry),
+        title: entry.title,
+        category: entry.category,
+        slug: entry.slug,
+        url: `/${entry.category}/${entry.slug}`,
+        description: entry.cardDescription || entry.description,
+        sourceStatus: entry.trustSignals?.sourceStatus ?? null,
+        downloadTrust: entry.downloadTrust ?? null,
+      })),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "heyclaude-collection.json";
+    anchor.click();
+    URL.revokeObjectURL(url);
+    setCollectionAction("json");
+  };
+
   return (
     <div className="space-y-6">
       <div className="hero-search">
@@ -591,17 +739,114 @@ export function BrowseDirectory({
         {normalizedQuery ? <p>Filtering for “{deferredQuery}”</p> : null}
       </div>
 
+      {collectionKeys.length > 0 ? (
+        <section className="surface-panel space-y-4 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                Compare tray - {collectionKeys.length} saved
+              </p>
+              <p className="mt-1 text-xs leading-6 text-muted-foreground">
+                Stored locally in this browser.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => copyCollection("share")}
+                className="h-8 rounded-lg px-3 text-[11px]"
+              >
+                {collectionAction === "share" ? (
+                  <Check className="mr-1.5 size-3.5" />
+                ) : (
+                  <Link2 className="mr-1.5 size-3.5" />
+                )}
+                Share
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => copyCollection("markdown")}
+                className="h-8 rounded-lg px-3 text-[11px]"
+              >
+                {collectionAction === "markdown" ? (
+                  <Check className="mr-1.5 size-3.5" />
+                ) : (
+                  <ClipboardCopy className="mr-1.5 size-3.5" />
+                )}
+                Markdown
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={exportCollectionJson}
+                className="h-8 rounded-lg px-3 text-[11px]"
+              >
+                {collectionAction === "json" ? (
+                  <Check className="mr-1.5 size-3.5" />
+                ) : (
+                  <Download className="mr-1.5 size-3.5" />
+                )}
+                JSON
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setCollectionKeys([])}
+                className="h-8 rounded-lg px-3 text-[11px]"
+              >
+                <Trash2 className="mr-1.5 size-3.5" />
+                Clear
+              </Button>
+            </div>
+          </div>
+
+          {collectionEntries.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {collectionEntries.map((entry) => (
+                <a
+                  key={getEntryKey(entry)}
+                  href={`/${entry.category}/${entry.slug}`}
+                  className="rounded-full border border-border bg-background px-2.5 py-1 text-xs text-foreground transition hover:border-primary/45"
+                >
+                  {entry.title}
+                </a>
+              ))}
+            </div>
+          ) : null}
+        </section>
+      ) : null}
+
       <div className="space-y-4">
         {displayedEntries.map((entry) => (
-          <DirectoryEntryCard
-            key={`${entry.category}-${entry.slug}`}
-            entry={entry}
-            voteCount={
-              votesAvailable ? (voteCounts[getEntryKey(entry)] ?? 0) : 0
-            }
-            hasVoted={votedByMe[getEntryKey(entry)] ?? false}
-            onToggleVote={handleToggleVote}
-          />
+          <div key={`${entry.category}-${entry.slug}`} className="space-y-2">
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => toggleCollectionEntry(entry)}
+                aria-pressed={collectionKeys.includes(getEntryKey(entry))}
+                className="h-8 rounded-lg px-3 text-[11px]"
+              >
+                <Star className="mr-1.5 size-3.5" />
+                {collectionKeys.includes(getEntryKey(entry)) ? "Saved" : "Save"}
+              </Button>
+            </div>
+            <DirectoryEntryCard
+              entry={entry}
+              voteCount={
+                votesAvailable ? (voteCounts[getEntryKey(entry)] ?? 0) : 0
+              }
+              hasVoted={votedByMe[getEntryKey(entry)] ?? false}
+              onToggleVote={handleToggleVote}
+            />
+          </div>
         ))}
 
         {filteredEntries.length === 0 ? (

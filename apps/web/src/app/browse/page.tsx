@@ -32,6 +32,7 @@ type BrowsePageProps = {
     utility?: string;
     platform?: string;
     sort?: string;
+    collection?: string;
   }>;
 };
 
@@ -84,6 +85,7 @@ export default async function BrowsePage({ searchParams }: BrowsePageProps) {
         initialUtilityFilter={params?.utility ?? "all"}
         initialPlatformFilter={params?.platform ?? "all"}
         initialSortMode={params?.sort ?? "popular"}
+        initialCollection={params?.collection ?? ""}
         limit={15}
         entriesUrl="/data/directory-index.json"
         syncUrl
