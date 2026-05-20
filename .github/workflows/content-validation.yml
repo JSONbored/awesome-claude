@@ -12,11 +12,13 @@ permissions:
   deployments: read
 
 jobs:
-  required-pr-gate:
-    name: required-pr-gate
+  classify-pr:
+    name: classify-pr
     runs-on: ubuntu-latest
     outputs:
       content: ${{ steps.classify.outputs.content }}
+      content_config: ${{ steps.classify.outputs.content_config }}
+      content_categories_json: ${{ steps.classify.outputs.content_categories_json }}
       registry: ${{ steps.classify.outputs.registry }}
       web: ${{ steps.classify.outputs.web }}
       mcp: ${{ steps.classify.outputs.mcp }}
@@ -26,7 +28,7 @@ jobs:
       docs: ${{ steps.classify.outputs.docs }}
       full: ${{ steps.classify.outputs.full }}
     concurrency:
-      group: pr-required-gate-${{ github.ref }}
+      group: pr-classify-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
@@ -53,6 +55,13 @@ jobs:
             node "$classifier_path"
           fi
 
+          if ! grep -q '^content_config=' "$GITHUB_OUTPUT"; then
+            echo "content_config=false" >> "$GITHUB_OUTPUT"
+          fi
+          if ! grep -q '^content_categories_json=' "$GITHUB_OUTPUT"; then
+            echo "content_categories_json=[]" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Reject external generated artifact changes
         if: ${{ github.event_name == 'pull_request' }}
         env:
@@ -73,7 +82,8 @@ jobs:
 
   validate-ci:
     name: validate-ci
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.ci == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-ci-${{ github.ref }}
@@ -81,105 +91,172 @@ jobs:
 
     steps:
       - name: Skip unchanged CI lane
-        if: ${{ needs.required-pr-gate.outputs.ci != 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci != 'true' }}
         run: echo "No CI/config validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Validate cleanup policy
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: pnpm validate:clean
 
       - name: Validate task tracker
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: pnpm validate:tasks
 
       - name: Check whitespace
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: git diff --check
 
       - name: Install Trunk CLI
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: |
           curl https://get.trunk.io -fsSL | bash -s -- -y
           echo "$HOME/.trunk/bin" >> "$GITHUB_PATH"
 
       - name: Trunk Check
-        if: ${{ needs.required-pr-gate.outputs.ci == 'true' }}
+        if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         run: trunk check --ci --all
+
+  validate-content-category:
+    name: validate-content-${{ matrix.category }}
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.content_categories_json != '[]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        category: ${{ fromJson(needs.classify-pr.outputs.content_categories_json) }}
+    concurrency:
+      group: pr-validate-content-${{ matrix.category }}-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate ${{ matrix.category }} content schema
+        run: pnpm validate:content:strict -- --category "${{ matrix.category }}"
+
+      - name: Audit ${{ matrix.category }} content report
+        run: pnpm audit:content -- --category "${{ matrix.category }}"
+
+  validate-content-config:
+    name: validate-content-config
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.content_config == 'true' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-validate-content-config-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate content schema
+        run: pnpm validate:content:strict
+
+      - name: Validate category submission spec
+        run: pnpm validate:category-spec
+
+      - name: Validate issue templates
+        run: pnpm validate:issue-templates
+
+      - name: Audit content report
+        run: pnpm audit:content
 
   validate-content:
     name: validate-content
-    needs: required-pr-gate
+    needs:
+      - classify-pr
+      - validate-content-category
+      - validate-content-config
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-content-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
-      - name: Skip unchanged content lane
-        if: ${{ needs.required-pr-gate.outputs.content != 'true' }}
-        run: echo "No content validation required for this change set."
+      - name: Summarize content validation
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          node <<'NODE'
+          const needs = JSON.parse(process.env.NEEDS_JSON || "{}");
+          const rows = Object.entries(needs);
 
-      - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
-        with:
-          fetch-depth: 0
+          console.log("Content validation results:");
+          for (const [name, info] of rows) {
+            console.log(`- ${name}: ${info.result || "unknown"}`);
+          }
 
-      - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+          const failed = rows.filter(([, info]) => {
+            const result = info.result || "unknown";
+            return !["success", "skipped"].includes(result);
+          });
 
-      - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
-        with:
-          node-version: 24.15.0
-          cache: pnpm
-
-      - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        run: pnpm install --frozen-lockfile
-
-      - name: Validate content schema
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        run: pnpm validate:content:strict
-
-      - name: Validate category submission spec
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        run: pnpm validate:category-spec
-
-      - name: Validate issue templates
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        run: pnpm validate:issue-templates
-
-      - name: Audit content report
-        if: ${{ needs.required-pr-gate.outputs.content == 'true' }}
-        run: pnpm audit:content
+          if (failed.length > 0) {
+            console.error("Content validation failed:");
+            for (const [name, info] of failed) {
+              console.error(`- ${name}: ${info.result || "unknown"}`);
+            }
+            process.exit(1);
+          }
+          NODE
 
   validate-registry:
     name: validate-registry
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.registry == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-registry-${{ github.ref }}
@@ -187,49 +264,50 @@ jobs:
 
     steps:
       - name: Skip unchanged registry lane
-        if: ${{ needs.required-pr-gate.outputs.registry != 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry != 'true' }}
         run: echo "No registry artifact validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Build registry artifacts
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test registry artifact contracts
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm test:registry-artifacts
 
       - name: Validate generated README
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm validate:readme
 
       - name: Verify generated registry artifacts are current
-        if: ${{ needs.required-pr-gate.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: git diff --exit-code apps/web/public/data apps/web/src/generated README.md
 
   validate-web:
     name: validate-web
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.web == 'true' }}
     runs-on: ubuntu-latest
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
@@ -240,92 +318,93 @@ jobs:
 
     steps:
       - name: Skip unchanged web lane
-        if: ${{ needs.required-pr-gate.outputs.web != 'true' }}
+        if: ${{ needs.classify-pr.outputs.web != 'true' }}
         run: echo "No web/API validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Clean test reports
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: rm -rf reports/junit && mkdir -p reports/junit
 
       - name: Build registry artifacts
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Apply local D1 migrations
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm --filter web db:migrate:local
 
       - name: Validate local D1 jobs schema
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:d1-jobs -- --local
 
       - name: Validate generated OpenAPI schema
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:openapi
 
       - name: Run Vitest suite
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm test
 
       - name: Install Playwright Chromium
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm exec playwright install --with-deps chromium
 
       - name: Run browser regression suite
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm test:e2e
 
       - name: Install Trunk CLI
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
         run: |
           curl https://get.trunk.io -fsSL | bash -s -- -y
           echo "$HOME/.trunk/bin" >> "$GITHUB_PATH"
 
       - name: Upload test results to Trunk
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' && always() && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' && always() && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
         continue-on-error: true
         run: trunk flakytests upload --junit-paths "reports/junit/*.xml" --org-url-slug "$TRUNK_ORG_URL_SLUG" --token "$TRUNK_API_TOKEN"
 
       - name: Validate email templates
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm validate:emails
 
       - name: Dry-run Resend template sync
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm resend:sync-templates -- --dry-run
 
       - name: Type-check web app
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm type-check
 
       - name: Build web app
-        if: ${{ needs.required-pr-gate.outputs.web == 'true' }}
+        if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm build
 
   validate-mcp:
     name: validate-mcp
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-mcp-${{ github.ref }}
@@ -333,55 +412,56 @@ jobs:
 
     steps:
       - name: Skip unchanged MCP lane
-        if: ${{ needs.required-pr-gate.outputs.mcp != 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp != 'true' }}
         run: echo "No MCP validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Build registry artifacts
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Test MCP package
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm test:mcp
 
       - name: Validate dev MCP endpoint
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
 
       - name: Dry-run MCP package tarball
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         run: pnpm --filter @heyclaude/mcp pack --dry-run --json
 
       - name: Validate packed MCP package
-        if: ${{ needs.required-pr-gate.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         env:
           MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclaude-dev.zeronode.workers.dev/api/mcp
         run: pnpm validate:mcp-package
 
   validate-raycast:
     name: validate-raycast
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
     runs-on: ubuntu-latest
     env:
       TRUNK_API_TOKEN: ${{ secrets.TRUNK_API_TOKEN || secrets.TRUNK_TOKEN }}
@@ -392,80 +472,81 @@ jobs:
 
     steps:
       - name: Skip unchanged Raycast lane
-        if: ${{ needs.required-pr-gate.outputs.raycast != 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast != 'true' }}
         run: echo "No Raycast validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Build feed artifacts
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm --filter web run prebuild
 
       - name: Clean test reports
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: rm -rf reports/junit && mkdir -p reports/junit
 
       - name: Validate Raycast feed
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm validate:raycast-feed
 
       - name: Test registry artifact contracts
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         run: pnpm test:registry-artifacts
 
       - name: Install Raycast dependencies
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         working-directory: integrations/raycast
         run: npm ci
 
       - name: Test Raycast helpers
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         working-directory: integrations/raycast
         run: npm run test:junit
 
       - name: Install Trunk CLI
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
         run: |
           curl https://get.trunk.io -fsSL | bash -s -- -y
           echo "$HOME/.trunk/bin" >> "$GITHUB_PATH"
 
       - name: Upload Raycast test results to Trunk
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' && always() && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' && always() && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
         continue-on-error: true
         run: trunk flakytests upload --junit-paths "reports/junit/raycast.xml" --org-url-slug "$TRUNK_ORG_URL_SLUG" --token "$TRUNK_API_TOKEN"
 
       - name: Lint Raycast extension
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         working-directory: integrations/raycast
         run: npm run lint
 
       - name: Build Raycast extension
-        if: ${{ needs.required-pr-gate.outputs.raycast == 'true' }}
+        if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         working-directory: integrations/raycast
         run: npm run build
 
   validate-packages:
     name: validate-packages
-    needs: required-pr-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.packages == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-packages-${{ github.ref }}
@@ -473,40 +554,40 @@ jobs:
 
     steps:
       - name: Skip unchanged package artifact lane
-        if: ${{ needs.required-pr-gate.outputs.packages != 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages != 'true' }}
         run: echo "No package artifact validation required for this change set."
 
       - name: Checkout
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup pnpm
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
 
       - name: Setup Node.js
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
           node-version: 24.15.0
           cache: pnpm
 
       - name: Install dependencies
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm install --frozen-lockfile
 
       - name: Validate package metadata
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm validate:packages
 
       - name: Scan package artifacts
-        if: ${{ needs.required-pr-gate.outputs.packages == 'true' }}
+        if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm scan:packages
 
   validate-pr-preview:
     name: validate-pr-preview
-    if: ${{ github.event_name == 'pull_request' && (needs.required-pr-gate.outputs.web == 'true' || needs.required-pr-gate.outputs.registry == 'true' || needs.required-pr-gate.outputs.mcp == 'true') }}
-    needs: required-pr-gate
+    if: ${{ github.event_name == 'pull_request' && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
+    needs: classify-pr
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -557,3 +638,49 @@ jobs:
         env:
           MCP_ENDPOINT_URL: ${{ steps.preview-url.outputs.base-url }}/api/mcp
         run: pnpm validate:mcp-endpoint
+
+  required-pr-gate:
+    name: required-pr-gate
+    needs:
+      - classify-pr
+      - validate-ci
+      - validate-content
+      - validate-registry
+      - validate-web
+      - validate-mcp
+      - validate-raycast
+      - validate-packages
+      - validate-pr-preview
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-required-gate-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Summarize required PR validation
+        env:
+          NEEDS_JSON: ${{ toJson(needs) }}
+        run: |
+          node <<'NODE'
+          const needs = JSON.parse(process.env.NEEDS_JSON || "{}");
+          const rows = Object.entries(needs);
+
+          console.log("Required PR validation results:");
+          for (const [name, info] of rows) {
+            console.log(`- ${name}: ${info.result || "unknown"}`);
+          }
+
+          const failed = rows.filter(([, info]) => {
+            const result = info.result || "unknown";
+            return !["success", "skipped"].includes(result);
+          });
+
+          if (failed.length > 0) {
+            console.error("Required PR validation failed:");
+            for (const [name, info] of failed) {
+              console.error(`- ${name}: ${info.result || "unknown"}`);
+            }
+            process.exit(1);
+          }
+          NODE

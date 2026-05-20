@@ -9,6 +9,19 @@ const forceFull =
   eventName === "schedule";
 const outputPath = process.env.GITHUB_OUTPUT || "";
 const summaryPath = process.env.GITHUB_STEP_SUMMARY || "";
+const CONTENT_CATEGORIES = [
+  "agents",
+  "commands",
+  "collections",
+  "guides",
+  "hooks",
+  "mcp",
+  "prompts",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+];
 
 function changedFiles() {
   if (forceFull) return [];
@@ -42,29 +55,43 @@ function touches(...patterns) {
   );
 }
 
+function contentCategoriesFromFiles() {
+  if (all) return [...CONTENT_CATEGORIES];
+
+  const categories = new Set();
+  for (const file of files) {
+    const match = /^content\/([^/]+)\/[^/]+\.mdx$/i.exec(file);
+    if (match && CONTENT_CATEGORIES.includes(match[1])) {
+      categories.add(match[1]);
+    }
+  }
+  return [...categories].sort();
+}
+
+const contentCategories = contentCategoriesFromFiles();
+const contentCategoryTouched = contentCategories.length > 0;
+const contentValidationInfra = touches(
+  /^examples\/content\//,
+  /^\.github\/ISSUE_TEMPLATE\//,
+  /^scripts\/(audit-content|generate-issue-templates|validate-category-spec|validate-content)\.mjs$/,
+  /^packages\/registry\/src\/(category-spec|content-builder|submission|index\.d\.ts)/,
+);
+const generatedArtifactInfra = touches(
+  /^packages\/registry\//,
+  /^scripts\/(audit-content|build-content-index|generate-readme|validate-category-spec|validate-content|validate-codebase-clean)\.mjs$/,
+  /^tests\/(registry-artifacts|readme-generation|seo-jsonld)\.test\.ts$/,
+  /^apps\/web\/public\/data\//,
+  /^apps\/web\/src\/generated\//,
+  "README.md",
+);
+
 const flags = {
-  content: touches(
-    /^content\//,
-    /^examples\/content\//,
-    /^\.github\/ISSUE_TEMPLATE\//,
-    /^scripts\/(audit-content|generate-issue-templates|validate-category-spec|validate-content)\.mjs$/,
-    /^packages\/registry\/src\/(category-spec|content-builder|submission|index\.d\.ts)/,
-  ),
-  registry: touches(
-    /^content\//,
-    /^examples\/content\//,
-    /^packages\/registry\//,
-    /^scripts\/(audit-content|build-content-index|generate-readme|validate-category-spec|validate-content|validate-codebase-clean)\.mjs$/,
-    /^tests\/(registry-artifacts|readme-generation|seo-jsonld)\.test\.ts$/,
-    /^apps\/web\/public\/data\//,
-    /^apps\/web\/src\/generated\//,
-    "README.md",
-  ),
+  content: contentCategoryTouched || contentValidationInfra,
+  content_config: contentValidationInfra,
+  registry: generatedArtifactInfra,
   web: touches(
     /^apps\/web\//,
     /^emails\//,
-    /^content\//,
-    /^examples\/content\//,
     /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
     /^scripts\/(generate-openapi|run-playwright|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
     /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
@@ -83,8 +110,6 @@ const flags = {
   ),
   raycast: touches(
     /^integrations\/raycast\//,
-    /^content\//,
-    /^examples\/content\//,
     /^apps\/web\/public\/data\/raycast/,
     /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
     /^tests\/registry-artifacts\.test\.ts$/,
@@ -123,11 +148,17 @@ for (const key of Object.keys(flags)) {
   flags[key] = Boolean(flags[key]);
 }
 
+for (const category of CONTENT_CATEGORIES) {
+  flags[`content_${category}`] = all || contentCategories.includes(category);
+}
+
 const lines = [
   `full=${all ? "true" : "false"}`,
   ...Object.entries(flags).map(
     ([key, value]) => `${key}=${value ? "true" : "false"}`,
   ),
+  `content_categories=${contentCategories.join(",")}`,
+  `content_categories_json=${JSON.stringify(contentCategories)}`,
   `changed_count=${files.length}`,
   `changed_files_json=${JSON.stringify(files)}`,
 ];
@@ -146,6 +177,7 @@ const summary = [
   ...Object.entries(flags).map(
     ([key, value]) => `| ${key} | ${value ? "yes" : "no"} |`,
   ),
+  `| content categories | ${contentCategories.length ? contentCategories.join(", ") : "none"} |`,
   "",
   `<details><summary>Changed files (${files.length})</summary>`,
   "",

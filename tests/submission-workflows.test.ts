@@ -18,6 +18,62 @@ import {
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("submission automation workflows", () => {
+  function writeFile(filePath: string, content: string) {
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    fs.writeFileSync(filePath, content, "utf8");
+  }
+
+  function git(cwd: string, args: string[]) {
+    return execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
+  }
+
+  function runClassifierForChangedFiles(files: Record<string, string>) {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-classifier-"),
+    );
+    git(tmpDir, ["init", "-b", "main"]);
+    git(tmpDir, ["config", "user.name", "HeyClaude Test"]);
+    git(tmpDir, ["config", "user.email", "test@example.com"]);
+    writeFile(path.join(tmpDir, "README.md"), "# Test\n");
+    git(tmpDir, ["add", "README.md"]);
+    git(tmpDir, ["commit", "-m", "test: initial content"]);
+    const baseSha = git(tmpDir, ["rev-parse", "HEAD"]);
+
+    for (const [filePath, content] of Object.entries(files)) {
+      writeFile(path.join(tmpDir, filePath), content);
+    }
+    git(tmpDir, ["add", "."]);
+    git(tmpDir, ["commit", "-m", "test: update content"]);
+
+    const outputPath = path.join(tmpDir, "github-output.txt");
+    execFileSync(
+      process.execPath,
+      [path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs")],
+      {
+        cwd: tmpDir,
+        encoding: "utf8",
+        env: {
+          ...process.env,
+          BASE_SHA: baseSha,
+          FORCE_FULL_VALIDATION: "0",
+          GITHUB_EVENT_NAME: "pull_request",
+          GITHUB_OUTPUT: outputPath,
+        },
+      },
+    );
+
+    return Object.fromEntries(
+      fs
+        .readFileSync(outputPath, "utf8")
+        .split(/\r?\n/)
+        .filter(Boolean)
+        .map((line) => {
+          const separator = line.indexOf("=");
+          return [line.slice(0, separator), line.slice(separator + 1)];
+        }),
+    );
+  }
+
   it("keeps public issue validation read-only for imports", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-issue-validation.yml"),
@@ -435,6 +491,13 @@ describe("submission automation workflows", () => {
       "utf8",
     );
 
+    expect(source).toContain("classify-pr:");
+    expect(source).toContain("required-pr-gate:");
+    expect(source).toContain("validate-content-${{ matrix.category }}");
+    expect(source).toContain(
+      "fromJson(needs.classify-pr.outputs.content_categories_json)",
+    );
+    expect(source).toContain("Summarize required PR validation");
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
     expect(source).toContain("Deploy same-repo PR preview to dev Worker");
@@ -801,6 +864,41 @@ description: Example description
 
     expect(source).toContain('"README.md"');
     expect(source).toContain("/^.*\\.md$/");
+    expect(source).toContain("CONTENT_CATEGORIES");
+    expect(source).toContain("content_categories_json");
+  });
+
+  it("routes hook-only content PRs to hook content validation", () => {
+    const outputs = runClassifierForChangedFiles({
+      "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
+    });
+
+    expect(outputs.content).toBe("true");
+    expect(outputs.content_hooks).toBe("true");
+    expect(outputs.content_mcp).toBe("false");
+    expect(outputs.content_categories_json).toBe('["hooks"]');
+    expect(outputs.web).toBe("false");
+    expect(outputs.mcp).toBe("false");
+    expect(outputs.raycast).toBe("false");
+    expect(outputs.packages).toBe("false");
+    expect(outputs.registry).toBe("false");
+    expect(outputs.ci).toBe("false");
+  });
+
+  it("routes multi-category content PRs to only touched category validators", () => {
+    const outputs = runClassifierForChangedFiles({
+      "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
+      "content/mcp/example-server.mdx": "---\ntitle: Example Server\n---\n",
+    });
+
+    expect(outputs.content_categories_json).toBe('["hooks","mcp"]');
+    expect(outputs.content_hooks).toBe("true");
+    expect(outputs.content_mcp).toBe("true");
+    expect(outputs.content_skills).toBe("false");
+    expect(outputs.web).toBe("false");
+    expect(outputs.raycast).toBe("false");
+    expect(outputs.packages).toBe("false");
+    expect(outputs.registry).toBe("false");
   });
 
   it("does not document GitHub PATs in MCP process arguments", () => {
