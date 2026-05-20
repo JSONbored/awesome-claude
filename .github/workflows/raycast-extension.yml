@@ -1,17 +1,6 @@
 name: Raycast Extension
 
 on:
-  pull_request:
-    paths:
-      - "integrations/raycast/**"
-      - "apps/web/public/data/raycast-index.json"
-      - "apps/web/public/data/raycast/**"
-      - "scripts/build-content-index.mjs"
-      - "scripts/validate-raycast-feed.mjs"
-      - "content/**"
-      - "package.json"
-      - "pnpm-lock.yaml"
-      - ".github/workflows/raycast-extension.yml"
   workflow_dispatch:
 
 permissions:
