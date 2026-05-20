@@ -38,6 +38,28 @@ function readContentEntries() {
   return entries;
 }
 
+function headingAnchor(label: string) {
+  return label
+    .replace(/^#+\s*/, "")
+    .replace(/[^\w\s-]/g, "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+}
+
+const categoryReadmeLabels: Record<string, string> = {
+  agents: "AI Agents",
+  collections: "Collections",
+  commands: "Commands",
+  guides: "Guides",
+  hooks: "Hooks",
+  mcp: "MCP Servers",
+  rules: "Rules",
+  skills: "Skills",
+  statuslines: "Statuslines",
+  tools: "Tools",
+};
+
 describe("generated README catalog", () => {
   const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
   const entries = readContentEntries();
@@ -62,15 +84,16 @@ describe("generated README catalog", () => {
         (entry) => entry.category === category,
       ).length;
       const label = categorySpec.categories[category]?.label ?? category;
-      expect(readme).toMatch(
-        new RegExp(`\\| \\[${label}\\]\\([^)]*\\)\\s*\\|\\s*${count}\\s*\\|`),
+      expect(readme).toContain(
+        `href="#${headingAnchor(categoryReadmeLabels[category] ?? label)}"`,
       );
+      expect(readme).toContain(`<code>${count}</code>`);
       expect(readme).toContain(`(${count})`);
     }
   });
 
   it("keeps machine-readable distribution links visible near the top", () => {
-    const top = readme.slice(0, 1200);
+    const top = readme.slice(0, 5200);
     expect(top).toContain("https://heyclau.de/api/registry/feed");
     expect(top).toContain("https://heyclau.de/llms-full.txt");
     expect(top).toContain("integrations/raycast");
@@ -78,5 +101,7 @@ describe("generated README catalog", () => {
     expect(top).toContain("https://heyclau.de/api/mcp");
     expect(top).toContain("https://heyclau.de/jobs");
     expect(top).toContain("https://heyclau.de/claim");
+    expect(top).toContain("https://awesome.re/mentioned-badge.svg");
+    expect(top).toContain("https://gittensor.io/repositories");
   });
 });
