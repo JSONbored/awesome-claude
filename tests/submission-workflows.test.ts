@@ -374,7 +374,7 @@ describe("submission automation workflows", () => {
 
     expect(source).toContain("pull_request_target:");
     expect(source).not.toContain("- edited");
-    expect(source).not.toContain("pull-requests: write");
+    expect(source).toContain("pull-requests: write");
     expect(source).toContain("Analyze PR content through GitHub API");
     expect(source).not.toContain("actions/checkout");
     expect(source).not.toContain("pnpm install");
@@ -414,6 +414,7 @@ describe("submission automation workflows", () => {
     );
     expect(source).not.toContain("Array.isArray(report.contentFiles)");
     expect(source).toContain("Could not sync submission risk labels");
+    expect(source).toContain("Could not sync submission risk comment");
     expect(source).toContain(
       "No content MDX files changed; skipping PR label/comment sync.",
     );
