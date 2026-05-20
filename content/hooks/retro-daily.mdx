@@ -93,9 +93,9 @@ scriptBody: |-
   # session, we MUST emit a JSON document with `systemMessage` set to the
   # rendered output. We also include `hookSpecificOutput.additionalContext` so
   # the model still gets the same view of the dashboard.
-  
+
   source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_paths.sh"
-  
+
   DEBUG_LOG="/tmp/claude-startup.log"
   {
     echo "===== startup.sh invoked at $(date -u +%Y-%m-%dT%H:%M:%SZ) ====="
@@ -103,12 +103,12 @@ scriptBody: |-
     echo "CLAUDE_CODE_SESSION=${CLAUDE_CODE_SESSION:-unset}"
     echo "PATH=$PATH"
   } >> "$DEBUG_LOG" 2>&1
-  
+
   # Accumulate every step's stdout into a single buffer. At the end we emit
   # the entire concatenated output as one JSON document so it lands in
   # systemMessage (user-visible) AND additionalContext (LLM-visible).
   ACCUMULATED=""
-  
+
   run_step() {
     local name="$1"; shift
     local t0=$(date +%s)
@@ -124,7 +124,7 @@ scriptBody: |-
     # Append to the buffer that will end up in systemMessage + additionalContext.
     ACCUMULATED="${ACCUMULATED}${out}"$'\n'
   }
-  
+
   # Order matters: dashboard first (scrolls to top of terminal), scout findings
   # LAST so they stay visible near the prompt when the session opens. Earlier
   # reverse order buried scout above the viewport.
@@ -132,7 +132,7 @@ scriptBody: |-
   run_step "scout"          bash "$RETRO_DAILY_HOME/scout.sh"          || true
   run_step "tag-sessions"   bash "$RETRO_DAILY_HOME/tag-sessions.sh"   || true
   run_step "scout-review"   bash "$RETRO_DAILY_HOME/scout-review.sh"   || true
-  
+
   # Emit the SessionStart hook JSON response. Reads ACCUMULATED from stdin so we
   # don't have to worry about shell quoting of multi-line ANSI-colored content.
   printf '%s' "$ACCUMULATED" | python3 -c '
@@ -146,7 +146,7 @@ scriptBody: |-
       },
   }))
   ' 2>>"$DEBUG_LOG"
-  
+
   echo "===== startup.sh finished at $(date -u +%Y-%m-%dT%H:%M:%SZ) =====" >> "$DEBUG_LOG"
 trigger: SessionStart
 tags:
@@ -170,6 +170,12 @@ readingTime: 2
 difficultyScore: 1
 hasTroubleshooting: true
 hasPrerequisites: true
+prerequisites:
+  - Claude Code CLI installed and authenticated.
+  - Python 3.9+ for metrics rendering.
+  - Reads local Claude Code session logs from ~/.claude/projects.
+  - Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics.
+  - Starts sandboxed background claude -p workers unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set.
 hasBreakingChanges: false
 robotsIndex: true
 robotsFollow: true
@@ -218,6 +224,14 @@ robotsFollow: true
 - Bash 4+ shell (macOS users: the bundled `/bin/bash` works for the dashboard; the scout runner uses `nohup` so no `setsid` requirement).
 - Python 3.9+ for the metrics renderer (`generate-metrics.py`).
 - Optional: an authenticated `claude` session in your keychain so the background scout can call `claude -p` without prompting.
+
+## Security and privacy disclosure
+
+Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`.
+
+By default, `scout.sh` and `tag-sessions.sh` can start detached, sandboxed `claude -p` background workers. The scout worker uses `WebSearch` and `Write` to research weak metrics, writes temporary results to `/tmp`, validates JSON, then moves the results into `~/.claude/metrics`. The session tagger builds a truncated digest from recent local session messages and asks `claude -p` to label those sessions; it denies network access and writes temporary results to `/tmp` before moving them into `~/.claude/metrics`.
+
+Set `RETRO_DAILY_NO_BACKGROUND_WORKERS=1` to disable the background scout and session tagger while keeping the dashboard rendering.
 
 ## Hook Configuration
 
