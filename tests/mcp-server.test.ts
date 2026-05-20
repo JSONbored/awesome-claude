@@ -578,6 +578,29 @@ describe("HeyClaude read-only MCP helpers", () => {
         ]),
       },
     });
+
+    expect(() =>
+      parseToolArguments("validate_submission_draft", {
+        fields: {
+          category: "mcp",
+          name: "Too Many Notes MCP",
+          safety_notes: Array.from(
+            { length: 9 },
+            (_, index) => `note ${index}`,
+          ).join("\n"),
+        },
+      }),
+    ).toThrow("Use at most 8 non-empty lines, 320 characters per line.");
+
+    expect(() =>
+      parseToolArguments("validate_submission_draft", {
+        fields: {
+          category: "mcp",
+          name: "Long Privacy Note MCP",
+          privacy_notes: "x".repeat(321),
+        },
+      }),
+    ).toThrow("Use at most 8 non-empty lines, 320 characters per line.");
   });
 
   it("searches registry artifacts with category and platform filters", async () => {

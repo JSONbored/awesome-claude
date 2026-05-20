@@ -315,8 +315,8 @@ function entryMatchesQuery(entry, query) {
     entry.submittedBy,
     entry.brandName,
     entry.brandDomain,
-    ...(entry.safetyNotes || []),
-    ...(entry.privacyNotes || []),
+    ...notes(entry.safetyNotes),
+    ...notes(entry.privacyNotes),
     ...(entry.tags || []),
     ...(entry.keywords || []),
   ]

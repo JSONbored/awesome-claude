@@ -154,6 +154,12 @@ jobs:
         with:
           script: |
             const label = "auto-import-eligible";
+            const managedValidationLabels = new Set([
+              "needs-author-input",
+              "source-needs-verification",
+              "stale-submission",
+              "auto-import-eligible"
+            ]);
             try {
               await github.rest.issues.updateLabel({
                 ...context.repo,
@@ -172,10 +178,25 @@ jobs:
                   "Submission passed deterministic gates and may auto-open an import PR"
               });
             }
-            await github.rest.issues.addLabels({
+            const { data: issue } = await github.rest.issues.get({
+              ...context.repo,
+              issue_number: context.issue.number
+            });
+            const currentLabels = (issue.labels || [])
+              .map((currentLabel) =>
+                typeof currentLabel === "string" ? currentLabel : currentLabel.name
+              )
+              .filter(Boolean);
+            const nextLabels = new Set(
+              currentLabels.filter(
+                (currentLabel) => !managedValidationLabels.has(currentLabel)
+              )
+            );
+            nextLabels.add(label);
+            await github.rest.issues.setLabels({
               ...context.repo,
               issue_number: context.issue.number,
-              labels: [label]
+              labels: [...nextLabels].filter(Boolean)
             });
 
       - name: Auto-label submission risk

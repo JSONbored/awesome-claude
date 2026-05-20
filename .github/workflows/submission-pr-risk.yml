@@ -191,6 +191,44 @@ jobs:
               }
               return [...urls];
             };
+            const ARCHIVE_PACKAGE_EXTENSIONS = new Set([
+              ".zip",
+              ".mcpb",
+              ".tar",
+              ".tar.gz",
+              ".tgz",
+              ".tar.bz2",
+              ".tbz2",
+              ".tar.xz",
+              ".txz",
+              ".7z",
+              ".rar",
+              ".gz",
+              ".bz2",
+              ".xz",
+              ".deb",
+              ".rpm",
+              ".dmg",
+              ".exe",
+              ".pkg",
+              ".msi",
+              ".appimage"
+            ]);
+            const urlPathname = (value) => {
+              const text = normalizeText(value);
+              if (!text) return "";
+              try {
+                return new URL(text).pathname.toLowerCase();
+              } catch {
+                return text.split(/[?#]/)[0].toLowerCase();
+              }
+            };
+            const isArchivePackageUrl = (value) => {
+              const pathname = urlPathname(value);
+              return [...ARCHIVE_PACKAGE_EXTENSIONS].some((extension) =>
+                pathname.endsWith(extension)
+              );
+            };
             const splitList = (value) =>
               normalizeText(value)
                 .split(/[\n,]+/)
@@ -668,6 +706,25 @@ jobs:
                   "critical",
                   "non_https_executable_source",
                   "Install or usage instructions execute or fetch from a non-HTTPS URL"
+                );
+              }
+              const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
+              const downloadPath = urlPathname(downloadUrl);
+              if (downloadPath.startsWith("/downloads/")) {
+                addFlag(
+                  report,
+                  "high",
+                  "community_local_download_request",
+                  "Community submissions cannot request HeyClaude-hosted package downloads",
+                  downloadUrl
+                );
+              } else if (isArchivePackageUrl(downloadUrl)) {
+                addFlag(
+                  report,
+                  "medium",
+                  "community_archive_download",
+                  "Submitted package archive URLs require maintainer package review and are not auto-import eligible",
+                  downloadUrl
                 );
               }
               if (

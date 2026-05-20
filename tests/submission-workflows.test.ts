@@ -32,13 +32,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain("auto-import-eligible");
     expect(source).toContain("HeyClaude Submission Bot");
     expect(source).toContain("steps.auto_import.outputs.eligible == 'true'");
+    expect(source).toContain("managedValidationLabels");
+    expect(source).toContain("issues.setLabels");
     expect(source).toContain("Create auto-import PR");
     expect(source).toContain("Maintainer review still gates merge");
     expect(source).toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");
     expect(source).toContain("Summarize invalid submission issue");
     expect(source).toContain("--informational");
-    expect(source).toContain("managedValidationLabels");
     expect(source).not.toContain("if (report.skipped) return;");
     expect(source).toContain("peter-evans/create-pull-request");
     expect(source).not.toContain("labels.*.name, 'submission'");
@@ -260,6 +261,10 @@ describe("submission automation workflows", () => {
       "Submission security/safety review found critical blockers",
     );
     expect(source).toContain("REQUEST_CHANGES");
+    expect(source).toContain("ARCHIVE_PACKAGE_EXTENSIONS");
+    expect(source).toContain("community_archive_download");
+    expect(source).toContain("community_local_download_request");
+    expect(source).toContain("isArchivePackageUrl(downloadUrl)");
     expect(source).toContain("missing_safety_notes");
     expect(source).toContain("missing_privacy_notes");
     expect(source).toContain("review.body?.includes(REVIEW_MARKER)");

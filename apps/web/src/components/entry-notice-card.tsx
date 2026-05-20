@@ -5,7 +5,7 @@ type EntryNoticeCardProps = {
   title: string;
   eyebrow: string;
   description?: string;
-  items: string[];
+  items: Array<string | null | undefined>;
   tone?: "safety" | "privacy";
 };
 
@@ -24,7 +24,11 @@ export function EntryNoticeCard({
   items,
   tone = "safety",
 }: EntryNoticeCardProps) {
-  if (!items.length) return null;
+  const normalizedItems = items
+    .map((item) => item?.trim())
+    .filter((item): item is string => Boolean(item));
+
+  if (!normalizedItems.length) return null;
   const Icon = icons[tone];
 
   return (
@@ -46,7 +50,7 @@ export function EntryNoticeCard({
             </p>
           ) : null}
           <ul className="mt-4 space-y-3">
-            {items.map((item, index) => (
+            {normalizedItems.map((item, index) => (
               <li
                 key={`${index}-${item}`}
                 className="rounded-2xl border border-border/80 bg-background/88 px-4 py-3 text-sm leading-7 text-foreground"

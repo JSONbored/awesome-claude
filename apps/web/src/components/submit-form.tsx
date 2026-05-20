@@ -1014,7 +1014,7 @@ export function SubmitForm() {
           <p className="text-xs leading-6 text-muted-foreground">
             Optional for simple copy-only entries, but expected when the entry
             runs code, writes files, installs packages, or changes external
-            services.
+            services. Use up to 8 lines, 320 chars per line.
           </p>
         </div>
       ) : null}
@@ -1034,7 +1034,7 @@ export function SubmitForm() {
           <p className="text-xs leading-6 text-muted-foreground">
             Optional for entries that do not handle user data, but expected when
             files, credentials, telemetry, logs, or third-party APIs are
-            involved.
+            involved. Use up to 8 lines, 320 chars per line.
           </p>
         </div>
       ) : null}
