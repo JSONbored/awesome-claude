@@ -2,33 +2,11 @@
 
 import { useCallback } from "react";
 
+import { logClientError } from "@/lib/client-logs";
+
 type AsyncAction<TArgs extends unknown[]> = (
   ...args: TArgs
 ) => Promise<void> | void;
-
-function normalizeError(error: unknown) {
-  if (error instanceof Error) {
-    return {
-      name: error.name,
-      message: error.message,
-    };
-  }
-  return {
-    name: "Error",
-    message: String(error || "Unknown error"),
-  };
-}
-
-function logClientAsyncError(event: string, error: unknown) {
-  console.error(
-    JSON.stringify({
-      ts: new Date().toISOString(),
-      level: "error",
-      event,
-      error: normalizeError(error),
-    }),
-  );
-}
 
 export function useLoggedAsync<TArgs extends unknown[]>(
   event: string,
@@ -39,7 +17,7 @@ export function useLoggedAsync<TArgs extends unknown[]>(
       try {
         await action(...args);
       } catch (error) {
-        logClientAsyncError(event, error);
+        logClientError(event, error);
       }
     },
     [action, event],

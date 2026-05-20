@@ -24,6 +24,7 @@ import type { DirectoryEntry } from "@/lib/content";
 import { useBrowseUrlSync } from "@/hooks/use-browse-url-sync";
 import { useClientId } from "@/hooks/use-client-id";
 import { useLoggedAsync } from "@/hooks/use-logged-async";
+import { logClientError } from "@/lib/client-logs";
 import { categoryLabels, siteConfig } from "@/lib/site";
 import { categorySpec } from "@heyclaude/registry";
 
@@ -252,8 +253,8 @@ export function BrowseDirectory({
 
       setAllEntries(nextEntries);
       setHasLoadedFullEntries(true);
-    } catch {
-      // Keep initial entries on fetch failure.
+    } catch (error) {
+      logClientError("browse.full_entries_load_failed", error);
     } finally {
       setIsLoadingFullEntries(false);
     }
