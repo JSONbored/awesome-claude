@@ -209,6 +209,8 @@ function matchesClusterRequirements(
   item: DirectoryEntry | ToolListing,
   definition: SeoClusterDefinition,
 ) {
+  // Tool listings are editorial/product records, so source and install-trust
+  // cluster gates only apply to file-backed directory entries.
   if (
     definition.requireSource &&
     item.category !== "tools" &&

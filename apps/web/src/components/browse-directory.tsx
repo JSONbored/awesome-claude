@@ -23,6 +23,7 @@ import {
 import type { DirectoryEntry } from "@/lib/content";
 import { useBrowseUrlSync } from "@/hooks/use-browse-url-sync";
 import { useClientId } from "@/hooks/use-client-id";
+import { useLoggedAsync } from "@/hooks/use-logged-async";
 import { categoryLabels, siteConfig } from "@/lib/site";
 import { categorySpec } from "@heyclaude/registry";
 
@@ -223,6 +224,10 @@ export function BrowseDirectory({
     () => normalizeCollectionKeys(initialCollection),
     [initialCollection],
   );
+  const collectionKeysFingerprint = useMemo(
+    () => collectionKeys.join(","),
+    [collectionKeys],
+  );
 
   useEffect(() => {
     setAllEntries(entries);
@@ -263,10 +268,11 @@ export function BrowseDirectory({
   }, [entriesUrl, isDefaultQuery]);
 
   useEffect(() => {
-    if (!entriesUrl || initialCollectionKeys.length === 0) return;
+    if (!entriesUrl || !collectionHydrated || !collectionKeysFingerprint)
+      return;
     void loadFullEntriesIfNeeded();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [entriesUrl, initialCollectionKeys.length]);
+  }, [entriesUrl, collectionHydrated, collectionKeysFingerprint]);
 
   useBrowseUrlSync({
     enabled: syncUrl,
@@ -633,12 +639,15 @@ export function BrowseDirectory({
     ].join("\n");
   };
 
-  const copyCollection = async (kind: "markdown" | "share") => {
-    const value =
-      kind === "share" ? buildCollectionUrl() : buildCollectionMarkdown();
-    await navigator.clipboard.writeText(value.trim());
-    setCollectionAction(kind);
-  };
+  const copyCollection = useLoggedAsync(
+    "browse.collection.copy_failed",
+    async (kind: "markdown" | "share") => {
+      const value =
+        kind === "share" ? buildCollectionUrl() : buildCollectionMarkdown();
+      await navigator.clipboard.writeText(value.trim());
+      setCollectionAction(kind);
+    },
+  );
 
   const exportCollectionJson = () => {
     const payload = {

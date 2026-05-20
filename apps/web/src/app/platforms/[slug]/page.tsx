@@ -42,7 +42,7 @@ function matchesView(supportLevel: string, view: string) {
   if (view === "native") return supportLevel === "native-skill";
   if (view === "adapter") return supportLevel === "adapter";
   if (view === "manual") return supportLevel === "manual-context";
-  return true;
+  return false;
 }
 
 export function generateStaticParams() {
