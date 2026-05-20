@@ -2116,7 +2116,7 @@ export function formatSubmissionRiskMarkdown(report) {
   }
 
   if (report.requestChangesReasons?.length) {
-    lines.push("", "### Requested changes blockers");
+    lines.push("", "### Blocking findings");
     for (const reason of report.requestChangesReasons) {
       lines.push(`- ${escapeMarkdownText(reason)}`);
     }
