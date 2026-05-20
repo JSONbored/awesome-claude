@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/anthropic.com",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nClaude Code is a core reference point for agentic coding workflows and fits teams that already live in the terminal.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# Claude Code\n\nAnthropic command-line coding agent for codebase questions, edits, tests, and terminal-centered development tasks.",
+  "detailMarkdown": "# Claude Code\n\nAnthropic command-line coding agent for codebase questions, edits, tests, and terminal-centered development tasks.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/claude-code",
   "canonicalUrl": "https://heyclau.de/tools/claude-code",
   "llmsUrl": "https://heyclau.de/data/llms/tools/claude-code.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Claude Code terminal coding agent",
   "seoDescription": "Claude Code is Anthropic's terminal coding agent for codebase questions, edits, tests, and development workflows. HeyClaude adds source links, install...",
   "repoUrl": "",
-  "documentationUrl": "https://docs.anthropic.com/en/docs/claude-code/overview"
+  "documentationUrl": "https://docs.anthropic.com/en/docs/claude-code/overview",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/langfuse.com",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nLangfuse is a strong option when teams want open-source LLM observability with self-hosting and prompt lifecycle support.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# Langfuse\n\nOpen-source LLM engineering platform for tracing, prompt management, evaluation, metrics, and observability.",
+  "detailMarkdown": "# Langfuse\n\nOpen-source LLM engineering platform for tracing, prompt management, evaluation, metrics, and observability.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/langfuse",
   "canonicalUrl": "https://heyclau.de/tools/langfuse",
   "llmsUrl": "https://heyclau.de/data/llms/tools/langfuse.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Langfuse open-source LLM observability",
   "seoDescription": "Langfuse is an open-source LLM engineering platform for tracing, prompt management, metrics, and evaluation. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/langfuse/langfuse",
-  "documentationUrl": "https://langfuse.com/docs"
+  "documentationUrl": "https://langfuse.com/docs",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

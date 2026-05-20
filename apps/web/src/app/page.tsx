@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { BrowseDirectory } from "@/components/browse-directory";
+import { DiscoveryRails } from "@/components/discovery-rails";
 import { GitHubStarsLive } from "@/components/github-stars-live";
 import { JsonLd } from "@/components/json-ld";
 import { getCategorySummaries, getDirectoryEntries } from "@/lib/content";
@@ -115,6 +116,46 @@ export default async function HomePage() {
           </Link>
         ))}
       </section>
+      <DiscoveryRails
+        rails={[
+          {
+            id: "new-this-week",
+            title: "New this week",
+            description:
+              "Recent additions based on the current registry snapshot.",
+            href: "/browse?sort=newest",
+            entries: growthSurfaces.newThisWeek,
+            icon: "new",
+          },
+          {
+            id: "recently-verified",
+            title: "Recently verified",
+            description:
+              "Entries with source, review, claim, or package trust metadata refreshed most recently.",
+            href: "/browse?utility=verified",
+            entries: growthSurfaces.recentlyVerified,
+            icon: "verified",
+          },
+          {
+            id: "source-backed",
+            title: "Source-backed",
+            description:
+              "Entries with registry-visible source metadata for review and attribution.",
+            href: "/browse?utility=source-backed",
+            entries: growthSurfaces.sourceBacked,
+            icon: "source",
+          },
+          {
+            id: "safe-install",
+            title: "Safe install",
+            description:
+              "Installable entries with first-party package, verified package, or source-backed copy/install paths.",
+            href: "/browse?utility=trusted-package",
+            entries: growthSurfaces.safeInstall,
+            icon: "install",
+          },
+        ]}
+      />
     </div>
   );
 }

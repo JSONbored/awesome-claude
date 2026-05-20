@@ -32,8 +32,9 @@ function request(
   body: Record<string, unknown>,
   ip = "203.0.113.10",
   headers: Record<string, string> = {},
+  url = "https://heyclau.de/api/submissions",
 ) {
-  return new Request("https://heyclau.de/api/submissions", {
+  return new Request(url, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -43,6 +44,19 @@ function request(
     },
     body: JSON.stringify(body),
   });
+}
+
+function preflightRequest(
+  body: Record<string, unknown>,
+  ip = "203.0.113.10",
+  headers: Record<string, string> = {},
+) {
+  return request(
+    body,
+    ip,
+    headers,
+    "https://heyclau.de/api/submissions/preflight",
+  );
 }
 
 function githubIssueResponse(number = 42) {
@@ -207,6 +221,162 @@ describe("website submission API", () => {
       },
     });
     expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("preflights valid submissions without GitHub writes", async () => {
+    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const response = await POST(
+      preflightRequest({ fields: validFields() }, "203.0.113.20"),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      valid: true,
+      routeSuggestion: "github_issue",
+      category: "mcp",
+      slug: "direct-submit-api-asset",
+      blockers: [],
+      duplicates: [],
+      issuePreview: {
+        title: "Submit MCP Server: Direct Submit API Asset",
+        labels: expect.arrayContaining(["content-submission"]),
+      },
+      risk: {
+        policyDecision: expect.any(String),
+        policyMatrix: expect.any(Object),
+      },
+    });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("preflights existing duplicate registry entries before issue creation", async () => {
+    directoryEntriesMock.mockResolvedValue([
+      {
+        category: "mcp",
+        slug: "direct-submit-api-asset",
+        title: "Direct Submit API Asset",
+        canonicalUrl: "https://heyclau.de/mcp/direct-submit-api-asset",
+        documentationUrl: "https://example.com/docs",
+        trustSignals: { sourceUrls: ["https://example.com/docs"] },
+      },
+    ]);
+    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const response = await POST(
+      preflightRequest({ fields: validFields() }, "203.0.113.21"),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      valid: false,
+      routeSuggestion: "fix_required",
+      blockers: [expect.objectContaining({ code: "duplicate_existing" })],
+      duplicates: [
+        expect.objectContaining({
+          key: "mcp:direct-submit-api-asset",
+          reasons: expect.arrayContaining(["slug", "source_url", "title"]),
+        }),
+      ],
+    });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("preflights product-shaped submissions toward the tools flow", async () => {
+    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const response = await POST(
+      preflightRequest({
+        fields: validFields({
+          name: "Paid SaaS AI Platform",
+          slug: "paid-saas-ai-platform",
+          category: "mcp",
+          docs_url: "https://example.com/pricing",
+          install_command: "Use the hosted dashboard at https://example.com",
+          usage_snippet: "Create an account and use the hosted dashboard.",
+          description:
+            "Commercial AI SaaS platform with pricing plans, subscription tiers, and a hosted product signup flow.",
+          card_description: "Commercial AI SaaS platform.",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      routeSuggestion: "tools_form",
+      nextAction: {
+        url: "/tools/submit",
+      },
+    });
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("preflights local download requests as blockers", async () => {
+    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const response = await POST(
+      preflightRequest({
+        fields: validFields({
+          category: "skills",
+          skill_type: "general",
+          skill_level: "advanced",
+          verification_status: "validated",
+          download_url: "/downloads/skills/submitted.zip",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.routeSuggestion).toBe("fix_required");
+    expect(body.nextAction).toMatchObject({
+      label: "Fix blockers before opening a submission issue",
+    });
+    expect(body.nextAction.url).toBeUndefined();
+    expect(
+      body.blockers.map((item: { message: string }) => item.message),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("Community submissions cannot request local"),
+      ]),
+    );
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("preflights risky drafts with expected safety and privacy notes", async () => {
+    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const response = await POST(
+      preflightRequest({
+        fields: validFields({
+          name: "Workspace Sync Hook",
+          slug: "workspace-sync-hook",
+          category: "hooks",
+          trigger: "PostToolUse",
+          script_language: "bash",
+          install_command: "curl -fsSL https://example.com/install.sh | sh",
+          description:
+            "Runs a background sync worker that reads the local workspace and requires an API key for a third-party API.",
+          card_description: "Background sync hook for project files.",
+          full_copyable_content:
+            "curl -fsSL https://example.com/install.sh | sh\nexport API_TOKEN=...",
+          safety_notes: "",
+          privacy_notes: "",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      expectedNotes: {
+        safety: true,
+        privacy: true,
+      },
+      warnings: expect.arrayContaining([
+        expect.objectContaining({ code: "missing_safety_notes" }),
+        expect.objectContaining({ code: "missing_privacy_notes" }),
+      ]),
+    });
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it("silently discards honeypot submissions", async () => {

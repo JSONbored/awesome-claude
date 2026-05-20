@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/fireflies.ai",
   "brandAssetSource": "brandfetch",
   "copyText": "Install:\nclaude mcp list && claude mcp status fireflies\n\nConfig:\n{\n  \"fireflies\": {\n    \"url\": \"https://api.fireflies.ai/mcp\",\n    \"transport\": \"http\"\n  }\n}\n\nUsage:\n{\n  \"fireflies\": {\n    \"url\": \"https://api.fireflies.ai/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-  "detailMarkdown": "# Fireflies MCP Server for Claude\n\nExtract valuable insights from meeting transcripts and summaries\n\n## Install\n```bash\nclaude mcp list && claude mcp status fireflies\n```\n\n## Config\n```json\n{\n  \"fireflies\": {\n    \"url\": \"https://api.fireflies.ai/mcp\",\n    \"transport\": \"http\"\n  }\n}\n```\n\n## Usage\nclaude mcp list && claude mcp status fireflies",
+  "detailMarkdown": "# Fireflies MCP Server for Claude\n\nExtract valuable insights from meeting transcripts and summaries\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Install\n```bash\nclaude mcp list && claude mcp status fireflies\n```\n\n## Config\n```json\n{\n  \"fireflies\": {\n    \"url\": \"https://api.fireflies.ai/mcp\",\n    \"transport\": \"http\"\n  }\n}\n```\n\n## Usage\nclaude mcp list && claude mcp status fireflies",
   "webUrl": "https://heyclau.de/mcp/fireflies-mcp-server",
   "canonicalUrl": "https://heyclau.de/mcp/fireflies-mcp-server",
   "llmsUrl": "https://heyclau.de/data/llms/mcp/fireflies-mcp-server.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Fireflies MCP Server for Claude",
   "seoDescription": "Extract valuable insights from meeting transcripts and summaries Discover tools for AI development. HeyClaude adds source links, install steps,...",
   "repoUrl": "",
-  "documentationUrl": "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol"
+  "documentationUrl": "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol",
+  "downloadTrust": "first-party",
+  "verificationStatus": "",
+  "packageVerified": true
 }

@@ -65,15 +65,17 @@ jobs:
           const lines = [
             "# Submission Queue",
             "",
-            `- Import ready: ${queue.summary.importReady}`,
+            `- Ready: ${queue.summary.ready}`,
+            `- Blocked: ${queue.summary.blocked}`,
+            `- Likely promo/spam: ${queue.summary.likelyPromoSpam}`,
             `- Needs author input: ${queue.summary.needsAuthorInput}`,
             `- Source needs verification: ${queue.summary.sourceNeedsVerification}`,
-            `- Stale reminder due: ${queue.summary.staleReminderDue}`,
+            `- Stale reminder due: ${queue.summary.stale}`,
             `- Close eligible: ${queue.summary.closeEligible}`,
             `- Skipped: ${queue.summary.skipped}`,
             "",
-            "| Issue | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
-            "| --- | --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |",
+            "| Issue | Group | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
+            "| --- | --- | --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- |",
           ];
           const cell = (value) => String(value || "-").replace(/\|/g, "\\|").replace(/\r?\n/g, "<br>");
           for (const entry of queue.entries) {
@@ -90,7 +92,7 @@ jobs:
             const contributor = entry.contributorReview?.length
               ? entry.contributorReview.join(", ")
               : "-";
-            lines.push(`| ${issue} | ${cell(entry.status)} | ${cell(risk)} | ${cell(entry.policyDecision)} | ${cell(entry.sourceState)} | ${cell(contributor)} | ${entry.ageDays ?? 0}d | ${cell(entry.category)} | ${cell(entry.slug)} | ${cell(entry.actionDue)} | ${cell(notes)} |`);
+            lines.push(`| ${issue} | ${cell(entry.triageGroup)} | ${cell(entry.status)} | ${cell(risk)} | ${cell(entry.policyDecision)} | ${cell(entry.sourceState)} | ${cell(contributor)} | ${entry.ageDays ?? 0}d | ${cell(entry.category)} | ${cell(entry.slug)} | ${cell(entry.actionDue)} | ${cell(notes)} |`);
           }
           fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
           NODE

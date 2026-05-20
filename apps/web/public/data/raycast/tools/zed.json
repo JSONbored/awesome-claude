@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/zed.dev",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nZed belongs in the directory because AI coding workflows increasingly depend on low-latency editor collaboration and shared context.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# Zed\n\nCollaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.",
+  "detailMarkdown": "# Zed\n\nCollaborative code editor with AI assistance, fast native performance, and developer-focused collaboration workflows.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/zed",
   "canonicalUrl": "https://heyclau.de/tools/zed",
   "llmsUrl": "https://heyclau.de/data/llms/tools/zed.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Zed collaborative code editor with AI",
   "seoDescription": "Zed is a fast collaborative code editor with AI assistance, native performance, and developer collaboration workflows. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/zed-industries/zed",
-  "documentationUrl": "https://zed.dev/docs"
+  "documentationUrl": "https://zed.dev/docs",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

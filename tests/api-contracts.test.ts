@@ -30,6 +30,7 @@ const apiRoutes = [
   "/api/newsletter/webhook",
   "/api/og",
   "/api/submissions",
+  "/api/submissions/preflight",
   "/api/download",
   "/api/jobs",
   "/api/listing-leads",
@@ -122,6 +123,9 @@ describe("OpenAPI route coverage", () => {
     expect(parsedSchema.paths["/api/registry/search"]?.get?.parameters).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ name: "platform", in: "query" }),
+        expect.objectContaining({ name: "hasSafetyNotes", in: "query" }),
+        expect.objectContaining({ name: "downloadTrust", in: "query" }),
+        expect.objectContaining({ name: "claimStatus", in: "query" }),
       ]),
     );
     expect(

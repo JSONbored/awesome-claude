@@ -26,15 +26,8 @@ type GitHubIssue = {
   pull_request?: unknown;
 };
 
-type SubmissionFilter =
-  | "all"
-  | "import_ready"
-  | "maintainer_review"
-  | "needs_author_input"
-  | "source_needs_verification"
-  | "stale_reminder_due"
-  | "close_eligible"
-  | "high_risk";
+type SubmissionTriageGroup = SubmissionQueueEntry["triageGroup"];
+type SubmissionFilter = "all" | SubmissionTriageGroup;
 
 type SubmissionsPageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
@@ -42,13 +35,15 @@ type SubmissionsPageProps = {
 
 const FILTERS: Array<{ key: SubmissionFilter; label: string }> = [
   { key: "all", label: "All" },
-  { key: "import_ready", label: "Import ready" },
+  { key: "ready", label: "Ready" },
+  { key: "blocked", label: "Blocked" },
   { key: "maintainer_review", label: "Maintainer review" },
   { key: "needs_author_input", label: "Author input" },
-  { key: "source_needs_verification", label: "Source review" },
-  { key: "stale_reminder_due", label: "Reminder due" },
+  { key: "source_verification", label: "Source review" },
+  { key: "likely_promo_spam", label: "Promo/spam" },
+  { key: "stale", label: "Reminder due" },
   { key: "close_eligible", label: "Close eligible" },
-  { key: "high_risk", label: "High risk" },
+  { key: "skipped", label: "Skipped" },
 ];
 
 export const dynamic = "force-dynamic";
@@ -129,6 +124,18 @@ function nextActionLabel(action: SubmissionQueueEntry["nextAction"]) {
   return "Skip";
 }
 
+function triageLabel(group: SubmissionTriageGroup) {
+  if (group === "ready") return "Ready";
+  if (group === "blocked") return "Blocked";
+  if (group === "needs_author_input") return "Needs author input";
+  if (group === "source_verification") return "Source verification";
+  if (group === "likely_promo_spam") return "Likely promo/spam";
+  if (group === "stale") return "Reminder due";
+  if (group === "close_eligible") return "Close eligible";
+  if (group === "maintainer_review") return "Maintainer review";
+  return "Skipped";
+}
+
 function normalizeFilter(value: string | string[] | undefined) {
   const normalized = Array.isArray(value) ? value[0] : value;
   return FILTERS.some((filter) => filter.key === normalized)
@@ -136,17 +143,12 @@ function normalizeFilter(value: string | string[] | undefined) {
     : "all";
 }
 
-function isHighRisk(entry: SubmissionQueueEntry) {
-  return entry.riskTier === "high" || entry.riskTier === "critical";
-}
-
 function filterEntries(
   entries: SubmissionQueueEntry[],
   filter: SubmissionFilter,
 ) {
   if (filter === "all") return entries;
-  if (filter === "high_risk") return entries.filter(isHighRisk);
-  return entries.filter((entry) => entry.status === filter);
+  return entries.filter((entry) => entry.triageGroup === filter);
 }
 
 function filterCount(
@@ -310,11 +312,12 @@ export default async function SubmissionsPage({
 
         <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            ["Import ready", queue.summary.importReady],
+            ["Ready", queue.summary.ready],
+            ["Blocked", queue.summary.blocked],
+            ["Likely promo/spam", queue.summary.likelyPromoSpam],
             ["Needs author input", queue.summary.needsAuthorInput],
             ["Source verification", queue.summary.sourceNeedsVerification],
-            ["High risk", queue.summary.highRisk],
-            ["Reminder due", queue.summary.staleReminderDue],
+            ["Reminder due", queue.summary.stale],
             ["Close eligible", queue.summary.closeEligible],
             ["Maintainer review", queue.summary.maintainerReview],
             ["Tracked issues", queue.count],
@@ -367,6 +370,12 @@ export default async function SubmissionsPage({
           {entries.length ? (
             entries.map((entry) => {
               const sourceHref = safeHttpUrl(entry.sourceUrl);
+              const sourceUrls = entry.sourceUrls
+                .map((url) => safeHttpUrl(url))
+                .filter(Boolean);
+              const contributorProfileHref = safeHttpUrl(
+                entry.contributorContext.profileUrl,
+              );
               const submitHref = submissionFormHref(entry.category || "mcp");
 
               return (
@@ -375,6 +384,9 @@ export default async function SubmissionsPage({
                     <div className="space-y-2">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-primary">
+                          {triageLabel(entry.triageGroup)}
+                        </span>
+                        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                           {statusLabel(entry.status)}
                         </span>
                         <span
@@ -387,7 +399,7 @@ export default async function SubmissionsPage({
                         </span>
                         {entry.autoImportEligible ? (
                           <span className="rounded-full border border-primary/35 bg-primary/10 px-2.5 py-1 text-[11px] uppercase tracking-[0.14em] text-primary">
-                            Auto PR eligible
+                            Approval-gated PR eligible
                           </span>
                         ) : null}
                       </div>
@@ -406,6 +418,9 @@ export default async function SubmissionsPage({
                         {entry.slug || "no slug"}
                         {entry.author ? ` / @${entry.author}` : ""}
                         {entry.ageDays ? ` / ${entry.ageDays}d waiting` : ""}
+                      </p>
+                      <p className="max-w-3xl text-sm leading-7 text-muted-foreground">
+                        {entry.triageReason}
                       </p>
                     </div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -450,28 +465,30 @@ export default async function SubmissionsPage({
                         </div>
                       ) : null}
 
-                      {entry.policyMatrix &&
-                      Object.keys(entry.policyMatrix).length ? (
+                      {entry.policyReasons.length ? (
                         <div>
                           <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
                             Policy matrix
                           </p>
                           <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                            {Object.entries(entry.policyMatrix).map(
-                              ([name, gate]) => (
-                                <div
-                                  key={name}
-                                  className="rounded-lg border border-border bg-background/60 px-3 py-2"
-                                >
-                                  <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                                    {name} / {gate?.status || "unknown"}
+                            {entry.policyReasons.map((gate) => (
+                              <div
+                                key={gate.name}
+                                className="rounded-lg border border-border bg-background/60 px-3 py-2"
+                              >
+                                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                                  {gate.name} / {gate.status}
+                                </p>
+                                <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                                  {gate.summary || "No summary available."}
+                                </p>
+                                {gate.detail.length ? (
+                                  <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                                    {gate.detail.slice(0, 3).join(", ")}
                                   </p>
-                                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                                    {gate?.summary || "No summary available."}
-                                  </p>
-                                </div>
-                              ),
-                            )}
+                                ) : null}
+                              </div>
+                            ))}
                           </div>
                         </div>
                       ) : null}
@@ -498,10 +515,31 @@ export default async function SubmissionsPage({
                     <div className="space-y-4 rounded-lg border border-border bg-background/40 p-4">
                       <div>
                         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                          Labels
+                          Current labels
                         </p>
                         <div className="mt-2 flex flex-wrap gap-1.5">
-                          {entry.labels.map((label) => (
+                          {entry.labels.length ? (
+                            entry.labels.map((label) => (
+                              <span
+                                key={label}
+                                className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground"
+                              >
+                                {label}
+                              </span>
+                            ))
+                          ) : (
+                            <span className="text-sm text-muted-foreground">
+                              No managed labels yet
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                          Recommended labels
+                        </p>
+                        <div className="mt-2 flex flex-wrap gap-1.5">
+                          {entry.recommendedLabels.map((label) => (
                             <span
                               key={label}
                               className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground"
@@ -530,19 +568,71 @@ export default async function SubmissionsPage({
                       ) : null}
                       <div>
                         <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
-                          Source state
+                          Source context
                         </p>
                         <p className="mt-2 text-sm text-muted-foreground">
                           {entry.sourceState}
                         </p>
-                        {sourceHref ? (
+                        <div className="mt-2 space-y-1">
+                          {[sourceHref, ...sourceUrls]
+                            .filter(Boolean)
+                            .filter(
+                              (url, index, urls) => urls.indexOf(url) === index,
+                            )
+                            .slice(0, 4)
+                            .map((url) => (
+                              <a
+                                key={url}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="block truncate text-sm text-primary hover:underline"
+                              >
+                                {url}
+                              </a>
+                            ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+                          Contributor context
+                        </p>
+                        <p className="mt-2 text-sm text-muted-foreground">
+                          {entry.contributorContext.login ||
+                            entry.author ||
+                            "Unknown contributor"}
+                          {" / "}
+                          {entry.contributorContext.resolutionStatus}
+                        </p>
+                        <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                          {entry.contributorContext.accountAgeDays === null
+                            ? "Account age unknown"
+                            : `${entry.contributorContext.accountAgeDays}d account age`}
+                          {" / "}
+                          {entry.contributorContext.publicRepos === null
+                            ? "public repos unknown"
+                            : `${entry.contributorContext.publicRepos} public repos`}
+                        </p>
+                        {entry.contributorContext.signals.length ? (
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {entry.contributorContext.signals.map((signal) => (
+                              <span
+                                key={signal}
+                                className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] text-muted-foreground"
+                              >
+                                {signal}
+                              </span>
+                            ))}
+                          </div>
+                        ) : null}
+                        {contributorProfileHref ? (
                           <a
-                            href={sourceHref}
+                            href={contributorProfileHref}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-2 inline-flex text-sm text-primary hover:underline"
                           >
-                            Open submitted source
+                            Open contributor profile
                           </a>
                         ) : null}
                       </div>

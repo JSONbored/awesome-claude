@@ -1,5 +1,17 @@
 # @heyclaude/mcp Changelog
 
+## 0.3.0 - Safety Metadata and Submission Policy
+
+- Expose registry `safetyNotes` and `privacyNotes` in MCP search, detail,
+  copyable asset, comparison, and install guidance responses.
+- Accept `safety_notes` and `privacy_notes` in submission draft helpers with
+  the same short-note limits used by HeyClaude intake.
+- Support source-backed and copyable-content skill submissions without requiring
+  community ZIP/MCPB package hosting.
+- Reflect the review-gated import policy: submission helpers can prepare issues
+  and local checks, but never create issues, open PRs, merge, publish, or mirror
+  package artifacts.
+
 ## 0.2.0 - Discovery and Submission Drafting
 
 - Add read-only discovery tools for server metadata, paginated category

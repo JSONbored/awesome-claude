@@ -150,6 +150,21 @@ export function reviewSubmissionDraft(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function getSubmissionPolicy(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function explainEntryTrust(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function reviewEntrySafety(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function callRegistryTool(
   name: string,
   args?: Record<string, unknown>,
@@ -180,6 +195,9 @@ export {
   PrepareSubmissionDraftInputSchema,
   GetSubmissionExamplesInputSchema,
   ReviewSubmissionDraftInputSchema,
+  SubmissionPolicyInputSchema,
+  ExplainEntryTrustInputSchema,
+  ReviewEntrySafetyInputSchema,
   TOOL_INPUT_SCHEMAS,
   jsonSchemaForTool,
   jsonSchemaForToolOutput,

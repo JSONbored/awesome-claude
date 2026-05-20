@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/crewai.com",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nCrewAI is relevant for users exploring role-based multi-agent systems and process automation patterns.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# CrewAI\n\nFramework and platform for building multi-agent workflows, role-based agents, process automation, and AI crews.",
+  "detailMarkdown": "# CrewAI\n\nFramework and platform for building multi-agent workflows, role-based agents, process automation, and AI crews.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/crewai",
   "canonicalUrl": "https://heyclau.de/tools/crewai",
   "llmsUrl": "https://heyclau.de/data/llms/tools/crewai.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "CrewAI multi-agent workflow framework",
   "seoDescription": "CrewAI helps build multi-agent workflows, role-based agents, process automation, and AI crew systems. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/crewAIInc/crewAI",
-  "documentationUrl": "https://docs.crewai.com"
+  "documentationUrl": "https://docs.crewai.com",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

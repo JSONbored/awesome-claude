@@ -79,6 +79,22 @@ function getMonogram(entry: DirectoryEntry) {
     .toUpperCase();
 }
 
+function getTrustBadges(entry: DirectoryEntry) {
+  const badges = [
+    entry.trustSignals?.sourceStatus === "available" ? "Source-backed" : "",
+    entry.downloadTrust === "first-party" || entry.packageVerified === true
+      ? "Verified package"
+      : entry.downloadUrl
+        ? "External package"
+        : "",
+    entry.safetyNotes?.length ? "Safety notes" : "",
+    entry.privacyNotes?.length ? "Privacy notes" : "",
+    entry.reviewedBy || entry.claimStatus === "verified" ? "Reviewed" : "",
+  ].filter(Boolean);
+
+  return [...new Set(badges)].slice(0, 5);
+}
+
 export function DirectoryEntryCard({
   entry,
   voteCount,
@@ -101,6 +117,7 @@ export function DirectoryEntryCard({
     () => getDistributionBadges(entry),
     [entry],
   );
+  const trustBadges = useMemo(() => getTrustBadges(entry), [entry]);
   const visibleSignals = [
     communitySignals?.used ? `Used ${compactCount(communitySignals.used)}` : "",
     communitySignals?.works
@@ -351,6 +368,14 @@ export function DirectoryEntryCard({
               title={badge.title}
             >
               {badge.label}
+            </span>
+          ))}
+          {trustBadges.map((badge) => (
+            <span
+              key={badge}
+              className="rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
+            >
+              {badge}
             </span>
           ))}
           {visibleSignals.map((signal) => (

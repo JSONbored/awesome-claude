@@ -16,6 +16,8 @@ const repoRoot = path.resolve(
 const packageDir = path.join(repoRoot, "packages", "mcp");
 const dataDir = path.join(repoRoot, "apps", "web", "public", "data");
 const remoteSmokeUrl = process.env.MCP_PACKAGE_REMOTE_SMOKE_URL || "";
+const requireRemoteSafetyMetadata =
+  process.env.MCP_PACKAGE_REQUIRE_SAFETY_METADATA === "1";
 const packageRequire = createRequire(path.join(packageDir, "package.json"));
 const { Client } = await import(
   packageRequire.resolve("@modelcontextprotocol/sdk/client/index.js")
@@ -26,6 +28,17 @@ const { StdioClientTransport } = await import(
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function assertSafetyMetadataShape(payload, label) {
+  assert(
+    Array.isArray(payload?.safetyNotes),
+    `${label} did not expose safetyNotes as an array.`,
+  );
+  assert(
+    Array.isArray(payload?.privacyNotes),
+    `${label} did not expose privacyNotes as an array.`,
+  );
 }
 
 async function run(command, args, options = {}) {
@@ -41,11 +54,18 @@ function parseJsonOutput(output) {
   return Array.isArray(parsed) ? parsed[0] : parsed;
 }
 
+function parseToolPayload(result) {
+  if (result?.structuredContent) return result.structuredContent;
+  const text = result?.content?.find((item) => item.type === "text")?.text;
+  if (!text) throw new Error("MCP tool response did not include JSON text.");
+  return JSON.parse(text);
+}
+
 async function readJson(filePath) {
   return JSON.parse(await fs.readFile(filePath, "utf8"));
 }
 
-async function smokeMcpServer(command, args, label) {
+async function smokeMcpServer(command, args, label, options = {}) {
   const client = new Client({
     name: `heyclaude-package-${label}-smoke`,
     version: "0.1.0",
@@ -83,6 +103,16 @@ async function smokeMcpServer(command, args, label) {
     assert(text, `${label} smoke did not return a text tool result.`);
     const result = JSON.parse(text);
     assert(result.ok === true, `${label} smoke search did not return ok.`);
+    if (options.requireSafetyMetadata) {
+      assert(
+        Array.isArray(result.entries) && result.entries.length > 0,
+        `${label} smoke search did not return entries for safety metadata validation.`,
+      );
+      assertSafetyMetadataShape(
+        result.entries[0],
+        `${label} smoke search entry`,
+      );
+    }
     if (toolNames.includes("get_registry_stats")) {
       assert(
         search.structuredContent?.policy?.readOnly === true,
@@ -168,6 +198,46 @@ async function smokeMcpServer(command, args, label) {
         ),
         `${label} smoke did not return install_asset_safely prompt content.`,
       );
+
+      if (options.requireSafetyMetadata) {
+        const firstEntry = result.entries[0];
+        const detail = await client.callTool(
+          {
+            name: "get_entry_detail",
+            arguments: {
+              category: firstEntry.category,
+              slug: firstEntry.slug,
+            },
+          },
+          undefined,
+          { timeout: 30000 },
+        );
+        assertSafetyMetadataShape(
+          parseToolPayload(detail).entry,
+          `${label} smoke entry detail`,
+        );
+
+        const submissionSchema = await client.callTool(
+          {
+            name: "get_submission_schema",
+            arguments: { category: "skills" },
+          },
+          undefined,
+          { timeout: 30000 },
+        );
+        const fieldIds =
+          parseToolPayload(submissionSchema).schema?.fields?.map(
+            (field) => field.id,
+          ) || [];
+        assert(
+          fieldIds.includes("safety_notes"),
+          `${label} smoke submission schema did not expose safety_notes.`,
+        );
+        assert(
+          fieldIds.includes("privacy_notes"),
+          `${label} smoke submission schema did not expose privacy_notes.`,
+        );
+      }
     }
   } finally {
     await client.close().catch(() => {});
@@ -251,10 +321,14 @@ async function main() {
       "CLI version does not match package.json.",
     );
 
-    await smokeMcpServer(binPath, ["--local", "--data-dir", dataDir], "local");
+    await smokeMcpServer(binPath, ["--local", "--data-dir", dataDir], "local", {
+      requireSafetyMetadata: true,
+    });
 
     if (remoteSmokeUrl) {
-      await smokeMcpServer(binPath, ["--url", remoteSmokeUrl], "remote");
+      await smokeMcpServer(binPath, ["--url", remoteSmokeUrl], "remote", {
+        requireSafetyMetadata: requireRemoteSafetyMetadata,
+      });
     } else {
       console.log(
         "Skipping remote packed-package smoke; MCP_PACKAGE_REMOTE_SMOKE_URL is not set.",

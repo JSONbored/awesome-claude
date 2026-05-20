@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/workato.com",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nWorkato belongs in the directory for enterprise teams evaluating AI-connected automation across business systems.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# Workato\n\nEnterprise automation platform for business integrations, workflows, data processes, and AI-assisted automation.",
+  "detailMarkdown": "# Workato\n\nEnterprise automation platform for business integrations, workflows, data processes, and AI-assisted automation.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/workato",
   "canonicalUrl": "https://heyclau.de/tools/workato",
   "llmsUrl": "https://heyclau.de/data/llms/tools/workato.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Workato enterprise automation platform",
   "seoDescription": "Workato supports enterprise integrations, workflow automation, data processes, and AI-assisted business automation. HeyClaude adds source links, install...",
   "repoUrl": "",
-  "documentationUrl": "https://docs.workato.com"
+  "documentationUrl": "https://docs.workato.com",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

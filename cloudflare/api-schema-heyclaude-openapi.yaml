@@ -153,6 +153,8 @@ components:
           type: string
         installable:
           type: boolean
+        downloadUrl:
+          type: string
         downloadTrust:
           type:
             - string
@@ -836,6 +838,58 @@ paths:
           name: platform
           in: query
         - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+            default: all
+          required: false
+          name: hasSafetyNotes
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+            default: all
+          required: false
+          name: hasPrivacyNotes
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - first-party
+              - external
+              - none
+            default: all
+          required: false
+          name: downloadTrust
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - unclaimed
+              - pending
+              - verified
+            default: all
+          required: false
+          name: claimStatus
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - available
+              - missing
+            default: all
+          required: false
+          name: sourceStatus
+          in: query
+        - schema:
             type: integer
             minimum: 1
             maximum: 50
@@ -859,6 +913,25 @@ paths:
                     type: string
                   platform:
                     type: string
+                  filters:
+                    type: object
+                    properties:
+                      hasSafetyNotes:
+                        type: string
+                      hasPrivacyNotes:
+                        type: string
+                      downloadTrust:
+                        type: string
+                      claimStatus:
+                        type: string
+                      sourceStatus:
+                        type: string
+                    required:
+                      - hasSafetyNotes
+                      - hasPrivacyNotes
+                      - downloadTrust
+                      - claimStatus
+                      - sourceStatus
                   count:
                     type: integer
                     minimum: 0
@@ -962,6 +1035,8 @@ paths:
                           type: string
                         installable:
                           type: boolean
+                        downloadUrl:
+                          type: string
                         downloadTrust:
                           type:
                             - string
@@ -4025,6 +4100,497 @@ paths:
               schema:
                 type: object
                 additionalProperties: {}
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/submissions/preflight:
+    post:
+      tags:
+        - Submissions
+      summary: Preflight a content submission draft
+      description:
+        Runs read-only schema, duplicate, source, package, and safety/privacy checks before a
+        contributor opens a public GitHub submission issue. This endpoint never creates issues,
+        labels, branches, pull requests, registry content, or package artifacts.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fields:
+                  type: object
+                  additionalProperties: {}
+                  default: {}
+                honeypot:
+                  type: string
+                  maxLength: 256
+                  default: ""
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                  - type: object
+                    properties:
+                      ok:
+                        type: boolean
+                        enum:
+                          - true
+                      valid:
+                        type: boolean
+                      routeSuggestion:
+                        type: string
+                        enum:
+                          - github_issue
+                          - fix_required
+                          - tools_form
+                      category:
+                        type: string
+                      slug:
+                        type: string
+                      fallbackUrl:
+                        type: string
+                        format: uri
+                      issuePreview:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                            maxLength: 300
+                          labels:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 80
+                            maxItems: 12
+                          body:
+                            type: string
+                            maxLength: 32000
+                        required:
+                          - title
+                          - labels
+                          - body
+                      schema:
+                        type: object
+                        properties:
+                          ok:
+                            type: boolean
+                          skipped:
+                            type: boolean
+                          errors:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 32
+                          warnings:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 32
+                          fields:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - ok
+                          - skipped
+                          - errors
+                          - warnings
+                          - fields
+                      risk:
+                        type: object
+                        properties:
+                          tier:
+                            type: string
+                          policyDecision:
+                            type: string
+                          policyMatrix:
+                            type: object
+                            additionalProperties: {}
+                          reviewFlags:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 120
+                            maxItems: 32
+                          classificationWarnings:
+                            type: array
+                            items: {}
+                            maxItems: 32
+                        required:
+                          - policyMatrix
+                          - reviewFlags
+                          - classificationWarnings
+                      expectedNotes:
+                        type: object
+                        properties:
+                          safety:
+                            type: boolean
+                          privacy:
+                            type: boolean
+                          reasons:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 8
+                        required:
+                          - safety
+                          - privacy
+                          - reasons
+                      blockers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              maxLength: 80
+                            message:
+                              type: string
+                              maxLength: 500
+                          required:
+                            - code
+                            - message
+                        maxItems: 24
+                      warnings:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              maxLength: 80
+                            message:
+                              type: string
+                              maxLength: 500
+                          required:
+                            - code
+                            - message
+                        maxItems: 24
+                      duplicates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              maxLength: 160
+                            category:
+                              type: string
+                              maxLength: 80
+                            slug:
+                              type: string
+                              maxLength: 160
+                            title:
+                              type: string
+                              maxLength: 240
+                            url:
+                              type: string
+                              maxLength: 2048
+                              format: uri
+                            reasons:
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 80
+                              maxItems: 8
+                          required:
+                            - key
+                            - category
+                            - slug
+                            - title
+                            - url
+                            - reasons
+                        maxItems: 5
+                      nextAction:
+                        type: object
+                        properties:
+                          label:
+                            type: string
+                            maxLength: 160
+                          url:
+                            type: string
+                            maxLength: 4096
+                        required:
+                          - label
+                    required:
+                      - ok
+                      - valid
+                      - routeSuggestion
+                      - category
+                      - slug
+                      - fallbackUrl
+                      - issuePreview
+                      - schema
+                      - risk
+                      - expectedNotes
+                      - blockers
+                      - warnings
+                      - duplicates
+                      - nextAction
+                  - type: object
+                    properties:
+                      ok:
+                        type: boolean
+                        enum:
+                          - true
+                      valid:
+                        type: boolean
+                        enum:
+                          - false
+                      queued:
+                        type: boolean
+                        enum:
+                          - false
+                    required:
+                      - ok
+                      - valid
+                      - queued
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

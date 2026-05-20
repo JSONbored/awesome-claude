@@ -82,6 +82,10 @@ describe("registry artifacts", () => {
       brandedCount: number;
       sourceAvailableCount: number;
       checksumPresentCount: number;
+      claimedOrReviewedPercent: number;
+      safetyNotesCount: number;
+      privacyNotesCount: number;
+      firstPartyPackageCount: number;
       recommendedFixCount: number;
       entriesNeedingAttention: number;
     };
@@ -163,6 +167,7 @@ describe("registry artifacts", () => {
       brandName: "Asana",
       brandDomain: "asana.com",
       brandAssetSource: "brandfetch",
+      downloadUrl: expect.any(String),
     });
     expect(raycastEntry).toMatchObject({
       brandName: "Asana",
@@ -177,6 +182,7 @@ describe("registry artifacts", () => {
       brandAssetSource: "brandfetch",
     });
     expect(raycastDetail).toHaveProperty("author");
+    expect(String(raycastDetail.detailMarkdown)).toContain("## Trust");
     expect(llmsText).toContain("- Brand: Asana");
     expect(llmsText).toContain("- Brand domain: asana.com");
 
@@ -208,6 +214,9 @@ describe("registry artifacts", () => {
     expect(rebuilt.summary).toEqual(trustReportPayload.summary);
     expect(trustReportPayload.summary.sourceAvailableCount).toBeGreaterThan(0);
     expect(trustReportPayload.summary.checksumPresentCount).toBeGreaterThan(0);
+    expect(trustReportPayload.summary).toHaveProperty("safetyNotesCount");
+    expect(trustReportPayload.summary).toHaveProperty("privacyNotesCount");
+    expect(trustReportPayload.summary).toHaveProperty("firstPartyPackageCount");
     expect(trustReportPayload.summary.recommendedFixCount).toBe(
       trustReportPayload.entries.reduce(
         (sum, entry) => sum + entry.recommendations.length,
@@ -450,8 +459,10 @@ Use this hook after reviewing the notes.`,
     const [searchEntry] = buildSearchEntries([entry]);
     expect(searchEntry.safetyNotes).toEqual(entry.safetyNotes);
     expect(searchEntry.privacyNotes).toEqual(entry.privacyNotes);
+    expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
+    expect(buildRaycastDetailMarkdown(entry)).toContain("## Trust");
     expect(renderEntryLlms(entry)).toContain("## Safety Notes");
     expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
   });

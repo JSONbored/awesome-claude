@@ -30,6 +30,10 @@ function parseArgs(argv) {
       args.set("strict-tools", "1");
       continue;
     }
+    if (value === "--require-safety-metadata") {
+      args.set("require-safety-metadata", "1");
+      continue;
+    }
     args.set(value.slice(2), argv[index + 1] ?? "");
     index += 1;
   }
@@ -44,6 +48,17 @@ function parseToolResult(result) {
 
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function assertSafetyMetadataShape(payload, label) {
+  assert(
+    Array.isArray(payload?.safetyNotes),
+    `${label} did not expose safetyNotes as an array.`,
+  );
+  assert(
+    Array.isArray(payload?.privacyNotes),
+    `${label} did not expose privacyNotes as an array.`,
+  );
 }
 
 async function validateHttpGuards(endpointUrl) {
@@ -177,6 +192,12 @@ async function validateMcpTools(endpointUrl, options = {}) {
       Array.isArray(search.entries) && search.entries.length > 0,
       "search_registry did not return entries.",
     );
+    if (options.requireSafetyMetadata) {
+      assertSafetyMetadataShape(
+        search.entries[0],
+        "search_registry first entry",
+      );
+    }
 
     if (toolNames.includes("server_info")) {
       const info = parseToolResult(
@@ -236,6 +257,9 @@ async function validateMcpTools(endpointUrl, options = {}) {
       detail.key === `${first.category}:${first.slug}`,
       "get_entry_detail returned the wrong entry.",
     );
+    if (options.requireSafetyMetadata) {
+      assertSafetyMetadataShape(detail.entry, "get_entry_detail entry");
+    }
 
     if (toolNames.includes("get_copyable_asset")) {
       const asset = parseToolResult(
@@ -274,6 +298,17 @@ async function validateMcpTools(endpointUrl, options = {}) {
       schema.issueTemplate?.template === "submit-mcp.yml",
       "get_submission_schema did not return the MCP issue template.",
     );
+    if (options.requireSafetyMetadata) {
+      const fieldIds = schema.schema?.fields?.map((field) => field.id) || [];
+      assert(
+        fieldIds.includes("safety_notes"),
+        "get_submission_schema did not expose safety_notes.",
+      );
+      assert(
+        fieldIds.includes("privacy_notes"),
+        "get_submission_schema did not expose privacy_notes.",
+      );
+    }
 
     const urls = parseToolResult(
       await client.callTool({
@@ -346,6 +381,9 @@ const endpointUrl = endpointUrlRaw ? normalizeEndpointUrl(endpointUrlRaw) : "";
 const strictTools =
   args.get("strict-tools") === "1" ||
   process.env.MCP_ENDPOINT_STRICT_TOOLS === "1";
+const requireSafetyMetadata =
+  args.get("require-safety-metadata") === "1" ||
+  process.env.MCP_ENDPOINT_REQUIRE_SAFETY_METADATA === "1";
 
 if (!endpointUrl) {
   console.error(
@@ -356,7 +394,7 @@ if (!endpointUrl) {
 
 try {
   await validateHttpGuards(endpointUrl);
-  await validateMcpTools(endpointUrl, { strictTools });
+  await validateMcpTools(endpointUrl, { strictTools, requireSafetyMetadata });
   console.log(`Validated HeyClaude MCP endpoint at ${endpointUrl.toString()}`);
 } catch (error) {
   console.error(error instanceof Error ? error.message : String(error));

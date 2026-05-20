@@ -1,17 +1,6 @@
 name: Package Artifact Scan
 
 on:
-  pull_request:
-    paths:
-      - "content/skills/*.zip"
-      - "content/skills/**/*.zip"
-      - "content/mcp/*.mcpb"
-      - "content/mcp/**/*.mcpb"
-      - "scripts/scan-download-packages.mjs"
-      - "scripts/validate-download-packages.mjs"
-      - ".github/workflows/package-artifact-scan.yml"
-      - "package.json"
-      - "pnpm-lock.yaml"
   workflow_dispatch:
 
 permissions:

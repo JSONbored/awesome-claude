@@ -7,6 +7,7 @@ import {
   entryCommunityTarget,
   safeCommunitySignalCounts,
 } from "@/lib/community-signals";
+import { buildDiscoverySurfaceLists } from "@/lib/growth-surface-rules";
 import { communityDiscoveryScore } from "@/lib/growth-ranking";
 import { safeIntentEventCounts } from "@/lib/intent-events";
 import { safeVoteCounts } from "@/lib/votes";
@@ -33,44 +34,7 @@ export const getGrowthSurfaces = cache(async () => {
     safeCommunitySignalCounts(communityTargets),
     safeIntentEventCounts(entryKeys),
   ]);
-  const newest = [...entries]
-    .filter((entry) => entry.dateAdded)
-    .sort((left, right) =>
-      String(right.dateAdded).localeCompare(String(left.dateAdded)),
-    )
-    .slice(0, 12);
-  const recentlyUpdated = [...entries]
-    .filter((entry) => entry.repoUpdatedAt)
-    .sort((left, right) =>
-      String(right.repoUpdatedAt).localeCompare(String(left.repoUpdatedAt)),
-    )
-    .slice(0, 12);
-  const popularBySourceSignals = [...entries]
-    .filter(
-      (entry) => typeof entry.githubStars === "number" && entry.githubStars > 0,
-    )
-    .sort((left, right) => (right.githubStars ?? 0) - (left.githubStars ?? 0))
-    .slice(0, 12);
-  const practicalPicks = [...entries]
-    .filter(
-      (entry) =>
-        Boolean(
-          entry.installCommand || entry.downloadUrl || entry.configSnippet,
-        ) && Boolean(entry.dateAdded),
-    )
-    .sort((left, right) => {
-      const rightScore =
-        (right.githubStars ?? 0) +
-        (right.downloadTrust === "first-party" ? 25 : 0) +
-        (right.verificationStatus === "production" ? 20 : 0);
-      const leftScore =
-        (left.githubStars ?? 0) +
-        (left.downloadTrust === "first-party" ? 25 : 0) +
-        (left.verificationStatus === "production" ? 20 : 0);
-      if (rightScore !== leftScore) return rightScore - leftScore;
-      return String(right.dateAdded).localeCompare(String(left.dateAdded));
-    })
-    .slice(0, 12);
+  const surfaces = buildDiscoverySurfaceLists(entries);
   const communityTrending = [...entries]
     .map((entry) => ({
       entry,
@@ -94,10 +58,7 @@ export const getGrowthSurfaces = cache(async () => {
     .map((item) => item.entry);
 
   return {
-    newest,
-    recentlyUpdated,
-    popularBySourceSignals,
-    practicalPicks,
+    ...surfaces,
     communityTrending,
     communitySignals: communityState.counts,
     communitySignalsAvailable: communityState.available,

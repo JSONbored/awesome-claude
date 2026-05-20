@@ -11,7 +11,7 @@
   <a href="https://github.com/JSONbored/awesome-claude">GitHub</a> •
   <a href="https://www.npmjs.com/package/@heyclaude/mcp">npm</a> •
   <a href="https://heyclau.de/api/mcp">MCP endpoint</a> •
-  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.2.0">v0.2.0 release</a>
+  <a href="https://github.com/JSONbored/awesome-claude/releases/tag/mcp-v0.3.0">v0.3.0 release</a>
 </p>
 
 Read-only Model Context Protocol server for the HeyClaude registry.
@@ -70,6 +70,12 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   templates for more complete submissions.
 - `review_submission_draft` - review schema errors, duplicate risk, and
   maintainer checklist items before a submission issue is opened.
+- `get_submission_policy` - fetch the read-only submission, artifact, import,
+  and maintainer-review policy.
+- `explain_entry_trust` - explain source, package, safety, privacy, and review
+  signals for one entry.
+- `review_entry_safety` - compare 1-5 entries for source, package, safety, and
+  privacy fit before install or recommendation.
 
 ## Resources and Prompts
 
@@ -189,10 +195,10 @@ Do not publish until the web branch has shipped, the production endpoint has
 been verified, and the package smoke test passes. The release checklist is:
 
 ```bash
-pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools
+MCP_ENDPOINT_REQUIRE_SAFETY_METADATA=1 pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools
 pnpm --filter @heyclaude/mcp test
 pnpm --filter @heyclaude/mcp pack --dry-run
-MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package
+MCP_PACKAGE_REQUIRE_SAFETY_METADATA=1 MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package
 ```
 
 Publishing should happen through the manual `Publish MCP Package` GitHub

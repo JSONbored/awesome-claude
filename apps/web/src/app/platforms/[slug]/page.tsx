@@ -18,7 +18,32 @@ import {
 
 type PlatformPageProps = {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ view?: string }>;
 };
+
+const platformViews = [
+  { value: "all", label: "All" },
+  { value: "native", label: "Native install" },
+  { value: "adapter", label: "Adapter" },
+  { value: "manual", label: "Manual context" },
+] as const;
+
+function normalizeView(value?: string) {
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
+  return platformViews.some((view) => view.value === normalized)
+    ? normalized
+    : "all";
+}
+
+function matchesView(supportLevel: string, view: string) {
+  if (view === "all") return true;
+  if (view === "native") return supportLevel === "native-skill";
+  if (view === "adapter") return supportLevel === "adapter";
+  if (view === "manual") return supportLevel === "manual-context";
+  return false;
+}
 
 export function generateStaticParams() {
   return getPlatformPageDefinitions().map((platform) => ({
@@ -53,10 +78,16 @@ export async function generateMetadata({
 
 export default async function PlatformDetailPage({
   params,
+  searchParams,
 }: PlatformPageProps) {
   const { slug } = await params;
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const view = normalizeView(resolvedSearchParams.view);
   const platform = await getPlatformPage(slug);
   if (!platform) notFound();
+  const visibleItems = platform.items.filter((item) =>
+    matchesView(item.supportLevel, view),
+  );
 
   const jsonLd = [
     buildBreadcrumbJsonLd([
@@ -114,8 +145,34 @@ export default async function PlatformDetailPage({
         </div>
       </header>
 
+      <nav className="flex flex-wrap gap-2" aria-label="Platform install view">
+        {platformViews.map((item) => (
+          <Link
+            key={item.value}
+            href={
+              item.value === "all"
+                ? `/platforms/${platform.slug}`
+                : `/platforms/${platform.slug}?view=${item.value}`
+            }
+            className={
+              item.value === view
+                ? "rounded-lg border border-primary/45 bg-primary/10 px-3 py-2 text-sm font-medium text-primary"
+                : "rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-muted-foreground transition hover:border-primary/45 hover:text-foreground"
+            }
+          >
+            {item.label}
+          </Link>
+        ))}
+        <Link
+          href={`/browse?category=skills&platform=${encodeURIComponent(platform.platform.toLowerCase())}&utility=trusted-package`}
+          className="rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium text-muted-foreground transition hover:border-primary/45 hover:text-foreground"
+        >
+          Trusted packages
+        </Link>
+      </nav>
+
       <section className="grid gap-4 md:grid-cols-2">
-        {platform.items.map((item) => (
+        {visibleItems.map((item) => (
           <article
             key={item.slug}
             className="rounded-lg border border-border bg-card p-5 shadow-sm"
@@ -163,6 +220,11 @@ export default async function PlatformDetailPage({
             </div>
           </article>
         ))}
+        {visibleItems.length === 0 ? (
+          <div className="rounded-lg border border-border bg-card p-5 text-sm text-muted-foreground">
+            No entries match this install view yet.
+          </div>
+        ) : null}
       </section>
     </main>
   );

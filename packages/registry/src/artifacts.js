@@ -72,6 +72,32 @@ function pushNoteSection(lines, title, values) {
   lines.push("", `## ${title}`, ...notes.map((note) => `- ${note}`));
 }
 
+function raycastPackageTrust(entry) {
+  if (entry.downloadTrust === "first-party" || entry.packageVerified) {
+    return "maintainer-built/verified package";
+  }
+  if (entry.downloadUrl) return "external package";
+  return "no package download";
+}
+
+function pushRaycastTrustSection(lines, entry) {
+  const source =
+    entry.repoUrl || entry.documentationUrl
+      ? "source-backed"
+      : "source not provided";
+  const review =
+    entry.claimStatus === "verified" || entry.reviewedBy
+      ? "reviewed or claimed"
+      : "unclaimed";
+  lines.push(
+    "",
+    "## Trust",
+    `- Source: ${source}`,
+    `- Package: ${raycastPackageTrust(entry)}`,
+    `- Review: ${review}`,
+  );
+}
+
 function buildEntryNoteFields(entry) {
   const fields = {};
   const safetyNotes = noteList(entry.safetyNotes);
@@ -130,6 +156,7 @@ function buildEntryProvenanceFields(entry) {
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
 
+  pushRaycastTrustSection(lines, entry);
   pushNoteSection(lines, "Safety notes", entry.safetyNotes);
   pushNoteSection(lines, "Privacy notes", entry.privacyNotes);
 
@@ -218,6 +245,7 @@ export function buildSearchEntries(entries) {
     installable: Boolean(
       entry.installable || entry.installCommand || entry.downloadUrl,
     ),
+    downloadUrl: entry.downloadUrl || "",
     downloadTrust: entry.downloadTrust ?? null,
     verificationStatus: entry.verificationStatus || "",
     platforms: buildSkillPlatformCompatibility(entry).map(
@@ -368,6 +396,12 @@ function entryTrustReportRow(entry, generatedAt) {
   const trustSignals = buildEntryTrustSignals(entry);
   const ageDays = verificationAgeDays(entry, generatedAt);
   const hasBrand = Boolean(entry.brandDomain || entry.brandIconUrl);
+  const hasSafetyNotes = Array.isArray(entry.safetyNotes)
+    ? entry.safetyNotes.length > 0
+    : false;
+  const hasPrivacyNotes = Array.isArray(entry.privacyNotes)
+    ? entry.privacyNotes.length > 0
+    : false;
   const hasProvenance = Boolean(
     entry.submittedBy ||
     entry.reviewedBy ||
@@ -414,6 +448,9 @@ function entryTrustReportRow(entry, generatedAt) {
     adapterGenerated: trustSignals.adapterGenerated,
     firstPartyEditorial: trustSignals.firstPartyEditorial,
     packageVerified: trustSignals.packageVerified,
+    packageTrust: trustSignals.packageTrust,
+    hasSafetyNotes,
+    hasPrivacyNotes,
     lastVerifiedAt: normalizedIsoTimestamp(trustSignals.lastVerifiedAt),
     verificationAgeDays: ageDays,
     hasProvenance,
@@ -451,6 +488,18 @@ function buildTrustCategoryBreakdown(entries, rows) {
           provenancePresent: booleanCount(
             categoryRows,
             (entry) => entry.hasProvenance,
+          ),
+          safetyNotesPresent: booleanCount(
+            categoryRows,
+            (entry) => entry.hasSafetyNotes,
+          ),
+          privacyNotesPresent: booleanCount(
+            categoryRows,
+            (entry) => entry.hasPrivacyNotes,
+          ),
+          firstPartyPackage: booleanCount(
+            categoryRows,
+            (entry) => entry.packageTrust === "first-party",
           ),
           recommendedFixes: categoryRows.reduce(
             (sum, entry) => sum + entry.recommendations.length,
@@ -500,6 +549,15 @@ export function buildRegistryTrustReport(entries) {
     rows,
     (entry) => entry.claimStatus === "verified" || Boolean(entry.reviewedBy),
   );
+  const safetyNotesCount = booleanCount(rows, (entry) => entry.hasSafetyNotes);
+  const privacyNotesCount = booleanCount(
+    rows,
+    (entry) => entry.hasPrivacyNotes,
+  );
+  const firstPartyPackageCount = booleanCount(
+    rows,
+    (entry) => entry.packageTrust === "first-party",
+  );
 
   const needsAttention = rows
     .filter((entry) => entry.recommendations.length)
@@ -534,6 +592,13 @@ export function buildRegistryTrustReport(entries) {
       provenanceCount,
       provenancePercent: percentage(provenanceCount, total),
       claimedOrReviewedCount,
+      claimedOrReviewedPercent: percentage(claimedOrReviewedCount, total),
+      safetyNotesCount,
+      safetyNotesPercent: percentage(safetyNotesCount, total),
+      privacyNotesCount,
+      privacyNotesPercent: percentage(privacyNotesCount, total),
+      firstPartyPackageCount,
+      firstPartyPackagePercent: percentage(firstPartyPackageCount, total),
       recommendedFixCount: rows.reduce(
         (sum, entry) => sum + entry.recommendations.length,
         0,
@@ -669,6 +734,9 @@ export function buildRaycastDetail(entry) {
     ...buildEntryNoteFields(entry),
     repoUrl: entry.repoUrl || "",
     documentationUrl: entry.documentationUrl || "",
+    downloadTrust: entry.downloadTrust ?? null,
+    verificationStatus: entry.verificationStatus || "",
+    packageVerified: Boolean(entry.packageVerified),
   };
 }
 

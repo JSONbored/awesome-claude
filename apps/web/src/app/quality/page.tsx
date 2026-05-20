@@ -129,6 +129,26 @@ export default async function QualityPage() {
               `${trustReport.summary.checksumPresentPercent}%`,
             ],
             [
+              "Safety notes",
+              `${trustReport.summary.safetyNotesCount}/${trustReport.count}`,
+              `${trustReport.summary.safetyNotesPercent}%`,
+            ],
+            [
+              "Privacy notes",
+              `${trustReport.summary.privacyNotesCount}/${trustReport.count}`,
+              `${trustReport.summary.privacyNotesPercent}%`,
+            ],
+            [
+              "First-party packages",
+              trustReport.summary.firstPartyPackageCount,
+              `${trustReport.summary.firstPartyPackagePercent}%`,
+            ],
+            [
+              "Claimed/reviewed",
+              trustReport.summary.claimedOrReviewedCount,
+              `${trustReport.summary.claimedOrReviewedPercent}%`,
+            ],
+            [
               "Needs attention",
               trustReport.summary.entriesNeedingAttention,
               `${trustReport.summary.recommendedFixCount} fixes`,
