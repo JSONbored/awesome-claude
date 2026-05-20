@@ -82,7 +82,7 @@ function getMonogram(entry: DirectoryEntry) {
 function getTrustBadges(entry: DirectoryEntry) {
   const badges = [
     entry.trustSignals?.sourceStatus === "available" ? "Source-backed" : "",
-    entry.downloadTrust === "first-party" || entry.packageVerified === true
+    entry.downloadTrust === "first-party"
       ? "Verified package"
       : entry.downloadUrl
         ? "External package"

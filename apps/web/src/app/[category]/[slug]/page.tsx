@@ -301,14 +301,12 @@ export default async function DetailPage({ params }: DetailPageProps) {
     {
       label: "Package",
       value: entry.downloadUrl
-        ? entry.downloadTrust === "first-party" || entry.packageVerified
+        ? entry.downloadTrust === "first-party"
           ? "Verified package"
           : "External package"
         : "No package download",
       tone:
-        !entry.downloadUrl ||
-        entry.downloadTrust === "first-party" ||
-        entry.packageVerified
+        !entry.downloadUrl || entry.downloadTrust === "first-party"
           ? "positive"
           : "warn",
     },
