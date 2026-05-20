@@ -81,7 +81,8 @@ export default async function PlatformDetailPage({
   searchParams,
 }: PlatformPageProps) {
   const { slug } = await params;
-  const view = normalizeView((await searchParams)?.view);
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const view = normalizeView(resolvedSearchParams.view);
   const platform = await getPlatformPage(slug);
   if (!platform) notFound();
   const visibleItems = platform.items.filter((item) =>
