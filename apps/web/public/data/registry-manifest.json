@@ -3203,12 +3203,12 @@
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "2a381d8c1fb5a28966a5aaac91ba59aa86ac52e6537f5f179815a0232859e660"
+      "sha256": "d0463285173d8d9bca413554d5f1d0a258af02a5393ac78bad6b3ccc09124851"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "5e4f4518c8aed45a54d73eaa199f8698380339684ffc9e9f3b2fdc5fe27eb4f6"
+      "sha256": "e97ebab2b61dda730e11b9329ce9485a480bf0be0de457d65824edc22033051c"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
@@ -3278,7 +3278,7 @@
     "raycast/commands/cursor-rules.json": {
       "path": "/data/raycast%2Fcommands%2Fcursor-rules.json",
       "type": "json",
-      "sha256": "7e0d7de7cc0779a2236e08e71a79ab46c3ed8c7bdf0cc6acac3316cbb4870986"
+      "sha256": "aee001412805fbd874ee9893a2e20ff5c18414737119b76ee612b4f822dd0792"
     },
     "entries/commands/debug.json": {
       "path": "/data/entries%2Fcommands%2Fdebug.json",
@@ -3293,7 +3293,7 @@
     "raycast/commands/debug.json": {
       "path": "/data/raycast%2Fcommands%2Fdebug.json",
       "type": "json",
-      "sha256": "6de80c6b318187d099a1c1133f27729d70a776832a3caef5e37509980214e5bc"
+      "sha256": "5c430fc998f32960442dbd7011424ea4bb4e28deb48b1db3dc47cead812b2036"
     },
     "entries/commands/docs.json": {
       "path": "/data/entries%2Fcommands%2Fdocs.json",
@@ -3308,7 +3308,7 @@
     "raycast/commands/docs.json": {
       "path": "/data/raycast%2Fcommands%2Fdocs.json",
       "type": "json",
-      "sha256": "79c4784c6f50a73d486902204e3b0c7cf15fcd5b5abea6979ec56f14599cf86c"
+      "sha256": "01752aad171bf6350c9094c75421d62be28504734743a3a9895e7d683dade36e"
     },
     "entries/commands/explain.json": {
       "path": "/data/entries%2Fcommands%2Fexplain.json",
@@ -3323,7 +3323,7 @@
     "raycast/commands/explain.json": {
       "path": "/data/raycast%2Fcommands%2Fexplain.json",
       "type": "json",
-      "sha256": "e82effaa7888333d2942066035bf70c6efdcd37af2c0c78c7912a1238ec5abaa"
+      "sha256": "3c407f0f1143192953c036430f30481a287ff1b6a39d75d9fbbd9a9be38fee07"
     },
     "entries/commands/optimize.json": {
       "path": "/data/entries%2Fcommands%2Foptimize.json",
@@ -3338,7 +3338,7 @@
     "raycast/commands/optimize.json": {
       "path": "/data/raycast%2Fcommands%2Foptimize.json",
       "type": "json",
-      "sha256": "807c71a49e770cb51940880e80cd02795c4d576702b95e093bf8aa74cbf2b798"
+      "sha256": "225adc72f38dc33d2bbf82e61a2ac945787a34f882e695c66337ed27b24ec7cd"
     },
     "entries/commands/refactor.json": {
       "path": "/data/entries%2Fcommands%2Frefactor.json",
@@ -3353,7 +3353,7 @@
     "raycast/commands/refactor.json": {
       "path": "/data/raycast%2Fcommands%2Frefactor.json",
       "type": "json",
-      "sha256": "2b1c13464e4f0af4a425771a33b10a0294356c7bdb125de5a15a05a7a78c9fba"
+      "sha256": "7fc7af703bfb4d112474825fb772a75096e59ef1930316116779b1c43b14cd68"
     },
     "entries/commands/refactor-code.json": {
       "path": "/data/entries%2Fcommands%2Frefactor-code.json",
@@ -3368,7 +3368,7 @@
     "raycast/commands/refactor-code.json": {
       "path": "/data/raycast%2Fcommands%2Frefactor-code.json",
       "type": "json",
-      "sha256": "8bb13dabfe60184e72c573b28c7b8e9d74a5b0844b8cdbfe8447680b15a48368"
+      "sha256": "1e775485e4e1fc5bdae521a6bb4c69896e5a6ea5661ef120e2326e7b3f69267b"
     },
     "entries/commands/review.json": {
       "path": "/data/entries%2Fcommands%2Freview.json",
@@ -3383,7 +3383,7 @@
     "raycast/commands/review.json": {
       "path": "/data/raycast%2Fcommands%2Freview.json",
       "type": "json",
-      "sha256": "bcbd691d2ecc1b276e2bccd30f47042ae1ab07acc3d97b50ba58e14d915e3eee"
+      "sha256": "de8f0301593919c47e3124ccb798d42d427e11f2ba2e30ebca18dad723f3e241"
     },
     "entries/commands/security.json": {
       "path": "/data/entries%2Fcommands%2Fsecurity.json",
@@ -3398,7 +3398,7 @@
     "raycast/commands/security.json": {
       "path": "/data/raycast%2Fcommands%2Fsecurity.json",
       "type": "json",
-      "sha256": "17d479a59f10a35df7738d6bb04b0a93ac3530c2bdbd3b844840e52aea63efef"
+      "sha256": "a5af1dd16c30afdfb28787d7422a235ba1e12da908b2cdd9b9de079253fba64d"
     },
     "entries/commands/security-audit.json": {
       "path": "/data/entries%2Fcommands%2Fsecurity-audit.json",
@@ -3413,7 +3413,7 @@
     "raycast/commands/security-audit.json": {
       "path": "/data/raycast%2Fcommands%2Fsecurity-audit.json",
       "type": "json",
-      "sha256": "84bc4c213c04d02baba5b84eeecd7c32b95b206a261be08b88772d7aae4c2866"
+      "sha256": "facd3556390772f7d2a35a5ba3325d0719879ef81e26e61a18eb0e3dbb1cd14c"
     },
     "entries/commands/test-advanced.json": {
       "path": "/data/entries%2Fcommands%2Ftest-advanced.json",
@@ -3428,7 +3428,7 @@
     "raycast/commands/test-advanced.json": {
       "path": "/data/raycast%2Fcommands%2Ftest-advanced.json",
       "type": "json",
-      "sha256": "a88e10bac295710cbc99094c46e847f5daa2124d587dd59df1ff8731261c425d"
+      "sha256": "68f608fd9282f773aa5be4efacd075bd2e4c82d3136d254e04078c6683ce08a5"
     },
     "entries/commands/zod-audit.json": {
       "path": "/data/entries%2Fcommands%2Fzod-audit.json",
@@ -3443,7 +3443,7 @@
     "raycast/commands/zod-audit.json": {
       "path": "/data/raycast%2Fcommands%2Fzod-audit.json",
       "type": "json",
-      "sha256": "3d73eb7ced7b96849768ba34d05c1ada6916012298d5f21a8911736f0df93606"
+      "sha256": "b1f118ac19ff2a2ac85af84c812abdfb84c1c886f657e2ac3aedbc149787b251"
     },
     "entries/hooks/accessibility-checker.json": {
       "path": "/data/entries%2Fhooks%2Faccessibility-checker.json",
@@ -3458,7 +3458,7 @@
     "raycast/hooks/accessibility-checker.json": {
       "path": "/data/raycast%2Fhooks%2Faccessibility-checker.json",
       "type": "json",
-      "sha256": "addd05ea5b37469444b2c925cb4de62a682bfffe614e20363350ef8701bcf8b9"
+      "sha256": "0345763540816f8a9b56ee9dbe5d09c0eb104f1d3ba73db39bf281614c953e1c"
     },
     "entries/statuslines/accessibility-first-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Faccessibility-first-statusline.json",
@@ -3473,7 +3473,7 @@
     "raycast/statuslines/accessibility-first-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Faccessibility-first-statusline.json",
       "type": "json",
-      "sha256": "b40c734ff3405eaf7cdb5432a3f647cb5a3b75be456e687087864346e79648a5"
+      "sha256": "70d6abc63ee6f375cad46ad8d632374fc8533405a3192d346cee8caa7e5b4928"
     },
     "entries/skills/agent-evals-regression-gate.json": {
       "path": "/data/entries%2Fskills%2Fagent-evals-regression-gate.json",
@@ -3488,7 +3488,7 @@
     "raycast/skills/agent-evals-regression-gate.json": {
       "path": "/data/raycast%2Fskills%2Fagent-evals-regression-gate.json",
       "type": "json",
-      "sha256": "d77447bb38ca110467c9e963c2b8b925adb8f7ac24ee8b0ca0814433380d9995"
+      "sha256": "fe0b52424c05e8197ef566434a821b2d2d21152437ad965f14d2e73541ebeb86"
     },
     "skill-adapters/cursor/agent-evals-regression-gate.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fagent-evals-regression-gate.mdc",
@@ -3508,7 +3508,7 @@
     "raycast/collections/agent-operator-growth-master-pack.json": {
       "path": "/data/raycast%2Fcollections%2Fagent-operator-growth-master-pack.json",
       "type": "json",
-      "sha256": "b62b135d70bf2af062ee1e7bc614a7255c021eee801c4f5a1009562a4998e706"
+      "sha256": "d7e421e4fbcc7f994d4ea9d912c424b852c1de15bd4bf6034794c31d7ae28e3d"
     },
     "entries/agents/agent-skills-framework-engineer.json": {
       "path": "/data/entries%2Fagents%2Fagent-skills-framework-engineer.json",
@@ -3523,7 +3523,7 @@
     "raycast/agents/agent-skills-framework-engineer.json": {
       "path": "/data/raycast%2Fagents%2Fagent-skills-framework-engineer.json",
       "type": "json",
-      "sha256": "6b90c84326692621805ebe7dfdef7ba49df5fec39c6f36e9d23bbcb5e72fe05d"
+      "sha256": "abdb4cb3cdbdfca35de8962ed88725276602883c12b9c2dbbf5b5e4bd8c7723f"
     },
     "entries/commands/skills-installer.json": {
       "path": "/data/entries%2Fcommands%2Fskills-installer.json",
@@ -3538,7 +3538,7 @@
     "raycast/commands/skills-installer.json": {
       "path": "/data/raycast%2Fcommands%2Fskills-installer.json",
       "type": "json",
-      "sha256": "12e089debf4f45d6f598bbfad11f558ec244af4b5939e5e65b77281967563a51"
+      "sha256": "99879f5b8e2b0ae7578a7921b7b12e60f48ce1462aa64e12c71639ff1f8c373a"
     },
     "entries/skills/ai-agent-observability-incident-response.json": {
       "path": "/data/entries%2Fskills%2Fai-agent-observability-incident-response.json",
@@ -3553,7 +3553,7 @@
     "raycast/skills/ai-agent-observability-incident-response.json": {
       "path": "/data/raycast%2Fskills%2Fai-agent-observability-incident-response.json",
       "type": "json",
-      "sha256": "94e22aa8fcb29fbbeccabdb99fa542d82993b4dc094d3339643306d270ff5424"
+      "sha256": "469f516e704ad98e6912289a4dcb2f23bb3223be5f79a9ff2548dbc2c69d529b"
     },
     "skill-adapters/cursor/ai-agent-observability-incident-response.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fai-agent-observability-incident-response.mdc",
@@ -3573,7 +3573,7 @@
     "raycast/skills/ai-business-idea-validation-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fai-business-idea-validation-capability-pack.json",
       "type": "json",
-      "sha256": "6bf4a904cb9f0aa4838ff400e2b615a15064d8b9b800c4f26bb5f602c48f34f2"
+      "sha256": "0a268d20ef93d01637eab97621ef869ca80d34247855413c59c791c1210de0f5"
     },
     "skill-adapters/cursor/ai-business-idea-validation-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fai-business-idea-validation-capability-pack.mdc",
@@ -3593,7 +3593,7 @@
     "raycast/agents/ai-code-review-security-agent.json": {
       "path": "/data/raycast%2Fagents%2Fai-code-review-security-agent.json",
       "type": "json",
-      "sha256": "95e5d06ac339530f16abe09b93ab782ff353cd59e8fcc2a00e9b6d0d86495c31"
+      "sha256": "1d35eb9e48a28543b8137118aa689fa33a2b523a8594ad196c637663f2666416"
     },
     "entries/agents/ai-devops-automation-engineer-agent.json": {
       "path": "/data/entries%2Fagents%2Fai-devops-automation-engineer-agent.json",
@@ -3608,7 +3608,7 @@
     "raycast/agents/ai-devops-automation-engineer-agent.json": {
       "path": "/data/raycast%2Fagents%2Fai-devops-automation-engineer-agent.json",
       "type": "json",
-      "sha256": "98e900e7f82901504e159f0f15cad9ab55e01e82059b74ed6080105be925bc5e"
+      "sha256": "6055be51663363addc6b31f341bdf51d390dbaf965eb2ad2f877ab894a0e722d"
     },
     "entries/statuslines/ai-model-performance-dashboard.json": {
       "path": "/data/entries%2Fstatuslines%2Fai-model-performance-dashboard.json",
@@ -3623,7 +3623,7 @@
     "raycast/statuslines/ai-model-performance-dashboard.json": {
       "path": "/data/raycast%2Fstatuslines%2Fai-model-performance-dashboard.json",
       "type": "json",
-      "sha256": "c6d0c49a94670d58d4c9ee50a3e298a8475ae39007b43f0e3a882112cfb5fc87"
+      "sha256": "12767b8f74a39398c00ac493505e037b3ef5adf18eebe968f37161ccd9c4f5f2"
     },
     "entries/rules/ai-prompt-engineering-expert.json": {
       "path": "/data/entries%2Frules%2Fai-prompt-engineering-expert.json",
@@ -3638,7 +3638,7 @@
     "raycast/rules/ai-prompt-engineering-expert.json": {
       "path": "/data/raycast%2Frules%2Fai-prompt-engineering-expert.json",
       "type": "json",
-      "sha256": "c547c09facba2045e7748cba785cd76192f9742f9844de38a9785fa8fa9675d1"
+      "sha256": "b7ce70031b30d40b07a49a751d37369388d8d22b748a76e90e0df2ad8d02bcfc"
     },
     "entries/skills/ai-search-ranking-content-cluster-strategy.json": {
       "path": "/data/entries%2Fskills%2Fai-search-ranking-content-cluster-strategy.json",
@@ -3653,7 +3653,7 @@
     "raycast/skills/ai-search-ranking-content-cluster-strategy.json": {
       "path": "/data/raycast%2Fskills%2Fai-search-ranking-content-cluster-strategy.json",
       "type": "json",
-      "sha256": "7ec547a3e705a41958637a637c662ff386fd3ebe7b809b30a60f6b7c2386f879"
+      "sha256": "a85dba5d5d1a74e9267d1766d24c5114c2a66105f97f1f46c04fcb5ac4bea51c"
     },
     "skill-adapters/cursor/ai-search-ranking-content-cluster-strategy.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fai-search-ranking-content-cluster-strategy.mdc",
@@ -3673,7 +3673,7 @@
     "raycast/tools/aider.json": {
       "path": "/data/raycast%2Ftools%2Faider.json",
       "type": "json",
-      "sha256": "10e137172be9afa6c78a702681dec340616299c0044bd3a66cd966d7d53ef336"
+      "sha256": "54930d6adb5774a25af661f01e9af43bc1d31354b4adb7c6d1eee3282812b6f8"
     },
     "entries/mcp/airtable-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fairtable-mcp-server.json",
@@ -3688,7 +3688,7 @@
     "raycast/mcp/airtable-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fairtable-mcp-server.json",
       "type": "json",
-      "sha256": "c042312d772964c87f42a6aca1838c8c651a40318c0e832f3fb1977b70cb1794"
+      "sha256": "2f7f8b397084c8ac1cf2fd1cac940542644eec998dbe449c82f661a57a27b1db"
     },
     "entries/agents/api-builder-agent.json": {
       "path": "/data/entries%2Fagents%2Fapi-builder-agent.json",
@@ -3703,7 +3703,7 @@
     "raycast/agents/api-builder-agent.json": {
       "path": "/data/raycast%2Fagents%2Fapi-builder-agent.json",
       "type": "json",
-      "sha256": "afb15eebfcc1da2f5a0260b10a89743eb681dba26064dd6be3c7a2a203ec46e2"
+      "sha256": "fbc2cedd920be454caeebf9a6f7a5e38eab130a81274dfae051686beedbcb6c7"
     },
     "entries/rules/api-design-expert.json": {
       "path": "/data/entries%2Frules%2Fapi-design-expert.json",
@@ -3718,7 +3718,7 @@
     "raycast/rules/api-design-expert.json": {
       "path": "/data/raycast%2Frules%2Fapi-design-expert.json",
       "type": "json",
-      "sha256": "0cd7c9b1f45ca515e97be24e6d9ce46d7a446c21fa629b6d0da01474509e7c65"
+      "sha256": "8a1d0fff84f9b9ea7f589cdc174ada2d6134377a6b46761e20ac09db972b0d37"
     },
     "entries/collections/api-development-starter-kit.json": {
       "path": "/data/entries%2Fcollections%2Fapi-development-starter-kit.json",
@@ -3733,7 +3733,7 @@
     "raycast/collections/api-development-starter-kit.json": {
       "path": "/data/raycast%2Fcollections%2Fapi-development-starter-kit.json",
       "type": "json",
-      "sha256": "691e27b1efbb5b45375a9e05d8c59ae38ddfd00fd17f442248e45cbcb2859e2e"
+      "sha256": "3bd4a5104c04f4d155c6b4d265a71ce6d824d31c70115ea1a2004ba85cac533e"
     },
     "entries/hooks/api-endpoint-documentation-generator.json": {
       "path": "/data/entries%2Fhooks%2Fapi-endpoint-documentation-generator.json",
@@ -3748,7 +3748,7 @@
     "raycast/hooks/api-endpoint-documentation-generator.json": {
       "path": "/data/raycast%2Fhooks%2Fapi-endpoint-documentation-generator.json",
       "type": "json",
-      "sha256": "8daccf00575e802cb8c8032e73e0e1748a84b40a0916d5e9f6bfad2e07a03e93"
+      "sha256": "b7bf8efa8ee7631566197ab7d4c926681a6a2f694292c79577f971f2c5d6bcb6"
     },
     "entries/rules/api-first-development-architect.json": {
       "path": "/data/entries%2Frules%2Fapi-first-development-architect.json",
@@ -3763,7 +3763,7 @@
     "raycast/rules/api-first-development-architect.json": {
       "path": "/data/raycast%2Frules%2Fapi-first-development-architect.json",
       "type": "json",
-      "sha256": "6b45c39b48d34791a7204bc1ec80bf85c3f8fac8ff09f40404138cbd17297f51"
+      "sha256": "daac465cfc9f7742ab52d4a95f24a02526e04a908efe4ab6fe457bf03b502c28"
     },
     "entries/statuslines/api-latency-breakdown.json": {
       "path": "/data/entries%2Fstatuslines%2Fapi-latency-breakdown.json",
@@ -3778,7 +3778,7 @@
     "raycast/statuslines/api-latency-breakdown.json": {
       "path": "/data/raycast%2Fstatuslines%2Fapi-latency-breakdown.json",
       "type": "json",
-      "sha256": "31a41cb0b6c2010f99515fea9318533e183454095ec71e07d5a7def4d6ce248a"
+      "sha256": "689ac123a9de76ca17926d62e73a8925845cdd3df63466660a1927c266c68111"
     },
     "entries/tools/apify.json": {
       "path": "/data/entries%2Ftools%2Fapify.json",
@@ -3793,7 +3793,7 @@
     "raycast/tools/apify.json": {
       "path": "/data/raycast%2Ftools%2Fapify.json",
       "type": "json",
-      "sha256": "e7574195bae422bf1b848a685ccc1462534b3e76be1feed6a5da479edae6116a"
+      "sha256": "e88503790f3b790aab5059733d021c97acde926fbbcdb5562a171ff23283ebb3"
     },
     "entries/tools/arcade-ai.json": {
       "path": "/data/entries%2Ftools%2Farcade-ai.json",
@@ -3808,7 +3808,7 @@
     "raycast/tools/arcade-ai.json": {
       "path": "/data/raycast%2Ftools%2Farcade-ai.json",
       "type": "json",
-      "sha256": "0d6aa8bb9188ba92292ae495a09c186e7f260b27e94ee4125827da4e25874ff5"
+      "sha256": "ba6cd9605d45ed2adf7d197277e04a370f6002d80e3b36020bbda34efcd89177"
     },
     "entries/tools/arize-phoenix.json": {
       "path": "/data/entries%2Ftools%2Farize-phoenix.json",
@@ -3823,7 +3823,7 @@
     "raycast/tools/arize-phoenix.json": {
       "path": "/data/raycast%2Ftools%2Farize-phoenix.json",
       "type": "json",
-      "sha256": "760a04ac5bbb6aeff636048d60f81170feec776822fb973957f38ade14e5c921"
+      "sha256": "43d352e419366e4aab7eb98f8da809553dbe790562144e2e8e2d5cd5c780625b"
     },
     "entries/mcp/asana-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fasana-mcp-server.json",
@@ -3838,7 +3838,7 @@
     "raycast/mcp/asana-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fasana-mcp-server.json",
       "type": "json",
-      "sha256": "80dd2db9671e53edab3e0e10b989cf96ee937c8a40a59b2c406011b0b05d0963"
+      "sha256": "ecc8b42902e1f9dbac1d06bb088ee1e84fb1d2a3791bc5deb40f6cc0da60a651"
     },
     "entries/skills/audio-transcription-summarization.json": {
       "path": "/data/entries%2Fskills%2Faudio-transcription-summarization.json",
@@ -3853,7 +3853,7 @@
     "raycast/skills/audio-transcription-summarization.json": {
       "path": "/data/raycast%2Fskills%2Faudio-transcription-summarization.json",
       "type": "json",
-      "sha256": "b7d1fac745be873f4928b16b47963751d8359b46c6b2e96ca07fab2477da6d8a"
+      "sha256": "ef8a8f1852e2dbbc5bdfc20aade74c26d810cf2a70b47942070736449b98a633"
     },
     "skill-adapters/cursor/audio-transcription-summarization.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Faudio-transcription-summarization.mdc",
@@ -3873,7 +3873,7 @@
     "raycast/hooks/auto-code-formatter-hook.json": {
       "path": "/data/raycast%2Fhooks%2Fauto-code-formatter-hook.json",
       "type": "json",
-      "sha256": "958dd165d088000bfecf1b83e8167361e3ee626e2a7ce74cde6905e105f2487e"
+      "sha256": "5ab67dd796c27dbe377e9e2febee9b106efd45dd5428c00751abbaf204e8f61e"
     },
     "entries/hooks/auto-save-backup.json": {
       "path": "/data/entries%2Fhooks%2Fauto-save-backup.json",
@@ -3888,7 +3888,7 @@
     "raycast/hooks/auto-save-backup.json": {
       "path": "/data/raycast%2Fhooks%2Fauto-save-backup.json",
       "type": "json",
-      "sha256": "01bc157aff85dfce2a67a1ee685770ea8ae59de0cbb877d0b52d3d3ff8845168"
+      "sha256": "f905f57595c6cae98de847fe9a302abb71986909cddbf7be90b2b67e133ee7d6"
     },
     "entries/agents/autogen-conversation-agent-builder.json": {
       "path": "/data/entries%2Fagents%2Fautogen-conversation-agent-builder.json",
@@ -3903,7 +3903,7 @@
     "raycast/agents/autogen-conversation-agent-builder.json": {
       "path": "/data/raycast%2Fagents%2Fautogen-conversation-agent-builder.json",
       "type": "json",
-      "sha256": "7e3255fe137e0ccc340893e3f6a65ec9946daa2c73c750b412976bfbafc3ff03"
+      "sha256": "6c8cb5b5225929a66ced5f2c8c21663019d24bd2e29b013a672df884fea0f3b9"
     },
     "entries/commands/autogen-workflow.json": {
       "path": "/data/entries%2Fcommands%2Fautogen-workflow.json",
@@ -3918,7 +3918,7 @@
     "raycast/commands/autogen-workflow.json": {
       "path": "/data/raycast%2Fcommands%2Fautogen-workflow.json",
       "type": "json",
-      "sha256": "b0795a9e50c9a3fdc5c8569e183402a12e34ef6c70ec7c251b8a2310ff47f799"
+      "sha256": "d17fdca0dd15360d882c4529e27c812d3719ba3f1acd7c417aa7e53451be4445"
     },
     "entries/rules/aws-cloud-architect.json": {
       "path": "/data/entries%2Frules%2Faws-cloud-architect.json",
@@ -3933,7 +3933,7 @@
     "raycast/rules/aws-cloud-architect.json": {
       "path": "/data/raycast%2Frules%2Faws-cloud-architect.json",
       "type": "json",
-      "sha256": "6e0a8ecdb111904464dd97393607ce1e42fa8deaa007021ebfecf63c65026f8f"
+      "sha256": "2dd6aa98cd59b0e494f35338fc4f3790b301ac369b0e4a0d430fc43ef8783116"
     },
     "entries/hooks/aws-cloudformation-validator.json": {
       "path": "/data/entries%2Fhooks%2Faws-cloudformation-validator.json",
@@ -3948,7 +3948,7 @@
     "raycast/hooks/aws-cloudformation-validator.json": {
       "path": "/data/raycast%2Fhooks%2Faws-cloudformation-validator.json",
       "type": "json",
-      "sha256": "a3625155b04b137cb1cf086d9c9f20d82a03c16322cd0b215ae4eb444ef30b05"
+      "sha256": "5e5312cc3639d2dda3d25118d9f15f3cab64ae3542c09ace3e7b9c09c33b7789"
     },
     "entries/collections/aws-cloud-infrastructure-bundle.json": {
       "path": "/data/entries%2Fcollections%2Faws-cloud-infrastructure-bundle.json",
@@ -3963,7 +3963,7 @@
     "raycast/collections/aws-cloud-infrastructure-bundle.json": {
       "path": "/data/raycast%2Fcollections%2Faws-cloud-infrastructure-bundle.json",
       "type": "json",
-      "sha256": "1489e77a3451cc505efee9004d4bfce6178bf92ae7344cdc11585fdcebc3d1be"
+      "sha256": "890fb6c5091d61d41964d99707f2105cd715a10ec5b1ed47aa153833b7e47feb"
     },
     "entries/mcp/aws-services-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Faws-services-mcp-server.json",
@@ -3978,7 +3978,7 @@
     "raycast/mcp/aws-services-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Faws-services-mcp-server.json",
       "type": "json",
-      "sha256": "6989783157f39f9607a44365c44df7a65e7d195e839eb3e4914d65ccba58c60c"
+      "sha256": "85bdb7b4e953ddd76cdacc777727a4feffbc5b3181032731a117eabc4b7390f2"
     },
     "entries/agents/backend-architect-agent.json": {
       "path": "/data/entries%2Fagents%2Fbackend-architect-agent.json",
@@ -3993,7 +3993,7 @@
     "raycast/agents/backend-architect-agent.json": {
       "path": "/data/raycast%2Fagents%2Fbackend-architect-agent.json",
       "type": "json",
-      "sha256": "a2b5f24e8b1edb1eb230d3210e4aff99b3c44fec8d794f587e63a7d1e5ce6117"
+      "sha256": "7ca91cfd411ba5c7dd8f40ccfa7db4f475be13495bdb2ea80ebd956888e86c9f"
     },
     "entries/collections/backend-development-suite.json": {
       "path": "/data/entries%2Fcollections%2Fbackend-development-suite.json",
@@ -4008,7 +4008,7 @@
     "raycast/collections/backend-development-suite.json": {
       "path": "/data/raycast%2Fcollections%2Fbackend-development-suite.json",
       "type": "json",
-      "sha256": "2f46f3cbea414368f7308568d97e95232b133b82eb0b79ea90f1997a9171c12d"
+      "sha256": "e0ba88cc50b0cb0d54a6fa6a6c6805dd997be54be89e3d93532d9d9148ddf4e6"
     },
     "entries/skills/base-l2-smart-contract-launchpad.json": {
       "path": "/data/entries%2Fskills%2Fbase-l2-smart-contract-launchpad.json",
@@ -4023,7 +4023,7 @@
     "raycast/skills/base-l2-smart-contract-launchpad.json": {
       "path": "/data/raycast%2Fskills%2Fbase-l2-smart-contract-launchpad.json",
       "type": "json",
-      "sha256": "e5a896524d36bfc4217c171b1fee3bcc761a19fa6ba10a9b136ba4c24f8fff87"
+      "sha256": "0a73a7059ceb504169368517415c8594748df181c137dc8fa6000bc6162a1297"
     },
     "skill-adapters/cursor/base-l2-smart-contract-launchpad.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fbase-l2-smart-contract-launchpad.mdc",
@@ -4043,7 +4043,7 @@
     "raycast/rules/biome-strict-linting-rules.json": {
       "path": "/data/raycast%2Frules%2Fbiome-strict-linting-rules.json",
       "type": "json",
-      "sha256": "3def2b46c6018bdbb8d4d9c34e33fc5dde48a0b658ced8d7250e7864b4f1cb1f"
+      "sha256": "922b119e46b6740be6f1414d312b5450257f234467daf53563f099cda4066e13"
     },
     "entries/statuslines/block-timer-tracker.json": {
       "path": "/data/entries%2Fstatuslines%2Fblock-timer-tracker.json",
@@ -4058,7 +4058,7 @@
     "raycast/statuslines/block-timer-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Fblock-timer-tracker.json",
       "type": "json",
-      "sha256": "aa5b5d177280076fe4d9d05d6e4e4c9678b7481b08c874f02c21914ded38f416"
+      "sha256": "4235f3b324472f32b75ec8476aba7cf068efc68d0589fe12c5dcd2006fc1e072"
     },
     "entries/tools/bolt-new.json": {
       "path": "/data/entries%2Ftools%2Fbolt-new.json",
@@ -4073,7 +4073,7 @@
     "raycast/tools/bolt-new.json": {
       "path": "/data/raycast%2Ftools%2Fbolt-new.json",
       "type": "json",
-      "sha256": "04e93e4877f7e7420dc4db0e68bcd7792e0c95943f698d55539160a14e6c9f27"
+      "sha256": "8c136d07d3c12e0d8641a65ac339c009a3a74ba2bb4ab0f83e4134d9f7feae15"
     },
     "entries/mcp/box-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fbox-mcp-server.json",
@@ -4088,7 +4088,7 @@
     "raycast/mcp/box-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fbox-mcp-server.json",
       "type": "json",
-      "sha256": "091eb36caa8af2ff00e48c88d6a5000128bb75e27e9a98cea410ebe539df539e"
+      "sha256": "1553175619da799a1c90357c52066bdbd9fd455b1ea7ba80464b06614958ee1a"
     },
     "entries/tools/braintrust.json": {
       "path": "/data/entries%2Ftools%2Fbraintrust.json",
@@ -4103,7 +4103,7 @@
     "raycast/tools/braintrust.json": {
       "path": "/data/raycast%2Ftools%2Fbraintrust.json",
       "type": "json",
-      "sha256": "a54fbf16713c4c014d6d8c50aa385413db4c62cc8b76a27e44b3be21512a0ecf"
+      "sha256": "b9444756401b07303c32c6c4b80012238c1d5589d8d312dae42504e44df95823"
     },
     "entries/skills/browser-agent-workflow-automation.json": {
       "path": "/data/entries%2Fskills%2Fbrowser-agent-workflow-automation.json",
@@ -4118,7 +4118,7 @@
     "raycast/skills/browser-agent-workflow-automation.json": {
       "path": "/data/raycast%2Fskills%2Fbrowser-agent-workflow-automation.json",
       "type": "json",
-      "sha256": "253e0491af2051f9d49e24442943e5c33fa3d3a633cdd664db60764a6c561409"
+      "sha256": "68b0f770c014cb1f2972710dfd771188bc02009927236b3a397fa1ec951c0a4e"
     },
     "skill-adapters/cursor/browser-agent-workflow-automation.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fbrowser-agent-workflow-automation.mdc",
@@ -4138,7 +4138,7 @@
     "raycast/tools/browser-use.json": {
       "path": "/data/raycast%2Ftools%2Fbrowser-use.json",
       "type": "json",
-      "sha256": "df54711c7b8d5913d4a5bacdcee57b6a07fa0e0ed754b13b19a7b14bd354eae1"
+      "sha256": "d12accdf97b13d601f24d6dcad19a5c0cec9fd153c2dcb210b05347239de775f"
     },
     "entries/tools/browserbase.json": {
       "path": "/data/entries%2Ftools%2Fbrowserbase.json",
@@ -4153,7 +4153,7 @@
     "raycast/tools/browserbase.json": {
       "path": "/data/raycast%2Ftools%2Fbrowserbase.json",
       "type": "json",
-      "sha256": "d47ada78b4f4df00afaeef485836d960bf7418071b15803c487804205d3ca6c3"
+      "sha256": "1b995320715493b6fa19c3a8c79a720798e6ca6a1e490ece35ad7b9d85620e88"
     },
     "entries/guides/build-mcp-server.json": {
       "path": "/data/entries%2Fguides%2Fbuild-mcp-server.json",
@@ -4168,7 +4168,7 @@
     "raycast/guides/build-mcp-server.json": {
       "path": "/data/raycast%2Fguides%2Fbuild-mcp-server.json",
       "type": "json",
-      "sha256": "c77136d78835a5b56def6f2d95570f7cb1f26e20b92643750c614980a3d30d22"
+      "sha256": "e1c0250d0099230f8d35855080668c7a55f1a4573a74438e08ccecaf3635c02d"
     },
     "entries/skills/bun-runtime-modern-javascript.json": {
       "path": "/data/entries%2Fskills%2Fbun-runtime-modern-javascript.json",
@@ -4183,7 +4183,7 @@
     "raycast/skills/bun-runtime-modern-javascript.json": {
       "path": "/data/raycast%2Fskills%2Fbun-runtime-modern-javascript.json",
       "type": "json",
-      "sha256": "140cc6f5e3fc317432b080b9a33d9fb0b1c7b69e1df31dd463ef8686dcb2edf5"
+      "sha256": "31e40d076295d6dfb3d24b432618566ff1a93a103b0eb6e41c2d18dbf3506f65"
     },
     "skill-adapters/cursor/bun-runtime-modern-javascript.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fbun-runtime-modern-javascript.mdc",
@@ -4203,7 +4203,7 @@
     "raycast/statuslines/burn-rate-monitor.json": {
       "path": "/data/raycast%2Fstatuslines%2Fburn-rate-monitor.json",
       "type": "json",
-      "sha256": "45ca6fe34d02be3f92f3ca5b16cd5541ca879c4fccbd6b105b03e867425954cf"
+      "sha256": "f2d342014be6f3d07d2b0231a696baee24ebd43385e469efa7c8d7a56c578758"
     },
     "entries/statuslines/cache-efficiency-monitor.json": {
       "path": "/data/entries%2Fstatuslines%2Fcache-efficiency-monitor.json",
@@ -4218,7 +4218,7 @@
     "raycast/statuslines/cache-efficiency-monitor.json": {
       "path": "/data/raycast%2Fstatuslines%2Fcache-efficiency-monitor.json",
       "type": "json",
-      "sha256": "f33746715b5b6c8711be63fc7e58d6437d4e252593d9c05def2902088a05708d"
+      "sha256": "f06075fb4dff78e0b3415213cf4fb4ce0fcd89ed3ced30c465a88d9883c26147"
     },
     "entries/mcp/canva-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcanva-mcp-server.json",
@@ -4233,7 +4233,7 @@
     "raycast/mcp/canva-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcanva-mcp-server.json",
       "type": "json",
-      "sha256": "e18e46fa7f7e6be1f66d958627c36ed36052beb75fcbd4da781faed7f699cfe8"
+      "sha256": "31b9d71a9141044047301b2723c750758ffb9da1483f010ee4efa998f5d658a5"
     },
     "entries/statuslines/catppuccin-mocha-theme.json": {
       "path": "/data/entries%2Fstatuslines%2Fcatppuccin-mocha-theme.json",
@@ -4248,7 +4248,7 @@
     "raycast/statuslines/catppuccin-mocha-theme.json": {
       "path": "/data/raycast%2Fstatuslines%2Fcatppuccin-mocha-theme.json",
       "type": "json",
-      "sha256": "cc43922a67e10da6a40ed83dcc27bc021c0e012bc0cbf47d1c1e000ba9f4588b"
+      "sha256": "76c5f933281588be28131d41361fb6e6df65575c9a81a028fb90ae87d3c3b8bc"
     },
     "entries/guides/chatgpt-migration-guide.json": {
       "path": "/data/entries%2Fguides%2Fchatgpt-migration-guide.json",
@@ -4263,7 +4263,7 @@
     "raycast/guides/chatgpt-migration-guide.json": {
       "path": "/data/raycast%2Fguides%2Fchatgpt-migration-guide.json",
       "type": "json",
-      "sha256": "99b91ea6b56d66de6e8d19a62dfc148cc178b62c81b8a5f1e58583ad4601ae29"
+      "sha256": "490c961fec207d7ae9eea40220832101512e07a118a2b4b4c1d592a52a09a22e"
     },
     "entries/commands/checkpoint-manager.json": {
       "path": "/data/entries%2Fcommands%2Fcheckpoint-manager.json",
@@ -4278,7 +4278,7 @@
     "raycast/commands/checkpoint-manager.json": {
       "path": "/data/raycast%2Fcommands%2Fcheckpoint-manager.json",
       "type": "json",
-      "sha256": "ee2efdd6a1ef02631cd2be934a16489314f678f3708da0301b4497c3ea3a2945"
+      "sha256": "2558021f8140979af0c3b917c9cbf91a2166e28920b08ae995a48512beb8c485"
     },
     "entries/guides/claude-4-extended-thinking-tutorial.json": {
       "path": "/data/entries%2Fguides%2Fclaude-4-extended-thinking-tutorial.json",
@@ -4293,7 +4293,7 @@
     "raycast/guides/claude-4-extended-thinking-tutorial.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-4-extended-thinking-tutorial.json",
       "type": "json",
-      "sha256": "9a1b82c6375996c8f48f3b89314a192edfb9e43686dc92b5e0d09da0c895ebb8"
+      "sha256": "fb6410c85599e7d50fb81c6c878d82ed33dbf9a913c2ca385393b13c5ff89ac8"
     },
     "entries/guides/claude-agent-development-framework.json": {
       "path": "/data/entries%2Fguides%2Fclaude-agent-development-framework.json",
@@ -4308,7 +4308,7 @@
     "raycast/guides/claude-agent-development-framework.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-agent-development-framework.json",
       "type": "json",
-      "sha256": "645cfb8dceb419f0c7f114a791ef905e031304d30839a1504eaaa4567872a4ca"
+      "sha256": "fffb01112db4d42df7f3b30b67084f759a60f90ee34f89a170e15df20519d04c"
     },
     "entries/guides/healthcare-hipaa-guide.json": {
       "path": "/data/entries%2Fguides%2Fhealthcare-hipaa-guide.json",
@@ -4323,7 +4323,7 @@
     "raycast/guides/healthcare-hipaa-guide.json": {
       "path": "/data/raycast%2Fguides%2Fhealthcare-hipaa-guide.json",
       "type": "json",
-      "sha256": "214567f767e04bdb9aeb32dfd62778ad65206e42cb16ae779080259c2127835e"
+      "sha256": "021835710fc9fe2c54b7d3a5bac4b7acc37c1142afd8c1889b7fbb3a25d6d33f"
     },
     "entries/tools/claude-code.json": {
       "path": "/data/entries%2Ftools%2Fclaude-code.json",
@@ -4338,7 +4338,7 @@
     "raycast/tools/claude-code.json": {
       "path": "/data/raycast%2Ftools%2Fclaude-code.json",
       "type": "json",
-      "sha256": "8a09c119f0d03a1a35e2d5809e92c03f25798fa44fd60c46491f442856c3ae5b"
+      "sha256": "c486e91fd5db52da3a1c262ad06e07ab798986adbc2603db6f6980612ccfd1d3"
     },
     "entries/statuslines/docker-health-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fdocker-health-statusline.json",
@@ -4353,7 +4353,7 @@
     "raycast/statuslines/docker-health-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fdocker-health-statusline.json",
       "type": "json",
-      "sha256": "21125edbfaef494e685fb6f6eb73cfc6d39022051ddd1cd79005c90140868c52"
+      "sha256": "759d86d4d734aad28b5a1eec142ca9a21de759eba0e8b20f767d4082672a25dc"
     },
     "entries/guides/multi-directory-setup.json": {
       "path": "/data/entries%2Fguides%2Fmulti-directory-setup.json",
@@ -4368,7 +4368,7 @@
     "raycast/guides/multi-directory-setup.json": {
       "path": "/data/raycast%2Fguides%2Fmulti-directory-setup.json",
       "type": "json",
-      "sha256": "9e79d425e6e170738c1a09273cfc653789912e77eb8bfab926759d512ccb70b1"
+      "sha256": "5fd7b7cc76e33c740f0493ae23721f31a4f6f8b342008b3160db2bf852ea8e85"
     },
     "entries/guides/claude-vs-cursor-codeium.json": {
       "path": "/data/entries%2Fguides%2Fclaude-vs-cursor-codeium.json",
@@ -4383,7 +4383,7 @@
     "raycast/guides/claude-vs-cursor-codeium.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-vs-cursor-codeium.json",
       "type": "json",
-      "sha256": "de4dd78429f9fac03d8c963394febe8f5fa1a3d9813d5761c78ce292a1d38a67"
+      "sha256": "d0459666a25620f02c2a848e314adf5d0e882f5bd171eeb66160a5cbb311ba06"
     },
     "entries/guides/wsl-setup-guide.json": {
       "path": "/data/entries%2Fguides%2Fwsl-setup-guide.json",
@@ -4398,7 +4398,7 @@
     "raycast/guides/wsl-setup-guide.json": {
       "path": "/data/raycast%2Fguides%2Fwsl-setup-guide.json",
       "type": "json",
-      "sha256": "3479fc0005866fa86cfd0a5d6325a9daa9ed0dcf1c2b4c0d14207e519b36cb56"
+      "sha256": "6ea78702e4a188b71dac971e4426561c7176ab31119390a45df45aa1bead8359"
     },
     "entries/mcp/desktop-mcp-setup.json": {
       "path": "/data/entries%2Fmcp%2Fdesktop-mcp-setup.json",
@@ -4413,7 +4413,7 @@
     "raycast/mcp/desktop-mcp-setup.json": {
       "path": "/data/raycast%2Fmcp%2Fdesktop-mcp-setup.json",
       "type": "json",
-      "sha256": "4195b927c915350a584c2c53574f7af5464c320540d1e9ac95376c553576d31b"
+      "sha256": "5f2d3598d1de5d32ba134f2620639e4b74c723839224ff53d179e6c5eb9ca561"
     },
     "entries/guides/financial-services-guide.json": {
       "path": "/data/entries%2Fguides%2Ffinancial-services-guide.json",
@@ -4428,7 +4428,7 @@
     "raycast/guides/financial-services-guide.json": {
       "path": "/data/raycast%2Fguides%2Ffinancial-services-guide.json",
       "type": "json",
-      "sha256": "b237a3a84852ee2981922bc84fa00966c34c2ff2a96cc6ce0541a8dc272aaa6c"
+      "sha256": "562e59b3666f329a1275f62d3fc54de8d36b91a617b9209a8306d5b5879be2da"
     },
     "entries/agents/claude-haiku-45-speed-optimizer-agent.json": {
       "path": "/data/entries%2Fagents%2Fclaude-haiku-45-speed-optimizer-agent.json",
@@ -4443,7 +4443,7 @@
     "raycast/agents/claude-haiku-45-speed-optimizer-agent.json": {
       "path": "/data/raycast%2Fagents%2Fclaude-haiku-45-speed-optimizer-agent.json",
       "type": "json",
-      "sha256": "dd841134d146f38cd6a6dd60b1c63aba4e5781ca1aa0a267e4b030df643f027b"
+      "sha256": "d344d2c21bec409e119c10f0669e72df0ce86799b9067762b1cf7109da4ea2fc"
     },
     "entries/guides/claude-mcp-server-setup-guide.json": {
       "path": "/data/entries%2Fguides%2Fclaude-mcp-server-setup-guide.json",
@@ -4458,7 +4458,7 @@
     "raycast/guides/claude-mcp-server-setup-guide.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-mcp-server-setup-guide.json",
       "type": "json",
-      "sha256": "17b5f7c4f6b3c3a8aec03fe30191e51db3a412dcb79bee920004fd53c2d7d17a"
+      "sha256": "98924a5be4017c0aab044ce821934c01dd78b724c85d0dd8592bd2f3c12c5cd8"
     },
     "entries/agents/claude-mcp-skills-integration-agent.json": {
       "path": "/data/entries%2Fagents%2Fclaude-mcp-skills-integration-agent.json",
@@ -4473,7 +4473,7 @@
     "raycast/agents/claude-mcp-skills-integration-agent.json": {
       "path": "/data/raycast%2Fagents%2Fclaude-mcp-skills-integration-agent.json",
       "type": "json",
-      "sha256": "432b33876d91103afa0b74c683bcd2a275b1e3c8e546767a976ef660a2a8a3e7"
+      "sha256": "32711464aa236deadaf7a9ac36dfdd6c8281498de930fa0a9450a3d654bce59d"
     },
     "entries/guides/business-process-automation.json": {
       "path": "/data/entries%2Fguides%2Fbusiness-process-automation.json",
@@ -4488,7 +4488,7 @@
     "raycast/guides/business-process-automation.json": {
       "path": "/data/raycast%2Fguides%2Fbusiness-process-automation.json",
       "type": "json",
-      "sha256": "589e4dfd6c9e5bacbf012207295fe1deaa5e39d454a564d7233457176cb8cc98"
+      "sha256": "7d4b9535e3f4df27a283b4b3f3105430083613b7787ab344d11ea4a69b4c3a70"
     },
     "entries/guides/claude-rate-limits-fix.json": {
       "path": "/data/entries%2Fguides%2Fclaude-rate-limits-fix.json",
@@ -4503,7 +4503,7 @@
     "raycast/guides/claude-rate-limits-fix.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-rate-limits-fix.json",
       "type": "json",
-      "sha256": "bcdf790ad93d0171a0f61caa5e0c07f9c30f54a86e260537fdb4f6fcecf89eb5"
+      "sha256": "1f4cf8d028e931150729610d39681f7e2d607dd4cbd0cdf3d6766a746d62fdac"
     },
     "entries/guides/claude-vs-codewhisperer-gemini.json": {
       "path": "/data/entries%2Fguides%2Fclaude-vs-codewhisperer-gemini.json",
@@ -4518,7 +4518,7 @@
     "raycast/guides/claude-vs-codewhisperer-gemini.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-vs-codewhisperer-gemini.json",
       "type": "json",
-      "sha256": "adaa3da4c2be3ad79ceb3877e88ae742b88bc63fc7b28330269b7f67c7790936"
+      "sha256": "019f210fe1f460c8b2ea7a02990354264a9da745c94c01a2b5756f7cb714698f"
     },
     "entries/guides/claude-vs-copilot-python.json": {
       "path": "/data/entries%2Fguides%2Fclaude-vs-copilot-python.json",
@@ -4533,7 +4533,7 @@
     "raycast/guides/claude-vs-copilot-python.json": {
       "path": "/data/raycast%2Fguides%2Fclaude-vs-copilot-python.json",
       "type": "json",
-      "sha256": "ac38816e3a2e0276aa2e5f7fdb78f13cdb996c25df440bd0437cfafffa860926"
+      "sha256": "8f02daea918ff2d3686eb93502da8d66602fe7d276035d3e5f93ec242b05653e"
     },
     "entries/commands/claudemd-builder.json": {
       "path": "/data/entries%2Fcommands%2Fclaudemd-builder.json",
@@ -4548,7 +4548,7 @@
     "raycast/commands/claudemd-builder.json": {
       "path": "/data/raycast%2Fcommands%2Fclaudemd-builder.json",
       "type": "json",
-      "sha256": "ffe146d6211b0fb32ae62f9ca5a78fbe36557fc851f347ad0472409255c308e9"
+      "sha256": "b82900d0915aa73ac133dfc4ff023b883518c536ebc07bf0f8c2974d1fdd1fc8"
     },
     "entries/agents/claude-md-knowledge-manager-agent.json": {
       "path": "/data/entries%2Fagents%2Fclaude-md-knowledge-manager-agent.json",
@@ -4563,7 +4563,7 @@
     "raycast/agents/claude-md-knowledge-manager-agent.json": {
       "path": "/data/raycast%2Fagents%2Fclaude-md-knowledge-manager-agent.json",
       "type": "json",
-      "sha256": "02a0ce03bd73730b5d69ea9ebefe472301a2e087bebe3ad10315de385035afe8"
+      "sha256": "18222f6b2b106ec6002297f74451cb038616a3ca05c0889d8badc34f2b3b81ec"
     },
     "entries/skills/cli-data-viz-quickstart.json": {
       "path": "/data/entries%2Fskills%2Fcli-data-viz-quickstart.json",
@@ -4578,7 +4578,7 @@
     "raycast/skills/cli-data-viz-quickstart.json": {
       "path": "/data/raycast%2Fskills%2Fcli-data-viz-quickstart.json",
       "type": "json",
-      "sha256": "0011f0605aa35f627d0f843b523bb8dacbbc31212cfc999fc0d5ba684434f06e"
+      "sha256": "913e98f50c6805c84c1657b5ada21dcb159fdb13ca937a75c0980caa57d7b40d"
     },
     "skill-adapters/cursor/cli-data-viz-quickstart.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcli-data-viz-quickstart.mdc",
@@ -4598,7 +4598,7 @@
     "raycast/mcp/clickup-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fclickup-mcp-server.json",
       "type": "json",
-      "sha256": "4e2f34106603a005ac1a34a9fbb9da2ce4136ef702583e4953dadf056e64c172"
+      "sha256": "0b0982e71030124cdf2c682b63ef088f12ece970f794283ab462e53f71436ab1"
     },
     "entries/tools/cline.json": {
       "path": "/data/entries%2Ftools%2Fcline.json",
@@ -4613,7 +4613,7 @@
     "raycast/tools/cline.json": {
       "path": "/data/raycast%2Ftools%2Fcline.json",
       "type": "json",
-      "sha256": "ac258b9f06f6ab4951ec795d418265c3420ab7cc64114dc071b7728fd6fe85cc"
+      "sha256": "ef52177256a5bf9a47eb4847a1e00eac10fd80e2bf3ec2125755e597180d5235"
     },
     "entries/hooks/cloud-backup-on-session-stop.json": {
       "path": "/data/entries%2Fhooks%2Fcloud-backup-on-session-stop.json",
@@ -4628,7 +4628,7 @@
     "raycast/hooks/cloud-backup-on-session-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fcloud-backup-on-session-stop.json",
       "type": "json",
-      "sha256": "3399344d0721c8524fd8dedc198575a170fe59174ac1974d137c35c4ba467927"
+      "sha256": "26f5cb3a4e12cd701c8f106181f142d063b772f05f1ed2055e0776db759324f2"
     },
     "entries/agents/cloud-infrastructure-architect-agent.json": {
       "path": "/data/entries%2Fagents%2Fcloud-infrastructure-architect-agent.json",
@@ -4643,7 +4643,7 @@
     "raycast/agents/cloud-infrastructure-architect-agent.json": {
       "path": "/data/raycast%2Fagents%2Fcloud-infrastructure-architect-agent.json",
       "type": "json",
-      "sha256": "9ade3596da6abfe1500a7e2bf01c7d5aa6d32406b8efc14b0908f94badc5ca61"
+      "sha256": "aab3a2fdc3e550f5d15be9b3f309e70e19e09301a73d7dea275a0e57cb57f697"
     },
     "entries/tools/cloudflare-agents-sdk.json": {
       "path": "/data/entries%2Ftools%2Fcloudflare-agents-sdk.json",
@@ -4658,7 +4658,7 @@
     "raycast/tools/cloudflare-agents-sdk.json": {
       "path": "/data/raycast%2Ftools%2Fcloudflare-agents-sdk.json",
       "type": "json",
-      "sha256": "138e90539410422f4e26f895deda916066bfa142c44b29425d6b3ee1319589b6"
+      "sha256": "405679e231913fd59d6a950560f34b8f41d6450581a618e20f4dcd1e2f96ecbb"
     },
     "entries/mcp/cloudflare-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcloudflare-mcp-server.json",
@@ -4673,7 +4673,7 @@
     "raycast/mcp/cloudflare-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcloudflare-mcp-server.json",
       "type": "json",
-      "sha256": "a229d68791dab1e3e346abbd9a011e5f03832bd4934e7c8b6a0de431de840aa0"
+      "sha256": "b6d6c9c61c616db9523c09ec36287b2da941cebf3e88c9cd40deba8bb6954563"
     },
     "entries/skills/cloudflare-workers-ai-edge.json": {
       "path": "/data/entries%2Fskills%2Fcloudflare-workers-ai-edge.json",
@@ -4688,7 +4688,7 @@
     "raycast/skills/cloudflare-workers-ai-edge.json": {
       "path": "/data/raycast%2Fskills%2Fcloudflare-workers-ai-edge.json",
       "type": "json",
-      "sha256": "f5ce1ab31b883aa5755d48ed49518dce270e95422debefb88566b1cdccfa92bf"
+      "sha256": "191c50309f55bb1c1b69c38593bbd1d2aeb01e879daec060949ba2a8069a3ce0"
     },
     "skill-adapters/cursor/cloudflare-workers-ai-edge.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcloudflare-workers-ai-edge.mdc",
@@ -4708,7 +4708,7 @@
     "raycast/skills/cloudflare-workers-d1-kv-r2-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcloudflare-workers-d1-kv-r2-capability-pack.json",
       "type": "json",
-      "sha256": "f48342821fab669077f0672fc543515b44af60d158104c5cda37ed5136829a74"
+      "sha256": "5d714557099f548c9c812f225afecabd962f7519293d4b807d6b0d473714c14c"
     },
     "skill-adapters/cursor/cloudflare-workers-d1-kv-r2-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcloudflare-workers-d1-kv-r2-capability-pack.mdc",
@@ -4728,7 +4728,7 @@
     "raycast/mcp/cloudinary-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcloudinary-mcp-server.json",
       "type": "json",
-      "sha256": "3e9868606c43ff645c5e8c65a8544defdd326a5dd31ea48f15c7fcc85237e133"
+      "sha256": "ee4b49a238b70bd956fd59372dc15d68280ff8847d15919ae26d44d967a421e9"
     },
     "entries/hooks/code-complexity-alert-monitor.json": {
       "path": "/data/entries%2Fhooks%2Fcode-complexity-alert-monitor.json",
@@ -4743,7 +4743,7 @@
     "raycast/hooks/code-complexity-alert-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Fcode-complexity-alert-monitor.json",
       "type": "json",
-      "sha256": "316b47dec7620de3ca0fb92b8337b5ce8be13d25626470a8066e9f04fb14c634"
+      "sha256": "340c54295d9f0618aead35522d9a19c7419041467392569c7b03a7facc153e6f"
     },
     "entries/collections/code-quality-toolkit.json": {
       "path": "/data/entries%2Fcollections%2Fcode-quality-toolkit.json",
@@ -4758,7 +4758,7 @@
     "raycast/collections/code-quality-toolkit.json": {
       "path": "/data/raycast%2Fcollections%2Fcode-quality-toolkit.json",
       "type": "json",
-      "sha256": "f907b03ff7bb3c7d42f3951c359b76aa234bdcd915b384b688acc331684603ed"
+      "sha256": "dbde6f0525b1c3953f020d963666b73a243b92edb3dac2ac671a0dcdcc63eebd"
     },
     "entries/skills/coderabbit-lite-pr-review-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcoderabbit-lite-pr-review-capability-pack.json",
@@ -4773,7 +4773,7 @@
     "raycast/skills/coderabbit-lite-pr-review-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcoderabbit-lite-pr-review-capability-pack.json",
       "type": "json",
-      "sha256": "28500bc058b625251b3417938f9d567f7afefe73cde77c35c7cddfdba4e8bfbd"
+      "sha256": "9c949fc4fd87b0a1ad04a397252db13c714b6af5ad19c98804f6aca8e4d999ee"
     },
     "skill-adapters/cursor/coderabbit-lite-pr-review-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcoderabbit-lite-pr-review-capability-pack.mdc",
@@ -4793,7 +4793,7 @@
     "raycast/rules/code-review-expert.json": {
       "path": "/data/raycast%2Frules%2Fcode-review-expert.json",
       "type": "json",
-      "sha256": "3ac4b8fb46b04b127c8ab6fbfba66ae0cda99ba0dd41aa7c7e727f86b8e75cfa"
+      "sha256": "9bc48ab65416788d03bde7fe65a01b734f49adce54ba1ec0b2d8babc9a18bcc8"
     },
     "entries/agents/code-reviewer-agent.json": {
       "path": "/data/entries%2Fagents%2Fcode-reviewer-agent.json",
@@ -4808,7 +4808,7 @@
     "raycast/agents/code-reviewer-agent.json": {
       "path": "/data/raycast%2Fagents%2Fcode-reviewer-agent.json",
       "type": "json",
-      "sha256": "5f9b9303f3ad6a646b71155c1a90f9d3be0d58a2bba5cc11311194bd559170ff"
+      "sha256": "7e0392c74de62a0121d4e9d0a263e501db0c180a74f4976ac163dd168825f531"
     },
     "entries/hooks/code-test-runner-hook.json": {
       "path": "/data/entries%2Fhooks%2Fcode-test-runner-hook.json",
@@ -4823,7 +4823,7 @@
     "raycast/hooks/code-test-runner-hook.json": {
       "path": "/data/raycast%2Fhooks%2Fcode-test-runner-hook.json",
       "type": "json",
-      "sha256": "fa2f54f3cde4c9d06716b8d0dd536429b465c46f9618cde9f5c1051d5a25f684"
+      "sha256": "9747a4aac7256f49739a810d9472fc12e2e884c3c69d2c0471fe3507d93cedbf"
     },
     "entries/agents/codebase-migration-refactoring-agent.json": {
       "path": "/data/entries%2Fagents%2Fcodebase-migration-refactoring-agent.json",
@@ -4838,7 +4838,7 @@
     "raycast/agents/codebase-migration-refactoring-agent.json": {
       "path": "/data/raycast%2Fagents%2Fcodebase-migration-refactoring-agent.json",
       "type": "json",
-      "sha256": "ef4d486718fe19fd1e86f812b2808feb7eebf1824368dcd62f7cc7fd28473bd0"
+      "sha256": "97b0d12290e16ca5aba96e5353569fd9bb1dcf7e3c25ac6ef04b06a23914ae3b"
     },
     "entries/tools/coderabbit.json": {
       "path": "/data/entries%2Ftools%2Fcoderabbit.json",
@@ -4853,7 +4853,7 @@
     "raycast/tools/coderabbit.json": {
       "path": "/data/raycast%2Ftools%2Fcoderabbit.json",
       "type": "json",
-      "sha256": "e500999c526c6abf64fea552a821657621b5a6dc1bee1ac8021a1890fd1d5d67"
+      "sha256": "ce61831ab32e1e44d6865ad967164d41204dd67d83f562e25ffd4c4ebf16ddbc"
     },
     "entries/skills/codex-automations-orchestrator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcodex-automations-orchestrator-capability-pack.json",
@@ -4868,7 +4868,7 @@
     "raycast/skills/codex-automations-orchestrator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcodex-automations-orchestrator-capability-pack.json",
       "type": "json",
-      "sha256": "8c749e4920cacc1bc56805a63a8532a1459d792627bcd50280d5a0858c68bb5f"
+      "sha256": "aa43ab35ebe07c7b0807809bf174cbd1160456fc66d60fed6fcb628b1789d731"
     },
     "skill-adapters/cursor/codex-automations-orchestrator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcodex-automations-orchestrator-capability-pack.mdc",
@@ -4888,7 +4888,7 @@
     "raycast/skills/codex-plugin-creator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcodex-plugin-creator-capability-pack.json",
       "type": "json",
-      "sha256": "e36512150b3b094e2d7be3fa3585dbbd041128efaf672027009884314b58d055"
+      "sha256": "3b66f99ba54830e2e6ea12f7aacb3daf8b1370ff8d020ff3e7449ac1131f59e7"
     },
     "skill-adapters/cursor/codex-plugin-creator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcodex-plugin-creator-capability-pack.mdc",
@@ -4908,7 +4908,7 @@
     "raycast/guides/migration-workflow-guide.json": {
       "path": "/data/raycast%2Fguides%2Fmigration-workflow-guide.json",
       "type": "json",
-      "sha256": "218af4c3c35cb3004ec80d8a9df0e05e1519f839332da52f50f9ffd0a26bf439"
+      "sha256": "23eb5be4dedf1f08fd02876c0192f9b09de5183313aab0c5a88ab854523e9bbf"
     },
     "entries/tools/composio.json": {
       "path": "/data/entries%2Ftools%2Fcomposio.json",
@@ -4923,7 +4923,7 @@
     "raycast/tools/composio.json": {
       "path": "/data/raycast%2Ftools%2Fcomposio.json",
       "type": "json",
-      "sha256": "576f792c77d331fe9d42ded2dbfedafceef92098ce48422efb6fc92d9ffb79e1"
+      "sha256": "6cf9a6340130bc4b2a8aa2022fdaec71f0836689cd6badd45a82e920700a8c3f"
     },
     "entries/collections/content-creation-workflow.json": {
       "path": "/data/entries%2Fcollections%2Fcontent-creation-workflow.json",
@@ -4938,7 +4938,7 @@
     "raycast/collections/content-creation-workflow.json": {
       "path": "/data/raycast%2Fcollections%2Fcontent-creation-workflow.json",
       "type": "json",
-      "sha256": "f961d68c03edb717e496d36f8ad0e49a642c175fef07088d8d6bdcb4a340fc56"
+      "sha256": "591a76d182325cfbb39770451cc7ce32eca8a95030f107ace71de1798e2dc6a9"
     },
     "entries/commands/context-analyzer.json": {
       "path": "/data/entries%2Fcommands%2Fcontext-analyzer.json",
@@ -4953,7 +4953,7 @@
     "raycast/commands/context-analyzer.json": {
       "path": "/data/raycast%2Fcommands%2Fcontext-analyzer.json",
       "type": "json",
-      "sha256": "f9203ecc35efb57f3c1bb2cb2b3e33a773bbb559a09e553bd0bb971f437aab9e"
+      "sha256": "4df91daf9d2e2ca2fd138bd194ea1fb17781cb85f6bacd7d7d893fe49336970d"
     },
     "entries/agents/context-window-optimizer-agent.json": {
       "path": "/data/entries%2Fagents%2Fcontext-window-optimizer-agent.json",
@@ -4968,7 +4968,7 @@
     "raycast/agents/context-window-optimizer-agent.json": {
       "path": "/data/raycast%2Fagents%2Fcontext-window-optimizer-agent.json",
       "type": "json",
-      "sha256": "c8d42ba29ae15c21b9e38217a95e91015f5e9a5ffa5046631ad005efac8dbf54"
+      "sha256": "f176d98fc202cd91d88f14b270477c7525f0ee53827bfa825856b3d00f2dbd85"
     },
     "entries/tools/continue.json": {
       "path": "/data/entries%2Ftools%2Fcontinue.json",
@@ -4983,7 +4983,7 @@
     "raycast/tools/continue.json": {
       "path": "/data/raycast%2Ftools%2Fcontinue.json",
       "type": "json",
-      "sha256": "7539fbf080f21f4d6b40ab9f9ede758430e2b832f5bb17977185f2d0b3a16bef"
+      "sha256": "9ef5a171bd95cf75afc64db15ca8bec88b88b4334a2718c0d39a7bc9b5608ea9"
     },
     "entries/mcp/contrastapi-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcontrastapi-mcp-server.json",
@@ -4998,7 +4998,7 @@
     "raycast/mcp/contrastapi-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "a554f812ae95f4b8a64ba3696a2536ad59166c4b499703d6e6b4a78de950bc17"
+      "sha256": "d448e3d537faa6ace933aba7fce5094fbc0686dd79deccfc2cfa5c85163165d7"
     },
     "entries/tools/crewai.json": {
       "path": "/data/entries%2Ftools%2Fcrewai.json",
@@ -5013,7 +5013,7 @@
     "raycast/tools/crewai.json": {
       "path": "/data/raycast%2Ftools%2Fcrewai.json",
       "type": "json",
-      "sha256": "c43ebd5daec2d8b56306c4e06e67b9d65ff09cbeda21e23096f5e1a78bfd5bad"
+      "sha256": "310fa951c7c6250eb2da8be6bc695bfecb4a078128d293cba3db98fe1bf0da64"
     },
     "entries/hooks/css-unused-selector-detector.json": {
       "path": "/data/entries%2Fhooks%2Fcss-unused-selector-detector.json",
@@ -5028,7 +5028,7 @@
     "raycast/hooks/css-unused-selector-detector.json": {
       "path": "/data/raycast%2Fhooks%2Fcss-unused-selector-detector.json",
       "type": "json",
-      "sha256": "404aa058dd2fe22f761c75c7366b7aa202ab1d39fc5f1e94af8c170dcea62be6"
+      "sha256": "91ccb9f6af4823b2821aac5fb4af3dc96875e70864003439df9210464a350802"
     },
     "entries/skills/csv-excel-data-wrangler.json": {
       "path": "/data/entries%2Fskills%2Fcsv-excel-data-wrangler.json",
@@ -5043,7 +5043,7 @@
     "raycast/skills/csv-excel-data-wrangler.json": {
       "path": "/data/raycast%2Fskills%2Fcsv-excel-data-wrangler.json",
       "type": "json",
-      "sha256": "12d237c56037f2ae592b2c308c8af39149a2f7d048b4ea2fd8dbad4ac46eb9f8"
+      "sha256": "a1b0ee73227d8bb3dad7a91ccdffc9daa59e1d0b15eabfaac888b8adcf1087d7"
     },
     "skill-adapters/cursor/csv-excel-data-wrangler.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcsv-excel-data-wrangler.mdc",
@@ -5063,7 +5063,7 @@
     "raycast/tools/cursor.json": {
       "path": "/data/raycast%2Ftools%2Fcursor.json",
       "type": "json",
-      "sha256": "8e4adc1ad1d11d7aae8c18c1e1f5e6092b06aa90f4bd9434941be07a587f8c87"
+      "sha256": "9715b2384d98e2950fde692253f0d512b865d66fb1b1d3cc2dd61b52278af2da"
     },
     "entries/skills/cursor-windsurf-ai-ide-setup.json": {
       "path": "/data/entries%2Fskills%2Fcursor-windsurf-ai-ide-setup.json",
@@ -5078,7 +5078,7 @@
     "raycast/skills/cursor-windsurf-ai-ide-setup.json": {
       "path": "/data/raycast%2Fskills%2Fcursor-windsurf-ai-ide-setup.json",
       "type": "json",
-      "sha256": "f100db28f785fc0e698c94aa4861d4fe16d149c34252a06eb8c372e93e7bea28"
+      "sha256": "edfa232900a1a2524e40ae1ba0e1191823ce561e8976a960b21d0c8881b6071f"
     },
     "skill-adapters/cursor/cursor-windsurf-ai-ide-setup.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcursor-windsurf-ai-ide-setup.mdc",
@@ -5098,7 +5098,7 @@
     "raycast/statuslines/daily-usage-percentage-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Fdaily-usage-percentage-tracker.json",
       "type": "json",
-      "sha256": "843eacd98b4cbb3e4f3eccc3e3df583f9d898f27d6884820b641919b29316ecb"
+      "sha256": "69fe33089a058e9ab53f9a0385593f8eda1d03d3345cdb6497a1e098a5098951"
     },
     "entries/mcp/daloopa-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fdaloopa-mcp-server.json",
@@ -5113,7 +5113,7 @@
     "raycast/mcp/daloopa-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fdaloopa-mcp-server.json",
       "type": "json",
-      "sha256": "ef206becb1c346918ccf1f9a247cf62479c3ac14dce82425ec54b3741828dda9"
+      "sha256": "dc4adf1d9d27035989d9dfe3a4d9d376917d1328caed7c5ef8b305b63dd2157b"
     },
     "entries/collections/data-engineering-suite.json": {
       "path": "/data/entries%2Fcollections%2Fdata-engineering-suite.json",
@@ -5128,7 +5128,7 @@
     "raycast/collections/data-engineering-suite.json": {
       "path": "/data/raycast%2Fcollections%2Fdata-engineering-suite.json",
       "type": "json",
-      "sha256": "6b8e934b8641829ea3b498252f5643eb745b5a21702f3ac77adf17687b3cf981"
+      "sha256": "707b140a2c800e22a8c28676c152bbf67b95305894d8a2525971131218e1a5f1"
     },
     "entries/agents/data-pipeline-engineering-agent.json": {
       "path": "/data/entries%2Fagents%2Fdata-pipeline-engineering-agent.json",
@@ -5143,7 +5143,7 @@
     "raycast/agents/data-pipeline-engineering-agent.json": {
       "path": "/data/raycast%2Fagents%2Fdata-pipeline-engineering-agent.json",
       "type": "json",
-      "sha256": "e4a9735b653eba67d668c452d0c0670dcc4b2bc00e73eab15e1359af9312edfc"
+      "sha256": "c4efb40e40eb6cdb745e2df1e6de38c8e48f6af5e93f591b28b535315076401f"
     },
     "entries/hooks/database-connection-cleanup.json": {
       "path": "/data/entries%2Fhooks%2Fdatabase-connection-cleanup.json",
@@ -5158,7 +5158,7 @@
     "raycast/hooks/database-connection-cleanup.json": {
       "path": "/data/raycast%2Fhooks%2Fdatabase-connection-cleanup.json",
       "type": "json",
-      "sha256": "e850649628ab32650cfe3cdf91e4f2d68f3ec1dc23aca81bd1c5d9dc90484cb2"
+      "sha256": "8954820aa43fd3665df7a2b798ff0aa62f39a6d2c3de288ea04f895616ad662f"
     },
     "entries/agents/database-expert.json": {
       "path": "/data/entries%2Fagents%2Fdatabase-expert.json",
@@ -5173,7 +5173,7 @@
     "raycast/agents/database-expert.json": {
       "path": "/data/raycast%2Fagents%2Fdatabase-expert.json",
       "type": "json",
-      "sha256": "667d50833397421ace4f6bac7f447fb7760318feaf2ea1eb10aa196027c98935"
+      "sha256": "f72b5d4410c7ed237343335a13b8df11f9a76464e2b9f367453758546e220492"
     },
     "entries/hooks/database-migration-runner.json": {
       "path": "/data/entries%2Fhooks%2Fdatabase-migration-runner.json",
@@ -5188,7 +5188,7 @@
     "raycast/hooks/database-migration-runner.json": {
       "path": "/data/raycast%2Fhooks%2Fdatabase-migration-runner.json",
       "type": "json",
-      "sha256": "7056a7994d9b54c779f061c6987c3c98f79fe78bee5742edbee8026a3f7bafde"
+      "sha256": "a2b5aefb24d6eb2e2d883da3da5ccc2d26d8253b47acd4afc47c8a8221c63fe5"
     },
     "entries/hooks/database-query-performance-logger.json": {
       "path": "/data/entries%2Fhooks%2Fdatabase-query-performance-logger.json",
@@ -5203,7 +5203,7 @@
     "raycast/hooks/database-query-performance-logger.json": {
       "path": "/data/raycast%2Fhooks%2Fdatabase-query-performance-logger.json",
       "type": "json",
-      "sha256": "9c294fb1205f734af75fba6714fe8ad2691d77e36a3bb0f70e233a6263db70cb"
+      "sha256": "9f28977a30b0bbb843d9c4a41c006bc467df7f0228bb2f0f7906a0d148b8615e"
     },
     "entries/agents/database-specialist-agent.json": {
       "path": "/data/entries%2Fagents%2Fdatabase-specialist-agent.json",
@@ -5218,7 +5218,7 @@
     "raycast/agents/database-specialist-agent.json": {
       "path": "/data/raycast%2Fagents%2Fdatabase-specialist-agent.json",
       "type": "json",
-      "sha256": "3ea94bf199fb0c142dd0554d7765abd884581638bae4de6a31d6ed3d2125093f"
+      "sha256": "07add49401628381561a32deb5c160b6557e922b179b15b727c39d8fd88cb0f9"
     },
     "entries/hooks/dead-code-eliminator.json": {
       "path": "/data/entries%2Fhooks%2Fdead-code-eliminator.json",
@@ -5233,7 +5233,7 @@
     "raycast/hooks/dead-code-eliminator.json": {
       "path": "/data/raycast%2Fhooks%2Fdead-code-eliminator.json",
       "type": "json",
-      "sha256": "fc33fab273797edfdd665a666b43ab7563cf9e8deb419b33bc1996c5056f4246"
+      "sha256": "f9530364b4297d9eebc8e2b7e93386ae57475a13361b2d4a69b7c3d4c6c63c31"
     },
     "entries/collections/debugging-troubleshooting-system.json": {
       "path": "/data/entries%2Fcollections%2Fdebugging-troubleshooting-system.json",
@@ -5248,7 +5248,7 @@
     "raycast/collections/debugging-troubleshooting-system.json": {
       "path": "/data/raycast%2Fcollections%2Fdebugging-troubleshooting-system.json",
       "type": "json",
-      "sha256": "76cb6ccc5491153046ae0cf2675868020fd3bc2eb96765211ecc07bf232c37b3"
+      "sha256": "1eb05135c43aa51a38e646316e28c579c98887ba0d8c4023314cf996e6a8096a"
     },
     "entries/agents/debugging-assistant-agent.json": {
       "path": "/data/entries%2Fagents%2Fdebugging-assistant-agent.json",
@@ -5263,7 +5263,7 @@
     "raycast/agents/debugging-assistant-agent.json": {
       "path": "/data/raycast%2Fagents%2Fdebugging-assistant-agent.json",
       "type": "json",
-      "sha256": "e1c3a749e262c3390e3e4b9cc186acb7af0c8dfcac1c787b26a12e6ab13c8c75"
+      "sha256": "031a14e72ff67f08fed28b2902314fe6e17d70ed42cf89bcd0427c1c40a17f3a"
     },
     "entries/hooks/dependency-security-audit-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fdependency-security-audit-on-stop.json",
@@ -5278,7 +5278,7 @@
     "raycast/hooks/dependency-security-audit-on-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fdependency-security-audit-on-stop.json",
       "type": "json",
-      "sha256": "97967770ed7309b30f625038f3832981d79227df761ada663684eb0a7b16d135"
+      "sha256": "7b664474ccaa7e4928b24028f75dcf4d6b883084ea1929cb79d67847d6d223a5"
     },
     "entries/hooks/dependency-security-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fdependency-security-scanner.json",
@@ -5293,7 +5293,7 @@
     "raycast/hooks/dependency-security-scanner.json": {
       "path": "/data/raycast%2Fhooks%2Fdependency-security-scanner.json",
       "type": "json",
-      "sha256": "d3577683b855f3570aeab85c9a62d3645f74d924046447f0e56f931fe908f694"
+      "sha256": "4fe15267ca99cf7c7ba997016350273a48a69d37eacbf4427e35fd509f971f8f"
     },
     "entries/hooks/dependency-update-checker.json": {
       "path": "/data/entries%2Fhooks%2Fdependency-update-checker.json",
@@ -5308,7 +5308,7 @@
     "raycast/hooks/dependency-update-checker.json": {
       "path": "/data/raycast%2Fhooks%2Fdependency-update-checker.json",
       "type": "json",
-      "sha256": "452608412776a9b3719866d7cb6213e1e68775eb9304ba8b78c5c1f78dd48761"
+      "sha256": "603e1d6623be67b1679b37b7c295be8e6dd6993f144e25ac7417c87197867ce4"
     },
     "entries/tools/devin.json": {
       "path": "/data/entries%2Ftools%2Fdevin.json",
@@ -5323,7 +5323,7 @@
     "raycast/tools/devin.json": {
       "path": "/data/raycast%2Ftools%2Fdevin.json",
       "type": "json",
-      "sha256": "a6e39373cefe66852540230f614b1db9260e29dcbda674d1d8edccdd86f94723"
+      "sha256": "79d4963a67bc6a69138a498a204229b7a8ac353fba9ff4d89ed1640df6c46354"
     },
     "entries/agents/devops-sre-expert.json": {
       "path": "/data/entries%2Fagents%2Fdevops-sre-expert.json",
@@ -5338,7 +5338,7 @@
     "raycast/agents/devops-sre-expert.json": {
       "path": "/data/raycast%2Fagents%2Fdevops-sre-expert.json",
       "type": "json",
-      "sha256": "d3fb4a8129985b402846666a59a1a9f518b90294b9e22e5294c757be2a02da0e"
+      "sha256": "e4988bbca6bd5b043bfd8bb12ea01f021f4b9b9ce82bab0cd1946f6da6404792"
     },
     "entries/hooks/discord-activity-notifier.json": {
       "path": "/data/entries%2Fhooks%2Fdiscord-activity-notifier.json",
@@ -5353,7 +5353,7 @@
     "raycast/hooks/discord-activity-notifier.json": {
       "path": "/data/raycast%2Fhooks%2Fdiscord-activity-notifier.json",
       "type": "json",
-      "sha256": "20db212879e5e9276ed85f0b9c8f741a4489a317d45aa39ecb8d316dcc000f04"
+      "sha256": "ba5c237c08530f687f745dd98ecc8cb140407a31023fa490647af4acd599c852"
     },
     "entries/mcp/discord-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fdiscord-mcp-server.json",
@@ -5368,7 +5368,7 @@
     "raycast/mcp/discord-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fdiscord-mcp-server.json",
       "type": "json",
-      "sha256": "a1e1dea3d3e306a67b0ff4027bc1f977d7957a83590c7bfaa97e8dd1812644ef"
+      "sha256": "486d8f40b391145fe39e26365355b2c8db0e32bc55406fd5ffbabc7f6ea4610e"
     },
     "entries/hooks/documentation-auto-generator-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fdocumentation-auto-generator-on-stop.json",
@@ -5383,7 +5383,7 @@
     "raycast/hooks/documentation-auto-generator-on-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fdocumentation-auto-generator-on-stop.json",
       "type": "json",
-      "sha256": "8bfdde19424a3396c43efe65ca6da983b0c23b7b11721ae4959d833321f0422f"
+      "sha256": "ef29daad7dac3431b3d66afec498ce7bcb07b9adc872877ba3532400a9d453e8"
     },
     "entries/skills/docker-compose-production-blueprints.json": {
       "path": "/data/entries%2Fskills%2Fdocker-compose-production-blueprints.json",
@@ -5398,7 +5398,7 @@
     "raycast/skills/docker-compose-production-blueprints.json": {
       "path": "/data/raycast%2Fskills%2Fdocker-compose-production-blueprints.json",
       "type": "json",
-      "sha256": "cd3a6f3c73a2f575780fdd188744bdf4a2672eec7055cca8e40b25bc40b5a29e"
+      "sha256": "e1d3ff4fc59f50579a019ac78e12a6fb7bb4232fa08ed50812bb124e4c4b382f"
     },
     "skill-adapters/cursor/docker-compose-production-blueprints.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fdocker-compose-production-blueprints.mdc",
@@ -5418,7 +5418,7 @@
     "raycast/hooks/docker-container-auto-rebuild.json": {
       "path": "/data/raycast%2Fhooks%2Fdocker-container-auto-rebuild.json",
       "type": "json",
-      "sha256": "dca35c955f7d2c6e5b98d34e59983493135ad9d8bfd4e2e759657467c8e42c05"
+      "sha256": "defd4dd9bb1a15388f51103005f693cc2da15cab50439bf4ac50600e004647aa"
     },
     "entries/hooks/docker-image-security-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fdocker-image-security-scanner.json",
@@ -5433,7 +5433,7 @@
     "raycast/hooks/docker-image-security-scanner.json": {
       "path": "/data/raycast%2Fhooks%2Fdocker-image-security-scanner.json",
       "type": "json",
-      "sha256": "7741c0821a5beafedcc3b85e8ead4a62e053ba49aae96ae2a1227ccedf2bbf71"
+      "sha256": "4a0a395df8f696db603aca9c1141248d9e476ec2fa2cc04136e6676c0e820c6e"
     },
     "entries/mcp/docker-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fdocker-mcp-server.json",
@@ -5448,7 +5448,7 @@
     "raycast/mcp/docker-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fdocker-mcp-server.json",
       "type": "json",
-      "sha256": "20be909a12f06fc015aaae526f13cacb9a3ae89ef16de670a9f71ea0b543a01c"
+      "sha256": "c5db89a6ad3a2f945061cd088d43efdbf3ca9e512c5e72de68f29dbe9ee21003"
     },
     "entries/hooks/documentation-coverage-checker.json": {
       "path": "/data/entries%2Fhooks%2Fdocumentation-coverage-checker.json",
@@ -5463,7 +5463,7 @@
     "raycast/hooks/documentation-coverage-checker.json": {
       "path": "/data/raycast%2Fhooks%2Fdocumentation-coverage-checker.json",
       "type": "json",
-      "sha256": "9981db15d412cf4274111c320dd5e768abd4f47c02b35c9ceb722f5d3824732c"
+      "sha256": "4dd6d69854a49d51a80ae006111d669a9ed4f4749e463586eaadc4c9d0993707"
     },
     "entries/hooks/documentation-generator.json": {
       "path": "/data/entries%2Fhooks%2Fdocumentation-generator.json",
@@ -5478,7 +5478,7 @@
     "raycast/hooks/documentation-generator.json": {
       "path": "/data/raycast%2Fhooks%2Fdocumentation-generator.json",
       "type": "json",
-      "sha256": "98185c82a165facf89ffd70d6b191e45fc2b3279bdbdfe3058d73b5fecf27253"
+      "sha256": "90e650449a1aa22cf2a0d48cfa94f011d8d88bef0fb003a1d6efa4519c582469"
     },
     "entries/skills/docx-report-generator.json": {
       "path": "/data/entries%2Fskills%2Fdocx-report-generator.json",
@@ -5493,7 +5493,7 @@
     "raycast/skills/docx-report-generator.json": {
       "path": "/data/raycast%2Fskills%2Fdocx-report-generator.json",
       "type": "json",
-      "sha256": "2b3f3398efa589a921c5621797cc47a178d17aa71de009130aebb0ca3ac03fb2"
+      "sha256": "6684bfac075fd71bda0b4457521c6bdcb9ba4e343b2ef70a5686031157a35097"
     },
     "skill-adapters/cursor/docx-report-generator.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fdocx-report-generator.mdc",
@@ -5513,7 +5513,7 @@
     "raycast/agents/domain-specialist-ai-agents.json": {
       "path": "/data/raycast%2Fagents%2Fdomain-specialist-ai-agents.json",
       "type": "json",
-      "sha256": "094e254b52e7b50cc53cb8007cea589e2dc4c2eb4ecd8e5c9f71951718df477c"
+      "sha256": "fa433ba8387f8ec65800fc18d380b1c542511c69bc5acb386ba34b4950c40e4d"
     },
     "entries/hooks/environment-cleanup-handler.json": {
       "path": "/data/entries%2Fhooks%2Fenvironment-cleanup-handler.json",
@@ -5528,7 +5528,7 @@
     "raycast/hooks/environment-cleanup-handler.json": {
       "path": "/data/raycast%2Fhooks%2Fenvironment-cleanup-handler.json",
       "type": "json",
-      "sha256": "48827488dae4a20c2ce24d9963a4fc205376611a1b8266edd2d003a4fb275a9b"
+      "sha256": "698cf5d46ead9c4726d6a09e0461825273cf46fb2f39e2c5b8cddc6585bee76a"
     },
     "entries/hooks/environment-variable-validator.json": {
       "path": "/data/entries%2Fhooks%2Fenvironment-variable-validator.json",
@@ -5543,7 +5543,7 @@
     "raycast/hooks/environment-variable-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fenvironment-variable-validator.json",
       "type": "json",
-      "sha256": "953d69f2b2dd7fc01df40d5c9d69593e33cbd3b0d8937605007f61b010803b48"
+      "sha256": "9f488019ada5a14afc7e695e33bc9991162702ee0a0e28cdb30932d4d81e0906"
     },
     "entries/hooks/error-rate-monitor.json": {
       "path": "/data/entries%2Fhooks%2Ferror-rate-monitor.json",
@@ -5558,7 +5558,7 @@
     "raycast/hooks/error-rate-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Ferror-rate-monitor.json",
       "type": "json",
-      "sha256": "b922e56ec078c40e4eba4400bd3a34de906de39bf1daddccb8311df03a6005ca"
+      "sha256": "81142e55164adc9e2b2783a055e7b0c5256e75002914caabd6738407346cc1d0"
     },
     "entries/skills/ethereum-base-smart-contract-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fethereum-base-smart-contract-security-capability-pack.json",
@@ -5573,7 +5573,7 @@
     "raycast/skills/ethereum-base-smart-contract-security-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fethereum-base-smart-contract-security-capability-pack.json",
       "type": "json",
-      "sha256": "fb7d7c2c6777c6ea1a84fe6a1a1c294d1a3af6411a3b83ece0313026a73cda59"
+      "sha256": "f89b83d34ac70938d72fbdd3bd4f40237dc88597052a7c55063f195d7bcd2d3e"
     },
     "skill-adapters/cursor/ethereum-base-smart-contract-security-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fethereum-base-smart-contract-security-capability-pack.mdc",
@@ -5593,7 +5593,7 @@
     "raycast/skills/ethereum-solidity-security-foundry.json": {
       "path": "/data/raycast%2Fskills%2Fethereum-solidity-security-foundry.json",
       "type": "json",
-      "sha256": "6cbcd04f86a4e4c1e13f575ce2cd3ae2437083909987465c2895a3361d81ec2a"
+      "sha256": "7502c05360f8b71910a4f4aedb69ddd8e242323bc9153c61849986f2d1606c72"
     },
     "skill-adapters/cursor/ethereum-solidity-security-foundry.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fethereum-solidity-security-foundry.mdc",
@@ -5613,7 +5613,7 @@
     "raycast/tools/exa.json": {
       "path": "/data/raycast%2Ftools%2Fexa.json",
       "type": "json",
-      "sha256": "b04dfdad9ab98e1058e5856caa1ad192d7619ded9966b4af709702c867a30068"
+      "sha256": "10daa6143431576ee24ca112c9b5c4035fc0afcf68cf36fede730552c661b851"
     },
     "entries/agents/extended-thinking-orchestrator.json": {
       "path": "/data/entries%2Fagents%2Fextended-thinking-orchestrator.json",
@@ -5628,7 +5628,7 @@
     "raycast/agents/extended-thinking-orchestrator.json": {
       "path": "/data/raycast%2Fagents%2Fextended-thinking-orchestrator.json",
       "type": "json",
-      "sha256": "29c5de60bffd89180f4f6bab659fb5412bfb5bf5718c4d56a240880e903ab01a"
+      "sha256": "61eb5b0fb79a1b7a46876ebf6bafa987f00bfb0e1f68b225d76e39f923656258"
     },
     "entries/skills/fastapi-python-backend.json": {
       "path": "/data/entries%2Fskills%2Ffastapi-python-backend.json",
@@ -5643,7 +5643,7 @@
     "raycast/skills/fastapi-python-backend.json": {
       "path": "/data/raycast%2Fskills%2Ffastapi-python-backend.json",
       "type": "json",
-      "sha256": "9d7718086d10d65b577aea342a42cbad59ceba2ea2758f362ccb1a80dab66d3e"
+      "sha256": "dd70c743359deb25519f87cb559e2df7f04b1f09b82daa016bf3d3a1f17341f2"
     },
     "skill-adapters/cursor/fastapi-python-backend.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Ffastapi-python-backend.mdc",
@@ -5663,7 +5663,7 @@
     "raycast/mcp/figma-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Ffigma-mcp-server.json",
       "type": "json",
-      "sha256": "3ea4e467ff26837ecda2dec563a014473b67cde3ba50a40e5b54317d18480596"
+      "sha256": "0e5d5579a2d7739fbbbad9136a382253eded9a9526354815507763b11e6d9643"
     },
     "entries/hooks/file-size-warning-monitor.json": {
       "path": "/data/entries%2Fhooks%2Ffile-size-warning-monitor.json",
@@ -5678,7 +5678,7 @@
     "raycast/hooks/file-size-warning-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Ffile-size-warning-monitor.json",
       "type": "json",
-      "sha256": "9faa464bd2dc62bf9d9eff672dfd1fab97773ef8918d09620288504f0d7155ea"
+      "sha256": "66615ac5f7b9cb12601529e9572088394368b40a1aa47800d9b0261eed5eccca"
     },
     "entries/mcp/filesystem-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Ffilesystem-mcp-server.json",
@@ -5693,7 +5693,7 @@
     "raycast/mcp/filesystem-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Ffilesystem-mcp-server.json",
       "type": "json",
-      "sha256": "a3bb9c806dae8d754925ec26dfe6764bd62f931de4a2a6f86e783aa9615178a4"
+      "sha256": "ec74af91e7a1bd1abc64351d67ab38804bc327eaec380f79c7542839de23b390"
     },
     "entries/hooks/final-bundle-size-reporter.json": {
       "path": "/data/entries%2Fhooks%2Ffinal-bundle-size-reporter.json",
@@ -5708,7 +5708,7 @@
     "raycast/hooks/final-bundle-size-reporter.json": {
       "path": "/data/raycast%2Fhooks%2Ffinal-bundle-size-reporter.json",
       "type": "json",
-      "sha256": "6ff50046af8de88cb4adc91c65ecba4ab6cbc87bc8d60ac12e26d5ff9ea3ac32"
+      "sha256": "c8db5c87d9de841deabfaea1ce239289847cf3480e672dc39ee90d708ba1dda4"
     },
     "entries/tools/firecrawl.json": {
       "path": "/data/entries%2Ftools%2Ffirecrawl.json",
@@ -5723,7 +5723,7 @@
     "raycast/tools/firecrawl.json": {
       "path": "/data/raycast%2Ftools%2Ffirecrawl.json",
       "type": "json",
-      "sha256": "95f7d3d552a81e4a7617ff7829b53249c3d852500cba4fefa6a00f027ee17d55"
+      "sha256": "ae9acd15db2f348cd16c4146be30f45375d84178430be31d33b4ec7d290f05a7"
     },
     "entries/mcp/fireflies-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Ffireflies-mcp-server.json",
@@ -5738,7 +5738,7 @@
     "raycast/mcp/fireflies-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Ffireflies-mcp-server.json",
       "type": "json",
-      "sha256": "cf5f55bde38bbe86a3bdbc197485e7fa5dc525aec5ed722c4cde757ef8297deb"
+      "sha256": "17b5103cf1642478e7adb83ebbc1102f3530a312b418a1417f3f829db5f0fa6f"
     },
     "entries/statuslines/five-hour-window-tracker.json": {
       "path": "/data/entries%2Fstatuslines%2Ffive-hour-window-tracker.json",
@@ -5753,7 +5753,7 @@
     "raycast/statuslines/five-hour-window-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Ffive-hour-window-tracker.json",
       "type": "json",
-      "sha256": "006635bd95137739f11904cf2f54b8c6bd5392e8f66f62a38a7a6d458a7202a7"
+      "sha256": "8dee791b145c89c84f8acbc09e642c8c5bf0ca93a69d57bbc6ac583f34dc290b"
     },
     "entries/guides/fix-environment-variables.json": {
       "path": "/data/entries%2Fguides%2Ffix-environment-variables.json",
@@ -5768,7 +5768,7 @@
     "raycast/guides/fix-environment-variables.json": {
       "path": "/data/raycast%2Fguides%2Ffix-environment-variables.json",
       "type": "json",
-      "sha256": "12827c2e583641e3ef5db2c6e4a514bc43d20783ed949a678c8f2a9c4c416b2a"
+      "sha256": "d24edee172eb9fbbfe6b61d352f0495eac20762748431cad0d01b309b45dafbc"
     },
     "entries/guides/fix-installation-errors.json": {
       "path": "/data/entries%2Fguides%2Ffix-installation-errors.json",
@@ -5783,7 +5783,7 @@
     "raycast/guides/fix-installation-errors.json": {
       "path": "/data/raycast%2Fguides%2Ffix-installation-errors.json",
       "type": "json",
-      "sha256": "dd14d2a05d0089ad292b5a1fd55f6b8f8f4d9d2df0ccd95a00b2470003b68247"
+      "sha256": "7812c006a204b4c19d10459f921da08ca7aed6fa38bd46465ba7378140c20a82"
     },
     "entries/guides/fix-memory-leak-performance.json": {
       "path": "/data/entries%2Fguides%2Ffix-memory-leak-performance.json",
@@ -5798,7 +5798,7 @@
     "raycast/guides/fix-memory-leak-performance.json": {
       "path": "/data/raycast%2Fguides%2Ffix-memory-leak-performance.json",
       "type": "json",
-      "sha256": "ac710e4fdc57643ef656c0c1846be55c3724d6641d4db480a1b7d22125940147"
+      "sha256": "3c465f468ed811bada40339d02eda599ee9a9108db4605b6722d13900d082a60"
     },
     "entries/guides/fix-mcp-connection-errors.json": {
       "path": "/data/entries%2Fguides%2Ffix-mcp-connection-errors.json",
@@ -5813,7 +5813,7 @@
     "raycast/guides/fix-mcp-connection-errors.json": {
       "path": "/data/raycast%2Fguides%2Ffix-mcp-connection-errors.json",
       "type": "json",
-      "sha256": "965038e390b70d41cdf4ed32354b0f55a5eb63a71bc36337e339367d54ce799d"
+      "sha256": "90bae61f42a2826090f106e5e410a0727cdb5be9bf1931cfdd9aa634812a36f8"
     },
     "entries/agents/frontend-specialist-agent.json": {
       "path": "/data/entries%2Fagents%2Ffrontend-specialist-agent.json",
@@ -5828,7 +5828,7 @@
     "raycast/agents/frontend-specialist-agent.json": {
       "path": "/data/raycast%2Fagents%2Ffrontend-specialist-agent.json",
       "type": "json",
-      "sha256": "f881078dd9c49f870653814e1e9661b3dc0cc37542959cb64dd3007ff51d3670"
+      "sha256": "75b25785466a84766e03bee67bb469ca03f87d275ac5961eb6c86d04d0a45dfa"
     },
     "entries/agents/full-stack-ai-development-agent.json": {
       "path": "/data/entries%2Fagents%2Ffull-stack-ai-development-agent.json",
@@ -5843,7 +5843,7 @@
     "raycast/agents/full-stack-ai-development-agent.json": {
       "path": "/data/raycast%2Fagents%2Ffull-stack-ai-development-agent.json",
       "type": "json",
-      "sha256": "8a6cb18425060520bbc8dfab269193bc07b73fa6b7f0f57a4b1abcb9b9a4991a"
+      "sha256": "055b25f6d5d5743c2e2bcf0f283044fa31d0ccc9cba49459537cef357ac3e630"
     },
     "entries/tools/garak.json": {
       "path": "/data/entries%2Ftools%2Fgarak.json",
@@ -5858,7 +5858,7 @@
     "raycast/tools/garak.json": {
       "path": "/data/raycast%2Ftools%2Fgarak.json",
       "type": "json",
-      "sha256": "3018678ce22dd32d086e9e0b3b82da4bcb2545f4a20c8809b9d5466ae7740ede"
+      "sha256": "69ec1ce0acf9a905cd6404b97e982655b26a0f60e555830d4c2abf57eaa1fb8b"
     },
     "entries/commands/generate-tests.json": {
       "path": "/data/entries%2Fcommands%2Fgenerate-tests.json",
@@ -5873,7 +5873,7 @@
     "raycast/commands/generate-tests.json": {
       "path": "/data/raycast%2Fcommands%2Fgenerate-tests.json",
       "type": "json",
-      "sha256": "f9c84443f9dfbd92401c73ade4a6312aef087d06492b4d2081ccd9fb751d6829"
+      "sha256": "ba72f1bf6c4e475154a6a717edaf236598fe4593dd884ae395f04d0234626462"
     },
     "entries/tools/giskard.json": {
       "path": "/data/entries%2Ftools%2Fgiskard.json",
@@ -5888,7 +5888,7 @@
     "raycast/tools/giskard.json": {
       "path": "/data/raycast%2Ftools%2Fgiskard.json",
       "type": "json",
-      "sha256": "11cc971dd5086a1a40dcc12de96fa06d5107bcba6d798da4d3b86e62bad2cd7d"
+      "sha256": "974d53529affb4a1e0b0212198f56e94ccff61e19b9fa964e3c6fb4153e9eac3"
     },
     "entries/hooks/git-auto-commit-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fgit-auto-commit-on-stop.json",
@@ -5903,7 +5903,7 @@
     "raycast/hooks/git-auto-commit-on-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fgit-auto-commit-on-stop.json",
       "type": "json",
-      "sha256": "43e0c0203912f115b73db2eadd6e4edf906dba232b3c41b155e039f20acba7c6"
+      "sha256": "f850980f8a2cd9c6d920200e5941e5407602d835d8a50d6b6483381332163131"
     },
     "entries/hooks/git-branch-protection.json": {
       "path": "/data/entries%2Fhooks%2Fgit-branch-protection.json",
@@ -5918,7 +5918,7 @@
     "raycast/hooks/git-branch-protection.json": {
       "path": "/data/raycast%2Fhooks%2Fgit-branch-protection.json",
       "type": "json",
-      "sha256": "cb076d1b81028b0d1aba1f9203f235bd79f576ae0dba5880a3537b22fdeb1981"
+      "sha256": "2f2b51bf0add5b1cafd31d945c7afb3eadf098264bbce143b8e899a4ee27e13e"
     },
     "entries/mcp/git-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fgit-mcp-server.json",
@@ -5933,7 +5933,7 @@
     "raycast/mcp/git-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fgit-mcp-server.json",
       "type": "json",
-      "sha256": "ed89e991ef3570d5b30ac289e3560ada1dd8ff1ca3a06b76c83cdadeb5c1f179"
+      "sha256": "0636762b5ccd141e5b6f10c0fd56ec7fea20fd99cf103e1928474851196d2922"
     },
     "entries/hooks/git-pre-commit-validator.json": {
       "path": "/data/entries%2Fhooks%2Fgit-pre-commit-validator.json",
@@ -5948,7 +5948,7 @@
     "raycast/hooks/git-pre-commit-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fgit-pre-commit-validator.json",
       "type": "json",
-      "sha256": "7b5461ccab50d00c579eba724463e812cae1b71b14813f21d47548daf646d7d4"
+      "sha256": "ebe9adabfc866a8f83a97d09093d1f8b6817af529bdf0162b072cb8ace4f40a3"
     },
     "entries/commands/git-smart-commit.json": {
       "path": "/data/entries%2Fcommands%2Fgit-smart-commit.json",
@@ -5963,7 +5963,7 @@
     "raycast/commands/git-smart-commit.json": {
       "path": "/data/raycast%2Fcommands%2Fgit-smart-commit.json",
       "type": "json",
-      "sha256": "de120c8593a615155e998769e06f0c5f147025ed413803d2a4612eabb6bd3522"
+      "sha256": "435fa8ec3f2388ff69439985a689e0d8ce50066d2e0424cd150d0d77f84571fc"
     },
     "entries/statuslines/git-status-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fgit-status-statusline.json",
@@ -5978,7 +5978,7 @@
     "raycast/statuslines/git-status-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fgit-status-statusline.json",
       "type": "json",
-      "sha256": "624608263c29bc1a0c7ab3cc7da45098d10da166eaa1e828c2b2aff61728819c"
+      "sha256": "1ef3597572098229d77df3dc16b51cfa283a0b3a3880753004749d825df2da60"
     },
     "entries/skills/git-cliff-release-changelog-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fgit-cliff-release-changelog-capability-pack.json",
@@ -5993,7 +5993,7 @@
     "raycast/skills/git-cliff-release-changelog-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fgit-cliff-release-changelog-capability-pack.json",
       "type": "json",
-      "sha256": "e876420b8aa078c06d44ec7b4c921440e6fb2e4d0c9a75f491c5d5b097ee14db"
+      "sha256": "ec028ad917bd9ea2cb84ed9fe202f5cd05877150c1cc5ed5dda920d986f4f4bb"
     },
     "skill-adapters/cursor/git-cliff-release-changelog-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fgit-cliff-release-changelog-capability-pack.mdc",
@@ -6013,7 +6013,7 @@
     "raycast/skills/github-actions-ai-cicd.json": {
       "path": "/data/raycast%2Fskills%2Fgithub-actions-ai-cicd.json",
       "type": "json",
-      "sha256": "0c56dcc5f11ef4ae531597fa7ea054762944317c047b8ababdc2f5dcaaa1fdaf"
+      "sha256": "fe1915b37e405d53992bfd1db16e9881076568dbabf373e3e5c9ddf6becd37c4"
     },
     "skill-adapters/cursor/github-actions-ai-cicd.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fgithub-actions-ai-cicd.mdc",
@@ -6033,7 +6033,7 @@
     "raycast/skills/github-actions-secure-cicd-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fgithub-actions-secure-cicd-capability-pack.json",
       "type": "json",
-      "sha256": "49eb4068814157567b27c682cbd716bc4fc17732d2f7b07be333fb856747c54d"
+      "sha256": "fe227a69abe32926b7ecf2f67ff28a12b000c2170e35e4e9a7e734adb0ed17fe"
     },
     "skill-adapters/cursor/github-actions-secure-cicd-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fgithub-actions-secure-cicd-capability-pack.mdc",
@@ -6053,7 +6053,7 @@
     "raycast/hooks/github-actions-workflow-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fgithub-actions-workflow-validator.json",
       "type": "json",
-      "sha256": "b7fa64c154905d778d29e8704d360b0b7340320ca07c2f1baf7fdf901a76f2ef"
+      "sha256": "7191326bde4a266102a6e661cf417df8bcb59505d3e5da84e9a6e24d010c82b5"
     },
     "entries/tools/github-copilot.json": {
       "path": "/data/entries%2Ftools%2Fgithub-copilot.json",
@@ -6068,7 +6068,7 @@
     "raycast/tools/github-copilot.json": {
       "path": "/data/raycast%2Ftools%2Fgithub-copilot.json",
       "type": "json",
-      "sha256": "493ccdb8be6ba627368f0efe0d3020e2894ab5a070850de2d4fdb69450a1187b"
+      "sha256": "a0462d4540e73869b4fa18bdce28d7408b76e7b99cc90d683a10fbca017976c4"
     },
     "entries/agents/github-copilot-interop-bridge.json": {
       "path": "/data/entries%2Fagents%2Fgithub-copilot-interop-bridge.json",
@@ -6083,7 +6083,7 @@
     "raycast/agents/github-copilot-interop-bridge.json": {
       "path": "/data/raycast%2Fagents%2Fgithub-copilot-interop-bridge.json",
       "type": "json",
-      "sha256": "161171819e265243c8498b18e6cd38b64020097e44e0c042ce00e7041e01dcff"
+      "sha256": "2a325e94b0e41f71e88adbceee07b30657612084dfbd54ec1b786b1021db1ea4"
     },
     "entries/mcp/github-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fgithub-mcp-server.json",
@@ -6098,7 +6098,7 @@
     "raycast/mcp/github-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fgithub-mcp-server.json",
       "type": "json",
-      "sha256": "671a1699352b171081ecda2d37ff5c4c56da7ee384c4a62b6f738db4c90349e0"
+      "sha256": "2dbb46b88299d57206357644400783bdc3912cbdd0858e5f0b89ad8ec423c9a7"
     },
     "entries/rules/go-golang-expert.json": {
       "path": "/data/entries%2Frules%2Fgo-golang-expert.json",
@@ -6113,7 +6113,7 @@
     "raycast/rules/go-golang-expert.json": {
       "path": "/data/raycast%2Frules%2Fgo-golang-expert.json",
       "type": "json",
-      "sha256": "550d6fcf9aa8d2933fe2b2121d7cf991257a7ff86c04a8a9073c8a17f2bb9463"
+      "sha256": "6762dcb37875e72ed0824072ad30a03dfb4db9f5fa83fd8558cafb4d80c01500"
     },
     "entries/rules/golang-expert.json": {
       "path": "/data/entries%2Frules%2Fgolang-expert.json",
@@ -6128,7 +6128,7 @@
     "raycast/rules/golang-expert.json": {
       "path": "/data/raycast%2Frules%2Fgolang-expert.json",
       "type": "json",
-      "sha256": "feae475cc98294b0929374cda222ecd7b4ca838cf35bd0de1f429a69c51ac025"
+      "sha256": "3bb17e9d8caf80e3db1d536e26d8098aa1fd0701f61509aa0f7719868d0b6032"
     },
     "entries/hooks/go-module-tidy.json": {
       "path": "/data/entries%2Fhooks%2Fgo-module-tidy.json",
@@ -6143,7 +6143,7 @@
     "raycast/hooks/go-module-tidy.json": {
       "path": "/data/raycast%2Fhooks%2Fgo-module-tidy.json",
       "type": "json",
-      "sha256": "aff14f1a5cf5edad0e9329184e81366d202b2b5a9448bfbfb53b007b99559df2"
+      "sha256": "dc985668fabd24b27a64719f26eb97da4781abd080730436be4627c1e9c942c2"
     },
     "entries/skills/google-workspace-gemini-automation.json": {
       "path": "/data/entries%2Fskills%2Fgoogle-workspace-gemini-automation.json",
@@ -6158,7 +6158,7 @@
     "raycast/skills/google-workspace-gemini-automation.json": {
       "path": "/data/raycast%2Fskills%2Fgoogle-workspace-gemini-automation.json",
       "type": "json",
-      "sha256": "e0663dee9c817e2d8cbafff997e9e7b6d962770e0fc4d917ead375fc60132ef9"
+      "sha256": "ca5ebf9242e5b515332f5956bef07ea66263f38ea34929101e3dcf5f3bdc124a"
     },
     "skill-adapters/cursor/google-workspace-gemini-automation.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fgoogle-workspace-gemini-automation.mdc",
@@ -6178,7 +6178,7 @@
     "raycast/tools/graphite-diamond.json": {
       "path": "/data/raycast%2Ftools%2Fgraphite-diamond.json",
       "type": "json",
-      "sha256": "a6655dbbba5f2a4c8f88be3a393860a36af5228d9f1ed0d7dcd70a39ad126ba1"
+      "sha256": "3ea72c3a62edee2777ef1c01584041552abaa4999e84a20734fe0a08aa2ca94c"
     },
     "entries/rules/graphql-federation-specialist.json": {
       "path": "/data/entries%2Frules%2Fgraphql-federation-specialist.json",
@@ -6193,7 +6193,7 @@
     "raycast/rules/graphql-federation-specialist.json": {
       "path": "/data/raycast%2Frules%2Fgraphql-federation-specialist.json",
       "type": "json",
-      "sha256": "656cda0a5e82c608af8d4325092c12fd614f886cecfdb4b60b1e6b7d0c8f0ade"
+      "sha256": "246e6d393d69ba7e69823a5ad6243ad0cf6d7ac9082be54dc2d6f6553832c7b4"
     },
     "entries/hooks/graphql-schema-validator.json": {
       "path": "/data/entries%2Fhooks%2Fgraphql-schema-validator.json",
@@ -6208,7 +6208,7 @@
     "raycast/hooks/graphql-schema-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fgraphql-schema-validator.json",
       "type": "json",
-      "sha256": "823f71a9f1d3a5233635c6f1cf2edc0abbce7e7bbe1fde17fca33b901642e2d0"
+      "sha256": "f84175666612b6c3e26a81f2112bf9918890965258d830ce79e455844a48b2d7"
     },
     "entries/tools/helicone.json": {
       "path": "/data/entries%2Ftools%2Fhelicone.json",
@@ -6223,7 +6223,7 @@
     "raycast/tools/helicone.json": {
       "path": "/data/raycast%2Ftools%2Fhelicone.json",
       "type": "json",
-      "sha256": "115290010dbc3e38026be648afa928391e094864d79ad047b74d3381b33dee89"
+      "sha256": "bcd31ed7951e63b689de6353525662b1d9c57a7e90eb0514b8c055c553e998a3"
     },
     "entries/skills/heyclaude-content-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-content-submission-factory.json",
@@ -6238,7 +6238,7 @@
     "raycast/skills/heyclaude-content-submission-factory.json": {
       "path": "/data/raycast%2Fskills%2Fheyclaude-content-submission-factory.json",
       "type": "json",
-      "sha256": "29f07d60d60a9f9b3b33184c47625fd7ba1c381ff6818fa5a58f0412c2d38dd3"
+      "sha256": "9978821a6e9c546210dee1bc5c222c91da39a5a46e82eb2d9655f5251a59075d"
     },
     "skill-adapters/cursor/heyclaude-content-submission-factory.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fheyclaude-content-submission-factory.mdc",
@@ -6258,7 +6258,7 @@
     "raycast/mcp/heyclaude-mcp.json": {
       "path": "/data/raycast%2Fmcp%2Fheyclaude-mcp.json",
       "type": "json",
-      "sha256": "a7a5cff150e10d4e1e29d82d918f9a00d82e44082c3c26532e4c4be25e971d42"
+      "sha256": "f4b9688eb2657b483d6cf6eee16e5552751cef366557b7a95c3fd289f4e30ea4"
     },
     "entries/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-skill-submission-factory.json",
@@ -6273,7 +6273,7 @@
     "raycast/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/raycast%2Fskills%2Fheyclaude-skill-submission-factory.json",
       "type": "json",
-      "sha256": "23b49d8cd89d673c1fff614717c16837c884a0aa0a9da65dc9de575be373eb05"
+      "sha256": "5adda3730899317dffc1671ad43ae0109170de2241b10711be9a7b42121a3655"
     },
     "skill-adapters/cursor/heyclaude-skill-submission-factory.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fheyclaude-skill-submission-factory.mdc",
@@ -6293,7 +6293,7 @@
     "raycast/commands/hooks-generator.json": {
       "path": "/data/raycast%2Fcommands%2Fhooks-generator.json",
       "type": "json",
-      "sha256": "1ab7d1bd21a595a1c2643a0de762647bbae8563237f6c1fc280e01f780836abb"
+      "sha256": "fe85a53b1e519ab88fe34c9521adf7a79a6eca0f6d66608a05c71a9a153355b3"
     },
     "entries/mcp/hubspot-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fhubspot-mcp-server.json",
@@ -6308,7 +6308,7 @@
     "raycast/mcp/hubspot-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fhubspot-mcp-server.json",
       "type": "json",
-      "sha256": "19dbe92b8cec737f6e98751050e25f5c9a89b1bdd11476791b92c154a4b004a7"
+      "sha256": "c2739195b3765b4e608fe7352750af6e8f36fd106f93772c04d3663cc3a102e1"
     },
     "entries/mcp/hugging-face-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fhugging-face-mcp-server.json",
@@ -6323,7 +6323,7 @@
     "raycast/mcp/hugging-face-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fhugging-face-mcp-server.json",
       "type": "json",
-      "sha256": "e48bef7d9dc99d79e763a1898aee705455b0e8706acfde58743d7cc063574668"
+      "sha256": "02eda59431fd4c7307dabe41270015271333e3e070f0ebdb5f3f6eda688f913b"
     },
     "entries/skills/husky-commit-governance-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fhusky-commit-governance-capability-pack.json",
@@ -6338,7 +6338,7 @@
     "raycast/skills/husky-commit-governance-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fhusky-commit-governance-capability-pack.json",
       "type": "json",
-      "sha256": "e877a320f7e16b0484466709e48a20453619b71065e35f6f00a5a96f17171a94"
+      "sha256": "21d96e20b205b71bff2599524685a6fb655aab563d5553b806c9377d9459827c"
     },
     "skill-adapters/cursor/husky-commit-governance-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fhusky-commit-governance-capability-pack.mdc",
@@ -6358,7 +6358,7 @@
     "raycast/tools/hyperbrowser.json": {
       "path": "/data/raycast%2Ftools%2Fhyperbrowser.json",
       "type": "json",
-      "sha256": "0ca28d8c3fb7fa23fab050740ffe99d0b41c51aaa5df2ecea01a28aa16f9f6df"
+      "sha256": "4822ce740b4a6db420c111bcc2021700a3193e721958a013a5ff69f3ac2b0400"
     },
     "entries/hooks/i18n-translation-validator.json": {
       "path": "/data/entries%2Fhooks%2Fi18n-translation-validator.json",
@@ -6373,7 +6373,7 @@
     "raycast/hooks/i18n-translation-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fi18n-translation-validator.json",
       "type": "json",
-      "sha256": "a46d5baf6a863e41007970d002453a0c7f30150feb1b7bf2d39b4faff7f8833b"
+      "sha256": "f6f30f91414bca61ff73c2590e79cb41d21cff2e963d41825266ef130ccf85a4"
     },
     "entries/skills/image-ocr-table-extraction.json": {
       "path": "/data/entries%2Fskills%2Fimage-ocr-table-extraction.json",
@@ -6388,7 +6388,7 @@
     "raycast/skills/image-ocr-table-extraction.json": {
       "path": "/data/raycast%2Fskills%2Fimage-ocr-table-extraction.json",
       "type": "json",
-      "sha256": "bb0e399f32850563ea66cdba1013aed11761f438abc0df4f5ae34a2f1aae90f9"
+      "sha256": "e93adb91422c3ea62db6f8fdb6649f6c5f17277117208cd7598fc4ac7da0934c"
     },
     "skill-adapters/cursor/image-ocr-table-extraction.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fimage-ocr-table-extraction.mdc",
@@ -6408,7 +6408,7 @@
     "raycast/skills/indexnow-search-indexing-accelerator.json": {
       "path": "/data/raycast%2Fskills%2Findexnow-search-indexing-accelerator.json",
       "type": "json",
-      "sha256": "4096792e67e8da3897f61667fcb026ecb1f2b9333574213ea5ba0a89f6b9ecc3"
+      "sha256": "e41e85200f0a4557cd26be079ac7e6c752d2d1e443942b9d466998e79cd51c48"
     },
     "skill-adapters/cursor/indexnow-search-indexing-accelerator.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Findexnow-search-indexing-accelerator.mdc",
@@ -6428,7 +6428,7 @@
     "raycast/mcp/intercom-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fintercom-mcp-server.json",
       "type": "json",
-      "sha256": "7613512404b1f072d4c97fc802a4b92cfd001306a7e673784df07893058ee285"
+      "sha256": "0dea38f080657aa24c03e4846f419a5e2837da9e2eaba5a3fb6507f22ae5b160"
     },
     "entries/mcp/invideo-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Finvideo-mcp-server.json",
@@ -6443,7 +6443,7 @@
     "raycast/mcp/invideo-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Finvideo-mcp-server.json",
       "type": "json",
-      "sha256": "6fe29c73c7e0c8e4552dbb0088d0c4dbeeb8bddcbfd022acfd182b97ea9fa9b8"
+      "sha256": "2074d8c78aaea54b4d3db8c16c172c40bf627cc6dca6738823211568953163d8"
     },
     "entries/mcp/jam-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fjam-mcp-server.json",
@@ -6458,7 +6458,7 @@
     "raycast/mcp/jam-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fjam-mcp-server.json",
       "type": "json",
-      "sha256": "b4e096bf88f5deee0a7f36a9537342900d78a56f1375f3f7d39bc00d84946ba4"
+      "sha256": "301fc9a4109117ae09f23736fb01f01539040076f3379afd407c118123188f42"
     },
     "entries/hooks/jest-snapshot-auto-updater.json": {
       "path": "/data/entries%2Fhooks%2Fjest-snapshot-auto-updater.json",
@@ -6473,7 +6473,7 @@
     "raycast/hooks/jest-snapshot-auto-updater.json": {
       "path": "/data/raycast%2Fhooks%2Fjest-snapshot-auto-updater.json",
       "type": "json",
-      "sha256": "5508d5b003e40b6fdfd105a9eecd25747a5a63e1a823686f0f4102005a9f969d"
+      "sha256": "51a27d68a7ed6b47e424e4dd39261ccf1bc31c7d03f4a450573c7f4518bf8f4a"
     },
     "entries/mcp/jira-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fjira-mcp-server.json",
@@ -6488,7 +6488,7 @@
     "raycast/mcp/jira-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fjira-mcp-server.json",
       "type": "json",
-      "sha256": "723e34deead65fc7db9265df88ce7f55b34ede51fc8a743edde859cfc539d8ea"
+      "sha256": "a90fc06e14ce7ef238fdbd374cb8acd6add4ef2026dbd4447e963c108bf60721"
     },
     "entries/skills/json-schema-validation-transformation.json": {
       "path": "/data/entries%2Fskills%2Fjson-schema-validation-transformation.json",
@@ -6503,7 +6503,7 @@
     "raycast/skills/json-schema-validation-transformation.json": {
       "path": "/data/raycast%2Fskills%2Fjson-schema-validation-transformation.json",
       "type": "json",
-      "sha256": "a4234998b7359b46b1b89a121e543022ef14613bb824b31c28bc21d77155d519"
+      "sha256": "18abe13507ceacb27d358ff6c5c0bdee39bf51682b788c666f1e3c5fc135b40a"
     },
     "skill-adapters/cursor/json-schema-validation-transformation.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fjson-schema-validation-transformation.mdc",
@@ -6523,7 +6523,7 @@
     "raycast/hooks/json-schema-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fjson-schema-validator.json",
       "type": "json",
-      "sha256": "ced120e6447f8126cccd875e584ce51b52e00851d1844adef1e740306a5eb2e8"
+      "sha256": "eefa0c72cbd6e38648140f5e819451b632d64eaedfa822115e5cb750c02a4aa2"
     },
     "entries/rules/kubernetes-devsecops-engineer.json": {
       "path": "/data/entries%2Frules%2Fkubernetes-devsecops-engineer.json",
@@ -6538,7 +6538,7 @@
     "raycast/rules/kubernetes-devsecops-engineer.json": {
       "path": "/data/raycast%2Frules%2Fkubernetes-devsecops-engineer.json",
       "type": "json",
-      "sha256": "00161f25d490b83841ddfd80c6701850fea0d25e8fe2c255f2659a314e37ed29"
+      "sha256": "c1e94e08383bae3be116534b02a8132a44c37e2c97dfd4462731137f4c789c4d"
     },
     "entries/hooks/kubernetes-manifest-validator.json": {
       "path": "/data/entries%2Fhooks%2Fkubernetes-manifest-validator.json",
@@ -6553,7 +6553,7 @@
     "raycast/hooks/kubernetes-manifest-validator.json": {
       "path": "/data/raycast%2Fhooks%2Fkubernetes-manifest-validator.json",
       "type": "json",
-      "sha256": "2ac27cfd0f193f5d7f7b7efcafa0766b3c62004a322931b9436bc7894458e0e4"
+      "sha256": "c4c3e3dd200d012457c78bb3d12bed842b048e5b90d5318cd47c57f963aaa082"
     },
     "entries/mcp/kubernetes-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fkubernetes-mcp-server.json",
@@ -6568,7 +6568,7 @@
     "raycast/mcp/kubernetes-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fkubernetes-mcp-server.json",
       "type": "json",
-      "sha256": "1d3d15c40e80de5661d2ca82a71d2c90b954b5193681df25cb2eb2a6ce4c7c97"
+      "sha256": "8a6ebfe521d7dcd3a87c9d75c111d25206153ee66c2ca7e462d766c169c85d9c"
     },
     "entries/tools/lakera-guard.json": {
       "path": "/data/entries%2Ftools%2Flakera-guard.json",
@@ -6583,7 +6583,7 @@
     "raycast/tools/lakera-guard.json": {
       "path": "/data/raycast%2Ftools%2Flakera-guard.json",
       "type": "json",
-      "sha256": "92285b53189c32c7367e80b4fede6fedaeaaba99b0d97f2dd086c01243ecbb49"
+      "sha256": "9217a09f64483d4ce8092af4cb4cdda86c5d1edcd033a687c6a3505ad9767072"
     },
     "entries/tools/langfuse.json": {
       "path": "/data/entries%2Ftools%2Flangfuse.json",
@@ -6598,7 +6598,7 @@
     "raycast/tools/langfuse.json": {
       "path": "/data/raycast%2Ftools%2Flangfuse.json",
       "type": "json",
-      "sha256": "a7a8145b6b310afbb2dec695cf001b6a164a11b1a3d97ab03ef330affa324bb1"
+      "sha256": "7b39c35bd6dda5610ee1397eb04d08e550a5913425d1b949584c37f6ab4150e2"
     },
     "entries/tools/langgraph.json": {
       "path": "/data/entries%2Ftools%2Flanggraph.json",
@@ -6613,7 +6613,7 @@
     "raycast/tools/langgraph.json": {
       "path": "/data/raycast%2Ftools%2Flanggraph.json",
       "type": "json",
-      "sha256": "0a5b879c33e6a95219fb0459468d124b9d0e8a63be7ddb4e8f2b8ad54554f483"
+      "sha256": "52fa5a57794d6b525764cc26c1271da499e9c7e67971b5a3d15cf4b4bea7a25c"
     },
     "entries/tools/langsmith.json": {
       "path": "/data/entries%2Ftools%2Flangsmith.json",
@@ -6628,7 +6628,7 @@
     "raycast/tools/langsmith.json": {
       "path": "/data/raycast%2Ftools%2Flangsmith.json",
       "type": "json",
-      "sha256": "f7f2d34c29eacd546cbd49eebdefa8a1bcda768399ebf5ac538a65ed82d3fb96"
+      "sha256": "ef84f6a081c438299d698961a7767d2951870ef87731a79dad6898b49dba747e"
     },
     "entries/agents/life-sciences-research-specialist.json": {
       "path": "/data/entries%2Fagents%2Flife-sciences-research-specialist.json",
@@ -6643,7 +6643,7 @@
     "raycast/agents/life-sciences-research-specialist.json": {
       "path": "/data/raycast%2Fagents%2Flife-sciences-research-specialist.json",
       "type": "json",
-      "sha256": "23fd5c0e5518a830e91288e3741eefe6a89a4cb1d56b24b48701d18f3efc5e8a"
+      "sha256": "ede1ee4ee5846085e211e460aea71f7e7a76846731d0b76559308d6b9ea22a07"
     },
     "entries/mcp/linear-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Flinear-mcp-server.json",
@@ -6658,7 +6658,7 @@
     "raycast/mcp/linear-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Flinear-mcp-server.json",
       "type": "json",
-      "sha256": "5fb7aadb436899ec3b33459c15de0725aa159a53d3cdc7499b22a0e223f394b9"
+      "sha256": "fadb7455e8881248f925fbc5017a8a8d36e7ce0a80b2e2079a88d513dda9e5ba"
     },
     "entries/statuslines/lines-per-minute-tracker.json": {
       "path": "/data/entries%2Fstatuslines%2Flines-per-minute-tracker.json",
@@ -6673,7 +6673,7 @@
     "raycast/statuslines/lines-per-minute-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Flines-per-minute-tracker.json",
       "type": "json",
-      "sha256": "2001d6bc54319f55b903dd74cac66cdcde4bfb55c7e36951fc4746481657350d"
+      "sha256": "d79918c068d2ffebb791182271c2d889607a2c0bcf96784d4fa4fbac15115aa4"
     },
     "entries/skills/log-parsing-incident-timeline.json": {
       "path": "/data/entries%2Fskills%2Flog-parsing-incident-timeline.json",
@@ -6688,7 +6688,7 @@
     "raycast/skills/log-parsing-incident-timeline.json": {
       "path": "/data/raycast%2Fskills%2Flog-parsing-incident-timeline.json",
       "type": "json",
-      "sha256": "8febdca8173f1b867e227ec1360f12cf1966080528b30db90efbf58ee037f69e"
+      "sha256": "f8ea1c385b3ca02458b4310362340aa3c295aa462d3704e90002d769bcbfb714"
     },
     "skill-adapters/cursor/log-parsing-incident-timeline.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Flog-parsing-incident-timeline.mdc",
@@ -6708,7 +6708,7 @@
     "raycast/tools/lovable.json": {
       "path": "/data/raycast%2Ftools%2Flovable.json",
       "type": "json",
-      "sha256": "97bcf8d423a83d8b4e2812448a7f0d1c821ac97b4175f8a36532861a0e3d83d7"
+      "sha256": "c5ccc622c18fc569e44d733154891fc40b4dfba1c4b39518fbf39633f533c294"
     },
     "entries/tools/make.json": {
       "path": "/data/entries%2Ftools%2Fmake.json",
@@ -6723,7 +6723,7 @@
     "raycast/tools/make.json": {
       "path": "/data/raycast%2Ftools%2Fmake.json",
       "type": "json",
-      "sha256": "2a4e8f60f07aad2543e7ca2fbf4cc9fb81880d22d26ae68cf82ba10d9c936e8f"
+      "sha256": "9797b7eb258cce08881eb4aa01d36f0b6a4a9343d1e6eb2a0d2c8f969750f669"
     },
     "entries/skills/markdown-knowledge-base-composer.json": {
       "path": "/data/entries%2Fskills%2Fmarkdown-knowledge-base-composer.json",
@@ -6738,7 +6738,7 @@
     "raycast/skills/markdown-knowledge-base-composer.json": {
       "path": "/data/raycast%2Fskills%2Fmarkdown-knowledge-base-composer.json",
       "type": "json",
-      "sha256": "6cdc49beafc664530d7d6b4d4a2d911d6f86427a89d91554db396694c8eb9c1e"
+      "sha256": "28b39a7de09184606f472977d47a0912002f651ea6a40b1b07751a8255af26e6"
     },
     "skill-adapters/cursor/markdown-knowledge-base-composer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmarkdown-knowledge-base-composer.mdc",
@@ -6758,7 +6758,7 @@
     "raycast/hooks/markdown-link-checker.json": {
       "path": "/data/raycast%2Fhooks%2Fmarkdown-link-checker.json",
       "type": "json",
-      "sha256": "f5714f264d8cf7b68e354accbdbd8fc02ed879bbb6c53cb684e6609df1ab79f4"
+      "sha256": "d59cd627429e9957b3488c5dc7c09998f2df21b804e8c24df8f7ef0612265356"
     },
     "entries/tools/mastra.json": {
       "path": "/data/entries%2Ftools%2Fmastra.json",
@@ -6773,7 +6773,7 @@
     "raycast/tools/mastra.json": {
       "path": "/data/raycast%2Ftools%2Fmastra.json",
       "type": "json",
-      "sha256": "c4044822591bd83a90e3ee1c7bbbac66d2fa6c91cbcc89f414f935ab9d054ed6"
+      "sha256": "59a773146641e67b00203e3233aa2371b66d0b2434a129baea3d6036ca0786ce"
     },
     "entries/skills/mcp-server-authoring-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fmcp-server-authoring-security-capability-pack.json",
@@ -6788,7 +6788,7 @@
     "raycast/skills/mcp-server-authoring-security-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fmcp-server-authoring-security-capability-pack.json",
       "type": "json",
-      "sha256": "7c72259bf392dab674e6ca3f130f74a38d3abfe29bbb2f8583c2df37741af835"
+      "sha256": "01767d01ee12a6c3b33a5754ad1fe043ebf8fb4aaee8622347d8b60cfb050ef4"
     },
     "skill-adapters/cursor/mcp-server-authoring-security-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmcp-server-authoring-security-capability-pack.mdc",
@@ -6808,7 +6808,7 @@
     "raycast/skills/mcp-server-security-hardening.json": {
       "path": "/data/raycast%2Fskills%2Fmcp-server-security-hardening.json",
       "type": "json",
-      "sha256": "acf16ba884c9f6f0fb7cdc55656876778dc08ecc24d07be367a8e1c1bf36d17a"
+      "sha256": "6c18b0cbbe4922b57123c7741f63a1a7ce16cc5af22e3a7f67e0e7a5d76c4f0e"
     },
     "skill-adapters/cursor/mcp-server-security-hardening.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmcp-server-security-hardening.mdc",
@@ -6828,7 +6828,7 @@
     "raycast/commands/mcp-setup.json": {
       "path": "/data/raycast%2Fcommands%2Fmcp-setup.json",
       "type": "json",
-      "sha256": "72b7516e2512a847d49d383b5d7c244712788df27dd33ff92db8c6adc0764b3f"
+      "sha256": "7b9e8bde7b76a4391d37d340fb2ca174f07ddb1e8778daf6b355052c87cec9da"
     },
     "entries/statuslines/mcp-server-status-monitor.json": {
       "path": "/data/entries%2Fstatuslines%2Fmcp-server-status-monitor.json",
@@ -6843,7 +6843,7 @@
     "raycast/statuslines/mcp-server-status-monitor.json": {
       "path": "/data/raycast%2Fstatuslines%2Fmcp-server-status-monitor.json",
       "type": "json",
-      "sha256": "259b5d3c0cb667c66a563d300481adef0bf5cfb06e54e131658e393cfbed80c5"
+      "sha256": "d83d5f14c90cb293fae143ef76ad67c6b3e3e517b9e1b48e1dd8ce6b5accaa67"
     },
     "entries/skills/mcp-tool-contract-testing.json": {
       "path": "/data/entries%2Fskills%2Fmcp-tool-contract-testing.json",
@@ -6858,7 +6858,7 @@
     "raycast/skills/mcp-tool-contract-testing.json": {
       "path": "/data/raycast%2Fskills%2Fmcp-tool-contract-testing.json",
       "type": "json",
-      "sha256": "6fb414c59eda7594d7b9e5cf42e1b0724d22298a822499bd5c79570ca7f6f78a"
+      "sha256": "2c429aa0ef5ff77b05edfba4754d0349f65f6761f442b15abface65b8cfd41d8"
     },
     "skill-adapters/cursor/mcp-tool-contract-testing.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmcp-tool-contract-testing.mdc",
@@ -6878,7 +6878,7 @@
     "raycast/mcp/memesio-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fmemesio-mcp-server.json",
       "type": "json",
-      "sha256": "a2ec41e9d6af35b41aff48157b8e5b6e4352f9eb892f4de15065f6d126deac9a"
+      "sha256": "ac4da336fa5bcce4a942a90676ef5dca7be626c6fa8997fc3577bf4674077eb0"
     },
     "entries/hooks/memory-usage-monitor.json": {
       "path": "/data/entries%2Fhooks%2Fmemory-usage-monitor.json",
@@ -6893,7 +6893,7 @@
     "raycast/hooks/memory-usage-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Fmemory-usage-monitor.json",
       "type": "json",
-      "sha256": "debed3d1e0ae7bc790dee0a429ea9942960d041d9e6b1a4d75e70f60e9f9e2f3"
+      "sha256": "01cf8390ef7c38deba99e419bf53bed64ab1054f6a8603ef4b4973f9d6b7184f"
     },
     "entries/tools/microsoft-autogen.json": {
       "path": "/data/entries%2Ftools%2Fmicrosoft-autogen.json",
@@ -6908,7 +6908,7 @@
     "raycast/tools/microsoft-autogen.json": {
       "path": "/data/raycast%2Ftools%2Fmicrosoft-autogen.json",
       "type": "json",
-      "sha256": "1ca30d09c200c24cc926a1ebf67b1f01b751a1cb79dedc063a16c7def9a36908"
+      "sha256": "0f903e158354ef4b15a47cf73e781f05ee885c667385e8fdf0f48ef1a7426156"
     },
     "entries/statuslines/minimal-powerline.json": {
       "path": "/data/entries%2Fstatuslines%2Fminimal-powerline.json",
@@ -6923,7 +6923,7 @@
     "raycast/statuslines/minimal-powerline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fminimal-powerline.json",
       "type": "json",
-      "sha256": "d99eb71bd7f7b370a436363ed79d75da5e5a83e53ee223a96bcc7d0674f74b90"
+      "sha256": "081999eda57cd2048ebfd8f2805e1f965843cce78fc2eccf485a6fdda7d2c7ab"
     },
     "entries/skills/mintlify-documentation-automation.json": {
       "path": "/data/entries%2Fskills%2Fmintlify-documentation-automation.json",
@@ -6938,7 +6938,7 @@
     "raycast/skills/mintlify-documentation-automation.json": {
       "path": "/data/raycast%2Fskills%2Fmintlify-documentation-automation.json",
       "type": "json",
-      "sha256": "f8ed4e3bb1e325e75e35507be1d88a83187ea3885a1ddd552bef0a7de0745dd2"
+      "sha256": "dcb7549fa0f89e3c00bc4a037ee44fb304fbcd737ae9a9799d94221e5cd1a87d"
     },
     "skill-adapters/cursor/mintlify-documentation-automation.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmintlify-documentation-automation.mdc",
@@ -6958,7 +6958,7 @@
     "raycast/commands/mintlify-docs.json": {
       "path": "/data/raycast%2Fcommands%2Fmintlify-docs.json",
       "type": "json",
-      "sha256": "5e029abb5ac90290fdd81ac82af802119d9aa29638f476328277de68deede504"
+      "sha256": "540e474cd5f4a12732bff6e1d9eefcf29d021cd05b663077c881dfd938c30b7d"
     },
     "entries/rules/mobile-app-developer.json": {
       "path": "/data/entries%2Frules%2Fmobile-app-developer.json",
@@ -6973,7 +6973,7 @@
     "raycast/rules/mobile-app-developer.json": {
       "path": "/data/raycast%2Frules%2Fmobile-app-developer.json",
       "type": "json",
-      "sha256": "65fd64ff0f273ca423a712284e52350982ad3b83155e18356c736c0fd7a7c047"
+      "sha256": "b59d6d1c43b2cb26588cb51387e9d3886134a8925f55c9a8da1f5a08ad0ba671"
     },
     "entries/rules/mobile-app-development-expert.json": {
       "path": "/data/entries%2Frules%2Fmobile-app-development-expert.json",
@@ -6988,7 +6988,7 @@
     "raycast/rules/mobile-app-development-expert.json": {
       "path": "/data/raycast%2Frules%2Fmobile-app-development-expert.json",
       "type": "json",
-      "sha256": "2fcc18db2e70ccccb8dbce77bfe9ace4c76704479aa7362d9248c6e868515e07"
+      "sha256": "388920ec09541679544a765d2439be2cacb6c4a434c23bdb34a0c02c7f82467c"
     },
     "entries/skills/model-routing-cost-latency-optimizer.json": {
       "path": "/data/entries%2Fskills%2Fmodel-routing-cost-latency-optimizer.json",
@@ -7003,7 +7003,7 @@
     "raycast/skills/model-routing-cost-latency-optimizer.json": {
       "path": "/data/raycast%2Fskills%2Fmodel-routing-cost-latency-optimizer.json",
       "type": "json",
-      "sha256": "4807a364fb42a180da567354285379074e8646d4fc7bded2125d4fa77a40d2f1"
+      "sha256": "4ef19fbe794b29a102c5326565feb2a96e13564f19d57846f161a69a7f07248d"
     },
     "skill-adapters/cursor/model-routing-cost-latency-optimizer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmodel-routing-cost-latency-optimizer.mdc",
@@ -7023,7 +7023,7 @@
     "raycast/statuslines/model-switch-history-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Fmodel-switch-history-tracker.json",
       "type": "json",
-      "sha256": "4ee4149dcea473c1d46b6b6cb1d6afd065375fa57e914595ead38cbdfba11a96"
+      "sha256": "70f0ba8a84ceeceea1046f36ec3a8caec256cc059e6cee996d30e95964deb3ed"
     },
     "entries/mcp/monday-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fmonday-mcp-server.json",
@@ -7038,7 +7038,7 @@
     "raycast/mcp/monday-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fmonday-mcp-server.json",
       "type": "json",
-      "sha256": "3c2864c71da09b07e4864ab8544fdb43ba9a643f2d971d18a85035d2dffb66a4"
+      "sha256": "0c1457c51c78b9c2a60ab1cddb6a64004204a5d62b6f0604d8fc84c1d94c83b4"
     },
     "entries/rules/monorepo-workspace-manager.json": {
       "path": "/data/entries%2Frules%2Fmonorepo-workspace-manager.json",
@@ -7053,7 +7053,7 @@
     "raycast/rules/monorepo-workspace-manager.json": {
       "path": "/data/raycast%2Frules%2Fmonorepo-workspace-manager.json",
       "type": "json",
-      "sha256": "847e5f025c50c2c761d63c690a32b1b999bbbca79bf23deee90d141d0ad442a0"
+      "sha256": "e83a561d54021b2ecb187cc7c108ab2d8d9f8385c44109619b7f1c9abe18ca95"
     },
     "entries/agents/multi-agent-orchestration-specialist.json": {
       "path": "/data/entries%2Fagents%2Fmulti-agent-orchestration-specialist.json",
@@ -7068,7 +7068,7 @@
     "raycast/agents/multi-agent-orchestration-specialist.json": {
       "path": "/data/raycast%2Fagents%2Fmulti-agent-orchestration-specialist.json",
       "type": "json",
-      "sha256": "b2b9d7b627dcdbe7557da1003e4f117e80e9d51461af7c928ed82c6b6b6d6b90"
+      "sha256": "ed9a5f2fbbea48f6f5fec0dba0349f8786aeb572c04128ea8cff3b5caa9bdbbf"
     },
     "entries/statuslines/multi-line-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fmulti-line-statusline.json",
@@ -7083,7 +7083,7 @@
     "raycast/statuslines/multi-line-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fmulti-line-statusline.json",
       "type": "json",
-      "sha256": "dad27caf013bddf7c5e78bce4576eccfc7bfd9178e0c8b9e4d36606187f4a0a5"
+      "sha256": "421a2f4c64bd3a7be88489899be94a7dd964257e8e07324b073ee743eba10798"
     },
     "entries/statuslines/multi-provider-token-counter.json": {
       "path": "/data/entries%2Fstatuslines%2Fmulti-provider-token-counter.json",
@@ -7098,7 +7098,7 @@
     "raycast/statuslines/multi-provider-token-counter.json": {
       "path": "/data/raycast%2Fstatuslines%2Fmulti-provider-token-counter.json",
       "type": "json",
-      "sha256": "d9f40faceee4141d53b245f591cb60e10dede36428f89002bcbfbbca68f22f0e"
+      "sha256": "b6db63d55c787d695c03f2bd7c2da15bd53742a59e3c3e01a665dd230fcfc440"
     },
     "entries/statuslines/multi-session-overlap-indicator.json": {
       "path": "/data/entries%2Fstatuslines%2Fmulti-session-overlap-indicator.json",
@@ -7113,7 +7113,7 @@
     "raycast/statuslines/multi-session-overlap-indicator.json": {
       "path": "/data/raycast%2Fstatuslines%2Fmulti-session-overlap-indicator.json",
       "type": "json",
-      "sha256": "3bd173e35f43f0ecdd2b8eb0218353477d9bfda9370a3df5dbd9d21482658d3e"
+      "sha256": "5311c66e0e6527f901c560ef4007163801b0109d9e7434bb5d4a55cce6a3a3cc"
     },
     "entries/tools/n8n.json": {
       "path": "/data/entries%2Ftools%2Fn8n.json",
@@ -7128,7 +7128,7 @@
     "raycast/tools/n8n.json": {
       "path": "/data/raycast%2Ftools%2Fn8n.json",
       "type": "json",
-      "sha256": "a519cb55e6330dd1b1c80bf619251df46165a6d6aff532eda22bb888d2f42c4c"
+      "sha256": "d0c8f2e220f8e4b775e18d9b882676a564a7f072ae8fc162df6a91b7e30821fb"
     },
     "entries/skills/n8n-ai-agent-workflow-architect.json": {
       "path": "/data/entries%2Fskills%2Fn8n-ai-agent-workflow-architect.json",
@@ -7143,7 +7143,7 @@
     "raycast/skills/n8n-ai-agent-workflow-architect.json": {
       "path": "/data/raycast%2Fskills%2Fn8n-ai-agent-workflow-architect.json",
       "type": "json",
-      "sha256": "6596bf94b58de7a1b6661eaf7e8879427ace704073cd08cca8b56a1fc7bc582a"
+      "sha256": "fcebd3b52b0b0ad0cbc7a35ec3cb17df7d8864d078ac11270d781f1f405da4b6"
     },
     "skill-adapters/cursor/n8n-ai-agent-workflow-architect.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fn8n-ai-agent-workflow-architect.mdc",
@@ -7163,7 +7163,7 @@
     "raycast/skills/n8n-operations-resilience-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fn8n-operations-resilience-capability-pack.json",
       "type": "json",
-      "sha256": "d785f287a680c19d0f5bf46c0e8a6c1a6878c4f04889f1a45a645c2641cbb4a4"
+      "sha256": "563adbc483d90ce80f7eab912900a93ae95da005585c41c0ca9827558f612320"
     },
     "skill-adapters/cursor/n8n-operations-resilience-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fn8n-operations-resilience-capability-pack.mdc",
@@ -7183,7 +7183,7 @@
     "raycast/skills/n8n-production-security-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fn8n-production-security-capability-pack.json",
       "type": "json",
-      "sha256": "6e758bb60175bffd620ea2b9e92714b5e2ad197c2484f01ffb459857871f9908"
+      "sha256": "6853be2f734c8e514c91f5b71e322c61eb8da170dd75e49125bc573fa7051f48"
     },
     "skill-adapters/cursor/n8n-production-security-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fn8n-production-security-capability-pack.mdc",
@@ -7203,7 +7203,7 @@
     "raycast/mcp/netlify-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fnetlify-mcp-server.json",
       "type": "json",
-      "sha256": "1661b896fe0b9683bd2422015093a606ed4875eb0e2ec9383982164eed428980"
+      "sha256": "12cebb0efe95219c09af5235012f7ee3df07ab5410c762fe50f4fbc909e38d92"
     },
     "entries/rules/nextjs-15-performance-architect.json": {
       "path": "/data/entries%2Frules%2Fnextjs-15-performance-architect.json",
@@ -7218,7 +7218,7 @@
     "raycast/rules/nextjs-15-performance-architect.json": {
       "path": "/data/raycast%2Frules%2Fnextjs-15-performance-architect.json",
       "type": "json",
-      "sha256": "b77d7e5acf69fc681df3c6cfbf8b0b56e11e979121610c8cfe63c49cdf2b2542"
+      "sha256": "16a9f2a93f4ea5636a9ce88f3f0de3d1c9beba50090ab1d19dd30e2068e4510b"
     },
     "entries/hooks/nextjs-route-analyzer.json": {
       "path": "/data/entries%2Fhooks%2Fnextjs-route-analyzer.json",
@@ -7233,7 +7233,7 @@
     "raycast/hooks/nextjs-route-analyzer.json": {
       "path": "/data/raycast%2Fhooks%2Fnextjs-route-analyzer.json",
       "type": "json",
-      "sha256": "10a985b0b12885d7faafa70fba3cb95a4dfbd22ce17c4bab71ea1252ee7453b8"
+      "sha256": "e79f812840e2642b15fc8bafde70bdddd61cf4d71fa000ffd591fe442bac8f3d"
     },
     "entries/mcp/notion-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fnotion-mcp-server.json",
@@ -7248,7 +7248,7 @@
     "raycast/mcp/notion-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fnotion-mcp-server.json",
       "type": "json",
-      "sha256": "5b865956bd91d7187153412d85723ebd4c8737ecd3949019f7a1eff22db87fd6"
+      "sha256": "6ab998d661bc1b4e573b983feba25d34646fa72dd823337bd086d9060716ab98"
     },
     "entries/statuslines/oh-my-zsh-robbyrussell.json": {
       "path": "/data/entries%2Fstatuslines%2Foh-my-zsh-robbyrussell.json",
@@ -7263,7 +7263,7 @@
     "raycast/statuslines/oh-my-zsh-robbyrussell.json": {
       "path": "/data/raycast%2Fstatuslines%2Foh-my-zsh-robbyrussell.json",
       "type": "json",
-      "sha256": "f42f18deaeed7642f861c884ef50a8e3aeef87b1765e4974e93ed7fc54933838"
+      "sha256": "b221243cdf21188d0276ba886a31f7d5553ab58811613a8284a336ce0aa23183"
     },
     "entries/skills/openclaw-agent-ops-hardening.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-agent-ops-hardening.json",
@@ -7278,7 +7278,7 @@
     "raycast/skills/openclaw-agent-ops-hardening.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-agent-ops-hardening.json",
       "type": "json",
-      "sha256": "2d2ad0cd039f604bda385fd2965074d567c1972f8b5951fb576ef9ebc3be1431"
+      "sha256": "c6b084065ca036755b2eda9cd712bad2899090d40cc6c6bd000904fa1b4fb4da"
     },
     "skill-adapters/cursor/openclaw-agent-ops-hardening.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-agent-ops-hardening.mdc",
@@ -7298,7 +7298,7 @@
     "raycast/skills/openclaw-operator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-operator-capability-pack.json",
       "type": "json",
-      "sha256": "c06360c1748ddcd8c520ed04970eb0f7f53902d4d819e6ccd023dc06801160c7"
+      "sha256": "95a18b09e1baad48821c5f27cea32c667f1eb8cc61600d6296cfaad4c5f1b4fe"
     },
     "skill-adapters/cursor/openclaw-operator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-operator-capability-pack.mdc",
@@ -7318,7 +7318,7 @@
     "raycast/skills/openclaw-skill-authoring-factory-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.json",
       "type": "json",
-      "sha256": "a20a66c54327b1c218dc03b9843b088777b531832f88530c1c59532195cec3d7"
+      "sha256": "8349db61e38615484bdce7f827695cacafc28bde4200c5426e88f55168c8f5a1"
     },
     "skill-adapters/cursor/openclaw-skill-authoring-factory-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-skill-authoring-factory-capability-pack.mdc",
@@ -7338,7 +7338,7 @@
     "raycast/tools/opencode.json": {
       "path": "/data/raycast%2Ftools%2Fopencode.json",
       "type": "json",
-      "sha256": "dfba052f9b35ad58f86ba4627fe4503a5acfc0c22dba07e96cd9111e814be03b"
+      "sha256": "02f6dde36c0e980aa3f74b8704235e1a0f773f31086a5ad2340dbf346ff386ea"
     },
     "entries/skills/opennext-cloudflare-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopennext-cloudflare-capability-pack.json",
@@ -7353,7 +7353,7 @@
     "raycast/skills/opennext-cloudflare-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fopennext-cloudflare-capability-pack.json",
       "type": "json",
-      "sha256": "925aaa80f9bbfdada34d838422a7716c260f1e06364cb3952e2da6a85ad79538"
+      "sha256": "79cd1fd3a5d3f9f612d0b58a133e9a1f9d115e6b272ba612b8289fe4a4523eed"
     },
     "skill-adapters/cursor/opennext-cloudflare-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopennext-cloudflare-capability-pack.mdc",
@@ -7373,7 +7373,7 @@
     "raycast/hooks/package-vulnerability-scanner.json": {
       "path": "/data/raycast%2Fhooks%2Fpackage-vulnerability-scanner.json",
       "type": "json",
-      "sha256": "49af85c75d8f05427a6e699ab6c9b2065a3fd843eca387b9d80199e5ab54eeac"
+      "sha256": "e75b9829ce5981547e9701230489c9a163a98827c86a95fd691d18aaa2e8590e"
     },
     "entries/mcp/packrift-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpackrift-mcp-server.json",
@@ -7388,7 +7388,7 @@
     "raycast/mcp/packrift-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpackrift-mcp-server.json",
       "type": "json",
-      "sha256": "4b94171fe14aae71cd4de2658d6aba117c54b5a4c20d387ee73480b4ebca4adf"
+      "sha256": "6541bb2dbb0a537d45d015f6dfd21226f3680eba225e72cc12c756f256ad3a21"
     },
     "entries/skills/pagespeed-insights-optimizer.json": {
       "path": "/data/entries%2Fskills%2Fpagespeed-insights-optimizer.json",
@@ -7403,7 +7403,7 @@
     "raycast/skills/pagespeed-insights-optimizer.json": {
       "path": "/data/raycast%2Fskills%2Fpagespeed-insights-optimizer.json",
       "type": "json",
-      "sha256": "088405f9decb6a648ce6b269249391db4e154f896a5a99c08ca4b2dc9121533e"
+      "sha256": "4d1cea170d5a739d57da0c6afff4927b655b2dec2dcbaf74d0322ca6ca0414e7"
     },
     "skill-adapters/cursor/pagespeed-insights-optimizer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fpagespeed-insights-optimizer.mdc",
@@ -7423,7 +7423,7 @@
     "raycast/agents/parallel-subagent-distributor.json": {
       "path": "/data/raycast%2Fagents%2Fparallel-subagent-distributor.json",
       "type": "json",
-      "sha256": "4a9bcb19b9e4580641d5a606f3883ae98f35320b2abc4ebb867d8a0ca1be40fc"
+      "sha256": "8dd89f68b7146c8425cd337fdc4e58e49726af42e6ac6d0edae99040deccd50b"
     },
     "entries/mcp/paypal-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpaypal-mcp-server.json",
@@ -7438,7 +7438,7 @@
     "raycast/mcp/paypal-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpaypal-mcp-server.json",
       "type": "json",
-      "sha256": "4bceb257edda32b4a7f631774093804f1eae2583d176f393afc8776289099365"
+      "sha256": "bf6f42e3d0b65da0d5773170ebe550e8d5997e5bfc90bbdfbcdb932d827d511a"
     },
     "entries/hooks/performance-benchmark-report.json": {
       "path": "/data/entries%2Fhooks%2Fperformance-benchmark-report.json",
@@ -7453,7 +7453,7 @@
     "raycast/hooks/performance-benchmark-report.json": {
       "path": "/data/raycast%2Fhooks%2Fperformance-benchmark-report.json",
       "type": "json",
-      "sha256": "d742e505219ba70e67edb67cb13f7b87dc6f246904a6ffed29286f6191e82aa5"
+      "sha256": "56b2589a044b5d8bab218f77eb2cca1954ee17b883960ad55aeb5beee236b2b7"
     },
     "entries/hooks/performance-impact-monitor.json": {
       "path": "/data/entries%2Fhooks%2Fperformance-impact-monitor.json",
@@ -7468,7 +7468,7 @@
     "raycast/hooks/performance-impact-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Fperformance-impact-monitor.json",
       "type": "json",
-      "sha256": "6c4fcc4249902e481502caf32416b518e8e707a72eecf9f6899c6c60b5c6f47c"
+      "sha256": "c5769687215a030571c4d527a3aa308521bf695a9ff340fd4a39edf3089fce92"
     },
     "entries/hooks/performance-monitor.json": {
       "path": "/data/entries%2Fhooks%2Fperformance-monitor.json",
@@ -7483,7 +7483,7 @@
     "raycast/hooks/performance-monitor.json": {
       "path": "/data/raycast%2Fhooks%2Fperformance-monitor.json",
       "type": "json",
-      "sha256": "d0e08ded20166b6a4ef0e653e2e5417df92869c949b618a0455d5db1d4b921c0"
+      "sha256": "a7f249e392ea78a052079adb2fc74f91f64b4188b3c8e2643bb3fd34bbc2f756"
     },
     "entries/agents/performance-optimizer-agent.json": {
       "path": "/data/entries%2Fagents%2Fperformance-optimizer-agent.json",
@@ -7498,7 +7498,7 @@
     "raycast/agents/performance-optimizer-agent.json": {
       "path": "/data/raycast%2Fagents%2Fperformance-optimizer-agent.json",
       "type": "json",
-      "sha256": "71a862243d368d95c2cad910f0074762ada3204417af1165527b65b71d80896b"
+      "sha256": "db66afa1d7e6064cddb03c57a96bf5c4dd8a787a8715e6a1d823987e4046872f"
     },
     "entries/tools/pipedream.json": {
       "path": "/data/entries%2Ftools%2Fpipedream.json",
@@ -7513,7 +7513,7 @@
     "raycast/tools/pipedream.json": {
       "path": "/data/raycast%2Ftools%2Fpipedream.json",
       "type": "json",
-      "sha256": "a3c7707a22b8b356421fc98b5278d2db5f56417cb8d31e9f3136f4407d0f6604"
+      "sha256": "c3a2620ec92dbe6b54be250d9fc0d0cfa0f0e4652b9a91490adac95fa43274ca"
     },
     "entries/mcp/plaid-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fplaid-mcp-server.json",
@@ -7528,7 +7528,7 @@
     "raycast/mcp/plaid-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fplaid-mcp-server.json",
       "type": "json",
-      "sha256": "9661b252013b827c86735e7d343d139673a279e73e6426b27c25835953fb1c3e"
+      "sha256": "2ca1adac0469eec5dd743cf16604d665ff6b00e5fa4eb9d70778a5eb71045c29"
     },
     "entries/commands/plan-mode.json": {
       "path": "/data/entries%2Fcommands%2Fplan-mode.json",
@@ -7543,7 +7543,7 @@
     "raycast/commands/plan-mode.json": {
       "path": "/data/raycast%2Fcommands%2Fplan-mode.json",
       "type": "json",
-      "sha256": "3424bbe87c976da6bf8666043f49a976fab841a83836872190c7ac9daf98bd0c"
+      "sha256": "6a7322fcd69da27c144df86b3a0642727f33241ee594ceb0b119fb64aa472629"
     },
     "entries/skills/playwright-e2e-testing.json": {
       "path": "/data/entries%2Fskills%2Fplaywright-e2e-testing.json",
@@ -7558,7 +7558,7 @@
     "raycast/skills/playwright-e2e-testing.json": {
       "path": "/data/raycast%2Fskills%2Fplaywright-e2e-testing.json",
       "type": "json",
-      "sha256": "7343fedf09aa9db9a6910d309dbd0897e7cdba79da03655e7bd7a8acf0bea0ca"
+      "sha256": "ccf33ddde7d2952e0ca3e4f4836eeebddaa7559bb3b300abd36f011004ab9717"
     },
     "skill-adapters/cursor/playwright-e2e-testing.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fplaywright-e2e-testing.mdc",
@@ -7578,7 +7578,7 @@
     "raycast/skills/playwright-mcp-browser-automation-engineer.json": {
       "path": "/data/raycast%2Fskills%2Fplaywright-mcp-browser-automation-engineer.json",
       "type": "json",
-      "sha256": "b84544fd5ccd5ad533aed9b52be54c86ea20a16d84c58659183ddc53fefc211b"
+      "sha256": "26a40c3b956d1ec7f3a1110db936f440ce455ecd1edc8bf1e82acadfb6645516"
     },
     "skill-adapters/cursor/playwright-mcp-browser-automation-engineer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fplaywright-mcp-browser-automation-engineer.mdc",
@@ -7598,7 +7598,7 @@
     "raycast/hooks/playwright-test-runner.json": {
       "path": "/data/raycast%2Fhooks%2Fplaywright-test-runner.json",
       "type": "json",
-      "sha256": "c5035d6ee04b6a97ef5d7ef2b7c1f18814abd2d6926c2a8b7818b9b82ae851e4"
+      "sha256": "155e71143f21fabea31b81581d3178f1b6136daa9d283cae2cb80d6dd83fa7c0"
     },
     "entries/agents/plugin-ecosystem-architect.json": {
       "path": "/data/entries%2Fagents%2Fplugin-ecosystem-architect.json",
@@ -7613,7 +7613,7 @@
     "raycast/agents/plugin-ecosystem-architect.json": {
       "path": "/data/raycast%2Fagents%2Fplugin-ecosystem-architect.json",
       "type": "json",
-      "sha256": "7ceae0fa958613d1562d92337f484ab8140b3cb1027ea7da36ba664fb859ac07"
+      "sha256": "d50e3caaf1b965bbfb130e2a7b45ee1ee7d73d57d42e0f9037dd5a3329feb83e"
     },
     "entries/mcp/postgresql-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpostgresql-mcp-server.json",
@@ -7628,7 +7628,7 @@
     "raycast/mcp/postgresql-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpostgresql-mcp-server.json",
       "type": "json",
-      "sha256": "8f83d2cb82116f6cb991459ff9c32ab07edd3ed0bd12c920919dcd85ce3120b2"
+      "sha256": "bfd0fbe1ac964b2196163d6a6108aa6aeebb9aafd274d375d406dbd9142b3fab"
     },
     "entries/skills/postgresql-query-optimization.json": {
       "path": "/data/entries%2Fskills%2Fpostgresql-query-optimization.json",
@@ -7643,7 +7643,7 @@
     "raycast/skills/postgresql-query-optimization.json": {
       "path": "/data/raycast%2Fskills%2Fpostgresql-query-optimization.json",
       "type": "json",
-      "sha256": "70fca4edb18a514390044403466e0ed168959f2a9d3af1617e86dcc794dcfa05"
+      "sha256": "a63ac301706c46b3fac0a84f8856885eca700d34e3a930fe5e61eea1b2ee3fc3"
     },
     "skill-adapters/cursor/postgresql-query-optimization.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fpostgresql-query-optimization.mdc",
@@ -7663,7 +7663,7 @@
     "raycast/hooks/prisma-schema-sync.json": {
       "path": "/data/raycast%2Fhooks%2Fprisma-schema-sync.json",
       "type": "json",
-      "sha256": "9582fde359bba0a8842857487e7317cfaf976976161045dfe1e0ce5635e6c4c4"
+      "sha256": "31e9a0a90815ce62518bd417fd55eb06d2eab02437e141df149ad17147d60d0e"
     },
     "entries/agents/product-management-ai-agent.json": {
       "path": "/data/entries%2Fagents%2Fproduct-management-ai-agent.json",
@@ -7678,7 +7678,7 @@
     "raycast/agents/product-management-ai-agent.json": {
       "path": "/data/raycast%2Fagents%2Fproduct-management-ai-agent.json",
       "type": "json",
-      "sha256": "63d1b8c77eea95101a49578bc843c2d7bd35900031f71a66595fcfa6c3af4f0f"
+      "sha256": "87b98ceff7437c77e7d4f7292ff38fed607e1e259c6b6a90903f19768d187e69"
     },
     "entries/rules/production-codebase-auditor.json": {
       "path": "/data/entries%2Frules%2Fproduction-codebase-auditor.json",
@@ -7693,7 +7693,7 @@
     "raycast/rules/production-codebase-auditor.json": {
       "path": "/data/raycast%2Frules%2Fproduction-codebase-auditor.json",
       "type": "json",
-      "sha256": "2fae7e17b88c44839ccadcba99d45cb63485e0451c05522c2baebd4dbc1374db"
+      "sha256": "f4988f9ed4012b3704f043740b36dc029e1a694b5a1097ca421eba571e2b6160"
     },
     "entries/agents/production-reliability-engineer.json": {
       "path": "/data/entries%2Fagents%2Fproduction-reliability-engineer.json",
@@ -7708,7 +7708,7 @@
     "raycast/agents/production-reliability-engineer.json": {
       "path": "/data/raycast%2Fagents%2Fproduction-reliability-engineer.json",
       "type": "json",
-      "sha256": "e050fe2a31554c2240717af0c4c0f0e10bc6ba1cb26290a561f2a0f1a297f07a"
+      "sha256": "94872ff0352e7ba48b6871c167676c89b7635c3b6905146b69314ad2f6871330"
     },
     "entries/collections/production-readiness-toolkit.json": {
       "path": "/data/entries%2Fcollections%2Fproduction-readiness-toolkit.json",
@@ -7723,7 +7723,7 @@
     "raycast/collections/production-readiness-toolkit.json": {
       "path": "/data/raycast%2Fcollections%2Fproduction-readiness-toolkit.json",
       "type": "json",
-      "sha256": "7c1b281011ca89ba8299d502e6b87e3be344f114c484fd6f0720a7914ec8108d"
+      "sha256": "52b09c46203dceacec26c7a454b39f0180cc06eef4b63a6c8efda2d5b4a1b740"
     },
     "entries/collections/developer-productivity-booster.json": {
       "path": "/data/entries%2Fcollections%2Fdeveloper-productivity-booster.json",
@@ -7738,7 +7738,7 @@
     "raycast/collections/developer-productivity-booster.json": {
       "path": "/data/raycast%2Fcollections%2Fdeveloper-productivity-booster.json",
       "type": "json",
-      "sha256": "33233101dcfe7a7678baaf7b1458a09d392fd5d6007452cc45d1c0e1ed92eff0"
+      "sha256": "ad33486adff1b2efb28cdd1da45504f6f48570e73a958b4c034f211864612928"
     },
     "entries/skills/prompt-injection-defense-guardrails.json": {
       "path": "/data/entries%2Fskills%2Fprompt-injection-defense-guardrails.json",
@@ -7753,7 +7753,7 @@
     "raycast/skills/prompt-injection-defense-guardrails.json": {
       "path": "/data/raycast%2Fskills%2Fprompt-injection-defense-guardrails.json",
       "type": "json",
-      "sha256": "a18e8a1dba1910a7743361db8a4481f0e26c47485326823ea2ade8c7811c1389"
+      "sha256": "f33561dfc925fdc7da86bd3bfd6b480a94bca7eba65c429aa527dca2e92c422d"
     },
     "skill-adapters/cursor/prompt-injection-defense-guardrails.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fprompt-injection-defense-guardrails.mdc",
@@ -7773,7 +7773,7 @@
     "raycast/agents/prompt-optimization-specialist.json": {
       "path": "/data/raycast%2Fagents%2Fprompt-optimization-specialist.json",
       "type": "json",
-      "sha256": "4e8070ade5df0e417531eae075ed751586f40920ef22a2940c19c36cf8fb60e1"
+      "sha256": "7779895876eeaca6c2c678cc0ab06dd17ea6f64e2ba04dc095b04d5eb2dbb347"
     },
     "entries/mcp/prompt-to-asset.json": {
       "path": "/data/entries%2Fmcp%2Fprompt-to-asset.json",
@@ -7788,7 +7788,7 @@
     "raycast/mcp/prompt-to-asset.json": {
       "path": "/data/raycast%2Fmcp%2Fprompt-to-asset.json",
       "type": "json",
-      "sha256": "2d93191553957aa11ef809a78b53bdc37068559dc80742060b04b554e0a337f3"
+      "sha256": "2d45be5eee001b41f741753c80e8b9cecf5190d14cac78696dd30b550e12a5e2"
     },
     "entries/tools/promptfoo.json": {
       "path": "/data/entries%2Ftools%2Fpromptfoo.json",
@@ -7803,7 +7803,7 @@
     "raycast/tools/promptfoo.json": {
       "path": "/data/raycast%2Ftools%2Fpromptfoo.json",
       "type": "json",
-      "sha256": "618ddb281947ffa62c9f8353e72d9fbe845c701411773d10b8fdcb8148ba92ec"
+      "sha256": "6e87d580abca59f54ea5276764b6991348d368e5b22703da80cf1ea6bc12dee6"
     },
     "entries/tools/protect-ai.json": {
       "path": "/data/entries%2Ftools%2Fprotect-ai.json",
@@ -7818,7 +7818,7 @@
     "raycast/tools/protect-ai.json": {
       "path": "/data/raycast%2Ftools%2Fprotect-ai.json",
       "type": "json",
-      "sha256": "5f65cf17061dd5742d40ab596d9bfe96144a292cc54fe6c739da5a7c35c347ed"
+      "sha256": "4f11eca67926968652152dd1028ac08f84bbcb0de79d693654a6c1f751128a66"
     },
     "entries/skills/proxmox-ve-api-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fproxmox-ve-api-capability-pack.json",
@@ -7833,7 +7833,7 @@
     "raycast/skills/proxmox-ve-api-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fproxmox-ve-api-capability-pack.json",
       "type": "json",
-      "sha256": "3e9de44499d1891106cad6b89474acca9ee5858193817db6d2d69faaac454b15"
+      "sha256": "ff62127c652c142e739839dba99d125f3c8f83d552924b9ba4027cf78b015eda"
     },
     "skill-adapters/cursor/proxmox-ve-api-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fproxmox-ve-api-capability-pack.mdc",
@@ -7853,7 +7853,7 @@
     "raycast/skills/proxmox-ve-api-orchestrator.json": {
       "path": "/data/raycast%2Fskills%2Fproxmox-ve-api-orchestrator.json",
       "type": "json",
-      "sha256": "5042270cc9d5d37e53f982a7dee550d5be9b82ed30d41c245600844f7c6bc510"
+      "sha256": "b86fc3117b829c840a03176ff7d2e9cbc2b4be3e2de26588bf575711de27d5a9"
     },
     "skill-adapters/cursor/proxmox-ve-api-orchestrator.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fproxmox-ve-api-orchestrator.mdc",
@@ -7873,7 +7873,7 @@
     "raycast/rules/python-data-science.json": {
       "path": "/data/raycast%2Frules%2Fpython-data-science.json",
       "type": "json",
-      "sha256": "5a9c048c0d403b369003453f14c6160e9bb2ab316b33d19d5d778e21d66fc5f1"
+      "sha256": "78cd181e889c4eefac28d72ead38608299b563437ac78cfdbc5fd42a3126d318"
     },
     "entries/rules/python-data-science-expert.json": {
       "path": "/data/entries%2Frules%2Fpython-data-science-expert.json",
@@ -7888,7 +7888,7 @@
     "raycast/rules/python-data-science-expert.json": {
       "path": "/data/raycast%2Frules%2Fpython-data-science-expert.json",
       "type": "json",
-      "sha256": "47c520e5c12508101595f27725ec0d4adee99892c6348361fb02fda384bc100b"
+      "sha256": "3b2029a582ebf9a00eb93ffbc97b34b5678ef7fe1e29ae9f29f528a3fef3cc4b"
     },
     "entries/hooks/python-import-optimizer.json": {
       "path": "/data/entries%2Fhooks%2Fpython-import-optimizer.json",
@@ -7903,7 +7903,7 @@
     "raycast/hooks/python-import-optimizer.json": {
       "path": "/data/raycast%2Fhooks%2Fpython-import-optimizer.json",
       "type": "json",
-      "sha256": "54073b13318e006d88023b2687a973924d361913210ea393a81941ce4942f5e7"
+      "sha256": "99af1eba093bb51a6b0275fb2ea06ff43bd5d9c3d3871334ce0baadc31c674e6"
     },
     "entries/hooks/python-linter-integration.json": {
       "path": "/data/entries%2Fhooks%2Fpython-linter-integration.json",
@@ -7918,7 +7918,7 @@
     "raycast/hooks/python-linter-integration.json": {
       "path": "/data/raycast%2Fhooks%2Fpython-linter-integration.json",
       "type": "json",
-      "sha256": "deb077641bc7369cb7c232628857896ead4f7d6d37abb18e2011c398173f834b"
+      "sha256": "a1e3db741f07847de70269d805c16310855df4a4ff0239196dba2e3f1613429d"
     },
     "entries/statuslines/python-rich-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fpython-rich-statusline.json",
@@ -7933,7 +7933,7 @@
     "raycast/statuslines/python-rich-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fpython-rich-statusline.json",
       "type": "json",
-      "sha256": "401b316c0cd6870c70c6b341675942edc146812506c184a817a77079318c66f1"
+      "sha256": "3140835dc4a3e5e0711de0d5d1b2a564aaf5d531ec4d1a3c8fcb80019e34869a"
     },
     "entries/tools/raycast.json": {
       "path": "/data/entries%2Ftools%2Fraycast.json",
@@ -7948,7 +7948,7 @@
     "raycast/tools/raycast.json": {
       "path": "/data/raycast%2Ftools%2Fraycast.json",
       "type": "json",
-      "sha256": "3f185f10f980ca62304a0643e5f2fc777faf16bfd0f0ff62b6fcb4d8c7e08a1e"
+      "sha256": "6a120728c73eff11d9935352ce6ac153eff112e677466c2a2e73d9e54fdda0c2"
     },
     "entries/skills/raycast-extension-dev-publish-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fraycast-extension-dev-publish-capability-pack.json",
@@ -7963,7 +7963,7 @@
     "raycast/skills/raycast-extension-dev-publish-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fraycast-extension-dev-publish-capability-pack.json",
       "type": "json",
-      "sha256": "8c5b66f6f67352dd01620b8f43f3c4ea9ca621fa02960a7f1c9deece9cdc3eb9"
+      "sha256": "c02fa9d8d1c7ad107e9066819ea825d0882f4b5bfe2cf6bdcd59dc5261aca4a0"
     },
     "skill-adapters/cursor/raycast-extension-dev-publish-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fraycast-extension-dev-publish-capability-pack.mdc",
@@ -7983,7 +7983,7 @@
     "raycast/rules/react-19-concurrent-features-specialist.json": {
       "path": "/data/raycast%2Frules%2Freact-19-concurrent-features-specialist.json",
       "type": "json",
-      "sha256": "161e1ab4ab75881e70da7c114dc7289a576574d48db70fd6aeff2eda4ee1f977"
+      "sha256": "8625b2df51b6f6f8394ae4487e4f662f8806e062c8860f099a185daff7af5c50"
     },
     "entries/rules/react-expert.json": {
       "path": "/data/entries%2Frules%2Freact-expert.json",
@@ -7998,7 +7998,7 @@
     "raycast/rules/react-expert.json": {
       "path": "/data/raycast%2Frules%2Freact-expert.json",
       "type": "json",
-      "sha256": "c4a0f83ebe69b4a71dc091e639bf986e7bf7e57a90bdc23eeed6764fa751f257"
+      "sha256": "f80ced16e89dad3b137430f64162ba058b46a780b2b4c30045c24790908329cb"
     },
     "entries/rules/react-next-js-expert.json": {
       "path": "/data/entries%2Frules%2Freact-next-js-expert.json",
@@ -8013,7 +8013,7 @@
     "raycast/rules/react-next-js-expert.json": {
       "path": "/data/raycast%2Frules%2Freact-next-js-expert.json",
       "type": "json",
-      "sha256": "c13cdc6b5e8066db02fb050617ced52f55633cf985971a11c31c85746b3510fd"
+      "sha256": "716e924d4ed904a28f384672efc80b87e58865b4a5da9970cd5c7e6f110abb0e"
     },
     "entries/rules/react-server-components-expert.json": {
       "path": "/data/entries%2Frules%2Freact-server-components-expert.json",
@@ -8028,7 +8028,7 @@
     "raycast/rules/react-server-components-expert.json": {
       "path": "/data/raycast%2Frules%2Freact-server-components-expert.json",
       "type": "json",
-      "sha256": "6d60cbb40eef51333d3289ada7737e322b1c552397bf91b6473abc1425301196"
+      "sha256": "57276f7af94456f856fc15a00b53a67cdb1570fb01e8345107cc6a71858add68"
     },
     "entries/hooks/react-component-test-generator.json": {
       "path": "/data/entries%2Fhooks%2Freact-component-test-generator.json",
@@ -8043,7 +8043,7 @@
     "raycast/hooks/react-component-test-generator.json": {
       "path": "/data/raycast%2Fhooks%2Freact-component-test-generator.json",
       "type": "json",
-      "sha256": "fc370276d2dab1a28fb677d79c85c574606d3e8eb9197770d0dce3dbcdefe034"
+      "sha256": "06376128334ea28b58148981f14e67732db3a638bf02501cb9ee8db603ad5ca8"
     },
     "entries/hooks/real-time-activity-tracker.json": {
       "path": "/data/entries%2Fhooks%2Freal-time-activity-tracker.json",
@@ -8058,7 +8058,7 @@
     "raycast/hooks/real-time-activity-tracker.json": {
       "path": "/data/raycast%2Fhooks%2Freal-time-activity-tracker.json",
       "type": "json",
-      "sha256": "d9af570921be6181bdc222200cc212615ae82bb9a5439be8c7e021b55ad5989b"
+      "sha256": "b92ebdeedf11c70b3f5e35d2e2cdd4838614bea6de393ef5620abfc11624b1d6"
     },
     "entries/statuslines/real-time-cost-tracker.json": {
       "path": "/data/entries%2Fstatuslines%2Freal-time-cost-tracker.json",
@@ -8073,7 +8073,7 @@
     "raycast/statuslines/real-time-cost-tracker.json": {
       "path": "/data/raycast%2Fstatuslines%2Freal-time-cost-tracker.json",
       "type": "json",
-      "sha256": "f6876f372db9220e560dd2ebfe595e4600587ee75d660abef1488bb0e797eb8c"
+      "sha256": "279475bb7a28d6878eea5b4af80804fa9c4dffe40ab3e2a03d4c09007f49b041"
     },
     "entries/mcp/reddit-mcp-buddy.json": {
       "path": "/data/entries%2Fmcp%2Freddit-mcp-buddy.json",
@@ -8088,7 +8088,7 @@
     "raycast/mcp/reddit-mcp-buddy.json": {
       "path": "/data/raycast%2Fmcp%2Freddit-mcp-buddy.json",
       "type": "json",
-      "sha256": "c0ade2c211c0af7723bddde9c3d22e5b4d558756f219312cb085576fc62e2aa0"
+      "sha256": "4a8345d5a1b567cf652d457786dfcd004921f103dba403bbe3c03be9811700b7"
     },
     "entries/hooks/redis-cache-invalidator.json": {
       "path": "/data/entries%2Fhooks%2Fredis-cache-invalidator.json",
@@ -8103,7 +8103,7 @@
     "raycast/hooks/redis-cache-invalidator.json": {
       "path": "/data/raycast%2Fhooks%2Fredis-cache-invalidator.json",
       "type": "json",
-      "sha256": "8efb5747c7da4c9f8e17e0fc635365f1a731a243987ab7541a8eca4e02009668"
+      "sha256": "bc2c9c77864e75dc299c759a7d3bf20eb33433e3cda108107189b51d19481ced"
     },
     "entries/mcp/redis-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fredis-mcp-server.json",
@@ -8118,7 +8118,7 @@
     "raycast/mcp/redis-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fredis-mcp-server.json",
       "type": "json",
-      "sha256": "86d36b401a6f33990581a65100b6fd3138171530a3ddc9e8054557af620c21c8"
+      "sha256": "d3ab1c28d8ffafb493c472b6a1c4183a1be9eb691b4f14a8f5d61db43f155f77"
     },
     "entries/tools/replit-agent.json": {
       "path": "/data/entries%2Ftools%2Freplit-agent.json",
@@ -8133,7 +8133,7 @@
     "raycast/tools/replit-agent.json": {
       "path": "/data/raycast%2Ftools%2Freplit-agent.json",
       "type": "json",
-      "sha256": "d970c3b7561e883c3ca71b8529d82cfbe7f2f719c4ca630cdc2005a7b876c1e7"
+      "sha256": "4e33ea50b5dcf52e6384ef8685da6449dbd2f4be3d9210b40c0f9c6f40ed5767"
     },
     "entries/skills/rest-api-client-harness.json": {
       "path": "/data/entries%2Fskills%2Frest-api-client-harness.json",
@@ -8148,7 +8148,7 @@
     "raycast/skills/rest-api-client-harness.json": {
       "path": "/data/raycast%2Fskills%2Frest-api-client-harness.json",
       "type": "json",
-      "sha256": "73d61c4cfdc41f8457d0f99d88cbc43b67ea3139516eed38b5c4f646a511d77a"
+      "sha256": "c591219aa49519be195e46163746bc139bcc1ab96e6f3fc7ba3ba83383f2ecec"
     },
     "skill-adapters/cursor/rest-api-client-harness.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Frest-api-client-harness.mdc",
@@ -8168,7 +8168,7 @@
     "raycast/tools/roo-code.json": {
       "path": "/data/raycast%2Ftools%2Froo-code.json",
       "type": "json",
-      "sha256": "4ad25eeb125d1e459bb1c7691ad4ee4a37a1b62ff6a1486b3bed17411bc751e8"
+      "sha256": "9c835f2b9917f5388a739553f73ae972c9f7cd8d175ab24743400bcf0fe4eb72"
     },
     "entries/hooks/rust-cargo-check.json": {
       "path": "/data/entries%2Fhooks%2Frust-cargo-check.json",
@@ -8183,7 +8183,7 @@
     "raycast/hooks/rust-cargo-check.json": {
       "path": "/data/raycast%2Fhooks%2Frust-cargo-check.json",
       "type": "json",
-      "sha256": "3ffa8c64a508a3c5158e645fce92e421778729393fe10ef383561262e8285f19"
+      "sha256": "ffa08539876d037be2559482587a51beeaae86f6ad4cabaa360d7f3f9d622562"
     },
     "entries/skills/saas-pricing-experimentation-engine.json": {
       "path": "/data/entries%2Fskills%2Fsaas-pricing-experimentation-engine.json",
@@ -8198,7 +8198,7 @@
     "raycast/skills/saas-pricing-experimentation-engine.json": {
       "path": "/data/raycast%2Fskills%2Fsaas-pricing-experimentation-engine.json",
       "type": "json",
-      "sha256": "f9a4ea9321f2e776c0ccbd7cbb96f1e26fd9ea0f81cc8fb5df53d688a3abbc22"
+      "sha256": "c80eee1449fa09dea719c8b43f7ff5da487b65b8786fd69854bd702f667579b2"
     },
     "skill-adapters/cursor/saas-pricing-experimentation-engine.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fsaas-pricing-experimentation-engine.mdc",
@@ -8218,7 +8218,7 @@
     "raycast/hooks/scss-auto-compiler.json": {
       "path": "/data/raycast%2Fhooks%2Fscss-auto-compiler.json",
       "type": "json",
-      "sha256": "c0a21cad141fb0ddaeb0fe93e9e0dc96b71499f1793e02ff433cfcc98980b8cd"
+      "sha256": "fd8698b06eeb3dade738655903a214db231e7b558697204ab93c2dc78e3d4f70"
     },
     "entries/rules/security-auditor.json": {
       "path": "/data/entries%2Frules%2Fsecurity-auditor.json",
@@ -8233,7 +8233,7 @@
     "raycast/rules/security-auditor.json": {
       "path": "/data/raycast%2Frules%2Fsecurity-auditor.json",
       "type": "json",
-      "sha256": "a03c65b40efa31459e524837018d9c84e3cfde964742c9b39cf9220764ec346e"
+      "sha256": "384df4c384919145db04ed57844215d76f4493231ef92b21c897744109bac633"
     },
     "entries/rules/security-auditor-penetration-tester.json": {
       "path": "/data/entries%2Frules%2Fsecurity-auditor-penetration-tester.json",
@@ -8248,7 +8248,7 @@
     "raycast/rules/security-auditor-penetration-tester.json": {
       "path": "/data/raycast%2Frules%2Fsecurity-auditor-penetration-tester.json",
       "type": "json",
-      "sha256": "ca274a018eab173a9149ede5c8180914ca43aa4259f4693d9f91a79aa18d0b35"
+      "sha256": "31c599ae109b7cab577fd2b03186c28c2136acacbd80201c79ba73b560882688"
     },
     "entries/hooks/security-scanner-hook.json": {
       "path": "/data/entries%2Fhooks%2Fsecurity-scanner-hook.json",
@@ -8263,7 +8263,7 @@
     "raycast/hooks/security-scanner-hook.json": {
       "path": "/data/raycast%2Fhooks%2Fsecurity-scanner-hook.json",
       "type": "json",
-      "sha256": "27abf72bd1b232d81862eb177b56c772858cacb6c3ef4d84905208ce3eb809c3"
+      "sha256": "57d5ba229cd8f92672bc32341d7b19947b815b0e0d50c6f132f6245c8d33f983"
     },
     "entries/rules/security-first-react-components.json": {
       "path": "/data/entries%2Frules%2Fsecurity-first-react-components.json",
@@ -8278,7 +8278,7 @@
     "raycast/rules/security-first-react-components.json": {
       "path": "/data/raycast%2Frules%2Fsecurity-first-react-components.json",
       "type": "json",
-      "sha256": "8b40c6fbea01b2e22ca0074311fa142bec810c525d0a81f561103edbe3116fb2"
+      "sha256": "28cb5adce4408ae0362d1c1108ac5083acfc2846ed0714f72a601f6752afdae2"
     },
     "entries/agents/semantic-kernel-enterprise-agent.json": {
       "path": "/data/entries%2Fagents%2Fsemantic-kernel-enterprise-agent.json",
@@ -8293,7 +8293,7 @@
     "raycast/agents/semantic-kernel-enterprise-agent.json": {
       "path": "/data/raycast%2Fagents%2Fsemantic-kernel-enterprise-agent.json",
       "type": "json",
-      "sha256": "413c485f226f1e18c85700c730b7aedb700e6a083e69dff0193b790dad83efc2"
+      "sha256": "20d87d5dbb987f18b5e07fb228bcb7e8c628b2b835ff24112d90dd58145433c4"
     },
     "entries/hooks/sensitive-data-alert-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fsensitive-data-alert-scanner.json",
@@ -8308,7 +8308,7 @@
     "raycast/hooks/sensitive-data-alert-scanner.json": {
       "path": "/data/raycast%2Fhooks%2Fsensitive-data-alert-scanner.json",
       "type": "json",
-      "sha256": "7719f92f99d281df786649f002b90a36489e754bdce83120824307e43945d4d2"
+      "sha256": "521fd36529a5fe2d2eb820fce72c09b68c64cd6f27ad3c58407e9092f4a730ba"
     },
     "entries/mcp/sentry-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsentry-mcp-server.json",
@@ -8323,7 +8323,7 @@
     "raycast/mcp/sentry-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fsentry-mcp-server.json",
       "type": "json",
-      "sha256": "bc31a8dd97d2cdabe3a01e2539c16cb9915f3f906bc52fb5aa85636fecdf0c12"
+      "sha256": "abb6b4355a61fc96ca5a6f3c0188b68cc08887c42c1a55b2c7c9d3aae06e5526"
     },
     "entries/statuslines/session-health-score.json": {
       "path": "/data/entries%2Fstatuslines%2Fsession-health-score.json",
@@ -8338,7 +8338,7 @@
     "raycast/statuslines/session-health-score.json": {
       "path": "/data/raycast%2Fstatuslines%2Fsession-health-score.json",
       "type": "json",
-      "sha256": "6b2ce8a19df12a931455bbc2a5da3a53445c95ef3f53babe3dbb028e933fc6b9"
+      "sha256": "5b785974bdbed35f9cef93fd7760ba07fd7138e08dacca3b69951afc7a42fd9d"
     },
     "entries/hooks/session-metrics-collector.json": {
       "path": "/data/entries%2Fhooks%2Fsession-metrics-collector.json",
@@ -8353,7 +8353,7 @@
     "raycast/hooks/session-metrics-collector.json": {
       "path": "/data/raycast%2Fhooks%2Fsession-metrics-collector.json",
       "type": "json",
-      "sha256": "1db7f2ebcf80bdeb5319703dbad6963a408a762c1dbd1b3ab1a1b7ee50599ce2"
+      "sha256": "2eca3bd262db57ee21ee40dd098c667f138c88b7220be51b342149e68b90ef4f"
     },
     "entries/statuslines/session-timer-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fsession-timer-statusline.json",
@@ -8368,7 +8368,7 @@
     "raycast/statuslines/session-timer-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fsession-timer-statusline.json",
       "type": "json",
-      "sha256": "e125c65581b656022a68513a78dd64bdb483e269072f9b949449ce52a4412018"
+      "sha256": "6e369b13adb7a16e0445bf8bf700c20e7f6d2a6f62a63da5176a71dbaab7fb6e"
     },
     "entries/statuslines/simple-text-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fsimple-text-statusline.json",
@@ -8383,7 +8383,7 @@
     "raycast/statuslines/simple-text-statusline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fsimple-text-statusline.json",
       "type": "json",
-      "sha256": "2fcb59a0f86d87b783a9901253d63ba80b5d4fdacf4c8e4f2c68dca5976b9c25"
+      "sha256": "aab7fe12327348d8c12f3a5d8c58567aaa1dbebb59a8180d98bbe71d9827eb9c"
     },
     "entries/hooks/slack-progress-notifier.json": {
       "path": "/data/entries%2Fhooks%2Fslack-progress-notifier.json",
@@ -8398,7 +8398,7 @@
     "raycast/hooks/slack-progress-notifier.json": {
       "path": "/data/raycast%2Fhooks%2Fslack-progress-notifier.json",
       "type": "json",
-      "sha256": "a1bbc4068a47d16b2b887d871f242e330c47682e04229cad5ae4f1f111a9c48c"
+      "sha256": "535fb9af9e9287b493fa722e5cced73820e888692b1e95a60b6a9fc78b3b2c2d"
     },
     "entries/commands/slash-command-gen.json": {
       "path": "/data/entries%2Fcommands%2Fslash-command-gen.json",
@@ -8413,7 +8413,7 @@
     "raycast/commands/slash-command-gen.json": {
       "path": "/data/raycast%2Fcommands%2Fslash-command-gen.json",
       "type": "json",
-      "sha256": "ebd6b3a6995dd38ebe95d502f985d52272dd9f0b7bfb63fcb9f2d52a334b21e7"
+      "sha256": "8868e2c74360144c34710fd56ee08de8d02bbe0f68a9f3a685c7dbbe91f77d2c"
     },
     "entries/agents/slash-command-orchestrator-agent.json": {
       "path": "/data/entries%2Fagents%2Fslash-command-orchestrator-agent.json",
@@ -8428,7 +8428,7 @@
     "raycast/agents/slash-command-orchestrator-agent.json": {
       "path": "/data/raycast%2Fagents%2Fslash-command-orchestrator-agent.json",
       "type": "json",
-      "sha256": "9aa788a66b6030966f09f5e479bf375c62154772d4931b253d230f5f0217c95a"
+      "sha256": "6315f933d1dc9a13235bdbdf37e6c53de9667b5fc23689b60f66fb02b178f520"
     },
     "entries/tools/smithery.json": {
       "path": "/data/entries%2Ftools%2Fsmithery.json",
@@ -8443,7 +8443,7 @@
     "raycast/tools/smithery.json": {
       "path": "/data/raycast%2Ftools%2Fsmithery.json",
       "type": "json",
-      "sha256": "6bdd4c0c293d0b5513490a32daff04999d71f93b254c178dc1c6198ac4624e71"
+      "sha256": "9c4afba22ff93beab41dfb0f5e04c3c3f7a6831c5cdfb19f618a51be31fab460"
     },
     "entries/mcp/socket-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsocket-mcp-server.json",
@@ -8458,7 +8458,7 @@
     "raycast/mcp/socket-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fsocket-mcp-server.json",
       "type": "json",
-      "sha256": "315d051e942f3e4a11be4e021b3cda33c67e1726226bf28b116fc6d795404b42"
+      "sha256": "878ed0365a2d09e9391a3289fa486dbd06efbd9a39018b9be386e9eaae246a45"
     },
     "entries/tools/sourcegraph-cody.json": {
       "path": "/data/entries%2Ftools%2Fsourcegraph-cody.json",
@@ -8473,7 +8473,7 @@
     "raycast/tools/sourcegraph-cody.json": {
       "path": "/data/raycast%2Ftools%2Fsourcegraph-cody.json",
       "type": "json",
-      "sha256": "565094a6c9696b2ffd2e4d30eaae336cf1b937a72e8578eff7df7c3ea7c440c4"
+      "sha256": "788497ac665ede2e68ad56dd808c3d7eedb97ed091de763655115f33517ac335"
     },
     "entries/mcp/legal-fournier-spain-legal-mcp.json": {
       "path": "/data/entries%2Fmcp%2Flegal-fournier-spain-legal-mcp.json",
@@ -8488,7 +8488,7 @@
     "raycast/mcp/legal-fournier-spain-legal-mcp.json": {
       "path": "/data/raycast%2Fmcp%2Flegal-fournier-spain-legal-mcp.json",
       "type": "json",
-      "sha256": "9123dac473f35b00eb3bbaf61538181ff45d24d4095aae999ea7fa1fef8e337f"
+      "sha256": "98f5453b321ac466295a6e614ed40bf4d8cd26b92d918580917ef1f362d5ad36"
     },
     "entries/mcp/square-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsquare-mcp-server.json",
@@ -8503,7 +8503,7 @@
     "raycast/mcp/square-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fsquare-mcp-server.json",
       "type": "json",
-      "sha256": "022fa058eca09b8588a20f654ea758beab7445648ad498fe71c3999c723950af"
+      "sha256": "386482f5ed3f8e75fffa4ed0032bbcd08c4c033a76b12064ede6cfc9f22be37f"
     },
     "entries/tools/stagehand.json": {
       "path": "/data/entries%2Ftools%2Fstagehand.json",
@@ -8518,7 +8518,7 @@
     "raycast/tools/stagehand.json": {
       "path": "/data/raycast%2Ftools%2Fstagehand.json",
       "type": "json",
-      "sha256": "a20511d9e80bb02c8edeafab8db34b472ef95469db5b572fc4a9b1d1bd7978a6"
+      "sha256": "68037620e2e416ca82f736b7846598b4a3daa4b542ad0fdfeb92b1f0ac1ac4f2"
     },
     "entries/statuslines/starship-powerline-theme.json": {
       "path": "/data/entries%2Fstatuslines%2Fstarship-powerline-theme.json",
@@ -8533,7 +8533,7 @@
     "raycast/statuslines/starship-powerline-theme.json": {
       "path": "/data/raycast%2Fstatuslines%2Fstarship-powerline-theme.json",
       "type": "json",
-      "sha256": "85ebf32893c030036eaeea46dadc3d2ab538dc64dc8f574734164bf255c58261"
+      "sha256": "97f4f9db392af377e564dcb04776b03c80cabbbc4629433bdfce7723eacdfedb"
     },
     "entries/mcp/stripe-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fstripe-mcp-server.json",
@@ -8548,7 +8548,7 @@
     "raycast/mcp/stripe-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fstripe-mcp-server.json",
       "type": "json",
-      "sha256": "ac1a259697fa71c84ea85463cbf24622b5294bc6edb8e5befa1fa7cec1722472"
+      "sha256": "258d3c4370c0fc9a1660a1d1274c1bf12167e02e03b686419089e76cb78a872f"
     },
     "entries/mcp/stytch-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fstytch-mcp-server.json",
@@ -8563,7 +8563,7 @@
     "raycast/mcp/stytch-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fstytch-mcp-server.json",
       "type": "json",
-      "sha256": "91b67c7ee91b11c8607d152f4860d39496737a498963d80ede05f82334d28014"
+      "sha256": "d0799c21c5f7e2428d05f9a3f7d168a2b544dd7e3e60ecfb7777d049c4922b33"
     },
     "entries/commands/subagent-create.json": {
       "path": "/data/entries%2Fcommands%2Fsubagent-create.json",
@@ -8578,7 +8578,7 @@
     "raycast/commands/subagent-create.json": {
       "path": "/data/raycast%2Fcommands%2Fsubagent-create.json",
       "type": "json",
-      "sha256": "88f2d560d3533e4ad05a1a6235081ba7b047d049bedb38867a0d56a52e99852c"
+      "sha256": "da3293f78764dfff5749d955675277ab2b94defdf1e4c99af71b1ffad2fec4d1"
     },
     "entries/agents/subagent-factory-agent.json": {
       "path": "/data/entries%2Fagents%2Fsubagent-factory-agent.json",
@@ -8593,7 +8593,7 @@
     "raycast/agents/subagent-factory-agent.json": {
       "path": "/data/raycast%2Fagents%2Fsubagent-factory-agent.json",
       "type": "json",
-      "sha256": "b3d0e3d82096a051d1fd1c112851786b828d64bdab4ea772a86a8e760139346b"
+      "sha256": "0101218a3bb6aad06db29ed96c56be895169b01a89389e78a0501d7be6838062"
     },
     "entries/skills/supabase-realtime-database.json": {
       "path": "/data/entries%2Fskills%2Fsupabase-realtime-database.json",
@@ -8608,7 +8608,7 @@
     "raycast/skills/supabase-realtime-database.json": {
       "path": "/data/raycast%2Fskills%2Fsupabase-realtime-database.json",
       "type": "json",
-      "sha256": "216a1bdd65cd12666ce3f23eb0d0011a6302bff0819c26f5a6235e82b5738f4d"
+      "sha256": "bc2c72e5454715c1360a722300e620392719449701636c99035d995c362eeadf"
     },
     "skill-adapters/cursor/supabase-realtime-database.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fsupabase-realtime-database.mdc",
@@ -8628,7 +8628,7 @@
     "raycast/hooks/svelte-component-compiler.json": {
       "path": "/data/raycast%2Fhooks%2Fsvelte-component-compiler.json",
       "type": "json",
-      "sha256": "437d4e05bcf68bab36211749ea029f1fb4e4193f573bb3c0673eb2d79ff10bd5"
+      "sha256": "744d67d638337b75a684f2fe90bdc9e76ece976d7f2c642bde39326c5a4f5883"
     },
     "entries/skills/svelte-sveltekit-fullstack.json": {
       "path": "/data/entries%2Fskills%2Fsvelte-sveltekit-fullstack.json",
@@ -8643,7 +8643,7 @@
     "raycast/skills/svelte-sveltekit-fullstack.json": {
       "path": "/data/raycast%2Fskills%2Fsvelte-sveltekit-fullstack.json",
       "type": "json",
-      "sha256": "9a931671a36af698888d049769bf0f813ae45a1bc305c0b2729749dcdeaa3282"
+      "sha256": "68b34a2f4a9816d34798dabf008df2df0832b397f9f183c7e30b1e51aee1647f"
     },
     "skill-adapters/cursor/svelte-sveltekit-fullstack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fsvelte-sveltekit-fullstack.mdc",
@@ -8663,7 +8663,7 @@
     "raycast/commands/tdd-workflow.json": {
       "path": "/data/raycast%2Fcommands%2Ftdd-workflow.json",
       "type": "json",
-      "sha256": "379d163bbb362ceea83a136612dd45c3558fc1845abd9758b5dd9a01e8669b2b"
+      "sha256": "1b08c6c4031e2e6d2f0226b0f5054e72878bfa575eef4758845fa33661d7dbb5"
     },
     "entries/hooks/team-summary-email-generator.json": {
       "path": "/data/entries%2Fhooks%2Fteam-summary-email-generator.json",
@@ -8678,7 +8678,7 @@
     "raycast/hooks/team-summary-email-generator.json": {
       "path": "/data/raycast%2Fhooks%2Fteam-summary-email-generator.json",
       "type": "json",
-      "sha256": "4eedcac2b68b17614e93bdc05e36667552f729b2f83d0ce88ceb5fed1e3ad716"
+      "sha256": "92c1ee76d3fbdd91583daaca747418dca1a08a80c74e017bd1bb100bcc57244f"
     },
     "entries/agents/technical-documentation-writer-agent.json": {
       "path": "/data/entries%2Fagents%2Ftechnical-documentation-writer-agent.json",
@@ -8693,7 +8693,7 @@
     "raycast/agents/technical-documentation-writer-agent.json": {
       "path": "/data/raycast%2Fagents%2Ftechnical-documentation-writer-agent.json",
       "type": "json",
-      "sha256": "1bb62b4d970ef2d107b7ae7e205118ed0192f5481d53c9d8e27a46ea29886903"
+      "sha256": "66614873c6163ce8c203b276581e8fb7b7530b0ba713e9b5e16b6ed7774fc561"
     },
     "entries/rules/terraform-infrastructure-architect.json": {
       "path": "/data/entries%2Frules%2Fterraform-infrastructure-architect.json",
@@ -8708,7 +8708,7 @@
     "raycast/rules/terraform-infrastructure-architect.json": {
       "path": "/data/raycast%2Frules%2Fterraform-infrastructure-architect.json",
       "type": "json",
-      "sha256": "d8fc5850650f121f3fd8947dcd59091183605ee35c1156949e302a1b258bcb58"
+      "sha256": "0b0bf2ff9a069b1bbc0ec0d35dacaea588988f9a228b528a12daa90896143c64"
     },
     "entries/hooks/terraform-plan-executor.json": {
       "path": "/data/entries%2Fhooks%2Fterraform-plan-executor.json",
@@ -8723,7 +8723,7 @@
     "raycast/hooks/terraform-plan-executor.json": {
       "path": "/data/raycast%2Fhooks%2Fterraform-plan-executor.json",
       "type": "json",
-      "sha256": "09b79a2f50025718c8ef431079752dd70081d9332f6cca105be69c78dbc3c78d"
+      "sha256": "16ef696844562776f2e03fb7843e4988680f76b369b9382e378ba73529d1ce00"
     },
     "entries/agents/test-automation-engineer-agent.json": {
       "path": "/data/entries%2Fagents%2Ftest-automation-engineer-agent.json",
@@ -8738,7 +8738,7 @@
     "raycast/agents/test-automation-engineer-agent.json": {
       "path": "/data/raycast%2Fagents%2Ftest-automation-engineer-agent.json",
       "type": "json",
-      "sha256": "c8f7dc74946a2d8e32443eeec42bea6f3a60bcc875d50be32b6e6988e87f0f03"
+      "sha256": "0f499cfe621aa8eed995938a6075cdcaaff24ba57a0ad3bc1667f828640e7403"
     },
     "entries/hooks/test-coverage-final-report.json": {
       "path": "/data/entries%2Fhooks%2Ftest-coverage-final-report.json",
@@ -8753,7 +8753,7 @@
     "raycast/hooks/test-coverage-final-report.json": {
       "path": "/data/raycast%2Fhooks%2Ftest-coverage-final-report.json",
       "type": "json",
-      "sha256": "0daca5124afa72391405d525438cd7907a76e462d9ce3d130458c8a90520cc45"
+      "sha256": "0f11cea80d94f372bb4e20c10f556e947bd2e5abc057d126572d71c85e495dc7"
     },
     "entries/hooks/test-runner-hook.json": {
       "path": "/data/entries%2Fhooks%2Ftest-runner-hook.json",
@@ -8768,7 +8768,7 @@
     "raycast/hooks/test-runner-hook.json": {
       "path": "/data/raycast%2Fhooks%2Ftest-runner-hook.json",
       "type": "json",
-      "sha256": "ee0e296b66881e76049109bcc9775d9298857e56e2fba20b8fb9d9421205ed31"
+      "sha256": "77d03665f6482023037c0d234e4935f97aa8df0dd7d441c2cf5b75753e0c3e38"
     },
     "entries/rules/test-driven-development-enforcer.json": {
       "path": "/data/entries%2Frules%2Ftest-driven-development-enforcer.json",
@@ -8783,7 +8783,7 @@
     "raycast/rules/test-driven-development-enforcer.json": {
       "path": "/data/raycast%2Frules%2Ftest-driven-development-enforcer.json",
       "type": "json",
-      "sha256": "5df4051edb4fd1a9cb007de921095a4270eeffdd2324d2026c02b6da2a93b599"
+      "sha256": "3326f225353cfb146a4cc745c8dac013c3a615e4a855024dec5019c3c8fdc218"
     },
     "entries/agents/token-cost-budget-optimizer.json": {
       "path": "/data/entries%2Fagents%2Ftoken-cost-budget-optimizer.json",
@@ -8798,7 +8798,7 @@
     "raycast/agents/token-cost-budget-optimizer.json": {
       "path": "/data/raycast%2Fagents%2Ftoken-cost-budget-optimizer.json",
       "type": "json",
-      "sha256": "d44df2336da5cc2777194517798b2144ca12525e21b3aad5bccce2bbcb2ec2ec"
+      "sha256": "fbdc9d960e17759d5a4b0365ce15610b99e2fbe8a08cde9f0f5a8de9c062ceb4"
     },
     "entries/tools/trigger-dev.json": {
       "path": "/data/entries%2Ftools%2Ftrigger-dev.json",
@@ -8813,7 +8813,7 @@
     "raycast/tools/trigger-dev.json": {
       "path": "/data/raycast%2Ftools%2Ftrigger-dev.json",
       "type": "json",
-      "sha256": "d551d94a410082c24621c2e70dcba69e5917f29d72781f41d35f166b88b69eca"
+      "sha256": "0c4b656da15a245b630fed7422f8986094fe62cbdc83fa8fe0a99168de71f5e9"
     },
     "entries/skills/trpc-type-safe-api.json": {
       "path": "/data/entries%2Fskills%2Ftrpc-type-safe-api.json",
@@ -8828,7 +8828,7 @@
     "raycast/skills/trpc-type-safe-api.json": {
       "path": "/data/raycast%2Fskills%2Ftrpc-type-safe-api.json",
       "type": "json",
-      "sha256": "98e21d49d04a6219d4d326fb1c0d79c4e03d4891136330197f3dda5c546ac2ff"
+      "sha256": "36485598566eb39ad1d499ca020529eb4848ac1928d48c0ff0d27afbb0eab8ca"
     },
     "skill-adapters/cursor/trpc-type-safe-api.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Ftrpc-type-safe-api.mdc",
@@ -8848,7 +8848,7 @@
     "raycast/rules/typescript-5x-strict-mode-expert.json": {
       "path": "/data/raycast%2Frules%2Ftypescript-5x-strict-mode-expert.json",
       "type": "json",
-      "sha256": "a74900533353c90a02ee61b1ccf1b5e1ea06e2cdad9958c30b6da5cf5a245312"
+      "sha256": "77977312e3d5e55c244ca3fc11f4582a99ea6cf732760aaa0da8955cc9915d83"
     },
     "entries/hooks/typescript-compilation-checker.json": {
       "path": "/data/entries%2Fhooks%2Ftypescript-compilation-checker.json",
@@ -8863,7 +8863,7 @@
     "raycast/hooks/typescript-compilation-checker.json": {
       "path": "/data/raycast%2Fhooks%2Ftypescript-compilation-checker.json",
       "type": "json",
-      "sha256": "7abf6f66bddc9a9fbde332b05c9455679f0ba6bac4e35e31d1a335ff72f2f7a3"
+      "sha256": "571ff3294ae47e2ee5e69d36776f6d05d696ffa98fcb80ca5fc602685566d919"
     },
     "entries/agents/ui-ux-design-expert-agent.json": {
       "path": "/data/entries%2Fagents%2Fui-ux-design-expert-agent.json",
@@ -8878,7 +8878,7 @@
     "raycast/agents/ui-ux-design-expert-agent.json": {
       "path": "/data/raycast%2Fagents%2Fui-ux-design-expert-agent.json",
       "type": "json",
-      "sha256": "91418e4364e85db4d896560a235e904a0aa933594536111c68be50fdb65dbec9"
+      "sha256": "490ad6a2e09891a9dff723b78d4886ceb6cabdd2f8d9a2e10b244bd86d990a62"
     },
     "entries/skills/unraid-api-automation-operator.json": {
       "path": "/data/entries%2Fskills%2Funraid-api-automation-operator.json",
@@ -8893,7 +8893,7 @@
     "raycast/skills/unraid-api-automation-operator.json": {
       "path": "/data/raycast%2Fskills%2Funraid-api-automation-operator.json",
       "type": "json",
-      "sha256": "28c8fc27f181dc96636ba92e823945b745456e2fb06cae45c09618404e5c2fc9"
+      "sha256": "d987d8d1a5f4d561f537c5431510f9dd4d62a1510d8e5fe6c89647ec66965b49"
     },
     "skill-adapters/cursor/unraid-api-automation-operator.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Funraid-api-automation-operator.mdc",
@@ -8913,7 +8913,7 @@
     "raycast/skills/unraid-api-v2-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Funraid-api-v2-capability-pack.json",
       "type": "json",
-      "sha256": "a3101295288dca28c6f25daec79c405c71f053e364b9b01e3b5f28589659625f"
+      "sha256": "46c9b65430bfd84ff3cbe2822b9a5c6d956021f5981613cf1354debb2b159162"
     },
     "skill-adapters/cursor/unraid-api-v2-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Funraid-api-v2-capability-pack.mdc",
@@ -8933,7 +8933,7 @@
     "raycast/skills/unraid-ca-template-authoring-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Funraid-ca-template-authoring-capability-pack.json",
       "type": "json",
-      "sha256": "e2742858a48c218fdccb0e2cd8ec38d0463bbd7ef9609b7b7df1863e3f832aa3"
+      "sha256": "9777c8aa0579f402437f21d78f0715002a0fe9683293e25fa4908c482fe49def"
     },
     "skill-adapters/cursor/unraid-ca-template-authoring-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Funraid-ca-template-authoring-capability-pack.mdc",
@@ -8953,7 +8953,7 @@
     "raycast/tools/vercel-v0.json": {
       "path": "/data/raycast%2Ftools%2Fvercel-v0.json",
       "type": "json",
-      "sha256": "24762081d8142288e57fa140c2a446c823c34bd415902609d0d4115b3341f5e8"
+      "sha256": "7e3754016d55f7c37725dba1da4223ff8c095232bb27f8ad4c7ea76bde71b8ef"
     },
     "entries/commands/v0-generate.json": {
       "path": "/data/entries%2Fcommands%2Fv0-generate.json",
@@ -8968,7 +8968,7 @@
     "raycast/commands/v0-generate.json": {
       "path": "/data/raycast%2Fcommands%2Fv0-generate.json",
       "type": "json",
-      "sha256": "e9645a62789029c885391912c40c59c0a439450252aef7845be160d250ae74dc"
+      "sha256": "2c728cf60cbf90d7f085bffc712e9ba335d6311c346c653c4d973198e2405094"
     },
     "entries/skills/v0-rapid-prototyping.json": {
       "path": "/data/entries%2Fskills%2Fv0-rapid-prototyping.json",
@@ -8983,7 +8983,7 @@
     "raycast/skills/v0-rapid-prototyping.json": {
       "path": "/data/raycast%2Fskills%2Fv0-rapid-prototyping.json",
       "type": "json",
-      "sha256": "251a8b9dcd0f3991aae72a2971df64213906ff6e42a3dcee1ec4360872b5c9de"
+      "sha256": "8925955596d4f0e2996636f8729c7b828715693df15530e8940144c3a37f3f2e"
     },
     "skill-adapters/cursor/v0-rapid-prototyping.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fv0-rapid-prototyping.mdc",
@@ -9003,7 +9003,7 @@
     "raycast/tools/vercel-ai-sdk.json": {
       "path": "/data/raycast%2Ftools%2Fvercel-ai-sdk.json",
       "type": "json",
-      "sha256": "66ce5f47bec8df7b500c3e761888d69c9b5f171119682ae948a5eaff7a175b49"
+      "sha256": "abf83ae6c2add47b3062814451cdadb766e93d3107d400eab9c8ba613ad9a719"
     },
     "entries/mcp/vercel-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fvercel-mcp-server.json",
@@ -9018,7 +9018,7 @@
     "raycast/mcp/vercel-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fvercel-mcp-server.json",
       "type": "json",
-      "sha256": "4ba822898bc35e596767f6c650242c41eb93957acf1c12785d9a1066f9f20779"
+      "sha256": "c26c922f73c57174ad7c249f4691814ddc20753a64ace60be21796567636b094"
     },
     "entries/skills/vite-build-optimization.json": {
       "path": "/data/entries%2Fskills%2Fvite-build-optimization.json",
@@ -9033,7 +9033,7 @@
     "raycast/skills/vite-build-optimization.json": {
       "path": "/data/raycast%2Fskills%2Fvite-build-optimization.json",
       "type": "json",
-      "sha256": "38eaa91aad41a28ed7455b4b057d0fd071640079b1f0c01d8bb6baa73d2fdc42"
+      "sha256": "ce49b4da864b91f564ebdecaa8cf425181cc9c4e840d52de1f2c8dcb7ad95fa2"
     },
     "skill-adapters/cursor/vite-build-optimization.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fvite-build-optimization.mdc",
@@ -9053,7 +9053,7 @@
     "raycast/hooks/vue-composition-api-linter.json": {
       "path": "/data/raycast%2Fhooks%2Fvue-composition-api-linter.json",
       "type": "json",
-      "sha256": "cd8edcb00585755d324e72c0650504eeeb2fe7573c10c5e125b841232fc0a8e5"
+      "sha256": "1686902a74c05dedffab42eac156de279ea86f7000e4d1959acef87d7fe0c561"
     },
     "entries/rules/wcag-accessibility-auditor.json": {
       "path": "/data/entries%2Frules%2Fwcag-accessibility-auditor.json",
@@ -9068,7 +9068,7 @@
     "raycast/rules/wcag-accessibility-auditor.json": {
       "path": "/data/raycast%2Frules%2Fwcag-accessibility-auditor.json",
       "type": "json",
-      "sha256": "791f7b7495c06f53dd66f2ac87e340ad3f64af568b112f5b925dd4382cb12843"
+      "sha256": "e2871be2df19387a29005385c844fd4bcd93d980864d31fa327a4f68d1d84a87"
     },
     "entries/tools/weave.json": {
       "path": "/data/entries%2Ftools%2Fweave.json",
@@ -9083,7 +9083,7 @@
     "raycast/tools/weave.json": {
       "path": "/data/raycast%2Ftools%2Fweave.json",
       "type": "json",
-      "sha256": "89bef562fbb3e11f7967218b9b9211862cafbad280e8cb7eb3c09c823e9aa8b9"
+      "sha256": "a36bde84d47128afeecb6e3e14495f3cf9ce6afebb07c122c6c82627e31cdbc3"
     },
     "entries/agents/web-async-agent-coordinator.json": {
       "path": "/data/entries%2Fagents%2Fweb-async-agent-coordinator.json",
@@ -9098,7 +9098,7 @@
     "raycast/agents/web-async-agent-coordinator.json": {
       "path": "/data/raycast%2Fagents%2Fweb-async-agent-coordinator.json",
       "type": "json",
-      "sha256": "783b461e03278b5b75f805a96f8ab8b08c76cb89051ce9cc3f717c3d66004f3d"
+      "sha256": "5a1241f436aa31edf0c9e8fda7610be631e296c0ed00adac27a9492d9b7c124d"
     },
     "entries/skills/webassembly-module-development.json": {
       "path": "/data/entries%2Fskills%2Fwebassembly-module-development.json",
@@ -9113,7 +9113,7 @@
     "raycast/skills/webassembly-module-development.json": {
       "path": "/data/raycast%2Fskills%2Fwebassembly-module-development.json",
       "type": "json",
-      "sha256": "3464a923f359aed4c08c4895942060cf1e07e9bb4586b048211e076b63f162e5"
+      "sha256": "c9253de443273d9e6285b7fe14862f66198e6c8798ce2e772082106642d0ffdd"
     },
     "skill-adapters/cursor/webassembly-module-development.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fwebassembly-module-development.mdc",
@@ -9133,7 +9133,7 @@
     "raycast/hooks/webpack-bundle-analyzer.json": {
       "path": "/data/raycast%2Fhooks%2Fwebpack-bundle-analyzer.json",
       "type": "json",
-      "sha256": "14127fc585d1e2ebe45a599486865096098a809e7a5842b29ef3351b7244893d"
+      "sha256": "3b2ddfc04ca76734b38318c095ff6e40ebc7d0724794019931b15e18c560dd9f"
     },
     "entries/skills/website-crawler-summarizer.json": {
       "path": "/data/entries%2Fskills%2Fwebsite-crawler-summarizer.json",
@@ -9148,7 +9148,7 @@
     "raycast/skills/website-crawler-summarizer.json": {
       "path": "/data/raycast%2Fskills%2Fwebsite-crawler-summarizer.json",
       "type": "json",
-      "sha256": "45828c5dafcaf3905ac67563be9221d43853a2609e4739a260fb6fc701abcb0b"
+      "sha256": "cf1f6cf4ecaa26a741f09625281210dc1f626df3225a774bbf598886b776ea98"
     },
     "skill-adapters/cursor/website-crawler-summarizer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fwebsite-crawler-summarizer.mdc",
@@ -9168,7 +9168,7 @@
     "raycast/tools/windsurf.json": {
       "path": "/data/raycast%2Ftools%2Fwindsurf.json",
       "type": "json",
-      "sha256": "ad164601958358eb472dec5d4f2476fafa8de7433bfa55bb704870ad74cd4a6c"
+      "sha256": "f382c8d9f5a4ce6ce98372124d51be3eb510c4b882955e5af3a647faa3a647ee"
     },
     "entries/skills/windsurf-collaborative-development.json": {
       "path": "/data/entries%2Fskills%2Fwindsurf-collaborative-development.json",
@@ -9183,7 +9183,7 @@
     "raycast/skills/windsurf-collaborative-development.json": {
       "path": "/data/raycast%2Fskills%2Fwindsurf-collaborative-development.json",
       "type": "json",
-      "sha256": "7ea0a37478bf39790e5866bc2b7ac20cb7b68f08c0f572de32e3ca17932cd303"
+      "sha256": "e245f9b07be87ec97bd15a8b272aed2c7f1fa566fb5e7e3c5258dd6ef968a0fa"
     },
     "skill-adapters/cursor/windsurf-collaborative-development.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fwindsurf-collaborative-development.mdc",
@@ -9203,7 +9203,7 @@
     "raycast/rules/windsurf-ai-native-ide-patterns.json": {
       "path": "/data/raycast%2Frules%2Fwindsurf-ai-native-ide-patterns.json",
       "type": "json",
-      "sha256": "9b8f82dc48f5caeaa09dddb7dd7557af0b35222a88ccdfaf695e84f8b81290c0"
+      "sha256": "e20085dcfa8571ec839c207dfe92953349105b485d64c55d1cc4ad865342e35d"
     },
     "entries/tools/workato.json": {
       "path": "/data/entries%2Ftools%2Fworkato.json",
@@ -9218,7 +9218,7 @@
     "raycast/tools/workato.json": {
       "path": "/data/raycast%2Ftools%2Fworkato.json",
       "type": "json",
-      "sha256": "664ebd88fbb722b2f7ea8c362a4c431ff1fcbc53df06a5bc226198a49a042e83"
+      "sha256": "bf7907b749ff021f9b25780061baa6a41b7edf88970373b63c97cde0f1245026"
     },
     "entries/mcp/workato-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fworkato-mcp-server.json",
@@ -9233,7 +9233,7 @@
     "raycast/mcp/workato-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fworkato-mcp-server.json",
       "type": "json",
-      "sha256": "17950e1536fec0d099de938e393a4eec48a3dfd015db65d946c3925d6cd1c4d2"
+      "sha256": "b599d81dfe26c2af855aa7f8ce012ace722a6e5032cbad4fb80d9230d362065c"
     },
     "entries/hooks/workflow-completion-report.json": {
       "path": "/data/entries%2Fhooks%2Fworkflow-completion-report.json",
@@ -9248,7 +9248,7 @@
     "raycast/hooks/workflow-completion-report.json": {
       "path": "/data/raycast%2Fhooks%2Fworkflow-completion-report.json",
       "type": "json",
-      "sha256": "5bbee491c80244d5de41a231fa90ea7f35e4b96d1617cbef7649cadc371a4da1"
+      "sha256": "d411de37e72f607484f42a5b8ca9efd3ba10199d6a37460a6a6c1a0d944dfcec"
     },
     "entries/statuslines/workspace-project-depth-indicator.json": {
       "path": "/data/entries%2Fstatuslines%2Fworkspace-project-depth-indicator.json",
@@ -9263,7 +9263,7 @@
     "raycast/statuslines/workspace-project-depth-indicator.json": {
       "path": "/data/raycast%2Fstatuslines%2Fworkspace-project-depth-indicator.json",
       "type": "json",
-      "sha256": "edf7a88afbdb1fae1fe8894911fcc36474fbf3a28d6d235feb0a11cab836ee03"
+      "sha256": "f95a9d095352d96e977159eb4d4bede893c37bb4bf0c02e4eae7d463d96235a5"
     },
     "entries/mcp/xquik-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fxquik-mcp-server.json",
@@ -9278,7 +9278,7 @@
     "raycast/mcp/xquik-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fxquik-mcp-server.json",
       "type": "json",
-      "sha256": "9d291ad7160f115974a1d618b162d72806e0be066217d522d5457117d71181ce"
+      "sha256": "e13dadc500cdb13df7f6d409cfb8f635c82a9a2531325d9da7ee1197c154f268"
     },
     "entries/tools/zapier-ai.json": {
       "path": "/data/entries%2Ftools%2Fzapier-ai.json",
@@ -9293,7 +9293,7 @@
     "raycast/tools/zapier-ai.json": {
       "path": "/data/raycast%2Ftools%2Fzapier-ai.json",
       "type": "json",
-      "sha256": "860787b6b6851c105b249ff64ca2f94552b6a0e7666c353d584e87637fcfda53"
+      "sha256": "2398704a3dbe4367aba2948ed9194655cef7720a86029ae6df5b30ca014258b8"
     },
     "entries/mcp/zapier-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fzapier-mcp-server.json",
@@ -9308,7 +9308,7 @@
     "raycast/mcp/zapier-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fzapier-mcp-server.json",
       "type": "json",
-      "sha256": "a88b25ab2ea9272c872b53591cb6d798ff85d3ccd53f6240dac9ffebd447df5a"
+      "sha256": "0a085ee9ed63c39b9078e79fce08f3bdebfda914263d53f9323099cd02432b6b"
     },
     "entries/tools/zed.json": {
       "path": "/data/entries%2Ftools%2Fzed.json",
@@ -9323,7 +9323,7 @@
     "raycast/tools/zed.json": {
       "path": "/data/raycast%2Ftools%2Fzed.json",
       "type": "json",
-      "sha256": "55f4d52e09d730a85741337f1b8c6fff646cbbd72affa0679980a069589b20cb"
+      "sha256": "de2cfed138f0d02db879e53bc95fc53afe64a762ec579bd702025635bdc8be9c"
     },
     "entries/skills/zero-budget-saas-launch-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fzero-budget-saas-launch-capability-pack.json",
@@ -9338,7 +9338,7 @@
     "raycast/skills/zero-budget-saas-launch-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fzero-budget-saas-launch-capability-pack.json",
       "type": "json",
-      "sha256": "cf7f357fce715005c4e30d7461a7ee58b94ee2284b0820de49fdd38fbfeac3e6"
+      "sha256": "b31eb8c95fea027f1d29d162f66d3eb58459ecb0d7e8ecad6ae8f091df45c826"
     },
     "skill-adapters/cursor/zero-budget-saas-launch-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fzero-budget-saas-launch-capability-pack.mdc",
@@ -9358,7 +9358,7 @@
     "raycast/skills/zod-schema-validator.json": {
       "path": "/data/raycast%2Fskills%2Fzod-schema-validator.json",
       "type": "json",
-      "sha256": "378d2e3247386f8fde28ac82e8444c6da9e36249e5f92e0ac40df7c868b4a598"
+      "sha256": "ce27eaca775bbb64697c09e69b26e69f43841e4d8d128f70c74466bd44671562"
     },
     "skill-adapters/cursor/zod-schema-validator.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fzod-schema-validator.mdc",
@@ -9378,7 +9378,7 @@
     "raycast/mcp/zyntra-mail.json": {
       "path": "/data/raycast%2Fmcp%2Fzyntra-mail.json",
       "type": "json",
-      "sha256": "828cea180fd94fba4d6819f7e03e8c4b4cf1a0fd25cb7aafdc6ab8888b2ee672"
+      "sha256": "6f1d1b00dc5643d3d31589ca9d275f0cd4f690e80df3c7b69e381c99dd59ec6c"
     },
     "feeds/categories/agents.json": {
       "path": "/data/feeds%2Fcategories%2Fagents.json",

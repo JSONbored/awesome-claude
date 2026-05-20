@@ -42,10 +42,12 @@ function readEntries(category) {
     });
 }
 
-function escapeTableCell(value) {
+function escapeHtml(value) {
   return String(value || "")
-    .replaceAll("\\", "\\\\")
-    .replaceAll("|", "\\|");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 }
 
 function escapeRegExp(value) {
@@ -69,11 +71,40 @@ const entriesByCategory = Object.fromEntries(
   categoryOrder.map((category) => [category, readEntries(category)]),
 );
 
-const categoryRows = categoryOrder
-  .map((category) => {
-    const entries = entriesByCategory[category] ?? [];
-    const spec = categorySpec.categories[category];
-    return `| [${escapeTableCell(spec?.label ?? category)}](#${headingAnchor(category)}) | ${entries.length} | ${escapeTableCell(spec?.description ?? "")} |`;
+const categoryIcons = {
+  agents: "🤖",
+  collections: "📦",
+  commands: "⌨️",
+  guides: "📚",
+  hooks: "🪝",
+  mcp: "🔌",
+  rules: "📏",
+  skills: "🧠",
+  statuslines: "📟",
+  tools: "🧰",
+};
+
+const categoryGrid = Array.from(
+  { length: Math.ceil(categoryOrder.length / 5) },
+  (_, rowIndex) => categoryOrder.slice(rowIndex * 5, rowIndex * 5 + 5),
+)
+  .map((row) => {
+    const cells = row
+      .map((category) => {
+        const entries = entriesByCategory[category] ?? [];
+        const spec = categorySpec.categories[category];
+        const label = spec?.label ?? category;
+        const description = spec?.description ?? "";
+        return `<td align="center" width="20%">
+          <a href="#${headingAnchor(category)}"><strong>${categoryIcons[category] ?? "•"} ${escapeHtml(label)}</strong></a><br>
+          <code>${entries.length}</code><br>
+          <sub>${escapeHtml(description)}</sub>
+        </td>`;
+      })
+      .join("\n");
+    return `<tr>
+${cells}
+</tr>`;
   })
   .join("\n");
 
@@ -98,88 +129,108 @@ const total = categoryOrder.reduce(
   0,
 );
 
-const readme = `<div align="center">
+const readme = `<table>
+  <tr>
+    <td width="58%" valign="top">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="apps/web/public/heyclaude-wordmark-dark.svg">
+        <img src="apps/web/public/heyclaude-wordmark.svg" alt="HeyClaude" width="260">
+      </picture>
+      <h3>Curated Claude workflow infrastructure.</h3>
+      <p>
+        HeyClaude is a file-backed, human-reviewed directory for Claude agents,
+        MCP servers, skills, hooks, commands, tools, prompts, rules, guides,
+        templates, and statuslines.
+      </p>
+      <p>
+        <strong>${total}+ file-backed entries</strong> stay useful as both an
+        awesome-list catalog and a machine-readable registry for builders.
+      </p>
+      <p>
+        <a href="https://heyclau.de"><img alt="Website" src="https://img.shields.io/badge/Website-heyclau.de-c855a0?style=for-the-badge&logo=googlechrome&logoColor=white"></a>
+        <a href="https://heyclau.de/browse"><img alt="Browse" src="https://img.shields.io/badge/Browse-directory-2d7ff9?style=for-the-badge&logo=icloud&logoColor=white"></a>
+        <a href="https://heyclau.de/submit"><img alt="Submit" src="https://img.shields.io/badge/Submit-resource-36b37e?style=for-the-badge&logo=githubsponsors&logoColor=white"></a>
+      </p>
+      <p>
+        <a href="https://heyclau.de/api-docs"><img alt="API docs" src="https://img.shields.io/badge/API-docs-111827?style=flat-square&logo=openapiinitiative&logoColor=white"></a>
+        <a href="packages/mcp"><img alt="MCP package" src="https://img.shields.io/badge/MCP-package-7c3aed?style=flat-square&logo=npm&logoColor=white"></a>
+        <a href="https://heyclau.de/api/mcp"><img alt="Remote MCP endpoint" src="https://img.shields.io/badge/Remote-MCP-7c3aed?style=flat-square&logo=protocolsdotio&logoColor=white"></a>
+        <a href="integrations/raycast"><img alt="Raycast" src="https://img.shields.io/badge/Raycast-extension-ff6363?style=flat-square&logo=raycast&logoColor=white"></a>
+        <a href="https://heyclau.de/llms-full.txt"><img alt="LLM export" src="https://img.shields.io/badge/LLM-export-0f766e?style=flat-square&logo=readme&logoColor=white"></a>
+        <a href="https://heyclau.de/api/registry/feed"><img alt="Registry feed" src="https://img.shields.io/badge/Registry-feed-2563eb?style=flat-square&logo=json&logoColor=white"></a>
+        <a href="https://heyclau.de/feed.xml"><img alt="RSS feed" src="https://img.shields.io/badge/RSS-feed-f97316?style=flat-square&logo=rss&logoColor=white"></a>
+        <a href="https://heyclau.de/jobs"><img alt="Jobs" src="https://img.shields.io/badge/Jobs-board-8b5cf6?style=flat-square&logo=briefcase&logoColor=white"></a>
+        <a href="https://heyclau.de/claim"><img alt="Claim or update" src="https://img.shields.io/badge/Claim-update-c855a0?style=flat-square&logo=github&logoColor=white"></a>
+      </p>
+    </td>
+    <td width="42%" valign="top">
+      <h3>Registry snapshot</h3>
+      <table>
+        <tr>
+          <td align="center"><strong>${total}</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>${categoryOrder.length}</strong><br><sub>sections</sub></td>
+          <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
+        </tr>
+        <tr>
+          <td align="center"><strong>source</strong><br><sub>first UGC</sub></td>
+          <td align="center"><strong>no ZIP</strong><br><sub>community uploads</sub></td>
+          <td align="center"><strong>API</strong><br><sub>MCP + feeds</sub></td>
+        </tr>
+      </table>
+      <p>
+        <a href="https://github.com/hesreallyhim/awesome-claude-code/blob/main/README_ALTERNATIVES/README_EXTRA.md#workflows--knowledge-guides-"><img src="https://awesome.re/mentioned-badge.svg" alt="Mentioned in Awesome Claude Code"></a>
+      </p>
+      <p>
+        <a href="https://gittensor.io/repositories"><img src="https://gittensor.io/favicon.ico" alt="" height="16" align="absmiddle"> <strong>Listed on Gittensor</strong></a><br>
+        <sub>Unofficial community project. Contribution eligibility and rewards follow Gittensor's current rules.</sub>
+      </p>
+    </td>
+  </tr>
+</table>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="apps/web/public/heyclaude-wordmark-dark.svg">
-  <img src="apps/web/public/heyclaude-wordmark.svg" alt="HeyClaude" width="300">
-</picture>
+## Explore The Directory
 
-**An awesome Claude directory for agents, MCP servers, skills, hooks, commands, tools, and AI workflows.**
-${total}+ file-backed entries covering agents, MCP servers, tools, skills, hooks, rules, commands, guides, collections, and statuslines.
+<table>
+${categoryGrid}
+</table>
 
-[Website](https://heyclau.de) • [Browse](https://heyclau.de/browse) • [Jobs](https://heyclau.de/jobs) • [Submit](https://heyclau.de/submit) • [API](https://heyclau.de/api-docs) • [MCP](packages/mcp) • [Discussions](https://github.com/JSONbored/awesome-claude/discussions)
+## Choose Your Path
 
-[Feeds](https://heyclau.de/api/registry/feed) • [RSS](https://heyclau.de/feed.xml) • [Atom](https://heyclau.de/atom.xml) • [LLM export](https://heyclau.de/llms-full.txt) • [Raycast](integrations/raycast) • [MCP endpoint](https://heyclau.de/api/mcp) • [Claim/update](https://heyclau.de/claim) • [Contributing](CONTRIBUTING.md)
+<table>
+  <tr>
+    <td width="25%" valign="top">
+      <h3>🔎 Discover</h3>
+      <p>Search the curated directory and jump from README entries into richer detail pages.</p>
+      <p><a href="https://heyclau.de/browse"><strong>Browse resources</strong></a></p>
+    </td>
+    <td width="25%" valign="top">
+      <h3>🧾 Contribute</h3>
+      <p>Submit free, source-backed Claude resources through issue-first intake.</p>
+      <p><a href="https://heyclau.de/submit"><strong>Submit content</strong></a> · <a href="https://github.com/JSONbored/awesome-claude/issues/new/choose">Issue forms</a></p>
+    </td>
+    <td width="25%" valign="top">
+      <h3>⚙️ Integrate</h3>
+      <p>Use the registry as JSON, RSS, Atom, LLM text, Raycast data, or a read-only MCP server.</p>
+      <p><a href="https://heyclau.de/api-docs"><strong>API docs</strong></a> · <a href="packages/mcp">MCP package</a></p>
+    </td>
+    <td width="25%" valign="top">
+      <h3>💼 List</h3>
+      <p>Claim an entry, post a Claude role, or route commercial listings through the website.</p>
+      <p><a href="https://heyclau.de/claim"><strong>Claim/update</strong></a> · <a href="https://heyclau.de/jobs">Jobs</a></p>
+    </td>
+  </tr>
+</table>
 
-[![Mentioned in Awesome Claude Code](https://awesome.re/mentioned-badge.svg)](https://github.com/hesreallyhim/awesome-claude-code/blob/main/README_ALTERNATIVES/README_EXTRA.md#workflows--knowledge-guides-)
+<details>
+<summary><strong>Contributor rules, docs, and local validation</strong></summary>
 
-<a href="https://gittensor.io/repositories"><img src="https://gittensor.io/favicon.ico" alt="" height="16" align="absmiddle"></a>
-<a href="https://gittensor.io/repositories">Listed on Gittensor</a> · Contribution eligibility and rewards follow Gittensor's current rules.
-
-</div>
-
----
-
-## What is HeyClaude?
-
-HeyClaude is an unofficial, community-built awesome Claude directory and browsable registry.
-
-- No paid database required for the public site
-- Content lives in-repo as files
-- Community submissions can flow through GitHub
-- Jobs are reviewed and published by maintainers
-- The site doubles as an awesome-list and a browsable directory
-
-## At a Glance
-
-| Section | Entries | Scope |
-| --- | ---: | --- |
-${categoryRows}
-
-## Distribution Surfaces
-
-- Website: [heyclau.de](https://heyclau.de)
-- Search and browse API: [API docs](https://heyclau.de/api-docs)
-- Machine-readable registry feed: [\`/api/registry/feed\`](https://heyclau.de/api/registry/feed)
-- Platform compatibility pages: [\`/platforms\`](https://heyclau.de/platforms)
-- Read-only MCP server: [\`packages/mcp\`](packages/mcp)
-- Remote MCP endpoint: [\`/api/mcp\`](https://heyclau.de/api/mcp)
-- Jobs board: [\`/jobs\`](https://heyclau.de/jobs)
-- Post a role: [\`/jobs/post\`](https://heyclau.de/jobs/post)
-- Full LLM export: [\`/llms-full.txt\`](https://heyclau.de/llms-full.txt)
-- RSS updates: [\`/feed.xml\`](https://heyclau.de/feed.xml)
-- Atom updates: [\`/atom.xml\`](https://heyclau.de/atom.xml)
-- Package validator: [Agent Skill package validator](https://heyclau.de/validators/skill-package)
-
-## Quick Start
-
-### For contributors
-
-Option A (recommended): open [Submit](https://heyclau.de/submit) and use the category issue form.
-
-Option B (direct): open a category issue form in GitHub under \`.github/ISSUE_TEMPLATE\`.
-
-Option C (advanced): open a pull request with content files directly.
+### Contributor Guardrails
 
 Free Claude resources use issue-first intake by default. Fully valid,
 source-backed, non-artifact submissions can be approved for an import PR after
-policy gates pass. Maintainer review still gates merge.
-Tool/app/service
+policy gates pass. Maintainer review still gates merge. Tool, app, service
 promotion, listing claims, and jobs use the website lead forms instead of GitHub
 content issues.
-
-### Claim or update an entry
-
-- Use [Claim/update listing](https://heyclau.de/claim) for ownership or commercial listing updates.
-- Use detail-page "Edit on GitHub" links for direct source edits.
-- Use detail-page "Suggest change" links for issue-first corrections.
-
-1. Add or update a file under \`content/<category>/\`
-2. Run \`pnpm --filter web run prebuild\`
-3. Run \`pnpm validate:content:strict\`, \`pnpm validate:issue-templates\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\`
-4. Run \`pnpm generate:issue-templates\` if registry categories changed
-5. Commit generated registry artifacts only from maintainer/internal branches
 
 \`README.md\`, \`apps/web/public/data/**\`, \`apps/web/src/generated/**\`, and
 \`apps/web/public/downloads/**\` are generated or maintainer-owned outputs.
@@ -190,29 +241,25 @@ commands, or full copyable content. Community-submitted ZIP/MCPB packages are
 not published as HeyClaude-hosted downloads. Maintainer-built convenience
 packages use checksums and package trust metadata after review.
 
-### Schema references
+### Project Docs
 
-- Examples: [examples/content/README.md](examples/content/README.md)
-- Registry schema: [content/SCHEMA.md](content/SCHEMA.md)
-- Registry package: [packages/registry](packages/registry)
-- Read-only MCP server: [packages/mcp](packages/mcp)
-- Issue forms: [.github/ISSUE_TEMPLATE](.github/ISSUE_TEMPLATE)
-- Submission queue ops: [docs/submission-queue-ops.md](docs/submission-queue-ops.md)
-- Package trust model: [docs/package-security-policy.md](docs/package-security-policy.md)
+| Area | Links |
+| --- | --- |
+| Community | [Contributing](CONTRIBUTING.md), [Code of conduct](CODE_OF_CONDUCT.md), [Security policy](SECURITY.md), [License](LICENSE) |
+| Content model | [Registry schema](content/SCHEMA.md), [content examples](examples/content/README.md), [issue forms](.github/ISSUE_TEMPLATE) |
+| Packages | [Registry package](packages/registry), [read-only MCP server](packages/mcp), [Raycast extension](integrations/raycast) |
+| Operations | [Submission queue ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
+| Public policy | [Legal/disclaimer](https://heyclau.de/legal), [claim/update](https://heyclau.de/claim), [advertise](https://heyclau.de/advertise) |
 
----
+### Local Validation
 
-## Project Docs
+1. Add or update a file under \`content/<category>/\`
+2. Run \`pnpm --filter web run prebuild\`
+3. Run \`pnpm validate:content:strict\`, \`pnpm validate:issue-templates\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\`
+4. Run \`pnpm generate:issue-templates\` if registry categories changed
+5. Commit generated registry artifacts only from maintainer/internal branches
 
-- Security policy: [SECURITY.md](SECURITY.md)
-- Deployment guide: [apps/web/DEPLOYMENT.md](apps/web/DEPLOYMENT.md)
-- IndexNow: [docs/indexnow.md](docs/indexnow.md)
-- Registry MCP: [docs/registry-mcp-plan.md](docs/registry-mcp-plan.md)
-- API security contract: [docs/api-security-contract.md](docs/api-security-contract.md)
-- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
-- Code of conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-- Legal/disclaimer: [https://heyclau.de/legal](https://heyclau.de/legal)
-- License: [LICENSE](LICENSE)
+</details>
 
 ---
 
@@ -224,17 +271,17 @@ ${sections}
 
 <div align="center">
 
-## 📈 Star History
+## Repository Pulse
 
-[![Star History Chart](https://api.star-history.com/svg?repos=JSONbored/awesome-claude&type=Date)](https://www.star-history.com/#JSONbored/awesome-claude&Date)
+<a href="https://www.star-history.com/#JSONbored/awesome-claude&Date">
+  <img src="https://api.star-history.com/svg?repos=JSONbored/awesome-claude&type=Date" alt="Star History Chart" width="760">
+</a>
 
-## 📊 Activity
+<br><br>
 
-![RepoBeats Analytics](https://repobeats.axiom.co/api/embed/c2b1b7e36103fba7a650c6d7f2777cba7338a1f7.svg "Repobeats analytics image")
+<img src="https://repobeats.axiom.co/api/embed/c2b1b7e36103fba7a650c6d7f2777cba7338a1f7.svg" alt="RepoBeats Analytics" width="760">
 
-## 👥 Contributors
-
-Thanks to everyone who has contributed to making HeyClaude better.
+### Contributors
 
 <a href="https://github.com/JSONbored/awesome-claude/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=JSONbored/awesome-claude" alt="HeyClaude contributors" />
@@ -242,7 +289,15 @@ Thanks to everyone who has contributed to making HeyClaude better.
 
 ---
 
-[Website](https://heyclau.de) • [GitHub](https://github.com/JSONbored/awesome-claude) • [Discord](https://discord.gg/Ax3Py4YDrq) • [Twitter](https://x.com/jsonbored) • [Contributing](CONTRIBUTING.md) • [Code of Conduct](CODE_OF_CONDUCT.md) • [License](LICENSE)
+<p>
+  <a href="https://heyclau.de"><img alt="Website" src="https://img.shields.io/badge/Website-heyclau.de-c855a0?style=flat-square&logo=googlechrome&logoColor=white"></a>
+  <a href="https://github.com/JSONbored/awesome-claude"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-repository-181717?style=flat-square&logo=github&logoColor=white"></a>
+  <a href="https://discord.gg/Ax3Py4YDrq"><img alt="Discord" src="https://img.shields.io/badge/Discord-community-5865f2?style=flat-square&logo=discord&logoColor=white"></a>
+  <a href="https://x.com/jsonbored"><img alt="X" src="https://img.shields.io/badge/X-jsonbored-000000?style=flat-square&logo=x&logoColor=white"></a>
+  <a href="CONTRIBUTING.md"><img alt="Contributing" src="https://img.shields.io/badge/Contributing-guide-36b37e?style=flat-square&logo=github&logoColor=white"></a>
+  <a href="CODE_OF_CONDUCT.md"><img alt="Code of conduct" src="https://img.shields.io/badge/Code_of_Conduct-community-7c3aed?style=flat-square&logo=github&logoColor=white"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-111827?style=flat-square&logo=opensourceinitiative&logoColor=white"></a>
+</p>
 
 </div>
 `;
@@ -260,15 +315,15 @@ function validateReadmeCatalog(readmeContent) {
     const entries = entriesByCategory[category] ?? [];
     const spec = categorySpec.categories[category];
     const label = spec?.label ?? category;
-    const countRowPattern = new RegExp(
-      `\\| \\[${escapeRegExp(label)}\\]\\(#${escapeRegExp(
-        headingAnchor(category),
-      )}\\)\\s*\\|\\s*${entries.length}\\s*\\|`,
+    const gridCardPattern = new RegExp(
+      `<a href="#${escapeRegExp(headingAnchor(category))}"><strong>[^<]*${escapeRegExp(
+        label,
+      )}</strong></a><br>\\s*<code>${entries.length}</code>`,
     );
 
-    if (!countRowPattern.test(readmeContent)) {
+    if (!gridCardPattern.test(readmeContent)) {
       errors.push(
-        `README At a Glance row for ${category} does not show ${entries.length}.`,
+        `README Explore card for ${category} does not show ${entries.length}.`,
       );
     }
 

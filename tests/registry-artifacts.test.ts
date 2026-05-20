@@ -167,6 +167,7 @@ describe("registry artifacts", () => {
       brandName: "Asana",
       brandDomain: "asana.com",
       brandAssetSource: "brandfetch",
+      downloadUrl: expect.any(String),
     });
     expect(raycastEntry).toMatchObject({
       brandName: "Asana",
@@ -181,6 +182,7 @@ describe("registry artifacts", () => {
       brandAssetSource: "brandfetch",
     });
     expect(raycastDetail).toHaveProperty("author");
+    expect(String(raycastDetail.detailMarkdown)).toContain("## Trust");
     expect(llmsText).toContain("- Brand: Asana");
     expect(llmsText).toContain("- Brand domain: asana.com");
 
@@ -457,8 +459,10 @@ Use this hook after reviewing the notes.`,
     const [searchEntry] = buildSearchEntries([entry]);
     expect(searchEntry.safetyNotes).toEqual(entry.safetyNotes);
     expect(searchEntry.privacyNotes).toEqual(entry.privacyNotes);
+    expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
+    expect(buildRaycastDetailMarkdown(entry)).toContain("## Trust");
     expect(renderEntryLlms(entry)).toContain("## Safety Notes");
     expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
   });

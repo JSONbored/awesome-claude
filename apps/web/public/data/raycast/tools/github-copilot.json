@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/github.com",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nGitHub Copilot is useful for teams that want AI assistance tied directly to repository hosting, pull requests, and editor workflows.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# GitHub Copilot\n\nAI developer assistant across GitHub, editors, pull requests, chat, code review, and agentic coding workflows.",
+  "detailMarkdown": "# GitHub Copilot\n\nAI developer assistant across GitHub, editors, pull requests, chat, code review, and agentic coding workflows.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/github-copilot",
   "canonicalUrl": "https://heyclau.de/tools/github-copilot",
   "llmsUrl": "https://heyclau.de/data/llms/tools/github-copilot.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "GitHub Copilot for AI-assisted development",
   "seoDescription": "GitHub Copilot supports AI coding, chat, review, and agentic development workflows across GitHub and editors. HeyClaude adds source links, install steps,...",
   "repoUrl": "",
-  "documentationUrl": "https://docs.github.com/en/copilot"
+  "documentationUrl": "https://docs.github.com/en/copilot",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }
