@@ -120,6 +120,15 @@ function validToolArguments(name: string) {
     prepare_submission_draft: { fields: validMcpSubmissionFields },
     get_submission_examples: { category: "mcp" },
     review_submission_draft: { fields: validMcpSubmissionFields },
+    get_submission_policy: {},
+    explain_entry_trust: { category: skill.category, slug: skill.slug },
+    review_entry_safety: {
+      entries: [
+        { category: skill.category, slug: skill.slug },
+        { category: otherSkill.category, slug: otherSkill.slug },
+      ],
+      platform: "claude",
+    },
   };
   if (!(name in argsByTool)) {
     throw new Error(`Missing protocol test arguments for ${name}.`);
@@ -326,7 +335,7 @@ describe("HeyClaude read-only MCP helpers", () => {
         /create_issue|create_pull_request|publish_content|write_file|delete/i,
       );
       expect(tool.description).toMatch(
-        /read-only|fetch|search|list|validate|build|guidance|review/i,
+        /read-only|fetch|search|list|validate|build|guidance|review|explain/i,
       );
       expect(tool.annotations).toMatchObject({
         readOnlyHint: true,
@@ -534,12 +543,20 @@ describe("HeyClaude read-only MCP helpers", () => {
         query: "discord",
         category: "mcp",
         platform: "cursor-rules",
+        hasSafetyNotes: "all",
+        downloadTrust: "first-party",
+        claimStatus: "unclaimed",
+        sourceStatus: "available",
         limit: 3,
       }),
     ).toEqual({
       query: "discord",
       category: "mcp",
       platform: "cursor-rules",
+      hasSafetyNotes: "all",
+      downloadTrust: "first-party",
+      claimStatus: "unclaimed",
+      sourceStatus: "available",
       limit: 3,
     });
 
@@ -622,6 +639,37 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
     expect(result.entries[0].platforms).toContain("Cursor");
+  });
+
+  it("searches registry artifacts with trust filters", async () => {
+    const result = await callRegistryTool(
+      "search_registry",
+      {
+        category: "skills",
+        downloadTrust: "first-party",
+        sourceStatus: "available",
+        claimStatus: "unclaimed",
+        limit: 5,
+      },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      filters: {
+        downloadTrust: "first-party",
+        sourceStatus: "available",
+        claimStatus: "unclaimed",
+      },
+    });
+    expect(result.entries.length).toBeGreaterThan(0);
+    expect(result.entries[0]).toMatchObject({
+      downloadTrust: "first-party",
+      trust: {
+        package: { downloadTrust: "first-party" },
+        source: { status: "available" },
+      },
+    });
   });
 
   it("lists category entries with bounded pagination and filters", async () => {
@@ -717,6 +765,13 @@ describe("HeyClaude read-only MCP helpers", () => {
         safetyNotes: expect.any(Array),
         privacyNotes: expect.any(Array),
       },
+      trust: {
+        source: { status: "available" },
+        disclosures: {
+          hasSafetyNotes: expect.any(Boolean),
+          hasPrivacyNotes: expect.any(Boolean),
+        },
+      },
     });
 
     const guidance = await callRegistryTool(
@@ -728,8 +783,74 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       key: `${skill.category}:${skill.slug}`,
       platform: "Claude",
+      trust: {
+        recommendations: expect.any(Array),
+      },
     });
     expect(guidance).not.toHaveProperty("writePath");
+  });
+
+  it("explains submission policy and entry trust through read-only helpers", async () => {
+    const policy = await callRegistryTool(
+      "get_submission_policy",
+      {},
+      { dataDir },
+    );
+    expect(policy).toMatchObject({
+      ok: true,
+      publicPolicy: {
+        readOnly: true,
+        createsIssues: false,
+        createsPullRequests: false,
+      },
+      reviewModel: {
+        autoMerge: false,
+        importPrRequiresApprovalLabel: ["accepted", "import-approved"],
+      },
+      artifactPolicy: {
+        communityZipHostingAllowed: false,
+        maintainerBuiltDownloadsOnly: true,
+      },
+    });
+
+    const trust = await callRegistryTool(
+      "explain_entry_trust",
+      { category: skill.category, slug: skill.slug },
+      { dataDir },
+    );
+    expect(trust).toMatchObject({
+      ok: true,
+      key: `${skill.category}:${skill.slug}`,
+      trust: {
+        source: { status: "available" },
+        package: { downloadTrust: expect.any(String) },
+        recommendations: expect.any(Array),
+      },
+    });
+
+    const review = await callRegistryTool(
+      "review_entry_safety",
+      {
+        entries: [
+          { category: skill.category, slug: skill.slug },
+          { category: otherSkill.category, slug: otherSkill.slug },
+        ],
+        platform: "claude",
+      },
+      { dataDir },
+    );
+    expect(review).toMatchObject({
+      ok: true,
+      count: 2,
+      platform: "Claude",
+      summary: {
+        sourceBacked: expect.any(Number),
+        firstPartyPackages: expect.any(Number),
+      },
+      reviewNotes: expect.arrayContaining([
+        expect.stringContaining("metadata review"),
+      ]),
+    });
   });
 
   it("returns category-aware copyable assets and comparison metadata", async () => {

@@ -70,6 +70,12 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   templates for more complete submissions.
 - `review_submission_draft` - review schema errors, duplicate risk, and
   maintainer checklist items before a submission issue is opened.
+- `get_submission_policy` - fetch the read-only submission, artifact, import,
+  and maintainer-review policy.
+- `explain_entry_trust` - explain source, package, safety, privacy, and review
+  signals for one entry.
+- `review_entry_safety` - compare 1-5 entries for source, package, safety, and
+  privacy fit before install or recommendation.
 
 ## Resources and Prompts
 

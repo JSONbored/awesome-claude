@@ -23,6 +23,9 @@ export const CategorySubmissionGuidanceInputSchema: z.ZodType;
 export const PrepareSubmissionDraftInputSchema: z.ZodType;
 export const GetSubmissionExamplesInputSchema: z.ZodType;
 export const ReviewSubmissionDraftInputSchema: z.ZodType;
+export const SubmissionPolicyInputSchema: z.ZodType;
+export const ExplainEntryTrustInputSchema: z.ZodType;
+export const ReviewEntrySafetyInputSchema: z.ZodType;
 export const TOOL_INPUT_SCHEMAS: Record<string, z.ZodType>;
 
 export function jsonSchemaForTool(name: string): Record<string, unknown>;

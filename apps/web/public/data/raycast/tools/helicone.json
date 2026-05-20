@@ -10,7 +10,7 @@
   "brandIconUrl": "/api/brand-assets/icon/helicone.ai",
   "brandAssetSource": "brandfetch",
   "copyText": "## Editorial notes\n\nHelicone is useful when cost visibility, request logging, and feedback capture are central to LLM operations.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
-  "detailMarkdown": "# Helicone\n\nOpen-source LLM observability platform for logging, metrics, cost tracking, feedback, and gateway workflows.",
+  "detailMarkdown": "# Helicone\n\nOpen-source LLM observability platform for logging, metrics, cost tracking, feedback, and gateway workflows.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed",
   "webUrl": "https://heyclau.de/tools/helicone",
   "canonicalUrl": "https://heyclau.de/tools/helicone",
   "llmsUrl": "https://heyclau.de/data/llms/tools/helicone.txt",
@@ -18,5 +18,8 @@
   "seoTitle": "Helicone LLM observability and cost tracking",
   "seoDescription": "Helicone provides LLM logging, metrics, cost tracking, feedback, and gateway workflows for AI applications. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/Helicone/helicone",
-  "documentationUrl": "https://docs.helicone.ai"
+  "documentationUrl": "https://docs.helicone.ai",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
 }

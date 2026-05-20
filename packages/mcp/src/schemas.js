@@ -8,6 +8,10 @@ const pathPart = z
   .regex(/^[a-z0-9-]+$/, "Use lowercase slug-safe path parts only.");
 
 const platform = z.string().trim().min(1).max(80);
+const trustBooleanFilter = z.enum(["all", "true", "false"]);
+const downloadTrustFilter = z.enum(["all", "first-party", "external", "none"]);
+const claimStatusFilter = z.enum(["all", "unclaimed", "pending", "verified"]);
+const sourceStatusFilter = z.enum(["all", "available", "missing"]);
 const clientName = z.enum([
   "codex",
   "claude-desktop",
@@ -93,6 +97,11 @@ export const SearchRegistryInputSchema = z
     query: z.string().trim().max(240).optional(),
     category: pathPart.optional(),
     platform: platform.optional(),
+    hasSafetyNotes: trustBooleanFilter.optional(),
+    hasPrivacyNotes: trustBooleanFilter.optional(),
+    downloadTrust: downloadTrustFilter.optional(),
+    claimStatus: claimStatusFilter.optional(),
+    sourceStatus: sourceStatusFilter.optional(),
     limit: z.number().int().min(1).max(25).optional(),
   })
   .strict();
@@ -247,6 +256,32 @@ export const ReviewSubmissionDraftInputSchema = z
   })
   .strict();
 
+export const SubmissionPolicyInputSchema = z.object({}).strict();
+
+export const ExplainEntryTrustInputSchema = z
+  .object({
+    category: pathPart,
+    slug: pathPart,
+  })
+  .strict();
+
+export const ReviewEntrySafetyInputSchema = z
+  .object({
+    entries: z
+      .array(
+        z
+          .object({
+            category: pathPart,
+            slug: pathPart,
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(5),
+    platform: platform.optional(),
+  })
+  .strict();
+
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
   server_info: ServerInfoInputSchema,
@@ -270,6 +305,9 @@ export const TOOL_INPUT_SCHEMAS = {
   prepare_submission_draft: PrepareSubmissionDraftInputSchema,
   get_submission_examples: GetSubmissionExamplesInputSchema,
   review_submission_draft: ReviewSubmissionDraftInputSchema,
+  get_submission_policy: SubmissionPolicyInputSchema,
+  explain_entry_trust: ExplainEntryTrustInputSchema,
+  review_entry_safety: ReviewEntrySafetyInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {
