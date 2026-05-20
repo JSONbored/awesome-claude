@@ -45,10 +45,12 @@ publishing.
    - `npm exec -y @heyclaude/mcp@<version> -- --version`
    - GitHub release `mcp-v<version>`
 
-For release publishing, endpoint validation should use `--strict-tools` after
-the matching Worker code has shipped. Pull-request checks intentionally allow a
-lagging dev Worker as long as the deployed endpoint still exposes the baseline
-read-only MCP tools.
+For release publishing, endpoint validation should use `--strict-tools` and
+`MCP_ENDPOINT_REQUIRE_SAFETY_METADATA=1` after the matching Worker code has
+shipped. Packed-package validation should set
+`MCP_PACKAGE_REQUIRE_SAFETY_METADATA=1` when it smokes the production endpoint.
+Pull-request checks intentionally allow a lagging dev Worker as long as the
+deployed endpoint still exposes the baseline read-only MCP tools.
 
 ## Local Auth Check
 

@@ -45,6 +45,8 @@ jobs:
         run: pnpm test:mcp
 
       - name: Validate production MCP endpoint
+        env:
+          MCP_ENDPOINT_REQUIRE_SAFETY_METADATA: "1"
         run: pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools
 
       - name: Dry-run MCP package tarball
@@ -53,6 +55,7 @@ jobs:
       - name: Validate packed MCP package
         env:
           MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclau.de/api/mcp
+          MCP_PACKAGE_REQUIRE_SAFETY_METADATA: "1"
         run: pnpm validate:mcp-package
 
   publish-mcp-npm:
@@ -119,9 +122,9 @@ jobs:
             printf -- "- npm package: https://www.npmjs.com/package/@heyclaude/mcp/v/%s\n\n" "$RELEASE_VERSION"
             printf "## Validation\n\n"
             printf -- "- \`pnpm test:mcp\`\n"
-            printf -- "- \`pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools\`\n"
+            printf -- "- \`MCP_ENDPOINT_REQUIRE_SAFETY_METADATA=1 pnpm validate:mcp-endpoint -- --url https://heyclau.de/api/mcp --strict-tools\`\n"
             printf -- "- \`pnpm --filter @heyclaude/mcp pack --dry-run --json\`\n"
-            printf -- "- \`MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package\`\n"
+            printf -- "- \`MCP_PACKAGE_REQUIRE_SAFETY_METADATA=1 MCP_PACKAGE_REMOTE_SMOKE_URL=https://heyclau.de/api/mcp pnpm validate:mcp-package\`\n"
           } > "$notes_file"
           gh release create "$RELEASE_TAG" \
             --title "@heyclaude/mcp v$RELEASE_VERSION" \

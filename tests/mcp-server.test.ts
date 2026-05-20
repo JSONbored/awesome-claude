@@ -713,6 +713,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       key: `${skill.category}:${skill.slug}`,
       canonicalUrl: `https://heyclau.de/${skill.category}/${skill.slug}`,
+      entry: {
+        safetyNotes: expect.any(Array),
+        privacyNotes: expect.any(Array),
+      },
     });
 
     const guidance = await callRegistryTool(

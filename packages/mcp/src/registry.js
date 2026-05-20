@@ -785,7 +785,11 @@ export async function getEntryDetail(args = {}, options = {}) {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
     canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
-    entry,
+    entry: {
+      ...entry,
+      safetyNotes: notes(entry.safetyNotes),
+      privacyNotes: notes(entry.privacyNotes),
+    },
   };
 }
 
