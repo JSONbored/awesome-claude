@@ -54,6 +54,8 @@ export function SubmitReadinessCard({
   const blockers = preflight?.blockers ?? [];
   const warnings = preflight?.warnings ?? [];
   const duplicates = preflight?.duplicates ?? [];
+  const nextActionLabel = preflight?.nextAction?.label;
+  const nextActionHref = safeHttpUrl(preflight?.nextAction?.url);
 
   return (
     <div className="rounded-xl border border-border bg-background px-4 py-3 text-xs leading-6 text-muted-foreground">
@@ -164,21 +166,19 @@ export function SubmitReadinessCard({
           </ul>
         </div>
       ) : null}
-      {preflight?.nextAction?.url ? (
+      {nextActionHref ? (
         <p className="mt-3">
           Suggested next step:{" "}
           <a
-            href={preflight.nextAction.url}
+            href={nextActionHref}
             className="text-primary underline underline-offset-4"
           >
-            {preflight.nextAction.label}
+            {nextActionLabel}
           </a>
           .
         </p>
-      ) : preflight?.nextAction?.label ? (
-        <p className="mt-3">
-          Suggested next step: {preflight.nextAction.label}.
-        </p>
+      ) : nextActionLabel ? (
+        <p className="mt-3">Suggested next step: {nextActionLabel}.</p>
       ) : null}
     </div>
   );

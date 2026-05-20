@@ -4498,7 +4498,6 @@ paths:
                       - warnings
                       - duplicates
                       - nextAction
-                    additionalProperties: {}
                   - type: object
                     properties:
                       ok:
