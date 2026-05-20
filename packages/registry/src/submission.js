@@ -28,6 +28,7 @@ export const CATEGORY_REQUIREMENTS = Object.fromEntries(
 
 export const COMMON_REQUIRED_FIELDS = categorySpec.commonIssueRequiredFields;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const HEYCLAUDE_HOSTNAME = "heyclau.de";
 
 export const SUBMISSION_STALE_POLICY = {
   reminderDays: 7,
@@ -666,6 +667,16 @@ function urlPathname(value) {
   }
 }
 
+function urlHostname(value) {
+  const normalized = normalizeValue(value);
+  if (!normalized) return "";
+  try {
+    return new URL(normalized).hostname.replace(/^www\./, "").toLowerCase();
+  } catch {
+    return "";
+  }
+}
+
 function isValidPublicContact(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return true;
@@ -1153,7 +1164,12 @@ export function validateSubmission(issue) {
     errors.push("Card description is too short for review");
   }
 
-  if (urlPathname(fields.download_url).startsWith("/downloads/")) {
+  const downloadPath = urlPathname(fields.download_url);
+  const downloadHost = urlHostname(fields.download_url);
+  if (
+    downloadPath.startsWith("/downloads/") &&
+    (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME)
+  ) {
     errors.push(
       "Community submissions cannot request local /downloads hosting",
     );

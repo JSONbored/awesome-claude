@@ -262,6 +262,9 @@ describe("submission automation workflows", () => {
     );
     expect(source).toContain("REQUEST_CHANGES");
     expect(source).toContain("ARCHIVE_PACKAGE_EXTENSIONS");
+    expect(source).toContain("HEYCLAUDE_HOSTNAME");
+    expect(source).toContain("const downloadHost = hostname(downloadUrl)");
+    expect(source).toContain("const isHeyClaudeDownloadRequest");
     expect(source).toContain("community_archive_download");
     expect(source).toContain("community_local_download_request");
     expect(source).toContain("isArchivePackageUrl(downloadUrl)");

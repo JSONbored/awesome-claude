@@ -24,6 +24,8 @@ const SEVERITY_WEIGHT = {
   critical: 100,
 };
 
+const HEYCLAUDE_HOSTNAME = "heyclau.de";
+
 const RISK_LABEL_BY_TIER = {
   low: SUBMISSION_RISK_LOW_LABEL,
   medium: SUBMISSION_RISK_MEDIUM_LABEL,
@@ -782,7 +784,11 @@ function addContentRiskSignals(report, fields, text) {
 
   const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
   const downloadPath = urlPathname(downloadUrl);
-  if (downloadPath.startsWith("/downloads/")) {
+  const downloadHost = hostname(downloadUrl);
+  const isHeyClaudeDownloadRequest =
+    downloadPath.startsWith("/downloads/") &&
+    (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME);
+  if (isHeyClaudeDownloadRequest) {
     addFlag(
       report,
       "high",

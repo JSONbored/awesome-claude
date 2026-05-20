@@ -86,6 +86,7 @@ jobs:
             ]);
             const TOOLS_CATEGORY = "tools";
             const TOOLS_LISTING_FLOW_URL = "https://heyclau.de/tools/submit";
+            const HEYCLAUDE_HOSTNAME = "heyclau.de";
             const URL_PREFIXES = ["https://", "http://"];
             const URL_TERMINATORS = new Set([
               " ",
@@ -710,7 +711,11 @@ jobs:
               }
               const downloadUrl = normalizeText(fields.download_url || fields.downloadUrl);
               const downloadPath = urlPathname(downloadUrl);
-              if (downloadPath.startsWith("/downloads/")) {
+              const downloadHost = hostname(downloadUrl);
+              const isHeyClaudeDownloadRequest =
+                downloadPath.startsWith("/downloads/") &&
+                (!downloadHost || downloadHost === HEYCLAUDE_HOSTNAME);
+              if (isHeyClaudeDownloadRequest) {
                 addFlag(
                   report,
                   "high",

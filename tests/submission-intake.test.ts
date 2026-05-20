@@ -1061,6 +1061,56 @@ Use the archive only after review.`);
     expect(risk.policyDecision).toBe("maintainer_review");
   });
 
+  it("does not treat external /downloads URLs as HeyClaude-hosted packages", () => {
+    const submission = issue(`### Name
+External Download Skill
+
+### Slug
+external-download-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/external-download-skill
+
+### Download URL (optional)
+https://example.com/downloads/source
+
+### Description
+Source-backed skill submission with an external download path.
+
+### Card description
+External source-backed skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Full copyable content
+# External Download Skill
+
+Use this source-backed skill content.
+
+### Usage snippet
+Use the source only after review.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "community_local_download_request",
+    );
+  });
+
   it("flags direct contributor package artifact changes", () => {
     const risk = analyzeDirectContentRisk({
       sourceType: "external_direct",
