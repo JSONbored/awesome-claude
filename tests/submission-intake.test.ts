@@ -606,14 +606,28 @@ npx unslop --help`);
       { now: "2026-04-30T00:00:00Z" },
     );
     expect(queue.count).toBe(2);
-    expect(queue.schemaVersion).toBe(2);
+    expect(queue.schemaVersion).toBe(3);
+    expect(queue.summary.ready).toBe(1);
     expect(queue.summary.importReady).toBe(1);
     expect(queue.summary.needsChanges).toBe(1);
     expect(queue.entries[0].status).toBe("import_ready");
+    expect(queue.entries[0].triageGroup).toBe("ready");
+    expect(queue.entries[0].triageReason).toContain(
+      "maintainer approval is still required",
+    );
     expect(queue.entries[0].nextAction).toBe("import");
     expect(queue.entries[0].importPath).toBe("content/mcp/contrastapi.mdx");
     expect(queue.entries[0].sourceUrl).toBe(
       "https://github.com/example/contrastapi",
+    );
+    expect(queue.entries[0].sourceUrls).toEqual(
+      expect.arrayContaining(["https://github.com/example/contrastapi"]),
+    );
+    expect(queue.entries[0].contributorContext.login).toBe("contributor");
+    expect(queue.entries[0].policyReasons).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "schema", status: "pass" }),
+      ]),
     );
     expect(queue.entries[0].missingLabels).toEqual(
       expect.arrayContaining(["community-mcp", "needs-review"]),
@@ -627,6 +641,7 @@ npx unslop --help`);
     expect(queue.entries[0].autoImportEligible).toBe(true);
     expect(queue.entries[0].policyDecision).toBe("auto_import_eligible");
     expect(queue.entries[1].status).toBe("needs_author_input");
+    expect(queue.entries[1].triageGroup).toBe("needs_author_input");
     expect(queue.entries[1].nextAction).toBe("request_author_input");
     expect(queue.entries[1].actionDue).toBe("author_input");
     expect(queue.entries[1].commentDraft).toContain(
@@ -699,9 +714,17 @@ npx unslop --help`;
         ?.nextAction,
     ).toBe("send_stale_reminder");
     expect(
+      queue.entries.find((entry) => entry.status === "stale_reminder_due")
+        ?.triageGroup,
+    ).toBe("stale");
+    expect(
       queue.entries.find((entry) => entry.status === "close_eligible")
         ?.nextAction,
     ).toBe("close_stale");
+    expect(
+      queue.entries.find((entry) => entry.status === "close_eligible")
+        ?.triageGroup,
+    ).toBe("close_eligible");
     expect(
       queue.entries.find((entry) => entry.status === "maintainer_review")
         ?.nextAction,
@@ -756,9 +779,77 @@ claude mcp add source-review-mcp -- npx -y source-review-mcp`,
       now: "2026-04-30T00:00:00Z",
     });
     expect(queue.entries[0].nextAction).toBe("verify_source");
+    expect(queue.entries[0].triageGroup).toBe("source_verification");
     expect(queue.entries[0].commentDraft).toContain(
       "needs source verification before it can be imported",
     );
+  });
+
+  it("groups deterministic blockers and likely promo submissions separately", () => {
+    const blockedPackage = issue(`### Name
+Blocked Skill Package
+
+### Slug
+blocked-skill-package
+
+### Category
+skills
+
+### Public contact
+dev@example.com
+
+### Description
+Skill package that asks HeyClaude to host an uploaded archive.
+
+### Card description
+Archive-hosted skill package.
+
+### Download URL
+/downloads/community-skill.zip
+
+### Usage snippet
+Use the packaged skill.`);
+    const promoProduct = issue(`### Name
+Promo Product
+
+### Slug
+promo-product
+
+### Category
+mcp
+
+### Public contact
+dev@example.com
+
+### Website URL
+https://promo.example.com
+
+### Description
+Hosted SaaS product with pricing, paid plans, and a dashboard for teams.
+
+### Card description
+Hosted SaaS product for teams.
+
+### Install command
+npx promo-product
+
+### Usage snippet
+npx promo-product`);
+
+    const queue = buildSubmissionQueue([blockedPackage, promoProduct], {
+      now: "2026-04-30T00:00:00Z",
+    });
+
+    expect(queue.summary.blocked).toBe(1);
+    expect(queue.summary.likelyPromoSpam).toBe(1);
+    expect(
+      queue.entries.find((entry) => entry.slug === "blocked-skill-package")
+        ?.triageGroup,
+    ).toBe("blocked");
+    expect(
+      queue.entries.find((entry) => entry.slug === "promo-product")
+        ?.triageGroup,
+    ).toBe("likely_promo_spam");
   });
 
   it("rejects missing required category fields", () => {

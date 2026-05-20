@@ -861,6 +861,122 @@ function formatRiskSummary(riskTier, capabilityBuckets = []) {
     : label;
 }
 
+function policyHasBlockingGate(policyMatrix = {}, options = {}) {
+  const { ignoredGates = [] } = options;
+  const ignored = new Set(ignoredGates);
+  return Object.entries(policyMatrix || {}).some(
+    ([name, gate]) => gate?.status === "block" && !ignored.has(name),
+  );
+}
+
+function textMatchesAny(values = [], patterns = []) {
+  const text = values.flat().filter(Boolean).join("\n");
+  return patterns.some((pattern) => pattern.test(text));
+}
+
+function submissionLooksPromotional({ report, risk }) {
+  const classificationIds = new Set(
+    (risk.classificationWarnings || []).map((warning) => warning.id),
+  );
+  if (
+    classificationIds.has("tools_category_routing") ||
+    classificationIds.has("tools_listing_metadata_missing")
+  ) {
+    return true;
+  }
+
+  return textMatchesAny(
+    [
+      report?.errors || [],
+      report?.warnings || [],
+      risk.reviewFlags?.map((flag) => flag.summary) || [],
+    ],
+    [
+      /tools\/app listing flow/i,
+      /paid listing/i,
+      /affiliate\/referral/i,
+      /hosted tool\/app\/service\/product/i,
+    ],
+  );
+}
+
+function submissionLooksBlocked({ report, risk }) {
+  if (
+    policyHasBlockingGate(risk.policyMatrix, {
+      ignoredGates: ["schema", "source", "quality"],
+    })
+  ) {
+    return true;
+  }
+  if (risk.riskTier === "critical") return true;
+
+  return textMatchesAny(
+    [
+      report?.errors || [],
+      report?.warnings || [],
+      risk.reviewFlags?.map((flag) => flag.id) || [],
+    ],
+    [
+      /local \/downloads hosting/i,
+      /community.*(?:zip|mcpb|archive|package)/i,
+      /community_local_download_request/i,
+      /community_archive_download/i,
+      /unsafe packageverified/i,
+      /forbidden \/downloads/i,
+    ],
+  );
+}
+
+function submissionTriageGroup({ report, risk, status }) {
+  if (status === "skipped") return "skipped";
+  if (status === "close_eligible") return "close_eligible";
+  if (status === "stale_reminder_due") return "stale";
+  if (submissionLooksBlocked({ report, risk })) return "blocked";
+  if (submissionLooksPromotional({ report, risk })) {
+    return "likely_promo_spam";
+  }
+  if (status === "needs_author_input") return "needs_author_input";
+  if (status === "source_needs_verification") return "source_verification";
+  if (status === "import_ready") return "ready";
+  return "maintainer_review";
+}
+
+function submissionTriageReason({ entry, report, risk }) {
+  if (entry.triageGroup === "ready") {
+    return entry.autoImportEligible
+      ? "Deterministic gates passed; maintainer approval is still required before import."
+      : "Schema passed and the submission is ready for maintainer review.";
+  }
+  if (entry.triageGroup === "blocked") {
+    const blockedGate = Object.entries(risk.policyMatrix || {}).find(
+      ([, gate]) => gate?.status === "block",
+    );
+    if (blockedGate) {
+      return `${blockedGate[0]} gate is blocking: ${blockedGate[1]?.summary || "review required"}`;
+    }
+    return "A deterministic policy or package safety blocker must be resolved first.";
+  }
+  if (entry.triageGroup === "likely_promo_spam") {
+    return "This looks like a hosted product, paid placement, affiliate, or tools listing flow rather than free community content.";
+  }
+  if (entry.triageGroup === "needs_author_input") {
+    return "Required schema fields or category metadata are missing or invalid.";
+  }
+  if (entry.triageGroup === "source_verification") {
+    return "Maintainers need to verify the canonical source, docs, package, or repository.";
+  }
+  if (entry.triageGroup === "stale") {
+    return "Author input has been pending long enough for a reminder.";
+  }
+  if (entry.triageGroup === "close_eligible") {
+    return "Author input has been pending past the close window.";
+  }
+  if (report?.skipped) {
+    return "The issue does not resolve cleanly to a supported submission category.";
+  }
+  return "Maintainer judgment is required before this can progress.";
+}
+
 function firstSubmissionSourceUrl(fields = {}) {
   return (
     normalizeValue(fields.github_url) ||
@@ -1028,6 +1144,25 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         slug: report.fields?.slug || "",
         name: report.fields?.name || "",
         sourceUrl: firstSubmissionSourceUrl(report.fields),
+        sourceUrls: risk.contributionAnalysis?.sourceUrls?.slice(0, 5) || [],
+        contributorContext: {
+          login: risk.contributorAnalysis?.login || "",
+          profileUrl: risk.contributorAnalysis?.profileUrl || "",
+          resolutionStatus:
+            risk.contributorAnalysis?.resolutionStatus || "unresolved",
+          accountAgeDays: risk.contributorAnalysis?.accountAgeDays ?? null,
+          publicRepos: risk.contributorAnalysis?.publicRepos ?? null,
+          signals: contributorReview,
+          warnings: risk.contributorAnalysis?.warnings || [],
+        },
+        policyReasons: Object.entries(risk.policyMatrix || {}).map(
+          ([name, gate]) => ({
+            name,
+            status: gate?.status || "unknown",
+            summary: gate?.summary || "",
+            detail: gate?.detail || [],
+          }),
+        ),
         errors: report.errors || [],
         warnings: report.warnings || [],
         importPath:
@@ -1035,6 +1170,8 @@ export function buildSubmissionQueue(issues = [], options = {}) {
             ? `content/${report.category}/${report.fields.slug}.mdx`
             : "",
       };
+      entry.triageGroup = submissionTriageGroup({ report, risk, status });
+      entry.triageReason = submissionTriageReason({ entry, report, risk });
       entry.reviewChecklist = buildSubmissionReviewChecklist({
         report,
         risk,
@@ -1063,11 +1200,18 @@ export function buildSubmissionQueue(issues = [], options = {}) {
     });
 
   return {
-    schemaVersion: 2,
+    schemaVersion: 3,
     kind: "submission-queue",
     generatedAt: new Date().toISOString(),
     count: entries.length,
     summary: {
+      ready: entries.filter((entry) => entry.triageGroup === "ready").length,
+      blocked: entries.filter((entry) => entry.triageGroup === "blocked")
+        .length,
+      likelyPromoSpam: entries.filter(
+        (entry) => entry.triageGroup === "likely_promo_spam",
+      ).length,
+      stale: entries.filter((entry) => entry.triageGroup === "stale").length,
       importReady: entries.filter((entry) => entry.status === "import_ready")
         .length,
       maintainerReview: entries.filter(

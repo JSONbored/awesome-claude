@@ -685,6 +685,17 @@ export type SubmissionQueueEntry = {
     | "send_stale_reminder"
     | "close_stale"
     | "skip";
+  triageGroup:
+    | "ready"
+    | "blocked"
+    | "needs_author_input"
+    | "source_verification"
+    | "likely_promo_spam"
+    | "stale"
+    | "close_eligible"
+    | "maintainer_review"
+    | "skipped";
+  triageReason: string;
   staleState: "not_applicable" | "fresh" | "reminder_due" | "close_eligible";
   ageDays: number;
   sourceNeedsVerification: boolean;
@@ -703,6 +714,22 @@ export type SubmissionQueueEntry = {
   slug: string;
   name: string;
   sourceUrl: string;
+  sourceUrls: string[];
+  contributorContext: {
+    login: string;
+    profileUrl: string;
+    resolutionStatus: string;
+    accountAgeDays: number | null;
+    publicRepos: number | null;
+    signals: string[];
+    warnings: string[];
+  };
+  policyReasons: Array<{
+    name: string;
+    status: string;
+    summary: string;
+    detail: string[];
+  }>;
   errors: string[];
   warnings: string[];
   reviewChecklist: string[];
@@ -716,6 +743,10 @@ export type SubmissionQueue = {
   generatedAt: string;
   count: number;
   summary: {
+    ready: number;
+    blocked: number;
+    likelyPromoSpam: number;
+    stale: number;
     importReady: number;
     maintainerReview: number;
     needsAuthorInput: number;
