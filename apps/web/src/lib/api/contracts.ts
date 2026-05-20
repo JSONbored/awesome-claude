@@ -192,6 +192,7 @@ export const registrySearchResultSchema = registryBrandAssetSchema
     privacyNotes: z.array(z.string().min(1).max(320)).max(8).optional(),
     dateAdded: z.string(),
     installable: z.boolean(),
+    downloadUrl: z.string().optional(),
     downloadTrust: z.string().nullable().optional(),
     verificationStatus: z.string(),
     platforms: z.array(z.string()).max(12).optional(),
@@ -211,6 +212,15 @@ export const registrySearchResponseSchema = z.object({
   query: z.string(),
   category: z.string(),
   platform: z.string(),
+  filters: z
+    .object({
+      hasSafetyNotes: z.string(),
+      hasPrivacyNotes: z.string(),
+      downloadTrust: z.string(),
+      claimStatus: z.string(),
+      sourceStatus: z.string(),
+    })
+    .optional(),
   count: z.number().int().nonnegative(),
   results: z.array(registrySearchResultSchema).max(50),
 });
@@ -219,6 +229,20 @@ export const registrySearchQuerySchema = z.object({
   q: z.string().trim().toLowerCase().max(120).optional().default(""),
   category: categorySchema,
   platform: platformSchema,
+  hasSafetyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
+  hasPrivacyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
+  downloadTrust: z
+    .enum(["all", "first-party", "external", "none"])
+    .optional()
+    .default("all"),
+  claimStatus: z
+    .enum(["all", "unclaimed", "pending", "verified"])
+    .optional()
+    .default("all"),
+  sourceStatus: z
+    .enum(["all", "available", "missing"])
+    .optional()
+    .default("all"),
   limit: z.coerce.number().int().min(1).max(50).optional().default(20),
 });
 

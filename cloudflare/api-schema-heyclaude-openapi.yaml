@@ -153,6 +153,8 @@ components:
           type: string
         installable:
           type: boolean
+        downloadUrl:
+          type: string
         downloadTrust:
           type:
             - string
@@ -836,6 +838,58 @@ paths:
           name: platform
           in: query
         - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+            default: all
+          required: false
+          name: hasSafetyNotes
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+            default: all
+          required: false
+          name: hasPrivacyNotes
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - first-party
+              - external
+              - none
+            default: all
+          required: false
+          name: downloadTrust
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - unclaimed
+              - pending
+              - verified
+            default: all
+          required: false
+          name: claimStatus
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - available
+              - missing
+            default: all
+          required: false
+          name: sourceStatus
+          in: query
+        - schema:
             type: integer
             minimum: 1
             maximum: 50
@@ -859,6 +913,25 @@ paths:
                     type: string
                   platform:
                     type: string
+                  filters:
+                    type: object
+                    properties:
+                      hasSafetyNotes:
+                        type: string
+                      hasPrivacyNotes:
+                        type: string
+                      downloadTrust:
+                        type: string
+                      claimStatus:
+                        type: string
+                      sourceStatus:
+                        type: string
+                    required:
+                      - hasSafetyNotes
+                      - hasPrivacyNotes
+                      - downloadTrust
+                      - claimStatus
+                      - sourceStatus
                   count:
                     type: integer
                     minimum: 0
@@ -962,6 +1035,8 @@ paths:
                           type: string
                         installable:
                           type: boolean
+                        downloadUrl:
+                          type: string
                         downloadTrust:
                           type:
                             - string

@@ -81,6 +81,9 @@ export const READ_ONLY_TOOL_NAMES = [
   "prepare_submission_draft",
   "get_submission_examples",
   "review_submission_draft",
+  "get_submission_policy",
+  "explain_entry_trust",
+  "review_entry_safety",
 ];
 
 export const TOOL_DEFINITIONS = [
@@ -223,6 +226,24 @@ export const TOOL_DEFINITIONS = [
       "Review a HeyClaude submission draft locally for schema errors, duplicate risk, and maintainer checklist items without writing to GitHub.",
     inputSchema: jsonSchemaForTool("review_submission_draft"),
   },
+  {
+    name: "get_submission_policy",
+    description:
+      "Fetch HeyClaude's read-only submission, artifact, import, and maintainer-review policy for contributors and agents.",
+    inputSchema: jsonSchemaForTool("get_submission_policy"),
+  },
+  {
+    name: "explain_entry_trust",
+    description:
+      "Explain deterministic trust, source, package, safety, privacy, and review signals for one HeyClaude entry.",
+    inputSchema: jsonSchemaForTool("explain_entry_trust"),
+  },
+  {
+    name: "review_entry_safety",
+    description:
+      "Review 1-5 HeyClaude entries for source, package, safety, and privacy fit before install or recommendation.",
+    inputSchema: jsonSchemaForTool("review_entry_safety"),
+  },
 ];
 
 for (const tool of TOOL_DEFINITIONS) {
@@ -337,6 +358,83 @@ function entryMatchesTag(entry, tag) {
   );
 }
 
+function booleanFilterMatches(value, filter = "all") {
+  if (!filter || filter === "all") return true;
+  return filter === "true" ? Boolean(value) : !value;
+}
+
+function entryPackageTrust(entry) {
+  return entry.downloadTrust || (entry.downloadUrl ? "external" : "none");
+}
+
+function entryClaimStatus(entry) {
+  return entry.claimStatus || "unclaimed";
+}
+
+function entrySourceStatus(entry) {
+  const sourceUrls = [
+    entry.documentationUrl,
+    entry.repoUrl,
+    entry.githubUrl,
+    entry.sourceUrl,
+  ].filter((value) => String(value || "").trim());
+  return (
+    entry.trustSignals?.sourceStatus ||
+    (sourceUrls.length ? "available" : "missing")
+  );
+}
+
+function entryMatchesTrustFilters(entry, args = {}) {
+  if (
+    !booleanFilterMatches(
+      notes(entry.safetyNotes).length > 0,
+      args.hasSafetyNotes,
+    )
+  ) {
+    return false;
+  }
+  if (
+    !booleanFilterMatches(
+      notes(entry.privacyNotes).length > 0,
+      args.hasPrivacyNotes,
+    )
+  ) {
+    return false;
+  }
+  if (
+    args.downloadTrust &&
+    args.downloadTrust !== "all" &&
+    entryPackageTrust(entry) !== args.downloadTrust
+  ) {
+    return false;
+  }
+  if (
+    args.claimStatus &&
+    args.claimStatus !== "all" &&
+    entryClaimStatus(entry) !== args.claimStatus
+  ) {
+    return false;
+  }
+  if (
+    args.sourceStatus &&
+    args.sourceStatus !== "all" &&
+    entrySourceStatus(entry) !== args.sourceStatus
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function parsedTrustArgs(args = {}) {
+  return {
+    hasSafetyNotes: args.hasSafetyNotes || "all",
+    hasPrivacyNotes: args.hasPrivacyNotes || "all",
+    downloadTrust: args.downloadTrust || "all",
+    claimStatus: args.claimStatus || "all",
+    sourceStatus: args.sourceStatus || "all",
+  };
+}
+
 function toSearchResult(entry) {
   return {
     key: `${entry.category}:${entry.slug}`,
@@ -350,6 +448,7 @@ function toSearchResult(entry) {
     brandDomain: entry.brandDomain || "",
     submittedBy: entry.submittedBy || "",
     claimStatus: entry.claimStatus || "",
+    downloadTrust: entry.downloadTrust || null,
     safetyNotes: notes(entry.safetyNotes),
     privacyNotes: notes(entry.privacyNotes),
     url: entry.url || `${SITE_URL}/${entry.category}/${entry.slug}`,
@@ -357,6 +456,7 @@ function toSearchResult(entry) {
       entry.canonicalUrl ||
       entry.url ||
       `${SITE_URL}/${entry.category}/${entry.slug}`,
+    trust: entryTrustSummary(entry),
   };
 }
 
@@ -450,6 +550,80 @@ function sourceSummary(entry) {
       typeof entry.githubForks === "number" ? entry.githubForks : null,
     repoUpdatedAt: entry.repoUpdatedAt || null,
     downloadTrust: entry.downloadTrust || null,
+  };
+}
+
+function entryTrustRecommendations(entry) {
+  const recommendations = [];
+  const safetyNotes = notes(entry.safetyNotes);
+  const privacyNotes = notes(entry.privacyNotes);
+  const packageTrust = entryPackageTrust(entry);
+  const source = sourceSummary(entry);
+
+  if (!source.repoUrl && !source.documentationUrl) {
+    recommendations.push(
+      "Verify a canonical source before relying on this entry.",
+    );
+  }
+  if (packageTrust === "external") {
+    recommendations.push(
+      "Review the upstream package source and checksum before installing.",
+    );
+  }
+  if (entry.downloadUrl && packageTrust !== "first-party") {
+    recommendations.push(
+      "Treat the download as external unless maintainers have rebuilt and verified it.",
+    );
+  }
+  if (!safetyNotes.length) {
+    recommendations.push(
+      "No structured safety notes are present; inspect commands and permissions manually.",
+    );
+  }
+  if (!privacyNotes.length) {
+    recommendations.push(
+      "No structured privacy notes are present; review file, credential, telemetry, and network behavior manually.",
+    );
+  }
+  return unique(recommendations).slice(0, 6);
+}
+
+function entryTrustSummary(entry) {
+  const safetyNotes = notes(entry.safetyNotes);
+  const privacyNotes = notes(entry.privacyNotes);
+  const source = sourceSummary(entry);
+  const packageTrust = entryPackageTrust(entry);
+  const claimStatus = entryClaimStatus(entry);
+  return {
+    source: {
+      status: entrySourceStatus(entry),
+      repoUrl: source.repoUrl,
+      documentationUrl: source.documentationUrl,
+      sourceHosts: source.sourceHosts,
+      githubStars: source.githubStars,
+      githubForks: source.githubForks,
+      repoUpdatedAt: source.repoUpdatedAt,
+    },
+    package: {
+      downloadUrl: source.downloadUrl,
+      downloadTrust: packageTrust,
+      packageVerified: Boolean(entry.packageVerified),
+      checksum: entry.checksum || entry.packageChecksum || "",
+    },
+    disclosures: {
+      safetyNotes,
+      privacyNotes,
+      hasSafetyNotes: safetyNotes.length > 0,
+      hasPrivacyNotes: privacyNotes.length > 0,
+    },
+    review: {
+      claimStatus,
+      reviewedBy: entry.reviewedBy || "",
+      reviewedAt: entry.reviewedAt || "",
+      submittedBy: entry.submittedBy || "",
+      submissionIssueUrl: entry.submissionIssueUrl || "",
+    },
+    recommendations: entryTrustRecommendations(entry),
   };
 }
 
@@ -564,6 +738,7 @@ export async function searchRegistry(args = {}, options = {}) {
   const category = normalizeText(args.category);
   const platform = normalizePlatform(args.platform);
   const limit = normalizeLimit(args.limit);
+  const trustFilters = parsedTrustArgs(args);
   const searchIndex = unwrapEntries(
     await readJsonArtifact("search-index.json", options),
   );
@@ -572,6 +747,7 @@ export async function searchRegistry(args = {}, options = {}) {
     .filter((entry) => !category || entry.category === category)
     .filter((entry) => entryMatchesPlatform(entry, platform))
     .filter((entry) => entryMatchesQuery(entry, query))
+    .filter((entry) => entryMatchesTrustFilters(entry, trustFilters))
     .slice(0, limit)
     .map(toSearchResult);
 
@@ -581,6 +757,7 @@ export async function searchRegistry(args = {}, options = {}) {
     query: args.query || "",
     category: category || "",
     platform: platform || "",
+    filters: trustFilters,
     entries,
   };
 }
@@ -790,6 +967,7 @@ export async function getEntryDetail(args = {}, options = {}) {
       safetyNotes: notes(entry.safetyNotes),
       privacyNotes: notes(entry.privacyNotes),
     },
+    trust: entryTrustSummary(entry),
   };
 }
 
@@ -855,6 +1033,7 @@ export async function getCopyableAsset(args = {}, options = {}) {
     privacyNotes: notes(entry.privacyNotes),
     platformCompatibility: compatibility,
     source: sourceSummary(entry),
+    trust: entryTrustSummary(entry),
   };
 }
 
@@ -894,6 +1073,7 @@ export async function compareEntries(args = {}, options = {}) {
         entry.scriptBody ? "script" : "",
       ].filter(Boolean),
       source: sourceSummary(entry),
+      trust: entryTrustSummary(entry),
     };
   });
 
@@ -910,6 +1090,7 @@ export async function compareEntries(args = {}, options = {}) {
       "Prefer exact category fit before source popularity.",
       "Treat GitHub stars/forks as source signals only when present; absence is not a negative ranking.",
       "Install complexity is derived from available install/config/download/prerequisite metadata.",
+      "Safety/privacy notes are disclosure metadata, not a malware verdict.",
     ],
   };
 }
@@ -1332,6 +1513,7 @@ export async function getInstallGuidance(args = {}, options = {}) {
     repoUrl: entry.repoUrl || "",
     safetyNotes: notes(entry.safetyNotes),
     privacyNotes: notes(entry.privacyNotes),
+    trust: entryTrustSummary(entry),
     platform: platform || "",
     selectedCompatibility,
     platformCompatibility: compatibility,
@@ -1448,6 +1630,107 @@ export async function reviewSubmissionDraft(args = {}, options = {}) {
   return reviewSubmissionDraftFromSpec(spec, args, unwrapEntries(searchIndex));
 }
 
+export async function getSubmissionPolicy() {
+  return {
+    ok: true,
+    publicPolicy: MCP_PUBLIC_POLICY,
+    reviewModel: {
+      issueFirst: true,
+      maintainerReviewRequired: true,
+      autoMerge: false,
+      importPrRequiresApprovalLabel: ["accepted", "import-approved"],
+      mutatingAutomationOwner: "GitHub Actions",
+    },
+    artifactPolicy: {
+      communityHostedArchivesAllowed: false,
+      communityZipHostingAllowed: false,
+      communityMcpbHostingAllowed: false,
+      maintainerBuiltDownloadsOnly: true,
+      firstPartyDownloadsRequireVerification: true,
+    },
+    submissionGuidance: [
+      "Use source-backed or copyable-content submissions for community content.",
+      "Do not request public HeyClaude /downloads hosting for community ZIP/MCPB artifacts.",
+      "Add safety_notes when a submission runs code, writes externally, uses permissions, or starts background workers.",
+      "Add privacy_notes when a submission reads local files, logs, credentials, telemetry, or third-party user data.",
+      "Commercial, affiliate, sponsored, or paid product listings go through maintainer review and disclosure, not the free content queue.",
+    ],
+  };
+}
+
+export async function explainEntryTrust(args = {}, options = {}) {
+  const category = normalizeText(args.category);
+  const slug = normalizeText(args.slug);
+  if (!category || !slug) {
+    return invalid("category and slug are required.");
+  }
+
+  const entry = await readEntry(category, slug, options);
+  if (!entry) {
+    return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
+  }
+
+  return {
+    ok: true,
+    key: `${entry.category}:${entry.slug}`,
+    title: entry.title,
+    canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    trust: entryTrustSummary(entry),
+  };
+}
+
+export async function reviewEntrySafety(args = {}, options = {}) {
+  const platform = normalizePlatform(args.platform);
+  const entries = [];
+  for (const target of args.entries || []) {
+    const category = normalizeText(target.category);
+    const slug = normalizeText(target.slug);
+    const entry = await readEntry(category, slug, options);
+    if (!entry) {
+      return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
+    }
+    const compatibility = buildSkillPlatformCompatibility(entry);
+    entries.push({
+      key: `${entry.category}:${entry.slug}`,
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+      selectedCompatibility: platform
+        ? compatibility.find((item) => item.platform === platform) || null
+        : null,
+      trust: entryTrustSummary(entry),
+    });
+  }
+
+  const entriesWithNotes = entries.filter(
+    (entry) =>
+      entry.trust.disclosures.hasSafetyNotes ||
+      entry.trust.disclosures.hasPrivacyNotes,
+  );
+
+  return {
+    ok: true,
+    platform: platform || "",
+    count: entries.length,
+    entries,
+    summary: {
+      entriesWithSafetyOrPrivacyNotes: entriesWithNotes.length,
+      firstPartyPackages: entries.filter(
+        (entry) => entry.trust.package.downloadTrust === "first-party",
+      ).length,
+      sourceBacked: entries.filter(
+        (entry) => entry.trust.source.status === "available",
+      ).length,
+    },
+    reviewNotes: [
+      "This is a metadata review, not a malware scan or install verdict.",
+      "Prefer source-backed entries and first-party maintainer-built downloads when installing packages.",
+      "Inspect commands, requested permissions, and external writes before running any copied content.",
+    ],
+  };
+}
+
 export async function callRegistryTool(name, args = {}, options = {}) {
   if (!READ_ONLY_TOOL_NAMES.includes(name)) {
     return invalid(`Unknown read-only HeyClaude MCP tool: ${name}`);
@@ -1534,6 +1817,15 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "review_submission_draft":
       result = await reviewSubmissionDraft(parsedArgs, options);
+      break;
+    case "get_submission_policy":
+      result = await getSubmissionPolicy(parsedArgs, options);
+      break;
+    case "explain_entry_trust":
+      result = await explainEntryTrust(parsedArgs, options);
+      break;
+    case "review_entry_safety":
+      result = await reviewEntrySafety(parsedArgs, options);
       break;
   }
 

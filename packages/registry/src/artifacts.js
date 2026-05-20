@@ -72,6 +72,32 @@ function pushNoteSection(lines, title, values) {
   lines.push("", `## ${title}`, ...notes.map((note) => `- ${note}`));
 }
 
+function raycastPackageTrust(entry) {
+  if (entry.downloadTrust === "first-party" || entry.packageVerified) {
+    return "maintainer-built/verified package";
+  }
+  if (entry.downloadUrl) return "external package";
+  return "no package download";
+}
+
+function pushRaycastTrustSection(lines, entry) {
+  const source =
+    entry.repoUrl || entry.documentationUrl
+      ? "source-backed"
+      : "source not provided";
+  const review =
+    entry.claimStatus === "verified" || entry.reviewedBy
+      ? "reviewed or claimed"
+      : "unclaimed";
+  lines.push(
+    "",
+    "## Trust",
+    `- Source: ${source}`,
+    `- Package: ${raycastPackageTrust(entry)}`,
+    `- Review: ${review}`,
+  );
+}
+
 function buildEntryNoteFields(entry) {
   const fields = {};
   const safetyNotes = noteList(entry.safetyNotes);
@@ -130,6 +156,7 @@ function buildEntryProvenanceFields(entry) {
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
 
+  pushRaycastTrustSection(lines, entry);
   pushNoteSection(lines, "Safety notes", entry.safetyNotes);
   pushNoteSection(lines, "Privacy notes", entry.privacyNotes);
 
@@ -218,6 +245,7 @@ export function buildSearchEntries(entries) {
     installable: Boolean(
       entry.installable || entry.installCommand || entry.downloadUrl,
     ),
+    downloadUrl: entry.downloadUrl || "",
     downloadTrust: entry.downloadTrust ?? null,
     verificationStatus: entry.verificationStatus || "",
     platforms: buildSkillPlatformCompatibility(entry).map(
@@ -706,6 +734,9 @@ export function buildRaycastDetail(entry) {
     ...buildEntryNoteFields(entry),
     repoUrl: entry.repoUrl || "",
     documentationUrl: entry.documentationUrl || "",
+    downloadTrust: entry.downloadTrust ?? null,
+    verificationStatus: entry.verificationStatus || "",
+    packageVerified: Boolean(entry.packageVerified),
   };
 }
 

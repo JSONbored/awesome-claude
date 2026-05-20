@@ -33,6 +33,23 @@ function matchesPlatform(entry: SearchDocument, platform: string) {
   );
 }
 
+function matchesBooleanFilter(value: boolean, filter: string) {
+  if (!filter || filter === "all") return true;
+  return filter === "true" ? value : !value;
+}
+
+function packageTrust(entry: SearchDocument) {
+  return entry.downloadTrust || (entry.downloadUrl ? "external" : "none");
+}
+
+function sourceStatus(entry: SearchDocument) {
+  return entry.trustSignals?.sourceStatus || "missing";
+}
+
+function claimStatus(entry: SearchDocument) {
+  return entry.claimStatus || "unclaimed";
+}
+
 export const GET = createApiHandler(
   "registry.search",
   async ({ request, query: parsedQuery }) => {
@@ -40,6 +57,11 @@ export const GET = createApiHandler(
       q: query,
       category,
       platform,
+      hasSafetyNotes,
+      hasPrivacyNotes,
+      downloadTrust,
+      claimStatus: requestedClaimStatus,
+      sourceStatus: requestedSourceStatus,
       limit,
     } = parsedQuery as InferApiQuery<typeof registrySearchQuerySchema>;
 
@@ -47,6 +69,32 @@ export const GET = createApiHandler(
     const results = entries
       .filter((entry) => !category || entry.category === category)
       .filter((entry) => matchesPlatform(entry, platform))
+      .filter((entry) =>
+        matchesBooleanFilter(
+          Boolean(entry.safetyNotes?.length),
+          hasSafetyNotes,
+        ),
+      )
+      .filter((entry) =>
+        matchesBooleanFilter(
+          Boolean(entry.privacyNotes?.length),
+          hasPrivacyNotes,
+        ),
+      )
+      .filter(
+        (entry) =>
+          downloadTrust === "all" || packageTrust(entry) === downloadTrust,
+      )
+      .filter(
+        (entry) =>
+          requestedClaimStatus === "all" ||
+          claimStatus(entry) === requestedClaimStatus,
+      )
+      .filter(
+        (entry) =>
+          requestedSourceStatus === "all" ||
+          sourceStatus(entry) === requestedSourceStatus,
+      )
       .filter((entry) => matchesQuery(entry, query))
       .slice(0, limit);
 
@@ -57,6 +105,13 @@ export const GET = createApiHandler(
         query,
         category: category || "all",
         platform: platform || "all",
+        filters: {
+          hasSafetyNotes,
+          hasPrivacyNotes,
+          downloadTrust,
+          claimStatus: requestedClaimStatus,
+          sourceStatus: requestedSourceStatus,
+        },
         count: results.length,
         results,
       },
