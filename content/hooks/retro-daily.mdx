@@ -91,8 +91,9 @@ scriptBody: |-
   # SessionStart hook is captured into the LLM's `additionalContext` and is NOT
   # rendered visibly. To make the dashboard appear at the top of the user's
   # session, we MUST emit a JSON document with `systemMessage` set to the
-  # rendered output. We also include `hookSpecificOutput.additionalContext` so
-  # the model still gets the same view of the dashboard.
+  # rendered output. For safety, we do NOT mirror this output into
+  # hookSpecificOutput.additionalContext because scout findings may include
+  # untrusted web/GitHub-derived content.
 
   source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_paths.sh"
 
@@ -105,8 +106,9 @@ scriptBody: |-
   } >> "$DEBUG_LOG" 2>&1
 
   # Accumulate every step's stdout into a single buffer. At the end we emit
-  # the entire concatenated output as one JSON document so it lands in
-  # systemMessage (user-visible) AND additionalContext (LLM-visible).
+  # the entire concatenated output as one JSON document in systemMessage
+  # (user-visible). We intentionally keep additionalContext empty to avoid
+  # forwarding untrusted content into LLM-only context.
   ACCUMULATED=""
 
   run_step() {
@@ -142,7 +144,7 @@ scriptBody: |-
       "systemMessage": content,
       "hookSpecificOutput": {
           "hookEventName": "SessionStart",
-          "additionalContext": content,
+          "additionalContext": "",
       },
   }))
   ' 2>>"$DEBUG_LOG"
