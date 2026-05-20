@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>385+ file-backed entries</strong> stay useful as both an
+        <strong>386+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>385</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>386</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -95,7 +95,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#hooks"><strong>🪝 Hooks</strong></a><br>
-          <code>66</code><br>
+          <code>67</code><br>
           <sub>Claude Code hook configs and automation helpers.</sub>
         </td>
 <td align="center" width="20%">
@@ -471,7 +471,7 @@ Get a free API key on https://app.zyntra.app/
 - **[V0 Component Generator for Claude](https://heyclau.de/commands/v0-generate)** - Generate production-ready React components from natural language using V0.dev patterns with shadcn/ui, TailwindCSS, and TypeScript
 - **[/zod-audit - Zod Auditor Command for Claude Code](https://heyclau.de/commands/zod-audit)** - Production codebase auditor specialized in Zod schema validation coverage, security vulnerability detection, and dead code elimination
 
-## 🪝 Hooks (66)
+## 🪝 Hooks (67)
 
 - **[Accessibility Checker - Claude Code Hooks](https://heyclau.de/hooks/accessibility-checker)** - Automated accessibility testing and compliance checking for web applications following WCAG 2.1 and WCAG 2.2 guidelines. This hook automatically runs accessibility scans on HTML files after they are written or edited, using axe-core for comprehensive WCAG compliance testing.
 - **[API Doc Generator](https://heyclau.de/hooks/api-endpoint-documentation-generator)** - Automatically generates or updates API documentation when endpoint files are modified, supporting OpenAPI 3.1.0, Swagger 2.0, and AsyncAPI 2.0 specifications.
@@ -524,6 +524,7 @@ Get a free API key on https://app.zyntra.app/
 - **[React Test Generator](https://heyclau.de/hooks/react-component-test-generator)** - Automatically creates or updates test files when React components are modified.
 - **[Real Time Activity Tracker - Hooks](https://heyclau.de/hooks/real-time-activity-tracker)** - Tracks all Claude Code activities in real-time and logs them for monitoring and debugging.
 - **[Redis Cache Invalidator - Hooks](https://heyclau.de/hooks/redis-cache-invalidator)** - Automatically clears relevant Redis cache keys when data model files are modified.
+- **[Retro Daily - Hooks](https://heyclau.de/hooks/retro-daily)** - SessionStart hook that prints a daily Claude Code retro at the top of every session — competency grade (0–100, A–F), 14-day efficiency sparklines, and a year-long contributions heatmap.
 - **[Rust Cargo Check - Hooks](https://heyclau.de/hooks/rust-cargo-check)** - Automatically runs cargo check and clippy when Rust files are modified.
 - **[SCSS Auto Compiler - Hooks](https://heyclau.de/hooks/scss-auto-compiler)** - Automatically compiles SCSS/Sass files to CSS when they are modified.
 - **[Security Scanner Hook - Hooks](https://heyclau.de/hooks/security-scanner-hook)** - Automated security vulnerability scanning that integrates with development workflow to detect and prevent security issues before deployment.
