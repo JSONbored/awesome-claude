@@ -9,6 +9,9 @@ import { siteConfig } from "@/lib/site";
 
 const DEFAULT_REPO = "JSONbored/awesome-claude";
 const TOOL_LISTING_FORM_URL = "/tools/submit";
+const MAX_FALLBACK_BODY_BYTES = 6000;
+const FALLBACK_BODY_TRUNCATION_NOTE =
+  "\n\n[HeyClaude preflight note: this fallback URL shortened the issue body. Submit from the website to keep the full draft.]";
 
 type DuplicateCandidate = {
   key: string;
@@ -42,10 +45,37 @@ function normalizeUrl(value: unknown) {
   }
 }
 
+function normalizeError(error: unknown) {
+  if (error instanceof Error) {
+    return {
+      name: error.name,
+      message: error.message,
+    };
+  }
+  return { message: String(error) };
+}
+
+function truncateFallbackBody(value: string) {
+  const encoder = new TextEncoder();
+  if (encoder.encode(value).length <= MAX_FALLBACK_BODY_BYTES) return value;
+
+  const noteBytes = encoder.encode(FALLBACK_BODY_TRUNCATION_NOTE).length;
+  const budget = Math.max(0, MAX_FALLBACK_BODY_BYTES - noteBytes);
+  let bytes = 0;
+  let body = "";
+  for (const char of value) {
+    const nextBytes = encoder.encode(char).length;
+    if (bytes + nextBytes > budget) break;
+    body += char;
+    bytes += nextBytes;
+  }
+  return `${body.trimEnd()}${FALLBACK_BODY_TRUNCATION_NOTE}`;
+}
+
 function githubIssueFallbackUrl(issue: { title: string; body: string }) {
   const url = new URL(`https://github.com/${DEFAULT_REPO}/issues/new`);
   url.searchParams.set("title", issue.title);
-  url.searchParams.set("body", issue.body);
+  url.searchParams.set("body", truncateFallbackBody(issue.body));
   return url.toString();
 }
 
@@ -169,7 +199,17 @@ export async function buildSubmissionPreflight(
   const fallbackUrl = githubIssueFallbackUrl(issue);
   const category = normalizeText(validation.category || risk.subject?.category);
   const slug = normalizeText(validation.fields?.slug || risk.subject?.slug);
-  const entries = await getDirectoryEntries().catch(() => []);
+  const entries = await getDirectoryEntries().catch((error) => {
+    console.warn(
+      JSON.stringify({
+        ts: new Date().toISOString(),
+        level: "warn",
+        event: "submissions.preflight.directory_entries_failed",
+        error: normalizeError(error),
+      }),
+    );
+    return [];
+  });
   const duplicates = duplicateCandidates({
     entries,
     fields: validation.fields || fields,
