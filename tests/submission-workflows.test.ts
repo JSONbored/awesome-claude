@@ -625,7 +625,7 @@ description: Example description
     );
 
     expect(source).toContain(
-      "| Issue | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
+      "| Issue | Group | Status | Security | Policy | Source | Contributor | Age | Category | Slug | Action | Notes |",
     );
     expect(source).toContain("entry.riskSummary");
     expect(source).toContain("entry.riskFlags");
