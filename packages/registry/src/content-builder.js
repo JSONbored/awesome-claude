@@ -258,6 +258,9 @@ export function buildContentEntryFromMdx(params) {
       allowAliasFallback: true,
     },
   );
+  const prerequisites = normalizeStringList(data.prerequisites);
+  const safetyNotes = normalizeStringList(data.safetyNotes);
+  const privacyNotes = normalizeStringList(data.privacyNotes);
 
   return {
     category,
@@ -337,9 +340,9 @@ export function buildContentEntryFromMdx(params) {
       Array.isArray(inferred.testedPlatforms) && inferred.testedPlatforms.length
         ? inferred.testedPlatforms
         : undefined,
-    prerequisites: normalizeStringList(data.prerequisites),
-    safetyNotes: normalizeStringList(data.safetyNotes),
-    privacyNotes: normalizeStringList(data.privacyNotes),
+    prerequisites,
+    safetyNotes,
+    privacyNotes,
     hasPrerequisites:
       typeof data.hasPrerequisites === "boolean"
         ? data.hasPrerequisites

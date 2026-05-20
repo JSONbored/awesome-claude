@@ -210,6 +210,70 @@ function loadExistingContentUpdatedAt() {
   return values;
 }
 
+function loadExistingEntryRepoStats() {
+  const values = new Map();
+  if (!fs.existsSync(entryDataDir)) return values;
+
+  for (const category of fs.readdirSync(entryDataDir)) {
+    const categoryDir = path.join(entryDataDir, category);
+    if (!fs.statSync(categoryDir).isDirectory()) continue;
+
+    for (const fileName of fs.readdirSync(categoryDir)) {
+      if (!fileName.endsWith(".json")) continue;
+
+      try {
+        const payload = JSON.parse(
+          fs.readFileSync(path.join(categoryDir, fileName), "utf8"),
+        );
+        const entry = payload?.entry;
+        if (!entry?.category || !entry?.slug) continue;
+        values.set(`${entry.category}:${entry.slug}`, {
+          stars:
+            typeof entry.githubStars === "number"
+              ? entry.githubStars
+              : undefined,
+          forks:
+            typeof entry.githubForks === "number"
+              ? entry.githubForks
+              : undefined,
+          updatedAt:
+            typeof entry.repoUpdatedAt === "string"
+              ? entry.repoUpdatedAt
+              : undefined,
+        });
+      } catch {
+        // Regeneration should not fail just because a stale artifact is invalid.
+      }
+    }
+  }
+
+  return values;
+}
+
+function loadExistingSiteStats() {
+  if (!fs.existsSync(siteStatsFile)) return null;
+
+  try {
+    const payload = JSON.parse(fs.readFileSync(siteStatsFile, "utf8"));
+    return {
+      stars:
+        typeof payload.githubStars === "number"
+          ? payload.githubStars
+          : undefined,
+      forks:
+        typeof payload.githubForks === "number"
+          ? payload.githubForks
+          : undefined,
+      updatedAt:
+        typeof payload.repoUpdatedAt === "string"
+          ? payload.repoUpdatedAt
+          : undefined,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function copyFileIfChanged(sourcePath, destPath) {
   const source = fs.readFileSync(sourcePath);
   if (fs.existsSync(destPath)) {
@@ -248,6 +312,8 @@ async function main() {
   const reposToFetch = new Map();
   const directoryRepo = parseGitHubRepo(DEFAULT_DIRECTORY_REPO_URL);
   const existingContentUpdatedAt = loadExistingContentUpdatedAt();
+  const existingEntryRepoStats = loadExistingEntryRepoStats();
+  const existingSiteStats = loadExistingSiteStats();
 
   if (directoryRepo) {
     reposToFetch.set(directoryRepo.key, directoryRepo);
@@ -309,11 +375,14 @@ async function main() {
     if (!githubRepo) continue;
 
     const stats = repoStats.get(githubRepo.key);
-    if (!stats) continue;
+    const existingStats = existingEntryRepoStats.get(
+      `${entry.category}:${entry.slug}`,
+    );
+    if (!stats && !existingStats) continue;
 
-    entry.githubStars = stats.stars ?? null;
-    entry.githubForks = stats.forks ?? null;
-    entry.repoUpdatedAt = stats.updatedAt ?? null;
+    entry.githubStars = stats?.stars ?? existingStats?.stars ?? null;
+    entry.githubForks = stats?.forks ?? existingStats?.forks ?? null;
+    entry.repoUpdatedAt = stats?.updatedAt ?? existingStats?.updatedAt ?? null;
   }
 
   entries.sort((left, right) => left.title.localeCompare(right.title));
@@ -342,9 +411,10 @@ async function main() {
     : null;
   const siteStatsPayload = {
     directoryRepo: DEFAULT_DIRECTORY_REPO_URL,
-    githubStars: directoryStats?.stars ?? null,
-    githubForks: directoryStats?.forks ?? null,
-    repoUpdatedAt: directoryStats?.updatedAt ?? null,
+    githubStars: directoryStats?.stars ?? existingSiteStats?.stars ?? null,
+    githubForks: directoryStats?.forks ?? existingSiteStats?.forks ?? null,
+    repoUpdatedAt:
+      directoryStats?.updatedAt ?? existingSiteStats?.updatedAt ?? null,
   };
   const wroteSiteStats = writeFileIfChanged(
     siteStatsFile,
