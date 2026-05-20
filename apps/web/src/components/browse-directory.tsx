@@ -753,7 +753,7 @@ export function BrowseDirectory({
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <p className="text-sm font-semibold text-foreground">
-                Compare tray - {collectionKeys.length} saved
+                Compare tray - {collectionEntries.length} saved
               </p>
               <p className="mt-1 text-xs leading-6 text-muted-foreground">
                 Stored locally in this browser.

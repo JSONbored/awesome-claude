@@ -11,6 +11,7 @@ import type { DirectoryEntry } from "@/lib/content";
 import { categoryLabels } from "@/lib/site";
 
 type DiscoveryRail = {
+  id: string;
   title: string;
   description: string;
   href: string;
@@ -49,7 +50,7 @@ export function DiscoveryRails({ rails }: DiscoveryRailsProps) {
         const Icon = icons[rail.icon];
 
         return (
-          <div key={rail.title} className="space-y-4">
+          <div key={rail.id} className="space-y-4">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div className="max-w-2xl space-y-2">
                 <div className="flex items-center gap-2">
@@ -76,7 +77,7 @@ export function DiscoveryRails({ rails }: DiscoveryRailsProps) {
             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
               {rail.entries.slice(0, 4).map((entry) => (
                 <Link
-                  key={`${rail.title}-${entry.category}-${entry.slug}`}
+                  key={`${rail.id}-${entry.category}-${entry.slug}`}
                   href={entryHref(entry)}
                   className="surface-panel p-4 transition hover:border-primary/45"
                 >

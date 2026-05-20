@@ -119,6 +119,7 @@ export default async function HomePage() {
       <DiscoveryRails
         rails={[
           {
+            id: "new-this-week",
             title: "New this week",
             description:
               "Recent additions based on the current registry snapshot.",
@@ -127,6 +128,7 @@ export default async function HomePage() {
             icon: "new",
           },
           {
+            id: "recently-verified",
             title: "Recently verified",
             description:
               "Entries with source, review, claim, or package trust metadata refreshed most recently.",
@@ -135,6 +137,7 @@ export default async function HomePage() {
             icon: "verified",
           },
           {
+            id: "source-backed",
             title: "Source-backed",
             description:
               "Entries with registry-visible source metadata for review and attribution.",
@@ -143,6 +146,7 @@ export default async function HomePage() {
             icon: "source",
           },
           {
+            id: "safe-install",
             title: "Safe install",
             description:
               "Installable entries with first-party package, verified package, or source-backed copy/install paths.",
