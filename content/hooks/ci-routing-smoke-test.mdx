@@ -1,0 +1,53 @@
+---
+title: CI Routing Smoke Test - Claude Code Hooks
+slug: ci-routing-smoke-test
+category: hooks
+description: Temporary hook content entry used to verify category-aware PR validation routing in GitHub Actions.
+cardDescription: Temporary hook content entry used to verify category-aware PR validation routing.
+author: JSONbored
+dateAdded: "2026-05-20"
+installable: true
+installCommand: mkdir -p .claude/hooks && touch .claude/hooks/ci-routing-smoke-test.sh
+usageSnippet: mkdir -p .claude/hooks && touch .claude/hooks/ci-routing-smoke-test.sh
+copySnippet: |-
+  {
+    "hooks": {
+      "postToolUse": {
+        "script": "./.claude/hooks/ci-routing-smoke-test.sh",
+        "matchers": ["write"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "postToolUse": {
+        "script": "./.claude/hooks/ci-routing-smoke-test.sh",
+        "matchers": ["write"]
+      }
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  exit 0
+trigger: PostToolUse
+tags:
+  - ci
+  - smoke-test
+keywords:
+  - ci
+  - validation
+  - routing
+readingTime: 1
+difficultyScore: 0
+hasTroubleshooting: false
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: false
+robotsFollow: false
+---
+
+## Verification
+
+This temporary entry exists only to verify category-aware CI routing on a hook-only pull request.
