@@ -40,7 +40,18 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           FORCE_FULL_VALIDATION: ${{ github.event_name != 'pull_request' && '1' || '0' }}
-        run: node scripts/ci/classify-pr-changes.mjs
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          classifier_path="scripts/ci/classify-pr-changes.mjs"
+
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ]; then
+            trusted_classifier="${RUNNER_TEMP:-.}/classify-pr-changes.mjs"
+            git show "$BASE_SHA:$classifier_path" > "$trusted_classifier"
+            node "$trusted_classifier"
+          else
+            node "$classifier_path"
+          fi
 
       - name: Reject external generated artifact changes
         if: ${{ github.event_name == 'pull_request' }}
