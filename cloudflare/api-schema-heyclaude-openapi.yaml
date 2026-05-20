@@ -4483,7 +4483,6 @@ paths:
                             maxLength: 4096
                         required:
                           - label
-                          - url
                     required:
                       - ok
                       - valid

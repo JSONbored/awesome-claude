@@ -20,7 +20,7 @@ export type SubmissionPreflightSummary = {
   };
   nextAction?: {
     label: string;
-    url: string;
+    url?: string;
   };
 };
 
@@ -30,6 +30,19 @@ type SubmitReadinessCardProps = {
   sourceWarning: boolean;
   preflight?: SubmissionPreflightSummary;
 };
+
+function safeHttpUrl(value?: string) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  try {
+    const url = new URL(text);
+    return url.protocol === "http:" || url.protocol === "https:"
+      ? url.toString()
+      : "";
+  } catch {
+    return "";
+  }
+}
 
 export function SubmitReadinessCard({
   category,
@@ -126,21 +139,28 @@ export function SubmitReadinessCard({
         <div className="mt-3 rounded-lg border border-border bg-card/70 px-3 py-2">
           <p className="font-medium text-foreground">Possible duplicates</p>
           <ul className="mt-1 space-y-1">
-            {duplicates.map((item) => (
-              <li key={item.key}>
-                <a
-                  href={item.url}
-                  className="text-primary underline underline-offset-4"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {item.title}
-                </a>{" "}
-                {item.reasons?.length ? (
-                  <span>({item.reasons.join(", ")})</span>
-                ) : null}
-              </li>
-            ))}
+            {duplicates.map((item) => {
+              const href = safeHttpUrl(item.url);
+              return (
+                <li key={item.key}>
+                  {href ? (
+                    <a
+                      href={href}
+                      className="text-primary underline underline-offset-4"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {item.title}
+                    </a>
+                  ) : (
+                    <span>{item.title}</span>
+                  )}{" "}
+                  {item.reasons?.length ? (
+                    <span>({item.reasons.join(", ")})</span>
+                  ) : null}
+                </li>
+              );
+            })}
           </ul>
         </div>
       ) : null}

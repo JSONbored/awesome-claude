@@ -317,7 +317,7 @@ const submissionPreflightSuccessResponseSchema = z
     duplicates: z.array(submissionPreflightDuplicateSchema).max(5),
     nextAction: z.object({
       label: z.string().max(160),
-      url: z.string().max(4096),
+      url: z.string().max(4096).optional(),
     }),
   })
   .passthrough();

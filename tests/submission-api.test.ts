@@ -328,6 +328,10 @@ describe("website submission API", () => {
     expect(response.status).toBe(200);
     const body = await response.json();
     expect(body.routeSuggestion).toBe("fix_required");
+    expect(body.nextAction).toMatchObject({
+      label: "Fix blockers before opening a submission issue",
+    });
+    expect(body.nextAction.url).toBeUndefined();
     expect(
       body.blockers.map((item: { message: string }) => item.message),
     ).toEqual(

@@ -287,7 +287,6 @@ export async function buildSubmissionPreflight(
         : routeSuggestion === "fix_required"
           ? {
               label: "Fix blockers before opening a submission issue",
-              url: "",
             }
           : {
               label: "Open a reviewable GitHub issue",
