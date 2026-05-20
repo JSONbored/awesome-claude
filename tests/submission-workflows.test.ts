@@ -901,6 +901,18 @@ description: Example description
     expect(outputs.registry).toBe("false");
   });
 
+  it("routes generated registry artifacts to artifact validation", () => {
+    const outputs = runClassifierForChangedFiles({
+      "apps/web/public/data/raycast/entries.json": "[]\n",
+    });
+
+    expect(outputs.content).toBe("false");
+    expect(outputs.registry).toBe("true");
+    expect(outputs.web).toBe("true");
+    expect(outputs.raycast).toBe("true");
+    expect(outputs.packages).toBe("false");
+  });
+
   it("does not document GitHub PATs in MCP process arguments", () => {
     const source = fs.readFileSync(
       path.join(
