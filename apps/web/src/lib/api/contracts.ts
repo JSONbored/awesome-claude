@@ -267,17 +267,17 @@ export const submissionPreflightBodySchema = z.object({
 });
 
 const submissionPreflightNoteSchema = z.object({
-  code: z.string(),
-  message: z.string(),
+  code: z.string().max(80),
+  message: z.string().max(500),
 });
 
 const submissionPreflightDuplicateSchema = z.object({
-  key: z.string(),
-  category: z.string(),
-  slug: z.string(),
-  title: z.string(),
-  url: z.string(),
-  reasons: z.array(z.string()),
+  key: z.string().max(160),
+  category: z.string().max(80),
+  slug: z.string().max(160),
+  title: z.string().max(240),
+  url: z.string().url().max(2048),
+  reasons: z.array(z.string().max(80)).max(8),
 });
 
 const submissionPreflightSuccessResponseSchema = z
@@ -289,35 +289,35 @@ const submissionPreflightSuccessResponseSchema = z
     slug: z.string(),
     fallbackUrl: z.string().url(),
     issuePreview: z.object({
-      title: z.string(),
-      labels: z.array(z.string()),
-      body: z.string(),
+      title: z.string().max(300),
+      labels: z.array(z.string().max(80)).max(12),
+      body: z.string().max(32_000),
     }),
     schema: z.object({
       ok: z.boolean(),
       skipped: z.boolean(),
-      errors: z.array(z.string()),
-      warnings: z.array(z.string()),
+      errors: z.array(z.string().max(500)).max(32),
+      warnings: z.array(z.string().max(500)).max(32),
       fields: z.record(z.string(), z.unknown()),
     }),
     risk: z.object({
       tier: z.string().optional(),
       policyDecision: z.string().optional(),
       policyMatrix: z.record(z.string(), z.unknown()),
-      reviewFlags: z.array(z.string()),
-      classificationWarnings: z.array(z.unknown()),
+      reviewFlags: z.array(z.string().max(120)).max(32),
+      classificationWarnings: z.array(z.unknown()).max(32),
     }),
     expectedNotes: z.object({
       safety: z.boolean(),
       privacy: z.boolean(),
-      reasons: z.array(z.string()),
+      reasons: z.array(z.string().max(500)).max(8),
     }),
-    blockers: z.array(submissionPreflightNoteSchema),
-    warnings: z.array(submissionPreflightNoteSchema),
-    duplicates: z.array(submissionPreflightDuplicateSchema),
+    blockers: z.array(submissionPreflightNoteSchema).max(24),
+    warnings: z.array(submissionPreflightNoteSchema).max(24),
+    duplicates: z.array(submissionPreflightDuplicateSchema).max(5),
     nextAction: z.object({
-      label: z.string(),
-      url: z.string(),
+      label: z.string().max(160),
+      url: z.string().max(4096),
     }),
   })
   .passthrough();

@@ -4324,12 +4324,16 @@ paths:
                         properties:
                           title:
                             type: string
+                            maxLength: 300
                           labels:
                             type: array
                             items:
                               type: string
+                              maxLength: 80
+                            maxItems: 12
                           body:
                             type: string
+                            maxLength: 32000
                         required:
                           - title
                           - labels
@@ -4345,10 +4349,14 @@ paths:
                             type: array
                             items:
                               type: string
+                              maxLength: 500
+                            maxItems: 32
                           warnings:
                             type: array
                             items:
                               type: string
+                              maxLength: 500
+                            maxItems: 32
                           fields:
                             type: object
                             additionalProperties: {}
@@ -4372,9 +4380,12 @@ paths:
                             type: array
                             items:
                               type: string
+                              maxLength: 120
+                            maxItems: 32
                           classificationWarnings:
                             type: array
                             items: {}
+                            maxItems: 32
                         required:
                           - policyMatrix
                           - reviewFlags
@@ -4390,6 +4401,8 @@ paths:
                             type: array
                             items:
                               type: string
+                              maxLength: 500
+                            maxItems: 8
                         required:
                           - safety
                           - privacy
@@ -4401,11 +4414,14 @@ paths:
                           properties:
                             code:
                               type: string
+                              maxLength: 80
                             message:
                               type: string
+                              maxLength: 500
                           required:
                             - code
                             - message
+                        maxItems: 24
                       warnings:
                         type: array
                         items:
@@ -4413,11 +4429,14 @@ paths:
                           properties:
                             code:
                               type: string
+                              maxLength: 80
                             message:
                               type: string
+                              maxLength: 500
                           required:
                             - code
                             - message
+                        maxItems: 24
                       duplicates:
                         type: array
                         items:
@@ -4425,18 +4444,26 @@ paths:
                           properties:
                             key:
                               type: string
+                              maxLength: 160
                             category:
                               type: string
+                              maxLength: 80
                             slug:
                               type: string
+                              maxLength: 160
                             title:
                               type: string
+                              maxLength: 240
                             url:
                               type: string
+                              maxLength: 2048
+                              format: uri
                             reasons:
                               type: array
                               items:
                                 type: string
+                                maxLength: 80
+                              maxItems: 8
                           required:
                             - key
                             - category
@@ -4444,13 +4471,16 @@ paths:
                             - title
                             - url
                             - reasons
+                        maxItems: 5
                       nextAction:
                         type: object
                         properties:
                           label:
                             type: string
+                            maxLength: 160
                           url:
                             type: string
+                            maxLength: 4096
                         required:
                           - label
                           - url
