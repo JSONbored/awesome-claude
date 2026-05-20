@@ -188,6 +188,8 @@ export const registrySearchResultSchema = registryBrandAssetSchema
     tags: z.array(z.string()).max(32),
     keywords: z.array(z.string()).max(64),
     author: z.string(),
+    safetyNotes: z.array(z.string()).max(8).optional(),
+    privacyNotes: z.array(z.string()).max(8).optional(),
     dateAdded: z.string(),
     installable: z.boolean(),
     downloadTrust: z.string().nullable().optional(),

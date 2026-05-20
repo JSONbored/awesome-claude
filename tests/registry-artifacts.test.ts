@@ -18,6 +18,8 @@ import {
   buildRegistryTrustReport,
   buildReadOnlyEcosystemFeed,
   buildRaycastEnvelope,
+  buildRaycastDetailMarkdown,
+  renderEntryLlms,
   RAYCAST_COPY_PREVIEW_LIMIT,
   buildSearchEntries,
   brandAssetProxyUrl,
@@ -27,6 +29,7 @@ import {
   isAllowedBrandAssetUrl,
   truncateText,
 } from "@heyclaude/registry";
+import { buildContentEntryFromMdx } from "@heyclaude/registry/content-builder";
 
 import {
   dataRoot,
@@ -411,6 +414,46 @@ describe("registry artifacts", () => {
     expect(searchEntry?.apiUrl).toBe(
       `https://heyclau.de/api/registry/entries/${sourceEntry.category}/${sourceEntry.slug}`,
     );
+  });
+
+  it("normalizes and publishes safety and privacy notes across artifacts", () => {
+    const entry = buildContentEntryFromMdx({
+      category: "hooks",
+      fileName: "safe-background-hook.mdx",
+      filePath: path.join(repoRoot, "content/hooks/safe-background-hook.mdx"),
+      repoRoot,
+      contentRoot: path.join(repoRoot, "content"),
+      source: `---
+title: Safe Background Hook
+slug: safe-background-hook
+category: hooks
+description: Demonstrates structured safety and privacy notes.
+cardDescription: Structured safety and privacy notes.
+dateAdded: 2026-05-19
+tags:
+  - hooks
+safetyNotes:
+  - "Runs as a background worker during the configured Claude Code session."
+privacyNotes:
+  - "Reads local workspace metadata and does not send it to third parties."
+---
+Use this hook after reviewing the notes.`,
+    });
+
+    expect(entry.safetyNotes).toEqual([
+      "Runs as a background worker during the configured Claude Code session.",
+    ]);
+    expect(entry.privacyNotes).toEqual([
+      "Reads local workspace metadata and does not send it to third parties.",
+    ]);
+
+    const [searchEntry] = buildSearchEntries([entry]);
+    expect(searchEntry.safetyNotes).toEqual(entry.safetyNotes);
+    expect(searchEntry.privacyNotes).toEqual(entry.privacyNotes);
+    expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
+    expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
+    expect(renderEntryLlms(entry)).toContain("## Safety Notes");
+    expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
   });
 
   it("publishes registry moat feeds with deterministic contract hashes", () => {

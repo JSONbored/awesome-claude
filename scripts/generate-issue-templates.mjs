@@ -39,6 +39,10 @@ const fieldPlaceholders = {
   download_url: "https://github.com/owner/repo/releases/latest",
   retrieval_sources: "https://example.com/docs\nhttps://github.com/owner/repo",
   tested_platforms: "Claude Code, Claude Desktop, Codex",
+  safety_notes:
+    "Runs a background worker; writes to local logs; can modify files in the configured workspace.",
+  privacy_notes:
+    "Reads local project files and may send selected context to the configured third-party API.",
   guide_content: "Paste the full guide content.",
   items: "mcp/example\nskills/example",
   script_language: "bash",
@@ -71,6 +75,16 @@ function linesForField(field, category) {
   if (field.id === "contact_email") {
     descriptionParts.push(
       "Optional public contact. Do not include private contact details.",
+    );
+  }
+  if (field.id === "safety_notes") {
+    descriptionParts.push(
+      "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services.",
+    );
+  }
+  if (field.id === "privacy_notes") {
+    descriptionParts.push(
+      "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties.",
     );
   }
   if (descriptionParts.length) {

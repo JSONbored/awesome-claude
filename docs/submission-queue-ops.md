@@ -13,6 +13,8 @@ after policy gates pass, but automation does not auto-merge or publish content.
 - `source-needs-verification`: the submitted source URL is missing, ambiguous,
   unavailable, or otherwise needs maintainer review.
 - `stale-submission`: the issue has waited at least 7 days for author input.
+- `auto-import-eligible`: deterministic gates passed and the issue may open an
+  import PR. This is not approval to merge.
 - `accepted` / `import-approved`: maintainer-reviewed approval labels that can
   open an import PR.
 - `import-pr-open`: an import PR exists; stale automation must not close it.
@@ -42,6 +44,12 @@ Policy decisions:
 - `maintainer_review`: valid enough to review, but a warning gate or stronger
   risk signal needs human judgment.
 - `blocked`: at least one policy gate blocks import.
+
+Safety/privacy disclosure affects the `quality` gate. If deterministic risk
+signals detect code execution, package install risk, destructive behavior,
+background automation, external writes, credentials, local data, telemetry, or
+third-party data handling, missing `safety_notes` / `privacy_notes` downgrades
+auto-import eligibility to maintainer review.
 
 ## Queue States
 
@@ -99,12 +107,19 @@ Maintainers still review the generated PR before merge.
   `auto_import_eligible`; otherwise it leaves the issue in maintainer review.
   Regulated-domain status, category fit, and promotional tone are not treated as
   security risk.
+- `HeyClaude Submission Bot` may label issues, keep stable validation/risk
+  comments updated, and open import PRs after deterministic gates pass. It never
+  auto-approves, auto-merges, or publishes content.
 - `Package Artifact Scan` validates reviewed package archives with archive
   safety limits and optional ClamAV, Trivy, and OSV-Scanner checks. Scans are
   quarantine signals, not a warranty.
 - `Submission PR Risk Review` runs on direct content PRs through
   `pull_request_target`, but only checks out trusted base-repo code. It reads PR
-  content through the GitHub API as data and never executes fork code.
+  content through the GitHub API as data and never executes fork code. It may
+  request changes for deterministic blockers such as schema/frontmatter failure,
+  category/path mismatch, generated-artifact churn, community ZIP/MCPB hosting,
+  unsafe `packageVerified: true`, provenance failure, or missing required
+  safety/privacy notes for sensitive behavior.
 - Product-shaped tools, hosted apps, services, SaaS products, subscriptions, and
   sponsored/featured placement interest route through
   `https://heyclau.de/tools/submit` unless a maintainer explicitly approves a

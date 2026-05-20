@@ -125,7 +125,8 @@ jobs:
             const managedValidationLabels = new Set([
               "needs-author-input",
               "source-needs-verification",
-              "stale-submission"
+              "stale-submission",
+              "auto-import-eligible"
             ]);
             const currentLabels = (issue.labels || [])
               .map((label) => typeof label === "string" ? label : label.name)
@@ -147,8 +148,38 @@ jobs:
               core.warning(`Could not apply submission labels: ${error.message}`);
             }
 
+      - name: HeyClaude Submission Bot mark auto-import eligible
+        if: ${{ always() && steps.auto_import_precheck.outputs.eligible == 'true' }}
+        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
+        with:
+          script: |
+            const label = "auto-import-eligible";
+            try {
+              await github.rest.issues.updateLabel({
+                ...context.repo,
+                name: label,
+                color: "0e8a16",
+                description:
+                  "Submission passed deterministic gates and may auto-open an import PR"
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
+              await github.rest.issues.createLabel({
+                ...context.repo,
+                name: label,
+                color: "0e8a16",
+                description:
+                  "Submission passed deterministic gates and may auto-open an import PR"
+              });
+            }
+            await github.rest.issues.addLabels({
+              ...context.repo,
+              issue_number: context.issue.number,
+              labels: [label]
+            });
+
       - name: Auto-label submission risk
-        if: ${{ always() && steps.auto_import_precheck.outputs.eligible != 'true' }}
+        if: always()
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |

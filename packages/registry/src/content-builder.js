@@ -66,6 +66,12 @@ function normalizeTextField(value) {
   return normalized || undefined;
 }
 
+function normalizeStringList(value) {
+  if (!Array.isArray(value)) return undefined;
+  const items = value.map((item) => String(item || "").trim()).filter(Boolean);
+  return items.length ? items : undefined;
+}
+
 function normalizeDateTimeField(value) {
   const normalized = normalizeTextField(value);
   if (!normalized) return undefined;
@@ -331,9 +337,9 @@ export function buildContentEntryFromMdx(params) {
       Array.isArray(inferred.testedPlatforms) && inferred.testedPlatforms.length
         ? inferred.testedPlatforms
         : undefined,
-    prerequisites: Array.isArray(data.prerequisites)
-      ? data.prerequisites.map(String)
-      : undefined,
+    prerequisites: normalizeStringList(data.prerequisites),
+    safetyNotes: normalizeStringList(data.safetyNotes),
+    privacyNotes: normalizeStringList(data.privacyNotes),
     hasPrerequisites:
       typeof data.hasPrerequisites === "boolean"
         ? data.hasPrerequisites

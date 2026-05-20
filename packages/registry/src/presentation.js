@@ -278,6 +278,20 @@ export function getDistributionBadges(entry) {
     });
   }
 
+  if (Array.isArray(entry.safetyNotes) && entry.safetyNotes.length) {
+    badges.push({
+      label: "safety notes",
+      title: "Entry includes structured execution or permission safety notes",
+    });
+  }
+
+  if (Array.isArray(entry.privacyNotes) && entry.privacyNotes.length) {
+    badges.push({
+      label: "privacy notes",
+      title: "Entry includes structured data access or privacy notes",
+    });
+  }
+
   if (entry.reviewedBy || entry.claimStatus === "verified") {
     badges.push({
       label: entry.claimStatus === "verified" ? "claimed" : "reviewed",

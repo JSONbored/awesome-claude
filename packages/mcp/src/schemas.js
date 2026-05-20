@@ -68,6 +68,8 @@ export const SubmissionFieldsSchema = z
     retrieval_sources: optionalLongText,
     tested_platforms: optionalText,
     prerequisites: optionalLongText,
+    safety_notes: optionalLongText,
+    privacy_notes: optionalLongText,
     troubleshooting_section: optionalLongText,
     installation_order: optionalText,
     estimated_setup_time: optionalText,

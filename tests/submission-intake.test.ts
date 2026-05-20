@@ -18,6 +18,7 @@ import {
 import {
   analyzeDirectContentRisk,
   analyzeIssueSubmissionRisk,
+  directContentRequestChangesReasons,
   formatSubmissionRiskMarkdown,
 } from "@heyclaude/registry/submission-risk";
 import { categorySpec } from "@heyclaude/registry";
@@ -880,6 +881,85 @@ Use the full copyable skill content.`);
     expect(formatSubmissionRiskMarkdown(risk)).toContain("Policy matrix");
   });
 
+  it("downgrades sensitive auto-imports when privacy notes are missing", () => {
+    const submission = issue(`### Name
+Credential MCP
+
+### Slug
+credential-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/credential-mcp
+
+### Description
+MCP server that uses API keys for authenticated read-only API access.
+
+### Card description
+Credential-backed MCP server.
+
+### Install command
+npx -y credential-mcp
+
+### Usage snippet
+Set CREDENTIAL_MCP_API_KEY before use.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(risk.riskTier).toBe("medium");
+    expect(risk.classificationWarnings.map((warning) => warning.id)).toContain(
+      "missing_privacy_notes",
+    );
+    expect(risk.policyMatrix.quality.status).toBe("warn");
+    expect(risk.policyDecision).toBe("maintainer_review");
+  });
+
+  it("keeps sensitive source-backed submissions eligible when notes disclose behavior", () => {
+    const submission = issue(`### Name
+Credential MCP
+
+### Slug
+credential-mcp
+
+### Category
+mcp
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/credential-mcp
+
+### Description
+MCP server that uses API keys for authenticated read-only API access.
+
+### Card description
+Credential-backed MCP server.
+
+### Install command
+npx -y credential-mcp
+
+### Usage snippet
+Set CREDENTIAL_MCP_API_KEY before use.
+
+### Privacy notes
+Reads the configured API key from the local environment and sends requests to the upstream API only.`);
+    const report = validateSubmission(submission);
+    const risk = analyzeIssueSubmissionRisk(submission, report);
+
+    expect(report.ok).toBe(true);
+    expect(
+      risk.classificationWarnings.map((warning) => warning.id),
+    ).not.toContain("missing_privacy_notes");
+    expect(risk.policyDecision).toBe("auto_import_eligible");
+  });
+
   it("keeps archive package URLs in maintainer review", () => {
     const submission = issue(`### Name
 Archive Skill
@@ -1457,6 +1537,10 @@ repoUrl: https://github.com/Xquik-dev/x-twitter-scraper
 documentationUrl: https://docs.xquik.com/mcp/overview
 installCommand: "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}"
 usageSnippet: "Use an API key for Xquik social media posting workflows."
+safetyNotes:
+  - "Can post, reply, send DMs, or update profiles through the configured Xquik account."
+privacyNotes:
+  - "Reads the configured API key and sends social media workflow requests to Xquik."
 ---
 ## Security Notes
 Review payloads before posting tweets, replies, DMs, or profile updates.`,
@@ -1490,6 +1574,49 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       expect.arrayContaining(["credentials_or_auth", "external_write"]),
     );
     expect(report.contributionAnalysis.sourceState).toBe("provided");
+  });
+
+  it("requests changes for direct PRs that omit required safety/privacy notes", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 382,
+        title: "Add risky hook",
+        user: { login: "hook-author" },
+      },
+      files: [
+        {
+          filename: "content/hooks/risky-hook.mdx",
+          status: "added",
+          content: `---
+title: Risky Hook
+slug: risky-hook
+category: hooks
+description: Hook that runs a background worker, reads local workspace files, and can delete generated files.
+cardDescription: Background hook with local file access.
+repoUrl: https://github.com/example/risky-hook
+submittedBy: hook-author
+submittedByUrl: https://github.com/hook-author
+trigger: SessionStart
+installCommand: "python risky-hook.py"
+---
+Runs a background worker against the local workspace and can delete generated files.`,
+        },
+      ],
+    });
+
+    expect(report.classificationWarnings.map((warning) => warning.id)).toEqual(
+      expect.arrayContaining(["missing_safety_notes", "missing_privacy_notes"]),
+    );
+    expect(report.requestChangesReasons).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("safetyNotes disclosure"),
+        expect.stringContaining("privacyNotes disclosure"),
+      ]),
+    );
+    expect(directContentRequestChangesReasons(report)).toEqual(
+      report.requestChangesReasons,
+    );
   });
 
   it("keeps malformed contributor payloads from becoming GitHub mentions", () => {

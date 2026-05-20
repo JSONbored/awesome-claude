@@ -116,6 +116,14 @@ export const HEADING_KEY_MAP = {
   "items-category-slug-list": "items",
   "guide-content-markdown": "guide_content",
   prerequisites: "prerequisites",
+  "safety-notes": "safety_notes",
+  "safety-notes-optional": "safety_notes",
+  safetynotes: "safety_notes",
+  safety_notes: "safety_notes",
+  "privacy-notes": "privacy_notes",
+  "privacy-notes-optional": "privacy_notes",
+  privacynotes: "privacy_notes",
+  privacy_notes: "privacy_notes",
   "troubleshooting-section": "troubleshooting_section",
   "installation-order": "installation_order",
   "estimated-setup-time": "estimated_setup_time",
@@ -302,6 +310,10 @@ function mapJsonData(data) {
     npm: "download_url",
     install: "install_command",
     installCommand: "install_command",
+    safetyNotes: "safety_notes",
+    safety_notes: "safety_notes",
+    privacyNotes: "privacy_notes",
+    privacy_notes: "privacy_notes",
     license: "license",
   };
 
@@ -484,7 +496,14 @@ export function normalizeSubmissionPayloadFields(fields = {}) {
   for (const [key, value] of Object.entries(fields || {})) {
     if (value === undefined || value === null) continue;
     if (Array.isArray(value)) {
-      normalized[key] = value.map(String).join(", ");
+      const separator =
+        key === "safety_notes" ||
+        key === "privacy_notes" ||
+        key === "safetyNotes" ||
+        key === "privacyNotes"
+          ? "\n"
+          : ", ";
+      normalized[key] = value.map(String).join(separator);
       continue;
     }
     if (typeof value === "object") continue;
@@ -1269,6 +1288,19 @@ export function validateSubmission(issue) {
   const fullCopyable = String(fields.full_copyable_content ?? "");
   if (containsForbiddenCounter(fullCopyable)) {
     errors.push("Forbidden counters detected in full_copyable_content");
+  }
+
+  for (const field of ["safety_notes", "privacy_notes"]) {
+    const notes = splitList(fields[field]);
+    if (!notes.length) continue;
+    if (notes.length > 8) {
+      errors.push(`${field} must include 8 items or fewer`);
+    }
+    for (const note of notes) {
+      if (note.length > 320) {
+        errors.push(`${field} items must be 320 characters or fewer`);
+      }
+    }
   }
 
   if (!fields.github_url && !fields.docs_url) {

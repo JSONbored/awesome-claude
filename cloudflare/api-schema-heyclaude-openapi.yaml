@@ -135,6 +135,16 @@ components:
           maxItems: 64
         author:
           type: string
+        safetyNotes:
+          type: array
+          items:
+            type: string
+          maxItems: 8
+        privacyNotes:
+          type: array
+          items:
+            type: string
+          maxItems: 8
         dateAdded:
           type: string
         installable:
@@ -930,6 +940,16 @@ paths:
                           maxItems: 64
                         author:
                           type: string
+                        safetyNotes:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 8
+                        privacyNotes:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 8
                         dateAdded:
                           type: string
                         installable:

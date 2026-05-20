@@ -218,6 +218,22 @@ const OPTIONAL_FIELDS = [
     required: false,
     placeholder: categorySpec.defaultTestedPlatforms?.join(", "),
   },
+  {
+    id: "safety_notes",
+    label: "Safety notes",
+    type: "textarea",
+    required: false,
+    placeholder:
+      "Execution, permissions, destructive actions, background workers, network access, or install risk.",
+  },
+  {
+    id: "privacy_notes",
+    label: "Privacy notes",
+    type: "textarea",
+    required: false,
+    placeholder:
+      "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
+  },
 ];
 
 function fieldFor(id, required = false) {
@@ -261,6 +277,15 @@ export function buildSubmissionFieldModel(category) {
     category === "statuslines"
   ) {
     fieldIds.push("config_snippet");
+  }
+  if (
+    category === "hooks" ||
+    category === "mcp" ||
+    category === "skills" ||
+    category === "commands" ||
+    category === "statuslines"
+  ) {
+    fieldIds.push("safety_notes", "privacy_notes");
   }
 
   const fields = fieldIds

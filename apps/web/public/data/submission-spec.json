@@ -327,6 +327,20 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Execution, permissions, destructive actions, background workers, network access, or install risk."
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
         }
       ]
     },
@@ -501,6 +515,20 @@
           "type": "text",
           "required": false,
           "placeholder": "Claude, Codex, Windsurf, Gemini, Cursor, Generic AGENTS"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Execution, permissions, destructive actions, background workers, network access, or install risk."
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
         }
       ]
     },
@@ -636,6 +664,20 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Execution, permissions, destructive actions, background workers, network access, or install risk."
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
         }
       ]
     },
@@ -756,6 +798,20 @@
           "required": true,
           "render": "markdown",
           "placeholder": "Paste the complete usable prompt, config, script, or rule."
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Execution, permissions, destructive actions, background workers, network access, or install risk."
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
         }
       ]
     },
@@ -890,6 +946,20 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Execution, permissions, destructive actions, background workers, network access, or install risk."
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Local files, logs, credentials, telemetry, third-party data handling, or user data exposure."
         }
       ]
     },
@@ -1387,6 +1457,18 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false
         }
       ]
     },
@@ -1541,6 +1623,18 @@
           "label": "Tested platforms",
           "type": "text",
           "required": false
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false
         }
       ]
     },
@@ -1661,6 +1755,18 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false
         }
       ]
     },
@@ -1765,6 +1871,18 @@
           "type": "textarea",
           "required": true,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false
         }
       ]
     },
@@ -1884,6 +2002,18 @@
           "type": "textarea",
           "required": false,
           "render": "markdown"
+        },
+        {
+          "id": "safety_notes",
+          "label": "Safety notes",
+          "type": "textarea",
+          "required": false
+        },
+        {
+          "id": "privacy_notes",
+          "label": "Privacy notes",
+          "type": "textarea",
+          "required": false
         }
       ]
     },

@@ -622,6 +622,10 @@ function exampleValueForField(fieldId, category, label) {
       return "Claude Code, Codex, Cursor";
     case "prerequisites":
       return "- Node.js 20+\n- Claude-compatible MCP client";
+    case "safety_notes":
+      return "- Runs user-configured code with local workspace permissions";
+    case "privacy_notes":
+      return "- Reads local project files and may send selected context to the configured API";
     case "troubleshooting_section":
       return "If setup fails, verify the install command and source URL first.";
     case "installation_order":
@@ -730,6 +734,7 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       "Confirm category fit and required fields before opening the issue.",
       "Check for existing registry entries with the same source, slug, or title.",
       "Verify source URLs, install commands, and copied content before maintainer approval.",
+      "Add safety_notes/privacy_notes when a submission runs code, handles credentials, reads local data, writes externally, or uses background workers.",
       "Use source-backed or copyable-content submissions; do not request public /downloads hosting for community ZIPs.",
       "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
     ],

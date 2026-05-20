@@ -29,6 +29,8 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Analyze submission risk");
     expect(source).toContain("Precheck auto-import eligibility");
     expect(source).toContain("Check auto-import eligibility");
+    expect(source).toContain("auto-import-eligible");
+    expect(source).toContain("HeyClaude Submission Bot");
     expect(source).toContain("steps.auto_import.outputs.eligible == 'true'");
     expect(source).toContain("Create auto-import PR");
     expect(source).toContain("Maintainer review still gates merge");
@@ -257,6 +259,10 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "Submission security/safety review found critical blockers",
     );
+    expect(source).toContain("REQUEST_CHANGES");
+    expect(source).toContain("missing_safety_notes");
+    expect(source).toContain("missing_privacy_notes");
+    expect(source).toContain("review.body?.includes(REVIEW_MARKER)");
     expect(source).not.toContain("git checkout");
   });
 

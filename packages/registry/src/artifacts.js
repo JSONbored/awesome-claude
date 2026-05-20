@@ -60,6 +60,27 @@ function codeBlock(language, value) {
   return `\`\`\`${language}\n${normalized}\n\`\`\``;
 }
 
+function noteList(values) {
+  return Array.isArray(values)
+    ? values.map((value) => String(value || "").trim()).filter(Boolean)
+    : [];
+}
+
+function pushNoteSection(lines, title, values) {
+  const notes = noteList(values);
+  if (!notes.length) return;
+  lines.push("", `## ${title}`, ...notes.map((note) => `- ${note}`));
+}
+
+function buildEntryNoteFields(entry) {
+  const fields = {};
+  const safetyNotes = noteList(entry.safetyNotes);
+  const privacyNotes = noteList(entry.privacyNotes);
+  if (safetyNotes.length) fields.safetyNotes = safetyNotes;
+  if (privacyNotes.length) fields.privacyNotes = privacyNotes;
+  return fields;
+}
+
 function buildEntryBrandFields(entry) {
   const fields = {};
   for (const field of [
@@ -108,6 +129,9 @@ function buildEntryProvenanceFields(entry) {
 
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
+
+  pushNoteSection(lines, "Safety notes", entry.safetyNotes);
+  pushNoteSection(lines, "Privacy notes", entry.privacyNotes);
 
   if (entry.installCommand || entry.commandSyntax) {
     lines.push(
@@ -187,6 +211,7 @@ export function buildSearchEntries(entries) {
     tags: entry.tags ?? [],
     keywords: entry.keywords ?? [],
     author: entry.author || "",
+    ...buildEntryNoteFields(entry),
     ...buildEntryProvenanceFields(entry),
     ...buildEntryBrandFields(entry),
     dateAdded: entry.dateAdded || "",
@@ -593,6 +618,7 @@ export function buildRaycastEntries(entries) {
       ...buildEntryBrandFields(entry),
       installCommand: entry.installCommand || "",
       configSnippet: entry.configSnippet || "",
+      ...buildEntryNoteFields(entry),
       copyText: truncateText(copyText, RAYCAST_COPY_PREVIEW_LIMIT),
       copyTextLength: copyText.length,
       copyTextTruncated: copyText.length > RAYCAST_COPY_PREVIEW_LIMIT,
@@ -640,6 +666,7 @@ export function buildRaycastDetail(entry) {
     apiUrl: entryApiUrl(entry),
     seoTitle: entry.seoTitle || entry.title,
     seoDescription: entry.seoDescription || entry.description,
+    ...buildEntryNoteFields(entry),
     repoUrl: entry.repoUrl || "",
     documentationUrl: entry.documentationUrl || "",
   };

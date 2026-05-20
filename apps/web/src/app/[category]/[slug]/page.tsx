@@ -24,6 +24,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DetailToc } from "@/components/detail-toc";
 import { EntryCopyButton } from "@/components/entry-copy-button";
 import { EntryChecklistCard } from "@/components/entry-checklist-card";
+import { EntryNoticeCard } from "@/components/entry-notice-card";
 import { GitHubMark } from "@/components/icons/github-mark";
 import { JsonLd } from "@/components/json-ld";
 import { SnippetCard } from "@/components/snippet-card";
@@ -243,6 +244,10 @@ export default async function DetailPage({ params }: DetailPageProps) {
   const prerequisites = Array.isArray(entry.prerequisites)
     ? entry.prerequisites
     : [];
+  const safetyNotes = Array.isArray(entry.safetyNotes) ? entry.safetyNotes : [];
+  const privacyNotes = Array.isArray(entry.privacyNotes)
+    ? entry.privacyNotes
+    : [];
   const installationOrder = Array.isArray(entry.installationOrder)
     ? entry.installationOrder
     : [];
@@ -398,6 +403,26 @@ export default async function DetailPage({ params }: DetailPageProps) {
             </div>
           ) : null}
         </div>
+
+        {safetyNotes.length ? (
+          <EntryNoticeCard
+            eyebrow="Safety notes"
+            title="Review before running this entry"
+            description="These notes call out execution, permission, package, or account risks disclosed for this entry."
+            items={safetyNotes}
+            tone="safety"
+          />
+        ) : null}
+
+        {privacyNotes.length ? (
+          <EntryNoticeCard
+            eyebrow="Privacy notes"
+            title="Review data access before use"
+            description="These notes call out files, credentials, logs, telemetry, or third-party data handling disclosed for this entry."
+            items={privacyNotes}
+            tone="privacy"
+          />
+        ) : null}
 
         {primarySnippet && snippetTitle ? (
           <SnippetCard
