@@ -261,6 +261,11 @@ export const submissionBodySchema = z.object({
   honeypot: z.string().max(256).optional().default(""),
 });
 
+export const submissionPreflightBodySchema = z.object({
+  fields: z.record(z.string(), z.unknown()).optional().default({}),
+  honeypot: z.string().max(256).optional().default(""),
+});
+
 export const downloadQuerySchema = z.object({
   asset: z.string().trim().max(256),
 });
@@ -728,6 +733,24 @@ export const apiRouteDefinitions = {
       limit: 8,
       windowMs: 60_000,
       binding: "API_STRICT_RATE_LIMIT",
+    },
+  }),
+  "submissions.preflight": route({
+    id: "submissions.preflight",
+    method: "POST",
+    path: "/api/submissions/preflight",
+    summary: "Preflight a content submission draft",
+    description:
+      "Runs read-only schema, duplicate, source, package, and safety/privacy checks before a contributor opens a public GitHub submission issue. This endpoint never creates issues, labels, branches, pull requests, registry content, or package artifacts.",
+    tags: ["Submissions"],
+    originCheck: true,
+    bodySchema: submissionPreflightBodySchema,
+    bodyLimitBytes: 64 * 1024,
+    rateLimit: {
+      scope: "submissions-preflight",
+      limit: 30,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
     },
   }),
   download: route({

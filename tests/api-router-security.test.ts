@@ -252,6 +252,9 @@ describe("central API router security", () => {
     expect(apiRouteDefinitions["submissions.create"].rateLimit?.binding).toBe(
       "API_STRICT_RATE_LIMIT",
     );
+    expect(
+      apiRouteDefinitions["submissions.preflight"].rateLimit?.binding,
+    ).toBe("API_DYNAMIC_RATE_LIMIT");
     expect(apiRouteDefinitions["registry.search"].rateLimit?.binding).toBe(
       "API_REGISTRY_RATE_LIMIT",
     );

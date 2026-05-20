@@ -12,7 +12,10 @@ import {
 import { categorySpec } from "@heyclaude/registry";
 import { categoryLabels, siteConfig } from "@/lib/site";
 import { SubmitPreviewCard } from "@/components/submit-preview-card";
-import { SubmitReadinessCard } from "@/components/submit-readiness-card";
+import {
+  SubmitReadinessCard,
+  type SubmissionPreflightSummary,
+} from "@/components/submit-readiness-card";
 import { buildSubmissionFieldModel } from "@heyclaude/registry/submission-spec";
 
 type SubmissionCategorySpec = {
@@ -66,6 +69,10 @@ type SubmitStatus =
   | { state: "submitting" }
   | { state: "success"; issueUrl: string }
   | { state: "error"; message: string; fallbackUrl: string };
+
+type SubmissionPreflightResponse = SubmissionPreflightSummary & {
+  ok?: boolean;
+};
 
 function getApiErrorPayloadMessage(result: {
   error?: string | { code?: string; message?: string; details?: unknown };
@@ -180,6 +187,9 @@ export function SubmitForm() {
   const [honeypot, setHoneypot] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>({
+    state: "idle",
+  });
+  const [preflight, setPreflight] = useState<SubmissionPreflightSummary>({
     state: "idle",
   });
   const turnstileRef = useRef<HTMLDivElement | null>(null);
@@ -477,6 +487,65 @@ export function SubmitForm() {
     : 0;
 
   const isReady = Boolean(category) && missingReadinessItems.length === 0;
+  const preflightBlocksSubmission =
+    preflight.state === "success" &&
+    (preflight.routeSuggestion === "fix_required" ||
+      preflight.routeSuggestion === "tools_form" ||
+      Boolean(preflight.blockers?.length));
+  const canSubmit =
+    isReady &&
+    !preflightBlocksSubmission &&
+    submitStatus.state !== "submitting";
+
+  useEffect(() => {
+    if (!category && !toolName && !normalizedSlug) {
+      setPreflight({ state: "idle" });
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeout = window.setTimeout(async () => {
+      setPreflight((current) => ({
+        ...current,
+        state: "loading",
+      }));
+      try {
+        const response = await fetch("/api/submissions/preflight", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            fields: submissionFieldValues,
+            honeypot,
+          }),
+          signal: controller.signal,
+        });
+        const result = (await response
+          .json()
+          .catch(() => ({}))) as SubmissionPreflightResponse;
+        if (!response.ok || result.ok !== true) {
+          setPreflight({ state: "error" });
+          return;
+        }
+        setPreflight({
+          state: "success",
+          routeSuggestion: result.routeSuggestion,
+          blockers: result.blockers ?? [],
+          warnings: result.warnings ?? [],
+          duplicates: result.duplicates ?? [],
+          risk: result.risk,
+          nextAction: result.nextAction,
+        });
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setPreflight({ state: "error" });
+      }
+    }, 350);
+
+    return () => {
+      controller.abort();
+      window.clearTimeout(timeout);
+    };
+  }, [category, honeypot, normalizedSlug, submissionFieldValues, toolName]);
 
   const resetTurnstile = () => {
     setTurnstileToken("");
@@ -487,7 +556,7 @@ export function SubmitForm() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!isReady || submitStatus.state === "submitting") return;
+    if (!canSubmit) return;
 
     setSubmitStatus({ state: "submitting" });
     try {
@@ -1056,25 +1125,28 @@ export function SubmitForm() {
         category={category}
         items={readinessItems}
         sourceWarning={sourceWarning}
+        preflight={preflight}
       />
 
-      <SubmitPreviewCard
-        title={toolName}
-        slug={normalizedSlug}
-        category={category}
-        author={author}
-        description={description}
-        cardDescription={cardDescription}
-        tags={tags}
-        githubUrl={githubUrl}
-        docsUrl={docsUrl}
-        brandName={brandName}
-        brandDomain={brandDomain}
-        installCommand={installCommand}
-        assetContent={assetContent || usageSnippet || installCommand}
-        readinessScore={readinessScore}
-        sourceWarning={sourceWarning}
-      />
+      {!preflightBlocksSubmission ? (
+        <SubmitPreviewCard
+          title={toolName}
+          slug={normalizedSlug}
+          category={category}
+          author={author}
+          description={description}
+          cardDescription={cardDescription}
+          tags={tags}
+          githubUrl={githubUrl}
+          docsUrl={docsUrl}
+          brandName={brandName}
+          brandDomain={brandDomain}
+          installCommand={installCommand}
+          assetContent={assetContent || usageSnippet || installCommand}
+          readinessScore={readinessScore}
+          sourceWarning={sourceWarning}
+        />
+      ) : null}
 
       <div className="rounded-xl border border-border bg-background px-4 py-3 text-xs leading-6 text-muted-foreground">
         This creates a reviewable GitHub issue from the website. If the direct
@@ -1123,7 +1195,7 @@ export function SubmitForm() {
       <button
         type="submit"
         className="submit-primary-button"
-        disabled={!isReady || submitStatus.state === "submitting"}
+        disabled={!canSubmit}
       >
         {submitStatus.state === "submitting"
           ? "Submitting..."
