@@ -448,9 +448,12 @@ describe("submission automation workflows", () => {
     expect(source).toContain("apps/web/public/downloads");
     expect(source).toContain("content/skills/.+\\.zip$");
     expect(source).toContain("content/mcp/.+\\.mcpb$");
-    expect(source).toContain("Regenerate README for pull request validation");
-    expect(source).toContain("pnpm generate:readme");
+    expect(source).toContain("Build registry artifacts");
+    expect(source).toContain("pnpm --filter web run prebuild");
     expect(source).toContain("pnpm validate:readme");
+    expect(source).toContain(
+      "git diff --exit-code apps/web/public/data apps/web/src/generated README.md",
+    );
   });
 
   it("uses generated README refresh body metadata instead of a static PR body", () => {
@@ -776,14 +779,14 @@ description: Example description
     );
   });
 
-  it("keeps required validation checks wired for README and changelog PRs", () => {
+  it("keeps required validation classification wired for README and changelog PRs", () => {
     const source = fs.readFileSync(
-      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs"),
       "utf8",
     );
 
-    expect(source).toContain('- "README.md"');
-    expect(source).toContain('- "CHANGELOG.md"');
+    expect(source).toContain('"README.md"');
+    expect(source).toContain("/^.*\\.md$/");
   });
 
   it("does not document GitHub PATs in MCP process arguments", () => {
