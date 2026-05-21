@@ -2,6 +2,7 @@
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import matter from "gray-matter";
 
 const STATUS_BY_CODE = {
   A: "added",
@@ -183,52 +184,13 @@ function stringList(value) {
     .filter(Boolean);
 }
 
-function parseScalar(value) {
-  const text = normalizeText(value);
-  if (/^(true|false)$/i.test(text)) return text.toLowerCase() === "true";
-  const quoted = text.match(/^(['"])([\s\S]*)\1$/);
-  return quoted ? quoted[2] : text;
-}
-
-function parseFrontmatterBlock(block) {
-  const data = {};
-  let listKey = "";
-  for (const rawLine of block.split(/\r?\n/)) {
-    const line = rawLine.replace(/\s+#.*$/, "");
-    if (!line.trim()) continue;
-
-    const listItem = line.match(/^\s*-\s*(.*)$/);
-    if (listItem && listKey) {
-      if (!Array.isArray(data[listKey])) data[listKey] = [];
-      data[listKey].push(parseScalar(listItem[1]));
-      continue;
-    }
-
-    const field = line.match(/^([A-Za-z0-9_-]+):(?:\s*(.*))?$/);
-    if (!field) {
-      listKey = "";
-      continue;
-    }
-
-    const [, key, value = ""] = field;
-    if (value === "") {
-      data[key] = [];
-      listKey = key;
-    } else {
-      data[key] = parseScalar(value);
-      listKey = "";
-    }
-  }
-  return data;
-}
-
 function parseMdxFrontmatter(content) {
-  const match = String(content).match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*/);
-  if (!match) return { data: {}, content };
-  return {
-    data: parseFrontmatterBlock(match[1]),
-    content: content.slice(match[0].length),
-  };
+  try {
+    const parsed = matter(String(content));
+    return { data: parsed.data || {}, content: parsed.content || "" };
+  } catch {
+    return { data: {}, content: String(content) };
+  }
 }
 
 function urlPathname(value) {
