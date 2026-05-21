@@ -21,6 +21,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { DirectoryEntry } from "@/lib/content";
+import {
+  countTrustFilterChips,
+  matchesUtilityFilter,
+  normalizeUtilityFilter as normalizeUtilityFilterValue,
+  trustFilterChips,
+  utilityFilterOptions,
+} from "@/lib/browse-utility-filters";
 import { useBrowseUrlSync } from "@/hooks/use-browse-url-sync";
 import { useClientId } from "@/hooks/use-client-id";
 import { useLoggedAsync } from "@/hooks/use-logged-async";
@@ -46,23 +53,6 @@ const COLLECTION_QUERY_PARAM = "collection";
 const VOTE_QUERY_BATCH_SIZE = 120;
 const VOTE_QUERY_MAX_ATTEMPTS = 3;
 const VOTE_QUERY_RETRY_DELAYS_MS = [250, 900, 1800] as const;
-const utilityFilterOptions = [
-  { value: "all", label: "All Utility" },
-  { value: "installable", label: "Installable" },
-  { value: "trusted-package", label: "Trusted Package" },
-  { value: "source-backed", label: "Source-backed" },
-  { value: "brand-metadata", label: "Brand Metadata" },
-  { value: "checksum", label: "Checksum" },
-  { value: "adapter", label: "Adapter" },
-  { value: "reviewed", label: "Reviewed" },
-  { value: "verified", label: "Verified/Prod" },
-  { value: "draft", label: "Draft" },
-  { value: "hook-trigger", label: "Hook Trigger" },
-  { value: "prerequisites", label: "Prerequisites" },
-  { value: "safety-notes", label: "Safety Notes" },
-  { value: "privacy-notes", label: "Privacy Notes" },
-  { value: "troubleshooting", label: "Troubleshooting" },
-] as const;
 const platformFilterOptions = [
   { value: "all", label: "All Platforms" },
   ...categorySpec.defaultTestedPlatforms.map((platform) => ({
@@ -84,14 +74,7 @@ function normalizeCategory(value?: string) {
   return siteConfig.categoryOrder.includes(normalized) ? normalized : "all";
 }
 
-function normalizeUtilityFilter(value?: string) {
-  const normalized = String(value || "")
-    .trim()
-    .toLowerCase();
-  return utilityFilterOptions.some((option) => option.value === normalized)
-    ? normalized
-    : "all";
-}
+const normalizeUtilityFilter = normalizeUtilityFilterValue;
 
 function normalizePlatformFilter(value?: string) {
   const normalized = String(value || "")
@@ -127,48 +110,6 @@ function normalizeSortMode(value?: string) {
   )
     ? normalized
     : "popular";
-}
-
-function matchesUtilityFilter(entry: DirectoryEntry, filter: string) {
-  switch (filter) {
-    case "installable":
-      return Boolean(
-        entry.installable || entry.installCommand || entry.downloadUrl,
-      );
-    case "trusted-package":
-      return (
-        entry.downloadTrust === "first-party" || entry.packageVerified === true
-      );
-    case "source-backed":
-      return entry.trustSignals?.sourceStatus === "available";
-    case "brand-metadata":
-      return Boolean(entry.brandDomain || entry.brandIconUrl);
-    case "checksum":
-      return entry.trustSignals?.checksumPresent === true;
-    case "adapter":
-      return entry.trustSignals?.adapterGenerated === true;
-    case "reviewed":
-      return Boolean(entry.reviewedBy || entry.claimStatus === "verified");
-    case "verified":
-      return (
-        entry.verificationStatus === "validated" ||
-        entry.verificationStatus === "production"
-      );
-    case "draft":
-      return entry.verificationStatus === "draft";
-    case "hook-trigger":
-      return Boolean(entry.trigger);
-    case "prerequisites":
-      return Boolean(entry.hasPrerequisites || entry.prerequisites?.length);
-    case "safety-notes":
-      return Boolean(entry.safetyNotes?.length);
-    case "privacy-notes":
-      return Boolean(entry.privacyNotes?.length);
-    case "troubleshooting":
-      return entry.hasTroubleshooting === true;
-    default:
-      return true;
-  }
 }
 
 function matchesPlatformFilter(entry: DirectoryEntry, filter: string) {
@@ -408,6 +349,15 @@ export function BrowseDirectory({
       cancelled = true;
     };
   }, [allEntries, clientId]);
+
+  const trustChipCounts = useMemo(
+    () => countTrustFilterChips(allEntries),
+    [allEntries],
+  );
+
+  const handleTrustChipToggle = (value: string) => {
+    setUtilityFilter((current) => (current === value ? "all" : value));
+  };
 
   const filteredEntries = useMemo(() => {
     const matched = allEntries.filter((entry) => {
@@ -742,6 +692,44 @@ export function BrowseDirectory({
             <SelectItem value="title">A-Z</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+
+      <div
+        className="flex flex-wrap items-center gap-2"
+        role="group"
+        aria-label="Trust quick filters"
+      >
+        {trustFilterChips.map((chip) => {
+          const isActive = utilityFilter === chip.value;
+          const count = trustChipCounts[chip.value] ?? 0;
+          return (
+            <button
+              key={chip.value}
+              type="button"
+              onClick={() => handleTrustChipToggle(chip.value)}
+              aria-pressed={isActive}
+              title={chip.description}
+              className={
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-medium transition-colors " +
+                (isActive
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-background text-muted-foreground hover:bg-accent hover:text-accent-foreground")
+              }
+            >
+              <span>{chip.label}</span>
+              <span
+                className={
+                  "rounded-full px-1.5 text-[10px] tabular-nums " +
+                  (isActive
+                    ? "bg-primary-foreground/15 text-primary-foreground"
+                    : "bg-muted text-muted-foreground")
+                }
+              >
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-between gap-4 text-sm text-muted-foreground">
