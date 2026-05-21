@@ -3216,7 +3216,7 @@
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "c31834963562c486533afeca2e347ef585678fb81820bd7a550cb16cd4235abe"
+      "sha256": "7252c1287fbffd1fd23e678f22f47da70d698ca860b997fe3186836d0d051a0f"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
@@ -3236,7 +3236,7 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "ac935831ace64ad91916f38e95badbf70971d1a079f86377d295e22a3ea601ff"
+      "sha256": "53a3210027f8582485f2d071957dd124bc615a13d0ec960020b99b148a93546e"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
@@ -3271,7 +3271,7 @@
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "854cfcba6f6472fbd72ac0fbc218220da36b3abaf039781de03d460e8ee403a9"
+      "sha256": "ed5dafac23d346ecea1dcb67cbfea8434d681592430930e5b9b6afe3817ab6f8"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -8166,17 +8166,17 @@
     "entries/hooks/retro-daily.json": {
       "path": "/data/entries%2Fhooks%2Fretro-daily.json",
       "type": "json",
-      "sha256": "9b67bcd22a982e07e927030431ba8931d0b96a25174fb8a1df73bda0e0766bfb"
+      "sha256": "e5506753338938dc89d3e3fb2c296fa3809f5b52ada911f67a159d536f98bbc3"
     },
     "llms/hooks/retro-daily.txt": {
       "path": "/data/llms%2Fhooks%2Fretro-daily.txt",
       "type": "text",
-      "sha256": "2b41240160ddd258a206fd1e7b895678d29e6c13801b9a218c8d8377b9dd7608"
+      "sha256": "f777a96e326624fdbca1e5d28a2f3364cc8f1828bccec09d082e12a9aa617618"
     },
     "raycast/hooks/retro-daily.json": {
       "path": "/data/raycast%2Fhooks%2Fretro-daily.json",
       "type": "json",
-      "sha256": "dec3d11daea1518bda4a0aa3c23485122d43b4592826320a6d66911fa72cd970"
+      "sha256": "81adb243a2c0bdcb87e20d5fe35d1c88b00e7ca45b54af15d144daa5d2b4ab6a"
     },
     "entries/tools/roo-code.json": {
       "path": "/data/entries%2Ftools%2Froo-code.json",

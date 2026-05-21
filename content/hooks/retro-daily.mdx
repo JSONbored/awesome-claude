@@ -65,8 +65,8 @@ scriptBody: |-
   #!/bin/bash
   # startup.sh — Single SessionStart hook that runs all startup scripts sequentially.
   # Each step runs independently (one failure does not skip the rest). Per-step
-  # output + timing mirrored to /tmp/claude-startup.log for debugging what
-  # Claude Code's hook pipeline actually receives.
+  # output + timing mirrored to a private ~/.claude/metrics/startup.log for
+  # debugging what Claude Code's hook pipeline actually receives.
   # NOTE: no `set -e` — we want every step to execute even if an earlier one errors.
   #
   # ─── How SessionStart hook output reaches the user vs. the LLM ───────────────
@@ -97,7 +97,18 @@ scriptBody: |-
 
   source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/_paths.sh"
 
-  DEBUG_LOG="/tmp/claude-startup.log"
+  DEBUG_LOG_DIR="${RETRO_DAILY_HOME:-$HOME/.claude/metrics}"
+  previous_umask=$(umask)
+  umask 077
+  mkdir -p "$DEBUG_LOG_DIR" 2>/dev/null || true
+  DEBUG_LOG="$DEBUG_LOG_DIR/startup.log"
+  touch "$DEBUG_LOG" 2>/dev/null || DEBUG_LOG="/dev/null"
+  umask "$previous_umask"
+  if [ "$DEBUG_LOG" != "/dev/null" ]; then
+    chmod 700 "$DEBUG_LOG_DIR" 2>/dev/null || true
+    chmod 600 "$DEBUG_LOG" 2>/dev/null || true
+  fi
+
   {
     echo "===== startup.sh invoked at $(date -u +%Y-%m-%dT%H:%M:%SZ) ====="
     echo "TERM=$TERM  PWD=$PWD  USER=${USER:-?}"
@@ -250,7 +261,7 @@ robotsFollow: true
 
 ## Security and privacy disclosure
 
-Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`.
+Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`. The startup debug log is created at `~/.claude/metrics/startup.log` with user-only file permissions when possible.
 
 By default, `scout.sh` and `tag-sessions.sh` can start detached, sandboxed `claude -p` background workers. The scout worker uses `WebSearch` and `Write` to research weak metrics, writes temporary results to `/tmp`, validates JSON, then moves the results into `~/.claude/metrics`. The session tagger builds a truncated digest from recent local session messages and asks `claude -p` to label those sessions; it denies network access and writes temporary results to `/tmp` before moving them into `~/.claude/metrics`.
 
