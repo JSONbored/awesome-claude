@@ -43,7 +43,7 @@ jobs:
 
       - name: Setup pnpm
         if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
-        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v4 action lineage
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6 action lineage
 
       - name: Setup Node.js
         if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
