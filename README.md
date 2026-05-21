@@ -2,8 +2,8 @@
   <tr>
     <td width="58%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="apps/web/public/heyclaude-wordmark-dark.svg">
-        <img src="apps/web/public/heyclaude-wordmark.svg" alt="HeyClaude" width="260">
+        <source media="(prefers-color-scheme: dark)" srcset="https://heyclau.de/heyclaude-wordmark-dark.svg">
+        <img src="https://heyclau.de/heyclaude-wordmark.svg" alt="HeyClaude" width="260">
       </picture>
       <h3>Curated Claude workflow infrastructure.</h3>
       <p>
