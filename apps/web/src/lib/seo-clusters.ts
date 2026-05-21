@@ -172,6 +172,58 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     tags: ["review", "testing", "git", "automation", "quality-gate"],
     itemLimit: 18,
   },
+  {
+    slug: "claude-rules-for-engineering-teams",
+    title: "Claude rules for engineering teams",
+    eyebrow: "Claude rules",
+    description:
+      "CLAUDE.md and rule resources that codify TypeScript, React, security, and performance expectations for engineering teams.",
+    seoTitle: "Claude rules for engineering teams",
+    seoDescription:
+      "Browse Claude rules for engineering teams covering TypeScript, React, security, OWASP, and performance expectations across language and framework stacks.",
+    categories: ["rules"],
+    tags: ["typescript", "react", "security", "performance", "owasp"],
+    itemLimit: 16,
+  },
+  {
+    slug: "mcp-servers-for-databases-and-data",
+    title: "MCP servers for databases and data workflows",
+    eyebrow: "Data MCP servers",
+    description:
+      "MCP servers for Claude teams working with databases, analytics platforms, and structured data pipelines.",
+    seoTitle: "MCP servers for databases and data workflows",
+    seoDescription:
+      "Find Claude MCP servers for databases, analytics, and structured data workflows covering project data, infrastructure, deployment, and operations integrations.",
+    categories: ["mcp"],
+    tags: [
+      "database",
+      "project-management",
+      "infrastructure",
+      "deployment",
+      "devops",
+    ],
+    itemLimit: 14,
+  },
+  {
+    slug: "slash-commands-for-claude-code",
+    title: "Slash commands for Claude Code",
+    eyebrow: "Slash commands",
+    description:
+      "Reusable slash commands for testing, documentation, refactoring, performance, and everyday Claude Code workflows.",
+    seoTitle: "Slash commands for Claude Code",
+    seoDescription:
+      "Browse Claude Code slash commands for testing, documentation, refactoring, performance, security audits, and everyday workflow automation across teams.",
+    categories: ["commands"],
+    tags: [
+      "testing",
+      "documentation",
+      "refactoring",
+      "performance",
+      "security",
+      "automation",
+    ],
+    itemLimit: 16,
+  },
 ];
 
 function scoreItem(
