@@ -55,7 +55,11 @@ function tally(
     if (!entryMatchesFilters(entry, filters, except)) continue;
     const bucket = bucketFor(entry);
     if (Array.isArray(bucket)) {
-      for (const value of bucket) increment(buckets, value);
+      // Dedupe per-entry so a document with the same value listed
+      // twice (e.g. duplicate platform tags after normalization)
+      // contributes to the facet count once, matching how single-string
+      // buckets behave.
+      for (const value of new Set(bucket)) increment(buckets, value);
     } else if (typeof bucket === "string") {
       increment(buckets, bucket);
     }
