@@ -1690,6 +1690,14 @@
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
       "scriptLanguage": "bash",
       "trigger": "PostToolUse",
+      "safetyNotes": [
+        "Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc.",
+        "Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling."
+      ],
+      "privacyNotes": [
+        "Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections.",
+        "Generated documentation may include source comments, API details, project names, and README content from the local workspace."
+      ],
       "hasPrerequisites": false,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false,
@@ -4549,6 +4557,7 @@
       ],
       "readingTime": 4,
       "difficultyScore": 0,
+      "documentationUrl": "https://svelte.dev/docs",
       "cardDescription": "Automatically compiles and validates Svelte components when they are modified.",
       "installable": true,
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
@@ -4557,6 +4566,14 @@
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
       "scriptLanguage": "bash",
       "trigger": "PostToolUse",
+      "safetyNotes": [
+        "Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project.",
+        "Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing."
+      ],
+      "privacyNotes": [
+        "Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals.",
+        "Prints component statistics and validation output to the local Claude Code hook output stream."
+      ],
       "hasPrerequisites": false,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false,
@@ -4580,8 +4597,9 @@
         "packageTrust": null,
         "packageChecksum": "",
         "checksumPresent": false,
-        "sourceUrlCount": 1,
+        "sourceUrlCount": 2,
         "sourceUrls": [
+          "https://svelte.dev/docs",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
         "sourceStatus": "available",

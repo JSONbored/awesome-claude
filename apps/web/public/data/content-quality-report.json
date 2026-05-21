@@ -5,8 +5,8 @@
   "count": 386,
   "summary": {
     "averageScore": 81,
-    "noExternalSourceCount": 102,
-    "firstPartyEditorialCount": 100,
+    "noExternalSourceCount": 101,
+    "firstPartyEditorialCount": 99,
     "unprovenancedSourceCount": 1,
     "missingSeoCount": 0,
     "duplicateBodyGroupCount": 0
@@ -9967,23 +9967,26 @@
       "slug": "svelte-component-compiler",
       "title": "Svelte Component Compiler - Hooks",
       "scores": {
-        "total": 78,
+        "total": 80,
         "usefulness": 85,
-        "source": 30,
+        "source": 40,
         "copyability": 90,
         "freshness": 85,
         "seo": 100
       },
       "provenance": {
-        "sourceQuality": "local-editorial-source",
-        "hasExternalSource": false,
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
         "hasRepository": false,
-        "hasDocumentation": false,
+        "hasDocumentation": true,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
+          "https://svelte.dev/docs",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
-        "externalSourceUrls": []
+        "externalSourceUrls": [
+          "https://svelte.dev/docs"
+        ]
       },
       "warnings": []
     },

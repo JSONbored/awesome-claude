@@ -5385,10 +5385,18 @@
       "author": "JSONbored",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
+      "safetyNotes": [
+        "Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc.",
+        "Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling."
+      ],
+      "privacyNotes": [
+        "Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections.",
+        "Generated documentation may include source comments, API details, project names, and README content from the local workspace."
+      ],
       "copyText": "Trigger:\nPostToolUse\n\nInstall:\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh\n\nClaude config:\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n\nHook script:\n#!/usr/bin/env bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if it's a documentation-relevant file\nif [[ \"$FILE_PATH\" == *.js ]] || [[ \"$FILE_PATH\" == *.jsx ]] || [[ \"$FILE_PATH\" == *.ts ]] || [[ \"$FILE_PATH\" == *.tsx ]] || [[ \"$FILE_PATH\" == *.py ]]...",
       "copyTextLength": 24422,
       "copyTextTruncated": true,
-      "detailMarkdown": "# Documentation Generator - Hooks\n\nAutomatically generates and updates project documentation from code comments, README files, and API definitions. This PostToolUse hook provides real-time documentation generation when code files are modified, supporting multiple programming languages and documentation formats.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
+      "detailMarkdown": "# Documentation Generator - Hooks\n\nAutomatically generates and updates project documentation from code comments, README files, and API definitions. This PostToolUse hook provides real-time documentation generation when code files are modified, supporting multiple programming languages and documentation formats.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc.\n- Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling.\n\n## Privacy notes\n- Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections.\n- Generated documentation may include source comments, API details, project names, and README content from the local workspace.\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
       "detailUrl": "/data/raycast/hooks/documentation-generator.json",
       "webUrl": "https://heyclau.de/hooks/documentation-generator",
       "canonicalUrl": "https://heyclau.de/hooks/documentation-generator",
@@ -11794,10 +11802,18 @@
       "author": "JSONbored",
       "installCommand": "",
       "configSnippet": "{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"$CLAUDE_PROJECT_DIR/.claude/statuslines/python-rich-statusline.py\",\n    \"refreshInterval\": 1000\n  }\n}",
+      "safetyNotes": [
+        "Runs as a Claude Code statusline command on refresh and depends on the local Python/Rich environment being available.",
+        "Does not perform network calls or write files, but statusline failures may affect prompt/status rendering until dependencies are installed."
+      ],
+      "privacyNotes": [
+        "Reads Claude Code statusline JSON from stdin, including model, workspace path, token usage, estimated cost, and Git branch when present.",
+        "Displays workspace path, Git branch, token usage, and cost information in the local terminal statusline."
+      ],
       "copyText": "Claude config:\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"$CLAUDE_PROJECT_DIR/.claude/statuslines/python-rich-statusline.py\",\n    \"refreshInterval\": 1000\n  }\n}\n\nUsage:\n🤖 claude-sonnet-4.5 │ 📁 ~/projects/app │  main │ 🎯 12,345 │ 💰 $0.234\n\nAsset:\n#!/usr/bin/env python3\n\nimport sys\nimport json\nfrom rich.console import Console\nfrom rich.text import Text\n\nconsole = Console()\n\n# Read JSON from stdin\ntry:\n    data = json.load(sys.stdin)\nexcept json.JSONDecodeError:\n    console.print(\"[red]Error: Invalid JSON input[/red]\")\n    sys.exit(1)\n\n# Extract session data\nmodel = data.get('model', 'unknown')\nworkspace = data.get('workspace', {}).get('path', '~').replace(f\"{os.path.expanduser('~')}\", '~')\ntokens = data.get('session', {}).get('totalTokens', 0)\ncost = data.get('session',...",
       "copyTextLength": 1765,
       "copyTextTruncated": true,
-      "detailMarkdown": "# Python Rich Statusline - Statuslines\n\nFeature-rich statusline using Python's Rich library for beautiful formatting, progress bars, and real-time token cost tracking\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Config\n```json\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"$CLAUDE_PROJECT_DIR/.claude/statuslines/python-rich-statusline.py\",\n    \"refreshInterval\": 1000\n  }\n}\n```\n\n## Usage\n🤖 claude-sonnet-4.5 │ 📁 ~/projects/app │  main │ 🎯 12,345 │ 💰 $0.234",
+      "detailMarkdown": "# Python Rich Statusline - Statuslines\n\nFeature-rich statusline using Python's Rich library for beautiful formatting, progress bars, and real-time token cost tracking\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Runs as a Claude Code statusline command on refresh and depends on the local Python/Rich environment being available.\n- Does not perform network calls or write files, but statusline failures may affect prompt/status rendering until dependencies are installed.\n\n## Privacy notes\n- Reads Claude Code statusline JSON from stdin, including model, workspace path, token usage, estimated cost, and Git branch when present.\n- Displays workspace path, Git branch, token usage, and cost information in the local terminal statusline.\n\n## Config\n```json\n{\n  \"statusLine\": {\n    \"type\": \"command\",\n    \"command\": \"$CLAUDE_PROJECT_DIR/.claude/statuslines/python-rich-statusline.py\",\n    \"refreshInterval\": 1000\n  }\n}\n```\n\n## Usage\n🤖 claude-sonnet-4.5 │ 📁 ~/projects/app │  main │ 🎯 12,345 │ 💰 $0.234",
       "detailUrl": "/data/raycast/statuslines/python-rich-statusline.json",
       "webUrl": "https://heyclau.de/statuslines/python-rich-statusline",
       "canonicalUrl": "https://heyclau.de/statuslines/python-rich-statusline",
@@ -13512,10 +13528,18 @@
       "author": "JSONbored",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
+      "safetyNotes": [
+        "Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project.",
+        "Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing."
+      ],
+      "privacyNotes": [
+        "Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals.",
+        "Prints component statistics and validation output to the local Claude Code hook output stream."
+      ],
       "copyText": "Trigger:\nPostToolUse\n\nInstall:\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n\nClaude config:\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n\nHook script:\n#!/bin/bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if this is a Svelte component file\nif [[ \"$FILE_PATH\" == *.svelte ]]; then\n    echo \"🔥 Svelte Component Compiler - Validating Svelte component...\"\n    echo \"📄 Component: $FILE_PATH\"\n\n    #...",
       "copyTextLength": 26183,
       "copyTextTruncated": true,
-      "detailMarkdown": "# Svelte Component Compiler - Hooks\n\nAutomatically compiles and validates Svelte components when they are modified.\n\n## Trust\n- Source: source not provided\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
+      "detailMarkdown": "# Svelte Component Compiler - Hooks\n\nAutomatically compiles and validates Svelte components when they are modified.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project.\n- Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing.\n\n## Privacy notes\n- Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals.\n- Prints component statistics and validation output to the local Claude Code hook output stream.\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "detailUrl": "/data/raycast/hooks/svelte-component-compiler.json",
       "webUrl": "https://heyclau.de/hooks/svelte-component-compiler",
       "canonicalUrl": "https://heyclau.de/hooks/svelte-component-compiler",
@@ -13524,7 +13548,7 @@
       "seoTitle": "Svelte Component Compiler - Hooks",
       "seoDescription": "Automatically compiles and validates Svelte components when they are modified. This PostToolUse hook provides comprehensive Svelte component validation with ...",
       "repoUrl": "",
-      "documentationUrl": "",
+      "documentationUrl": "https://svelte.dev/docs",
       "downloadTrust": null,
       "verificationStatus": "",
       "platformCompatibility": []

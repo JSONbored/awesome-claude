@@ -52,6 +52,14 @@
       "Terminal with truecolor support (24-bit color, recommended for best Rich rendering - set COLORTERM=truecolor)",
       "Git command (optional, for Git branch display - statusline works without Git)"
     ],
+    "safetyNotes": [
+      "Runs as a Claude Code statusline command on refresh and depends on the local Python/Rich environment being available.",
+      "Does not perform network calls or write files, but statusline failures may affect prompt/status rendering until dependencies are installed."
+    ],
+    "privacyNotes": [
+      "Reads Claude Code statusline JSON from stdin, including model, workspace path, token usage, estimated cost, and Git branch when present.",
+      "Displays workspace path, Git branch, token usage, and cost information in the local terminal statusline."
+    ],
     "hasPrerequisites": false,
     "hasTroubleshooting": true,
     "hasBreakingChanges": false,

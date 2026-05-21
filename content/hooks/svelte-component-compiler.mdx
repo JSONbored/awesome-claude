@@ -12,6 +12,7 @@ seoDescription: >-
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2025-09-19"
+documentationUrl: "https://svelte.dev/docs"
 installable: true
 installCommand: >-
   mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh &&
@@ -202,6 +203,12 @@ scriptBody: |-
 
   exit 0
 trigger: PostToolUse
+safetyNotes:
+  - Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project.
+  - Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing.
+privacyNotes:
+  - Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals.
+  - Prints component statistics and validation output to the local Claude Code hook output stream.
 tags:
   - svelte
   - components

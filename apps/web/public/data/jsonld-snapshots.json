@@ -26611,8 +26611,11 @@
           "isPartOf": {
             "@id": "https://heyclau.de/#website"
           },
-          "sameAs": [],
+          "sameAs": [
+            "https://svelte.dev/docs"
+          ],
           "isBasedOn": [
+            "https://svelte.dev/docs",
             "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
           ],
           "codeRepository": null,

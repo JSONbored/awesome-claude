@@ -8,6 +8,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/statuslines/python-rich-statusline
 - Source URLs: https://rich.readthedocs.io/, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/python-rich-statusline.mdx
+- Safety notes: Runs as a Claude Code statusline command on refresh and depends on the local Python/Rich environment being available., Does not perform network calls or write files, but statusline failures may affect prompt/status rendering until dependencies are installed.
+- Privacy notes: Reads Claude Code statusline JSON from stdin, including model, workspace path, token usage, estimated cost, and Git branch when present., Displays workspace path, Git branch, token usage, and cost information in the local terminal statusline.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -20,6 +22,12 @@ Feature-rich statusline using Python's Rich library for beautiful formatting, pr
 - cost-tracking
 - progress
 - colorful
+## Safety Notes
+- Runs as a Claude Code statusline command on refresh and depends on the local Python/Rich environment being available.
+- Does not perform network calls or write files, but statusline failures may affect prompt/status rendering until dependencies are installed.
+## Privacy Notes
+- Reads Claude Code statusline JSON from stdin, including model, workspace path, token usage, estimated cost, and Git branch when present.
+- Displays workspace path, Git branch, token usage, and cost information in the local terminal statusline.
 ## Content
 ## Features
 - Rich library for beautiful terminal formatting

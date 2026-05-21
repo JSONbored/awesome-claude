@@ -18807,7 +18807,7 @@
       "description": "Automatically compiles and validates Svelte components when they are modified.",
       "url": "https://heyclau.de/hooks/svelte-component-compiler",
       "websiteUrl": "",
-      "documentationUrl": "",
+      "documentationUrl": "https://svelte.dev/docs",
       "repoUrl": "",
       "pricingModel": "",
       "disclosure": "editorial",
@@ -18818,17 +18818,20 @@
         "validation",
         "frontend"
       ],
-      "qualityScore": 78,
+      "qualityScore": 80,
       "provenance": {
-        "sourceQuality": "local-editorial-source",
-        "hasExternalSource": false,
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
         "hasRepository": false,
-        "hasDocumentation": false,
+        "hasDocumentation": true,
         "hasFirstPartyPackage": false,
         "sourceUrls": [
+          "https://svelte.dev/docs",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
-        "externalSourceUrls": []
+        "externalSourceUrls": [
+          "https://svelte.dev/docs"
+        ]
       },
       "trustSignals": {
         "firstPartyEditorial": false,
@@ -18836,8 +18839,9 @@
         "packageTrust": null,
         "packageChecksum": "",
         "checksumPresent": false,
-        "sourceUrlCount": 1,
+        "sourceUrlCount": 2,
         "sourceUrls": [
+          "https://svelte.dev/docs",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx"
         ],
         "sourceStatus": "available",
@@ -21463,5 +21467,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "a6fbbef61cef93309184d706729236bc2501bf5c8c84e2f374b3d511a3258f89"
+  "signature": "02a411d8dd3fce7a47e0a3061fa33d960296570ef835f29bd87de222073e1731"
 }

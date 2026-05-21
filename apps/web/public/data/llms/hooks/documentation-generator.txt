@@ -8,6 +8,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/documentation-generator
 - Source URLs: https://jsdoc.app/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx
+- Safety notes: Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc., Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling.
+- Privacy notes: Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections., Generated documentation may include source comments, API details, project names, and README content from the local workspace.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -19,6 +21,12 @@ Automatically generates and updates project documentation from code comments, RE
 - api
 - markdown
 - jsdoc
+## Safety Notes
+- Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc.
+- Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling.
+## Privacy Notes
+- Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections.
+- Generated documentation may include source comments, API details, project names, and README content from the local workspace.
 ## Content
 ## Features
 - Real-time documentation generation from code comments with automatic detection of JSDoc 4.0.0+, TSDoc, Python docstrings, Go comments, and Rust documentation comments when code files are modified

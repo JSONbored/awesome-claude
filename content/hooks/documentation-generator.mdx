@@ -226,6 +226,12 @@ scriptBody: |-
 
   exit 0
 trigger: PostToolUse
+safetyNotes:
+  - Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc.
+  - Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling.
+privacyNotes:
+  - Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections.
+  - Generated documentation may include source comments, API details, project names, and README content from the local workspace.
 tags:
   - documentation
   - automation

@@ -3,10 +3,13 @@ URL: https://heyclau.de/hooks/svelte-component-compiler
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
+Documentation: https://svelte.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/svelte-component-compiler
-- Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx
+- Source URLs: https://svelte.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx
+- Safety notes: Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project., Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing.
+- Privacy notes: Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals., Prints component statistics and validation output to the local Claude Code hook output stream.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -18,6 +21,12 @@ Automatically compiles and validates Svelte components when they are modified.
 - compilation
 - validation
 - frontend
+## Safety Notes
+- Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project.
+- Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing.
+## Privacy Notes
+- Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals.
+- Prints component statistics and validation output to the local Claude Code hook output stream.
 ## Content
 ## Features
 - Automatic Svelte component compilation and validation including Svelte compilation (automatic Svelte component compilation on file changes, Svelte syntax validation with syntax checking, Svelte type checking with TypeScript support, Svelte component validation with component verification), compilation optimization (compilation performance with fast compilation, compilation reliability with error handling, compilation efficiency with efficient processing, compilation reporting with compilation status), compilation validation (compilation syntax validation with syntax verification, compilation type validation with type checking, compilation component validation with component verification, compilation dependency validation with dependency checking), and compilation reporting (compilation status reporting with compilation status, compilation error reporting with error details, compilation statistics with compilation metrics, compilation analytics with compilation analytics)

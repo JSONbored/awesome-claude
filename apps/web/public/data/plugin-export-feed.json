@@ -4654,7 +4654,7 @@
       "title": "Svelte Component Compiler - Hooks",
       "description": "Automatically compiles and validates Svelte components when they are modified.",
       "category": "hooks",
-      "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx",
+      "sourceUrl": "https://svelte.dev/docs",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/hooks/svelte-component-compiler"
