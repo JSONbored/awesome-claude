@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "totalEntries": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "totalEntries": 386,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -41,7 +41,7 @@
       "label": "Commands"
     },
     "hooks": {
-      "count": 66,
+      "count": 67,
       "label": "Hooks"
     },
     "guides": {
@@ -2523,6 +2523,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/rest-api-client-harness"
     },
     {
+      "key": "hooks:retro-daily",
+      "category": "hooks",
+      "slug": "retro-daily",
+      "canonicalUrl": "https://heyclau.de/hooks/retro-daily",
+      "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily"
+    },
+    {
       "key": "tools:roo-code",
       "category": "tools",
       "slug": "roo-code",
@@ -3151,21 +3159,21 @@
     "brandedCount": 142,
     "brandedPercent": 37,
     "brandfetchCount": 140,
-    "sourceAvailableCount": 385,
+    "sourceAvailableCount": 386,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 28,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 359,
+    "recentlyVerifiedCount": 360,
     "staleVerificationCount": 0,
-    "provenanceCount": 7,
+    "provenanceCount": 8,
     "provenancePercent": 2,
     "claimedOrReviewedCount": 6,
     "claimedOrReviewedPercent": 2,
-    "safetyNotesCount": 0,
+    "safetyNotesCount": 1,
     "safetyNotesPercent": 0,
-    "privacyNotesCount": 0,
+    "privacyNotesCount": 1,
     "privacyNotesPercent": 0,
     "firstPartyPackageCount": 109,
     "firstPartyPackagePercent": 28,
@@ -3198,22 +3206,22 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "f6603201eed2f73af54bf8354c92428f43e0a917810439eb32305511e7445b2e"
+      "sha256": "d442e178cf67f25238d1132fda0ecbab416dad17c49e1e7d65d6e908b297dc1e"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "d0463285173d8d9bca413554d5f1d0a258af02a5393ac78bad6b3ccc09124851"
+      "sha256": "3b4a81ec8a7955935a2ff9a6c4a96ecf3ad801133bcd396b05cee95abafc1cb5"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "e97ebab2b61dda730e11b9329ce9485a480bf0be0de457d65824edc22033051c"
+      "sha256": "e5dd62abd56bcfa008a8eb669fb8ceed021a2282039ae0fa3ff7dfe2065661eb"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "1b7b4051d1fee180b7a33a557d2a6fb19db185d551d289703ed264e91b4c3948"
+      "sha256": "7be3be318a0aa09a6f6d9dfc8b892baebddf05e6d5170ad251338c684ae2fdd2"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
@@ -3223,22 +3231,22 @@
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "a9afbc174003ebb639e050b048ea046d8b5f6233260fd8ed5393415db92d7ba4"
+      "sha256": "c0e2f87e47fe8d45b9bac6bbe1507fc91a8ba675395dc2f340e6bd18580f1e32"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "29dceac0942125d8c1ce06946b30d42a9f1aea5d7cab811fb67ee7f05687a0d0"
+      "sha256": "0c4d636fb7e209a4e2bd31766922510bc656bce62d19990aaa8a98340cac4023"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "bb8d385325a959615c2d2ef498422e8eb7fe172f137d84bc3d9ceec6ff76ad54"
+      "sha256": "7821e56956a4c9a83c094fe7aed8fbd869415af7164b6c78521f15341f460d80"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "2ef0d87aed9fc055e560a1653394d8b2982882467de330704f9f3de7ec54c517"
+      "sha256": "43dd4c9e90b4bcf4c12ce8e08839180f9c7a32b141ac88bd26842eecd303daf0"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3248,22 +3256,22 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "b87e17ac97424dbf88245d88b17fb6f97b123fe1fb6cd3be301b1ff3421048b8"
+      "sha256": "e566414cda328774bdf282ef1fa54ced4a33dec129ea2c3c1f59e9b53ae74390"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "aa2945b61d923e02f83cd732737889c02594a111c276df9718d0a04751141baf"
+      "sha256": "6cef635a85ea7c96e12412905abeaa86581c5b144ec8e5f4b289a243d1bcdeb1"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "c76dbf790e37e4cb248bb22cbad5d9c89fd7a123e86f19098b0f8fdcad74d31d"
+      "sha256": "cdc1f0fa71e2e742d27e6fcfbe6ba3748237ae58651d22d8b829deee1e951cbb"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "e89ab1a94ec2908be894504031de60f2b69dca00c94cbf8cd43ef28c854f509e"
+      "sha256": "cea023baf76862d66ad6311f577b552a0f602730886e220099577b983161d2e1"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -5468,17 +5476,17 @@
     "entries/hooks/documentation-generator.json": {
       "path": "/data/entries%2Fhooks%2Fdocumentation-generator.json",
       "type": "json",
-      "sha256": "8165a1944fc73c24f46a84567458f1d99e1d0ba2f899fe0297d57e18fa9a61b8"
+      "sha256": "09437af7b24d07dd97b751c83df10bb7405303b21ae4ee2ddbb19017c16d99bd"
     },
     "llms/hooks/documentation-generator.txt": {
       "path": "/data/llms%2Fhooks%2Fdocumentation-generator.txt",
       "type": "text",
-      "sha256": "9b689df2196a98cde2245ae5d61973060b51dc467201007cdc570a75ed146906"
+      "sha256": "4e8017557d8f432e5f2419da928a84908846f6d39093a7a981a906d2347d236e"
     },
     "raycast/hooks/documentation-generator.json": {
       "path": "/data/raycast%2Fhooks%2Fdocumentation-generator.json",
       "type": "json",
-      "sha256": "90e650449a1aa22cf2a0d48cfa94f011d8d88bef0fb003a1d6efa4519c582469"
+      "sha256": "94f417ba22f527b6a462f2addfb12540c5c4b5de297102d8c31a7518ed1f3d9b"
     },
     "entries/skills/docx-report-generator.json": {
       "path": "/data/entries%2Fskills%2Fdocx-report-generator.json",
@@ -7923,7 +7931,7 @@
     "entries/statuslines/python-rich-statusline.json": {
       "path": "/data/entries%2Fstatuslines%2Fpython-rich-statusline.json",
       "type": "json",
-      "sha256": "2aa1bdd0b70b58c455e82905b51454ad8480d64d93c6f950aba8bb881bdbd715"
+      "sha256": "ebd2be9ff161443fb6b777b7e348d5c8e9be4026ef6fc888e29ff2fca42f5730"
     },
     "llms/statuslines/python-rich-statusline.txt": {
       "path": "/data/llms%2Fstatuslines%2Fpython-rich-statusline.txt",
@@ -8154,6 +8162,21 @@
       "path": "/data/skill-adapters%2Fcursor%2Frest-api-client-harness.mdc",
       "type": "text",
       "sha256": "b31ac237c2a4aa5d9df20f056ae068630a9416fb24b04885a58f2232922fe237"
+    },
+    "entries/hooks/retro-daily.json": {
+      "path": "/data/entries%2Fhooks%2Fretro-daily.json",
+      "type": "json",
+      "sha256": "9b67bcd22a982e07e927030431ba8931d0b96a25174fb8a1df73bda0e0766bfb"
+    },
+    "llms/hooks/retro-daily.txt": {
+      "path": "/data/llms%2Fhooks%2Fretro-daily.txt",
+      "type": "text",
+      "sha256": "2b41240160ddd258a206fd1e7b895678d29e6c13801b9a218c8d8377b9dd7608"
+    },
+    "raycast/hooks/retro-daily.json": {
+      "path": "/data/raycast%2Fhooks%2Fretro-daily.json",
+      "type": "json",
+      "sha256": "dec3d11daea1518bda4a0aa3c23485122d43b4592826320a6d66911fa72cd970"
     },
     "entries/tools/roo-code.json": {
       "path": "/data/entries%2Ftools%2Froo-code.json",
@@ -8618,17 +8641,17 @@
     "entries/hooks/svelte-component-compiler.json": {
       "path": "/data/entries%2Fhooks%2Fsvelte-component-compiler.json",
       "type": "json",
-      "sha256": "d1ab35f81dac8316334eedab758bf9e116a298f28fc6ecc82594726e681e7393"
+      "sha256": "fa1105b6ff00ecda698a041a1f3a6ea218ff843dfa94392bd6925333b930422e"
     },
     "llms/hooks/svelte-component-compiler.txt": {
       "path": "/data/llms%2Fhooks%2Fsvelte-component-compiler.txt",
       "type": "text",
-      "sha256": "d24c1ff83e53be974b4d96703397f88e78e9cce5480f0672b2d5d16550c2e48e"
+      "sha256": "e1405e90c7e5cdbc6ed64bda6b0a7d8b53c1ae9188fbefcdd751ff8c56685ce5"
     },
     "raycast/hooks/svelte-component-compiler.json": {
       "path": "/data/raycast%2Fhooks%2Fsvelte-component-compiler.json",
       "type": "json",
-      "sha256": "744d67d638337b75a684f2fe90bdc9e76ece976d7f2c642bde39326c5a4f5883"
+      "sha256": "73664b23c1df914b180c9315a82b296491d85ee893dd9b0ad27ce1c25d00ec2b"
     },
     "entries/skills/svelte-sveltekit-fullstack.json": {
       "path": "/data/entries%2Fskills%2Fsvelte-sveltekit-fullstack.json",
@@ -9413,7 +9436,7 @@
     "feeds/categories/hooks.json": {
       "path": "/data/feeds%2Fcategories%2Fhooks.json",
       "type": "json",
-      "sha256": "f6132b22e85804e8c6b976ffe836caaa8e90baea016983c9bf797c9ac1d15620"
+      "sha256": "9954f65256e6c29c2b2493bdf57bc65be375813ae77e8bcea87e13df00533493"
     },
     "feeds/categories/guides.json": {
       "path": "/data/feeds%2Fcategories%2Fguides.json",
@@ -9428,7 +9451,7 @@
     "feeds/categories/statuslines.json": {
       "path": "/data/feeds%2Fcategories%2Fstatuslines.json",
       "type": "json",
-      "sha256": "5355a38eb1aa9497a8233a3aaa0943897283f44cda6a234813dd6639d6c5fdc6"
+      "sha256": "409716612de88fb491fb8bcb385a1374d7ed8a39f1affb0272f7da41043c0eaf"
     },
     "feeds/platforms/claude.json": {
       "path": "/data/feeds%2Fplatforms%2Fclaude.json",

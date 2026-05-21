@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "raycast-index",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "category": "commands",
@@ -5386,7 +5386,7 @@
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
       "copyText": "Trigger:\nPostToolUse\n\nInstall:\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh\n\nClaude config:\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n\nHook script:\n#!/usr/bin/env bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if it's a documentation-relevant file\nif [[ \"$FILE_PATH\" == *.js ]] || [[ \"$FILE_PATH\" == *.jsx ]] || [[ \"$FILE_PATH\" == *.ts ]] || [[ \"$FILE_PATH\" == *.tsx ]] || [[ \"$FILE_PATH\" == *.py ]]...",
-      "copyTextLength": 24594,
+      "copyTextLength": 24422,
       "copyTextTruncated": true,
       "detailMarkdown": "# Documentation Generator - Hooks\n\nAutomatically generates and updates project documentation from code comments, README files, and API definitions. This PostToolUse hook provides real-time documentation generation when code files are modified, supporting multiple programming languages and documentation formats.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/documentation-generator.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
       "detailUrl": "/data/raycast/hooks/documentation-generator.json",
@@ -12355,6 +12355,54 @@
       ]
     },
     {
+      "category": "hooks",
+      "slug": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "description": "SessionStart hook that prints a daily Claude Code retro: competency grade, efficiency sparklines, contributions heatmap, and weak-metric scout findings.",
+      "tags": [
+        "sessionstart",
+        "dashboard",
+        "metrics",
+        "retro",
+        "analytics"
+      ],
+      "author": "gyanesh-m",
+      "submittedBy": "gyanesh-m",
+      "submittedByUrl": "https://github.com/gyanesh-m",
+      "installCommand": "/plugin marketplace add gyanesh-m/retro-daily && /plugin install retro-daily@retro-daily",
+      "configSnippet": "{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"~/.claude/metrics/startup.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}",
+      "safetyNotes": [
+        "Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers.",
+        "Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set.",
+        "Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics.",
+        "First full setup can install large Python model dependencies for local classification.",
+        "Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions."
+      ],
+      "privacyNotes": [
+        "Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics.",
+        "Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics.",
+        "Session tagger builds a truncated digest from recent local session messages for claude -p labeling.",
+        "Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch.",
+        "The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard."
+      ],
+      "copyText": "Trigger:\nSessionStart\n\nInstall:\n/plugin marketplace add gyanesh-m/retro-daily && /plugin install retro-daily@retro-daily\n\nClaude config:\n{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"~/.claude/metrics/startup.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}\n\nHook script:\n#!/bin/bash\n# startup.sh — Single SessionStart hook that runs all startup scripts sequentially.\n# Each step runs independently (one failure does not skip the rest). Per-step\n# output + timing mirrored to /tmp/claude-startup.log for debugging what\n# Claude Code's hook pipeline actually receives.\n# NOTE: no `set -e` — we want every step to execute even if an earlier one errors.\n#\n# ─── How SessionStart hook output reaches the user vs. the LL...",
+      "copyTextLength": 10695,
+      "copyTextTruncated": true,
+      "detailMarkdown": "# Retro Daily - Hooks\n\nSessionStart hook that prints a daily Claude Code retro at the top of every session — competency grade (0–100, A–F), 14-day efficiency sparklines, and a year-long contributions heatmap.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers.\n- Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set.\n- Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics.\n- First full setup can install large Python model dependencies for local classification.\n- Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions.\n\n## Privacy notes\n- Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics.\n- Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics.\n- Session tagger builds a truncated digest from recent local session messages for claude -p labeling.\n- Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch.\n- The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard.\n\n## Install\n```bash\n/plugin marketplace add gyanesh-m/retro-daily && /plugin install retro-daily@retro-daily\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"command\": \"~/.claude/metrics/startup.sh\"\n          }\n        ]\n      }\n    ]\n  }\n}\n```\n\n## Usage\n/plugin marketplace add gyanesh-m/retro-daily\n/plugin install retro-daily@retro-daily\n/reload-plugins",
+      "detailUrl": "/data/raycast/hooks/retro-daily.json",
+      "webUrl": "https://heyclau.de/hooks/retro-daily",
+      "canonicalUrl": "https://heyclau.de/hooks/retro-daily",
+      "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
+      "seoTitle": "Retro Daily - SessionStart Hook for Claude Code",
+      "seoDescription": "Daily retro dashboard printed at the top of every Claude Code session.",
+      "repoUrl": "https://github.com/gyanesh-m/retro-daily",
+      "documentationUrl": "",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platformCompatibility": []
+    },
+    {
       "category": "tools",
       "slug": "roo-code",
       "title": "Roo Code",
@@ -13464,8 +13512,8 @@
       "author": "JSONbored",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "configSnippet": "{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}",
-      "copyText": "Trigger:\nPostToolUse\n\nInstall:\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n\nClaude config:\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n\nHook script:\n#!/bin/bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if this is a Svelte component file\nif [[ \"$FILE_PATH\" == *.svelte ]]; then\n    echo \"🔥 Svelte Component Compiler - Validating Svelte component...\"\n    echo \"📄 Component: $FILE_PATH\"...",
-      "copyTextLength": 26303,
+      "copyText": "Trigger:\nPostToolUse\n\nInstall:\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n\nClaude config:\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n\nHook script:\n#!/bin/bash\n\n# Read the tool input from stdin\nINPUT=$(cat)\nTOOL_NAME=$(echo \"$INPUT\" | jq -r '.tool_name')\nFILE_PATH=$(echo \"$INPUT\" | jq -r '.tool_input.file_path // .tool_input.path // \"\"')\n\nif [ -z \"$FILE_PATH\" ]; then\n  exit 0\nfi\n\n# Check if this is a Svelte component file\nif [[ \"$FILE_PATH\" == *.svelte ]]; then\n    echo \"🔥 Svelte Component Compiler - Validating Svelte component...\"\n    echo \"📄 Component: $FILE_PATH\"\n\n    #...",
+      "copyTextLength": 26183,
       "copyTextTruncated": true,
       "detailMarkdown": "# Svelte Component Compiler - Hooks\n\nAutomatically compiles and validates Svelte components when they are modified.\n\n## Trust\n- Source: source not provided\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh\n```\n\n## Config\n```json\n{\n  \"hooks\": {\n    \"postToolUse\": {\n      \"script\": \"./.claude/hooks/svelte-component-compiler.sh\",\n      \"matchers\": [\n        \"write\",\n        \"edit\"\n      ]\n    }\n  }\n}\n```\n\n## Usage\nmkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "detailUrl": "/data/raycast/hooks/svelte-component-compiler.json",

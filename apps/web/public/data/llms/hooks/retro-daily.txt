@@ -1,0 +1,152 @@
+# Retro Daily - Hooks
+URL: https://heyclau.de/hooks/retro-daily
+Category: hooks
+Author: gyanesh-m
+Submitted by: gyanesh-m
+Date added: 2026-05-19
+Repository: https://github.com/gyanesh-m/retro-daily
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/hooks/retro-daily
+- Source URLs: https://github.com/gyanesh-m/retro-daily, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx, https://gyanesh-m.github.io/retro-daily/
+- Safety notes: Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers., Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set., Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics., First full setup can install large Python model dependencies for local classification., Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions.
+- Privacy notes: Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics., Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics., Session tagger builds a truncated digest from recent local session messages for claude -p labeling., Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch., The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard.
+- Author: gyanesh-m
+- Submitted by: gyanesh-m
+- Last verified: 2026-05-19
+- Robots: indexable
+## Summary
+SessionStart hook that prints a daily Claude Code retro at the top of every session — competency grade (0–100, A–F), 14-day efficiency sparklines, and a year-long contributions heatmap.
+## Tags
+- sessionstart
+- dashboard
+- metrics
+- retro
+- analytics
+## Safety Notes
+- Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers.
+- Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set.
+- Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics.
+- First full setup can install large Python model dependencies for local classification.
+- Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions.
+## Privacy Notes
+- Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics.
+- Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics.
+- Session tagger builds a truncated digest from recent local session messages for claude -p labeling.
+- Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch.
+- The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard.
+## Content
+## Features
+- SessionStart hook prints a daily retro dashboard at the top of every Claude Code session, with zero added latency on warm cache days.
+- Composite competency score (0–100) and letter grade (A–F) derived from per-metric breakdowns, so you see your trajectory in one glance.
+- 14-day efficiency grid: sparklines per metric, 7d/30d delta arrows, and severity dots that highlight regressions before they pile up.
+- Year-long contributions heatmap rendered inline as ANSI blocks, GitHub-style, so you can spot streaks and dry spells across sessions.
+- Detached, sandboxed `claude -p` background worker (the "scout") that researches your weakest metrics on `docs.anthropic.com` and GitHub between sessions.
+- Findings surface inline in the next session's dashboard with one line per query: top doc pick plus a trending repo for creative angles.
+- Daily cache gate: expensive embedding-based classification runs at most once per day; subsequent sessions reuse the cached store.
+- Archives previous scout results to `~/.claude/metrics/scout-archive/` and ships an interactive viewer for browsing historical findings.
+
+## Use Cases
+- Spot regressions early: catch a drop in test-pass rate, build-time, or context-efficiency within a day instead of weeks later.
+- Stay calibrated against your own baseline rather than someone else's productivity ideal — every metric is computed from your own session history.
+- Discover relevant docs and repos without context-switching: the scout pre-fetches material for whichever metric is currently weakest.
+- Maintain a session journal automatically: the contributions heatmap doubles as a long-term activity log across machines and projects.
+- Make weekly retros trivial: the dashboard is already there at the top of each session, no separate tool to open.
+
+## Installation
+1. Install via the Claude Code plugin marketplace (recommended):
+
+   ```
+   /plugin marketplace add gyanesh-m/retro-daily
+   /plugin install retro-daily@retro-daily
+   /reload-plugins
+   ```
+
+2. Or add the SessionStart hook manually to `~/.claude/settings.json` using the configuration above, pointing at the `startup.sh` entry point you place in `~/.claude/metrics/`.
+
+### Config paths
+
+- User settings (global): `~/.claude/settings.json`
+- Project-wide (committed): `.claude/settings.json`
+- Local (not committed): `.claude/settings.local.json`
+```text
+/plugin marketplace add gyanesh-m/retro-daily
+   /plugin install retro-daily@retro-daily
+   /reload-plugins
+```
+
+## Requirements
+- Claude Code CLI installed and authenticated.
+- Bash 4+ shell (macOS users: the bundled `/bin/bash` works for the dashboard; the scout runner uses `nohup` so no `setsid` requirement).
+- Python 3.9+ for the metrics renderer (`generate-metrics.py`).
+- Optional: an authenticated `claude` session in your keychain so the background scout can call `claude -p` without prompting.
+
+## Security and privacy disclosure
+Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`.
+
+By default, `scout.sh` and `tag-sessions.sh` can start detached, sandboxed `claude -p` background workers. The scout worker uses `WebSearch` and `Write` to research weak metrics, writes temporary results to `/tmp`, validates JSON, then moves the results into `~/.claude/metrics`. The session tagger builds a truncated digest from recent local session messages and asks `claude -p` to label those sessions; it denies network access and writes temporary results to `/tmp` before moving them into `~/.claude/metrics`.
+
+Set `RETRO_DAILY_NO_BACKGROUND_WORKERS=1` to disable the background scout and session tagger while keeping the dashboard rendering.
+
+## Hook Configuration
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/metrics/startup.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/metrics/startup.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## How It Works
+On every session start, three scripts run in sequence:
+
+1. **`daily-insights.sh`** prints the editorial dashboard from the cached `metrics-store.json`. Regeneration (embedding classification) is gated by `last-run-date.txt` so it runs at most once per day.
+2. **`scout.sh`** spawns `scout-runner.sh` as a detached `nohup` background worker if the weak-metric set changed or the last scout is older than `SCOUT_STALE_DAYS` (default 7). A `pgrep` guard prevents double-spawn.
+3. **`scout-runner.sh`** invokes `claude -p --allowedTools "WebSearch Write"` with a research prompt over `docs.anthropic.com`, GitHub, and GitHub Trending, writing results to `/tmp/` first and atomically `mv`-ing them into place. Previous results are archived.
+4. **`scout-review.sh`** renders a compact SCOUT FINDINGS block on the next session with one line per query.
+
+## Troubleshooting
+### Dashboard not rendering on session start
+
+Confirm the SessionStart hook is registered in `~/.claude/settings.json` and that `~/.claude/metrics/startup.sh` is executable (`chmod +x`). Test manually: `bash ~/.claude/metrics/startup.sh`. Force a regenerate by removing the daily cache: `rm ~/.claude/metrics/last-run-date.txt && python3 ~/.claude/metrics/generate-metrics.py`.
+
+### Scout worker dies immediately on macOS
+
+macOS has no `setsid`, so `nohup` alone is not enough to survive the parent Claude Code session closing. The runner traps SIGHUP at the top (`trap '' HUP`) and `scout.sh` redirects stdin from `/dev/null` to keep the worker alive after the session exits.
+
+### `claude -p --bare` returns auth errors from the scout
+
+`--bare` disables OAuth and keychain auth. Drop `--bare` so the user's session auth applies. The runner uses `--allowedTools "WebSearch Write"` for the right scope.
+
+### Scout cannot write to `~/.claude/`
+
+The Claude Code sensitive-path guard blocks headless `claude -p` writes inside `~/.claude/` even with `--allowedTools`. The runner writes to `/tmp/claude-scout-results-$$.json` first, validates the JSON, then `mv`s it into place.
+
+### SessionStart hook denied for autonomous-agent safety check
+
+SessionStart hooks are exempt from the per-command autonomous-agent safety check, so the runner spawns fine from `scout.sh`. Re-running the runner manually from inside a session will be denied; test it via `bash ~/.claude/metrics/scout-runner.sh` from an external terminal.

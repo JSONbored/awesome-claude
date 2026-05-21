@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "distribution-feed-index",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
+  "generatedAt": "2026-05-19T00:00:00.000Z",
   "categories": [
     {
       "category": "agents",
@@ -48,7 +48,7 @@
     {
       "category": "hooks",
       "label": "Hooks",
-      "count": 66,
+      "count": 67,
       "feedUrl": "/data/feeds/categories/hooks.json",
       "canonicalUrl": "https://heyclau.de/hooks"
     },

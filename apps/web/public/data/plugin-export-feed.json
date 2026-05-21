@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 249,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 250,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -4325,6 +4325,18 @@
         }
       ],
       "heyclaudeUrl": "https://heyclau.de/skills/rest-api-client-harness"
+    },
+    {
+      "name": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "description": "SessionStart hook that prints a daily Claude Code retro: competency grade, efficiency sparklines, contributions heatmap, and weak-metric scout findings.",
+      "category": "hooks",
+      "submittedBy": "gyanesh-m",
+      "submittedByUrl": "https://github.com/gyanesh-m",
+      "sourceUrl": "https://github.com/gyanesh-m/retro-daily",
+      "installCommand": "/plugin marketplace add gyanesh-m/retro-daily && /plugin install retro-daily@retro-daily",
+      "platformCompatibility": [],
+      "heyclaudeUrl": "https://heyclau.de/hooks/retro-daily"
     },
     {
       "name": "rust-cargo-check",

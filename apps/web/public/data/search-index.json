@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "search-index",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "category": "commands",
@@ -20235,6 +20235,83 @@
           "adapter",
           "manual-context"
         ]
+      }
+    },
+    {
+      "category": "hooks",
+      "slug": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "seoTitle": "Retro Daily - SessionStart Hook for Claude Code",
+      "description": "SessionStart hook that prints a daily Claude Code retro: competency grade, efficiency sparklines, contributions heatmap, and weak-metric scout findings.",
+      "seoDescription": "Daily retro dashboard printed at the top of every Claude Code session.",
+      "tags": [
+        "sessionstart",
+        "dashboard",
+        "metrics",
+        "retro",
+        "analytics"
+      ],
+      "keywords": [
+        "sessionstart",
+        "hook",
+        "dashboard",
+        "metrics",
+        "retro",
+        "sparkline",
+        "heatmap",
+        "competency",
+        "claude-code",
+        "analytics",
+        "hooks",
+        "claude"
+      ],
+      "author": "gyanesh-m",
+      "safetyNotes": [
+        "Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers.",
+        "Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set.",
+        "Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics.",
+        "First full setup can install large Python model dependencies for local classification.",
+        "Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions."
+      ],
+      "privacyNotes": [
+        "Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics.",
+        "Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics.",
+        "Session tagger builds a truncated digest from recent local session messages for claude -p labeling.",
+        "Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch.",
+        "The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard."
+      ],
+      "submittedBy": "gyanesh-m",
+      "submittedByUrl": "https://github.com/gyanesh-m",
+      "dateAdded": "2026-05-19",
+      "installable": true,
+      "downloadUrl": "",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "",
+      "repoUrl": "https://github.com/gyanesh-m/retro-daily",
+      "url": "https://heyclau.de/hooks/retro-daily",
+      "canonicalUrl": "https://heyclau.de/hooks/retro-daily",
+      "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-19",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
       }
     },
     {

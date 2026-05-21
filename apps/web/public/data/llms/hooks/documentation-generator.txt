@@ -146,7 +146,7 @@ if [[ "$FILE_PATH" == *.js ]] || [[ "$FILE_PATH" == *.jsx ]] || [[ "$FILE_PATH" 
     echo "🐍 Python file - checking for documentation..." >&2
 
     if [ -f "$FILE_PATH" ]; then
-      DOCSTRINGS=$(grep -c '"""\|'\''\''\'''' "$FILE_PATH" 2>/dev/null || echo "0")
+      DOCSTRINGS=$(grep -c "\"\"\"\|'''" "$FILE_PATH" 2>/dev/null || echo "0")
       FUNCTIONS=$(grep -c '^def\s\|^class\s' "$FILE_PATH" 2>/dev/null || echo "0")
 
       echo "📊 Found $DOCSTRINGS docstrings and $FUNCTIONS functions/classes" >&2
@@ -321,7 +321,7 @@ if [[ "$FILE_PATH" == *.js ]] || [[ "$FILE_PATH" == *.jsx ]] || [[ "$FILE_PATH" 
     echo "🐍 Python file - checking for documentation..." >&2
 
     if [ -f "$FILE_PATH" ]; then
-      DOCSTRINGS=$(grep -c '"""\|'\''\''\'''' "$FILE_PATH" 2>/dev/null || echo "0")
+      DOCSTRINGS=$(grep -c "\"\"\"\|'''" "$FILE_PATH" 2>/dev/null || echo "0")
       FUNCTIONS=$(grep -c '^def\s\|^class\s' "$FILE_PATH" 2>/dev/null || echo "0")
 
       echo "📊 Found $DOCSTRINGS docstrings and $FUNCTIONS functions/classes" >&2

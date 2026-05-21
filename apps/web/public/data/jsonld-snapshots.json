@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -23037,7 +23037,7 @@
             "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/python-rich-statusline.mdx"
           ],
           "codeRepository": null,
-          "programmingLanguage": "bash",
+          "programmingLanguage": "python",
           "runtimePlatform": "Claude Code"
         }
       ]
@@ -24135,6 +24135,85 @@
               "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
             }
           ]
+        }
+      ]
+    },
+    {
+      "key": "hooks:retro-daily",
+      "category": "hooks",
+      "slug": "retro-daily",
+      "url": "https://heyclau.de/hooks/retro-daily",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/hooks/retro-daily#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Hooks",
+              "item": "https://heyclau.de/hooks"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Retro Daily - Hooks",
+              "item": "https://heyclau.de/hooks/retro-daily"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/hooks/retro-daily#webpage",
+          "name": "Retro Daily - Hooks",
+          "description": "Daily retro dashboard printed at the top of every Claude Code session.",
+          "url": "https://heyclau.de/hooks/retro-daily",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/hooks/retro-daily#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/hooks/retro-daily#entry",
+          "name": "Retro Daily - Hooks",
+          "headline": "Retro Daily - Hooks",
+          "description": "Daily retro dashboard printed at the top of every Claude Code session.",
+          "url": "https://heyclau.de/hooks/retro-daily",
+          "datePublished": "2026-05-19",
+          "dateModified": "2026-05-19",
+          "keywords": "sessionstart, hook, dashboard, metrics, retro, sparkline, heatmap, competency, claude-code, analytics, hooks, claude, sessionstart, dashboard, metrics, retro, analytics",
+          "genre": "Hooks",
+          "author": {
+            "@type": "Person",
+            "name": "gyanesh-m",
+            "url": "https://github.com/gyanesh-m"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://github.com/gyanesh-m/retro-daily"
+          ],
+          "isBasedOn": [
+            "https://github.com/gyanesh-m/retro-daily",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
+            "https://gyanesh-m.github.io/retro-daily/"
+          ],
+          "codeRepository": "https://github.com/gyanesh-m/retro-daily",
+          "programmingLanguage": "bash",
+          "runtimePlatform": "Claude Code"
         }
       ]
     },

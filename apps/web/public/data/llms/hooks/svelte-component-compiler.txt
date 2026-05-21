@@ -137,7 +137,7 @@ if [[ "$FILE_PATH" == *.svelte ]]; then
         echo "✅ Script block found"
 
         # Check for TypeScript
-        if grep -q '<script lang=["']ts["']>' "$FILE_PATH"; then
+        if grep -q "<script lang=[\"']ts[\"']>" "$FILE_PATH"; then
             echo "📘 TypeScript detected in component"
         fi
     fi
@@ -295,7 +295,7 @@ if [[ "$FILE_PATH" == *.svelte ]]; then
         echo "✅ Script block found"
 
         # Check for TypeScript
-        if grep -q '<script lang=["']ts["']>' "$FILE_PATH"; then
+        if grep -q "<script lang=[\"']ts[\"']>" "$FILE_PATH"; then
             echo "📘 TypeScript detected in component"
         fi
     fi

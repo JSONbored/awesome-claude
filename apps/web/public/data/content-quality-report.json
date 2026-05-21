@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 102,
@@ -43,7 +43,7 @@
       "warningCount": 0
     },
     "hooks": {
-      "count": 66,
+      "count": 67,
       "averageScore": 82,
       "warningCount": 14
     },
@@ -9068,6 +9068,37 @@
       "warnings": [
         "Description is long for browse/search display."
       ]
+    },
+    {
+      "key": "hooks:retro-daily",
+      "category": "hooks",
+      "slug": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "scores": {
+        "total": 84,
+        "usefulness": 100,
+        "source": 45,
+        "copyability": 90,
+        "freshness": 100,
+        "seo": 82
+      },
+      "provenance": {
+        "sourceQuality": "repo",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": false,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ]
+      },
+      "warnings": []
     },
     {
       "key": "tools:roo-code",

@@ -1,9 +1,21 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "entries": [
+    {
+      "key": "hooks:retro-daily",
+      "type": "added",
+      "category": "hooks",
+      "slug": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "dateAdded": "2026-05-19",
+      "canonicalUrl": "https://heyclau.de/hooks/retro-daily",
+      "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
+      "artifactHash": "9b67bcd22a982e07e927030431ba8931d0b96a25174fb8a1df73bda0e0766bfb"
+    },
     {
       "key": "mcp:packrift-mcp-server",
       "type": "added",
@@ -2930,7 +2942,7 @@
       "canonicalUrl": "https://heyclau.de/statuslines/python-rich-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/python-rich-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/python-rich-statusline",
-      "artifactHash": "2aa1bdd0b70b58c455e82905b51454ad8480d64d93c6f950aba8bb881bdbd715"
+      "artifactHash": "ebd2be9ff161443fb6b777b7e348d5c8e9be4026ef6fc888e29ff2fca42f5730"
     },
     {
       "key": "statuslines:session-timer-statusline",
@@ -3566,7 +3578,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/svelte-component-compiler",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/svelte-component-compiler.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/svelte-component-compiler",
-      "artifactHash": "d1ab35f81dac8316334eedab758bf9e116a298f28fc6ecc82594726e681e7393"
+      "artifactHash": "fa1105b6ff00ecda698a041a1f3a6ea218ff843dfa94392bd6925333b930422e"
     },
     {
       "key": "hooks:team-summary-email-generator",
@@ -4298,7 +4310,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/documentation-generator",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/documentation-generator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/documentation-generator",
-      "artifactHash": "8165a1944fc73c24f46a84567458f1d99e1d0ba2f899fe0297d57e18fa9a61b8"
+      "artifactHash": "09437af7b24d07dd97b751c83df10bb7405303b21ae4ee2ddbb19017c16d99bd"
     },
     {
       "key": "hooks:environment-variable-validator",
@@ -4626,5 +4638,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "194972ff24612249b42875dbfddc101a1f097a7dbc8a04695c84c36a917f7536"
+  "signature": "58e5c3139e5beb393c91a8f2df63345129c3dca76333c8d89091fa8f7fb1eab2"
 }

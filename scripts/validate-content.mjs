@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 
 import matter from "gray-matter";
 
@@ -44,6 +45,7 @@ for (let index = 2; index < process.argv.length; index += 1) {
 const failures = [];
 const warnings = [];
 let filesChecked = 0;
+const bashScriptLanguages = new Set(["bash", "sh", "shell"]);
 const oldBrandOrDomainPattern = new RegExp(
   `${["claude", "pro"].join("")}\\.directory|${[
     "Claude",
@@ -52,6 +54,36 @@ const oldBrandOrDomainPattern = new RegExp(
   ].join("")}`,
   "i",
 );
+
+function checkBashSyntax(scriptBody) {
+  const result = spawnSync("bash", ["--noprofile", "--norc", "-n", "-s"], {
+    input: scriptBody,
+    encoding: "utf8",
+    maxBuffer: 1024 * 1024,
+    timeout: 5000,
+  });
+
+  if (result.error) {
+    return {
+      ok: false,
+      detail: result.error.message,
+    };
+  }
+
+  if (result.status !== 0) {
+    const detail = String(result.stderr || result.stdout || "")
+      .trim()
+      .split(/\r?\n/)
+      .filter(Boolean)
+      .slice(-1)[0];
+    return {
+      ok: false,
+      detail: detail || `bash -n exited with status ${result.status}`,
+    };
+  }
+
+  return { ok: true };
+}
 
 for (const category of Object.keys(CATEGORY_SCHEMAS)) {
   if (selectedCategories.size > 0 && !selectedCategories.has(category)) {
@@ -77,6 +109,12 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
     );
     const validation = validateEntry(category, parsed.data, inferred);
     const sectionFlags = inferSectionBooleans(normalizedBody);
+    const scriptBody = String(parsed.data.scriptBody ?? inferred.scriptBody ?? "");
+    const scriptLanguage = String(
+      parsed.data.scriptLanguage ?? inferred.scriptLanguage ?? "",
+    )
+      .trim()
+      .toLowerCase();
 
     const entry = `${category}/${fileName}`;
 
@@ -113,6 +151,15 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 
     if (validation.semanticErrors?.length) {
       failures.push(`${entry}: ${validation.semanticErrors.join("; ")}`);
+    }
+
+    if (scriptBody.trim() && bashScriptLanguages.has(scriptLanguage)) {
+      const syntax = checkBashSyntax(scriptBody);
+      if (!syntax.ok) {
+        failures.push(
+          `${entry}: scriptBody failed bash syntax check -> ${syntax.detail}`,
+        );
+      }
     }
 
     for (const field of FORBIDDEN_CONTENT_FIELDS) {

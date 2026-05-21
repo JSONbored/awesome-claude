@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 385,
+  "generatedAt": "2026-05-19T00:00:00.000Z",
+  "count": 386,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -17112,6 +17112,63 @@
       }
     },
     {
+      "key": "hooks:retro-daily",
+      "category": "hooks",
+      "slug": "retro-daily",
+      "title": "Retro Daily - Hooks",
+      "description": "SessionStart hook that prints a daily Claude Code retro: competency grade, efficiency sparklines, contributions heatmap, and weak-metric scout findings.",
+      "url": "https://heyclau.de/hooks/retro-daily",
+      "submittedBy": "gyanesh-m",
+      "submittedByUrl": "https://github.com/gyanesh-m",
+      "websiteUrl": "https://gyanesh-m.github.io/retro-daily/",
+      "documentationUrl": "",
+      "repoUrl": "https://github.com/gyanesh-m/retro-daily",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "sessionstart",
+        "dashboard",
+        "metrics",
+        "retro",
+        "analytics"
+      ],
+      "qualityScore": 84,
+      "provenance": {
+        "sourceQuality": "repo",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": false,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://github.com/gyanesh-m/retro-daily",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
+          "https://gyanesh-m.github.io/retro-daily/"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-19",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "key": "tools:roo-code",
       "category": "tools",
       "slug": "roo-code",
@@ -21406,5 +21463,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "2e41727129549cdacf5ef296cf0b6c784ec9e9dee79ee9d353ae31e564ca932e"
+  "signature": "a6fbbef61cef93309184d706729236bc2501bf5c8c84e2f374b3d511a3258f89"
 }
