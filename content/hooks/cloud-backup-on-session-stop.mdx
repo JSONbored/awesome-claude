@@ -43,6 +43,14 @@ configSnippet: |-
 scriptLanguage: bash
 scriptBody: "#!/usr/bin/env bash\n\necho \"☁️ Starting cloud backup process...\" >&2\n\n# Generate timestamped backup directory name\nBACKUP_DIR=\"claude-backup-$(date +%Y%m%d_%H%M%S)\"\n\n# Get list of modified files\nMODIFIED_FILES=$(git diff --name-only 2>/dev/null)\n\nif [ -z \"$MODIFIED_FILES\" ]; then\n  echo \"\U0001F4C2 No modified files to backup\" >&2\n  exit 0\nfi\n\necho \"\U0001F4E6 Found modified files to backup\" >&2\n\n# Try AWS S3 first\nif command -v aws >/dev/null 2>&1 && [[ -n \"$AWS_BACKUP_BUCKET\" ]]; then\n  echo \"\U0001F4E6 Backing up to AWS S3...\" >&2\n  if echo \"$MODIFIED_FILES\" | tar -czf - -T - | aws s3 cp - \"s3://$AWS_BACKUP_BUCKET/$BACKUP_DIR.tar.gz\"; then\n    echo \"✅ Successfully backed up to S3: $AWS_BACKUP_BUCKET/$BACKUP_DIR.tar.gz\" >&2\n    exit 0\n  else\n    echo \"❌ AWS S3 backup failed\" >&2\n  fi\nfi\n\n# Try Google Cloud Storage\nif command -v gcloud >/dev/null 2>&1 && [[ -n \"$GCS_BACKUP_BUCKET\" ]]; then\n  echo \"\U0001F4E6 Backing up to Google Cloud Storage...\" >&2\n  if echo \"$MODIFIED_FILES\" | tar -czf - -T - | gsutil cp - \"gs://$GCS_BACKUP_BUCKET/$BACKUP_DIR.tar.gz\"; then\n    echo \"✅ Successfully backed up to GCS: $GCS_BACKUP_BUCKET/$BACKUP_DIR.tar.gz\" >&2\n    exit 0\n  else\n    echo \"❌ Google Cloud backup failed\" >&2\n  fi\nfi\n\n# Try rclone as universal fallback\nif command -v rclone >/dev/null 2>&1; then\n  echo \"\U0001F4E6 Backing up using rclone...\" >&2\n  TEMP_BACKUP=\"/tmp/$BACKUP_DIR.tar.gz\"\n  if echo \"$MODIFIED_FILES\" | tar -czf \"$TEMP_BACKUP\" -T - && rclone copy \"$TEMP_BACKUP\" remote:backups/; then\n    echo \"✅ Successfully backed up using rclone\" >&2\n    rm -f \"$TEMP_BACKUP\"\n    exit 0\n  else\n    echo \"❌ rclone backup failed\" >&2\n    rm -f \"$TEMP_BACKUP\"\n  fi\nfi\n\necho \"⚠️ No cloud storage provider configured or available\" >&2\necho \"\U0001F4A1 Configure AWS_BACKUP_BUCKET, GCS_BACKUP_BUCKET, or rclone to enable cloud backup\" >&2\nexit 1"
 trigger: Stop
+safetyNotes:
+  - Runs automatically at session end and can create compressed archives of modified git files.
+  - Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured.
+  - Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt.
+privacyNotes:
+  - Sends modified file contents to the configured cloud storage destination.
+  - Uses locally configured cloud credentials and bucket environment variables but does not define or manage them.
+  - Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff.
 tags:
   - backup
   - cloud
