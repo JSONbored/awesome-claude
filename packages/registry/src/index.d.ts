@@ -1075,6 +1075,14 @@ export function buildCorpusLlmsArtifact(
   params?: Record<string, unknown>,
 ): string;
 export const QUALITY_REPORT_SCHEMA_VERSION: number;
+export const SOURCE_HEALTH_REPORT_SCHEMA_VERSION: number;
+export const SOURCE_FRESHNESS_THRESHOLDS: {
+  freshDays: number;
+  agingDays: number;
+  staleDays: number;
+};
+export const SAFETY_RELEVANT_CATEGORIES: readonly string[];
+export const PACKAGEABLE_CATEGORIES: readonly string[];
 export const LLMS_ARTIFACT_SCHEMA_VERSION: number;
 export const SUBMISSION_SPEC_SCHEMA_VERSION: number;
 export function buildSourceProvenance(
@@ -1088,6 +1096,52 @@ export function findDuplicateBodyGroups(
   entries: Partial<ContentEntry>[],
 ): Array<Array<Record<string, unknown>>>;
 export function buildContentQualityReport(
+  entries: Partial<ContentEntry>[],
+): Record<string, unknown>;
+
+export type SourceFreshnessBucket =
+  | "fresh"
+  | "aging"
+  | "stale"
+  | "dormant"
+  | "unknown";
+
+export interface EntrySourceHealth {
+  key: string;
+  category: string;
+  slug: string;
+  title?: string;
+  freshness: {
+    bucket: SourceFreshnessBucket;
+    ageDays: number | null;
+    sourceDate: string;
+    source: string;
+  };
+  sourceBacked: boolean;
+  unprovenancedSource: boolean;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
+  missingSafetyNotes: boolean;
+  missingPrivacyNotes: boolean;
+  packageTrust: string | null;
+  packageVerified: boolean;
+  missingPackageTrust: boolean;
+  needsAttention: boolean;
+  attentionReasons: string[];
+}
+
+export function deriveSourceFreshness(
+  entry: Partial<ContentEntry>,
+  referenceDate?: Date | string,
+): EntrySourceHealth["freshness"];
+export function buildEntrySourceHealth(
+  entry: Partial<ContentEntry>,
+  referenceDate?: Date | string,
+): EntrySourceHealth;
+export function buildSourceHealthReport(
+  entries: Partial<ContentEntry>[],
+): Record<string, unknown>;
+export function buildContentSourceHealthArtifact(
   entries: Partial<ContentEntry>[],
 ): Record<string, unknown>;
 export function renderEntryLlms(

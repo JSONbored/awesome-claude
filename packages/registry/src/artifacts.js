@@ -6,6 +6,7 @@ import {
   buildEntryQuality,
   buildContentPromptReport,
   buildContentQualityReport,
+  buildSourceHealthReport,
 } from "./quality.js";
 import { renderCorpusLlms, renderEntryLlms } from "./llms.js";
 import { buildEntryJsonLdSnapshot } from "./seo.js";
@@ -1094,6 +1095,10 @@ export function buildContentQualityArtifact(entries) {
 
 export function buildContentPromptArtifact(entries) {
   return buildContentPromptReport(entries);
+}
+
+export function buildContentSourceHealthArtifact(entries) {
+  return buildSourceHealthReport(entries);
 }
 
 export function buildJsonLdSnapshots(entries, params = {}) {

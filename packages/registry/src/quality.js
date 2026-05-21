@@ -2,6 +2,36 @@ import categorySpec from "./category-spec.json" with { type: "json" };
 import { getCopyText } from "./presentation.js";
 
 export const QUALITY_REPORT_SCHEMA_VERSION = 2;
+export const SOURCE_HEALTH_REPORT_SCHEMA_VERSION = 1;
+
+// Freshness buckets are derived from the most recent observable source
+// timestamp on an entry (repoUpdatedAt preferred, dateAdded fallback).
+// Bucket thresholds are intentionally aligned with the trust report's
+// verification thresholds (180/365 days) so downstream surfaces can
+// reason about "fresh" / "stale" uniformly across signals.
+export const SOURCE_FRESHNESS_THRESHOLDS = Object.freeze({
+  freshDays: 180,
+  agingDays: 365,
+  staleDays: 730,
+});
+
+// Categories where safety_notes / privacy_notes coverage is meaningful.
+// Pulled from CONTRIBUTING.md and AGENTS.md: hooks, MCP servers,
+// skills, commands, and statuslines should disclose safety/privacy
+// behavior. Other categories (guides, collections, rules) have no
+// runtime side-effects to disclose.
+export const SAFETY_RELEVANT_CATEGORIES = Object.freeze([
+  "hooks",
+  "mcp",
+  "skills",
+  "commands",
+  "statuslines",
+]);
+
+// Categories that ship installable packages whose trust metadata
+// (downloadTrust / packageVerified / packageVerifiedAt) the directory
+// surfaces to users.
+export const PACKAGEABLE_CATEGORIES = Object.freeze(["skills", "mcp"]);
 
 function clean(value) {
   return String(value ?? "").trim();
@@ -332,5 +362,214 @@ export function buildContentPromptReport(entries, maxPrompts = 30) {
     generatedAt: quality.generatedAt,
     count: prompts.length,
     prompts,
+  };
+}
+
+function pickSourceDate(entry) {
+  const repoUpdated = clean(entry.repoUpdatedAt);
+  if (repoUpdated) return { sourceDate: repoUpdated, source: "repoUpdatedAt" };
+  const lastVerified = clean(entry.lastVerifiedAt);
+  if (lastVerified)
+    return { sourceDate: lastVerified, source: "lastVerifiedAt" };
+  const added = clean(entry.dateAdded);
+  if (added) return { sourceDate: added, source: "dateAdded" };
+  return { sourceDate: "", source: "" };
+}
+
+export function deriveSourceFreshness(entry, referenceDate = new Date()) {
+  const { sourceDate, source } = pickSourceDate(entry);
+  if (!sourceDate) {
+    return { bucket: "unknown", ageDays: null, sourceDate: "", source: "" };
+  }
+  const parsed = new Date(sourceDate);
+  if (Number.isNaN(parsed.getTime())) {
+    return { bucket: "unknown", ageDays: null, sourceDate, source };
+  }
+  const referenceTime =
+    referenceDate instanceof Date
+      ? referenceDate.getTime()
+      : new Date(referenceDate).getTime();
+  const ageDays = Math.max(
+    0,
+    Math.floor((referenceTime - parsed.getTime()) / 86_400_000),
+  );
+  let bucket;
+  if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.freshDays) bucket = "fresh";
+  else if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.agingDays) bucket = "aging";
+  else if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.staleDays) bucket = "stale";
+  else bucket = "dormant";
+  return { bucket, ageDays, sourceDate, source };
+}
+
+function hasNonEmptyStringArray(value) {
+  return (
+    Array.isArray(value) &&
+    value.some((item) => clean(typeof item === "string" ? item : "").length > 0)
+  );
+}
+
+function isSafetyRelevant(category) {
+  return SAFETY_RELEVANT_CATEGORIES.includes(category);
+}
+
+function isPackageable(category) {
+  return PACKAGEABLE_CATEGORIES.includes(category);
+}
+
+export function buildEntrySourceHealth(entry, referenceDate = new Date()) {
+  const provenance = buildSourceProvenance(entry);
+  const freshness = deriveSourceFreshness(entry, referenceDate);
+  const hasSafetyNotes = hasNonEmptyStringArray(entry.safetyNotes);
+  const hasPrivacyNotes = hasNonEmptyStringArray(entry.privacyNotes);
+  const sourceBacked =
+    provenance.hasExternalSource ||
+    provenance.hasFirstPartyPackage ||
+    provenance.sourceQuality === "local-editorial-source" ||
+    provenance.sourceQuality === "source-free-first-party";
+  const unprovenancedSource =
+    !provenance.hasExternalSource &&
+    !provenance.hasFirstPartyPackage &&
+    provenance.sourceQuality !== "local-editorial-source" &&
+    provenance.sourceQuality !== "source-free-first-party";
+
+  const safetyRelevant = isSafetyRelevant(entry.category);
+  const packageable = isPackageable(entry.category);
+
+  const missingSafetyNotes = safetyRelevant && !hasSafetyNotes;
+  const missingPrivacyNotes = safetyRelevant && !hasPrivacyNotes;
+  const packageTrust = entry.downloadTrust || null;
+  const packageVerified = entry.packageVerified === true;
+  // Skills/MCP entries that don't disclose a downloadTrust label OR
+  // aren't first-party packages are the ones a tenant needs to evaluate
+  // manually. We don't gate on packageVerified here because community
+  // submissions are intentionally not auto-verified.
+  const missingPackageTrust = packageable && !packageTrust;
+
+  const stale = freshness.bucket === "stale" || freshness.bucket === "dormant";
+  const attentionReasons = [];
+  if (unprovenancedSource) attentionReasons.push("unprovenanced-source");
+  if (stale) attentionReasons.push("stale-source");
+  if (freshness.bucket === "unknown")
+    attentionReasons.push("unknown-source-date");
+  if (missingSafetyNotes) attentionReasons.push("missing-safety-notes");
+  if (missingPrivacyNotes) attentionReasons.push("missing-privacy-notes");
+  if (missingPackageTrust) attentionReasons.push("missing-package-trust");
+
+  return {
+    key: `${entry.category}:${entry.slug}`,
+    category: entry.category,
+    slug: entry.slug,
+    title: entry.title,
+    freshness,
+    sourceBacked,
+    unprovenancedSource,
+    hasSafetyNotes,
+    hasPrivacyNotes,
+    missingSafetyNotes,
+    missingPrivacyNotes,
+    packageTrust,
+    packageVerified,
+    missingPackageTrust,
+    needsAttention: attentionReasons.length > 0,
+    attentionReasons,
+  };
+}
+
+function emptyFreshnessBuckets() {
+  return { fresh: 0, aging: 0, stale: 0, dormant: 0, unknown: 0 };
+}
+
+function incrementBucket(buckets, bucket) {
+  if (Object.hasOwn(buckets, bucket)) {
+    buckets[bucket] += 1;
+  }
+}
+
+function buildSourceHealthCategoryBreakdown(rows) {
+  return Object.fromEntries(
+    categorySpec.categoryOrder.map((category) => {
+      const categoryRows = rows.filter((row) => row.category === category);
+      const buckets = emptyFreshnessBuckets();
+      for (const row of categoryRows) {
+        incrementBucket(buckets, row.freshness.bucket);
+      }
+      return [
+        category,
+        {
+          count: categoryRows.length,
+          freshness: buckets,
+          sourceBackedCount: categoryRows.filter((row) => row.sourceBacked)
+            .length,
+          unprovenancedSourceCount: categoryRows.filter(
+            (row) => row.unprovenancedSource,
+          ).length,
+          missingSafetyNotesCount: categoryRows.filter(
+            (row) => row.missingSafetyNotes,
+          ).length,
+          missingPrivacyNotesCount: categoryRows.filter(
+            (row) => row.missingPrivacyNotes,
+          ).length,
+          missingPackageTrustCount: categoryRows.filter(
+            (row) => row.missingPackageTrust,
+          ).length,
+          packageVerifiedCount: categoryRows.filter(
+            (row) => row.packageVerified,
+          ).length,
+          needsAttentionCount: categoryRows.filter((row) => row.needsAttention)
+            .length,
+        },
+      ];
+    }),
+  );
+}
+
+export function buildSourceHealthReport(entries) {
+  const generatedAt = generatedAtForEntries(entries);
+  const referenceDate = new Date(generatedAt);
+  const rows = entries.map((entry) =>
+    buildEntrySourceHealth(entry, referenceDate),
+  );
+
+  const freshnessBuckets = emptyFreshnessBuckets();
+  for (const row of rows) {
+    incrementBucket(freshnessBuckets, row.freshness.bucket);
+  }
+
+  const sourceBackedCount = rows.filter((row) => row.sourceBacked).length;
+  const unprovenancedSourceCount = rows.filter(
+    (row) => row.unprovenancedSource,
+  ).length;
+  const missingSafetyNotesCount = rows.filter(
+    (row) => row.missingSafetyNotes,
+  ).length;
+  const missingPrivacyNotesCount = rows.filter(
+    (row) => row.missingPrivacyNotes,
+  ).length;
+  const missingPackageTrustCount = rows.filter(
+    (row) => row.missingPackageTrust,
+  ).length;
+  const packageVerifiedCount = rows.filter((row) => row.packageVerified).length;
+  const needsAttentionCount = rows.filter((row) => row.needsAttention).length;
+
+  return {
+    schemaVersion: SOURCE_HEALTH_REPORT_SCHEMA_VERSION,
+    kind: "content-source-health-report",
+    generatedAt,
+    count: rows.length,
+    thresholds: { ...SOURCE_FRESHNESS_THRESHOLDS },
+    safetyRelevantCategories: [...SAFETY_RELEVANT_CATEGORIES],
+    packageableCategories: [...PACKAGEABLE_CATEGORIES],
+    summary: {
+      freshness: freshnessBuckets,
+      sourceBackedCount,
+      unprovenancedSourceCount,
+      missingSafetyNotesCount,
+      missingPrivacyNotesCount,
+      missingPackageTrustCount,
+      packageVerifiedCount,
+      needsAttentionCount,
+    },
+    categoryBreakdown: buildSourceHealthCategoryBreakdown(rows),
+    entries: rows,
   };
 }
