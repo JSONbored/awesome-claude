@@ -75,7 +75,10 @@ describe("submission automation workflows", () => {
   }
 
   function runContentPolicyForChangedFiles(
-    files: Record<string, string>,
+    files: Record<
+      string,
+      string | { content: string; status?: string; baseContent?: string }
+    >,
     options: {
       headRepo?: string;
       baseRepo?: string;
@@ -87,9 +90,17 @@ describe("submission automation workflows", () => {
     );
     const changedFiles = [];
 
-    for (const [filePath, content] of Object.entries(files)) {
+    for (const [filePath, spec] of Object.entries(files)) {
+      const content = typeof spec === "string" ? spec : spec.content;
+      const status = typeof spec === "string" ? "modified" : spec.status;
+      const baseContent =
+        typeof spec === "string" ? undefined : spec.baseContent;
       writeFile(path.join(tmpDir, filePath), content);
-      changedFiles.push({ filename: filePath, status: "modified" });
+      changedFiles.push({
+        filename: filePath,
+        status: status || "modified",
+        ...(baseContent === undefined ? {} : { baseContent }),
+      });
     }
 
     const filesPath = path.join(tmpDir, "changed-files.json");
@@ -639,6 +650,154 @@ description: Daily Claude Code retro dashboard hook.
     expect(result.ok).toBe(false);
     expect(result.report?.failures.join("\n")).toContain(
       "Direct contributor PRs should not edit README.md",
+    );
+  });
+
+  it("blocks new direct content PR entries without submitter provenance", () => {
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/no-provenance.mdx": {
+        status: "added",
+        content: contentFixture(
+          `
+title: No Provenance MCP
+slug: no-provenance
+category: mcp
+description: Example MCP server without submitter provenance.
+installCommand: "npx -y no-provenance"
+usageSnippet: "claude mcp add no-provenance -- npx -y no-provenance"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "missing_direct_pr_submitter_content/mcp/no-provenance.mdx",
+        }),
+      ]),
+    );
+  });
+
+  it("allows external metadata updates to existing content without submitter provenance", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing Hook
+slug: existing-hook
+category: hooks
+description: Existing SessionStart hook entry.
+`,
+      "This SessionStart hook reads local workspace logs and summarizes user activity.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/hooks/existing-hook.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing Hook
+slug: existing-hook
+category: hooks
+description: Existing SessionStart hook entry.
+safetyNotes:
+  - Runs as a Claude Code SessionStart hook and can execute local shell scripts.
+privacyNotes:
+  - Reads local Claude Code activity and workspace-derived logs for summaries.
+`,
+          "This SessionStart hook reads local workspace logs and summarizes user activity.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.report?.provenanceFindings).toEqual([]);
+  });
+
+  it("blocks external metadata updates that change existing submitter provenance", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+      "Source-backed MCP server content.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/existing-mcp.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: someone-else
+submittedByUrl: https://github.com/someone-else
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_existing_provenance_change_content/mcp/existing-mcp.mdx",
+        }),
+      ]),
+    );
+  });
+
+  it("blocks external metadata updates that add provenance to existing content", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+      "Source-backed MCP server content.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/existing-mcp.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_existing_provenance_change_content/mcp/existing-mcp.mdx",
+        }),
+      ]),
     );
   });
 
