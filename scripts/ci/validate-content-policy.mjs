@@ -346,11 +346,6 @@ function submitterProvenanceChanged(entry) {
   );
 }
 
-function isNewDirectContentEntry(entry) {
-  if (entry.status === "added" || !entry.baseExists) return true;
-  return false;
-}
-
 function addGeneratedArtifactSignals(report, files, sourceType) {
   if (sourceType !== "external_direct") return;
 
@@ -647,17 +642,18 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
-    if (!isNewDirectContentEntry(entry)) {
-      if (submitterProvenanceChanged(entry)) {
-        addProvenanceFinding(
-          report,
-          "error",
-          `direct_pr_existing_provenance_change_${entry.filename}`,
-          "Direct contributor PRs cannot change submitter provenance on existing content",
-          `${entry.filename}: leave existing submittedBy/submittedByUrl unchanged; maintainers can handle attribution corrections separately.`,
-        );
-      }
-      continue;
+    if (
+      entry.status !== "added" &&
+      entry.baseExists &&
+      submitterProvenanceChanged(entry)
+    ) {
+      addProvenanceFinding(
+        report,
+        "error",
+        `direct_pr_existing_provenance_change_${entry.filename}`,
+        "Direct contributor PRs cannot change submitter provenance on existing content",
+        `${entry.filename}: leave existing submittedBy/submittedByUrl unchanged; maintainers can handle attribution corrections separately.`,
+      );
     }
 
     const provenance = entry.provenance;

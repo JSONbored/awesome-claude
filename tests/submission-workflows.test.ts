@@ -681,7 +681,7 @@ usageSnippet: "claude mcp add no-provenance -- npx -y no-provenance"
     );
   });
 
-  it("allows external metadata updates to existing content without submitter provenance", () => {
+  it("blocks external metadata updates to existing content when submitter provenance is missing", () => {
     const baseContent = contentFixture(
       `
 title: Existing Hook
@@ -711,8 +711,14 @@ privacyNotes:
       },
     });
 
-    expect(result.ok).toBe(true);
-    expect(result.report?.provenanceFindings).toEqual([]);
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "missing_direct_pr_submitter_content/hooks/existing-hook.mdx",
+        }),
+      ]),
+    );
   });
 
   it("blocks external metadata updates that change existing submitter provenance", () => {
