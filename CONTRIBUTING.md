@@ -22,6 +22,8 @@ Use GitHub issue templates when the website is not convenient:
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
 
+For accepted, rejected, and rerouted examples across agents, MCP servers, skills, hooks, commands, collections, and paid/tool listings, see [`examples/content/SUBMISSION_EXAMPLES.md`](examples/content/SUBMISSION_EXAMPLES.md).
+
 For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful safety/privacy behavior in the submission fields:
 
 - `safety_notes`: code execution, package install risk, write/delete actions, background workers, network access, account writes, or destructive behavior.
