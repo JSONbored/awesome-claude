@@ -3,25 +3,23 @@
 `main` is the production promotion branch. Production deploys should remain
 gated by the Cloudflare Worker and GitHub integration attached to `main`.
 
-Required checks before merging:
+Required check before merging:
 
-- `pnpm validate:clean`
-- `pnpm validate:tasks`
-- `pnpm validate:content:strict`
-- `pnpm validate:category-spec`
-- `pnpm validate:packages`
-- `pnpm validate:raycast-feed`
-- `pnpm validate:emails`
-- `pnpm resend:sync-templates -- --dry-run`
-- `pnpm test:mcp`
-- `pnpm test`
-- `pnpm test:e2e`
-- `pnpm type-check`
-- `pnpm build`
-- Raycast `npm ci && npm run lint && npm run build`
-- `validate-pr-preview`, which deploys or resolves the PR preview URL and then
-  runs `pnpm validate:deployment-artifacts -- --base-url <preview-url>`
-- `trunk check --show-existing --all --no-progress`
+- `required-pr-gate`
+
+`required-pr-gate` summarizes the routed `PR Validation` lanes. Only lanes
+relevant to the changed files should run. Content submissions run the affected
+content category validators plus `validate-content-policy`; web, MCP, Raycast,
+package, registry, and CI lanes run only when their owned files change.
+
+Advisory checks before merging:
+
+- Superagent Marketplace `Contributor trust` and `Security scan`.
+- `superagent-repo-scan`, when scanner secrets are available.
+- `pipelock-advisory-scan`.
+
+The advisory checks should stay non-required until they have passed cleanly on
+several normal HeyClaude PRs. Socket should apply only to dependency PRs.
 
 Development deploys may target the OpenNext Cloudflare dev Worker only:
 

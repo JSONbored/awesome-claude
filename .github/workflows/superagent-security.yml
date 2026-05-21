@@ -1,0 +1,84 @@
+name: Superagent Repo Scan
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  superagent-repo-scan:
+    name: superagent-repo-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check scanner secrets
+        id: scanner-secrets
+        env:
+          SUPERAGENT_API_KEY: ${{ secrets.SUPERAGENT_API_KEY }}
+          DAYTONA_API_KEY: ${{ secrets.DAYTONA_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPERAGENT_API_KEY:-}" ] || [ -z "${DAYTONA_API_KEY:-}" ]; then
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Superagent repo scan"
+              echo
+              echo "Skipped because SUPERAGENT_API_KEY or DAYTONA_API_KEY is unavailable in this workflow context."
+              echo "Fork pull requests rely on the installed Marketplace app checks."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "available=true" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout trusted scanner tools
+        if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.base.sha || github.sha }}
+          path: scanner-tools
+          persist-credentials: false
+
+      - name: Setup pnpm
+        if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v4 action lineage
+
+      - name: Setup Node.js
+        if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: 24.15.0
+
+      - name: Install locked scanner dependency
+        id: scanner-install
+        if: ${{ steps.scanner-secrets.outputs.available == 'true' }}
+        working-directory: scanner-tools
+        run: |
+          set -euo pipefail
+          if ! node -e "const p = require('./package.json'); process.exit(p.devDependencies?.['safety-agent-cli'] ? 0 : 1)"; then
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "## Superagent repo scan"
+              echo
+              echo "Skipped because the trusted base branch does not yet include the locked scanner dependency."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          pnpm install --frozen-lockfile --ignore-scripts
+          echo "ready=true" >> "$GITHUB_OUTPUT"
+
+      - name: Run Superagent repo scan
+        if: ${{ steps.scanner-install.outputs.ready == 'true' }}
+        working-directory: scanner-tools
+        env:
+          SUPERAGENT_API_KEY: ${{ secrets.SUPERAGENT_API_KEY }}
+          DAYTONA_API_KEY: ${{ secrets.DAYTONA_API_KEY }}
+          SCAN_REPO: ${{ github.event.pull_request.head.repo.clone_url || github.event.repository.clone_url }}
+          SCAN_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          pnpm exec superagent scan \
+            --repo "$SCAN_REPO" \
+            --branch "$SCAN_BRANCH"

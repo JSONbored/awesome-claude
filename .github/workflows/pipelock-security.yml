@@ -1,0 +1,29 @@
+name: Pipelock Advisory Scan
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  pipelock-advisory-scan:
+    name: pipelock-advisory-scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Run Pipelock advisory scan
+        # Pipelock v2 tag dereferenced to a full commit SHA for selected-actions policy.
+        uses: luckyPipewrench/pipelock@dcd25d8ea407f087fa9f2d4a0f8bddea5c997f07
+        continue-on-error: true
+        with:
+          scan-diff: "true"
+          fail-on-findings: "false"

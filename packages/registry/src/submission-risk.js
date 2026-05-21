@@ -62,8 +62,8 @@ function compactWhitespace(value) {
 const GITHUB_LOGIN_PATTERN =
   /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?(?:\[bot\])?$/;
 
-// Keep these Markdown/login helpers in sync with the inline pull_request_target
-// script in .github/workflows/submission-pr-risk.yml.
+// Keep these Markdown/login helpers in sync with CI policy reporting so issue
+// and PR review summaries escape contributor-controlled text consistently.
 function isGitHubLogin(value) {
   return GITHUB_LOGIN_PATTERN.test(normalizeText(value));
 }

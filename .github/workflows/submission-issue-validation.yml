@@ -239,41 +239,62 @@ jobs:
           fs.writeFileSync(".github/tmp/submission-import-preview.md", result.stdout, "utf8");
           NODE
 
-      - name: Post validation report comment
+      - name: Post HeyClaude submission check comment
         if: always()
         uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
         with:
           script: |
             const fs = require("node:fs");
-            const reportPath = ".github/tmp/submission-validation.json";
-            if (!fs.existsSync(reportPath)) return;
+            const validationPath = ".github/tmp/submission-validation.json";
+            if (!fs.existsSync(validationPath)) return;
 
-            const report = JSON.parse(fs.readFileSync(reportPath, "utf8"));
+            const report = JSON.parse(fs.readFileSync(validationPath, "utf8"));
+            const riskJsonPath = ".github/tmp/submission-risk.json";
+            const riskReport = fs.existsSync(riskJsonPath)
+              ? JSON.parse(fs.readFileSync(riskJsonPath, "utf8"))
+              : {};
 
-            const marker = "<!-- submission-validation-report -->";
+            const marker = "<!-- heyclaude-submission-check -->";
+            const escapeMarkdownOrMention = (value) =>
+              String(value ?? "")
+                .replace(/\r/g, "")
+                .replace(/\n/g, " ")
+                .slice(0, 4000)
+                .replace(/\\/g, "\\\\")
+                .replace(/`/g, "\\`")
+                .replace(/([*_{}\[\]()#+\-.!|>])/g, "\\$1")
+                .replace(/</g, "&lt;")
+                .replace(/@/g, "&#64;");
+            const escapeCodeBlock = (value) =>
+              String(value ?? "")
+                .replace(/\r/g, "")
+                .replace(/```/g, "` ` `")
+                .replace(/@/g, "&#64;");
             const heading = report.skipped
-              ? "## Submission validation: needs more detail"
+              ? "## HeyClaude submission check: needs more detail"
               : report.ok
-                ? "## Submission validation: passed"
-                : "## Submission validation: failed";
+                ? "## HeyClaude submission check: passed"
+                : "## HeyClaude submission check: failed";
 
             const lines = [
               marker,
               heading,
               "",
-              `- Category: \`${report.category || "unknown"}\``,
+              `- Category: ${escapeMarkdownOrMention(report.category || "unknown")}`,
               report.errors?.length ? `- Errors: ${report.errors.length}` : "- Errors: 0",
-              report.warnings?.length ? `- Warnings: ${report.warnings.length}` : "- Warnings: 0"
+              report.warnings?.length ? `- Warnings: ${report.warnings.length}` : "- Warnings: 0",
+              `- Risk tier: ${escapeMarkdownOrMention(riskReport.riskTier || "unknown")}`,
+              `- Policy decision: ${escapeMarkdownOrMention(riskReport.policyDecision || "maintainer_review")}`
             ];
 
             if (report.errors?.length) {
               lines.push("", "### Errors");
-              for (const error of report.errors) lines.push(`- ${error}`);
+              for (const error of report.errors) lines.push(`- ${escapeMarkdownOrMention(error)}`);
             }
 
             if (report.warnings?.length) {
               lines.push("", "### Warnings");
-              for (const warning of report.warnings) lines.push(`- ${warning}`);
+              for (const warning of report.warnings) lines.push(`- ${escapeMarkdownOrMention(warning)}`);
             }
 
             if (report.skipped) {
@@ -291,14 +312,46 @@ jobs:
               const [firstLine, ...rest] = preview.split("\n");
               const importPath = firstLine?.replace(/^Would write\s+/, "").trim();
               if (importPath) {
-                lines.push("", "### Import preview", `- Output path: \`${importPath}\``);
+                lines.push("", "### Import preview", `- Output path: ${escapeMarkdownOrMention(importPath)}`);
               } else {
                 lines.push("", "### Import preview");
               }
               const mdxPreview = rest.join("\n").trim();
               if (mdxPreview) {
-                const capped = mdxPreview.split("\n").slice(0, 120).join("\n");
+                const capped = escapeCodeBlock(mdxPreview.split("\n").slice(0, 120).join("\n"));
                 lines.push("", "<details><summary>Dry-run MDX preview</summary>", "", "```mdx", capped, "```", "</details>");
+              }
+            }
+
+            if (riskReport.reviewFlags?.length) {
+              lines.push("", "### Security/safety signals");
+              for (const flag of riskReport.reviewFlags) {
+                lines.push(
+                  `- ${escapeMarkdownOrMention(flag.severity || "info")} ${escapeMarkdownOrMention(flag.summary || flag.id)} (${escapeMarkdownOrMention(flag.id)})`
+                );
+              }
+            }
+
+            if (riskReport.classificationWarnings?.length) {
+              lines.push("", "### Policy warnings");
+              for (const warning of riskReport.classificationWarnings) {
+                lines.push(
+                  `- ${escapeMarkdownOrMention(warning.summary || warning.id)} (${escapeMarkdownOrMention(warning.id)})`
+                );
+              }
+            }
+
+            if (riskReport.requestChangesReasons?.length) {
+              lines.push("", "### Blockers");
+              for (const reason of riskReport.requestChangesReasons) {
+                lines.push(`- ${escapeMarkdownOrMention(reason)}`);
+              }
+            }
+
+            if (riskReport.humanReviewNotes?.length) {
+              lines.push("", "### Maintainer notes");
+              for (const note of riskReport.humanReviewNotes) {
+                lines.push(`- ${escapeMarkdownOrMention(note)}`);
               }
             }
 
@@ -313,7 +366,17 @@ jobs:
               per_page: 100
             });
 
-            const existing = comments.find((comment) => comment.body?.includes(marker));
+            const isWorkflowBotComment = (comment) =>
+              comment.user?.type === "Bot" &&
+              comment.user?.login === "github-actions[bot]" &&
+              typeof comment.body === "string";
+            const existing = comments.find(
+              (comment) => isWorkflowBotComment(comment) && comment.body.includes(marker)
+            );
+            const oldMarkers = [
+              "<!-- submission-validation-report -->",
+              "<!-- submission-risk-report -->"
+            ];
 
             if (existing) {
               if (existing.body !== body) {
@@ -333,41 +396,18 @@ jobs:
               });
             }
 
-      - name: Post risk report comment
-        if: always()
-        uses: actions/github-script@373c709c69115d41ff229c7e5df9f8788daa9553
-        with:
-          script: |
-            const fs = require("node:fs");
-            const reportPath = ".github/tmp/submission-risk.md";
-            if (!fs.existsSync(reportPath)) return;
-            const body = fs.readFileSync(reportPath, "utf8");
-            const marker = "<!-- submission-risk-report -->";
-            const { owner, repo } = context.repo;
-            const issue_number = context.issue.number;
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner,
-              repo,
-              issue_number,
-              per_page: 100
-            });
-            const existing = comments.find((comment) => comment.body?.includes(marker));
-            if (existing) {
-              if (existing.body !== body) {
-                await github.rest.issues.updateComment({
+            for (const comment of comments) {
+              if (
+                isWorkflowBotComment(comment) &&
+                comment.id !== existing?.id &&
+                oldMarkers.some((oldMarker) => comment.body.includes(oldMarker))
+              ) {
+                await github.rest.issues.deleteComment({
                   owner,
                   repo,
-                  comment_id: existing.id,
-                  body
+                  comment_id: comment.id
                 });
               }
-            } else {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body
-              });
             }
 
       - name: Fail when submission risk is critical

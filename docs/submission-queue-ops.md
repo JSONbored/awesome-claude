@@ -101,27 +101,32 @@ Maintainers still review the generated PR before merge.
 - `Submission Stale Manager` runs weekly and on demand. Manual dispatch defaults
   to dry-run and does not accept runtime inputs. Scheduled runs can add labels,
   upsert one reminder comment, and close only eligible stale submissions.
-- `Submission Issue Validation` posts both schema validation and
-  security/safety review comments. The review is deterministic: it checks URLs,
-  install commands, malware/abuse terms, suspicious executable paths, sensitive
-  capability words, contributor metadata, and source signals without executing
-  submitted code. It does not create branches, open PRs, or dispatch validation
-  workflows from public issue events. Regulated-domain status, category fit, and
-  promotional tone are not treated as security risk.
-- `HeyClaude Submission Bot` may label issues, keep stable validation/risk
-  comments updated, and open import PRs only after a maintainer applies
+- `Submission Issue Validation` posts one stable HeyClaude submission check
+  comment covering schema, dry-run import preview, and deterministic
+  security/safety review. The review checks URLs, install commands,
+  malware/abuse terms, suspicious executable paths, sensitive capability words,
+  contributor metadata, and source signals without executing submitted code. It
+  does not create branches, open PRs, or dispatch validation workflows from
+  public issue events. Regulated-domain status, category fit, and promotional
+  tone are not treated as security risk.
+- `HeyClaude Submission Bot` may label issues, keep the stable submission check
+  comment updated, and open import PRs only after a maintainer applies
   `accepted` or `import-approved` and deterministic gates pass. It never
   auto-approves, auto-merges, or publishes content.
 - `Package Artifact Scan` validates reviewed package archives with archive
   safety limits and optional ClamAV, Trivy, and OSV-Scanner checks. Scans are
   quarantine signals, not a warranty.
-- `Submission PR Risk Review` runs on direct content PRs through
-  `pull_request_target`, but only checks out trusted base-repo code. It reads PR
-  content through the GitHub API as data and never executes fork code. It may
-  request changes for deterministic blockers such as schema/frontmatter failure,
-  category/path mismatch, generated-artifact churn, community ZIP/MCPB hosting,
-  unsafe `packageVerified: true`, provenance failure, or missing required
-  safety/privacy notes for sensitive behavior.
+- `validate-content-policy` runs inside `PR Validation` and enforces only
+  deterministic HeyClaude UGC blockers: category/path/frontmatter consistency,
+  generated-artifact churn from external contributors, community ZIP/MCPB or
+  `/downloads/**` hosting requests, unsafe `packageVerified: true`, provenance
+  failure, and missing required safety/privacy notes for sensitive behavior.
+  It emits concise annotations only when it fails.
+- Installed external security apps provide contributor and repo trust signals.
+  Superagent Marketplace checks (`Contributor trust` and `Security scan`) are
+  the primary low-noise contributor security layer, while advisory Superagent
+  CLI and Pipelock workflows are non-required until they prove stable on
+  HeyClaude PRs.
 - Product-shaped tools, hosted apps, services, SaaS products, subscriptions, and
   sponsored/featured placement interest route through
   `https://heyclau.de/tools/submit` unless a maintainer explicitly approves a
@@ -150,9 +155,9 @@ Maintainers still review the generated PR before merge.
    when the deterministic gates indicate the issue is import-ready.
 
 Direct content PRs are allowed for advanced contributors, but they must pass the
-same content validation and deterministic security/safety review. A `risk-high`
-label does not automatically reject a PR; it means maintainers need to verify
-source, permissions, install safety, and user-consent boundaries before merge.
+same content validation and deterministic content policy gate. External scanner
+findings are maintainer review signals unless branch protection is updated to
+require a specific app check.
 Direct product/app PRs belong under `content/tools/` and should include
 `websiteUrl`, `documentationUrl`, `pricingModel`, `disclosure`,
 `applicationCategory`, and `operatingSystem` before merge.

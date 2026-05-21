@@ -1,0 +1,14 @@
+version: 2
+
+triggerPaths:
+  - package.json
+  - pnpm-lock.yaml
+  - apps/web/package.json
+  - packages/mcp/package.json
+  - packages/registry/package.json
+  - integrations/raycast/package.json
+
+githubApp:
+  enabled: true
+  dependencyOverviewEnabled: true
+  disableCommentsAndCheckRuns: false

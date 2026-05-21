@@ -72,6 +72,7 @@
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-email": "6.1.5",
+    "safety-agent-cli": "0.1.6",
     "tsx": "4.22.2",
     "vitest": "4.1.6"
   }

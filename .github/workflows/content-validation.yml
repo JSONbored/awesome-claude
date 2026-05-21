@@ -62,24 +62,6 @@ jobs:
             echo "content_categories_json=[]" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Reject external generated artifact changes
-        if: ${{ github.event_name == 'pull_request' }}
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
-          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
-        run: |
-          set -euo pipefail
-          if [ "$HEAD_REPO" = "$GITHUB_REPOSITORY" ]; then
-            exit 0
-          fi
-
-          blocked="$(git diff --name-only "$BASE_SHA...HEAD" -- README.md apps/web/public/data apps/web/src/generated apps/web/public/downloads content/skills content/mcp | grep -E '^(README\.md$|apps/web/public/data/|apps/web/src/generated/|apps/web/public/downloads/|content/skills/.+\.zip$|content/mcp/.+\.mcpb$)' || true)"
-          if [ -n "$blocked" ]; then
-            echo "::error::Generated artifacts and package artifacts are maintainer-owned. External contributor PRs should edit source content only, not README.md, registry outputs, generated source, public download mirrors, or source ZIP/MCPB packages."
-            printf '%s\n' "$blocked"
-            exit 1
-          fi
-
   validate-ci:
     name: validate-ci
     needs: classify-pr
@@ -135,7 +117,16 @@ jobs:
 
       - name: Trunk Check
         if: ${{ needs.classify-pr.outputs.ci == 'true' }}
-        run: trunk check --ci --all
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ]; then
+            trunk check --ci --upstream "$BASE_SHA"
+          else
+            trunk check --ci --all
+          fi
 
   validate-content-category:
     name: validate-content-${{ matrix.category }}
@@ -173,6 +164,53 @@ jobs:
 
       - name: Audit ${{ matrix.category }} content report
         run: pnpm audit:content -- --category "${{ matrix.category }}"
+
+  validate-content-policy:
+    name: validate-content-policy
+    needs: classify-pr
+    if: ${{ github.event_name == 'pull_request' && (needs.classify-pr.outputs.content == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.packages == 'true') }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-validate-content-policy-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.15.0
+
+      - name: Validate direct content policy
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+          policy_path="scripts/ci/validate-content-policy.mjs"
+          trusted_policy="${RUNNER_TEMP:-.}/validate-content-policy.mjs"
+
+          if git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
+            git show "$BASE_SHA:$policy_path" > "$trusted_policy"
+          elif [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            cp "$policy_path" "$trusted_policy"
+          else
+            echo "::error::Trusted content policy script is missing from the base branch."
+            exit 1
+          fi
+
+          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE"
 
   validate-content-config:
     name: validate-content-config
@@ -218,6 +256,7 @@ jobs:
     needs:
       - classify-pr
       - validate-content-category
+      - validate-content-policy
       - validate-content-config
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -645,6 +684,7 @@ jobs:
       - classify-pr
       - validate-ci
       - validate-content
+      - validate-content-policy
       - validate-registry
       - validate-web
       - validate-mcp
