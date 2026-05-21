@@ -2,6 +2,7 @@
 
 These example files show the expected frontmatter/body shape for each category.
 
+- `SUBMISSION_EXAMPLES.md`
 - `agent.example.mdx`
 - `rule.example.mdx`
 - `mcp.example.mdx`
@@ -24,6 +25,7 @@ pnpm build
 Important:
 
 - Prefer the public Submit page or GitHub issue forms for free resource submissions.
+- Use `SUBMISSION_EXAMPLES.md` to compare accepted, rejected, and rerouted submissions before opening an issue or PR.
 - Pull requests are welcome for advanced contributors, but generated PRs and direct PRs are still maintainer-reviewed before merge.
 - Tools, apps, services, sponsored placements, claims, and jobs use the website lead forms rather than content issue templates.
 - Contributor-provided affiliate, referral, or tracking URLs are rejected. Use official source, docs, release, or website URLs.
