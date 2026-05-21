@@ -97,6 +97,12 @@ export function SiteFooter() {
             About
           </Link>
           <Link
+            href="/community"
+            className="block transition hover:text-foreground"
+          >
+            Community
+          </Link>
+          <Link
             href="/submit"
             className="block transition hover:text-foreground"
           >
