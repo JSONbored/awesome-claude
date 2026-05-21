@@ -591,6 +591,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain("needs.classify-pr.outputs.packages == 'true'");
     expect(source).toContain("validate-content-policy");
     expect(source).toContain("trusted_policy");
+    expect(source).toContain("trusted_policy_dir");
+    expect(source).toContain("runtime_lock_path");
+    expect(source).toContain(
+      "scripts/ci/content-policy-runtime/package-lock.json",
+    );
+    expect(source).toContain("npm ci --ignore-scripts");
+    expect(source).toContain("--ignore-scripts");
+    expect(source).toContain("--no-audit --no-fund");
     expect(source).toContain("persist-credentials: false");
     expect(source).not.toContain('ln -s "$GITHUB_WORKSPACE/node_modules"');
     expect(source).toContain(

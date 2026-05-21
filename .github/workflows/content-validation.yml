@@ -199,7 +199,22 @@ jobs:
         run: |
           set -euo pipefail
           policy_path="scripts/ci/validate-content-policy.mjs"
-          trusted_policy="${RUNNER_TEMP:-.}/validate-content-policy.mjs"
+          runtime_manifest_path="scripts/ci/content-policy-runtime/package.json"
+          runtime_lock_path="scripts/ci/content-policy-runtime/package-lock.json"
+          trusted_policy_dir="${RUNNER_TEMP:-.}/trusted-content-policy"
+          trusted_policy="$trusted_policy_dir/validate-content-policy.mjs"
+          rm -rf "$trusted_policy_dir"
+          mkdir -p "$trusted_policy_dir"
+
+          if git cat-file -e "$BASE_SHA:$runtime_manifest_path" 2>/dev/null && git cat-file -e "$BASE_SHA:$runtime_lock_path" 2>/dev/null; then
+            git show "$BASE_SHA:$runtime_manifest_path" > "$trusted_policy_dir/package.json"
+            git show "$BASE_SHA:$runtime_lock_path" > "$trusted_policy_dir/package-lock.json"
+          else
+            echo "::error::Trusted content policy runtime lockfile is missing from the base branch."
+            exit 1
+          fi
+
+          (cd "$trusted_policy_dir" && npm ci --ignore-scripts --no-audit --no-fund)
 
           if git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
             git show "$BASE_SHA:$policy_path" > "$trusted_policy"
