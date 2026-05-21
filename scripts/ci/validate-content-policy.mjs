@@ -127,6 +127,8 @@ function changedFilesFromJson(filePath) {
           filename: normalizeText(item.filename || item.path),
           status: normalizeText(item.status) || "modified",
           content: typeof item.content === "string" ? item.content : undefined,
+          baseContent:
+            typeof item.baseContent === "string" ? item.baseContent : undefined,
         },
   );
 }
@@ -142,22 +144,45 @@ function readFileContent(repoRoot, filename, status, providedContent) {
   }
 }
 
+function readBaseFileContent(filename, status, providedBaseContent, baseSha) {
+  if (typeof providedBaseContent === "string") return providedBaseContent;
+  if (status === "added") return null;
+  if (!/^[0-9a-f]{40}$/i.test(baseSha || "")) return null;
+
+  try {
+    execFileSync("git", ["cat-file", "-e", `${baseSha}:${filename}`], {
+      stdio: "ignore",
+    });
+    return execFileSync("git", ["show", `${baseSha}:${filename}`], {
+      encoding: "utf8",
+    });
+  } catch {
+    return null;
+  }
+}
+
 function resolveFiles({ repoRoot, args }) {
+  const baseSha = args["base-sha"] || process.env.BASE_SHA || "";
   const source = args["files-json"]
     ? changedFilesFromJson(args["files-json"])
-    : changedFilesFromGit(args["base-sha"] || process.env.BASE_SHA || "");
+    : changedFilesFromGit(baseSha);
 
   return source
-    .map((file) => ({
-      filename: normalizeText(file.filename),
-      status: normalizeText(file.status) || "modified",
-      content: readFileContent(
-        repoRoot,
-        normalizeText(file.filename),
-        normalizeText(file.status) || "modified",
-        file.content,
-      ),
-    }))
+    .map((file) => {
+      const filename = normalizeText(file.filename);
+      const status = normalizeText(file.status) || "modified";
+      return {
+        filename,
+        status,
+        content: readFileContent(repoRoot, filename, status, file.content),
+        baseContent: readBaseFileContent(
+          filename,
+          status,
+          file.baseContent,
+          baseSha,
+        ),
+      };
+    })
     .filter((file) => file.filename);
 }
 
@@ -310,6 +335,20 @@ function frontmatterProvenance(data = {}) {
         : null,
     importPrUrl: normalizeText(data.importPrUrl),
   };
+}
+
+function submitterProvenanceChanged(entry) {
+  const current = entry.provenance || {};
+  const base = entry.baseProvenance || {};
+  return (
+    normalizeText(current.submittedBy) !== normalizeText(base.submittedBy) ||
+    normalizeText(current.submittedByUrl) !== normalizeText(base.submittedByUrl)
+  );
+}
+
+function isNewDirectContentEntry(entry) {
+  if (entry.status === "added" || !entry.baseExists) return true;
+  return false;
 }
 
 function addGeneratedArtifactSignals(report, files, sourceType) {
@@ -600,12 +639,27 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (!entries.length) return;
   report.contentProvenance = entries.map((entry) => ({
     filename: entry.filename,
+    status: entry.status,
+    baseExists: entry.baseExists,
     ...entry.provenance,
   }));
 
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
+    if (!isNewDirectContentEntry(entry)) {
+      if (submitterProvenanceChanged(entry)) {
+        addProvenanceFinding(
+          report,
+          "error",
+          `direct_pr_existing_provenance_change_${entry.filename}`,
+          "Direct contributor PRs cannot change submitter provenance on existing content",
+          `${entry.filename}: leave existing submittedBy/submittedByUrl unchanged; maintainers can handle attribution corrections separately.`,
+        );
+      }
+      continue;
+    }
+
     const provenance = entry.provenance;
     if (!provenance.submittedBy || !provenance.submittedByUrl) {
       addProvenanceFinding(
@@ -774,6 +828,11 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
     const category = prFileCategory(file.filename);
     const fields = frontmatterFields(parsed.data, category);
     const provenance = frontmatterProvenance(parsed.data);
+    const baseParsed =
+      typeof file.baseContent === "string"
+        ? parseMdxFrontmatter(file.baseContent)
+        : { data: {} };
+    const baseProvenance = frontmatterProvenance(baseParsed.data);
     if (fields.category && fields.category !== category) {
       addClassificationWarning(
         report,
@@ -794,7 +853,14 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       );
     }
 
-    entries.push({ filename: file.filename, fields, provenance });
+    entries.push({
+      filename: file.filename,
+      status: normalizeText(file.status) || "modified",
+      baseExists: typeof file.baseContent === "string",
+      fields,
+      provenance,
+      baseProvenance,
+    });
     addContentRiskSignals(report, fields, content);
     addDisclosureNoteSignals(report, fields);
   }
