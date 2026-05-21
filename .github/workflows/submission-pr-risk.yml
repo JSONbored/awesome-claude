@@ -13,6 +13,7 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   analyze-submission-pr-risk:
@@ -2047,28 +2048,36 @@ jobs:
                   }`
                 );
               }
-              const comments = await github.paginate(github.rest.issues.listComments, {
-                ...context.repo,
-                issue_number: context.payload.pull_request.number,
-                per_page: 100
-              });
-              const existing = comments.find((comment) =>
-                comment.body?.includes(RISK_COMMENT_MARKER)
-              );
-              if (existing) {
-                if (existing.body !== markdownReport) {
-                  await github.rest.issues.updateComment({
+              try {
+                const comments = await github.paginate(github.rest.issues.listComments, {
+                  ...context.repo,
+                  issue_number: context.payload.pull_request.number,
+                  per_page: 100
+                });
+                const existing = comments.find((comment) =>
+                  comment.body?.includes(RISK_COMMENT_MARKER)
+                );
+                if (existing) {
+                  if (existing.body !== markdownReport) {
+                    await github.rest.issues.updateComment({
+                      ...context.repo,
+                      comment_id: existing.id,
+                      body: markdownReport
+                    });
+                  }
+                } else {
+                  await github.rest.issues.createComment({
                     ...context.repo,
-                    comment_id: existing.id,
+                    issue_number: context.payload.pull_request.number,
                     body: markdownReport
                   });
                 }
-              } else {
-                await github.rest.issues.createComment({
-                  ...context.repo,
-                  issue_number: context.payload.pull_request.number,
-                  body: markdownReport
-                });
+              } catch (error) {
+                core.warning(
+                  `Could not sync submission risk comment: ${
+                    error instanceof Error ? error.message : String(error)
+                  }`
+                );
               }
             } else {
               core.info("No content MDX files changed; skipping PR label/comment sync.");
