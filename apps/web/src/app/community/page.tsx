@@ -63,6 +63,13 @@ function createCommunityPageLogger(requestId: string): CommunityPageLogger {
   };
 }
 
+function normalizeError(error: unknown) {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message };
+  }
+  return { name: "Error", message: String(error || "Unknown error") };
+}
+
 async function withDuration<T>(
   callback: (context: {
     getDurationMs: () => number;
@@ -80,9 +87,14 @@ async function withDuration<T>(
   } catch (error) {
     logger.error("community.page.failed", {
       durationMs: getDurationMs(),
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: normalizeError(error),
     });
     throw error;
+  } finally {
+    logger.info("community.page.summary", {
+      durationMs: getDurationMs(),
+      requestId,
+    });
   }
 }
 
@@ -109,7 +121,7 @@ export default async function CommunityPage() {
     const contributors = await getContributors();
     const topContributors = contributors.slice(0, 12);
 
-    logger.info("community.page.summary", {
+    logger.info("community.page.loaded", {
       durationMs: getDurationMs(),
       contributorCount: contributors.length,
     });
@@ -241,7 +253,7 @@ export default async function CommunityPage() {
                         target="_blank"
                         rel="noreferrer"
                         className="text-muted-foreground hover:text-foreground"
-                        aria-label={`${contributor.name} GitHub profile`}
+                        aria-label={`${contributor.name} profile`}
                       >
                         <ExternalLink className="size-3.5" />
                       </a>
