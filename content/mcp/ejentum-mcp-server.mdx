@@ -1,0 +1,61 @@
+---
+title: Ejentum Reasoning Harness MCP Server
+slug: ejentum-mcp-server
+category: mcp
+description: Ejentum is a cognitive-harness MCP server exposing four tools (harness_reasoning, harness_code, harness_anti_deception, harness_memory) an agent calls before generating. Each call returns a structured scaffold (named failure pattern, executable procedure, suppression vectors, falsification test) the agent absorbs to harden its next response against named failure modes. Use it when an agent needs reasoning quality control, code-generation discipline, anti-sycophancy protection, or multi-turn perception sharpening.
+cardDescription: Cognitive-harness MCP server with four tools (reasoning, code, anti-deception, memory) returning structured scaffolds the agent absorbs before generating.
+seoTitle: Ejentum Reasoning Harness MCP Server for Claude
+seoDescription: Cognitive-harness MCP server with four tools (reasoning, code, anti-deception, memory). Each call returns a structured scaffold an agent absorbs before generating its response.
+author: Ejentum
+authorProfileUrl: "https://github.com/ejentum"
+dateAdded: "2026-05-22"
+repoUrl: "https://github.com/ejentum/ejentum-mcp"
+documentationUrl: "https://ejentum.com/docs/mcp_guide"
+installable: true
+installCommand: "No local install required for the hosted endpoint. Configure with Authorization: Bearer EJENTUM_API_KEY at https://api.ejentum.com/mcp. Stdio alternative: npx -y ejentum-mcp"
+usageSnippet: |-
+  {
+    "mcpServers": {
+      "ejentum": {
+        "type": "http",
+        "url": "https://api.ejentum.com/mcp",
+        "headers": {
+          "Authorization": "Bearer ${EJENTUM_API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "ejentum": {
+        "type": "http",
+        "url": "https://api.ejentum.com/mcp",
+        "headers": {
+          "Authorization": "Bearer ${EJENTUM_API_KEY}"
+        }
+      }
+    }
+  }
+prerequisites:
+  - "EJENTUM_API_KEY from https://ejentum.com/auth/register"
+  - "Claude Desktop 0.7.0+ or Claude Code with MCP support"
+  - "Internet connection for the hosted endpoint (Node.js 18+ for the stdio fallback)"
+tags:
+  - mcp
+  - reasoning
+  - anti-deception
+  - cognitive-harness
+  - agent
+keywords:
+  - ejentum
+  - reasoning-harness
+  - mcp
+  - cognitive-scaffold
+---
+
+Ejentum is a cognitive-harness MCP server that injects structured cognitive scaffolds into an agent's context before generation. It exposes four `harness_*` tools mapped to four failure-mode classes: reasoning decay, code-generation shortcuts, sycophantic capitulation, and perception drift across multi-turn context. Each call returns a scaffold with a named failure pattern, an executable procedure, suppression vectors to block specific shortcuts, and a falsification test the agent uses to self-check its next response.
+
+The server is delivered two ways: a hosted HTTPS endpoint at `https://api.ejentum.com/mcp` (Streamable HTTP, Bearer auth) or a stdio package on npm at `ejentum-mcp`. Same `EJENTUM_API_KEY` works for both. Free and paid tiers at <https://ejentum.com/auth/register>.
+
+Source at [ejentum/ejentum-mcp](https://github.com/ejentum/ejentum-mcp). Per-client install guide (Cursor, Windsurf, Cline, Continue, Zed, n8n) at <https://ejentum.com/docs/mcp_guide>.
