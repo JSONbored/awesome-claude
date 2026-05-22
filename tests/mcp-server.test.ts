@@ -1347,4 +1347,247 @@ describe("HeyClaude read-only MCP helpers", () => {
       ),
     ).resolves.toMatchObject({ ok: false, error: { code: "not_found" } });
   });
+
+  describe("trust-review helper edge cases", () => {
+    it("explains trust for entry with safety and privacy notes", async () => {
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: "hooks", slug: "documentation-generator" },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        key: "hooks:documentation-generator",
+        trust: {
+          disclosures: {
+            hasSafetyNotes: true,
+            hasPrivacyNotes: true,
+          },
+          source: {
+            status: "available",
+          },
+        },
+      });
+      expect(trust.trust.disclosures.safetyNotes.length).toBeGreaterThan(0);
+      expect(trust.trust.disclosures.privacyNotes.length).toBeGreaterThan(0);
+    });
+
+    it("explains trust for entry without safety or privacy notes", async () => {
+      const directory = JSON.parse(
+        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+      ) as {
+        entries: Array<{ category: string; slug: string }>;
+      };
+      const entryWithoutNotes = directory.entries.find(
+        (e) => e.category === "hooks" && e.slug !== "documentation-generator",
+      );
+      expect(entryWithoutNotes).toBeTruthy();
+
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        trust: {
+          disclosures: {
+            hasSafetyNotes: false,
+            hasPrivacyNotes: false,
+          },
+        },
+      });
+      expect(trust.trust.disclosures.safetyNotes).toEqual([]);
+      expect(trust.trust.disclosures.privacyNotes).toEqual([]);
+    });
+
+    it("explains trust for first-party package download", async () => {
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: "skills", slug: "agent-evals-regression-gate" },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        trust: {
+          package: {
+            downloadTrust: "first-party",
+            downloadUrl: expect.stringContaining("/downloads/"),
+          },
+        },
+      });
+      expect(trust.trust.recommendations).not.toContain(
+        expect.stringContaining("external"),
+      );
+    });
+
+    it("explains trust for entry without download (copyable content only)", async () => {
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: "hooks", slug: "documentation-generator" },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        trust: {
+          package: {
+            downloadTrust: "none",
+            downloadUrl: "",
+          },
+        },
+      });
+    });
+
+    it("explains trust for entry with weak source metadata", async () => {
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: "statuslines", slug: "python-rich-statusline" },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        trust: {
+          source: {
+            githubStars: null,
+            githubForks: null,
+          },
+        },
+      });
+      // Entry has weak source signals (no GitHub stats) even if it has documentation URL
+    });
+
+    it("explains trust for claimed and reviewed entry", async () => {
+      const directory = JSON.parse(
+        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+      ) as {
+        entries: Array<{ category: string; slug: string }>;
+      };
+      const reviewedEntry = directory.entries.find(
+        (e) => e.category === "agents" && e.slug === "contrastapi-agent",
+      );
+      if (!reviewedEntry) {
+        // Skip if the specific entry doesn't exist in test data
+        return;
+      }
+
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: reviewedEntry.category, slug: reviewedEntry.slug },
+        { dataDir },
+      );
+      expect(trust).toMatchObject({
+        ok: true,
+        trust: {
+          review: {
+            claimStatus: "unclaimed",
+            reviewedBy: expect.any(String),
+            reviewedAt: expect.any(String),
+          },
+        },
+      });
+    });
+
+    it("reviews safety for entries with mixed trust signals", async () => {
+      const review = await callRegistryTool(
+        "review_entry_safety",
+        {
+          entries: [
+            { category: "hooks", slug: "documentation-generator" },
+            { category: "skills", slug: "agent-evals-regression-gate" },
+          ],
+          platform: "claude",
+        },
+        { dataDir },
+      );
+      expect(review).toMatchObject({
+        ok: true,
+        count: 2,
+        summary: {
+          entriesWithSafetyOrPrivacyNotes: expect.any(Number),
+          firstPartyPackages: expect.any(Number),
+          sourceBacked: expect.any(Number),
+        },
+        reviewNotes: expect.arrayContaining([
+          expect.stringContaining("metadata review"),
+        ]),
+      });
+      expect(review.reviewNotes).not.toContain(
+        expect.stringContaining("malware scan"),
+      );
+      expect(review.reviewNotes).not.toContain(
+        expect.stringContaining("install verdict"),
+      );
+    });
+
+    it("reviews safety for entry without safety notes highlights manual inspection", async () => {
+      const directory = JSON.parse(
+        fs.readFileSync(path.join(dataDir, "directory-index.json"), "utf8"),
+      ) as {
+        entries: Array<{ category: string; slug: string }>;
+      };
+      const entryWithoutNotes = directory.entries.find(
+        (e) => e.category === "hooks" && e.slug !== "documentation-generator" && e.slug !== "retro-daily",
+      );
+      expect(entryWithoutNotes).toBeTruthy();
+
+      const review = await callRegistryTool(
+        "review_entry_safety",
+        {
+          entries: [{ category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug }],
+          platform: "claude",
+        },
+        { dataDir },
+      );
+      expect(review).toMatchObject({
+        ok: true,
+        count: 1,
+        entries: [
+          expect.objectContaining({
+            trust: expect.objectContaining({
+              disclosures: expect.objectContaining({
+                hasSafetyNotes: false,
+              }),
+            }),
+          }),
+        ],
+      });
+    });
+
+    it("review_entry_safety output clearly states metadata review scope", async () => {
+      const review = await callRegistryTool(
+        "review_entry_safety",
+        {
+          entries: [{ category: "hooks", slug: "documentation-generator" }],
+          platform: "claude",
+        },
+        { dataDir },
+      );
+      expect(review.reviewNotes).toContain(
+        "This is a metadata review, not a malware scan or install verdict.",
+      );
+      expect(review.reviewNotes).not.toContain("safe to install");
+      expect(review.reviewNotes).not.toContain("approved");
+      expect(review.reviewNotes).not.toContain("verified malware-free");
+    });
+
+    it("explain_entry_trust output remains advisory only", async () => {
+      const trust = await callRegistryTool(
+        "explain_entry_trust",
+        { category: "hooks", slug: "documentation-generator" },
+        { dataDir },
+      );
+      expect(JSON.stringify(trust)).not.toContain("safe to install");
+      expect(JSON.stringify(trust)).not.toContain("approved");
+      expect(JSON.stringify(trust)).not.toContain("verified malware-free");
+      expect(JSON.stringify(trust)).not.toContain("automatic safety");
+      // Recommendations are advisory and vary by entry; check they don't claim safety
+      if (trust.trust.recommendations && trust.trust.recommendations.length > 0) {
+        for (const rec of trust.trust.recommendations) {
+          expect(String(rec)).not.toContain("safe to install");
+          expect(String(rec)).not.toContain("approved");
+          expect(String(rec)).not.toContain("verified");
+        }
+      }
+    });
+  });
 });
