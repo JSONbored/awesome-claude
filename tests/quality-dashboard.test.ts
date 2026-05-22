@@ -6,13 +6,16 @@ import type {
 } from "@heyclaude/registry";
 
 import {
+  buildCategoryHref,
   buildCategoryTrustRows,
+  buildEntryHref,
   buildQualityDashboardSummary,
   findSafetyPrivacyGaps,
   isRiskBearingCategory,
   rankWeakestTrustCategories,
   summarizeProvenanceCoverage,
   summarizeRiskBearingTotals,
+  toSafePathSegment,
 } from "../apps/web/src/lib/quality-dashboard";
 
 interface CategoryBreakdownInput {
@@ -434,5 +437,27 @@ describe("buildQualityDashboardSummary", () => {
     expect(summary.riskBearingTotals.totalMissingSafetyNotes).toBe(2);
     expect(summary.provenanceCoverage.totalEntries).toBe(3);
     expect(summary.provenanceCoverage.sourceAvailable).toBe(2);
+  });
+});
+
+describe("path segment encoding", () => {
+  it("trims and percent-encodes unsafe characters", () => {
+    expect(toSafePathSegment("mcp")).toBe("mcp");
+    expect(toSafePathSegment("  mcp  ")).toBe("mcp");
+    expect(toSafePathSegment("a b")).toBe("a%20b");
+    expect(toSafePathSegment("../etc/passwd")).toBe("..%2Fetc%2Fpasswd");
+    expect(toSafePathSegment("café")).toBe("caf%C3%A9");
+    expect(toSafePathSegment("")).toBe("");
+  });
+
+  it("buildCategoryHref encodes the category segment", () => {
+    expect(buildCategoryHref("mcp")).toBe("/mcp");
+    expect(buildCategoryHref("a/b")).toBe("/a%2Fb");
+  });
+
+  it("buildEntryHref encodes both segments independently", () => {
+    expect(buildEntryHref("mcp", "context7")).toBe("/mcp/context7");
+    expect(buildEntryHref("a/b", "c d")).toBe("/a%2Fb/c%20d");
+    expect(buildEntryHref("mcp", "../escape")).toBe("/mcp/..%2Fescape");
   });
 });

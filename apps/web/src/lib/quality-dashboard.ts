@@ -79,6 +79,18 @@ export function isRiskBearingCategory(category: string): boolean {
   return RISK_BEARING_CATEGORY_SET.has(category);
 }
 
+export function toSafePathSegment(value: string): string {
+  return encodeURIComponent(String(value ?? "").trim());
+}
+
+export function buildCategoryHref(category: string): string {
+  return `/${toSafePathSegment(category)}`;
+}
+
+export function buildEntryHref(category: string, slug: string): string {
+  return `/${toSafePathSegment(category)}/${toSafePathSegment(slug)}`;
+}
+
 function percent(part: number, total: number): number {
   if (total <= 0) {
     return 0;
@@ -125,7 +137,7 @@ export function buildCategoryTrustRows(
     if (!value || value.count <= 0) {
       continue;
     }
-    const claimedCount = claimedByCategory.get(category) ?? 0;
+    const claimedOrReviewedCount = claimedByCategory.get(category) ?? 0;
     const sourcePercent = percent(value.sourceAvailable, value.count);
     const brandPercent = percent(value.brandCoverage, value.count);
     const safetyNotesPercent = percent(value.safetyNotesPresent, value.count);
@@ -142,8 +154,8 @@ export function buildCategoryTrustRows(
       safetyNotesPercent,
       privacyNotesPresent: value.privacyNotesPresent,
       privacyNotesPercent,
-      claimedOrReviewed: claimedCount,
-      claimedOrReviewedPercent: percent(claimedCount, value.count),
+      claimedOrReviewed: claimedOrReviewedCount,
+      claimedOrReviewedPercent: percent(claimedOrReviewedCount, value.count),
       firstPartyPackage: value.firstPartyPackage,
       firstPartyPackagePercent: percent(value.firstPartyPackage, value.count),
       provenancePresent: value.provenancePresent,
