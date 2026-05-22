@@ -207,6 +207,21 @@ export const registrySearchResultSchema = registryBrandAssetSchema
   })
   .passthrough();
 
+export const registrySearchFacetBucketsSchema = z.record(
+  z.string().min(1).max(64),
+  z.number().int().nonnegative(),
+);
+
+export const registrySearchFacetsSchema = z.object({
+  categories: registrySearchFacetBucketsSchema,
+  platforms: registrySearchFacetBucketsSchema,
+  hasSafetyNotes: registrySearchFacetBucketsSchema,
+  hasPrivacyNotes: registrySearchFacetBucketsSchema,
+  downloadTrust: registrySearchFacetBucketsSchema,
+  claimStatus: registrySearchFacetBucketsSchema,
+  sourceStatus: registrySearchFacetBucketsSchema,
+});
+
 export const registrySearchResponseSchema = z.object({
   schemaVersion: z.number(),
   query: z.string(),
@@ -223,6 +238,7 @@ export const registrySearchResponseSchema = z.object({
     .optional(),
   count: z.number().int().nonnegative(),
   results: z.array(registrySearchResultSchema).max(50),
+  facets: registrySearchFacetsSchema.optional(),
 });
 
 export const registrySearchQuerySchema = z.object({

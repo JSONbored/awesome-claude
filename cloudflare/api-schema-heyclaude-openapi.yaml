@@ -1133,6 +1133,52 @@ paths:
                         - trustSignals
                       additionalProperties: {}
                     maxItems: 50
+                  facets:
+                    type: object
+                    properties:
+                      categories:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      platforms:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      hasSafetyNotes:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      hasPrivacyNotes:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      downloadTrust:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      claimStatus:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                      sourceStatus:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                          minimum: 0
+                    required:
+                      - categories
+                      - platforms
+                      - hasSafetyNotes
+                      - hasPrivacyNotes
+                      - downloadTrust
+                      - claimStatus
+                      - sourceStatus
                 required:
                   - schemaVersion
                   - query

@@ -142,6 +142,37 @@ describe("OpenAPI route coverage", () => {
     ).toHaveProperty("application/atom+xml");
   });
 
+  it("documents facet counts on the registry search response", () => {
+    const searchResponse =
+      parsedSchema.paths["/api/registry/search"]?.get?.responses?.["200"];
+    const jsonContent = (
+      searchResponse?.content as Record<string, { schema?: unknown }> | undefined
+    )?.["application/json"];
+    const responseSchema = jsonContent?.schema as
+      | {
+          properties?: {
+            facets?: {
+              type?: string;
+              properties?: Record<string, unknown>;
+            };
+          };
+        }
+      | undefined;
+
+    expect(responseSchema?.properties?.facets?.type).toBe("object");
+    expect(Object.keys(responseSchema?.properties?.facets?.properties ?? {})).toEqual(
+      expect.arrayContaining([
+        "categories",
+        "platforms",
+        "hasSafetyNotes",
+        "hasPrivacyNotes",
+        "downloadTrust",
+        "claimStatus",
+        "sourceStatus",
+      ]),
+    );
+  });
+
   it("documents error envelopes, cacheable feeds, and registry trust signals", () => {
     expect(schema).toContain("ErrorEnvelope:");
     expect(schema).toContain("RegistryTrustSignals:");
