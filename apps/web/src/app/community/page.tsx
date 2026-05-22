@@ -31,6 +31,9 @@ type CommunityPageLogger = {
   error: (event: string, meta?: Record<string, unknown>) => void;
 };
 
+/**
+ * Writes a structured server-side log line for the community page lifecycle.
+ */
 function writeCommunityPageLog(
   level: "info" | "error",
   event: string,
@@ -52,6 +55,9 @@ function writeCommunityPageLog(
   console.info(line);
 }
 
+/**
+ * Creates a request-scoped logger that automatically attaches the request id.
+ */
 function createCommunityPageLogger(requestId: string): CommunityPageLogger {
   return {
     info(event, meta = {}) {
@@ -63,6 +69,9 @@ function createCommunityPageLogger(requestId: string): CommunityPageLogger {
   };
 }
 
+/**
+ * Converts unknown thrown values into a safe, serializable error payload.
+ */
 function normalizeError(error: unknown) {
   if (error instanceof Error) {
     return { name: error.name, message: error.message };
@@ -70,6 +79,9 @@ function normalizeError(error: unknown) {
   return { name: "Error", message: String(error || "Unknown error") };
 }
 
+/**
+ * Runs a server-page render with duration tracking and summary/error logging.
+ */
 async function withDuration<T>(
   callback: (context: {
     getDurationMs: () => number;
@@ -102,6 +114,9 @@ async function withDuration<T>(
 // URL validation
 // ---------------------------------------------------------------------------
 
+/**
+ * Returns a normalized HTTP(S) URL or an empty string for unsafe profile links.
+ */
 function safeHttpUrl(value: string): string {
   try {
     const url = new URL(value);
@@ -116,6 +131,9 @@ function safeHttpUrl(value: string): string {
 // Page
 // ---------------------------------------------------------------------------
 
+/**
+ * Renders the community landing page with contributor highlights and contribution guidance.
+ */
 export default async function CommunityPage() {
   return withDuration(async ({ getDurationMs, logger }) => {
     const contributors = await getContributors();
@@ -305,6 +323,9 @@ export default async function CommunityPage() {
   });
 }
 
+/**
+ * Displays a single contribution path with an optional external-link affordance.
+ */
 function ContributeCard({
   icon,
   title,
