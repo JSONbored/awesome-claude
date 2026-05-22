@@ -1,0 +1,113 @@
+name: Product or feature improvement
+description: Propose contributor work for HeyClaude product, website, API, MCP, Raycast, discovery, or design improvements.
+title: "feat: "
+labels:
+  - help wanted
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for maintainer-authored product and feature work. Do not use it for free content submissions; use the category-specific submission forms instead.
+
+        Good issues are narrow enough for one PR, explicit about what is out of scope, and clear about the proof required before merge.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: One clear outcome this issue should deliver.
+      placeholder: "Add trust filter chips to browse so visitors can quickly narrow entries by safety/privacy metadata."
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this matters
+      description: Explain the user, contributor, traffic, trust, or product-growth value.
+      placeholder: "This helps visitors evaluate resources faster and supports higher-quality community contributions."
+    validations:
+      required: true
+  - type: textarea
+    id: current_behavior
+    attributes:
+      label: Current behavior
+      description: Link relevant pages, files, APIs, or docs.
+      placeholder: "Browse currently supports utility filters in the sidebar, but there is no quick count strip above results."
+    validations:
+      required: true
+  - type: textarea
+    id: desired_behavior
+    attributes:
+      label: Desired behavior
+      description: Describe exactly what should exist after the PR lands.
+      placeholder: "The browse page shows quick filter chips with counts, shares state with the existing dropdown, and preserves URL state."
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: List allowed areas to edit.
+      placeholder: |
+        - apps/web/src/components/browse-directory.tsx
+        - apps/web/src/lib/search helpers
+        - focused tests
+    validations:
+      required: true
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out of scope
+      description: Explicitly forbid unrelated rewrites, generated artifact churn, and automation changes when not part of the issue.
+      placeholder: |
+        - Full browse redesign
+        - Generated registry artifacts
+        - Content imports
+        - CI or automation behavior
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: Concrete behavior, quality, accessibility, data, SEO, or compatibility requirements.
+      placeholder: |
+        - PR includes `Closes #<issue>`.
+        - Filter state is reflected in the URL.
+        - Empty states remain clear.
+        - Existing filters still work.
+    validations:
+      required: true
+  - type: textarea
+    id: quality_evidence
+    attributes:
+      label: Quality evidence required in the PR
+      description: Say exactly what screenshots, invariants, and review proof the contributor must provide.
+      placeholder: |
+        - Frontend/page/UI changes require desktop and mobile screenshots, or a clear `No visual impact` note.
+        - New features must list changed routes/components/endpoints/tools, expected behavior, and important edge cases.
+        - API/MCP/Raycast changes must list invariants and backward-compatibility notes.
+        - Accessibility-sensitive UI must mention keyboard, focus, label, and mobile behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Validation
+      description: Exact commands contributors should run from the repo root.
+      placeholder: |
+        pnpm build
+        pnpm exec vitest run tests/example.test.ts
+        git diff --check
+    validations:
+      required: true
+  - type: checkboxes
+    id: guardrails
+    attributes:
+      label: Contributor guardrails
+      options:
+        - label: Generated artifacts stay out of scope unless this issue explicitly asks for them.
+          required: true
+        - label: PRs should use a Conventional Commit-style title and include `Closes #<issue>`.
+          required: true
+        - label: UI or page changes must include screenshots in the PR, or explain `No visual impact`.
+          required: true

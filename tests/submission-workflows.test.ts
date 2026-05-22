@@ -148,6 +148,50 @@ describe("submission automation workflows", () => {
     return `---\n${frontmatter.trim()}\n---\n\n${body}\n`;
   }
 
+  it("keeps direct PR quality evidence requirements visible", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/pull_request_template.md"),
+      "utf8",
+    );
+
+    expect(source).toContain("## Quality Evidence");
+    expect(source).toContain("Desktop:");
+    expect(source).toContain("Mobile:");
+    expect(source).toContain("No visual impact");
+    expect(source).toContain("Important edge cases or invariants");
+    expect(source).toContain("Backward compatibility notes");
+    expect(source).toContain("Accessibility notes for UI changes");
+  });
+
+  it("keeps product feature issues scoped with screenshot expectations", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/ISSUE_TEMPLATE/product-feature.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain("Product or feature improvement");
+    expect(source).toContain("id: quality_evidence");
+    expect(source).toContain("desktop and mobile screenshots");
+    expect(source).toContain("No visual impact");
+    expect(source).toContain("Generated artifacts stay out of scope");
+    expect(source).toContain("Closes #<issue>");
+  });
+
+  it("keeps the devcontainer minimal and manual-install oriented", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".devcontainer/devcontainer.json"),
+      "utf8",
+    );
+    const config = JSON.parse(source);
+
+    expect(config.image).toContain("javascript-node");
+    expect(config.image).toContain("24");
+    expect(config.postCreateCommand).toContain("corepack enable");
+    expect(config.postCreateCommand).toContain("pnpm@11.1.3");
+    expect(config.postCreateCommand).not.toContain("pnpm install");
+    expect(config.postCreateCommand).not.toContain("playwright install");
+  });
+
   it("keeps public issue validation read-only for imports", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-issue-validation.yml"),

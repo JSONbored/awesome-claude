@@ -1,0 +1,25 @@
+{
+  "name": "HeyClaude",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-24-bookworm",
+  "postCreateCommand": "corepack enable && corepack prepare pnpm@11.1.3 --activate",
+  "forwardPorts": [3000, 3111],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js app",
+      "onAutoForward": "notify"
+    },
+    "3111": {
+      "label": "Playwright dev server",
+      "onAutoForward": "silent"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright"
+      ]
+    }
+  }
+}
