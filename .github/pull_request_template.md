@@ -23,10 +23,24 @@
 - [ ] Install/use/copy paths are practical and complete
 - [ ] Skill submissions include capability metadata when applicable (`skillType`, `skillLevel`, `verificationStatus`, `verifiedAt`, `retrievalSources`, `testedPlatforms`)
 
+## Quality Evidence
+
+- Changed routes/components/endpoints/tools:
+- Expected behavior:
+- Important edge cases or invariants:
+- Backward compatibility notes:
+- Screenshots for frontend/page/UI changes:
+  - Desktop:
+  - Mobile:
+- If screenshots do not apply, write `No visual impact` and explain why.
+- Accessibility notes for UI changes:
+- Focused tests or reason tests are not practical:
+
 ## Validation
 
 - [ ] Local build passed (`pnpm build`)
-- [ ] I spot-checked the affected detail page(s)
+- [ ] I ran the focused checks listed above
+- [ ] I spot-checked the affected detail page(s), route(s), or integration surface(s)
 
 ## Notes
 
