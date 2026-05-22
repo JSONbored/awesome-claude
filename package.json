@@ -1,7 +1,7 @@
 {
   "name": "heyclaude",
   "private": true,
-  "packageManager": "pnpm@11.2.0",
+  "packageManager": "pnpm@11.2.1",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "8.5.0",
     "@heyclaude/registry": "workspace:*",
