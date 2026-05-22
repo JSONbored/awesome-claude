@@ -73,9 +73,12 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
 - `get_submission_policy` - fetch the read-only submission, artifact, import,
   and maintainer-review policy.
 - `explain_entry_trust` - explain source, package, safety, privacy, and review
-  signals for one entry.
+  metadata signals for one entry. This is a metadata review only and does not
+  provide malware scanning, automatic safety guarantees, or installation approval.
 - `review_entry_safety` - compare 1-5 entries for source, package, safety, and
-  privacy fit before install or recommendation.
+  privacy metadata fit before install or recommendation. This is a metadata review
+  only and does not provide malware scanning, automatic safety guarantees, or
+  installation approval.
 
 ## Resources and Prompts
 
