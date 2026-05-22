@@ -44,6 +44,37 @@ Do not edit these in external content PRs:
 
 Maintainer automation regenerates those outputs.
 
+For frontend, page, product, API, MCP, Raycast, or other feature work, include enough review evidence for maintainers to understand the behavior without guessing:
+
+- Frontend/page/UI changes: attach desktop and mobile screenshots in the PR, or clearly write `No visual impact` when the change is non-visual.
+- New features: list changed routes, pages, components, commands, tools, or endpoints, plus the expected behavior and important edge cases.
+- Backend/API/MCP/Raycast changes: list the invariants that must remain true, validation commands, and any backward-compatibility notes.
+- Accessibility-sensitive UI changes: mention keyboard, focus, label, and mobile behavior where relevant.
+- Content-only changes that do not alter rendering may skip screenshots, but should say so explicitly.
+
+Screenshots are manual-review evidence, not a separate CI gate. Maintainers may request changes when UI or feature PRs omit screenshots, invariants, or meaningful validation.
+
+## Development environment
+
+Use the local environment you prefer, or open the repo in the included minimal devcontainer/Codespaces setup. The devcontainer standardizes Node and pnpm but intentionally avoids heavy browser installs by default.
+
+Inside a fresh environment:
+
+```sh
+corepack enable
+corepack prepare pnpm@11.1.3 --activate
+pnpm install --frozen-lockfile
+```
+
+For browser validation, install Playwright Chromium when needed:
+
+```sh
+pnpm exec playwright install --with-deps chromium
+pnpm test:e2e
+```
+
+CI remains the source of truth for merge readiness.
+
 ## Package and artifact policy
 
 Community submissions should be source-backed, not artifact-hosting requests.
