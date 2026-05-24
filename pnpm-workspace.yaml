@@ -5,7 +5,7 @@ overrides:
   fast-uri: 3.1.2
   fast-xml-builder: 1.2.0
   fast-xml-parser: 5.8.0
-  hono: 4.12.21
+  hono: 4.12.22
   ip-address: 10.2.0
   postcss: 8.5.15
   ws: 8.20.1
