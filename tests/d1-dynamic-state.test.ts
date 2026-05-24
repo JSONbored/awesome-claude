@@ -14,6 +14,7 @@ import {
 } from "../apps/web/src/lib/votes";
 import {
   getFallbackCommunitySignalCounts,
+  normalizeCommunitySignalTarget,
   queryCommunitySignalCounts,
 } from "../apps/web/src/lib/community-signals";
 import {
@@ -325,6 +326,30 @@ describe("D1 dynamic state helpers", () => {
       "entry:mcp/example-server": { used: 2, works: 1, broken: 0 },
       "tool:cursor": { used: 0, works: 0, broken: 1 },
     });
+  });
+
+  it("normalizes community signal target kind and key together", () => {
+    expect(
+      normalizeCommunitySignalTarget("entry", "entry:mcp/example-server"),
+    ).toEqual({
+      targetKind: "entry",
+      targetKey: "entry:mcp/example-server",
+    });
+    expect(normalizeCommunitySignalTarget("tool", "tool:cursor")).toEqual({
+      targetKind: "tool",
+      targetKey: "tool:cursor",
+    });
+
+    expect(normalizeCommunitySignalTarget("entry", "tool:cursor")).toBeNull();
+    expect(
+      normalizeCommunitySignalTarget("tool", "entry:mcp/example-server"),
+    ).toBeNull();
+    expect(
+      normalizeCommunitySignalTarget("entry", "entry:missing-slug"),
+    ).toBeNull();
+    expect(
+      normalizeCommunitySignalTarget("tool", "tool:cursor/extra"),
+    ).toBeNull();
   });
 
   it("aggregates 30-day intent events by entry key", async () => {
