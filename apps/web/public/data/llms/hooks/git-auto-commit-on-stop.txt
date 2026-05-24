@@ -7,6 +7,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/git-auto-commit-on-stop
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx
+- Safety notes: Runs automatically at session end and stages all unignored repository changes with git add -A., Creates a local commit when changes are present unless SKIP_AUTO_COMMIT=true is set., Only warns on sensitive-looking filenames and does not block the commit by default.
+- Privacy notes: Reads git status, branch name, staged diff statistics, and changed file names to build the commit message., Can commit newly created or modified local files, including private work, when they are not excluded by .gitignore., Commit metadata uses the locally configured git user name and email.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -18,6 +20,14 @@ Automatically commits all changes with a summary when Claude Code session ends.
 - stop-hook
 - automation
 - commit
+## Safety Notes
+- Runs automatically at session end and stages all unignored repository changes with git add -A.
+- Creates a local commit when changes are present unless SKIP_AUTO_COMMIT=true is set.
+- Only warns on sensitive-looking filenames and does not block the commit by default.
+## Privacy Notes
+- Reads git status, branch name, staged diff statistics, and changed file names to build the commit message.
+- Can commit newly created or modified local files, including private work, when they are not excluded by .gitignore.
+- Commit metadata uses the locally configured git user name and email.
 ## Content
 ## Features
 - Automatic git commit creation when session ends with comprehensive change detection including untracked files, modified files, added files, deleted files, and renamed files with detailed status analysis

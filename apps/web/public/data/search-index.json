@@ -5549,6 +5549,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically at session end and can create compressed archives of modified git files.",
+        "Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured.",
+        "Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt."
+      ],
+      "privacyNotes": [
+        "Sends modified file contents to the configured cloud storage destination.",
+        "Uses locally configured cloud credentials and bucket environment variables but does not define or manage them.",
+        "Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff."
+      ],
       "brandName": "AWS",
       "brandDomain": "aws.amazon.com",
       "brandIconUrl": "/api/brand-assets/icon/aws.amazon.com",
@@ -7897,6 +7907,15 @@
         "database migration runner - hooks"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically after write or edit activity on migration, schema, and SQL files.",
+        "Invokes local framework status commands such as knex migrate status, Django showmigrations, and Rails migrate status when available.",
+        "Scans raw SQL for destructive statements and reports warnings but does not apply migrations itself."
+      ],
+      "privacyNotes": [
+        "Reads migration, schema, SQL, package, and framework configuration files to infer migration state.",
+        "Command output may reveal database names, migration names, table names, or schema details in the local hook output."
+      ],
       "dateAdded": "2025-09-16",
       "installable": true,
       "downloadUrl": "",
@@ -7957,6 +7976,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files.",
+        "Creates .claude/logs/query-performance.log and appends database command or file-analysis events.",
+        "Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect."
+      ],
+      "privacyNotes": [
+        "Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output.",
+        "Stores analyzed file paths and database command text in .claude/logs/query-performance.log.",
+        "Database command text may include connection names, database names, or other operational details if typed directly into the command."
+      ],
       "dateAdded": "2025-10-19",
       "installable": true,
       "downloadUrl": "",
@@ -8255,6 +8284,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically at session end and invokes local package-manager audit tools when dependency lockfiles are present.",
+        "May contact package registries or vulnerability advisory services through npm, yarn, safety, pip, or bundler-audit.",
+        "Writes a timestamped security-audit log in the current working directory."
+      ],
+      "privacyNotes": [
+        "Reads dependency manifests and lockfiles to identify package managers and audit targets.",
+        "The generated audit log may include package names, versions, vulnerability identifiers, and remediation output.",
+        "External audit tools may send package metadata to their configured registries or advisory services."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",
@@ -8836,6 +8875,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically after write or edit activity on Dockerfile, docker-compose, dockerfile, and dockerignore paths.",
+        "Invokes docker build or docker compose build and can consume CPU, disk, network, and local Docker daemon resources.",
+        "Uses the Dockerfile directory or compose-file directory as the build context, so incorrect paths can include more files than expected."
+      ],
+      "privacyNotes": [
+        "Reads Docker-related files and may send build context files to the local Docker daemon during image builds.",
+        "Build logs may reveal image names, service names, dependency URLs, and package-install output.",
+        "Prints the first lines of .dockerignore files to local hook output when those files are edited."
+      ],
       "brandName": "Docker",
       "brandDomain": "docker.com",
       "brandIconUrl": "/api/brand-assets/icon/docker.com",
@@ -10822,6 +10871,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically at session end and stages all unignored repository changes with git add -A.",
+        "Creates a local commit when changes are present unless SKIP_AUTO_COMMIT=true is set.",
+        "Only warns on sensitive-looking filenames and does not block the commit by default."
+      ],
+      "privacyNotes": [
+        "Reads git status, branch name, staged diff statistics, and changed file names to build the commit message.",
+        "Can commit newly created or modified local files, including private work, when they are not excluded by .gitignore.",
+        "Commit metadata uses the locally configured git user name and email."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",
@@ -19827,6 +19886,16 @@
         "tools"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs on notification events and writes daily activity logs under .claude in the current project.",
+        "Rotates logs to the last 100 entries and may archive older activity files under .claude/archive.",
+        "Uses local file operations only but can add persistent project files if .claude is not ignored."
+      ],
+      "privacyNotes": [
+        "Records tool names, file paths, tool actions, timestamps, and generated session IDs.",
+        "Stores human-readable and JSON activity logs under .claude.",
+        "Prints recent activity summaries to local hook output."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",
@@ -20744,6 +20813,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically after write, edit, or multiedit activity and invokes installed security tools against the touched file.",
+        "May run truffleHog, Semgrep, npm audit, Bandit, or gosec depending on the file type and tools available.",
+        "Treats scanner findings as warnings and does not guarantee that code is safe or unsafe."
+      ],
+      "privacyNotes": [
+        "Reads modified file contents for security scanning and prints scanner output to local hook output.",
+        "Semgrep and package audit commands may contact external rule, registry, or advisory services depending on local tool configuration.",
+        "Scanner output may include file paths, code snippets, dependency names, and suspected secrets."
+      ],
       "dateAdded": "2025-09-16",
       "installable": true,
       "downloadUrl": "",
@@ -20928,6 +21007,16 @@
         "sensitive-data"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs on notification events and scans recent tool input for patterns that resemble secrets or sensitive data.",
+        "Produces alerts only and does not redact files, rotate credentials, or block the original tool action.",
+        "Pattern-based detection can miss real secrets or flag harmless placeholders."
+      ],
+      "privacyNotes": [
+        "Reads hook input fields such as tool names, file paths, commands, and text snippets supplied to the notification event.",
+        "May print matched sensitive-looking strings or surrounding context to local hook output.",
+        "Does not send findings to a remote service in the bundled script."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",
@@ -21290,6 +21379,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs on notification events and posts a formatted activity message to Slack when SLACK_WEBHOOK_URL is configured.",
+        "Uses curl with a short timeout and retry, so failed network delivery may still delay hook completion briefly.",
+        "High activity can create noisy Slack notifications unless users add their own filtering or rate limits."
+      ],
+      "privacyNotes": [
+        "Sends tool name, file basename, user name, git branch, project name, and timestamp to the configured Slack webhook.",
+        "Uses the SLACK_WEBHOOK_URL environment variable and does not manage webhook rotation or channel permissions.",
+        "Slack receives and retains the notification according to the workspace and webhook configuration."
+      ],
       "brandName": "Slack",
       "brandDomain": "slack.com",
       "brandIconUrl": "/api/brand-assets/icon/slack.com",
@@ -22470,6 +22569,16 @@
         "team summary email generator - hooks"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically at session end and may execute test or build commands before sending a summary.",
+        "Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured.",
+        "Test and build commands are time-limited but can still consume local CPU, disk, or network resources."
+      ],
+      "privacyNotes": [
+        "Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status.",
+        "Sends summary content to the configured team address and, when used, the SendGrid API.",
+        "Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",
@@ -22647,6 +22756,16 @@
         "heyclaude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Runs automatically after write or edit activity on .tf and .tfvars files.",
+        "Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file.",
+        "Terraform init and plan can contact configured backends and providers and may consume cloud API quota."
+      ],
+      "privacyNotes": [
+        "Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes.",
+        "Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names.",
+        "Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets."
+      ],
       "dateAdded": "2025-09-19",
       "installable": true,
       "downloadUrl": "",

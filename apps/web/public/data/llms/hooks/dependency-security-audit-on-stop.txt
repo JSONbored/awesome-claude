@@ -7,6 +7,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/dependency-security-audit-on-stop
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx
+- Safety notes: Runs automatically at session end and invokes local package-manager audit tools when dependency lockfiles are present., May contact package registries or vulnerability advisory services through npm, yarn, safety, pip, or bundler-audit., Writes a timestamped security-audit log in the current working directory.
+- Privacy notes: Reads dependency manifests and lockfiles to identify package managers and audit targets., The generated audit log may include package names, versions, vulnerability identifiers, and remediation output., External audit tools may send package metadata to their configured registries or advisory services.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -18,6 +20,14 @@ Performs a comprehensive security audit of all dependencies when Claude Code ses
 - audit
 - stop-hook
 - vulnerabilities
+## Safety Notes
+- Runs automatically at session end and invokes local package-manager audit tools when dependency lockfiles are present.
+- May contact package registries or vulnerability advisory services through npm, yarn, safety, pip, or bundler-audit.
+- Writes a timestamped security-audit log in the current working directory.
+## Privacy Notes
+- Reads dependency manifests and lockfiles to identify package managers and audit targets.
+- The generated audit log may include package names, versions, vulnerability identifiers, and remediation output.
+- External audit tools may send package metadata to their configured registries or advisory services.
 ## Content
 ## Features
 - Comprehensive security audit for multiple package managers (npm 10.x+, Yarn 4.x+, pnpm, pip-audit 2.7.x+, Poetry, bundler-audit) with automatic detection

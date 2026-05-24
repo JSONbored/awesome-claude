@@ -3171,10 +3171,10 @@
     "provenancePercent": 2,
     "claimedOrReviewedCount": 6,
     "claimedOrReviewedPercent": 2,
-    "safetyNotesCount": 4,
-    "safetyNotesPercent": 1,
-    "privacyNotesCount": 4,
-    "privacyNotesPercent": 1,
+    "safetyNotesCount": 16,
+    "safetyNotesPercent": 4,
+    "privacyNotesCount": 16,
+    "privacyNotesPercent": 4,
     "firstPartyPackageCount": 109,
     "firstPartyPackagePercent": 28,
     "recommendedFixCount": 1,
@@ -3206,17 +3206,17 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "eb9e1782af2fb9e6df82274e65de4e61cbd569f33fac6e8e9bd15e150c8a36d7"
+      "sha256": "55ddf2b0e5787fc203b244ee8768f8928f42e1bad09eea22d723cfe46cd66c68"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "daba28d8e0710c0e1afdf39292b2d642f362825258f9c7c2bcde7a62054791b0"
+      "sha256": "e26b33e1275a015b2736b35f21863bba5cca62582497dc615f91c8d50236923f"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "7252c1287fbffd1fd23e678f22f47da70d698ca860b997fe3186836d0d051a0f"
+      "sha256": "2e07797f1f069689ee93eaf0c057c796bcaaa5f48803fb3701e1c157c82b3307"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
@@ -3236,12 +3236,12 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "53a3210027f8582485f2d071957dd124bc615a13d0ec960020b99b148a93546e"
+      "sha256": "af5c00186761a98cce7e60f9b840cef277434242367e5a468ff34c85673de15b"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "28e53e3fe09e0b9ca84be01d0d072e623d48e98fc388d2ce886b40c8c88d8c69"
+      "sha256": "74460c4d2a6d0a41c5bd5886065121c543de9df6602babd8a6ac7c76507db221"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
@@ -3271,7 +3271,7 @@
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "ed5dafac23d346ecea1dcb67cbfea8434d681592430930e5b9b6afe3817ab6f8"
+      "sha256": "48279932e7b2e901581dc74bd523dafe412671bb298dc861064e8df69eeea3c5"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -4626,17 +4626,17 @@
     "entries/hooks/cloud-backup-on-session-stop.json": {
       "path": "/data/entries%2Fhooks%2Fcloud-backup-on-session-stop.json",
       "type": "json",
-      "sha256": "39c1825a3f45aaf9c49e028bb71fd2742991cd9254d4766724e9bf38b8d739ee"
+      "sha256": "f5689931a9b798395f3bb8ec4198934c862cbabbb42f57854ea9e528a7849edb"
     },
     "llms/hooks/cloud-backup-on-session-stop.txt": {
       "path": "/data/llms%2Fhooks%2Fcloud-backup-on-session-stop.txt",
       "type": "text",
-      "sha256": "e050edc19a79f3db76ee3c3e8ce544a971cf041713843c13e9c5cad37398178a"
+      "sha256": "79ea0ba660d51e1886a7f0c338f61eb3a51d5f9d9d2fc86d2785954de9ebf526"
     },
     "raycast/hooks/cloud-backup-on-session-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fcloud-backup-on-session-stop.json",
       "type": "json",
-      "sha256": "26f5cb3a4e12cd701c8f106181f142d063b772f05f1ed2055e0776db759324f2"
+      "sha256": "cb75d52ff98784e48b8ec58fff19259ad7146534c2c005a811b7da14de4d1a31"
     },
     "entries/agents/cloud-infrastructure-architect-agent.json": {
       "path": "/data/entries%2Fagents%2Fcloud-infrastructure-architect-agent.json",
@@ -5186,32 +5186,32 @@
     "entries/hooks/database-migration-runner.json": {
       "path": "/data/entries%2Fhooks%2Fdatabase-migration-runner.json",
       "type": "json",
-      "sha256": "1314763f490c0bc992bd1365bd7dc1cde5c92505cc64e9340db89758c07bbaab"
+      "sha256": "e1c1fda284fe84e2cc3ded8f6cb4ea66d21363f4974686bfdb37c7095e6ac5cc"
     },
     "llms/hooks/database-migration-runner.txt": {
       "path": "/data/llms%2Fhooks%2Fdatabase-migration-runner.txt",
       "type": "text",
-      "sha256": "1432eec9a8cd46edaca6767013aa3f672deb60c63235eaf34e6d3f0631835073"
+      "sha256": "5796566a43d60596805e3ca4ff0a98554f8396735dfe77428bc936fc13983bbb"
     },
     "raycast/hooks/database-migration-runner.json": {
       "path": "/data/raycast%2Fhooks%2Fdatabase-migration-runner.json",
       "type": "json",
-      "sha256": "a2b5aefb24d6eb2e2d883da3da5ccc2d26d8253b47acd4afc47c8a8221c63fe5"
+      "sha256": "28ac8f115590c980f2029f987171133a466e1dba17bfdf7127dc6cb6fab05c53"
     },
     "entries/hooks/database-query-performance-logger.json": {
       "path": "/data/entries%2Fhooks%2Fdatabase-query-performance-logger.json",
       "type": "json",
-      "sha256": "597e54d2afba644ef00b721c2eac77f65fd30d2aa71c22442f5dced028bf2e7b"
+      "sha256": "02b0263a4ec0324e9c62bb92f1b7f20c13186d30a860537e264385dc49b0211c"
     },
     "llms/hooks/database-query-performance-logger.txt": {
       "path": "/data/llms%2Fhooks%2Fdatabase-query-performance-logger.txt",
       "type": "text",
-      "sha256": "0e11d8fde2cfbaa53d98ebce708a07b801b8016b83138b4d7102f44e443a697f"
+      "sha256": "40d91845aa0f2c48c78778efce128fc6d8ae236ba05d83223f0c619e120282bb"
     },
     "raycast/hooks/database-query-performance-logger.json": {
       "path": "/data/raycast%2Fhooks%2Fdatabase-query-performance-logger.json",
       "type": "json",
-      "sha256": "9f28977a30b0bbb843d9c4a41c006bc467df7f0228bb2f0f7906a0d148b8615e"
+      "sha256": "b9787d2f9767f081281090302662ec265ca0072852d68c0c3c2d01ee3f36eb7d"
     },
     "entries/agents/database-specialist-agent.json": {
       "path": "/data/entries%2Fagents%2Fdatabase-specialist-agent.json",
@@ -5276,17 +5276,17 @@
     "entries/hooks/dependency-security-audit-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fdependency-security-audit-on-stop.json",
       "type": "json",
-      "sha256": "890a243b5eaf4d821d8cdbfe5ac6e49938cdfce34aff6ce333f5b70264fa4ff4"
+      "sha256": "b738d7a7499048336ad4e0627799f405711a53f97bb49fa218bca962add265ed"
     },
     "llms/hooks/dependency-security-audit-on-stop.txt": {
       "path": "/data/llms%2Fhooks%2Fdependency-security-audit-on-stop.txt",
       "type": "text",
-      "sha256": "9de7d7aa043bdc4edbfe4f47e7d5d5d1d32fb59249ea6b769ce979b49cc15a55"
+      "sha256": "259b4031d26b5855710f8ed73e848aeee38f51c681b8418ff431ed6b93766758"
     },
     "raycast/hooks/dependency-security-audit-on-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fdependency-security-audit-on-stop.json",
       "type": "json",
-      "sha256": "7b664474ccaa7e4928b24028f75dcf4d6b883084ea1929cb79d67847d6d223a5"
+      "sha256": "ddcb826be6fc463e1a8d00f01d9786664546f5e266f7ad88810f9426a0707cb5"
     },
     "entries/hooks/dependency-security-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fdependency-security-scanner.json",
@@ -5416,17 +5416,17 @@
     "entries/hooks/docker-container-auto-rebuild.json": {
       "path": "/data/entries%2Fhooks%2Fdocker-container-auto-rebuild.json",
       "type": "json",
-      "sha256": "339c4248cb2e4494e74c293a36c6823342b1bb9061a52d444e202eb364787b9d"
+      "sha256": "a22449dc06b40db655e45f491de9da6aa744c307dacc91d64abfc11de336586d"
     },
     "llms/hooks/docker-container-auto-rebuild.txt": {
       "path": "/data/llms%2Fhooks%2Fdocker-container-auto-rebuild.txt",
       "type": "text",
-      "sha256": "1308a0b72b8df43191dc307ca651f8e29af18cd3a839362a5d36aa79a05cd635"
+      "sha256": "5836807ca9f7bc2749c0e9c3d35136873b07080aa1520f786f996141354346ff"
     },
     "raycast/hooks/docker-container-auto-rebuild.json": {
       "path": "/data/raycast%2Fhooks%2Fdocker-container-auto-rebuild.json",
       "type": "json",
-      "sha256": "defd4dd9bb1a15388f51103005f693cc2da15cab50439bf4ac50600e004647aa"
+      "sha256": "44d5ce4bfb44e01c3c60c322dfd6f1f608aba4b967c63aef4bc3a1df2fbcbbe0"
     },
     "entries/hooks/docker-image-security-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fdocker-image-security-scanner.json",
@@ -5901,17 +5901,17 @@
     "entries/hooks/git-auto-commit-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fgit-auto-commit-on-stop.json",
       "type": "json",
-      "sha256": "0e4f2be5ad35884a183f8a2df7089b37742c7e8638d7873fcdafc6c5f7d2fe72"
+      "sha256": "544bfe9b56a78d9e4ce1bcd33e2cf02513760ce3522e602307cbd953d9975323"
     },
     "llms/hooks/git-auto-commit-on-stop.txt": {
       "path": "/data/llms%2Fhooks%2Fgit-auto-commit-on-stop.txt",
       "type": "text",
-      "sha256": "3f80acf533d8f6b833604f191dd4debab532d6dd95709a13e161606b8fae5ffe"
+      "sha256": "0e72fc059cf385cac6393aad46914beae197539579d74d968f43522b7683da29"
     },
     "raycast/hooks/git-auto-commit-on-stop.json": {
       "path": "/data/raycast%2Fhooks%2Fgit-auto-commit-on-stop.json",
       "type": "json",
-      "sha256": "f850980f8a2cd9c6d920200e5941e5407602d835d8a50d6b6483381332163131"
+      "sha256": "8207b09fb5dfd5b024e467da189d869e1d403add746cd2a7a80a2c89eb0897ca"
     },
     "entries/hooks/git-branch-protection.json": {
       "path": "/data/entries%2Fhooks%2Fgit-branch-protection.json",
@@ -8056,17 +8056,17 @@
     "entries/hooks/real-time-activity-tracker.json": {
       "path": "/data/entries%2Fhooks%2Freal-time-activity-tracker.json",
       "type": "json",
-      "sha256": "7ddd757462b87b3adda5248a25cb7e6c12c9ea2d83e5945bdb37f734dbc085d8"
+      "sha256": "6f35548154a815202fbab815b58ce96f4cf3273fa0f0a31612fed684d5757f12"
     },
     "llms/hooks/real-time-activity-tracker.txt": {
       "path": "/data/llms%2Fhooks%2Freal-time-activity-tracker.txt",
       "type": "text",
-      "sha256": "6fab4e1ed2be7f8be995a67a03403c0ac9f969522a1f8a06e6ee1701b73d3c4d"
+      "sha256": "e5c7136feaecec7718e0e902d73fb3821093dc6522fc07623dc391a934da4f22"
     },
     "raycast/hooks/real-time-activity-tracker.json": {
       "path": "/data/raycast%2Fhooks%2Freal-time-activity-tracker.json",
       "type": "json",
-      "sha256": "b92ebdeedf11c70b3f5e35d2e2cdd4838614bea6de393ef5620abfc11624b1d6"
+      "sha256": "167b01de644042cb2b9fc558d0772570349090196ed3193e95bd5f40964f39ca"
     },
     "entries/statuslines/real-time-cost-tracker.json": {
       "path": "/data/entries%2Fstatuslines%2Freal-time-cost-tracker.json",
@@ -8276,17 +8276,17 @@
     "entries/hooks/security-scanner-hook.json": {
       "path": "/data/entries%2Fhooks%2Fsecurity-scanner-hook.json",
       "type": "json",
-      "sha256": "8a74717677fe29d12381a2cf0253b60752a19986e3576a2512eb59629b00abc8"
+      "sha256": "25388967ce7ef089b75d5fbf5ce81079f514fac83cbd47a7d4f8cb2340399f4d"
     },
     "llms/hooks/security-scanner-hook.txt": {
       "path": "/data/llms%2Fhooks%2Fsecurity-scanner-hook.txt",
       "type": "text",
-      "sha256": "29e04439bc8e5a0125fbaade92ab747c8db99e0fef542c8d7121ffb2691d024a"
+      "sha256": "92c1728bd53c41d044a25d66dd70567130f01c71a3f211549831fb27f5893a98"
     },
     "raycast/hooks/security-scanner-hook.json": {
       "path": "/data/raycast%2Fhooks%2Fsecurity-scanner-hook.json",
       "type": "json",
-      "sha256": "57d5ba229cd8f92672bc32341d7b19947b815b0e0d50c6f132f6245c8d33f983"
+      "sha256": "874ffa2d677fa653271c3c6fd85c48d455bbaec014617a7d202e0fca84a35753"
     },
     "entries/rules/security-first-react-components.json": {
       "path": "/data/entries%2Frules%2Fsecurity-first-react-components.json",
@@ -8321,17 +8321,17 @@
     "entries/hooks/sensitive-data-alert-scanner.json": {
       "path": "/data/entries%2Fhooks%2Fsensitive-data-alert-scanner.json",
       "type": "json",
-      "sha256": "4ef8407d5392f640aa769a1a0522ec76eac599f86897c337b43ed7bbc6cde7e3"
+      "sha256": "25ad0d4e62ed9d7677aa3e027a3f2af67d5d9071f468cc4150a6fc995439a2d5"
     },
     "llms/hooks/sensitive-data-alert-scanner.txt": {
       "path": "/data/llms%2Fhooks%2Fsensitive-data-alert-scanner.txt",
       "type": "text",
-      "sha256": "ebec3e7f2866f49144524dc6cdbd2d7b3fd48be5583a7e54d408c4dc44a11c86"
+      "sha256": "8e077ae7c2d30682efa470f6f39ebbb63c06f2f9f88ecaa29df8bba73b3dd406"
     },
     "raycast/hooks/sensitive-data-alert-scanner.json": {
       "path": "/data/raycast%2Fhooks%2Fsensitive-data-alert-scanner.json",
       "type": "json",
-      "sha256": "521fd36529a5fe2d2eb820fce72c09b68c64cd6f27ad3c58407e9092f4a730ba"
+      "sha256": "070c6f8d78f5b98c3894f2dfab937da02e61b1a427f710aac0915a4fe32f3f66"
     },
     "entries/mcp/sentry-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsentry-mcp-server.json",
@@ -8411,17 +8411,17 @@
     "entries/hooks/slack-progress-notifier.json": {
       "path": "/data/entries%2Fhooks%2Fslack-progress-notifier.json",
       "type": "json",
-      "sha256": "7f7c0948fdc0cf906bfc7b7d6e51957f3bdaf0e7447a24a893e8449e7fcff3d0"
+      "sha256": "6c5e520a076c0b36852dee12e78031534a970f378b5aead0a225eb360d8162a6"
     },
     "llms/hooks/slack-progress-notifier.txt": {
       "path": "/data/llms%2Fhooks%2Fslack-progress-notifier.txt",
       "type": "text",
-      "sha256": "5f42604808f4aecc32c35c372702633c37c1005e6b90c72aa8d2a9c1631107bb"
+      "sha256": "05ef484b0660599dad8da5690e569446b48a2b3bc7c084b1df2902ee31793fb4"
     },
     "raycast/hooks/slack-progress-notifier.json": {
       "path": "/data/raycast%2Fhooks%2Fslack-progress-notifier.json",
       "type": "json",
-      "sha256": "535fb9af9e9287b493fa722e5cced73820e888692b1e95a60b6a9fc78b3b2c2d"
+      "sha256": "2eebb99bcf94234ee00facb2969239a80e7efac0b36979156414a5028341ee3e"
     },
     "entries/commands/slash-command-gen.json": {
       "path": "/data/entries%2Fcommands%2Fslash-command-gen.json",
@@ -8691,17 +8691,17 @@
     "entries/hooks/team-summary-email-generator.json": {
       "path": "/data/entries%2Fhooks%2Fteam-summary-email-generator.json",
       "type": "json",
-      "sha256": "6ec46bd80cd089681d04146188442ea37cf6c81ae0f9e473c4eca7f2d2ef51b7"
+      "sha256": "721ebf3a13c5fc653f78fac0e9270291d1822c556e729a094e615c94ba4305fb"
     },
     "llms/hooks/team-summary-email-generator.txt": {
       "path": "/data/llms%2Fhooks%2Fteam-summary-email-generator.txt",
       "type": "text",
-      "sha256": "f7ecd69748b4ffb98390e5a6f77c236a62194eedaaf34e800bc5d337a9505ee4"
+      "sha256": "9531515f09fa061c562866088f61613bfd08eb06486f7782538205c64608ceae"
     },
     "raycast/hooks/team-summary-email-generator.json": {
       "path": "/data/raycast%2Fhooks%2Fteam-summary-email-generator.json",
       "type": "json",
-      "sha256": "92c1ee76d3fbdd91583daaca747418dca1a08a80c74e017bd1bb100bcc57244f"
+      "sha256": "a3896457c688eacd31c26ba7f17de4fa0e0e93a2f385a381006df06f856a5e9b"
     },
     "entries/agents/technical-documentation-writer-agent.json": {
       "path": "/data/entries%2Fagents%2Ftechnical-documentation-writer-agent.json",
@@ -8736,17 +8736,17 @@
     "entries/hooks/terraform-plan-executor.json": {
       "path": "/data/entries%2Fhooks%2Fterraform-plan-executor.json",
       "type": "json",
-      "sha256": "0b8844c5b7ad07466df2161699a8a4941a1d72d21a6c10b51aeaf1d0ccc09d62"
+      "sha256": "afcef7f6e1a496fb324b603d8f0b865acfe9582fa831faa7afbf12c5c04c73a5"
     },
     "llms/hooks/terraform-plan-executor.txt": {
       "path": "/data/llms%2Fhooks%2Fterraform-plan-executor.txt",
       "type": "text",
-      "sha256": "3feba99cd077374c0f202569c1ab881c807cc6ab546e5f61d1a5c1004aa4eab8"
+      "sha256": "478fdfa5aa333fe3c9eaa5c94950e81cf60bb4babfcf88224ab95ca57fd994fd"
     },
     "raycast/hooks/terraform-plan-executor.json": {
       "path": "/data/raycast%2Fhooks%2Fterraform-plan-executor.json",
       "type": "json",
-      "sha256": "16ef696844562776f2e03fb7843e4988680f76b369b9382e378ba73529d1ce00"
+      "sha256": "1acd336705ec055b61b4ffa79b90f6b78f7705947af74244ffcb35af89b63173"
     },
     "entries/agents/test-automation-engineer-agent.json": {
       "path": "/data/entries%2Fagents%2Ftest-automation-engineer-agent.json",
@@ -9436,7 +9436,7 @@
     "feeds/categories/hooks.json": {
       "path": "/data/feeds%2Fcategories%2Fhooks.json",
       "type": "json",
-      "sha256": "827a18ab1b4779b4ef687f5beded29b00ca496568c6dde918bd342b4efb6b58b"
+      "sha256": "8f297322c7620e8cc165fbdf84304150e80b9568532a7bddc3ee85520e25789c"
     },
     "feeds/categories/guides.json": {
       "path": "/data/feeds%2Fcategories%2Fguides.json",
