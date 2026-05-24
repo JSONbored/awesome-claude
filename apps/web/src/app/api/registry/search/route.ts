@@ -41,7 +41,8 @@ export const GET = createApiHandler(
     const matched = filterEntries(entries, filters);
     const results = matched.slice(offset, offset + limit);
     const facets = computeRegistrySearchFacets(entries, filters);
-    const nextOffset = Math.min(offset + limit, MAX_OFFSET);
+    const pageEnd = Math.min(offset + limit, matched.length);
+    const nextOffset = Math.min(pageEnd, MAX_OFFSET);
 
     return cachedJsonResponse(
       request,
@@ -62,7 +63,7 @@ export const GET = createApiHandler(
         limit,
         offset,
         nextOffset:
-          nextOffset < matched.length && nextOffset !== offset
+          nextOffset !== offset && nextOffset === pageEnd && nextOffset < matched.length
             ? nextOffset
             : null,
         results,

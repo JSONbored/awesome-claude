@@ -100,7 +100,7 @@ describe("/api/registry/search", () => {
     await expect(cappedPage.json()).resolves.toMatchObject({
       count: 11,
       total: 10_001,
-      nextOffset: 10_000,
+      nextOffset: null,
     });
 
     const finalPage = await GET(
