@@ -11,6 +11,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: Docker
 - Brand domain: docker.com
 - Brand asset source: brandfetch
+- Safety notes: Runs automatically after write or edit activity on Dockerfile, docker-compose, dockerfile, and dockerignore paths., Invokes docker build or docker compose build and can consume CPU, disk, network, and local Docker daemon resources., Uses the Dockerfile directory or compose-file directory as the build context, so incorrect paths can include more files than expected.
+- Privacy notes: Reads Docker-related files and may send build context files to the local Docker daemon during image builds., Build logs may reveal image names, service names, dependency URLs, and package-install output., Prints the first lines of .dockerignore files to local hook output when those files are edited.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -21,6 +23,14 @@ Automatically rebuilds Docker containers when Dockerfile or docker-compose.yml f
 - containers
 - devops
 - automation
+## Safety Notes
+- Runs automatically after write or edit activity on Dockerfile, docker-compose, dockerfile, and dockerignore paths.
+- Invokes docker build or docker compose build and can consume CPU, disk, network, and local Docker daemon resources.
+- Uses the Dockerfile directory or compose-file directory as the build context, so incorrect paths can include more files than expected.
+## Privacy Notes
+- Reads Docker-related files and may send build context files to the local Docker daemon during image builds.
+- Build logs may reveal image names, service names, dependency URLs, and package-install output.
+- Prints the first lines of .dockerignore files to local hook output when those files are edited.
 ## Content
 ## Features
 - Automatic Docker image rebuilding on Dockerfile changes with BuildKit support (Docker Engine 24.0+), layer caching optimization, and explicit Dockerfile path specification using -f flag

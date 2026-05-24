@@ -7,6 +7,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/team-summary-email-generator
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx
+- Safety notes: Runs automatically at session end and may execute test or build commands before sending a summary., Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured., Test and build commands are time-limited but can still consume local CPU, disk, or network resources.
+- Privacy notes: Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status., Sends summary content to the configured team address and, when used, the SendGrid API., Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -18,6 +20,14 @@ Generates and sends a comprehensive summary email to the team when session ends.
 - stop-hook
 - summary
 - communication
+## Safety Notes
+- Runs automatically at session end and may execute test or build commands before sending a summary.
+- Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured.
+- Test and build commands are time-limited but can still consume local CPU, disk, or network resources.
+## Privacy Notes
+- Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status.
+- Sends summary content to the configured team address and, when used, the SendGrid API.
+- Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them.
 ## Content
 ## Features
 - Comprehensive session summary generation including session summary generation (automatic session summary generation on session end, session data collection with data gathering, session analysis with session analysis, session reporting with summary reporting), summary optimization (summary performance with fast generation, summary reliability with reliable generation, summary efficiency with efficient processing, summary reporting with generation status), summary validation (summary content validation with content verification, summary format validation with format checking, summary completeness validation with completeness checking, summary accuracy validation with accuracy verification), and summary reporting (summary generation reporting with generation status, summary delivery reporting with delivery status, summary statistics with summary metrics, summary analytics with summary analytics)
@@ -287,7 +297,7 @@ case "$EMAIL_METHOD" in
   "subject": "$SUBJECT",
   "content": [{
     "type": "text/html",
-    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"'/g')"
+    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"/g')"
   }]
 }
 EOF
@@ -536,7 +546,7 @@ case "$EMAIL_METHOD" in
   "subject": "$SUBJECT",
   "content": [{
     "type": "text/html",
-    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"'/g')"
+    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"/g')"
   }]
 }
 EOF

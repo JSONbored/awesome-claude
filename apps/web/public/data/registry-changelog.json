@@ -2138,7 +2138,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/database-query-performance-logger",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/database-query-performance-logger.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/database-query-performance-logger",
-      "artifactHash": "597e54d2afba644ef00b721c2eac77f65fd30d2aa71c22442f5dced028bf2e7b"
+      "artifactHash": "02b0263a4ec0324e9c62bb92f1b7f20c13186d30a860537e264385dc49b0211c"
     },
     {
       "key": "hooks:dead-code-eliminator",
@@ -3110,7 +3110,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/cloud-backup-on-session-stop",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/cloud-backup-on-session-stop.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/cloud-backup-on-session-stop",
-      "artifactHash": "39c1825a3f45aaf9c49e028bb71fd2742991cd9254d4766724e9bf38b8d739ee"
+      "artifactHash": "f5689931a9b798395f3bb8ec4198934c862cbabbb42f57854ea9e528a7849edb"
     },
     {
       "key": "hooks:code-complexity-alert-monitor",
@@ -3158,7 +3158,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/dependency-security-audit-on-stop",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/dependency-security-audit-on-stop.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/dependency-security-audit-on-stop",
-      "artifactHash": "890a243b5eaf4d821d8cdbfe5ac6e49938cdfce34aff6ce333f5b70264fa4ff4"
+      "artifactHash": "b738d7a7499048336ad4e0627799f405711a53f97bb49fa218bca962add265ed"
     },
     {
       "key": "hooks:discord-activity-notifier",
@@ -3194,7 +3194,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/docker-container-auto-rebuild",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/docker-container-auto-rebuild.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/docker-container-auto-rebuild",
-      "artifactHash": "339c4248cb2e4494e74c293a36c6823342b1bb9061a52d444e202eb364787b9d"
+      "artifactHash": "a22449dc06b40db655e45f491de9da6aa744c307dacc91d64abfc11de336586d"
     },
     {
       "key": "hooks:environment-cleanup-handler",
@@ -3254,7 +3254,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/git-auto-commit-on-stop",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/git-auto-commit-on-stop.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/git-auto-commit-on-stop",
-      "artifactHash": "0e4f2be5ad35884a183f8a2df7089b37742c7e8638d7873fcdafc6c5f7d2fe72"
+      "artifactHash": "544bfe9b56a78d9e4ce1bcd33e2cf02513760ce3522e602307cbd953d9975323"
     },
     {
       "key": "hooks:git-branch-protection",
@@ -3494,7 +3494,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/real-time-activity-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/real-time-activity-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/real-time-activity-tracker",
-      "artifactHash": "7ddd757462b87b3adda5248a25cb7e6c12c9ea2d83e5945bdb37f734dbc085d8"
+      "artifactHash": "6f35548154a815202fbab815b58ce96f4cf3273fa0f0a31612fed684d5757f12"
     },
     {
       "key": "hooks:redis-cache-invalidator",
@@ -3542,7 +3542,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/sensitive-data-alert-scanner",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/sensitive-data-alert-scanner.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/sensitive-data-alert-scanner",
-      "artifactHash": "4ef8407d5392f640aa769a1a0522ec76eac599f86897c337b43ed7bbc6cde7e3"
+      "artifactHash": "25ad0d4e62ed9d7677aa3e027a3f2af67d5d9071f468cc4150a6fc995439a2d5"
     },
     {
       "key": "hooks:session-metrics-collector",
@@ -3566,7 +3566,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/slack-progress-notifier",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/slack-progress-notifier.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/slack-progress-notifier",
-      "artifactHash": "7f7c0948fdc0cf906bfc7b7d6e51957f3bdaf0e7447a24a893e8449e7fcff3d0"
+      "artifactHash": "6c5e520a076c0b36852dee12e78031534a970f378b5aead0a225eb360d8162a6"
     },
     {
       "key": "hooks:svelte-component-compiler",
@@ -3590,7 +3590,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/team-summary-email-generator",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/team-summary-email-generator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/team-summary-email-generator",
-      "artifactHash": "6ec46bd80cd089681d04146188442ea37cf6c81ae0f9e473c4eca7f2d2ef51b7"
+      "artifactHash": "721ebf3a13c5fc653f78fac0e9270291d1822c556e729a094e615c94ba4305fb"
     },
     {
       "key": "hooks:terraform-plan-executor",
@@ -3602,7 +3602,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/terraform-plan-executor",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/terraform-plan-executor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/terraform-plan-executor",
-      "artifactHash": "0b8844c5b7ad07466df2161699a8a4941a1d72d21a6c10b51aeaf1d0ccc09d62"
+      "artifactHash": "afcef7f6e1a496fb324b603d8f0b865acfe9582fa831faa7afbf12c5c04c73a5"
     },
     {
       "key": "hooks:test-coverage-final-report",
@@ -4250,7 +4250,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/database-migration-runner",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/database-migration-runner.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/database-migration-runner",
-      "artifactHash": "1314763f490c0bc992bd1365bd7dc1cde5c92505cc64e9340db89758c07bbaab"
+      "artifactHash": "e1c1fda284fe84e2cc3ded8f6cb4ea66d21363f4974686bfdb37c7095e6ac5cc"
     },
     {
       "key": "agents:database-specialist-agent",
@@ -4466,7 +4466,7 @@
       "canonicalUrl": "https://heyclau.de/hooks/security-scanner-hook",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/security-scanner-hook.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/security-scanner-hook",
-      "artifactHash": "8a74717677fe29d12381a2cf0253b60752a19986e3576a2512eb59629b00abc8"
+      "artifactHash": "25388967ce7ef089b75d5fbf5ce81079f514fac83cbd47a7d4f8cb2340399f4d"
     },
     {
       "key": "agents:test-automation-engineer-agent",
@@ -4638,5 +4638,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "adce6ff897606295d34c9a8cd8cdd241664ce22c4b436056ef1466737424d97d"
+  "signature": "4ae75301961ce9c96f37fabf0fe332aa1cef611d6191a1eb1a1bc472c805c503"
 }

@@ -24,8 +24,24 @@ const SENSITIVE_ENV_PATTERN =
 const PLACEHOLDER_PATTERN =
   /(\$\{[A-Z0-9_]+\}|YOUR_|REPLACE_|INSERT_|<[^>]+>|\bxxx+\b|\bTODO\b)/i;
 const SECRET_VALUE_PATTERN =
-  /\b(ghp_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{40,}|sk-[A-Za-z0-9]{20,}|AKIA[0-9A-Z]{16}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})\b/;
+  /\b(gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{40,}|glpat-[A-Za-z0-9_-]{20,}|sk-(?:proj-)?[A-Za-z0-9_-]{20,}|xox[baprs]-[A-Za-z0-9-]{20,}|AKIA[0-9A-Z]{16}|AIza[0-9A-Za-z_-]{20,}|Bearer\s+[A-Za-z0-9._~+/=-]{16,})\b/;
 const SHELL_OPERATOR_PATTERN = /(?:&&|\|\||[;|`<>]|\$\()/;
+const SENSITIVE_SPLIT_ARG_KEYS = new Set([
+  "api_key",
+  "apikey",
+  "auth",
+  "authorization",
+  "bearer",
+  "client_secret",
+  "clientsecret",
+  "password",
+  "private_key",
+  "privatekey",
+  "secret",
+  "token",
+  "x_api_key",
+  "xapikey",
+]);
 
 function decodePlaceholderTokens(value: string) {
   return value
@@ -119,6 +135,52 @@ function redactArgValue(value: string) {
   return { value, redactedCount: 0 };
 }
 
+function splitArgPlaceholder(value: string) {
+  const normalized = value.trim();
+  if (!normalized.startsWith("-") || normalized.includes("=")) return "";
+  const key = normalized
+    .replace(/^-+/, "")
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+  return SENSITIVE_SPLIT_ARG_KEYS.has(key)
+    ? key.toUpperCase().replace(/[^A-Z0-9_]/g, "_")
+    : "";
+}
+
+function redactArgArray(values: unknown[]): SanitizedValue {
+  let redactedCount = 0;
+  let pendingPlaceholder = "";
+  const sanitizedItems = values.map((item) => {
+    if (typeof item !== "string") {
+      pendingPlaceholder = "";
+      const sanitized = sanitizeConfigValue("args", item);
+      redactedCount += sanitized.redactedCount;
+      return sanitized.value;
+    }
+
+    const normalized = item.trim();
+    if (
+      pendingPlaceholder &&
+      normalized &&
+      !normalized.startsWith("-") &&
+      !PLACEHOLDER_PATTERN.test(normalized)
+    ) {
+      const placeholder = pendingPlaceholder;
+      redactedCount += 1;
+      pendingPlaceholder = "";
+      return `\${${placeholder || "SECRET"}}`;
+    }
+
+    const sanitized = redactArgValue(item);
+    redactedCount += sanitized.redactedCount;
+    pendingPlaceholder = splitArgPlaceholder(item);
+    return sanitized.value;
+  });
+  return { value: sanitizedItems, redactedCount };
+}
+
 type SanitizedValue = {
   value: unknown;
   redactedCount: number;
@@ -126,6 +188,7 @@ type SanitizedValue = {
 
 function sanitizeConfigValue(key: string, value: unknown): SanitizedValue {
   if (Array.isArray(value)) {
+    if (key.toLowerCase() === "args") return redactArgArray(value);
     let redactedCount = 0;
     const sanitizedItems = value.map((item) => {
       const sanitized = sanitizeConfigValue(key, item);
@@ -292,9 +355,11 @@ function validateServer(name: string, raw: unknown) {
       "command must be an executable name/path, not a shell pipeline.",
     );
   }
-  for (const arg of args) {
+  for (const [index, arg] of args.entries()) {
     if (SHELL_OPERATOR_PATTERN.test(arg)) {
-      warnings.push(`Argument contains shell-like syntax: ${arg}`);
+      warnings.push(
+        `Argument contains shell-like syntax: ${sanitizedArgs[index] ?? "${SECRET}"}`,
+      );
     }
   }
   if (command) {

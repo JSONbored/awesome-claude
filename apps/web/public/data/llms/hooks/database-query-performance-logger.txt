@@ -8,6 +8,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/database-query-performance-logger
 - Source URLs: https://www.postgresql.org/docs/current/runtime-config-logging.html, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx
+- Safety notes: Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files., Creates .claude/logs/query-performance.log and appends database command or file-analysis events., Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect.
+- Privacy notes: Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output., Stores analyzed file paths and database command text in .claude/logs/query-performance.log., Database command text may include connection names, database names, or other operational details if typed directly into the command.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -19,6 +21,14 @@ Monitors and logs database query performance metrics with slow query detection, 
 - monitoring
 - optimization
 - logging
+## Safety Notes
+- Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files.
+- Creates .claude/logs/query-performance.log and appends database command or file-analysis events.
+- Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect.
+## Privacy Notes
+- Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output.
+- Stores analyzed file paths and database command text in .claude/logs/query-performance.log.
+- Database command text may include connection names, database names, or other operational details if typed directly into the command.
 ## Content
 ## Features
 - Automatic slow query detection and alerting with configurable thresholds (default: 1000ms) and real-time performance monitoring
