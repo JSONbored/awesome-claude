@@ -52,6 +52,23 @@ export function normalizeCommunityTargetKey(
     : null;
 }
 
+export function normalizeCommunitySignalTarget(
+  targetKindValue: string | null | undefined,
+  targetKeyValue: string | null | undefined,
+): CommunitySignalTarget | null {
+  const targetKind = normalizeCommunityTargetKind(targetKindValue);
+  const targetKey = normalizeCommunityTargetKey(targetKeyValue);
+  if (!targetKind || !targetKey) return null;
+
+  const isEntryTarget =
+    targetKind === "entry" &&
+    /^entry:[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/.test(targetKey);
+  const isToolTarget =
+    targetKind === "tool" && /^tool:[a-z0-9][a-z0-9-]*$/.test(targetKey);
+
+  return isEntryTarget || isToolTarget ? { targetKind, targetKey } : null;
+}
+
 export function normalizeCommunityClientId(
   value: string | null | undefined,
 ): string | null {

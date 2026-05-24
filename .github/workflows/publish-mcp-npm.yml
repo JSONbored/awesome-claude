@@ -27,8 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
-          cache: pnpm
+          node-version: 24.16.0
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
@@ -80,7 +79,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           registry-url: https://registry.npmjs.org
 
       - name: Validate release version

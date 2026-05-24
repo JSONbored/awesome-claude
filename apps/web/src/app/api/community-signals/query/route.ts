@@ -6,8 +6,7 @@ import {
   type InferApiBody,
 } from "@/lib/api/router";
 import {
-  normalizeCommunityTargetKey,
-  normalizeCommunityTargetKind,
+  normalizeCommunitySignalTarget,
   safeCommunitySignalCounts,
   type CommunitySignalTarget,
 } from "@/lib/community-signals";
@@ -21,16 +20,18 @@ export const POST = createApiHandler(
     const targets: CommunitySignalTarget[] = [];
 
     for (const target of payload.targets || []) {
-      const targetKind = normalizeCommunityTargetKind(target.targetKind);
-      const targetKey = normalizeCommunityTargetKey(target.targetKey);
-      if (!targetKind || !targetKey) {
+      const normalizedTarget = normalizeCommunitySignalTarget(
+        target.targetKind,
+        target.targetKey,
+      );
+      if (!normalizedTarget) {
         return apiError("invalid_payload", 400, {
           requestId,
           message:
             "Provide targets as entry/tool with keys like entry:<category>/<slug> or tool:<slug>.",
         });
       }
-      targets.push({ targetKind, targetKey });
+      targets.push(normalizedTarget);
     }
 
     const { available, counts } = await safeCommunitySignalCounts(targets);
