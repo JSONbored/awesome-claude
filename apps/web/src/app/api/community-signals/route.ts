@@ -12,9 +12,8 @@ import {
 import { logApiWarn } from "@/lib/api-logs";
 import {
   normalizeCommunityClientId,
+  normalizeCommunitySignalTarget,
   normalizeCommunitySignalType,
-  normalizeCommunityTargetKey,
-  normalizeCommunityTargetKind,
   queryCommunitySignalCounts,
   safeCommunitySignalCounts,
   ZERO_COMMUNITY_SIGNAL_COUNTS,
@@ -25,10 +24,12 @@ export const GET = createApiHandler(
   "communitySignals.read",
   async ({ query, requestId }) => {
     const payload = query as InferApiQuery<typeof communitySignalsQuerySchema>;
-    const targetKind = normalizeCommunityTargetKind(payload.targetKind);
-    const targetKey = normalizeCommunityTargetKey(payload.targetKey);
+    const target = normalizeCommunitySignalTarget(
+      payload.targetKind,
+      payload.targetKey,
+    );
 
-    if (!targetKind || !targetKey) {
+    if (!target) {
       return apiError("invalid_payload", 400, {
         requestId,
         message:
@@ -36,9 +37,8 @@ export const GET = createApiHandler(
       });
     }
 
-    const { available, counts } = await safeCommunitySignalCounts([
-      { targetKind, targetKey },
-    ]);
+    const { targetKind, targetKey } = target;
+    const { available, counts } = await safeCommunitySignalCounts([target]);
     return apiJson({
       ok: true,
       available,
@@ -53,18 +53,21 @@ export const POST = createApiHandler(
   "communitySignals.write",
   async ({ body, request, requestId }) => {
     const payload = body as InferApiBody<typeof communitySignalsBodySchema>;
-    const targetKind = normalizeCommunityTargetKind(payload.targetKind);
-    const targetKey = normalizeCommunityTargetKey(payload.targetKey);
+    const target = normalizeCommunitySignalTarget(
+      payload.targetKind,
+      payload.targetKey,
+    );
     const signalType = normalizeCommunitySignalType(payload.signalType);
     const clientId = normalizeCommunityClientId(payload.clientId);
 
-    if (!targetKind || !targetKey || !signalType || !clientId) {
+    if (!target || !signalType || !clientId) {
       return apiError("invalid_payload", 400, {
         requestId,
         message: "Provide targetKind, targetKey, signalType, and clientId.",
       });
     }
 
+    const { targetKind, targetKey } = target;
     try {
       const db = getSiteDb();
       if (!db) {
@@ -108,9 +111,7 @@ export const POST = createApiHandler(
           .run();
       }
 
-      const counts = await queryCommunitySignalCounts(db, [
-        { targetKind, targetKey },
-      ]);
+      const counts = await queryCommunitySignalCounts(db, [target]);
       return apiJson(
         {
           ok: true,
@@ -136,9 +137,7 @@ export const POST = createApiHandler(
         });
       }
 
-      const { counts } = await safeCommunitySignalCounts([
-        { targetKind, targetKey },
-      ]);
+      const { counts } = await safeCommunitySignalCounts([target]);
       return apiJson(
         {
           ok: true,

@@ -1,7 +1,7 @@
 {
   "name": "heyclaude",
   "private": true,
-  "packageManager": "pnpm@11.2.1",
+  "packageManager": "pnpm@11.2.2",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "8.5.0",
     "@heyclaude/registry": "workspace:*",
@@ -71,7 +71,7 @@
     "prettier": "3.8.3",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "react-email": "6.1.5",
+    "react-email": "6.3.0",
     "safety-agent-cli": "0.1.6",
     "tsx": "4.22.3",
     "vitest": "4.1.7"

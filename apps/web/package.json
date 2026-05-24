@@ -30,7 +30,7 @@
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "fflate": "0.8.3",
-    "geist": "1.7.0",
+    "geist": "1.7.1",
     "lucide-react": "1.16.0",
     "marked": "18.0.4",
     "next": "16.2.6",
@@ -52,6 +52,6 @@
     "postcss": "8.5.15",
     "tailwindcss": "4.3.0",
     "typescript": "6.0.3",
-    "wrangler": "4.93.0"
+    "wrangler": "4.93.1"
   }
 }
