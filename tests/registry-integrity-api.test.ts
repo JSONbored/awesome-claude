@@ -125,12 +125,30 @@ describe("/api/registry/integrity", () => {
     expect(artifactOnly.status).toBe(400);
     await expect(artifactOnly.json()).resolves.toMatchObject({
       ok: false,
-      error: { code: "invalid_payload" },
+      error: {
+        code: "invalid_payload",
+        details: [
+          expect.objectContaining({
+            path: "hash",
+            message: "Provide both artifact and hash together for verification",
+            code: "custom",
+          }),
+        ],
+      },
     });
     expect(hashOnly.status).toBe(400);
     await expect(hashOnly.json()).resolves.toMatchObject({
       ok: false,
-      error: { code: "invalid_payload" },
+      error: {
+        code: "invalid_payload",
+        details: [
+          expect.objectContaining({
+            path: "artifact",
+            message: "Provide both artifact and hash together for verification",
+            code: "custom",
+          }),
+        ],
+      },
     });
     expect(malformed.status).toBe(400);
     await expect(malformed.json()).resolves.toMatchObject({
