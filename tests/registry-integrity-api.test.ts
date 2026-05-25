@@ -74,9 +74,6 @@ describe("/api/registry/integrity", () => {
         "/api/registry/integrity?artifact=%2fdata%2ffeeds%2findex.json&hash=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
       ),
     );
-    const currentSnapshot = await GET(
-      request("/api/registry/integrity?artifact=%2fdirectory-index.json"),
-    );
 
     await expect(match.json()).resolves.toMatchObject({
       ok: true,
@@ -93,18 +90,19 @@ describe("/api/registry/integrity", () => {
       status: "match",
       current: expect.objectContaining({ name: "feeds/index.json" }),
     });
-    await expect(currentSnapshot.json()).resolves.toMatchObject({
-      ok: true,
-      status: "snapshot",
-      current: expect.objectContaining({ name: "directory-index.json" }),
-    });
   });
 
   it("returns clear unknown artifact and malformed hash responses", async () => {
     const { GET } =
       await import("../apps/web/src/app/api/registry/integrity/route");
     const unknown = await GET(
-      request("/api/registry/integrity?artifact=missing.json"),
+      request("/api/registry/integrity?artifact=missing.json&hash=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"),
+    );
+    const artifactOnly = await GET(
+      request("/api/registry/integrity?artifact=directory-index.json"),
+    );
+    const hashOnly = await GET(
+      request("/api/registry/integrity?hash=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
     );
     const malformed = await GET(
       request("/api/registry/integrity?artifact=directory-index.json&hash=nope"),
@@ -118,6 +116,8 @@ describe("/api/registry/integrity", () => {
       status: "unknown",
       current: null,
     });
+    expect(artifactOnly.status).toBe(400);
+    expect(hashOnly.status).toBe(400);
     expect(malformed.status).toBe(400);
     await expect(malformed.json()).resolves.toMatchObject({
       ok: false,
