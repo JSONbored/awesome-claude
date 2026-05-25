@@ -32,6 +32,12 @@ privacyNotes:
   - OAuth2 access tokens are refreshed in the background by the local daemon; refresh tokens are kept in the local vault.
   - First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. No credentials are sent to any third-party service hosted by Agentr.
   - Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.
+safetyNotes:
+  - Installs a local daemon and a local HTTPS proxy (`authsome run`) that listens on `127.0.0.1` and intercepts outbound HTTPS to matched provider hostnames.
+  - The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies, but agents running behind it will perform live API calls (e.g. send emails, post to Slack, charge cards) using the user's credentials.
+  - Daemon runs token refresh as a background process. Refresh failures or network outages can leave a provider in a stale state until `authsome login` is re-run.
+  - Network access is required for OAuth flows, token refresh, and provider API calls. The proxy itself runs only on loopback.
+  - Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; the package is hosted on PyPI under the `authsome` name.
 ---
 
 ## Editorial notes
