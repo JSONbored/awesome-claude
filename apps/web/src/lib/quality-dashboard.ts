@@ -6,6 +6,7 @@ import type {
 const RISK_BEARING_CATEGORIES = [
   "mcp",
   "hooks",
+  "skills",
   "statuslines",
   "commands",
 ] as const;

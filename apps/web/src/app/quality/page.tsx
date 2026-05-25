@@ -11,6 +11,7 @@ import {
   type CategoryTrustRow,
 } from "@/lib/quality-dashboard";
 import { buildPageMetadata } from "@/lib/seo";
+import { withDuration } from "@/lib/server-page-logging";
 import { categoryLabels, siteConfig } from "@/lib/site";
 import {
   buildBreadcrumbJsonLd,
@@ -29,75 +30,8 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
-type QualityPageLogger = {
-  info: (event: string, meta?: Record<string, unknown>) => void;
-  error: (event: string, meta?: Record<string, unknown>) => void;
-};
-
-function writeQualityPageLog(
-  level: "info" | "error",
-  event: string,
-  requestId: string,
-  meta: Record<string, unknown> = {},
-) {
-  const payload = {
-    ts: new Date().toISOString(),
-    level,
-    event,
-    requestId,
-    ...meta,
-  };
-  const line = JSON.stringify(payload);
-  if (level === "error") {
-    console.error(line);
-    return;
-  }
-  console.info(line);
-}
-
-function createQualityPageLogger(requestId: string): QualityPageLogger {
-  return {
-    info(event, meta = {}) {
-      writeQualityPageLog("info", event, requestId, meta);
-    },
-    error(event, meta = {}) {
-      writeQualityPageLog("error", event, requestId, meta);
-    },
-  };
-}
-
-function normalizeQualityPageError(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return "Unknown error";
-}
-
-async function withDuration<T>(
-  callback: (context: {
-    getDurationMs: () => number;
-    logger: QualityPageLogger;
-    requestId: string;
-  }) => Promise<T>,
-) {
-  const startedAt = Date.now();
-  const requestId = crypto.randomUUID();
-  const logger = createQualityPageLogger(requestId);
-  const getDurationMs = () => Date.now() - startedAt;
-
-  try {
-    return await callback({ getDurationMs, logger, requestId });
-  } catch (error) {
-    logger.error("quality.page.failed", {
-      durationMs: getDurationMs(),
-      error: normalizeQualityPageError(error),
-    });
-    throw error;
-  }
-}
-
 export default async function QualityPage() {
-  return withDuration(async ({ getDurationMs, logger }) => {
+  return withDuration("quality.page", async ({ getDurationMs, logger }) => {
     const [report, trustReport] = await Promise.all([
       getContentQualityReport(),
       getRegistryTrustReport(),
@@ -137,7 +71,7 @@ export default async function QualityPage() {
       }),
     ];
 
-    logger.info("quality.page.summary", {
+    logger.info("summary", {
       categoryCount: categories.length,
       contentEntryCount: report.count,
       durationMs: getDurationMs(),
@@ -267,7 +201,7 @@ export default async function QualityPage() {
                 Safety and privacy coverage on risk-bearing categories
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-7 text-muted-foreground">
-                MCP servers, hooks, statuslines, and slash commands run
+                MCP servers, hooks, skills, statuslines, and slash commands run
                 untrusted behavior or touch local files. Safety and privacy
                 notes are the fastest contributor-actionable win.
               </p>

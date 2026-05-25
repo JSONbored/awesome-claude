@@ -128,6 +128,7 @@ describe("isRiskBearingCategory", () => {
   it("identifies risk-bearing categories", () => {
     expect(isRiskBearingCategory("mcp")).toBe(true);
     expect(isRiskBearingCategory("hooks")).toBe(true);
+    expect(isRiskBearingCategory("skills")).toBe(true);
     expect(isRiskBearingCategory("statuslines")).toBe(true);
     expect(isRiskBearingCategory("commands")).toBe(true);
   });
@@ -135,7 +136,7 @@ describe("isRiskBearingCategory", () => {
   it("rejects non-risk-bearing categories", () => {
     expect(isRiskBearingCategory("agents")).toBe(false);
     expect(isRiskBearingCategory("tools")).toBe(false);
-    expect(isRiskBearingCategory("skills")).toBe(false);
+    expect(isRiskBearingCategory("rules")).toBe(false);
     expect(isRiskBearingCategory("")).toBe(false);
   });
 });
@@ -428,6 +429,7 @@ describe("buildQualityDashboardSummary", () => {
     expect(summary.riskBearingCategories).toEqual([
       "mcp",
       "hooks",
+      "skills",
       "statuslines",
       "commands",
     ]);
