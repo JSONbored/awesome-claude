@@ -5,9 +5,12 @@ category: tools
 description: Local credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.
 cardDescription: Local credential broker for AI agents.
 seoTitle: Authsome local credential broker for AI agents
-seoDescription: Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTP proxy that injects credentials so agents never see raw secrets.
+seoDescription: Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTPS proxy that injects credentials so agents never see raw secrets.
 author: Agentr
+authorProfileUrl: "https://github.com/agentrhq"
 dateAdded: "2026-05-25"
+submittedBy: zriyansh
+submittedByUrl: "https://github.com/zriyansh"
 websiteUrl: "https://authsome.ai"
 documentationUrl: "https://authsome.ai/docs"
 repoUrl: "https://github.com/agentrhq/authsome"
@@ -23,6 +26,12 @@ keywords:
   - ai agent credentials
   - local credential broker
   - oauth2 for agents
+privacyNotes:
+  - Credentials are stored locally in an encrypted vault under `~/.authsome`. They never leave the user's machine.
+  - A local HTTPS proxy on `127.0.0.1` injects credentials into outbound requests so the agent's process environment never holds raw secrets.
+  - OAuth2 access tokens are refreshed in the background by the local daemon; refresh tokens are kept in the local vault.
+  - First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. No credentials are sent to any third-party service hosted by Agentr.
+  - Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.
 ---
 
 ## Editorial notes
