@@ -96,16 +96,22 @@ describe("/api/registry/integrity", () => {
     const { GET } =
       await import("../apps/web/src/app/api/registry/integrity/route");
     const unknown = await GET(
-      request("/api/registry/integrity?artifact=missing.json&hash=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"),
+      request(
+        "/api/registry/integrity?artifact=missing.json&hash=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      ),
     );
     const artifactOnly = await GET(
       request("/api/registry/integrity?artifact=directory-index.json"),
     );
     const hashOnly = await GET(
-      request("/api/registry/integrity?hash=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"),
+      request(
+        "/api/registry/integrity?hash=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      ),
     );
     const malformed = await GET(
-      request("/api/registry/integrity?artifact=directory-index.json&hash=nope"),
+      request(
+        "/api/registry/integrity?artifact=directory-index.json&hash=nope",
+      ),
     );
     const badArtifact = await GET(
       request("/api/registry/integrity?artifact=../registry-manifest.json"),
@@ -117,7 +123,15 @@ describe("/api/registry/integrity", () => {
       current: null,
     });
     expect(artifactOnly.status).toBe(400);
+    await expect(artifactOnly.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_payload" },
+    });
     expect(hashOnly.status).toBe(400);
+    await expect(hashOnly.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_payload" },
+    });
     expect(malformed.status).toBe(400);
     await expect(malformed.json()).resolves.toMatchObject({
       ok: false,
