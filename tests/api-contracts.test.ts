@@ -19,6 +19,7 @@ const apiRoutes = [
   "/api/registry/categories",
   "/api/registry/search",
   "/api/registry/feed",
+  "/api/registry/trending",
   "/api/registry/diff",
   "/api/registry/integrity",
   "/api/registry/entries/{category}/{slug}",
@@ -67,6 +68,9 @@ describe("OpenAPI route coverage", () => {
         patch?: unknown;
       }
     >;
+    components?: {
+      schemas?: Record<string, { properties?: Record<string, unknown> }>;
+    };
   };
 
   it("documents every public and limited dynamic API route", () => {
@@ -204,6 +208,27 @@ describe("OpenAPI route coverage", () => {
       "integer",
       "null",
     ]);
+  });
+
+  it("documents concrete registry trending response metadata", () => {
+    const trendingResponse =
+      parsedSchema.paths["/api/registry/trending"]?.get?.responses?.["200"];
+    const responseSchema = (
+      trendingResponse?.content as
+        | Record<string, { schema?: { $ref?: string } }>
+        | undefined
+    )?.["application/json"]?.schema;
+    const component =
+      parsedSchema.components?.schemas?.RegistryTrendingResponse?.properties as
+        | Record<string, { maxItems?: number; minimum?: number; maximum?: number }>
+        | undefined;
+
+    expect(responseSchema?.$ref).toBe(
+      "#/components/schemas/RegistryTrendingResponse",
+    );
+    expect(component?.limit?.minimum).toBe(1);
+    expect(component?.limit?.maximum).toBe(50);
+    expect(component?.entries?.maxItems).toBe(50);
   });
 
   it("documents error envelopes, cacheable feeds, and registry trust signals", () => {

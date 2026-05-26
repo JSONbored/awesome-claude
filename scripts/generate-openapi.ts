@@ -17,6 +17,7 @@ const require = createRequire(import.meta.url);
 const {
   apiErrorEnvelopeSchema,
   registryBrandAssetSchema,
+  registryTrendingResponseSchema,
   registrySearchResultSchema,
   listApiRouteDefinitions,
   registryTrustSignalsSchema,
@@ -105,7 +106,9 @@ function responseFor(definition: ApiRouteDefinition) {
     description: successDescription(definition),
     content: {
       "application/json": {
-        schema: definition.responseSchema || z.record(z.string(), z.unknown()),
+        schema: definition.responseSchemaName
+          ? { $ref: `#/components/schemas/${definition.responseSchemaName}` }
+          : definition.responseSchema || z.record(z.string(), z.unknown()),
       },
     },
   };
@@ -161,6 +164,7 @@ function buildOpenApiDocument() {
   registry.register("ErrorEnvelope", apiErrorEnvelopeSchema);
   registry.register("RegistryBrandAsset", registryBrandAssetSchema);
   registry.register("RegistrySearchResult", registrySearchResultSchema);
+  registry.register("RegistryTrendingResponse", registryTrendingResponseSchema);
   registry.register("RegistryTrustSignals", registryTrustSignalsSchema);
 
   for (const definition of listApiRouteDefinitions()) {
