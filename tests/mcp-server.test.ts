@@ -1590,4 +1590,241 @@ describe("HeyClaude read-only MCP helpers", () => {
       }
     });
   });
+
+  describe("jobs and trending discovery resources", () => {
+    it("documents the new discovery helpers with JSDoc (docstring coverage gate)", () => {
+      const registrySource = fs.readFileSync(
+        path.join(repoRoot, "packages/mcp/src/registry.js"),
+        "utf8",
+      );
+
+      const requireDocstringBefore = (declaration: string) => {
+        const index = registrySource.indexOf(declaration);
+        expect(
+          index,
+          `Expected to find declaration: ${declaration}`,
+        ).toBeGreaterThan(-1);
+        const preceding = registrySource.slice(Math.max(0, index - 4000), index);
+        const trimmed = preceding.trimEnd();
+        expect(
+          trimmed.endsWith("*/"),
+          `Missing JSDoc block immediately before: ${declaration}`,
+        ).toBe(true);
+        const blockStart = trimmed.lastIndexOf("/**");
+        expect(
+          blockStart,
+          `Missing JSDoc opener before: ${declaration}`,
+        ).toBeGreaterThan(-1);
+        const block = trimmed.slice(blockStart);
+        expect(block.length).toBeGreaterThan(40);
+      };
+
+      requireDocstringBefore("export async function listRegistryRecent(");
+      requireDocstringBefore("export async function listRegistryTrending(");
+      requireDocstringBefore("export async function listJobsActive(");
+      requireDocstringBefore("async function fetchPublicApiJson(");
+      requireDocstringBefore("function publicApiBaseUrl(");
+      requireDocstringBefore("function unavailable(");
+      requireDocstringBefore("function toTrendingEntry(");
+      requireDocstringBefore("function toJobEntry(");
+      requireDocstringBefore("const DISCOVERY_RESOURCES = [");
+    });
+
+    it("lists discovery resources alongside the directory and category feeds", async () => {
+      const resources = await listRegistryResources({}, { dataDir });
+      const uris = (resources.resources as Array<{ uri: string }>).map(
+        (resource) => resource.uri,
+      );
+      expect(uris).toEqual(
+        expect.arrayContaining([
+          "heyclaude://feeds/directory",
+          "heyclaude://registry/recent",
+          "heyclaude://registry/trending",
+          "heyclaude://jobs/active",
+        ]),
+      );
+
+      await withMcpClient(async (client) => {
+        const remote = await client.listResources();
+        const remoteUris = remote.resources.map(
+          (resource: { uri: string }) => resource.uri,
+        );
+        expect(remoteUris).toEqual(
+          expect.arrayContaining([
+            "heyclaude://registry/recent",
+            "heyclaude://registry/trending",
+            "heyclaude://jobs/active",
+          ]),
+        );
+      });
+    });
+
+    it("reads bounded recent registry updates from the local search index", async () => {
+      const resource = await readRegistryResource(
+        { uri: "heyclaude://registry/recent" },
+        { dataDir },
+      );
+      const payload = JSON.parse(resource.contents[0].text);
+      expect(payload).toMatchObject({
+        ok: true,
+        kind: "registry-recent",
+        policy: { readOnly: true, createsIssues: false },
+      });
+      expect(payload.entries.length).toBeGreaterThan(0);
+      expect(payload.entries.length).toBeLessThanOrEqual(25);
+      const dates = payload.entries.map((entry: { updatedAt: string }) => entry.updatedAt);
+      expect(dates).toEqual([...dates].sort().reverse());
+      expect(payload.entries[0]).toMatchObject({
+        key: expect.stringContaining(":"),
+        updateKind: expect.stringMatching(/added|upstream_update/),
+      });
+    });
+
+    it("reads trending entries via an injected public-api fetcher", async () => {
+      const fetchPublicApi = async (apiPath: string) => {
+        expect(apiPath).toContain("/api/registry/trending");
+        return {
+          schemaVersion: 1,
+          kind: "registry-trending",
+          category: "all",
+          platform: "all",
+          limit: 25,
+          count: 1,
+          signalsAvailable: { votes: true, community: true, intent: true },
+          entries: [
+            {
+              category: skill.category,
+              slug: skill.slug,
+              title: skill.title,
+              description: "Example trending entry.",
+              canonicalUrl: `https://heyclau.de/${skill.category}/${skill.slug}`,
+              platforms: ["Claude"],
+              tags: ["evals"],
+              dateAdded: "2026-05-01",
+              score: 12.5,
+              reasons: ["upvotes", "community_used"],
+              trustSignals: { sourceStatus: "available" },
+            },
+          ],
+        };
+      };
+
+      const resource = await readRegistryResource(
+        { uri: "heyclaude://registry/trending" },
+        { dataDir, fetchPublicApi },
+      );
+      const payload = JSON.parse(resource.contents[0].text);
+      expect(payload).toMatchObject({
+        ok: true,
+        kind: "registry-trending",
+        source: "public-api",
+        signalsAvailable: { votes: true, community: true, intent: true },
+        policy: { readOnly: true },
+      });
+      expect(payload.entries).toHaveLength(1);
+      expect(payload.entries[0]).toMatchObject({
+        key: `${skill.category}:${skill.slug}`,
+        reasons: expect.arrayContaining(["upvotes"]),
+      });
+    });
+
+    it("reads active jobs via an injected public-api fetcher", async () => {
+      const fetchPublicApi = async (apiPath: string) => {
+        expect(apiPath).toContain("/api/jobs");
+        return {
+          schemaVersion: 1,
+          kind: "jobs-index",
+          count: 1,
+          totalAvailable: 1,
+          entries: [
+            {
+              id: "example-job",
+              title: "Example AI Engineer",
+              company: "Example Co",
+              location: "Remote",
+              type: "full-time",
+              isRemote: true,
+              tier: "premium",
+              applyUrl: "https://example.com/jobs/example-job",
+              sourceLabel: "Example",
+              postedAt: "2026-05-20",
+              labels: ["ai"],
+            },
+          ],
+        };
+      };
+
+      const resource = await readRegistryResource(
+        { uri: "heyclaude://jobs/active" },
+        { dataDir, fetchPublicApi },
+      );
+      const payload = JSON.parse(resource.contents[0].text);
+      expect(payload).toMatchObject({
+        ok: true,
+        kind: "jobs-active",
+        source: "public-api",
+        totalAvailable: 1,
+        policy: { readOnly: true, createsIssues: false },
+      });
+      expect(payload.entries).toEqual([
+        expect.objectContaining({
+          id: "example-job",
+          isRemote: true,
+          applyUrl: "https://example.com/jobs/example-job",
+        }),
+      ]);
+    });
+
+    it("treats malformed upstream payloads as unavailable", async () => {
+      const fetchPublicApi = async () => ({ entries: null });
+
+      const trending = await readRegistryResource(
+        { uri: "heyclaude://registry/trending" },
+        { dataDir, fetchPublicApi },
+      );
+      const trendingPayload = JSON.parse(trending.contents[0].text);
+      expect(trendingPayload).toMatchObject({
+        ok: false,
+        error: { code: "unavailable" },
+      });
+
+      const jobs = await readRegistryResource(
+        { uri: "heyclaude://jobs/active" },
+        { dataDir, fetchPublicApi: async () => ({}) },
+      );
+      const jobsPayload = JSON.parse(jobs.contents[0].text);
+      expect(jobsPayload).toMatchObject({
+        ok: false,
+        error: { code: "unavailable" },
+      });
+    });
+
+    it("degrades gracefully when the public api is unavailable", async () => {
+      const fetchPublicApi = async () => {
+        throw new Error("network unreachable");
+      };
+
+      const trending = await readRegistryResource(
+        { uri: "heyclaude://registry/trending" },
+        { dataDir, fetchPublicApi },
+      );
+      const trendingPayload = JSON.parse(trending.contents[0].text);
+      expect(trendingPayload).toMatchObject({
+        ok: false,
+        error: { code: "unavailable" },
+        policy: { readOnly: true },
+      });
+
+      const jobs = await readRegistryResource(
+        { uri: "heyclaude://jobs/active" },
+        { dataDir, fetchPublicApi },
+      );
+      const jobsPayload = JSON.parse(jobs.contents[0].text);
+      expect(jobsPayload).toMatchObject({
+        ok: false,
+        error: { code: "unavailable" },
+        policy: { readOnly: true },
+      });
+    });
+  });
 });
