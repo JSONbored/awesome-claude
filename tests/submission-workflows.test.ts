@@ -1570,9 +1570,9 @@ packageVerified: true
     expect(result.stderr).toContain("archive contains more than 500 files");
   });
 
-  it("scanner fails closed on archives it cannot inspect", () => {
+  it("scanner fails closed on corrupt archives", () => {
     const result = runScanner({
-      "content/skills/empty.zip": buildZip([]),
+      "content/skills/corrupt.zip": Buffer.from("not a zip"),
     });
 
     expect(result.status).toBe(1);
