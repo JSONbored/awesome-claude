@@ -142,7 +142,13 @@ export const publicJobsQuerySchema = z.object({
     .default("all"),
   postedAfter: isoDateLikeSchema,
   limit: z.coerce.number().int().min(1).max(100).optional().default(100),
-  offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
+  offset: z.coerce
+    .number()
+    .int()
+    .min(0)
+    .max(10_000)
+    .default(0)
+    .meta({ type: "integer", minimum: 0, maximum: 10_000, default: 0 }),
 });
 
 export const apiErrorEnvelopeSchema = z.object({

@@ -6278,9 +6278,7 @@ paths:
           name: limit
           in: query
         - schema:
-            type:
-              - integer
-              - "null"
+            type: integer
             minimum: 0
             maximum: 10000
             default: 0
