@@ -35,7 +35,7 @@ prerequisites:
   - Acceptance that authsome installs a long-running local daemon and a local HTTPS proxy on loopback. Both must be running while the agent makes provider API calls.
 privacyNotes:
   - Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service.
-  - When the agent calls an external provider, the local proxy injects the corresponding OAuth2 access token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com, slack.com). Credentials reach the provider you authenticated with, by design, since that is required for the provider call to succeed.
+  - When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them.
   - OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint.
   - First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.
   - Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.
