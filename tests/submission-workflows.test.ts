@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -15,6 +15,7 @@ import {
   planStaleSubmissionAction,
   urlNeedsVerification,
 } from "../scripts/manage-stale-submissions.mjs";
+import { buildZip } from "./helpers/zip-fixtures";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("submission automation workflows", () => {
@@ -1378,5 +1379,333 @@ description: Example description
     expect(jobsSource).toContain(
       "if: steps.source-check.outputs.skip != 'true'",
     );
+  });
+});
+
+describe("package archive scanner regression fixtures", () => {
+  const SCAN_SCRIPT = "scripts/scan-download-packages.mjs";
+  const VALIDATE_SCRIPT = "scripts/validate-download-packages.mjs";
+
+  // A SKILL.md whose frontmatter satisfies the validator (name + description).
+  const VALID_SKILL_MD =
+    "---\nname: example-skill\ndescription: Example skill description.\n---\n\nDo the thing.\n";
+
+  const verifiedSkillMdx = mdx(`
+title: Example Skill
+slug: example-skill
+category: skills
+description: Example source-backed skill.
+submittedBy: maintainer
+submittedByUrl: https://github.com/maintainer
+downloadUrl: /downloads/skills/example-skill.zip
+packageVerified: true
+`);
+
+  const verifiedMcpMdx = mdx(`
+title: Example MCP Server
+slug: example-server
+category: mcp
+description: Example source-backed MCP server.
+submittedBy: maintainer
+submittedByUrl: https://github.com/maintainer
+downloadUrl: /downloads/mcp/example-server.mcpb
+packageVerified: true
+`);
+
+  const requiredMcpFiles = [
+    { name: "manifest.json", content: "{}" },
+    { name: "package.json", content: '{"name":"example-server"}' },
+    { name: "README.md", content: "# Example MCP Server\n" },
+    { name: "server/index.js", content: "module.exports = {};\n" },
+  ];
+
+  function mdx(frontmatter: string): string {
+    return `---\n${frontmatter.trim()}\n---\n\nSource-backed package.\n`;
+  }
+
+  function runPackageScript(
+    script: string,
+    files: Record<string, Buffer | string>,
+  ): { status: number | null; stdout: string; stderr: string } {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-package-fixture-"),
+    );
+    try {
+      for (const [relativePath, data] of Object.entries(files)) {
+        const target = path.join(tmpDir, relativePath);
+        fs.mkdirSync(path.dirname(target), { recursive: true });
+        fs.writeFileSync(target, data);
+      }
+      const result = spawnSync(
+        process.execPath,
+        [path.join(repoRoot, script)],
+        { cwd: tmpDir, encoding: "utf8" },
+      );
+      return {
+        status: result.status,
+        stdout: result.stdout ?? "",
+        stderr: result.stderr ?? "",
+      };
+    } finally {
+      fs.rmSync(tmpDir, { recursive: true, force: true });
+    }
+  }
+
+  const runScanner = (files: Record<string, Buffer | string>) =>
+    runPackageScript(SCAN_SCRIPT, files);
+  const runValidator = (files: Record<string, Buffer | string>) =>
+    runPackageScript(VALIDATE_SCRIPT, files);
+
+  it("scanner rejects absolute archive paths", () => {
+    const result = runScanner({
+      "content/skills/unsafe.zip": buildZip([
+        { name: "/etc/passwd", content: "root:x:0:0" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("unsafe archive path (/etc/passwd)");
+  });
+
+  it("scanner rejects parent-directory traversal paths", () => {
+    const result = runScanner({
+      "content/skills/unsafe.zip": buildZip([
+        { name: "../escape.txt", content: "payload" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("unsafe archive path (../escape.txt)");
+  });
+
+  it("scanner rejects backslash archive paths", () => {
+    const result = runScanner({
+      "content/skills/unsafe.zip": buildZip([
+        { name: "windows\\payload.txt", content: "payload" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "unsafe archive path (windows\\payload.txt)",
+    );
+  });
+
+  it("scanner rejects symlink entries", () => {
+    const result = runScanner({
+      "content/skills/symlink.zip": buildZip([
+        { name: "example-skill/link", symlinkTarget: "/etc/passwd" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("symbolic links are not allowed");
+  });
+
+  it("scanner rejects nested archives", () => {
+    const result = runScanner({
+      "content/skills/nested.zip": buildZip([
+        { name: "example-skill/inner.zip", content: "not really a zip" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "nested archive is not allowed (example-skill/inner.zip)",
+    );
+  });
+
+  it("scanner rejects executable package files", () => {
+    const result = runScanner({
+      "content/skills/exe.zip": buildZip([
+        { name: "example-skill/installer.exe", content: "MZ " },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "executable package file is not allowed (example-skill/installer.exe)",
+    );
+  });
+
+  it("scanner warns about script files without failing the scan", () => {
+    const result = runScanner({
+      "content/skills/script.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "example-skill/scripts/setup.sh", content: "echo hi\n" },
+      ]),
+    });
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain(
+      "script file requires source review (example-skill/scripts/setup.sh)",
+    );
+  });
+
+  it("scanner rejects archives that exceed the compression ratio limit", () => {
+    const result = runScanner({
+      "content/skills/bomb.zip": buildZip([
+        {
+          name: "example-skill/zeros.bin",
+          content: Buffer.alloc(1024 * 1024, 0),
+          compression: "deflate",
+        },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("compression ratio exceeds 30:1");
+  });
+
+  it("scanner rejects archives with too many files", () => {
+    const entries = Array.from({ length: 501 }, (_, index) => ({
+      name: `example-skill/file-${index}.txt`,
+      content: "x",
+    }));
+    const result = runScanner({
+      "content/skills/many.zip": buildZip(entries),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("archive contains more than 500 files");
+  });
+
+  it("scanner fails closed on archives it cannot inspect", () => {
+    const result = runScanner({
+      "content/skills/empty.zip": buildZip([]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("cannot inspect archive");
+  });
+
+  it("scanner accepts a clean skill archive", () => {
+    const result = runScanner({
+      "content/skills/clean.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "example-skill/references/guide.md", content: "Reference.\n" },
+      ]),
+    });
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("Package artifact scan passed");
+  });
+
+  it("validator rejects skill archives missing SKILL.md", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": verifiedSkillMdx,
+      "content/skills/example-skill.zip": buildZip([
+        { name: "example-skill/notes.md", content: "no skill manifest" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "skills archive must include example-skill/SKILL.md",
+    );
+  });
+
+  it("validator rejects skill archives with unexpected files", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": verifiedSkillMdx,
+      "content/skills/example-skill.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "example-skill/payload.bin", content: "binary blob" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "unexpected Agent Skill file (example-skill/payload.bin)",
+    );
+  });
+
+  it("validator rejects skill archives with multiple root folders", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": verifiedSkillMdx,
+      "content/skills/example-skill.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "second-skill/SKILL.md", content: VALID_SKILL_MD },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "skills archive must contain one root folder",
+    );
+  });
+
+  it("validator rejects unsafe paths inside skill archives", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": verifiedSkillMdx,
+      "content/skills/example-skill.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "example-skill/../escape.md", content: "payload" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("unsafe archive path detected");
+  });
+
+  it("validator rejects MCPB archives missing required files", () => {
+    const result = runValidator({
+      "content/mcp/example-server.mdx": verifiedMcpMdx,
+      "content/mcp/example-server.mcpb": buildZip([
+        { name: "manifest.json", content: "{}" },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("missing required MCPB file");
+  });
+
+  it("validator rejects MCPB archives with disallowed file extensions", () => {
+    const result = runValidator({
+      "content/mcp/example-server.mdx": verifiedMcpMdx,
+      "content/mcp/example-server.mcpb": buildZip([
+        ...requiredMcpFiles,
+        { name: "payload.exe", content: "MZ " },
+      ]),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "unexpected MCPB file extension (payload.exe)",
+    );
+  });
+
+  it("validator rejects local /downloads references without packageVerified", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": mdx(`
+title: Example Skill
+slug: example-skill
+category: skills
+description: Example source-backed skill.
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+downloadUrl: /downloads/skills/example-skill.zip
+`),
+    });
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain(
+      "local /downloads hosting requires packageVerified: true",
+    );
+  });
+
+  it("validator accepts verified skill and MCPB archives", () => {
+    const result = runValidator({
+      "content/skills/example-skill.mdx": verifiedSkillMdx,
+      "content/skills/example-skill.zip": buildZip([
+        { name: "example-skill/SKILL.md", content: VALID_SKILL_MD },
+        { name: "example-skill/scripts/run.py", content: "print('hi')\n" },
+      ]),
+      "content/mcp/example-server.mdx": verifiedMcpMdx,
+      "content/mcp/example-server.mcpb": buildZip(requiredMcpFiles),
+    });
+
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("Package download validation passed.");
   });
 });
