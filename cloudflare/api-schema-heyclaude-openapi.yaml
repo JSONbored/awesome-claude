@@ -250,6 +250,102 @@ components:
         - apiUrl
         - trustSignals
       additionalProperties: {}
+    RegistryTrendingResponse:
+      type: object
+      properties:
+        schemaVersion:
+          type: number
+        kind:
+          type: string
+          enum:
+            - registry-trending
+        category:
+          type: string
+        platform:
+          type: string
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 50
+        count:
+          type: integer
+          minimum: 0
+        signalsAvailable:
+          type: object
+          properties:
+            votes:
+              type: boolean
+            community:
+              type: boolean
+            intent:
+              type: boolean
+          required:
+            - votes
+            - community
+            - intent
+        entries:
+          type: array
+          items:
+            type: object
+            properties:
+              category:
+                type: string
+              slug:
+                type: string
+              title:
+                type: string
+              description:
+                type: string
+              canonicalUrl:
+                type: string
+                format: uri
+              platforms:
+                type: array
+                items:
+                  type: string
+                maxItems: 12
+              tags:
+                type: array
+                items:
+                  type: string
+                maxItems: 32
+              dateAdded:
+                type: string
+              score:
+                type: number
+              reasons:
+                type: array
+                items:
+                  type: string
+                maxItems: 6
+              trustSignals:
+                type: object
+                properties:
+                  sourceStatus:
+                    type: string
+                required:
+                  - sourceStatus
+            required:
+              - category
+              - slug
+              - title
+              - description
+              - platforms
+              - tags
+              - dateAdded
+              - score
+              - reasons
+              - trustSignals
+          maxItems: 50
+      required:
+        - schemaVersion
+        - kind
+        - category
+        - platform
+        - limit
+        - count
+        - signalsAvailable
+        - entries
     RegistryTrustSignals:
       type: object
       properties:
@@ -824,15 +920,23 @@ paths:
           name: q
           in: query
         - schema:
-            type: string
-            pattern: ^[a-z0-9-]+$
+            anyOf:
+              - type: string
+                pattern: ^[a-z0-9-]+$
+              - type: string
+                enum:
+                  - ""
             default: ""
           required: false
           name: category
           in: query
         - schema:
-            type: string
-            pattern: ^[a-z0-9][a-z0-9 -]{0,48}$
+            anyOf:
+              - type: string
+                pattern: ^[a-z0-9][a-z0-9 -]{0,48}$
+              - type: string
+                enum:
+                  - ""
             default: ""
           required: false
           name: platform
@@ -1476,6 +1580,295 @@ paths:
               schema:
                 type: object
                 additionalProperties: {}
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/registry/trending:
+    get:
+      tags:
+        - Registry
+      summary: Public registry trending entries
+      description:
+        Returns bounded privacy-safe trending registry entries from aggregate votes, community
+        signals, intent events, and static trust metadata.
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                pattern: ^[a-z0-9-]+$
+              - type: string
+                enum:
+                  - ""
+            default: ""
+          required: false
+          name: category
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+                pattern: ^[a-z0-9][a-z0-9 -]{0,48}$
+              - type: string
+                enum:
+                  - ""
+            default: ""
+          required: false
+          name: platform
+          in: query
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 12
+          required: false
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: Cacheable registry response with ETag support where applicable.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegistryTrendingResponse"
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

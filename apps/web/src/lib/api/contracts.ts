@@ -4,14 +4,8 @@ import { validateJobPublicationQuality } from "@heyclaude/registry/commercial";
 
 const entryKeySchema = z.string().regex(/^[a-z0-9-]+:[a-z0-9-]+$/);
 const safeSlugSchema = z.string().regex(/^[a-z0-9-]+$/);
-const platformSchema = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .regex(/^[a-z0-9][a-z0-9 -]{0,48}$/)
-  .optional()
-  .default("");
-const categorySchema = safeSlugSchema.optional().default("");
+const categorySchema = z.union([safeSlugSchema, z.literal("")]).optional().default("");
+const platformSchema = z.union([z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9 -]{0,48}$/), z.literal("")]).optional().default("");
 const jobTierSchema = z.enum(["free", "standard", "featured", "sponsored"]);
 const jobStatusSchema = z.enum([
   "draft",
@@ -245,6 +239,17 @@ export const registrySearchResponseSchema = z.object({
   facets: registrySearchFacetsSchema.optional(),
 });
 
+export const registryTrendingResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("registry-trending"),
+  category: z.string(),
+  platform: z.string(),
+  limit: z.number().int().min(1).max(50),
+  count: z.number().int().nonnegative(),
+  signalsAvailable: z.object({ votes: z.boolean(), community: z.boolean(), intent: z.boolean() }),
+  entries: z.array(z.object({ category: z.string(), slug: z.string(), title: z.string(), description: z.string(), canonicalUrl: z.string().url().optional(), platforms: z.array(z.string()).max(12), tags: z.array(z.string()).max(32), dateAdded: z.string(), score: z.number(), reasons: z.array(z.string()).max(6), trustSignals: z.object({ sourceStatus: z.string() }) })).max(50),
+});
+
 export const registrySearchQuerySchema = z.object({
   q: z.string().trim().toLowerCase().max(120).optional().default(""),
   category: categorySchema,
@@ -265,6 +270,12 @@ export const registrySearchQuerySchema = z.object({
     .default("all"),
   limit: z.coerce.number().int().min(1).max(50).optional().default(20),
   offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
+});
+
+export const registryTrendingQuerySchema = z.object({
+  category: categorySchema,
+  platform: platformSchema,
+  limit: z.coerce.number().int().min(1).max(50).optional().default(12),
 });
 
 export const registryDiffQuerySchema = z.object({
@@ -642,6 +653,7 @@ export type ApiRouteDefinition = {
   paramsSchema?: z.ZodTypeAny;
   bodySchema?: z.ZodTypeAny;
   responseSchema?: z.ZodTypeAny;
+  responseSchemaName?: string;
   responseContentType?: string;
   staticSurface?: boolean;
   auth?: "admin-token" | "resend-signature" | "turnstile";
@@ -709,6 +721,25 @@ export const apiRouteDefinitions = {
     originCheck: true,
     rateLimit: {
       scope: "registry-feed",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
+  "registry.trending": route({
+    id: "registry.trending",
+    method: "GET",
+    path: "/api/registry/trending",
+    summary: "Public registry trending entries",
+    description:
+      "Returns bounded privacy-safe trending registry entries from aggregate votes, community signals, intent events, and static trust metadata.",
+    tags: ["Registry"],
+    originCheck: true,
+    querySchema: registryTrendingQuerySchema,
+    responseSchema: registryTrendingResponseSchema,
+    responseSchemaName: "RegistryTrendingResponse",
+    rateLimit: {
+      scope: "registry-trending",
       limit: 120,
       windowMs: 60_000,
       binding: "API_REGISTRY_RATE_LIMIT",
