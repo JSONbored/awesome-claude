@@ -110,19 +110,9 @@ const optionalHttpsUrlSchema = z
   .default("");
 
 const isoDateLikeSchema = z
-  .string()
-  .trim()
-  .max(40)
+  .union([z.literal(""), z.iso.datetime({ offset: true }), z.iso.date()])
   .optional()
-  .default("")
-  .refine(
-    (value) => {
-      if (!value) return true;
-      const parsed = Date.parse(value);
-      return Number.isFinite(parsed);
-    },
-    { message: "Invalid ISO date" },
-  );
+  .default("");
 
 export const jobSourceKindFilterSchema = z
   .enum([

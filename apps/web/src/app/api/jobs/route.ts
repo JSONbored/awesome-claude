@@ -71,6 +71,8 @@ export const GET = createApiHandler(
     const postedAfterCursor = Number.isFinite(postedAfterMs)
       ? postedAfterMs
       : null;
+    const locationNeedle = (location ?? "").toLowerCase();
+    const typeNeedle = (type ?? "").toLowerCase();
 
     const payload = buildPublicJobsIndex(
       await getJobs(),
@@ -84,12 +86,12 @@ export const GET = createApiHandler(
         return remote === "true" ? Boolean(job.isRemote) : !job.isRemote;
       })
       .filter((job) => {
-        if (!location) return true;
-        return (job.location ?? "").toLowerCase().includes(location);
+        if (!locationNeedle) return true;
+        return (job.location ?? "").toLowerCase().includes(locationNeedle);
       })
       .filter((job) => {
-        if (!type) return true;
-        return (job.type ?? "").toLowerCase().includes(type);
+        if (!typeNeedle) return true;
+        return (job.type ?? "").toLowerCase().includes(typeNeedle);
       })
       .filter((job) => {
         if (!sourceKind || sourceKind === "all") return true;

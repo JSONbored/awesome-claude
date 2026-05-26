@@ -136,6 +136,34 @@ describe("/api/jobs", () => {
     expect(body.entries[0].slug).toBe("remote-eu-compensated");
   });
 
+  it("falls back to firstSeenAt when postedAt is missing for the postedAfter cursor", async () => {
+    jobsMock.value = [
+      makeJob({
+        slug: "first-seen-only",
+        title: "Edge case engineer",
+        postedAt: undefined,
+        firstSeenAt: "2026-05-22T00:00:00.000Z",
+      }),
+      makeJob({
+        slug: "old-first-seen-only",
+        title: "Older engineer",
+        postedAt: undefined,
+        firstSeenAt: "2025-12-01T00:00:00.000Z",
+      }),
+    ];
+
+    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const response = await GET(
+      request("?postedAfter=2026-05-01T00:00:00.000Z"),
+    );
+
+    const body = await response.json();
+    expect(body.count).toBe(1);
+    expect(body.entries.map((job: { slug: string }) => job.slug)).toEqual([
+      "first-seen-only",
+    ]);
+  });
+
   it("applies postedAfter as an inclusive date cursor", async () => {
     const { GET } = await import("../apps/web/src/app/api/jobs/route");
     const response = await GET(

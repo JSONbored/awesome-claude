@@ -6257,8 +6257,14 @@ paths:
           name: claimedEmployer
           in: query
         - schema:
-            type: string
-            maxLength: 40
+            anyOf:
+              - type: string
+                enum:
+                  - ""
+              - type: string
+                format: date-time
+              - type: string
+                format: date
             default: ""
           required: false
           name: postedAfter
