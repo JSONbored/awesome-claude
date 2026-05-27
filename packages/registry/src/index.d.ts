@@ -855,6 +855,7 @@ export const SITE_URL: string;
 export const RAYCAST_COPY_PREVIEW_LIMIT: number;
 
 export function compactCount(value: number): string;
+export function parseAbbreviatedCount(value: unknown): number | null;
 export function firstUsefulLine(value?: string | null): string;
 export function extractConfigCommand(value?: string | null): string;
 export function buildCollectionSequence(entry: Partial<DirectoryEntry>): string;

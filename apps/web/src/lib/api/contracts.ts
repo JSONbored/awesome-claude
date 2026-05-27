@@ -4,14 +4,8 @@ import { validateJobPublicationQuality } from "@heyclaude/registry/commercial";
 
 const entryKeySchema = z.string().regex(/^[a-z0-9-]+:[a-z0-9-]+$/);
 const safeSlugSchema = z.string().regex(/^[a-z0-9-]+$/);
-const platformSchema = z
-  .string()
-  .trim()
-  .toLowerCase()
-  .regex(/^[a-z0-9][a-z0-9 -]{0,48}$/)
-  .optional()
-  .default("");
-const categorySchema = safeSlugSchema.optional().default("");
+const categorySchema = z.union([safeSlugSchema, z.literal("")]).optional().default("");
+const platformSchema = z.union([z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9 -]{0,48}$/), z.literal("")]).optional().default("");
 const jobTierSchema = z.enum(["free", "standard", "featured", "sponsored"]);
 const jobStatusSchema = z.enum([
   "draft",
@@ -237,8 +231,23 @@ export const registrySearchResponseSchema = z.object({
     })
     .optional(),
   count: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  limit: z.number().int().min(1).max(50),
+  offset: z.number().int().min(0).max(10_000),
+  nextOffset: z.number().int().min(0).max(10_000).nullable(),
   results: z.array(registrySearchResultSchema).max(50),
   facets: registrySearchFacetsSchema.optional(),
+});
+
+export const registryTrendingResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("registry-trending"),
+  category: z.string(),
+  platform: z.string(),
+  limit: z.number().int().min(1).max(50),
+  count: z.number().int().nonnegative(),
+  signalsAvailable: z.object({ votes: z.boolean(), community: z.boolean(), intent: z.boolean() }),
+  entries: z.array(z.object({ category: z.string(), slug: z.string(), title: z.string(), description: z.string(), canonicalUrl: z.string().url().optional(), platforms: z.array(z.string()).max(12), tags: z.array(z.string()).max(32), dateAdded: z.string(), score: z.number(), reasons: z.array(z.string()).max(6), trustSignals: z.object({ sourceStatus: z.string() }) })).max(50),
 });
 
 export const registrySearchQuerySchema = z.object({
@@ -260,12 +269,68 @@ export const registrySearchQuerySchema = z.object({
     .optional()
     .default("all"),
   limit: z.coerce.number().int().min(1).max(50).optional().default(20),
+  offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
+});
+
+export const registryTrendingQuerySchema = z.object({
+  category: categorySchema,
+  platform: platformSchema,
+  limit: z.coerce.number().int().min(1).max(50).optional().default(12),
 });
 
 export const registryDiffQuerySchema = z.object({
   since: z.string().trim().max(128).optional().default(""),
   limit: z.coerce.number().int().min(1).max(500).optional().default(100),
 });
+
+const registryIntegrityPairMessage =
+  "Provide both artifact and hash together for verification";
+
+// Empty is treated as "snapshot listing" by the route handler at
+// apps/web/src/app/api/registry/integrity/route.ts (`!artifact` → status
+// `snapshot`, `artifact || null` in response). Accept it as a valid value
+// at the field level so clients that round-trip `null → ""` (HTML forms,
+// Raycast) don't get a 400 from the Zod gate. The pair-check below still
+// rejects non-empty artifact paired with empty/absent hash (and vice versa).
+export const registryIntegrityQuerySchema = z
+  .object({
+    artifact: z
+      .union([
+        z.literal(""),
+        z
+          .string()
+          .trim()
+          .max(160)
+          .regex(/^\/?(?:[a-z0-9][a-z0-9._-]*\/)*(?:[a-z0-9][a-z0-9._-]*)$/),
+      ])
+      .optional(),
+    hash: z
+      .union([
+        z.literal(""),
+        z
+          .string()
+          .trim()
+          .toLowerCase()
+          .regex(/^[a-f0-9]{64}$/),
+      ])
+      .optional(),
+  })
+  .superRefine((query, ctx) => {
+    if (query.artifact && !query.hash) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["hash"],
+        message: registryIntegrityPairMessage,
+      });
+    }
+    if (!query.artifact && query.hash) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["artifact"],
+        message: registryIntegrityPairMessage,
+      });
+    }
+  });
 
 export const entryParamsSchema = z.object({
   category: safeSlugSchema,
@@ -602,6 +667,7 @@ export type ApiRouteDefinition = {
   paramsSchema?: z.ZodTypeAny;
   bodySchema?: z.ZodTypeAny;
   responseSchema?: z.ZodTypeAny;
+  responseSchemaName?: string;
   responseContentType?: string;
   staticSurface?: boolean;
   auth?: "admin-token" | "resend-signature" | "turnstile";
@@ -674,6 +740,25 @@ export const apiRouteDefinitions = {
       binding: "API_REGISTRY_RATE_LIMIT",
     },
   }),
+  "registry.trending": route({
+    id: "registry.trending",
+    method: "GET",
+    path: "/api/registry/trending",
+    summary: "Public registry trending entries",
+    description:
+      "Returns bounded privacy-safe trending registry entries from aggregate votes, community signals, intent events, and static trust metadata.",
+    tags: ["Registry"],
+    originCheck: true,
+    querySchema: registryTrendingQuerySchema,
+    responseSchema: registryTrendingResponseSchema,
+    responseSchemaName: "RegistryTrendingResponse",
+    rateLimit: {
+      scope: "registry-trending",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
   "registry.diff": route({
     id: "registry.diff",
     method: "GET",
@@ -684,6 +769,23 @@ export const apiRouteDefinitions = {
     querySchema: registryDiffQuerySchema,
     rateLimit: {
       scope: "registry-diff",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
+  "registry.integrity": route({
+    id: "registry.integrity",
+    method: "GET",
+    path: "/api/registry/integrity",
+    summary: "Registry artifact integrity verification",
+    description:
+      "Lists current registry artifact hashes and verifies submitted artifact/hash pairs against the deployed manifest.",
+    tags: ["Registry"],
+    originCheck: true,
+    querySchema: registryIntegrityQuerySchema,
+    rateLimit: {
+      scope: "registry-integrity",
       limit: 120,
       windowMs: 60_000,
       binding: "API_REGISTRY_RATE_LIMIT",

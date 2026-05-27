@@ -19,7 +19,9 @@ const apiRoutes = [
   "/api/registry/categories",
   "/api/registry/search",
   "/api/registry/feed",
+  "/api/registry/trending",
   "/api/registry/diff",
+  "/api/registry/integrity",
   "/api/registry/entries/{category}/{slug}",
   "/api/registry/entries/{category}/{slug}/llms",
   "/api/mcp",
@@ -66,6 +68,9 @@ describe("OpenAPI route coverage", () => {
         patch?: unknown;
       }
     >;
+    components?: {
+      schemas?: Record<string, { properties?: Record<string, unknown> }>;
+    };
   };
 
   it("documents every public and limited dynamic API route", () => {
@@ -126,6 +131,7 @@ describe("OpenAPI route coverage", () => {
         expect.objectContaining({ name: "hasSafetyNotes", in: "query" }),
         expect.objectContaining({ name: "downloadTrust", in: "query" }),
         expect.objectContaining({ name: "claimStatus", in: "query" }),
+        expect.objectContaining({ name: "offset", in: "query" }),
       ]),
     );
     expect(
@@ -146,7 +152,9 @@ describe("OpenAPI route coverage", () => {
     const searchResponse =
       parsedSchema.paths["/api/registry/search"]?.get?.responses?.["200"];
     const jsonContent = (
-      searchResponse?.content as Record<string, { schema?: unknown }> | undefined
+      searchResponse?.content as
+        | Record<string, { schema?: unknown }>
+        | undefined
     )?.["application/json"];
     const responseSchema = jsonContent?.schema as
       | {
@@ -160,7 +168,9 @@ describe("OpenAPI route coverage", () => {
       | undefined;
 
     expect(responseSchema?.properties?.facets?.type).toBe("object");
-    expect(Object.keys(responseSchema?.properties?.facets?.properties ?? {})).toEqual(
+    expect(
+      Object.keys(responseSchema?.properties?.facets?.properties ?? {}),
+    ).toEqual(
       expect.arrayContaining([
         "categories",
         "platforms",
@@ -171,6 +181,54 @@ describe("OpenAPI route coverage", () => {
         "sourceStatus",
       ]),
     );
+  });
+
+  it("documents registry search pagination metadata", () => {
+    const searchResponse =
+      parsedSchema.paths["/api/registry/search"]?.get?.responses?.["200"];
+    const jsonContent = (
+      searchResponse?.content as
+        | Record<string, { schema?: unknown }>
+        | undefined
+    )?.["application/json"];
+    const responseSchema = jsonContent?.schema as
+      | {
+          required?: string[];
+          properties?: Record<string, { type?: string | string[] }>;
+        }
+      | undefined;
+
+    expect(responseSchema?.required).toEqual(
+      expect.arrayContaining(["total", "limit", "offset", "nextOffset"]),
+    );
+    expect(responseSchema?.properties?.total?.type).toBe("integer");
+    expect(responseSchema?.properties?.limit?.type).toBe("integer");
+    expect(responseSchema?.properties?.offset?.type).toBe("integer");
+    expect(responseSchema?.properties?.nextOffset?.type).toEqual([
+      "integer",
+      "null",
+    ]);
+  });
+
+  it("documents concrete registry trending response metadata", () => {
+    const trendingResponse =
+      parsedSchema.paths["/api/registry/trending"]?.get?.responses?.["200"];
+    const responseSchema = (
+      trendingResponse?.content as
+        | Record<string, { schema?: { $ref?: string } }>
+        | undefined
+    )?.["application/json"]?.schema;
+    const component =
+      parsedSchema.components?.schemas?.RegistryTrendingResponse?.properties as
+        | Record<string, { maxItems?: number; minimum?: number; maximum?: number }>
+        | undefined;
+
+    expect(responseSchema?.$ref).toBe(
+      "#/components/schemas/RegistryTrendingResponse",
+    );
+    expect(component?.limit?.minimum).toBe(1);
+    expect(component?.limit?.maximum).toBe(50);
+    expect(component?.entries?.maxItems).toBe(50);
   });
 
   it("documents error envelopes, cacheable feeds, and registry trust signals", () => {

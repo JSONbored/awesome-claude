@@ -10,6 +10,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: AWS
 - Brand domain: aws.amazon.com
 - Brand asset source: brandfetch
+- Safety notes: Runs automatically at session end and can create compressed archives of modified git files., Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured., Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt.
+- Privacy notes: Sends modified file contents to the configured cloud storage destination., Uses locally configured cloud credentials and bucket environment variables but does not define or manage them., Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -21,6 +23,14 @@ Automatically backs up changed files to cloud storage when Claude Code session e
 - stop-hook
 - aws
 - safety
+## Safety Notes
+- Runs automatically at session end and can create compressed archives of modified git files.
+- Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured.
+- Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt.
+## Privacy Notes
+- Sends modified file contents to the configured cloud storage destination.
+- Uses locally configured cloud credentials and bucket environment variables but does not define or manage them.
+- Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff.
 ## Content
 ## Features
 - Automatic cloud backup when Claude session ends using Stop hook with intelligent session detection

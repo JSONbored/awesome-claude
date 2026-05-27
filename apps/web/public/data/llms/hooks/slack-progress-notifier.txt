@@ -10,6 +10,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: Slack
 - Brand domain: slack.com
 - Brand asset source: brandfetch
+- Safety notes: Runs on notification events and posts a formatted activity message to Slack when SLACK_WEBHOOK_URL is configured., Uses curl with a short timeout and retry, so failed network delivery may still delay hook completion briefly., High activity can create noisy Slack notifications unless users add their own filtering or rate limits.
+- Privacy notes: Sends tool name, file basename, user name, git branch, project name, and timestamp to the configured Slack webhook., Uses the SLACK_WEBHOOK_URL environment variable and does not manage webhook rotation or channel permissions., Slack receives and retains the notification according to the workspace and webhook configuration.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -21,6 +23,14 @@ Sends progress updates to Slack channel for team visibility on Claude activities
 - team
 - collaboration
 - monitoring
+## Safety Notes
+- Runs on notification events and posts a formatted activity message to Slack when SLACK_WEBHOOK_URL is configured.
+- Uses curl with a short timeout and retry, so failed network delivery may still delay hook completion briefly.
+- High activity can create noisy Slack notifications unless users add their own filtering or rate limits.
+## Privacy Notes
+- Sends tool name, file basename, user name, git branch, project name, and timestamp to the configured Slack webhook.
+- Uses the SLACK_WEBHOOK_URL environment variable and does not manage webhook rotation or channel permissions.
+- Slack receives and retains the notification according to the workspace and webhook configuration.
 ## Content
 ## Features
 - Real-time Slack notifications for Claude activities including Slack notification integration (real-time Slack notifications on file changes, immediate notification delivery with webhook delivery, Slack message formatting with rich formatting, Slack channel integration with channel routing), notification optimization (notification performance with fast delivery, notification reliability with retry logic, notification efficiency with efficient processing, notification batching with message batching), notification validation (notification payload validation with payload verification, notification delivery validation with delivery checking, notification format validation with format checking, notification content validation with content verification), and notification reporting (notification delivery reporting with delivery status, notification error reporting with error details, notification statistics with delivery metrics, notification analytics with analytics tracking)

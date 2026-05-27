@@ -7,6 +7,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/terraform-plan-executor
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx
+- Safety notes: Runs automatically after write or edit activity on .tf and .tfvars files., Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file., Terraform init and plan can contact configured backends and providers and may consume cloud API quota.
+- Privacy notes: Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes., Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names., Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -18,6 +20,14 @@ Automatically runs terraform plan when .tf files are modified to preview infrast
 - iac
 - devops
 - cloud
+## Safety Notes
+- Runs automatically after write or edit activity on .tf and .tfvars files.
+- Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file.
+- Terraform init and plan can contact configured backends and providers and may consume cloud API quota.
+## Privacy Notes
+- Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes.
+- Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names.
+- Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets.
 ## Content
 ## Features
 - Automatic Terraform plan execution on file changes including Terraform plan execution (automatic terraform plan execution on Terraform file changes, Terraform plan generation with plan creation, Terraform plan analysis with plan analysis, Terraform plan reporting with plan status), plan optimization (plan performance with fast plan generation, plan reliability with reliable plan generation, plan efficiency with efficient processing, plan reporting with plan status), plan validation (plan syntax validation with syntax verification, plan configuration validation with configuration checking, plan resource validation with resource verification, plan dependency validation with dependency checking), and plan reporting (plan generation reporting with generation status, plan analysis reporting with analysis status, plan resource reporting with resource status, plan analytics with plan metrics)

@@ -90,7 +90,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.ci == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -153,7 +153,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -184,7 +184,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
 
       - name: Validate direct content policy
         env:
@@ -248,7 +248,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -335,7 +335,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -389,7 +389,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -483,7 +483,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -543,7 +543,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.raycast == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -623,7 +623,7 @@ jobs:
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies
@@ -663,7 +663,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
         with:
-          node-version: 24.15.0
+          node-version: 24.16.0
           cache: pnpm
 
       - name: Install dependencies

@@ -1,4 +1,5 @@
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
+import { chunk, inPlaceholders } from "@/lib/d1-batch";
 
 export const INTENT_EVENT_TYPES = [
   "copy",
@@ -24,8 +25,6 @@ type IntentEventRow = {
   event_type: IntentEventType;
   count: number;
 };
-
-const D1_SAFE_VARIABLE_BATCH_SIZE = 25;
 
 export function normalizeIntentEventType(value: unknown) {
   const normalized = String(value ?? "")
@@ -63,13 +62,8 @@ export async function queryIntentEventCounts(
   const counts = getFallbackIntentEventCounts(uniqueKeys);
   if (!uniqueKeys.length) return counts;
 
-  for (
-    let index = 0;
-    index < uniqueKeys.length;
-    index += D1_SAFE_VARIABLE_BATCH_SIZE
-  ) {
-    const batch = uniqueKeys.slice(index, index + D1_SAFE_VARIABLE_BATCH_SIZE);
-    const placeholders = batch.map(() => "?").join(", ");
+  for (const batch of chunk(uniqueKeys)) {
+    const placeholders = inPlaceholders(batch.length);
     const { results } = await db
       .prepare(
         `SELECT entry_key, event_type, COUNT(*) AS count

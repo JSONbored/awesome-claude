@@ -21,6 +21,7 @@ import {
   buildReadOnlyEcosystemFeed,
   buildRaycastEnvelope,
   buildRaycastDetailMarkdown,
+  parseAbbreviatedCount,
   renderEntryLlms,
   RAYCAST_COPY_PREVIEW_LIMIT,
   buildSearchEntries,
@@ -94,6 +95,20 @@ describe("registry artifacts", () => {
     queues: Record<string, any[]>;
     entries: any[];
   }>("registry-trust-report.json");
+
+  it("parses abbreviated Shields fallback counts", () => {
+    expect(parseAbbreviatedCount("987")).toBe(987);
+    expect(parseAbbreviatedCount("1.2k")).toBe(1200);
+    expect(parseAbbreviatedCount("3.4m")).toBe(3_400_000);
+    expect(parseAbbreviatedCount("2.5b")).toBe(2_500_000_000);
+    expect(parseAbbreviatedCount("")).toBeNull();
+    expect(parseAbbreviatedCount("n/a")).toBeNull();
+    expect(parseAbbreviatedCount("1.2t")).toBeNull();
+    expect(parseAbbreviatedCount("1.2k stars")).toBeNull();
+    expect(parseAbbreviatedCount("1.2.3k")).toBeNull();
+    expect(parseAbbreviatedCount("1.")).toBeNull();
+    expect(parseAbbreviatedCount(null)).toBeNull();
+  });
 
   it("does not publish the retired full content corpus JSON", () => {
     expect(fs.existsSync(path.join(dataRoot, "content-index.json"))).toBe(

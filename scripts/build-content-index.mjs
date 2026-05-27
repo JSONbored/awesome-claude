@@ -3,7 +3,11 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
-import { categorySpec, buildRegistryArtifactSet } from "@heyclaude/registry";
+import {
+  categorySpec,
+  buildRegistryArtifactSet,
+  parseAbbreviatedCount,
+} from "@heyclaude/registry";
 import {
   buildContentEntryFromMdx,
   DEFAULT_DIRECTORY_REPO_URL,
@@ -128,11 +132,9 @@ async function fetchShieldsStars(repo) {
 
     if (!response.ok) return null;
     const data = await response.json();
-    const value = Number.parseFloat(
-      String(data.value || data.message || "").replace(/[^\d.]/g, ""),
-    );
+    const value = parseAbbreviatedCount(data.value ?? data.message);
 
-    return Number.isFinite(value) ? Math.round(value) : null;
+    return value;
   } catch {
     return null;
   }

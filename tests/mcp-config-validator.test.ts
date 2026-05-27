@@ -96,6 +96,89 @@ describe("MCP config validator", () => {
     }
   });
 
+  it("redacts values after sensitive split CLI flags", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          splitFlagSecrets: {
+            command: "npx",
+            args: [
+              "-y",
+              "@example/secure-mcp",
+              "--api-key",
+              "live_api_key_value_that_must;not_leak",
+              "--mode",
+              "read",
+              "--client-secret",
+              "sk-proj-clientsecretvaluethatmustnotleak",
+              "--token",
+              "${EXISTING_TOKEN}",
+              "--authorization",
+              "Bearer abcdefghijklmnopqrstuvwxyz123456",
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.redactedSecretCount).toBe(3);
+    expect(result.servers[0]).toMatchObject({
+      packageName: "@example/secure-mcp",
+    });
+    const fixed = JSON.parse(result.fixedConfigText);
+    expect(fixed.mcpServers.splitFlagSecrets.args).toEqual([
+      "-y",
+      "@example/secure-mcp",
+      "--api-key",
+      "${API_KEY}",
+      "--mode",
+      "read",
+      "--client-secret",
+      "${CLIENT_SECRET}",
+      "--token",
+      "${EXISTING_TOKEN}",
+      "--authorization",
+      "${AUTHORIZATION}",
+    ]);
+    for (const output of [result.fixedConfigText, result.reportText]) {
+      expect(output).not.toContain("live_api_key_value_that_must;not_leak");
+      expect(output).not.toContain("sk-proj-clientsecretvaluethatmustnotleak");
+      expect(output).not.toContain("abcdefghijklmnopqrstuvwxyz123456");
+    }
+    expect(result.reportText).toContain(
+      "Argument contains shell-like syntax: ${API_KEY}",
+    );
+  });
+
+  it("redacts modern raw token prefixes from command args", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          rawTokenArgs: {
+            command: "npx",
+            args: [
+              "-y",
+              "@example/token-mcp",
+              "gho_abcdefghijklmnopqrstuvwxyz123456",
+              "glpat-abcdefghijklmnopqrstuvwxyz123456",
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.redactedSecretCount).toBe(2);
+    expect(result.fixedConfigText).not.toContain(
+      "gho_abcdefghijklmnopqrstuvwxyz123456",
+    );
+    expect(result.fixedConfigText).not.toContain(
+      "glpat-abcdefghijklmnopqrstuvwxyz123456",
+    );
+    expect(result.fixedConfigText).toContain("${SECRET}");
+  });
+
   it("preserves non-sensitive primitive values in fixed snippets", () => {
     const result = validateMcpConfigText(
       JSON.stringify({

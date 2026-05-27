@@ -38823,6 +38823,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: AWS
 - Brand domain: aws.amazon.com
 - Brand asset source: brandfetch
+- Safety notes: Runs automatically at session end and can create compressed archives of modified git files., Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured., Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt.
+- Privacy notes: Sends modified file contents to the configured cloud storage destination., Uses locally configured cloud credentials and bucket environment variables but does not define or manage them., Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -38834,6 +38836,14 @@ Automatically backs up changed files to cloud storage when Claude Code session e
 - stop-hook
 - aws
 - safety
+## Safety Notes
+- Runs automatically at session end and can create compressed archives of modified git files.
+- Uploads backups through AWS CLI, Google Cloud SDK, or rclone when those tools and bucket variables are configured.
+- Writes a temporary archive under /tmp when using the rclone fallback and removes it after the copy attempt.
+## Privacy Notes
+- Sends modified file contents to the configured cloud storage destination.
+- Uses locally configured cloud credentials and bucket environment variables but does not define or manage them.
+- Backup archives may include source code, docs, generated files, and any unignored local changes listed by git diff.
 ## Content
 ## Features
 - Automatic cloud backup when Claude session ends using Stop hook with intelligent session detection
@@ -49695,6 +49705,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/database-migration-runner
 - Source URLs: https://knexjs.org/guide/migrations.html, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx
+- Safety notes: Runs automatically after write or edit activity on migration, schema, and SQL files., Invokes local framework status commands such as knex migrate status, Django showmigrations, and Rails migrate status when available., Scans raw SQL for destructive statements and reports warnings but does not apply migrations itself.
+- Privacy notes: Reads migration, schema, SQL, package, and framework configuration files to infer migration state., Command output may reveal database names, migration names, table names, or schema details in the local hook output.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -49706,6 +49718,13 @@ Automated database migration management with rollback capabilities, validation, 
 - automation
 - deployment
 - sql
+## Safety Notes
+- Runs automatically after write or edit activity on migration, schema, and SQL files.
+- Invokes local framework status commands such as knex migrate status, Django showmigrations, and Rails migrate status when available.
+- Scans raw SQL for destructive statements and reports warnings but does not apply migrations itself.
+## Privacy Notes
+- Reads migration, schema, SQL, package, and framework configuration files to infer migration state.
+- Command output may reveal database names, migration names, table names, or schema details in the local hook output.
 ## Content
 ## Features
 - Automated database migration detection and execution with intelligent framework detection (Knex 3.x, Sequelize 6.x/7.x, TypeORM 0.3.x, Django 5.x, Rails 7.x)
@@ -50188,6 +50207,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/database-query-performance-logger
 - Source URLs: https://www.postgresql.org/docs/current/runtime-config-logging.html, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx
+- Safety notes: Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files., Creates .claude/logs/query-performance.log and appends database command or file-analysis events., Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect.
+- Privacy notes: Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output., Stores analyzed file paths and database command text in .claude/logs/query-performance.log., Database command text may include connection names, database names, or other operational details if typed directly into the command.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -50199,6 +50220,14 @@ Monitors and logs database query performance metrics with slow query detection, 
 - monitoring
 - optimization
 - logging
+## Safety Notes
+- Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files.
+- Creates .claude/logs/query-performance.log and appends database command or file-analysis events.
+- Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect.
+## Privacy Notes
+- Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output.
+- Stores analyzed file paths and database command text in .claude/logs/query-performance.log.
+- Database command text may include connection names, database names, or other operational details if typed directly into the command.
 ## Content
 ## Features
 - Automatic slow query detection and alerting with configurable thresholds (default: 1000ms) and real-time performance monitoring
@@ -53026,6 +53055,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/dependency-security-audit-on-stop
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx
+- Safety notes: Runs automatically at session end and invokes local package-manager audit tools when dependency lockfiles are present., May contact package registries or vulnerability advisory services through npm, yarn, safety, pip, or bundler-audit., Writes a timestamped security-audit log in the current working directory.
+- Privacy notes: Reads dependency manifests and lockfiles to identify package managers and audit targets., The generated audit log may include package names, versions, vulnerability identifiers, and remediation output., External audit tools may send package metadata to their configured registries or advisory services.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -53037,6 +53068,14 @@ Performs a comprehensive security audit of all dependencies when Claude Code ses
 - audit
 - stop-hook
 - vulnerabilities
+## Safety Notes
+- Runs automatically at session end and invokes local package-manager audit tools when dependency lockfiles are present.
+- May contact package registries or vulnerability advisory services through npm, yarn, safety, pip, or bundler-audit.
+- Writes a timestamped security-audit log in the current working directory.
+## Privacy Notes
+- Reads dependency manifests and lockfiles to identify package managers and audit targets.
+- The generated audit log may include package names, versions, vulnerability identifiers, and remediation output.
+- External audit tools may send package metadata to their configured registries or advisory services.
 ## Content
 ## Features
 - Comprehensive security audit for multiple package managers (npm 10.x+, Yarn 4.x+, pnpm, pip-audit 2.7.x+, Poetry, bundler-audit) with automatic detection
@@ -56843,6 +56882,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: Docker
 - Brand domain: docker.com
 - Brand asset source: brandfetch
+- Safety notes: Runs automatically after write or edit activity on Dockerfile, docker-compose, dockerfile, and dockerignore paths., Invokes docker build or docker compose build and can consume CPU, disk, network, and local Docker daemon resources., Uses the Dockerfile directory or compose-file directory as the build context, so incorrect paths can include more files than expected.
+- Privacy notes: Reads Docker-related files and may send build context files to the local Docker daemon during image builds., Build logs may reveal image names, service names, dependency URLs, and package-install output., Prints the first lines of .dockerignore files to local hook output when those files are edited.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -56853,6 +56894,14 @@ Automatically rebuilds Docker containers when Dockerfile or docker-compose.yml f
 - containers
 - devops
 - automation
+## Safety Notes
+- Runs automatically after write or edit activity on Dockerfile, docker-compose, dockerfile, and dockerignore paths.
+- Invokes docker build or docker compose build and can consume CPU, disk, network, and local Docker daemon resources.
+- Uses the Dockerfile directory or compose-file directory as the build context, so incorrect paths can include more files than expected.
+## Privacy Notes
+- Reads Docker-related files and may send build context files to the local Docker daemon during image builds.
+- Build logs may reveal image names, service names, dependency URLs, and package-install output.
+- Prints the first lines of .dockerignore files to local hook output when those files are edited.
 ## Content
 ## Features
 - Automatic Docker image rebuilding on Dockerfile changes with BuildKit support (Docker Engine 24.0+), layer caching optimization, and explicit Dockerfile path specification using -f flag
@@ -71623,6 +71672,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/git-auto-commit-on-stop
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx
+- Safety notes: Runs automatically at session end and stages all unignored repository changes with git add -A., Creates a local commit when changes are present unless SKIP_AUTO_COMMIT=true is set., Only warns on sensitive-looking filenames and does not block the commit by default.
+- Privacy notes: Reads git status, branch name, staged diff statistics, and changed file names to build the commit message., Can commit newly created or modified local files, including private work, when they are not excluded by .gitignore., Commit metadata uses the locally configured git user name and email.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -71634,6 +71685,14 @@ Automatically commits all changes with a summary when Claude Code session ends.
 - stop-hook
 - automation
 - commit
+## Safety Notes
+- Runs automatically at session end and stages all unignored repository changes with git add -A.
+- Creates a local commit when changes are present unless SKIP_AUTO_COMMIT=true is set.
+- Only warns on sensitive-looking filenames and does not block the commit by default.
+## Privacy Notes
+- Reads git status, branch name, staged diff statistics, and changed file names to build the commit message.
+- Can commit newly created or modified local files, including private work, when they are not excluded by .gitignore.
+- Commit metadata uses the locally configured git user name and email.
 ## Content
 ## Features
 - Automatic git commit creation when session ends with comprehensive change detection including untracked files, modified files, added files, deleted files, and renamed files with detailed status analysis
@@ -124712,6 +124771,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/real-time-activity-tracker
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx
+- Safety notes: Runs on notification events and writes daily activity logs under .claude in the current project., Rotates logs to the last 100 entries and may archive older activity files under .claude/archive., Uses local file operations only but can add persistent project files if .claude is not ignored.
+- Privacy notes: Records tool names, file paths, tool actions, timestamps, and generated session IDs., Stores human-readable and JSON activity logs under .claude., Prints recent activity summaries to local hook output.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -124723,6 +124784,14 @@ Tracks all Claude Code activities in real-time and logs them for monitoring and 
 - notification
 - real-time
 - debugging
+## Safety Notes
+- Runs on notification events and writes daily activity logs under .claude in the current project.
+- Rotates logs to the last 100 entries and may archive older activity files under .claude/archive.
+- Uses local file operations only but can add persistent project files if .claude is not ignored.
+## Privacy Notes
+- Records tool names, file paths, tool actions, timestamps, and generated session IDs.
+- Stores human-readable and JSON activity logs under .claude.
+- Prints recent activity summaries to local hook output.
 ## Content
 ## Features
 - Real-time activity logging including activity detection (real-time activity detection with immediate notification, activity event capture with tool usage tracking, activity timestamp recording with ISO-8601 format, activity context collection with file paths and actions), activity logging (structured activity logging with JSON format, human-readable activity logging with text format, activity log rotation with daily rotation, activity log archival with weekly/monthly archives), activity monitoring (real-time activity monitoring with immediate feedback, activity pattern detection with usage patterns, activity trend analysis with historical trends, activity anomaly detection with unusual patterns), and activity reporting (activity summary reporting with daily summaries, activity statistics reporting with usage statistics, activity export with JSON/CSV formats, activity visualization with charts and graphs)
@@ -128936,6 +129005,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/security-scanner-hook
 - Source URLs: https://owasp.org/www-project-top-ten/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx
+- Safety notes: Runs automatically after write, edit, or multiedit activity and invokes installed security tools against the touched file., May run truffleHog, Semgrep, npm audit, Bandit, or gosec depending on the file type and tools available., Treats scanner findings as warnings and does not guarantee that code is safe or unsafe.
+- Privacy notes: Reads modified file contents for security scanning and prints scanner output to local hook output., Semgrep and package audit commands may contact external rule, registry, or advisory services depending on local tool configuration., Scanner output may include file paths, code snippets, dependency names, and suspected secrets.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -128947,6 +129018,14 @@ Automated security vulnerability scanning that integrates with development workf
 - scanning
 - automation
 - compliance
+## Safety Notes
+- Runs automatically after write, edit, or multiedit activity and invokes installed security tools against the touched file.
+- May run truffleHog, Semgrep, npm audit, Bandit, or gosec depending on the file type and tools available.
+- Treats scanner findings as warnings and does not guarantee that code is safe or unsafe.
+## Privacy Notes
+- Reads modified file contents for security scanning and prints scanner output to local hook output.
+- Semgrep and package audit commands may contact external rule, registry, or advisory services depending on local tool configuration.
+- Scanner output may include file paths, code snippets, dependency names, and suspected secrets.
 ## Content
 ## Features
 - Comprehensive security vulnerability scanning including security scanning integration (automated security scanning on file changes, multi-tool security scanning with multiple SAST tools, security vulnerability detection with vulnerability identification, security issue reporting with detailed reports), security scanning optimization (scanning performance with fast scanning, scanning caching with incremental scanning, scanning efficiency with efficient processing, scanning accuracy with accurate detection), security scanning validation (security issue validation with issue verification, security severity assessment with severity levels, security categorization with vulnerability types, security resolution suggestions with remediation tips), and security scanning reporting (security scan reporting with scan results, security vulnerability reporting with vulnerability details, security statistics with scan metrics, security compliance reporting with compliance status)
@@ -131512,6 +131591,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/sensitive-data-alert-scanner
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx
+- Safety notes: Runs on notification events and scans recent tool input for patterns that resemble secrets or sensitive data., Produces alerts only and does not redact files, rotate credentials, or block the original tool action., Pattern-based detection can miss real secrets or flag harmless placeholders.
+- Privacy notes: Reads hook input fields such as tool names, file paths, commands, and text snippets supplied to the notification event., May print matched sensitive-looking strings or surrounding context to local hook output., Does not send findings to a remote service in the bundled script.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -131523,6 +131604,14 @@ Scans for potential sensitive data exposure and alerts immediately.
 - notification
 - scanning
 - privacy
+## Safety Notes
+- Runs on notification events and scans recent tool input for patterns that resemble secrets or sensitive data.
+- Produces alerts only and does not redact files, rotate credentials, or block the original tool action.
+- Pattern-based detection can miss real secrets or flag harmless placeholders.
+## Privacy Notes
+- Reads hook input fields such as tool names, file paths, commands, and text snippets supplied to the notification event.
+- May print matched sensitive-looking strings or surrounding context to local hook output.
+- Does not send findings to a remote service in the bundled script.
 ## Content
 ## Features
 - Real-time sensitive data detection including sensitive data detection integration (real-time sensitive data scanning on file changes, immediate security alerts with alert notifications, sensitive data pattern detection with pattern matching, sensitive data validation with data validation), detection optimization (detection performance with fast scanning, detection accuracy with accurate pattern matching, detection efficiency with efficient processing, detection coverage with comprehensive patterns), detection validation (sensitive data validation with data verification, false positive reduction with filtering, sensitive data classification with classification, sensitive data severity assessment with severity levels), and detection reporting (sensitive data detection reporting with detection results, sensitive data location reporting with file locations, sensitive data severity reporting with severity levels, sensitive data remediation reporting with remediation suggestions)
@@ -135646,6 +135735,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: Slack
 - Brand domain: slack.com
 - Brand asset source: brandfetch
+- Safety notes: Runs on notification events and posts a formatted activity message to Slack when SLACK_WEBHOOK_URL is configured., Uses curl with a short timeout and retry, so failed network delivery may still delay hook completion briefly., High activity can create noisy Slack notifications unless users add their own filtering or rate limits.
+- Privacy notes: Sends tool name, file basename, user name, git branch, project name, and timestamp to the configured Slack webhook., Uses the SLACK_WEBHOOK_URL environment variable and does not manage webhook rotation or channel permissions., Slack receives and retains the notification according to the workspace and webhook configuration.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -135657,6 +135748,14 @@ Sends progress updates to Slack channel for team visibility on Claude activities
 - team
 - collaboration
 - monitoring
+## Safety Notes
+- Runs on notification events and posts a formatted activity message to Slack when SLACK_WEBHOOK_URL is configured.
+- Uses curl with a short timeout and retry, so failed network delivery may still delay hook completion briefly.
+- High activity can create noisy Slack notifications unless users add their own filtering or rate limits.
+## Privacy Notes
+- Sends tool name, file basename, user name, git branch, project name, and timestamp to the configured Slack webhook.
+- Uses the SLACK_WEBHOOK_URL environment variable and does not manage webhook rotation or channel permissions.
+- Slack receives and retains the notification according to the workspace and webhook configuration.
 ## Content
 ## Features
 - Real-time Slack notifications for Claude activities including Slack notification integration (real-time Slack notifications on file changes, immediate notification delivery with webhook delivery, Slack message formatting with rich formatting, Slack channel integration with channel routing), notification optimization (notification performance with fast delivery, notification reliability with retry logic, notification efficiency with efficient processing, notification batching with message batching), notification validation (notification payload validation with payload verification, notification delivery validation with delivery checking, notification format validation with format checking, notification content validation with content verification), and notification reporting (notification delivery reporting with delivery status, notification error reporting with error details, notification statistics with delivery metrics, notification analytics with analytics tracking)
@@ -144501,6 +144600,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/team-summary-email-generator
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx
+- Safety notes: Runs automatically at session end and may execute test or build commands before sending a summary., Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured., Test and build commands are time-limited but can still consume local CPU, disk, or network resources.
+- Privacy notes: Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status., Sends summary content to the configured team address and, when used, the SendGrid API., Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -144512,6 +144613,14 @@ Generates and sends a comprehensive summary email to the team when session ends.
 - stop-hook
 - summary
 - communication
+## Safety Notes
+- Runs automatically at session end and may execute test or build commands before sending a summary.
+- Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured.
+- Test and build commands are time-limited but can still consume local CPU, disk, or network resources.
+## Privacy Notes
+- Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status.
+- Sends summary content to the configured team address and, when used, the SendGrid API.
+- Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them.
 ## Content
 ## Features
 - Comprehensive session summary generation including session summary generation (automatic session summary generation on session end, session data collection with data gathering, session analysis with session analysis, session reporting with summary reporting), summary optimization (summary performance with fast generation, summary reliability with reliable generation, summary efficiency with efficient processing, summary reporting with generation status), summary validation (summary content validation with content verification, summary format validation with format checking, summary completeness validation with completeness checking, summary accuracy validation with accuracy verification), and summary reporting (summary generation reporting with generation status, summary delivery reporting with delivery status, summary statistics with summary metrics, summary analytics with summary analytics)
@@ -144781,7 +144890,7 @@ case "$EMAIL_METHOD" in
   "subject": "$SUBJECT",
   "content": [{
     "type": "text/html",
-    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"'/g')"
+    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"/g')"
   }]
 }
 EOF
@@ -145030,7 +145139,7 @@ case "$EMAIL_METHOD" in
   "subject": "$SUBJECT",
   "content": [{
     "type": "text/html",
-    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"'/g')"
+    "value": "$(echo "$HTML_CONTENT" | sed 's/"/\\"/g')"
   }]
 }
 EOF
@@ -146450,6 +146559,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 ## Citation Facts
 - Canonical URL: https://heyclau.de/hooks/terraform-plan-executor
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx
+- Safety notes: Runs automatically after write or edit activity on .tf and .tfvars files., Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file., Terraform init and plan can contact configured backends and providers and may consume cloud API quota.
+- Privacy notes: Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes., Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names., Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets.
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00
 - Robots: indexable
@@ -146461,6 +146572,14 @@ Automatically runs terraform plan when .tf files are modified to preview infrast
 - iac
 - devops
 - cloud
+## Safety Notes
+- Runs automatically after write or edit activity on .tf and .tfvars files.
+- Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file.
+- Terraform init and plan can contact configured backends and providers and may consume cloud API quota.
+## Privacy Notes
+- Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes.
+- Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names.
+- Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets.
 ## Content
 ## Features
 - Automatic Terraform plan execution on file changes including Terraform plan execution (automatic terraform plan execution on Terraform file changes, Terraform plan generation with plan creation, Terraform plan analysis with plan analysis, Terraform plan reporting with plan status), plan optimization (plan performance with fast plan generation, plan reliability with reliable plan generation, plan efficiency with efficient processing, plan reporting with plan status), plan validation (plan syntax validation with syntax verification, plan configuration validation with configuration checking, plan resource validation with resource verification, plan dependency validation with dependency checking), and plan reporting (plan generation reporting with generation status, plan analysis reporting with analysis status, plan resource reporting with resource status, plan analytics with plan metrics)

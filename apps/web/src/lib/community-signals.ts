@@ -1,4 +1,5 @@
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
+import { chunk, targetPairConditions } from "@/lib/d1-batch";
 
 export const COMMUNITY_SIGNAL_TYPES = ["used", "works", "broken"] as const;
 export const COMMUNITY_TARGET_KINDS = ["entry", "tool"] as const;
@@ -22,8 +23,6 @@ type SignalRow = {
   signal_type: CommunitySignalType;
   count: number;
 };
-
-const D1_SAFE_TARGET_BATCH_SIZE = 25;
 
 export function normalizeCommunityTargetKind(
   value: string | null | undefined,
@@ -50,6 +49,23 @@ export function normalizeCommunityTargetKey(
   )
     ? normalized
     : null;
+}
+
+export function normalizeCommunitySignalTarget(
+  targetKindValue: string | null | undefined,
+  targetKeyValue: string | null | undefined,
+): CommunitySignalTarget | null {
+  const targetKind = normalizeCommunityTargetKind(targetKindValue);
+  const targetKey = normalizeCommunityTargetKey(targetKeyValue);
+  if (!targetKind || !targetKey) return null;
+
+  const isEntryTarget =
+    targetKind === "entry" &&
+    /^entry:[a-z0-9][a-z0-9-]*\/[a-z0-9][a-z0-9-]*$/.test(targetKey);
+  const isToolTarget =
+    targetKind === "tool" && /^tool:[a-z0-9][a-z0-9-]*$/.test(targetKey);
+
+  return isEntryTarget || isToolTarget ? { targetKind, targetKey } : null;
 }
 
 export function normalizeCommunityClientId(
@@ -99,13 +115,12 @@ export async function queryCommunitySignalCounts(
   const counts = getFallbackCommunitySignalCounts(uniqueTargets);
   if (!uniqueTargets.length) return counts;
 
-  for (
-    let index = 0;
-    index < uniqueTargets.length;
-    index += D1_SAFE_TARGET_BATCH_SIZE
-  ) {
-    const batch = uniqueTargets.slice(index, index + D1_SAFE_TARGET_BATCH_SIZE);
-    const where = batch.map(() => "(target_kind = ? AND target_key = ?)");
+  for (const batch of chunk(uniqueTargets)) {
+    const where = targetPairConditions(
+      batch.length,
+      "target_kind",
+      "target_key",
+    );
     const values = batch.flatMap((target) => [
       target.targetKind,
       target.targetKey,
@@ -114,7 +129,7 @@ export async function queryCommunitySignalCounts(
       .prepare(
         `SELECT target_kind, target_key, signal_type, COUNT(*) AS count
          FROM community_signals
-         WHERE ${where.join(" OR ")}
+         WHERE ${where}
          GROUP BY target_kind, target_key, signal_type`,
       )
       .bind(...values)

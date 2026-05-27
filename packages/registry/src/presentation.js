@@ -5,6 +5,29 @@ export function compactCount(value) {
   return String(value);
 }
 
+export function parseAbbreviatedCount(value) {
+  const text = String(value ?? "")
+    .trim()
+    .toLowerCase();
+  if (!text) return null;
+
+  const match = text.match(/^(\d+(?:\.\d+)?)([kmb])?$/);
+  if (!match) return null;
+
+  const [, numberText, suffix = ""] = match;
+  const numeric = Number.parseFloat(numberText);
+  if (!Number.isFinite(numeric)) return null;
+  const multiplier =
+    suffix === "b"
+      ? 1_000_000_000
+      : suffix === "m"
+        ? 1_000_000
+        : suffix === "k"
+          ? 1_000
+          : 1;
+  return Math.round(numeric * multiplier);
+}
+
 export function firstUsefulLine(value) {
   if (!value) return "";
 

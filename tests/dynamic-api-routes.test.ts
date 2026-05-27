@@ -59,6 +59,22 @@ describe("dynamic API route fallback behavior", () => {
     });
   });
 
+  it("rejects mismatched community-signal read targets", async () => {
+    const { GET } = await import("@/app/api/community-signals/route");
+
+    const response = await GET(
+      new Request(
+        "https://heyclau.de/api/community-signals?targetKind=entry&targetKey=tool:cursor",
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_payload" },
+    });
+  });
+
   it("accepts community-signal writes without storing when SITE_DB is unavailable", async () => {
     const { POST } = await import("@/app/api/community-signals/route");
 
@@ -78,6 +94,26 @@ describe("dynamic API route fallback behavior", () => {
       stored: false,
       available: false,
       counts: { used: 0, works: 0, broken: 0 },
+    });
+  });
+
+  it("rejects mismatched community-signal write targets", async () => {
+    const { POST } = await import("@/app/api/community-signals/route");
+
+    const response = await POST(
+      jsonRequest("/api/community-signals", {
+        targetKind: "tool",
+        targetKey: "entry:mcp/asana-mcp-server",
+        signalType: "used",
+        clientId: "dynamic-route-client-0001",
+        active: true,
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_payload" },
     });
   });
 
@@ -102,6 +138,27 @@ describe("dynamic API route fallback behavior", () => {
       counts: {
         "entry:mcp/asana-mcp-server": { used: 0, works: 0, broken: 0 },
       },
+    });
+  });
+
+  it("rejects mismatched batch community-signal targets", async () => {
+    const { POST } = await import("@/app/api/community-signals/query/route");
+
+    const response = await POST(
+      jsonRequest("/api/community-signals/query", {
+        targets: [
+          {
+            targetKind: "entry",
+            targetKey: "tool:cursor",
+          },
+        ],
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: { code: "invalid_payload" },
     });
   });
 });

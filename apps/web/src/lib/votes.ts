@@ -1,6 +1,5 @@
 import { getSiteDb, type D1DatabaseLike } from "@/lib/db";
-
-const D1_SAFE_VARIABLE_BATCH_SIZE = 25;
+import { chunk, inPlaceholders } from "@/lib/d1-batch";
 
 export function isValidEntryKey(key: string) {
   return /^[a-z0-9-]+:[a-z0-9-]+$/.test(key);
@@ -37,13 +36,8 @@ export async function queryVoteCounts(db: D1DatabaseLike, keys: string[]) {
   const counts: Record<string, number> = {};
   for (const key of keys) counts[key] = 0;
 
-  for (
-    let index = 0;
-    index < keys.length;
-    index += D1_SAFE_VARIABLE_BATCH_SIZE
-  ) {
-    const batch = keys.slice(index, index + D1_SAFE_VARIABLE_BATCH_SIZE);
-    const placeholders = batch.map(() => "?").join(", ");
+  for (const batch of chunk(keys)) {
+    const placeholders = inPlaceholders(batch.length);
     const { results } = await db
       .prepare(
         `SELECT entry_key, upvote_count FROM votes_entries WHERE entry_key IN (${placeholders})`,
@@ -96,13 +90,8 @@ export async function queryVotesByClient(
   const voted: Record<string, boolean> = {};
   for (const key of keys) voted[key] = false;
 
-  for (
-    let index = 0;
-    index < keys.length;
-    index += D1_SAFE_VARIABLE_BATCH_SIZE
-  ) {
-    const batch = keys.slice(index, index + D1_SAFE_VARIABLE_BATCH_SIZE);
-    const placeholders = batch.map(() => "?").join(", ");
+  for (const batch of chunk(keys)) {
+    const placeholders = inPlaceholders(batch.length);
     const { results } = await db
       .prepare(
         `SELECT entry_key FROM votes_by_client WHERE client_id = ? AND entry_key IN (${placeholders})`,

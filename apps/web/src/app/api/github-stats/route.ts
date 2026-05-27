@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
 
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
@@ -73,38 +74,6 @@ async function fetchGitHubStats(
     typeof data.updated_at === "string" ? data.updated_at : null;
 
   return { stars, forks, updatedAt };
-}
-
-function parseAbbreviatedCount(value: unknown) {
-  const text = String(value ?? "")
-    .trim()
-    .toLowerCase();
-  if (!text) return null;
-
-  let numberText = "";
-  let suffix = "";
-  for (const char of text) {
-    if ((char >= "0" && char <= "9") || char === ".") {
-      numberText += char;
-      continue;
-    }
-    if (char === "k" || char === "m" || char === "b") {
-      suffix = char;
-      break;
-    }
-  }
-
-  const numeric = Number.parseFloat(numberText);
-  if (!Number.isFinite(numeric)) return null;
-  const multiplier =
-    suffix === "b"
-      ? 1_000_000_000
-      : suffix === "m"
-        ? 1_000_000
-        : suffix === "k"
-          ? 1_000
-          : 1;
-  return Math.round(numeric * multiplier);
 }
 
 async function fetchShieldsFallback(

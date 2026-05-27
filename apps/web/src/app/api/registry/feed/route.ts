@@ -23,7 +23,10 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       categories: "/api/registry/categories",
       search:
         "/api/registry/search?q={query}&category={category}&platform={platform}&limit=20",
+      trending:
+        "/api/registry/trending?category={category}&platform={platform}&limit=12",
       diff: "/api/registry/diff?since={hash-or-date}&limit=100",
+      integrity: "/api/registry/integrity?artifact={artifact}&hash={sha256}",
       entry: "/api/registry/entries/{category}/{slug}",
       entryLlms: "/api/registry/entries/{category}/{slug}/llms",
       jobs: "/api/jobs?limit=100",

@@ -235,13 +235,13 @@ export const TOOL_DEFINITIONS = [
   {
     name: "explain_entry_trust",
     description:
-      "Explain deterministic trust, source, package, safety, privacy, and review signals for one HeyClaude entry.",
+      "Explain deterministic trust, source, package, safety, privacy, and review metadata signals for one HeyClaude entry. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
     inputSchema: jsonSchemaForTool("explain_entry_trust"),
   },
   {
     name: "review_entry_safety",
     description:
-      "Review 1-5 HeyClaude entries for source, package, safety, and privacy fit before install or recommendation.",
+      "Review 1-5 HeyClaude entries for source, package, safety, and privacy metadata fit before install or recommendation. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
     inputSchema: jsonSchemaForTool("review_entry_safety"),
   },
 ];
