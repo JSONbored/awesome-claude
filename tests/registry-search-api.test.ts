@@ -116,4 +116,44 @@ describe("/api/registry/search", () => {
       nextOffset: null,
     });
   });
+
+  it("treats explicit empty category and platform as 'no filter'", async () => {
+    const { GET } =
+      await import("../apps/web/src/app/api/registry/search/route");
+    const response = await GET(
+      new Request(
+        "https://heyclau.de/api/registry/search?q=fixture&category=&platform=",
+        { headers: { origin: "https://heyclau.de" } },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toMatchObject({ count: 3, total: 3 });
+    expect(body.results.map((entry: SearchDocument) => entry.slug)).toEqual([
+      "fixture-a",
+      "fixture-b",
+      "fixture-c",
+    ]);
+  });
+
+  it("still rejects malformed non-empty category and platform", async () => {
+    const { GET } =
+      await import("../apps/web/src/app/api/registry/search/route");
+    const badPlatform = await GET(
+      new Request(
+        "https://heyclau.de/api/registry/search?q=fixture&platform=%21bad",
+        { headers: { origin: "https://heyclau.de" } },
+      ),
+    );
+    expect(badPlatform.status).toBe(400);
+
+    const badCategory = await GET(
+      new Request(
+        "https://heyclau.de/api/registry/search?q=fixture&category=NOT_A_SLUG",
+        { headers: { origin: "https://heyclau.de" } },
+      ),
+    );
+    expect(badCategory.status).toBe(400);
+  });
 });

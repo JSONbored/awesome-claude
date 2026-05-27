@@ -2394,15 +2394,23 @@ paths:
         against the deployed manifest.
       parameters:
         - schema:
-            type: string
-            maxLength: 160
-            pattern: ^\/?(?:[a-z0-9][a-z0-9._-]*\/)*(?:[a-z0-9][a-z0-9._-]*)$
+            anyOf:
+              - type: string
+                enum:
+                  - ""
+              - type: string
+                maxLength: 160
+                pattern: ^\/?(?:[a-z0-9][a-z0-9._-]*\/)*(?:[a-z0-9][a-z0-9._-]*)$
           required: false
           name: artifact
           in: query
         - schema:
-            type: string
-            pattern: ^[a-f0-9]{64}$
+            anyOf:
+              - type: string
+                enum:
+                  - ""
+              - type: string
+                pattern: ^[a-f0-9]{64}$
           required: false
           name: hash
           in: query
