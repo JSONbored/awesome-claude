@@ -106,7 +106,11 @@ function redactUrlValue(value: string) {
       redactedCount: redacted ? 1 : 0,
     };
   } catch {
-    return { value, redactedCount: 0 };
+    const fallback = redactEnvValue("url", value);
+    return {
+      value: fallback,
+      redactedCount: fallback === value ? 0 : 1,
+    };
   }
 }
 
