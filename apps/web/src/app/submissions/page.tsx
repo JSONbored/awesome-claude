@@ -178,6 +178,16 @@ function safeHttpUrl(value: string) {
   }
 }
 
+function safeHttpsUrl(value: string) {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:") return "";
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
 function submissionFormHref(category: string) {
   const params = new URLSearchParams();
   const normalizedCategory = category.trim();
@@ -369,7 +379,7 @@ export default async function SubmissionsPage({
         <section className="space-y-3">
           {entries.length ? (
             entries.map((entry) => {
-              const sourceHref = safeHttpUrl(entry.sourceUrl);
+              const sourceHref = safeHttpsUrl(entry.sourceUrl);
               const sourceUrls = entry.sourceUrls
                 .map((url) => safeHttpUrl(url))
                 .filter(Boolean);
