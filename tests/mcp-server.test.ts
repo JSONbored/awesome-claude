@@ -953,6 +953,23 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+
+
+  it("rejects non-HTTPS custom endpoint URLs for client setup", async () => {
+    const setup = await callRegistryTool(
+      "get_client_setup",
+      { endpointUrl: "http://evil.example/mcp" },
+      { dataDir },
+    );
+    expect(setup).toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "MCP endpoint URL must use HTTPS outside localhost.",
+      },
+    });
+  });
+
   it("exposes registry resources and workflow prompts through MCP helpers", async () => {
     await expect(listRegistryResources({}, { dataDir })).resolves.toMatchObject(
       {
