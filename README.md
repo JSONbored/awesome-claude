@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>387+ file-backed entries</strong> stay useful as both an
+        <strong>388+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>387</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>388</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,7 +68,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>49</code><br>
+          <code>50</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
@@ -229,7 +229,7 @@ packages use checksums and package trust metadata after review.
 - **[UI UX Design Expert Agent - Agents](https://heyclau.de/agents/ui-ux-design-expert-agent)** - Specialized in creating beautiful, intuitive user interfaces and exceptional user experiences
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (49)
+## 🔌 MCP Servers (50)
 
 - **[Airtable MCP Server for Claude](https://heyclau.de/mcp/airtable-mcp-server)** - Read and write records, manage bases and tables in Airtable directly from Claude
 - **[Asana MCP Server for Claude](https://heyclau.de/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
@@ -278,6 +278,7 @@ packages use checksums and package trust metadata after review.
 - **[Vercel MCP Server for Claude](https://heyclau.de/mcp/vercel-mcp-server)** - Manage deployments, analyze logs, and control Vercel projects
 - **[Workato MCP Server for Claude](https://heyclau.de/mcp/workato-mcp-server)** - Access any application, workflows, or data via Workato's integration platform
 - **[Xquik MCP Server](https://heyclau.de/mcp/xquik-mcp-server)** - Remote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated write actions.
+- **[YIELD INTELLIGENCE MCP — Passive Income Analysis](https://heyclau.de/mcp/yield-intelligence-mcp)** - Analyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL
 - **[Zapier MCP Server for Claude](https://heyclau.de/mcp/zapier-mcp-server)** - Connect to nearly 8,000 apps through Zapier's automation platform
 - **[Zyntra - Temp e-mails MCP](https://heyclau.de/mcp/zyntra-mail)** - MCP server for e-mail testing: create disposable inboxes, wait for delivery, and extract e-mail content or links - all from your AI agent or test automation workflow.
 
