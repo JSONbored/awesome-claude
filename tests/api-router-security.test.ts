@@ -515,3 +515,110 @@ describe("central API router security", () => {
     });
   });
 });
+
+describe("in-memory fallback rate limiter", () => {
+  function fallbackRequest(ip: string) {
+    return new Request("https://heyclau.de/api/registry/search", {
+      headers: {
+        origin: "https://heyclau.de",
+        "cf-connecting-ip": ip,
+      },
+    });
+  }
+
+  async function loadRateLimiter() {
+    const mod = await import("@/lib/api-security");
+    mod.__rateLimitTestHooks.reset();
+    return mod;
+  }
+
+  beforeEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("blocks after the configured limit within the window", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const { isRateLimited } = await loadRateLimiter();
+
+    const check = () =>
+      isRateLimited({
+        request: fallbackRequest("203.0.113.10"),
+        scope: "test",
+        limit: 2,
+        windowMs: 60_000,
+      });
+
+    expect(check()).toBe(false);
+    expect(check()).toBe(false);
+    expect(check()).toBe(true);
+  });
+
+  it("allows requests again after the window resets", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const { isRateLimited } = await loadRateLimiter();
+
+    const check = () =>
+      isRateLimited({
+        request: fallbackRequest("203.0.113.11"),
+        scope: "test",
+        limit: 1,
+        windowMs: 60_000,
+      });
+
+    expect(check()).toBe(false);
+    expect(check()).toBe(true);
+
+    vi.setSystemTime(60_001);
+    expect(check()).toBe(false);
+  });
+
+  it("prunes expired buckets when new keys arrive", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const { isRateLimited, __rateLimitTestHooks } = await loadRateLimiter();
+
+    for (let i = 0; i < 5; i += 1) {
+      isRateLimited({
+        request: fallbackRequest(`198.51.100.${i}`),
+        scope: "test",
+        limit: 5,
+        windowMs: 1_000,
+      });
+    }
+    expect(__rateLimitTestHooks.size()).toBe(5);
+
+    // Advance past every bucket's reset, then touch a single new key. The
+    // pruning pass should reclaim all five stale buckets, leaving only the new
+    // one behind.
+    vi.setSystemTime(2_000);
+    isRateLimited({
+      request: fallbackRequest("198.51.100.200"),
+      scope: "test",
+      limit: 5,
+      windowMs: 1_000,
+    });
+    expect(__rateLimitTestHooks.size()).toBe(1);
+  });
+
+  it("caps live bucket growth by evicting the oldest keys", async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(0);
+    const { isRateLimited, __rateLimitTestHooks } = await loadRateLimiter();
+    const cap = __rateLimitTestHooks.maxBuckets;
+
+    // Use a never-expiring window so no key ages out; growth must be bounded
+    // purely by the oldest-first eviction cap.
+    for (let i = 0; i < cap + 50; i += 1) {
+      isRateLimited({
+        request: fallbackRequest(`10.0.${Math.floor(i / 256)}.${i % 256}`),
+        scope: "test",
+        limit: 5,
+        windowMs: 60 * 60 * 1000,
+      });
+    }
+
+    expect(__rateLimitTestHooks.size()).toBeLessThanOrEqual(cap);
+  });
+});

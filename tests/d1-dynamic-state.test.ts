@@ -23,6 +23,12 @@ import {
   safeIntentEventCounts,
 } from "../apps/web/src/lib/intent-events";
 import {
+  D1_SAFE_VARIABLE_BATCH_SIZE,
+  chunk,
+  inPlaceholders,
+  targetPairConditions,
+} from "../apps/web/src/lib/d1-batch";
+import {
   buildPublicJobsIndex,
   normalizeJobLocation,
   queryActiveJobs,
@@ -55,6 +61,7 @@ class FakeD1 implements D1DatabaseLike {
     created_at: string;
   }> = [];
   runCalls: Array<{ query: string; values: unknown[] }> = [];
+  allCalls: Array<{ query: string; values: unknown[] }> = [];
 
   prepare(query: string) {
     return {
@@ -179,6 +186,7 @@ class FakeD1 implements D1DatabaseLike {
   }
 
   private all<T>(query: string, values: unknown[]) {
+    this.allCalls.push({ query, values });
     if (query.includes("PRAGMA table_info(jobs_listings)")) {
       return REQUIRED_JOB_COLUMNS.map((name) => ({ name })) as T[];
     }
@@ -326,6 +334,93 @@ describe("D1 dynamic state helpers", () => {
       "entry:mcp/example-server": { used: 2, works: 1, broken: 0 },
       "tool:cursor": { used: 0, works: 0, broken: 1 },
     });
+  });
+
+  it("shares D1 batching primitives across dynamic-state helpers", () => {
+    expect(D1_SAFE_VARIABLE_BATCH_SIZE).toBe(25);
+
+    expect(chunk([])).toEqual([]);
+    expect(chunk(["a", "b"], 5)).toEqual([["a", "b"]]);
+    expect(chunk(["a", "b", "c"], 2)).toEqual([["a", "b"], ["c"]]);
+    expect(
+      chunk(Array.from({ length: 60 }, (_, i) => i)).map((b) => b.length),
+    ).toEqual([25, 25, 10]);
+    expect(() => chunk(["a"], 0)).toThrow(RangeError);
+
+    expect(inPlaceholders(0)).toBe("");
+    expect(inPlaceholders(1)).toBe("?");
+    expect(inPlaceholders(3)).toBe("?, ?, ?");
+
+    expect(targetPairConditions(0, "target_kind", "target_key")).toBe("");
+    expect(targetPairConditions(1, "target_kind", "target_key")).toBe(
+      "(target_kind = ? AND target_key = ?)",
+    );
+    expect(targetPairConditions(2, "target_kind", "target_key")).toBe(
+      "(target_kind = ? AND target_key = ?) OR (target_kind = ? AND target_key = ?)",
+    );
+  });
+
+  it("splits oversized vote and intent reads into safe D1 batches", async () => {
+    const db = new FakeD1();
+    const keys = Array.from(
+      { length: D1_SAFE_VARIABLE_BATCH_SIZE + 5 },
+      (_, index) => `agents:entry-${index}`,
+    );
+
+    const voteCounts = await queryVoteCounts(db, keys);
+    expect(Object.keys(voteCounts)).toHaveLength(keys.length);
+    const voteBatches = db.allCalls.filter((call) =>
+      call.query.includes("FROM votes_entries"),
+    );
+    expect(voteBatches).toHaveLength(2);
+    expect(voteBatches[0].values).toHaveLength(D1_SAFE_VARIABLE_BATCH_SIZE);
+    expect(voteBatches[1].values).toHaveLength(5);
+
+    db.allCalls = [];
+    const intentCounts = await queryIntentEventCounts(db, keys);
+    expect(Object.keys(intentCounts)).toHaveLength(keys.length);
+    // Each intent batch appends the window-days bind after the key placeholders.
+    const intentBatches = db.allCalls.filter((call) =>
+      call.query.includes("FROM intent_events"),
+    );
+    expect(intentBatches).toHaveLength(2);
+    expect(intentBatches[0].values).toHaveLength(
+      D1_SAFE_VARIABLE_BATCH_SIZE + 1,
+    );
+    expect(intentBatches[1].values).toHaveLength(6);
+  });
+
+  it("dedupes inputs and returns empty state without touching D1", async () => {
+    const db = new FakeD1();
+
+    await expect(
+      queryIntentEventCounts(db, ["mcp:a", "mcp:a", ""]),
+    ).resolves.toEqual({
+      "mcp:a": { copy: 0, open: 0, install: 0, download: 0, vote: 0 },
+    });
+    expect(
+      db.allCalls.filter((call) => call.query.includes("FROM intent_events")),
+    ).toHaveLength(1);
+
+    db.allCalls = [];
+    await expect(queryIntentEventCounts(db, [])).resolves.toEqual({});
+    await expect(queryVoteCounts(db, [])).resolves.toEqual({});
+    await expect(queryCommunitySignalCounts(db, [])).resolves.toEqual({});
+    expect(db.allCalls).toHaveLength(0);
+
+    await expect(
+      queryCommunitySignalCounts(db, [
+        { targetKind: "tool", targetKey: "tool:cursor" },
+        { targetKind: "tool", targetKey: "tool:cursor" },
+      ]),
+    ).resolves.toEqual({
+      "tool:cursor": { used: 0, works: 0, broken: 0 },
+    });
+    expect(
+      db.allCalls.filter((call) =>
+        call.query.includes("FROM community_signals"),
+      ),
+    ).toHaveLength(1);
   });
 
   it("normalizes community signal target kind and key together", () => {

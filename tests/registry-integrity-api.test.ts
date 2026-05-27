@@ -157,4 +157,60 @@ describe("/api/registry/integrity", () => {
     });
     expect(badArtifact.status).toBe(400);
   });
+
+  it("treats explicit empty artifact and hash as 'snapshot listing'", async () => {
+    const { GET } =
+      await import("../apps/web/src/app/api/registry/integrity/route");
+    const emptyArtifact = await GET(
+      request("/api/registry/integrity?artifact="),
+    );
+    const bothEmpty = await GET(
+      request("/api/registry/integrity?artifact=&hash="),
+    );
+
+    // Empty artifact alone is no longer rejected by the field-level regex,
+    // and the pair-check (#516) treats both-falsy as "no verification
+    // requested" rather than a partial pair, so it returns the snapshot.
+    expect(emptyArtifact.status).toBe(200);
+    await expect(emptyArtifact.json()).resolves.toMatchObject({
+      ok: true,
+      status: "snapshot",
+      artifact: null,
+      hash: null,
+      current: null,
+    });
+
+    expect(bothEmpty.status).toBe(200);
+    await expect(bothEmpty.json()).resolves.toMatchObject({
+      ok: true,
+      status: "snapshot",
+      artifact: null,
+      hash: null,
+    });
+  });
+
+  it("still pair-rejects a non-empty artifact with an explicit empty hash", async () => {
+    // Preserves #516's invariant: a real artifact path must come with a real
+    // hash. Explicit-empty hash is treated as "no hash provided", same as
+    // omitting the param entirely, so the pair-check still fires.
+    const { GET } =
+      await import("../apps/web/src/app/api/registry/integrity/route");
+    const partialPair = await GET(
+      request("/api/registry/integrity?artifact=directory-index.json&hash="),
+    );
+    expect(partialPair.status).toBe(400);
+    await expect(partialPair.json()).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_payload",
+        details: [
+          expect.objectContaining({
+            path: "hash",
+            message: "Provide both artifact and hash together for verification",
+            code: "custom",
+          }),
+        ],
+      },
+    });
+  });
 });

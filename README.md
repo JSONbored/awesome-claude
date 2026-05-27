@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>386+ file-backed entries</strong> stay useful as both an
+        <strong>387+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>386</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>387</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>52</code><br>
+          <code>53</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -283,12 +283,13 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (52)
+## 🧰 Tools (53)
 
 - **[Aider](https://heyclau.de/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
 - **[Apify](https://heyclau.de/tools/apify)** - Web automation and scraping platform with actors, datasets, APIs, and integrations for data extraction workflows.
 - **[Arcade](https://heyclau.de/tools/arcade-ai)** - Tool-calling platform for AI agents with authenticated actions, user approvals, and external service integrations.
 - **[Arize Phoenix](https://heyclau.de/tools/arize-phoenix)** - Open-source observability and evaluation tooling for LLM applications, traces, datasets, and experiments.
+- **[Authsome](https://heyclau.de/tools/authsome)** - Local credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.
 - **[Bolt](https://heyclau.de/tools/bolt-new)** - Browser-based AI app builder for creating, editing, running, and deploying web projects from prompts.
 - **[Braintrust](https://heyclau.de/tools/braintrust)** - Evaluation, prompt experimentation, logging, and data platform for production AI application development.
 - **[Browser Use](https://heyclau.de/tools/browser-use)** - Open-source browser automation library for building AI agents that can navigate, click, type, and inspect websites.

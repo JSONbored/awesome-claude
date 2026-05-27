@@ -286,19 +286,33 @@ export const registryDiffQuerySchema = z.object({
 const registryIntegrityPairMessage =
   "Provide both artifact and hash together for verification";
 
+// Empty is treated as "snapshot listing" by the route handler at
+// apps/web/src/app/api/registry/integrity/route.ts (`!artifact` → status
+// `snapshot`, `artifact || null` in response). Accept it as a valid value
+// at the field level so clients that round-trip `null → ""` (HTML forms,
+// Raycast) don't get a 400 from the Zod gate. The pair-check below still
+// rejects non-empty artifact paired with empty/absent hash (and vice versa).
 export const registryIntegrityQuerySchema = z
   .object({
     artifact: z
-      .string()
-      .trim()
-      .max(160)
-      .regex(/^\/?(?:[a-z0-9][a-z0-9._-]*\/)*(?:[a-z0-9][a-z0-9._-]*)$/)
+      .union([
+        z.literal(""),
+        z
+          .string()
+          .trim()
+          .max(160)
+          .regex(/^\/?(?:[a-z0-9][a-z0-9._-]*\/)*(?:[a-z0-9][a-z0-9._-]*)$/),
+      ])
       .optional(),
     hash: z
-      .string()
-      .trim()
-      .toLowerCase()
-      .regex(/^[a-f0-9]{64}$/)
+      .union([
+        z.literal(""),
+        z
+          .string()
+          .trim()
+          .toLowerCase()
+          .regex(/^[a-f0-9]{64}$/),
+      ])
       .optional(),
   })
   .superRefine((query, ctx) => {
