@@ -932,6 +932,7 @@ function submissionTriageGroup({ report, risk, status }) {
   if (status === "close_eligible") return "close_eligible";
   if (status === "stale_reminder_due") return "stale";
   if (submissionLooksBlocked({ report, risk })) return "blocked";
+  if (status === "import_ready" && risk.riskTier === "high") return "blocked";
   if (submissionLooksPromotional({ report, risk })) {
     return "likely_promo_spam";
   }
