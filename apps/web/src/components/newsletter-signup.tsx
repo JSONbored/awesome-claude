@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 
 import { useToast } from "@/components/ui/toast-provider";
+import { useLoggedAsync } from "@/hooks/use-logged-async";
 
 type NewsletterSignupProps = {
   source?: string;
@@ -22,20 +23,16 @@ export function NewsletterSignup({ source = "footer" }: NewsletterSignupProps) {
     return () => window.clearTimeout(timer);
   }, [status]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!email.trim()) return;
-
-    setStatus("loading");
-
-    try {
+  const subscribeNewsletter = useLoggedAsync(
+    "newsletter.signup_failed",
+    async (emailToSubmit: string) => {
       const response = await fetch("/api/newsletter/subscribe", {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
         body: JSON.stringify({
-          email,
+          email: emailToSubmit,
           source,
         }),
       });
@@ -48,14 +45,27 @@ export function NewsletterSignup({ source = "footer" }: NewsletterSignupProps) {
         title: "Subscribed",
         description: "You are on the list for launch and major updates.",
       });
-    } catch {
-      setStatus("error");
-      pushToast({
-        variant: "error",
-        title: "Subscription failed",
-        description: "Could not subscribe right now. Try again in a bit.",
-      });
-    }
+    },
+    {
+      meta: () => ({ source }),
+      onError: () => {
+        setStatus("error");
+        pushToast({
+          variant: "error",
+          title: "Subscription failed",
+          description: "Could not subscribe right now. Try again in a bit.",
+        });
+      },
+    },
+  );
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const emailToSubmit = email.trim();
+    if (!emailToSubmit) return;
+
+    setStatus("loading");
+    await subscribeNewsletter(emailToSubmit);
   };
 
   return (

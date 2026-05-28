@@ -967,9 +967,10 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
     .filter((entry) => !category || entry.category === category)
     .filter((entry) => entryMatchesPlatform(entry, platform));
   let matched = scoped.filter((entry) => entryMatchesQuery(entry, query));
-  if (!matched.length && searchTokens(query).length) {
-    matched = scoped.filter(
-      (entry) => scoreSearchEntry(entry, query).score > 0,
+  const queryTokens = searchTokens(query);
+  if (!matched.length && queryTokens.length) {
+    matched = scoped.filter((entry) =>
+      queryTokens.some((token) => entrySearchText(entry).includes(token)),
     );
   }
   const ranked = rankSearchEntries(matched, query);

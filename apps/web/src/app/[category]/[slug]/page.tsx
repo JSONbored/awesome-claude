@@ -236,7 +236,11 @@ export default async function DetailPage({ params }: DetailPageProps) {
     entry.documentationUrl ?? entry.repoUrl ?? entry.githubUrl ?? "";
   const editHref = getGitHubEditUrl(entry.githubUrl);
   const suggestChangeHref = getSuggestChangeUrl(entry);
-  const compareHref = `/browse?collection=${entry.category}:${entry.slug}`;
+  const encodedCategory = encodeURIComponent(entry.category);
+  const encodedSlug = encodeURIComponent(entry.slug);
+  const encodedEntryKey = encodeURIComponent(`${entry.category}:${entry.slug}`);
+  const apiEntryHref = `/api/registry/entries/${encodedCategory}/${encodedSlug}`;
+  const compareHref = `/browse?collection=${encodedEntryKey}`;
   const referenceLabel = entry.documentationUrl
     ? "Open docs"
     : entry.repoUrl
@@ -532,13 +536,13 @@ export default async function DetailPage({ params }: DetailPageProps) {
               Add to compare tray
             </Link>
             <a
-              href={`/api/registry/entries/${entry.category}/${entry.slug}`}
+              href={apiEntryHref}
               className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
             >
               Open API record
             </a>
             <a
-              href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+              href={`${apiEntryHref}/llms`}
               className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
             >
               Open LLM text
@@ -781,13 +785,13 @@ export default async function DetailPage({ params }: DetailPageProps) {
                 Claim/update listing
               </Link>
               <a
-                href={`/api/registry/entries/${entry.category}/${entry.slug}`}
+                href={apiEntryHref}
                 className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
               >
                 API detail
               </a>
               <a
-                href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+                href={`${apiEntryHref}/llms`}
                 className="flex h-9 w-full items-center justify-center gap-2 rounded-lg border border-border bg-background text-muted-foreground transition hover:border-primary/40 hover:text-foreground"
               >
                 LLM text

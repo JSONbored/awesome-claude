@@ -685,6 +685,47 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("does not fill planner results with unrelated trust-only matches", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: [
+          {
+            category: "mcp",
+            slug: "trusted-browser-helper",
+            title: "Browser Helper",
+            description: "Runs browser automation for local QA.",
+            tags: ["browser"],
+            keywords: ["automation"],
+            platforms: ["Claude"],
+            safetyNotes: ["Runs read-only browser automation."],
+            privacyNotes: ["Does not persist submitted page content."],
+            downloadTrust: "first-party",
+            trustSignals: {
+              packageVerified: true,
+              sourceStatus: "available",
+            },
+          },
+        ],
+      };
+    };
+    const result = await callRegistryTool(
+      "plan_workflow_toolbox",
+      {
+        goal: "credential hardened",
+        limit: 3,
+      },
+      { readJsonArtifact },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      goal: "credential hardened",
+      count: 0,
+      entries: [],
+    });
+  });
+
   it("searches registry artifacts with trust filters", async () => {
     const result = await callRegistryTool(
       "search_registry",

@@ -67,9 +67,10 @@ function normalizedSearchText(entry: SearchDocument) {
 }
 
 export function matchesQuery(entry: SearchDocument, query: string) {
-  if (!query) return true;
+  const normalizedQuery = query.trim().toLowerCase();
+  if (!normalizedQuery) return true;
   const haystack = normalizedSearchText(entry);
-  return haystack.includes(query);
+  return haystack.includes(normalizedQuery);
 }
 
 export function matchesPlatform(entry: SearchDocument, platform: string) {
@@ -181,7 +182,8 @@ export function scoreSearchEntry(
   entry: SearchDocument,
   query: string,
 ): Omit<RankedSearchEntry, "entry"> {
-  const tokens = tokenizeSearchQuery(query);
+  const normalizedQuery = query.trim().toLowerCase();
+  const tokens = tokenizeSearchQuery(normalizedQuery);
   if (!tokens.length) return { score: 0, reasons: [] };
 
   const title = entry.title.toLowerCase();
@@ -194,11 +196,11 @@ export function scoreSearchEntry(
   let score = 0;
   const reasons = new Set<string>();
 
-  if (title.includes(query)) {
+  if (title.includes(normalizedQuery)) {
     score += 90;
     reasons.add("title phrase");
   }
-  if (category === query) {
+  if (category === normalizedQuery) {
     score += 45;
     reasons.add("category match");
   }
