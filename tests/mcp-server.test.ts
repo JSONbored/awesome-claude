@@ -726,6 +726,51 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("matches a lowercase planner goal against mixed-case entry text", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: [
+          {
+            category: "mcp",
+            slug: "kubernetes-cluster-helper",
+            title: "Kubernetes CLUSTER Deployment Helper",
+            description: "Manage ROLLOUTS across namespaces with guided steps.",
+            tags: ["DevOps"],
+            keywords: [],
+            platforms: ["Claude"],
+          },
+          {
+            category: "agents",
+            slug: "unrelated-entry",
+            title: "Totally Unrelated Thing",
+            description: "Has nothing to do with the goal.",
+            tags: [],
+            keywords: [],
+            platforms: [],
+          },
+        ],
+      };
+    };
+
+    const result = await callRegistryTool(
+      "plan_workflow_toolbox",
+      { goal: "kubernetes cluster rollouts", limit: 5 },
+      { readJsonArtifact },
+    );
+
+    expect(result).toMatchObject({ ok: true });
+    const slugs = result.entries.map((entry: any) => entry.slug);
+    // Lowercase goal tokens (kubernetes/cluster/rollouts) must match the
+    // mixed-case title ("CLUSTER") and description ("ROLLOUTS").
+    expect(slugs).toContain("kubernetes-cluster-helper");
+    expect(slugs).not.toContain("unrelated-entry");
+    const matched = result.entries.find(
+      (entry: any) => entry.slug === "kubernetes-cluster-helper",
+    );
+    expect(matched.searchScore).toBeGreaterThan(0);
+  });
+
   it("searches registry artifacts with trust filters", async () => {
     const result = await callRegistryTool(
       "search_registry",

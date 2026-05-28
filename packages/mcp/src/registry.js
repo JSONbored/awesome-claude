@@ -410,7 +410,8 @@ function entrySearchText(entry) {
     ...(entry.keywords || []),
   ]
     .map(normalizeText)
-    .join(" ");
+    .join(" ")
+    .toLowerCase();
 }
 
 function scoreSearchEntry(entry, query) {
