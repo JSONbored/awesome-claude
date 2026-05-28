@@ -92,14 +92,6 @@ Unlock the power of the Hugging Face ecosystem by connecting Claude to the Huggi
   }
 }
 ```
-```json
-{
-  "huggingface": {
-    "url": "https://huggingface.co/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Find the best text generation model
@@ -138,28 +130,6 @@ Ask Claude: "Compare BERT model variants"
 
 Run inference on a Hugging Face model with custom parameters
 
-```typescript
-// Run Hugging Face model inference
-const result = await huggingface.inference({
-  model: "bert-base-uncased",
-  inputs: "Hello, world!",
-  parameters: {
-    return_all_scores: true,
-  },
-});
-```
-```plaintext
-Ask Claude: "Find the best text generation model"
-```
-```plaintext
-Ask Claude: "Access the IMDB dataset"
-```
-```plaintext
-Ask Claude: "Run the stable diffusion demo"
-```
-```plaintext
-Ask Claude: "Compare BERT model variants"
-```
 ```typescript
 // Run Hugging Face model inference
 const result = await huggingface.inference({

@@ -35,10 +35,10 @@ Choosing the right AI coding assistant impacts development velocity significantl
 
 > **Comparison Overview**
 >
-> **Tools Compared:** Claude Code, Cursor, Codeium, GitHub Copilot  
-> **Use Case Focus:** Professional software development and team collaboration  
-> **Comparison Date:** September 2025  
-> **Data Sources:** SWE-bench, Aider Leaderboards, GitClear analysis, vendor documentation  
+> **Tools Compared:** Claude Code, Cursor, Codeium, GitHub Copilot
+> **Use Case Focus:** Professional software development and team collaboration
+> **Comparison Date:** September 2025
+> **Data Sources:** SWE-bench, Aider Leaderboards, GitClear analysis, vendor documentation
 > **Testing Methodology:** Real-world benchmarks and production deployment metrics
 
 ## Quick Comparison Table

@@ -177,46 +177,6 @@ Claude will set up:
 6. Store state in S3 with DynamoDB locking
 7. Post-apply validation tests"
 ```
-```text
-"Create a production-grade GitHub Actions pipeline for Next.js 15:
-1. Install dependencies with pnpm caching
-2. Run TypeScript type checking in parallel with linting
-3. Run Vitest unit tests with coverage (fail if < 80%)
-4. Run Playwright E2E tests on Chrome and Firefox
-5. Build Next.js app and verify no build errors
-6. Deploy to Vercel preview on PR, production on main
-7. Run Lighthouse CI and comment scores on PR
-8. Send Slack notification on success/failure"
-```
-```text
-"Set up GitHub Actions for Turborepo monorepo:
-1. Use Turborepo remote caching with Vercel
-2. Run affected tasks only (lint, test, build)
-3. Matrix build for each package
-4. Publish packages to npm on release tags
-5. Deploy apps to respective environments
-6. Coordinate deployments across dependent services"
-```
-```text
-"Create workflow for Docker application:
-1. Build Docker image with multi-stage caching
-2. Run security scan with Trivy
-3. Run integration tests in Docker Compose
-4. Push to GitHub Container Registry with semantic versioning
-5. Deploy to AWS ECS using OIDC authentication
-6. Run release regression tests post-deployment
-7. Rollback on failure"
-```
-```text
-"Generate Terraform deployment workflow:
-1. Validate Terraform syntax and formatting
-2. Run terraform plan and comment on PR
-3. Run security scan with tfsec and Checkov
-4. Require manual approval for apply
-5. Apply Terraform on main branch merge
-6. Store state in S3 with DynamoDB locking
-7. Post-apply validation tests"
-```
 
 ## Troubleshooting
 **Issue:** Workflows are too slow (>15 minutes)

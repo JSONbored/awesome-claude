@@ -58,13 +58,13 @@ This skill helps AI agents orchestrate Proxmox operations in a way that is safe 
 5. Validate final state and produce run report.
 
 ## Troubleshooting
-**Issue:** Migration operations fail mid-flight  
+**Issue:** Migration operations fail mid-flight
 **Fix:** Add pre-flight checks for storage/network/node health and fallback target node.
 
-**Issue:** API token works but operation is denied  
+**Issue:** API token works but operation is denied
 **Fix:** Review token role scopes and map required privileges per endpoint.
 
-**Issue:** Post-change drift appears hours later  
+**Issue:** Post-change drift appears hours later
 **Fix:** Add delayed verification checks for resource pressure and service health.
 
 ## Knowledge Freshness

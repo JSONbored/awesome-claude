@@ -3,6 +3,14 @@ import { submissionLabelsForCategory } from "./submission-labels.js";
 
 export const SUBMISSION_SPEC_SCHEMA_VERSION = 2;
 
+const RISK_BEARING_SUBMISSION_CATEGORIES = new Set([
+  "mcp",
+  "hooks",
+  "skills",
+  "commands",
+  "statuslines",
+]);
+
 const BASE_FIELDS = [
   {
     id: "name",
@@ -195,7 +203,8 @@ const OPTIONAL_FIELDS = [
     type: "url",
     required: false,
     placeholder: "https://...",
-    helpText: "Community submissions cannot request local /downloads hosting.",
+    helpText:
+      "Only use this for a real package, archive, or release download URL. Use GitHub URL or retrieval sources for source tree/blob paths. Community submissions cannot request local /downloads hosting.",
   },
   {
     id: "config_snippet",
@@ -225,7 +234,8 @@ const OPTIONAL_FIELDS = [
     required: false,
     placeholder:
       "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-    helpText: "Optional. Up to 8 notes, 320 characters per note.",
+    helpText:
+      'Required for risk-bearing assets. Use "Not applicable: ..." only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note.',
   },
   {
     id: "privacy_notes",
@@ -234,7 +244,8 @@ const OPTIONAL_FIELDS = [
     required: false,
     placeholder:
       "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-    helpText: "Optional. Up to 8 notes, 320 characters per note.",
+    helpText:
+      'Required for risk-bearing assets. Use "Not applicable: ..." only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note.',
   },
 ];
 
@@ -259,6 +270,10 @@ export function buildSubmissionFieldModel(category) {
     ...categorySpec.commonIssueRequiredFields,
     ...(spec.submissionRequired ?? []),
   ]);
+  if (RISK_BEARING_SUBMISSION_CATEGORIES.has(category)) {
+    required.add("safety_notes");
+    required.add("privacy_notes");
+  }
   const fieldIds = [
     ...BASE_FIELDS.map((field) => field.id),
     ...(spec.submissionRequired ?? []),

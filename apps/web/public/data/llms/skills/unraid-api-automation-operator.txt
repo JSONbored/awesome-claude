@@ -58,13 +58,13 @@ This skill helps AI agents create safe and repeatable Unraid automations. It foc
 5. Emit concise run report for ops visibility.
 
 ## Troubleshooting
-**Issue:** Automation retries create duplicate side effects  
+**Issue:** Automation retries create duplicate side effects
 **Fix:** Add idempotency keys and state checks before write operations.
 
-**Issue:** API calls fail intermittently  
+**Issue:** API calls fail intermittently
 **Fix:** Add bounded retries with backoff and explicit timeout policy.
 
-**Issue:** Hard to trust autonomous changes  
+**Issue:** Hard to trust autonomous changes
 **Fix:** Add human approval for destructive or high-risk operations.
 
 ## Knowledge Freshness

@@ -93,14 +93,6 @@ Access thousands of app integrations through Zapier's no-code automation platfor
   }
 }
 ```
-```json
-{
-  "zapier": {
-    "url": "https://mcp.zapier.com/YOUR_GENERATED_URL",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Trigger the new customer onboarding Zap
@@ -139,27 +131,6 @@ Ask Claude: "Create Trello card from email"
 
 Trigger a Zapier Zap with input data
 
-```typescript
-// Trigger Zapier Zap
-const result = await zapier.zaps.trigger({
-  zap_id: "zap-id",
-  data: {
-    field: "value",
-  },
-});
-```
-```plaintext
-Ask Claude: "Trigger the new customer onboarding Zap"
-```
-```plaintext
-Ask Claude: "Send Slack notification when deal closes"
-```
-```plaintext
-Ask Claude: "Add form submission to Google Sheets"
-```
-```plaintext
-Ask Claude: "Create Trello card from email"
-```
 ```typescript
 // Trigger Zapier Zap
 const result = await zapier.zaps.trigger({

@@ -69,13 +69,13 @@ This skill helps agents build practical plugins that stay secure and maintainabl
 - Ship updates with backward-compatibility notes when behavior changes.
 
 ## Troubleshooting
-**Issue:** Plugin has excessive privilege scope  
+**Issue:** Plugin has excessive privilege scope
 **Fix:** reduce manifest permissions to explicit operational minimum.
 
-**Issue:** Tool calls are inconsistent across clients  
+**Issue:** Tool calls are inconsistent across clients
 **Fix:** enforce contract tests against expected schema/shape.
 
-**Issue:** Plugin errors are hard to diagnose  
+**Issue:** Plugin errors are hard to diagnose
 **Fix:** add request IDs, structured logs, and clear failure categories.
 
 ## Output Contract

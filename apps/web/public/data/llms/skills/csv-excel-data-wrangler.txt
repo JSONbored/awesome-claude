@@ -144,38 +144,6 @@ Claude will:
 4. Sort by date column
 5. Export as consolidated_data.csv"
 ```
-```text
-"Clean this customer export:
-1. Remove duplicate emails (keep most recent)
-2. Standardize phone numbers to (XXX) XXX-XXXX format
-3. Fill missing company names with 'Unknown'
-4. Split full_name into first_name and last_name
-5. Export as customers_clean.xlsx"
-```
-```text
-"Analyze this sales data:
-1. Calculate total revenue by product category
-2. Identify top 10 customers by revenue
-3. Show month-over-month growth
-4. Create a pivot table: rows=salesperson, columns=month, values=revenue
-5. Export summary as sales_report.xlsx with formatted numbers"
-```
-```text
-"Validate this CSV:
-1. Check for duplicate IDs
-2. Identify rows with missing required fields (name, email, phone)
-3. Flag invalid email formats
-4. Report data quality issues
-5. Export clean rows and error rows separately"
-```
-```text
-"Combine all CSV files I upload into one master file:
-1. Ensure columns match (add missing ones)
-2. Add a 'source_file' column
-3. Remove duplicates across all files
-4. Sort by date column
-5. Export as consolidated_data.csv"
-```
 
 ## Tips for Best Results
 1. **Be Specific About Columns**: Name the exact columns you want to work with

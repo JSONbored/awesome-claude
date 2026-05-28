@@ -112,10 +112,6 @@ describe("discovery surface rules", () => {
         downloadUrl: "https://example.com/package.tgz",
         packageVerified: true,
       }),
-      entry("source-copyable", {
-        configSnippet: "copyable config",
-        trustSignals: { sourceStatus: "available" },
-      }),
       entry("external-download", {
         downloadUrl: "https://example.com/package.zip",
         downloadTrust: "external",
@@ -129,7 +125,6 @@ describe("discovery surface rules", () => {
     expect(slugs(surfaces.safeInstall)).toEqual([
       "first-party",
       "verified-package",
-      "source-copyable",
     ]);
   });
 });

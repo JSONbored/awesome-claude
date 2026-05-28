@@ -182,49 +182,6 @@ Claude will create:
 6. Set up URL structure: /v1/... and /v2/...
 7. Add version-specific examples"
 ```
-```text
-"Generate full Mintlify API documentation:
-1. Parse src/api/*.ts files for all exported functions
-2. Create API reference pages with proper Mintlify components
-3. Include TypeScript type definitions
-4. Add code examples in TypeScript, JavaScript, Python, and cURL
-5. Document all error codes and responses
-6. Set up authentication guide with OAuth 2.0 flow
-7. Configure API playground with authentication
-8. Add rate limiting documentation"
-```
-```text
-"Build Mintlify docs for React component library:
-1. Document all components in src/components/ui
-2. Extract prop types from TypeScript interfaces
-3. Create PropTable for each component
-4. Add usage examples with CodeGroup
-5. Include accessibility guidelines (ARIA, keyboard)
-6. Link to Storybook for interactive demos
-7. Add installation guide with package manager options
-8. Create theming and customization guide"
-```
-```text
-"Generate SDK documentation from TypeScript client:
-1. Document all SDK methods with parameters and returns
-2. Create quickstart with installation and auth setup
-3. Add comprehensive code examples for each method
-4. Include error handling patterns
-5. Document webhook integration
-6. Add retry and timeout configuration
-7. Create migration guide from v1 to v2
-8. Set up changelog with semantic versioning"
-```
-```text
-"Set up versioned Mintlify docs for API v1 and v2:
-1. Create separate documentation for each version
-2. Configure version switcher in mint.json
-3. Highlight breaking changes between versions
-4. Provide migration guide from v1 to v2
-5. Maintain v1 docs in archive with deprecation notice
-6. Set up URL structure: /v1/... and /v2/...
-7. Add version-specific examples"
-```
 
 ## Troubleshooting
 **Issue:** Mintlify build fails with "Invalid frontmatter"

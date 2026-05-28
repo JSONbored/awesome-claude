@@ -89,18 +89,6 @@ Enable your AI assistants to seamlessly interact with Discord servers through co
   }
 }
 ```
-```json
-{
-  "discord-mcp": {
-    "env": {
-      "DISCORD_TOKEN": "${DISCORD_TOKEN}",
-      "DISCORD_GUILD_ID": "${DISCORD_GUILD_ID}"
-    },
-    "args": ["-jar", "/absolute/path/to/discord-mcp-0.0.1-SNAPSHOT.jar"],
-    "command": "java"
-  }
-}
-```
 
 ## Examples
 ### Get server information and member count
@@ -139,32 +127,6 @@ Ask Claude: "Retrieve channel lists and configurations"
 
 Send a message to a Discord channel with embed content
 
-```typescript
-// Send message to Discord channel
-const message = await discord.channels.createMessage({
-  channel_id: "channel-id",
-  content: "Hello from Claude!",
-  embeds: [
-    {
-      title: "Notification",
-      description: "This is a test message",
-      color: 0x00ff00,
-    },
-  ],
-});
-```
-```plaintext
-Ask Claude: "Get server information and member count"
-```
-```plaintext
-Ask Claude: "Create new text channels and categories"
-```
-```plaintext
-Ask Claude: "Manage member roles and permissions"
-```
-```plaintext
-Ask Claude: "Retrieve channel lists and configurations"
-```
 ```typescript
 // Send message to Discord channel
 const message = await discord.channels.createMessage({

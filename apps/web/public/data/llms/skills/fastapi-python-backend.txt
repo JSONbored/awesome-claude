@@ -184,50 +184,6 @@ Claude will:
 7. Error handling: unified error format
 8. Testing: pytest fixtures for both APIs"
 ```
-```text
-"Build FastAPI e-commerce backend:
-1. Products: CRUD with search, filtering, pagination
-2. Cart: session-based with Redis, add/remove items, calculate totals
-3. Orders: create order, payment processing, order history
-4. Auth: JWT-based customer accounts with OAuth2
-5. Admin: protected endpoints for inventory management
-6. Webhooks: Stripe payment notifications
-7. Database: PostgreSQL with async SQLAlchemy
-8. Background tasks: order confirmation emails"
-```
-```text
-"Create FastAPI analytics dashboard backend:
-1. Ingest endpoint: accept events via POST with Pydantic validation
-2. Time-series storage: TimescaleDB for event data
-3. Aggregation endpoints: metrics by day/week/month
-4. WebSocket: real-time updates for live dashboard
-5. Caching: Redis for frequently-accessed metrics
-6. Rate limiting: per-API-key limits with middleware
-7. Export: CSV/JSON download of filtered data
-8. Admin API: user management, API key generation"
-```
-```text
-"Build multi-tenant SaaS API with FastAPI:
-1. Tenant isolation: subdomain-based routing
-2. Database: separate schemas per tenant in PostgreSQL
-3. Auth: tenant-scoped JWT tokens
-4. Billing: usage tracking, quota enforcement
-5. API versioning: /v1/, /v2/ with deprecation notices
-6. Rate limiting: per-tenant quotas
-7. Webhooks: tenant-configurable event notifications
-8. Admin: tenant provisioning, feature flags"
-```
-```text
-"Create FastAPI app with both REST and GraphQL:
-1. REST endpoints: CRUD operations with OpenAPI docs
-2. GraphQL: Strawberry integration for complex queries
-3. DataLoader: batching and caching for N+1 queries
-4. Auth: shared JWT validation across REST/GraphQL
-5. Subscriptions: WebSocket support for real-time data
-6. File uploads: multipart form data handling
-7. Error handling: unified error format
-8. Testing: pytest fixtures for both APIs"
-```
 
 ## Troubleshooting
 **Issue:** "Pydantic validation errors not showing custom messages"
