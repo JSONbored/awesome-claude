@@ -14,7 +14,7 @@
       "canonicalUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
-      "artifactHash": "1c33c6bfa9603200689294f24578e37d29cee1007497f5e584fe5a56a92b19cc"
+      "artifactHash": "b4bcd5ff003d7a629c5b7333d29f9fdfd3fce9af16439578ad0b9d2b570e957b"
     },
     {
       "key": "tools:authsome",
@@ -26,7 +26,7 @@
       "canonicalUrl": "https://heyclau.de/tools/authsome",
       "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome",
-      "artifactHash": "1d6106267fff780d699f498d9ef472ced52a2bd328a62422fc72c5f6624edd0e"
+      "artifactHash": "0b2e136f2ea2543aec20758216818c09ba4a8c92760948e113a09db0e55ce50f"
     },
     {
       "key": "hooks:retro-daily",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "63fa51df90dd910cbaaa68962c0dc1936405057a2d0648d8207bad7c92b8efb7"
+  "signature": "30af93e59b7b872499f41e9bec8041628b2c641090bdd072b4ab9ee0a38e0c64"
 }

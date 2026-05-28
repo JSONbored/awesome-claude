@@ -93,14 +93,6 @@ Connect to hundreds of applications through Workato's enterprise automation and 
   }
 }
 ```
-```json
-{
-  "workato": {
-    "url": "https://your-workspace.workato.com/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Sync Salesforce contacts to HubSpot
@@ -139,27 +131,6 @@ Ask Claude: "Trigger customer onboarding recipe"
 
 Execute a Workato recipe with input data
 
-```typescript
-// Execute Workato recipe
-const execution = await workato.recipes.execute({
-  recipe_id: "recipe-id",
-  input: {
-    data: "input-data",
-  },
-});
-```
-```plaintext
-Ask Claude: "Sync Salesforce contacts to HubSpot"
-```
-```plaintext
-Ask Claude: "Execute the invoice processing workflow"
-```
-```plaintext
-Ask Claude: "Check status of overnight data sync"
-```
-```plaintext
-Ask Claude: "Trigger customer onboarding recipe"
-```
 ```typescript
 // Execute Workato recipe
 const execution = await workato.recipes.execute({

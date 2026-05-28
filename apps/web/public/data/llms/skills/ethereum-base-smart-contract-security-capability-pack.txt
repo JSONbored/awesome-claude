@@ -72,13 +72,13 @@ This capability pack teaches agents to reason about Solidity security at protoco
 - Maintain emergency pathways (pause/kill-switch) with governance constraints.
 
 ## Troubleshooting
-**Issue:** Safe tests pass but adversarial behavior still possible  
+**Issue:** Safe tests pass but adversarial behavior still possible
 **Fix:** Expand fuzz + invariant suites and include cross-contract interaction scenarios.
 
-**Issue:** Upgrade path introduces hidden risk  
+**Issue:** Upgrade path introduces hidden risk
 **Fix:** Add storage-layout and permission diff checks to release gating.
 
-**Issue:** Incident response is untested  
+**Issue:** Incident response is untested
 **Fix:** Simulate emergency controls before mainnet launch.
 
 ## Output Contract

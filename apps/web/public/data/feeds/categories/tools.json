@@ -324,7 +324,10 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Linux, Windows",
       "cardDescription": "Local credential broker for AI agents.",
-      "installable": false,
+      "installable": true,
+      "installCommand": "uv tool install authsome",
+      "usageSnippet": "uv tool install authsome",
+      "copySnippet": "uv tool install authsome",
       "prerequisites": [
         "Python 3.13+ runtime on the host.",
         "Install authsome locally via `uv tool install authsome` (recommended), `pip install authsome`, or `uvx authsome@latest`. Package source is PyPI under the name `authsome`.",
@@ -347,7 +350,7 @@
         "First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.",
         "Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`."
       ],
-      "hasPrerequisites": false,
+      "hasPrerequisites": true,
       "hasTroubleshooting": false,
       "downloadUrl": "",
       "downloadTrust": null,

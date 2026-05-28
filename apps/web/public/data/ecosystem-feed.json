@@ -2113,7 +2113,7 @@
         "agent-auth",
         "agents"
       ],
-      "qualityScore": 83,
+      "qualityScore": 80,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -21589,5 +21589,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "aeac3b6e9a98acaa40abe95bafc17138545d78e5ec90dd935912c135cb68c357"
+  "signature": "ea0e18b78b5df32e2e257d63e06d6c2d1436f0718a4daaf7f9fff299fa8a0afd"
 }

@@ -61,13 +61,13 @@ This skill helps AI agents build practical Google Workspace automations using Ge
 5. Track execution outcomes and iterate prompts safely.
 
 ## Troubleshooting
-**Issue:** Output quality varies by run  
+**Issue:** Output quality varies by run
 **Fix:** Tighten schema constraints and add post-generation validation checks.
 
-**Issue:** Automation creates noisy or irrelevant docs  
+**Issue:** Automation creates noisy or irrelevant docs
 **Fix:** Refine source filtering and enforce clear acceptance criteria.
 
-**Issue:** Costs rise unexpectedly  
+**Issue:** Costs rise unexpectedly
 **Fix:** Add workload bucketing and caching for repeat context segments.
 
 ## Knowledge Freshness

@@ -1103,6 +1103,60 @@ Not applicable: this fixture does not access local data, credentials, telemetry,
     expect(formatSubmissionRiskMarkdown(risk)).toContain("Policy matrix");
   });
 
+  it("accepts setup script install commands when exact source evidence is provided", () => {
+    const report = validateSubmission(
+      issue(`### Name
+Setup Script Skill
+
+### Slug
+setup-script-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/source-skill/tree/main/skills/setup-script
+
+### Description
+Source-backed skill submission that installs through a setup script.
+
+### Card description
+Setup script skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Install command
+cd skills/setup-script && ./setup.sh
+
+### Retrieval sources
+https://github.com/example/source-skill/blob/main/skills/setup-script/setup.sh
+
+### Usage snippet
+Use the installed skill after reviewing setup.sh.
+
+### Safety notes
+Runs a local setup script from the reviewed source tree.
+
+### Privacy notes
+The setup script may read local shell environment during installation.`),
+    );
+
+    expect(report.ok).toBe(true);
+    expect(report.errors).not.toContain(
+      "Skills install_command references a local installer script; include the exact installer source URL in retrieval_sources or provide full_copyable_content",
+    );
+  });
+
   it("downgrades sensitive auto-imports when privacy notes are missing", () => {
     const submission = issue(`### Name
 Credential MCP

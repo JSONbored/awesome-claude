@@ -69,13 +69,13 @@ This skill operationalizes repeatable skill creation for OpenClaw and adjacent a
 - Require failure-path examples before marking production.
 
 ## Troubleshooting
-**Issue:** Skill works in one agent but not another  
+**Issue:** Skill works in one agent but not another
 **Fix:** include explicit adaptation notes per non-native platform.
 
-**Issue:** Skill gets stale quickly  
+**Issue:** Skill gets stale quickly
 **Fix:** enforce verifiedAt and retrievalSources refresh policy.
 
-**Issue:** Package integrity is unclear  
+**Issue:** Package integrity is unclear
 **Fix:** publish deterministic checksum and regenerate only on content changes.
 
 ## Output Contract

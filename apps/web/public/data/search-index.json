@@ -2492,7 +2492,7 @@
       "brandIconUrl": "/api/brand-assets/icon/authsome.ai",
       "brandAssetSource": "brandfetch",
       "dateAdded": "2026-05-25",
-      "installable": false,
+      "installable": true,
       "downloadUrl": "",
       "downloadTrust": null,
       "verificationStatus": "",

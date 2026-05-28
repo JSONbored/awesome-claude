@@ -92,14 +92,6 @@ Streamline your project management and documentation workflows by connecting Cla
   }
 }
 ```
-```json
-{
-  "atlassian": {
-    "url": "https://mcp.atlassian.com/v1/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Create a Jira bug for the login issue
@@ -138,28 +130,6 @@ Ask Claude: "Generate a sprint report"
 
 Create a new Jira issue with custom fields and metadata
 
-```typescript
-// Create Jira issue with custom fields
-const issue = await jira.issues.create({
-  project: { key: "PROJ" },
-  summary: "Fix authentication bug",
-  description: "Issue description",
-  issuetype: { name: "Bug" },
-  customfield_10001: "custom-value",
-});
-```
-```plaintext
-Ask Claude: "Create a Jira bug for the login issue"
-```
-```plaintext
-Ask Claude: "Update the API documentation in Confluence"
-```
-```plaintext
-Ask Claude: "Find all issues assigned to me"
-```
-```plaintext
-Ask Claude: "Generate a sprint report"
-```
 ```typescript
 // Create Jira issue with custom fields
 const issue = await jira.issues.create({

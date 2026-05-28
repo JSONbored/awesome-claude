@@ -185,46 +185,6 @@ Claude will:
 6. Recommend synchronous vs asynchronous replication
 7. Implement connection pooling strategy"
 ```
-```text
-"Perform a comprehensive PostgreSQL performance audit:
-1. Identify top 10 slowest queries from pg_stat_statements
-2. Analyze EXPLAIN plans for each
-3. Detect missing indexes with pg_stat_user_tables
-4. Find bloated tables needing VACUUM FULL
-5. Review configuration parameters
-6. Check for long-running transactions blocking others
-7. Provide prioritized optimization action plan"
-```
-```text
-"Optimize PostgreSQL for time-series data:
-1. 100M rows of sensor data per month
-2. Queries filter by device_id and time range
-3. Need 90-day retention with automated archival
-4. Implement declarative partitioning by month
-5. Add BRIN indexes on timestamp columns
-6. Configure autovacuum for partition management
-7. Create aggregate materialized views"
-```
-```text
-"Build high-performance full-text search:
-1. Search across title, description, tags fields
-2. Support phrase queries and ranking
-3. Handle 50M documents
-4. Sub-100ms query response time
-5. Use GIN indexes with tsvector
-6. Implement trigram similarity for typo tolerance
-7. Add weighted search across columns"
-```
-```text
-"Debug PostgreSQL replication lag:
-1. Replica is 30 seconds behind primary
-2. Analyze pg_stat_replication metrics
-3. Check for long-running queries on replica
-4. Identify write-heavy tables causing lag
-5. Tune max_wal_senders and wal_keep_size
-6. Recommend synchronous vs asynchronous replication
-7. Implement connection pooling strategy"
-```
 
 ## Troubleshooting
 **Issue:** Query still slow after adding index

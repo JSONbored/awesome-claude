@@ -35,7 +35,7 @@ Analyze passive income opportunities using live US Treasury rates, an AI-powered
 ## Overview
 Analyze passive income opportunities and optimize your yield strategy using live US Treasury rates, an AI-powered income optimizer, and a portfolio return calculator.
 
-## Content
+## Server Details
 YIELD INTELLIGENCE is a remote MCP server that gives Claude direct access to live US Treasury yield data and AI-powered passive income analysis. No local installation required — add it by URL and start optimizing immediately.
 
 ## Features
@@ -77,32 +77,8 @@ Open your Claude Desktop configuration file and add:
 ```
 
 Restart Claude Desktop after saving.
-```bash
-claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp
-claude mcp list
-```
-```json
-{
-  "mcpServers": {
-    "yield-intelligence": {
-      "url": "https://api.intuitek.ai/yield/mcp",
-      "transport": "sse"
-    }
-  }
-}
-```
 
 ## Configuration
-```json
-{
-  "mcpServers": {
-    "yield-intelligence": {
-      "url": "https://api.intuitek.ai/yield/mcp",
-      "transport": "sse"
-    }
-  }
-}
-```
 ```json
 {
   "mcpServers": {
@@ -141,18 +117,6 @@ Ask Claude: "Compare current 4-week, 13-week, and 26-week Treasury bill rates an
 
 ### Calculate projected income from a diversified allocation
 
-```plaintext
-Ask Claude: "Calculate projected annual income from a portfolio: 40% 2-year Treasury, 30% dividend stocks at 3.5%, 30% high-yield savings at 4.8%."
-```
-```plaintext
-Ask Claude: "What are the best passive income opportunities right now given current rates?"
-```
-```plaintext
-Ask Claude: "I have $50,000 to invest. Optimize my portfolio for a 5% annual yield with low risk."
-```
-```plaintext
-Ask Claude: "Compare current 4-week, 13-week, and 26-week Treasury bill rates and tell me which offers the best risk-adjusted yield."
-```
 ```plaintext
 Ask Claude: "Calculate projected annual income from a portfolio: 40% 2-year Treasury, 30% dividend stocks at 3.5%, 30% high-yield savings at 4.8%."
 ```

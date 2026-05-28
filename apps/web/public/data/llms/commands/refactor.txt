@@ -27,9 +27,6 @@ The `/refactor` command provides intelligent code refactoring capabilities with 
 ```
 /refactor [options] <file_or_selection>
 ```
-```text
-/refactor [options] <file_or_selection>
-```
 
 ## Options
 ### Refactoring Types
@@ -142,82 +139,6 @@ function getUserNames(users) {
   return users.filter((user) => user.active).map((user) => user.name);
 }
 ```
-```javascript
-// Before
-function processUsers(users) {
-  for (let user of users) {
-    if (user.email && user.email.includes("@")) {
-      user.isValid = true;
-      user.domain = user.email.split("@")[1];
-    } else {
-      user.isValid = false;
-      user.domain = null;
-    }
-  }
-}
-
-// After refactoring with --extract-function
-function validateEmail(email) {
-  return email && email.includes("@");
-}
-
-function extractDomain(email) {
-  return email.split("@")[1];
-}
-
-function processUsers(users) {
-  for (let user of users) {
-    if (validateEmail(user.email)) {
-      user.isValid = true;
-      user.domain = extractDomain(user.email);
-    } else {
-      user.isValid = false;
-      user.domain = null;
-    }
-  }
-}
-```
-```python
-# Before
-def calculate_discount(price, customer_type):
-    if customer_type == "premium":
-        return price * 0.2
-    elif customer_type == "regular":
-        return price * 0.1
-    else:
-        return 0
-
-# After refactoring with --extract-constant
-PREMIUM_DISCOUNT_RATE = 0.2
-REGULAR_DISCOUNT_RATE = 0.1
-PREMIUM_CUSTOMER_TYPE = "premium"
-REGULAR_CUSTOMER_TYPE = "regular"
-
-def calculate_discount(price, customer_type):
-    if customer_type == PREMIUM_CUSTOMER_TYPE:
-        return price * PREMIUM_DISCOUNT_RATE
-    elif customer_type == REGULAR_CUSTOMER_TYPE:
-        return price * REGULAR_DISCOUNT_RATE
-    else:
-        return 0
-```
-```javascript
-// Before (ES5 style)
-function getUserNames(users) {
-  var names = [];
-  for (var i = 0; i < users.length; i++) {
-    if (users[i].active) {
-      names.push(users[i].name);
-    }
-  }
-  return names;
-}
-
-// After refactoring with --modernize
-function getUserNames(users) {
-  return users.filter((user) => user.active).map((user) => user.name);
-}
-```
 
 ## Refactoring Patterns
 ### Design Patterns
@@ -275,21 +196,6 @@ function getUserNames(users) {
 ## Configuration
 Create a `.refactor.json` file in your project root:
 
-```json
-{
-  "rules": {
-    "maxFunctionLength": 20,
-    "maxParameterCount": 4,
-    "enforceConstantExtraction": true,
-    "modernizeFeatures": true
-  },
-  "exclude": ["node_modules/**", "dist/**", "*.test.js"],
-  "backup": {
-    "enabled": true,
-    "directory": ".refactor-backups"
-  }
-}
-```
 ```json
 {
   "rules": {

@@ -4,7 +4,7 @@
   "generatedAt": "2026-05-26T00:00:00.000Z",
   "count": 388,
   "summary": {
-    "averageScore": 82,
+    "averageScore": 81,
     "noExternalSourceCount": 101,
     "firstPartyEditorialCount": 99,
     "unprovenancedSourceCount": 1,
@@ -25,7 +25,7 @@
     "tools": {
       "count": 53,
       "averageScore": 79,
-      "warningCount": 0
+      "warningCount": 1
     },
     "skills": {
       "count": 68,
@@ -1188,10 +1188,10 @@
       "slug": "authsome",
       "title": "Authsome",
       "scores": {
-        "total": 83,
+        "total": 80,
         "usefulness": 100,
         "source": 75,
-        "copyability": 45,
+        "copyability": 30,
         "freshness": 100,
         "seo": 100
       },
@@ -1213,7 +1213,9 @@
           "https://authsome.ai"
         ]
       },
-      "warnings": []
+      "warnings": [
+        "No substantial copyable asset text."
+      ]
     },
     {
       "key": "hooks:auto-code-formatter-hook",

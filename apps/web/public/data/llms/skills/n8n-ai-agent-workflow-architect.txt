@@ -72,23 +72,15 @@ Produce:
 3. Add approval gates before irreversible actions.
 4. Add retries, timeouts, and dead-letter path.
 5. Define observability: run IDs, error labels, and incident routing.
-```text
-Use the n8n AI workflow architect skill for <business process>.
-Produce:
-1) node-by-node workflow design,
-2) failure handling policy,
-3) human approval criteria,
-4) deployment checklist.
-```
 
 ## Troubleshooting
-**Issue:** Workflow loops or duplicates records  
+**Issue:** Workflow loops or duplicates records
 **Fix:** Enforce idempotency keys and persistence checks before write operations.
 
-**Issue:** AI node output is inconsistent  
+**Issue:** AI node output is inconsistent
 **Fix:** Use strict output schemas and validation before branching decisions.
 
-**Issue:** Failures are discovered too late  
+**Issue:** Failures are discovered too late
 **Fix:** Add per-path alerts for retry exhaustion and dead-letter queue growth.
 
 ## Knowledge Freshness

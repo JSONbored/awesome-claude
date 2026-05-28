@@ -32,9 +32,9 @@ Master the migration from ChatGPT to Claude in this comprehensive tutorial. By c
 
 > **Tutorial Requirements**
 >
-> **Prerequisites:** Basic API knowledge, OpenAI experience  
-> **Time Required:** 30 minutes active work  
-> **Tools Needed:** Anthropic API key, Python/JavaScript  
+> **Prerequisites:** Basic API knowledge, OpenAI experience
+> **Time Required:** 30 minutes active work
+> **Tools Needed:** Anthropic API key, Python/JavaScript
 > **Outcome:** Working migration system with optimized prompts
 
 ## What You'll Learn
@@ -60,13 +60,13 @@ Understanding these concepts ensures you can adapt this tutorial to your specifi
 ## Troubleshooting Guide
 > **Common Issues and Solutions**
 >
-> **Issue 1: ANTHROPIC_API_KEY not found error**  
+> **Issue 1: ANTHROPIC_API_KEY not found error**
 > **Solution:** Set environment variable correctly - This fixes authentication failures and prevents API errors.
 >
 > **Issue 2: Token count mismatch**
 > **Solution:** Account for tokenizer differences between models.
 >
-> **Issue 3: Rate limit errors (50 RPM limit)**  
+> **Issue 3: Rate limit errors (50 RPM limit)**
 > **Solution:** Implement exponential backoff - Works with Tier 1 limits and maintains reliability.
 
 ## Advanced Techniques

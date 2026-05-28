@@ -713,7 +713,7 @@ function installCommandReferencesLocalScript(value) {
 }
 
 function hasInstallerSourceReference(fields = {}) {
-  return [
+  const combined = [
     fields.github_url,
     fields.docs_url,
     fields.download_url,
@@ -721,8 +721,8 @@ function hasInstallerSourceReference(fields = {}) {
   ]
     .map(normalizeValue)
     .join("\n")
-    .toLowerCase()
-    .includes("install.");
+    .toLowerCase();
+  return /\b(?:install|setup)\.(?:sh|bash|zsh|ps1)\b/.test(combined);
 }
 
 function normalizeDisclosureNoteForComparison(value) {
