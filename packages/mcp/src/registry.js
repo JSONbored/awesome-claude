@@ -1163,7 +1163,13 @@ export async function getRegistryStats(args = {}, options = {}) {
 export async function getClientSetup(args = {}) {
   let endpointUrl;
   try {
-    endpointUrl = normalizeEndpointUrl(args.endpointUrl || DEFAULT_REMOTE_MCP_URL).toString();
+    const rawEndpointUrl = Object.prototype.hasOwnProperty.call(
+      args,
+      "endpointUrl",
+    )
+      ? args.endpointUrl
+      : DEFAULT_REMOTE_MCP_URL;
+    endpointUrl = normalizeEndpointUrl(rawEndpointUrl).toString();
   } catch (error) {
     return invalid(error?.message || "Invalid endpoint URL.");
   }
