@@ -36,6 +36,11 @@ describe("getSectionVariant", () => {
     expect(getSectionVariant("Overview")).toBe("default");
     expect(getSectionVariant("How it works")).toBe("default");
   });
+
+  it("does not match keywords glued inside longer words", () => {
+    expect(getSectionVariant("Uninstall")).toBe("default");
+    expect(getSectionVariant("Reinstall steps")).toBe("default");
+  });
 });
 
 describe("isEssentialVariant", () => {

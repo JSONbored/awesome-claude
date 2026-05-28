@@ -1,3 +1,7 @@
+// The variants getSectionVariant can classify a title into. Downstream helpers
+// take `variant: string` rather than this union because a section's variant can
+// also come from an embedded `<!-- section type: ... -->` comment (e.g.
+// "quick_reference", "related_content"), which getSectionVariant never emits.
 export type SectionVariant =
   | "prerequisites"
   | "warning"
@@ -35,15 +39,28 @@ const TROUBLESHOOTING_KEYWORDS = [
   "faq",
 ];
 
+// Match keywords only at a word boundary so glued prefixes like "uninstall" or
+// "insecurity" are not misclassified. A leading boundary (not a trailing one)
+// is used so inflections such as "installation" and "prerequisites" still match.
+function compileKeywords(keywords: string[]): RegExp {
+  const escaped = keywords.map((keyword) =>
+    keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  );
+  return new RegExp(`\\b(?:${escaped.join("|")})`, "i");
+}
+
+const WARNING_PATTERN = compileKeywords(WARNING_KEYWORDS);
+const PREREQUISITE_PATTERN = compileKeywords(PREREQUISITE_KEYWORDS);
+const TROUBLESHOOTING_PATTERN = compileKeywords(TROUBLESHOOTING_KEYWORDS);
+
 export function getSectionVariant(title: string): SectionVariant {
-  const normalized = title.toLowerCase();
-  if (WARNING_KEYWORDS.some((keyword) => normalized.includes(keyword))) {
+  if (WARNING_PATTERN.test(title)) {
     return "warning";
   }
-  if (PREREQUISITE_KEYWORDS.some((keyword) => normalized.includes(keyword))) {
+  if (PREREQUISITE_PATTERN.test(title)) {
     return "prerequisites";
   }
-  if (TROUBLESHOOTING_KEYWORDS.some((keyword) => normalized.includes(keyword))) {
+  if (TROUBLESHOOTING_PATTERN.test(title)) {
     return "troubleshooting";
   }
   return "default";
