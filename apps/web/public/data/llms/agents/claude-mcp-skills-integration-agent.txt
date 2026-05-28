@@ -118,53 +118,6 @@ Simon Willison's October 16, 2025 article highlighted: **"Claude Skills maybe bi
 - Access enterprise tools behind authentication
 - Centralized tool versioning and updates
 - Lower client-side resource usage
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/username/projects"
-      ]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "YOUR_GITHUB_TOKEN"
-      }
-    },
-    "postgres": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-postgres",
-        "postgresql://localhost/mydb"
-      ]
-    }
-  }
-}
-```
-```json
-{
-  "mcpServers": {
-    "company-tools": {
-      "url": "https://mcp.company.com/api",
-      "apiKey": "${COMPANY_MCP_KEY}",
-      "transport": "http"
-    },
-    "shared-database": {
-      "url": "https://db-mcp.internal.company.com",
-      "transport": "https",
-      "headers": {
-        "Authorization": "Bearer ${DB_MCP_TOKEN}"
-      }
-    }
-  }
-}
-```
 
 ## Tool Permissions and Security
 ### Permission Levels
@@ -207,22 +160,6 @@ Simon Willison's October 16, 2025 article highlighted: **"Claude Skills maybe bi
 - File deletion tools
 - API calls that modify state
 - Payment/billing integrations
-```json
-{
-  "mcpServers": {
-    "production-db": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres", "${DB_URL}"],
-      "permissions": {
-        "allowedOperations": ["read"],
-        "blockedOperations": ["write", "delete", "drop"]
-      }
-    }
-  },
-  "autoApproveTools": [],
-  "alwaysPrompt": true
-}
-```
 
 ## Multi-MCP Workflow Orchestration
 ### Scenario: Full-Stack Development Workflow
@@ -273,40 +210,6 @@ Claude prompts:
 
 **Configure default preference:**
 
-```json
-{
-  "toolPreferences": {
-    "search-code": "local-filesystem-mcp",
-    "create-issue": "linear-mcp"
-  }
-}
-```
-```markdown
-User: "Create a new API endpoint for user registration, add database migration, create Linear task, and notify team on Slack."
-
-Claude orchestrates:
-
-1. [filesystem MCP] Read existing API routes
-2. [filesystem MCP] Write new endpoint: /api/users/register
-3. [postgres MCP] Generate migration for users table
-4. [filesystem MCP] Write migration file
-5. [linear MCP] Create task: "Review user registration endpoint"
-6. [github MCP] Create PR with changes
-7. [slack MCP] Post: "User registration PR ready for review: [link]"
-```
-```bash
-# Example: 2 MCP servers both offer "search-code" tool
-User: "Search for authentication logic"
-
-Claude prompts:
-┌─────────────────────────────────────────┐
-│ Multiple tools available for search:    │
-│ 1. github-mcp: search-code              │
-│ 2. local-filesystem-mcp: search-code    │
-│                                         │
-│ Which tool should I use?                │
-└─────────────────────────────────────────┘
-```
 ```json
 {
   "toolPreferences": {
@@ -398,62 +301,6 @@ npm install -g @modelcontextprotocol/server-github
   }
 }
 ```
-```bash
-# List all official servers
-npm search @modelcontextprotocol/server-
-
-# Common servers:
-@modelcontextprotocol/server-filesystem
-@modelcontextprotocol/server-github
-@modelcontextprotocol/server-postgres
-@modelcontextprotocol/server-slack
-@modelcontextprotocol/server-google-drive
-@modelcontextprotocol/server-memory
-```
-```bash
-# Search GitHub for MCP servers
-gh search repos mcp-server --language typescript --sort stars
-
-# Example community servers:
-- linear-mcp-server (Linear integration)
-- notion-mcp-server (Notion API)
-- shopify-mcp-server (E-commerce)
-```
-```json
-{
-  "mcpServers": {
-    "server-name": {
-      "command": "npx",
-      "args": ["-y", "package-name", "...args"]
-    }
-  }
-}
-```
-```bash
-npm install -g @modelcontextprotocol/server-github
-```
-```json
-{
-  "mcpServers": {
-    "github": {
-      "command": "mcp-server-github",
-      "env": {
-        "GITHUB_TOKEN": "${GITHUB_TOKEN}"
-      }
-    }
-  }
-}
-```
-```json
-{
-  "mcpServers": {
-    "custom-tools": {
-      "command": "node",
-      "args": ["/path/to/custom-mcp-server.js"]
-    }
-  }
-}
-```
 
 ## Slash Command Integration
 ### Creating MCP-Powered Slash Commands
@@ -487,31 +334,6 @@ After creating, report the issue URL.
 
 **Pattern:** Create slash commands that abstract MCP complexity.
 
-```markdown
-# .claude/commands/deploy-to-staging.md
-
-Use the following MCP tools to deploy to staging:
-
-1. [github-mcp] Get latest commit SHA from main branch
-2. [vercel-mcp] Trigger deployment to staging with SHA
-3. [slack-mcp] Notify #deployments channel: "Staging deployed: {SHA}"
-
-Wait for deployment to complete (check status every 10s).
-Report final deployment URL.
-```
-```markdown
-Use the Linear MCP server to create a new issue with the following details:
-
-Title: {{args}}
-Team: Engineering
-Priority: Medium
-Labels: from-claude
-
-After creating, report the issue URL.
-```
-```bash
-/create-linear-issue Fix authentication bug in login flow
-```
 ```markdown
 # .claude/commands/deploy-to-staging.md
 
@@ -571,35 +393,6 @@ export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
 - Check `autoApproveTools` configuration
 - Review `blockedTools` list
 - Ensure MCP server has necessary OS permissions (file access, network)
-```bash
-# Check MCP server logs
-tail -f ~/.config/claude/logs/mcp.log
-
-# Test server manually
-npx -y @modelcontextprotocol/server-github --help
-
-# Verify dependencies installed
-which npx
-node --version
-```
-```json
-// ❌ Don't hardcode secrets
-{
-  "env": {
-    "API_KEY": "YOUR_API_KEY"
-  }
-}
-
-// ✅ Use environment variable references
-{
-  "env": {
-    "API_KEY": "${GITHUB_TOKEN}"
-  }
-}
-```
-```bash
-export GITHUB_TOKEN=YOUR_GITHUB_TOKEN
-```
 
 ## Best Practices
 1. **Start Small**: Add one MCP server at a time, test thoroughly
@@ -640,40 +433,6 @@ server.start();
 
 **Deploy as MCP server:**
 
-```json
-{
-  "mcpServers": {
-    "custom-analysis": {
-      "command": "node",
-      "args": ["/path/to/custom-mcp-server.js"]
-    }
-  }
-}
-```
-```typescript
-import { MCPServer } from "@modelcontextprotocol/sdk";
-
-const server = new MCPServer({
-  name: "custom-tools",
-  version: "1.0.0",
-});
-
-server.tool({
-  name: "analyze-codebase",
-  description: "Run custom static analysis on codebase",
-  parameters: {
-    path: { type: "string", required: true },
-    depth: { type: "number", default: 3 },
-  },
-  handler: async ({ path, depth }) => {
-    // Custom logic here
-    const results = await runAnalysis(path, depth);
-    return { success: true, data: results };
-  },
-});
-
-server.start();
-```
 ```json
 {
   "mcpServers": {

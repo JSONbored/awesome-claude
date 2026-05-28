@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "raycast-index",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 388,
   "entries": [
     {
       "category": "commands",
@@ -1447,6 +1447,56 @@
           "verifiedAt": "2025-10-15"
         }
       ]
+    },
+    {
+      "category": "tools",
+      "slug": "authsome",
+      "title": "Authsome",
+      "description": "Local credential broker for AI agents.",
+      "tags": [
+        "credentials",
+        "agent-auth",
+        "agents"
+      ],
+      "author": "Agentr",
+      "submittedBy": "zriyansh",
+      "submittedByUrl": "https://github.com/zriyansh",
+      "brandName": "Authsome",
+      "brandDomain": "authsome.ai",
+      "brandIconUrl": "/api/brand-assets/icon/authsome.ai",
+      "brandAssetSource": "brandfetch",
+      "installCommand": "uv tool install authsome",
+      "configSnippet": "",
+      "safetyNotes": [
+        "Installs and runs a local daemon plus a local HTTPS proxy (`authsome run`) on loopback (`127.0.0.1`). Both processes are long-running and intercept outbound HTTPS to matched provider hostnames.",
+        "The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies. Agents running behind it will perform live, authenticated API calls against the provider (send emails, post to Slack, charge Stripe, write to GitHub, etc.) using the user's real credentials.",
+        "The daemon performs background OAuth2 token refresh by contacting each provider's token endpoint. Refresh failures or network outages can leave a provider in a stale state until `authsome login <provider>` is re-run.",
+        "Network access is required for OAuth flows, background token refresh, and the agent's provider API calls. The proxy itself only listens on loopback; outbound provider traffic leaves the host normally.",
+        "Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; verify the package source on PyPI (`authsome`) and the upstream repository (`agentrhq/authsome`) before installing."
+      ],
+      "privacyNotes": [
+        "Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service.",
+        "When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them.",
+        "OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint.",
+        "First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.",
+        "Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`."
+      ],
+      "copyText": "uv tool install authsome",
+      "copyTextLength": 24,
+      "copyTextTruncated": false,
+      "detailMarkdown": "# Authsome\n\nLocal credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Installs and runs a local daemon plus a local HTTPS proxy (`authsome run`) on loopback (`127.0.0.1`). Both processes are long-running and intercept outbound HTTPS to matched provider hostnames.\n- The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies. Agents running behind it will perform live, authenticated API calls against the provider (send emails, post to Slack, charge Stripe, write to GitHub, etc.) using the user's real credentials.\n- The daemon performs background OAuth2 token refresh by contacting each provider's token endpoint. Refresh failures or network outages can leave a provider in a stale state until `authsome login <provider>` is re-run.\n- Network access is required for OAuth flows, background token refresh, and the agent's provider API calls. The proxy itself only listens on loopback; outbound provider traffic leaves the host normally.\n- Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; verify the package source on PyPI (`authsome`) and the upstream repository (`agentrhq/authsome`) before installing.\n\n## Privacy notes\n- Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service.\n- When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them.\n- OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint.\n- First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.\n- Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.\n\n## Install\n```bash\nuv tool install authsome\n```\n\n## Usage\nuv tool install authsome",
+      "detailUrl": "/data/raycast/tools/authsome.json",
+      "webUrl": "https://heyclau.de/tools/authsome",
+      "canonicalUrl": "https://heyclau.de/tools/authsome",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome",
+      "seoTitle": "Authsome local credential broker for AI agents",
+      "seoDescription": "Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTPS proxy that injects cr...",
+      "repoUrl": "https://github.com/agentrhq/authsome",
+      "documentationUrl": "https://authsome.ai/docs",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platformCompatibility": []
     },
     {
       "category": "hooks",
@@ -15364,6 +15414,50 @@
       "seoDescription": "Use Xquik with Claude for tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated X write actions through MCP.",
       "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
       "documentationUrl": "https://docs.xquik.com/mcp/overview",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platformCompatibility": []
+    },
+    {
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "description": "Live Treasury rates, AI yield optimization, and portfolio calculator. Remote MCP — connect by URL, no API key required.",
+      "tags": [
+        "finance",
+        "yield",
+        "passive-income",
+        "treasury",
+        "portfolio",
+        "investment",
+        "remote-mcp"
+      ],
+      "author": "thebrierfox",
+      "submittedBy": "thebrierfox",
+      "submittedByUrl": "https://github.com/thebrierfox",
+      "submittedAt": "2026-05-26T04:27:00.000Z",
+      "claimStatus": "unclaimed",
+      "installCommand": "claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list",
+      "configSnippet": "{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}",
+      "safetyNotes": [
+        "Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required."
+      ],
+      "privacyNotes": [
+        "Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored."
+      ],
+      "copyText": "Install:\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list\n\nConfig:\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}\n\nUsage:\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}",
+      "copyTextLength": 398,
+      "copyTextTruncated": false,
+      "detailMarkdown": "# YIELD INTELLIGENCE MCP — Passive Income Analysis\n\nAnalyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.\n\n## Privacy notes\n- Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.\n\n## Install\n```bash\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list\n```\n\n## Config\n```json\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}\n```\n\n## Usage\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp",
+      "detailUrl": "/data/raycast/mcp/yield-intelligence-mcp.json",
+      "webUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "canonicalUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
+      "seoTitle": "YIELD INTELLIGENCE MCP — Passive Income & Treasury Rate Analysis fo...",
+      "seoDescription": "Remote MCP server for passive income analysis: live US Treasury rates, AI-powered yield optimization, and portfolio return calculator.",
+      "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
+      "documentationUrl": "https://github.com/thebrierfox/intuitek-ace",
       "downloadTrust": null,
       "verificationStatus": "",
       "platformCompatibility": []

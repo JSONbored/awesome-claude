@@ -92,14 +92,6 @@ Streamline your Reddit research and analysis by connecting Claude to Reddit. Bro
   }
 }
 ```
-```json
-{
-  "reddit": {
-    "args": ["reddit-mcp-buddy"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### What's trending in r/technology today?
@@ -162,35 +154,6 @@ Ask Claude: "Show me the comments on this Reddit URL"
 
 Create a new Reddit post in a subreddit
 
-```typescript
-// Create Reddit post
-const post = await reddit.subreddit("subreddit").submit({
-  title: "Post Title",
-  text: "Post content",
-  kind: "self",
-});
-```
-```plaintext
-Ask Claude: "What's trending in r/technology today?"
-```
-```plaintext
-Ask Claude: "Search for discussions about ChatGPT in r/programming"
-```
-```plaintext
-Ask Claude: "Get the top posts from r/MachineLearning this week"
-```
-```plaintext
-Ask Claude: "Find the most discussed topics in r/stocks"
-```
-```plaintext
-Ask Claude: "What is trending on reddit?"
-```
-```plaintext
-Ask Claude: "Search for discussions about AI"
-```
-```plaintext
-Ask Claude: "Show me the comments on this Reddit URL"
-```
 ```typescript
 // Create Reddit post
 const post = await reddit.subreddit("subreddit").submit({

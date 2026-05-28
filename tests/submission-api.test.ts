@@ -24,6 +24,10 @@ function validFields(overrides: Record<string, string> = {}) {
     install_command: "npx -y direct-submit-api-asset",
     usage_snippet:
       "claude mcp add direct-submit-api-asset -- npx -y direct-submit-api-asset",
+    safety_notes:
+      "Installs and runs an MCP server process from the submitted package.",
+    privacy_notes:
+      "Not applicable: this fixture does not access user files or credentials.",
     ...overrides,
   };
 }
@@ -293,6 +297,10 @@ describe("website submission API", () => {
           docs_url: "https://example.com/pricing",
           install_command: "Use the hosted dashboard at https://example.com",
           usage_snippet: "Create an account and use the hosted dashboard.",
+          safety_notes:
+            "Hosted dashboard account actions happen in the third-party service.",
+          privacy_notes:
+            "Sends account and workspace data to the hosted third-party service.",
           description:
             "Commercial AI SaaS platform with pricing plans, subscription tiers, and a hosted product signup flow.",
           card_description: "Commercial AI SaaS platform.",

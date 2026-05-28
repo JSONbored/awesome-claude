@@ -69,23 +69,15 @@ Generate:
 3. Run baseline and candidate under identical conditions.
 4. Compute deltas and classify regressions by impact.
 5. Block merge when thresholds fail; output remediation actions.
-```text
-Apply the agent evals regression gate skill to this workflow.
-Generate:
-1) Eval set (minimum 30 cases),
-2) Rubric and scoring model,
-3) Baseline vs candidate score delta report,
-4) Merge decision with blocking issues.
-```
 
 ## Troubleshooting
-**Issue:** Scores fluctuate heavily between runs  
+**Issue:** Scores fluctuate heavily between runs
 **Fix:** Reduce nondeterminism (temperature controls, fixed seeds where possible, stable tool mocks).
 
-**Issue:** Eval passes but production still degrades  
+**Issue:** Eval passes but production still degrades
 **Fix:** Expand dataset with real production transcripts and failure exemplars.
 
-**Issue:** Teams disagree on pass criteria  
+**Issue:** Teams disagree on pass criteria
 **Fix:** Move rubric to explicit weighted dimensions and threshold contracts.
 
 ## Knowledge Freshness

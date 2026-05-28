@@ -193,50 +193,6 @@ Claude will:
 7. Version history with temporal tables
 8. Edge Function for embedding generation"
 ```
-```text
-"Build a SaaS backend with Supabase:
-1. Authentication with email, Google, GitHub OAuth
-2. Organizations and team member management
-3. Role-based access control (owner, admin, member)
-4. Real-time activity feed
-5. File uploads to Storage with access control
-6. Billing integration with Stripe webhooks
-7. Edge Functions for business logic
-8. pgvector for AI-powered search"
-```
-```text
-"Create social media backend:
-1. User profiles with avatars in Storage
-2. Posts with likes, comments, shares
-3. Real-time notifications
-4. Follow/unfollow relationships
-5. Feed algorithm with RLS
-6. Direct messaging with presence
-7. Content moderation Edge Function
-8. Full-text search with PostgreSQL"
-```
-```text
-"Build IoT data collection system:
-1. Device registration and authentication
-2. Time-series data table with partitioning
-3. Real-time sensor data streaming
-4. Edge Functions for data aggregation
-5. Alert system for threshold violations
-6. Historical data analytics queries
-7. Dashboard real-time updates
-8. Export to CSV with Storage"
-```
-```text
-"Create knowledge base with AI:
-1. Document storage with chunking
-2. Generate embeddings with OpenAI
-3. Store vectors in pgvector
-4. Semantic search with similarity
-5. Full-text search fallback
-6. Real-time collaborative editing
-7. Version history with temporal tables
-8. Edge Function for embedding generation"
-```
 
 ## Troubleshooting
 **Issue:** RLS policies blocking valid queries

@@ -78,18 +78,6 @@ Deliverables:
 3. Apply smallest change set that targets top bottlenecks only.
 4. Re-run benchmarks and compare deltas.
 5. If gains are below threshold, stop and report diminishing returns.
-```text
-Apply the PageSpeed Insights optimizer skill to <route>.
-Constraints:
-1) No UI/UX redesign or feature removal.
-2) Preserve accessibility and SEO behavior.
-3) Prioritize highest-impact, lowest-risk fixes first.
-Deliverables:
-- Baseline metrics table (mobile + desktop)
-- Ranked bottlenecks and root causes
-- Minimal patch plan
-- Post-change metrics with deltas
-```
 
 ## Optimization Playbook
 ### 1) LCP and above-the-fold path
@@ -123,16 +111,16 @@ Deliverables:
 - Validate cache behavior after deploy.
 
 ## Troubleshooting
-**Issue:** Score regresses after adding "helpful" scripts  
+**Issue:** Score regresses after adding "helpful" scripts
 **Fix:** Prioritize first-view rendering; move non-critical scripts to idle/lazy load.
 
-**Issue:** LCP remains high despite JS reductions  
+**Issue:** LCP remains high despite JS reductions
 **Fix:** Re-check the actual LCP element, image/font loading path, and render delay.
 
-**Issue:** Mobile score volatile between runs  
+**Issue:** Mobile score volatile between runs
 **Fix:** Use median over multiple runs and compare stable deltas, not single spikes.
 
-**Issue:** Good lab scores but poor field data  
+**Issue:** Good lab scores but poor field data
 **Fix:** Track CrUX trends and verify real-user bottlenecks (device/network mix, third-party load).
 
 ## Notes for This Repository

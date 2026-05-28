@@ -86,14 +86,6 @@ Connect Claude to Asana for comprehensive project management and team collaborat
   }
 }
 ```
-```json
-{
-  "asana": {
-    "url": "https://mcp.asana.com/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Create a task for the new feature
@@ -147,38 +139,6 @@ const task = await asana.createTask({
 
 Create a new Asana task with project assignment, dependencies, and due date
 
-```typescript
-// Create Asana task with dependencies
-const task = await asana.createTask({
-  workspace: "1234567890",
-  name: "Complete project documentation",
-  projects: ["9876543210"],
-  dependencies: ["task-id-1", "task-id-2"],
-  due_on: "2025-12-31",
-});
-```
-```plaintext
-Ask Claude: "Create a task for the new feature"
-```
-```plaintext
-Ask Claude: "Show all tasks due this week"
-```
-```plaintext
-Ask Claude: "Update project status to on-track"
-```
-```plaintext
-Ask Claude: "Assign task to team member"
-```
-```typescript
-// Create Asana task with dependencies
-const task = await asana.createTask({
-  workspace: "1234567890",
-  name: "Complete project documentation",
-  projects: ["9876543210"],
-  dependencies: ["task-id-1", "task-id-2"],
-  due_on: "2025-12-31",
-});
-```
 ```typescript
 // Create Asana task with dependencies
 const task = await asana.createTask({

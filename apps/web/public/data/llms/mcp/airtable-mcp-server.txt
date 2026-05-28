@@ -89,17 +89,6 @@ Connect Claude to Airtable databases for seamless data management and automation
   }
 }
 ```
-```json
-{
-  "airtable": {
-    "env": {
-      "AIRTABLE_API_KEY": "${AIRTABLE_API_KEY}"
-    },
-    "args": ["-y", "airtable-mcp-server"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### Read all records from the Projects table
@@ -138,27 +127,6 @@ Ask Claude: "Filter records where status='active' AND priority='high'"
 
 Query Airtable records using formula-based filtering to retrieve specific data subsets
 
-```typescript
-// Query Airtable records with formula filtering
-const records = await airtable.query({
-  baseId: "appXXXXXXXXXXXXXX",
-  table: "Projects",
-  filterByFormula: "{Status} = 'Active'",
-  maxRecords: 100,
-});
-```
-```plaintext
-Ask Claude: "Read all records from the Projects table"
-```
-```plaintext
-Ask Claude: "Add a new contact with these details to Airtable"
-```
-```plaintext
-Ask Claude: "Update the status field for all overdue tasks"
-```
-```plaintext
-Ask Claude: "Filter records where status='active' AND priority='high'"
-```
 ```typescript
 // Query Airtable records with formula filtering
 const records = await airtable.query({

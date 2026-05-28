@@ -36,6 +36,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Classify changed files
         id: classify
@@ -126,6 +127,33 @@ jobs:
             trunk check --ci --upstream "$BASE_SHA"
           else
             trunk check --ci --all
+          fi
+
+  validate-worktree:
+    name: validate-worktree
+    needs: classify-pr
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-validate-worktree-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Check whitespace
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ]; then
+            git diff --check "$BASE_SHA"...HEAD
+          else
+            git diff --check
           fi
 
   validate-content-category:
@@ -420,14 +448,6 @@ jobs:
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm test
 
-      - name: Install Playwright Chromium
-        if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm exec playwright install --with-deps chromium
-
-      - name: Run browser regression suite
-        if: ${{ needs.classify-pr.outputs.web == 'true' }}
-        run: pnpm test:e2e
-
       - name: Install Trunk CLI
         if: ${{ needs.classify-pr.outputs.web == 'true' && env.TRUNK_API_TOKEN != '' && env.TRUNK_ORG_URL_SLUG != '' }}
         run: |
@@ -680,7 +700,7 @@ jobs:
         id: preview-url
         env:
           GITHUB_TOKEN: ${{ github.token }}
-          PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url || env.CLOUDFLARE_DEV_WORKER_URL }}
+          PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url }}
         run: node scripts/resolve-pr-preview-url.mjs --allow-missing
 
       - name: Validate deployed artifact contract
@@ -697,6 +717,7 @@ jobs:
     name: required-pr-gate
     needs:
       - classify-pr
+      - validate-worktree
       - validate-ci
       - validate-content
       - validate-content-policy

@@ -104,59 +104,6 @@ Agent:
 2. Uses MCP tool: github.create_workflow_file() (action)
 3. Result: Expert-designed workflow + automated creation
 ```
-```markdown
-## Traditional Approach
-
-**Problem:** Generic agent with everything in system prompt
-
-System Prompt (10,000 tokens):
-"You are an expert in:
-
-- React development (2000 tokens of knowledge)
-- PostgreSQL optimization (2000 tokens)
-- AWS deployment (2000 tokens)
-- Security best practices (2000 tokens)
-- Performance testing (2000 tokens)"
-
-**Issues:**
-
-- Massive context usage for every request
-- Can't specialize deeply in any domain
-- Knowledge becomes stale (hardcoded in prompt)
-- No reusability across agents
-```
-```markdown
-## Skills-Based Approach
-
-**Solution:** Modular skills loaded on-demand
-
-Agent System Prompt (500 tokens):
-"You are a full-stack development agent. Load skills as needed."
-
-Skill Files (loaded dynamically):
-├─ .skills/react-19-expert.md (2000 tokens)
-├─ .skills/postgres-performance.md (2000 tokens)
-├─ .skills/aws-serverless-deploy.md (2000 tokens)
-├─ .skills/owasp-security-audit.md (2000 tokens)
-└─ .skills/load-testing-artillery.md (2000 tokens)
-
-**Benefits:**
-
-- Only load relevant skill for current task
-- Deep domain expertise per skill
-- Update skills independently
-- Share skills across multiple agents
-- Version control for knowledge
-```
-```markdown
-Task: "Set up CI/CD for React app"
-
-Agent:
-
-1. Loads skill: .skills/github-actions-expert.md (knowledge)
-2. Uses MCP tool: github.create_workflow_file() (action)
-3. Result: Expert-designed workflow + automated creation
-```
 
 ## Creating Agent Skills
 ### Skill File Structure
@@ -346,148 +293,6 @@ function Dashboard() {
   );
 }
 ```
-```markdown
-# Skill Name: React 19 Performance Expert
-
-**Domain:** Frontend development - React 19 optimization
-**Version:** 1.0.0
-**Last Updated:** 2025-10-25
-**Prerequisites:** React 19.0+, Node.js 20+
-
-## Expertise Areas
-
-- React 19 concurrent features and Suspense optimization
-- Server Components performance patterns
-- Code splitting and lazy loading strategies
-- Rendering optimization (memo, useMemo, useCallback)
-- Profiling with React DevTools and Chrome Performance tab
-
-## Procedural Knowledge
-
-### 1. Identifying Performance Bottlenecks
-
-**Symptoms:**
-
-- Slow component re-renders (> 16ms frame time)
-- Janky scrolling or animations
-- High CPU usage in React DevTools profiler
-
-**Diagnosis Process:**
-
-1. **Open React DevTools Profiler**
-```
-```typescript
-// ❌ Slow: Rendering 10,000 items
-function UserList({ users }) {
-  return (
-    <div>
-      {users.map(user => <UserCard key={user.id} user={user} />)}
-    </div>
-  );
-}
-
-// ✅ Fast: Only render visible items
-import { FixedSizeList } from 'react-window';
-
-function UserList({ users }) {
-  const Row = ({ index, style }) => (
-    <div style={style}>
-      <UserCard user={users[index]} />
-    </div>
-  );
-
-  return (
-    <FixedSizeList
-      height={600}
-      itemCount={users.length}
-      itemSize={80}
-      width="100%"
-    >
-      {Row}
-    </FixedSizeList>
-  );
-}
-```
-```typescript
-// ❌ Re-renders on every parent render
-function ExpensiveComponent({ data }) {
-  const processed = expensiveCalculation(data);
-  return <div>{processed}</div>;
-}
-
-// ✅ Only re-calculates when data changes
-import { useMemo } from 'react';
-
-function ExpensiveComponent({ data }) {
-  const processed = useMemo(
-    () => expensiveCalculation(data),
-    [data]
-  );
-  return <div>{processed}</div>;
-}
-```
-```typescript
-// ❌ Bundle everything upfront (3MB initial load)
-import AdminDashboard from './AdminDashboard';
-import UserSettings from './UserSettings';
-import Reports from './Reports';
-
-// ✅ Lazy load routes (300KB initial, rest on-demand)
-import { lazy, Suspense } from 'react';
-
-const AdminDashboard = lazy(() => import('./AdminDashboard'));
-const UserSettings = lazy(() => import('./UserSettings'));
-const Reports = lazy(() => import('./Reports'));
-
-function App() {
-  return (
-    <Suspense fallback={<LoadingSpinner />}>
-      <Routes>
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/settings" element={<UserSettings />} />
-        <Route path="/reports" element={<Reports />} />
-      </Routes>
-    </Suspense>
-  );
-}
-```
-```typescript
-// app/products/page.tsx (Server Component)
-export default async function ProductsPage() {
-  // Runs on server - no client JS sent
-  const products = await db.query('SELECT * FROM products');
-
-  return (
-    <div>
-      <h1>Products</h1>
-      {products.map(product => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </div>
-  );
-}
-```
-```typescript
-import { Suspense } from 'react';
-
-function Dashboard() {
-  return (
-    <div>
-      <h1>Dashboard</h1>
-
-      {/* Load analytics independently */}
-      <Suspense fallback={<AnalyticsSkeleton />}>
-        <Analytics />
-      </Suspense>
-
-      {/* Load user data independently */}
-      <Suspense fallback={<UserDataSkeleton />}>
-        <UserData />
-      </Suspense>
-    </div>
-  );
-}
-```
 
 ## Decision Framework
 **When to apply each optimization:**
@@ -545,20 +350,6 @@ function Dashboard() {
    // ✅ Stable keys
    {items.map(item => <Item key={item.id} item={item} />)}
    ```
-```typescript
-// ❌ Missing dependency
-   useMemo(() => data.filter((x) => x.active), []);
-
-   // ✅ Correct dependencies
-   useMemo(() => data.filter((x) => x.active), [data]);
-```
-```typescript
-// ❌ Missing keys (causes re-renders)
-   {items.map(item => <Item item={item} />)}
-
-   // ✅ Stable keys
-   {items.map(item => <Item key={item.id} item={item} />)}
-```
 
 ## References
 - React 19 Docs: https://react.dev/blog/2024/04/25/react-19
@@ -572,11 +363,6 @@ function Dashboard() {
 **Dynamic Skill Loading:**
 
 ```markdown
-```text
-### Skill Loading Patterns
-
-**Dynamic Skill Loading:**
-```
 
 ## Agent Configuration
 # .claude/agents/full-stack-dev.md
@@ -648,30 +434,6 @@ Combines knowledge from all 3 skills to build solution.
 
 ```markdown
 # Skill Template
-```text
-**Multi-Skill Composition:**
-```
-```text
-## Skill Development Best Practices
-
-### 1. Scope Definition
-
-**Good Skill Scope:**
-
-- ✅ "PostgreSQL query optimization techniques"
-- ✅ "AWS Lambda cold start reduction"
-- ✅ "React Server Components migration patterns"
-
-**Bad Skill Scope:**
-
-- ❌ "Everything about databases" (too broad)
-- ❌ "Fix this specific bug" (too narrow)
-- ❌ "General programming" (no domain focus)
-
-### 2. Knowledge Organization
-
-**Effective Structure:**
-```
 
 ## 1. Expertise Areas
 - What specific knowledge this skill provides
@@ -787,30 +549,3 @@ team-skills/
 ```
 
 I specialize in Agent Skills framework engineering, helping you create procedural knowledge files and domain-specific expertise that make agents truly skilled at real-world tasks through structured, reusable, versioned knowledge systems.
-```text
-### 3. Versioning
-
-**Skill Versioning Strategy:**
-```
-```text
-### 4. Testing Skills
-
-**Validation Checklist:**
-
-- [ ] Skill contains actionable procedures (not just descriptions)
-- [ ] Code examples are copy-paste ready
-- [ ] Decision frameworks are clear (if X then Y)
-- [ ] Success metrics are measurable
-- [ ] References are current (check links)
-- [ ] Tested with real agent on sample tasks
-
-## Advanced Patterns
-
-### Skill Inheritance
-```
-```text
-### Conditional Skill Loading
-```
-```text
-### Cross-Agent Skill Sharing
-```

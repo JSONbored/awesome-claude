@@ -29,6 +29,20 @@ export const CATEGORY_REQUIREMENTS = Object.fromEntries(
 export const COMMON_REQUIRED_FIELDS = categorySpec.commonIssueRequiredFields;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const HEYCLAUDE_HOSTNAME = "heyclau.de";
+const RISK_BEARING_SUBMISSION_CATEGORIES = new Set([
+  "mcp",
+  "hooks",
+  "skills",
+  "commands",
+  "statuslines",
+]);
+const LOW_DETAIL_DISCLOSURE_NOTES = new Set([
+  "n/a",
+  "na",
+  "none",
+  "no",
+  "not applicable",
+]);
 
 export const SUBMISSION_STALE_POLICY = {
   reminderDays: 7,
@@ -677,6 +691,59 @@ function urlHostname(value) {
   }
 }
 
+function isGitHubSourcePath(value) {
+  const normalized = normalizeValue(value);
+  if (!normalized) return false;
+  try {
+    const url = new URL(normalized);
+    if (url.protocol !== "https:" || url.hostname !== "github.com") {
+      return false;
+    }
+    const [, , pathType] = url.pathname.split("/").filter(Boolean);
+    return pathType === "tree" || pathType === "blob";
+  } catch {
+    return false;
+  }
+}
+
+function installCommandReferencesLocalScript(value) {
+  return /(?:^|[\s;&|])(?:\.{1,2}\/|[\w.-]+\/)[\w./-]*(?:install|setup)\.(?:sh|bash|zsh|ps1)\b/i.test(
+    normalizeValue(value),
+  );
+}
+
+function hasInstallerSourceReference(fields = {}) {
+  const combined = [
+    fields.github_url,
+    fields.docs_url,
+    fields.download_url,
+    fields.retrieval_sources,
+  ]
+    .map(normalizeValue)
+    .join("\n")
+    .toLowerCase();
+  return /\b(?:install|setup)\.(?:sh|bash|zsh|ps1)\b/.test(combined);
+}
+
+function normalizeDisclosureNoteForComparison(value) {
+  let text = normalizeValue(value).toLowerCase();
+  while (text.endsWith(".") || text.endsWith(" ")) {
+    text = text.slice(0, -1);
+  }
+  return text;
+}
+
+function isUsefulDisclosureNote(value) {
+  const text = normalizeValue(value);
+  if (!text) return false;
+  const normalized = normalizeDisclosureNoteForComparison(text);
+  if (LOW_DETAIL_DISCLOSURE_NOTES.has(normalized)) return false;
+  if (normalized.startsWith("not applicable:")) {
+    return normalized.slice("not applicable:".length).trim().length >= 8;
+  }
+  return text.length >= 12;
+}
+
 function isValidPublicContact(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return true;
@@ -1287,6 +1354,19 @@ export function validateSubmission(issue) {
     }
   }
 
+  if (RISK_BEARING_SUBMISSION_CATEGORIES.has(category)) {
+    for (const field of ["safety_notes", "privacy_notes"]) {
+      const notes = splitNoteList(fields[field]);
+      if (!notes.length) {
+        errors.push(`Missing required field: ${field}`);
+      } else if (!notes.some(isUsefulDisclosureNote)) {
+        errors.push(
+          `${field} must explain the relevant behavior, or use "Not applicable: ..." with a specific reason`,
+        );
+      }
+    }
+  }
+
   if (fields.slug && slugify(fields.slug) !== fields.slug) {
     errors.push("Invalid slug format: expected kebab-case");
   }
@@ -1334,6 +1414,12 @@ export function validateSubmission(issue) {
         `Contributor submissions cannot include affiliate/referral URLs: ${field}`,
       );
     }
+  }
+
+  if (category === "skills" && isGitHubSourcePath(fields.download_url)) {
+    errors.push(
+      "download_url must point to a package, archive, or release download; use github_url or retrieval_sources for GitHub source tree/blob paths",
+    );
   }
 
   if (fields.brand_domain && !normalizeBrandDomain(fields.brand_domain)) {
@@ -1388,6 +1474,16 @@ export function validateSubmission(issue) {
     if (!hasSkillInstallPath) {
       errors.push(
         "Skills submissions require install_command, source URL, retrieval_sources, or full_copyable_content",
+      );
+    }
+    if (
+      installCommandReferencesLocalScript(fields.install_command) &&
+      isGitHubSourcePath(fields.github_url) &&
+      !hasInstallerSourceReference(fields) &&
+      !normalizeValue(fields.full_copyable_content)
+    ) {
+      errors.push(
+        "Skills install_command references a local installer script; include the exact installer source URL in retrieval_sources or provide full_copyable_content",
       );
     }
   }

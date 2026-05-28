@@ -94,14 +94,6 @@ Streamline your project management and CRM workflows by connecting Claude to mon
   }
 }
 ```
-```json
-{
-  "monday": {
-    "url": "https://mcp.monday.com/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Create a new item in the Projects board
@@ -140,29 +132,6 @@ Ask Claude: "Add CRM activity for client meeting"
 
 Create a new Monday.com board item with column values
 
-```typescript
-// Create Monday.com board item
-const item = await monday.items.create({
-  board_id: "board-id",
-  item_name: "New Task",
-  column_values: {
-    status: "Working on it",
-    text: "Task description",
-  },
-});
-```
-```plaintext
-Ask Claude: "Create a new item in the Projects board"
-```
-```plaintext
-Ask Claude: "Update status to Done for item 12345"
-```
-```plaintext
-Ask Claude: "Assign this task to the design team"
-```
-```plaintext
-Ask Claude: "Add CRM activity for client meeting"
-```
 ```typescript
 // Create Monday.com board item
 const item = await monday.items.create({

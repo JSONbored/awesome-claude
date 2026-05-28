@@ -98,14 +98,6 @@ Streamline your payment processing and financial operations by connecting Claude
   }
 }
 ```
-```json
-{
-  "paypal": {
-    "url": "https://mcp.paypal.com/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Process a refund for transaction ID ABC123
@@ -144,31 +136,6 @@ Ask Claude: "Check account balance"
 
 Create a new PayPal payment with amount and currency
 
-```typescript
-// Create PayPal payment
-const payment = await paypal.payments.create({
-  intent: "sale",
-  payer: { payment_method: "paypal" },
-  transactions: [
-    {
-      amount: { total: "10.00", currency: "USD" },
-      description: "Payment description",
-    },
-  ],
-});
-```
-```plaintext
-Ask Claude: "Process a refund for transaction ID ABC123"
-```
-```plaintext
-Ask Claude: "Show today's payment activity"
-```
-```plaintext
-Ask Claude: "Generate monthly transaction report"
-```
-```plaintext
-Ask Claude: "Check account balance"
-```
 ```typescript
 // Create PayPal payment
 const payment = await paypal.payments.create({

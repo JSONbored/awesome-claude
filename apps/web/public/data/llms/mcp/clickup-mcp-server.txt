@@ -88,18 +88,6 @@ Manage ClickUp tasks and projects directly through Claude for comprehensive proj
   }
 }
 ```
-```json
-{
-  "clickup": {
-    "env": {
-      "CLICKUP_API_KEY": "${CLICKUP_API_KEY}",
-      "CLICKUP_TEAM_ID": "${CLICKUP_TEAM_ID}"
-    },
-    "args": ["-y", "@hauptsache.net/clickup-mcp"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### Create a new task in the Development space
@@ -138,34 +126,6 @@ Ask Claude: "Add time entry to current task"
 
 Create a new ClickUp task with custom fields, assignees, and status
 
-```typescript
-// Create ClickUp task with custom fields
-const task = await clickup.tasks.create({
-  list_id: "list-id",
-  name: "Complete project documentation",
-  description: "Task description",
-  assignees: ["user-id"],
-  status: "in progress",
-  custom_fields: [
-    {
-      id: "custom-field-id",
-      value: "custom-value",
-    },
-  ],
-});
-```
-```plaintext
-Ask Claude: "Create a new task in the Development space"
-```
-```plaintext
-Ask Claude: "Update task CL-123 to completed"
-```
-```plaintext
-Ask Claude: "List all my assigned tasks"
-```
-```plaintext
-Ask Claude: "Add time entry to current task"
-```
 ```typescript
 // Create ClickUp task with custom fields
 const task = await clickup.tasks.create({
