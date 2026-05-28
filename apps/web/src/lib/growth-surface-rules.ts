@@ -62,8 +62,7 @@ export function hasInstallSurface(entry: GrowthSurfaceEntry) {
 export function hasSafeInstallSignal(entry: GrowthSurfaceEntry) {
   return (
     entry.downloadTrust === "first-party" ||
-    entry.packageVerified === true ||
-    (isSourceBackedEntry(entry) && !entry.downloadUrl)
+    entry.packageVerified === true
   );
 }
 

@@ -149,7 +149,7 @@ export default async function HomePage() {
             id: "safe-install",
             title: "Safe install",
             description:
-              "Installable entries with first-party package, verified package, or source-backed copy/install paths.",
+              "Installable entries with first-party package or verified package trust signals.",
             href: "/browse?utility=trusted-package",
             entries: growthSurfaces.safeInstall,
             icon: "install",

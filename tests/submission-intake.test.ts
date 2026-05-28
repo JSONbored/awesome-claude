@@ -1245,6 +1245,60 @@ Reads the configured API key from the local environment and sends requests to th
     expect(risk.policyDecision).toBe("auto_import_eligible");
   });
 
+  it("blocks high-risk import-ready submissions with a specific review reason", () => {
+    const submission = issue(`### Name
+Xquik MCP Server
+
+### Slug
+xquik-mcp-server
+
+### Category
+mcp
+
+### Public contact
+@xquik
+
+### GitHub URL
+https://github.com/Xquik-dev/x-twitter-scraper
+
+### Docs URL
+https://docs.xquik.com/mcp/overview
+
+### Description
+Remote MCP server for X and Twitter automation, tweet search, webhooks, and confirmation-gated posting.
+
+### Card description
+MCP server for social media posting workflows.
+
+### Install command
+npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header x-api-key:\${XQUIK_API_KEY}
+
+### Usage snippet
+Use an API key for Xquik social media posting workflows.
+
+### Safety notes
+Can post, reply, send DMs, or update profiles through the configured Xquik account.
+
+### Privacy notes
+Reads the configured API key and sends social media workflow requests to Xquik.`);
+    const queue = buildSubmissionQueue([submission], {
+      now: "2026-04-30T00:00:00Z",
+    });
+    const [entry] = queue.entries;
+
+    expect(entry.status).toBe("import_ready");
+    expect(entry.riskTier).toBe("high");
+    expect(entry.policyDecision).toBe("maintainer_review");
+    expect(entry.triageGroup).toBe("blocked");
+    expect(entry.triageReason).toContain(
+      "High-risk import-ready submissions require manual maintainer risk review",
+    );
+    expect(entry.nextAction).toBe("review_risk");
+    expect(queue.summary.ready).toBe(0);
+    expect(queue.summary.blocked).toBe(1);
+    expect(queue.summary.importReady).toBe(1);
+  });
+
   it("preserves commas inside newline-delimited safety and privacy notes", () => {
     const submission = issue(`### Name
 Comma Notes MCP
