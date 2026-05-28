@@ -92,14 +92,6 @@ Integrate Square's commerce platform with Claude for payment processing and busi
   }
 }
 ```
-```json
-{
-  "square": {
-    "url": "https://mcp.squareup.com/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Process a $50 payment
@@ -138,29 +130,6 @@ Ask Claude: "Generate today's sales report"
 
 Create a new Square payment with idempotency key
 
-```typescript
-// Create Square payment
-const payment = await square.payments.createPayment({
-  source_id: "source-id",
-  idempotency_key: "unique-key",
-  amount_money: {
-    amount: 1000,
-    currency: "USD",
-  },
-});
-```
-```plaintext
-Ask Claude: "Process a $50 payment"
-```
-```plaintext
-Ask Claude: "Check inventory for SKU-123"
-```
-```plaintext
-Ask Claude: "Create order for customer"
-```
-```plaintext
-Ask Claude: "Generate today's sales report"
-```
 ```typescript
 // Create Square payment
 const payment = await square.payments.createPayment({

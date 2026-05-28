@@ -165,38 +165,6 @@ Format as vCard or CSV for import to contacts."
 4. Handle multi-line cells
 5. Export as clean CSV"
 ```
-```text
-"Process all invoice images I upload and:
-1. Extract: invoice #, date, vendor, total
-2. Create a master spreadsheet with all invoices
-3. Flag any invoices where OCR confidence is low
-4. Export as invoices_data.csv"
-```
-```text
-"Extract all code from this screenshot of a terminal:
-1. Recognize monospace text accurately
-2. Preserve indentation
-3. Clean up any OCR artifacts
-4. Save as code.py"
-```
-```text
-"Extract contact information from this business card:
-1. Name
-2. Title/Position
-3. Company
-4. Email
-5. Phone
-6. Address
-Format as vCard or CSV for import to contacts."
-```
-```text
-"This PDF contains a table that I can't copy/paste properly:
-1. Extract the table using OCR
-2. Recognize the column headers
-3. Parse all rows
-4. Handle multi-line cells
-5. Export as clean CSV"
-```
 
 ## Tips for Best Results
 1. **Image Quality Matters**: Higher resolution, clear contrast, straight orientation = better OCR

@@ -92,39 +92,6 @@ func main() {
 - **Configuration**: Viper integration, environment variables, config files
 - **Output Formatting**: Table output, JSON output, progress bars
 - **Interactive Prompts**: User input, password masking, confirmations
-```go
-package main
-
-import (
-    "fmt"
-    "github.com/spf13/cobra"
-)
-
-var rootCmd = &cobra.Command{
-    Use:   "mycli",
-    Short: "A brief description",
-    Long:  "A longer description",
-}
-
-var versionCmd = &cobra.Command{
-    Use:   "version",
-    Short: "Print version",
-    Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println("v1.0.0")
-    },
-}
-
-func init() {
-    rootCmd.AddCommand(versionCmd)
-}
-
-func main() {
-    if err := rootCmd.Execute(); err != nil {
-        fmt.Fprintf(os.Stderr, "Error: %v\n", err)
-        os.Exit(1)
-    }
-}
-```
 
 ## Library Design
 ### Package Structure
@@ -175,42 +142,6 @@ func (p *Processor) Process(data []byte) ([]byte, error) {
     // Implementation
 }
 ```
-```text
-mylib/
-├── go.mod
-├── README.md
-├── mylib.go          # Main package API
-├── mylib_test.go     # Tests
-├── internal/         # Internal packages
-│   └── impl.go
-└── examples/         # Example usage
-    └── example.go
-```
-```go
-// Package mylib provides utilities for working with data.
-//
-// This package offers a simple API for common data operations.
-// For more advanced use cases, see the subpackages.
-package mylib
-
-// Processor processes data according to the given configuration.
-//
-// The Processor is safe for concurrent use and can be reused
-// across multiple goroutines.
-type Processor struct {
-    // config holds the processing configuration.
-    config Config
-}
-
-// Process applies the processor configuration to the input data.
-//
-// It returns the processed data or an error if processing fails.
-// The error will be of type *ProcessingError for configuration
-// issues, or *DataError for data-related problems.
-func (p *Processor) Process(data []byte) ([]byte, error) {
-    // Implementation
-}
-```
 
 ## Code Generation
 ### go generate
@@ -232,16 +163,6 @@ const (
 - **Mock Generation**: go-mock, counterfeiter
 - **Embedding**: go:embed for static assets
 - **Build Tags**: Conditional code generation
-```go
-//go:generate stringer -type=Status
-type Status int
-
-const (
-    StatusPending Status = iota
-    StatusActive
-    StatusCompleted
-)
-```
 
 ## Benchmarking & Profiling
 ### Benchmarking
@@ -264,17 +185,6 @@ func BenchmarkProcess(b *testing.B) {
 - **Memory Profiling**: go test -memprofile
 - **Heap Analysis**: go tool pprof, memory allocation tracking
 - **Trace Analysis**: go tool trace, execution tracing
-```go
-func BenchmarkProcess(b *testing.B) {
-    data := make([]byte, 1024)
-    p := NewProcessor()
-
-    b.ResetTimer()
-    for i := 0; i < b.N; i++ {
-        _, _ = p.Process(data)
-    }
-}
-```
 
 ## Module Publishing
 ### Versioning
@@ -293,32 +203,9 @@ git push origin v1.2.3
 - **Public Modules**: pkg.go.dev, module discovery
 - **Private Modules**: GOPRIVATE, GONOPROXY, GONOSUMDB
 - **Module Checksums**: go.sum, checksum database
-```bash
-# Tag version
-git tag v1.2.3
-git push origin v1.2.3
-
-# Module will be available at
-# module path + version tag
-```
 
 ## Project Structure for Libraries
 ```
-mylib/
-├── go.mod
-├── LICENSE
-├── README.md
-├── CHANGELOG.md
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-├── cmd/              # CLI tools (if any)
-│   └── mylib-cli/
-├── internal/         # Internal packages
-├── examples/         # Example code
-└── docs/             # Additional documentation
-```
-```text
 mylib/
 ├── go.mod
 ├── LICENSE

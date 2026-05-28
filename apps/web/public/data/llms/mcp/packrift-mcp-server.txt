@@ -45,13 +45,3 @@ Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remo
   }
 }
 ```
-```json
-{
-  "mcpServers": {
-    "packrift": {
-      "type": "http",
-      "url": "https://mcp.packrift.com/mcp"
-    }
-  }
-}
-```

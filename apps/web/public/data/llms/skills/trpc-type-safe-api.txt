@@ -180,46 +180,6 @@ Claude will:
 6. Conversation summarization
 7. Cost tracking per user"
 ```
-```text
-"Build a type-safe e-commerce API with tRPC:
-1. Product catalog with filtering and search
-2. Shopping cart management
-3. Order processing with Stripe
-4. User authentication with NextAuth
-5. Admin dashboard procedures
-6. Real-time inventory updates
-7. Include Zod validation and Prisma integration"
-```
-```text
-"Create a social media backend using tRPC:
-1. User profiles with follow/unfollow
-2. Posts with likes and comments
-3. Real-time notifications via subscriptions
-4. Image uploads to S3
-5. Feed algorithm with pagination
-6. Direct messaging between users
-7. Content moderation procedures"
-```
-```text
-"Build a multi-tenant SaaS API with tRPC:
-1. Organization and team management
-2. Role-based access control middleware
-3. Usage tracking and billing
-4. Webhook integrations
-5. Audit logging for all actions
-6. Rate limiting per tenant
-7. Data isolation at database level"
-```
-```text
-"Create a chat app with tRPC and streaming:
-1. OpenAI integration with streaming responses
-2. Chat history with Prisma
-3. Real-time message updates
-4. Typing indicators via subscriptions
-5. File uploads for context
-6. Conversation summarization
-7. Cost tracking per user"
-```
 
 ## Troubleshooting
 **Issue:** Type errors between client and server

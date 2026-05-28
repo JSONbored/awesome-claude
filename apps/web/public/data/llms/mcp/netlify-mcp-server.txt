@@ -94,14 +94,6 @@ Streamline your web deployment and site management by connecting Claude to Netli
   }
 }
 ```
-```json
-{
-  "netlify": {
-    "url": "https://netlify-mcp.netlify.app/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Deploy my site to production
@@ -140,29 +132,6 @@ Ask Claude: "Configure domain redirect"
 
 Deploy a site to Netlify with files and configuration
 
-```typescript
-// Deploy site to Netlify
-const deployment = await netlify.deploys.create({
-  site_id: "site-id",
-  files: {
-    "index.html": "<html>...</html>",
-    "style.css": "body { ... }",
-  },
-  draft: false,
-});
-```
-```plaintext
-Ask Claude: "Deploy my site to production"
-```
-```plaintext
-Ask Claude: "Update the API_KEY environment variable"
-```
-```plaintext
-Ask Claude: "Show recent form submissions"
-```
-```plaintext
-Ask Claude: "Configure domain redirect"
-```
 ```typescript
 // Deploy site to Netlify
 const deployment = await netlify.deploys.create({

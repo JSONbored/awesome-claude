@@ -68,78 +68,8 @@ Alerts when code complexity exceeds thresholds in real-time using cyclomatic com
   }
 }
 ```
-```json
-{
-  "hooks": {
-    "notification": {
-      "script": "./.claude/hooks/code-complexity-alert-monitor.sh"
-    }
-  }
-}
-```
 
 ## Hook Script
-```bash
-#!/usr/bin/env bash
-
-# Read the tool input from stdin
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-
-if [ -z "$FILE_PATH" ]; then
-  exit 0
-fi
-
-# Check if it's a supported file type
-if [[ "$FILE_PATH" == *.js ]] || [[ "$FILE_PATH" == *.jsx ]] || [[ "$FILE_PATH" == *.ts ]] || [[ "$FILE_PATH" == *.tsx ]] || [[ "$FILE_PATH" == *.py ]]; then
-  echo "🔍 Analyzing code complexity for $FILE_PATH..." >&2
-
-  # Check file exists
-  if [ ! -f "$FILE_PATH" ]; then
-    echo "📁 File does not exist yet, skipping complexity analysis" >&2
-    exit 0
-  fi
-
-  # Line count analysis
-  LINES=$(wc -l < "$FILE_PATH" 2>/dev/null || echo "0")
-  if [ "$LINES" -gt 500 ]; then
-    echo "⚠️ COMPLEXITY: File exceeds 500 lines ($LINES lines) - consider splitting into smaller modules" >&2
-  elif [ "$LINES" -gt 300 ]; then
-    echo "📊 INFO: File is getting large ($LINES lines) - monitor for complexity" >&2
-  fi
-
-  # Function/method count analysis
-  FUNCTION_COUNT=$(grep -E '(function|def |const.*=>|class |async |export function)' "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-  if [ "$FUNCTION_COUNT" -gt 20 ]; then
-    echo "⚠️ COMPLEXITY: Too many functions/methods ($FUNCTION_COUNT) - consider modularization" >&2
-  elif [ "$FUNCTION_COUNT" -gt 15 ]; then
-    echo "📊 INFO: High function count ($FUNCTION_COUNT) - good candidate for refactoring" >&2
-  fi
-
-  # Nesting level analysis (rough estimate)
-  OPEN_BRACES=$(grep -o '{' "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-  CLOSE_BRACES=$(grep -o '}' "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-
-  if [ "$OPEN_BRACES" -gt 50 ]; then
-    echo "⚠️ COMPLEXITY: High nesting detected ($OPEN_BRACES braces) - consider flattening logic" >&2
-  fi
-
-  # Python-specific checks
-  if [[ "$FILE_PATH" == *.py ]]; then
-    INDENT_DEPTH=$(grep -E '^[ ]{12,}' "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-    if [ "$INDENT_DEPTH" -gt 5 ]; then
-      echo "⚠️ COMPLEXITY: Deep indentation detected in Python code - consider function extraction" >&2
-    fi
-  fi
-
-  echo "✅ Complexity analysis completed for $FILE_PATH" >&2
-else
-  echo "File $FILE_PATH is not a supported type for complexity analysis" >&2
-fi
-
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 
@@ -283,75 +213,6 @@ exit 0
 
 Comprehensive hook script that analyzes multiple complexity metrics simultaneously for better detection
 
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ]; then exit 0; fi
-LINES=$(wc -l < "$FILE_PATH" 2>/dev/null || echo "0")
-FUNCTION_COUNT=$(grep -E "(function|def |const.*=>|class |async |export function)" "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-OPEN_BRACES=$(grep -o "{" "$FILE_PATH" 2>/dev/null | wc -l || echo "0")
-if [ "$LINES" -gt 500 ] || [ "$FUNCTION_COUNT" -gt 20 ] || [ "$OPEN_BRACES" -gt 50 ]; then
-  echo "⚠️ COMPLEXITY: Multiple thresholds exceeded - Lines: $LINES, Functions: $FUNCTION_COUNT, Nesting: $OPEN_BRACES" >&2
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r ".tool_name")
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ]; then exit 0; fi
-if [[ "$FILE_PATH" == *.js ]] || [[ "$FILE_PATH" == *.ts ]] || [[ "$FILE_PATH" == *.py ]]; then
-  LINES=$(wc -l < "$FILE_PATH" 2>/dev/null || echo "0")
-  if [ "$LINES" -gt 500 ]; then
-    echo "⚠️ COMPLEXITY: File exceeds 500 lines ($LINES lines) - consider splitting" >&2
-  fi
-fi
-exit 0
-```
-```json
-{
-  "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./.claude/hooks/code-complexity-alert-monitor.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ] || [[ ! "$FILE_PATH" == *.py ]]; then exit 0; fi
-if command -v radon >/dev/null 2>&1; then
-  COMPLEXITY=$(radon cc "$FILE_PATH" -a -nc 2>/dev/null | grep -oP "Average complexity: \\K[0-9]+\.[0-9]+" || echo "0")
-  if (( $(echo "$COMPLEXITY > 10" | bc -l) )); then
-    echo "⚠️ COMPLEXITY: High cyclomatic complexity ($COMPLEXITY) - consider refactoring" >&2
-  fi
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ] || [[ ! "$FILE_PATH" == *.{js,jsx,ts,tsx} ]]; then exit 0; fi
-if command -v eslint >/dev/null 2>&1; then
-  COMPLEXITY=$(eslint --format json "$FILE_PATH" 2>/dev/null | jq -r ".[0].messages[] | select(.ruleId==\"complexity\") | .message" || echo "")
-  if [ -n "$COMPLEXITY" ]; then
-    echo "⚠️ COMPLEXITY: $COMPLEXITY" >&2
-  fi
-fi
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 INPUT=$(cat)

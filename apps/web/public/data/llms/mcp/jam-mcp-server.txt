@@ -92,14 +92,6 @@ Accelerate your debugging workflow by connecting Claude to Jam's bug recording p
   }
 }
 ```
-```json
-{
-  "jam": {
-    "url": "https://mcp.jam.dev/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Show the console errors from bug JAM-123
@@ -138,28 +130,6 @@ Ask Claude: "Find all JavaScript errors from today"
 
 Create a new Jam feedback item with screenshot and metadata
 
-```typescript
-// Create Jam feedback with screenshot
-const feedback = await jam.feedback.create({
-  title: "Bug: Login button not working",
-  description: "The login button does not respond when clicked",
-  screenshot: "data:image/png;base64,...",
-  url: "https://example.com/login",
-  tags: ["bug", "critical"],
-});
-```
-```plaintext
-Ask Claude: "Show the console errors from bug JAM-123"
-```
-```plaintext
-Ask Claude: "Analyze the network requests in the checkout issue"
-```
-```plaintext
-Ask Claude: "Get reproduction steps for the login bug"
-```
-```plaintext
-Ask Claude: "Find all JavaScript errors from today"
-```
 ```typescript
 // Create Jam feedback with screenshot
 const feedback = await jam.feedback.create({

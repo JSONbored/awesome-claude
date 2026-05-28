@@ -91,14 +91,6 @@ Streamline your project management and issue tracking by connecting Claude to Li
   }
 }
 ```
-```json
-{
-  "linear": {
-    "url": "https://mcp.linear.app/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Create a new bug issue for the login problem
@@ -137,28 +129,6 @@ Ask Claude: "List all issues in the current sprint"
 
 Create a new Linear issue with priority and labels
 
-```typescript
-// Create Linear issue with labels
-const issue = await linear.issues.create({
-  teamId: "team-id",
-  title: "Fix authentication bug",
-  description: "Issue description",
-  priority: 1,
-  labelIds: ["label-id-1", "label-id-2"],
-});
-```
-```plaintext
-Ask Claude: "Create a new bug issue for the login problem"
-```
-```plaintext
-Ask Claude: "Show me all issues assigned to me"
-```
-```plaintext
-Ask Claude: "Update issue LIN-123 to 'In Progress'"
-```
-```plaintext
-Ask Claude: "List all issues in the current sprint"
-```
 ```typescript
 // Create Linear issue with labels
 const issue = await linear.issues.create({

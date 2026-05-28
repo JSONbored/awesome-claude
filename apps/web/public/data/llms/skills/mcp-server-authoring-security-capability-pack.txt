@@ -71,13 +71,13 @@ This capability pack teaches agents how to design MCP servers that remain safe u
 - Preserve immutable audit trails for sensitive invocations.
 
 ## Troubleshooting
-**Issue:** Tool abuse through crafted prompts  
+**Issue:** Tool abuse through crafted prompts
 **Fix:** Add policy layer between prompt interpretation and tool invocation.
 
-**Issue:** Schema drift breaks clients  
+**Issue:** Schema drift breaks clients
 **Fix:** Enforce contract tests and backward compatibility checks.
 
-**Issue:** Difficult to investigate incidents  
+**Issue:** Difficult to investigate incidents
 **Fix:** Add structured event logs with actor/tool/input/result correlation.
 
 ## Output Contract

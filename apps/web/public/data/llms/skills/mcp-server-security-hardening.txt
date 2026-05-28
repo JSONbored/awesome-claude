@@ -70,23 +70,15 @@ Deliver:
 3. Enforce schemas on all tool inputs and outputs.
 4. Add request IDs, structured logs, and alert hooks.
 5. Re-test normal and adversarial flows before release.
-```text
-Apply the MCP server security hardening skill.
-Deliver:
-1) Critical risks (P0/P1/P2),
-2) Exact config/code changes,
-3) Validation tests for each control,
-4) Rollout plan with rollback criteria.
-```
 
 ## Troubleshooting
-**Issue:** Hardening breaks legitimate tool calls  
+**Issue:** Hardening breaks legitimate tool calls
 **Fix:** Add explicit allowlist exceptions per trusted client scope, not global relaxations.
 
-**Issue:** Prompt injection still causes unsafe tool chains  
+**Issue:** Prompt injection still causes unsafe tool chains
 **Fix:** Separate model instructions from executable tool policy and enforce server-side policy checks.
 
-**Issue:** Logs are too noisy to be actionable  
+**Issue:** Logs are too noisy to be actionable
 **Fix:** Keep high-signal events (auth failures, denied tools, schema violations, repeated abuse IP/client IDs).
 
 ## Knowledge Freshness

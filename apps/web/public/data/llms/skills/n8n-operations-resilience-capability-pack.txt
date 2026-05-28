@@ -71,13 +71,13 @@ This skill gives agents an operational blueprint for running n8n safely in envir
 - Publish runbooks for queue, dependency, and auth failures.
 
 ## Troubleshooting
-**Issue:** Retries cause duplicate side effects  
+**Issue:** Retries cause duplicate side effects
 **Fix:** enforce idempotency keys and dedupe controls.
 
-**Issue:** Credential sprawl across workflows  
+**Issue:** Credential sprawl across workflows
 **Fix:** centralize and scope credentials by workflow domain.
 
-**Issue:** Silent failures in non-critical jobs  
+**Issue:** Silent failures in non-critical jobs
 **Fix:** add alert thresholds and dead-letter visibility.
 
 ## Output Contract

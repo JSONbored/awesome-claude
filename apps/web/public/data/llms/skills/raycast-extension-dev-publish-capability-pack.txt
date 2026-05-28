@@ -74,13 +74,13 @@ This capability pack teaches agents how to design and ship Raycast extensions th
 - Validate extension behavior on cold and warm starts.
 
 ## Troubleshooting
-**Issue:** Extension feels slow or brittle  
+**Issue:** Extension feels slow or brittle
 **Fix:** Add caching and request timeouts with clear fallback UI states.
 
-**Issue:** Store review rejects submission  
+**Issue:** Store review rejects submission
 **Fix:** Audit metadata, permissions, and UX consistency against Raycast guidelines.
 
-**Issue:** External API changes break commands  
+**Issue:** External API changes break commands
 **Fix:** Add schema guards and compatibility adapters for remote responses.
 
 ## Output Contract

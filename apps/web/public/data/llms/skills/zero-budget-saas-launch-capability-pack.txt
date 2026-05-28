@@ -68,13 +68,13 @@ This skill enables practical bootstrap execution where money is constrained and 
 - Drop low-signal features quickly when metrics miss thresholds.
 
 ## Troubleshooting
-**Issue:** Free-tier limits break reliability  
+**Issue:** Free-tier limits break reliability
 **Fix:** add graceful degradation and hard usage thresholds.
 
-**Issue:** Feature creep stalls launch  
+**Issue:** Feature creep stalls launch
 **Fix:** enforce strict cut-list with deadline lock.
 
-**Issue:** Traffic arrives but no conversion  
+**Issue:** Traffic arrives but no conversion
 **Fix:** tighten problem/offer fit and simplify CTA path.
 
 ## Output Contract

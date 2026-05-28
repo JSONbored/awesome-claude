@@ -96,14 +96,6 @@ Streamline your documentation and knowledge management by connecting Claude to N
   }
 }
 ```
-```json
-{
-  "notion": {
-    "url": "https://mcp.notion.com/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Create a new page for today's meeting notes
@@ -142,34 +134,6 @@ Ask Claude: "Add this conversation summary to Notion"
 
 Create a new Notion page in a database with custom blocks
 
-```typescript
-// Create Notion page with blocks
-const page = await notion.pages.create({
-  parent: { database_id: "database-id" },
-  properties: {
-    Title: { title: [{ text: { content: "New Page" } }] },
-  },
-  children: [
-    {
-      object: "block",
-      type: "paragraph",
-      paragraph: { rich_text: [{ text: { content: "Page content" } }] },
-    },
-  ],
-});
-```
-```plaintext
-Ask Claude: "Create a new page for today's meeting notes"
-```
-```plaintext
-Ask Claude: "Update the project status in Notion"
-```
-```plaintext
-Ask Claude: "Find all tasks due this week"
-```
-```plaintext
-Ask Claude: "Add this conversation summary to Notion"
-```
 ```typescript
 // Create Notion page with blocks
 const page = await notion.pages.create({

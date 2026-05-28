@@ -48,7 +48,7 @@ Master Claude Code installation on Windows through proper WSL2 configuration. By
 
 > **Common Installation Error**
 >
-> **Error: WslRegisterDistribution failed with error: 0x80370114**  
+> **Error: WslRegisterDistribution failed with error: 0x80370114**
 > **Solution:** Enable Virtual Machine Platform feature. Run `dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart` in PowerShell as Administrator.
 
 ## Step 2: Configure Node.js Environment

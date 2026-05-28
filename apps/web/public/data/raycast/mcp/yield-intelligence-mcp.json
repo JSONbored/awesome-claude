@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "key": "mcp:yield-intelligence-mcp",
+  "category": "mcp",
+  "slug": "yield-intelligence-mcp",
+  "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+  "author": "thebrierfox",
+  "submittedBy": "thebrierfox",
+  "submittedByUrl": "https://github.com/thebrierfox",
+  "submittedAt": "2026-05-26T04:27:00.000Z",
+  "claimStatus": "unclaimed",
+  "copyText": "Install:\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list\n\nConfig:\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}\n\nUsage:\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}",
+  "detailMarkdown": "# YIELD INTELLIGENCE MCP — Passive Income Analysis\n\nAnalyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.\n\n## Privacy notes\n- Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.\n\n## Install\n```bash\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list\n```\n\n## Config\n```json\n{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}\n```\n\n## Usage\nclaude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp",
+  "webUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+  "canonicalUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+  "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
+  "seoTitle": "YIELD INTELLIGENCE MCP — Passive Income & Treasury Rate Analysis fo...",
+  "seoDescription": "Remote MCP server for passive income analysis: live US Treasury rates, AI-powered yield optimization, and portfolio return calculator.",
+  "safetyNotes": [
+    "Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required."
+  ],
+  "privacyNotes": [
+    "Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored."
+  ],
+  "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
+  "documentationUrl": "https://github.com/thebrierfox/intuitek-ace",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
+}

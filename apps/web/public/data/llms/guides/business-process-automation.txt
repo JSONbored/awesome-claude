@@ -32,10 +32,10 @@ Transform your enterprise operations with Claude's agent capabilities. This guid
 
 > **Use Case Overview**
 >
-> **Industry:** Enterprise Technology & Services  
-> **Role:** CTO, VP Engineering, Business Process Owner  
-> **Challenge:** Manual processes consuming 40+ hours weekly per team  
-> **Solution:** Claude agent orchestration with enterprise system integration  
+> **Industry:** Enterprise Technology & Services
+> **Role:** CTO, VP Engineering, Business Process Owner
+> **Challenge:** Manual processes consuming 40+ hours weekly per team
+> **Solution:** Claude agent orchestration with enterprise system integration
 > **Impact:** Measurable returns with improved cycle times
 >
 > **Time to Value:** 6 months for foundation, 12-24 months for full ROI

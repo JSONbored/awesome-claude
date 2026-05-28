@@ -82,14 +82,6 @@ Access comprehensive financial data and SEC filing information through Daloopa's
   }
 }
 ```
-```json
-{
-  "daloopa": {
-    "url": "https://mcp.daloopa.com/server/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Get Apple's latest 10-K filing data
@@ -128,26 +120,6 @@ Ask Claude: "Show historical EBITDA margins"
 
 Extract structured data from a document using Daloopa extraction templates
 
-```typescript
-// Extract data from document using Daloopa
-const result = await daloopa.extract({
-  document_url: "https://example.com/document.pdf",
-  extraction_template: "invoice",
-  fields: ["invoice_number", "date", "amount", "vendor"],
-});
-```
-```plaintext
-Ask Claude: "Get Apple's latest 10-K filing data"
-```
-```plaintext
-Ask Claude: "Compare revenue growth across tech companies"
-```
-```plaintext
-Ask Claude: "Extract key metrics from investor presentation"
-```
-```plaintext
-Ask Claude: "Show historical EBITDA margins"
-```
 ```typescript
 // Extract data from document using Daloopa
 const result = await daloopa.extract({

@@ -58,13 +58,13 @@ This skill gives AI agents a security-first operating model for Ethereum smart c
 5. Deploy progressively with monitoring and pause controls.
 
 ## Troubleshooting
-**Issue:** Tests pass but invariants fail under fuzzing  
+**Issue:** Tests pass but invariants fail under fuzzing
 **Fix:** Revisit state transitions and assumptions around edge-case ordering.
 
-**Issue:** Access control too broad  
+**Issue:** Access control too broad
 **Fix:** Replace role overreach with least-privilege split roles and delayed admin ops.
 
-**Issue:** Upgrades create storage breakage  
+**Issue:** Upgrades create storage breakage
 **Fix:** Add storage layout checks and upgrade simulation in CI before release.
 
 ## Knowledge Freshness

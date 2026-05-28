@@ -1,0 +1,122 @@
+# YIELD INTELLIGENCE MCP — Passive Income Analysis
+URL: https://heyclau.de/mcp/yield-intelligence-mcp
+Category: mcp
+Author: thebrierfox
+Submitted by: thebrierfox
+Date added: 2026-05-26
+Documentation: https://github.com/thebrierfox/intuitek-ace
+Repository: https://github.com/thebrierfox/intuitek-ace
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/mcp/yield-intelligence-mcp
+- Source URLs: https://github.com/thebrierfox/intuitek-ace, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
+- Safety notes: Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.
+- Privacy notes: Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.
+- Author: thebrierfox
+- Submitted by: thebrierfox
+- Claim status: unclaimed
+- Last verified: 2026-05-26
+- Robots: indexable
+## Summary
+Analyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL
+## Tags
+- finance
+- yield
+- passive-income
+- treasury
+- portfolio
+- investment
+- remote-mcp
+## Safety Notes
+- Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.
+## Privacy Notes
+- Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.
+## Content
+## Overview
+Analyze passive income opportunities and optimize your yield strategy using live US Treasury rates, an AI-powered income optimizer, and a portfolio return calculator.
+
+## Server Details
+YIELD INTELLIGENCE is a remote MCP server that gives Claude direct access to live US Treasury yield data and AI-powered passive income analysis. No local installation required — add it by URL and start optimizing immediately.
+
+## Features
+- Live US Treasury rates (4-week through 30-year) fetched in real time
+- AI-powered passive income opportunity analysis across asset classes
+- Portfolio yield calculator with projected annual return estimates
+- Income optimization recommendations tailored to target yield and risk tolerance
+- Zero authentication required — open endpoint, no API key needed
+- Remote SSE transport — connect by URL from any Claude client
+
+## Use Cases
+- Identify the best Treasury bills, notes, or bonds for current yield goals
+- Compare passive income options across fixed income, dividend, and alternative assets
+- Calculate projected returns for a given portfolio allocation
+- Get AI-ranked income strategy recommendations by safety and yield
+- Research how rising or falling rates affect portfolio income
+
+## Installation
+### Claude Code
+
+```bash
+claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp
+claude mcp list
+```
+
+### Claude Desktop
+
+Open your Claude Desktop configuration file and add:
+
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving.
+
+## Configuration
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+## Tools
+| Tool                          | Description                                                                              |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `analyze_yield_opportunities` | Analyzes current passive income options using live Treasury rates and AI recommendations |
+| `optimize_income_portfolio`   | Calculates projected returns and optimizes allocation for a target yield                 |
+
+## Examples
+### Analyze current passive income opportunities
+
+```plaintext
+Ask Claude: "What are the best passive income opportunities right now given current rates?"
+```
+
+### Optimize a portfolio for 5% annual yield
+
+```plaintext
+Ask Claude: "I have $50,000 to invest. Optimize my portfolio for a 5% annual yield with low risk."
+```
+
+### Compare Treasury bill options
+
+```plaintext
+Ask Claude: "Compare current 4-week, 13-week, and 26-week Treasury bill rates and tell me which offers the best risk-adjusted yield."
+```
+
+### Calculate projected income from a diversified allocation
+
+```plaintext
+Ask Claude: "Calculate projected annual income from a portfolio: 40% 2-year Treasury, 30% dividend stocks at 3.5%, 30% high-yield savings at 4.8%."
+```
