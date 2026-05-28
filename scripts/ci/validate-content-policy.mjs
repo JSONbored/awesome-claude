@@ -351,6 +351,21 @@ function isNewDirectContentEntry(entry) {
   return false;
 }
 
+function existingEntryHasOnlyMetadataUpdates(entry) {
+  const current = entry.fields || {};
+  const base = entry.baseFields || {};
+  const metadataKeys = new Set(["safety_notes", "privacy_notes"]);
+
+  for (const key of Object.keys({ ...current, ...base })) {
+    if (metadataKeys.has(key)) continue;
+    if (normalizeText(current[key]) !== normalizeText(base[key])) return false;
+  }
+
+  return (
+    normalizeText(entry.contentBody) === normalizeText(entry.baseContentBody)
+  );
+}
+
 function addGeneratedArtifactSignals(report, files, sourceType) {
   if (sourceType !== "external_direct") return;
 
@@ -647,7 +662,10 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
-    if (!isNewDirectContentEntry(entry)) {
+    if (
+      !isNewDirectContentEntry(entry) &&
+      existingEntryHasOnlyMetadataUpdates(entry)
+    ) {
       if (submitterProvenanceChanged(entry)) {
         addProvenanceFinding(
           report,
@@ -832,6 +850,7 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       typeof file.baseContent === "string"
         ? parseMdxFrontmatter(file.baseContent)
         : { data: {} };
+    const baseFields = frontmatterFields(baseParsed.data, category);
     const baseProvenance = frontmatterProvenance(baseParsed.data);
     if (fields.category && fields.category !== category) {
       addClassificationWarning(
@@ -858,8 +877,11 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       status: normalizeText(file.status) || "modified",
       baseExists: typeof file.baseContent === "string",
       fields,
+      baseFields,
       provenance,
       baseProvenance,
+      contentBody: parsed.content || "",
+      baseContentBody: baseParsed.content || "",
     });
     addContentRiskSignals(report, fields, content);
     addDisclosureNoteSignals(report, fields);

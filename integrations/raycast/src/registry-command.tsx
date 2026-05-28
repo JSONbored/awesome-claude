@@ -156,10 +156,18 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
         setEntries(nextFeed.entries);
         setGeneratedAt(nextFeed.generatedAt);
         if (showSuccess) {
+          const isCurrent = nextFeed.refreshStatus === "unchanged";
+          const isStale = nextFeed.refreshStatus === "stale";
           await showToast({
-            style: Toast.Style.Success,
-            title: "HeyClaude feed refreshed",
-            message: `${nextFeed.entries.length} entries`,
+            style: isStale ? Toast.Style.Failure : Toast.Style.Success,
+            title: isStale
+              ? "Could not check for feed updates"
+              : isCurrent
+                ? "HeyClaude feed already current"
+                : "HeyClaude feed refreshed",
+            message: isStale
+              ? nextFeed.refreshWarning
+              : `${nextFeed.entries.length} entries`,
           });
         }
       } catch (error) {

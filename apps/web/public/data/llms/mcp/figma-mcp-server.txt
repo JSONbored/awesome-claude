@@ -83,14 +83,6 @@ Enable your AI assistants to seamlessly interact with Figma Desktop through the 
   }
 }
 ```
-```json
-{
-  "figma": {
-    "url": "http://127.0.0.1:3845/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Export all icons from the design system as SVG
@@ -129,26 +121,6 @@ Ask Claude: "List all text styles used in the design"
 
 Retrieve specific nodes from a Figma file with version control
 
-```typescript
-// Get Figma file nodes
-const file = await figma.files.get({
-  file_key: "file-key",
-  version: "latest",
-  ids: ["node-id-1", "node-id-2"],
-});
-```
-```plaintext
-Ask Claude: "Export all icons from the design system as SVG"
-```
-```plaintext
-Ask Claude: "Get the color palette from this Figma file"
-```
-```plaintext
-Ask Claude: "Extract component specifications for developers"
-```
-```plaintext
-Ask Claude: "List all text styles used in the design"
-```
 ```typescript
 // Get Figma file nodes
 const file = await figma.files.get({

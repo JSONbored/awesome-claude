@@ -68,56 +68,8 @@ Automatically creates timestamped backups of files before modification to preven
   }
 }
 ```
-```json
-{
-  "hooks": {
-    "preToolUse": {
-      "script": "./.claude/hooks/auto-save-backup.sh",
-      "matchers": ["edit", "write", "multiedit"]
-    }
-  }
-}
-```
 
 ## Hook Script
-```bash
-#!/usr/bin/env bash
-
-# Read the tool input from stdin
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-
-if [ -z "$FILE_PATH" ]; then
-  exit 0
-fi
-
-# Check if file exists before backing up
-if [ -f "$FILE_PATH" ]; then
-  echo "💾 Creating backup for $FILE_PATH..." >&2
-
-  # Create backups directory
-  mkdir -p .backups
-
-  # Generate timestamped backup filename
-  BASENAME=$(basename "$FILE_PATH")
-  TIMESTAMP=$(date +%Y%m%d_%H%M%S)
-  BACKUP_NAME="${BASENAME%.*}_${TIMESTAMP}.${BASENAME##*.}"
-
-  # Create backup
-  cp "$FILE_PATH" ".backups/$BACKUP_NAME" 2>/dev/null || true
-
-  if [ $? -eq 0 ]; then
-    echo "✅ Backup created: .backups/$BACKUP_NAME" >&2
-  else
-    echo "⚠️ Backup failed for $FILE_PATH" >&2
-  fi
-else
-  echo "📝 Creating new file $FILE_PATH (no backup needed)" >&2
-fi
-
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 
@@ -252,100 +204,6 @@ exit 0
 
 Advanced hook script with automatic retention policy limiting backups to last 50 versions per file
 
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path")
-if [ -f "$FILE_PATH" ]; then
-  mkdir -p .backups
-
-  # Retention policy: keep last 50 backups per file
-  BASENAME=$(basename "$FILE_PATH")
-  FILE_PREFIX="${BASENAME%.*}_"
-
-  # Count existing backups for this file
-  BACKUP_COUNT=$(find .backups -name "${FILE_PREFIX}*" | wc -l)
-
-  if [ "$BACKUP_COUNT" -ge 50 ]; then
-    find .backups -name "${FILE_PREFIX}*" -type f -printf '%T@ %p\n' | sort -n | head -n -50 | cut -d ' ' -f2- | xargs rm -f 2>/dev/null
-  fi
-
-  TIMESTAMP=$(date +%Y%m%d_%H%M%S_%N)
-  BACKUP_NAME="${BASENAME%.*}_${TIMESTAMP}.${BASENAME##*.}"
-  cp "$FILE_PATH" ".backups/$BACKUP_NAME" 2>/dev/null || true
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ]; then exit 0; fi
-if [ -f "$FILE_PATH" ]; then
-  mkdir -p .backups
-  BASENAME=$(basename "$FILE_PATH")
-  TIMESTAMP=$(date +%Y%m%d_%H%M%S_%N)
-  BACKUP_NAME="${BASENAME%.*}_${TIMESTAMP}.${BASENAME##*.}"
-  cp "$FILE_PATH" ".backups/$BACKUP_NAME" 2>/dev/null || true
-  if [ $? -eq 0 ]; then
-    echo "Backup created: .backups/$BACKUP_NAME" >&2
-  fi
-fi
-exit 0
-```
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|Multiedit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./.claude/hooks/auto-save-backup.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path")
-if [ -f "$FILE_PATH" ]; then
-  mkdir -p .backups
-  BASENAME=$(basename "$FILE_PATH")
-  TIMESTAMP=$(date +%Y%m%d_%H%M%S_%N)
-  BACKUP_NAME="${BASENAME%.*}_${TIMESTAMP}.${BASENAME##*.}"
-
-  # Check disk space before backup
-  AVAILABLE=$(df -BG .backups | tail -1 | awk '{print $4}' | sed 's/G//')
-  if [ "$AVAILABLE" -lt 1 ]; then
-    find .backups -type f -mtime +30 -delete 2>/dev/null
-  fi
-
-  cp "$FILE_PATH" ".backups/$BACKUP_NAME" 2>/dev/null || true
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-if echo "$INPUT" | jq -e ".tool_input.edits" &> /dev/null; then
-  mkdir -p .backups
-  echo "$INPUT" | jq -r ".tool_input.edits[].file_path" | while read -r FILE_PATH; do
-    if [ -f "$FILE_PATH" ]; then
-      BASENAME=$(basename "$FILE_PATH")
-      TIMESTAMP=$(date +%Y%m%d_%H%M%S_%N)
-      BACKUP_NAME="${BASENAME%.*}_${TIMESTAMP}.${BASENAME##*.}"
-      cp "$FILE_PATH" ".backups/$BACKUP_NAME" 2>/dev/null || true
-    fi
-  done
-fi
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 INPUT=$(cat)

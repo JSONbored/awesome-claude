@@ -69,11 +69,6 @@ SessionStart hook that prints a daily Claude Code retro at the top of every sess
 - User settings (global): `~/.claude/settings.json`
 - Project-wide (committed): `.claude/settings.json`
 - Local (not committed): `.claude/settings.local.json`
-```text
-/plugin marketplace add gyanesh-m/retro-daily
-   /plugin install retro-daily@retro-daily
-   /reload-plugins
-```
 
 ## Requirements
 - Claude Code CLI installed and authenticated.
@@ -89,22 +84,6 @@ By default, `scout.sh` and `tag-sessions.sh` can start detached, sandboxed `clau
 Set `RETRO_DAILY_NO_BACKGROUND_WORKERS=1` to disable the background scout and session tagger while keeping the dashboard rendering.
 
 ## Hook Configuration
-```json
-{
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/metrics/startup.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
 ```json
 {
   "hooks": {

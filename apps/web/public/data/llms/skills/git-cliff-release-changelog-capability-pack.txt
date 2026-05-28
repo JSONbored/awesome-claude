@@ -68,13 +68,13 @@ This skill gives agents a deterministic release process that produces readable c
 - Require human review before publishing release artifacts.
 
 ## Troubleshooting
-**Issue:** Changelog section grouping is noisy  
+**Issue:** Changelog section grouping is noisy
 **Fix:** tighten commit scopes and skip bots/merge-only commits.
 
-**Issue:** Wrong version bump recommendation  
+**Issue:** Wrong version bump recommendation
 **Fix:** map feat/fix/breaking conventions explicitly in config.
 
-**Issue:** Release notes differ from changelog  
+**Issue:** Release notes differ from changelog
 **Fix:** derive both from same generated artifact path.
 
 ## Output Contract

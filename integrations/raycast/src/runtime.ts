@@ -1,15 +1,22 @@
 import {
   FEED_URL,
   absoluteDataUrl,
+  buildFeedSnapshotMetadata,
   detailCacheKey,
   fallbackDetail,
   feedCacheKey,
+  feedMetadataCacheKey,
   isRaycastDetail,
   parseFeed,
+  parseFeedSnapshotMetadata,
+  parseRegistryManifestSnapshot,
+  registryManifestUrl,
   resolveFeedUrl,
+  type FeedSnapshotMetadata,
   type ParsedFeed,
   type RaycastDetail,
   type RaycastEntry,
+  type RegistryManifestSnapshot,
 } from "./feed";
 
 export type RaycastTextCache = {
@@ -23,6 +30,33 @@ export type FetchLike = (
   init?: RequestInit,
 ) => Promise<Response>;
 
+function loadCachedFeedMetadata(
+  cache: RaycastTextCache,
+  feedUrl = FEED_URL,
+): FeedSnapshotMetadata | null {
+  return parseFeedSnapshotMetadata(cache.get(feedMetadataCacheKey(feedUrl)));
+}
+
+function saveFeedSnapshotMetadata(
+  cache: RaycastTextCache,
+  feedUrl: string,
+  metadata: FeedSnapshotMetadata,
+) {
+  cache.set(feedMetadataCacheKey(feedUrl), JSON.stringify(metadata));
+}
+
+function enrichFeedWithMetadata(
+  feed: ParsedFeed,
+  metadata: FeedSnapshotMetadata | null,
+): ParsedFeed {
+  if (!metadata) return feed;
+  return {
+    ...feed,
+    generatedAt: metadata.generatedAt || feed.generatedAt,
+    signature: metadata.signature,
+  };
+}
+
 export function loadCachedFeed(
   cache: RaycastTextCache,
   feedUrl = FEED_URL,
@@ -32,11 +66,100 @@ export function loadCachedFeed(
   if (!cached) return { entries: [], generatedAt: "" };
 
   try {
-    return parseFeed(cached);
+    return enrichFeedWithMetadata(
+      parseFeed(cached),
+      loadCachedFeedMetadata(cache, feedUrl),
+    );
   } catch {
     cache.remove(cacheKey);
+    cache.remove(feedMetadataCacheKey(feedUrl));
     return { entries: [], generatedAt: "" };
   }
+}
+
+async function fetchRegistryManifestSnapshot(
+  fetchFn: FetchLike,
+  feedUrl: string,
+): Promise<RegistryManifestSnapshot | null> {
+  const response = await fetchFn(registryManifestUrl(feedUrl), {
+    headers: { accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Registry manifest responded with ${response.status}`);
+  }
+
+  const snapshot = parseRegistryManifestSnapshot(await response.text());
+  if (!snapshot) {
+    throw new Error("Registry manifest payload was malformed");
+  }
+  return snapshot;
+}
+
+function isSameFeedSnapshot(
+  cachedFeed: ParsedFeed,
+  cachedMetadata: FeedSnapshotMetadata | null,
+  manifestSnapshot: RegistryManifestSnapshot,
+) {
+  if (cachedMetadata?.signature) {
+    return cachedMetadata.signature === manifestSnapshot.signature;
+  }
+  return Boolean(
+    cachedFeed.generatedAt &&
+    manifestSnapshot.generatedAt &&
+    cachedFeed.generatedAt === manifestSnapshot.generatedAt,
+  );
+}
+
+function removeDetailCacheForSnapshot(options: {
+  cache: RaycastTextCache;
+  entries: RaycastEntry[];
+  feedUrl: string;
+  detailCacheNamespace: string;
+}) {
+  for (const entry of options.entries) {
+    options.cache.remove(
+      detailCacheKey(entry, options.feedUrl, options.detailCacheNamespace),
+    );
+  }
+}
+
+function invalidateDetailCacheWhenSnapshotChanges(options: {
+  cache: RaycastTextCache;
+  entries: RaycastEntry[];
+  feedUrl: string;
+  previousMetadata: FeedSnapshotMetadata | null;
+  nextMetadata: FeedSnapshotMetadata;
+}) {
+  const previousNamespace =
+    options.previousMetadata?.detailCacheNamespace || "";
+  if (previousNamespace === options.nextMetadata.detailCacheNamespace) return;
+
+  removeDetailCacheForSnapshot({
+    cache: options.cache,
+    entries: options.entries,
+    feedUrl: options.feedUrl,
+    detailCacheNamespace: previousNamespace,
+  });
+}
+
+function isFeedPayloadValidationError(error: unknown) {
+  return (
+    error instanceof SyntaxError ||
+    (error instanceof Error && error.message === "Feed contained no entries")
+  );
+}
+
+async function fetchFeedPayload(
+  fetchFn: FetchLike,
+  feedUrl: string,
+): Promise<string> {
+  const response = await fetchFn(feedUrl, {
+    headers: { accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Feed responded with ${response.status}`);
+  }
+  return response.text();
 }
 
 export async function fetchFreshFeed(options: {
@@ -46,21 +169,64 @@ export async function fetchFreshFeed(options: {
 }) {
   const fetchFn = options.fetchFn ?? fetch;
   const feedUrl = resolveFeedUrl(options.feedUrl);
-  const response = await fetchFn(feedUrl, {
-    headers: { accept: "application/json" },
-  });
-  if (!response.ok) {
-    throw new Error(`Feed responded with ${response.status}`);
+  const cachedFeed = loadCachedFeed(options.cache, feedUrl);
+  const cachedMetadata = loadCachedFeedMetadata(options.cache, feedUrl);
+  let manifestSnapshot: RegistryManifestSnapshot | null = null;
+  let manifestError: Error | null = null;
+
+  try {
+    manifestSnapshot = await fetchRegistryManifestSnapshot(fetchFn, feedUrl);
+    if (
+      cachedFeed.entries.length > 0 &&
+      manifestSnapshot &&
+      isSameFeedSnapshot(cachedFeed, cachedMetadata, manifestSnapshot)
+    ) {
+      const metadata = buildFeedSnapshotMetadata(cachedFeed, manifestSnapshot);
+      saveFeedSnapshotMetadata(options.cache, feedUrl, metadata);
+      return {
+        ...enrichFeedWithMetadata(cachedFeed, metadata),
+        refreshStatus: "unchanged" as const,
+      };
+    }
+  } catch (error) {
+    manifestError = error instanceof Error ? error : new Error(String(error));
   }
 
-  const text = await response.text();
-  const nextFeed = parseFeed(text);
-  if (nextFeed.entries.length === 0) {
-    throw new Error("Feed contained no entries");
-  }
+  try {
+    const text = await fetchFeedPayload(fetchFn, feedUrl);
+    const nextFeed = parseFeed(text);
+    if (nextFeed.entries.length === 0) {
+      throw new Error("Feed contained no entries");
+    }
 
-  options.cache.set(feedCacheKey(feedUrl), text);
-  return nextFeed;
+    const nextMetadata = buildFeedSnapshotMetadata(nextFeed, manifestSnapshot);
+    options.cache.set(feedCacheKey(feedUrl), text);
+    saveFeedSnapshotMetadata(options.cache, feedUrl, nextMetadata);
+    invalidateDetailCacheWhenSnapshotChanges({
+      cache: options.cache,
+      entries: nextFeed.entries,
+      feedUrl,
+      previousMetadata: cachedMetadata,
+      nextMetadata,
+    });
+    return {
+      ...enrichFeedWithMetadata(nextFeed, nextMetadata),
+      refreshStatus: "updated" as const,
+    };
+  } catch (error) {
+    if (
+      cachedFeed.entries.length > 0 &&
+      manifestError &&
+      !isFeedPayloadValidationError(error)
+    ) {
+      return {
+        ...cachedFeed,
+        refreshStatus: "stale" as const,
+        refreshWarning: manifestError.message,
+      };
+    }
+    throw error;
+  }
 }
 
 export async function loadEntryDetail(options: {
@@ -73,7 +239,12 @@ export async function loadEntryDetail(options: {
   if (!entry.detailUrl) return fallbackDetail(entry);
 
   const feedUrl = resolveFeedUrl(options.feedUrl);
-  const cacheKey = detailCacheKey(entry, feedUrl);
+  const metadata = loadCachedFeedMetadata(cache, feedUrl);
+  const cacheKey = detailCacheKey(
+    entry,
+    feedUrl,
+    metadata?.detailCacheNamespace,
+  );
   const cached = cache.get(cacheKey);
   if (cached) {
     try {

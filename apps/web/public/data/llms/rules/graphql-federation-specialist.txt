@@ -81,50 +81,6 @@ const resolvers = {
   },
 };
 ```
-```graphql
-# Users subgraph
-type User @key(fields: "id") {
-  id: ID!
-  email: String!
-  name: String!
-}
-
-# Posts subgraph - extends User
-extend type User @key(fields: "id") {
-  id: ID! @external
-  posts: [Post!]!
-}
-
-type Post {
-  id: ID!
-  title: String!
-  authorId: ID!
-}
-```
-```typescript
-// Users subgraph
-const resolvers = {
-  User: {
-    __resolveReference(user: { id: string }) {
-      return getUserById(user.id);
-    },
-  },
-  Query: {
-    user(_, { id }) {
-      return getUserById(id);
-    },
-  },
-};
-
-// Posts subgraph
-const resolvers = {
-  User: {
-    posts(user: { id: string }) {
-      return getPostsByAuthorId(user.id);
-    },
-  },
-};
-```
 
 ## Schema Design Best Practices
 ### Entity Ownership
@@ -178,44 +134,6 @@ type Query {
   node(id: ID!): Node
 }
 ```
-```graphql
-# Shared types across subgraphs
-scalar DateTime
-scalar JSON
-
-enum OrderStatus {
-  PENDING
-  CONFIRMED
-  SHIPPED
-  DELIVERED
-}
-
-# Use @shareable for common fields
-type Product @key(fields: "id") {
-  id: ID!
-  name: String! @shareable
-  price: Float! @shareable
-}
-```
-```graphql
-interface Node {
-  id: ID!
-}
-
-type User implements Node @key(fields: "id") {
-  id: ID!
-  email: String!
-}
-
-type Product implements Node @key(fields: "id") {
-  id: ID!
-  name: String!
-}
-
-type Query {
-  node(id: ID!): Node
-}
-```
 
 ## Apollo Gateway Setup
 ### Gateway Configuration
@@ -250,89 +168,10 @@ const gateway = new ApolloGateway({
   // No introspection in production
 });
 ```
-```typescript
-import { ApolloGateway, IntrospectAndCompose } from "@apollo/gateway";
-import { ApolloServer } from "@apollo/server";
-
-const gateway = new ApolloGateway({
-  supergraphSdl: new IntrospectAndCompose({
-    subgraphs: [
-      { name: "users", url: "http://users-service/graphql" },
-      { name: "posts", url: "http://posts-service/graphql" },
-      { name: "comments", url: "http://comments-service/graphql" },
-    ],
-    pollIntervalInMs: 10000, // Check for schema updates
-  }),
-});
-
-const server = new ApolloServer({
-  gateway,
-});
-```
-```typescript
-import { ApolloGateway } from "@apollo/gateway";
-
-const gateway = new ApolloGateway({
-  // Use Apollo Studio for managed federation
-  // No introspection in production
-});
-```
 
 ## Subgraph Implementation
 ### Apollo Federation Subgraph
 
-```typescript
-import { buildSubgraphSchema } from "@apollo/subgraph";
-import { ApolloServer } from "@apollo/server";
-import gql from "graphql-tag";
-
-const typeDefs = gql`
-  extend schema
-    @link(
-      url: "https://specs.apollo.dev/federation/v2.0"
-      import: ["@key", "@shareable", "@external"]
-    )
-
-  type User @key(fields: "id") {
-    id: ID!
-    email: String!
-    profile: UserProfile
-  }
-
-  type UserProfile {
-    bio: String
-    avatar: String
-  }
-
-  type Query {
-    me: User
-    user(id: ID!): User
-  }
-`;
-
-const resolvers = {
-  User: {
-    __resolveReference(user: { id: string }, context) {
-      return context.dataSources.users.findById(user.id);
-    },
-    profile(user) {
-      return context.dataSources.profiles.findByUserId(user.id);
-    },
-  },
-  Query: {
-    me(_, __, context) {
-      return context.user;
-    },
-    user(_, { id }, context) {
-      return context.dataSources.users.findById(id);
-    },
-  },
-};
-
-const server = new ApolloServer({
-  schema: buildSubgraphSchema({ typeDefs, resolvers }),
-});
-```
 ```typescript
 import { buildSubgraphSchema } from "@apollo/subgraph";
 import { ApolloServer } from "@apollo/server";
@@ -452,59 +291,6 @@ const gateway = new ApolloGateway({
   },
 });
 ```
-```typescript
-import DataLoader from "dataloader";
-
-class UserService {
-  private loader: DataLoader<string, User>;
-
-  constructor() {
-    this.loader = new DataLoader(async (ids) => {
-      const users = await db.user.findMany({
-        where: { id: { in: ids } },
-      });
-
-      return ids.map((id) => users.find((user) => user.id === id));
-    });
-  }
-
-  findById(id: string) {
-    return this.loader.load(id);
-  }
-}
-```
-```typescript
-// Subgraph-level caching
-const resolvers = {
-  Query: {
-    user: async (_, { id }, { cache }) => {
-      const cacheKey = `user:${id}`;
-      const cached = await cache.get(cacheKey);
-
-      if (cached) return JSON.parse(cached);
-
-      const user = await getUserById(id);
-      await cache.set(cacheKey, JSON.stringify(user), { ttl: 300 });
-
-      return user;
-    },
-  },
-};
-
-// Gateway-level caching with CDN
-const gateway = new ApolloGateway({
-  // ...
-  buildService({ url }) {
-    return new RemoteGraphQLDataSource({
-      url,
-      willSendRequest({ request, context }) {
-        // Add auth headers
-        request.http.headers.set("authorization", context.token);
-      },
-    });
-  },
-});
-```
 
 ## Error Handling
 ### Partial Failures
@@ -526,31 +312,6 @@ const resolvers = {
 
 ### Error Extensions
 
-```typescript
-import { GraphQLError } from "graphql";
-
-throw new GraphQLError("User not found", {
-  extensions: {
-    code: "USER_NOT_FOUND",
-    userId: id,
-    timestamp: new Date().toISOString(),
-  },
-});
-```
-```typescript
-const resolvers = {
-  User: {
-    async posts(user, _, context) {
-      try {
-        return await context.dataSources.posts.findByAuthorId(user.id);
-      } catch (error) {
-        // Return null and include error in response
-        return null;
-      }
-    },
-  },
-};
-```
 ```typescript
 import { GraphQLError } from "graphql";
 
@@ -617,54 +378,6 @@ enum Role {
   USER
 }
 ```
-```typescript
-// Gateway context
-const server = new ApolloServer({
-  gateway,
-  context: async ({ req }) => {
-    const token = req.headers.authorization;
-    const user = await verifyToken(token);
-
-    return { user, token };
-  },
-});
-
-// Subgraph resolvers
-const resolvers = {
-  Query: {
-    user(_, { id }, context) {
-      if (!context.user) {
-        throw new GraphQLError("Unauthorized", {
-          extensions: { code: "UNAUTHENTICATED" },
-        });
-      }
-
-      if (context.user.id !== id && !context.user.isAdmin) {
-        throw new GraphQLError("Forbidden", {
-          extensions: { code: "FORBIDDEN" },
-        });
-      }
-
-      return getUserById(id);
-    },
-  },
-};
-```
-```graphql
-type User @key(fields: "id") {
-  id: ID!
-  email: String! @auth(requires: OWNER)
-  publicProfile: Profile
-}
-
-directive @auth(requires: Role) on FIELD_DEFINITION
-
-enum Role {
-  OWNER
-  ADMIN
-  USER
-}
-```
 
 ## Performance Optimization
 ### Avoid N+1 Queries
@@ -692,29 +405,6 @@ const server = new ApolloServer({
 
 ### Persisted Queries
 
-```typescript
-const server = new ApolloServer({
-  gateway,
-  persistedQueries: {
-    cache: new RedisCache({
-      host: "redis-server",
-    }),
-  },
-});
-```
-```typescript
-import { createComplexityRule } from "graphql-validation-complexity";
-
-const server = new ApolloServer({
-  schema,
-  validationRules: [
-    createComplexityRule({
-      maximumComplexity: 1000,
-      onCost: (cost) => console.log("Query cost:", cost),
-    }),
-  ],
-});
-```
 ```typescript
 const server = new ApolloServer({
   gateway,
@@ -757,31 +447,6 @@ const metricsPlugin: ApolloServerPlugin = {
   },
 };
 ```
-```typescript
-const server = new ApolloServer({
-  gateway,
-  apollo: {
-    key: process.env.APOLLO_KEY,
-    graphRef: process.env.APOLLO_GRAPH_REF,
-  },
-});
-```
-```typescript
-import { ApolloServerPlugin } from "@apollo/server";
-
-const metricsPlugin: ApolloServerPlugin = {
-  async requestDidStart() {
-    const start = Date.now();
-
-    return {
-      async willSendResponse() {
-        const duration = Date.now() - start;
-        metrics.recordQueryDuration(duration);
-      },
-    };
-  },
-};
-```
 
 ## Schema Composition
 ### Composition Rules
@@ -794,18 +459,6 @@ const metricsPlugin: ApolloServerPlugin = {
 
 ### Rover CLI for Composition
 
-```bash
-# Check schema composition
-rover subgraph check my-graph@prod \
-  --name users \
-  --schema ./users-schema.graphql
-
-# Publish subgraph
-rover subgraph publish my-graph@prod \
-  --name users \
-  --schema ./users-schema.graphql \
-  --routing-url https://users-service/graphql
-```
 ```bash
 # Check schema composition
 rover subgraph check my-graph@prod \

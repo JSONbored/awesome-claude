@@ -148,40 +148,6 @@ Claude will:
    - Save to output/
 3. Report success/failure stats"
 ```
-```text
-"Create a validation script that:
-1. Loads this OpenAPI spec
-2. Extracts the POST /users request schema
-3. Validates this payload against it
-4. Returns detailed error messages for invalid fields
-5. Suggests corrections"
-```
-```text
-"Validate all JSON config files in the uploaded directory:
-1. Check against config.schema.json
-2. Report which files are invalid
-3. For each error, show: file, path, expected type, actual value
-4. Suggest fixes for common errors
-5. Generate a validation report"
-```
-```text
-"Normalize this messy JSON data:
-1. Validate against the schema
-2. Fix common issues (trim strings, coerce types)
-3. Remove extra properties not in schema
-4. Fill in default values for missing optional fields
-5. Export clean, validated JSON"
-```
-```text
-"Transform all JSON files from old format to new:
-1. Load transformation rules
-2. For each file:
-   - Parse and validate source
-   - Apply transformations
-   - Validate against target schema
-   - Save to output/
-3. Report success/failure stats"
-```
 
 ## Tips for Best Results
 1. **Provide Complete Schemas**: Include all $ref dependencies or use inline definitions

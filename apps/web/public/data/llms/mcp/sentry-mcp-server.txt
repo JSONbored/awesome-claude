@@ -92,14 +92,6 @@ Connect Claude to Sentry for comprehensive error monitoring, debugging, and appl
   }
 }
 ```
-```json
-{
-  "sentry": {
-    "url": "https://mcp.sentry.dev/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### What are the most common errors in the last 24 hou...
@@ -138,26 +130,6 @@ Ask Claude: "Find all errors affecting the checkout flow"
 
 Retrieve detailed information about a Sentry issue
 
-```typescript
-// Get Sentry issue details
-const issue = await sentry.issues.get({
-  organization_slug: "org-slug",
-  project_id: "project-id",
-  issue_id: "issue-id",
-});
-```
-```plaintext
-Ask Claude: "What are the most common errors in the last 24 hours?"
-```
-```plaintext
-Ask Claude: "Show me the stack trace for error ID abc123"
-```
-```plaintext
-Ask Claude: "Which deployment introduced these new errors?"
-```
-```plaintext
-Ask Claude: "Find all errors affecting the checkout flow"
-```
 ```typescript
 // Get Sentry issue details
 const issue = await sentry.issues.get({

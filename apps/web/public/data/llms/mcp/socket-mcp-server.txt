@@ -93,14 +93,6 @@ Analyze dependency security and supply chain risks with Socket's comprehensive v
   }
 }
 ```
-```json
-{
-  "socket": {
-    "url": "https://mcp.socket.dev/",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Scan my package.json for vulnerabilities
@@ -139,25 +131,6 @@ Ask Claude: "Generate a security report"
 
 Broadcast a message to all clients in a Socket.io room
 
-```typescript
-// Emit event to Socket.io room
-io.to("room-id").emit("message", {
-  text: "Hello, room!",
-  timestamp: Date.now(),
-});
-```
-```plaintext
-Ask Claude: "Scan my package.json for vulnerabilities"
-```
-```plaintext
-Ask Claude: "Check the security score of lodash"
-```
-```plaintext
-Ask Claude: "Find risky dependencies in my project"
-```
-```plaintext
-Ask Claude: "Generate a security report"
-```
 ```typescript
 // Emit event to Socket.io room
 io.to("room-id").emit("message", {

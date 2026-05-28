@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 388,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 101,
@@ -18,14 +18,14 @@
       "warningCount": 22
     },
     "mcp": {
-      "count": 49,
+      "count": 50,
       "averageScore": 90,
       "warningCount": 6
     },
     "tools": {
-      "count": 52,
+      "count": 53,
       "averageScore": 79,
-      "warningCount": 0
+      "warningCount": 1
     },
     "skills": {
       "count": 68,
@@ -1180,6 +1180,41 @@
       },
       "warnings": [
         "Description is long for browse/search display."
+      ]
+    },
+    {
+      "key": "tools:authsome",
+      "category": "tools",
+      "slug": "authsome",
+      "title": "Authsome",
+      "scores": {
+        "total": 80,
+        "usefulness": 100,
+        "source": 75,
+        "copyability": 30,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://authsome.ai/docs",
+          "https://github.com/agentrhq/authsome",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+          "https://authsome.ai"
+        ],
+        "externalSourceUrls": [
+          "https://authsome.ai/docs",
+          "https://github.com/agentrhq/authsome",
+          "https://authsome.ai"
+        ]
+      },
+      "warnings": [
+        "No substantial copyable asset text."
       ]
     },
     {
@@ -11150,6 +11185,37 @@
         "externalSourceUrls": [
           "https://docs.xquik.com/mcp/overview",
           "https://github.com/Xquik-dev/x-twitter-scraper"
+        ]
+      },
+      "warnings": []
+    },
+    {
+      "key": "mcp:yield-intelligence-mcp",
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "scores": {
+        "total": 93,
+        "usefulness": 100,
+        "source": 75,
+        "copyability": 90,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/thebrierfox/intuitek-ace"
         ]
       },
       "warnings": []

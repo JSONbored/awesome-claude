@@ -73,58 +73,8 @@ Validates AWS CloudFormation templates for syntax errors and best practices usin
   }
 }
 ```
-```json
-{
-  "hooks": {
-    "postToolUse": {
-      "script": "./.claude/hooks/aws-cloudformation-validator.sh",
-      "matchers": ["write", "edit"]
-    }
-  }
-}
-```
 
 ## Hook Script
-```bash
-#!/usr/bin/env bash
-
-# Read the tool input from stdin
-INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | jq -r '.tool_name')
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
-
-if [ -z "$FILE_PATH" ]; then
-  exit 0
-fi
-
-# Check if it's a CloudFormation template
-if [[ "$FILE_PATH" == *.cf.json ]] || [[ "$FILE_PATH" == *.cf.yaml ]] || [[ "$FILE_PATH" == *cloudformation*.yaml ]] || [[ "$FILE_PATH" == *cloudformation*.json ]]; then
-  echo "☁️ Validating CloudFormation template $FILE_PATH..." >&2
-
-  # Try cfn-lint first (preferred)
-  if command -v cfn-lint &> /dev/null; then
-    echo "Running cfn-lint validation..." >&2
-    if cfn-lint "$FILE_PATH" 2>&1; then
-      echo "✅ CloudFormation template validation passed" >&2
-    else
-      echo "❌ CloudFormation template validation failed" >&2
-    fi
-  elif command -v aws &> /dev/null; then
-    echo "⚠️ cfn-lint not installed, using AWS CLI validation..." >&2
-    if aws cloudformation validate-template --template-body "file://$FILE_PATH" 2>/dev/null; then
-      echo "✅ Basic CloudFormation validation passed" >&2
-    else
-      echo "❌ CloudFormation template validation failed" >&2
-    fi
-  else
-    echo "⚠️ Neither cfn-lint nor AWS CLI available for validation" >&2
-  fi
-else
-  echo "File $FILE_PATH is not a CloudFormation template, skipping validation" >&2
-fi
-
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 
@@ -261,88 +211,6 @@ exit 0
 
 Hook script that detects CloudFormation templates by content and updates schemas before validation
 
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path")
-if grep -q "AWSTemplateFormatVersion" "$FILE_PATH" 2>/dev/null || grep -q "Transform: AWS::Serverless" "$FILE_PATH" 2>/dev/null; then
-  if command -v cfn-lint &> /dev/null; then
-    cfn-lint "$FILE_PATH" --update-specs 2>/dev/null
-    cfn-lint "$FILE_PATH" 2>&1
-  fi
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path // .tool_input.path // \"\"")
-if [ -z "$FILE_PATH" ]; then exit 0; fi
-if [[ "$FILE_PATH" == *.cf.json ]] || [[ "$FILE_PATH" == *.cf.yaml ]] || [[ "$FILE_PATH" == *cloudformation*.yaml ]] || [[ "$FILE_PATH" == *cloudformation*.json ]]; then
-  echo "Validating CloudFormation template $FILE_PATH..." >&2
-  if command -v cfn-lint &> /dev/null; then
-    if cfn-lint "$FILE_PATH" 2>&1; then
-      echo "CloudFormation template validation passed" >&2
-    else
-      echo "CloudFormation template validation failed" >&2
-    fi
-  elif command -v aws &> /dev/null; then
-    if aws cloudformation validate-template --template-body "file://$FILE_PATH" 2>/dev/null; then
-      echo "Basic CloudFormation validation passed" >&2
-    else
-      echo "CloudFormation template validation failed" >&2
-    fi
-  fi
-fi
-exit 0
-```
-```json
-{
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "./.claude/hooks/aws-cloudformation-validator.sh"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path")
-if [[ "$FILE_PATH" == *.yaml ]] || [[ "$FILE_PATH" == *.yml ]]; then
-  if command -v cfn-lint &> /dev/null; then
-    cfn-lint "$FILE_PATH" --regions us-east-1 us-west-2 --format json --output-file validation-results.json 2>&1
-    if [ $? -eq 0 ]; then
-      echo "Multi-region validation passed" >&2
-    fi
-  fi
-fi
-exit 0
-```
-```bash
-#!/usr/bin/env bash
-INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r ".tool_input.file_path")
-if [[ "$FILE_PATH" == *.yaml ]] || [[ "$FILE_PATH" == *.json ]]; then
-  if command -v cfn-lint &> /dev/null; then
-    cfn-lint "$FILE_PATH" --ignore-checks W --format parseable 2>&1
-    EXIT_CODE=$?
-    if [ $EXIT_CODE -ne 0 ]; then
-      echo "Template validation failed with errors" >&2
-      exit 2
-    fi
-  fi
-fi
-exit 0
-```
 ```bash
 #!/usr/bin/env bash
 INPUT=$(cat)

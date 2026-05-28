@@ -92,14 +92,6 @@ Control Vercel deployments and infrastructure through Claude for seamless deploy
   }
 }
 ```
-```json
-{
-  "vercel": {
-    "url": "https://mcp.vercel.com",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Deploy the latest commit to production
@@ -138,28 +130,6 @@ Ask Claude: "List all recent deployments"
 
 Deploy a project to Vercel with files and configuration
 
-```typescript
-// Deploy project to Vercel
-const deployment = await vercel.deployments.create({
-  name: "my-project",
-  files: [
-    { file: "index.html", data: "<html>...</html>" },
-    { file: "package.json", data: JSON.stringify({ ... }) }
-  ]
-});
-```
-```plaintext
-Ask Claude: "Deploy the latest commit to production"
-```
-```plaintext
-Ask Claude: "Show me the build logs for the failed deployment"
-```
-```plaintext
-Ask Claude: "Update the API_KEY environment variable"
-```
-```plaintext
-Ask Claude: "List all recent deployments"
-```
 ```typescript
 // Deploy project to Vercel
 const deployment = await vercel.deployments.create({

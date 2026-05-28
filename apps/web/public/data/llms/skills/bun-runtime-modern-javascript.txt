@@ -168,39 +168,6 @@ Claude will:
 7. Docker containers
 8. Kubernetes deployment"
 ```
-```text
-"Build production REST API with Bun:
-1. HTTP server with Bun.serve() and routing
-2. JWT authentication middleware
-3. Database with bun:sqlite or Postgres
-4. Request validation with Zod
-5. Rate limiting with in-memory store
-6. File uploads with Bun.file()
-7. WebSocket for real-time updates
-8. Docker deployment with bun:alpine"
-```
-```text
-"Create build tool with Bun:
-1. File watching with Bun.watch()
-2. Bundling with Bun.build()
-3. TypeScript transpilation (automatic)
-4. Minification and tree-shaking
-5. Source maps generation
-6. Plugin system for transforms
-7. Parallel file processing
-8. Cache invalidation"
-```
-```text
-"Build microservices with Bun:
-1. Service discovery with etcd
-2. gRPC communication
-3. Health checks endpoint
-4. Metrics collection
-5. Structured logging
-6. Graceful shutdown
-7. Docker containers
-8. Kubernetes deployment"
-```
 
 ## Troubleshooting
 **Issue:** "Node.js package not working in Bun"

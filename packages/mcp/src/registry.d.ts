@@ -81,7 +81,10 @@ export function listRegistryResourceTemplates(): Record<string, unknown>;
 
 export function readRegistryResource(
   args?: Record<string, unknown>,
-  options?: RegistryArtifactLoaders,
+  options?: RegistryArtifactLoaders & {
+    publicApiBaseUrl?: string;
+    fetchPublicApi?: (apiPath: string) => Promise<unknown>;
+  },
 ): Promise<Record<string, unknown>>;
 
 export function listRegistryPrompts(): Record<string, unknown>;
@@ -163,6 +166,27 @@ export function explainEntryTrust(
 export function reviewEntrySafety(
   args?: Record<string, unknown>,
   options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
+export function listRegistryRecent(
+  options?: RegistryArtifactLoaders & {
+    publicApiBaseUrl?: string;
+    fetchPublicApi?: (apiPath: string) => Promise<unknown>;
+  },
+): Promise<RegistryToolResult>;
+
+export function listRegistryTrending(
+  options?: RegistryArtifactLoaders & {
+    publicApiBaseUrl?: string;
+    fetchPublicApi?: (apiPath: string) => Promise<unknown>;
+  },
+): Promise<RegistryToolResult>;
+
+export function listJobsActive(
+  options?: RegistryArtifactLoaders & {
+    publicApiBaseUrl?: string;
+    fetchPublicApi?: (apiPath: string) => Promise<unknown>;
+  },
 ): Promise<RegistryToolResult>;
 
 export function callRegistryTool(

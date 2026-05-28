@@ -7,6 +7,7 @@ import {
   CACHE_KEY,
   DETAIL_CACHE_PREFIX,
   absoluteDataUrl,
+  buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
   buildEntrySummary,
   buildSuggestChangeUrl,
@@ -16,11 +17,13 @@ import {
   entryKey,
   fallbackDetail,
   feedCacheKey,
+  feedMetadataCacheKey,
   filterEntriesByCategory,
   isRaycastDetail,
   parseDetail,
   parseFavoriteKeys,
   parseFeed,
+  registryManifestUrl,
   resolveFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
@@ -666,6 +669,151 @@ describe("Raycast feed helpers", () => {
     );
   });
 
+  it("skips the full Raycast feed when the manifest signature is unchanged", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const metadata = buildFeedSnapshotMetadata(
+      { generatedAt: "2026-04-28T00:00:00.000Z" },
+      {
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        signature: "same-signature",
+      },
+    );
+    cache.set(
+      feedCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        entries: [sampleEntry],
+      }),
+    );
+    cache.set(feedMetadataCacheKey(devFeed), JSON.stringify(metadata));
+
+    const requestedUrls: string[] = [];
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        return response({
+          generatedAt: "2026-04-28T00:00:00.000Z",
+          artifactContracts: {
+            "raycast-index.json": {
+              path: "/data/raycast-index.json",
+              type: "json",
+              sha256: "same-signature",
+            },
+          },
+        });
+      },
+    });
+
+    assert.equal(feed.refreshStatus, "unchanged");
+    assert.equal(feed.entries.length, 1);
+    assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed)]);
+    assert.equal(
+      JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
+      "same-signature",
+    );
+  });
+
+  it("refreshes changed feeds and invalidates previous detail snapshots", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const oldMetadata = buildFeedSnapshotMetadata(
+      { generatedAt: "2026-04-28T00:00:00.000Z" },
+      {
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        signature: "old-signature",
+      },
+    );
+    const oldDetailKey = detailCacheKey(
+      sampleEntry,
+      devFeed,
+      oldMetadata.detailCacheNamespace,
+    );
+    cache.set(
+      feedCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        entries: [sampleEntry],
+      }),
+    );
+    cache.set(feedMetadataCacheKey(devFeed), JSON.stringify(oldMetadata));
+    cache.set(
+      oldDetailKey,
+      JSON.stringify({
+        copyText: "stale detail",
+        detailMarkdown: "# Stale",
+      }),
+    );
+
+    const requestedUrls: string[] = [];
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        if (String(input).endsWith("/data/registry-manifest.json")) {
+          return response({
+            generatedAt: "2026-04-29T00:00:00.000Z",
+            artifactContracts: {
+              "raycast-index.json": {
+                path: "/data/raycast-index.json",
+                type: "json",
+                sha256: "new-signature",
+              },
+            },
+          });
+        }
+        return response({
+          generatedAt: "2026-04-29T00:00:00.000Z",
+          entries: [{ ...sampleEntry, title: "Context7 Updated" }],
+        });
+      },
+    });
+
+    assert.equal(feed.refreshStatus, "updated");
+    assert.equal(feed.signature, "new-signature");
+    assert.equal(feed.entries[0].title, "Context7 Updated");
+    assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed), devFeed]);
+    assert.equal(cache.get(oldDetailKey), undefined);
+    assert.equal(
+      JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
+      "new-signature",
+    );
+  });
+
+  it("keeps stale cached feed data usable when signature and feed checks fail", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    cache.set(
+      feedCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        entries: [sampleEntry],
+      }),
+    );
+    cache.set(
+      feedMetadataCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        signature: "cached-signature",
+        detailCacheNamespace: "cached-signature",
+      }),
+    );
+
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () => response({}, { status: 503 }),
+    });
+
+    assert.equal(feed.refreshStatus, "stale");
+    assert.match(feed.refreshWarning || "", /Registry manifest responded/);
+    assert.equal(feed.entries[0].slug, sampleEntry.slug);
+    assert.match(cache.get(feedCacheKey(devFeed)) || "", /context7/);
+  });
+
   it("loads detail payloads on demand and falls back only when no detail URL exists", async () => {
     const cache = new MemoryCache();
     let requestedUrl = "";
@@ -714,6 +862,44 @@ describe("Raycast feed helpers", () => {
         cache: new MemoryCache(),
       }),
       fallbackDetail(sampleEntry),
+    );
+  });
+
+  it("uses feed snapshot metadata when reading and writing detail cache entries", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    cache.set(
+      feedMetadataCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-29T00:00:00.000Z",
+        signature: "current-signature",
+        detailCacheNamespace: "current-signature",
+      }),
+    );
+    cache.set(
+      detailCacheKey(sampleEntry, devFeed, "old-signature"),
+      JSON.stringify({
+        copyText: "stale detail",
+        detailMarkdown: "# Stale",
+      }),
+    );
+
+    const detail = await loadEntryDetail({
+      entry: sampleEntry,
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () =>
+        response({
+          copyText: "current detail",
+          detailMarkdown: "# Current",
+        }),
+    });
+
+    assert.equal(detail.copyText, "current detail");
+    assert.match(
+      cache.get(detailCacheKey(sampleEntry, devFeed, "current-signature")) ||
+        "",
+      /current detail/,
     );
   });
 });

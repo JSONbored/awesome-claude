@@ -174,45 +174,6 @@ Use consistent styling throughout."
 6. Use modern, clean formatting
 Save as resume.docx"
 ```
-```text
-"Create a meeting minutes template with:
-1. Header: Date, Time, Location, Attendees
-2. Agenda items section
-3. Discussion notes table (Topic | Discussion | Decision)
-4. Action items table (Task | Owner | Due Date | Status)
-5. Next meeting section
-Use professional formatting with the 'Office' built-in style."
-```
-```text
-"Generate an invoice document:
-1. Company header (name, address, logo placeholder)
-2. Invoice details (number, date, due date)
-3. Bill to / Ship to sections
-4. Line items table (Description, Qty, Rate, Amount)
-5. Subtotal, tax, total calculations
-6. Payment terms footer
-Make it look professional with borders and shading."
-```
-```text
-"Create technical documentation:
-1. Cover page with title and version
-2. Table of contents (auto-generated)
-3. Multiple sections with heading hierarchy
-4. Code examples in monospace with syntax highlighting
-5. Tables for API endpoints
-6. Numbered figures with captions
-Use consistent styling throughout."
-```
-```text
-"Format this resume data into a professional document:
-1. Header with name and contact info
-2. Professional summary
-3. Work experience (company, role, dates, bullets)
-4. Education section
-5. Skills table (2 columns)
-6. Use modern, clean formatting
-Save as resume.docx"
-```
 
 ## Tips for Best Results
 1. **Be Specific About Formatting**: Mention fonts, sizes, colors, alignment

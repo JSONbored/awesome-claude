@@ -68,13 +68,13 @@ This skill focuses on practical local governance: catch avoidable issues early w
 - Treat commit-msg enforcement as required for changelog quality.
 
 ## Troubleshooting
-**Issue:** Hooks are too slow and developers bypass them  
+**Issue:** Hooks are too slow and developers bypass them
 **Fix:** keep pre-commit to staged-file checks only.
 
-**Issue:** Hook failures differ from CI failures  
+**Issue:** Hook failures differ from CI failures
 **Fix:** use shared scripts for local and CI paths.
 
-**Issue:** Commit message confusion  
+**Issue:** Commit message confusion
 **Fix:** provide examples in failing output and contributor docs.
 
 ## Output Contract

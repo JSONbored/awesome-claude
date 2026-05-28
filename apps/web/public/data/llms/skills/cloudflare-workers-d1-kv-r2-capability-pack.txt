@@ -75,13 +75,13 @@ This capability pack teaches agents how to choose the right Cloudflare storage p
 - Enforce endpoint-level auth and rate limits for write operations.
 
 ## Troubleshooting
-**Issue:** Stale reads after updates  
+**Issue:** Stale reads after updates
 **Fix:** Define explicit invalidation/order rules between D1 source of truth and KV caches.
 
-**Issue:** High read latency on hot paths  
+**Issue:** High read latency on hot paths
 **Fix:** Move read-heavy projection to KV with controlled sync from D1.
 
-**Issue:** Unexpected storage cost growth  
+**Issue:** Unexpected storage cost growth
 **Fix:** Add lifecycle policies and payload minimization for R2/KV objects.
 
 ## Output Contract

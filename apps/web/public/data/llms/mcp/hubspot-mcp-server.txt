@@ -83,14 +83,6 @@ Seamlessly connect Claude to your HubSpot CRM to manage contacts, companies, and
   }
 }
 ```
-```json
-{
-  "hubspot": {
-    "url": "https://mcp.hubspot.com/anthropic",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Create a new contact for John Doe
@@ -129,29 +121,6 @@ Ask Claude: "Generate pipeline report"
 
 Create a new HubSpot contact with email and custom properties
 
-```typescript
-// Create HubSpot contact with custom properties
-const contact = await hubspot.contacts.create({
-  properties: {
-    email: "contact@example.com",
-    firstname: "John",
-    lastname: "Doe",
-    company: "Example Corp",
-  },
-});
-```
-```plaintext
-Ask Claude: "Create a new contact for John Doe"
-```
-```plaintext
-Ask Claude: "Update deal stage to closed-won"
-```
-```plaintext
-Ask Claude: "Find all contacts from Microsoft"
-```
-```plaintext
-Ask Claude: "Generate pipeline report"
-```
 ```typescript
 // Create HubSpot contact with custom properties
 const contact = await hubspot.contacts.create({

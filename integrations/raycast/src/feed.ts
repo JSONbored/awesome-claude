@@ -13,9 +13,11 @@ export const SUBMIT_URL = "https://heyclau.de/submit";
 export const GITHUB_NEW_ISSUE_URL =
   "https://github.com/JSONbored/awesome-claude/issues/new";
 export const CACHE_KEY = "heyclaude-raycast-index";
+export const FEED_METADATA_CACHE_KEY = "heyclaude-raycast-feed-metadata";
 export const DETAIL_CACHE_PREFIX = "heyclaude-raycast-detail";
 export const FAVORITES_KEY = "favorite-entry-keys";
 const RAYCAST_FEED_PATH = "/data/raycast-index.json";
+const REGISTRY_MANIFEST_PATH = "/data/registry-manifest.json";
 
 export type DownloadTrust = "first-party" | "external" | null;
 
@@ -91,6 +93,20 @@ export type RaycastDetail = {
 export type ParsedFeed = {
   entries: RaycastEntry[];
   generatedAt: string;
+  signature?: string;
+  refreshStatus?: "updated" | "unchanged" | "stale";
+  refreshWarning?: string;
+};
+
+export type FeedSnapshotMetadata = {
+  generatedAt: string;
+  signature: string;
+  detailCacheNamespace: string;
+};
+
+export type RegistryManifestSnapshot = {
+  generatedAt: string;
+  signature: string;
 };
 
 export type CategoryOption = {
@@ -173,11 +189,20 @@ export function feedCacheKey(feedUrl = FEED_URL) {
   return scopedCacheKey(CACHE_KEY, feedUrl);
 }
 
+export function feedMetadataCacheKey(feedUrl = FEED_URL) {
+  return scopedCacheKey(FEED_METADATA_CACHE_KEY, feedUrl);
+}
+
 export function detailCacheKey(
   entry: Pick<RaycastEntry, "category" | "slug">,
   feedUrl = FEED_URL,
+  detailCacheNamespace = "",
 ) {
-  return scopedCacheKey(`${DETAIL_CACHE_PREFIX}:${entryKey(entry)}`, feedUrl);
+  const namespace = detailCacheNamespace ? `:${detailCacheNamespace}` : "";
+  return scopedCacheKey(
+    `${DETAIL_CACHE_PREFIX}:${entryKey(entry)}${namespace}`,
+    feedUrl,
+  );
 }
 
 export function categoryLabel(category: string) {
@@ -186,6 +211,10 @@ export function categoryLabel(category: string) {
 
 export function absoluteDataUrl(value: string, baseUrl = FEED_URL) {
   return new URL(value, baseUrl).toString();
+}
+
+export function registryManifestUrl(feedUrl = FEED_URL) {
+  return absoluteDataUrl(REGISTRY_MANIFEST_PATH, feedUrl);
 }
 
 function setOptionalParam(
@@ -358,6 +387,69 @@ export function parseFeed(value: string): ParsedFeed {
     entries,
     generatedAt:
       typeof envelope.generatedAt === "string" ? envelope.generatedAt : "",
+  };
+}
+
+export function buildFeedSnapshotMetadata(
+  feed: Pick<ParsedFeed, "generatedAt">,
+  manifestSnapshot?: RegistryManifestSnapshot | null,
+): FeedSnapshotMetadata {
+  const generatedAt = manifestSnapshot?.generatedAt || feed.generatedAt || "";
+  const signature = manifestSnapshot?.signature || generatedAt;
+
+  return {
+    generatedAt,
+    signature,
+    detailCacheNamespace: signature || generatedAt || "unknown",
+  };
+}
+
+export function parseFeedSnapshotMetadata(
+  value: string | undefined,
+): FeedSnapshotMetadata | null {
+  if (!value) return null;
+
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    if (!isRecord(parsed)) return null;
+
+    const generatedAt = optionalString(parsed.generatedAt);
+    const signature = optionalString(parsed.signature) || generatedAt;
+    const detailCacheNamespace =
+      optionalString(parsed.detailCacheNamespace) || signature;
+    if (!signature && !generatedAt) return null;
+
+    return {
+      generatedAt,
+      signature,
+      detailCacheNamespace: detailCacheNamespace || "unknown",
+    };
+  } catch {
+    return null;
+  }
+}
+
+export function parseRegistryManifestSnapshot(
+  value: string,
+): RegistryManifestSnapshot | null {
+  const parsed = JSON.parse(value) as unknown;
+  if (!isRecord(parsed)) return null;
+
+  const generatedAt = optionalString(parsed.generatedAt);
+  const contracts = isRecord(parsed.artifactContracts)
+    ? parsed.artifactContracts
+    : {};
+  const raycastContract = isRecord(contracts["raycast-index.json"])
+    ? contracts["raycast-index.json"]
+    : null;
+  const signature = raycastContract
+    ? optionalString(raycastContract.sha256)
+    : "";
+
+  if (!signature && !generatedAt) return null;
+  return {
+    generatedAt,
+    signature: signature || generatedAt,
   };
 }
 

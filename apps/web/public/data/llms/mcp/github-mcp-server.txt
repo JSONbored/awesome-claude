@@ -89,17 +89,6 @@ Transform how you interact with GitHub repositories by connecting Claude to the 
   }
 }
 ```
-```json
-{
-  "github": {
-    "env": {
-      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
-    },
-    "args": ["-y", "@modelcontextprotocol/server-github"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### Reading Repository Files
@@ -178,58 +167,6 @@ Perform multiple file operations atomically. The MCP server handles branch creat
 
 Create a new GitHub issue with labels and description
 
-```typescript
-// Create GitHub issue with labels
-const issue = await github.issues.create({
-  owner: "owner",
-  repo: "repo",
-  title: "Bug: Fix authentication error",
-  body: "Issue description",
-  labels: ["bug", "high-priority"],
-});
-```
-```javascript
-// Ask Claude to read a specific file
-"Can you show me the contents of src/lib/utils.ts from my-org/my-repo?";
-
-// Or read multiple files
-"Show me all TypeScript files in the src/components directory of my-org/my-repo";
-```
-```javascript
-// Create a new React component
-"Create a new Button component in my-org/my-repo at src/components/Button.tsx with TypeScript and proper props";
-
-// Update existing file
-"Update the README.md in my-org/my-repo to include installation instructions for the new Button component";
-```
-```javascript
-// Search for specific patterns
-"Find all files in my-org/my-repo that use the 'useState' hook";
-
-// Search across multiple repos
-"Search all my repositories for functions that handle authentication";
-```
-```javascript
-// List issues
-"Show me all open issues with the 'bug' label in my-org/my-repo";
-
-// Find pull requests
-"Find all pull requests that mention 'authentication' in my-org/my-repo";
-```
-```javascript
-// Get repository details
-"Show me information about my-org/my-repo including stars, forks, and main language";
-
-// List all repositories
-"List all repositories in my-org organization sorted by stars";
-```
-```javascript
-// Create multiple related files at once
-"Create a new feature in my-org/my-repo:
-- Component file at src/components/Feature.tsx
-- Test file at src/components/Feature.test.tsx
-- Export it from src/components/index.ts"
-```
 ```typescript
 // Create GitHub issue with labels
 const issue = await github.issues.create({
