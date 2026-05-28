@@ -361,7 +361,9 @@ function existingEntryHasOnlyMetadataUpdates(entry) {
     if (normalizeText(current[key]) !== normalizeText(base[key])) return false;
   }
 
-  return normalizeText(entry.contentBody) === normalizeText(entry.baseContentBody);
+  return (
+    normalizeText(entry.contentBody) === normalizeText(entry.baseContentBody)
+  );
 }
 
 function addGeneratedArtifactSignals(report, files, sourceType) {
