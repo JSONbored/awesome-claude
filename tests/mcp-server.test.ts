@@ -1397,7 +1397,10 @@ describe("HeyClaude read-only MCP helpers", () => {
 
       const trust = await callRegistryTool(
         "explain_entry_trust",
-        { category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug },
+        {
+          category: entryWithoutNotes!.category,
+          slug: entryWithoutNotes!.slug,
+        },
         { dataDir },
       );
       expect(trust).toMatchObject({
@@ -1538,14 +1541,22 @@ describe("HeyClaude read-only MCP helpers", () => {
         entries: Array<{ category: string; slug: string }>;
       };
       const entryWithoutNotes = directory.entries.find(
-        (e) => e.category === "hooks" && e.slug !== "documentation-generator" && e.slug !== "retro-daily",
+        (e) =>
+          e.category === "hooks" &&
+          e.slug !== "documentation-generator" &&
+          e.slug !== "retro-daily",
       );
       expect(entryWithoutNotes).toBeTruthy();
 
       const review = await callRegistryTool(
         "review_entry_safety",
         {
-          entries: [{ category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug }],
+          entries: [
+            {
+              category: entryWithoutNotes!.category,
+              slug: entryWithoutNotes!.slug,
+            },
+          ],
           platform: "claude",
         },
         { dataDir },
@@ -1593,7 +1604,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       expect(JSON.stringify(trust)).not.toContain("verified malware-free");
       expect(JSON.stringify(trust)).not.toContain("automatic safety");
       // Recommendations are advisory and vary by entry; check they don't claim safety
-      if (trust.trust.recommendations && trust.trust.recommendations.length > 0) {
+      if (
+        trust.trust.recommendations &&
+        trust.trust.recommendations.length > 0
+      ) {
         for (const rec of trust.trust.recommendations) {
           expect(String(rec)).not.toContain("safe to install");
           expect(String(rec)).not.toContain("approved");

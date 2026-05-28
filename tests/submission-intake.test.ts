@@ -1556,8 +1556,7 @@ Review build logs, identify the failing step, and summarize the likely fix.`),
       usage_snippet: "claude mcp status config-snippet",
       safety_notes:
         "Connects Claude to a remote MCP endpoint and should be reviewed before use.",
-      privacy_notes:
-        "Sends MCP requests to the configured remote endpoint.",
+      privacy_notes: "Sends MCP requests to the configured remote endpoint.",
       config_snippet: `\`\`\`json
 {
   "mcpServers": {

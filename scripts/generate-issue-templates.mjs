@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { buildIssueTemplateSpec, categorySpec } from "@heyclaude/registry";
+import { format } from "prettier";
 
 const repoRoot = process.cwd();
 const templateDir = path.join(repoRoot, ".github", "ISSUE_TEMPLATE");
@@ -120,7 +121,7 @@ function linesForField(field, category) {
   return lines;
 }
 
-function renderIssueTemplate(category) {
+async function renderIssueTemplate(category) {
   const spec = buildIssueTemplateSpec(category);
   if (!spec) throw new Error(`Unknown category: ${category}`);
   const label = categorySpec.categories[category]?.label || category;
@@ -157,17 +158,18 @@ function renderIssueTemplate(category) {
     "        - label: I understand community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads.",
     "          required: true",
   ];
-  return `${lines.join("\n")}\n`;
+  return format(`${lines.join("\n")}\n`, { parser: "yaml" });
 }
 
 fs.mkdirSync(templateDir, { recursive: true });
 
-const expectedFiles = new Map(
-  categorySpec.submissionOrder.map((category) => [
+const expectedFiles = new Map();
+for (const category of categorySpec.submissionOrder) {
+  expectedFiles.set(
     categorySpec.categories[category].template,
-    renderIssueTemplate(category),
-  ]),
-);
+    await renderIssueTemplate(category),
+  );
+}
 
 let changed = false;
 for (const [fileName, expected] of expectedFiles) {

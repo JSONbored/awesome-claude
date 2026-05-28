@@ -237,9 +237,7 @@ describe("submission automation workflows", () => {
     expect(source).toContain("Post HeyClaude submission check comment");
     expect(source).toContain("<!-- heyclaude-submission-check -->");
     expect(source).toContain("!github.event.issue.pull_request");
-    expect(source).toContain(
-      "schema passed, maintainer review required",
-    );
+    expect(source).toContain("schema passed, maintainer review required");
     expect(source).not.toContain("submission check: passed");
     expect(source).not.toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");

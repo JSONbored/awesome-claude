@@ -725,10 +725,18 @@ function hasInstallerSourceReference(fields = {}) {
     .includes("install.");
 }
 
+function normalizeDisclosureNoteForComparison(value) {
+  let text = normalizeValue(value).toLowerCase();
+  while (text.endsWith(".") || text.endsWith(" ")) {
+    text = text.slice(0, -1);
+  }
+  return text;
+}
+
 function isUsefulDisclosureNote(value) {
   const text = normalizeValue(value);
   if (!text) return false;
-  const normalized = text.toLowerCase().replace(/[.\s]+$/g, "");
+  const normalized = normalizeDisclosureNoteForComparison(text);
   if (LOW_DETAIL_DISCLOSURE_NOTES.has(normalized)) return false;
   if (normalized.startsWith("not applicable:")) {
     return normalized.slice("not applicable:".length).trim().length >= 8;
