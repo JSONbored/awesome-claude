@@ -1016,6 +1016,9 @@ function submissionTriageReason({ entry, report, risk }) {
       : "Schema passed and the submission is ready for maintainer review.";
   }
   if (entry.triageGroup === "blocked") {
+    if (entry.status === "import_ready" && risk.riskTier === "high") {
+      return "High-risk import-ready submissions require manual maintainer risk review before import.";
+    }
     const blockedGate = Object.entries(risk.policyMatrix || {}).find(
       ([, gate]) => gate?.status === "block",
     );
