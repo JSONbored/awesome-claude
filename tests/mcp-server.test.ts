@@ -82,6 +82,7 @@ const validMcpSubmissionFields = {
 function validToolArguments(name: string) {
   const argsByTool: Record<string, unknown> = {
     search_registry: { query: "mcp", limit: 1 },
+    plan_workflow_toolbox: { goal: "code review automation", limit: 2 },
     server_info: {},
     list_category_entries: { category: "mcp", limit: 1 },
     get_recent_updates: { limit: 1 },
@@ -644,6 +645,44 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result.entries.length).toBeGreaterThan(0);
     expect(result.entries.length).toBeLessThanOrEqual(5);
     expect(result.entries[0].platforms).toContain("Cursor");
+    expect(result.entries[0]).toMatchObject({
+      searchScore: expect.any(Number),
+      searchReasons: expect.any(Array),
+    });
+  });
+
+  it("plans a ranked read-only workflow toolbox", async () => {
+    const result = await callRegistryTool(
+      "plan_workflow_toolbox",
+      {
+        goal: "skill workflow",
+        category: "skills",
+        limit: 3,
+      },
+      { dataDir },
+    );
+
+    expect(result).toMatchObject({
+      ok: true,
+      goal: "skill workflow",
+      category: "skills",
+      count: expect.any(Number),
+      plannerNotes: expect.arrayContaining([
+        expect.stringContaining("does not execute or install"),
+      ]),
+    });
+    expect(result.entries.length).toBeGreaterThan(0);
+    expect(result.entries.length).toBeLessThanOrEqual(3);
+    expect(result.entries[0]).toMatchObject({
+      category: "skills",
+      searchScore: expect.any(Number),
+      searchReasons: expect.any(Array),
+      toolboxReasons: expect.any(Array),
+      caveats: expect.any(Array),
+      nextActions: expect.arrayContaining([
+        expect.stringContaining("get_entry_detail"),
+      ]),
+    });
   });
 
   it("searches registry artifacts with trust filters", async () => {
@@ -1669,7 +1708,10 @@ describe("HeyClaude read-only MCP helpers", () => {
           index,
           `Expected to find declaration: ${declaration}`,
         ).toBeGreaterThan(-1);
-        const preceding = registrySource.slice(Math.max(0, index - 4000), index);
+        const preceding = registrySource.slice(
+          Math.max(0, index - 4000),
+          index,
+        );
         const trimmed = preceding.trimEnd();
         expect(
           trimmed.endsWith("*/"),
@@ -1737,7 +1779,9 @@ describe("HeyClaude read-only MCP helpers", () => {
       });
       expect(payload.entries.length).toBeGreaterThan(0);
       expect(payload.entries.length).toBeLessThanOrEqual(25);
-      const dates = payload.entries.map((entry: { updatedAt: string }) => entry.updatedAt);
+      const dates = payload.entries.map(
+        (entry: { updatedAt: string }) => entry.updatedAt,
+      );
       expect(dates).toEqual([...dates].sort().reverse());
       expect(payload.entries[0]).toMatchObject({
         key: expect.stringContaining(":"),

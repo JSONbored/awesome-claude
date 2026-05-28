@@ -2,6 +2,7 @@ import { registrySearchQuerySchema } from "@/lib/api/contracts";
 import { computeRegistrySearchFacets } from "@/lib/api/registry-search-facets";
 import {
   filterEntries,
+  rankSearchEntries,
   type RegistrySearchFilterState,
 } from "@/lib/api/registry-search-filters";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
@@ -39,7 +40,12 @@ export const GET = createApiHandler(
 
     const entries = await getSearchIndex();
     const matched = filterEntries(entries, filters);
-    const results = matched.slice(offset, offset + limit);
+    const ranked = rankSearchEntries(matched, query);
+    const results = ranked.slice(offset, offset + limit).map((item) => ({
+      ...item.entry,
+      searchScore: item.score,
+      searchReasons: item.reasons,
+    }));
     const facets = computeRegistrySearchFacets(entries, filters);
     const pageEnd = Math.min(offset + limit, matched.length);
     const nextOffset = Math.min(pageEnd, MAX_OFFSET);
@@ -63,7 +69,9 @@ export const GET = createApiHandler(
         limit,
         offset,
         nextOffset:
-          nextOffset !== offset && nextOffset === pageEnd && nextOffset < matched.length
+          nextOffset !== offset &&
+          nextOffset === pageEnd &&
+          nextOffset < matched.length
             ? nextOffset
             : null,
         results,

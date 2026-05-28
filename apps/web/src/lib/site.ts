@@ -37,6 +37,8 @@ export const siteConfig = {
     "/jobs/post?tier=sponsored",
   nav: [
     { href: "/browse", label: "Browse" },
+    { href: "/best/agent-workflow-starter-kits", label: "Best" },
+    { href: "/brief", label: "Brief" },
     { href: "/tools", label: "Tools" },
     { href: "/jobs", label: "Jobs" },
     { href: "/about", label: "About" },

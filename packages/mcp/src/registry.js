@@ -7,7 +7,10 @@ import {
   platformFeedSlug,
   SITE_URL,
 } from "./platforms.js";
-import { DEFAULT_REMOTE_MCP_URL, normalizeEndpointUrl } from "./endpoint-url.js";
+import {
+  DEFAULT_REMOTE_MCP_URL,
+  normalizeEndpointUrl,
+} from "./endpoint-url.js";
 import { packageName, packageVersion } from "./package-metadata.js";
 import {
   formatZodError,
@@ -62,6 +65,7 @@ const platformAliases = new Map([
 
 export const READ_ONLY_TOOL_NAMES = [
   "search_registry",
+  "plan_workflow_toolbox",
   "server_info",
   "list_category_entries",
   "get_recent_updates",
@@ -95,6 +99,19 @@ export const TOOL_DEFINITIONS = [
       "Search read-only HeyClaude registry entries by query, category, and skill platform compatibility.",
     inputSchema: jsonSchemaForTool("search_registry"),
     outputSchema: jsonSchemaForToolOutput("search_registry"),
+    annotations: {
+      readOnlyHint: true,
+      destructiveHint: false,
+      idempotentHint: true,
+      openWorldHint: false,
+    },
+  },
+  {
+    name: "plan_workflow_toolbox",
+    description:
+      "Plan a read-only Claude or Codex workflow toolbox from ranked HeyClaude registry entries with trust, install, and follow-up guidance.",
+    inputSchema: jsonSchemaForTool("plan_workflow_toolbox"),
+    outputSchema: jsonSchemaForToolOutput("plan_workflow_toolbox"),
     annotations: {
       readOnlyHint: true,
       destructiveHint: false,
@@ -348,6 +365,121 @@ function entryMatchesQuery(entry, query) {
   return haystack.includes(query);
 }
 
+function searchTokens(query) {
+  return normalizeText(query)
+    .split(/[^a-z0-9+#.-]+/i)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 2)
+    .slice(0, 12);
+}
+
+function entrySearchText(entry) {
+  return [
+    entry.title,
+    entry.description,
+    entry.cardDescription,
+    entry.category,
+    entry.slug,
+    entry.author,
+    entry.submittedBy,
+    entry.brandName,
+    entry.brandDomain,
+    ...notes(entry.safetyNotes),
+    ...notes(entry.privacyNotes),
+    ...(entry.tags || []),
+    ...(entry.keywords || []),
+  ]
+    .map(normalizeText)
+    .join(" ");
+}
+
+function scoreSearchEntry(entry, query) {
+  const normalizedQuery = normalizeText(query);
+  const tokens = searchTokens(normalizedQuery);
+  if (!tokens.length) return { score: 0, reasons: [] };
+
+  const title = normalizeText(entry.title);
+  const category = normalizeText(entry.category);
+  const tags = new Set((entry.tags || []).map(normalizeText));
+  const keywords = new Set((entry.keywords || []).map(normalizeText));
+  const haystack = entrySearchText(entry);
+  const reasons = new Set();
+  let score = 0;
+
+  if (title.includes(normalizedQuery)) {
+    score += 90;
+    reasons.add("title phrase");
+  }
+  if (category === normalizedQuery) {
+    score += 45;
+    reasons.add("category match");
+  }
+
+  for (const token of tokens) {
+    if (title.includes(token)) {
+      score += 35;
+      reasons.add("title term");
+    }
+    if (tags.has(token)) {
+      score += 24;
+      reasons.add("tag match");
+    }
+    if (keywords.has(token)) {
+      score += 18;
+      reasons.add("keyword match");
+    }
+    if (category.includes(token)) {
+      score += 12;
+      reasons.add("category term");
+    }
+    if (haystack.includes(token)) score += 4;
+  }
+
+  if (entrySourceStatus(entry) === "available") {
+    score += 8;
+    reasons.add("source-backed");
+  }
+  if (
+    entryPackageTrust(entry) === "first-party" ||
+    entry.packageVerified ||
+    entry.trustSignals?.packageVerified
+  ) {
+    score += 8;
+    reasons.add("trusted package");
+  }
+  if (notes(entry.safetyNotes).length) {
+    score += 4;
+    reasons.add("safety notes");
+  }
+  if (notes(entry.privacyNotes).length) {
+    score += 4;
+    reasons.add("privacy notes");
+  }
+  if (entry.claimStatus === "verified" || entry.reviewedBy) {
+    score += 4;
+    reasons.add("reviewed");
+  }
+
+  return { score, reasons: [...reasons].slice(0, 6) };
+}
+
+function rankSearchEntries(entries, query) {
+  return entries
+    .map((entry, index) => ({
+      entry,
+      index,
+      ...scoreSearchEntry(entry, query),
+    }))
+    .sort((left, right) => {
+      if (left.score !== right.score) return right.score - left.score;
+      const dateCompare = String(right.entry.dateAdded || "").localeCompare(
+        String(left.entry.dateAdded || ""),
+      );
+      if (dateCompare !== 0) return dateCompare;
+      return left.index - right.index;
+    });
+}
+
 function entryMatchesPlatform(entry, platform) {
   if (!platform) return true;
   return (entry.platforms || []).some((candidate) => candidate === platform);
@@ -437,7 +569,7 @@ function parsedTrustArgs(args = {}) {
   };
 }
 
-function toSearchResult(entry) {
+function toSearchResult(entry, ranking = null) {
   return {
     key: `${entry.category}:${entry.slug}`,
     category: entry.category,
@@ -458,6 +590,8 @@ function toSearchResult(entry) {
       entry.canonicalUrl ||
       entry.url ||
       `${SITE_URL}/${entry.category}/${entry.slug}`,
+    searchScore: ranking?.score ?? 0,
+    searchReasons: ranking?.reasons ?? [],
     trust: entryTrustSummary(entry),
   };
 }
@@ -750,13 +884,14 @@ export async function searchRegistry(args = {}, options = {}) {
     await readJsonArtifact("search-index.json", options),
   );
 
-  const entries = searchIndex
+  const matched = searchIndex
     .filter((entry) => !category || entry.category === category)
     .filter((entry) => entryMatchesPlatform(entry, platform))
     .filter((entry) => entryMatchesQuery(entry, query))
-    .filter((entry) => entryMatchesTrustFilters(entry, trustFilters))
+    .filter((entry) => entryMatchesTrustFilters(entry, trustFilters));
+  const entries = rankSearchEntries(matched, query)
     .slice(0, limit)
-    .map(toSearchResult);
+    .map((item) => toSearchResult(item.entry, item));
 
   return {
     ok: true,
@@ -766,6 +901,103 @@ export async function searchRegistry(args = {}, options = {}) {
     platform: platform || "",
     filters: trustFilters,
     entries,
+  };
+}
+
+function selectDiverseRankedEntries(ranked, limit) {
+  const selected = [];
+  const byCategory = new Map();
+
+  for (const item of ranked) {
+    const category = item.entry.category || "";
+    const current = byCategory.get(category) || 0;
+    if (current >= 2) continue;
+    selected.push(item);
+    byCategory.set(category, current + 1);
+    if (selected.length >= limit) return selected;
+  }
+
+  for (const item of ranked) {
+    if (selected.includes(item)) continue;
+    selected.push(item);
+    if (selected.length >= limit) return selected;
+  }
+
+  return selected;
+}
+
+function toolboxFitReasons(entry, ranking) {
+  const reasons = [...(ranking.reasons || [])];
+  if (entry.installCommand || entry.downloadUrl || entry.configSnippet) {
+    reasons.push("actionable setup surface");
+  }
+  if ((entry.platforms || []).length) {
+    reasons.push("platform compatibility metadata");
+  }
+  return unique(reasons).slice(0, 6);
+}
+
+function toolboxCaveats(entry) {
+  const caveats = [];
+  if (entrySourceStatus(entry) !== "available") {
+    caveats.push("Source metadata is missing or incomplete.");
+  }
+  if (entryPackageTrust(entry) === "external") {
+    caveats.push("Package/download is external; verify upstream before use.");
+  }
+  if (!notes(entry.safetyNotes).length) {
+    caveats.push("No structured safety notes are present.");
+  }
+  if (!notes(entry.privacyNotes).length) {
+    caveats.push("No structured privacy notes are present.");
+  }
+  return caveats.slice(0, 4);
+}
+
+export async function planWorkflowToolbox(args = {}, options = {}) {
+  const goal = String(args.goal || "").trim();
+  const query = normalizeText(goal);
+  const category = normalizeText(args.category);
+  const platform = normalizePlatform(args.platform);
+  const limit = normalizeLimit(args.limit, 6);
+  const searchIndex = unwrapEntries(
+    await readJsonArtifact("search-index.json", options),
+  );
+  const scoped = searchIndex
+    .filter((entry) => !category || entry.category === category)
+    .filter((entry) => entryMatchesPlatform(entry, platform));
+  let matched = scoped.filter((entry) => entryMatchesQuery(entry, query));
+  if (!matched.length && searchTokens(query).length) {
+    matched = scoped.filter(
+      (entry) => scoreSearchEntry(entry, query).score > 0,
+    );
+  }
+  const ranked = rankSearchEntries(matched, query);
+  const selected = selectDiverseRankedEntries(ranked, limit).map((item) => ({
+    ...toEntrySummary(item.entry),
+    searchScore: item.score,
+    searchReasons: item.reasons,
+    toolboxReasons: toolboxFitReasons(item.entry, item),
+    caveats: toolboxCaveats(item.entry),
+    nextActions: [
+      `Inspect get_entry_detail with category=${item.entry.category} and slug=${item.entry.slug}.`,
+      `Run explain_entry_trust before copying install or config content.`,
+      `Use compare_entries with nearby candidates before recommending a final stack.`,
+    ],
+  }));
+
+  return {
+    ok: true,
+    goal,
+    category: category || "",
+    platform: platform || "",
+    count: selected.length,
+    entries: selected,
+    plannerNotes: [
+      "This planner ranks public registry metadata only; it does not execute or install entries.",
+      "Prefer source-backed entries with safety/privacy notes for risk-bearing MCP, hooks, skills, commands, and statuslines.",
+      "Use get_copyable_asset only after reviewing trust metadata and upstream source.",
+    ],
   };
 }
 
@@ -1305,7 +1537,9 @@ const DISCOVERY_RESOURCES = [
  * @returns {string} Base URL used to build `/api/...` requests.
  */
 function publicApiBaseUrl(options = {}) {
-  return options.publicApiBaseUrl || process.env.HEYCLAUDE_PUBLIC_API_URL || SITE_URL;
+  return (
+    options.publicApiBaseUrl || process.env.HEYCLAUDE_PUBLIC_API_URL || SITE_URL
+  );
 }
 
 /**
@@ -1561,7 +1795,9 @@ export async function listJobsActive(options = {}) {
     limit: DISCOVERY_RESOURCE_LIMIT,
     count: entries.length,
     totalAvailable:
-      typeof payload?.totalAvailable === "number" ? payload.totalAvailable : null,
+      typeof payload?.totalAvailable === "number"
+        ? payload.totalAvailable
+        : null,
     source: "public-api",
     entries,
   };
@@ -2097,6 +2333,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
   switch (name) {
     case "search_registry":
       result = await searchRegistry(parsedArgs, options);
+      break;
+    case "plan_workflow_toolbox":
+      result = await planWorkflowToolbox(parsedArgs, options);
       break;
     case "server_info":
       result = await getServerInfo(parsedArgs, options);

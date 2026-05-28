@@ -236,6 +236,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
     entry.documentationUrl ?? entry.repoUrl ?? entry.githubUrl ?? "";
   const editHref = getGitHubEditUrl(entry.githubUrl);
   const suggestChangeHref = getSuggestChangeUrl(entry);
+  const compareHref = `/browse?collection=${entry.category}:${entry.slug}`;
   const referenceLabel = entry.documentationUrl
     ? "Open docs"
     : entry.repoUrl
@@ -508,6 +509,46 @@ export default async function DetailPage({ params }: DetailPageProps) {
                 <p className="mt-2 text-sm text-foreground">{item.value}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="surface-panel p-5">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+            Use this entry
+          </p>
+          <h2 className="mt-1 text-lg font-semibold tracking-tight text-foreground">
+            Move from static reading to an agent workflow.
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-muted-foreground">
+            Compare it against nearby options, hand it to the registry API, or
+            use the LLM text view when you want an agent to inspect the listing
+            without scraping the page.
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            <Link
+              href={compareHref}
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
+            >
+              Add to compare tray
+            </Link>
+            <a
+              href={`/api/registry/entries/${entry.category}/${entry.slug}`}
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
+            >
+              Open API record
+            </a>
+            <a
+              href={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
+            >
+              Open LLM text
+            </a>
+            <Link
+              href="/brief"
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition hover:border-primary/45"
+            >
+              Subscribe for updates
+            </Link>
           </div>
         </section>
 

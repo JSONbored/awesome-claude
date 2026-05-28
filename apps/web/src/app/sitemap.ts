@@ -57,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/platforms",
     "/quality",
     "/trending",
+    "/brief",
     "/llms.txt",
     "/llms-full.txt",
     "/feed.xml",

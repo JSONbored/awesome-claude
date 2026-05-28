@@ -5,7 +5,11 @@ import { FormEvent, useEffect, useState } from "react";
 
 import { useToast } from "@/components/ui/toast-provider";
 
-export function NewsletterSignup() {
+type NewsletterSignupProps = {
+  source?: string;
+};
+
+export function NewsletterSignup({ source = "footer" }: NewsletterSignupProps) {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -32,7 +36,7 @@ export function NewsletterSignup() {
         },
         body: JSON.stringify({
           email,
-          source: "footer",
+          source,
         }),
       });
 

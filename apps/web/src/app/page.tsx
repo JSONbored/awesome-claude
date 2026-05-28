@@ -8,6 +8,7 @@ import { JsonLd } from "@/components/json-ld";
 import { getCategorySummaries, getDirectoryEntries } from "@/lib/content";
 import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { buildPageMetadata } from "@/lib/seo";
+import { getSeoClusterDefinitions } from "@/lib/seo-clusters";
 import { siteConfig } from "@/lib/site";
 import { buildItemListJsonLd } from "@heyclaude/registry/seo";
 
@@ -93,9 +94,15 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      <section className="container-shell grid gap-4 py-10 md:grid-cols-3">
+      <section className="container-shell grid gap-4 py-10 md:grid-cols-3 lg:grid-cols-5">
         {[
           ["Trending", "/trending", growthSurfaces.practicalPicks.length],
+          [
+            "Best",
+            "/best/agent-workflow-starter-kits",
+            getSeoClusterDefinitions().length,
+          ],
+          ["Brief", "/brief", growthSurfaces.newThisWeek.length],
           ["Newly added", "/browse?sort=newest", growthSurfaces.newest.length],
           ["API", "/api-docs", directoryEntries.length],
         ].map(([label, href, count]) => (

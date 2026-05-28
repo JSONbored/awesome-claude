@@ -63,6 +63,14 @@ const utilityFilterOptions = [
   { value: "privacy-notes", label: "Privacy Notes" },
   { value: "troubleshooting", label: "Troubleshooting" },
 ] as const;
+const quickTrustFilterOptions = [
+  { value: "source-backed", label: "Source-backed" },
+  { value: "trusted-package", label: "Trusted package" },
+  { value: "safety-notes", label: "Safety notes" },
+  { value: "privacy-notes", label: "Privacy notes" },
+  { value: "reviewed", label: "Reviewed" },
+  { value: "checksum", label: "Checksum" },
+] as const;
 const platformFilterOptions = [
   { value: "all", label: "All Platforms" },
   ...categorySpec.defaultTestedPlatforms.map((platform) => ({
@@ -176,6 +184,40 @@ function matchesPlatformFilter(entry: DirectoryEntry, filter: string) {
   return (entry.platformCompatibility ?? []).some(
     (item) => item.platform.trim().toLowerCase() === filter,
   );
+}
+
+function entryMatchesBrowseQuery(
+  entry: DirectoryEntry,
+  normalizedQuery: string,
+) {
+  if (!normalizedQuery) return true;
+
+  const haystack = [
+    entry.title,
+    entry.description,
+    entry.author,
+    entry.submittedBy,
+    entry.brandName,
+    entry.brandDomain,
+    entry.trigger,
+    entry.skillType,
+    entry.skillLevel,
+    entry.verificationStatus,
+    entry.downloadTrust,
+    ...(entry.platformCompatibility ?? []).flatMap((item) => [
+      item.platform,
+      item.supportLevel,
+    ]),
+    ...(entry.safetyNotes ?? []),
+    ...(entry.privacyNotes ?? []),
+    ...entry.tags,
+    ...entry.keywords,
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+
+  return haystack.includes(normalizedQuery);
 }
 
 export function BrowseDirectory({
@@ -414,34 +456,7 @@ export function BrowseDirectory({
       if (category !== "all" && entry.category !== category) return false;
       if (!matchesUtilityFilter(entry, utilityFilter)) return false;
       if (!matchesPlatformFilter(entry, platformFilter)) return false;
-      if (!normalizedQuery) return true;
-
-      const haystack = [
-        entry.title,
-        entry.description,
-        entry.author,
-        entry.submittedBy,
-        entry.brandName,
-        entry.brandDomain,
-        entry.trigger,
-        entry.skillType,
-        entry.skillLevel,
-        entry.verificationStatus,
-        entry.downloadTrust,
-        ...(entry.platformCompatibility ?? []).flatMap((item) => [
-          item.platform,
-          item.supportLevel,
-        ]),
-        ...(entry.safetyNotes ?? []),
-        ...(entry.privacyNotes ?? []),
-        ...entry.tags,
-        ...entry.keywords,
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-
-      return haystack.includes(normalizedQuery);
+      return entryMatchesBrowseQuery(entry, normalizedQuery);
     });
 
     const sorted = [...matched].sort((left, right) => {
@@ -471,6 +486,23 @@ export function BrowseDirectory({
     sortMode,
     utilityFilter,
   ]);
+
+  const trustChipCounts = useMemo(() => {
+    const scopedEntries = allEntries.filter((entry) => {
+      if (category !== "all" && entry.category !== category) return false;
+      if (!matchesPlatformFilter(entry, platformFilter)) return false;
+      return entryMatchesBrowseQuery(entry, normalizedQuery);
+    });
+
+    return Object.fromEntries(
+      quickTrustFilterOptions.map((option) => [
+        option.value,
+        scopedEntries.filter((entry) =>
+          matchesUtilityFilter(entry, option.value),
+        ).length,
+      ]),
+    ) as Record<(typeof quickTrustFilterOptions)[number]["value"], number>;
+  }, [allEntries, category, normalizedQuery, platformFilter]);
 
   const entryByKey = useMemo(() => {
     return new Map(allEntries.map((entry) => [getEntryKey(entry), entry]));
@@ -749,6 +781,52 @@ export function BrowseDirectory({
         {normalizedQuery ? <p>Filtering for “{deferredQuery}”</p> : null}
       </div>
 
+      <div className="surface-panel p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">
+              Trust quick filters
+            </p>
+            <p className="mt-1 text-xs leading-6 text-muted-foreground">
+              Narrow discovery by source, install, safety, privacy, and review
+              signals before opening a listing.
+            </p>
+          </div>
+          {utilityFilter !== "all" ? (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setUtilityFilter("all")}
+              className="h-8 rounded-lg px-3 text-[11px]"
+            >
+              Clear utility filter
+            </Button>
+          ) : null}
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {quickTrustFilterOptions.map((option) => {
+            const isActive = utilityFilter === option.value;
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() =>
+                  setUtilityFilter(isActive ? "all" : option.value)
+                }
+                className={
+                  isActive
+                    ? "rounded-full border border-primary bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
+                    : "rounded-full border border-border bg-background px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/45 hover:text-foreground"
+                }
+              >
+                {option.label} ({trustChipCounts[option.value] ?? 0})
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {collectionKeys.length > 0 ? (
         <section className="surface-panel space-y-4 p-4">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
@@ -817,17 +895,73 @@ export function BrowseDirectory({
           </div>
 
           {collectionEntries.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {collectionEntries.map((entry) => (
-                <a
-                  key={getEntryKey(entry)}
-                  href={`/${entry.category}/${entry.slug}`}
-                  className="rounded-full border border-border bg-background px-2.5 py-1 text-xs text-foreground transition hover:border-primary/45"
-                >
-                  {entry.title}
-                </a>
-              ))}
-            </div>
+            <>
+              <div className="flex flex-wrap gap-2">
+                {collectionEntries.map((entry) => (
+                  <a
+                    key={getEntryKey(entry)}
+                    href={`/${entry.category}/${entry.slug}`}
+                    className="rounded-full border border-border bg-background px-2.5 py-1 text-xs text-foreground transition hover:border-primary/45"
+                  >
+                    {entry.title}
+                  </a>
+                ))}
+              </div>
+              <div className="overflow-x-auto rounded-xl border border-border bg-background">
+                <table className="min-w-full divide-y divide-border text-left text-xs">
+                  <thead className="bg-card/80 text-muted-foreground">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Entry</th>
+                      <th className="px-3 py-2 font-medium">Category</th>
+                      <th className="px-3 py-2 font-medium">Source</th>
+                      <th className="px-3 py-2 font-medium">Install</th>
+                      <th className="px-3 py-2 font-medium">Safety</th>
+                      <th className="px-3 py-2 font-medium">Privacy</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {collectionEntries.map((entry) => (
+                      <tr key={`compare:${getEntryKey(entry)}`}>
+                        <td className="max-w-[14rem] px-3 py-2">
+                          <a
+                            href={`/${entry.category}/${entry.slug}`}
+                            className="font-medium text-foreground transition hover:text-primary"
+                          >
+                            {entry.title}
+                          </a>
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {categoryLabels[entry.category] ?? entry.category}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {entry.trustSignals?.sourceStatus === "available"
+                            ? "Available"
+                            : "Missing"}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {entry.downloadTrust === "first-party" ||
+                          entry.packageVerified
+                            ? "Trusted"
+                            : entry.installCommand || entry.downloadUrl
+                              ? "Review"
+                              : "None"}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {entry.safetyNotes?.length
+                            ? `${entry.safetyNotes.length} note(s)`
+                            : "Missing"}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {entry.privacyNotes?.length
+                            ? `${entry.privacyNotes.length} note(s)`
+                            : "Missing"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           ) : null}
         </section>
       ) : null}

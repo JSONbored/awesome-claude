@@ -83,6 +83,51 @@ describe("/api/registry/search", () => {
     expect(body.facets.categories.mcp).toBe(3);
   });
 
+  it("ranks exact title and trust matches ahead of broad substring matches", async () => {
+    searchIndexMock.entries = [
+      {
+        ...makeEntry("broad-browser"),
+        title: "Browser helper",
+        description: "MCP server with a passing code review mention.",
+        tags: ["browser"],
+      },
+      {
+        ...makeEntry("code-review-agent"),
+        title: "Code Review MCP Server",
+        description: "Review code changes with source-backed metadata.",
+        tags: ["review"],
+        keywords: ["code-review", "quality"],
+        trustSignals: {
+          ...makeEntry("code-review-agent").trustSignals,
+          sourceStatus: "available",
+          sourceUrlCount: 1,
+        },
+        safetyNotes: ["Runs read-only repository analysis."],
+        privacyNotes: ["Sends selected source snippets to the configured API."],
+      },
+    ];
+
+    const { GET } =
+      await import("../apps/web/src/app/api/registry/search/route");
+    const response = await GET(
+      new Request("https://heyclau.de/api/registry/search?q=code review", {
+        headers: { origin: "https://heyclau.de" },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body.results.map((entry: SearchDocument) => entry.slug)).toEqual([
+      "code-review-agent",
+      "broad-browser",
+    ]);
+    expect(body.results[0].searchScore).toBeGreaterThan(
+      body.results[1].searchScore,
+    );
+    expect(body.results[0].searchReasons).toContain("title phrase");
+    expect(body.results[0].searchReasons).toContain("source-backed");
+  });
+
   it("does not advertise an offset beyond the documented maximum", async () => {
     searchIndexMock.entries = Array.from({ length: 10_001 }, (_, index) =>
       makeEntry(`fixture-${index}`),

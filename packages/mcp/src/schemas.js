@@ -106,6 +106,15 @@ export const SearchRegistryInputSchema = z
   })
   .strict();
 
+export const PlanWorkflowToolboxInputSchema = z
+  .object({
+    goal: z.string().trim().min(2).max(240),
+    category: pathPart.optional(),
+    platform: platform.optional(),
+    limit: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
+
 export const ServerInfoInputSchema = z.object({}).strict();
 
 export const ListCategoryEntriesInputSchema = z
@@ -284,6 +293,7 @@ export const ReviewEntrySafetyInputSchema = z
 
 export const TOOL_INPUT_SCHEMAS = {
   search_registry: SearchRegistryInputSchema,
+  plan_workflow_toolbox: PlanWorkflowToolboxInputSchema,
   server_info: ServerInfoInputSchema,
   list_category_entries: ListCategoryEntriesInputSchema,
   get_recent_updates: RecentUpdatesInputSchema,

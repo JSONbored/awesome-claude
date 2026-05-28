@@ -30,6 +30,7 @@ const staticMetadataPages = [
   "ecosystem",
   "quality",
   "trending",
+  "brief",
   "jobs/post",
   "validators",
   "validators/mcp-config",
@@ -66,6 +67,16 @@ function seoClusterDescription(slug: string) {
   expect(start, slug).toBeGreaterThanOrEqual(0);
   const block = source.slice(start, source.indexOf("},", start));
   return block.match(/seoDescription:\s*"([^"]+)"/)?.[1];
+}
+
+function allSeoClusterDescriptions() {
+  const source = fs.readFileSync(
+    path.join(repoRoot, "apps/web/src/lib/seo-clusters.ts"),
+    "utf8",
+  );
+  return [...source.matchAll(/seoDescription:\s*"([^"]+)"/g)].map(
+    (match) => match[1],
+  );
 }
 
 describe("SEO metadata snippets", () => {
@@ -113,5 +124,12 @@ describe("SEO metadata snippets", () => {
     expect(mcpServersDescription).toBeTruthy();
     expect(mcpServersDescription!.length).toBeGreaterThanOrEqual(120);
     expect(mcpServersDescription!.length).toBeLessThanOrEqual(160);
+
+    const clusterDescriptions = allSeoClusterDescriptions();
+    expect(clusterDescriptions.length).toBeGreaterThanOrEqual(25);
+    for (const description of clusterDescriptions) {
+      expect(description.length, description).toBeGreaterThanOrEqual(100);
+      expect(description.length, description).toBeLessThanOrEqual(170);
+    }
   });
 });

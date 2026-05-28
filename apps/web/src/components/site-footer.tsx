@@ -87,6 +87,18 @@ export function SiteFooter() {
           >
             Tools
           </Link>
+          <Link
+            href="/best/agent-workflow-starter-kits"
+            className="block transition hover:text-foreground"
+          >
+            Best
+          </Link>
+          <Link
+            href="/brief"
+            className="block transition hover:text-foreground"
+          >
+            Brief
+          </Link>
           <Link href="/jobs" className="block transition hover:text-foreground">
             Jobs
           </Link>
