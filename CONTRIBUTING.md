@@ -14,6 +14,10 @@ Use the website form:
 
 This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may be approved for an import PR after policy gates pass. Automation does not auto-merge.
 
+Maintainers trigger a submission import by applying `import-approved` or `accepted` after review. `needs-author-input`, `source-needs-verification`, `stale-submission`, and `import-pr-open` block or defer import until the issue is fixed, verified, reopened for review, or already represented by an import PR.
+
+No CLA signature is required. Repo checks focus on submission quality, source verification, contributor trust, and security review.
+
 ### 2. Open a GitHub submission issue
 
 Use GitHub issue templates when the website is not convenient:

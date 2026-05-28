@@ -32,13 +32,6 @@ claude-code --model claude-haiku-4-5
 # Or in agent configuration
 model: haiku
 ```
-```bash
-# Access Haiku 4.5 via CLI
-claude-code --model claude-haiku-4-5
-
-# Or in agent configuration
-model: haiku
-```
 
 ## Optimal Use Cases for Haiku 4.5
 ### 1. Rapid Iteration Tasks (2x Speed Advantage)
@@ -166,26 +159,6 @@ done
     claude-code --model haiku \
       --task "Fix CI failures in ${{ github.event.pull_request.changed_files }}"
 ```
-```bash
-# Initial implementation with Haiku (fast)
-claude-code --model haiku implement-feature.md
-
-# Review/refine with Sonnet (thorough)
-claude-code --model sonnet review-implementation.md
-```
-```bash
-# Process multiple files with Haiku for cost efficiency
-for file in src/**/*.ts; do
-  claude-code --model haiku "Fix linting in $file"
-done
-```
-```yaml
-# GitHub Actions workflow
-- name: Auto-fix code issues
-  run: |
-    claude-code --model haiku \
-      --task "Fix CI failures in ${{ github.event.pull_request.changed_files }}"
-```
 
 ## Cost Optimization Strategy
 ### Token Usage Monitoring
@@ -202,11 +175,6 @@ Output tokens: Haiku $5/M vs Sonnet $15/M (3x savings)
 - Reserve Sonnet 4.5 for 20-30% complex work
 - Achieve ~2.5x overall cost reduction
 - Maintain high quality with smart routing
-```bash
-# Track costs across models
-Input tokens:  Haiku $1/M vs Sonnet $3/M (3x savings)
-Output tokens: Haiku $5/M vs Sonnet $15/M (3x savings)
-```
 
 ## Best Practices
 1. **Profile Your Tasks**: Track which tasks benefit most from speed
@@ -229,22 +197,6 @@ Output tokens: Haiku $5/M vs Sonnet $15/M (3x savings)
 
 ### Slash Command
 
-```markdown
-# .claude/commands/quick-fix.md
-
-Use Haiku 4.5 to quickly fix the following issues:
-$ARGUMENTS
-
-Prioritize speed over perfection. Fix syntax, imports, and obvious bugs.
-```
-```json
-{
-  "name": "fast-fixer",
-  "model": "haiku",
-  "description": "Quick code fixes and formatting",
-  "systemPrompt": "You are a speed-optimized agent for rapid code corrections."
-}
-```
 ```markdown
 # .claude/commands/quick-fix.md
 

@@ -1,9 +1,33 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 388,
   "entries": [
+    {
+      "key": "mcp:yield-intelligence-mcp",
+      "type": "added",
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "dateAdded": "2026-05-26",
+      "canonicalUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
+      "artifactHash": "b4bcd5ff003d7a629c5b7333d29f9fdfd3fce9af16439578ad0b9d2b570e957b"
+    },
+    {
+      "key": "tools:authsome",
+      "type": "added",
+      "category": "tools",
+      "slug": "authsome",
+      "title": "Authsome",
+      "dateAdded": "2026-05-25",
+      "canonicalUrl": "https://heyclau.de/tools/authsome",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome",
+      "artifactHash": "0b2e136f2ea2543aec20758216818c09ba4a8c92760948e113a09db0e55ce50f"
+    },
     {
       "key": "hooks:retro-daily",
       "type": "added",
@@ -4638,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "4ae75301961ce9c96f37fabf0fe332aa1cef611d6191a1eb1a1bc472c805c503"
+  "signature": "30af93e59b7b872499f41e9bec8041628b2c641090bdd072b4ab9ee0a38e0c64"
 }

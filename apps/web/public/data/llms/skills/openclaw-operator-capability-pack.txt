@@ -72,13 +72,13 @@ This capability pack teaches agents to operate OpenClaw in production responsibl
 - Keep response plans tested and documented.
 
 ## Troubleshooting
-**Issue:** Agents exceed intended permission scope  
+**Issue:** Agents exceed intended permission scope
 **Fix:** Move to strict allowlists with per-tool approvals.
 
-**Issue:** Hard to diagnose cross-agent failures  
+**Issue:** Hard to diagnose cross-agent failures
 **Fix:** Add trace IDs and event correlation across all agent actions.
 
-**Issue:** Cost spikes during autonomous runs  
+**Issue:** Cost spikes during autonomous runs
 **Fix:** Add budget limits and route heavy tasks to cheaper model/tool paths.
 
 ## Output Contract

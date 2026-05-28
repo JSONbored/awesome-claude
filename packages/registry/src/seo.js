@@ -8,6 +8,15 @@ export function absoluteSiteUrl(siteUrl, path = "/") {
   return new URL(path || "/", siteUrl).toString();
 }
 
+function uniqueValues(values = []) {
+  const seen = new Set();
+  return values.filter((value) => {
+    if (!value || seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+}
+
 export function buildOrganizationJsonLd(params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
   return {
@@ -16,9 +25,11 @@ export function buildOrganizationJsonLd(params = {}) {
     "@id": `${siteUrl.replace(/\/$/, "")}/#organization`,
     name: params.name || "HeyClaude",
     url: siteUrl,
-    sameAs: [params.githubUrl, params.twitterUrl, params.discordUrl].filter(
-      Boolean,
-    ),
+    sameAs: uniqueValues([
+      params.githubUrl,
+      params.twitterUrl,
+      params.discordUrl,
+    ]),
   };
 }
 
@@ -128,12 +139,12 @@ export function buildEntryJsonLd(entry, params = {}) {
       : codeLikeCategories.has(entry.category)
         ? "SoftwareSourceCode"
         : "CreativeWork";
-  const sourceUrls = [
+  const sourceUrls = uniqueValues([
     entry.documentationUrl,
     entry.repoUrl,
     entry.githubUrl,
     entry.websiteUrl,
-  ].filter(Boolean);
+  ]);
   const additionalProperty = [
     entry.downloadSha256
       ? {
@@ -167,9 +178,10 @@ export function buildEntryJsonLd(entry, params = {}) {
       entry.repoUpdatedAt ||
       entry.verifiedAt ||
       entry.dateAdded,
-    keywords: [...(entry.keywords || []), ...(entry.tags || [])]
-      .filter(Boolean)
-      .join(", "),
+    keywords: uniqueValues([
+      ...(entry.keywords || []),
+      ...(entry.tags || []),
+    ]).join(", "),
     genre: label,
     author: entry.author
       ? {
@@ -185,7 +197,7 @@ export function buildEntryJsonLd(entry, params = {}) {
     isPartOf: {
       "@id": `${siteUrl.replace(/\/$/, "")}/#website`,
     },
-    sameAs: [entry.documentationUrl, entry.repoUrl].filter(Boolean),
+    sameAs: uniqueValues([entry.documentationUrl, entry.repoUrl]),
     isBasedOn: sourceUrls.length ? sourceUrls : undefined,
     codeRepository:
       entryType === "SoftwareSourceCode" ? entry.repoUrl : undefined,
@@ -241,7 +253,7 @@ export function buildToolSoftwareApplicationJsonLd(tool, params = {}) {
     isPartOf: {
       "@id": `${siteUrl.replace(/\/$/, "")}/#website`,
     },
-    sameAs: [tool.documentationUrl, tool.repoUrl].filter(Boolean),
+    sameAs: uniqueValues([tool.documentationUrl, tool.repoUrl]),
     additionalProperty: {
       "@type": "PropertyValue",
       name: "Disclosure",

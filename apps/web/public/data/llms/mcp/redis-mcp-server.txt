@@ -100,20 +100,6 @@ The official Redis MCP Server provides a natural language interface for AI agent
   }
 }
 ```
-```json
-{
-  "redis": {
-    "args": [
-      "--from",
-      "git+https://github.com/redis/mcp-redis.git",
-      "redis-mcp-server",
-      "--url",
-      "redis://localhost:6379/0"
-    ],
-    "command": "uvx"
-  }
-}
-```
 
 ## Examples
 ### Store and retrieve cached data with expiration
@@ -160,29 +146,6 @@ Ask Claude: "Process events using Redis streams"
 
 Store and retrieve JSON data in Redis with key-value operations
 
-```typescript
-// Set and get Redis key
-await redis.set(
-  "user:123",
-  JSON.stringify({ name: "John", email: "john@example.com" }),
-);
-const user = await redis.get("user:123");
-```
-```plaintext
-Ask Claude: "Store and retrieve cached data with expiration"
-```
-```plaintext
-Ask Claude: "Manage user sessions and preferences"
-```
-```plaintext
-Ask Claude: "Implement real-time chat with pub/sub"
-```
-```plaintext
-Ask Claude: "Create leaderboards with sorted sets"
-```
-```plaintext
-Ask Claude: "Process events using Redis streams"
-```
 ```typescript
 // Set and get Redis key
 await redis.set(

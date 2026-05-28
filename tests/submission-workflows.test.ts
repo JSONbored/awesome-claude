@@ -192,6 +192,28 @@ describe("submission automation workflows", () => {
     expect(config.postCreateCommand).not.toContain("playwright install");
   });
 
+  it("keeps required PR validation Vitest-based without normal Playwright runs", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain("validate-worktree:");
+    expect(source).toContain('git diff --check "$BASE_SHA"...HEAD');
+    expect(source).toContain("Run Vitest suite");
+    expect(source).toContain("pnpm test");
+    expect(source).toContain("pnpm type-check");
+    expect(source).toContain("pnpm build");
+    expect(source).not.toContain("pnpm test:e2e");
+    expect(source).not.toContain("playwright install");
+    expect(source).toContain(
+      "PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url }}",
+    );
+    expect(source).not.toContain(
+      "steps.deploy-preview.outputs.base-url || env.CLOUDFLARE_DEV_WORKER_URL",
+    );
+  });
+
   it("keeps public issue validation read-only for imports", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/submission-issue-validation.yml"),
@@ -214,6 +236,9 @@ describe("submission automation workflows", () => {
     expect(source).toContain("issues.setLabels");
     expect(source).toContain("Post HeyClaude submission check comment");
     expect(source).toContain("<!-- heyclaude-submission-check -->");
+    expect(source).toContain("!github.event.issue.pull_request");
+    expect(source).toContain("schema passed, maintainer review required");
+    expect(source).not.toContain("submission check: passed");
     expect(source).not.toContain("Post risk report comment");
     expect(source).toContain("Fail when submission risk is critical");
     expect(source).toContain("Summarize invalid submission issue");
@@ -494,13 +519,13 @@ describe("submission automation workflows", () => {
     ).toBe(false);
   });
 
-  it("keeps advisory Superagent scanning read-only and secret-gated", () => {
+  it("keeps advisory Superagent scanning manual, read-only, and secret-gated", () => {
     const source = fs.readFileSync(
       path.join(repoRoot, ".github/workflows/superagent-security.yml"),
       "utf8",
     );
 
-    expect(source).toContain("pull_request:");
+    expect(source).not.toContain("pull_request:");
     expect(source).toContain("workflow_dispatch:");
     expect(source).not.toContain("pull_request_target");
     expect(source).toContain("contents: read");
@@ -840,6 +865,50 @@ usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
       expect.arrayContaining([
         expect.objectContaining({
           id: "direct_pr_existing_provenance_change_content/mcp/existing-mcp.mdx",
+        }),
+      ]),
+    );
+  });
+
+  it("blocks external executable content updates on existing entries with stale provenance", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+      "Source-backed MCP server content.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/existing-mcp.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+installCommand: "npx -y attacker-mcp"
+usageSnippet: "claude mcp add attacker-mcp -- npx -y attacker-mcp"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_submitter_mismatch_content/mcp/existing-mcp.mdx",
         }),
       ]),
     );

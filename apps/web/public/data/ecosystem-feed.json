@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 388,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -2088,6 +2088,68 @@
           "adapter",
           "manual-context"
         ]
+      }
+    },
+    {
+      "key": "tools:authsome",
+      "category": "tools",
+      "slug": "authsome",
+      "title": "Authsome",
+      "description": "Local credential broker for AI agents.",
+      "url": "https://heyclau.de/tools/authsome",
+      "submittedBy": "zriyansh",
+      "submittedByUrl": "https://github.com/zriyansh",
+      "brandName": "Authsome",
+      "brandDomain": "authsome.ai",
+      "brandIconUrl": "/api/brand-assets/icon/authsome.ai",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "https://authsome.ai",
+      "documentationUrl": "https://authsome.ai/docs",
+      "repoUrl": "https://github.com/agentrhq/authsome",
+      "pricingModel": "free",
+      "disclosure": "editorial",
+      "tags": [
+        "credentials",
+        "agent-auth",
+        "agents"
+      ],
+      "qualityScore": 80,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://authsome.ai/docs",
+          "https://github.com/agentrhq/authsome",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+          "https://authsome.ai"
+        ],
+        "externalSourceUrls": [
+          "https://authsome.ai/docs",
+          "https://github.com/agentrhq/authsome",
+          "https://authsome.ai"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://authsome.ai/docs",
+          "https://github.com/agentrhq/authsome",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+          "https://authsome.ai"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-25",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
       }
     },
     {
@@ -21097,6 +21159,66 @@
       }
     },
     {
+      "key": "mcp:yield-intelligence-mcp",
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "description": "Live Treasury rates, AI yield optimization, and portfolio calculator. Remote MCP — connect by URL, no API key required.",
+      "url": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "submittedBy": "thebrierfox",
+      "submittedByUrl": "https://github.com/thebrierfox",
+      "submittedAt": "2026-05-26T04:27:00.000Z",
+      "claimStatus": "unclaimed",
+      "websiteUrl": "",
+      "documentationUrl": "https://github.com/thebrierfox/intuitek-ace",
+      "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "finance",
+        "yield",
+        "passive-income",
+        "treasury",
+        "portfolio",
+        "investment",
+        "remote-mcp"
+      ],
+      "qualityScore": 93,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/thebrierfox/intuitek-ace"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://github.com/thebrierfox/intuitek-ace",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-05-26",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "key": "tools:zapier-ai",
       "category": "tools",
       "slug": "zapier-ai",
@@ -21467,5 +21589,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "02a411d8dd3fce7a47e0a3061fa33d960296570ef835f29bd87de222073e1731"
+  "signature": "ea0e18b78b5df32e2e257d63e06d6c2d1436f0718a4daaf7f9fff299fa8a0afd"
 }

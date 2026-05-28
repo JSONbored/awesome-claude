@@ -69,13 +69,13 @@ This skill teaches agents to perform fast, low-noise code reviews that mimic sen
 - Always include rollback or quick-mitigation options.
 
 ## Troubleshooting
-**Issue:** Too many low-signal findings  
+**Issue:** Too many low-signal findings
 **Fix:** tighten rule set to changed files and critical paths first.
 
-**Issue:** Security findings lack proof  
+**Issue:** Security findings lack proof
 **Fix:** require request/response, data-flow, or control-path evidence.
 
-**Issue:** Patch plan is too broad  
+**Issue:** Patch plan is too broad
 **Fix:** break by file ownership and dependency boundary.
 
 ## Output Contract

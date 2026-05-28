@@ -188,50 +188,6 @@ Claude will:
 7. Enable test runner integration
 8. Generate coverage reports"
 ```
-```text
-"Configure Cursor for React refactoring workflow:
-1. Set up .cursorrules with React 19 patterns
-2. Enable TypeScript strict mode validation
-3. Configure agent mode for component splits
-4. Add rules for shadcn/ui usage
-5. Set up automatic prop-types to TS conversion
-6. Configure test generation with Vitest
-7. Enable preview for all agent changes
-8. Add rollback shortcuts"
-```
-```text
-"Set up Windsurf for API development:
-1. Create .cursorrules for FastAPI/Next.js API routes
-2. Configure agent to generate OpenAPI docs
-3. Set up automatic validation with Zod
-4. Add error handling templates
-5. Configure test generation
-6. Set up database query optimization
-7. Enable security scanning
-8. Add rate limiting patterns"
-```
-```text
-"Configure Cursor for migrating JS to TS:
-1. Set up .cursorrules for TypeScript migration
-2. Configure agent for file-by-file conversion
-3. Add type inference rules
-4. Set up any type replacement
-5. Configure import path updates
-6. Enable type checking after each file
-7. Add rollback on type errors
-8. Generate migration report"
-```
-```text
-"Set up Windsurf for test generation:
-1. Configure agent for unit test creation
-2. Add .cursorrules for testing patterns
-3. Set up coverage threshold checks
-4. Configure mock generation
-5. Add integration test templates
-6. Set up snapshot testing rules
-7. Enable test runner integration
-8. Generate coverage reports"
-```
 
 ## Troubleshooting
 **Issue:** "AI suggestions are slow or timing out"

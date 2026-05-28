@@ -58,13 +58,13 @@ This skill helps AI agents enforce explicit behavior contracts for MCP tools. It
 5. Block release when contract-critical checks fail.
 
 ## Troubleshooting
-**Issue:** Tool output changes break downstream clients  
+**Issue:** Tool output changes break downstream clients
 **Fix:** Add strict backward-compatibility contract checks for public fields.
 
-**Issue:** Tests pass but runtime still fails on edge cases  
+**Issue:** Tests pass but runtime still fails on edge cases
 **Fix:** Add adversarial input suites and timeout/error propagation checks.
 
-**Issue:** Frequent false positives in test suite  
+**Issue:** Frequent false positives in test suite
 **Fix:** Split deterministic contract checks from heuristic quality checks.
 
 ## Knowledge Freshness

@@ -177,44 +177,6 @@ Claude will:
 6. All pages with consistent styling using shadcn/ui
 7. Loading states and error handling"
 ```
-```text
-"Create a complete product details page with:
-1. Image gallery with thumbnails (Client Component)
-2. Product info section (title, price, description)
-3. Add to cart button with quantity selector
-4. Reviews section with star ratings
-5. Related products carousel
-6. Mobile-responsive layout with good UX
-7. Loading states and error handling"
-```
-```text
-"Generate a set of reusable UI components:
-1. CustomButton with variants (primary, secondary, outline, ghost)
-2. CustomCard with header, content, footer slots
-3. CustomInput with label, error message, help text
-4. CustomSelect with search and multi-select
-5. All components with TypeScript props, accessibility, and Storybook-ready"
-```
-```text
-"Build a data visualization dashboard component:
-1. KPI summary cards at top (Revenue, Users, Conversion)
-2. Line chart for 30-day trends using Recharts
-3. Bar chart for category breakdown
-4. Pie chart for traffic sources
-5. Data table with sorting and filtering
-6. Export to CSV functionality
-7. Responsive grid that stacks on mobile"
-```
-```text
-"Create a complete authentication flow:
-1. Login page with email/password and OAuth buttons
-2. Registration page with form validation
-3. Forgot password page with email input
-4. Email verification pending page
-5. Password reset page
-6. All pages with consistent styling using shadcn/ui
-7. Loading states and error handling"
-```
 
 ## Troubleshooting
 **Issue:** Generated components don't match my design system colors

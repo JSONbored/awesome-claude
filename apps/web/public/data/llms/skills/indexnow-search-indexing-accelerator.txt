@@ -58,13 +58,13 @@ This skill helps AI agents implement fast, reliable indexing workflows. It coord
 5. Retry failures and escalate persistent errors.
 
 ## Troubleshooting
-**Issue:** URLs submitted but indexing stays slow  
+**Issue:** URLs submitted but indexing stays slow
 **Fix:** Verify canonical tags, crawlability, and no conflicting redirect chains.
 
-**Issue:** Frequent submission failures  
+**Issue:** Frequent submission failures
 **Fix:** Add backoff retries and endpoint health checks with alerting.
 
-**Issue:** Duplicate URL variants get indexed  
+**Issue:** Duplicate URL variants get indexed
 **Fix:** Enforce strict canonical and redirect consistency before submission.
 
 ## Knowledge Freshness

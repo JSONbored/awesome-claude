@@ -181,43 +181,6 @@ Include TypeScript types and deployment scripts."
 5. Support 1000 concurrent connections
 6. Deploy across all Cloudflare edge locations"
 ```
-```text
-"Create a complete AI-powered application on Cloudflare:
-1. Workers AI for text generation (Llama-2)
-2. D1 database for storing conversations
-3. R2 for file uploads and generated content
-4. KV for session management and caching
-5. Pages for frontend deployment
-6. Queue for background job processing
-Include TypeScript types and deployment scripts."
-```
-```text
-"Build an edge API that:
-1. Accepts text content via POST request
-2. Uses Workers AI to detect harmful content
-3. Classifies content as safe/unsafe with confidence scores
-4. Logs results to D1 database
-5. Returns moderation decision in <100ms
-6. Handles 10,000 requests per minute"
-```
-```text
-"Create a Cloudflare Worker that:
-1. Intercepts image requests
-2. Analyzes image with Workers AI (OCR, object detection)
-3. Automatically optimizes images for device/bandwidth
-4. Stores optimized versions in R2
-5. Serves from edge cache on subsequent requests
-6. Includes usage analytics and cost tracking"
-```
-```text
-"Build a WebSocket-based sentiment analysis service:
-1. Accept streaming text via WebSocket
-2. Process chunks with Workers AI sentiment model
-3. Return real-time sentiment scores
-4. Store aggregate results in D1
-5. Support 1000 concurrent connections
-6. Deploy across all Cloudflare edge locations"
-```
 
 ## Troubleshooting
 **Issue:** Worker exceeds CPU time limits

@@ -92,14 +92,6 @@ Transform your customer support operations by connecting Claude to Intercom. Acc
   }
 }
 ```
-```json
-{
-  "intercom": {
-    "url": "https://mcp.intercom.com/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Show open conversations from today
@@ -138,26 +130,6 @@ Ask Claude: "Generate weekly support metrics"
 
 Create a new Intercom conversation and assign it to an admin
 
-```typescript
-// Create Intercom conversation
-const conversation = await intercom.conversations.create({
-  from: { type: "user", id: "user-id" },
-  body: "Hello, I need help with my account",
-  assign_to: { type: "admin", id: "admin-id" },
-});
-```
-```plaintext
-Ask Claude: "Show open conversations from today"
-```
-```plaintext
-Ask Claude: "Find customer by email"
-```
-```plaintext
-Ask Claude: "Update ticket status to resolved"
-```
-```plaintext
-Ask Claude: "Generate weekly support metrics"
-```
 ```typescript
 // Create Intercom conversation
 const conversation = await intercom.conversations.create({

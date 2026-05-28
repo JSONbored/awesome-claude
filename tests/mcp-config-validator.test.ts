@@ -96,6 +96,32 @@ describe("MCP config validator", () => {
     }
   });
 
+  it("redacts malformed URL-like values that contain secrets", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          malformedRemote: {
+            url: "https://bad host/sse?api_key=sk-12345678901234567890",
+          },
+          malformedArg: {
+            command: "npx",
+            args: [
+              "-y",
+              "@example/mcp",
+              "https://bad host/sse?api_key=sk-12345678901234567890",
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(result.redactedSecretCount).toBe(2);
+    expect(result.fixedConfigText).not.toContain("sk-12345678901234567890");
+    expect(result.reportText).not.toContain("sk-12345678901234567890");
+    expect(result.fixedConfigText).toContain("${URL}");
+    expect(result.reportText).toContain("${URL}");
+  });
+
   it("redacts values after sensitive split CLI flags", () => {
     const result = validateMcpConfigText(
       JSON.stringify({
