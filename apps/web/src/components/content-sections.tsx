@@ -6,6 +6,11 @@ import {
   htmlBeforeFirstH3,
   stripSectionTypeComments,
 } from "@/lib/content-section-parsing";
+import {
+  getSectionEyebrow,
+  getSectionVariant,
+  shouldOpenSection,
+} from "@/lib/content-section-variant";
 import { htmlToPlainText } from "@/lib/detail-assembly";
 
 type ContentSection = {
@@ -23,31 +28,6 @@ type ContentSectionsProps = {
   sections: ContentSection[];
   omitCode?: string[];
 };
-
-function getSectionVariant(title: string) {
-  const normalized = title.toLowerCase();
-  if (
-    normalized.includes("prerequisite") ||
-    normalized.includes("requirement") ||
-    normalized.includes("before you start")
-  ) {
-    return "prerequisites";
-  }
-  if (
-    normalized.includes("warning") ||
-    normalized.includes("critical") ||
-    normalized.includes("security")
-  ) {
-    return "warning";
-  }
-  if (
-    normalized.includes("troubleshooting") ||
-    normalized.includes("common issues")
-  ) {
-    return "troubleshooting";
-  }
-  return "default";
-}
 
 export function ContentSections({
   sections,
@@ -89,16 +69,12 @@ export function ContentSections({
           <section key={section.id} id={section.id} className="scroll-mt-28">
             <details
               className={`section-card section-card-${variant}`}
-              open={
-                index < 2 ||
-                variant === "warning" ||
-                variant === "quick_reference"
-              }
+              open={shouldOpenSection({ index, variant })}
             >
               <summary className="section-card-summary">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                    Section
+                    {getSectionEyebrow(variant)}
                   </p>
                   <h2 className="mt-2 text-xl font-semibold tracking-tight text-foreground">
                     {section.title}
