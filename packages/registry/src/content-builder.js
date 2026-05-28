@@ -346,7 +346,7 @@ export function buildContentEntryFromMdx(params) {
     hasPrerequisites:
       typeof data.hasPrerequisites === "boolean"
         ? data.hasPrerequisites
-        : sectionFlags.hasPrerequisites,
+        : Boolean(prerequisites?.length) || sectionFlags.hasPrerequisites,
     hasTroubleshooting:
       typeof data.hasTroubleshooting === "boolean"
         ? data.hasTroubleshooting

@@ -4,6 +4,13 @@ function clean(value) {
   return String(value ?? "").trim();
 }
 
+function trimLineEndings(value) {
+  return String(value)
+    .split("\n")
+    .map((line) => line.trimEnd())
+    .join("\n");
+}
+
 function sectionText(entry) {
   const chunks = [];
 
@@ -14,7 +21,7 @@ function sectionText(entry) {
       if (!title && !markdown) continue;
       chunks.push(`## ${title || "Section"}`);
       if (markdown) chunks.push(markdown);
-      if (section.codeBlocks?.length) {
+      if (!markdown && section.codeBlocks?.length) {
         for (const block of section.codeBlocks) {
           const code = clean(block.code);
           if (!code) continue;
@@ -146,7 +153,7 @@ export function renderEntryLlms(entry, params = {}) {
     "",
   ].filter(Boolean);
 
-  return lines.join("\n");
+  return trimLineEndings(lines.join("\n"));
 }
 
 export function renderCorpusLlms(entries, params = {}) {
@@ -181,5 +188,5 @@ export function renderCorpusLlms(entries, params = {}) {
     );
   }
 
-  return lines.join("\n");
+  return trimLineEndings(lines.join("\n"));
 }

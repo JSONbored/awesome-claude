@@ -7,6 +7,7 @@ import { createRemoteMcpProxyServerFromClient } from "../packages/mcp/src/remote
 import { createHeyClaudeMcpServer } from "../packages/mcp/src/server.js";
 import {
   callRegistryTool,
+  getClientSetup,
   getRegistryPrompt,
   listRegistryPrompts,
   listRegistryResources,
@@ -72,6 +73,10 @@ const validMcpSubmissionFields = {
     "Example MCP server submission used to verify the protocol-level tool surface.",
   install_command: "npx -y example-protocol-mcp",
   usage_snippet: "Add this server to your MCP client configuration.",
+  safety_notes:
+    "Installs and runs an MCP server process from the submitted package.",
+  privacy_notes:
+    "Not applicable: this fixture does not access user files or credentials.",
 };
 
 function validToolArguments(name: string) {
@@ -953,6 +958,44 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("rejects non-HTTPS custom endpoint URLs for client setup", async () => {
+    const setup = await callRegistryTool(
+      "get_client_setup",
+      { endpointUrl: "http://evil.example/mcp" },
+      { dataDir },
+    );
+    expect(setup).toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "MCP endpoint URL must use HTTPS outside localhost.",
+      },
+    });
+  });
+
+  it("rejects explicit empty endpoint URLs for client setup", async () => {
+    const setup = await callRegistryTool(
+      "get_client_setup",
+      { endpointUrl: "" },
+      { dataDir },
+    );
+    expect(setup).toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "Invalid HeyClaude MCP tool arguments.",
+      },
+    });
+
+    await expect(getClientSetup({ endpointUrl: "" })).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "invalid_request",
+        message: "MCP endpoint URL is required.",
+      },
+    });
+  });
+
   it("exposes registry resources and workflow prompts through MCP helpers", async () => {
     await expect(listRegistryResources({}, { dataDir })).resolves.toMatchObject(
       {
@@ -1095,6 +1138,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       skill_level: "advanced",
       verification_status: "validated",
       download_url: "https://example.com/example-skill.zip",
+      safety_notes:
+        "Installs package-like skill content from a source-backed download.",
+      privacy_notes:
+        "Not applicable: this fixture does not access user files or credentials.",
       tags: ["heyclaude", "submissions"],
     };
 
@@ -1177,6 +1224,10 @@ describe("HeyClaude read-only MCP helpers", () => {
         "Example MCP server submission used to test stronger draft tooling.",
       install_command: "npx -y example-draft-mcp",
       usage_snippet: "Add this server to your MCP client configuration.",
+      safety_notes:
+        "Installs and runs an MCP server process from the submitted package.",
+      privacy_notes:
+        "Not applicable: this fixture does not access user files or credentials.",
     };
 
     const prepared = await callRegistryTool(
@@ -1385,7 +1436,10 @@ describe("HeyClaude read-only MCP helpers", () => {
 
       const trust = await callRegistryTool(
         "explain_entry_trust",
-        { category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug },
+        {
+          category: entryWithoutNotes!.category,
+          slug: entryWithoutNotes!.slug,
+        },
         { dataDir },
       );
       expect(trust).toMatchObject({
@@ -1526,14 +1580,22 @@ describe("HeyClaude read-only MCP helpers", () => {
         entries: Array<{ category: string; slug: string }>;
       };
       const entryWithoutNotes = directory.entries.find(
-        (e) => e.category === "hooks" && e.slug !== "documentation-generator" && e.slug !== "retro-daily",
+        (e) =>
+          e.category === "hooks" &&
+          e.slug !== "documentation-generator" &&
+          e.slug !== "retro-daily",
       );
       expect(entryWithoutNotes).toBeTruthy();
 
       const review = await callRegistryTool(
         "review_entry_safety",
         {
-          entries: [{ category: entryWithoutNotes!.category, slug: entryWithoutNotes!.slug }],
+          entries: [
+            {
+              category: entryWithoutNotes!.category,
+              slug: entryWithoutNotes!.slug,
+            },
+          ],
           platform: "claude",
         },
         { dataDir },
@@ -1581,7 +1643,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       expect(JSON.stringify(trust)).not.toContain("verified malware-free");
       expect(JSON.stringify(trust)).not.toContain("automatic safety");
       // Recommendations are advisory and vary by entry; check they don't claim safety
-      if (trust.trust.recommendations && trust.trust.recommendations.length > 0) {
+      if (
+        trust.trust.recommendations &&
+        trust.trust.recommendations.length > 0
+      ) {
         for (const rec of trust.trust.recommendations) {
           expect(String(rec)).not.toContain("safe to install");
           expect(String(rec)).not.toContain("approved");

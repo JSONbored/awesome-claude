@@ -65,25 +65,8 @@ Analyze the changes and create a git commit following these guidelines:
 
 If arguments provided: Use $1 as type and $2 as message.
 Otherwise: Analyze changes and suggest appropriate commit.
-```text
-<type>(<scope>): <subject>
-
-   <body>
-
-   <footer>
-```
 
 ## Command Metadata
-```yaml
-allowed-tools:
-  - Bash(git add:*)
-  - Bash(git status:*)
-  - Bash(git diff:*)
-  - Bash(git commit:*)
-argument-hint: [type] [message]
-description: Create a smart git commit
-model: claude-3-5-sonnet-20241022
-```
 ```yaml
 allowed-tools:
   - Bash(git add:*)

@@ -82,14 +82,6 @@ Connect Claude to Box for enterprise content management and document automation.
   }
 }
 ```
-```json
-{
-  "box": {
-    "url": "https://mcp.box.com/",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Find all contracts from 2024
@@ -128,28 +120,6 @@ Ask Claude: "Organize project files by client and date"
 
 Upload a file to Box with custom metadata and modification timestamp
 
-```typescript
-// Upload file to Box with custom metadata
-const file = await box.files.upload({
-  parent: { id: "folder-id" },
-  name: "document.pdf",
-  file: fileBuffer,
-  content_modified_at: new Date().toISOString(),
-  metadata: { "custom-field": "value" },
-});
-```
-```plaintext
-Ask Claude: "Find all contracts from 2024"
-```
-```plaintext
-Ask Claude: "Summarize the quarterly reports in the finance folder"
-```
-```plaintext
-Ask Claude: "Extract key data from invoice documents"
-```
-```plaintext
-Ask Claude: "Organize project files by client and date"
-```
 ```typescript
 // Upload file to Box with custom metadata
 const file = await box.files.upload({

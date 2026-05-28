@@ -69,13 +69,13 @@ This skill turns ad-hoc recurring tasks into maintainable automations with clear
 - Keep runbooks current for pause, rollback, and recovery actions.
 
 ## Troubleshooting
-**Issue:** Automation output is inconsistent  
+**Issue:** Automation output is inconsistent
 **Fix:** tighten prompt to fixed output schema and acceptance checks.
 
-**Issue:** Too many alerts  
+**Issue:** Too many alerts
 **Fix:** only notify on actionable failures, not informational events.
 
-**Issue:** Runs overlap and cause drift  
+**Issue:** Runs overlap and cause drift
 **Fix:** enforce single-flight behavior and lock window policy.
 
 ## Output Contract

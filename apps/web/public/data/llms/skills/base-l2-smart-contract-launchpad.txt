@@ -58,13 +58,13 @@ This skill helps AI agents execute Base contract launches with clear operational
 5. Monitor post-launch behavior and key metrics.
 
 ## Troubleshooting
-**Issue:** Deployment succeeds but verification fails  
+**Issue:** Deployment succeeds but verification fails
 **Fix:** Confirm compiler version, optimizer settings, and constructor args alignment.
 
-**Issue:** Admin key risk is too high  
+**Issue:** Admin key risk is too high
 **Fix:** Move to multisig ownership and delayed privileged actions.
 
-**Issue:** Release process is hard to repeat  
+**Issue:** Release process is hard to repeat
 **Fix:** Encode deployment steps in scripts and enforce release checklists in CI.
 
 ## Knowledge Freshness

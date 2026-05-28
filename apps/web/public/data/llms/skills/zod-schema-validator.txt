@@ -186,46 +186,6 @@ Claude will:
 6. Check for malware signatures
 7. Transform to standard format"
 ```
-```text
-"Create complete Zod validation for checkout flow:
-1. Customer info: email, phone, billing address
-2. Shipping: address with validation (can't be PO box), preferred delivery date
-3. Payment: discriminated union for credit card, PayPal, crypto
-4. Items: array of products with quantity (min 1, max 10), size, color
-5. Promo code: optional, alphanumeric, validate against API
-6. Total must match cart calculation
-7. Accept terms and conditions (required)"
-```
-```text
-"Build API validation middleware with Zod:
-1. Validate request headers (auth token, content-type)
-2. Parse and validate query parameters with coercion
-3. Validate request body based on endpoint
-4. Add rate limiting metadata validation
-5. Validate response format before sending to client
-6. Log validation errors with request context
-7. Return standardized error responses"
-```
-```text
-"Create Zod schemas for database operations:
-1. User input sanitization before INSERT
-2. Strip dangerous characters from strings
-3. Validate foreign key relationships exist
-4. Ensure email uniqueness with async validator
-5. Transform dates to ISO format
-6. Validate JSON columns match expected structure
-7. Add database constraint validation"
-```
-```text
-"Build file upload validator with Zod:
-1. Validate MIME types (images: PNG, JPG, WebP)
-2. Check file size (max 5MB)
-3. Validate image dimensions (min 800x600, max 4000x4000)
-4. Sanitize filename (alphanumeric, hyphens, underscores)
-5. Validate metadata (EXIF data)
-6. Check for malware signatures
-7. Transform to standard format"
-```
 
 ## Troubleshooting
 **Issue:** Type inference not working

@@ -184,50 +184,6 @@ Claude will:
 7. Add source maps for debugging
 8. Set up package.json exports field"
 ```
-```text
-"Optimize Vite build for React app with 50+ routes:
-1. Implement route-based code splitting with React.lazy()
-2. Split vendor chunks: react/react-dom, UI library, utilities
-3. Configure dynamic imports for modals, charts, editors
-4. Add preload hints for critical chunks
-5. Enable CSS code splitting per route
-6. Configure build.rollupOptions for optimal chunking
-7. Add bundle analyzer and aim for <200KB initial load
-8. Set up Lighthouse CI to track performance"
-```
-```text
-"Configure Vite in Turborepo monorepo:
-1. Shared vite.config.base.ts for common config
-2. App-specific configs extending base
-3. Shared component library with optimized exports
-4. Configure path aliases for @workspace packages
-5. Set up cache strategy for unchanged packages
-6. Optimize prebundling for internal dependencies
-7. Configure dev server proxy for backend services
-8. Add workspace-aware HMR"
-```
-```text
-"Set up Vite PWA with offline support:
-1. Install vite-plugin-pwa with Workbox
-2. Configure service worker precaching strategy
-3. Add runtime caching for API calls
-4. Set up offline fallback page
-5. Generate web manifest with icons
-6. Configure update notification for new versions
-7. Optimize caching based on file types
-8. Add service worker update lifecycle"
-```
-```text
-"Configure Vite for component library build:
-1. Set build.lib mode with entry point
-2. Configure external dependencies (React, Vue)
-3. Generate ESM and UMD bundles
-4. Add TypeScript declaration generation
-5. Set up CSS extraction and modules
-6. Configure tree-shaking for optimal imports
-7. Add source maps for debugging
-8. Set up package.json exports field"
-```
 
 ## Troubleshooting
 **Issue:** "Dev server slow to start with large dependencies"

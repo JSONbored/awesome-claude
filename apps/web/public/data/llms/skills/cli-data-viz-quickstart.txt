@@ -153,39 +153,6 @@ Make it presentation-ready"
 - High DPI for print (300 dpi)
 Show monthly data as area chart"
 ```
-```text
-"Create a sales dashboard from this data:
-1. Line chart: monthly revenue trend
-2. Bar chart: top 10 products by sales
-3. Pie chart: sales by region
-4. Table: key metrics summary
-Use a professional color scheme and save as sales_dashboard.png"
-```
-```text
-"Visualize this dataset statistically:
-1. Histogram with distribution curve
-2. Box plot showing quartiles
-3. Scatter plot with correlation
-4. Heatmap of correlations between variables
-Add statistical annotations and save as analysis.png"
-```
-```text
-"Compare Year 2024 vs 2025 data:
-1. Side-by-side bar charts
-2. Percentage change annotations
-3. Highlight positive/negative changes with colors
-4. Add summary statistics
-Make it presentation-ready"
-```
-```text
-"Create a chart matching our brand:
-- Primary color: #FF6B35
-- Font: Arial
-- Style: minimalist, no grid lines
-- Background: white
-- High DPI for print (300 dpi)
-Show monthly data as area chart"
-```
 
 ## Chart Types Available
 ### Basic Charts

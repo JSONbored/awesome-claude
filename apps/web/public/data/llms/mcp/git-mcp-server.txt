@@ -85,14 +85,6 @@ Empower Claude to explore and analyze your Git repositories safely with read-onl
   }
 }
 ```
-```json
-{
-  "git": {
-    "args": ["-y", "@modelcontextprotocol/server-git"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### Show me the recent commit history
@@ -139,31 +131,6 @@ Ask Claude: "Compare this file between two commits"
 
 Stage files and create a commit with a descriptive message
 
-```typescript
-// Create Git commit
-await git.add({
-  files: ["src/components/Button.tsx", "src/utils/helpers.ts"],
-});
-const commit = await git.commit({
-  message: "feat: Add new Button component",
-  author: "Claude <claude@example.com>",
-});
-```
-```plaintext
-Ask Claude: "Show me the recent commit history"
-```
-```plaintext
-Ask Claude: "What branches exist in this repository?"
-```
-```plaintext
-Ask Claude: "Find commits mentioning bug fix"
-```
-```plaintext
-Ask Claude: "What changed in the last 5 commits?"
-```
-```plaintext
-Ask Claude: "Compare this file between two commits"
-```
 ```typescript
 // Create Git commit
 await git.add({

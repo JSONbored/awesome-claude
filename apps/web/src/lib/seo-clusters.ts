@@ -225,8 +225,7 @@ function matchesClusterRequirements(
     );
     const hasTrustedInstall =
       item.downloadTrust === "first-party" ||
-      item.packageVerified === true ||
-      (item.trustSignals?.sourceStatus === "available" && !item.downloadUrl);
+      item.packageVerified === true;
     if (!hasInstallSurface || !hasTrustedInstall) return false;
   }
 

@@ -96,14 +96,6 @@ Streamline your banking data integration and financial services by connecting Cl
   }
 }
 ```
-```json
-{
-  "plaid": {
-    "url": "https://api.dashboard.plaid.com/mcp/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Debug why account linking is failing
@@ -142,25 +134,6 @@ Ask Claude: "Check transaction categorization accuracy"
 
 Retrieve account balance from Plaid using access token
 
-```typescript
-// Get Plaid account balance
-const accounts = await plaid.accounts.get({
-  access_token: "access-token",
-});
-const balance = accounts.accounts[0].balances.current;
-```
-```plaintext
-Ask Claude: "Debug why account linking is failing"
-```
-```plaintext
-Ask Claude: "Show recent API errors"
-```
-```plaintext
-Ask Claude: "Verify webhook configuration"
-```
-```plaintext
-Ask Claude: "Check transaction categorization accuracy"
-```
 ```typescript
 // Get Plaid account balance
 const accounts = await plaid.accounts.get({

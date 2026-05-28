@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 250,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 251,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -5343,6 +5343,20 @@
       "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
+    },
+    {
+      "name": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "description": "Live Treasury rates, AI yield optimization, and portfolio calculator. Remote MCP — connect by URL, no API key required.",
+      "category": "mcp",
+      "submittedBy": "thebrierfox",
+      "submittedByUrl": "https://github.com/thebrierfox",
+      "submittedAt": "2026-05-26T04:27:00.000Z",
+      "claimStatus": "unclaimed",
+      "sourceUrl": "https://github.com/thebrierfox/intuitek-ace",
+      "installCommand": "claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list",
+      "platformCompatibility": [],
+      "heyclaudeUrl": "https://heyclau.de/mcp/yield-intelligence-mcp"
     },
     {
       "name": "zapier-mcp-server",

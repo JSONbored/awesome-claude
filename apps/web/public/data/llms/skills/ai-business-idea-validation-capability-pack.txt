@@ -68,13 +68,13 @@ This skill helps agents pressure-test business ideas before heavy build effort, 
 - Re-test assumptions whenever segment or offer changes materially.
 
 ## Troubleshooting
-**Issue:** Validation result is inconclusive  
+**Issue:** Validation result is inconclusive
 **Fix:** narrow segment and run higher-signal interviews/tests.
 
-**Issue:** Competitor map is generic  
+**Issue:** Competitor map is generic
 **Fix:** compare by workflow outcome, not feature list.
 
-**Issue:** Pricing feels arbitrary  
+**Issue:** Pricing feels arbitrary
 **Fix:** tie price to measurable ROI or time/cost savings.
 
 ## Output Contract

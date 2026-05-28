@@ -137,37 +137,6 @@ Claude will guide:
    ```
 4. Review Cascade's component design
 5. Apply changes atomically
-```text
-Refactor authentication across these files to use better-auth v1.3.9:
-   - Update lib/auth.ts to use betterAuth() instead of NextAuth()
-   - Migrate session handling to better-auth patterns
-   - Update all import statements
-   - Maintain existing OAuth providers
-   - Keep current session management logic
-```
-```text
-Implement real-time notifications using Supabase Realtime:
-   - Database schema: notifications table with RLS
-   - Server-side: Supabase client setup
-   - Hooks: useNotifications with real-time subscription
-   - UI: NotificationBell component
-   - Follow patterns in /lib/supabase and /components/ui
-```
-```text
-Explain this error handling pattern and show me:
-   1. Where else this pattern is used
-   2. All files that import this error handler
-   3. How errors propagate to the UI layer
-   4. Any inconsistencies in error handling
-```
-```text
-Extract user profile section into reusable component:
-   - Create components/user/profile.tsx
-   - Add TypeScript props interface
-   - Support 'compact' and 'full' variants
-   - Move styles to component
-   - Update dashboard to import and use new component
-```
 
 ## Tips for Best Results
 1. **Specific File Context**: When using Cascade, select all related files first (Cmd/Ctrl+Click in sidebar) to provide complete context for multi-file operations.
@@ -222,42 +191,6 @@ Extract user profile section into reusable component:
 ### Performance Optimization
 
 ```
-"Cascade analysis for performance optimization:
-1. Identify components causing unnecessary re-renders
-2. Suggest React.memo, useCallback, useMemo placements
-3. Find expensive operations that could use useTransition
-4. Optimize database queries in Server Components
-5. Suggest code splitting opportunities
-6. Analyze bundle size impact"
-```
-```text
-"Use Cascade Flow to implement user profile editing:
-1. Database: Add Prisma schema for user profiles
-2. API: Create tRPC mutations for profile updates
-3. Validation: Define Zod schemas
-4. UI: Build profile edit form with react-hook-form
-5. State: Add optimistic updates
-6. Follow our existing patterns in /lib and /components"
-```
-```text
-"Run Cascade security audit on authentication flow:
-1. Analyze all files in /lib/auth and /app/api/auth
-2. Check for OWASP Top 10 vulnerabilities
-3. Verify input validation with Zod
-4. Review session management security
-5. Identify any exposed secrets or tokens
-6. Suggest security improvements"
-```
-```text
-"Use Cascade to migrate from React 18 to React 19:
-1. Update package.json dependencies
-2. Migrate class components to functional components with hooks
-3. Replace deprecated lifecycle methods
-4. Update ReactDOM.render to createRoot
-5. Adopt new React 19 features (useOptimistic, useFormStatus)
-6. Update tests for new React Testing Library patterns"
-```
-```text
 "Cascade analysis for performance optimization:
 1. Identify components causing unnecessary re-renders
 2. Suggest React.memo, useCallback, useMemo placements

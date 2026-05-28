@@ -1,0 +1,130 @@
+{
+  "schemaVersion": 1,
+  "key": "tools:authsome",
+  "entry": {
+    "category": "tools",
+    "slug": "authsome",
+    "title": "Authsome",
+    "description": "Local credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.",
+    "seoTitle": "Authsome local credential broker for AI agents",
+    "seoDescription": "Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTPS proxy that injects cr...",
+    "author": "Agentr",
+    "authorProfileUrl": "https://github.com/agentrhq",
+    "dateAdded": "2026-05-25",
+    "contentUpdatedAt": "2026-05-25",
+    "submittedBy": "zriyansh",
+    "submittedByUrl": "https://github.com/zriyansh",
+    "tags": [
+      "credentials",
+      "agent-auth",
+      "agents"
+    ],
+    "keywords": [
+      "ai agent credentials",
+      "local credential broker",
+      "oauth2 for agents",
+      "credentials",
+      "agent-auth",
+      "agents",
+      "tools",
+      "claude",
+      "heyclaude",
+      "authsome"
+    ],
+    "documentationUrl": "https://authsome.ai/docs",
+    "websiteUrl": "https://authsome.ai",
+    "brandName": "Authsome",
+    "brandDomain": "authsome.ai",
+    "brandIconUrl": "/api/brand-assets/icon/authsome.ai",
+    "brandAssetSource": "brandfetch",
+    "pricingModel": "free",
+    "disclosure": "editorial",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Linux, Windows",
+    "cardDescription": "Local credential broker for AI agents.",
+    "installable": true,
+    "installCommand": "uv tool install authsome",
+    "usageSnippet": "uv tool install authsome",
+    "copySnippet": "uv tool install authsome",
+    "prerequisites": [
+      "Python 3.13+ runtime on the host.",
+      "Install authsome locally via `uv tool install authsome` (recommended), `pip install authsome`, or `uvx authsome@latest`. Package source is PyPI under the name `authsome`.",
+      "A user account with each external provider you intend to connect (GitHub, Google, OpenAI, Linear, Slack, Notion, Resend, Stripe, etc.). For OAuth2 providers, the first-time login opens a browser; some providers also support device code flow for headless setup.",
+      "Network access on the host for the initial OAuth2 / API-key registration and for live API calls the agent makes through the proxy.",
+      "A Claude Code (or other agentskills.io-compatible agent) session that can reach `127.0.0.1` for the loopback proxy. The agent must trust the local proxy endpoint authsome configures.",
+      "Acceptance that authsome installs a long-running local daemon and a local HTTPS proxy on loopback. Both must be running while the agent makes provider API calls."
+    ],
+    "safetyNotes": [
+      "Installs and runs a local daemon plus a local HTTPS proxy (`authsome run`) on loopback (`127.0.0.1`). Both processes are long-running and intercept outbound HTTPS to matched provider hostnames.",
+      "The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies. Agents running behind it will perform live, authenticated API calls against the provider (send emails, post to Slack, charge Stripe, write to GitHub, etc.) using the user's real credentials.",
+      "The daemon performs background OAuth2 token refresh by contacting each provider's token endpoint. Refresh failures or network outages can leave a provider in a stale state until `authsome login <provider>` is re-run.",
+      "Network access is required for OAuth flows, background token refresh, and the agent's provider API calls. The proxy itself only listens on loopback; outbound provider traffic leaves the host normally.",
+      "Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; verify the package source on PyPI (`authsome`) and the upstream repository (`agentrhq/authsome`) before installing."
+    ],
+    "privacyNotes": [
+      "Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service.",
+      "When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them.",
+      "OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint.",
+      "First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.",
+      "Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`."
+    ],
+    "hasPrerequisites": true,
+    "hasTroubleshooting": false,
+    "downloadUrl": "",
+    "downloadTrust": null,
+    "downloadSha256": null,
+    "body": "## Editorial notes\n\nAuthsome fits agent builders that want OAuth2 and API key handling without sending credentials to a third-party service. Login once via browser PKCE or device code, the encrypted vault sits at ~/.authsome, and a local HTTPS proxy injects credentials at request time so the agent's process env never holds raw secrets. 45 providers ship bundled (14 OAuth2, 31 API key) including GitHub, Google, OpenAI, Linear, Slack, Notion, Resend, and Stripe. MIT licensed, Python 3.13+.\n\n## Disclosure\n\nEditorial listing. No paid placement or affiliate link is used.",
+    "sections": [
+      {
+        "title": "Editorial notes",
+        "id": "editorial-notes",
+        "markdown": "Authsome fits agent builders that want OAuth2 and API key handling without sending credentials to a third-party service. Login once via browser PKCE or device code, the encrypted vault sits at ~/.authsome, and a local HTTPS proxy injects credentials at request time so the agent's process env never holds raw secrets. 45 providers ship bundled (14 OAuth2, 31 API key) including GitHub, Google, OpenAI, Linear, Slack, Notion, Resend, and Stripe. MIT licensed, Python 3.13+.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Disclosure",
+        "id": "disclosure",
+        "markdown": "Editorial listing. No paid placement or affiliate link is used.",
+        "codeBlocks": []
+      }
+    ],
+    "headings": [
+      {
+        "depth": 2,
+        "text": "Editorial notes",
+        "id": "editorial-notes"
+      },
+      {
+        "depth": 2,
+        "text": "Disclosure",
+        "id": "disclosure"
+      }
+    ],
+    "codeBlocks": [],
+    "filePath": "content/tools/authsome.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+    "repoUrl": "https://github.com/agentrhq/authsome",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null
+  },
+  "trustSignals": {
+    "firstPartyEditorial": false,
+    "packageVerified": false,
+    "packageTrust": null,
+    "packageChecksum": "",
+    "checksumPresent": false,
+    "sourceUrlCount": 4,
+    "sourceUrls": [
+      "https://authsome.ai/docs",
+      "https://github.com/agentrhq/authsome",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+      "https://authsome.ai"
+    ],
+    "sourceStatus": "available",
+    "lastVerifiedAt": "2026-05-25",
+    "adapterGenerated": false,
+    "platforms": [],
+    "supportLevels": []
+  }
+}
