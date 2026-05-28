@@ -381,7 +381,7 @@ export default async function SubmissionsPage({
             entries.map((entry) => {
               const sourceHref = safeHttpsUrl(entry.sourceUrl);
               const sourceUrls = entry.sourceUrls
-                .map((url) => safeHttpUrl(url))
+                .map((url) => safeHttpsUrl(url))
                 .filter(Boolean);
               const contributorProfileHref = safeHttpUrl(
                 entry.contributorContext.profileUrl,
