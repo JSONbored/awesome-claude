@@ -184,50 +184,6 @@ Claude will:
 7. Rooms: dynamic [roomId] routes
 8. Cursor positions: reactive SVG overlays"
 ```
-```text
-"Build SvelteKit e-commerce with:
-1. Product catalog: +page.svelte with load function, search/filter
-2. Product detail: dynamic [slug]/+page.svelte route
-3. Cart: writable store with localStorage persistence
-4. Checkout: form actions with Stripe integration
-5. Auth: hooks for JWT validation, protected routes
-6. Admin: +layout.server.ts for role-based access
-7. Database: Prisma with PostgreSQL
-8. Images: static adapter with CDN"
-```
-```text
-"Create multi-tenant SvelteKit SaaS:
-1. Auth: +hooks.server.ts for session management
-2. Multi-tenant: load function filters by tenant ID
-3. Dashboard: reactive charts with derived stores
-4. Settings: form actions for account updates
-5. API: +server.ts routes for external integrations
-6. Billing: Stripe webhooks in API routes
-7. Real-time: Server-Sent Events for notifications
-8. Deploy: Node adapter with PM2"
-```
-```text
-"Build Svelte static site generator:
-1. Content: Markdown files with frontmatter
-2. Processing: +page.server.ts loads and parses MD
-3. Templates: layout components for post types
-4. Navigation: derived store from post metadata
-5. Search: client-side with Fuse.js
-6. RSS: +server.ts generates feed.xml
-7. Sitemap: prerender all routes
-8. Deploy: Static adapter to Netlify"
-```
-```text
-"Build collaborative doc editor with Svelte:
-1. Editor: rich text with ProseMirror
-2. Sync: WebSocket for real-time updates
-3. Presence: writable store showing active users
-4. Conflict resolution: operational transforms
-5. Persistence: auto-save to database
-6. Auth: session-based with refresh tokens
-7. Rooms: dynamic [roomId] routes
-8. Cursor positions: reactive SVG overlays"
-```
 
 ## Troubleshooting
 **Issue:** "Reactive statements not updating when I expect"

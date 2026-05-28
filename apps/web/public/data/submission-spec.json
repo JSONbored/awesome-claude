@@ -332,17 +332,17 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note."
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note."
         }
       ]
     },
@@ -494,7 +494,7 @@
           "type": "url",
           "required": false,
           "placeholder": "https://...",
-          "helpText": "Community submissions cannot request local /downloads hosting."
+          "helpText": "Only use this for a real package, archive, or release download URL. Use GitHub URL or retrieval sources for source tree/blob paths. Community submissions cannot request local /downloads hosting."
         },
         {
           "id": "full_copyable_content",
@@ -522,17 +522,17 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note."
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note."
         }
       ]
     },
@@ -673,17 +673,17 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note."
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note."
         }
       ]
     },
@@ -809,17 +809,17 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note."
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note."
         }
       ]
     },
@@ -959,17 +959,17 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Execution, permissions, destructive actions, background workers, network access, or install risk.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no runtime/install/file/network/credential behavior. Up to 8 notes, 320 characters per note."
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false,
+          "required": true,
           "placeholder": "One note per line. Local files, logs, credentials, telemetry, third-party data handling, or user data exposure.",
-          "helpText": "Optional. Up to 8 notes, 320 characters per note."
+          "helpText": "Required for risk-bearing assets. Use \"Not applicable: ...\" only when there is genuinely no local data, logging, credential, telemetry, or third-party data behavior. Up to 8 notes, 320 characters per note."
         }
       ]
     },
@@ -1472,13 +1472,13 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false
+          "required": true
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false
+          "required": true
         }
       ]
     },
@@ -1638,13 +1638,13 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false
+          "required": true
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false
+          "required": true
         }
       ]
     },
@@ -1770,13 +1770,13 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false
+          "required": true
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false
+          "required": true
         }
       ]
     },
@@ -1886,13 +1886,13 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false
+          "required": true
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false
+          "required": true
         }
       ]
     },
@@ -2017,13 +2017,13 @@
           "id": "safety_notes",
           "label": "Safety notes",
           "type": "textarea",
-          "required": false
+          "required": true
         },
         {
           "id": "privacy_notes",
           "label": "Privacy notes",
           "type": "textarea",
-          "required": false
+          "required": true
         }
       ]
     },

@@ -74,16 +74,6 @@ Use:
 - Include edge cases to handle
 - Share existing similar implementations
 - Reference specific documentation sections
-```text
-Instead of: "Build a complete authentication system"
-
-Use:
-1. "Create a User schema with Zod validation for email and password"
-2. "Implement password hashing with bcrypt in the user service"
-3. "Create JWT token generation and verification utilities"
-4. "Build login API endpoint with proper error handling"
-5. "Add authentication middleware for protected routes"
-```
 
 ## Coding-Specific Patterns
 ### Test-Driven Development Prompts
@@ -123,35 +113,6 @@ Goals:
 - Add TypeScript types for all parameters
 - Keep the route handler thin (< 10 lines)"
 ```
-```text
-"Write unit tests for a UserService class that:
-1. Creates users with valid email/password
-2. Rejects invalid emails (test@, @example, etc.)
-3. Enforces password minimum length of 8 characters
-4. Handles duplicate email errors
-5. Uses Jest with proper mocking of the database
-
-Then implement the UserService to make all tests pass."
-```
-```text
-"Design the architecture for a multi-tenant SaaS application:
-1. Define clear separation between tenants
-2. Implement row-level security in PostgreSQL
-3. Use discriminated unions in TypeScript for tenant context
-4. Show the folder structure and main abstractions
-5. Then we'll implement each piece step by step"
-```
-```text
-"Refactor this Express.js route handler:
-[paste code]
-
-Goals:
-- Extract business logic into service layer
-- Add proper error handling with custom error classes
-- Implement request validation with Zod
-- Add TypeScript types for all parameters
-- Keep the route handler thin (< 10 lines)"
-```
 
 ## Context Window Management
 ### Efficient Context Usage
@@ -165,15 +126,6 @@ Goals:
 ### Managing Long Conversations
 
 ```
-"Context refresh: We're building a Next.js 15 e-commerce app with:
-- App Router and React Server Components
-- Supabase for database and auth
-- Stripe for payments
-- Current status: Authentication is complete, now adding product catalog
-
-Next task: Create product listing page with filters..."
-```
-```text
 "Context refresh: We're building a Next.js 15 e-commerce app with:
 - App Router and React Server Components
 - Supabase for database and auth
@@ -201,13 +153,6 @@ Iteration 5: "Implement responsive design for mobile"
 - Request adjustments based on actual behavior
 - Provide performance metrics if optimization needed
 - Share linter/compiler warnings
-```text
-Iteration 1: "Create basic product card component"
-Iteration 2: "Add image optimization with next/image"
-Iteration 3: "Include loading skeleton states"
-Iteration 4: "Add error boundaries for failed image loads"
-Iteration 5: "Implement responsive design for mobile"
-```
 
 ## Framework-Specific Patterns
 ### React/Next.js Prompts
@@ -238,34 +183,6 @@ Iteration 5: "Implement responsive design for mobile"
 ### Database Queries
 
 ```
-"Write a Prisma query that:
-- Fetches posts with author info
-- Includes comment count (no N+1 queries)
-- Filters by published status
-- Sorts by creation date descending
-- Paginates with cursor-based pagination
-- Returns TypeScript-typed results"
-```
-```text
-"Create a Next.js 15 Server Component for user dashboard:
-- Fetch user data with Supabase client
-- Use Suspense for streaming
-- Implement proper error boundaries
-- Add TypeScript types from Supabase schema
-- Follow Next.js App Router conventions
-- Include loading.tsx and error.tsx files"
-```
-```text
-"Build a REST API endpoint for creating blog posts:
-- Use Express.js with TypeScript
-- Validate input with Zod schema
-- Authenticate with JWT middleware
-- Store in PostgreSQL with Prisma
-- Return proper HTTP status codes (201, 400, 401, 500)
-- Include comprehensive error handling
-- Add request logging"
-```
-```text
 "Write a Prisma query that:
 - Fetches posts with author info
 - Includes comment count (no N+1 queries)
@@ -307,32 +224,6 @@ Problems:
 
 Optimize using useMemo, useCallback, and React.memo where appropriate."
 ```
-```text
-"I'm getting this error:
-[paste full error stack]
-
-Context:
-- Next.js 15 with App Router
-- Happens when navigating to /dashboard
-- User is authenticated
-- Works in development but fails in production
-
-Here's the relevant code:
-[paste minimal reproduction]
-
-Analyze the error and suggest fixes."
-```
-```text
-"This React component re-renders too frequently:
-[paste component code]
-
-Problems:
-- Re-renders on every keystroke in parent
-- Fetches data unnecessarily
-- No memoization
-
-Optimize using useMemo, useCallback, and React.memo where appropriate."
-```
 
 ## Security-Focused Prompts
 ### Security Review
@@ -349,35 +240,11 @@ Check for:
 - JWT implementation best practices
 - Input validation gaps"
 ```
-```text
-"Review this authentication code for security issues:
-[paste code]
-
-Check for:
-- SQL injection vulnerabilities
-- XSS attack vectors
-- CSRF protection
-- Secure password storage
-- JWT implementation best practices
-- Input validation gaps"
-```
 
 ## Documentation Requests
 ### Code Documentation
 
 ```
-"Add comprehensive documentation to this module:
-[paste code]
-
-Include:
-- JSDoc comments for all functions
-- TypeScript type annotations
-- Usage examples in comments
-- Edge case explanations
-- Performance considerations
-- Error handling documentation"
-```
-```text
 "Add comprehensive documentation to this module:
 [paste code]
 
@@ -417,34 +284,6 @@ Instruction: Implement reconnection logic that:
 ### Few-Shot Learning Pattern
 
 ```
-"Here are two examples of API error responses in our system:
-
-Example 1: [JSON structure]
-Example 2: [JSON structure]
-
-Now create error responses for:
-1. Invalid authentication token
-2. Resource not found
-3. Rate limit exceeded"
-```
-```text
-"Context: I'm building a real-time chat app with WebSocket.
-
-Instruction: Implement reconnection logic that:
-- Retries with exponential backoff
-- Maintains message queue during disconnection
-- Syncs missed messages on reconnect
-- Shows connection status to user"
-```
-```text
-"Build a image carousel component with these constraints:
-- No external libraries (vanilla React only)
-- Support touch gestures on mobile
-- Lazy load images
-- Accessible (keyboard navigation, ARIA labels)
-- Max bundle size: 5KB gzipped"
-```
-```text
 "Here are two examples of API error responses in our system:
 
 Example 1: [JSON structure]

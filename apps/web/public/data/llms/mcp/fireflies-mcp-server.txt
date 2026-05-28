@@ -83,14 +83,6 @@ Unlock the power of your meeting data by connecting Claude to Fireflies.ai's mee
   }
 }
 ```
-```json
-{
-  "fireflies": {
-    "url": "https://api.fireflies.ai/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Get action items from today's standup
@@ -129,26 +121,6 @@ Ask Claude: "Find all mentions of budget in recent meetings"
 
 Retrieve a meeting transcript with speaker identification
 
-```typescript
-// Get Fireflies meeting transcript
-const transcript = await fireflies.transcripts.get({
-  meeting_id: "meeting-id",
-  format: "text",
-  include_speakers: true,
-});
-```
-```plaintext
-Ask Claude: "Get action items from today's standup"
-```
-```plaintext
-Ask Claude: "Search for discussions about Q4 planning"
-```
-```plaintext
-Ask Claude: "Generate summary of customer call"
-```
-```plaintext
-Ask Claude: "Find all mentions of budget in recent meetings"
-```
 ```typescript
 // Get Fireflies meeting transcript
 const transcript = await fireflies.transcripts.get({

@@ -68,23 +68,15 @@ Output:
 3. Add pre-tool policy checks and argument validation.
 4. Build adversarial test prompts and expected outcomes.
 5. Block release if any critical bypass succeeds.
-```text
-Apply prompt injection defense guardrails to this system.
-Output:
-1) attack tree,
-2) policy controls with enforcement points,
-3) adversarial test suite,
-4) release gate criteria.
-```
 
 ## Troubleshooting
-**Issue:** Guardrails over-block normal user requests  
+**Issue:** Guardrails over-block normal user requests
 **Fix:** Tighten policy conditions by action context, not broad keyword filters.
 
-**Issue:** Model still attempts prohibited actions  
+**Issue:** Model still attempts prohibited actions
 **Fix:** Enforce server-side policy independently of model output.
 
-**Issue:** Red-team set misses real attacks  
+**Issue:** Red-team set misses real attacks
 **Fix:** Continuously seed tests from production incidents and near misses.
 
 ## Knowledge Freshness

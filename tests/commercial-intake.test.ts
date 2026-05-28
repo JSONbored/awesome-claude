@@ -289,16 +289,19 @@ describe("commercial intake contracts", () => {
 
   it("transitions curated job sources through verified, stale, and closed states", () => {
     expect(
-      evaluateJobSourceLifecycle({
-        currentStatus: "active",
-        staleCheckCount: 1,
-        expiresAt: "2026-05-28T00:00:00Z",
-        sourceOk: true,
-        titleMatched: true,
-        companyMatched: true,
-        closureDetected: false,
-        applyDetected: true,
-      }),
+      evaluateJobSourceLifecycle(
+        {
+          currentStatus: "active",
+          staleCheckCount: 1,
+          expiresAt: "2026-05-28T00:00:00Z",
+          sourceOk: true,
+          titleMatched: true,
+          companyMatched: true,
+          closureDetected: false,
+          applyDetected: true,
+        },
+        new Date("2026-05-27T00:00:00Z"),
+      ),
     ).toMatchObject({
       status: "active",
       staleCheckCount: 0,

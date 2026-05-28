@@ -74,13 +74,13 @@ This capability pack teaches agents how to build secure and resilient GitHub Act
 - Capture artifacts/logs for post-failure diagnostics.
 
 ## Troubleshooting
-**Issue:** CI passes in PRs but fails after merge  
+**Issue:** CI passes in PRs but fails after merge
 **Fix:** Align PR and main workflow environments and dependency assumptions.
 
-**Issue:** Workflow has excessive token scope  
+**Issue:** Workflow has excessive token scope
 **Fix:** Reduce permissions per job and isolate privileged steps to protected environments.
 
-**Issue:** Third-party action risk is unclear  
+**Issue:** Third-party action risk is unclear
 **Fix:** Pin exact versions/SHAs and periodically review upstream security posture.
 
 ## Output Contract

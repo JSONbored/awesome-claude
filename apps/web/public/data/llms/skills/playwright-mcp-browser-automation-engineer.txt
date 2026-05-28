@@ -58,13 +58,13 @@ This skill turns browser automation requests into deterministic workflows. It em
 5. Run replay validation to verify flake resistance.
 
 ## Troubleshooting
-**Issue:** Selectors break after UI updates  
+**Issue:** Selectors break after UI updates
 **Fix:** Prefer role/data attributes and maintain fallback selector chains.
 
-**Issue:** Workflow fails intermittently  
+**Issue:** Workflow fails intermittently
 **Fix:** Replace fixed sleeps with condition-based waits and bounded retries.
 
-**Issue:** Hard to diagnose failures  
+**Issue:** Hard to diagnose failures
 **Fix:** Persist trace, screenshot, and action logs per step with correlation IDs.
 
 ## Knowledge Freshness

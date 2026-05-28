@@ -88,19 +88,6 @@ Manage and transform media assets through Cloudinary's comprehensive cloud-based
   }
 }
 ```
-```json
-{
-  "cloudinary": {
-    "env": {
-      "CLOUDINARY_API_KEY": "${CLOUDINARY_API_KEY}",
-      "CLOUDINARY_API_SECRET": "${CLOUDINARY_API_SECRET}",
-      "CLOUDINARY_CLOUD_NAME": "${CLOUDINARY_CLOUD_NAME}"
-    },
-    "url": "https://mcp.cloudinary.com/",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Resize all product images to 800x600
@@ -139,29 +126,6 @@ Ask Claude: "Optimize images for web delivery"
 
 Upload an image to Cloudinary with automatic transformations and tagging
 
-```typescript
-// Upload image to Cloudinary with transformations
-const result = await cloudinary.uploader.upload("image.jpg", {
-  folder: "products",
-  transformation: [
-    { width: 800, height: 600, crop: "fill" },
-    { quality: "auto", fetch_format: "auto" },
-  ],
-  tags: ["product", "featured"],
-});
-```
-```plaintext
-Ask Claude: "Resize all product images to 800x600"
-```
-```plaintext
-Ask Claude: "Apply watermark to videos"
-```
-```plaintext
-Ask Claude: "Generate responsive image sets"
-```
-```plaintext
-Ask Claude: "Optimize images for web delivery"
-```
 ```typescript
 // Upload image to Cloudinary with transformations
 const result = await cloudinary.uploader.upload("image.jpg", {
