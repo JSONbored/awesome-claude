@@ -38,9 +38,9 @@ Master MCP server configuration in Claude Desktop with this comprehensive tutori
 
 > **Tutorial Requirements**
 >
-> **Prerequisites:** Basic JSON knowledge, Claude Desktop installed  
-> **Time Required:** 20 minutes active work  
-> **Tools Needed:** Text editor, npm/Node.js installed  
+> **Prerequisites:** Basic JSON knowledge, Claude Desktop installed
+> **Time Required:** 20 minutes active work
+> **Tools Needed:** Text editor, npm/Node.js installed
 > **Outcome:** Working MCP server configuration with filesystem access
 
 ## What You'll Learn
@@ -68,13 +68,13 @@ Understanding these concepts ensures you can adapt this tutorial to your specifi
 ## Troubleshooting Guide
 > **Common Issues and Solutions**
 >
-> **Issue 1: Cannot connect to MCP server**  
+> **Issue 1: Cannot connect to MCP server**
 > **Solution:** Validate JSON syntax with python -m json.tool. This fixes invalid JSON causing connection failures.
 >
-> **Issue 2: Server disconnected unexpectedly**  
+> **Issue 2: Server disconnected unexpectedly**
 > **Solution:** Check Claude Desktop logs at ~/Library/Logs/Claude/. Missing dependencies cause 80% of disconnections.
 >
-> **Issue 3: Windows path errors**  
+> **Issue 3: Windows path errors**
 > **Solution:** Use double backslashes or forward slashes. Escape sequences break Windows path parsing.
 
 ## Advanced Techniques
@@ -171,20 +171,6 @@ _Last updated: September 2025 | Found this helpful? Share it with your team and 
 - Understanding of your operating system file paths and environment variable syntax
 
 ## Configuration
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/username/Documents"
-      ]
-    }
-  }
-}
-```
 ```json
 {
   "mcpServers": {
@@ -299,73 +285,6 @@ tail -f ~/Library/Logs/Claude/mcp*.log
 
 Add remote HTTP MCP server to Claude Code using CLI command
 
-```bash
-claude mcp add --transport http server-name https://api.example.com/mcp
-```
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/username/Documents"
-      ]
-    }
-  }
-}
-```
-```json
-{
-  "mcpServers": {
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}"
-      }
-    }
-  }
-}
-```
-```json
-{
-  "mcpServers": {
-    "filesystem": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "./projects"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
-    },
-    "github": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-github"]
-    }
-  }
-}
-```
-```json
-{
-  "mcpServers": {
-    "database": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "DATABASE_URL": "${POSTGRES_CONNECTION}"
-      }
-    }
-  }
-}
-```
-```bash
-python -m json.tool claude_desktop_config.json
-```
-```bash
-tail -f ~/Library/Logs/Claude/mcp*.log
-```
 ```bash
 claude mcp add --transport http server-name https://api.example.com/mcp
 ```

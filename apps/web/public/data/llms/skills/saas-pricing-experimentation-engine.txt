@@ -58,13 +58,13 @@ This skill helps AI agents run pricing experiments that are rigorous and operati
 5. Decide rollout, rollback, or follow-up test.
 
 ## Troubleshooting
-**Issue:** Conversion increases but churn worsens  
+**Issue:** Conversion increases but churn worsens
 **Fix:** Enforce retention guardrails and include lagging metrics in decisions.
 
-**Issue:** Results are inconclusive  
+**Issue:** Results are inconclusive
 **Fix:** Extend sample duration or tighten cohort segmentation assumptions.
 
-**Issue:** Pricing experiment hurts trust  
+**Issue:** Pricing experiment hurts trust
 **Fix:** Improve messaging clarity and align price changes with explicit value communication.
 
 ## Knowledge Freshness

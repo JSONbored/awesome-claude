@@ -69,23 +69,15 @@ Deliver:
 3. Add guardrails for destructive actions (confirmations/human gate).
 4. Instrument logs/screenshots for every failed checkpoint.
 5. Run repeatedly to validate stability before shipping.
-```text
-Apply browser agent workflow automation skill.
-Deliver:
-1) deterministic step plan,
-2) selector map,
-3) retry/timeout policy,
-4) failure recovery playbook.
-```
 
 ## Troubleshooting
-**Issue:** Flaky failures on dynamic pages  
+**Issue:** Flaky failures on dynamic pages
 **Fix:** replace brittle selectors with role/label/text anchors and add readiness checks.
 
-**Issue:** Infinite retries hide root cause  
+**Issue:** Infinite retries hide root cause
 **Fix:** cap retries and emit structured failure reasons after each attempt.
 
-**Issue:** Automation performs unsafe actions  
+**Issue:** Automation performs unsafe actions
 **Fix:** require explicit confirmation gates for irreversible operations.
 
 ## Knowledge Freshness

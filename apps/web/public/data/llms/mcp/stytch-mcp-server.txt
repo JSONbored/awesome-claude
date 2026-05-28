@@ -92,14 +92,6 @@ Manage Stytch authentication configurations and workspace settings for identity 
   }
 }
 ```
-```json
-{
-  "stytch": {
-    "url": "http://mcp.stytch.dev/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Add new redirect URL for production
@@ -138,25 +130,6 @@ Ask Claude: "Show authentication metrics for this week"
 
 Authenticate a user using Stytch magic link with session duration
 
-```typescript
-// Authenticate user with Stytch
-const session = await stytch.magicLinks.authenticate({
-  token: "magic-link-token",
-  session_duration_minutes: 60,
-});
-```
-```plaintext
-Ask Claude: "Add new redirect URL for production"
-```
-```plaintext
-Ask Claude: "Update password reset email template"
-```
-```plaintext
-Ask Claude: "Configure MFA settings"
-```
-```plaintext
-Ask Claude: "Show authentication metrics for this week"
-```
 ```typescript
 // Authenticate user with Stytch
 const session = await stytch.magicLinks.authenticate({

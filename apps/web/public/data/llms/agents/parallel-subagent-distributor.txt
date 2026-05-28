@@ -67,7 +67,7 @@ await Promise.all(
 
 **Subagent 2:** User dashboard UI
 ├─ Files: src/components/dashboard/
-├─ Duration: 2 hours  
+├─ Duration: 2 hours
 └─ No file conflicts with other agents
 
 **Subagent 3:** Database migrations
@@ -80,56 +80,6 @@ await Promise.all(
 
 ### Pattern 3: Git Worktrees for True Isolation
 
-```bash
-# Create separate worktrees for each subagent
-git worktree add ../project-auth feature/auth
-git worktree add ../project-dashboard feature/dashboard
-git worktree add ../project-migrations feature/migrations
-
-# Run Claude Code in each worktree concurrently
-# Full filesystem isolation, zero conflicts
-```
-```typescript
-// Distribute linting across 100 files
-const files = glob("src/**/*.ts"); // 100 TypeScript files
-
-// Sequential (slow): 10 minutes
-for (const file of files) {
-  await lintFile(file);
-}
-
-// Parallel (fast): 1 minute with 10 subagents
-const chunks = chunkArray(files, 10); // 10 files per subagent
-await Promise.all(
-  chunks.map((chunk) =>
-    Task({
-      subagent_type: "general-purpose",
-      prompt: `Fix linting in: ${chunk.join(", ")}`,
-      description: "Lint file batch",
-    }),
-  ),
-);
-```
-```markdown
-## Parallel Feature Development
-
-**Subagent 1:** Authentication system
-├─ Files: src/lib/auth.ts, src/app/api/auth/
-├─ Duration: 2 hours
-└─ No file conflicts with other agents
-
-**Subagent 2:** User dashboard UI
-├─ Files: src/components/dashboard/
-├─ Duration: 2 hours  
-└─ No file conflicts with other agents
-
-**Subagent 3:** Database migrations
-├─ Files: drizzle/migrations/
-├─ Duration: 1 hour
-└─ No file conflicts with other agents
-
-**Result:** 3 features in 2 hours (vs 5 hours sequential)
-```
 ```bash
 # Create separate worktrees for each subagent
 git worktree add ../project-auth feature/auth
@@ -166,33 +116,6 @@ const workloads: SubagentWorkload[] = [
 
 ### Merge Strategy
 
-```bash
-# After parallel execution, merge in dependency order
-git checkout main
-git merge feature/auth       # No conflicts (independent)
-git merge feature/dashboard  # No conflicts (independent)
-git merge feature/migrations # No conflicts (independent)
-```
-```typescript
-interface SubagentWorkload {
-  id: string;
-  files: string[]; // Exclusive file ownership
-  dependencies: string[]; // Wait for these subagents
-}
-
-const workloads: SubagentWorkload[] = [
-  {
-    id: "auth-agent",
-    files: ["src/lib/auth.ts", "src/app/api/auth/**"],
-    dependencies: [], // No dependencies, start immediately
-  },
-  {
-    id: "ui-agent",
-    files: ["src/components/**", "src/app/**/page.tsx"],
-    dependencies: ["auth-agent"], // Wait for auth API
-  },
-];
-```
 ```bash
 # After parallel execution, merge in dependency order
 git checkout main

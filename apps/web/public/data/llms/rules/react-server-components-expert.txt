@@ -67,32 +67,6 @@ async function Dashboard() {
   return <DashboardLayout users={users} analytics={analytics} revenue={revenue} />;
 }
 ```
-```typescript
-// Server Component with direct data fetching
-async function UserProfile({ userId }: { userId: string }) {
-  // Fetch directly - runs on server
-  const user = await db.user.findUnique({ where: { id: userId } });
-  const posts = await db.post.findMany({ where: { authorId: userId } });
-
-  return (
-    <div>
-      <h1>{user.name}</h1>
-      <PostList posts={posts} />
-    </div>
-  );
-}
-
-// Parallel data fetching
-async function Dashboard() {
-  const [users, analytics, revenue] = await Promise.all([
-    fetchUsers(),
-    fetchAnalytics(),
-    fetchRevenue(),
-  ]);
-
-  return <DashboardLayout users={users} analytics={analytics} revenue={revenue} />;
-}
-```
 
 ## App Router Best Practices
 ### Layouts and Templates
@@ -125,20 +99,6 @@ export default function Loading() {
 - Use `(folder)` for organization without affecting URL structure
 - Implement parallel routes with `@folder` for simultaneous rendering
 - Use intercepting routes with `(..)folder` for modals and overlays
-```typescript
-// loading.tsx - automatic loading state
-export default function Loading() {
-  return <Skeleton />;
-}
-
-// Suspense boundaries for granular loading
-<Suspense fallback={<UserSkeleton />}>
-  <UserProfile userId={id} />
-</Suspense>
-<Suspense fallback={<PostsSkeleton />}>
-  <UserPosts userId={id} />
-</Suspense>
-```
 
 ## Performance Optimization
 ### Code Splitting Strategy
@@ -175,24 +135,6 @@ await fetch("https://api.example.com/user", {
 - Show skeleton/loading UI immediately
 - Use `<Suspense>` boundaries strategically around slow components
 - Implement progressive enhancement for better UX
-```typescript
-// Fetch with caching
-await fetch("https://api.example.com/data", {
-  next: { revalidate: 3600 }, // Revalidate every hour
-});
-
-// On-demand revalidation
-import { revalidatePath, revalidateTag } from "next/cache";
-
-// In Server Action or Route Handler
-revalidatePath("/dashboard");
-revalidateTag("user-data");
-
-// Tagged fetch
-await fetch("https://api.example.com/user", {
-  next: { tags: ["user-data"] },
-});
-```
 
 ## Server Actions
 ### Form Handling
@@ -228,29 +170,6 @@ export async function createPost(formData: FormData) {
 - Add loading states with useFormStatus
 - Handle errors gracefully with try/catch
 - Revalidate affected routes after mutations
-```typescript
-'use server'
-
-import { revalidatePath } from 'next/cache';
-
-export async function createPost(formData: FormData) {
-  const title = formData.get('title') as string;
-  const content = formData.get('content') as string;
-
-  await db.post.create({
-    data: { title, content, authorId: userId }
-  });
-
-  revalidatePath('/posts');
-}
-
-// In component
-<form action={createPost}>
-  <input name="title" />
-  <textarea name="content" />
-  <button type="submit">Create Post</button>
-</form>
-```
 
 ## Common Patterns
 ### Client-Server Composition
@@ -297,34 +216,6 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
 - Wrap incompatible libraries in Client Components
 - Use dynamic imports with ssr: false for browser-only libraries
 - Prefer RSC-compatible alternatives when available
-```typescript
-// Server Component
-import ClientWrapper from './ClientWrapper';
-
-async function ServerPage() {
-  const data = await fetchData();
-
-  return (
-    <ClientWrapper>
-      {/* Pass Server Component as children */}
-      <ServerDataDisplay data={data} />
-    </ClientWrapper>
-  );
-}
-
-// Client Component
-'use client'
-
-export default function ClientWrapper({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  return (
-    <div onClick={() => setIsOpen(!isOpen)}>
-      {children}
-    </div>
-  );
-}
-```
 
 ## Security Best Practices
 ### Server-Side Security
@@ -337,25 +228,6 @@ export default function ClientWrapper({ children }: { children: React.ReactNode 
 
 ### Authentication in RSC
 
-```typescript
-import { auth } from '@/lib/auth';
-import { redirect } from 'next/navigation';
-
-async function ProtectedPage() {
-  const session = await auth();
-
-  if (!session) {
-    redirect('/login');
-  }
-
-  // Securely fetch user-specific data
-  const userData = await db.user.findUnique({
-    where: { id: session.userId }
-  });
-
-  return <Dashboard user={userData} />;
-}
-```
 ```typescript
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
@@ -403,56 +275,10 @@ export default function NotFound() {
   return <h2>Page not found</h2>;
 }
 ```
-```typescript
-// error.tsx
-'use client'
-
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string };
-  reset: () => void;
-}) {
-  return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button onClick={reset}>Try again</button>
-    </div>
-  );
-}
-
-// not-found.tsx
-export default function NotFound() {
-  return <h2>Page not found</h2>;
-}
-```
 
 ## Metadata and SEO
 ### Static and Dynamic Metadata
 
-```typescript
-import type { Metadata } from "next";
-
-// Static metadata
-export const metadata: Metadata = {
-  title: "My App",
-  description: "App description",
-};
-
-// Dynamic metadata
-export async function generateMetadata({ params }): Promise<Metadata> {
-  const post = await fetchPost(params.id);
-
-  return {
-    title: post.title,
-    description: post.excerpt,
-    openGraph: {
-      images: [post.coverImage],
-    },
-  };
-}
-```
 ```typescript
 import type { Metadata } from "next";
 

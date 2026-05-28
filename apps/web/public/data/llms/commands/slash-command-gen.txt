@@ -59,9 +59,6 @@ The `/slash-command-gen` command creates custom slash commands stored as Markdow
 - `--with-args` - Include argument placeholders
 - `--template=<name>` - Use specific template
 - `--description=<text>` - Add command description
-```bash
-/slash-command-gen [command-name] [options]
-```
 
 ## Examples
 ### Basic Custom Command
@@ -310,170 +307,6 @@ tags: [documentation, api]
 ---
 
 Generate comprehensive documentation for API endpoint $1:
-```bash
-/slash-command-gen fix-issue --github-workflow --project
-```
-```markdown
----
-description: Fix GitHub issue with TDD workflow
-tags: [github, tdd, workflow]
----
-
-Fix GitHub issue #$1 using test-driven development:
-
-1. Fetch issue details from GitHub
-2. Understand the problem and requirements
-3. Write failing tests that reproduce the issue
-4. Implement minimal fix to make tests pass
-5. Refactor for code quality
-6. Run full test suite
-7. Create PR with reference to issue #$1
-8. Request review
-
-Follow TDD best practices:
-
-- Write tests FIRST
-- Commit tests before implementation
-- Ensure 80%+ coverage
-```
-```bash
-/fix-issue 123
-
-# Expands to full prompt with issue #123
-# Claude fetches issue, writes tests, fixes, creates PR
-```
-```bash
-/slash-command-gen review-pr --code-review --with-args
-```
-```markdown
----
-description: Comprehensive PR review with security focus
-tags: [review, security, quality]
----
-
-Perform comprehensive code review of PR #$1:
-
-## Security Review
-
-1. Check for SQL injection vulnerabilities
-2. Verify input validation on all endpoints
-3. Check authentication/authorization
-4. Review for XSS vulnerabilities
-5. Check for sensitive data exposure
-
-## Code Quality
-
-1. Verify TypeScript types (no `any`)
-2. Check for code duplication
-3. Review error handling
-4. Verify test coverage (80%+ required)
-5. Check adherence to CLAUDE.md standards
-
-## Performance
-
-1. Identify N+1 query issues
-2. Check for unnecessary re-renders
-3. Review database query efficiency
-4. Check for memory leaks
-
-## Documentation
-
-1. Verify JSDoc comments on public APIs
-2. Check README updates if needed
-3. Ensure CHANGELOG updated
-
-Provide:
-
-- ✅ Approved items
-- ⚠️ Suggestions for improvement
-- ❌ Required changes before merge
-```
-```bash
-/review-pr 456
-
-# Claude performs comprehensive review of PR #456
-```
-```bash
-/slash-command-gen create-feature --custom --with-args
-```
-```markdown
----
-description: Create new feature with full stack implementation
-tags: [feature, fullstack, tdd]
----
-
-Create feature "$1" in module "$2" with priority $3:
-
-## Planning Phase
-
-1. Review existing $2 module architecture
-2. Design feature integration approach
-3. Identify affected files and dependencies
-
-## Implementation (TDD)
-
-1. Write comprehensive test suite for $1
-2. Implement backend:
-   - Database schema changes
-   - API endpoints
-   - Business logic
-3. Implement frontend:
-   - UI components
-   - API integration
-   - State management
-
-## Testing
-
-1. Unit tests (80%+ coverage)
-2. Integration tests (API + DB)
-3. E2E tests (critical paths)
-
-## Documentation
-
-1. Update API documentation
-2. Add usage examples
-3. Update CHANGELOG with feature: $1
-
-## Deployment
-
-1. Create feature flag for gradual rollout
-2. Generate migration scripts
-3. Create deployment checklist
-
-Priority: $3
-Deadline: Based on priority
-```
-```bash
-/create-feature "user notifications" "messaging" "high"
-
-# $1 = user notifications
-# $2 = messaging
-# $3 = high
-```
-```bash
-/slash-command-gen optimize-bundle --custom
-```
-```markdown
----
-description: Analyze and optimize bundle size
-tags: [performance, optimization]
----
-
-Optimize application bundle size:
-
-1. Run bundle analyzer:
-```
-```text
-**Usage:**
-```
-```text
-### Documentation Command
-
-**Command:**
-```
-```text
-**Generated:** `.claude/commands/doc-api.md`
-```
 
 ## Endpoint Analysis
 1. Read implementation: $1
@@ -543,14 +376,6 @@ Save to: docs/api/$1.md
 # .claude/commands/commit.md
 
 ---
-```text
-**Usage:**
-```
-```text
-### $ARGUMENTS vs Positional
-
-**Using $ARGUMENTS (all arguments as string):**
-```
 
 ## description: Create conventional commit
 Create a conventional commit with message: "$ARGUMENTS"
@@ -678,43 +503,6 @@ Run comprehensive security audit:
    - Remediation steps
 
 ````
-```text
-**Usage:**
-```
-```text
-**Using Positional ($1, $2, $3):**
-```
-```text
-**Usage:**
-```
-```text
-## Advanced Patterns
-
-### Conditional Logic
-```
-```text
-### Chained Commands
-```
-```text
-### Template with Frontmatter
-```
-```bash
-npx sonarqube-scanner
-```
-```text
-2. Dependency audit:
-```
-```text
-3. Code review:
-   - Check for hardcoded secrets
-   - Verify input validation
-   - Review authentication flows
-
-4. Generate report:
-   - Findings summary
-   - Severity ratings
-   - Remediation steps
-```
 
 ## Team Collaboration
 ### Project Commands (Shared)
@@ -756,28 +544,6 @@ npx sonarqube-scanner
 - Personal shortcuts
 - Individual preferences
 - Experimental workflows
-```bash
-# Location: .claude/commands/
-# Committed to git
-# Available to entire team
-
-.claude/
-  commands/
-    fix-issue.md
-    review-pr.md
-    deploy.md
-    create-feature.md
-```
-```bash
-# Location: ~/.claude/commands/
-# Personal workflows
-# Not shared with team
-
-~/.claude/
-  commands/
-    my-daily-standup.md
-    my-shortcuts.md
-```
 
 ## Command Discovery
 ### List All Commands
@@ -806,27 +572,6 @@ User Commands:
 /rev<TAB>
   → /review-pr
 ```
-```bash
-/help
-
-[Available Commands]
-Project Commands:
-  /fix-issue [number] - Fix GitHub issue with TDD
-  /review-pr [number] - Comprehensive PR review
-  /deploy [env] - Deploy to environment
-  /create-feature [name] [module] [priority] - Create feature
-
-User Commands:
-  /my-shortcuts - Personal workflow shortcuts
-```
-```bash
-# Type / and press TAB
-/fix-<TAB>
-  → /fix-issue
-
-/rev<TAB>
-  → /review-pr
-```
 
 ## Best Practices
 ### Clear Descriptions
@@ -836,7 +581,7 @@ User Commands:
 # ✅ Good
 description: Fix GitHub issue with TDD workflow and PR creation
 
-# ❌ Bad  
+# ❌ Bad
 description: Fix stuff
 ---
 ```
@@ -870,47 +615,6 @@ tags: [github, tdd, testing, workflow]
 
 ### Document Arguments
 
-```markdown
----
-description: Deploy to environment
----
-
-Arguments:
-$1 - Environment (dev, staging, production)
-$2 - Version tag (optional)
-
-Example: /deploy production v1.2.3
-```
-```markdown
----
-# ✅ Good
-description: Fix GitHub issue with TDD workflow and PR creation
-
-# ❌ Bad  
-description: Fix stuff
----
-```
-```markdown
-# ✅ Good
-
-Implement feature using:
-
-1. Write tests in tests/unit/
-2. Use Vitest framework
-3. 80%+ coverage required
-4. Follow AAA pattern
-
-# ❌ Bad
-
-Write some tests
-```
-```markdown
----
-tags: [github, tdd, testing, workflow]
----
-
-# Makes commands searchable and organized
-```
 ```markdown
 ---
 description: Deploy to environment
@@ -983,30 +687,6 @@ Example: /deploy production v1.2.3
 
 ### Validate Commands
 
-```bash
-/slash-command-gen --validate-all
-
-[Validation Report]
-✓ fix-issue.md - Valid
-✓ review-pr.md - Valid
-⚠ deploy.md - Missing description
-✗ old-command.md - Invalid frontmatter
-
-3 valid, 1 warning, 1 error
-```
-```bash
-/slash-command-gen fix-issue --update
-
-# Opens editor to modify existing command
-# Preserves frontmatter
-# Updates last-modified date
-```
-```bash
-/slash-command-gen fix-issue --delete
-
-⚠️  Delete command 'fix-issue'? (y/n): y
-✓ Deleted .claude/commands/fix-issue.md
-```
 ```bash
 /slash-command-gen --validate-all
 

@@ -183,44 +183,6 @@ Claude will:
 6. Expose async API to JavaScript
 7. Add query performance analytics"
 ```
-```text
-"Create a WebAssembly module for my React app that:
-1. Parses and validates 10MB JSON files instantly
-2. Performs complex data aggregations
-3. Exports results to CSV format
-4. Includes TypeScript types
-5. Loads asynchronously without blocking UI
-6. Caches compiled module in IndexedDB
-7. Falls back to JavaScript if WASM not supported"
-```
-```text
-"Build a WebAssembly SHA-256 hasher in Rust:
-1. Implements Bitcoin mining algorithm
-2. Uses multi-threading with Web Workers
-3. Achieves >1000 hashes per second
-4. Includes difficulty adjustment
-5. Reports progress to JavaScript
-6. Optimized with SIMD instructions"
-```
-```text
-"Create a WebAssembly H.264 decoder:
-1. Decode video streams in real-time (30fps)
-2. Output to canvas via ImageData
-3. Support seeking and playback controls
-4. Use multi-threading for parallel decode
-5. Implement memory-efficient frame buffer
-6. Package as Web Component"
-```
-```text
-"Build a WebAssembly SQLite query engine:
-1. Compile SQLite to WASM with WASI
-2. Implement virtual file system in browser
-3. Support full SQL query syntax
-4. Persist database to IndexedDB
-5. Include transaction support
-6. Expose async API to JavaScript
-7. Add query performance analytics"
-```
 
 ## Troubleshooting
 **Issue:** WASM module binary is too large (>2MB)

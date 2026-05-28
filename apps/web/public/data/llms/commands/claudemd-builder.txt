@@ -61,9 +61,6 @@ The `/claudemd-builder` command generates CLAUDE.md files that store coding stan
 - `--root` - Create root CLAUDE.md (project-wide)
 - `--directory=<path>` - Create CLAUDE.md for specific directory
 - `--all` - Create hierarchical CLAUDE.md throughout project
-```bash
-/claudemd-builder [action] [options]
-```
 
 ## Examples
 ### Initialize Project with /init
@@ -206,101 +203,6 @@ lib/
 - Components: PascalCase (`UserProfile`)
 - Functions: camelCase (`getUserById`)
 - Constants: UPPER_SNAKE_CASE (`MAX_RETRIES`)
-```bash
-/claudemd-builder --init
-```
-```text
-[Scanning Project]
-✓ Detected: Next.js 15.5.2
-✓ Detected: TypeScript 5.x
-✓ Detected: TailwindCSS v4
-✓ Detected: Vitest testing
-✓ Detected: Prisma ORM
-✓ Detected: pnpm package manager
-
-[Analyzing Codebase]
-✓ 450 TypeScript files
-✓ 8 main directories
-✓ 45 components
-✓ 12 API routes
-
-[Generating CLAUDE.md]
-```
-```markdown
-# Project Context for Claude Code
-
-**Last Updated:** 2025-10-25
-**Project:** My SaaS Application
-**Stack:** Next.js 15.5.2 + React 19 + TypeScript + Prisma
-
-## Technology Stack
-
-### Frontend
-
-- React 19.1.1 (React Compiler enabled)
-- Next.js 15.5.2 (App Router)
-- TailwindCSS v4.1.13
-- shadcn/ui components
-- Framer Motion for animations
-
-### Backend
-
-- Next.js API Routes
-- Prisma ORM (PostgreSQL)
-- tRPC for type-safe APIs
-- better-auth v1.3.9
-
-### Testing
-
-- Vitest (unit/integration)
-- Playwright (E2E)
-- React Testing Library
-
-### Tooling
-
-- TypeScript 5.x (strict mode)
-- Biome (linting/formatting)
-- pnpm (package manager)
-
-## Coding Standards
-
-### TypeScript
-
-- **Strict mode enabled**: No `any`, use `unknown`
-- **Explicit return types**: For public functions
-- **Interfaces over types**: For public APIs
-```
-```typescript
-// ✅ Server Component (default)
-export async function UserProfile({ userId }: { userId: string }) {
-  const user = await db.user.findUnique({ where: { id: userId } });
-  return <div>{user.name}</div>;
-}
-
-// ✅ Client Component (when needed)
-'use client';
-
-export function InteractiveButton() {
-  const [count, setCount] = useState(0);
-  return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
-}
-```
-```text
-app/
-├── (auth)/          # Auth routes group
-├── (dashboard)/     # Dashboard routes group
-└── api/            # API routes
-
-components/
-├── ui/             # shadcn/ui components
-├── forms/          # Form components
-└── layout/         # Layout components
-
-lib/
-├── api/            # API clients
-├── db/             # Prisma client
-└── utils/          # Utilities
-```
 
 ## Architecture Decisions
 ### Authentication
@@ -365,39 +267,6 @@ export default function Layout({ children }) {
   );
 }
 ```
-```typescript
-// Use async Server Components
-export async function ProductList() {
-  const products = await db.product.findMany();
-  return <div>{products.map(p => <ProductCard key={p.id} product={p} />)}</div>;
-}
-```
-```typescript
-// Use react-hook-form + Zod
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
-const formSchema = z.object({
-  email: z.string().email(),
-});
-
-export function ContactForm() {
-  const form = useForm({ resolver: zodResolver(formSchema) });
-  return <form onSubmit={form.handleSubmit(onSubmit)}>...</form>;
-}
-```
-```typescript
-// Always use Error Boundaries
-import { ErrorBoundary } from '@/components/error-boundary';
-
-export default function Layout({ children }) {
-  return (
-    <ErrorBoundary fallback={<ErrorPage />}>
-      {children}
-    </ErrorBoundary>
-  );
-}
-```
 
 ## Testing Guidelines
 - **Coverage target**: 80% for business logic
@@ -440,14 +309,6 @@ When writing code:
 
 ````markdown
 # React Project - Claude Code Context
-```text
-### Use Pre-Built Template
-
-**Command:**
-```
-```text
-**Generated React Template:**
-```
 
 ## Stack
 - React 19.1.1
@@ -552,58 +413,6 @@ export function MyForm({ onSubmit, defaultValues }: FormProps) {
 }
 ```
 ````
-```typescript
-// ✅ Use function declarations
-export function MyComponent({ prop }: Props) {
-  return <div>{prop}</div>;
-}
-
-// ❌ Avoid arrow functions for components
-const MyComponent = ({ prop }: Props) => <div>{prop}</div>;
-```
-```text
-### Hooks Rules
-
-- Call hooks at top level only
-- Custom hooks start with 'use'
-- Extract complex logic to custom hooks
-
-### State Management
-
-- Local state: `useState`
-- Global state: Zustand
-- Server state: TanStack Query
-- Form state: react-hook-form
-
-## Code Organization
-```
-```text
-## Styling
-
-- **Primary**: TailwindCSS utility classes
-- **Components**: shadcn/ui
-- **Dynamic**: CSS variables + Tailwind
-
-## Testing
-
-- **Unit**: Vitest + React Testing Library
-- **E2E**: Playwright
-- **Coverage**: 80% minimum
-```
-```bash
-/claudemd-builder --directory=src/components/forms
-```
-```markdown
-# Forms Directory Context
-
-## Purpose
-
-Reusable form components with validation and error handling
-
-## Patterns
-
-### Form Component Structure
-```
 
 ## Validation
 - **Always use Zod**: Define schema in same file
@@ -734,66 +543,6 @@ Completeness: 70%
 **Good Context (Specific):**
 
 ```markdown
-```text
-### Hierarchical CLAUDE.md Generation
-
-**Command:**
-```
-```text
-**Generated Structure:**
-```
-```text
-**Context Resolution:**
-Claude reads from most specific → general:
-
-1. `src/components/forms/CLAUDE.md` (most specific)
-2. `src/components/CLAUDE.md`
-3. `src/CLAUDE.md`
-4. `CLAUDE.md` (root - most general)
-
-### Update Existing CLAUDE.md
-
-**Command:**
-```
-```text
-**Process:**
-```
-```text
-### Validate CLAUDE.md
-
-**Command:**
-```
-```text
-**Validation Report:**
-```
-```text
-## Best Practices
-
-### What to Include
-
-✅ **Do Include:**
-
-- Technology stack and versions
-- Coding standards with examples
-- File organization structure
-- Naming conventions
-- Common patterns
-- Architecture decisions
-- Testing guidelines
-- Development workflow
-
-❌ **Don't Include:**
-
-- Implementation details (code duplicates)
-- Frequently changing data
-- Secrets or credentials
-- Personal preferences
-- Obvious best practices
-
-### Writing Effective Context
-
-**Good Context (Specific):**
-```
 
 ## Authentication
 - Library: better-auth v1.3.9
@@ -805,9 +554,6 @@ Claude reads from most specific → general:
 **Bad Context (Vague):**
 
 ```markdown
-```text
-**Bad Context (Vague):**
-```
 
 ## Authentication
 - We use authentication
@@ -897,28 +643,6 @@ monorepo/
 ### Environment-Specific Context
 
 ```markdown
-```text
-### Keep It Updated
-```
-```text
-## Team Collaboration
-
-### Onboarding New Developers
-```
-```text
-### Consistency Across Team
-```
-```text
-## Integration with /init
-```
-```text
-## Advanced Patterns
-
-### Monorepo CLAUDE.md
-```
-```text
-### Environment-Specific Context
-```
 
 ## Development vs Production
 ### Development

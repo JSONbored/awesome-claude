@@ -92,14 +92,6 @@ Integrate Stripe payment capabilities directly into Claude for payment processin
   }
 }
 ```
-```json
-{
-  "stripe": {
-    "url": "https://mcp.stripe.com",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Processing Refunds
@@ -199,78 +191,6 @@ Monitor webhook events, retry failed deliveries, and track integration health. E
 
 Create a new Stripe payment intent with amount and currency
 
-```typescript
-// Create Stripe payment intent
-const paymentIntent = await stripe.paymentIntents.create({
-  amount: 2000,
-  currency: "usd",
-  payment_method_types: ["card"],
-  metadata: { order_id: "order_123" },
-});
-```
-```javascript
-// Full refund for a payment
-"Refund payment pi_1234567890 completely";
-
-// Partial refund with reason
-"Issue a $25 partial refund for payment pi_1234567890 with reason: customer_request";
-
-// Refund with metadata
-"Refund payment pi_1234567890 and add metadata: support_ticket=TICKET-123";
-```
-```javascript
-// List active subscriptions
-"Show all active subscriptions for customer cus_abc123";
-
-// Update subscription plan
-"Upgrade customer cus_abc123 from price_basic to price_premium starting next billing cycle";
-
-// Cancel subscription
-"Cancel subscription sub_xyz at period end";
-```
-```javascript
-// Monthly revenue report
-"Show total revenue and transaction count for September 2024";
-
-// Revenue by product
-"Break down revenue by product for the last quarter";
-
-// Failed payment analysis
-"List all failed payments in the last 30 days with reasons";
-```
-```javascript
-// Create invoice
-"Create an invoice for customer cus_abc123 with items:
-- price_item1 x 2
-- price_item2 x 1
-Due in 14 days"
-
-// Send invoice reminder
-"Send payment reminder for invoice in_xyz to customer"
-
-// View customer payment history
-"Show all payments for customer cus_abc123 in the last 6 months"
-```
-```javascript
-// List customer payment methods
-"Show all payment methods for customer cus_abc123";
-
-// Set default payment method
-"Set payment method pm_xyz as default for customer cus_abc123";
-
-// Remove expired cards
-"List and remove all expired payment methods";
-```
-```javascript
-// List recent events
-"Show recent webhook events for type payment_intent.succeeded";
-
-// Retry failed webhooks
-"Retry failed webhook deliveries from the last 24 hours";
-
-// Monitor webhook health
-"Show webhook endpoint health status and delivery success rate";
-```
 ```typescript
 // Create Stripe payment intent
 const paymentIntent = await stripe.paymentIntents.create({

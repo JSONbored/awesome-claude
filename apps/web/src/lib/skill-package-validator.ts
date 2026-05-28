@@ -189,6 +189,12 @@ function buildSkillSubmissionFields(params: {
       params.frontmatter.install_command ||
       "Install the zip package into your AI client skill directory.",
     usage_snippet: usageSnippet,
+    safety_notes:
+      params.frontmatter.safety_notes ||
+      "Review the package contents before installation; install only from the verified source package.",
+    privacy_notes:
+      params.frontmatter.privacy_notes ||
+      "Not applicable: package validation does not identify credential, telemetry, or third-party data handling.",
     skill_type: normalizedChoice(
       params.frontmatter.skill_type,
       ["general", "capability-pack"],

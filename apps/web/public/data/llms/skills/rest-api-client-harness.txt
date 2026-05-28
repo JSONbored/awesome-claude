@@ -164,39 +164,6 @@ Save unmigrated records to errors.json"
 4. Create uptime report
 5. Plot response times"
 ```
-```text
-"Test this API endpoint:
-1. Make GET request to /api/products
-2. Check status code and headers
-3. Validate JSON response schema
-4. Show sample of first 3 records
-5. Report if any fields are null/missing"
-```
-```text
-"Migrate data from API A to API B:
-1. Fetch all records from source API (paginated)
-2. Transform to target API format
-3. POST to destination API
-4. Handle rate limits (5 req/sec)
-5. Log migration progress and errors
-Save unmigrated records to errors.json"
-```
-```text
-"Test this webhook:
-1. POST sample payload to webhook URL
-2. Check response status
-3. Validate response format
-4. Test with invalid payload
-5. Report all results"
-```
-```text
-"Monitor API health:
-1. Hit /health endpoint every minute for 10 minutes
-2. Record response time and status
-3. Alert if response time > 1 second
-4. Create uptime report
-5. Plot response times"
-```
 
 ## Authentication Methods
 ### API Key Authentication
@@ -279,34 +246,6 @@ while True:
 
 ### Retry with Exponential Backoff
 
-```python
-import time
-max_retries = 3
-for attempt in range(max_retries):
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        break
-    except requests.exceptions.RequestException:
-        if attempt < max_retries - 1:
-            wait = 2 ** attempt  # 1s, 2s, 4s
-            time.sleep(wait)
-        else:
-            raise
-```
-```python
-url = "https://api.example.com/items"
-all_items = []
-cursor = None
-while True:
-    params = {"cursor": cursor} if cursor else {}
-    response = requests.get(url, params=params)
-    data = response.json()
-    all_items.extend(data["items"])
-    cursor = data.get("next_cursor")
-    if not cursor:
-        break
-```
 ```python
 import time
 max_retries = 3

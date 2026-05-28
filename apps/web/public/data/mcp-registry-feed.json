@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "mcp-registry-feed",
-  "generatedAt": "2026-05-10T00:00:00.000Z",
-  "count": 49,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 50,
   "servers": [
     {
       "name": "airtable-mcp-server",
@@ -709,6 +709,23 @@
       "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}",
       "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
+    },
+    {
+      "name": "yield-intelligence-mcp",
+      "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+      "description": "Analyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL",
+      "websiteUrl": "https://github.com/thebrierfox/intuitek-ace",
+      "submittedBy": "thebrierfox",
+      "submittedByUrl": "https://github.com/thebrierfox",
+      "submittedAt": "2026-05-26T04:27:00.000Z",
+      "claimStatus": "unclaimed",
+      "repository": {
+        "url": "https://github.com/thebrierfox/intuitek-ace",
+        "source": "github"
+      },
+      "installCommand": "claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list",
+      "configSnippet": "{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}",
+      "heyclaudeUrl": "https://heyclau.de/mcp/yield-intelligence-mcp"
     },
     {
       "name": "zapier-mcp-server",

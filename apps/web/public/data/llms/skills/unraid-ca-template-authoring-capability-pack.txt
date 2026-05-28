@@ -71,13 +71,13 @@ This skill helps agents produce community-ready Unraid templates that are practi
 - Treat template updates as user-impacting changes with clear notes.
 
 ## Troubleshooting
-**Issue:** Template rejected for weak metadata  
+**Issue:** Template rejected for weak metadata
 **Fix:** complete Project, Support, TemplateURL, Icon, and Overview fields.
 
-**Issue:** New users fail first boot  
+**Issue:** New users fail first boot
 **Fix:** tighten defaults and add explicit setup prerequisites.
 
-**Issue:** Support load spikes after release  
+**Issue:** Support load spikes after release
 **Fix:** publish FAQ + known limitations before submission.
 
 ## Output Contract

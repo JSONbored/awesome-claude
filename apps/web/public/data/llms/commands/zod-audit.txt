@@ -52,22 +52,6 @@ argument-hint: [audit-type=full|security|duplication|validation|zod] [path]
 description: Audits codebase for Zod validation coverage, security gaps, and code quality issues
 model: claude-3-5-sonnet-20241022
 ```
-```yaml
-allowed-tools:
-  - Bash(find:*)
-  - Bash(grep:*)
-  - Bash(rg:*)
-  - Bash(ls:*)
-  - Read
-  - Write
-  - Edit
-  - Grep
-  - Glob
-  - Task
-argument-hint: [audit-type=full|security|duplication|validation|zod] [path]
-description: Audits codebase for Zod validation coverage, security gaps, and code quality issues
-model: claude-3-5-sonnet-20241022
-```
 
 ## Your Task
 Perform a comprehensive codebase audit focusing on:
@@ -178,9 +162,6 @@ Copy the command content with YAML frontmatter format
 
 - Project: `.claude/commands/audit-codebase.md`
 - User: `~/.claude/commands/audit-codebase.md`
-```bash
-mkdir -p .claude/commands
-```
 
 ## Implementation Notes
 When auditing:

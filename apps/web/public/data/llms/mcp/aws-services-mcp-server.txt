@@ -95,19 +95,6 @@ Comprehensive AWS cloud services integration for infrastructure management, depl
   }
 }
 ```
-```json
-{
-  "aws": {
-    "env": {
-      "AWS_REGION": "${AWS_REGION:-us-east-1}",
-      "AWS_PROFILE": "${AWS_PROFILE}",
-      "FASTMCP_LOG_LEVEL": "${FASTMCP_LOG_LEVEL:-ERROR}"
-    },
-    "args": ["awslabs.core-mcp-server@latest"],
-    "command": "uvx"
-  }
-}
-```
 
 ## Examples
 ### Launch a new EC2 instance with custom tags
@@ -154,24 +141,6 @@ Ask Claude: "Create an RDS instance with automated backups"
 
 Common usage pattern for this MCP server
 
-```plaintext
-Ask Claude: "Deploy a complete web application stack via CloudFormation"
-```
-```plaintext
-Ask Claude: "Launch a new EC2 instance with custom tags"
-```
-```plaintext
-Ask Claude: "Create an S3 bucket with versioning enabled"
-```
-```plaintext
-Ask Claude: "Deploy a Lambda function with environment variables"
-```
-```plaintext
-Ask Claude: "Set up CloudWatch alarms for application monitoring"
-```
-```plaintext
-Ask Claude: "Create an RDS instance with automated backups"
-```
 ```plaintext
 Ask Claude: "Deploy a complete web application stack via CloudFormation"
 ```

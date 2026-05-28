@@ -71,13 +71,13 @@ This capability pack teaches agents how to operate Proxmox VE safely and predict
 - Keep operations idempotent where possible.
 
 ## Troubleshooting
-**Issue:** API call returns success but workload state is wrong  
+**Issue:** API call returns success but workload state is wrong
 **Fix:** Tie workflow completion to task result plus post-state verification.
 
-**Issue:** Migration flakiness under load  
+**Issue:** Migration flakiness under load
 **Fix:** Add capacity and network health gates before migration.
 
-**Issue:** Permission confusion across tokens  
+**Issue:** Permission confusion across tokens
 **Fix:** Maintain explicit token-role matrix per workflow.
 
 ## Output Contract
