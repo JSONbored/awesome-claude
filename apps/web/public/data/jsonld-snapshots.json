@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "count": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "count": 388,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -2964,6 +2964,84 @@
               "name": "Platform compatibility",
               "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
             }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "tools:authsome",
+      "category": "tools",
+      "slug": "authsome",
+      "url": "https://heyclau.de/tools/authsome",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/tools/authsome#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Tools",
+              "item": "https://heyclau.de/tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Authsome",
+              "item": "https://heyclau.de/tools/authsome"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/tools/authsome#webpage",
+          "name": "Authsome",
+          "description": "Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTPS proxy that injects cr...",
+          "url": "https://heyclau.de/tools/authsome",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/tools/authsome#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/tools/authsome#entry",
+          "name": "Authsome",
+          "headline": "Authsome",
+          "description": "Authsome is an open-source local credential broker for AI agents with OAuth2 and API key support, an encrypted vault, and a local HTTPS proxy that injects cr...",
+          "url": "https://heyclau.de/tools/authsome",
+          "datePublished": "2026-05-25",
+          "dateModified": "2026-05-25",
+          "keywords": "ai agent credentials, local credential broker, oauth2 for agents, credentials, agent-auth, agents, tools, claude, heyclaude, authsome, credentials, agent-auth, agents",
+          "genre": "Tools",
+          "author": {
+            "@type": "Person",
+            "name": "Agentr",
+            "url": "https://github.com/agentrhq"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://authsome.ai/docs",
+            "https://github.com/agentrhq/authsome"
+          ],
+          "isBasedOn": [
+            "https://authsome.ai/docs",
+            "https://github.com/agentrhq/authsome",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
+            "https://authsome.ai"
           ]
         }
       ]
@@ -29768,6 +29846,85 @@
             "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx"
           ],
           "codeRepository": "https://github.com/Xquik-dev/x-twitter-scraper",
+          "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "mcp:yield-intelligence-mcp",
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "url": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/mcp/yield-intelligence-mcp#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "MCP Servers",
+              "item": "https://heyclau.de/mcp"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+              "item": "https://heyclau.de/mcp/yield-intelligence-mcp"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/mcp/yield-intelligence-mcp#webpage",
+          "name": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+          "description": "Remote MCP server for passive income analysis: live US Treasury rates, AI-powered yield optimization, and portfolio return calculator.",
+          "url": "https://heyclau.de/mcp/yield-intelligence-mcp",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/mcp/yield-intelligence-mcp#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/mcp/yield-intelligence-mcp#entry",
+          "name": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+          "headline": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
+          "description": "Remote MCP server for passive income analysis: live US Treasury rates, AI-powered yield optimization, and portfolio return calculator.",
+          "url": "https://heyclau.de/mcp/yield-intelligence-mcp",
+          "datePublished": "2026-05-26",
+          "dateModified": "2026-05-26",
+          "keywords": "yield, passive income, treasury rates, portfolio, finance, investment, mcp, mcp server, remote mcp, claude, income optimization, treasury, finance, yield, passive-income, treasury, portfolio, investment, remote-mcp",
+          "genre": "MCP Servers",
+          "author": {
+            "@type": "Person",
+            "name": "thebrierfox",
+            "url": "https://github.com/thebrierfox"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://github.com/thebrierfox/intuitek-ace",
+            "https://github.com/thebrierfox/intuitek-ace"
+          ],
+          "isBasedOn": [
+            "https://github.com/thebrierfox/intuitek-ace",
+            "https://github.com/thebrierfox/intuitek-ace",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx"
+          ],
+          "codeRepository": "https://github.com/thebrierfox/intuitek-ace",
           "runtimePlatform": "Claude Code"
         }
       ]

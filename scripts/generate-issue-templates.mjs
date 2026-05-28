@@ -67,7 +67,9 @@ function linesForField(field, category) {
   const descriptionParts = [];
   if (field.required) descriptionParts.push("Required.");
   if (field.id === "download_url") {
-    descriptionParts.push("Do not request local /downloads hosting.");
+    descriptionParts.push(
+      "Only use this for a real package, archive, or release download URL. Use GitHub URL or retrieval sources for source tree/blob paths. Do not request local /downloads hosting.",
+    );
   }
   if (field.id === "github_url" || field.id === "docs_url") {
     descriptionParts.push("Do not use affiliate, referral, or tracking URLs.");
@@ -79,12 +81,18 @@ function linesForField(field, category) {
   }
   if (field.id === "safety_notes") {
     descriptionParts.push(
-      "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services. Use one note per line, up to 8 notes and 320 characters per note.",
+      field.required
+        ? 'Required for risk-bearing assets. Explain execution, permissions, install/package risk, background workers, network access, or external writes. Use "Not applicable: ..." only with a specific reason.'
+        : "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services.",
+      "Use one note per line, up to 8 notes and 320 characters per note.",
     );
   }
   if (field.id === "privacy_notes") {
     descriptionParts.push(
-      "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties. Use one note per line, up to 8 notes and 320 characters per note.",
+      field.required
+        ? 'Required for risk-bearing assets. Explain local file access, logs, credentials, telemetry, third-party requests, retention, or user-data exposure. Use "Not applicable: ..." only with a specific reason.'
+        : "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties.",
+      "Use one note per line, up to 8 notes and 320 characters per note.",
     );
   }
   if (descriptionParts.length) {

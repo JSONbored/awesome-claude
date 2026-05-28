@@ -72,6 +72,10 @@ const validMcpSubmissionFields = {
     "Example MCP server submission used to verify the protocol-level tool surface.",
   install_command: "npx -y example-protocol-mcp",
   usage_snippet: "Add this server to your MCP client configuration.",
+  safety_notes:
+    "Installs and runs an MCP server process from the submitted package.",
+  privacy_notes:
+    "Not applicable: this fixture does not access user files or credentials.",
 };
 
 function validToolArguments(name: string) {
@@ -1095,6 +1099,10 @@ describe("HeyClaude read-only MCP helpers", () => {
       skill_level: "advanced",
       verification_status: "validated",
       download_url: "https://example.com/example-skill.zip",
+      safety_notes:
+        "Installs package-like skill content from a source-backed download.",
+      privacy_notes:
+        "Not applicable: this fixture does not access user files or credentials.",
       tags: ["heyclaude", "submissions"],
     };
 
@@ -1177,6 +1185,10 @@ describe("HeyClaude read-only MCP helpers", () => {
         "Example MCP server submission used to test stronger draft tooling.",
       install_command: "npx -y example-draft-mcp",
       usage_snippet: "Add this server to your MCP client configuration.",
+      safety_notes:
+        "Installs and runs an MCP server process from the submitted package.",
+      privacy_notes:
+        "Not applicable: this fixture does not access user files or credentials.",
     };
 
     const prepared = await callRegistryTool(

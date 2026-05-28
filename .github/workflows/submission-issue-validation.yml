@@ -15,13 +15,16 @@ permissions:
 jobs:
   validate-submission:
     if: >-
-      contains(github.event.issue.labels.*.name, 'content-submission') ||
-      startsWith(github.event.issue.title, 'Submit') ||
-      startsWith(github.event.issue.title, '[Submit]') ||
-      contains(github.event.issue.body, '### Category') ||
-      contains(github.event.issue.body, '**Category:**') ||
-      contains(github.event.issue.body, 'Category:') ||
-      contains(github.event.issue.body, 'Content Type:')
+      !github.event.issue.pull_request &&
+      (
+        contains(github.event.issue.labels.*.name, 'content-submission') ||
+        startsWith(github.event.issue.title, 'Submit') ||
+        startsWith(github.event.issue.title, '[Submit]') ||
+        contains(github.event.issue.body, '### Category') ||
+        contains(github.event.issue.body, '**Category:**') ||
+        contains(github.event.issue.body, 'Category:') ||
+        contains(github.event.issue.body, 'Content Type:')
+      )
     runs-on: ubuntu-latest
     timeout-minutes: 5
     concurrency:
@@ -209,7 +212,7 @@ jobs:
             }
 
       - name: Preview import output
-        if: always()
+        if: ${{ always() && steps.auto_import_precheck.outputs.eligible == 'true' }}
         run: |
           node - <<'NODE'
           const { spawnSync } = require("node:child_process");
@@ -270,11 +273,14 @@ jobs:
                 .replace(/\r/g, "")
                 .replace(/```/g, "` ` `")
                 .replace(/@/g, "&#64;");
+            const policyDecision = riskReport.policyDecision || "maintainer_review";
             const heading = report.skipped
               ? "## HeyClaude submission check: needs more detail"
-              : report.ok
-                ? "## HeyClaude submission check: passed"
-                : "## HeyClaude submission check: failed";
+              : !report.ok
+                ? "## HeyClaude submission check: failed"
+                : policyDecision === "auto_import_eligible"
+                  ? "## HeyClaude submission check: schema passed, import approval eligible"
+                  : "## HeyClaude submission check: schema passed, maintainer review required";
 
             const lines = [
               marker,
@@ -284,7 +290,7 @@ jobs:
               report.errors?.length ? `- Errors: ${report.errors.length}` : "- Errors: 0",
               report.warnings?.length ? `- Warnings: ${report.warnings.length}` : "- Warnings: 0",
               `- Risk tier: ${escapeMarkdownOrMention(riskReport.riskTier || "unknown")}`,
-              `- Policy decision: ${escapeMarkdownOrMention(riskReport.policyDecision || "maintainer_review")}`
+              `- Policy decision: ${escapeMarkdownOrMention(policyDecision)}`
             ];
 
             if (report.errors?.length) {

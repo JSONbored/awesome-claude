@@ -2,7 +2,7 @@
 The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.
 
 Base URL: https://heyclau.de
-Total entries: 386
+Total entries: 388
 
 ## Entry Index
 - [/cursor-rules - Cursor Rules Generator for Claude Code](https://heyclau.de/commands/cursor-rules) (commands)
@@ -43,6 +43,7 @@ Total entries: 386
 - [Arize Phoenix](https://heyclau.de/tools/arize-phoenix) (tools)
 - [Asana MCP Server for Claude](https://heyclau.de/mcp/asana-mcp-server) (mcp)
 - [Audio Transcription + Summarization Skill](https://heyclau.de/skills/audio-transcription-summarization) (skills)
+- [Authsome](https://heyclau.de/tools/authsome) (tools)
 - [Auto Code Formatter Hook - Claude Code Hooks](https://heyclau.de/hooks/auto-code-formatter-hook) (hooks)
 - [Auto Save Backup - Hooks](https://heyclau.de/hooks/auto-save-backup) (hooks)
 - [Autogen Conversation Agent Builder - Agents](https://heyclau.de/agents/autogen-conversation-agent-builder) (agents)
@@ -385,6 +386,7 @@ Total entries: 386
 - [Workflow Completion Report - Hooks](https://heyclau.de/hooks/workflow-completion-report) (hooks)
 - [Workspace Project Depth Indicator - Statuslines](https://heyclau.de/statuslines/workspace-project-depth-indicator) (statuslines)
 - [Xquik MCP Server](https://heyclau.de/mcp/xquik-mcp-server) (mcp)
+- [YIELD INTELLIGENCE MCP — Passive Income Analysis](https://heyclau.de/mcp/yield-intelligence-mcp) (mcp)
 - [Zapier AI](https://heyclau.de/tools/zapier-ai) (tools)
 - [Zapier MCP Server for Claude](https://heyclau.de/mcp/zapier-mcp-server) (mcp)
 - [Zed](https://heyclau.de/tools/zed) (tools)
@@ -22733,6 +22735,53 @@ Format as Q&A with:
 - Generate meeting minutes with action items
 - Create accessible transcripts for video content
 - Extract insights from podcast episodes
+---
+
+# Authsome
+URL: https://heyclau.de/tools/authsome
+Category: tools
+Author: Agentr
+Submitted by: zriyansh
+Date added: 2026-05-25
+Documentation: https://authsome.ai/docs
+Repository: https://github.com/agentrhq/authsome
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/tools/authsome
+- Source URLs: https://authsome.ai/docs, https://github.com/agentrhq/authsome, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx, https://authsome.ai
+- Brand: Authsome
+- Brand domain: authsome.ai
+- Brand asset source: brandfetch
+- Safety notes: Installs and runs a local daemon plus a local HTTPS proxy (`authsome run`) on loopback (`127.0.0.1`). Both processes are long-running and intercept outbound HTTPS to matched provider hostnames., The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies. Agents running behind it will perform live, authenticated API calls against the provider (send emails, post to Slack, charge Stripe, write to GitHub, etc.) using the user's real credentials., The daemon performs background OAuth2 token refresh by contacting each provider's token endpoint. Refresh failures or network outages can leave a provider in a stale state until `authsome login <provider>` is re-run., Network access is required for OAuth flows, background token refresh, and the agent's provider API calls. The proxy itself only listens on loopback; outbound provider traffic leaves the host normally., Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; verify the package source on PyPI (`authsome`) and the upstream repository (`agentrhq/authsome`) before installing.
+- Privacy notes: Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service., When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them., OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint., First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr., Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.
+- Author: Agentr
+- Submitted by: zriyansh
+- Last verified: 2026-05-25
+- Robots: indexable
+## Summary
+Local credential broker for AI agents. Log in once via OAuth2 or API key, encrypted local vault stores credentials, and a local proxy injects them at request time so agents never see raw secret values.
+## Tags
+- credentials
+- agent-auth
+- agents
+## Safety Notes
+- Installs and runs a local daemon plus a local HTTPS proxy (`authsome run`) on loopback (`127.0.0.1`). Both processes are long-running and intercept outbound HTTPS to matched provider hostnames.
+- The proxy injects credentials into outbound requests by adding `Authorization` headers; it does not modify request bodies. Agents running behind it will perform live, authenticated API calls against the provider (send emails, post to Slack, charge Stripe, write to GitHub, etc.) using the user's real credentials.
+- The daemon performs background OAuth2 token refresh by contacting each provider's token endpoint. Refresh failures or network outages can leave a provider in a stale state until `authsome login <provider>` is re-run.
+- Network access is required for OAuth flows, background token refresh, and the agent's provider API calls. The proxy itself only listens on loopback; outbound provider traffic leaves the host normally.
+- Installable via `uv tool install authsome` or `pip install authsome`. Standard package-install risk profile applies; verify the package source on PyPI (`authsome`) and the upstream repository (`agentrhq/authsome`) before installing.
+## Privacy Notes
+- Credentials are stored locally in an encrypted vault under `~/.authsome`. They are not transmitted to any Agentr- or Authsome-hosted service.
+- When the agent calls a provider, the local proxy injects the matching OAuth2 token or API key into the outbound request and sends it to that provider (e.g. github.com, openai.com). Credentials reach the provider you authenticated with, by design, since the provider call requires them.
+- OAuth2 access tokens are refreshed in the background by the local daemon, which contacts the provider's token endpoint. Refresh tokens remain in the local vault and are not sent anywhere other than the provider's token endpoint.
+- First-time login uses browser PKCE, device code, or a local browser bridge for API key entry. The browser flow sends user credentials to the provider's own authorization endpoint, not to Agentr.
+- Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`.
+## Content
+## Editorial notes
+Authsome fits agent builders that want OAuth2 and API key handling without sending credentials to a third-party service. Login once via browser PKCE or device code, the encrypted vault sits at ~/.authsome, and a local HTTPS proxy injects credentials at request time so the agent's process env never holds raw secrets. 45 providers ship bundled (14 OAuth2, 31 API key) including GitHub, Google, OpenAI, Linear, Slack, Notion, Resend, and Stripe. MIT licensed, Python 3.13+.
+
+## Disclosure
+Editorial listing. No paid placement or affiliate link is used.
 ---
 
 # Auto Code Formatter Hook - Claude Code Hooks
@@ -165123,6 +165172,166 @@ Xquik supports API-key authentication through the `x-api-key` header and OAuth 2
 - Review the exact payload before any post, reply, DM, follow, profile update, media upload, or billing/top-up workflow.
 - Prefer read-only exploration first, then authorize write actions only when needed.
 - Treat webhooks and monitors as ongoing external delivery workflows; verify destination URLs and HMAC signature handling before enabling them.
+---
+
+# YIELD INTELLIGENCE MCP — Passive Income Analysis
+URL: https://heyclau.de/mcp/yield-intelligence-mcp
+Category: mcp
+Author: thebrierfox
+Submitted by: thebrierfox
+Date added: 2026-05-26
+Documentation: https://github.com/thebrierfox/intuitek-ace
+Repository: https://github.com/thebrierfox/intuitek-ace
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/mcp/yield-intelligence-mcp
+- Source URLs: https://github.com/thebrierfox/intuitek-ace, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
+- Safety notes: Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.
+- Privacy notes: Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.
+- Author: thebrierfox
+- Submitted by: thebrierfox
+- Claim status: unclaimed
+- Last verified: 2026-05-26
+- Robots: indexable
+## Summary
+Analyze passive income opportunities using live US Treasury rates, an AI-powered yield optimizer, and portfolio return calculator — no auth, no install, connect by URL
+## Tags
+- finance
+- yield
+- passive-income
+- treasury
+- portfolio
+- investment
+- remote-mcp
+## Safety Notes
+- Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.
+## Privacy Notes
+- Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.
+## Content
+## Overview
+Analyze passive income opportunities and optimize your yield strategy using live US Treasury rates, an AI-powered income optimizer, and a portfolio return calculator.
+
+## Content
+YIELD INTELLIGENCE is a remote MCP server that gives Claude direct access to live US Treasury yield data and AI-powered passive income analysis. No local installation required — add it by URL and start optimizing immediately.
+
+## Features
+- Live US Treasury rates (4-week through 30-year) fetched in real time
+- AI-powered passive income opportunity analysis across asset classes
+- Portfolio yield calculator with projected annual return estimates
+- Income optimization recommendations tailored to target yield and risk tolerance
+- Zero authentication required — open endpoint, no API key needed
+- Remote SSE transport — connect by URL from any Claude client
+
+## Use Cases
+- Identify the best Treasury bills, notes, or bonds for current yield goals
+- Compare passive income options across fixed income, dividend, and alternative assets
+- Calculate projected returns for a given portfolio allocation
+- Get AI-ranked income strategy recommendations by safety and yield
+- Research how rising or falling rates affect portfolio income
+
+## Installation
+### Claude Code
+
+```bash
+claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp
+claude mcp list
+```
+
+### Claude Desktop
+
+Open your Claude Desktop configuration file and add:
+
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+Restart Claude Desktop after saving.
+```bash
+claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp
+claude mcp list
+```
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+## Configuration
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+```json
+{
+  "mcpServers": {
+    "yield-intelligence": {
+      "url": "https://api.intuitek.ai/yield/mcp",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+## Tools
+| Tool                          | Description                                                                              |
+| ----------------------------- | ---------------------------------------------------------------------------------------- |
+| `analyze_yield_opportunities` | Analyzes current passive income options using live Treasury rates and AI recommendations |
+| `optimize_income_portfolio`   | Calculates projected returns and optimizes allocation for a target yield                 |
+
+## Examples
+### Analyze current passive income opportunities
+
+```plaintext
+Ask Claude: "What are the best passive income opportunities right now given current rates?"
+```
+
+### Optimize a portfolio for 5% annual yield
+
+```plaintext
+Ask Claude: "I have $50,000 to invest. Optimize my portfolio for a 5% annual yield with low risk."
+```
+
+### Compare Treasury bill options
+
+```plaintext
+Ask Claude: "Compare current 4-week, 13-week, and 26-week Treasury bill rates and tell me which offers the best risk-adjusted yield."
+```
+
+### Calculate projected income from a diversified allocation
+
+```plaintext
+Ask Claude: "Calculate projected annual income from a portfolio: 40% 2-year Treasury, 30% dividend stocks at 3.5%, 30% high-yield savings at 4.8%."
+```
+```plaintext
+Ask Claude: "What are the best passive income opportunities right now given current rates?"
+```
+```plaintext
+Ask Claude: "I have $50,000 to invest. Optimize my portfolio for a 5% annual yield with low risk."
+```
+```plaintext
+Ask Claude: "Compare current 4-week, 13-week, and 26-week Treasury bill rates and tell me which offers the best risk-adjusted yield."
+```
+```plaintext
+Ask Claude: "Calculate projected annual income from a portfolio: 40% 2-year Treasury, 30% dividend stocks at 3.5%, 30% high-yield savings at 4.8%."
+```
 ---
 
 # Zapier AI

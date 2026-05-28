@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-05-19T00:00:00.000Z",
-  "totalEntries": 386,
+  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "totalEntries": 388,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -21,11 +21,11 @@
       "label": "Agents"
     },
     "mcp": {
-      "count": 49,
+      "count": 50,
       "label": "MCP Servers"
     },
     "tools": {
-      "count": 52,
+      "count": 53,
       "label": "Tools"
     },
     "skills": {
@@ -361,6 +361,14 @@
       "canonicalUrl": "https://heyclau.de/skills/audio-transcription-summarization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/audio-transcription-summarization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/audio-transcription-summarization"
+    },
+    {
+      "key": "tools:authsome",
+      "category": "tools",
+      "slug": "authsome",
+      "canonicalUrl": "https://heyclau.de/tools/authsome",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome"
     },
     {
       "key": "hooks:auto-code-formatter-hook",
@@ -3099,6 +3107,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server"
     },
     {
+      "key": "mcp:yield-intelligence-mcp",
+      "category": "mcp",
+      "slug": "yield-intelligence-mcp",
+      "canonicalUrl": "https://heyclau.de/mcp/yield-intelligence-mcp",
+      "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp"
+    },
+    {
       "key": "tools:zapier-ai",
       "category": "tools",
       "slug": "zapier-ai",
@@ -3148,7 +3164,7 @@
     }
   ],
   "qualitySummary": {
-    "averageScore": 81,
+    "averageScore": 82,
     "noExternalSourceCount": 101,
     "firstPartyEditorialCount": 99,
     "unprovenancedSourceCount": 1,
@@ -3156,29 +3172,29 @@
     "duplicateBodyGroupCount": 0
   },
   "trustSummary": {
-    "brandedCount": 142,
+    "brandedCount": 143,
     "brandedPercent": 37,
-    "brandfetchCount": 140,
-    "sourceAvailableCount": 386,
+    "brandfetchCount": 141,
+    "sourceAvailableCount": 388,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 28,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 360,
+    "recentlyVerifiedCount": 362,
     "staleVerificationCount": 0,
-    "provenanceCount": 8,
-    "provenancePercent": 2,
+    "provenanceCount": 10,
+    "provenancePercent": 3,
     "claimedOrReviewedCount": 6,
     "claimedOrReviewedPercent": 2,
-    "safetyNotesCount": 16,
-    "safetyNotesPercent": 4,
-    "privacyNotesCount": 16,
-    "privacyNotesPercent": 4,
+    "safetyNotesCount": 18,
+    "safetyNotesPercent": 5,
+    "privacyNotesCount": 18,
+    "privacyNotesPercent": 5,
     "firstPartyPackageCount": 109,
     "firstPartyPackagePercent": 28,
-    "recommendedFixCount": 1,
-    "entriesNeedingAttention": 1
+    "recommendedFixCount": 2,
+    "entriesNeedingAttention": 2
   },
   "artifacts": {
     "directory": "/data/directory-index.json",
@@ -3206,72 +3222,72 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "55ddf2b0e5787fc203b244ee8768f8928f42e1bad09eea22d723cfe46cd66c68"
+      "sha256": "2a23016cea9ac2fab46db1de42529911d1e088a73f752359f677f4197b42b421"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "e26b33e1275a015b2736b35f21863bba5cca62582497dc615f91c8d50236923f"
+      "sha256": "b95d80435fc8a5bcbe28429b35d5335b08c731c3b99fc49de17e2fa374e48a5c"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "2e07797f1f069689ee93eaf0c057c796bcaaa5f48803fb3701e1c157c82b3307"
+      "sha256": "eebf17e5e0622a22e681e09ec2fc6216df6862bfceafc8111469bbf9b74c5827"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "a6d33be7fa145b28039c59d8d14041fe4e8615d118d0e49b867ef5408adbac4f"
+      "sha256": "b31676150c39cf551e44cc574fd19ed748572d39948601c2c0be141d4871a169"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
       "type": "json",
-      "sha256": "750881baf63bace87668e849da9235e741db6087d440309601cf8db42ef4d605"
+      "sha256": "750f4176db8afc7ecf5dd0bb89ef74b42ebad237fad58ac4d5fe3332af999899"
     },
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "2da24a205a298e6d9cad3999f06df27517338272eaa453906d3f4f905867c4ea"
+      "sha256": "1d58a547405e4bf13d623ec56b5275bb40bc77f0799e50f2d98895f5e02ab127"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "af5c00186761a98cce7e60f9b840cef277434242367e5a468ff34c85673de15b"
+      "sha256": "78c59ae3236231daf670d33498d03d2b1fc0ab9f5b653198d94c93a0b453c40b"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "74460c4d2a6d0a41c5bd5886065121c543de9df6602babd8a6ac7c76507db221"
+      "sha256": "f8e719618003cae173a2b702756ee323225e6087fe326044927d1fd424d528e8"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "43dd4c9e90b4bcf4c12ce8e08839180f9c7a32b141ac88bd26842eecd303daf0"
+      "sha256": "c9882fe7d00ce393103cac1b84dca833c41f02d238672c5fd35d1950c6c8c4b7"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
       "type": "json",
-      "sha256": "682db7e9b3e2c3d7418badfe5f0e4ded2f49069368fa860f019e17bd961de2cf"
+      "sha256": "2084a7e82142d4b9dc9bae9a97473c91b5cd284f81274a74bbf9dda1c687178d"
     },
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "3c6a33626ddac27e05cf86143cd6553279077ce79a243b09575052282e2a636b"
+      "sha256": "732f45097a81e41ba09117d1efe39c7a545e0848596cb1e6bcc208d0467adef8"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "6cef635a85ea7c96e12412905abeaa86581c5b144ec8e5f4b289a243d1bcdeb1"
+      "sha256": "0a0b38d282927349294eed74eeff17e8775d93ed6bd929cdb5ce32de77fc1d57"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "abf619dd9b487a755f306db94af94ad5ecccd2c1e2b710e2f24b6848950a6bff"
+      "sha256": "22864d17179bad6cf40f8f2e944156e198be3db109da4195fb174a2c289d2708"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "48279932e7b2e901581dc74bd523dafe412671bb298dc861064e8df69eeea3c5"
+      "sha256": "f3dfcc28ccd1959d7aa228e1caf249f10970e9a9cbf80956cadb3219f99ab41b"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -3867,6 +3883,21 @@
       "path": "/data/skill-adapters%2Fcursor%2Faudio-transcription-summarization.mdc",
       "type": "text",
       "sha256": "4ea817364de2509a9b5652b600df926dc3531abba1ca1b33fbf0a06ee9e98f09"
+    },
+    "entries/tools/authsome.json": {
+      "path": "/data/entries%2Ftools%2Fauthsome.json",
+      "type": "json",
+      "sha256": "1d6106267fff780d699f498d9ef472ced52a2bd328a62422fc72c5f6624edd0e"
+    },
+    "llms/tools/authsome.txt": {
+      "path": "/data/llms%2Ftools%2Fauthsome.txt",
+      "type": "text",
+      "sha256": "fe61227d5e13ec0a2d949824592969c32aecc556985a6d584963107dd0e04550"
+    },
+    "raycast/tools/authsome.json": {
+      "path": "/data/raycast%2Ftools%2Fauthsome.json",
+      "type": "json",
+      "sha256": "e2e8f93776d856ca0aaabb3347921fae131c74e26477fd2eacbda7b32f9968f2"
     },
     "entries/hooks/auto-code-formatter-hook.json": {
       "path": "/data/entries%2Fhooks%2Fauto-code-formatter-hook.json",
@@ -9303,6 +9334,21 @@
       "type": "json",
       "sha256": "e13dadc500cdb13df7f6d409cfb8f635c82a9a2531325d9da7ee1197c154f268"
     },
+    "entries/mcp/yield-intelligence-mcp.json": {
+      "path": "/data/entries%2Fmcp%2Fyield-intelligence-mcp.json",
+      "type": "json",
+      "sha256": "1c33c6bfa9603200689294f24578e37d29cee1007497f5e584fe5a56a92b19cc"
+    },
+    "llms/mcp/yield-intelligence-mcp.txt": {
+      "path": "/data/llms%2Fmcp%2Fyield-intelligence-mcp.txt",
+      "type": "text",
+      "sha256": "6f428130d5d7a49da88c0bac8258fb3857b8f8a78de2def9bf2e8e35892c8369"
+    },
+    "raycast/mcp/yield-intelligence-mcp.json": {
+      "path": "/data/raycast%2Fmcp%2Fyield-intelligence-mcp.json",
+      "type": "json",
+      "sha256": "e919d3051d0d10a2cd4b2b83c9fbde8d65021d4acf50f573c8a83356240ac5df"
+    },
     "entries/tools/zapier-ai.json": {
       "path": "/data/entries%2Ftools%2Fzapier-ai.json",
       "type": "json",
@@ -9411,12 +9457,12 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "903e42e32b8fe851be00915296fa85312825aacbea1c3032e2a434a2a7d5e23c"
+      "sha256": "51db8db258c5fad43bc5759e7f3ddf4956b36a6f34135b1d956a17df685e63f4"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",
       "type": "json",
-      "sha256": "10851c0c75722d9eea14054c6fdc996484244d0f24c33c291d30bac3bcfbdde1"
+      "sha256": "153c47bed154c05534a1a5fb977907c4e6ac7c950b7a32f404d2d229e0d0084a"
     },
     "feeds/categories/skills.json": {
       "path": "/data/feeds%2Fcategories%2Fskills.json",
