@@ -109,6 +109,32 @@ const optionalHttpsUrlSchema = z
   .optional()
   .default("");
 
+const isoDateLikeSchema = z
+  .string()
+  .trim()
+  .max(40)
+  .optional()
+  .default("")
+  .refine(
+    (value) => {
+      if (!value) return true;
+      const parsed = Date.parse(value);
+      return Number.isFinite(parsed);
+    },
+    { message: "Invalid ISO date" },
+  );
+
+export const jobSourceKindFilterSchema = z
+  .enum([
+    "all",
+    "official_ats",
+    "employer_careers",
+    "employer_submitted",
+    "",
+  ])
+  .optional()
+  .default("all");
+
 export const publicJobsQuerySchema = z.object({
   q: z.string().trim().toLowerCase().max(120).optional().default(""),
   tier: z
@@ -116,7 +142,17 @@ export const publicJobsQuerySchema = z.object({
     .optional()
     .default("all"),
   remote: z.enum(["all", "true", "false", ""]).optional().default("all"),
+  location: z.string().trim().toLowerCase().max(120).optional().default(""),
+  type: z.string().trim().toLowerCase().max(60).optional().default(""),
+  sourceKind: jobSourceKindFilterSchema,
+  compensation: z.enum(["all", "true", "false", ""]).optional().default("all"),
+  claimedEmployer: z
+    .enum(["all", "true", "false", ""])
+    .optional()
+    .default("all"),
+  postedAfter: isoDateLikeSchema,
   limit: z.coerce.number().int().min(1).max(100).optional().default(100),
+  offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
 });
 
 export const apiErrorEnvelopeSchema = z.object({

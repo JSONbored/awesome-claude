@@ -6209,12 +6209,77 @@ paths:
           name: remote
           in: query
         - schema:
+            type: string
+            maxLength: 120
+            default: ""
+          required: false
+          name: location
+          in: query
+        - schema:
+            type: string
+            maxLength: 60
+            default: ""
+          required: false
+          name: type
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - official_ats
+              - employer_careers
+              - employer_submitted
+              - ""
+            default: all
+          required: false
+          name: sourceKind
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+              - ""
+            default: all
+          required: false
+          name: compensation
+          in: query
+        - schema:
+            type: string
+            enum:
+              - all
+              - "true"
+              - "false"
+              - ""
+            default: all
+          required: false
+          name: claimedEmployer
+          in: query
+        - schema:
+            type: string
+            maxLength: 40
+            default: ""
+          required: false
+          name: postedAfter
+          in: query
+        - schema:
             type: integer
             minimum: 1
             maximum: 100
             default: 100
           required: false
           name: limit
+          in: query
+        - schema:
+            type:
+              - integer
+              - "null"
+            minimum: 0
+            maximum: 10000
+            default: 0
+          required: false
+          name: offset
           in: query
       responses:
         "200":

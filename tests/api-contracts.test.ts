@@ -183,6 +183,20 @@ describe("OpenAPI route coverage", () => {
     );
   });
 
+  it("documents richer public job filters and pagination cursor", () => {
+    expect(parsedSchema.paths["/api/jobs"]?.get?.parameters).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ name: "location", in: "query" }),
+        expect.objectContaining({ name: "type", in: "query" }),
+        expect.objectContaining({ name: "sourceKind", in: "query" }),
+        expect.objectContaining({ name: "compensation", in: "query" }),
+        expect.objectContaining({ name: "claimedEmployer", in: "query" }),
+        expect.objectContaining({ name: "postedAfter", in: "query" }),
+        expect.objectContaining({ name: "offset", in: "query" }),
+      ]),
+    );
+  });
+
   it("documents registry search pagination metadata", () => {
     const searchResponse =
       parsedSchema.paths["/api/registry/search"]?.get?.responses?.["200"];
