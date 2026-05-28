@@ -100,18 +100,6 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
   }
 }
 ```
-```json
-{
-  "postgres": {
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-postgres",
-      "postgresql://localhost/mydb"
-    ],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### What tables exist in my database?
@@ -158,28 +146,6 @@ Ask Claude: "Generate documentation for my database schema"
 
 Execute a parameterized PostgreSQL query with prepared statement
 
-```typescript
-// Execute PostgreSQL query
-const result = await postgres.query({
-  text: "SELECT * FROM users WHERE email = $1",
-  values: ["user@example.com"],
-});
-```
-```plaintext
-Ask Claude: "What tables exist in my database?"
-```
-```plaintext
-Ask Claude: "Describe the structure of the users table"
-```
-```plaintext
-Ask Claude: "How many records are in each table?"
-```
-```plaintext
-Ask Claude: "Write a query to find active users from last month"
-```
-```plaintext
-Ask Claude: "Generate documentation for my database schema"
-```
 ```typescript
 // Execute PostgreSQL query
 const result = await postgres.query({

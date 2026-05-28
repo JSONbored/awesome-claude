@@ -7,7 +7,7 @@ import {
   platformFeedSlug,
   SITE_URL,
 } from "./platforms.js";
-import { DEFAULT_REMOTE_MCP_URL } from "./endpoint-url.js";
+import { DEFAULT_REMOTE_MCP_URL, normalizeEndpointUrl } from "./endpoint-url.js";
 import { packageName, packageVersion } from "./package-metadata.js";
 import {
   formatZodError,
@@ -1161,7 +1161,18 @@ export async function getRegistryStats(args = {}, options = {}) {
 }
 
 export async function getClientSetup(args = {}) {
-  const endpointUrl = args.endpointUrl || DEFAULT_REMOTE_MCP_URL;
+  let endpointUrl;
+  try {
+    const rawEndpointUrl = Object.prototype.hasOwnProperty.call(
+      args,
+      "endpointUrl",
+    )
+      ? args.endpointUrl
+      : DEFAULT_REMOTE_MCP_URL;
+    endpointUrl = normalizeEndpointUrl(rawEndpointUrl).toString();
+  } catch (error) {
+    return invalid(error?.message || "Invalid endpoint URL.");
+  }
   const snippets = {
     codex: {
       label: "Codex stdio bridge",

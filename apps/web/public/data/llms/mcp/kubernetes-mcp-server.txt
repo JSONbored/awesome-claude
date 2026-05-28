@@ -97,17 +97,6 @@ Streamline your Kubernetes cluster management by connecting Claude to your Kuber
   }
 }
 ```
-```json
-{
-  "kubernetes": {
-    "env": {
-      "KUBECONFIG": "${KUBECONFIG:-~/.kube/config}"
-    },
-    "args": ["mcp-kubernetes-server"],
-    "command": "uvx"
-  }
-}
-```
 
 ## Examples
 ### List all pods in the default namespace
@@ -146,35 +135,6 @@ Ask Claude: "Get cluster node information and status"
 
 Create a Kubernetes deployment with replica configuration
 
-```typescript
-// Deploy application to Kubernetes
-const deployment = await k8s.apps.v1.deployments.create({
-  namespace: "default",
-  body: {
-    metadata: { name: "my-app" },
-    spec: {
-      replicas: 3,
-      selector: { matchLabels: { app: "my-app" } },
-      template: {
-        metadata: { labels: { app: "my-app" } },
-        spec: { containers: [{ name: "app", image: "nginx:latest" }] },
-      },
-    },
-  },
-});
-```
-```plaintext
-Ask Claude: "List all pods in the default namespace"
-```
-```plaintext
-Ask Claude: "Create a new deployment with specified image"
-```
-```plaintext
-Ask Claude: "Scale a deployment to 5 replicas"
-```
-```plaintext
-Ask Claude: "Get cluster node information and status"
-```
 ```typescript
 // Deploy application to Kubernetes
 const deployment = await k8s.apps.v1.deployments.create({

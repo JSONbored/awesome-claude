@@ -92,14 +92,6 @@ Transform your content creation workflow by connecting Claude to Invideo's AI-po
   }
 }
 ```
-```json
-{
-  "invideo": {
-    "url": "https://mcp.invideo.io/sse",
-    "transport": "sse"
-  }
-}
-```
 
 ## Examples
 ### Create a 30-second product video
@@ -138,31 +130,6 @@ Ask Claude: "Export video in 1080p MP4"
 
 Create a new InVideo video from a template with custom script and media
 
-```typescript
-// Create InVideo video from template
-const video = await invideo.videos.create({
-  template_id: "template-id",
-  script: "Your video script text here",
-  media: [
-    {
-      type: "image",
-      url: "https://example.com/image.jpg",
-    },
-  ],
-});
-```
-```plaintext
-Ask Claude: "Create a 30-second product video"
-```
-```plaintext
-Ask Claude: "Add subtitles to my video"
-```
-```plaintext
-Ask Claude: "Generate a video from this blog post"
-```
-```plaintext
-Ask Claude: "Export video in 1080p MP4"
-```
 ```typescript
 // Create InVideo video from template
 const video = await invideo.videos.create({

@@ -337,6 +337,10 @@ describe("HeyClaude remote MCP route", () => {
                 "Example MCP server submission used to verify the public helper flow.",
               install_command: "npx -y example-mcp",
               usage_snippet: "Add the MCP server to your Claude config.",
+              safety_notes:
+                "Installs and runs an MCP server process from the submitted package.",
+              privacy_notes:
+                "Not applicable: this fixture does not access user files or credentials.",
             },
           },
         },

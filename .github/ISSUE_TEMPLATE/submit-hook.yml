@@ -148,18 +148,18 @@ body:
     id: safety_notes
     attributes:
       label: "Safety notes"
-      description: "Optional, but expected when this entry runs code, writes files, installs packages, uses background workers, or changes external services. Use one note per line, up to 8 notes and 320 characters per note."
+      description: 'Required. Required for risk-bearing assets. Explain execution, permissions, install/package risk, background workers, network access, or external writes. Use "Not applicable: ..." only with a specific reason. Use one note per line, up to 8 notes and 320 characters per note.'
       placeholder: "Runs a background worker\nWrites to local logs\nCan modify files in the configured workspace"
     validations:
-      required: false
+      required: true
   - type: textarea
     id: privacy_notes
     attributes:
       label: "Privacy notes"
-      description: "Optional, but expected when this entry reads files, logs data, handles credentials, uses telemetry, or sends data to third parties. Use one note per line, up to 8 notes and 320 characters per note."
+      description: 'Required. Required for risk-bearing assets. Explain local file access, logs, credentials, telemetry, third-party requests, retention, or user-data exposure. Use "Not applicable: ..." only with a specific reason. Use one note per line, up to 8 notes and 320 characters per note.'
       placeholder: "Reads local project files\nMay send selected context to the configured third-party API"
     validations:
-      required: false
+      required: true
   - type: checkboxes
     id: acknowledgements
     attributes:

@@ -61,13 +61,13 @@ This skill provides consistent production patterns for Docker Compose stacks. It
 5. Validate with restart, failover, and upgrade simulations.
 
 ## Troubleshooting
-**Issue:** Services start but fail shortly after  
+**Issue:** Services start but fail shortly after
 **Fix:** Add robust healthchecks and delay dependent services until healthy.
 
-**Issue:** Compose changes break unrelated services  
+**Issue:** Compose changes break unrelated services
 **Fix:** Use profiles and explicit dependency contracts to scope blast radius.
 
-**Issue:** Secrets leak into logs or env dumps  
+**Issue:** Secrets leak into logs or env dumps
 **Fix:** Move sensitive values to secrets manager or runtime-injected env.
 
 ## Knowledge Freshness

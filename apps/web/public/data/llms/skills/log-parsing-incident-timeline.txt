@@ -157,38 +157,6 @@ Claude will:
 - Cache (redis)
 For request ID xyz789, show complete flow across all services."
 ```
-```text
-"Analyze logs from the incident:
-1. Extract all errors between 14:00-15:00
-2. Identify first error that occurred
-3. Show cascade of subsequent errors
-4. Correlate with deployment timestamp
-5. Create incident report with timeline"
-```
-```text
-"Audit access logs for security issues:
-1. Find failed login attempts (3+ in 5 min)
-2. Identify IP addresses with suspicious patterns
-3. Detect potential SQL injection attempts
-4. Flag unusual user agent strings
-5. Generate security report"
-```
-```text
-"Aggregate errors from past 7 days:
-1. Group by error type/stack trace
-2. Count occurrences over time
-3. Identify trends (increasing/decreasing)
-4. Show top 10 most common errors
-5. Export as CSV for tracking"
-```
-```text
-"Correlate logs from:
-- API gateway (nginx)
-- Application server (node.js)
-- Database (postgres)
-- Cache (redis)
-For request ID xyz789, show complete flow across all services."
-```
 
 ## Log Formats Supported
 ### Common Formats

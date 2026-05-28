@@ -484,6 +484,37 @@ Use this hook after reviewing the notes.`,
     expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
   });
 
+  it("deduplicates repeated JSON-LD values while preserving order", () => {
+    const [snapshot] = buildJsonLdSnapshots([
+      {
+        category: "mcp",
+        slug: "duplicate-jsonld",
+        title: "Duplicate JSON-LD",
+        description: "Fixture entry with intentionally repeated source values.",
+        seoDescription:
+          "Fixture entry with intentionally repeated JSON-LD source values.",
+        dateAdded: "2026-05-20",
+        keywords: ["mcp", "fixture"],
+        tags: ["fixture", "mcp"],
+        documentationUrl: "https://github.com/example/duplicate-jsonld",
+        repoUrl: "https://github.com/example/duplicate-jsonld",
+        githubUrl: "https://github.com/example/duplicate-jsonld",
+      },
+    ]).entries;
+    const entryJsonLd = snapshot.documents.find(
+      (document) =>
+        document["@id"] === "https://heyclau.de/mcp/duplicate-jsonld#entry",
+    );
+
+    expect(entryJsonLd?.keywords).toBe("mcp, fixture");
+    expect(entryJsonLd?.sameAs).toEqual([
+      "https://github.com/example/duplicate-jsonld",
+    ]);
+    expect(entryJsonLd?.isBasedOn).toEqual([
+      "https://github.com/example/duplicate-jsonld",
+    ]);
+  });
+
   it("publishes registry moat feeds with deterministic contract hashes", () => {
     const ecosystemFeed = readDataJson<{
       schemaVersion: number;
@@ -854,5 +885,22 @@ Use this hook after reviewing the notes.`,
         ),
       ),
     ).toBe(false);
+  });
+
+  it("keeps generated entry LLM exports free of duplicated code blocks", () => {
+    const yieldLlms = fs.readFileSync(
+      path.join(dataRoot, "llms", "mcp", "yield-intelligence-mcp.txt"),
+      "utf8",
+    );
+
+    expect(yieldLlms.match(/^## Content$/gm)).toHaveLength(1);
+    expect(
+      yieldLlms.match(
+        /claude mcp add --transport sse yield-intelligence https:\/\/api\.intuitek\.ai\/yield\/mcp/g,
+      ),
+    ).toHaveLength(1);
+    expect(
+      yieldLlms.match(/Ask Claude: "What are the best passive income/g),
+    ).toHaveLength(1);
   });
 });

@@ -169,40 +169,6 @@ Output as structured Markdown."
 4. Highlight what changed
 5. Generate change report"
 ```
-```text
-"Analyze competitor website:
-1. Crawl main site (max 20 pages)
-2. Extract: services, pricing mentions, features
-3. Identify key messaging themes
-4. Create structured comparison report
-Focus on product/service pages."
-```
-```text
-"Create local mirror of documentation:
-1. Start at https://docs.example.com
-2. Crawl all /docs/* pages
-3. Download images referenced
-4. Convert to Markdown
-5. Preserve link structure
-6. Generate offline-browseable site"
-```
-```text
-"Gather research from these 20 URLs:
-1. Extract main content from each
-2. Identify key findings and quotes
-3. Extract citations and references
-4. Group by topic/theme
-5. Create annotated bibliography
-Output as structured Markdown."
-```
-```text
-"Monitor this webpage for changes:
-1. Fetch current version
-2. Extract main content
-3. Compare with version from last week
-4. Highlight what changed
-5. Generate change report"
-```
 
 ## Web Scraping Best Practices
 ### Respect & Ethics

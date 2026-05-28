@@ -1,7 +1,6 @@
 name: Superagent Repo Scan
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

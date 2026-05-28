@@ -87,18 +87,6 @@ Manage Cloudflare services and configurations through Claude for comprehensive i
   }
 }
 ```
-```json
-{
-  "cloudflare": {
-    "env": {
-      "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}",
-      "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}"
-    },
-    "args": ["-y", "@cloudflare/mcp-server-cloudflare"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### Add DNS record for subdomain
@@ -137,28 +125,6 @@ Ask Claude: "Configure firewall rule"
 
 Create a new Cloudflare DNS A record with TTL configuration
 
-```typescript
-// Create Cloudflare DNS record
-const record = await cloudflare.dns.records.create({
-  zone_id: "zone-id",
-  type: "A",
-  name: "example.com",
-  content: "192.0.2.1",
-  ttl: 3600,
-});
-```
-```plaintext
-Ask Claude: "Add DNS record for subdomain"
-```
-```plaintext
-Ask Claude: "Deploy Worker script"
-```
-```plaintext
-Ask Claude: "Show traffic analytics"
-```
-```plaintext
-Ask Claude: "Configure firewall rule"
-```
 ```typescript
 // Create Cloudflare DNS record
 const record = await cloudflare.dns.records.create({

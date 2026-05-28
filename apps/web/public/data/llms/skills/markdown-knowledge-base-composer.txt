@@ -160,40 +160,6 @@ Export as both Markdown and PDF."
 4. DOCX (for Word)
 Maintain consistent styling across all formats."
 ```
-```text
-"Create documentation site:
-1. Parse all .md files in docs/
-2. Generate sidebar navigation
-3. Create search index
-4. Add syntax highlighting for code blocks
-5. Export as static HTML site
-Use clean, professional styling."
-```
-```text
-"Consolidate scattered notes:
-1. Combine all Markdown files into sections
-2. Generate master TOC
-3. Normalize heading levels (start all at H1)
-4. Fix relative links between files
-5. Create single comprehensive document
-Export as both Markdown and PDF."
-```
-```text
-"Generate professional README.md:
-1. Extract project info from package.json
-2. Add badges (build status, version, license)
-3. Create sections: About, Installation, Usage, Contributing
-4. Add table of contents with anchor links
-5. Include code examples from docs/"
-```
-```text
-"Export documentation in multiple formats:
-1. HTML (with navigation and search)
-2. PDF (with TOC and page numbers)
-3. EPUB (for e-readers)
-4. DOCX (for Word)
-Maintain consistent styling across all formats."
-```
 
 ## Features & Capabilities
 ### Markdown Processing

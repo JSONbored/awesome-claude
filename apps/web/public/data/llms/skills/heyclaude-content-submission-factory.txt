@@ -99,36 +99,13 @@ mcpValidation:
   githubIssueUrl: https://github.com/JSONbored/awesome-claude/issues/new?...
 maintainerNotes: Why this belongs in HeyClaude and what still needs review.
 ```
-```yaml
-category: mcp
-title: Example MCP Server
-slug: example-mcp-server
-description: Short source-backed summary.
-cardDescription: One-line preview text.
-sourceUrl: https://example.com/docs/mcp
-documentationUrl: https://example.com/docs
-repoUrl: https://github.com/example/example
-brandName: Example
-brandDomain: example.com
-tags:
-  - mcp
-  - automation
-seoTitle: Example MCP Server for Claude
-seoDescription: Source-backed description suitable for search previews.
-mcpValidation:
-  schemaChecked: true
-  duplicateSearch: "No likely duplicate found."
-  submitUrl: https://heyclau.de/submit?...
-  githubIssueUrl: https://github.com/JSONbored/awesome-claude/issues/new?...
-maintainerNotes: Why this belongs in HeyClaude and what still needs review.
-```
 
 ## Troubleshooting
-**Issue:** The category is ambiguous  
+**Issue:** The category is ambiguous
 **Fix:** Prefer the category that matches the install or usage surface. An MCP server is not a skill unless it ships a valid `SKILL.md` skill package.
 
-**Issue:** The source page is mostly marketing copy  
+**Issue:** The source page is mostly marketing copy
 **Fix:** Use docs, repo, package, or release pages as supporting sources, and mark unsupported claims as unverified.
 
-**Issue:** Brand domain is unclear  
+**Issue:** Brand domain is unclear
 **Fix:** Leave brand fields blank rather than guessing from GitHub, docs subdomains, or mirrors.

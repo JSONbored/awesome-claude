@@ -32,11 +32,11 @@ Transform your enterprise codebase management with this comprehensive workflow p
 
 > **Workflow Overview**
 >
-> **Process Type:** Enterprise Development Automation  
-> **Complexity:** Advanced (requires DevOps knowledge)  
-> **Implementation Time:** 4 weeks full deployment  
-> **Team Size:** 5-10 developers minimum  
-> **ROI Timeline:** Value realization within 30 days  
+> **Process Type:** Enterprise Development Automation
+> **Complexity:** Advanced (requires DevOps knowledge)
+> **Implementation Time:** 4 weeks full deployment
+> **Team Size:** 5-10 developers minimum
+> **ROI Timeline:** Value realization within 30 days
 > **Difficulty:** Advanced
 
 ## Workflow Architecture

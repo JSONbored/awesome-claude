@@ -58,13 +58,13 @@ This skill helps AI agents create practical, ranking-oriented content programs. 
 5. Publish, measure, and refresh using clear rules.
 
 ## Troubleshooting
-**Issue:** Traffic grows but conversions stay flat  
+**Issue:** Traffic grows but conversions stay flat
 **Fix:** Align cluster CTAs and page intent with concrete user next steps.
 
-**Issue:** New pages cannibalize each other  
+**Issue:** New pages cannibalize each other
 **Fix:** Tighten intent separation and canonical/internal-link structure.
 
-**Issue:** Rankings plateau  
+**Issue:** Rankings plateau
 **Fix:** Expand cluster depth and update aging pages with new evidence/examples.
 
 ## Knowledge Freshness

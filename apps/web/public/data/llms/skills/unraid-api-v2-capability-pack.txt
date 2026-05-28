@@ -77,13 +77,13 @@ This is an expert-level capability skill for Unraid API operations. It is intend
 - Keep credentials scoped and rotated.
 
 ## Troubleshooting
-**Issue:** Same automation works on one server but fails on another  
+**Issue:** Same automation works on one server but fails on another
 **Fix:** Capture and compare API version/capability differences before execution.
 
-**Issue:** Partial state updates on retries  
+**Issue:** Partial state updates on retries
 **Fix:** Introduce operation IDs and idempotent guard checks.
 
-**Issue:** Difficult post-mortem analysis  
+**Issue:** Difficult post-mortem analysis
 **Fix:** Add structured execution logs with endpoint, payload hash, and result metadata.
 
 ## Output Contract

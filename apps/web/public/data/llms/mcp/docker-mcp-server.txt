@@ -87,18 +87,6 @@ Enable your AI assistants to seamlessly interact with Docker environments throug
   }
 }
 ```
-```json
-{
-  "docker": {
-    "env": {
-      "DOCKER_HOST": "${DOCKER_HOST:-unix:///var/run/docker.sock}",
-      "DOCKER_API_VERSION": "${DOCKER_API_VERSION:-1.43}"
-    },
-    "args": ["-y", "@docker/mcp-server"],
-    "command": "npx"
-  }
-}
-```
 
 ## Examples
 ### List all running containers and their status
@@ -145,31 +133,6 @@ Ask Claude: "Deploy a multi-service application using Docker Compose"
 
 Create and start a Docker container with environment variables, port mapping, and volume mounts
 
-```typescript
-// Run Docker container with environment variables
-const container = await docker.containers.create({
-  image: "node:18",
-  env: ["NODE_ENV=production", "PORT=3000"],
-  ports: [{ host: 8080, container: 3000 }],
-  volumes: [{ host: "./data", container: "/app/data" }],
-});
-await container.start();
-```
-```plaintext
-Ask Claude: "List all running containers and their status"
-```
-```plaintext
-Ask Claude: "Build a Docker image from a Dockerfile"
-```
-```plaintext
-Ask Claude: "Start a new container with custom configuration"
-```
-```plaintext
-Ask Claude: "View real-time logs from a specific container"
-```
-```plaintext
-Ask Claude: "Deploy a multi-service application using Docker Compose"
-```
 ```typescript
 // Run Docker container with environment variables
 const container = await docker.containers.create({

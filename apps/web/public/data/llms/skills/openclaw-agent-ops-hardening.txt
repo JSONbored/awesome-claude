@@ -59,13 +59,13 @@ This skill provides a practical hardening framework for OpenClaw deployments. It
 5. Validate with adversarial prompts and abuse scenarios.
 
 ## Troubleshooting
-**Issue:** Agent can execute risky actions too broadly  
+**Issue:** Agent can execute risky actions too broadly
 **Fix:** Split capabilities into scoped tools and add approval for privileged operations.
 
-**Issue:** Difficult to trace harmful outputs  
+**Issue:** Difficult to trace harmful outputs
 **Fix:** Add structured logging for prompt, tool call, decision, and result lifecycle.
 
-**Issue:** Secrets exposed in generated output  
+**Issue:** Secrets exposed in generated output
 **Fix:** Add redaction middleware and blocklist checks before response emission.
 
 ## Knowledge Freshness
