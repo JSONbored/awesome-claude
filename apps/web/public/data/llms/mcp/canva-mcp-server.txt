@@ -82,14 +82,6 @@ Create and manage Canva designs through Claude for automated design generation.
   }
 }
 ```
-```json
-{
-  "canva": {
-    "url": "https://mcp.canva.com/mcp",
-    "transport": "http"
-  }
-}
-```
 
 ## Examples
 ### Create an Instagram post about our product launch
@@ -128,27 +120,6 @@ Ask Claude: "Update brand colors in templates"
 
 Create a new Canva design from a template with brand kit integration
 
-```typescript
-// Create Canva design from template
-const design = await canva.designs.create({
-  templateId: "template-id",
-  brandKitId: "brand-kit-id",
-  title: "New Marketing Campaign",
-  elements: [{ type: "text", content: "Hello World" }],
-});
-```
-```plaintext
-Ask Claude: "Create an Instagram post about our product launch"
-```
-```plaintext
-Ask Claude: "Generate a presentation slide template"
-```
-```plaintext
-Ask Claude: "Export all logo variations"
-```
-```plaintext
-Ask Claude: "Update brand colors in templates"
-```
 ```typescript
 // Create Canva design from template
 const design = await canva.designs.create({

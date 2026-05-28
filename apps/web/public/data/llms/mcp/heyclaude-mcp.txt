@@ -88,22 +88,6 @@ pnpm --filter @heyclaude/mcp start
 
 Set `HEYCLAUDE_DATA_DIR=/absolute/path/to/apps/web/public/data` if you need to
 point the server at a specific generated artifact directory.
-```json
-{
-  "mcpServers": {
-    "heyclaude": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "https://heyclau.de/api/mcp"]
-    }
-  }
-}
-```
-```text
-https://heyclau.de/api/mcp
-```
-```bash
-pnpm --filter @heyclaude/mcp start
-```
 
 ## Example prompts
 ```text
@@ -118,18 +102,6 @@ Show install guidance for mcp/github-mcp-server.
 Validate this HeyClaude content submission draft and build a prefilled issue URL.
 ```
 
-```text
-Find possible duplicate entries before I submit this new Claude skill.
-```
-```text
-Search HeyClaude for MCP servers related to GitHub.
-```
-```text
-Show install guidance for mcp/github-mcp-server.
-```
-```text
-Validate this HeyClaude content submission draft and build a prefilled issue URL.
-```
 ```text
 Find possible duplicate entries before I submit this new Claude skill.
 ```

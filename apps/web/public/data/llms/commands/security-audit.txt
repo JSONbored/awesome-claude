@@ -47,9 +47,6 @@ The `/security-audit` command deploys 100 specialized virtual sub-agents to cond
   - `all` - Full comprehensive audit (default)
   - `security` - Focus on security specialists
   - `performance` - Focus on performance optimization
-```text
-/security-audit [scope]
-```
 
 ## Sub-Agent Categories
 ### Security Specialists (15 agents)
@@ -199,18 +196,6 @@ The `/security-audit` command deploys 100 specialized virtual sub-agents to cond
 
 ### Performance-Focused Audit
 
-```bash
-/security-audit performance
-# Focuses on 12 performance specialists + optimization agents
-```
-```bash
-/security-audit
-# Deploys all 100 sub-agents for complete analysis
-```
-```bash
-/security-audit security
-# Focuses on 15 security specialists + related infrastructure agents
-```
 ```bash
 /security-audit performance
 # Focuses on 12 performance specialists + optimization agents

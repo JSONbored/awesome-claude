@@ -85,6 +85,16 @@ describe("submission intake", () => {
     ).toBe(true);
     expect(
       model?.fields.some(
+        (field) => field.id === "safety_notes" && field.required,
+      ),
+    ).toBe(true);
+    expect(
+      model?.fields.some(
+        (field) => field.id === "privacy_notes" && field.required,
+      ),
+    ).toBe(true);
+    expect(
+      model?.fields.some(
         (field) =>
           field.id === "contact_email" &&
           field.label === "Public contact" &&
@@ -123,6 +133,10 @@ describe("submission intake", () => {
       install_command: "npx -y website-intake-mcp",
       usage_snippet:
         "claude mcp add website-intake-mcp -- npx -y website-intake-mcp",
+      safety_notes:
+        "Installs and runs an MCP server process from the submitted package.",
+      privacy_notes:
+        "Not applicable: this test fixture does not access user files or credentials.",
     });
 
     expect(draft.title).toBe("Submit MCP Server: Website Intake MCP");
@@ -160,6 +174,10 @@ describe("submission intake", () => {
           install_command: "npx -y provenance-mcp",
           usage_snippet:
             "claude mcp add provenance-mcp -- npx -y provenance-mcp",
+          safety_notes:
+            "Installs and runs an MCP server process from the submitted package.",
+          privacy_notes:
+            "Not applicable: this fixture does not access user files or credentials.",
         }).body,
         labels: [{ name: "content-submission" }, { name: "community-mcp" }],
       },
@@ -205,6 +223,10 @@ describe("submission intake", () => {
         install_command: "npx -y website-token-mcp",
         usage_snippet:
           "claude mcp add website-token-mcp -- npx -y website-token-mcp",
+        safety_notes:
+          "Installs and runs an MCP server process from the submitted package.",
+        privacy_notes:
+          "Not applicable: this fixture does not access user files or credentials.",
       }).body,
       labels: [{ name: "content-submission" }, { name: "community-mcp" }],
     });
@@ -241,6 +263,10 @@ describe("submission intake", () => {
         install_command: "npx -y website-contact-spoof-mcp",
         usage_snippet:
           "claude mcp add website-contact-spoof-mcp -- npx -y website-contact-spoof-mcp",
+        safety_notes:
+          "Installs and runs an MCP server process from the submitted package.",
+        privacy_notes:
+          "Not applicable: this fixture does not access user files or credentials.",
       }).body,
       labels: [{ name: "content-submission" }, { name: "community-mcp" }],
     });
@@ -275,6 +301,10 @@ describe("submission intake", () => {
         install_command: "npx -y spoofed-website-mcp",
         usage_snippet:
           "claude mcp add spoofed-website-mcp -- npx -y spoofed-website-mcp",
+        safety_notes:
+          "Installs and runs an MCP server process from the submitted package.",
+        privacy_notes:
+          "Not applicable: this fixture does not access user files or credentials.",
       }).body,
       labels: [{ name: "content-submission" }, { name: "community-mcp" }],
     });
@@ -313,7 +343,13 @@ https://www.asana.com/docs
 npx -y brand-intake-mcp
 
 ### Usage snippet
-claude mcp add brand-intake-mcp -- npx -y brand-intake-mcp`);
+claude mcp add brand-intake-mcp -- npx -y brand-intake-mcp
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`);
 
     const report = validateSubmission(shapedIssue);
     expect(report.ok).toBe(true);
@@ -342,7 +378,13 @@ not a domain
 npx -y broken-brand-mcp
 
 ### Usage snippet
-claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp`),
+claude mcp add broken-brand-mcp -- npx -y broken-brand-mcp
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`),
     );
     expect(invalid.ok).toBe(false);
     expect(invalid.errors).toContain(
@@ -408,7 +450,13 @@ Generate app icons and favicons.
 npx -y prompt-to-asset
 
 ### Usage snippet
-claude mcp add prompt-to-asset -- npx -y prompt-to-asset`),
+claude mcp add prompt-to-asset -- npx -y prompt-to-asset
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`),
     );
     expect(report.ok).toBe(true);
     expect(report.category).toBe("mcp");
@@ -444,7 +492,13 @@ Check color contrast from Claude.
 npx -y contrastapi
 
 ### Usage snippet
-claude mcp add contrastapi -- npx -y contrastapi`,
+claude mcp add contrastapi -- npx -y contrastapi
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`,
       ["submission"],
     );
     expect(looksLikeSubmissionIssue(shapedIssue)).toBe(true);
@@ -475,7 +529,13 @@ Generate app icons and favicons.
 npx -y prompt-to-asset
 
 ### Usage snippet
-claude mcp add prompt-to-asset -- npx -y prompt-to-asset`,
+claude mcp add prompt-to-asset -- npx -y prompt-to-asset
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`,
       [],
     );
     expect(looksLikeSubmissionIssue(unlabeled)).toBe(true);
@@ -580,7 +640,13 @@ Security MCP.
 claude mcp add contrastapi --transport http https://example.com/mcp
 
 ### Usage snippet
-claude mcp list`);
+claude mcp list
+
+### Safety notes
+Connects Claude to a remote MCP endpoint and should be reviewed before use.
+
+### Privacy notes
+Sends MCP requests to the configured remote endpoint.`);
     const invalid = issue(`### Name
 Unslop
 
@@ -762,7 +828,13 @@ Source verification coverage.
 npx -y source-review-mcp
 
 ### Usage snippet
-claude mcp add source-review-mcp -- npx -y source-review-mcp`,
+claude mcp add source-review-mcp -- npx -y source-review-mcp
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
+
+### Privacy notes
+Not applicable: this fixture does not access user files or credentials.`,
       ["content-submission", "source-needs-verification"],
     );
     const report = validateSubmission(sourceProblem);
@@ -924,6 +996,59 @@ Use it.`),
     );
   });
 
+  it("rejects skill submissions that treat GitHub source trees as installer downloads", () => {
+    const report = validateSubmission(
+      issue(`### Name
+Deslop Skill
+
+### Slug
+deslop-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/agent-skills/tree/main/skills/deslop
+
+### Download URL (optional)
+https://github.com/example/agent-skills/tree/main/skills/deslop
+
+### Description
+Skill submission that claims an install script exists at a GitHub tree path.
+
+### Card description
+Deslop-like skill package.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Install command
+cd skills/deslop && ./install.sh
+
+### Usage snippet
+Run the installed skill.`),
+    );
+
+    expect(report.ok).toBe(false);
+    expect(report.errors).toEqual(
+      expect.arrayContaining([
+        "Missing required field: safety_notes",
+        "Missing required field: privacy_notes",
+        "download_url must point to a package, archive, or release download; use github_url or retrieval_sources for GitHub source tree/blob paths",
+        "Skills install_command references a local installer script; include the exact installer source URL in retrieval_sources or provide full_copyable_content",
+      ]),
+    );
+  });
+
   it("accepts source-backed skill submissions without package downloads", () => {
     const submission = issue(`### Name
 Source Skill
@@ -961,7 +1086,13 @@ validated
 Use this source-backed skill content.
 
 ### Usage snippet
-Use the full copyable skill content.`);
+Use the full copyable skill content.
+
+### Safety notes
+Not applicable: this fixture is copyable text with no command or process.
+
+### Privacy notes
+Not applicable: this fixture does not access local data, credentials, telemetry, or third-party APIs.`);
     const report = validateSubmission(submission);
     const risk = analyzeIssueSubmissionRisk(submission, report);
 
@@ -970,6 +1101,60 @@ Use the full copyable skill content.`);
     expect(risk.policyMatrix.source.status).toBe("pass");
     expect(risk.policyMatrix.package.status).toBe("pass");
     expect(formatSubmissionRiskMarkdown(risk)).toContain("Policy matrix");
+  });
+
+  it("accepts setup script install commands when exact source evidence is provided", () => {
+    const report = validateSubmission(
+      issue(`### Name
+Setup Script Skill
+
+### Slug
+setup-script-skill
+
+### Category
+skills
+
+### Public contact
+@source-owner
+
+### GitHub URL
+https://github.com/example/source-skill/tree/main/skills/setup-script
+
+### Description
+Source-backed skill submission that installs through a setup script.
+
+### Card description
+Setup script skill.
+
+### Skill type
+general
+
+### Skill level
+advanced
+
+### Verification status
+validated
+
+### Install command
+cd skills/setup-script && ./setup.sh
+
+### Retrieval sources
+https://github.com/example/source-skill/blob/main/skills/setup-script/setup.sh
+
+### Usage snippet
+Use the installed skill after reviewing setup.sh.
+
+### Safety notes
+Runs a local setup script from the reviewed source tree.
+
+### Privacy notes
+The setup script may read local shell environment during installation.`),
+    );
+
+    expect(report.ok).toBe(true);
+    expect(report.errors).not.toContain(
+      "Skills install_command references a local installer script; include the exact installer source URL in retrieval_sources or provide full_copyable_content",
+    );
   });
 
   it("downgrades sensitive auto-imports when privacy notes are missing", () => {
@@ -1002,13 +1187,19 @@ Set CREDENTIAL_MCP_API_KEY before use.`);
     const report = validateSubmission(submission);
     const risk = analyzeIssueSubmissionRisk(submission, report);
 
-    expect(report.ok).toBe(true);
+    expect(report.ok).toBe(false);
+    expect(report.errors).toEqual(
+      expect.arrayContaining([
+        "Missing required field: safety_notes",
+        "Missing required field: privacy_notes",
+      ]),
+    );
     expect(risk.riskTier).toBe("medium");
     expect(risk.classificationWarnings.map((warning) => warning.id)).toContain(
       "missing_privacy_notes",
     );
-    expect(risk.policyMatrix.quality.status).toBe("warn");
-    expect(risk.policyDecision).toBe("maintainer_review");
+    expect(risk.policyMatrix.schema.status).toBe("block");
+    expect(risk.policyDecision).toBe("blocked");
   });
 
   it("keeps sensitive source-backed submissions eligible when notes disclose behavior", () => {
@@ -1038,6 +1229,9 @@ npx -y credential-mcp
 
 ### Usage snippet
 Set CREDENTIAL_MCP_API_KEY before use.
+
+### Safety notes
+Installs and runs an MCP server process from the submitted package.
 
 ### Privacy notes
 Reads the configured API key from the local environment and sends requests to the upstream API only.`);
@@ -1140,7 +1334,13 @@ advanced
 validated
 
 ### Usage snippet
-Use the archive only after review.`);
+Use the archive only after review.
+
+### Safety notes
+Installs package-like skill content from a community-provided archive.
+
+### Privacy notes
+Not applicable: this fixture does not claim local data, credential, telemetry, or third-party API access.`);
     const report = validateSubmission(submission);
     const risk = analyzeIssueSubmissionRisk(submission, report);
 
@@ -1192,7 +1392,13 @@ validated
 Use this source-backed skill content.
 
 ### Usage snippet
-Use the source only after review.`);
+Use the source only after review.
+
+### Safety notes
+Not applicable: this fixture is copyable text with no installer or runtime process.
+
+### Privacy notes
+Not applicable: this fixture does not access local data, credentials, telemetry, or third-party APIs.`);
     const report = validateSubmission(submission);
     const risk = analyzeIssueSubmissionRisk(submission, report);
 
@@ -1402,6 +1608,9 @@ Review build logs, identify the failing step, and summarize the likely fix.`),
       install_command:
         "claude mcp add --transport http config-snippet https://example.com/mcp",
       usage_snippet: "claude mcp status config-snippet",
+      safety_notes:
+        "Connects Claude to a remote MCP endpoint and should be reviewed before use.",
+      privacy_notes: "Sends MCP requests to the configured remote endpoint.",
       config_snippet: `\`\`\`json
 {
   "mcpServers": {

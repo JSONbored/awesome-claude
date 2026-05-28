@@ -136,28 +136,6 @@ Format as Q&A with:
 - Interviewee responses
 - Notable quotes pulled out"
 ```
-```text
-"Transcribe this meeting and create:
-1. Attendee list (if mentioned)
-2. Key discussion topics with timestamps
-3. Decisions made
-4. Action items with owners
-5. Next steps"
-```
-```text
-"Transcribe this podcast episode and create:
-1. Episode summary (2-3 sentences)
-2. Main topics discussed with timestamps
-3. Key quotes
-4. Chapters (every 10 minutes)"
-```
-```text
-"Transcribe this interview with speaker labels.
-Format as Q&A with:
-- Interviewer questions highlighted
-- Interviewee responses
-- Notable quotes pulled out"
-```
 
 ## Troubleshooting
 **Issue:** Transcription is inaccurate

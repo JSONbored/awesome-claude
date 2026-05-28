@@ -74,13 +74,13 @@ This capability pack teaches agents how to correctly design, deploy, and operate
 - Enforce explicit rollback and incident pathways.
 
 ## Troubleshooting
-**Issue:** Unexpected cache behavior after deploy  
+**Issue:** Unexpected cache behavior after deploy
 **Fix:** Validate cache headers, Cloudflare cache rules, and OpenNext route semantics together.
 
-**Issue:** Local works, Worker fails  
+**Issue:** Local works, Worker fails
 **Fix:** Check bindings/env parity and runtime-specific API differences.
 
-**Issue:** Deploys are correct but latency is inconsistent  
+**Issue:** Deploys are correct but latency is inconsistent
 **Fix:** Profile critical routes, tighten cache strategy, and isolate expensive dynamic operations.
 
 ## Output Contract

@@ -32,10 +32,10 @@ Transform your financial operations with Claude's AI capabilities. This guide de
 
 > **Use Case Overview**
 >
-> **Industry:** Financial Services and Capital Markets  
-> **Role:** Portfolio Managers, Risk Analysts, Compliance Officers  
-> **Challenge:** Manual processing limiting scale and accuracy  
-> **Solution:** Claude's automated analysis and compliance framework  
+> **Industry:** Financial Services and Capital Markets
+> **Role:** Portfolio Managers, Risk Analysts, Compliance Officers
+> **Challenge:** Manual processing limiting scale and accuracy
+> **Solution:** Claude's automated analysis and compliance framework
 > **Impact:** Measurable productivity improvements
 > **Time to Value:** Varies by implementation scope
 
@@ -96,7 +96,7 @@ Claude addresses financial challenges through enterprise-grade AI that maintains
 > **Organization Type:** Investment firm
 > **Implementation:** Analysts across portfolio management
 > **Timeline:** Phased deployment
-> **Results:** Faster analysis with substantial annual savings  
+> **Results:** Faster analysis with substantial annual savings
 > **Key Learning:** Early integration with proprietary systems critical
 
 ## Related Use Cases and Resources

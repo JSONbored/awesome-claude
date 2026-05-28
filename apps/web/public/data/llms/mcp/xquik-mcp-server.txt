@@ -40,10 +40,6 @@ The server exposes `explore` for searching the API catalog and `xquik` for authe
 export XQUIK_API_KEY=xq_YOUR_KEY_HERE
 npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
 ```
-```bash
-export XQUIK_API_KEY=xq_YOUR_KEY_HERE
-npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header "x-api-key:${XQUIK_API_KEY}"
-```
 
 ## Auth Requirements
 Xquik supports API-key authentication through the `x-api-key` header and OAuth 2.1 for clients that support browser-based MCP connectors. Create an API key from the Xquik dashboard, keep it out of prompts and logs, and connect an X account only when you need write workflows.

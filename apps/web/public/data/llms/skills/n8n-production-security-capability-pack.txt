@@ -74,13 +74,13 @@ This capability pack teaches an agent how to operate n8n securely in production.
 - Preserve full workflow execution traceability.
 
 ## Troubleshooting
-**Issue:** Credential leaks through logs or outputs  
+**Issue:** Credential leaks through logs or outputs
 **Fix:** Redact sensitive fields and disable verbose logging for secure paths.
 
-**Issue:** AI node triggers unintended side effects  
+**Issue:** AI node triggers unintended side effects
 **Fix:** Add deterministic validation/approval stage before mutation nodes.
 
-**Issue:** Hard to scope incident impact  
+**Issue:** Hard to scope incident impact
 **Fix:** Isolate workflows by domain and use least-privilege credentials.
 
 ## Output Contract

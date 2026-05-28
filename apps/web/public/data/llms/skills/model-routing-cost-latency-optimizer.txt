@@ -68,23 +68,15 @@ Output:
 3. Define routing and escalation policy with hard quality thresholds.
 4. Deploy canary and monitor cost, latency, and quality deltas.
 5. Promote or rollback based on explicit guardrails.
-```text
-Apply model routing cost/latency optimizer.
-Output:
-1) baseline cost/latency table,
-2) routing policy with escalation rules,
-3) quality guardrails,
-4) before/after savings projection.
-```
 
 ## Troubleshooting
-**Issue:** Savings improve but user quality drops  
+**Issue:** Savings improve but user quality drops
 **Fix:** tighten escalation thresholds and reserve stronger models for high-impact tasks.
 
-**Issue:** Latency improves but cost rises unexpectedly  
+**Issue:** Latency improves but cost rises unexpectedly
 **Fix:** inspect token bloat from prompts/context size and cap response/output tokens.
 
-**Issue:** Routing policy is hard to explain  
+**Issue:** Routing policy is hard to explain
 **Fix:** keep deterministic rules for first rollout, then add adaptive logic incrementally.
 
 ## Knowledge Freshness

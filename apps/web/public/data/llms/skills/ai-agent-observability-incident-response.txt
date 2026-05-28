@@ -69,23 +69,15 @@ Provide:
 3. Create alert thresholds aligned to user impact.
 4. Build runbooks with owner, severity, and escalation path.
 5. Validate incident drills before production launch.
-```text
-Apply the AI agent observability and incident response skill.
-Provide:
-1) telemetry contract,
-2) SLO definitions,
-3) alert routing matrix,
-4) incident playbook with triage steps.
-```
 
 ## Troubleshooting
-**Issue:** Alert fatigue from noisy thresholds  
+**Issue:** Alert fatigue from noisy thresholds
 **Fix:** Alert on sustained error budgets, not single spikes.
 
-**Issue:** Logs are present but not useful  
+**Issue:** Logs are present but not useful
 **Fix:** Standardize event schema (request ID, workflow ID, tool name, failure reason).
 
-**Issue:** Incidents take too long to triage  
+**Issue:** Incidents take too long to triage
 **Fix:** Add direct links from alerts to trace dashboards and runbook sections.
 
 ## Knowledge Freshness
