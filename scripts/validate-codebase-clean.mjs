@@ -238,6 +238,27 @@ function walk(dir) {
     if (!searchable) continue;
 
     const source = fs.readFileSync(fullPath, "utf8");
+    if (
+      relativePath.startsWith("apps/web/src/") &&
+      !relativePath.endsWith(".server.ts") &&
+      !relativePath.endsWith(".server.tsx") &&
+      !relativePath.includes("/generated/") &&
+      /from\s+["']node:/.test(source)
+    ) {
+      failures.push(
+        `${relativePath}: Node builtin import outside server-only module`,
+      );
+    }
+    if (/@\/lib\/content(?=["'])/.test(source)) {
+      failures.push(
+        `${relativePath}: import content artifacts through content.server`,
+      );
+    }
+    if (/@\/lib\/cloudflare-env(?=["'])/.test(source)) {
+      failures.push(
+        `${relativePath}: import Cloudflare runtime through cloudflare-env.server`,
+      );
+    }
     for (const { pattern, label } of forbiddenPatterns) {
       if (pattern.test(source)) failures.push(`${relativePath}: ${label}`);
     }
@@ -350,6 +371,7 @@ for (const route of [
   "/api/registry/entries/{category}/{slug}/llms:",
   "/api/submissions:",
   "/api/listing-leads:",
+  "/api/jobs/{slug}:",
   "/api/admin/listing-leads:",
   "/api/admin/jobs:",
   "/api/admin/jobs/health:",

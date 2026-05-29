@@ -1,4 +1,4 @@
-import type { DirectoryEntry } from "@/lib/content";
+import type { DirectoryEntry } from "@/lib/content.server";
 
 export function safeSitemapDate(value?: string | null) {
   if (!value) return undefined;
@@ -12,9 +12,6 @@ export function isSitemapIndexableEntry(entry: DirectoryEntry) {
 
 export function sitemapEntryLastModified(entry: DirectoryEntry) {
   return safeSitemapDate(
-    entry.contentUpdatedAt ||
-      entry.repoUpdatedAt ||
-      entry.verifiedAt ||
-      entry.dateAdded,
+    entry.contentUpdatedAt || entry.repoUpdatedAt || entry.verifiedAt || entry.dateAdded,
   );
 }

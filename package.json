@@ -25,6 +25,7 @@
     "brand:enrich": "node scripts/enrich-brand-assets.mjs",
     "validate:deployment-artifacts": "node scripts/validate-deployment-artifacts.mjs",
     "validate:clean": "node scripts/validate-codebase-clean.mjs",
+    "validate:web-build-log": "node scripts/validate-web-build-log.mjs",
     "generate:openapi": "tsx scripts/generate-openapi.ts",
     "validate:openapi": "tsx scripts/generate-openapi.ts --check",
     "validate:d1-jobs": "node scripts/validate-d1-jobs.mjs",

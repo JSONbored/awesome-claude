@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { normalizeBrandDomain } from "@heyclaude/registry";
+import { normalizeBrandDomain } from "@heyclaude/registry/brand-assets";
 import { validateJobPublicationQuality } from "@heyclaude/registry/commercial";
 
 const entryKeySchema = z.string().regex(/^[a-z0-9-]+:[a-z0-9-]+$/);
@@ -145,6 +145,73 @@ export const publicJobsQuerySchema = z.object({
     .max(10_000)
     .default(0)
     .meta({ type: "integer", minimum: 0, maximum: 10_000, default: 0 }),
+});
+
+export const publicJobParamsSchema = z.object({
+  slug: safeSlugSchema,
+});
+
+const publicJobListingSchema = z
+  .object({
+    slug: z.string(),
+    title: z.string(),
+    company: z.string(),
+    companyUrl: z.string().url().optional(),
+    location: z.string(),
+    description: z.string(),
+    descriptionMd: z.string().optional(),
+    type: z.string().optional(),
+    postedAt: z.string().optional(),
+    compensation: z.string().optional(),
+    equity: z.string().optional(),
+    bonus: z.string().optional(),
+    benefits: z.array(z.string()).max(24).optional(),
+    responsibilities: z.array(z.string()).max(24).optional(),
+    requirements: z.array(z.string()).max(24).optional(),
+    featured: z.boolean(),
+    sponsored: z.boolean().optional(),
+    applyUrl: z.string(),
+    tier: jobTierSchema.optional(),
+    status: jobStatusSchema.optional(),
+    source: jobSourceSchema.optional(),
+    sourceKind: jobSourceKindSchema.optional(),
+    sourceUrl: z.string().optional(),
+    firstSeenAt: z.string().optional(),
+    lastCheckedAt: z.string().optional(),
+    sourceCheckedAt: z.string().optional(),
+    curationNote: z.string().optional(),
+    claimedEmployer: z.boolean().optional(),
+    expiresAt: z.string().optional(),
+    isRemote: z.boolean().optional(),
+    isWorldwide: z.boolean().optional(),
+    webUrl: z.string().url(),
+    labels: z.array(z.string()).max(24),
+    sourceLabel: z.string(),
+    applySourceLabel: z.string(),
+    lastVerifiedAt: z.string().optional(),
+  })
+  .passthrough();
+
+export const publicJobsResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("jobs-index"),
+  generatedAt: z.string(),
+  count: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  totalAvailable: z.number().int().nonnegative(),
+  limit: z.number().int().min(1).max(100),
+  offset: z.number().int().min(0),
+  nextOffset: z.number().int().nullable(),
+  entries: z.array(publicJobListingSchema).max(100),
+});
+
+export const publicJobDetailResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("jobs-detail"),
+  slug: z.string(),
+  generatedAt: z.string(),
+  entry: publicJobListingSchema,
+  related: z.array(publicJobListingSchema).max(4),
 });
 
 export const apiErrorEnvelopeSchema = z.object({
@@ -1135,8 +1202,27 @@ export const apiRouteDefinitions = {
     tags: ["Jobs"],
     originCheck: true,
     querySchema: publicJobsQuerySchema,
+    responseSchema: publicJobsResponseSchema,
     rateLimit: {
       scope: "jobs-list",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "jobs.detail": route({
+    id: "jobs.detail",
+    method: "GET",
+    path: "/api/jobs/{slug}",
+    summary: "Get one active reviewed job",
+    description:
+      "Returns one active D1-backed public job listing plus a small related set. Expired, closed, stale, unreviewed, or source-unhealthy jobs return 404.",
+    tags: ["Jobs"],
+    originCheck: true,
+    paramsSchema: publicJobParamsSchema,
+    responseSchema: publicJobDetailResponseSchema,
+    rateLimit: {
+      scope: "jobs-detail",
       limit: 120,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",

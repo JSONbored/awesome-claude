@@ -219,18 +219,33 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
           </pre>
         </div>
       )}
-      <button
-        type="button"
-        onClick={() => setShowAdvanced((s) => !s)}
-        className="inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
-      >
-        <ChevronDown className={cn("h-3 w-3 transition-transform", showAdvanced && "rotate-180")} />
-        MCP / Raycast equivalents
-      </button>
-      {showAdvanced && (
-        <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink">
-          <code>{`# MCP\nclaude code call heyclaude.${endpoint.id.replace(/-/g, "_")}\n\n# Raycast\nraycast://extensions/jsonbored/heyclaude/${endpoint.id}`}</code>
-        </pre>
+      {endpoint.clientExamples && endpoint.clientExamples.length > 0 && (
+        <>
+          <button
+            type="button"
+            onClick={() => setShowAdvanced((s) => !s)}
+            className="inline-flex items-center gap-1 text-[11px] text-ink-muted hover:text-ink"
+          >
+            <ChevronDown
+              className={cn("h-3 w-3 transition-transform", showAdvanced && "rotate-180")}
+            />
+            Tested client paths
+          </button>
+          {showAdvanced && (
+            <div className="space-y-2 rounded-md border border-border bg-background p-3">
+              {endpoint.clientExamples.map((example) => (
+                <div key={example.label}>
+                  <div className="mb-1 text-[10px] uppercase tracking-wider text-ink-subtle">
+                    {example.label}
+                  </div>
+                  <pre className="overflow-auto font-mono text-[11px] text-ink">
+                    <code>{example.code}</code>
+                  </pre>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

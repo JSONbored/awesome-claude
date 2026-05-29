@@ -1,6 +1,6 @@
 import type { DirectoryEntry, ToolListing } from "@heyclaude/registry";
 
-import { getDirectoryEntries } from "@/lib/content";
+import { getDirectoryEntries } from "@/lib/content.server";
 import { getTools } from "@/lib/tools";
 
 export type SeoClusterDefinition = {

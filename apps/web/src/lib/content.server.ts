@@ -12,7 +12,7 @@ import type {
   SearchDocument,
 } from "@heyclaude/registry";
 
-import { getCloudflareBinding } from "@/lib/cloudflare-env";
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 import { categoryDescriptions, categoryLabels, siteConfig } from "@/lib/site";
 
 export type { CategorySummary, ContentEntry, DirectoryEntry };

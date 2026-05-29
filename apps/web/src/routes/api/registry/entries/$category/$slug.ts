@@ -2,7 +2,7 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { apiError, createApiHandler, type InferApiParams } from "@/lib/api/router";
 import { entryParamsSchema } from "@/lib/api/contracts";
-import { getEntry, isSafeContentPathPart } from "@/lib/content";
+import { getEntry, isSafeContentPathPart } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 
 export const GET = createApiHandler("registry.entry", async ({ request, params, requestId }) => {

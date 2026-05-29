@@ -2,7 +2,7 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { entryParamsSchema } from "@/lib/api/contracts";
 import { apiError, createApiHandler, type InferApiParams } from "@/lib/api/router";
-import { getEntryLlmsText, isSafeContentPathPart } from "@/lib/content";
+import { getEntryLlmsText, isSafeContentPathPart } from "@/lib/content.server";
 import { cachedTextResponse } from "@/lib/http-cache";
 
 export const GET = createApiHandler(

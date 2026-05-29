@@ -1,7 +1,7 @@
 import type { DirectoryEntry, ToolListing } from "@heyclaude/registry";
 import { compareToolListings } from "@heyclaude/registry/commercial";
 
-import { getDirectoryEntriesByCategory } from "@/lib/content";
+import { getDirectoryEntriesByCategory } from "@/lib/content.server";
 import { getSiteDb } from "@/lib/db";
 
 type PlacementRow = {

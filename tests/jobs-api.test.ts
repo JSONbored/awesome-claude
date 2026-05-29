@@ -44,6 +44,12 @@ function request(query: string) {
   });
 }
 
+function detailRequest(slug: string) {
+  return new Request(`https://heyclau.de/api/jobs/${slug}`, {
+    headers: { origin: "https://heyclau.de" },
+  });
+}
+
 describe("/api/jobs", () => {
   beforeEach(() => {
     vi.resetModules();
@@ -229,5 +235,36 @@ describe("/api/jobs", () => {
     const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(request("?postedAfter=not-a-date"));
     expect(response.status).toBe(400);
+  });
+
+  it("returns one active reviewed job from the detail endpoint", async () => {
+    const { GET } = await import("../apps/web/src/routes/api/jobs/$slug");
+    const response = await GET(detailRequest("remote-eu-compensated"), {
+      params: { slug: "remote-eu-compensated" },
+    });
+
+    expect(response.status).toBe(200);
+    const body = await response.json();
+    expect(body).toMatchObject({
+      kind: "jobs-detail",
+      slug: "remote-eu-compensated",
+      entry: {
+        slug: "remote-eu-compensated",
+        company: "Aether",
+        sourceLabel: "Official ATS page",
+      },
+    });
+    expect(body.related).toHaveLength(2);
+  });
+
+  it("returns 404 for missing job detail slugs", async () => {
+    const { GET } = await import("../apps/web/src/routes/api/jobs/$slug");
+    const response = await GET(detailRequest("missing-role"), {
+      params: { slug: "missing-role" },
+    });
+
+    expect(response.status).toBe(404);
+    const body = await response.json();
+    expect(body.error.code).toBe("job_not_found");
   });
 });

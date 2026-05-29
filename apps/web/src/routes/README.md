@@ -1,21 +1,15 @@
-# Routes
+# HeyClaude Routes
 
-TanStack Start uses **file-based routing**. Every `.tsx` file in this directory
-is a route. Do **not** create `src/pages/`, `src/routes/_app/index.tsx`, or
-`app/layout.tsx` — those are Next.js / Remix conventions. The only root layout
-is `src/routes/__root.tsx`.
+TanStack Start uses file-based routing from this directory. Keep the Atlas route
+structure as the public site contract and adapt backend/data wiring to it rather
+than reviving old Next.js paths.
 
 ## Conventions
 
-| File                     | URL                                                     |
-| ------------------------ | ------------------------------------------------------- |
-| `index.tsx`              | `/`                                                     |
-| `about.tsx`              | `/about`                                                |
-| `users/index.tsx`        | `/users`                                                |
-| `users/$id.tsx`          | `/users/:id` (dynamic — bare `$`, no curly braces)      |
-| `posts/{-$category}.tsx` | `/posts/:category?` (optional segment)                  |
-| `files/$.tsx`            | `/files/*` (splat — read via `_splat` param, never `*`) |
-| `_layout.tsx`            | layout route (renders children via `<Outlet />`)        |
-| `__root.tsx`             | app shell — wraps every page; preserve `<Outlet />`     |
-
-`routeTree.gen.ts` is auto-generated. Don't edit it by hand.
+- Canonical entry detail pages live at `/entry/<category>/<slug>`.
+- Legacy `/<category>` and `/<category>/<slug>` routes are redirects only.
+- Public API handlers live under `routes/api/**` and should stay thin adapters
+  around `createApiHandler`.
+- Server-only helpers must use `.server.ts` when they import Cloudflare runtime,
+  filesystem, Node builtins, generated artifact readers, or MCP server code.
+- `routeTree.gen.ts` is generated. Do not edit it by hand.

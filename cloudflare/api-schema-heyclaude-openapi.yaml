@@ -6685,7 +6685,704 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: {}
+                properties:
+                  schemaVersion:
+                    type: number
+                  kind:
+                    type: string
+                    enum:
+                      - jobs-index
+                  generatedAt:
+                    type: string
+                  count:
+                    type: integer
+                    minimum: 0
+                  total:
+                    type: integer
+                    minimum: 0
+                  totalAvailable:
+                    type: integer
+                    minimum: 0
+                  limit:
+                    type: integer
+                    minimum: 1
+                    maximum: 100
+                  offset:
+                    type: integer
+                    minimum: 0
+                  nextOffset:
+                    type:
+                      - integer
+                      - "null"
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                        title:
+                          type: string
+                        company:
+                          type: string
+                        companyUrl:
+                          type: string
+                          format: uri
+                        location:
+                          type: string
+                        description:
+                          type: string
+                        descriptionMd:
+                          type: string
+                        type:
+                          type: string
+                        postedAt:
+                          type: string
+                        compensation:
+                          type: string
+                        equity:
+                          type: string
+                        bonus:
+                          type: string
+                        benefits:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        responsibilities:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        requirements:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        featured:
+                          type: boolean
+                        sponsored:
+                          type: boolean
+                        applyUrl:
+                          type: string
+                        tier:
+                          type: string
+                          enum:
+                            - free
+                            - standard
+                            - featured
+                            - sponsored
+                        status:
+                          type: string
+                          enum:
+                            - draft
+                            - pending_review
+                            - active
+                            - stale_pending_review
+                            - closed
+                            - archived
+                        source:
+                          type: string
+                          enum:
+                            - manual
+                            - polar
+                            - email
+                            - curated
+                        sourceKind:
+                          type: string
+                          enum:
+                            - official_ats
+                            - employer_careers
+                            - employer_submitted
+                        sourceUrl:
+                          type: string
+                        firstSeenAt:
+                          type: string
+                        lastCheckedAt:
+                          type: string
+                        sourceCheckedAt:
+                          type: string
+                        curationNote:
+                          type: string
+                        claimedEmployer:
+                          type: boolean
+                        expiresAt:
+                          type: string
+                        isRemote:
+                          type: boolean
+                        isWorldwide:
+                          type: boolean
+                        webUrl:
+                          type: string
+                          format: uri
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        sourceLabel:
+                          type: string
+                        applySourceLabel:
+                          type: string
+                        lastVerifiedAt:
+                          type: string
+                      required:
+                        - slug
+                        - title
+                        - company
+                        - location
+                        - description
+                        - featured
+                        - applyUrl
+                        - webUrl
+                        - labels
+                        - sourceLabel
+                        - applySourceLabel
+                      additionalProperties: {}
+                    maxItems: 100
+                required:
+                  - schemaVersion
+                  - kind
+                  - generatedAt
+                  - count
+                  - total
+                  - totalAvailable
+                  - limit
+                  - offset
+                  - nextOffset
+                  - entries
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/jobs/{slug}:
+    get:
+      tags:
+        - Jobs
+      summary: Get one active reviewed job
+      description:
+        Returns one active D1-backed public job listing plus a small related set. Expired,
+        closed, stale, unreviewed, or source-unhealthy jobs return 404.
+      parameters:
+        - schema:
+            type: string
+            pattern: ^[a-z0-9-]+$
+          required: true
+          name: slug
+          in: path
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemaVersion:
+                    type: number
+                  kind:
+                    type: string
+                    enum:
+                      - jobs-detail
+                  slug:
+                    type: string
+                  generatedAt:
+                    type: string
+                  entry:
+                    type: object
+                    properties:
+                      slug:
+                        type: string
+                      title:
+                        type: string
+                      company:
+                        type: string
+                      companyUrl:
+                        type: string
+                        format: uri
+                      location:
+                        type: string
+                      description:
+                        type: string
+                      descriptionMd:
+                        type: string
+                      type:
+                        type: string
+                      postedAt:
+                        type: string
+                      compensation:
+                        type: string
+                      equity:
+                        type: string
+                      bonus:
+                        type: string
+                      benefits:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      responsibilities:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      requirements:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      featured:
+                        type: boolean
+                      sponsored:
+                        type: boolean
+                      applyUrl:
+                        type: string
+                      tier:
+                        type: string
+                        enum:
+                          - free
+                          - standard
+                          - featured
+                          - sponsored
+                      status:
+                        type: string
+                        enum:
+                          - draft
+                          - pending_review
+                          - active
+                          - stale_pending_review
+                          - closed
+                          - archived
+                      source:
+                        type: string
+                        enum:
+                          - manual
+                          - polar
+                          - email
+                          - curated
+                      sourceKind:
+                        type: string
+                        enum:
+                          - official_ats
+                          - employer_careers
+                          - employer_submitted
+                      sourceUrl:
+                        type: string
+                      firstSeenAt:
+                        type: string
+                      lastCheckedAt:
+                        type: string
+                      sourceCheckedAt:
+                        type: string
+                      curationNote:
+                        type: string
+                      claimedEmployer:
+                        type: boolean
+                      expiresAt:
+                        type: string
+                      isRemote:
+                        type: boolean
+                      isWorldwide:
+                        type: boolean
+                      webUrl:
+                        type: string
+                        format: uri
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      sourceLabel:
+                        type: string
+                      applySourceLabel:
+                        type: string
+                      lastVerifiedAt:
+                        type: string
+                    required:
+                      - slug
+                      - title
+                      - company
+                      - location
+                      - description
+                      - featured
+                      - applyUrl
+                      - webUrl
+                      - labels
+                      - sourceLabel
+                      - applySourceLabel
+                    additionalProperties: {}
+                  related:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                        title:
+                          type: string
+                        company:
+                          type: string
+                        companyUrl:
+                          type: string
+                          format: uri
+                        location:
+                          type: string
+                        description:
+                          type: string
+                        descriptionMd:
+                          type: string
+                        type:
+                          type: string
+                        postedAt:
+                          type: string
+                        compensation:
+                          type: string
+                        equity:
+                          type: string
+                        bonus:
+                          type: string
+                        benefits:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        responsibilities:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        requirements:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        featured:
+                          type: boolean
+                        sponsored:
+                          type: boolean
+                        applyUrl:
+                          type: string
+                        tier:
+                          type: string
+                          enum:
+                            - free
+                            - standard
+                            - featured
+                            - sponsored
+                        status:
+                          type: string
+                          enum:
+                            - draft
+                            - pending_review
+                            - active
+                            - stale_pending_review
+                            - closed
+                            - archived
+                        source:
+                          type: string
+                          enum:
+                            - manual
+                            - polar
+                            - email
+                            - curated
+                        sourceKind:
+                          type: string
+                          enum:
+                            - official_ats
+                            - employer_careers
+                            - employer_submitted
+                        sourceUrl:
+                          type: string
+                        firstSeenAt:
+                          type: string
+                        lastCheckedAt:
+                          type: string
+                        sourceCheckedAt:
+                          type: string
+                        curationNote:
+                          type: string
+                        claimedEmployer:
+                          type: boolean
+                        expiresAt:
+                          type: string
+                        isRemote:
+                          type: boolean
+                        isWorldwide:
+                          type: boolean
+                        webUrl:
+                          type: string
+                          format: uri
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        sourceLabel:
+                          type: string
+                        applySourceLabel:
+                          type: string
+                        lastVerifiedAt:
+                          type: string
+                      required:
+                        - slug
+                        - title
+                        - company
+                        - location
+                        - description
+                        - featured
+                        - applyUrl
+                        - webUrl
+                        - labels
+                        - sourceLabel
+                        - applySourceLabel
+                      additionalProperties: {}
+                    maxItems: 4
+                required:
+                  - schemaVersion
+                  - kind
+                  - slug
+                  - generatedAt
+                  - entry
+                  - related
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

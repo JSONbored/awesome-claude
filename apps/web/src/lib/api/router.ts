@@ -1,6 +1,6 @@
 import { ZodError, type z } from "zod";
 
-import { getCloudflareBinding } from "@/lib/cloudflare-env";
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 import {
   getApiRouteDefinition,
   type ApiRouteDefinition,

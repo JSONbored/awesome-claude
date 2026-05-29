@@ -1,4 +1,4 @@
-import { categorySpec } from "@heyclaude/registry";
+import { categorySpec } from "@heyclaude/registry/category-spec";
 
 type CategorySpecEntry = {
   label: string;

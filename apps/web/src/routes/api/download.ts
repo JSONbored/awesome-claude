@@ -1,11 +1,9 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 import { downloadQuerySchema } from "@/lib/api/contracts";
 import { apiError, createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
-import { getCloudflareBinding } from "@/lib/cloudflare-env";
+import { readDownloadAsset } from "@/lib/download-assets.server";
 
 function isAllowedAssetPath(asset: string) {
   const normalized = String(asset || "").trim();
@@ -21,24 +19,8 @@ function getContentType(asset: string) {
   return "application/octet-stream";
 }
 
-async function readAssetBuffer(asset: string, requestUrl: string) {
-  try {
-    const relativeAssetPath = asset.replace(/^\/+/, "");
-    const filePath = path.join(process.cwd(), "public", relativeAssetPath);
-    return await readFile(filePath);
-  } catch {
-    const assets = getCloudflareBinding<{
-      fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
-    }>("ASSETS");
-    if (!assets) {
-      throw new Error("asset_not_found:no_assets_binding");
-    }
-    const response = await assets.fetch(new Request(new URL(asset, requestUrl)));
-    if (!response.ok) {
-      throw new Error(`asset_not_found:${response.status}`);
-    }
-    return Buffer.from(await response.arrayBuffer());
-  }
+function filenameFromAsset(asset: string) {
+  return asset.split("/").filter(Boolean).at(-1) || "download";
 }
 
 export const GET = createApiHandler("download", async ({ request, query, requestId }) => {
@@ -54,10 +36,10 @@ export const GET = createApiHandler("download", async ({ request, query, request
     return apiError("invalid_asset", 400, { requestId });
   }
 
-  const filename = path.basename(asset);
+  const filename = filenameFromAsset(asset);
 
   try {
-    const body = await readAssetBuffer(asset, request.url);
+    const body = await readDownloadAsset(asset, request.url);
     if (sample(0.02)) {
       logApiInfo(request, "download.sample", { asset });
     }

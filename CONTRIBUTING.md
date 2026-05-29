@@ -70,12 +70,9 @@ corepack prepare pnpm@11.1.3 --activate
 pnpm install --frozen-lockfile
 ```
 
-For browser validation, install Playwright Chromium when needed:
-
-```sh
-pnpm exec playwright install --with-deps chromium
-pnpm test:e2e
-```
+Normal PR validation does not require Playwright. For user-facing page changes,
+include desktop and mobile screenshots or a clear `No visual impact` note in the
+PR, then run the focused checks listed below.
 
 CI remains the source of truth for merge readiness.
 

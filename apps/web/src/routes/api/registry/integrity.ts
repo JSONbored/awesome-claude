@@ -1,7 +1,7 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { createApiHandler } from "@/lib/api/router";
-import { getRegistryManifest } from "@/lib/content";
+import { getRegistryManifest } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 
 type Contract = { path: string; type: string; sha256: string };

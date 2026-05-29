@@ -1,7 +1,7 @@
 import type { ContentEntry } from "@heyclaude/registry";
 import { buildSkillPlatformCompatibility, platformFeedSlug } from "@heyclaude/registry/artifacts";
 
-import { getAllEntries } from "@/lib/content";
+import { getAllEntries } from "@/lib/content.server";
 
 export type PlatformPageDefinition = {
   slug: string;

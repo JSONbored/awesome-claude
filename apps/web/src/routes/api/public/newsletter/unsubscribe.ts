@@ -18,7 +18,7 @@ import {
   readRequestTextWithinLimit,
 } from "@/lib/api-security";
 import { logApiError, logApiWarn, redactEmail } from "@/lib/api-logs";
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 
 const BODY_LIMIT_BYTES = 8 * 1024;
 const RATE_LIMIT = {

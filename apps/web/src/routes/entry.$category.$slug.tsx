@@ -56,7 +56,7 @@ import { cn } from "@/lib/utils";
 const loadFullEntry = createServerFn({ method: "GET" })
   .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
   .handler(async ({ data }) => {
-    const { getEntry } = await import("@/lib/content");
+    const { getEntry } = await import("@/lib/content.server");
     const { renderMarkdown } = await import("@/lib/detail-assembly");
     const { buildEntry } = await import("@/data/entry-normalize");
     const entry = await getEntry(data.category, data.slug);
@@ -557,7 +557,11 @@ function hasSchemaDetails(entry: Entry) {
     entry.applicationCategory ||
     entry.operatingSystem ||
     entry.repoStats ||
-    entry.copySnippet,
+    entry.downloadUrl ||
+    entry.packageVerified !== undefined ||
+    entry.downloadSha256 ||
+    entry.copySnippet ||
+    entry.fullCopy,
   );
 }
 
@@ -597,6 +601,16 @@ function SchemaDetails({ entry }: { entry: Entry }) {
                 }
               />
               <FieldRow label="Updated" value={entry.repoStats.updatedAt} />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        {(entry.downloadUrl || entry.packageVerified !== undefined || entry.downloadSha256) && (
+          <MetadataGroup title="Package metadata" icon={Package}>
+            <FieldGrid>
+              <FieldRow label="Download URL" value={entry.downloadUrl} href={entry.downloadUrl} />
+              <FieldRow label="Package verified" value={booleanLabel(entry.packageVerified)} />
+              <FieldRow label="SHA-256" value={entry.downloadSha256} mono />
             </FieldGrid>
           </MetadataGroup>
         )}
@@ -677,7 +691,7 @@ function SchemaDetails({ entry }: { entry: Entry }) {
               <FieldRow label="Estimated setup" value={entry.estimatedSetupTime} />
               <FieldRow label="Difficulty" value={entry.difficulty} />
             </FieldGrid>
-            <PillList label="Included entries" values={entry.items} />
+            <CollectionItemList values={entry.items} />
             <PillList label="Installation order" values={entry.installationOrder} />
           </MetadataGroup>
         )}
@@ -698,7 +712,7 @@ function SchemaDetails({ entry }: { entry: Entry }) {
           </MetadataGroup>
         )}
 
-        <CodeDisclosure label="Full copyable content" value={entry.copySnippet} />
+        <CodeDisclosure label="Full copyable content" value={entry.fullCopy ?? entry.copySnippet} />
       </div>
     </DossierSection>
   );
@@ -775,6 +789,42 @@ function PillList({ label, values }: { label: string; values?: string[] }) {
             {value}
           </span>
         ))}
+      </div>
+    </div>
+  );
+}
+
+function CollectionItemList({ values }: { values?: string[] }) {
+  if (!values?.length) return null;
+  return (
+    <div className="mt-3">
+      <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">
+        Included entries
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((value) => {
+          const [category, slug] = value.split("/");
+          if (category && slug) {
+            return (
+              <Link
+                key={value}
+                to="/entry/$category/$slug"
+                params={{ category, slug }}
+                className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted hover:text-ink"
+              >
+                {value}
+              </Link>
+            );
+          }
+          return (
+            <span
+              key={value}
+              className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted"
+            >
+              {value}
+            </span>
+          );
+        })}
       </div>
     </div>
   );

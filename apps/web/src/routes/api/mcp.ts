@@ -1,6 +1,4 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
-import { createHeyClaudeMcpServer } from "@heyclaude/mcp/server";
-import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 
 import { getApiRouteDefinition } from "@/lib/api/contracts";
 import { apiError, enforceApiRateLimit, getApiRequestId } from "@/lib/api/router";
@@ -11,8 +9,8 @@ import {
   readRequestTextWithinLimit,
 } from "@/lib/api-security";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
-import { getCloudflareBinding } from "@/lib/cloudflare-env";
-import { loadJsonDataFile, loadTextDataFile } from "@/lib/content";
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
+import { loadJsonDataFile, loadTextDataFile } from "@/lib/content.server";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const route = getApiRouteDefinition("mcp.streamable");
@@ -149,6 +147,11 @@ async function handleMcpRequest(request: Request) {
       url.origin,
       getCloudflareBinding<StaticAssetsBinding>("ASSETS"),
     );
+    const [{ createHeyClaudeMcpServer }, { WebStandardStreamableHTTPServerTransport }] =
+      await Promise.all([
+        import("@heyclaude/mcp/server"),
+        import("@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js"),
+      ]);
     const transport = new WebStandardStreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
       enableJsonResponse: true,

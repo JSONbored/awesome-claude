@@ -1,4 +1,4 @@
-import { listApiRouteDefinitions } from "@/lib/api/contracts";
+import { listApiRouteDefinitions, type ApiRouteId } from "@/lib/api/contracts";
 
 export interface OpenApiParam {
   name: string;
@@ -23,6 +23,7 @@ export interface OpenApiEndpoint {
   sampleResponse: unknown;
   curlExtra?: string;
   liveRequest?: boolean;
+  clientExamples?: Array<{ label: string; code: string }>;
 }
 
 const TAG_BLURBS: Record<string, string> = {
@@ -193,98 +194,295 @@ function canTryLive(definition: ReturnType<typeof listApiRouteDefinitions>[numbe
   return true;
 }
 
-function bodyExample(id: string) {
-  if (id === "submissions.create" || id === "submissions.preflight") {
-    return JSON.stringify(
+const BODY_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
+  "mcp.streamable": { jsonrpc: "2.0", id: 1, method: "tools/list", params: {} },
+  "votes.query": { keys: ["mcp:github-mcp-server"], clientId: "anon-client-1234" },
+  "votes.toggle": { key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true },
+  "newsletter.subscribe": { email: "reader@example.com", source: "api-docs" },
+  "newsletter.webhook": { type: "contact.created", data: { email: "reader@example.com" } },
+  "submissions.create": {
+    fields: {
+      name: "Example MCP Server",
+      slug: "example-mcp-server",
+      category: "mcp",
+      github_url: "https://github.com/example/example-mcp",
+      description: "A source-backed MCP server for a specific workflow.",
+      card_description: "Source-backed MCP server.",
+      install_command: "npx -y @example/mcp",
+      usage_snippet: "Add the server to your Claude config.",
+      safety_notes: "Runs a local MCP server process.",
+      privacy_notes: "May send configured tool inputs to the upstream service.",
+    },
+  },
+  "submissions.preflight": {
+    fields: {
+      name: "Example MCP Server",
+      slug: "example-mcp-server",
+      category: "mcp",
+      github_url: "https://github.com/example/example-mcp",
+      description: "A source-backed MCP server for a specific workflow.",
+    },
+  },
+  "listingLeads.create": {
+    kind: "claim",
+    tierInterest: "free",
+    contactName: "Maintainer",
+    contactEmail: "maintainer@example.com",
+    companyName: "Example",
+    listingTitle: "Example MCP Server",
+    websiteUrl: "https://example.com",
+    message: "Claim proof and context.",
+  },
+  "adminListingLeads.update": { id: "lead_123", status: "pending_review" },
+  "adminJobs.upsert": {
+    slug: "example-ai-platform-engineer",
+    title: "AI Platform Engineer",
+    companyName: "Example Co",
+    locationText: "Remote",
+    applyUrl: "https://example.com/jobs/ai-platform-engineer",
+    status: "pending_review",
+    sourceKind: "employer_careers",
+  },
+  "adminJobs.update": { id: "job_123", status: "stale_pending_review" },
+  "intentEvents.create": {
+    targetKey: "mcp:github-mcp-server",
+    eventName: "install_copy",
+    source: "entry-detail",
+  },
+  "communitySignals.write": {
+    targetKey: "mcp:github-mcp-server",
+    signal: "used",
+    clientId: "anon-client-1234",
+  },
+  "communitySignals.query": { targetKeys: ["mcp:github-mcp-server"] },
+};
+
+const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
+  "registry.manifest": {
+    schemaVersion: 2,
+    generatedAt: "2026-05-29T00:00:00.000Z",
+    artifacts: { "directory-index.json": { sha256: "64-char-sha256", bytes: 12345 } },
+  },
+  "registry.categories": {
+    schemaVersion: 1,
+    count: 1,
+    entries: [{ id: "mcp", label: "MCP servers", count: 42 }],
+  },
+  "registry.search": {
+    schemaVersion: 1,
+    query: "mcp",
+    category: "",
+    platform: "",
+    count: 1,
+    total: 1,
+    limit: 20,
+    offset: 0,
+    nextOffset: null,
+    results: [{ category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" }],
+    facets: {
+      categories: { mcp: 1 },
+      platforms: {},
+      hasSafetyNotes: {},
+      hasPrivacyNotes: {},
+      downloadTrust: {},
+      claimStatus: {},
+      sourceStatus: {},
+    },
+  },
+  "registry.feed": {
+    schemaVersion: 1,
+    kind: "registry-feed",
+    categoryFeeds: { mcp: "/data/feeds/categories/mcp.json" },
+    platformFeeds: { claude: "/data/feeds/platforms/claude.json" },
+    jobs: "/api/jobs?limit=100",
+  },
+  "registry.trending": {
+    schemaVersion: 1,
+    kind: "registry-trending",
+    category: "",
+    platform: "",
+    limit: 3,
+    count: 1,
+    signalsAvailable: { votes: true, community: true, intent: true },
+    entries: [
       {
-        fields: {
-          name: "Example MCP Server",
-          slug: "example-mcp-server",
-          category: "mcp",
-          github_url: "https://github.com/example/example-mcp",
-          description: "A source-backed MCP server for a specific workflow.",
-          card_description: "Source-backed MCP server.",
-          install_command: "npx -y @example/mcp",
-          usage_snippet: "Add the server to your Claude config.",
-          safety_notes: "Runs a local MCP server process.",
-          privacy_notes: "May send configured tool inputs to the upstream service.",
-        },
+        category: "mcp",
+        slug: "github-mcp-server",
+        title: "GitHub MCP Server",
+        score: 12,
+        reasons: ["recent usage signals"],
+        platforms: ["claude-code"],
+        tags: ["github"],
+        dateAdded: "2026-05-01",
+        trustSignals: { sourceStatus: "available" },
       },
-      null,
-      2,
-    );
-  }
-  if (id === "listingLeads.create") {
-    return JSON.stringify(
+    ],
+  },
+  "registry.diff": {
+    schemaVersion: 1,
+    count: 1,
+    entries: [
+      { key: "mcp/github-mcp-server", type: "updated", category: "mcp", slug: "github-mcp-server" },
+    ],
+  },
+  "registry.integrity": {
+    status: "snapshot",
+    artifact: null,
+    generatedAt: "2026-05-29T00:00:00.000Z",
+  },
+  "registry.entry": {
+    schemaVersion: 1,
+    key: "mcp:github-mcp-server",
+    entry: { category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" },
+  },
+  "registry.entryLlms": "# GitHub MCP Server\n\nMachine-readable entry text.",
+  "mcp.streamable": { jsonrpc: "2.0", id: 1, result: { tools: [{ name: "search_registry" }] } },
+  "brandAsset.read": "Binary image response.",
+  "votes.query": {
+    ok: true,
+    votes: { "mcp:github-mcp-server": true },
+    counts: { "mcp:github-mcp-server": 12 },
+  },
+  "votes.toggle": { ok: true, key: "mcp:github-mcp-server", voted: true, count: 12 },
+  "newsletter.subscribe": { ok: true, subscribed: true },
+  "newsletter.webhook": { ok: true, accepted: true },
+  "submissions.create": {
+    ok: true,
+    issueUrl: "https://github.com/JSONbored/awesome-claude/issues/123",
+    issueNumber: 123,
+  },
+  "submissions.preflight": {
+    ok: true,
+    valid: true,
+    routeSuggestion: "github_issue",
+    blockers: [],
+    warnings: [],
+  },
+  "submissions.queue": {
+    ok: true,
+    generatedAt: "2026-05-29T00:00:00.000Z",
+    repo: "JSONbored/awesome-claude",
+    count: 1,
+    entries: [
       {
-        kind: "claim",
-        tierInterest: "free",
-        contactName: "Maintainer",
-        contactEmail: "maintainer@example.com",
-        companyName: "Example",
-        listingTitle: "Example MCP Server",
-        websiteUrl: "https://example.com",
-        message: "Claim proof and context.",
+        number: 123,
+        url: "https://github.com/JSONbored/awesome-claude/issues/123",
+        title: "Submit MCP Server: Example",
+        author: "contributor",
+        category: "mcp",
+        slug: "example",
+        status: "in_review",
+        state: "open",
+        labels: ["content-submission", "needs-review"],
+        blockers: [],
+        updatedAt: "2026-05-29T00:00:00Z",
+        createdAt: "2026-05-29T00:00:00Z",
       },
-      null,
-      2,
-    );
-  }
-  if (id === "newsletter.subscribe") {
-    return JSON.stringify({ email: "reader@example.com", source: "api-docs" }, null, 2);
-  }
-  if (id === "votes.toggle") {
-    return JSON.stringify(
-      { key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true },
-      null,
-      2,
-    );
-  }
-  if (id === "mcp") {
-    return JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }, null, 2);
-  }
-  return JSON.stringify({}, null, 2);
+    ],
+  },
+  download: "Binary package response.",
+  "listingLeads.create": { ok: true, id: "lead_123", status: "new" },
+  "jobs.list": {
+    schemaVersion: 1,
+    kind: "jobs-index",
+    generatedAt: "2026-05-29T00:00:00.000Z",
+    count: 1,
+    total: 1,
+    totalAvailable: 1,
+    limit: 10,
+    offset: 0,
+    nextOffset: null,
+    entries: [
+      {
+        slug: "example-ai-platform-engineer",
+        title: "AI Platform Engineer",
+        company: "Example Co",
+        location: "Remote",
+        description: "Build source-backed AI workflow infrastructure.",
+        featured: false,
+        applyUrl: "https://example.com/jobs/ai-platform-engineer",
+        webUrl: "https://heyclau.de/jobs/example-ai-platform-engineer",
+        labels: ["Remote"],
+        sourceLabel: "Employer careers page",
+        applySourceLabel: "External apply via employer site",
+      },
+    ],
+  },
+  "jobs.detail": {
+    schemaVersion: 1,
+    kind: "jobs-detail",
+    slug: "example-ai-platform-engineer",
+    generatedAt: "2026-05-29T00:00:00.000Z",
+    entry: {
+      slug: "example-ai-platform-engineer",
+      title: "AI Platform Engineer",
+      company: "Example Co",
+      location: "Remote",
+      description: "Build source-backed AI workflow infrastructure.",
+      featured: false,
+      applyUrl: "https://example.com/jobs/ai-platform-engineer",
+      webUrl: "https://heyclau.de/jobs/example-ai-platform-engineer",
+      labels: ["Remote"],
+      sourceLabel: "Employer careers page",
+      applySourceLabel: "External apply via employer site",
+    },
+    related: [],
+  },
+  "adminListingLeads.list": { ok: true, entries: [] },
+  "adminListingLeads.update": { ok: true, status: "pending_review" },
+  "adminJobs.list": { ok: true, entries: [] },
+  "adminJobs.upsert": { ok: true, slug: "example-ai-platform-engineer" },
+  "adminJobs.update": {
+    ok: true,
+    slug: "example-ai-platform-engineer",
+    status: "stale_pending_review",
+  },
+  "adminJobs.health": { ok: true, requiredColumnsPresent: true, statusCounts: [] },
+  "intentEvents.create": { ok: true, accepted: true },
+  "communitySignals.read": { ok: true, target: "mcp:github-mcp-server", signals: {} },
+  "communitySignals.write": { ok: true, accepted: true },
+  "communitySignals.query": { ok: true, signals: {} },
+  "githubStats.read": { ok: true, repo: "jsonbored/awesome-claude", stars: 123 },
+  "publicAlerts.read": { ok: true, events: [] },
+  "publicFeeds.health": { ok: true, feeds: [] },
+  "static.rss": "RSS XML response.",
+  "static.atom": "Atom XML response.",
+  "static.feedIndex": { schemaVersion: 1, feeds: [] },
+  "static.categoryFeed": { schemaVersion: 1, category: "skills", entries: [] },
+  "static.platformFeed": { schemaVersion: 1, platform: "claude", entries: [] },
+  "og.render": "PNG image response.",
+};
+
+const CLIENT_EXAMPLES: Partial<Record<ApiRouteId, Array<{ label: string; code: string }>>> = {
+  "registry.search": [
+    { label: "Raycast", code: "raycast://extensions/jsonbored/heyclaude/search" },
+    { label: "MCP", code: "Use the search_registry tool from the HeyClaude MCP server." },
+  ],
+  "jobs.list": [
+    { label: "Raycast", code: "raycast://extensions/jsonbored/heyclaude/jobs" },
+    { label: "MCP resource", code: "heyclaude://jobs/active" },
+  ],
+  "mcp.streamable": [
+    { label: "Streamable HTTP endpoint", code: "https://heyclau.de/api/mcp" },
+    { label: "First tool to call", code: "tools/list, then search_registry or get_entry_detail" },
+  ],
+};
+
+function bodyExample(id: ApiRouteId) {
+  return JSON.stringify(
+    BODY_EXAMPLES[id] ?? { schema: id, note: "See request schema above." },
+    null,
+    2,
+  );
 }
 
-function sampleResponse(id: string) {
-  if (id === "submissions.queue") {
-    return {
-      ok: true,
-      generatedAt: "2026-05-28T00:00:00.000Z",
-      repo: "JSONbored/awesome-claude",
-      count: 1,
-      entries: [
-        {
-          number: 123,
-          url: "https://github.com/JSONbored/awesome-claude/issues/123",
-          title: "Submit MCP Server: Example",
-          author: "contributor",
-          category: "mcp",
-          slug: "example",
-          status: "in_review",
-          state: "open",
-          labels: ["content-submission", "needs-review", "community-mcp"],
-          blockers: [],
-          updatedAt: "2026-05-28T00:00:00Z",
-          createdAt: "2026-05-28T00:00:00Z",
-        },
-      ],
-    };
-  }
-  if (id.includes("registry.search")) {
-    return {
-      results: [{ category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" }],
-      facets: {},
-      pagination: { limit: 20, offset: 0, total: 1 },
-    };
-  }
-  if (id.includes("registry.manifest")) {
-    return { generatedAt: "2026-05-28T00:00:00Z", artifacts: [] };
-  }
-  if (id === "listingLeads.create" || id === "newsletter.subscribe") {
-    return { ok: true };
-  }
-  return { ok: true };
+function sampleResponse(definition: ReturnType<typeof listApiRouteDefinitions>[number]) {
+  return (
+    RESPONSE_EXAMPLES[definition.id as ApiRouteId] ?? {
+      schema: definition.responseSchemaName ?? "application/json",
+      note: `Response shape is documented by the OpenAPI schema for ${definition.id}.`,
+    }
+  );
 }
 
 function endpointId(id: string) {
@@ -292,14 +490,15 @@ function endpointId(id: string) {
 }
 
 export const ENDPOINTS: OpenApiEndpoint[] = listApiRouteDefinitions().map((definition) => {
+  const routeId = definition.id as ApiRouteId;
   const tag = definition.tags[0] ?? "Registry";
   const body = definition.bodySchema
     ? {
         contentType: "application/json",
-        example: bodyExample(definition.id),
+        example: bodyExample(routeId),
       }
     : undefined;
-  const sample = sampleResponse(definition.id);
+  const sample = sampleResponse(definition);
   return {
     id: endpointId(definition.id),
     method: definition.method,
@@ -312,6 +511,7 @@ export const ENDPOINTS: OpenApiEndpoint[] = listApiRouteDefinitions().map((defin
     responseExample: JSON.stringify(sample, null, 2),
     sampleResponse: sample,
     liveRequest: canTryLive(definition),
+    clientExamples: CLIENT_EXAMPLES[routeId],
   };
 });
 

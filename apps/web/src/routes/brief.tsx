@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar } from "lucide-react";
-import { BRIEF_ISSUES } from "@/data/entries";
+import { BRIEF_ISSUES, WEEKLY_BRIEF } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 
@@ -56,6 +56,17 @@ function BriefPage() {
                   <p className="mt-2 text-pretty text-sm text-ink-muted drop-cap">
                     {latest.summary}
                   </p>
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <BriefMetric label="New entries" value={WEEKLY_BRIEF.newEntries.length} />
+                    <BriefMetric
+                      label="Trusted installs"
+                      value={WEEKLY_BRIEF.trustedInstalls.length}
+                    />
+                    <BriefMetric
+                      label="Source-backed picks"
+                      value={WEEKLY_BRIEF.sourceBackedPicks.length}
+                    />
+                  </div>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {latest.tags.map((t) => (
                       <span
@@ -70,6 +81,12 @@ function BriefPage() {
               </div>
             </article>
           )}
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <BriefList title="New in the registry" items={WEEKLY_BRIEF.newEntries} />
+            <BriefList title="Trusted installs" items={WEEKLY_BRIEF.trustedInstalls} />
+            <BriefList title="Source-backed picks" items={WEEKLY_BRIEF.sourceBackedPicks} />
+          </div>
 
           <div className="mt-12 flex items-end justify-between border-b border-border pb-3">
             <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Archive</h2>
@@ -126,5 +143,41 @@ function BriefPage() {
         </aside>
       </div>
     </div>
+  );
+}
+
+function BriefMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <div className="font-mono text-lg font-semibold tabular-nums text-ink">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</div>
+    </div>
+  );
+}
+
+function BriefList({
+  title,
+  items,
+}: {
+  title: string;
+  items: Array<{ ref: string; title: string; reason?: string; date?: string }>;
+}) {
+  return (
+    <section className="rounded-xl border border-border bg-surface p-4">
+      <h2 className="font-display text-base font-semibold text-ink">{title}</h2>
+      <ul className="mt-3 space-y-3 text-sm">
+        {items.map((item) => (
+          <li key={item.ref}>
+            <a href={`/entry/${item.ref}`} className="font-medium text-ink hover:underline">
+              {item.title}
+            </a>
+            <div className="mt-0.5 font-mono text-[11px] text-ink-subtle">{item.ref}</div>
+            {(item.reason || item.date) && (
+              <p className="mt-1 text-xs text-ink-muted">{item.reason ?? item.date}</p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }

@@ -2,7 +2,7 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { registryDiffQuerySchema } from "@/lib/api/contracts";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
-import { getRegistryChangelog } from "@/lib/content";
+import { getRegistryChangelog } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 
 type ChangelogEntry = Awaited<ReturnType<typeof getRegistryChangelog>>["entries"][number];

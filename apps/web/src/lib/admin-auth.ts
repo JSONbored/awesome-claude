@@ -1,4 +1,4 @@
-import { getCloudflareEnv, getEnvString } from "@/lib/cloudflare-env";
+import { getCloudflareEnv, getEnvString } from "@/lib/cloudflare-env.server";
 
 const ADMIN_TOKEN_NAMES = [
   "ADMIN_API_TOKEN",

@@ -5,7 +5,7 @@ const searchIndexMock = vi.hoisted(() => ({
   entries: [] as SearchDocument[],
 }));
 
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getSearchIndex: () => Promise.resolve(searchIndexMock.entries),
 }));
 

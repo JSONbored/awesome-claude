@@ -1,7 +1,7 @@
 import { marked } from "marked";
 import sanitizeHtml from "sanitize-html";
 
-import type { ContentEntry, DirectoryEntry } from "@/lib/content";
+import type { ContentEntry, DirectoryEntry } from "@/lib/content.server";
 
 export function stripCodeBlocks(markdown: string) {
   const lines = String(markdown || "").split("\n");
@@ -31,9 +31,7 @@ export function stripCodeBlocks(markdown: string) {
 
 export async function renderMarkdown(markdown: string) {
   const output = await marked.parse(markdown);
-  return sanitizeRenderedHtml(
-    typeof output === "string" ? output : String(output),
-  );
+  return sanitizeRenderedHtml(typeof output === "string" ? output : String(output));
 }
 
 function escapeHtml(value: string) {
@@ -151,24 +149,13 @@ export function getPrimarySnippet(entry: ContentEntry) {
             ? "Command syntax"
             : "Usage",
         code:
-          entry.installCommand ||
-          entry.commandSyntax ||
-          entry.copySnippet ||
-          entry.usageSnippet,
+          entry.installCommand || entry.commandSyntax || entry.copySnippet || entry.usageSnippet,
         language: entry.scriptLanguage || "text",
       };
     case "statuslines":
       return {
-        title: entry.configSnippet
-          ? "Claude config"
-          : entry.scriptBody
-            ? "Source asset"
-            : "Usage",
-        code:
-          entry.configSnippet ||
-          entry.scriptBody ||
-          entry.copySnippet ||
-          entry.usageSnippet,
+        title: entry.configSnippet ? "Claude config" : entry.scriptBody ? "Source asset" : "Usage",
+        code: entry.configSnippet || entry.scriptBody || entry.copySnippet || entry.usageSnippet,
         language: entry.configSnippet ? "json" : entry.scriptLanguage || "text",
       };
     case "collections":
@@ -258,14 +245,9 @@ function hashString(value: string) {
   return Math.abs(hash);
 }
 
-export function getRelatedEntries(
-  entry: ContentEntry,
-  allEntries: DirectoryEntry[],
-) {
+export function getRelatedEntries(entry: ContentEntry, allEntries: DirectoryEntry[]) {
   const relatedPool = allEntries.filter((item) => item.slug !== entry.slug);
-  const entryTagSet = new Set(
-    (entry.tags ?? []).map((tag) => tag.toLowerCase()),
-  );
+  const entryTagSet = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
   const anchorHash = hashString(`${entry.category}:${entry.slug}`);
 
   return relatedPool
@@ -277,9 +259,7 @@ export function getRelatedEntries(
       const hasDocs = item.documentationUrl ? 1 : 0;
       const hasInstall = item.installCommand ? 1 : 0;
       const dateScore = item.dateAdded ? new Date(item.dateAdded).getTime() : 0;
-      const closeness = Math.abs(
-        hashString(`${item.category}:${item.slug}`) - anchorHash,
-      );
+      const closeness = Math.abs(hashString(`${item.category}:${item.slug}`) - anchorHash);
 
       return {
         item,
@@ -290,31 +270,33 @@ export function getRelatedEntries(
     })
     .sort((left, right) => {
       if (right.score !== left.score) return right.score - left.score;
-      if (right.dateScore !== left.dateScore)
-        return right.dateScore - left.dateScore;
+      if (right.dateScore !== left.dateScore) return right.dateScore - left.dateScore;
       return left.closeness - right.closeness;
     })
     .slice(0, 2)
     .map((item) => item.item);
 }
 
-export function getCollectionItems(
-  entry: ContentEntry,
-  allEntries: DirectoryEntry[],
-) {
-  if (entry.category !== "collections" || !Array.isArray(entry.items))
-    return [];
+export function getCollectionItems(entry: ContentEntry, allEntries: DirectoryEntry[]) {
+  if (entry.category !== "collections" || !Array.isArray(entry.items)) return [];
 
   return entry.items
-    .map((item) => ({
-      ...item,
-      target:
-        allEntries.find(
-          (candidate) =>
-            candidate.category === item.category &&
-            candidate.slug === item.slug,
-        ) ?? null,
-    }))
+    .map((item) => {
+      const ref =
+        typeof item === "string"
+          ? item
+          : `${String(item.category || "")}/${String(item.slug || "")}`;
+      const [category, slug] = ref.split("/");
+      return {
+        category,
+        slug,
+        ref,
+        target:
+          allEntries.find(
+            (candidate) => candidate.category === category && candidate.slug === slug,
+          ) ?? null,
+      };
+    })
     .filter((item) => item.target);
 }
 
@@ -323,15 +305,9 @@ export function getTopFacts(entry: ContentEntry) {
     entry.author ? { label: "Author", value: entry.author } : null,
     entry.dateAdded ? { label: "Added", value: entry.dateAdded } : null,
     entry.trigger ? { label: "Trigger", value: entry.trigger } : null,
-    entry.argumentHint
-      ? { label: "Arguments", value: entry.argumentHint }
-      : null,
-    entry.scriptLanguage
-      ? { label: "Format", value: entry.scriptLanguage }
-      : null,
-    entry.estimatedSetupTime
-      ? { label: "Setup time", value: entry.estimatedSetupTime }
-      : null,
+    entry.argumentHint ? { label: "Arguments", value: entry.argumentHint } : null,
+    entry.scriptLanguage ? { label: "Format", value: entry.scriptLanguage } : null,
+    entry.estimatedSetupTime ? { label: "Setup time", value: entry.estimatedSetupTime } : null,
     entry.difficulty ? { label: "Difficulty", value: entry.difficulty } : null,
     entry.category === "skills" && entry.skillType
       ? { label: "Skill type", value: entry.skillType }
@@ -347,9 +323,7 @@ export function getTopFacts(entry: ContentEntry) {
       : null,
   ];
 
-  return facts.filter((fact): fact is { label: string; value: string } =>
-    Boolean(fact),
-  );
+  return facts.filter((fact): fact is { label: string; value: string } => Boolean(fact));
 }
 
 export function getSourceSignals(entry: ContentEntry) {
@@ -363,18 +337,12 @@ export function getSourceSignals(entry: ContentEntry) {
               : "External package, review before use",
         }
       : null,
-    entry.verificationStatus
-      ? { label: "Verification", value: entry.verificationStatus }
-      : null,
-    entry.verifiedAt
-      ? { label: "Last verified", value: entry.verifiedAt }
-      : null,
+    entry.verificationStatus ? { label: "Verification", value: entry.verificationStatus } : null,
+    entry.verifiedAt ? { label: "Last verified", value: entry.verifiedAt } : null,
     entry.contentUpdatedAt
       ? { label: "Content updated", value: entry.contentUpdatedAt.slice(0, 10) }
       : null,
-    entry.downloadSha256
-      ? { label: "Package checksum", value: entry.downloadSha256 }
-      : null,
+    entry.downloadSha256 ? { label: "Package checksum", value: entry.downloadSha256 } : null,
     entry.submissionIssueUrl
       ? { label: "Submission issue", value: entry.submissionIssueUrl }
       : null,
@@ -387,9 +355,7 @@ export function getSourceSignals(entry: ContentEntry) {
             : entry.reviewedBy,
         }
       : null,
-    entry.claimStatus
-      ? { label: "Claim status", value: entry.claimStatus }
-      : null,
+    entry.claimStatus ? { label: "Claim status", value: entry.claimStatus } : null,
     entry.claimedBy
       ? {
           label: "Claimed by",
@@ -397,15 +363,9 @@ export function getSourceSignals(entry: ContentEntry) {
         }
       : null,
     entry.repoUrl ? { label: "Repository", value: entry.repoUrl } : null,
-    entry.documentationUrl
-      ? { label: "Documentation", value: entry.documentationUrl }
-      : null,
-    entry.githubUrl
-      ? { label: "Content source", value: entry.githubUrl }
-      : null,
+    entry.documentationUrl ? { label: "Documentation", value: entry.documentationUrl } : null,
+    entry.githubUrl ? { label: "Content source", value: entry.githubUrl } : null,
   ];
 
-  return signals.filter((signal): signal is { label: string; value: string } =>
-    Boolean(signal),
-  );
+  return signals.filter((signal): signal is { label: string; value: string } => Boolean(signal));
 }

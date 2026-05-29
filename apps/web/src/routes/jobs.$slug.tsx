@@ -6,7 +6,6 @@ import { ArrowUpRight, MapPin, BadgeCheck, ArrowLeft } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { companyTint, monogram, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { CopyButton } from "@/components/copy-button";
-import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { JobListing, JobTier } from "@/types/registry";
 
@@ -133,51 +132,16 @@ function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown
 
 function JobDetail() {
   const { slug, job: initialJob, related } = Route.useLoaderData();
-  const [job, setJob] = useState<JobListing | null>(initialJob);
-  const [jobs, setJobs] = useState<JobListing[]>(initialJob ? [initialJob, ...related] : related);
-  const [loaded, setLoaded] = useState(Boolean(initialJob));
-
-  useEffect(() => {
-    let cancelled = false;
-    async function loadJobs() {
-      try {
-        const response = await fetch("/api/jobs?limit=100", {
-          headers: { accept: "application/json" },
-        });
-        if (!response.ok) throw new Error(`jobs API returned ${response.status}`);
-        const payload = (await response.json()) as {
-          entries?: Array<Partial<JobListing> & Record<string, unknown>>;
-        };
-        if (!cancelled) {
-          const normalized = (payload.entries ?? [])
-            .map(normalizeJobListing)
-            .filter((item) => item.slug);
-          setJobs(normalized);
-          setJob(normalized.find((item) => item.slug === slug) ?? null);
-        }
-      } catch {
-        if (!cancelled) setJobs([]);
-      } finally {
-        if (!cancelled) setLoaded(true);
-      }
-    }
-    void loadJobs();
-    return () => {
-      cancelled = true;
-    };
-  }, [slug]);
+  const job = initialJob;
+  const jobs = initialJob ? [initialJob, ...related] : related;
 
   if (!job) {
     return (
       <div className="mx-auto max-w-xl px-4 py-16 text-center">
-        <div className="eyebrow">{loaded ? "404" : "Jobs"}</div>
-        <h1 className="mt-2 font-display text-3xl text-ink">
-          {loaded ? "Role not found" : "Loading role"}
-        </h1>
+        <div className="eyebrow">404</div>
+        <h1 className="mt-2 font-display text-3xl text-ink">Role not found</h1>
         <p className="mt-2 text-sm text-ink-muted">
-          {loaded
-            ? `We couldn't find an active role matching ${slug}. It may have been filled or removed.`
-            : "Checking the active jobs index."}
+          We couldn't find an active role matching {slug}. It may have been filled or removed.
         </p>
         <Link
           to="/jobs"

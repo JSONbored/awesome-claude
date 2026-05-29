@@ -1,7 +1,7 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { createApiHandler } from "@/lib/api/router";
-import { getCategorySummaries, getRegistryManifest } from "@/lib/content";
+import { getCategorySummaries, getRegistryManifest } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 import { siteConfig } from "@/lib/site";
 

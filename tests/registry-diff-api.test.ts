@@ -22,7 +22,7 @@ const changelogMock = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getRegistryChangelog: () => Promise.resolve(changelogMock.value),
 }));
 

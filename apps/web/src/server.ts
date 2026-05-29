@@ -1,6 +1,6 @@
 import "./lib/error-capture";
 
-import { runWithCloudflareRuntime } from "./lib/cloudflare-env";
+import { runWithCloudflareRuntime } from "./lib/cloudflare-env.server";
 import { consumeLastCapturedError } from "./lib/error-capture";
 import { renderErrorPage } from "./lib/error-page";
 

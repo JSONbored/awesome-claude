@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const directoryEntriesMock = vi.hoisted(() => vi.fn());
 
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getDirectoryEntries: directoryEntriesMock,
 }));
 

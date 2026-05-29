@@ -6,8 +6,8 @@ import { submissionBodySchema } from "@/lib/api/contracts";
 import { getClientIp } from "@/lib/api-security";
 import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn } from "@/lib/api-logs";
-import { getCloudflareEnv } from "@/lib/cloudflare-env";
-import { getDirectoryEntries } from "@/lib/content";
+import { getCloudflareEnv } from "@/lib/cloudflare-env.server";
+import { getDirectoryEntries } from "@/lib/content.server";
 
 const GITHUB_API_VERSION = "2022-11-28";
 const DEFAULT_REPO = "JSONbored/awesome-claude";

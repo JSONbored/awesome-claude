@@ -1,6 +1,6 @@
 import { cache } from "react";
 
-import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content";
+import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 
 export type ContributorSummary = {
   slug: string;

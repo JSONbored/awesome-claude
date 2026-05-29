@@ -8,7 +8,7 @@ import {
   type RegistrySearchFilterState,
 } from "@/lib/api/registry-search-filters";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
-import { getSearchIndex } from "@/lib/content";
+import { getSearchIndex } from "@/lib/content.server";
 import { cachedJsonResponse } from "@/lib/http-cache";
 
 const MAX_OFFSET = 10_000;

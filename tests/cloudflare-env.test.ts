@@ -4,7 +4,7 @@ import {
   getCloudflareBinding,
   getCloudflareEnv,
   runWithCloudflareRuntime,
-} from "@/lib/cloudflare-env";
+} from "@/lib/cloudflare-env.server";
 
 const globalWithEnv = globalThis as typeof globalThis & { __env__?: unknown };
 

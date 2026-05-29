@@ -1,5 +1,3 @@
-import matter from "gray-matter";
-
 import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
@@ -223,6 +221,101 @@ function stringList(value) {
         .split(/\n+/)
         .map((item) => item.trim())
         .filter(Boolean);
+}
+
+function parseFrontmatterScalar(value) {
+  const text = normalizeText(value);
+  if (!text) return "";
+  if (text === "true") return true;
+  if (text === "false") return false;
+  if (text === "null" || text === "~") return null;
+  if (/^-?\d+(?:\.\d+)?$/.test(text)) return Number(text);
+  if (
+    (text.startsWith('"') && text.endsWith('"')) ||
+    (text.startsWith("'") && text.endsWith("'"))
+  ) {
+    return text.slice(1, -1);
+  }
+  if (text.startsWith("[") && text.endsWith("]")) {
+    return text
+      .slice(1, -1)
+      .split(",")
+      .map((item) => parseFrontmatterScalar(item))
+      .filter((item) => item !== "");
+  }
+  return text;
+}
+
+function parseSimpleFrontmatterData(source) {
+  const data = {};
+  const lines = String(source ?? "").split(/\r?\n/);
+  let index = 0;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    const delimiter = line.indexOf(":");
+    if (delimiter <= 0) {
+      index += 1;
+      continue;
+    }
+
+    const key = line.slice(0, delimiter);
+    if (!/^[A-Za-z0-9_-]+$/.test(key)) {
+      index += 1;
+      continue;
+    }
+    const rawValue = line.slice(delimiter + 1).trimStart();
+    if (rawValue === "|" || rawValue === ">") {
+      const block = [];
+      index += 1;
+      while (index < lines.length && /^(?:\s{2,}|\t)/.test(lines[index])) {
+        block.push(lines[index].replace(/^(?:\s{2}|\t)/, ""));
+        index += 1;
+      }
+      data[key] = rawValue === ">" ? block.join(" ") : block.join("\n");
+      continue;
+    }
+
+    if (
+      !rawValue &&
+      index + 1 < lines.length &&
+      /^\s*-\s+/.test(lines[index + 1])
+    ) {
+      const items = [];
+      index += 1;
+      while (index < lines.length && /^\s*-\s+/.test(lines[index])) {
+        items.push(
+          parseFrontmatterScalar(lines[index].replace(/^\s*-\s+/, "")),
+        );
+        index += 1;
+      }
+      data[key] = items;
+      continue;
+    }
+
+    data[key] = parseFrontmatterScalar(rawValue);
+    index += 1;
+  }
+
+  return data;
+}
+
+function parseContentFrontmatter(value) {
+  const content = String(value ?? "").replace(/^\uFEFF/, "");
+  const match = content.match(
+    /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/,
+  );
+  if (!match) return { data: {}, content };
+
+  try {
+    return {
+      data: parseSimpleFrontmatterData(match[1]),
+      content: content.slice(match[0].length),
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(message);
+  }
 }
 
 const MAX_URL_SCAN_LENGTH = 200_000;
@@ -1887,7 +1980,7 @@ export function analyzeDirectContentRisk(input = {}) {
 
     let parsed;
     try {
-      parsed = matter(content);
+      parsed = parseContentFrontmatter(content);
     } catch (error) {
       addFlag(
         report,

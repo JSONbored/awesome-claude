@@ -3,7 +3,7 @@ import { createApiFileRoute } from "@/lib/api/file-route";
 import { newsletterSubscribeBodySchema } from "@/lib/api/contracts";
 import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiError, logApiInfo, redactEmail } from "@/lib/api-logs";
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 
 function envSegmentId(followId: string): string | undefined {
   const key = `RESEND_SEGMENT_${followId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;

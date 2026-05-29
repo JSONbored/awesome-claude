@@ -1,4 +1,4 @@
-import { getCloudflareBinding } from "@/lib/cloudflare-env";
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 
 export type D1RunResult = {
   success?: boolean;

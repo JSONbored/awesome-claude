@@ -8,1820 +8,1827 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as ValidatorsRouteImport } from './routes/validators'
-import { Route as TrendingRouteImport } from './routes/trending'
-import { Route as ToolsRouteImport } from './routes/tools'
-import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
-import { Route as SubmitRouteImport } from './routes/submit'
-import { Route as SubmissionsRouteImport } from './routes/submissions'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
-import { Route as QualityRouteImport } from './routes/quality'
-import { Route as PlatformsRouteImport } from './routes/platforms'
-import { Route as ManifestDotwebmanifestRouteImport } from './routes/manifest[.]webmanifest'
-import { Route as LlmsDottxtRouteImport } from './routes/llms[.]txt'
-import { Route as LlmsFullDottxtRouteImport } from './routes/llms-full[.]txt'
-import { Route as LegalRouteImport } from './routes/legal'
-import { Route as IntegrationsRouteImport } from './routes/integrations'
-import { Route as FeedsRouteImport } from './routes/feeds'
-import { Route as FeedDotxmlRouteImport } from './routes/feed[.]xml'
-import { Route as EcosystemRouteImport } from './routes/ecosystem'
-import { Route as ContributorsRouteImport } from './routes/contributors'
-import { Route as CompareRouteImport } from './routes/compare'
-import { Route as ClaimRouteImport } from './routes/claim'
-import { Route as ChangelogRouteImport } from './routes/changelog'
-import { Route as BrowseRouteImport } from './routes/browse'
-import { Route as BriefRouteImport } from './routes/brief'
-import { Route as BestRouteImport } from './routes/best'
-import { Route as AtomDotxmlRouteImport } from './routes/atom[.]xml'
-import { Route as ApiDocsRouteImport } from './routes/api-docs'
-import { Route as AdvertiseRouteImport } from './routes/advertise'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as CategoryRouteImport } from './routes/$category'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as JobsIndexRouteImport } from './routes/jobs.index'
-import { Route as ValidatorsSkillPackageRouteImport } from './routes/validators.skill-package'
-import { Route as ValidatorsMcpConfigRouteImport } from './routes/validators.mcp-config'
-import { Route as ToolsSubmitRouteImport } from './routes/tools.submit'
-import { Route as ToolsSlugRouteImport } from './routes/tools.$slug'
-import { Route as SubmissionsIdRouteImport } from './routes/submissions.$id'
-import { Route as JobsPostRouteImport } from './routes/jobs.post'
-import { Route as JobsSlugRouteImport } from './routes/jobs.$slug'
-import { Route as IntegrationsSlugRouteImport } from './routes/integrations.$slug'
-import { Route as FeedsSlugRouteImport } from './routes/feeds.$slug'
-import { Route as ContributorsSlugRouteImport } from './routes/contributors.$slug'
-import { Route as BestSlugRouteImport } from './routes/best.$slug'
-import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
-import { Route as ApiOgRouteImport } from './routes/api/og'
-import { Route as ApiMcpRouteImport } from './routes/api/mcp'
-import { Route as ApiListingLeadsRouteImport } from './routes/api/listing-leads'
-import { Route as ApiJobsRouteImport } from './routes/api/jobs'
-import { Route as ApiIntentEventsRouteImport } from './routes/api/intent-events'
-import { Route as ApiGithubStatsRouteImport } from './routes/api/github-stats'
-import { Route as ApiDownloadRouteImport } from './routes/api/download'
-import { Route as ApiCommunitySignalsRouteImport } from './routes/api/community-signals'
-import { Route as CategorySlugRouteImport } from './routes/$category.$slug'
-import { Route as OgCategorySlugRouteImport } from './routes/og.$category.$slug'
-import { Route as EntryCategorySlugRouteImport } from './routes/entry.$category.$slug'
-import { Route as ApiVotesToggleRouteImport } from './routes/api/votes/toggle'
-import { Route as ApiVotesQueryRouteImport } from './routes/api/votes/query'
-import { Route as ApiSubmissionsQueueRouteImport } from './routes/api/submissions/queue'
-import { Route as ApiSubmissionsPreflightRouteImport } from './routes/api/submissions/preflight'
-import { Route as ApiRegistryTrendingRouteImport } from './routes/api/registry/trending'
-import { Route as ApiRegistrySearchRouteImport } from './routes/api/registry/search'
-import { Route as ApiRegistryManifestRouteImport } from './routes/api/registry/manifest'
-import { Route as ApiRegistryIntegrityRouteImport } from './routes/api/registry/integrity'
-import { Route as ApiRegistryFeedRouteImport } from './routes/api/registry/feed'
-import { Route as ApiRegistryDiffRouteImport } from './routes/api/registry/diff'
-import { Route as ApiRegistryCategoriesRouteImport } from './routes/api/registry/categories'
-import { Route as ApiPublicAlertsRouteImport } from './routes/api/public/alerts'
-import { Route as ApiNewsletterWebhookRouteImport } from './routes/api/newsletter/webhook'
-import { Route as ApiNewsletterSubscribeRouteImport } from './routes/api/newsletter/subscribe'
-import { Route as ApiCommunitySignalsQueryRouteImport } from './routes/api/community-signals/query'
-import { Route as ApiAdminListingLeadsRouteImport } from './routes/api/admin/listing-leads'
-import { Route as ApiAdminJobsRouteImport } from './routes/api/admin/jobs'
-import { Route as CategorySlugLlmsDottxtRouteImport } from './routes/$category.$slug.llms[.]txt'
-import { Route as ApiPublicNpmSplatRouteImport } from './routes/api/public/npm/$'
-import { Route as ApiPublicNewsletterUnsubscribeRouteImport } from './routes/api/public/newsletter/unsubscribe'
-import { Route as ApiPublicNewsletterSubscribeRouteImport } from './routes/api/public/newsletter/subscribe'
-import { Route as ApiPublicGithubWebhookRouteImport } from './routes/api/public/github/webhook'
-import { Route as ApiPublicFeedsHealthRouteImport } from './routes/api/public/feeds/health'
-import { Route as ApiBrandAssetsKindDomainRouteImport } from './routes/api/brand-assets/$kind/$domain'
-import { Route as ApiAdminJobsHealthRouteImport } from './routes/api/admin/jobs/health'
-import { Route as ApiRegistryEntriesCategorySlugRouteImport } from './routes/api/registry/entries/$category/$slug'
-import { Route as ApiRegistryEntriesCategorySlugLlmsRouteImport } from './routes/api/registry/entries/$category/$slug/llms'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as ValidatorsRouteImport } from "./routes/validators";
+import { Route as TrendingRouteImport } from "./routes/trending";
+import { Route as ToolsRouteImport } from "./routes/tools";
+import { Route as SubscriptionsRouteImport } from "./routes/subscriptions";
+import { Route as SubmitRouteImport } from "./routes/submit";
+import { Route as SubmissionsRouteImport } from "./routes/submissions";
+import { Route as SitemapDotxmlRouteImport } from "./routes/sitemap[.]xml";
+import { Route as RobotsDottxtRouteImport } from "./routes/robots[.]txt";
+import { Route as QualityRouteImport } from "./routes/quality";
+import { Route as PlatformsRouteImport } from "./routes/platforms";
+import { Route as ManifestDotwebmanifestRouteImport } from "./routes/manifest[.]webmanifest";
+import { Route as LlmsDottxtRouteImport } from "./routes/llms[.]txt";
+import { Route as LlmsFullDottxtRouteImport } from "./routes/llms-full[.]txt";
+import { Route as LegalRouteImport } from "./routes/legal";
+import { Route as IntegrationsRouteImport } from "./routes/integrations";
+import { Route as FeedsRouteImport } from "./routes/feeds";
+import { Route as FeedDotxmlRouteImport } from "./routes/feed[.]xml";
+import { Route as EcosystemRouteImport } from "./routes/ecosystem";
+import { Route as ContributorsRouteImport } from "./routes/contributors";
+import { Route as CompareRouteImport } from "./routes/compare";
+import { Route as ClaimRouteImport } from "./routes/claim";
+import { Route as ChangelogRouteImport } from "./routes/changelog";
+import { Route as BrowseRouteImport } from "./routes/browse";
+import { Route as BriefRouteImport } from "./routes/brief";
+import { Route as BestRouteImport } from "./routes/best";
+import { Route as AtomDotxmlRouteImport } from "./routes/atom[.]xml";
+import { Route as ApiDocsRouteImport } from "./routes/api-docs";
+import { Route as AdvertiseRouteImport } from "./routes/advertise";
+import { Route as AboutRouteImport } from "./routes/about";
+import { Route as CategoryRouteImport } from "./routes/$category";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as JobsIndexRouteImport } from "./routes/jobs.index";
+import { Route as ValidatorsSkillPackageRouteImport } from "./routes/validators.skill-package";
+import { Route as ValidatorsMcpConfigRouteImport } from "./routes/validators.mcp-config";
+import { Route as ToolsSubmitRouteImport } from "./routes/tools.submit";
+import { Route as ToolsSlugRouteImport } from "./routes/tools.$slug";
+import { Route as SubmissionsIdRouteImport } from "./routes/submissions.$id";
+import { Route as JobsPostRouteImport } from "./routes/jobs.post";
+import { Route as JobsSlugRouteImport } from "./routes/jobs.$slug";
+import { Route as IntegrationsSlugRouteImport } from "./routes/integrations.$slug";
+import { Route as FeedsSlugRouteImport } from "./routes/feeds.$slug";
+import { Route as ContributorsSlugRouteImport } from "./routes/contributors.$slug";
+import { Route as BestSlugRouteImport } from "./routes/best.$slug";
+import { Route as ApiSubmissionsRouteImport } from "./routes/api/submissions";
+import { Route as ApiOgRouteImport } from "./routes/api/og";
+import { Route as ApiMcpRouteImport } from "./routes/api/mcp";
+import { Route as ApiListingLeadsRouteImport } from "./routes/api/listing-leads";
+import { Route as ApiJobsRouteImport } from "./routes/api/jobs";
+import { Route as ApiIntentEventsRouteImport } from "./routes/api/intent-events";
+import { Route as ApiGithubStatsRouteImport } from "./routes/api/github-stats";
+import { Route as ApiDownloadRouteImport } from "./routes/api/download";
+import { Route as ApiCommunitySignalsRouteImport } from "./routes/api/community-signals";
+import { Route as CategorySlugRouteImport } from "./routes/$category.$slug";
+import { Route as OgCategorySlugRouteImport } from "./routes/og.$category.$slug";
+import { Route as EntryCategorySlugRouteImport } from "./routes/entry.$category.$slug";
+import { Route as ApiVotesToggleRouteImport } from "./routes/api/votes/toggle";
+import { Route as ApiVotesQueryRouteImport } from "./routes/api/votes/query";
+import { Route as ApiSubmissionsQueueRouteImport } from "./routes/api/submissions/queue";
+import { Route as ApiSubmissionsPreflightRouteImport } from "./routes/api/submissions/preflight";
+import { Route as ApiRegistryTrendingRouteImport } from "./routes/api/registry/trending";
+import { Route as ApiRegistrySearchRouteImport } from "./routes/api/registry/search";
+import { Route as ApiRegistryManifestRouteImport } from "./routes/api/registry/manifest";
+import { Route as ApiRegistryIntegrityRouteImport } from "./routes/api/registry/integrity";
+import { Route as ApiRegistryFeedRouteImport } from "./routes/api/registry/feed";
+import { Route as ApiRegistryDiffRouteImport } from "./routes/api/registry/diff";
+import { Route as ApiRegistryCategoriesRouteImport } from "./routes/api/registry/categories";
+import { Route as ApiPublicAlertsRouteImport } from "./routes/api/public/alerts";
+import { Route as ApiNewsletterWebhookRouteImport } from "./routes/api/newsletter/webhook";
+import { Route as ApiNewsletterSubscribeRouteImport } from "./routes/api/newsletter/subscribe";
+import { Route as ApiJobsSlugRouteImport } from "./routes/api/jobs/$slug";
+import { Route as ApiCommunitySignalsQueryRouteImport } from "./routes/api/community-signals/query";
+import { Route as ApiAdminListingLeadsRouteImport } from "./routes/api/admin/listing-leads";
+import { Route as ApiAdminJobsRouteImport } from "./routes/api/admin/jobs";
+import { Route as CategorySlugLlmsDottxtRouteImport } from "./routes/$category.$slug.llms[.]txt";
+import { Route as ApiPublicNpmSplatRouteImport } from "./routes/api/public/npm/$";
+import { Route as ApiPublicNewsletterUnsubscribeRouteImport } from "./routes/api/public/newsletter/unsubscribe";
+import { Route as ApiPublicNewsletterSubscribeRouteImport } from "./routes/api/public/newsletter/subscribe";
+import { Route as ApiPublicGithubWebhookRouteImport } from "./routes/api/public/github/webhook";
+import { Route as ApiPublicFeedsHealthRouteImport } from "./routes/api/public/feeds/health";
+import { Route as ApiBrandAssetsKindDomainRouteImport } from "./routes/api/brand-assets/$kind/$domain";
+import { Route as ApiAdminJobsHealthRouteImport } from "./routes/api/admin/jobs/health";
+import { Route as ApiRegistryEntriesCategorySlugRouteImport } from "./routes/api/registry/entries/$category/$slug";
+import { Route as ApiRegistryEntriesCategorySlugLlmsRouteImport } from "./routes/api/registry/entries/$category/$slug/llms";
 
 const ValidatorsRoute = ValidatorsRouteImport.update({
-  id: '/validators',
-  path: '/validators',
+  id: "/validators",
+  path: "/validators",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const TrendingRoute = TrendingRouteImport.update({
-  id: '/trending',
-  path: '/trending',
+  id: "/trending",
+  path: "/trending",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ToolsRoute = ToolsRouteImport.update({
-  id: '/tools',
-  path: '/tools',
+  id: "/tools",
+  path: "/tools",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SubscriptionsRoute = SubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
+  id: "/subscriptions",
+  path: "/subscriptions",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SubmitRoute = SubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
+  id: "/submit",
+  path: "/submit",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SubmissionsRoute = SubmissionsRouteImport.update({
-  id: '/submissions',
-  path: '/submissions',
+  id: "/submissions",
+  path: "/submissions",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+  id: "/sitemap.xml",
+  path: "/sitemap.xml",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
-  id: '/robots.txt',
-  path: '/robots.txt',
+  id: "/robots.txt",
+  path: "/robots.txt",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const QualityRoute = QualityRouteImport.update({
-  id: '/quality',
-  path: '/quality',
+  id: "/quality",
+  path: "/quality",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const PlatformsRoute = PlatformsRouteImport.update({
-  id: '/platforms',
-  path: '/platforms',
+  id: "/platforms",
+  path: "/platforms",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ManifestDotwebmanifestRoute = ManifestDotwebmanifestRouteImport.update({
-  id: '/manifest.webmanifest',
-  path: '/manifest.webmanifest',
+  id: "/manifest.webmanifest",
+  path: "/manifest.webmanifest",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LlmsDottxtRoute = LlmsDottxtRouteImport.update({
-  id: '/llms.txt',
-  path: '/llms.txt',
+  id: "/llms.txt",
+  path: "/llms.txt",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LlmsFullDottxtRoute = LlmsFullDottxtRouteImport.update({
-  id: '/llms-full.txt',
-  path: '/llms-full.txt',
+  id: "/llms-full.txt",
+  path: "/llms-full.txt",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const LegalRoute = LegalRouteImport.update({
-  id: '/legal',
-  path: '/legal',
+  id: "/legal",
+  path: "/legal",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IntegrationsRoute = IntegrationsRouteImport.update({
-  id: '/integrations',
-  path: '/integrations',
+  id: "/integrations",
+  path: "/integrations",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const FeedsRoute = FeedsRouteImport.update({
-  id: '/feeds',
-  path: '/feeds',
+  id: "/feeds",
+  path: "/feeds",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const FeedDotxmlRoute = FeedDotxmlRouteImport.update({
-  id: '/feed.xml',
-  path: '/feed.xml',
+  id: "/feed.xml",
+  path: "/feed.xml",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const EcosystemRoute = EcosystemRouteImport.update({
-  id: '/ecosystem',
-  path: '/ecosystem',
+  id: "/ecosystem",
+  path: "/ecosystem",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ContributorsRoute = ContributorsRouteImport.update({
-  id: '/contributors',
-  path: '/contributors',
+  id: "/contributors",
+  path: "/contributors",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CompareRoute = CompareRouteImport.update({
-  id: '/compare',
-  path: '/compare',
+  id: "/compare",
+  path: "/compare",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ClaimRoute = ClaimRouteImport.update({
-  id: '/claim',
-  path: '/claim',
+  id: "/claim",
+  path: "/claim",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ChangelogRoute = ChangelogRouteImport.update({
-  id: '/changelog',
-  path: '/changelog',
+  id: "/changelog",
+  path: "/changelog",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BrowseRoute = BrowseRouteImport.update({
-  id: '/browse',
-  path: '/browse',
+  id: "/browse",
+  path: "/browse",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BriefRoute = BriefRouteImport.update({
-  id: '/brief',
-  path: '/brief',
+  id: "/brief",
+  path: "/brief",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const BestRoute = BestRouteImport.update({
-  id: '/best',
-  path: '/best',
+  id: "/best",
+  path: "/best",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AtomDotxmlRoute = AtomDotxmlRouteImport.update({
-  id: '/atom.xml',
-  path: '/atom.xml',
+  id: "/atom.xml",
+  path: "/atom.xml",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiDocsRoute = ApiDocsRouteImport.update({
-  id: '/api-docs',
-  path: '/api-docs',
+  id: "/api-docs",
+  path: "/api-docs",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AdvertiseRoute = AdvertiseRouteImport.update({
-  id: '/advertise',
-  path: '/advertise',
+  id: "/advertise",
+  path: "/advertise",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AboutRoute = AboutRouteImport.update({
-  id: '/about',
-  path: '/about',
+  id: "/about",
+  path: "/about",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CategoryRoute = CategoryRouteImport.update({
-  id: '/$category',
-  path: '/$category',
+  id: "/$category",
+  path: "/$category",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const JobsIndexRoute = JobsIndexRouteImport.update({
-  id: '/jobs/',
-  path: '/jobs/',
+  id: "/jobs/",
+  path: "/jobs/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ValidatorsSkillPackageRoute = ValidatorsSkillPackageRouteImport.update({
-  id: '/skill-package',
-  path: '/skill-package',
+  id: "/skill-package",
+  path: "/skill-package",
   getParentRoute: () => ValidatorsRoute,
-} as any)
+} as any);
 const ValidatorsMcpConfigRoute = ValidatorsMcpConfigRouteImport.update({
-  id: '/mcp-config',
-  path: '/mcp-config',
+  id: "/mcp-config",
+  path: "/mcp-config",
   getParentRoute: () => ValidatorsRoute,
-} as any)
+} as any);
 const ToolsSubmitRoute = ToolsSubmitRouteImport.update({
-  id: '/submit',
-  path: '/submit',
+  id: "/submit",
+  path: "/submit",
   getParentRoute: () => ToolsRoute,
-} as any)
+} as any);
 const ToolsSlugRoute = ToolsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => ToolsRoute,
-} as any)
+} as any);
 const SubmissionsIdRoute = SubmissionsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
+  id: "/$id",
+  path: "/$id",
   getParentRoute: () => SubmissionsRoute,
-} as any)
+} as any);
 const JobsPostRoute = JobsPostRouteImport.update({
-  id: '/jobs/post',
-  path: '/jobs/post',
+  id: "/jobs/post",
+  path: "/jobs/post",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const JobsSlugRoute = JobsSlugRouteImport.update({
-  id: '/jobs/$slug',
-  path: '/jobs/$slug',
+  id: "/jobs/$slug",
+  path: "/jobs/$slug",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IntegrationsSlugRoute = IntegrationsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => IntegrationsRoute,
-} as any)
+} as any);
 const FeedsSlugRoute = FeedsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => FeedsRoute,
-} as any)
+} as any);
 const ContributorsSlugRoute = ContributorsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => ContributorsRoute,
-} as any)
+} as any);
 const BestSlugRoute = BestSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => BestRoute,
-} as any)
+} as any);
 const ApiSubmissionsRoute = ApiSubmissionsRouteImport.update({
-  id: '/api/submissions',
-  path: '/api/submissions',
+  id: "/api/submissions",
+  path: "/api/submissions",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiOgRoute = ApiOgRouteImport.update({
-  id: '/api/og',
-  path: '/api/og',
+  id: "/api/og",
+  path: "/api/og",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiMcpRoute = ApiMcpRouteImport.update({
-  id: '/api/mcp',
-  path: '/api/mcp',
+  id: "/api/mcp",
+  path: "/api/mcp",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiListingLeadsRoute = ApiListingLeadsRouteImport.update({
-  id: '/api/listing-leads',
-  path: '/api/listing-leads',
+  id: "/api/listing-leads",
+  path: "/api/listing-leads",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiJobsRoute = ApiJobsRouteImport.update({
-  id: '/api/jobs',
-  path: '/api/jobs',
+  id: "/api/jobs",
+  path: "/api/jobs",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiIntentEventsRoute = ApiIntentEventsRouteImport.update({
-  id: '/api/intent-events',
-  path: '/api/intent-events',
+  id: "/api/intent-events",
+  path: "/api/intent-events",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiGithubStatsRoute = ApiGithubStatsRouteImport.update({
-  id: '/api/github-stats',
-  path: '/api/github-stats',
+  id: "/api/github-stats",
+  path: "/api/github-stats",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiDownloadRoute = ApiDownloadRouteImport.update({
-  id: '/api/download',
-  path: '/api/download',
+  id: "/api/download",
+  path: "/api/download",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiCommunitySignalsRoute = ApiCommunitySignalsRouteImport.update({
-  id: '/api/community-signals',
-  path: '/api/community-signals',
+  id: "/api/community-signals",
+  path: "/api/community-signals",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CategorySlugRoute = CategorySlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
+  id: "/$slug",
+  path: "/$slug",
   getParentRoute: () => CategoryRoute,
-} as any)
+} as any);
 const OgCategorySlugRoute = OgCategorySlugRouteImport.update({
-  id: '/og/$category/$slug',
-  path: '/og/$category/$slug',
+  id: "/og/$category/$slug",
+  path: "/og/$category/$slug",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const EntryCategorySlugRoute = EntryCategorySlugRouteImport.update({
-  id: '/entry/$category/$slug',
-  path: '/entry/$category/$slug',
+  id: "/entry/$category/$slug",
+  path: "/entry/$category/$slug",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiVotesToggleRoute = ApiVotesToggleRouteImport.update({
-  id: '/api/votes/toggle',
-  path: '/api/votes/toggle',
+  id: "/api/votes/toggle",
+  path: "/api/votes/toggle",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiVotesQueryRoute = ApiVotesQueryRouteImport.update({
-  id: '/api/votes/query',
-  path: '/api/votes/query',
+  id: "/api/votes/query",
+  path: "/api/votes/query",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiSubmissionsQueueRoute = ApiSubmissionsQueueRouteImport.update({
-  id: '/queue',
-  path: '/queue',
+  id: "/queue",
+  path: "/queue",
   getParentRoute: () => ApiSubmissionsRoute,
-} as any)
+} as any);
 const ApiSubmissionsPreflightRoute = ApiSubmissionsPreflightRouteImport.update({
-  id: '/preflight',
-  path: '/preflight',
+  id: "/preflight",
+  path: "/preflight",
   getParentRoute: () => ApiSubmissionsRoute,
-} as any)
+} as any);
 const ApiRegistryTrendingRoute = ApiRegistryTrendingRouteImport.update({
-  id: '/api/registry/trending',
-  path: '/api/registry/trending',
+  id: "/api/registry/trending",
+  path: "/api/registry/trending",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistrySearchRoute = ApiRegistrySearchRouteImport.update({
-  id: '/api/registry/search',
-  path: '/api/registry/search',
+  id: "/api/registry/search",
+  path: "/api/registry/search",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistryManifestRoute = ApiRegistryManifestRouteImport.update({
-  id: '/api/registry/manifest',
-  path: '/api/registry/manifest',
+  id: "/api/registry/manifest",
+  path: "/api/registry/manifest",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistryIntegrityRoute = ApiRegistryIntegrityRouteImport.update({
-  id: '/api/registry/integrity',
-  path: '/api/registry/integrity',
+  id: "/api/registry/integrity",
+  path: "/api/registry/integrity",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistryFeedRoute = ApiRegistryFeedRouteImport.update({
-  id: '/api/registry/feed',
-  path: '/api/registry/feed',
+  id: "/api/registry/feed",
+  path: "/api/registry/feed",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistryDiffRoute = ApiRegistryDiffRouteImport.update({
-  id: '/api/registry/diff',
-  path: '/api/registry/diff',
+  id: "/api/registry/diff",
+  path: "/api/registry/diff",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiRegistryCategoriesRoute = ApiRegistryCategoriesRouteImport.update({
-  id: '/api/registry/categories',
-  path: '/api/registry/categories',
+  id: "/api/registry/categories",
+  path: "/api/registry/categories",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiPublicAlertsRoute = ApiPublicAlertsRouteImport.update({
-  id: '/api/public/alerts',
-  path: '/api/public/alerts',
+  id: "/api/public/alerts",
+  path: "/api/public/alerts",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiNewsletterWebhookRoute = ApiNewsletterWebhookRouteImport.update({
-  id: '/api/newsletter/webhook',
-  path: '/api/newsletter/webhook',
+  id: "/api/newsletter/webhook",
+  path: "/api/newsletter/webhook",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiNewsletterSubscribeRoute = ApiNewsletterSubscribeRouteImport.update({
-  id: '/api/newsletter/subscribe',
-  path: '/api/newsletter/subscribe',
+  id: "/api/newsletter/subscribe",
+  path: "/api/newsletter/subscribe",
   getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCommunitySignalsQueryRoute =
-  ApiCommunitySignalsQueryRouteImport.update({
-    id: '/query',
-    path: '/query',
-    getParentRoute: () => ApiCommunitySignalsRoute,
-  } as any)
+} as any);
+const ApiJobsSlugRoute = ApiJobsSlugRouteImport.update({
+  id: "/$slug",
+  path: "/$slug",
+  getParentRoute: () => ApiJobsRoute,
+} as any);
+const ApiCommunitySignalsQueryRoute = ApiCommunitySignalsQueryRouteImport.update({
+  id: "/query",
+  path: "/query",
+  getParentRoute: () => ApiCommunitySignalsRoute,
+} as any);
 const ApiAdminListingLeadsRoute = ApiAdminListingLeadsRouteImport.update({
-  id: '/api/admin/listing-leads',
-  path: '/api/admin/listing-leads',
+  id: "/api/admin/listing-leads",
+  path: "/api/admin/listing-leads",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiAdminJobsRoute = ApiAdminJobsRouteImport.update({
-  id: '/api/admin/jobs',
-  path: '/api/admin/jobs',
+  id: "/api/admin/jobs",
+  path: "/api/admin/jobs",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const CategorySlugLlmsDottxtRoute = CategorySlugLlmsDottxtRouteImport.update({
-  id: '/llms.txt',
-  path: '/llms.txt',
+  id: "/llms.txt",
+  path: "/llms.txt",
   getParentRoute: () => CategorySlugRoute,
-} as any)
+} as any);
 const ApiPublicNpmSplatRoute = ApiPublicNpmSplatRouteImport.update({
-  id: '/api/public/npm/$',
-  path: '/api/public/npm/$',
+  id: "/api/public/npm/$",
+  path: "/api/public/npm/$",
   getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicNewsletterUnsubscribeRoute =
-  ApiPublicNewsletterUnsubscribeRouteImport.update({
-    id: '/api/public/newsletter/unsubscribe',
-    path: '/api/public/newsletter/unsubscribe',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const ApiPublicNewsletterSubscribeRoute =
-  ApiPublicNewsletterSubscribeRouteImport.update({
-    id: '/api/public/newsletter/subscribe',
-    path: '/api/public/newsletter/subscribe',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+} as any);
+const ApiPublicNewsletterUnsubscribeRoute = ApiPublicNewsletterUnsubscribeRouteImport.update({
+  id: "/api/public/newsletter/unsubscribe",
+  path: "/api/public/newsletter/unsubscribe",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const ApiPublicNewsletterSubscribeRoute = ApiPublicNewsletterSubscribeRouteImport.update({
+  id: "/api/public/newsletter/subscribe",
+  path: "/api/public/newsletter/subscribe",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ApiPublicGithubWebhookRoute = ApiPublicGithubWebhookRouteImport.update({
-  id: '/api/public/github/webhook',
-  path: '/api/public/github/webhook',
+  id: "/api/public/github/webhook",
+  path: "/api/public/github/webhook",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const ApiPublicFeedsHealthRoute = ApiPublicFeedsHealthRouteImport.update({
-  id: '/api/public/feeds/health',
-  path: '/api/public/feeds/health',
+  id: "/api/public/feeds/health",
+  path: "/api/public/feeds/health",
   getParentRoute: () => rootRouteImport,
-} as any)
-const ApiBrandAssetsKindDomainRoute =
-  ApiBrandAssetsKindDomainRouteImport.update({
-    id: '/api/brand-assets/$kind/$domain',
-    path: '/api/brand-assets/$kind/$domain',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+} as any);
+const ApiBrandAssetsKindDomainRoute = ApiBrandAssetsKindDomainRouteImport.update({
+  id: "/api/brand-assets/$kind/$domain",
+  path: "/api/brand-assets/$kind/$domain",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ApiAdminJobsHealthRoute = ApiAdminJobsHealthRouteImport.update({
-  id: '/health',
-  path: '/health',
+  id: "/health",
+  path: "/health",
   getParentRoute: () => ApiAdminJobsRoute,
-} as any)
-const ApiRegistryEntriesCategorySlugRoute =
-  ApiRegistryEntriesCategorySlugRouteImport.update({
-    id: '/api/registry/entries/$category/$slug',
-    path: '/api/registry/entries/$category/$slug',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+} as any);
+const ApiRegistryEntriesCategorySlugRoute = ApiRegistryEntriesCategorySlugRouteImport.update({
+  id: "/api/registry/entries/$category/$slug",
+  path: "/api/registry/entries/$category/$slug",
+  getParentRoute: () => rootRouteImport,
+} as any);
 const ApiRegistryEntriesCategorySlugLlmsRoute =
   ApiRegistryEntriesCategorySlugLlmsRouteImport.update({
-    id: '/llms',
-    path: '/llms',
+    id: "/llms",
+    path: "/llms",
     getParentRoute: () => ApiRegistryEntriesCategorySlugRoute,
-  } as any)
+  } as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/$category': typeof CategoryRouteWithChildren
-  '/about': typeof AboutRoute
-  '/advertise': typeof AdvertiseRoute
-  '/api-docs': typeof ApiDocsRoute
-  '/atom.xml': typeof AtomDotxmlRoute
-  '/best': typeof BestRouteWithChildren
-  '/brief': typeof BriefRoute
-  '/browse': typeof BrowseRoute
-  '/changelog': typeof ChangelogRoute
-  '/claim': typeof ClaimRoute
-  '/compare': typeof CompareRoute
-  '/contributors': typeof ContributorsRouteWithChildren
-  '/ecosystem': typeof EcosystemRoute
-  '/feed.xml': typeof FeedDotxmlRoute
-  '/feeds': typeof FeedsRouteWithChildren
-  '/integrations': typeof IntegrationsRouteWithChildren
-  '/legal': typeof LegalRoute
-  '/llms-full.txt': typeof LlmsFullDottxtRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
-  '/platforms': typeof PlatformsRoute
-  '/quality': typeof QualityRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/submissions': typeof SubmissionsRouteWithChildren
-  '/submit': typeof SubmitRoute
-  '/subscriptions': typeof SubscriptionsRoute
-  '/tools': typeof ToolsRouteWithChildren
-  '/trending': typeof TrendingRoute
-  '/validators': typeof ValidatorsRouteWithChildren
-  '/$category/$slug': typeof CategorySlugRouteWithChildren
-  '/api/community-signals': typeof ApiCommunitySignalsRouteWithChildren
-  '/api/download': typeof ApiDownloadRoute
-  '/api/github-stats': typeof ApiGithubStatsRoute
-  '/api/intent-events': typeof ApiIntentEventsRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/listing-leads': typeof ApiListingLeadsRoute
-  '/api/mcp': typeof ApiMcpRoute
-  '/api/og': typeof ApiOgRoute
-  '/api/submissions': typeof ApiSubmissionsRouteWithChildren
-  '/best/$slug': typeof BestSlugRoute
-  '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$slug': typeof FeedsSlugRoute
-  '/integrations/$slug': typeof IntegrationsSlugRoute
-  '/jobs/$slug': typeof JobsSlugRoute
-  '/jobs/post': typeof JobsPostRoute
-  '/submissions/$id': typeof SubmissionsIdRoute
-  '/tools/$slug': typeof ToolsSlugRoute
-  '/tools/submit': typeof ToolsSubmitRoute
-  '/validators/mcp-config': typeof ValidatorsMcpConfigRoute
-  '/validators/skill-package': typeof ValidatorsSkillPackageRoute
-  '/jobs/': typeof JobsIndexRoute
-  '/$category/$slug/llms.txt': typeof CategorySlugLlmsDottxtRoute
-  '/api/admin/jobs': typeof ApiAdminJobsRouteWithChildren
-  '/api/admin/listing-leads': typeof ApiAdminListingLeadsRoute
-  '/api/community-signals/query': typeof ApiCommunitySignalsQueryRoute
-  '/api/newsletter/subscribe': typeof ApiNewsletterSubscribeRoute
-  '/api/newsletter/webhook': typeof ApiNewsletterWebhookRoute
-  '/api/public/alerts': typeof ApiPublicAlertsRoute
-  '/api/registry/categories': typeof ApiRegistryCategoriesRoute
-  '/api/registry/diff': typeof ApiRegistryDiffRoute
-  '/api/registry/feed': typeof ApiRegistryFeedRoute
-  '/api/registry/integrity': typeof ApiRegistryIntegrityRoute
-  '/api/registry/manifest': typeof ApiRegistryManifestRoute
-  '/api/registry/search': typeof ApiRegistrySearchRoute
-  '/api/registry/trending': typeof ApiRegistryTrendingRoute
-  '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
-  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
-  '/api/votes/query': typeof ApiVotesQueryRoute
-  '/api/votes/toggle': typeof ApiVotesToggleRoute
-  '/entry/$category/$slug': typeof EntryCategorySlugRoute
-  '/og/$category/$slug': typeof OgCategorySlugRoute
-  '/api/admin/jobs/health': typeof ApiAdminJobsHealthRoute
-  '/api/brand-assets/$kind/$domain': typeof ApiBrandAssetsKindDomainRoute
-  '/api/public/feeds/health': typeof ApiPublicFeedsHealthRoute
-  '/api/public/github/webhook': typeof ApiPublicGithubWebhookRoute
-  '/api/public/newsletter/subscribe': typeof ApiPublicNewsletterSubscribeRoute
-  '/api/public/newsletter/unsubscribe': typeof ApiPublicNewsletterUnsubscribeRoute
-  '/api/public/npm/$': typeof ApiPublicNpmSplatRoute
-  '/api/registry/entries/$category/$slug': typeof ApiRegistryEntriesCategorySlugRouteWithChildren
-  '/api/registry/entries/$category/$slug/llms': typeof ApiRegistryEntriesCategorySlugLlmsRoute
+  "/": typeof IndexRoute;
+  "/$category": typeof CategoryRouteWithChildren;
+  "/about": typeof AboutRoute;
+  "/advertise": typeof AdvertiseRoute;
+  "/api-docs": typeof ApiDocsRoute;
+  "/atom.xml": typeof AtomDotxmlRoute;
+  "/best": typeof BestRouteWithChildren;
+  "/brief": typeof BriefRoute;
+  "/browse": typeof BrowseRoute;
+  "/changelog": typeof ChangelogRoute;
+  "/claim": typeof ClaimRoute;
+  "/compare": typeof CompareRoute;
+  "/contributors": typeof ContributorsRouteWithChildren;
+  "/ecosystem": typeof EcosystemRoute;
+  "/feed.xml": typeof FeedDotxmlRoute;
+  "/feeds": typeof FeedsRouteWithChildren;
+  "/integrations": typeof IntegrationsRouteWithChildren;
+  "/legal": typeof LegalRoute;
+  "/llms-full.txt": typeof LlmsFullDottxtRoute;
+  "/llms.txt": typeof LlmsDottxtRoute;
+  "/manifest.webmanifest": typeof ManifestDotwebmanifestRoute;
+  "/platforms": typeof PlatformsRoute;
+  "/quality": typeof QualityRoute;
+  "/robots.txt": typeof RobotsDottxtRoute;
+  "/sitemap.xml": typeof SitemapDotxmlRoute;
+  "/submissions": typeof SubmissionsRouteWithChildren;
+  "/submit": typeof SubmitRoute;
+  "/subscriptions": typeof SubscriptionsRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/trending": typeof TrendingRoute;
+  "/validators": typeof ValidatorsRouteWithChildren;
+  "/$category/$slug": typeof CategorySlugRouteWithChildren;
+  "/api/community-signals": typeof ApiCommunitySignalsRouteWithChildren;
+  "/api/download": typeof ApiDownloadRoute;
+  "/api/github-stats": typeof ApiGithubStatsRoute;
+  "/api/intent-events": typeof ApiIntentEventsRoute;
+  "/api/jobs": typeof ApiJobsRouteWithChildren;
+  "/api/listing-leads": typeof ApiListingLeadsRoute;
+  "/api/mcp": typeof ApiMcpRoute;
+  "/api/og": typeof ApiOgRoute;
+  "/api/submissions": typeof ApiSubmissionsRouteWithChildren;
+  "/best/$slug": typeof BestSlugRoute;
+  "/contributors/$slug": typeof ContributorsSlugRoute;
+  "/feeds/$slug": typeof FeedsSlugRoute;
+  "/integrations/$slug": typeof IntegrationsSlugRoute;
+  "/jobs/$slug": typeof JobsSlugRoute;
+  "/jobs/post": typeof JobsPostRoute;
+  "/submissions/$id": typeof SubmissionsIdRoute;
+  "/tools/$slug": typeof ToolsSlugRoute;
+  "/tools/submit": typeof ToolsSubmitRoute;
+  "/validators/mcp-config": typeof ValidatorsMcpConfigRoute;
+  "/validators/skill-package": typeof ValidatorsSkillPackageRoute;
+  "/jobs/": typeof JobsIndexRoute;
+  "/$category/$slug/llms.txt": typeof CategorySlugLlmsDottxtRoute;
+  "/api/admin/jobs": typeof ApiAdminJobsRouteWithChildren;
+  "/api/admin/listing-leads": typeof ApiAdminListingLeadsRoute;
+  "/api/community-signals/query": typeof ApiCommunitySignalsQueryRoute;
+  "/api/jobs/$slug": typeof ApiJobsSlugRoute;
+  "/api/newsletter/subscribe": typeof ApiNewsletterSubscribeRoute;
+  "/api/newsletter/webhook": typeof ApiNewsletterWebhookRoute;
+  "/api/public/alerts": typeof ApiPublicAlertsRoute;
+  "/api/registry/categories": typeof ApiRegistryCategoriesRoute;
+  "/api/registry/diff": typeof ApiRegistryDiffRoute;
+  "/api/registry/feed": typeof ApiRegistryFeedRoute;
+  "/api/registry/integrity": typeof ApiRegistryIntegrityRoute;
+  "/api/registry/manifest": typeof ApiRegistryManifestRoute;
+  "/api/registry/search": typeof ApiRegistrySearchRoute;
+  "/api/registry/trending": typeof ApiRegistryTrendingRoute;
+  "/api/submissions/preflight": typeof ApiSubmissionsPreflightRoute;
+  "/api/submissions/queue": typeof ApiSubmissionsQueueRoute;
+  "/api/votes/query": typeof ApiVotesQueryRoute;
+  "/api/votes/toggle": typeof ApiVotesToggleRoute;
+  "/entry/$category/$slug": typeof EntryCategorySlugRoute;
+  "/og/$category/$slug": typeof OgCategorySlugRoute;
+  "/api/admin/jobs/health": typeof ApiAdminJobsHealthRoute;
+  "/api/brand-assets/$kind/$domain": typeof ApiBrandAssetsKindDomainRoute;
+  "/api/public/feeds/health": typeof ApiPublicFeedsHealthRoute;
+  "/api/public/github/webhook": typeof ApiPublicGithubWebhookRoute;
+  "/api/public/newsletter/subscribe": typeof ApiPublicNewsletterSubscribeRoute;
+  "/api/public/newsletter/unsubscribe": typeof ApiPublicNewsletterUnsubscribeRoute;
+  "/api/public/npm/$": typeof ApiPublicNpmSplatRoute;
+  "/api/registry/entries/$category/$slug": typeof ApiRegistryEntriesCategorySlugRouteWithChildren;
+  "/api/registry/entries/$category/$slug/llms": typeof ApiRegistryEntriesCategorySlugLlmsRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/$category': typeof CategoryRouteWithChildren
-  '/about': typeof AboutRoute
-  '/advertise': typeof AdvertiseRoute
-  '/api-docs': typeof ApiDocsRoute
-  '/atom.xml': typeof AtomDotxmlRoute
-  '/best': typeof BestRouteWithChildren
-  '/brief': typeof BriefRoute
-  '/browse': typeof BrowseRoute
-  '/changelog': typeof ChangelogRoute
-  '/claim': typeof ClaimRoute
-  '/compare': typeof CompareRoute
-  '/contributors': typeof ContributorsRouteWithChildren
-  '/ecosystem': typeof EcosystemRoute
-  '/feed.xml': typeof FeedDotxmlRoute
-  '/feeds': typeof FeedsRouteWithChildren
-  '/integrations': typeof IntegrationsRouteWithChildren
-  '/legal': typeof LegalRoute
-  '/llms-full.txt': typeof LlmsFullDottxtRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
-  '/platforms': typeof PlatformsRoute
-  '/quality': typeof QualityRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/submissions': typeof SubmissionsRouteWithChildren
-  '/submit': typeof SubmitRoute
-  '/subscriptions': typeof SubscriptionsRoute
-  '/tools': typeof ToolsRouteWithChildren
-  '/trending': typeof TrendingRoute
-  '/validators': typeof ValidatorsRouteWithChildren
-  '/$category/$slug': typeof CategorySlugRouteWithChildren
-  '/api/community-signals': typeof ApiCommunitySignalsRouteWithChildren
-  '/api/download': typeof ApiDownloadRoute
-  '/api/github-stats': typeof ApiGithubStatsRoute
-  '/api/intent-events': typeof ApiIntentEventsRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/listing-leads': typeof ApiListingLeadsRoute
-  '/api/mcp': typeof ApiMcpRoute
-  '/api/og': typeof ApiOgRoute
-  '/api/submissions': typeof ApiSubmissionsRouteWithChildren
-  '/best/$slug': typeof BestSlugRoute
-  '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$slug': typeof FeedsSlugRoute
-  '/integrations/$slug': typeof IntegrationsSlugRoute
-  '/jobs/$slug': typeof JobsSlugRoute
-  '/jobs/post': typeof JobsPostRoute
-  '/submissions/$id': typeof SubmissionsIdRoute
-  '/tools/$slug': typeof ToolsSlugRoute
-  '/tools/submit': typeof ToolsSubmitRoute
-  '/validators/mcp-config': typeof ValidatorsMcpConfigRoute
-  '/validators/skill-package': typeof ValidatorsSkillPackageRoute
-  '/jobs': typeof JobsIndexRoute
-  '/$category/$slug/llms.txt': typeof CategorySlugLlmsDottxtRoute
-  '/api/admin/jobs': typeof ApiAdminJobsRouteWithChildren
-  '/api/admin/listing-leads': typeof ApiAdminListingLeadsRoute
-  '/api/community-signals/query': typeof ApiCommunitySignalsQueryRoute
-  '/api/newsletter/subscribe': typeof ApiNewsletterSubscribeRoute
-  '/api/newsletter/webhook': typeof ApiNewsletterWebhookRoute
-  '/api/public/alerts': typeof ApiPublicAlertsRoute
-  '/api/registry/categories': typeof ApiRegistryCategoriesRoute
-  '/api/registry/diff': typeof ApiRegistryDiffRoute
-  '/api/registry/feed': typeof ApiRegistryFeedRoute
-  '/api/registry/integrity': typeof ApiRegistryIntegrityRoute
-  '/api/registry/manifest': typeof ApiRegistryManifestRoute
-  '/api/registry/search': typeof ApiRegistrySearchRoute
-  '/api/registry/trending': typeof ApiRegistryTrendingRoute
-  '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
-  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
-  '/api/votes/query': typeof ApiVotesQueryRoute
-  '/api/votes/toggle': typeof ApiVotesToggleRoute
-  '/entry/$category/$slug': typeof EntryCategorySlugRoute
-  '/og/$category/$slug': typeof OgCategorySlugRoute
-  '/api/admin/jobs/health': typeof ApiAdminJobsHealthRoute
-  '/api/brand-assets/$kind/$domain': typeof ApiBrandAssetsKindDomainRoute
-  '/api/public/feeds/health': typeof ApiPublicFeedsHealthRoute
-  '/api/public/github/webhook': typeof ApiPublicGithubWebhookRoute
-  '/api/public/newsletter/subscribe': typeof ApiPublicNewsletterSubscribeRoute
-  '/api/public/newsletter/unsubscribe': typeof ApiPublicNewsletterUnsubscribeRoute
-  '/api/public/npm/$': typeof ApiPublicNpmSplatRoute
-  '/api/registry/entries/$category/$slug': typeof ApiRegistryEntriesCategorySlugRouteWithChildren
-  '/api/registry/entries/$category/$slug/llms': typeof ApiRegistryEntriesCategorySlugLlmsRoute
+  "/": typeof IndexRoute;
+  "/$category": typeof CategoryRouteWithChildren;
+  "/about": typeof AboutRoute;
+  "/advertise": typeof AdvertiseRoute;
+  "/api-docs": typeof ApiDocsRoute;
+  "/atom.xml": typeof AtomDotxmlRoute;
+  "/best": typeof BestRouteWithChildren;
+  "/brief": typeof BriefRoute;
+  "/browse": typeof BrowseRoute;
+  "/changelog": typeof ChangelogRoute;
+  "/claim": typeof ClaimRoute;
+  "/compare": typeof CompareRoute;
+  "/contributors": typeof ContributorsRouteWithChildren;
+  "/ecosystem": typeof EcosystemRoute;
+  "/feed.xml": typeof FeedDotxmlRoute;
+  "/feeds": typeof FeedsRouteWithChildren;
+  "/integrations": typeof IntegrationsRouteWithChildren;
+  "/legal": typeof LegalRoute;
+  "/llms-full.txt": typeof LlmsFullDottxtRoute;
+  "/llms.txt": typeof LlmsDottxtRoute;
+  "/manifest.webmanifest": typeof ManifestDotwebmanifestRoute;
+  "/platforms": typeof PlatformsRoute;
+  "/quality": typeof QualityRoute;
+  "/robots.txt": typeof RobotsDottxtRoute;
+  "/sitemap.xml": typeof SitemapDotxmlRoute;
+  "/submissions": typeof SubmissionsRouteWithChildren;
+  "/submit": typeof SubmitRoute;
+  "/subscriptions": typeof SubscriptionsRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/trending": typeof TrendingRoute;
+  "/validators": typeof ValidatorsRouteWithChildren;
+  "/$category/$slug": typeof CategorySlugRouteWithChildren;
+  "/api/community-signals": typeof ApiCommunitySignalsRouteWithChildren;
+  "/api/download": typeof ApiDownloadRoute;
+  "/api/github-stats": typeof ApiGithubStatsRoute;
+  "/api/intent-events": typeof ApiIntentEventsRoute;
+  "/api/jobs": typeof ApiJobsRouteWithChildren;
+  "/api/listing-leads": typeof ApiListingLeadsRoute;
+  "/api/mcp": typeof ApiMcpRoute;
+  "/api/og": typeof ApiOgRoute;
+  "/api/submissions": typeof ApiSubmissionsRouteWithChildren;
+  "/best/$slug": typeof BestSlugRoute;
+  "/contributors/$slug": typeof ContributorsSlugRoute;
+  "/feeds/$slug": typeof FeedsSlugRoute;
+  "/integrations/$slug": typeof IntegrationsSlugRoute;
+  "/jobs/$slug": typeof JobsSlugRoute;
+  "/jobs/post": typeof JobsPostRoute;
+  "/submissions/$id": typeof SubmissionsIdRoute;
+  "/tools/$slug": typeof ToolsSlugRoute;
+  "/tools/submit": typeof ToolsSubmitRoute;
+  "/validators/mcp-config": typeof ValidatorsMcpConfigRoute;
+  "/validators/skill-package": typeof ValidatorsSkillPackageRoute;
+  "/jobs": typeof JobsIndexRoute;
+  "/$category/$slug/llms.txt": typeof CategorySlugLlmsDottxtRoute;
+  "/api/admin/jobs": typeof ApiAdminJobsRouteWithChildren;
+  "/api/admin/listing-leads": typeof ApiAdminListingLeadsRoute;
+  "/api/community-signals/query": typeof ApiCommunitySignalsQueryRoute;
+  "/api/jobs/$slug": typeof ApiJobsSlugRoute;
+  "/api/newsletter/subscribe": typeof ApiNewsletterSubscribeRoute;
+  "/api/newsletter/webhook": typeof ApiNewsletterWebhookRoute;
+  "/api/public/alerts": typeof ApiPublicAlertsRoute;
+  "/api/registry/categories": typeof ApiRegistryCategoriesRoute;
+  "/api/registry/diff": typeof ApiRegistryDiffRoute;
+  "/api/registry/feed": typeof ApiRegistryFeedRoute;
+  "/api/registry/integrity": typeof ApiRegistryIntegrityRoute;
+  "/api/registry/manifest": typeof ApiRegistryManifestRoute;
+  "/api/registry/search": typeof ApiRegistrySearchRoute;
+  "/api/registry/trending": typeof ApiRegistryTrendingRoute;
+  "/api/submissions/preflight": typeof ApiSubmissionsPreflightRoute;
+  "/api/submissions/queue": typeof ApiSubmissionsQueueRoute;
+  "/api/votes/query": typeof ApiVotesQueryRoute;
+  "/api/votes/toggle": typeof ApiVotesToggleRoute;
+  "/entry/$category/$slug": typeof EntryCategorySlugRoute;
+  "/og/$category/$slug": typeof OgCategorySlugRoute;
+  "/api/admin/jobs/health": typeof ApiAdminJobsHealthRoute;
+  "/api/brand-assets/$kind/$domain": typeof ApiBrandAssetsKindDomainRoute;
+  "/api/public/feeds/health": typeof ApiPublicFeedsHealthRoute;
+  "/api/public/github/webhook": typeof ApiPublicGithubWebhookRoute;
+  "/api/public/newsletter/subscribe": typeof ApiPublicNewsletterSubscribeRoute;
+  "/api/public/newsletter/unsubscribe": typeof ApiPublicNewsletterUnsubscribeRoute;
+  "/api/public/npm/$": typeof ApiPublicNpmSplatRoute;
+  "/api/registry/entries/$category/$slug": typeof ApiRegistryEntriesCategorySlugRouteWithChildren;
+  "/api/registry/entries/$category/$slug/llms": typeof ApiRegistryEntriesCategorySlugLlmsRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/$category': typeof CategoryRouteWithChildren
-  '/about': typeof AboutRoute
-  '/advertise': typeof AdvertiseRoute
-  '/api-docs': typeof ApiDocsRoute
-  '/atom.xml': typeof AtomDotxmlRoute
-  '/best': typeof BestRouteWithChildren
-  '/brief': typeof BriefRoute
-  '/browse': typeof BrowseRoute
-  '/changelog': typeof ChangelogRoute
-  '/claim': typeof ClaimRoute
-  '/compare': typeof CompareRoute
-  '/contributors': typeof ContributorsRouteWithChildren
-  '/ecosystem': typeof EcosystemRoute
-  '/feed.xml': typeof FeedDotxmlRoute
-  '/feeds': typeof FeedsRouteWithChildren
-  '/integrations': typeof IntegrationsRouteWithChildren
-  '/legal': typeof LegalRoute
-  '/llms-full.txt': typeof LlmsFullDottxtRoute
-  '/llms.txt': typeof LlmsDottxtRoute
-  '/manifest.webmanifest': typeof ManifestDotwebmanifestRoute
-  '/platforms': typeof PlatformsRoute
-  '/quality': typeof QualityRoute
-  '/robots.txt': typeof RobotsDottxtRoute
-  '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/submissions': typeof SubmissionsRouteWithChildren
-  '/submit': typeof SubmitRoute
-  '/subscriptions': typeof SubscriptionsRoute
-  '/tools': typeof ToolsRouteWithChildren
-  '/trending': typeof TrendingRoute
-  '/validators': typeof ValidatorsRouteWithChildren
-  '/$category/$slug': typeof CategorySlugRouteWithChildren
-  '/api/community-signals': typeof ApiCommunitySignalsRouteWithChildren
-  '/api/download': typeof ApiDownloadRoute
-  '/api/github-stats': typeof ApiGithubStatsRoute
-  '/api/intent-events': typeof ApiIntentEventsRoute
-  '/api/jobs': typeof ApiJobsRoute
-  '/api/listing-leads': typeof ApiListingLeadsRoute
-  '/api/mcp': typeof ApiMcpRoute
-  '/api/og': typeof ApiOgRoute
-  '/api/submissions': typeof ApiSubmissionsRouteWithChildren
-  '/best/$slug': typeof BestSlugRoute
-  '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$slug': typeof FeedsSlugRoute
-  '/integrations/$slug': typeof IntegrationsSlugRoute
-  '/jobs/$slug': typeof JobsSlugRoute
-  '/jobs/post': typeof JobsPostRoute
-  '/submissions/$id': typeof SubmissionsIdRoute
-  '/tools/$slug': typeof ToolsSlugRoute
-  '/tools/submit': typeof ToolsSubmitRoute
-  '/validators/mcp-config': typeof ValidatorsMcpConfigRoute
-  '/validators/skill-package': typeof ValidatorsSkillPackageRoute
-  '/jobs/': typeof JobsIndexRoute
-  '/$category/$slug/llms.txt': typeof CategorySlugLlmsDottxtRoute
-  '/api/admin/jobs': typeof ApiAdminJobsRouteWithChildren
-  '/api/admin/listing-leads': typeof ApiAdminListingLeadsRoute
-  '/api/community-signals/query': typeof ApiCommunitySignalsQueryRoute
-  '/api/newsletter/subscribe': typeof ApiNewsletterSubscribeRoute
-  '/api/newsletter/webhook': typeof ApiNewsletterWebhookRoute
-  '/api/public/alerts': typeof ApiPublicAlertsRoute
-  '/api/registry/categories': typeof ApiRegistryCategoriesRoute
-  '/api/registry/diff': typeof ApiRegistryDiffRoute
-  '/api/registry/feed': typeof ApiRegistryFeedRoute
-  '/api/registry/integrity': typeof ApiRegistryIntegrityRoute
-  '/api/registry/manifest': typeof ApiRegistryManifestRoute
-  '/api/registry/search': typeof ApiRegistrySearchRoute
-  '/api/registry/trending': typeof ApiRegistryTrendingRoute
-  '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
-  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
-  '/api/votes/query': typeof ApiVotesQueryRoute
-  '/api/votes/toggle': typeof ApiVotesToggleRoute
-  '/entry/$category/$slug': typeof EntryCategorySlugRoute
-  '/og/$category/$slug': typeof OgCategorySlugRoute
-  '/api/admin/jobs/health': typeof ApiAdminJobsHealthRoute
-  '/api/brand-assets/$kind/$domain': typeof ApiBrandAssetsKindDomainRoute
-  '/api/public/feeds/health': typeof ApiPublicFeedsHealthRoute
-  '/api/public/github/webhook': typeof ApiPublicGithubWebhookRoute
-  '/api/public/newsletter/subscribe': typeof ApiPublicNewsletterSubscribeRoute
-  '/api/public/newsletter/unsubscribe': typeof ApiPublicNewsletterUnsubscribeRoute
-  '/api/public/npm/$': typeof ApiPublicNpmSplatRoute
-  '/api/registry/entries/$category/$slug': typeof ApiRegistryEntriesCategorySlugRouteWithChildren
-  '/api/registry/entries/$category/$slug/llms': typeof ApiRegistryEntriesCategorySlugLlmsRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/$category": typeof CategoryRouteWithChildren;
+  "/about": typeof AboutRoute;
+  "/advertise": typeof AdvertiseRoute;
+  "/api-docs": typeof ApiDocsRoute;
+  "/atom.xml": typeof AtomDotxmlRoute;
+  "/best": typeof BestRouteWithChildren;
+  "/brief": typeof BriefRoute;
+  "/browse": typeof BrowseRoute;
+  "/changelog": typeof ChangelogRoute;
+  "/claim": typeof ClaimRoute;
+  "/compare": typeof CompareRoute;
+  "/contributors": typeof ContributorsRouteWithChildren;
+  "/ecosystem": typeof EcosystemRoute;
+  "/feed.xml": typeof FeedDotxmlRoute;
+  "/feeds": typeof FeedsRouteWithChildren;
+  "/integrations": typeof IntegrationsRouteWithChildren;
+  "/legal": typeof LegalRoute;
+  "/llms-full.txt": typeof LlmsFullDottxtRoute;
+  "/llms.txt": typeof LlmsDottxtRoute;
+  "/manifest.webmanifest": typeof ManifestDotwebmanifestRoute;
+  "/platforms": typeof PlatformsRoute;
+  "/quality": typeof QualityRoute;
+  "/robots.txt": typeof RobotsDottxtRoute;
+  "/sitemap.xml": typeof SitemapDotxmlRoute;
+  "/submissions": typeof SubmissionsRouteWithChildren;
+  "/submit": typeof SubmitRoute;
+  "/subscriptions": typeof SubscriptionsRoute;
+  "/tools": typeof ToolsRouteWithChildren;
+  "/trending": typeof TrendingRoute;
+  "/validators": typeof ValidatorsRouteWithChildren;
+  "/$category/$slug": typeof CategorySlugRouteWithChildren;
+  "/api/community-signals": typeof ApiCommunitySignalsRouteWithChildren;
+  "/api/download": typeof ApiDownloadRoute;
+  "/api/github-stats": typeof ApiGithubStatsRoute;
+  "/api/intent-events": typeof ApiIntentEventsRoute;
+  "/api/jobs": typeof ApiJobsRouteWithChildren;
+  "/api/listing-leads": typeof ApiListingLeadsRoute;
+  "/api/mcp": typeof ApiMcpRoute;
+  "/api/og": typeof ApiOgRoute;
+  "/api/submissions": typeof ApiSubmissionsRouteWithChildren;
+  "/best/$slug": typeof BestSlugRoute;
+  "/contributors/$slug": typeof ContributorsSlugRoute;
+  "/feeds/$slug": typeof FeedsSlugRoute;
+  "/integrations/$slug": typeof IntegrationsSlugRoute;
+  "/jobs/$slug": typeof JobsSlugRoute;
+  "/jobs/post": typeof JobsPostRoute;
+  "/submissions/$id": typeof SubmissionsIdRoute;
+  "/tools/$slug": typeof ToolsSlugRoute;
+  "/tools/submit": typeof ToolsSubmitRoute;
+  "/validators/mcp-config": typeof ValidatorsMcpConfigRoute;
+  "/validators/skill-package": typeof ValidatorsSkillPackageRoute;
+  "/jobs/": typeof JobsIndexRoute;
+  "/$category/$slug/llms.txt": typeof CategorySlugLlmsDottxtRoute;
+  "/api/admin/jobs": typeof ApiAdminJobsRouteWithChildren;
+  "/api/admin/listing-leads": typeof ApiAdminListingLeadsRoute;
+  "/api/community-signals/query": typeof ApiCommunitySignalsQueryRoute;
+  "/api/jobs/$slug": typeof ApiJobsSlugRoute;
+  "/api/newsletter/subscribe": typeof ApiNewsletterSubscribeRoute;
+  "/api/newsletter/webhook": typeof ApiNewsletterWebhookRoute;
+  "/api/public/alerts": typeof ApiPublicAlertsRoute;
+  "/api/registry/categories": typeof ApiRegistryCategoriesRoute;
+  "/api/registry/diff": typeof ApiRegistryDiffRoute;
+  "/api/registry/feed": typeof ApiRegistryFeedRoute;
+  "/api/registry/integrity": typeof ApiRegistryIntegrityRoute;
+  "/api/registry/manifest": typeof ApiRegistryManifestRoute;
+  "/api/registry/search": typeof ApiRegistrySearchRoute;
+  "/api/registry/trending": typeof ApiRegistryTrendingRoute;
+  "/api/submissions/preflight": typeof ApiSubmissionsPreflightRoute;
+  "/api/submissions/queue": typeof ApiSubmissionsQueueRoute;
+  "/api/votes/query": typeof ApiVotesQueryRoute;
+  "/api/votes/toggle": typeof ApiVotesToggleRoute;
+  "/entry/$category/$slug": typeof EntryCategorySlugRoute;
+  "/og/$category/$slug": typeof OgCategorySlugRoute;
+  "/api/admin/jobs/health": typeof ApiAdminJobsHealthRoute;
+  "/api/brand-assets/$kind/$domain": typeof ApiBrandAssetsKindDomainRoute;
+  "/api/public/feeds/health": typeof ApiPublicFeedsHealthRoute;
+  "/api/public/github/webhook": typeof ApiPublicGithubWebhookRoute;
+  "/api/public/newsletter/subscribe": typeof ApiPublicNewsletterSubscribeRoute;
+  "/api/public/newsletter/unsubscribe": typeof ApiPublicNewsletterUnsubscribeRoute;
+  "/api/public/npm/$": typeof ApiPublicNpmSplatRoute;
+  "/api/registry/entries/$category/$slug": typeof ApiRegistryEntriesCategorySlugRouteWithChildren;
+  "/api/registry/entries/$category/$slug/llms": typeof ApiRegistryEntriesCategorySlugLlmsRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/$category'
-    | '/about'
-    | '/advertise'
-    | '/api-docs'
-    | '/atom.xml'
-    | '/best'
-    | '/brief'
-    | '/browse'
-    | '/changelog'
-    | '/claim'
-    | '/compare'
-    | '/contributors'
-    | '/ecosystem'
-    | '/feed.xml'
-    | '/feeds'
-    | '/integrations'
-    | '/legal'
-    | '/llms-full.txt'
-    | '/llms.txt'
-    | '/manifest.webmanifest'
-    | '/platforms'
-    | '/quality'
-    | '/robots.txt'
-    | '/sitemap.xml'
-    | '/submissions'
-    | '/submit'
-    | '/subscriptions'
-    | '/tools'
-    | '/trending'
-    | '/validators'
-    | '/$category/$slug'
-    | '/api/community-signals'
-    | '/api/download'
-    | '/api/github-stats'
-    | '/api/intent-events'
-    | '/api/jobs'
-    | '/api/listing-leads'
-    | '/api/mcp'
-    | '/api/og'
-    | '/api/submissions'
-    | '/best/$slug'
-    | '/contributors/$slug'
-    | '/feeds/$slug'
-    | '/integrations/$slug'
-    | '/jobs/$slug'
-    | '/jobs/post'
-    | '/submissions/$id'
-    | '/tools/$slug'
-    | '/tools/submit'
-    | '/validators/mcp-config'
-    | '/validators/skill-package'
-    | '/jobs/'
-    | '/$category/$slug/llms.txt'
-    | '/api/admin/jobs'
-    | '/api/admin/listing-leads'
-    | '/api/community-signals/query'
-    | '/api/newsletter/subscribe'
-    | '/api/newsletter/webhook'
-    | '/api/public/alerts'
-    | '/api/registry/categories'
-    | '/api/registry/diff'
-    | '/api/registry/feed'
-    | '/api/registry/integrity'
-    | '/api/registry/manifest'
-    | '/api/registry/search'
-    | '/api/registry/trending'
-    | '/api/submissions/preflight'
-    | '/api/submissions/queue'
-    | '/api/votes/query'
-    | '/api/votes/toggle'
-    | '/entry/$category/$slug'
-    | '/og/$category/$slug'
-    | '/api/admin/jobs/health'
-    | '/api/brand-assets/$kind/$domain'
-    | '/api/public/feeds/health'
-    | '/api/public/github/webhook'
-    | '/api/public/newsletter/subscribe'
-    | '/api/public/newsletter/unsubscribe'
-    | '/api/public/npm/$'
-    | '/api/registry/entries/$category/$slug'
-    | '/api/registry/entries/$category/$slug/llms'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/$category"
+    | "/about"
+    | "/advertise"
+    | "/api-docs"
+    | "/atom.xml"
+    | "/best"
+    | "/brief"
+    | "/browse"
+    | "/changelog"
+    | "/claim"
+    | "/compare"
+    | "/contributors"
+    | "/ecosystem"
+    | "/feed.xml"
+    | "/feeds"
+    | "/integrations"
+    | "/legal"
+    | "/llms-full.txt"
+    | "/llms.txt"
+    | "/manifest.webmanifest"
+    | "/platforms"
+    | "/quality"
+    | "/robots.txt"
+    | "/sitemap.xml"
+    | "/submissions"
+    | "/submit"
+    | "/subscriptions"
+    | "/tools"
+    | "/trending"
+    | "/validators"
+    | "/$category/$slug"
+    | "/api/community-signals"
+    | "/api/download"
+    | "/api/github-stats"
+    | "/api/intent-events"
+    | "/api/jobs"
+    | "/api/listing-leads"
+    | "/api/mcp"
+    | "/api/og"
+    | "/api/submissions"
+    | "/best/$slug"
+    | "/contributors/$slug"
+    | "/feeds/$slug"
+    | "/integrations/$slug"
+    | "/jobs/$slug"
+    | "/jobs/post"
+    | "/submissions/$id"
+    | "/tools/$slug"
+    | "/tools/submit"
+    | "/validators/mcp-config"
+    | "/validators/skill-package"
+    | "/jobs/"
+    | "/$category/$slug/llms.txt"
+    | "/api/admin/jobs"
+    | "/api/admin/listing-leads"
+    | "/api/community-signals/query"
+    | "/api/jobs/$slug"
+    | "/api/newsletter/subscribe"
+    | "/api/newsletter/webhook"
+    | "/api/public/alerts"
+    | "/api/registry/categories"
+    | "/api/registry/diff"
+    | "/api/registry/feed"
+    | "/api/registry/integrity"
+    | "/api/registry/manifest"
+    | "/api/registry/search"
+    | "/api/registry/trending"
+    | "/api/submissions/preflight"
+    | "/api/submissions/queue"
+    | "/api/votes/query"
+    | "/api/votes/toggle"
+    | "/entry/$category/$slug"
+    | "/og/$category/$slug"
+    | "/api/admin/jobs/health"
+    | "/api/brand-assets/$kind/$domain"
+    | "/api/public/feeds/health"
+    | "/api/public/github/webhook"
+    | "/api/public/newsletter/subscribe"
+    | "/api/public/newsletter/unsubscribe"
+    | "/api/public/npm/$"
+    | "/api/registry/entries/$category/$slug"
+    | "/api/registry/entries/$category/$slug/llms";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/$category'
-    | '/about'
-    | '/advertise'
-    | '/api-docs'
-    | '/atom.xml'
-    | '/best'
-    | '/brief'
-    | '/browse'
-    | '/changelog'
-    | '/claim'
-    | '/compare'
-    | '/contributors'
-    | '/ecosystem'
-    | '/feed.xml'
-    | '/feeds'
-    | '/integrations'
-    | '/legal'
-    | '/llms-full.txt'
-    | '/llms.txt'
-    | '/manifest.webmanifest'
-    | '/platforms'
-    | '/quality'
-    | '/robots.txt'
-    | '/sitemap.xml'
-    | '/submissions'
-    | '/submit'
-    | '/subscriptions'
-    | '/tools'
-    | '/trending'
-    | '/validators'
-    | '/$category/$slug'
-    | '/api/community-signals'
-    | '/api/download'
-    | '/api/github-stats'
-    | '/api/intent-events'
-    | '/api/jobs'
-    | '/api/listing-leads'
-    | '/api/mcp'
-    | '/api/og'
-    | '/api/submissions'
-    | '/best/$slug'
-    | '/contributors/$slug'
-    | '/feeds/$slug'
-    | '/integrations/$slug'
-    | '/jobs/$slug'
-    | '/jobs/post'
-    | '/submissions/$id'
-    | '/tools/$slug'
-    | '/tools/submit'
-    | '/validators/mcp-config'
-    | '/validators/skill-package'
-    | '/jobs'
-    | '/$category/$slug/llms.txt'
-    | '/api/admin/jobs'
-    | '/api/admin/listing-leads'
-    | '/api/community-signals/query'
-    | '/api/newsletter/subscribe'
-    | '/api/newsletter/webhook'
-    | '/api/public/alerts'
-    | '/api/registry/categories'
-    | '/api/registry/diff'
-    | '/api/registry/feed'
-    | '/api/registry/integrity'
-    | '/api/registry/manifest'
-    | '/api/registry/search'
-    | '/api/registry/trending'
-    | '/api/submissions/preflight'
-    | '/api/submissions/queue'
-    | '/api/votes/query'
-    | '/api/votes/toggle'
-    | '/entry/$category/$slug'
-    | '/og/$category/$slug'
-    | '/api/admin/jobs/health'
-    | '/api/brand-assets/$kind/$domain'
-    | '/api/public/feeds/health'
-    | '/api/public/github/webhook'
-    | '/api/public/newsletter/subscribe'
-    | '/api/public/newsletter/unsubscribe'
-    | '/api/public/npm/$'
-    | '/api/registry/entries/$category/$slug'
-    | '/api/registry/entries/$category/$slug/llms'
+    | "/"
+    | "/$category"
+    | "/about"
+    | "/advertise"
+    | "/api-docs"
+    | "/atom.xml"
+    | "/best"
+    | "/brief"
+    | "/browse"
+    | "/changelog"
+    | "/claim"
+    | "/compare"
+    | "/contributors"
+    | "/ecosystem"
+    | "/feed.xml"
+    | "/feeds"
+    | "/integrations"
+    | "/legal"
+    | "/llms-full.txt"
+    | "/llms.txt"
+    | "/manifest.webmanifest"
+    | "/platforms"
+    | "/quality"
+    | "/robots.txt"
+    | "/sitemap.xml"
+    | "/submissions"
+    | "/submit"
+    | "/subscriptions"
+    | "/tools"
+    | "/trending"
+    | "/validators"
+    | "/$category/$slug"
+    | "/api/community-signals"
+    | "/api/download"
+    | "/api/github-stats"
+    | "/api/intent-events"
+    | "/api/jobs"
+    | "/api/listing-leads"
+    | "/api/mcp"
+    | "/api/og"
+    | "/api/submissions"
+    | "/best/$slug"
+    | "/contributors/$slug"
+    | "/feeds/$slug"
+    | "/integrations/$slug"
+    | "/jobs/$slug"
+    | "/jobs/post"
+    | "/submissions/$id"
+    | "/tools/$slug"
+    | "/tools/submit"
+    | "/validators/mcp-config"
+    | "/validators/skill-package"
+    | "/jobs"
+    | "/$category/$slug/llms.txt"
+    | "/api/admin/jobs"
+    | "/api/admin/listing-leads"
+    | "/api/community-signals/query"
+    | "/api/jobs/$slug"
+    | "/api/newsletter/subscribe"
+    | "/api/newsletter/webhook"
+    | "/api/public/alerts"
+    | "/api/registry/categories"
+    | "/api/registry/diff"
+    | "/api/registry/feed"
+    | "/api/registry/integrity"
+    | "/api/registry/manifest"
+    | "/api/registry/search"
+    | "/api/registry/trending"
+    | "/api/submissions/preflight"
+    | "/api/submissions/queue"
+    | "/api/votes/query"
+    | "/api/votes/toggle"
+    | "/entry/$category/$slug"
+    | "/og/$category/$slug"
+    | "/api/admin/jobs/health"
+    | "/api/brand-assets/$kind/$domain"
+    | "/api/public/feeds/health"
+    | "/api/public/github/webhook"
+    | "/api/public/newsletter/subscribe"
+    | "/api/public/newsletter/unsubscribe"
+    | "/api/public/npm/$"
+    | "/api/registry/entries/$category/$slug"
+    | "/api/registry/entries/$category/$slug/llms";
   id:
-    | '__root__'
-    | '/'
-    | '/$category'
-    | '/about'
-    | '/advertise'
-    | '/api-docs'
-    | '/atom.xml'
-    | '/best'
-    | '/brief'
-    | '/browse'
-    | '/changelog'
-    | '/claim'
-    | '/compare'
-    | '/contributors'
-    | '/ecosystem'
-    | '/feed.xml'
-    | '/feeds'
-    | '/integrations'
-    | '/legal'
-    | '/llms-full.txt'
-    | '/llms.txt'
-    | '/manifest.webmanifest'
-    | '/platforms'
-    | '/quality'
-    | '/robots.txt'
-    | '/sitemap.xml'
-    | '/submissions'
-    | '/submit'
-    | '/subscriptions'
-    | '/tools'
-    | '/trending'
-    | '/validators'
-    | '/$category/$slug'
-    | '/api/community-signals'
-    | '/api/download'
-    | '/api/github-stats'
-    | '/api/intent-events'
-    | '/api/jobs'
-    | '/api/listing-leads'
-    | '/api/mcp'
-    | '/api/og'
-    | '/api/submissions'
-    | '/best/$slug'
-    | '/contributors/$slug'
-    | '/feeds/$slug'
-    | '/integrations/$slug'
-    | '/jobs/$slug'
-    | '/jobs/post'
-    | '/submissions/$id'
-    | '/tools/$slug'
-    | '/tools/submit'
-    | '/validators/mcp-config'
-    | '/validators/skill-package'
-    | '/jobs/'
-    | '/$category/$slug/llms.txt'
-    | '/api/admin/jobs'
-    | '/api/admin/listing-leads'
-    | '/api/community-signals/query'
-    | '/api/newsletter/subscribe'
-    | '/api/newsletter/webhook'
-    | '/api/public/alerts'
-    | '/api/registry/categories'
-    | '/api/registry/diff'
-    | '/api/registry/feed'
-    | '/api/registry/integrity'
-    | '/api/registry/manifest'
-    | '/api/registry/search'
-    | '/api/registry/trending'
-    | '/api/submissions/preflight'
-    | '/api/submissions/queue'
-    | '/api/votes/query'
-    | '/api/votes/toggle'
-    | '/entry/$category/$slug'
-    | '/og/$category/$slug'
-    | '/api/admin/jobs/health'
-    | '/api/brand-assets/$kind/$domain'
-    | '/api/public/feeds/health'
-    | '/api/public/github/webhook'
-    | '/api/public/newsletter/subscribe'
-    | '/api/public/newsletter/unsubscribe'
-    | '/api/public/npm/$'
-    | '/api/registry/entries/$category/$slug'
-    | '/api/registry/entries/$category/$slug/llms'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/$category"
+    | "/about"
+    | "/advertise"
+    | "/api-docs"
+    | "/atom.xml"
+    | "/best"
+    | "/brief"
+    | "/browse"
+    | "/changelog"
+    | "/claim"
+    | "/compare"
+    | "/contributors"
+    | "/ecosystem"
+    | "/feed.xml"
+    | "/feeds"
+    | "/integrations"
+    | "/legal"
+    | "/llms-full.txt"
+    | "/llms.txt"
+    | "/manifest.webmanifest"
+    | "/platforms"
+    | "/quality"
+    | "/robots.txt"
+    | "/sitemap.xml"
+    | "/submissions"
+    | "/submit"
+    | "/subscriptions"
+    | "/tools"
+    | "/trending"
+    | "/validators"
+    | "/$category/$slug"
+    | "/api/community-signals"
+    | "/api/download"
+    | "/api/github-stats"
+    | "/api/intent-events"
+    | "/api/jobs"
+    | "/api/listing-leads"
+    | "/api/mcp"
+    | "/api/og"
+    | "/api/submissions"
+    | "/best/$slug"
+    | "/contributors/$slug"
+    | "/feeds/$slug"
+    | "/integrations/$slug"
+    | "/jobs/$slug"
+    | "/jobs/post"
+    | "/submissions/$id"
+    | "/tools/$slug"
+    | "/tools/submit"
+    | "/validators/mcp-config"
+    | "/validators/skill-package"
+    | "/jobs/"
+    | "/$category/$slug/llms.txt"
+    | "/api/admin/jobs"
+    | "/api/admin/listing-leads"
+    | "/api/community-signals/query"
+    | "/api/jobs/$slug"
+    | "/api/newsletter/subscribe"
+    | "/api/newsletter/webhook"
+    | "/api/public/alerts"
+    | "/api/registry/categories"
+    | "/api/registry/diff"
+    | "/api/registry/feed"
+    | "/api/registry/integrity"
+    | "/api/registry/manifest"
+    | "/api/registry/search"
+    | "/api/registry/trending"
+    | "/api/submissions/preflight"
+    | "/api/submissions/queue"
+    | "/api/votes/query"
+    | "/api/votes/toggle"
+    | "/entry/$category/$slug"
+    | "/og/$category/$slug"
+    | "/api/admin/jobs/health"
+    | "/api/brand-assets/$kind/$domain"
+    | "/api/public/feeds/health"
+    | "/api/public/github/webhook"
+    | "/api/public/newsletter/subscribe"
+    | "/api/public/newsletter/unsubscribe"
+    | "/api/public/npm/$"
+    | "/api/registry/entries/$category/$slug"
+    | "/api/registry/entries/$category/$slug/llms";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  CategoryRoute: typeof CategoryRouteWithChildren
-  AboutRoute: typeof AboutRoute
-  AdvertiseRoute: typeof AdvertiseRoute
-  ApiDocsRoute: typeof ApiDocsRoute
-  AtomDotxmlRoute: typeof AtomDotxmlRoute
-  BestRoute: typeof BestRouteWithChildren
-  BriefRoute: typeof BriefRoute
-  BrowseRoute: typeof BrowseRoute
-  ChangelogRoute: typeof ChangelogRoute
-  ClaimRoute: typeof ClaimRoute
-  CompareRoute: typeof CompareRoute
-  ContributorsRoute: typeof ContributorsRouteWithChildren
-  EcosystemRoute: typeof EcosystemRoute
-  FeedDotxmlRoute: typeof FeedDotxmlRoute
-  FeedsRoute: typeof FeedsRouteWithChildren
-  IntegrationsRoute: typeof IntegrationsRouteWithChildren
-  LegalRoute: typeof LegalRoute
-  LlmsFullDottxtRoute: typeof LlmsFullDottxtRoute
-  LlmsDottxtRoute: typeof LlmsDottxtRoute
-  ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute
-  PlatformsRoute: typeof PlatformsRoute
-  QualityRoute: typeof QualityRoute
-  RobotsDottxtRoute: typeof RobotsDottxtRoute
-  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SubmissionsRoute: typeof SubmissionsRouteWithChildren
-  SubmitRoute: typeof SubmitRoute
-  SubscriptionsRoute: typeof SubscriptionsRoute
-  ToolsRoute: typeof ToolsRouteWithChildren
-  TrendingRoute: typeof TrendingRoute
-  ValidatorsRoute: typeof ValidatorsRouteWithChildren
-  ApiCommunitySignalsRoute: typeof ApiCommunitySignalsRouteWithChildren
-  ApiDownloadRoute: typeof ApiDownloadRoute
-  ApiGithubStatsRoute: typeof ApiGithubStatsRoute
-  ApiIntentEventsRoute: typeof ApiIntentEventsRoute
-  ApiJobsRoute: typeof ApiJobsRoute
-  ApiListingLeadsRoute: typeof ApiListingLeadsRoute
-  ApiMcpRoute: typeof ApiMcpRoute
-  ApiOgRoute: typeof ApiOgRoute
-  ApiSubmissionsRoute: typeof ApiSubmissionsRouteWithChildren
-  JobsSlugRoute: typeof JobsSlugRoute
-  JobsPostRoute: typeof JobsPostRoute
-  JobsIndexRoute: typeof JobsIndexRoute
-  ApiAdminJobsRoute: typeof ApiAdminJobsRouteWithChildren
-  ApiAdminListingLeadsRoute: typeof ApiAdminListingLeadsRoute
-  ApiNewsletterSubscribeRoute: typeof ApiNewsletterSubscribeRoute
-  ApiNewsletterWebhookRoute: typeof ApiNewsletterWebhookRoute
-  ApiPublicAlertsRoute: typeof ApiPublicAlertsRoute
-  ApiRegistryCategoriesRoute: typeof ApiRegistryCategoriesRoute
-  ApiRegistryDiffRoute: typeof ApiRegistryDiffRoute
-  ApiRegistryFeedRoute: typeof ApiRegistryFeedRoute
-  ApiRegistryIntegrityRoute: typeof ApiRegistryIntegrityRoute
-  ApiRegistryManifestRoute: typeof ApiRegistryManifestRoute
-  ApiRegistrySearchRoute: typeof ApiRegistrySearchRoute
-  ApiRegistryTrendingRoute: typeof ApiRegistryTrendingRoute
-  ApiVotesQueryRoute: typeof ApiVotesQueryRoute
-  ApiVotesToggleRoute: typeof ApiVotesToggleRoute
-  EntryCategorySlugRoute: typeof EntryCategorySlugRoute
-  OgCategorySlugRoute: typeof OgCategorySlugRoute
-  ApiBrandAssetsKindDomainRoute: typeof ApiBrandAssetsKindDomainRoute
-  ApiPublicFeedsHealthRoute: typeof ApiPublicFeedsHealthRoute
-  ApiPublicGithubWebhookRoute: typeof ApiPublicGithubWebhookRoute
-  ApiPublicNewsletterSubscribeRoute: typeof ApiPublicNewsletterSubscribeRoute
-  ApiPublicNewsletterUnsubscribeRoute: typeof ApiPublicNewsletterUnsubscribeRoute
-  ApiPublicNpmSplatRoute: typeof ApiPublicNpmSplatRoute
-  ApiRegistryEntriesCategorySlugRoute: typeof ApiRegistryEntriesCategorySlugRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  CategoryRoute: typeof CategoryRouteWithChildren;
+  AboutRoute: typeof AboutRoute;
+  AdvertiseRoute: typeof AdvertiseRoute;
+  ApiDocsRoute: typeof ApiDocsRoute;
+  AtomDotxmlRoute: typeof AtomDotxmlRoute;
+  BestRoute: typeof BestRouteWithChildren;
+  BriefRoute: typeof BriefRoute;
+  BrowseRoute: typeof BrowseRoute;
+  ChangelogRoute: typeof ChangelogRoute;
+  ClaimRoute: typeof ClaimRoute;
+  CompareRoute: typeof CompareRoute;
+  ContributorsRoute: typeof ContributorsRouteWithChildren;
+  EcosystemRoute: typeof EcosystemRoute;
+  FeedDotxmlRoute: typeof FeedDotxmlRoute;
+  FeedsRoute: typeof FeedsRouteWithChildren;
+  IntegrationsRoute: typeof IntegrationsRouteWithChildren;
+  LegalRoute: typeof LegalRoute;
+  LlmsFullDottxtRoute: typeof LlmsFullDottxtRoute;
+  LlmsDottxtRoute: typeof LlmsDottxtRoute;
+  ManifestDotwebmanifestRoute: typeof ManifestDotwebmanifestRoute;
+  PlatformsRoute: typeof PlatformsRoute;
+  QualityRoute: typeof QualityRoute;
+  RobotsDottxtRoute: typeof RobotsDottxtRoute;
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute;
+  SubmissionsRoute: typeof SubmissionsRouteWithChildren;
+  SubmitRoute: typeof SubmitRoute;
+  SubscriptionsRoute: typeof SubscriptionsRoute;
+  ToolsRoute: typeof ToolsRouteWithChildren;
+  TrendingRoute: typeof TrendingRoute;
+  ValidatorsRoute: typeof ValidatorsRouteWithChildren;
+  ApiCommunitySignalsRoute: typeof ApiCommunitySignalsRouteWithChildren;
+  ApiDownloadRoute: typeof ApiDownloadRoute;
+  ApiGithubStatsRoute: typeof ApiGithubStatsRoute;
+  ApiIntentEventsRoute: typeof ApiIntentEventsRoute;
+  ApiJobsRoute: typeof ApiJobsRouteWithChildren;
+  ApiListingLeadsRoute: typeof ApiListingLeadsRoute;
+  ApiMcpRoute: typeof ApiMcpRoute;
+  ApiOgRoute: typeof ApiOgRoute;
+  ApiSubmissionsRoute: typeof ApiSubmissionsRouteWithChildren;
+  JobsSlugRoute: typeof JobsSlugRoute;
+  JobsPostRoute: typeof JobsPostRoute;
+  JobsIndexRoute: typeof JobsIndexRoute;
+  ApiAdminJobsRoute: typeof ApiAdminJobsRouteWithChildren;
+  ApiAdminListingLeadsRoute: typeof ApiAdminListingLeadsRoute;
+  ApiNewsletterSubscribeRoute: typeof ApiNewsletterSubscribeRoute;
+  ApiNewsletterWebhookRoute: typeof ApiNewsletterWebhookRoute;
+  ApiPublicAlertsRoute: typeof ApiPublicAlertsRoute;
+  ApiRegistryCategoriesRoute: typeof ApiRegistryCategoriesRoute;
+  ApiRegistryDiffRoute: typeof ApiRegistryDiffRoute;
+  ApiRegistryFeedRoute: typeof ApiRegistryFeedRoute;
+  ApiRegistryIntegrityRoute: typeof ApiRegistryIntegrityRoute;
+  ApiRegistryManifestRoute: typeof ApiRegistryManifestRoute;
+  ApiRegistrySearchRoute: typeof ApiRegistrySearchRoute;
+  ApiRegistryTrendingRoute: typeof ApiRegistryTrendingRoute;
+  ApiVotesQueryRoute: typeof ApiVotesQueryRoute;
+  ApiVotesToggleRoute: typeof ApiVotesToggleRoute;
+  EntryCategorySlugRoute: typeof EntryCategorySlugRoute;
+  OgCategorySlugRoute: typeof OgCategorySlugRoute;
+  ApiBrandAssetsKindDomainRoute: typeof ApiBrandAssetsKindDomainRoute;
+  ApiPublicFeedsHealthRoute: typeof ApiPublicFeedsHealthRoute;
+  ApiPublicGithubWebhookRoute: typeof ApiPublicGithubWebhookRoute;
+  ApiPublicNewsletterSubscribeRoute: typeof ApiPublicNewsletterSubscribeRoute;
+  ApiPublicNewsletterUnsubscribeRoute: typeof ApiPublicNewsletterUnsubscribeRoute;
+  ApiPublicNpmSplatRoute: typeof ApiPublicNpmSplatRoute;
+  ApiRegistryEntriesCategorySlugRoute: typeof ApiRegistryEntriesCategorySlugRouteWithChildren;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/validators': {
-      id: '/validators'
-      path: '/validators'
-      fullPath: '/validators'
-      preLoaderRoute: typeof ValidatorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/trending': {
-      id: '/trending'
-      path: '/trending'
-      fullPath: '/trending'
-      preLoaderRoute: typeof TrendingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/tools': {
-      id: '/tools'
-      path: '/tools'
-      fullPath: '/tools'
-      preLoaderRoute: typeof ToolsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/subscriptions': {
-      id: '/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/subscriptions'
-      preLoaderRoute: typeof SubscriptionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/submit': {
-      id: '/submit'
-      path: '/submit'
-      fullPath: '/submit'
-      preLoaderRoute: typeof SubmitRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/submissions': {
-      id: '/submissions'
-      path: '/submissions'
-      fullPath: '/submissions'
-      preLoaderRoute: typeof SubmissionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/robots.txt': {
-      id: '/robots.txt'
-      path: '/robots.txt'
-      fullPath: '/robots.txt'
-      preLoaderRoute: typeof RobotsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/quality': {
-      id: '/quality'
-      path: '/quality'
-      fullPath: '/quality'
-      preLoaderRoute: typeof QualityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/platforms': {
-      id: '/platforms'
-      path: '/platforms'
-      fullPath: '/platforms'
-      preLoaderRoute: typeof PlatformsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/manifest.webmanifest': {
-      id: '/manifest.webmanifest'
-      path: '/manifest.webmanifest'
-      fullPath: '/manifest.webmanifest'
-      preLoaderRoute: typeof ManifestDotwebmanifestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/llms.txt': {
-      id: '/llms.txt'
-      path: '/llms.txt'
-      fullPath: '/llms.txt'
-      preLoaderRoute: typeof LlmsDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/llms-full.txt': {
-      id: '/llms-full.txt'
-      path: '/llms-full.txt'
-      fullPath: '/llms-full.txt'
-      preLoaderRoute: typeof LlmsFullDottxtRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/legal': {
-      id: '/legal'
-      path: '/legal'
-      fullPath: '/legal'
-      preLoaderRoute: typeof LegalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/integrations': {
-      id: '/integrations'
-      path: '/integrations'
-      fullPath: '/integrations'
-      preLoaderRoute: typeof IntegrationsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feeds': {
-      id: '/feeds'
-      path: '/feeds'
-      fullPath: '/feeds'
-      preLoaderRoute: typeof FeedsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/feed.xml': {
-      id: '/feed.xml'
-      path: '/feed.xml'
-      fullPath: '/feed.xml'
-      preLoaderRoute: typeof FeedDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ecosystem': {
-      id: '/ecosystem'
-      path: '/ecosystem'
-      fullPath: '/ecosystem'
-      preLoaderRoute: typeof EcosystemRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contributors': {
-      id: '/contributors'
-      path: '/contributors'
-      fullPath: '/contributors'
-      preLoaderRoute: typeof ContributorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/compare': {
-      id: '/compare'
-      path: '/compare'
-      fullPath: '/compare'
-      preLoaderRoute: typeof CompareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/claim': {
-      id: '/claim'
-      path: '/claim'
-      fullPath: '/claim'
-      preLoaderRoute: typeof ClaimRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/changelog': {
-      id: '/changelog'
-      path: '/changelog'
-      fullPath: '/changelog'
-      preLoaderRoute: typeof ChangelogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/browse': {
-      id: '/browse'
-      path: '/browse'
-      fullPath: '/browse'
-      preLoaderRoute: typeof BrowseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brief': {
-      id: '/brief'
-      path: '/brief'
-      fullPath: '/brief'
-      preLoaderRoute: typeof BriefRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/best': {
-      id: '/best'
-      path: '/best'
-      fullPath: '/best'
-      preLoaderRoute: typeof BestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/atom.xml': {
-      id: '/atom.xml'
-      path: '/atom.xml'
-      fullPath: '/atom.xml'
-      preLoaderRoute: typeof AtomDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api-docs': {
-      id: '/api-docs'
-      path: '/api-docs'
-      fullPath: '/api-docs'
-      preLoaderRoute: typeof ApiDocsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/advertise': {
-      id: '/advertise'
-      path: '/advertise'
-      fullPath: '/advertise'
-      preLoaderRoute: typeof AdvertiseRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$category': {
-      id: '/$category'
-      path: '/$category'
-      fullPath: '/$category'
-      preLoaderRoute: typeof CategoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/jobs/': {
-      id: '/jobs/'
-      path: '/jobs'
-      fullPath: '/jobs/'
-      preLoaderRoute: typeof JobsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/validators/skill-package': {
-      id: '/validators/skill-package'
-      path: '/skill-package'
-      fullPath: '/validators/skill-package'
-      preLoaderRoute: typeof ValidatorsSkillPackageRouteImport
-      parentRoute: typeof ValidatorsRoute
-    }
-    '/validators/mcp-config': {
-      id: '/validators/mcp-config'
-      path: '/mcp-config'
-      fullPath: '/validators/mcp-config'
-      preLoaderRoute: typeof ValidatorsMcpConfigRouteImport
-      parentRoute: typeof ValidatorsRoute
-    }
-    '/tools/submit': {
-      id: '/tools/submit'
-      path: '/submit'
-      fullPath: '/tools/submit'
-      preLoaderRoute: typeof ToolsSubmitRouteImport
-      parentRoute: typeof ToolsRoute
-    }
-    '/tools/$slug': {
-      id: '/tools/$slug'
-      path: '/$slug'
-      fullPath: '/tools/$slug'
-      preLoaderRoute: typeof ToolsSlugRouteImport
-      parentRoute: typeof ToolsRoute
-    }
-    '/submissions/$id': {
-      id: '/submissions/$id'
-      path: '/$id'
-      fullPath: '/submissions/$id'
-      preLoaderRoute: typeof SubmissionsIdRouteImport
-      parentRoute: typeof SubmissionsRoute
-    }
-    '/jobs/post': {
-      id: '/jobs/post'
-      path: '/jobs/post'
-      fullPath: '/jobs/post'
-      preLoaderRoute: typeof JobsPostRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/jobs/$slug': {
-      id: '/jobs/$slug'
-      path: '/jobs/$slug'
-      fullPath: '/jobs/$slug'
-      preLoaderRoute: typeof JobsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/integrations/$slug': {
-      id: '/integrations/$slug'
-      path: '/$slug'
-      fullPath: '/integrations/$slug'
-      preLoaderRoute: typeof IntegrationsSlugRouteImport
-      parentRoute: typeof IntegrationsRoute
-    }
-    '/feeds/$slug': {
-      id: '/feeds/$slug'
-      path: '/$slug'
-      fullPath: '/feeds/$slug'
-      preLoaderRoute: typeof FeedsSlugRouteImport
-      parentRoute: typeof FeedsRoute
-    }
-    '/contributors/$slug': {
-      id: '/contributors/$slug'
-      path: '/$slug'
-      fullPath: '/contributors/$slug'
-      preLoaderRoute: typeof ContributorsSlugRouteImport
-      parentRoute: typeof ContributorsRoute
-    }
-    '/best/$slug': {
-      id: '/best/$slug'
-      path: '/$slug'
-      fullPath: '/best/$slug'
-      preLoaderRoute: typeof BestSlugRouteImport
-      parentRoute: typeof BestRoute
-    }
-    '/api/submissions': {
-      id: '/api/submissions'
-      path: '/api/submissions'
-      fullPath: '/api/submissions'
-      preLoaderRoute: typeof ApiSubmissionsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/og': {
-      id: '/api/og'
-      path: '/api/og'
-      fullPath: '/api/og'
-      preLoaderRoute: typeof ApiOgRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/mcp': {
-      id: '/api/mcp'
-      path: '/api/mcp'
-      fullPath: '/api/mcp'
-      preLoaderRoute: typeof ApiMcpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/listing-leads': {
-      id: '/api/listing-leads'
-      path: '/api/listing-leads'
-      fullPath: '/api/listing-leads'
-      preLoaderRoute: typeof ApiListingLeadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/jobs': {
-      id: '/api/jobs'
-      path: '/api/jobs'
-      fullPath: '/api/jobs'
-      preLoaderRoute: typeof ApiJobsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/intent-events': {
-      id: '/api/intent-events'
-      path: '/api/intent-events'
-      fullPath: '/api/intent-events'
-      preLoaderRoute: typeof ApiIntentEventsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/github-stats': {
-      id: '/api/github-stats'
-      path: '/api/github-stats'
-      fullPath: '/api/github-stats'
-      preLoaderRoute: typeof ApiGithubStatsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/download': {
-      id: '/api/download'
-      path: '/api/download'
-      fullPath: '/api/download'
-      preLoaderRoute: typeof ApiDownloadRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/community-signals': {
-      id: '/api/community-signals'
-      path: '/api/community-signals'
-      fullPath: '/api/community-signals'
-      preLoaderRoute: typeof ApiCommunitySignalsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$category/$slug': {
-      id: '/$category/$slug'
-      path: '/$slug'
-      fullPath: '/$category/$slug'
-      preLoaderRoute: typeof CategorySlugRouteImport
-      parentRoute: typeof CategoryRoute
-    }
-    '/og/$category/$slug': {
-      id: '/og/$category/$slug'
-      path: '/og/$category/$slug'
-      fullPath: '/og/$category/$slug'
-      preLoaderRoute: typeof OgCategorySlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/entry/$category/$slug': {
-      id: '/entry/$category/$slug'
-      path: '/entry/$category/$slug'
-      fullPath: '/entry/$category/$slug'
-      preLoaderRoute: typeof EntryCategorySlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/votes/toggle': {
-      id: '/api/votes/toggle'
-      path: '/api/votes/toggle'
-      fullPath: '/api/votes/toggle'
-      preLoaderRoute: typeof ApiVotesToggleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/votes/query': {
-      id: '/api/votes/query'
-      path: '/api/votes/query'
-      fullPath: '/api/votes/query'
-      preLoaderRoute: typeof ApiVotesQueryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/submissions/queue': {
-      id: '/api/submissions/queue'
-      path: '/queue'
-      fullPath: '/api/submissions/queue'
-      preLoaderRoute: typeof ApiSubmissionsQueueRouteImport
-      parentRoute: typeof ApiSubmissionsRoute
-    }
-    '/api/submissions/preflight': {
-      id: '/api/submissions/preflight'
-      path: '/preflight'
-      fullPath: '/api/submissions/preflight'
-      preLoaderRoute: typeof ApiSubmissionsPreflightRouteImport
-      parentRoute: typeof ApiSubmissionsRoute
-    }
-    '/api/registry/trending': {
-      id: '/api/registry/trending'
-      path: '/api/registry/trending'
-      fullPath: '/api/registry/trending'
-      preLoaderRoute: typeof ApiRegistryTrendingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/search': {
-      id: '/api/registry/search'
-      path: '/api/registry/search'
-      fullPath: '/api/registry/search'
-      preLoaderRoute: typeof ApiRegistrySearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/manifest': {
-      id: '/api/registry/manifest'
-      path: '/api/registry/manifest'
-      fullPath: '/api/registry/manifest'
-      preLoaderRoute: typeof ApiRegistryManifestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/integrity': {
-      id: '/api/registry/integrity'
-      path: '/api/registry/integrity'
-      fullPath: '/api/registry/integrity'
-      preLoaderRoute: typeof ApiRegistryIntegrityRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/feed': {
-      id: '/api/registry/feed'
-      path: '/api/registry/feed'
-      fullPath: '/api/registry/feed'
-      preLoaderRoute: typeof ApiRegistryFeedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/diff': {
-      id: '/api/registry/diff'
-      path: '/api/registry/diff'
-      fullPath: '/api/registry/diff'
-      preLoaderRoute: typeof ApiRegistryDiffRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/categories': {
-      id: '/api/registry/categories'
-      path: '/api/registry/categories'
-      fullPath: '/api/registry/categories'
-      preLoaderRoute: typeof ApiRegistryCategoriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/alerts': {
-      id: '/api/public/alerts'
-      path: '/api/public/alerts'
-      fullPath: '/api/public/alerts'
-      preLoaderRoute: typeof ApiPublicAlertsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/newsletter/webhook': {
-      id: '/api/newsletter/webhook'
-      path: '/api/newsletter/webhook'
-      fullPath: '/api/newsletter/webhook'
-      preLoaderRoute: typeof ApiNewsletterWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/newsletter/subscribe': {
-      id: '/api/newsletter/subscribe'
-      path: '/api/newsletter/subscribe'
-      fullPath: '/api/newsletter/subscribe'
-      preLoaderRoute: typeof ApiNewsletterSubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/community-signals/query': {
-      id: '/api/community-signals/query'
-      path: '/query'
-      fullPath: '/api/community-signals/query'
-      preLoaderRoute: typeof ApiCommunitySignalsQueryRouteImport
-      parentRoute: typeof ApiCommunitySignalsRoute
-    }
-    '/api/admin/listing-leads': {
-      id: '/api/admin/listing-leads'
-      path: '/api/admin/listing-leads'
-      fullPath: '/api/admin/listing-leads'
-      preLoaderRoute: typeof ApiAdminListingLeadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/jobs': {
-      id: '/api/admin/jobs'
-      path: '/api/admin/jobs'
-      fullPath: '/api/admin/jobs'
-      preLoaderRoute: typeof ApiAdminJobsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/$category/$slug/llms.txt': {
-      id: '/$category/$slug/llms.txt'
-      path: '/llms.txt'
-      fullPath: '/$category/$slug/llms.txt'
-      preLoaderRoute: typeof CategorySlugLlmsDottxtRouteImport
-      parentRoute: typeof CategorySlugRoute
-    }
-    '/api/public/npm/$': {
-      id: '/api/public/npm/$'
-      path: '/api/public/npm/$'
-      fullPath: '/api/public/npm/$'
-      preLoaderRoute: typeof ApiPublicNpmSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/newsletter/unsubscribe': {
-      id: '/api/public/newsletter/unsubscribe'
-      path: '/api/public/newsletter/unsubscribe'
-      fullPath: '/api/public/newsletter/unsubscribe'
-      preLoaderRoute: typeof ApiPublicNewsletterUnsubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/newsletter/subscribe': {
-      id: '/api/public/newsletter/subscribe'
-      path: '/api/public/newsletter/subscribe'
-      fullPath: '/api/public/newsletter/subscribe'
-      preLoaderRoute: typeof ApiPublicNewsletterSubscribeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/github/webhook': {
-      id: '/api/public/github/webhook'
-      path: '/api/public/github/webhook'
-      fullPath: '/api/public/github/webhook'
-      preLoaderRoute: typeof ApiPublicGithubWebhookRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/feeds/health': {
-      id: '/api/public/feeds/health'
-      path: '/api/public/feeds/health'
-      fullPath: '/api/public/feeds/health'
-      preLoaderRoute: typeof ApiPublicFeedsHealthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/brand-assets/$kind/$domain': {
-      id: '/api/brand-assets/$kind/$domain'
-      path: '/api/brand-assets/$kind/$domain'
-      fullPath: '/api/brand-assets/$kind/$domain'
-      preLoaderRoute: typeof ApiBrandAssetsKindDomainRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/admin/jobs/health': {
-      id: '/api/admin/jobs/health'
-      path: '/health'
-      fullPath: '/api/admin/jobs/health'
-      preLoaderRoute: typeof ApiAdminJobsHealthRouteImport
-      parentRoute: typeof ApiAdminJobsRoute
-    }
-    '/api/registry/entries/$category/$slug': {
-      id: '/api/registry/entries/$category/$slug'
-      path: '/api/registry/entries/$category/$slug'
-      fullPath: '/api/registry/entries/$category/$slug'
-      preLoaderRoute: typeof ApiRegistryEntriesCategorySlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/registry/entries/$category/$slug/llms': {
-      id: '/api/registry/entries/$category/$slug/llms'
-      path: '/llms'
-      fullPath: '/api/registry/entries/$category/$slug/llms'
-      preLoaderRoute: typeof ApiRegistryEntriesCategorySlugLlmsRouteImport
-      parentRoute: typeof ApiRegistryEntriesCategorySlugRoute
-    }
+    "/validators": {
+      id: "/validators";
+      path: "/validators";
+      fullPath: "/validators";
+      preLoaderRoute: typeof ValidatorsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/trending": {
+      id: "/trending";
+      path: "/trending";
+      fullPath: "/trending";
+      preLoaderRoute: typeof TrendingRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/tools": {
+      id: "/tools";
+      path: "/tools";
+      fullPath: "/tools";
+      preLoaderRoute: typeof ToolsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/subscriptions": {
+      id: "/subscriptions";
+      path: "/subscriptions";
+      fullPath: "/subscriptions";
+      preLoaderRoute: typeof SubscriptionsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/submit": {
+      id: "/submit";
+      path: "/submit";
+      fullPath: "/submit";
+      preLoaderRoute: typeof SubmitRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/submissions": {
+      id: "/submissions";
+      path: "/submissions";
+      fullPath: "/submissions";
+      preLoaderRoute: typeof SubmissionsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/sitemap.xml": {
+      id: "/sitemap.xml";
+      path: "/sitemap.xml";
+      fullPath: "/sitemap.xml";
+      preLoaderRoute: typeof SitemapDotxmlRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/robots.txt": {
+      id: "/robots.txt";
+      path: "/robots.txt";
+      fullPath: "/robots.txt";
+      preLoaderRoute: typeof RobotsDottxtRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/quality": {
+      id: "/quality";
+      path: "/quality";
+      fullPath: "/quality";
+      preLoaderRoute: typeof QualityRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/platforms": {
+      id: "/platforms";
+      path: "/platforms";
+      fullPath: "/platforms";
+      preLoaderRoute: typeof PlatformsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/manifest.webmanifest": {
+      id: "/manifest.webmanifest";
+      path: "/manifest.webmanifest";
+      fullPath: "/manifest.webmanifest";
+      preLoaderRoute: typeof ManifestDotwebmanifestRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/llms.txt": {
+      id: "/llms.txt";
+      path: "/llms.txt";
+      fullPath: "/llms.txt";
+      preLoaderRoute: typeof LlmsDottxtRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/llms-full.txt": {
+      id: "/llms-full.txt";
+      path: "/llms-full.txt";
+      fullPath: "/llms-full.txt";
+      preLoaderRoute: typeof LlmsFullDottxtRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/legal": {
+      id: "/legal";
+      path: "/legal";
+      fullPath: "/legal";
+      preLoaderRoute: typeof LegalRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/integrations": {
+      id: "/integrations";
+      path: "/integrations";
+      fullPath: "/integrations";
+      preLoaderRoute: typeof IntegrationsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/feeds": {
+      id: "/feeds";
+      path: "/feeds";
+      fullPath: "/feeds";
+      preLoaderRoute: typeof FeedsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/feed.xml": {
+      id: "/feed.xml";
+      path: "/feed.xml";
+      fullPath: "/feed.xml";
+      preLoaderRoute: typeof FeedDotxmlRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/ecosystem": {
+      id: "/ecosystem";
+      path: "/ecosystem";
+      fullPath: "/ecosystem";
+      preLoaderRoute: typeof EcosystemRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/contributors": {
+      id: "/contributors";
+      path: "/contributors";
+      fullPath: "/contributors";
+      preLoaderRoute: typeof ContributorsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/compare": {
+      id: "/compare";
+      path: "/compare";
+      fullPath: "/compare";
+      preLoaderRoute: typeof CompareRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/claim": {
+      id: "/claim";
+      path: "/claim";
+      fullPath: "/claim";
+      preLoaderRoute: typeof ClaimRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/changelog": {
+      id: "/changelog";
+      path: "/changelog";
+      fullPath: "/changelog";
+      preLoaderRoute: typeof ChangelogRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/browse": {
+      id: "/browse";
+      path: "/browse";
+      fullPath: "/browse";
+      preLoaderRoute: typeof BrowseRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/brief": {
+      id: "/brief";
+      path: "/brief";
+      fullPath: "/brief";
+      preLoaderRoute: typeof BriefRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/best": {
+      id: "/best";
+      path: "/best";
+      fullPath: "/best";
+      preLoaderRoute: typeof BestRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/atom.xml": {
+      id: "/atom.xml";
+      path: "/atom.xml";
+      fullPath: "/atom.xml";
+      preLoaderRoute: typeof AtomDotxmlRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api-docs": {
+      id: "/api-docs";
+      path: "/api-docs";
+      fullPath: "/api-docs";
+      preLoaderRoute: typeof ApiDocsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/advertise": {
+      id: "/advertise";
+      path: "/advertise";
+      fullPath: "/advertise";
+      preLoaderRoute: typeof AdvertiseRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/about": {
+      id: "/about";
+      path: "/about";
+      fullPath: "/about";
+      preLoaderRoute: typeof AboutRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/$category": {
+      id: "/$category";
+      path: "/$category";
+      fullPath: "/$category";
+      preLoaderRoute: typeof CategoryRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/jobs/": {
+      id: "/jobs/";
+      path: "/jobs";
+      fullPath: "/jobs/";
+      preLoaderRoute: typeof JobsIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/validators/skill-package": {
+      id: "/validators/skill-package";
+      path: "/skill-package";
+      fullPath: "/validators/skill-package";
+      preLoaderRoute: typeof ValidatorsSkillPackageRouteImport;
+      parentRoute: typeof ValidatorsRoute;
+    };
+    "/validators/mcp-config": {
+      id: "/validators/mcp-config";
+      path: "/mcp-config";
+      fullPath: "/validators/mcp-config";
+      preLoaderRoute: typeof ValidatorsMcpConfigRouteImport;
+      parentRoute: typeof ValidatorsRoute;
+    };
+    "/tools/submit": {
+      id: "/tools/submit";
+      path: "/submit";
+      fullPath: "/tools/submit";
+      preLoaderRoute: typeof ToolsSubmitRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
+    "/tools/$slug": {
+      id: "/tools/$slug";
+      path: "/$slug";
+      fullPath: "/tools/$slug";
+      preLoaderRoute: typeof ToolsSlugRouteImport;
+      parentRoute: typeof ToolsRoute;
+    };
+    "/submissions/$id": {
+      id: "/submissions/$id";
+      path: "/$id";
+      fullPath: "/submissions/$id";
+      preLoaderRoute: typeof SubmissionsIdRouteImport;
+      parentRoute: typeof SubmissionsRoute;
+    };
+    "/jobs/post": {
+      id: "/jobs/post";
+      path: "/jobs/post";
+      fullPath: "/jobs/post";
+      preLoaderRoute: typeof JobsPostRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/jobs/$slug": {
+      id: "/jobs/$slug";
+      path: "/jobs/$slug";
+      fullPath: "/jobs/$slug";
+      preLoaderRoute: typeof JobsSlugRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/integrations/$slug": {
+      id: "/integrations/$slug";
+      path: "/$slug";
+      fullPath: "/integrations/$slug";
+      preLoaderRoute: typeof IntegrationsSlugRouteImport;
+      parentRoute: typeof IntegrationsRoute;
+    };
+    "/feeds/$slug": {
+      id: "/feeds/$slug";
+      path: "/$slug";
+      fullPath: "/feeds/$slug";
+      preLoaderRoute: typeof FeedsSlugRouteImport;
+      parentRoute: typeof FeedsRoute;
+    };
+    "/contributors/$slug": {
+      id: "/contributors/$slug";
+      path: "/$slug";
+      fullPath: "/contributors/$slug";
+      preLoaderRoute: typeof ContributorsSlugRouteImport;
+      parentRoute: typeof ContributorsRoute;
+    };
+    "/best/$slug": {
+      id: "/best/$slug";
+      path: "/$slug";
+      fullPath: "/best/$slug";
+      preLoaderRoute: typeof BestSlugRouteImport;
+      parentRoute: typeof BestRoute;
+    };
+    "/api/submissions": {
+      id: "/api/submissions";
+      path: "/api/submissions";
+      fullPath: "/api/submissions";
+      preLoaderRoute: typeof ApiSubmissionsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/og": {
+      id: "/api/og";
+      path: "/api/og";
+      fullPath: "/api/og";
+      preLoaderRoute: typeof ApiOgRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/mcp": {
+      id: "/api/mcp";
+      path: "/api/mcp";
+      fullPath: "/api/mcp";
+      preLoaderRoute: typeof ApiMcpRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/listing-leads": {
+      id: "/api/listing-leads";
+      path: "/api/listing-leads";
+      fullPath: "/api/listing-leads";
+      preLoaderRoute: typeof ApiListingLeadsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/jobs": {
+      id: "/api/jobs";
+      path: "/api/jobs";
+      fullPath: "/api/jobs";
+      preLoaderRoute: typeof ApiJobsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/intent-events": {
+      id: "/api/intent-events";
+      path: "/api/intent-events";
+      fullPath: "/api/intent-events";
+      preLoaderRoute: typeof ApiIntentEventsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/github-stats": {
+      id: "/api/github-stats";
+      path: "/api/github-stats";
+      fullPath: "/api/github-stats";
+      preLoaderRoute: typeof ApiGithubStatsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/download": {
+      id: "/api/download";
+      path: "/api/download";
+      fullPath: "/api/download";
+      preLoaderRoute: typeof ApiDownloadRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/community-signals": {
+      id: "/api/community-signals";
+      path: "/api/community-signals";
+      fullPath: "/api/community-signals";
+      preLoaderRoute: typeof ApiCommunitySignalsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/$category/$slug": {
+      id: "/$category/$slug";
+      path: "/$slug";
+      fullPath: "/$category/$slug";
+      preLoaderRoute: typeof CategorySlugRouteImport;
+      parentRoute: typeof CategoryRoute;
+    };
+    "/og/$category/$slug": {
+      id: "/og/$category/$slug";
+      path: "/og/$category/$slug";
+      fullPath: "/og/$category/$slug";
+      preLoaderRoute: typeof OgCategorySlugRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/entry/$category/$slug": {
+      id: "/entry/$category/$slug";
+      path: "/entry/$category/$slug";
+      fullPath: "/entry/$category/$slug";
+      preLoaderRoute: typeof EntryCategorySlugRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/votes/toggle": {
+      id: "/api/votes/toggle";
+      path: "/api/votes/toggle";
+      fullPath: "/api/votes/toggle";
+      preLoaderRoute: typeof ApiVotesToggleRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/votes/query": {
+      id: "/api/votes/query";
+      path: "/api/votes/query";
+      fullPath: "/api/votes/query";
+      preLoaderRoute: typeof ApiVotesQueryRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/submissions/queue": {
+      id: "/api/submissions/queue";
+      path: "/queue";
+      fullPath: "/api/submissions/queue";
+      preLoaderRoute: typeof ApiSubmissionsQueueRouteImport;
+      parentRoute: typeof ApiSubmissionsRoute;
+    };
+    "/api/submissions/preflight": {
+      id: "/api/submissions/preflight";
+      path: "/preflight";
+      fullPath: "/api/submissions/preflight";
+      preLoaderRoute: typeof ApiSubmissionsPreflightRouteImport;
+      parentRoute: typeof ApiSubmissionsRoute;
+    };
+    "/api/registry/trending": {
+      id: "/api/registry/trending";
+      path: "/api/registry/trending";
+      fullPath: "/api/registry/trending";
+      preLoaderRoute: typeof ApiRegistryTrendingRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/search": {
+      id: "/api/registry/search";
+      path: "/api/registry/search";
+      fullPath: "/api/registry/search";
+      preLoaderRoute: typeof ApiRegistrySearchRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/manifest": {
+      id: "/api/registry/manifest";
+      path: "/api/registry/manifest";
+      fullPath: "/api/registry/manifest";
+      preLoaderRoute: typeof ApiRegistryManifestRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/integrity": {
+      id: "/api/registry/integrity";
+      path: "/api/registry/integrity";
+      fullPath: "/api/registry/integrity";
+      preLoaderRoute: typeof ApiRegistryIntegrityRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/feed": {
+      id: "/api/registry/feed";
+      path: "/api/registry/feed";
+      fullPath: "/api/registry/feed";
+      preLoaderRoute: typeof ApiRegistryFeedRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/diff": {
+      id: "/api/registry/diff";
+      path: "/api/registry/diff";
+      fullPath: "/api/registry/diff";
+      preLoaderRoute: typeof ApiRegistryDiffRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/categories": {
+      id: "/api/registry/categories";
+      path: "/api/registry/categories";
+      fullPath: "/api/registry/categories";
+      preLoaderRoute: typeof ApiRegistryCategoriesRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/public/alerts": {
+      id: "/api/public/alerts";
+      path: "/api/public/alerts";
+      fullPath: "/api/public/alerts";
+      preLoaderRoute: typeof ApiPublicAlertsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/newsletter/webhook": {
+      id: "/api/newsletter/webhook";
+      path: "/api/newsletter/webhook";
+      fullPath: "/api/newsletter/webhook";
+      preLoaderRoute: typeof ApiNewsletterWebhookRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/newsletter/subscribe": {
+      id: "/api/newsletter/subscribe";
+      path: "/api/newsletter/subscribe";
+      fullPath: "/api/newsletter/subscribe";
+      preLoaderRoute: typeof ApiNewsletterSubscribeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/jobs/$slug": {
+      id: "/api/jobs/$slug";
+      path: "/$slug";
+      fullPath: "/api/jobs/$slug";
+      preLoaderRoute: typeof ApiJobsSlugRouteImport;
+      parentRoute: typeof ApiJobsRoute;
+    };
+    "/api/community-signals/query": {
+      id: "/api/community-signals/query";
+      path: "/query";
+      fullPath: "/api/community-signals/query";
+      preLoaderRoute: typeof ApiCommunitySignalsQueryRouteImport;
+      parentRoute: typeof ApiCommunitySignalsRoute;
+    };
+    "/api/admin/listing-leads": {
+      id: "/api/admin/listing-leads";
+      path: "/api/admin/listing-leads";
+      fullPath: "/api/admin/listing-leads";
+      preLoaderRoute: typeof ApiAdminListingLeadsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/admin/jobs": {
+      id: "/api/admin/jobs";
+      path: "/api/admin/jobs";
+      fullPath: "/api/admin/jobs";
+      preLoaderRoute: typeof ApiAdminJobsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/$category/$slug/llms.txt": {
+      id: "/$category/$slug/llms.txt";
+      path: "/llms.txt";
+      fullPath: "/$category/$slug/llms.txt";
+      preLoaderRoute: typeof CategorySlugLlmsDottxtRouteImport;
+      parentRoute: typeof CategorySlugRoute;
+    };
+    "/api/public/npm/$": {
+      id: "/api/public/npm/$";
+      path: "/api/public/npm/$";
+      fullPath: "/api/public/npm/$";
+      preLoaderRoute: typeof ApiPublicNpmSplatRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/public/newsletter/unsubscribe": {
+      id: "/api/public/newsletter/unsubscribe";
+      path: "/api/public/newsletter/unsubscribe";
+      fullPath: "/api/public/newsletter/unsubscribe";
+      preLoaderRoute: typeof ApiPublicNewsletterUnsubscribeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/public/newsletter/subscribe": {
+      id: "/api/public/newsletter/subscribe";
+      path: "/api/public/newsletter/subscribe";
+      fullPath: "/api/public/newsletter/subscribe";
+      preLoaderRoute: typeof ApiPublicNewsletterSubscribeRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/public/github/webhook": {
+      id: "/api/public/github/webhook";
+      path: "/api/public/github/webhook";
+      fullPath: "/api/public/github/webhook";
+      preLoaderRoute: typeof ApiPublicGithubWebhookRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/public/feeds/health": {
+      id: "/api/public/feeds/health";
+      path: "/api/public/feeds/health";
+      fullPath: "/api/public/feeds/health";
+      preLoaderRoute: typeof ApiPublicFeedsHealthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/brand-assets/$kind/$domain": {
+      id: "/api/brand-assets/$kind/$domain";
+      path: "/api/brand-assets/$kind/$domain";
+      fullPath: "/api/brand-assets/$kind/$domain";
+      preLoaderRoute: typeof ApiBrandAssetsKindDomainRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/admin/jobs/health": {
+      id: "/api/admin/jobs/health";
+      path: "/health";
+      fullPath: "/api/admin/jobs/health";
+      preLoaderRoute: typeof ApiAdminJobsHealthRouteImport;
+      parentRoute: typeof ApiAdminJobsRoute;
+    };
+    "/api/registry/entries/$category/$slug": {
+      id: "/api/registry/entries/$category/$slug";
+      path: "/api/registry/entries/$category/$slug";
+      fullPath: "/api/registry/entries/$category/$slug";
+      preLoaderRoute: typeof ApiRegistryEntriesCategorySlugRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/api/registry/entries/$category/$slug/llms": {
+      id: "/api/registry/entries/$category/$slug/llms";
+      path: "/llms";
+      fullPath: "/api/registry/entries/$category/$slug/llms";
+      preLoaderRoute: typeof ApiRegistryEntriesCategorySlugLlmsRouteImport;
+      parentRoute: typeof ApiRegistryEntriesCategorySlugRoute;
+    };
   }
 }
 
 interface CategorySlugRouteChildren {
-  CategorySlugLlmsDottxtRoute: typeof CategorySlugLlmsDottxtRoute
+  CategorySlugLlmsDottxtRoute: typeof CategorySlugLlmsDottxtRoute;
 }
 
 const CategorySlugRouteChildren: CategorySlugRouteChildren = {
   CategorySlugLlmsDottxtRoute: CategorySlugLlmsDottxtRoute,
-}
+};
 
-const CategorySlugRouteWithChildren = CategorySlugRoute._addFileChildren(
-  CategorySlugRouteChildren,
-)
+const CategorySlugRouteWithChildren = CategorySlugRoute._addFileChildren(CategorySlugRouteChildren);
 
 interface CategoryRouteChildren {
-  CategorySlugRoute: typeof CategorySlugRouteWithChildren
+  CategorySlugRoute: typeof CategorySlugRouteWithChildren;
 }
 
 const CategoryRouteChildren: CategoryRouteChildren = {
   CategorySlugRoute: CategorySlugRouteWithChildren,
-}
+};
 
-const CategoryRouteWithChildren = CategoryRoute._addFileChildren(
-  CategoryRouteChildren,
-)
+const CategoryRouteWithChildren = CategoryRoute._addFileChildren(CategoryRouteChildren);
 
 interface BestRouteChildren {
-  BestSlugRoute: typeof BestSlugRoute
+  BestSlugRoute: typeof BestSlugRoute;
 }
 
 const BestRouteChildren: BestRouteChildren = {
   BestSlugRoute: BestSlugRoute,
-}
+};
 
-const BestRouteWithChildren = BestRoute._addFileChildren(BestRouteChildren)
+const BestRouteWithChildren = BestRoute._addFileChildren(BestRouteChildren);
 
 interface ContributorsRouteChildren {
-  ContributorsSlugRoute: typeof ContributorsSlugRoute
+  ContributorsSlugRoute: typeof ContributorsSlugRoute;
 }
 
 const ContributorsRouteChildren: ContributorsRouteChildren = {
   ContributorsSlugRoute: ContributorsSlugRoute,
-}
+};
 
-const ContributorsRouteWithChildren = ContributorsRoute._addFileChildren(
-  ContributorsRouteChildren,
-)
+const ContributorsRouteWithChildren = ContributorsRoute._addFileChildren(ContributorsRouteChildren);
 
 interface FeedsRouteChildren {
-  FeedsSlugRoute: typeof FeedsSlugRoute
+  FeedsSlugRoute: typeof FeedsSlugRoute;
 }
 
 const FeedsRouteChildren: FeedsRouteChildren = {
   FeedsSlugRoute: FeedsSlugRoute,
-}
+};
 
-const FeedsRouteWithChildren = FeedsRoute._addFileChildren(FeedsRouteChildren)
+const FeedsRouteWithChildren = FeedsRoute._addFileChildren(FeedsRouteChildren);
 
 interface IntegrationsRouteChildren {
-  IntegrationsSlugRoute: typeof IntegrationsSlugRoute
+  IntegrationsSlugRoute: typeof IntegrationsSlugRoute;
 }
 
 const IntegrationsRouteChildren: IntegrationsRouteChildren = {
   IntegrationsSlugRoute: IntegrationsSlugRoute,
-}
+};
 
-const IntegrationsRouteWithChildren = IntegrationsRoute._addFileChildren(
-  IntegrationsRouteChildren,
-)
+const IntegrationsRouteWithChildren = IntegrationsRoute._addFileChildren(IntegrationsRouteChildren);
 
 interface SubmissionsRouteChildren {
-  SubmissionsIdRoute: typeof SubmissionsIdRoute
+  SubmissionsIdRoute: typeof SubmissionsIdRoute;
 }
 
 const SubmissionsRouteChildren: SubmissionsRouteChildren = {
   SubmissionsIdRoute: SubmissionsIdRoute,
-}
+};
 
-const SubmissionsRouteWithChildren = SubmissionsRoute._addFileChildren(
-  SubmissionsRouteChildren,
-)
+const SubmissionsRouteWithChildren = SubmissionsRoute._addFileChildren(SubmissionsRouteChildren);
 
 interface ToolsRouteChildren {
-  ToolsSlugRoute: typeof ToolsSlugRoute
-  ToolsSubmitRoute: typeof ToolsSubmitRoute
+  ToolsSlugRoute: typeof ToolsSlugRoute;
+  ToolsSubmitRoute: typeof ToolsSubmitRoute;
 }
 
 const ToolsRouteChildren: ToolsRouteChildren = {
   ToolsSlugRoute: ToolsSlugRoute,
   ToolsSubmitRoute: ToolsSubmitRoute,
-}
+};
 
-const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren)
+const ToolsRouteWithChildren = ToolsRoute._addFileChildren(ToolsRouteChildren);
 
 interface ValidatorsRouteChildren {
-  ValidatorsMcpConfigRoute: typeof ValidatorsMcpConfigRoute
-  ValidatorsSkillPackageRoute: typeof ValidatorsSkillPackageRoute
+  ValidatorsMcpConfigRoute: typeof ValidatorsMcpConfigRoute;
+  ValidatorsSkillPackageRoute: typeof ValidatorsSkillPackageRoute;
 }
 
 const ValidatorsRouteChildren: ValidatorsRouteChildren = {
   ValidatorsMcpConfigRoute: ValidatorsMcpConfigRoute,
   ValidatorsSkillPackageRoute: ValidatorsSkillPackageRoute,
-}
+};
 
-const ValidatorsRouteWithChildren = ValidatorsRoute._addFileChildren(
-  ValidatorsRouteChildren,
-)
+const ValidatorsRouteWithChildren = ValidatorsRoute._addFileChildren(ValidatorsRouteChildren);
 
 interface ApiCommunitySignalsRouteChildren {
-  ApiCommunitySignalsQueryRoute: typeof ApiCommunitySignalsQueryRoute
+  ApiCommunitySignalsQueryRoute: typeof ApiCommunitySignalsQueryRoute;
 }
 
 const ApiCommunitySignalsRouteChildren: ApiCommunitySignalsRouteChildren = {
   ApiCommunitySignalsQueryRoute: ApiCommunitySignalsQueryRoute,
+};
+
+const ApiCommunitySignalsRouteWithChildren = ApiCommunitySignalsRoute._addFileChildren(
+  ApiCommunitySignalsRouteChildren,
+);
+
+interface ApiJobsRouteChildren {
+  ApiJobsSlugRoute: typeof ApiJobsSlugRoute;
 }
 
-const ApiCommunitySignalsRouteWithChildren =
-  ApiCommunitySignalsRoute._addFileChildren(ApiCommunitySignalsRouteChildren)
+const ApiJobsRouteChildren: ApiJobsRouteChildren = {
+  ApiJobsSlugRoute: ApiJobsSlugRoute,
+};
+
+const ApiJobsRouteWithChildren = ApiJobsRoute._addFileChildren(ApiJobsRouteChildren);
 
 interface ApiSubmissionsRouteChildren {
-  ApiSubmissionsPreflightRoute: typeof ApiSubmissionsPreflightRoute
-  ApiSubmissionsQueueRoute: typeof ApiSubmissionsQueueRoute
+  ApiSubmissionsPreflightRoute: typeof ApiSubmissionsPreflightRoute;
+  ApiSubmissionsQueueRoute: typeof ApiSubmissionsQueueRoute;
 }
 
 const ApiSubmissionsRouteChildren: ApiSubmissionsRouteChildren = {
   ApiSubmissionsPreflightRoute: ApiSubmissionsPreflightRoute,
   ApiSubmissionsQueueRoute: ApiSubmissionsQueueRoute,
-}
+};
 
 const ApiSubmissionsRouteWithChildren = ApiSubmissionsRoute._addFileChildren(
   ApiSubmissionsRouteChildren,
-)
+);
 
 interface ApiAdminJobsRouteChildren {
-  ApiAdminJobsHealthRoute: typeof ApiAdminJobsHealthRoute
+  ApiAdminJobsHealthRoute: typeof ApiAdminJobsHealthRoute;
 }
 
 const ApiAdminJobsRouteChildren: ApiAdminJobsRouteChildren = {
   ApiAdminJobsHealthRoute: ApiAdminJobsHealthRoute,
-}
+};
 
-const ApiAdminJobsRouteWithChildren = ApiAdminJobsRoute._addFileChildren(
-  ApiAdminJobsRouteChildren,
-)
+const ApiAdminJobsRouteWithChildren = ApiAdminJobsRoute._addFileChildren(ApiAdminJobsRouteChildren);
 
 interface ApiRegistryEntriesCategorySlugRouteChildren {
-  ApiRegistryEntriesCategorySlugLlmsRoute: typeof ApiRegistryEntriesCategorySlugLlmsRoute
+  ApiRegistryEntriesCategorySlugLlmsRoute: typeof ApiRegistryEntriesCategorySlugLlmsRoute;
 }
 
-const ApiRegistryEntriesCategorySlugRouteChildren: ApiRegistryEntriesCategorySlugRouteChildren =
-  {
-    ApiRegistryEntriesCategorySlugLlmsRoute:
-      ApiRegistryEntriesCategorySlugLlmsRoute,
-  }
+const ApiRegistryEntriesCategorySlugRouteChildren: ApiRegistryEntriesCategorySlugRouteChildren = {
+  ApiRegistryEntriesCategorySlugLlmsRoute: ApiRegistryEntriesCategorySlugLlmsRoute,
+};
 
 const ApiRegistryEntriesCategorySlugRouteWithChildren =
-  ApiRegistryEntriesCategorySlugRoute._addFileChildren(
-    ApiRegistryEntriesCategorySlugRouteChildren,
-  )
+  ApiRegistryEntriesCategorySlugRoute._addFileChildren(ApiRegistryEntriesCategorySlugRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -1859,7 +1866,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDownloadRoute: ApiDownloadRoute,
   ApiGithubStatsRoute: ApiGithubStatsRoute,
   ApiIntentEventsRoute: ApiIntentEventsRoute,
-  ApiJobsRoute: ApiJobsRoute,
+  ApiJobsRoute: ApiJobsRouteWithChildren,
   ApiListingLeadsRoute: ApiListingLeadsRoute,
   ApiMcpRoute: ApiMcpRoute,
   ApiOgRoute: ApiOgRoute,
@@ -1889,19 +1896,18 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicNewsletterSubscribeRoute: ApiPublicNewsletterSubscribeRoute,
   ApiPublicNewsletterUnsubscribeRoute: ApiPublicNewsletterUnsubscribeRoute,
   ApiPublicNpmSplatRoute: ApiPublicNpmSplatRoute,
-  ApiRegistryEntriesCategorySlugRoute:
-    ApiRegistryEntriesCategorySlugRouteWithChildren,
-}
+  ApiRegistryEntriesCategorySlugRoute: ApiRegistryEntriesCategorySlugRouteWithChildren,
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { startInstance } from "./start.ts";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }

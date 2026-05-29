@@ -4,7 +4,7 @@ import { Webhook } from "svix";
 
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, redactEmail } from "@/lib/api-logs";
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 
 type ResendEvent = {
   type?: string;

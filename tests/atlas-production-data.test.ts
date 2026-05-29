@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { ARTIFACT_CONTRACTS } from "@/data/changelog";
 import { ECOSYSTEM_FEEDS } from "@/data/ecosystem-feeds";
-import { ENTRIES } from "@/data/entries";
+import { BEST_LISTS, ENTRIES, WEEKLY_BRIEF } from "@/data/entries";
 import { getIntegration } from "@/data/integrations";
 import { PLATFORM_MATRIX } from "@/data/platforms";
 import { REVIEW_COVERAGE, REVIEW_SUMMARY } from "@/data/validators";
@@ -84,5 +84,33 @@ describe("Atlas production data wiring", () => {
       fs.readFileSync(path.join(repoRoot, "packages/mcp/package.json"), "utf8"),
     ) as { version: string };
     expect(getIntegration("mcp-server")?.version).toBe(packageJson.version);
+  });
+
+  it("keeps generated best lists and weekly brief backed by registry entries", () => {
+    const entryRefs = new Set(
+      ENTRIES.map((entry) => `${entry.category}/${entry.slug}`),
+    );
+    expect(BEST_LISTS.length).toBeGreaterThanOrEqual(20);
+    expect(BEST_LISTS.map((list) => list.slug)).toContain(
+      "agent-workflow-starter-kits",
+    );
+
+    for (const list of BEST_LISTS) {
+      expect(list.picks.length, list.slug).toBeGreaterThan(0);
+      for (const pick of list.picks) {
+        expect(entryRefs.has(pick.ref), `${list.slug}:${pick.ref}`).toBe(true);
+      }
+    }
+
+    for (const section of [
+      WEEKLY_BRIEF.newEntries,
+      WEEKLY_BRIEF.trustedInstalls,
+      WEEKLY_BRIEF.sourceBackedPicks,
+    ]) {
+      expect(section.length).toBeGreaterThan(0);
+      for (const item of section) {
+        expect(entryRefs.has(item.ref), item.ref).toBe(true);
+      }
+    }
   });
 });

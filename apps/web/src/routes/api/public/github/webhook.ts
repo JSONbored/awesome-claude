@@ -7,14 +7,12 @@
  * paths, and writes them into the edge cache so /api/public/alerts can
  * surface them to watchers without a database.
  *
- * Workers `nodejs_compat` provides node:crypto. The handler is intentionally
- * minimal — fan-out to email (single-send) is invoked here later, once the
- * Resend templates ship.
+ * The handler uses Web Crypto so webhook verification stays compatible with
+ * Workers and does not pull Node crypto into the browser build graph.
  */
 import { createApiFileRoute } from "@/lib/api/file-route";
-import { createHmac, timingSafeEqual } from "node:crypto";
 
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 
 const ALLOWED_REPO = "jsonbored/awesome-claude";
 const ALLOWED_BRANCH = "main";
@@ -40,13 +38,31 @@ interface PushFile {
   message?: string;
 }
 
-function verify(secret: string, signature: string | null, body: string): boolean {
+function toHex(buffer: ArrayBuffer) {
+  return [...new Uint8Array(buffer)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function timingSafeStringEqual(left: string, right: string) {
+  if (left.length !== right.length) return false;
+  let diff = 0;
+  for (let index = 0; index < left.length; index += 1) {
+    diff |= left.charCodeAt(index) ^ right.charCodeAt(index);
+  }
+  return diff === 0;
+}
+
+async function verify(secret: string, signature: string | null, body: string): Promise<boolean> {
   if (!signature || !signature.startsWith("sha256=")) return false;
-  const expected = "sha256=" + createHmac("sha256", secret).update(body).digest("hex");
-  const a = Buffer.from(signature);
-  const b = Buffer.from(expected);
-  if (a.length !== b.length) return false;
-  return timingSafeEqual(a, b);
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(secret),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"],
+  );
+  const digest = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(body));
+  const expected = `sha256=${toHex(digest)}`;
+  return timingSafeStringEqual(signature, expected);
 }
 
 function classify(
@@ -109,7 +125,7 @@ export const Route = createApiFileRoute("/api/public/github/webhook")({
 
         const body = await request.text();
         const sig = request.headers.get("x-hub-signature-256");
-        if (!verify(secret, sig, body)) {
+        if (!(await verify(secret, sig, body))) {
           return new Response("Invalid signature", { status: 401 });
         }
 

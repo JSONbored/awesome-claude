@@ -20,7 +20,7 @@ const manifestMock = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getRegistryManifest: () => Promise.resolve(manifestMock.value),
 }));
 

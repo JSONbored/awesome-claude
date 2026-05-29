@@ -1,10 +1,10 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
-import { normalizeBrandDomain } from "@heyclaude/registry";
+import { normalizeBrandDomain } from "@heyclaude/registry/brand-assets";
 
 import { brandAssetParamsSchema } from "@/lib/api/contracts";
 import { apiError, createApiHandler, type InferApiParams } from "@/lib/api/router";
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const CACHE_CONTROL = "public, max-age=86400, stale-while-revalidate=604800";

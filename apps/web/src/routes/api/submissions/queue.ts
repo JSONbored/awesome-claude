@@ -10,7 +10,7 @@ import {
 import { submissionQueueQuerySchema } from "@/lib/api/contracts";
 import { apiError, apiJson, createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
-import { getCloudflareEnv } from "@/lib/cloudflare-env";
+import { getCloudflareEnv } from "@/lib/cloudflare-env.server";
 
 const GITHUB_API_VERSION = "2022-11-28";
 const GITHUB_USER_AGENT = "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)";

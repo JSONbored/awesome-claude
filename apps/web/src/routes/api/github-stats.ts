@@ -4,7 +4,7 @@ import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
 
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
-import { getEnvString } from "@/lib/cloudflare-env";
+import { getEnvString } from "@/lib/cloudflare-env.server";
 import { siteConfig } from "@/lib/site";
 
 const GITHUB_API_VERSION = "2022-11-28";

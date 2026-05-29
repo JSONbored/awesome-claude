@@ -37,6 +37,7 @@ const apiRoutes = [
   "/api/submissions/queue",
   "/api/download",
   "/api/jobs",
+  "/api/jobs/{slug}",
   "/api/listing-leads",
   "/api/admin/listing-leads",
   "/api/admin/jobs",
@@ -143,6 +144,43 @@ describe("OpenAPI route coverage", () => {
     ).toMatchObject({
       liveRequest: false,
     });
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "jobs-detail"),
+    ).toMatchObject({
+      liveRequest: true,
+      parameters: expect.arrayContaining([
+        expect.objectContaining({ name: "slug", in: "path" }),
+      ]),
+    });
+  });
+
+  it("keeps API docs examples tied to known contracts and real client paths", () => {
+    const routeIds = new Set(
+      listApiRouteDefinitions().map((route) => route.id.replaceAll(".", "-")),
+    );
+    for (const endpoint of ENDPOINTS) {
+      expect(routeIds, endpoint.id).toContain(endpoint.id);
+      expect(endpoint.responseExample, endpoint.id).not.toBe(
+        JSON.stringify({ ok: true }, null, 2),
+      );
+      expect(endpoint.responseExample, endpoint.id).not.toContain("heyclaude.");
+      expect(endpoint.responseExample, endpoint.id).not.toContain(
+        "raycast://extensions/jsonbored/heyclaude/",
+      );
+    }
+
+    const search = ENDPOINTS.find(
+      (endpoint) => endpoint.id === "registry-search",
+    );
+    expect(search?.clientExamples).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: "Raycast",
+          code: "raycast://extensions/jsonbored/heyclaude/search",
+        }),
+        expect.objectContaining({ label: "MCP" }),
+      ]),
+    );
   });
 
   it("keeps route handlers as central-router adapters", () => {

@@ -1,7 +1,7 @@
 import { buildSubmissionIssueDraft, validateSubmission } from "@heyclaude/registry/submission";
 import { analyzeIssueSubmissionRisk } from "@heyclaude/registry/submission-risk";
 
-import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content";
+import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
 
 const DEFAULT_REPO = "JSONbored/awesome-claude";
