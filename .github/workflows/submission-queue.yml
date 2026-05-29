@@ -43,11 +43,16 @@ jobs:
             });
             const userIssues = issues.filter((issue) => !issue.pull_request);
             for (const issue of userIssues) {
-              issue.comments = await github.paginate(github.rest.issues.listComments, {
-                ...context.repo,
-                issue_number: issue.number,
-                per_page: 100
-              });
+              try {
+                issue.comments = await github.paginate(github.rest.issues.listComments, {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  per_page: 100
+                });
+              } catch (error) {
+                core.warning(`Could not fetch comments for #${issue.number}: ${error.message}`);
+                issue.comments = [];
+              }
               try {
                 issue.timeline = await github.paginate(github.rest.issues.listEventsForTimeline, {
                   ...context.repo,

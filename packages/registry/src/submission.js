@@ -623,15 +623,7 @@ export function looksLikeSubmissionIssue(issue = {}) {
   const hasSubmissionShape = hasCategoryField && hasNameOrSourceField;
 
   if (labels.includes("content-submission")) {
-    const hasCategoryLabel = labels.some((label) => {
-      if (!label.startsWith("community-")) return false;
-      return CORE_CATEGORIES.includes(
-        normalizeCategory(label.slice("community-".length)),
-      );
-    });
-    return (
-      hasCategoryLabel || looksLikeSubmitTitle(title) || hasSubmissionShape
-    );
+    return looksLikeSubmitTitle(title) || hasSubmissionShape;
   }
 
   if (looksLikeSubmitTitle(title)) return true;
@@ -905,7 +897,7 @@ function issueComments(issue = {}) {
 function commentAuthor(comment = {}) {
   if (typeof comment.author === "string") return comment.author;
   if (typeof comment.user === "string") return comment.user;
-  return String(comment.user?.login || "");
+  return String(comment.author?.login || comment.user?.login || "");
 }
 
 function issueAuthor(issue = {}) {
@@ -916,6 +908,45 @@ function issueAuthor(issue = {}) {
 
 function commentTimestamp(comment = {}) {
   return parseTimestamp(comment.createdAt || comment.created_at);
+}
+
+const MAINTAINER_REVIEW_ASSOCIATIONS = new Set([
+  "OWNER",
+  "MEMBER",
+  "COLLABORATOR",
+]);
+
+function commentAuthorAssociation(comment = {}) {
+  return String(
+    comment.authorAssociation ||
+      comment.author_association ||
+      comment.association ||
+      "",
+  ).toUpperCase();
+}
+
+function isTrustedReviewBotComment(comment = {}) {
+  const login = commentAuthor(comment).toLowerCase();
+  if (
+    !["github-actions[bot]", "heyclaude[bot]", "heyclaude-bot"].includes(login)
+  ) {
+    return false;
+  }
+
+  const body = String(comment.body || "").toLowerCase();
+  return (
+    body.includes("needs author input") ||
+    body.includes("edit the original issue") ||
+    body.includes("original issue fields") ||
+    body.includes("issue body")
+  );
+}
+
+function isMaintainerReviewComment(comment = {}) {
+  return (
+    MAINTAINER_REVIEW_ASSOCIATIONS.has(commentAuthorAssociation(comment)) ||
+    isTrustedReviewBotComment(comment)
+  );
 }
 
 export function submissionBodyUpdatedAt(issue = {}) {
@@ -973,7 +1004,7 @@ export function submissionActivityState(issue = {}) {
     const commentAuthorLogin = commentAuthor(comment).toLowerCase();
     if (author && commentAuthorLogin === author) {
       authorCommentTimestamps.push(timestamp);
-    } else {
+    } else if (isMaintainerReviewComment(comment)) {
       reviewCommentTimestamps.push(timestamp);
     }
   }

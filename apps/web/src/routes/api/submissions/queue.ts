@@ -154,20 +154,53 @@ async function fetchGitHub<T>(url: string, token: string) {
   return { response, payload };
 }
 
+function withPerPage(url: string) {
+  const parsed = new URL(url);
+  if (!parsed.searchParams.has("per_page")) {
+    parsed.searchParams.set("per_page", "100");
+  }
+  return parsed.toString();
+}
+
+function nextPageUrl(response: Response) {
+  const link = response.headers.get("link");
+  if (!link) return "";
+  const match = link.match(/<([^>]+)>;\s*rel="next"/);
+  return match?.[1] || "";
+}
+
+async function fetchGitHubPages<T>(url: string, token: string) {
+  const items: T[] = [];
+  let nextUrl = withPerPage(url);
+
+  for (let page = 0; page < 10 && nextUrl; page += 1) {
+    const { response, payload } = await fetchGitHub<T[]>(nextUrl, token);
+    if (!response.ok || !Array.isArray(payload)) return items;
+    items.push(...payload);
+    nextUrl = nextPageUrl(response);
+  }
+
+  return items;
+}
+
 async function fetchIssueComments(issue: GitHubIssue, token: string) {
   if (!issue.comments_url) return [];
-  const { response, payload } = await fetchGitHub<GitHubComment[]>(issue.comments_url, token);
-  if (!response.ok || !Array.isArray(payload)) return [];
-  return payload;
+  try {
+    return await fetchGitHubPages<GitHubComment>(issue.comments_url, token);
+  } catch {
+    return [];
+  }
 }
 
 async function fetchIssueTimeline(repo: string, issueNumber: number, token: string) {
-  const { response, payload } = await fetchGitHub<GitHubTimelineEvent[]>(
-    `https://api.github.com/repos/${repo}/issues/${issueNumber}/timeline`,
-    token,
-  );
-  if (!response.ok || !Array.isArray(payload)) return [];
-  return payload;
+  try {
+    return await fetchGitHubPages<GitHubTimelineEvent>(
+      `https://api.github.com/repos/${repo}/issues/${issueNumber}/timeline`,
+      token,
+    );
+  } catch {
+    return [];
+  }
 }
 
 function commentImportPr(comments: GitHubComment[]) {
@@ -197,8 +230,10 @@ async function mapIssue(issue: GitHubIssue, repo: string, token: string) {
   const labels = labelNames(issue);
   const fields = parseIssueFormBody(issue.body || "");
   const status = statusFor(issue, labels);
-  const comments = await fetchIssueComments(issue, token);
-  const timeline = await fetchIssueTimeline(repo, issue.number, token);
+  const [comments, timeline] = await Promise.all([
+    fetchIssueComments(issue, token),
+    fetchIssueTimeline(repo, issue.number, token),
+  ]);
   const activity = submissionActivityState(activityIssue(issue, comments, timeline));
   const bodyImportPrUrl = importPrFromText(issue.body || "");
   const importPrUrl =

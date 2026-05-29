@@ -223,7 +223,7 @@ describe("website submission API", () => {
       "fetch",
       vi.fn((input: RequestInfo | URL) => {
         const url = String(input);
-        if (url.endsWith("/issues/88/comments")) {
+        if (url.includes("/issues/88/comments")) {
           return Promise.resolve(
             new Response(
               JSON.stringify([
@@ -325,7 +325,8 @@ describe("website submission API", () => {
     };
     expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({
       authorization: "Bearer test-token",
-      "user-agent": "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
+      "user-agent":
+        "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
       "x-github-api-version": "2022-11-28",
     });
   });
@@ -367,7 +368,8 @@ describe("website submission API", () => {
     expect(fetchMock.mock.calls).toHaveLength(1);
     expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({
       authorization: "Bearer test-token",
-      "user-agent": "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
+      "user-agent":
+        "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
     });
   });
 

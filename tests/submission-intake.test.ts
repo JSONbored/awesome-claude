@@ -751,6 +751,7 @@ npx unslop --help`;
       comments: [
         {
           user: { login: "JSONbored" },
+          author_association: "OWNER",
           created_at: "2026-04-28T12:00:00Z",
           body: "Please update the issue body.",
         },
@@ -781,6 +782,52 @@ npx unslop --help`;
     expect(entry.reviewChecklist).toContain(
       "Ask the author to edit the original issue body; comments do not update validation.",
     );
+  });
+
+  it("ignores non-maintainer comments when checking author replies", () => {
+    const invalidBody = `### Name
+Unslop
+
+### Slug
+unslop
+
+### Category
+skills
+
+### Public contact
+dev@example.com
+
+### Description
+Writing cleanup.
+
+### Card description
+Writing cleanup.
+
+### Usage snippet
+npx unslop --help`;
+    const submission = {
+      ...issue(invalidBody, ["content-submission", "needs-author-input"]),
+      bodyUpdatedAt: "2026-04-28T00:00:00Z",
+      createdAt: "2026-04-20T00:00:00Z",
+      updatedAt: "2026-04-29T00:00:00Z",
+      comments: [
+        {
+          user: { login: "drive-by" },
+          author_association: "NONE",
+          created_at: "2026-04-28T12:00:00Z",
+          body: "You should update this.",
+        },
+        {
+          user: { login: "contributor" },
+          created_at: "2026-04-29T00:00:00Z",
+          body: "Fixed in this comment.",
+        },
+      ],
+    };
+
+    const activity = submissionActivityState(submission);
+    expect(activity.authorCommentedAfterReview).toBe(false);
+    expect(activity.authorCommentedWithoutBodyUpdate).toBe(false);
   });
 
   it("uses validation-relevant body edits instead of comments for stale age", () => {
@@ -880,6 +927,21 @@ Improve browse conversion.
 
     expect(looksLikeSubmissionIssue(productIssue)).toBe(false);
     expect(buildSubmissionQueue([productIssue]).count).toBe(0);
+  });
+
+  it("does not treat content and category labels alone as a submission", () => {
+    const mislabeled = {
+      title: "Review workflow trust copy",
+      body: "Discussing queue language, not a content submission.",
+      labels: [{ name: "content-submission" }, { name: "community-mcp" }],
+      number: 100,
+      url: "https://github.com/owner/repo/issues/100",
+      author: { login: "JSONbored" },
+      updatedAt: "2026-04-29T00:00:00Z",
+    };
+
+    expect(looksLikeSubmissionIssue(mislabeled)).toBe(false);
+    expect(buildSubmissionQueue([mislabeled]).count).toBe(0);
   });
 
   it("keeps offline and live queue scripts explicit about their inputs", () => {
