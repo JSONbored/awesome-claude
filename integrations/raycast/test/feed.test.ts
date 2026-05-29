@@ -10,6 +10,8 @@ import {
   buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
   buildEntrySummary,
+  buildReportStaleUrl,
+  buildSafetyReviewUrl,
   buildSuggestChangeUrl,
   buildSubmitIssueUrl,
   categoryLabel,
@@ -19,6 +21,9 @@ import {
   feedCacheKey,
   feedMetadataCacheKey,
   filterEntriesByCategory,
+  formatPackageLabel,
+  formatReviewLabel,
+  formatSourceLabel,
   isRaycastDetail,
   parseDetail,
   parseFavoriteKeys,
@@ -27,6 +32,7 @@ import {
   resolveFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
+  summarizeEntryTrust,
   type RaycastEntry,
 } from "../src/feed";
 import {
@@ -901,5 +907,260 @@ describe("Raycast feed helpers", () => {
         "",
       /current detail/,
     );
+  });
+});
+
+function trustEntry(overrides: Partial<RaycastEntry> = {}): RaycastEntry {
+  return {
+    ...sampleEntry,
+    safetyNotes: [],
+    privacyNotes: [],
+    claimStatus: "",
+    reviewedBy: undefined,
+    submittedBy: undefined,
+    packageVerified: undefined,
+    sourceStatus: undefined,
+    ...overrides,
+  };
+}
+
+describe("trust formatters", () => {
+  it("labels source-backed entries from sourceStatus or fallback heuristics", () => {
+    assert.equal(
+      formatSourceLabel(trustEntry({ sourceStatus: "available" })),
+      "Source-backed",
+    );
+    assert.equal(
+      formatSourceLabel(trustEntry({ sourceStatus: "missing" })),
+      "Source not provided",
+    );
+    assert.equal(
+      formatSourceLabel(
+        trustEntry({
+          sourceStatus: undefined,
+          repoUrl: "https://github.com/foo/bar",
+          documentationUrl: "",
+        }),
+      ),
+      "Source-backed",
+    );
+    assert.equal(
+      formatSourceLabel(
+        trustEntry({
+          sourceStatus: undefined,
+          repoUrl: "",
+          documentationUrl: "",
+        }),
+      ),
+      "Source not provided",
+    );
+  });
+
+  it("describes package download trust including verified state", () => {
+    assert.equal(
+      formatPackageLabel(
+        trustEntry({ downloadTrust: "first-party", packageVerified: true }),
+      ),
+      "First-party (verified)",
+    );
+    assert.equal(
+      formatPackageLabel(
+        trustEntry({ downloadTrust: "first-party", packageVerified: false }),
+      ),
+      "First-party",
+    );
+    assert.equal(
+      formatPackageLabel(
+        trustEntry({ downloadTrust: "external", packageVerified: true }),
+      ),
+      "External (verified)",
+    );
+    assert.equal(
+      formatPackageLabel(trustEntry({ downloadTrust: null })),
+      "No package download",
+    );
+  });
+
+  it("prefers verified claim over reviewer attribution over submitter attribution", () => {
+    assert.equal(
+      formatReviewLabel(trustEntry({ claimStatus: "verified" })),
+      "Verified claim",
+    );
+    assert.equal(
+      formatReviewLabel(trustEntry({ claimStatus: "claimed" })),
+      "Claimed (pending review)",
+    );
+    assert.equal(
+      formatReviewLabel(trustEntry({ claimStatus: "", reviewedBy: "octocat" })),
+      "Reviewed by octocat",
+    );
+    assert.equal(
+      formatReviewLabel(
+        trustEntry({ claimStatus: "", submittedBy: "octocat" }),
+      ),
+      "Submitted by octocat",
+    );
+    assert.equal(formatReviewLabel(trustEntry()), "Unclaimed");
+  });
+});
+
+describe("summarizeEntryTrust", () => {
+  it("aggregates every trust signal a feed entry can expose", () => {
+    const summary = summarizeEntryTrust(
+      trustEntry({
+        sourceStatus: "available",
+        downloadTrust: "first-party",
+        packageVerified: true,
+        claimStatus: "verified",
+        reviewedBy: "octocat",
+        safetyNotes: ["Runs background workers"],
+        privacyNotes: ["Stores OAuth tokens locally"],
+      }),
+    );
+    assert.equal(summary.sourceLabel, "Source-backed");
+    assert.equal(summary.packageLabel, "First-party (verified)");
+    assert.equal(summary.reviewLabel, "Verified claim");
+    assert.equal(summary.safetyNoteCount, 1);
+    assert.equal(summary.privacyNoteCount, 1);
+    assert.equal(summary.hasSafetyNotes, true);
+    assert.equal(summary.hasPrivacyNotes, true);
+    assert.equal(summary.hasAnyTrustSignal, true);
+  });
+
+  it("degrades gracefully when no trust metadata is present", () => {
+    const summary = summarizeEntryTrust(
+      trustEntry({
+        downloadTrust: null,
+        sourceStatus: undefined,
+        repoUrl: "",
+        documentationUrl: "",
+      }),
+    );
+    assert.equal(summary.sourceLabel, "Source not provided");
+    assert.equal(summary.packageLabel, "No package download");
+    assert.equal(summary.reviewLabel, "Unclaimed");
+    assert.equal(summary.safetyNoteCount, 0);
+    assert.equal(summary.privacyNoteCount, 0);
+    assert.equal(summary.hasAnyTrustSignal, false);
+  });
+});
+
+describe("handoff URL builders route to approved flows", () => {
+  it("buildReportStaleUrl targets GitHub new-issue with prefilled metadata and category template", () => {
+    const url = new URL(buildReportStaleUrl(sampleEntry));
+    assert.equal(url.origin, "https://github.com");
+    assert.equal(url.pathname, "/JSONbored/awesome-claude/issues/new");
+    assert.equal(url.searchParams.get("template"), "submit-mcp.yml");
+    assert.equal(url.searchParams.get("category"), sampleEntry.category);
+    assert.equal(url.searchParams.get("slug"), sampleEntry.slug);
+    assert.equal(url.searchParams.get("name"), sampleEntry.title);
+    assert.equal(
+      url.searchParams.get("brand_name"),
+      sampleEntry.brandName ?? "",
+    );
+    assert.equal(
+      url.searchParams.get("brand_domain"),
+      sampleEntry.brandDomain ?? "",
+    );
+    assert.equal(url.searchParams.get("github_url"), sampleEntry.repoUrl);
+    assert.match(url.searchParams.get("title") ?? "", /^Stale /);
+  });
+
+  it("buildSafetyReviewUrl reuses the category template and prefixes the title", () => {
+    const url = new URL(buildSafetyReviewUrl(sampleEntry));
+    assert.equal(url.origin, "https://github.com");
+    assert.equal(url.searchParams.get("template"), "submit-mcp.yml");
+    assert.equal(url.searchParams.get("slug"), sampleEntry.slug);
+    assert.match(url.searchParams.get("title") ?? "", /^Safety review: /);
+  });
+
+  it("falls back to submit-entry.md when no template is registered for the category", () => {
+    const unknownEntry = { ...sampleEntry, category: "unmapped-category" };
+    const url = new URL(buildReportStaleUrl(unknownEntry));
+    assert.equal(url.searchParams.get("template"), "submit-entry.md");
+  });
+});
+
+describe("parseFeed picks up trust and submission metadata when present", () => {
+  it("normalizes safety, privacy, source, claim, reviewer, package, and verification fields", () => {
+    const payload = JSON.stringify({
+      schemaVersion: 2,
+      kind: "raycast-index",
+      generatedAt: "2026-05-22T00:00:00.000Z",
+      count: 1,
+      entries: [
+        {
+          category: "hooks",
+          slug: "trust-test",
+          title: "Trust Test",
+          description: "Used to validate trust parsing.",
+          tags: ["test"],
+          installCommand: "",
+          configSnippet: "",
+          copyText: "asset",
+          detailMarkdown: "# heading",
+          webUrl: "https://heyclau.de/hooks/trust-test",
+          repoUrl: "",
+          documentationUrl: "",
+          downloadTrust: "first-party",
+          verificationStatus: "",
+          safetyNotes: ["First note", "  ", "Second note"],
+          privacyNotes: ["Stores tokens"],
+          claimStatus: "verified",
+          reviewedBy: "octocat",
+          submittedBy: "alice",
+          packageVerified: true,
+          sourceStatus: "available",
+        },
+      ],
+    });
+    const parsed = parseFeed(payload);
+    assert.equal(parsed.entries.length, 1);
+    const entry = parsed.entries[0];
+    assert.deepEqual(entry.safetyNotes, ["First note", "Second note"]);
+    assert.deepEqual(entry.privacyNotes, ["Stores tokens"]);
+    assert.equal(entry.claimStatus, "verified");
+    assert.equal(entry.reviewedBy, "octocat");
+    assert.equal(entry.submittedBy, "alice");
+    assert.equal(entry.packageVerified, true);
+    assert.equal(entry.sourceStatus, "available");
+  });
+
+  it("ignores unknown claim status and source status values", () => {
+    const payload = JSON.stringify({
+      schemaVersion: 2,
+      kind: "raycast-index",
+      generatedAt: "2026-05-22T00:00:00.000Z",
+      count: 1,
+      entries: [
+        {
+          category: "mcp",
+          slug: "loose-fields",
+          title: "Loose Fields",
+          description: "Validates defensive parsing.",
+          tags: [],
+          installCommand: "",
+          configSnippet: "",
+          copyText: "asset",
+          detailMarkdown: "# heading",
+          webUrl: "https://heyclau.de/mcp/loose-fields",
+          repoUrl: "",
+          documentationUrl: "",
+          downloadTrust: "external",
+          verificationStatus: "",
+          claimStatus: "weird-value",
+          sourceStatus: "weird-value",
+          safetyNotes: "not-an-array",
+          privacyNotes: 123,
+        },
+      ],
+    });
+    const parsed = parseFeed(payload);
+    assert.equal(parsed.entries.length, 1);
+    const entry = parsed.entries[0];
+    assert.equal(entry.claimStatus, "");
+    assert.equal(entry.sourceStatus, "");
+    assert.deepEqual(entry.safetyNotes, []);
+    assert.deepEqual(entry.privacyNotes, []);
   });
 });

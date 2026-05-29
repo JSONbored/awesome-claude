@@ -21,6 +21,21 @@ const REGISTRY_MANIFEST_PATH = "/data/registry-manifest.json";
 
 export type DownloadTrust = "first-party" | "external" | null;
 
+export type ClaimStatus = "verified" | "claimed" | "unclaimed" | "";
+
+export type SourceStatus = "available" | "missing" | "";
+
+export interface EntryTrustSummary {
+  sourceLabel: string;
+  packageLabel: string;
+  reviewLabel: string;
+  safetyNoteCount: number;
+  privacyNoteCount: number;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
+  hasAnyTrustSignal: boolean;
+}
+
 export type RaycastEntry = {
   category: string;
   slug: string;
@@ -52,10 +67,45 @@ export type RaycastEntry = {
   documentationUrl: string;
   downloadTrust: DownloadTrust;
   verificationStatus: string;
+  safetyNotes?: string[];
+  privacyNotes?: string[];
+  claimStatus?: ClaimStatus;
+  reviewedBy?: string;
+  submittedBy?: string;
+  packageVerified?: boolean;
+  sourceStatus?: SourceStatus;
 };
 
 function normalizeDownloadTrust(value: unknown): DownloadTrust {
   return value === "first-party" || value === "external" ? value : null;
+}
+
+function normalizeClaimStatus(value: unknown): ClaimStatus {
+  if (value === "verified" || value === "claimed" || value === "unclaimed") {
+    return value;
+  }
+  return "";
+}
+
+function normalizeSourceStatus(value: unknown): SourceStatus {
+  if (value === "available" || value === "missing") {
+    return value;
+  }
+  return "";
+}
+
+function normalizeNotes(value: unknown): string[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+  const notes: string[] = [];
+  for (const item of value) {
+    const text = optionalRawString(item).trim();
+    if (text) {
+      notes.push(text);
+    }
+  }
+  return notes;
 }
 
 function normalizePlatformCompatibility(value: unknown) {
@@ -361,6 +411,13 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
     documentationUrl: optionalString(value.documentationUrl),
     downloadTrust: normalizeDownloadTrust(value.downloadTrust),
     verificationStatus: optionalString(value.verificationStatus),
+    safetyNotes: normalizeNotes(value.safetyNotes),
+    privacyNotes: normalizeNotes(value.privacyNotes),
+    claimStatus: normalizeClaimStatus(value.claimStatus),
+    reviewedBy: optionalString(value.reviewedBy) || undefined,
+    submittedBy: optionalString(value.submittedBy) || undefined,
+    packageVerified: optionalBoolean(value.packageVerified),
+    sourceStatus: normalizeSourceStatus(value.sourceStatus),
   };
 }
 
@@ -513,4 +570,137 @@ export function parseFavoriteKeys(raw: string | null | undefined) {
 
 export function serializeFavoriteKeys(favorites: Iterable<string>) {
   return JSON.stringify([...new Set(favorites)].sort());
+}
+
+export function formatSourceLabel(entry: RaycastEntry): string {
+  if (entry.sourceStatus === "available") {
+    return "Source-backed";
+  }
+  if (entry.sourceStatus === "missing") {
+    return "Source not provided";
+  }
+  if (entry.repoUrl || entry.documentationUrl) {
+    return "Source-backed";
+  }
+  return "Source not provided";
+}
+
+export function formatPackageLabel(entry: RaycastEntry): string {
+  if (entry.downloadTrust === "first-party") {
+    return entry.packageVerified ? "First-party (verified)" : "First-party";
+  }
+  if (entry.downloadTrust === "external") {
+    return entry.packageVerified ? "External (verified)" : "External";
+  }
+  return "No package download";
+}
+
+export function formatReviewLabel(entry: RaycastEntry): string {
+  if (entry.claimStatus === "verified") {
+    return "Verified claim";
+  }
+  if (entry.claimStatus === "claimed") {
+    return "Claimed (pending review)";
+  }
+  if (entry.reviewedBy) {
+    return `Reviewed by ${entry.reviewedBy}`;
+  }
+  if (entry.submittedBy) {
+    return `Submitted by ${entry.submittedBy}`;
+  }
+  return "Unclaimed";
+}
+
+export function summarizeEntryTrust(entry: RaycastEntry): EntryTrustSummary {
+  const safetyNoteCount = entry.safetyNotes?.length ?? 0;
+  const privacyNoteCount = entry.privacyNotes?.length ?? 0;
+  const hasSafetyNotes = safetyNoteCount > 0;
+  const hasPrivacyNotes = privacyNoteCount > 0;
+  const sourceLabel = formatSourceLabel(entry);
+  const packageLabel = formatPackageLabel(entry);
+  const reviewLabel = formatReviewLabel(entry);
+  const hasAnyTrustSignal =
+    Boolean(entry.sourceStatus) ||
+    Boolean(entry.repoUrl) ||
+    Boolean(entry.documentationUrl) ||
+    Boolean(entry.downloadTrust) ||
+    Boolean(entry.claimStatus) ||
+    Boolean(entry.reviewedBy) ||
+    Boolean(entry.submittedBy) ||
+    Boolean(entry.packageVerified) ||
+    hasSafetyNotes ||
+    hasPrivacyNotes;
+  return {
+    sourceLabel,
+    packageLabel,
+    reviewLabel,
+    safetyNoteCount,
+    privacyNoteCount,
+    hasSafetyNotes,
+    hasPrivacyNotes,
+    hasAnyTrustSignal,
+  };
+}
+
+function applyHandoffEntryParams(
+  url: URL,
+  entry: Pick<
+    RaycastEntry,
+    | "category"
+    | "slug"
+    | "title"
+    | "description"
+    | "brandName"
+    | "brandDomain"
+    | "tags"
+    | "repoUrl"
+    | "documentationUrl"
+  >,
+) {
+  url.searchParams.set("category", entry.category);
+  url.searchParams.set("slug", entry.slug);
+  url.searchParams.set("name", entry.title);
+  if (entry.description) {
+    url.searchParams.set("description", entry.description);
+    url.searchParams.set("card_description", entry.description);
+  }
+  if (entry.brandName) {
+    url.searchParams.set("brand_name", entry.brandName);
+  }
+  if (entry.brandDomain) {
+    url.searchParams.set("brand_domain", entry.brandDomain);
+  }
+  if (entry.tags?.length) {
+    url.searchParams.set("tags", entry.tags.join(", "));
+  }
+  if (entry.repoUrl) {
+    url.searchParams.set("github_url", entry.repoUrl);
+  }
+  if (entry.documentationUrl) {
+    url.searchParams.set("docs_url", entry.documentationUrl);
+  }
+}
+
+export function buildReportStaleUrl(entry: RaycastEntry): string {
+  const template = issueTemplateByCategory[entry.category] ?? "submit-entry.md";
+  const url = new URL(GITHUB_NEW_ISSUE_URL);
+  url.searchParams.set("template", template);
+  url.searchParams.set(
+    "title",
+    `Stale ${categoryLabel(entry.category)}: ${entry.title}`,
+  );
+  applyHandoffEntryParams(url, entry);
+  return url.toString();
+}
+
+export function buildSafetyReviewUrl(entry: RaycastEntry): string {
+  const template = issueTemplateByCategory[entry.category] ?? "submit-entry.md";
+  const url = new URL(GITHUB_NEW_ISSUE_URL);
+  url.searchParams.set("template", template);
+  url.searchParams.set(
+    "title",
+    `Safety review: ${categoryLabel(entry.category)} ${entry.title}`,
+  );
+  applyHandoffEntryParams(url, entry);
+  return url.toString();
 }

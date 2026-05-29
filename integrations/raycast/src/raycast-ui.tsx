@@ -1,5 +1,10 @@
 import { Color, Icon, List } from "@raycast/api";
-import { categoryLabel, type RaycastEntry } from "./feed";
+import {
+  categoryLabel,
+  summarizeEntryTrust,
+  type EntryTrustSummary,
+  type RaycastEntry,
+} from "./feed";
 import { type RaycastJob } from "./jobs-feed";
 
 function formatDate(value?: string) {
@@ -19,6 +24,20 @@ function trustLabel(value: RaycastEntry["downloadTrust"]) {
   return "";
 }
 
+function safetyNoteSummary(summary: EntryTrustSummary): string {
+  if (!summary.hasSafetyNotes) {
+    return "No safety notes";
+  }
+  return `${summary.safetyNoteCount} safety note${summary.safetyNoteCount === 1 ? "" : "s"}`;
+}
+
+function privacyNoteSummary(summary: EntryTrustSummary): string {
+  if (!summary.hasPrivacyNotes) {
+    return "No privacy notes";
+  }
+  return `${summary.privacyNoteCount} privacy note${summary.privacyNoteCount === 1 ? "" : "s"}`;
+}
+
 export function entrySnippetKeyword(entry: RaycastEntry) {
   return `hc-${entry.slug}`.slice(0, 40);
 }
@@ -28,6 +47,7 @@ export function entryDetailMetadata(entry: RaycastEntry, generatedAt = "") {
     ? entry.platformCompatibility.filter(Boolean)
     : [];
   const sourceUrl = entry.repoUrl || entry.documentationUrl;
+  const trust = summarizeEntryTrust(entry);
 
   return (
     <List.Item.Detail.Metadata>
@@ -85,6 +105,36 @@ export function entryDetailMetadata(entry: RaycastEntry, generatedAt = "") {
           text={entry.verificationStatus}
           icon={Icon.CheckRosette}
         />
+      ) : null}
+      {trust.hasAnyTrustSignal ? (
+        <>
+          <List.Item.Detail.Metadata.Separator />
+          <List.Item.Detail.Metadata.Label
+            title="Source"
+            text={trust.sourceLabel}
+            icon={Icon.Globe}
+          />
+          <List.Item.Detail.Metadata.Label
+            title="Package"
+            text={trust.packageLabel}
+            icon={Icon.Box}
+          />
+          <List.Item.Detail.Metadata.Label
+            title="Review"
+            text={trust.reviewLabel}
+            icon={Icon.Person}
+          />
+          <List.Item.Detail.Metadata.Label
+            title="Safety notes"
+            text={safetyNoteSummary(trust)}
+            icon={Icon.Shield}
+          />
+          <List.Item.Detail.Metadata.Label
+            title="Privacy notes"
+            text={privacyNoteSummary(trust)}
+            icon={Icon.Lock}
+          />
+        </>
       ) : null}
       {entry.copyTextTruncated ? (
         <List.Item.Detail.Metadata.Label

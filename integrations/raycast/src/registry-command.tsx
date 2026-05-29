@@ -20,6 +20,8 @@ import {
   absoluteDataUrl,
   buildEntrySummary,
   buildContributeEntryUrl,
+  buildReportStaleUrl,
+  buildSafetyReviewUrl,
   buildSuggestChangeUrl,
   categoryLabel,
   entryKey,
@@ -509,6 +511,16 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
                       title="Suggest Change"
                       url={buildSuggestChangeUrl(entry)}
                       icon={Icon.Pencil}
+                    />
+                    <Action.OpenInBrowser
+                      title="Report Stale Listing"
+                      url={buildReportStaleUrl(entry)}
+                      icon={Icon.ExclamationMark}
+                    />
+                    <Action.OpenInBrowser
+                      title="Request Safety Review"
+                      url={buildSafetyReviewUrl(entry)}
+                      icon={Icon.Shield}
                     />
                     <Action.OpenInBrowser
                       title="Claim or Update Listing"
