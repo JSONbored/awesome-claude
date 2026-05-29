@@ -16,7 +16,8 @@ export const Route = createFileRoute("/api-docs")({
       { property: "og:title", content: "HeyClaude API docs" },
       {
         property: "og:description",
-        content: "Search, trending, manifest, integrity, diff, submissions, and generated OpenAPI specs.",
+        content:
+          "Search, trending, manifest, integrity, diff, submissions, and generated OpenAPI specs.",
       },
     ],
   }),

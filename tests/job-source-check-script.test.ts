@@ -147,13 +147,17 @@ describe("jobs source checker planning", () => {
     process.env.JOBS_ADMIN_API_TOKEN = "jobs-test-token";
     const requestedOffsets: string[] = [];
     const authorizationHeaders: string[] = [];
-    globalThis.fetch = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
       const request = input instanceof Request ? input : null;
       const url = new URL(String(input));
       requestedOffsets.push(url.searchParams.get("offset") || "0");
       authorizationHeaders.push(
         request?.headers.get("authorization") ||
-          (init?.headers as Record<string, string> | undefined)?.authorization ||
+          (init?.headers as Record<string, string> | undefined)
+            ?.authorization ||
           "",
       );
       const offset = Number(url.searchParams.get("offset") || 0);

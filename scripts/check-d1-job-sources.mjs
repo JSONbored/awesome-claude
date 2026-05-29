@@ -65,9 +65,7 @@ function getBaseUrl(args) {
 async function adminFetch(url, options = {}) {
   const token = getToken();
   if (!token) {
-    throw new Error(
-      "Missing ADMIN_API_TOKEN or JOBS_ADMIN_API_TOKEN.",
-    );
+    throw new Error("Missing ADMIN_API_TOKEN or JOBS_ADMIN_API_TOKEN.");
   }
   const response = await fetch(url, {
     ...options,

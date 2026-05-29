@@ -535,29 +535,29 @@ function Dossier() {
 function hasSchemaDetails(entry: Entry) {
   return Boolean(
     entry.skillType ||
-      entry.skillLevel ||
-      entry.verificationStatus ||
-      entry.verifiedAt ||
-      entry.retrievalSources?.length ||
-      entry.testedPlatforms?.length ||
-      entry.platformCompatibility?.length ||
-      entry.trigger ||
-      entry.commandSyntax ||
-      entry.argumentHint ||
-      entry.allowedTools?.length ||
-      entry.scriptLanguage ||
-      entry.scriptBody ||
-      entry.items?.length ||
-      entry.installationOrder?.length ||
-      entry.estimatedSetupTime ||
-      entry.difficulty ||
-      entry.websiteUrl ||
-      entry.pricingModel ||
-      entry.disclosure ||
-      entry.applicationCategory ||
-      entry.operatingSystem ||
-      entry.repoStats ||
-      entry.copySnippet,
+    entry.skillLevel ||
+    entry.verificationStatus ||
+    entry.verifiedAt ||
+    entry.retrievalSources?.length ||
+    entry.testedPlatforms?.length ||
+    entry.platformCompatibility?.length ||
+    entry.trigger ||
+    entry.commandSyntax ||
+    entry.argumentHint ||
+    entry.allowedTools?.length ||
+    entry.scriptLanguage ||
+    entry.scriptBody ||
+    entry.items?.length ||
+    entry.installationOrder?.length ||
+    entry.estimatedSetupTime ||
+    entry.difficulty ||
+    entry.websiteUrl ||
+    entry.pricingModel ||
+    entry.disclosure ||
+    entry.applicationCategory ||
+    entry.operatingSystem ||
+    entry.repoStats ||
+    entry.copySnippet,
   );
 }
 
@@ -784,9 +784,7 @@ function CodeDisclosure({ label, value }: { label: string; value?: string }) {
   if (!value) return null;
   return (
     <details className="mt-3 rounded-lg border border-border bg-background">
-      <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-ink">
-        {label}
-      </summary>
+      <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-ink">{label}</summary>
       <pre className="max-h-96 overflow-auto border-t border-border p-3 font-mono text-[12px] leading-relaxed text-ink">
         <code>{value}</code>
       </pre>

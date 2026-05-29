@@ -285,7 +285,9 @@ describe("commercial intake contracts", () => {
     expect(workflow).toContain("--apply --allow-unhealthy");
     expect(workflow).toContain("--dry-run --fail-on-unhealthy");
     expect(workflow).toContain("GITHUB_STEP_SUMMARY");
-    expect(workflow).not.toContain("Skipping scheduled jobs source revalidation");
+    expect(workflow).not.toContain(
+      "Skipping scheduled jobs source revalidation",
+    );
   });
 
   it("transitions curated job sources through verified, stale, and closed states", () => {

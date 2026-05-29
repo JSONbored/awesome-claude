@@ -200,8 +200,7 @@ function compactText(value: unknown): string | undefined {
   if (typeof value === "string") return value.trim() || undefined;
   if (Array.isArray(value)) {
     const rows = value.filter(
-      (item): item is string =>
-        typeof item === "string" && item.trim().length > 0,
+      (item): item is string => typeof item === "string" && item.trim().length > 0,
     );
     return rows.length ? rows.join("\n") : undefined;
   }
@@ -358,7 +357,8 @@ export function buildEntry(entry: RegistryEntry): Entry {
   const privacyNotes = compactText(entry.privacyNotes);
   const copyPayload = entry.copySnippet ?? entry.usageSnippet ?? entry.body;
   const platforms = inferPlatforms(entry);
-  const reviewedAt = entry.reviewedAt ?? entry.trustSignals?.lastVerifiedAt ?? entry.contentUpdatedAt;
+  const reviewedAt =
+    entry.reviewedAt ?? entry.trustSignals?.lastVerifiedAt ?? entry.contentUpdatedAt;
 
   return {
     category,

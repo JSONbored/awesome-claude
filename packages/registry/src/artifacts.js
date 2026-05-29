@@ -222,8 +222,10 @@ function buildRepoStats(entry) {
       ? String(entry.repoUrl).replace(/^https:\/\/github\.com\//, "")
       : undefined,
     url: entry.repoUrl || undefined,
-    stars: typeof entry.githubStars === "number" ? entry.githubStars : undefined,
-    forks: typeof entry.githubForks === "number" ? entry.githubForks : undefined,
+    stars:
+      typeof entry.githubStars === "number" ? entry.githubStars : undefined,
+    forks:
+      typeof entry.githubForks === "number" ? entry.githubForks : undefined,
     updatedAt: entry.repoUpdatedAt || undefined,
     appliesTo: entry.repoUrl ? "listing_source_repo" : "none",
     label: "Source repo",

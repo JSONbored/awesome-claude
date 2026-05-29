@@ -53,7 +53,11 @@ export function SourceCitations({ entry }: { entry: Entry }) {
       Icon: BookOpen,
     });
   }
-  if (entry.websiteUrl && entry.websiteUrl !== entry.docsUrl && entry.websiteUrl !== entry.sourceUrl) {
+  if (
+    entry.websiteUrl &&
+    entry.websiteUrl !== entry.docsUrl &&
+    entry.websiteUrl !== entry.sourceUrl
+  ) {
     cites.push({
       label: "Website",
       href: entry.websiteUrl,

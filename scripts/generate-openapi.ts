@@ -31,8 +31,14 @@ const outputPath = path.join(
   repoRoot,
   "cloudflare/api-schema-heyclaude-openapi.yaml",
 );
-const publicYamlOutputPath = path.join(repoRoot, "apps/web/public/openapi.yaml");
-const publicJsonOutputPath = path.join(repoRoot, "apps/web/public/openapi.json");
+const publicYamlOutputPath = path.join(
+  repoRoot,
+  "apps/web/public/openapi.yaml",
+);
+const publicJsonOutputPath = path.join(
+  repoRoot,
+  "apps/web/public/openapi.json",
+);
 
 function methodName(method: ApiRouteDefinition["method"]) {
   return method.toLowerCase() as "get" | "post" | "patch";
@@ -234,8 +240,14 @@ async function main() {
     lineWidth: 100,
     singleQuote: false,
   })}\n`;
-  const generated = await formatWithPrettier(rawGenerated, { parser: "yaml" });
-  const generatedJson = `${JSON.stringify(document, null, 2)}\n`;
+  const generated = await formatWithPrettier(rawGenerated, {
+    parser: "yaml",
+    printWidth: 100,
+  });
+  const generatedJson = await formatWithPrettier(JSON.stringify(document), {
+    parser: "json",
+    printWidth: 100,
+  });
 
   if (process.argv.includes("--check")) {
     const outputs = [

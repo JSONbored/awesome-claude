@@ -192,9 +192,7 @@ export async function checkJobsSchema(db: D1DatabaseLike) {
     .filter(Boolean)
     .sort();
   const columnSet = new Set(columns);
-  const missingColumns = REQUIRED_JOB_COLUMNS.filter(
-    (column) => !columnSet.has(column),
-  );
+  const missingColumns = REQUIRED_JOB_COLUMNS.filter((column) => !columnSet.has(column));
 
   return {
     ok: missingColumns.length === 0,
@@ -215,9 +213,7 @@ export async function getJobsHealth(db: D1DatabaseLike) {
         .bind()
         .all<JobStatusCountRow>()
         .then(({ results }) =>
-          Object.fromEntries(
-            results.map((row) => [row.status, Number(row.count ?? 0)]),
-          ),
+          Object.fromEntries(results.map((row) => [row.status, Number(row.count ?? 0)])),
         )
     : {};
 
@@ -290,10 +286,7 @@ export async function queryAdminJobBySlug(
   return row ? mapJobListingRow(row) : null;
 }
 
-export async function upsertAdminJob(
-  db: D1DatabaseLike,
-  input: JobAdminUpsertInput,
-) {
+export async function upsertAdminJob(db: D1DatabaseLike, input: JobAdminUpsertInput) {
   assertJobPublicationQuality(input as Record<string, unknown>);
 
   await db
@@ -415,10 +408,7 @@ export async function updateAdminJobState(
   },
 ) {
   const checkedAt = optionalText(input.checkedAt) ?? new Date().toISOString();
-  const hasExpiresAt = Object.prototype.hasOwnProperty.call(
-    input,
-    "expiresAt",
-  );
+  const hasExpiresAt = Object.prototype.hasOwnProperty.call(input, "expiresAt");
   const expiresAt = input.expiresAt === null ? null : optionalText(input.expiresAt);
 
   if (input.action === "activate" || input.action === "reactivate") {
@@ -470,10 +460,7 @@ export async function updateAdminJobState(
     return;
   }
 
-  const nextStatusByAction: Record<
-    Exclude<JobAdminAction, "revalidate" | "stale">,
-    JobStatus
-  > = {
+  const nextStatusByAction: Record<Exclude<JobAdminAction, "revalidate" | "stale">, JobStatus> = {
     review: "pending_review",
     activate: "active",
     close: "closed",

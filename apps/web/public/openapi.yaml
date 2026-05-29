@@ -2,8 +2,7 @@ openapi: 3.1.0
 info:
   title: HeyClaude API
   version: 1.0.0
-  description:
-    Read-only registry, distribution feeds, and tightly scoped dynamic endpoints. Public
+  description: Read-only registry, distribution feeds, and tightly scoped dynamic endpoints. Public
     registry publishing is not exposed through the API.
 servers:
   - url: https://heyclau.de
@@ -2389,8 +2388,7 @@ paths:
       tags:
         - Registry
       summary: Registry artifact integrity verification
-      description:
-        Lists current registry artifact hashes and verifies submitted artifact/hash pairs
+      description: Lists current registry artifact hashes and verifies submitted artifact/hash pairs
         against the deployed manifest.
       parameters:
         - schema:
@@ -2670,8 +2668,7 @@ paths:
       tags:
         - Registry
       summary: Registry entry detail
-      description:
-        Returns entry metadata, body content, package facts, platform compatibility, and
+      description: Returns entry metadata, body content, package facts, platform compatibility, and
         factual trustSignals when available.
       parameters:
         - schema:
@@ -5963,8 +5960,7 @@ paths:
       tags:
         - Distribution
       summary: Download generated registry packages
-      description:
-        Serves maintainer-built package artifacts from constrained /downloads paths.
+      description: Serves maintainer-built package artifacts from constrained /downloads paths.
         Community-submitted archives are not exposed through this endpoint unless maintainers
         rebuild and verify the artifact.
       parameters:
@@ -8540,8 +8536,7 @@ paths:
       tags:
         - Admin
       summary: Token-protected D1 jobs health check
-      description:
-        Checks the jobs D1 schema, required columns, and status counts before release or
+      description: Checks the jobs D1 schema, required columns, and status counts before release or
         operational review.
       responses:
         "200":
@@ -10204,8 +10199,7 @@ paths:
       tags:
         - Dynamic
       summary: Read public registry alert events
-      description:
-        Returns the current in-edge-cache registry event list used by browser-local watch
+      description: Returns the current in-edge-cache registry event list used by browser-local watch
         alerts. Cold cache or missing webhook configuration returns an empty events array rather
         than simulated activity.
       responses:

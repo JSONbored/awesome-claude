@@ -64,7 +64,10 @@ describe("OpenAPI route coverage", () => {
     "utf8",
   );
   const publicJsonSchema = JSON.parse(
-    fs.readFileSync(path.join(repoRoot, "apps/web/public/openapi.json"), "utf8"),
+    fs.readFileSync(
+      path.join(repoRoot, "apps/web/public/openapi.json"),
+      "utf8",
+    ),
   ) as { openapi?: string; paths?: Record<string, unknown> };
   const parsedSchema = parse(schema) as {
     paths: Record<
@@ -103,11 +106,15 @@ describe("OpenAPI route coverage", () => {
   });
 
   it("renders every documented endpoint tag in the Atlas API docs data", () => {
-    const documentedEndpointIds = new Set(ENDPOINTS.map((endpoint) => endpoint.id));
+    const documentedEndpointIds = new Set(
+      ENDPOINTS.map((endpoint) => endpoint.id),
+    );
     const renderedTagIds = new Set(OPENAPI_TAGS.map((tag) => tag.id));
 
     for (const route of listApiRouteDefinitions()) {
-      expect(documentedEndpointIds, route.id).toContain(route.id.replaceAll(".", "-"));
+      expect(documentedEndpointIds, route.id).toContain(
+        route.id.replaceAll(".", "-"),
+      );
       for (const tag of route.tags) {
         expect(renderedTagIds, `${route.id}:${tag}`).toContain(
           tag.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -115,14 +122,18 @@ describe("OpenAPI route coverage", () => {
       }
     }
 
-    expect(ENDPOINTS.find((endpoint) => endpoint.id === "registry-search")).toMatchObject({
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "registry-search"),
+    ).toMatchObject({
       liveRequest: true,
       parameters: expect.arrayContaining([
         expect.objectContaining({ name: "q", in: "query", example: "mcp" }),
         expect.objectContaining({ name: "limit", in: "query", example: "5" }),
       ]),
     });
-    expect(ENDPOINTS.find((endpoint) => endpoint.id === "submissions-create")).toMatchObject({
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "submissions-create"),
+    ).toMatchObject({
       liveRequest: false,
     });
   });

@@ -98,9 +98,7 @@ const ROWS: RowDef[] = [
     label: "Source repo",
     render: (e) => (
       <span className="font-mono text-sm tabular-nums text-ink">
-        {e.repoStats?.stars !== undefined
-          ? `${formatCompact(e.repoStats.stars)} repo stars`
-          : "—"}
+        {e.repoStats?.stars !== undefined ? `${formatCompact(e.repoStats.stars)} repo stars` : "—"}
       </span>
     ),
   },

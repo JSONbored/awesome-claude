@@ -7,7 +7,12 @@ const requiredPaths = [
   "/openapi.json",
 ];
 const indexNowKeyPath = "/48486ebc7ddc47af875118345161ae70.txt";
-const requiredRenderedPaths = ["/sitemap.xml", "/robots.txt", "/api/jobs", "/openapi.yaml"];
+const requiredRenderedPaths = [
+  "/sitemap.xml",
+  "/robots.txt",
+  "/api/jobs",
+  "/openapi.yaml",
+];
 const canonicalOrigin = "https://heyclau.de";
 
 function parseArgs(argv) {
@@ -96,9 +101,7 @@ for (const pathname of requiredPaths) {
         "/data/feeds/index.json",
         "/data/submission-spec.json",
         "/openapi.json",
-      ].includes(
-        pathname,
-      ) &&
+      ].includes(pathname) &&
       !Array.isArray(entries)
     ) {
       fail(`${pathname} must return an envelope with entries`);
