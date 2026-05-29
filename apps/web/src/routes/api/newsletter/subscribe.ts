@@ -5,11 +5,17 @@ import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/ap
 import { logApiError, logApiInfo, redactEmail } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env";
 
+function envSegmentId(followId: string): string | undefined {
+  const key = `RESEND_SEGMENT_${followId.toUpperCase().replace(/[^A-Z0-9]/g, "_")}`;
+  return getEnvString(key) || undefined;
+}
+
 export const POST = createApiHandler(
   "newsletter.subscribe",
   async ({ request, body, requestId }) => {
     const payload = body as InferApiBody<typeof newsletterSubscribeBodySchema>;
     const email = payload.email;
+    const segments = payload.segments;
     const source = payload.source;
 
     const resendApiKey = getEnvString("RESEND_API_KEY");
@@ -20,6 +26,12 @@ export const POST = createApiHandler(
       return apiError("newsletter_not_configured", 503, { requestId });
     }
 
+    const segmentIds = new Set<string>([resendSegmentId]);
+    for (const segment of segments) {
+      const segmentId = envSegmentId(segment);
+      if (segmentId) segmentIds.add(segmentId);
+    }
+
     const requestBody: Record<string, unknown> = {
       email,
       unsubscribed: false,
@@ -28,7 +40,7 @@ export const POST = createApiHandler(
       metadata: {
         source,
       },
-      segments: [{ id: resendSegmentId }],
+      segments: [...segmentIds].map((id) => ({ id })),
     };
 
     let response: Response;

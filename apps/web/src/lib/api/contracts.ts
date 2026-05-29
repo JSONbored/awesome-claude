@@ -382,8 +382,16 @@ export const votesToggleBodySchema = z.object({
   vote: z.boolean(),
 });
 
+const newsletterSegmentIdSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9:_-]+$/i);
+
 export const newsletterSubscribeBodySchema = z.object({
   email: safeEmailSchema,
+  segments: z.array(newsletterSegmentIdSchema).max(20).optional().default([]),
   source: z.string().trim().max(64).optional().default("site"),
 });
 

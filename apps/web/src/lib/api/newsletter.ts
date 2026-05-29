@@ -1,4 +1,4 @@
-/** Tiny client helper for /api/public/newsletter/*. */
+/** Tiny client helper for newsletter API routes. */
 type SubscribeInput = {
   email: string;
   segments?: string[];
@@ -9,7 +9,7 @@ export async function subscribeToNewsletter(
   input: SubscribeInput,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   try {
-    const res = await fetch("/api/public/newsletter/subscribe", {
+    const res = await fetch("/api/newsletter/subscribe", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),

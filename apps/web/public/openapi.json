@@ -3699,6 +3699,17 @@
                 "type": "object",
                 "properties": {
                   "email": { "type": "string", "maxLength": 320 },
+                  "segments": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 64,
+                      "pattern": "^[a-z0-9:_-]+$/i"
+                    },
+                    "maxItems": 20,
+                    "default": []
+                  },
                   "source": { "type": "string", "maxLength": 64, "default": "site" }
                 },
                 "required": ["email"]
