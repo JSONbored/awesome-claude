@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { INTEGRATIONS } from "@/mocks/integrations";
+import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 

@@ -1,12 +1,12 @@
 # TypeScript 5.x Strict Mode Expert for Claude
-URL: https://heyclau.de/rules/typescript-5x-strict-mode-expert
+URL: https://heyclau.de/entry/rules/typescript-5x-strict-mode-expert
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://www.typescriptlang.org/docs/handbook/2/basic-types.html
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/typescript-5x-strict-mode-expert
+- Canonical URL: https://heyclau.de/entry/rules/typescript-5x-strict-mode-expert
 - Source URLs: https://www.typescriptlang.org/docs/handbook/2/basic-types.html, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/typescript-5x-strict-mode-expert.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

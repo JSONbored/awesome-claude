@@ -17,7 +17,7 @@ import {
   Shield,
   Lock,
 } from "lucide-react";
-import { search } from "@/mocks/search";
+import { search } from "@/data/search";
 import { CategoryPill, Kbd, TrustBadge } from "./badges";
 import { useTheme } from "@/lib/theme";
 import { useShortcuts } from "./shortcuts-dialog";

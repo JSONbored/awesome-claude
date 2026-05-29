@@ -65,7 +65,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/cursor-rules",
+      "canonicalUrl": "https://heyclau.de/entry/commands/cursor-rules",
       "llmsUrl": "https://heyclau.de/data/llms/commands/cursor-rules.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/cursor-rules",
       "trustSignals": {
@@ -141,7 +141,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/debug",
+      "canonicalUrl": "https://heyclau.de/entry/commands/debug",
       "llmsUrl": "https://heyclau.de/data/llms/commands/debug.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/debug",
       "trustSignals": {
@@ -218,7 +218,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/docs",
+      "canonicalUrl": "https://heyclau.de/entry/commands/docs",
       "llmsUrl": "https://heyclau.de/data/llms/commands/docs.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/docs",
       "trustSignals": {
@@ -295,7 +295,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/explain",
+      "canonicalUrl": "https://heyclau.de/entry/commands/explain",
       "llmsUrl": "https://heyclau.de/data/llms/commands/explain.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/explain",
       "trustSignals": {
@@ -371,7 +371,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/optimize",
+      "canonicalUrl": "https://heyclau.de/entry/commands/optimize",
       "llmsUrl": "https://heyclau.de/data/llms/commands/optimize.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/optimize",
       "trustSignals": {
@@ -447,7 +447,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/refactor",
+      "canonicalUrl": "https://heyclau.de/entry/commands/refactor",
       "llmsUrl": "https://heyclau.de/data/llms/commands/refactor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/refactor",
       "trustSignals": {
@@ -523,7 +523,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/refactor-code",
+      "canonicalUrl": "https://heyclau.de/entry/commands/refactor-code",
       "llmsUrl": "https://heyclau.de/data/llms/commands/refactor-code.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/refactor-code",
       "trustSignals": {
@@ -599,7 +599,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/review",
+      "canonicalUrl": "https://heyclau.de/entry/commands/review",
       "llmsUrl": "https://heyclau.de/data/llms/commands/review.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/review",
       "trustSignals": {
@@ -674,7 +674,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/security",
+      "canonicalUrl": "https://heyclau.de/entry/commands/security",
       "llmsUrl": "https://heyclau.de/data/llms/commands/security.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/security",
       "trustSignals": {
@@ -755,7 +755,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/security-audit",
+      "canonicalUrl": "https://heyclau.de/entry/commands/security-audit",
       "llmsUrl": "https://heyclau.de/data/llms/commands/security-audit.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/security-audit",
       "trustSignals": {
@@ -832,7 +832,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/test-advanced",
+      "canonicalUrl": "https://heyclau.de/entry/commands/test-advanced",
       "llmsUrl": "https://heyclau.de/data/llms/commands/test-advanced.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/test-advanced",
       "trustSignals": {
@@ -926,7 +926,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/zod-audit",
+      "canonicalUrl": "https://heyclau.de/entry/commands/zod-audit",
       "llmsUrl": "https://heyclau.de/data/llms/commands/zod-audit.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/zod-audit",
       "trustSignals": {
@@ -1003,7 +1003,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/skills-installer",
+      "canonicalUrl": "https://heyclau.de/entry/commands/skills-installer",
       "llmsUrl": "https://heyclau.de/data/llms/commands/skills-installer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/skills-installer",
       "trustSignals": {
@@ -1079,7 +1079,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/autogen-workflow",
+      "canonicalUrl": "https://heyclau.de/entry/commands/autogen-workflow",
       "llmsUrl": "https://heyclau.de/data/llms/commands/autogen-workflow.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/autogen-workflow",
       "trustSignals": {
@@ -1156,7 +1156,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/checkpoint-manager",
+      "canonicalUrl": "https://heyclau.de/entry/commands/checkpoint-manager",
       "llmsUrl": "https://heyclau.de/data/llms/commands/checkpoint-manager.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/checkpoint-manager",
       "trustSignals": {
@@ -1234,7 +1234,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/claudemd-builder",
+      "canonicalUrl": "https://heyclau.de/entry/commands/claudemd-builder",
       "llmsUrl": "https://heyclau.de/data/llms/commands/claudemd-builder.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/claudemd-builder",
       "trustSignals": {
@@ -1311,7 +1311,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/context-analyzer",
+      "canonicalUrl": "https://heyclau.de/entry/commands/context-analyzer",
       "llmsUrl": "https://heyclau.de/data/llms/commands/context-analyzer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/context-analyzer",
       "trustSignals": {
@@ -1387,7 +1387,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/generate-tests",
+      "canonicalUrl": "https://heyclau.de/entry/commands/generate-tests",
       "llmsUrl": "https://heyclau.de/data/llms/commands/generate-tests.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/generate-tests",
       "trustSignals": {
@@ -1467,7 +1467,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/git-smart-commit",
+      "canonicalUrl": "https://heyclau.de/entry/commands/git-smart-commit",
       "llmsUrl": "https://heyclau.de/data/llms/commands/git-smart-commit.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/git-smart-commit",
       "trustSignals": {
@@ -1544,7 +1544,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/hooks-generator",
+      "canonicalUrl": "https://heyclau.de/entry/commands/hooks-generator",
       "llmsUrl": "https://heyclau.de/data/llms/commands/hooks-generator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/hooks-generator",
       "trustSignals": {
@@ -1620,7 +1620,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/mcp-setup",
+      "canonicalUrl": "https://heyclau.de/entry/commands/mcp-setup",
       "llmsUrl": "https://heyclau.de/data/llms/commands/mcp-setup.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/mcp-setup",
       "trustSignals": {
@@ -1697,7 +1697,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/mintlify-docs",
+      "canonicalUrl": "https://heyclau.de/entry/commands/mintlify-docs",
       "llmsUrl": "https://heyclau.de/data/llms/commands/mintlify-docs.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/mintlify-docs",
       "trustSignals": {
@@ -1774,7 +1774,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/plan-mode",
+      "canonicalUrl": "https://heyclau.de/entry/commands/plan-mode",
       "llmsUrl": "https://heyclau.de/data/llms/commands/plan-mode.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/plan-mode",
       "trustSignals": {
@@ -1851,7 +1851,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/slash-command-gen",
+      "canonicalUrl": "https://heyclau.de/entry/commands/slash-command-gen",
       "llmsUrl": "https://heyclau.de/data/llms/commands/slash-command-gen.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/slash-command-gen",
       "trustSignals": {
@@ -1928,7 +1928,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/subagent-create",
+      "canonicalUrl": "https://heyclau.de/entry/commands/subagent-create",
       "llmsUrl": "https://heyclau.de/data/llms/commands/subagent-create.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/subagent-create",
       "trustSignals": {
@@ -2005,7 +2005,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/tdd-workflow",
+      "canonicalUrl": "https://heyclau.de/entry/commands/tdd-workflow",
       "llmsUrl": "https://heyclau.de/data/llms/commands/tdd-workflow.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/tdd-workflow",
       "trustSignals": {
@@ -2082,7 +2082,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/commands/v0-generate",
+      "canonicalUrl": "https://heyclau.de/entry/commands/v0-generate",
       "llmsUrl": "https://heyclau.de/data/llms/commands/v0-generate.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/v0-generate",
       "trustSignals": {

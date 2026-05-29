@@ -1,51 +1,54 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { ArrowUpRight, MapPin, BadgeCheck, ArrowLeft } from "lucide-react";
-import { JOB_LISTINGS } from "@/mocks/jobs";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { companyTint, monogram, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { CopyButton } from "@/components/copy-button";
+import { useEffect, useState } from "react";
+import type { ReactNode } from "react";
+import type { JobListing, JobTier } from "@/types/registry";
+
+const loadJobDetailData = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ slug: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { buildPublicJobsIndex, getJobBySlug, getJobs, toPublicJobListing } = await import("@/lib/jobs");
+    const [job, jobs] = await Promise.all([getJobBySlug(data.slug), getJobs()]);
+    return {
+      job: job ? toPublicJobListing(job) : null,
+      related: buildPublicJobsIndex(jobs.filter((item) => item.slug !== data.slug)).entries.slice(0, 4),
+    };
+  });
 
 export const Route = createFileRoute("/jobs/$slug")({
-  loader: ({ params }) => {
-    const job = JOB_LISTINGS.find((j) => j.slug === params.slug);
-    if (!job) throw notFound();
-    return { job };
+  loader: async ({ params }) => {
+    const data = await loadJobDetailData({ data: { slug: params.slug } });
+    return {
+      slug: params.slug,
+      job: data.job ? normalizeJobListing(data.job) : null,
+      related: data.related
+        .map(normalizeJobListing)
+        .filter((item) => item.slug)
+        .slice(0, 4),
+    };
   },
   head: ({ params, loaderData }) => {
-    if (!loaderData) return { meta: [] };
-    const j = loaderData.job;
+    const job = loaderData?.job;
     const url = `/jobs/${params.slug}`;
-    const ld = {
-      "@context": "https://schema.org",
-      "@type": "JobPosting",
-      title: j.title,
-      description: j.description,
-      datePosted: j.postedAt,
-      employmentType: j.type,
-      hiringOrganization: {
-        "@type": "Organization",
-        name: j.company,
-        ...(j.companyUrl ? { sameAs: j.companyUrl } : {}),
-      },
-      jobLocation: {
-        "@type": "Place",
-        address: { "@type": "PostalAddress", addressLocality: j.location },
-      },
-      ...(j.isRemote ? { jobLocationType: "TELECOMMUTE" } : {}),
-      ...(j.applyUrl ? { url: j.applyUrl } : {}),
-    };
     return {
       meta: [
-        { title: `${j.title} at ${j.company} — HeyClaude` },
-        { name: "description", content: j.description },
-        { property: "og:title", content: `${j.title} at ${j.company}` },
-        { property: "og:description", content: j.description },
+        { title: job ? `${job.title} at ${job.company} — HeyClaude jobs` : "Claude workflow role — HeyClaude" },
+        {
+          name: "description",
+          content: job?.description || "Source-verified roles building Claude Code, MCP servers, and agent workflows.",
+        },
+        { property: "og:title", content: job ? `${job.title} at ${job.company}` : "Claude workflow role — HeyClaude" },
+        { property: "og:description", content: job?.description || "Source-verified role from the HeyClaude jobs board." },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
       links: [{ rel: "canonical", href: url }],
-      scripts: [{ type: "application/ld+json", children: JSON.stringify(ld) }],
     };
   },
   errorComponent: ({ error, reset }) => (
@@ -79,10 +82,93 @@ export const Route = createFileRoute("/jobs/$slug")({
   component: JobDetail,
 });
 
+function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown>): JobListing {
+  const postedAt = String(value.postedAt || value.lastVerifiedAt || new Date(0).toISOString());
+  return {
+    slug: String(value.slug || ""),
+    title: String(value.title || "Untitled role"),
+    company: String(value.company || "Unknown company"),
+    companyUrl: typeof value.companyUrl === "string" ? value.companyUrl : undefined,
+    location: String(value.location || "Remote"),
+    isRemote: Boolean(value.isRemote),
+    isWorldwide: Boolean(value.isWorldwide),
+    type: String(value.type || "Role"),
+    postedAt,
+    lastVerifiedAt: typeof value.lastVerifiedAt === "string" ? value.lastVerifiedAt : undefined,
+    compensation: typeof value.compensation === "string" ? value.compensation : undefined,
+    equity: typeof value.equity === "string" ? value.equity : undefined,
+    bonus: typeof value.bonus === "string" ? value.bonus : undefined,
+    description: String(value.description || ""),
+    benefits: Array.isArray(value.benefits) ? value.benefits.map(String) : undefined,
+    responsibilities: Array.isArray(value.responsibilities) ? value.responsibilities.map(String) : undefined,
+    requirements: Array.isArray(value.requirements) ? value.requirements.map(String) : undefined,
+    labels: Array.isArray(value.labels) ? value.labels.map(String) : undefined,
+    applyUrl: typeof value.applyUrl === "string" ? value.applyUrl : undefined,
+    tier: (value.tier as JobTier) || "free",
+    sourceKind: value.sourceKind as JobListing["sourceKind"],
+    sourceUrl: typeof value.sourceUrl === "string" ? value.sourceUrl : undefined,
+    curationNote: typeof value.curationNote === "string" ? value.curationNote : undefined,
+    featured: Boolean(value.featured),
+    sponsored: Boolean(value.sponsored),
+  };
+}
+
 function JobDetail() {
-  const { job } = Route.useLoaderData();
+  const { slug, job: initialJob, related } = Route.useLoaderData();
+  const [job, setJob] = useState<JobListing | null>(initialJob);
+  const [jobs, setJobs] = useState<JobListing[]>(initialJob ? [initialJob, ...related] : related);
+  const [loaded, setLoaded] = useState(Boolean(initialJob));
+
+  useEffect(() => {
+    let cancelled = false;
+    async function loadJobs() {
+      try {
+        const response = await fetch("/api/jobs?limit=100", {
+          headers: { accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`jobs API returned ${response.status}`);
+        const payload = (await response.json()) as { entries?: Array<Partial<JobListing> & Record<string, unknown>> };
+        if (!cancelled) {
+          const normalized = (payload.entries ?? []).map(normalizeJobListing).filter((item) => item.slug);
+          setJobs(normalized);
+          setJob(normalized.find((item) => item.slug === slug) ?? null);
+        }
+      } catch {
+        if (!cancelled) setJobs([]);
+      } finally {
+        if (!cancelled) setLoaded(true);
+      }
+    }
+    void loadJobs();
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  if (!job) {
+    return (
+      <div className="mx-auto max-w-xl px-4 py-16 text-center">
+        <div className="eyebrow">{loaded ? "404" : "Jobs"}</div>
+        <h1 className="mt-2 font-display text-3xl text-ink">
+          {loaded ? "Role not found" : "Loading role"}
+        </h1>
+        <p className="mt-2 text-sm text-ink-muted">
+          {loaded
+            ? `We couldn't find an active role matching ${slug}. It may have been filled or removed.`
+            : "Checking the active jobs index."}
+        </p>
+        <Link
+          to="/jobs"
+          className="mt-5 inline-flex items-center gap-1.5 rounded-md bg-ink px-4 py-2 text-sm font-medium text-background hover:bg-ink/90"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" /> Browse all jobs
+        </Link>
+      </div>
+    );
+  }
+
   const tint = companyTint(job.company);
-  const more = sortJobs(JOB_LISTINGS.filter((j) => j.slug !== job.slug)).slice(0, 4);
+  const more = sortJobs(jobs.filter((j) => j.slug !== job.slug)).slice(0, 4);
   const shareUrl = typeof window !== "undefined" ? window.location.href : `/jobs/${job.slug}`;
 
   return (
@@ -265,7 +351,7 @@ function JobDetail() {
   );
 }
 
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+function Block({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section className="surface-raised rounded-xl border border-border bg-surface p-5">
       <h2 className="font-display text-base font-semibold tracking-tight text-ink">{title}</h2>

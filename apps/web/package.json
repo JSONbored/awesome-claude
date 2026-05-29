@@ -18,10 +18,10 @@
     "cf-typegen": "wrangler types --env-interface CloudflareEnv worker-configuration.d.ts",
     "db:migrate:local": "wrangler d1 migrations apply SITE_DB --local",
     "db:migrate:remote": "wrangler d1 migrations apply SITE_DB --remote",
-    "preview": "vite build && wrangler dev",
-    "deploy": "vite build && wrangler deploy",
-    "deploy:dev": "vite build && wrangler deploy --env dev",
-    "deploy:prod": "vite build && wrangler deploy"
+    "preview": "vite build && wrangler dev --config wrangler.jsonc",
+    "deploy": "pnpm run deploy:prod",
+    "deploy:dev": "vite build && wrangler deploy --config wrangler.jsonc --env dev",
+    "deploy:prod": "vite build && wrangler deploy --config wrangler.jsonc --env \"\""
   },
   "dependencies": {
     "@hookform/resolvers": "5.2.2",

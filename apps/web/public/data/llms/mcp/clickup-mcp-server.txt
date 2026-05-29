@@ -1,5 +1,5 @@
 # Clickup MCP Server for Claude
-URL: https://heyclau.de/mcp/clickup-mcp-server
+URL: https://heyclau.de/entry/mcp/clickup-mcp-server
 Category: mcp
 Author: hauptsacheNet
 Date added: 2025-09-18
@@ -8,7 +8,7 @@ Repository: https://github.com/hauptsacheNet/clickup-mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx
 Download: /downloads/mcp/clickup-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/clickup-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/clickup-mcp-server
 - Source URLs: https://github.com/hauptsacheNet/clickup-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx
 - Brand: ClickUp
 - Brand domain: clickup.com

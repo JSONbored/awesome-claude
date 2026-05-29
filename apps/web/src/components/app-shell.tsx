@@ -129,7 +129,7 @@ export function Footer() {
           <div className="mt-4 flex flex-wrap items-center gap-1.5 text-[11px]">
             <FeedChip href="/feed.xml" label="RSS" />
             <FeedChip href="/atom.xml" label="Atom" />
-            <FeedChip href="/feeds/ecosystem.json" label="JSON Feed" />
+            <FeedChip href="/data/feeds/index.json" label="JSON Feed" />
             <FeedChip href="/llms.txt" label="llms.txt" />
           </div>
         </div>
@@ -163,7 +163,7 @@ export function Footer() {
             { to: "/submit", label: "Submit a resource" },
             { to: "/claim", label: "Claim a listing" },
             { to: "/contributors", label: "Contributors" },
-            { to: "/validators", label: "Validators" },
+            { to: "/validators", label: "Review coverage" },
             { to: "/advertise", label: "Advertise" },
             { to: "/about", label: "About" },
           ]}

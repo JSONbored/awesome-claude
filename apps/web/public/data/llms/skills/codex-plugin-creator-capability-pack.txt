@@ -1,5 +1,5 @@
 # Codex Plugin Creator Capability Pack Skill
-URL: https://heyclau.de/skills/codex-plugin-creator-capability-pack
+URL: https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -8,7 +8,7 @@ Repository: https://github.com/openai/codex
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx
 Download: /downloads/skills/codex-plugin-creator-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/codex-plugin-creator-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack
 - Source URLs: https://github.com/openai/codex, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx
 - Package URL: /downloads/skills/codex-plugin-creator-capability-pack.zip
 - Package SHA256: 7ea59a73540f97320dc9819720d4dc25f6d117f44096d7aa6011a4857cced8f0

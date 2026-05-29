@@ -1,6 +1,6 @@
 import * as React from "react";
 import type { Entry } from "@/types/registry";
-import { ENTRIES } from "@/mocks/entries";
+import { ENTRIES } from "@/data/entries";
 
 interface CompareCtx {
   items: Entry[];

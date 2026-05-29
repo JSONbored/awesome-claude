@@ -1,25 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { HARNESSES, type Harness } from "@/types/registry";
-import { ENTRIES } from "@/mocks/entries";
-import { Sparkline } from "@/components/sparkline";
+import { ENTRIES } from "@/data/entries";
 import { platformMark, IntegrationMark } from "@/components/integration-marks";
 import { cn } from "@/lib/utils";
-
-/**
- * Deterministic faux 14-build trend per harness, seeded by count, so the
- * sparkline is stable across renders without needing a backing time series.
- */
-function trend(seed: number, target: number): number[] {
-  const out: number[] = [];
-  let v = Math.max(0, target - 6);
-  for (let i = 0; i < 14; i++) {
-    v += ((seed * (i + 1)) % 5) - 1;
-    if (v < 0) v = 0;
-    if (i === 13) v = target;
-    out.push(v);
-  }
-  return out;
-}
 
 function coverageFor(h: Harness) {
   // An entry "covers" a harness when it lists the harness in `harness[]`
@@ -34,7 +17,7 @@ function coverageFor(h: Harness) {
 export function HarnessCoverage() {
   return (
     <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {HARNESSES.map((h, i) => {
+      {HARNESSES.map((h) => {
         const { count, pct } = coverageFor(h.id);
         const mark = platformMark(h.id);
         return (
@@ -70,15 +53,8 @@ export function HarnessCoverage() {
             </div>
 
             <div className="flex items-end justify-between gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-ink-subtle">14-build trend</span>
-              <Sparkline
-                data={trend((i + 1) * 7, count)}
-                width={72}
-                height={18}
-                ariaLabel={`${h.label} coverage trend`}
-                strokeClassName="stroke-accent"
-                fillClassName="fill-accent/15"
-              />
+              <span className="text-[10px] uppercase tracking-wider text-ink-subtle">Current registry snapshot</span>
+              <span className="font-mono text-[11px] text-ink-muted">{count}/{ENTRIES.length}</span>
             </div>
           </Link>
         );

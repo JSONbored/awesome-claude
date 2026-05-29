@@ -38,6 +38,9 @@ export const siteConfig = {
   discordUrl:
     publicEnv("NEXT_PUBLIC_DISCORD_URL") ||
     "https://discord.com/invite/Ax3Py4YDrq",
+  turnstileSiteKey:
+    publicEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY") ||
+    "1x00000000000000000000AA",
   polarFreeJobUrl:
     publicEnv("NEXT_PUBLIC_POLAR_FREE_JOB_URL") || "/jobs/post?tier=free",
   polarJobBoardUrl: publicEnv("NEXT_PUBLIC_POLAR_JOB_BOARD_URL") || "/advertise",

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getEntry } from "@/mocks/search";
+import { getEntry } from "@/data/search";
 
 /**
  * Lightweight OG image — deterministic SVG keyed by category + slug.

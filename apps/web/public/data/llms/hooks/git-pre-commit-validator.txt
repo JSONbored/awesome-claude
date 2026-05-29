@@ -1,12 +1,12 @@
 # Git Pre Commit Validator - Hooks
-URL: https://heyclau.de/hooks/git-pre-commit-validator
+URL: https://heyclau.de/entry/hooks/git-pre-commit-validator
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://pre-commit.com/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/git-pre-commit-validator
+- Canonical URL: https://heyclau.de/entry/hooks/git-pre-commit-validator
 - Source URLs: https://pre-commit.com/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-pre-commit-validator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

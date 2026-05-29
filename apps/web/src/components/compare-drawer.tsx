@@ -82,14 +82,6 @@ const ROWS: RowDef[] = [
     render: (e) => <NotesPresenceChips entry={e} />,
   },
   {
-    label: "Weekly installs",
-    render: (e) => (
-      <span className="font-mono text-sm text-ink">
-        {e.signals?.weeklyInstalls?.toLocaleString() ?? "—"}
-      </span>
-    ),
-  },
-  {
     label: "Stars",
     render: (e) => (
       <span className="font-mono text-sm text-ink">{e.stars?.toLocaleString() ?? "—"}</span>

@@ -9,7 +9,7 @@ export interface SearchFilters {
   source?: SourceStatus[];
   installable?: boolean;
   hasSafetyNotes?: boolean;
-  sort?: "popular" | "newest" | "title" | "trending";
+  sort?: "popular" | "newest" | "title";
 }
 
 export function search(filters: SearchFilters = {}): Entry[] {
@@ -41,7 +41,6 @@ export function search(filters: SearchFilters = {}): Entry[] {
   rows = [...rows].sort((a, b) => {
     if (sort === "newest") return a.dateAdded < b.dateAdded ? 1 : -1;
     if (sort === "title") return a.title.localeCompare(b.title);
-    if (sort === "trending") return (b.trending ?? 0) - (a.trending ?? 0);
     return (b.stars ?? 0) - (a.stars ?? 0);
   });
   return rows;

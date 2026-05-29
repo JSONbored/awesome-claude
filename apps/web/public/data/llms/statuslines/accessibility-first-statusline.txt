@@ -1,12 +1,12 @@
 # Accessibility First Statusline - Claude Code Statuslines
-URL: https://heyclau.de/statuslines/accessibility-first-statusline
+URL: https://heyclau.de/entry/statuslines/accessibility-first-statusline
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-23
 Documentation: https://www.w3.org/WAI/WCAG21/quickref/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/accessibility-first-statusline.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/accessibility-first-statusline
+- Canonical URL: https://heyclau.de/entry/statuslines/accessibility-first-statusline
 - Source URLs: https://www.w3.org/WAI/WCAG21/quickref/, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/accessibility-first-statusline.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

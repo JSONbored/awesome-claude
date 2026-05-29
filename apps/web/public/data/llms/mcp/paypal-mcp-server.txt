@@ -1,5 +1,5 @@
 # Paypal MCP Server for Claude
-URL: https://heyclau.de/mcp/paypal-mcp-server
+URL: https://heyclau.de/entry/mcp/paypal-mcp-server
 Category: mcp
 Author: PayPal
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://www.paypal.ai/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/paypal-mcp-server.mdx
 Download: /downloads/mcp/paypal-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/paypal-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/paypal-mcp-server
 - Source URLs: https://www.paypal.ai/, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/paypal-mcp-server.mdx
 - Brand: PayPal
 - Brand domain: paypal.com

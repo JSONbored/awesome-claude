@@ -1,12 +1,12 @@
 # Codebase Migration Refactoring Agent - Agents
-URL: https://heyclau.de/agents/codebase-migration-refactoring-agent
+URL: https://heyclau.de/entry/agents/codebase-migration-refactoring-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-19
 Documentation: https://refactoring.guru/refactoring/catalog
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/codebase-migration-refactoring-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/codebase-migration-refactoring-agent
+- Canonical URL: https://heyclau.de/entry/agents/codebase-migration-refactoring-agent
 - Source URLs: https://refactoring.guru/refactoring/catalog, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/codebase-migration-refactoring-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

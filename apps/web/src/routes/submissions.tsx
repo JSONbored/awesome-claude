@@ -1,58 +1,195 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Clock, CheckCircle2, GitPullRequest, XCircle } from "lucide-react";
-import { CATEGORIES, type Category } from "@/types/registry";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+  GitPullRequest,
+  XCircle,
+} from "lucide-react";
+import { CATEGORIES } from "@/types/registry";
 import { cn } from "@/lib/utils";
 
-type Status = "queued" | "in-review" | "merged" | "rejected";
+type QueueStatus =
+  | "queued"
+  | "in_review"
+  | "ready"
+  | "approved"
+  | "import_pr_open"
+  | "needs_author_input"
+  | "source_needs_verification"
+  | "stale"
+  | "imported"
+  | "closed";
 
 interface QueueItem {
-  id: string;
+  number: number;
+  url: string;
   title: string;
-  category: Category;
-  submittedBy: string;
-  submittedAt: string;
-  status: Status;
-  note?: string;
-  issueUrl?: string;
+  author: string;
+  authorUrl?: string;
+  category: string;
+  slug: string;
+  status: QueueStatus;
+  state: "open" | "closed";
+  labels: string[];
+  blockers: string[];
+  updatedAt: string;
+  createdAt: string;
+  closedAt?: string | null;
+  importPrUrl?: string;
 }
 
-const QUEUE: QueueItem[] = [
-  { id: "S-247", title: "Postgres explain-plan MCP", category: "mcp", submittedBy: "wong2", submittedAt: "2026-05-26", status: "in-review", note: "Verifying credentials scope." },
-  { id: "S-246", title: "Pre-commit lint hook", category: "hooks", submittedBy: "jzombie", submittedAt: "2026-05-25", status: "queued" },
-  { id: "S-245", title: "Cursor MDC: TypeScript baseline", category: "rules", submittedBy: "cursor", submittedAt: "2026-05-25", status: "merged" },
-  { id: "S-244", title: "/refactor command", category: "commands", submittedBy: "claude-workflows", submittedAt: "2026-05-24", status: "in-review" },
-  { id: "S-243", title: "Statusline: Git branch + battery", category: "statuslines", submittedBy: "jzombie", submittedAt: "2026-05-24", status: "queued" },
-  { id: "S-242", title: "Ship a Skill in 10 minutes", category: "guides", submittedBy: "anthropic", submittedAt: "2026-05-23", status: "merged" },
-  { id: "S-241", title: "Legacy CLI wrapper", category: "tools", submittedBy: "unknown", submittedAt: "2026-05-22", status: "rejected", note: "Source URL unreachable; resubmit with provenance." },
-  { id: "S-240", title: "Notion MCP", category: "mcp", submittedBy: "notion-community", submittedAt: "2026-05-22", status: "in-review", note: "Awaiting safety + privacy notes." },
-  { id: "S-239", title: "Agent: SRE on-call", category: "agents", submittedBy: "ops-guild", submittedAt: "2026-05-21", status: "merged" },
-  { id: "S-238", title: "Skill: design tokens linter", category: "skills", submittedBy: "designsystems", submittedAt: "2026-05-20", status: "queued" },
-];
+interface QueueResponse {
+  ok: true;
+  generatedAt: string;
+  repo: string;
+  count: number;
+  entries: QueueItem[];
+}
 
-const STATUS_META = {
-  queued: { icon: Clock, label: "Queued", tone: "border-border bg-surface text-ink-muted" },
-  "in-review": { icon: GitPullRequest, label: "In review", tone: "border-accent/40 bg-accent/15 text-ink" },
-  merged: { icon: CheckCircle2, label: "Merged", tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink" },
-  rejected: { icon: XCircle, label: "Returned", tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink" },
-} as const;
+const STATUS_META: Record<
+  QueueStatus,
+  {
+    icon: typeof Clock;
+    label: string;
+    tone: string;
+    group: "active" | "ready" | "blocked" | "done";
+  }
+> = {
+  queued: {
+    icon: Clock,
+    label: "Queued",
+    tone: "border-border bg-surface text-ink-muted",
+    group: "active",
+  },
+  in_review: {
+    icon: GitPullRequest,
+    label: "In review",
+    tone: "border-accent/40 bg-accent/15 text-ink",
+    group: "active",
+  },
+  ready: {
+    icon: CheckCircle2,
+    label: "Ready for maintainer",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+    group: "ready",
+  },
+  approved: {
+    icon: CheckCircle2,
+    label: "Approved for import",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+    group: "ready",
+  },
+  import_pr_open: {
+    icon: GitPullRequest,
+    label: "Import PR open",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+    group: "ready",
+  },
+  needs_author_input: {
+    icon: AlertTriangle,
+    label: "Needs author input",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+    group: "blocked",
+  },
+  source_needs_verification: {
+    icon: AlertTriangle,
+    label: "Source needs verification",
+    tone: "border-trust-review/40 bg-trust-review/10 text-ink",
+    group: "blocked",
+  },
+  stale: {
+    icon: AlertTriangle,
+    label: "Stale",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+    group: "blocked",
+  },
+  imported: {
+    icon: CheckCircle2,
+    label: "Imported",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+    group: "done",
+  },
+  closed: {
+    icon: XCircle,
+    label: "Closed",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+    group: "done",
+  },
+};
 
 export const Route = createFileRoute("/submissions")({
   head: () => ({
     meta: [
       { title: "Submission queue — HeyClaude" },
-      { name: "description", content: "Public queue of submissions in review, merged, and returned across the HeyClaude registry." },
+      {
+        name: "description",
+        content:
+          "Public queue of source-backed HeyClaude submissions with live GitHub issue status.",
+      },
       { property: "og:title", content: "Submission queue — HeyClaude" },
-      { property: "og:description", content: "Transparent look at what's in review and what's landed." },
+      {
+        property: "og:description",
+        content:
+          "Transparent read-only view of what's queued, blocked, approved, and imported.",
+      },
     ],
   }),
   component: SubmissionsPage,
 });
 
+function useSubmissionQueue() {
+  const [data, setData] = React.useState<QueueResponse | null>(null);
+  const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/submissions/queue?limit=100");
+        const payload = (await response.json().catch(() => null)) as
+          | QueueResponse
+          | { error?: { message?: string } }
+          | null;
+        if (!response.ok || !payload || !("entries" in payload)) {
+          throw new Error(
+            payload && "error" in payload
+              ? payload.error?.message || "Could not load submission queue."
+              : "Could not load submission queue.",
+          );
+        }
+        if (!cancelled) {
+          setData(payload);
+          setError("");
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Could not load submission queue.");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { data, error, loading };
+}
+
 function SubmissionsPage() {
-  const counts = QUEUE.reduce<Record<Status, number>>(
-    (acc, q) => ({ ...acc, [q.status]: (acc[q.status] ?? 0) + 1 }),
-    { queued: 0, "in-review": 0, merged: 0, rejected: 0 },
-  );
+  const { data, error, loading } = useSubmissionQueue();
+  const entries = data?.entries ?? [];
+  const counts = React.useMemo(() => {
+    const next = { active: 0, ready: 0, blocked: 0, done: 0 };
+    for (const entry of entries) next[STATUS_META[entry.status].group] += 1;
+    return next;
+  }, [entries]);
 
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
@@ -63,8 +200,9 @@ function SubmissionsPage() {
             Submission queue
           </h1>
           <p className="mt-3 max-w-xl text-ink-muted">
-            Everything submitted to the registry shows up here. Reviewers leave a note when they return
-            something — usually missing source URL, missing safety notes, or a duplicate.
+            Read-only status pulled from public GitHub content-submission issues.
+            Approval, import, and review still happen on GitHub after maintainer
+            review.
           </p>
         </div>
         <Link
@@ -76,56 +214,102 @@ function SubmissionsPage() {
       </div>
 
       <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
-        {(["in-review", "queued", "merged", "rejected"] as Status[]).map((s) => {
-          const meta = STATUS_META[s];
-          const Icon = meta.icon;
-          return (
-            <div key={s} className="bg-surface p-5">
-              <div className="flex items-center justify-between">
-                <Icon className="h-4 w-4 text-ink-muted" />
-                <span className="font-mono text-xs text-ink-subtle">{meta.label}</span>
-              </div>
-              <div className="mt-3 font-display text-3xl font-semibold text-ink">{counts[s]}</div>
+        {[
+          ["active", "Active"],
+          ["ready", "Maintainer-ready"],
+          ["blocked", "Needs changes"],
+          ["done", "Closed/imported"],
+        ].map(([key, label]) => (
+          <div key={key} className="bg-surface p-5">
+            <div className="flex items-center justify-between">
+              <Clock className="h-4 w-4 text-ink-muted" />
+              <span className="font-mono text-xs text-ink-subtle">{label}</span>
             </div>
-          );
-        })}
+            <div className="mt-3 font-display text-3xl font-semibold text-ink">
+              {counts[key as keyof typeof counts]}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="mt-10 overflow-hidden rounded-xl border border-border bg-surface">
-        <div className="hidden grid-cols-[80px_1fr_100px_140px_120px_120px] gap-4 border-b border-border bg-surface-2 px-5 py-2 text-[11px] uppercase tracking-wider text-ink-subtle md:grid">
-          <span>ID</span>
+        <div className="hidden grid-cols-[80px_1fr_100px_140px_130px_170px] gap-4 border-b border-border bg-surface-2 px-5 py-2 text-[11px] uppercase tracking-wider text-ink-subtle md:grid">
+          <span>Issue</span>
           <span>Title</span>
           <span>Category</span>
           <span>Submitted by</span>
-          <span>Submitted</span>
+          <span>Updated</span>
           <span>Status</span>
         </div>
-        {QUEUE.map((q) => {
+
+        {loading && (
+          <div className="px-5 py-8 text-sm text-ink-muted">
+            Loading public GitHub submission queue…
+          </div>
+        )}
+
+        {!loading && error && (
+          <div className="px-5 py-8 text-sm text-trust-blocked">
+            {error}
+          </div>
+        )}
+
+        {!loading && !error && entries.length === 0 && (
+          <div className="px-5 py-8 text-sm text-ink-muted">
+            No public content submissions are currently visible.
+          </div>
+        )}
+
+        {entries.map((q) => {
           const meta = STATUS_META[q.status];
           const Icon = meta.icon;
           const category = CATEGORIES.find((c) => c.id === q.category);
           return (
-            <div key={q.id} className="border-b border-border px-5 py-3 last:border-0">
-              <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-[80px_1fr_100px_140px_120px_120px] md:gap-4">
-                <code className="font-mono text-xs text-ink-subtle">{q.id}</code>
-                <div className="text-sm font-medium text-ink">{q.title}</div>
-                <span className="rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted w-fit">
+            <div key={q.number} className="border-b border-border px-5 py-3 last:border-0">
+              <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-[80px_1fr_100px_140px_130px_170px] md:gap-4">
+                <Link
+                  to="/submissions/$id"
+                  params={{ id: String(q.number) }}
+                  className="font-mono text-xs text-ink-subtle hover:text-ink"
+                >
+                  #{q.number}
+                </Link>
+                <div className="min-w-0">
+                  <Link
+                    to="/submissions/$id"
+                    params={{ id: String(q.number) }}
+                    className="block truncate text-sm font-medium text-ink hover:underline"
+                  >
+                    {q.title}
+                  </Link>
+                  <code className="font-mono text-[11px] text-ink-subtle">
+                    {q.category}/{q.slug}
+                  </code>
+                </div>
+                <span className="w-fit rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted">
                   {category?.label ?? q.category}
                 </span>
-                <Link
-                  to="/contributors/$slug"
-                  params={{ slug: q.submittedBy }}
+                <a
+                  href={q.authorUrl || `https://github.com/${q.author}`}
+                  target="_blank"
+                  rel="noreferrer"
                   className="truncate font-mono text-xs text-ink-muted hover:text-ink"
                 >
-                  @{q.submittedBy}
-                </Link>
-                <span className="font-mono text-xs text-ink-subtle">{q.submittedAt}</span>
+                  @{q.author}
+                </a>
+                <span className="font-mono text-xs text-ink-subtle">
+                  {q.updatedAt.slice(0, 10)}
+                </span>
                 <span className={cn("inline-flex w-fit items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px]", meta.tone)}>
                   <Icon className="h-3 w-3" /> {meta.label}
                 </span>
               </div>
-              {q.note && (
-                <div className="mt-2 text-xs text-ink-muted md:pl-[88px]">{q.note}</div>
+              {q.blockers.length > 0 && (
+                <ul className="mt-2 space-y-1 text-xs text-ink-muted md:pl-[88px]">
+                  {q.blockers.map((blocker) => (
+                    <li key={blocker}>- {blocker}</li>
+                  ))}
+                </ul>
               )}
             </div>
           );
@@ -133,8 +317,12 @@ function SubmissionsPage() {
       </div>
 
       <p className="mt-6 text-xs text-ink-subtle">
-        Queue refreshes from <code className="rounded bg-surface px-1 py-0.5 font-mono">/api/submissions</code>{" "}
-        every hour. Status reflects reviewer state, not automated checks.
+        Queue data comes from{" "}
+        <code className="rounded bg-surface px-1 py-0.5 font-mono">
+          /api/submissions/queue
+        </code>
+        {data?.generatedAt ? ` · refreshed ${data.generatedAt.slice(0, 16).replace("T", " ")}` : ""}
+        . This page is read-only and cannot approve, reject, label, or import submissions.
       </p>
     </div>
   );

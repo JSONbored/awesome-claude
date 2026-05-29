@@ -1,5 +1,5 @@
 # WebAssembly WASM Module Development Skill
-URL: https://heyclau.de/skills/webassembly-module-development
+URL: https://heyclau.de/entry/skills/webassembly-module-development
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://webassembly.org/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/webassembly-module-development.mdx
 Download: /downloads/skills/webassembly-module-development.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/webassembly-module-development
+- Canonical URL: https://heyclau.de/entry/skills/webassembly-module-development
 - Source URLs: https://webassembly.org/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/webassembly-module-development.mdx
 - Package URL: /downloads/skills/webassembly-module-development.zip
 - Package SHA256: ef8e4038c38a8508ad1afdd7e0152ba4b64babc941ad5deabffb70122e10e75f

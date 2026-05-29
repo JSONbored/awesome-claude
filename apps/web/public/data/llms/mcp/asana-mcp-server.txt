@@ -1,5 +1,5 @@
 # Asana MCP Server for Claude
-URL: https://heyclau.de/mcp/asana-mcp-server
+URL: https://heyclau.de/entry/mcp/asana-mcp-server
 Category: mcp
 Author: Asana
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://developers.asana.com/docs/using-asanas-model-control-prot
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/asana-mcp-server.mdx
 Download: /downloads/mcp/asana-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/asana-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/asana-mcp-server
 - Source URLs: https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/asana-mcp-server.mdx
 - Brand: Asana
 - Brand domain: asana.com

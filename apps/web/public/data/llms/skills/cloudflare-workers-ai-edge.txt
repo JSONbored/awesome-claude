@@ -1,5 +1,5 @@
 # Cloudflare Workers AI Edge Functions Skill
-URL: https://heyclau.de/skills/cloudflare-workers-ai-edge
+URL: https://heyclau.de/entry/skills/cloudflare-workers-ai-edge
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://developers.cloudflare.com/workers-ai/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx
 Download: /downloads/skills/cloudflare-workers-ai-edge.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/cloudflare-workers-ai-edge
+- Canonical URL: https://heyclau.de/entry/skills/cloudflare-workers-ai-edge
 - Source URLs: https://developers.cloudflare.com/workers-ai/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-ai-edge.mdx
 - Brand: Cloudflare
 - Brand domain: cloudflare.com

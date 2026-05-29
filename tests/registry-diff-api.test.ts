@@ -42,7 +42,7 @@ function makeEntry(
     slug,
     title: `Fixture ${slug}`,
     dateAdded: overrides.dateAdded ?? "2026-05-19",
-    canonicalUrl: `https://heyclau.de/${category}/${slug}`,
+    canonicalUrl: `https://heyclau.de/entry/${category}/${slug}`,
     llmsUrl: `https://heyclau.de/data/llms/${category}/${slug}.txt`,
     apiUrl: `https://heyclau.de/api/registry/entries/${category}/${slug}`,
     artifactHash: "0".repeat(64),

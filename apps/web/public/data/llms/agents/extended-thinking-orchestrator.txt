@@ -1,11 +1,11 @@
 # Extended Thinking Orchestrator - Agents
-URL: https://heyclau.de/agents/extended-thinking-orchestrator
+URL: https://heyclau.de/entry/agents/extended-thinking-orchestrator
 Category: agents
 Author: JSONbored
 Date added: 2025-10-25
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/extended-thinking-orchestrator
+- Canonical URL: https://heyclau.de/entry/agents/extended-thinking-orchestrator
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

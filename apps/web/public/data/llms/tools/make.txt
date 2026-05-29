@@ -1,12 +1,12 @@
 # Make
-URL: https://heyclau.de/tools/make
+URL: https://heyclau.de/entry/tools/make
 Category: tools
 Author: Make
 Date added: 2026-04-27
 Documentation: https://www.make.com/en/help
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/make
+- Canonical URL: https://heyclau.de/entry/tools/make
 - Source URLs: https://www.make.com/en/help, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/make.mdx, https://www.make.com
 - Brand: Make
 - Brand domain: make.com

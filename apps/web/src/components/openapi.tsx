@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Send, Loader2, ChevronDown } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
-import type { OpenApiEndpoint, OpenApiParam } from "@/mocks/openapi";
+import type { OpenApiEndpoint, OpenApiParam } from "@/data/openapi";
 import { cn } from "@/lib/utils";
 
 const METHOD_STYLES: Record<OpenApiEndpoint["method"], string> = {
   GET: "bg-trust-trusted/15 text-trust-trusted border-trust-trusted/40",
   POST: "bg-accent/40 text-accent-ink dark:text-accent border-accent/60",
+  PATCH: "bg-trust-review/15 text-trust-review border-trust-review/40",
 };
 
 export function MethodPill({ method }: { method: OpenApiEndpoint["method"] }) {
@@ -89,7 +90,7 @@ function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
   const curl =
     endpoint.method === "GET"
       ? `curl '${fullUrl}'`
-      : `curl -X POST '${fullUrl}' \\\n  -H 'content-type: application/json' \\\n  -d '${endpoint.body?.example.replace(/\n/g, "") ?? ""}'`;
+      : `curl -X ${endpoint.method} '${fullUrl}' \\\n  -H 'content-type: application/json' \\\n  -d '${endpoint.body?.example.replace(/\n/g, "") ?? ""}'`;
   return (
     <div>
       <div className="mb-2 flex items-center justify-between">
@@ -115,16 +116,15 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
   const send = async () => {
     setSending(true);
     setResponse(null);
-    await new Promise((r) => setTimeout(r, 600));
-    setResponse(JSON.stringify(endpoint.mockResponse, null, 2));
+    setResponse(JSON.stringify(endpoint.sampleResponse, null, 2));
     setSending(false);
   };
 
   return (
     <div className="space-y-4 bg-surface-2 p-5">
       <div className="flex items-center justify-between">
-        <div className="eyebrow">Try it</div>
-        <span className="text-[10px] text-ink-subtle">Returns mocked response · no real call</span>
+        <div className="eyebrow">Example</div>
+        <span className="text-[10px] text-ink-subtle">Sample response only</span>
       </div>
       {endpoint.parameters && endpoint.parameters.length > 0 && (
         <div className="space-y-3">
@@ -151,7 +151,7 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90 disabled:opacity-50"
       >
         {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
-        Send
+        Show sample
       </button>
       {response && (
         <div>

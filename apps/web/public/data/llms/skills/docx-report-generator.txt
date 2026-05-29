@@ -1,5 +1,5 @@
 # DOCX Report Generator Skill
-URL: https://heyclau.de/skills/docx-report-generator
+URL: https://heyclau.de/entry/skills/docx-report-generator
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://docxtpl.readthedocs.io/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docx-report-generator.mdx
 Download: /downloads/skills/docx-report-generator.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/docx-report-generator
+- Canonical URL: https://heyclau.de/entry/skills/docx-report-generator
 - Source URLs: https://docxtpl.readthedocs.io/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docx-report-generator.mdx
 - Package URL: /downloads/skills/docx-report-generator.zip
 - Package SHA256: 97c1f763257656b21679a7b0158c6a5f70e4f9feae1722c8674242498e39d462

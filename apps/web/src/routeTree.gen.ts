@@ -49,7 +49,7 @@ import { Route as SubmissionsIdRouteImport } from './routes/submissions.$id'
 import { Route as JobsPostRouteImport } from './routes/jobs.post'
 import { Route as JobsSlugRouteImport } from './routes/jobs.$slug'
 import { Route as IntegrationsSlugRouteImport } from './routes/integrations.$slug'
-import { Route as FeedsSplatRouteImport } from './routes/feeds.$'
+import { Route as FeedsSlugRouteImport } from './routes/feeds.$slug'
 import { Route as ContributorsSlugRouteImport } from './routes/contributors.$slug'
 import { Route as BestSlugRouteImport } from './routes/best.$slug'
 import { Route as ApiSubmissionsRouteImport } from './routes/api/submissions'
@@ -66,6 +66,7 @@ import { Route as OgCategorySlugRouteImport } from './routes/og.$category.$slug'
 import { Route as EntryCategorySlugRouteImport } from './routes/entry.$category.$slug'
 import { Route as ApiVotesToggleRouteImport } from './routes/api/votes/toggle'
 import { Route as ApiVotesQueryRouteImport } from './routes/api/votes/query'
+import { Route as ApiSubmissionsQueueRouteImport } from './routes/api/submissions/queue'
 import { Route as ApiSubmissionsPreflightRouteImport } from './routes/api/submissions/preflight'
 import { Route as ApiRegistryTrendingRouteImport } from './routes/api/registry/trending'
 import { Route as ApiRegistrySearchRouteImport } from './routes/api/registry/search'
@@ -292,9 +293,9 @@ const IntegrationsSlugRoute = IntegrationsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => IntegrationsRoute,
 } as any)
-const FeedsSplatRoute = FeedsSplatRouteImport.update({
-  id: '/$',
-  path: '/$',
+const FeedsSlugRoute = FeedsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => FeedsRoute,
 } as any)
 const ContributorsSlugRoute = ContributorsSlugRouteImport.update({
@@ -376,6 +377,11 @@ const ApiVotesQueryRoute = ApiVotesQueryRouteImport.update({
   id: '/api/votes/query',
   path: '/api/votes/query',
   getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSubmissionsQueueRoute = ApiSubmissionsQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => ApiSubmissionsRoute,
 } as any)
 const ApiSubmissionsPreflightRoute = ApiSubmissionsPreflightRouteImport.update({
   id: '/preflight',
@@ -554,7 +560,7 @@ export interface FileRoutesByFullPath {
   '/api/submissions': typeof ApiSubmissionsRouteWithChildren
   '/best/$slug': typeof BestSlugRoute
   '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$': typeof FeedsSplatRoute
+  '/feeds/$slug': typeof FeedsSlugRoute
   '/integrations/$slug': typeof IntegrationsSlugRoute
   '/jobs/$slug': typeof JobsSlugRoute
   '/jobs/post': typeof JobsPostRoute
@@ -579,6 +585,7 @@ export interface FileRoutesByFullPath {
   '/api/registry/search': typeof ApiRegistrySearchRoute
   '/api/registry/trending': typeof ApiRegistryTrendingRoute
   '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
+  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
   '/api/votes/query': typeof ApiVotesQueryRoute
   '/api/votes/toggle': typeof ApiVotesToggleRoute
   '/entry/$category/$slug': typeof EntryCategorySlugRoute
@@ -638,7 +645,7 @@ export interface FileRoutesByTo {
   '/api/submissions': typeof ApiSubmissionsRouteWithChildren
   '/best/$slug': typeof BestSlugRoute
   '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$': typeof FeedsSplatRoute
+  '/feeds/$slug': typeof FeedsSlugRoute
   '/integrations/$slug': typeof IntegrationsSlugRoute
   '/jobs/$slug': typeof JobsSlugRoute
   '/jobs/post': typeof JobsPostRoute
@@ -663,6 +670,7 @@ export interface FileRoutesByTo {
   '/api/registry/search': typeof ApiRegistrySearchRoute
   '/api/registry/trending': typeof ApiRegistryTrendingRoute
   '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
+  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
   '/api/votes/query': typeof ApiVotesQueryRoute
   '/api/votes/toggle': typeof ApiVotesToggleRoute
   '/entry/$category/$slug': typeof EntryCategorySlugRoute
@@ -723,7 +731,7 @@ export interface FileRoutesById {
   '/api/submissions': typeof ApiSubmissionsRouteWithChildren
   '/best/$slug': typeof BestSlugRoute
   '/contributors/$slug': typeof ContributorsSlugRoute
-  '/feeds/$': typeof FeedsSplatRoute
+  '/feeds/$slug': typeof FeedsSlugRoute
   '/integrations/$slug': typeof IntegrationsSlugRoute
   '/jobs/$slug': typeof JobsSlugRoute
   '/jobs/post': typeof JobsPostRoute
@@ -748,6 +756,7 @@ export interface FileRoutesById {
   '/api/registry/search': typeof ApiRegistrySearchRoute
   '/api/registry/trending': typeof ApiRegistryTrendingRoute
   '/api/submissions/preflight': typeof ApiSubmissionsPreflightRoute
+  '/api/submissions/queue': typeof ApiSubmissionsQueueRoute
   '/api/votes/query': typeof ApiVotesQueryRoute
   '/api/votes/toggle': typeof ApiVotesToggleRoute
   '/entry/$category/$slug': typeof EntryCategorySlugRoute
@@ -809,7 +818,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/best/$slug'
     | '/contributors/$slug'
-    | '/feeds/$'
+    | '/feeds/$slug'
     | '/integrations/$slug'
     | '/jobs/$slug'
     | '/jobs/post'
@@ -834,6 +843,7 @@ export interface FileRouteTypes {
     | '/api/registry/search'
     | '/api/registry/trending'
     | '/api/submissions/preflight'
+    | '/api/submissions/queue'
     | '/api/votes/query'
     | '/api/votes/toggle'
     | '/entry/$category/$slug'
@@ -893,7 +903,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/best/$slug'
     | '/contributors/$slug'
-    | '/feeds/$'
+    | '/feeds/$slug'
     | '/integrations/$slug'
     | '/jobs/$slug'
     | '/jobs/post'
@@ -918,6 +928,7 @@ export interface FileRouteTypes {
     | '/api/registry/search'
     | '/api/registry/trending'
     | '/api/submissions/preflight'
+    | '/api/submissions/queue'
     | '/api/votes/query'
     | '/api/votes/toggle'
     | '/entry/$category/$slug'
@@ -977,7 +988,7 @@ export interface FileRouteTypes {
     | '/api/submissions'
     | '/best/$slug'
     | '/contributors/$slug'
-    | '/feeds/$'
+    | '/feeds/$slug'
     | '/integrations/$slug'
     | '/jobs/$slug'
     | '/jobs/post'
@@ -1002,6 +1013,7 @@ export interface FileRouteTypes {
     | '/api/registry/search'
     | '/api/registry/trending'
     | '/api/submissions/preflight'
+    | '/api/submissions/queue'
     | '/api/votes/query'
     | '/api/votes/toggle'
     | '/entry/$category/$slug'
@@ -1370,11 +1382,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IntegrationsSlugRouteImport
       parentRoute: typeof IntegrationsRoute
     }
-    '/feeds/$': {
-      id: '/feeds/$'
-      path: '/$'
-      fullPath: '/feeds/$'
-      preLoaderRoute: typeof FeedsSplatRouteImport
+    '/feeds/$slug': {
+      id: '/feeds/$slug'
+      path: '/$slug'
+      fullPath: '/feeds/$slug'
+      preLoaderRoute: typeof FeedsSlugRouteImport
       parentRoute: typeof FeedsRoute
     }
     '/contributors/$slug': {
@@ -1488,6 +1500,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/votes/query'
       preLoaderRoute: typeof ApiVotesQueryRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/api/submissions/queue': {
+      id: '/api/submissions/queue'
+      path: '/queue'
+      fullPath: '/api/submissions/queue'
+      preLoaderRoute: typeof ApiSubmissionsQueueRouteImport
+      parentRoute: typeof ApiSubmissionsRoute
     }
     '/api/submissions/preflight': {
       id: '/api/submissions/preflight'
@@ -1714,11 +1733,11 @@ const ContributorsRouteWithChildren = ContributorsRoute._addFileChildren(
 )
 
 interface FeedsRouteChildren {
-  FeedsSplatRoute: typeof FeedsSplatRoute
+  FeedsSlugRoute: typeof FeedsSlugRoute
 }
 
 const FeedsRouteChildren: FeedsRouteChildren = {
-  FeedsSplatRoute: FeedsSplatRoute,
+  FeedsSlugRoute: FeedsSlugRoute,
 }
 
 const FeedsRouteWithChildren = FeedsRoute._addFileChildren(FeedsRouteChildren)
@@ -1786,10 +1805,12 @@ const ApiCommunitySignalsRouteWithChildren =
 
 interface ApiSubmissionsRouteChildren {
   ApiSubmissionsPreflightRoute: typeof ApiSubmissionsPreflightRoute
+  ApiSubmissionsQueueRoute: typeof ApiSubmissionsQueueRoute
 }
 
 const ApiSubmissionsRouteChildren: ApiSubmissionsRouteChildren = {
   ApiSubmissionsPreflightRoute: ApiSubmissionsPreflightRoute,
+  ApiSubmissionsQueueRoute: ApiSubmissionsQueueRoute,
 }
 
 const ApiSubmissionsRouteWithChildren = ApiSubmissionsRoute._addFileChildren(

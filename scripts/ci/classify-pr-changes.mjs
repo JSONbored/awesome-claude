@@ -101,7 +101,7 @@ const flags = {
   ),
   mcp: touches(
     /^packages\/mcp\//,
-    /^apps\/web\/src\/app\/api\/mcp\//,
+    /^apps\/web\/src\/routes\/api\/mcp\.ts$/,
     /^scripts\/validate-mcp-package\.mjs$/,
     /^tests\/mcp-.*\.test\.ts$/,
     "package.json",

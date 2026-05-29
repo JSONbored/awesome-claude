@@ -28,14 +28,13 @@ import { AgentNativeStrip } from "@/components/agent-native-strip";
 import { EcosystemPulse } from "@/components/ecosystem-pulse";
 import { useRecents } from "@/lib/recents";
 import { CATEGORIES, PRIMARY_CATEGORIES, type Category } from "@/types/registry";
-import { ENTRIES, BRIEF_ISSUES } from "@/mocks/entries";
-import { search } from "@/mocks/search";
+import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
+import { search } from "@/data/search";
 
 // Pre-computed counts at module scope so SSR + first paint show real numbers.
 const TRUSTED_COUNT = ENTRIES.filter((e) => e.trust === "trusted").length;
 const SOURCE_BACKED_COUNT = ENTRIES.filter((e) => e.source !== "unverified").length;
 const REVIEWED_COUNT = ENTRIES.filter((e) => e.reviewed).length;
-const TRENDING_COUNT = ENTRIES.filter((e) => (e.trending ?? 0) > 10).length;
 const TOTAL = ENTRIES.length;
 
 const CATEGORY_ICONS: Partial<Record<Category, typeof Bot>> = {
@@ -109,7 +108,7 @@ export const Route = createFileRoute("/")({
 });
 
 function Home() {
-  const trending = search({ sort: "trending" }).slice(0, 6);
+  const popular = search({ sort: "popular" }).slice(0, 6);
   const newest = search({ sort: "newest" }).slice(0, 4);
   const sourceBacked = ENTRIES.filter((e) => e.source !== "unverified" && e.trust === "trusted").slice(0, 4);
   const claudeNative = PRIMARY_CATEGORIES;
@@ -132,6 +131,7 @@ function Home() {
             reviewedCount={REVIEWED_COUNT}
             briefNumber={latestBrief?.number ?? 14}
             briefDate={latestBrief?.date ?? "this week"}
+            indexedAt={REGISTRY_GENERATED_AT}
           />
 
           <h1
@@ -203,7 +203,7 @@ function Home() {
           <TrustStat icon={ShieldCheck} label="Trusted" value={TRUSTED_COUNT} hint="metadata reviewed" to="/browse" search={{ trust: "trusted" }} />
           <TrustStat icon={GitBranch} label="Source-backed" value={SOURCE_BACKED_COUNT} hint="repo verified" to="/browse" search={{ source: "source-backed" }} />
           <TrustStat icon={Sparkles} label="Reviewed" value={REVIEWED_COUNT} hint="maintainer-checked" to="/browse" search={{ sort: "newest" }} />
-          <TrustStat icon={Flame} label="Trending" value={TRENDING_COUNT} hint="last 7 days" to="/trending" />
+          <TrustStat icon={Flame} label="Live signals" value={TOTAL} hint="tracked entries" to="/trending" />
           <TrustStat icon={Package} label="Categories" value={CATEGORIES.length} hint="surfaces indexed" to="/browse" />
         </div>
       </section>
@@ -279,11 +279,11 @@ function Home() {
         </section>
       )}
 
-      {/* Trending */}
+      {/* Popular */}
       <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
         <RailHeader
-          eyebrow="Trending this week"
-          title="What developers are pinning"
+          eyebrow="Popular starting points"
+          title="What developers inspect first"
           icon={Flame}
           to="/trending"
         />
@@ -301,7 +301,7 @@ function Home() {
           ))}
         </div>
         <div className="mt-4 grid gap-4 stagger-children sm:grid-cols-2 lg:grid-cols-3">
-          {trending.map((e) => (
+          {popular.map((e) => (
             <ResourceCard key={e.slug} entry={e} variant="grid" />
           ))}
         </div>

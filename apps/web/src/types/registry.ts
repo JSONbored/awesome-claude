@@ -88,15 +88,6 @@ export interface SkillFields {
   testedPlatforms?: Platform[];
 }
 
-export interface SignalCounts {
-  upvotes?: number;
-  used?: number;
-  works?: number;
-  broken?: number;
-  weeklyInstalls?: number;
-  comments?: number;
-}
-
 export interface Entry extends Provenance, BrandInfo, SkillFields {
   category: Category;
   slug: string;
@@ -143,8 +134,6 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   privacyNotesList?: string[];
   prerequisites?: string[];
   body?: string;
-  signals?: SignalCounts;
-  trending?: number;
   /** SHA-256 checksum for downloadable package, if any. */
   downloadSha256?: string;
   downloadUrl?: string;

@@ -1,9 +1,17 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, ShieldCheck, ListChecks } from "lucide-react";
-import { ENTRIES } from "@/mocks/entries";
-import { MY_CLAIMS, CLAIM_TYPE_LABEL, CLAIM_STATE_META, type ClaimType } from "@/mocks/claims";
+import { ENTRIES } from "@/data/entries";
 import { cn } from "@/lib/utils";
+
+type ClaimType = "maintain" | "transfer" | "correct" | "remove";
+
+const CLAIM_TYPE_LABEL: Record<ClaimType, string> = {
+  maintain: "Maintain this listing",
+  transfer: "Transfer ownership",
+  correct: "Request correction",
+  remove: "Request removal",
+};
 
 export const Route = createFileRoute("/claim")({
   head: () => ({
@@ -16,6 +24,7 @@ export const Route = createFileRoute("/claim")({
 });
 
 const PROOF_FIELDS = [
+  { id: "email", label: "Contact email", placeholder: "you@example.com", help: "Required so maintainers can verify and follow up.", type: "email" },
   { id: "github", label: "GitHub handle", placeholder: "@your-handle", help: "We verify push/admin on the linked repo." },
   { id: "repo", label: "Repo permission", placeholder: "owner/repo", help: "Public repo where you have admin or maintain." },
   { id: "package", label: "Package owner", placeholder: "npm: @scope/pkg or PyPI handle", help: "Optional but speeds up review." },
@@ -32,6 +41,8 @@ function ClaimPage() {
   const [query, setQuery] = React.useState("");
   const [picked, setPicked] = React.useState<(typeof ENTRIES)[number] | null>(null);
   const [proof, setProof] = React.useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   const matches = React.useMemo(() => {
     if (!query || picked) return [];
@@ -42,6 +53,47 @@ function ClaimPage() {
   }, [query, picked]);
 
   const filled = PROOF_FIELDS.filter((f) => (proof[f.id] ?? "").trim().length > 0);
+  const contactEmail = (proof.email ?? "").trim();
+
+  async function submitClaim() {
+    if (!picked || !contactEmail || submitting) return;
+    setSubmitting(true);
+    setError("");
+    const proofLines = PROOF_FIELDS
+      .filter((field) => field.id !== "email")
+      .map((field) => {
+        const value = (proof[field.id] ?? "").trim();
+        return value ? `${field.label}: ${value}` : "";
+      })
+      .filter(Boolean);
+
+    try {
+      const response = await fetch("/api/listing-leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          kind: "claim",
+          tierInterest: "free",
+          contactName: proof.github?.trim() || "Listing claimant",
+          contactEmail,
+          companyName: picked.author || picked.brandName || "Listing owner",
+          listingTitle: picked.title,
+          websiteUrl: picked.sourceUrl || picked.repoUrl || picked.docsUrl || "",
+          message: [
+            `Claim type: ${CLAIM_TYPE_LABEL[type]}`,
+            `Entry: ${picked.category}/${picked.slug}`,
+            ...proofLines,
+          ].join("\n"),
+        }),
+      });
+      if (!response.ok) throw new Error(`Claim intake returned ${response.status}`);
+      setDone(true);
+    } catch {
+      setError("Claim could not be submitted. Check the required fields and try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   if (done) {
     return (
@@ -50,8 +102,8 @@ function ClaimPage() {
           <Check className="h-6 w-6 text-trust-trusted" />
         </div>
         <h1 className="mt-4 h-display-2 text-ink text-balance">Claim submitted</h1>
-        <p className="mt-2 text-sm text-ink-muted">
-          We'll verify the proof you attached and reply on GitHub. You can watch the status in the table below.
+      <p className="mt-2 text-sm text-ink-muted">
+          We'll verify the proof you attached and reply by email. Claims do not change public listings until maintainer review is complete.
         </p>
         <button
           type="button"
@@ -84,7 +136,7 @@ function ClaimPage() {
         className="mt-10 grid gap-6 lg:grid-cols-[1fr_320px]"
         onSubmit={(e) => {
           e.preventDefault();
-          setDone(true);
+          void submitClaim();
         }}
       >
         <div className="space-y-6">
@@ -172,6 +224,7 @@ function ClaimPage() {
                     value={proof[f.id] ?? ""}
                     onChange={(e) => setProof((p) => ({ ...p, [f.id]: e.target.value }))}
                     placeholder={f.placeholder}
+                    type={"type" in f ? f.type : "text"}
                     className="mt-1 w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-ink placeholder:text-ink-subtle focus:border-ink focus:outline-none"
                   />
                 </label>
@@ -182,14 +235,15 @@ function ClaimPage() {
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="submit"
-              disabled={!picked || filled.length === 0}
+              disabled={!picked || !contactEmail || submitting}
               className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              File claim
+              {submitting ? "Submitting…" : "File claim"}
             </button>
             <span className="text-xs text-ink-subtle">
               {filled.length} of {PROOF_FIELDS.length} proof fields filled
             </span>
+            {error && <span className="text-xs text-trust-blocked">{error}</span>}
           </div>
         </div>
 
@@ -237,57 +291,22 @@ function ClaimPage() {
       </form>
 
       <section className="mt-16">
-        <h2 className="h-display-2 text-ink text-balance">My claims</h2>
-        <p className="mt-2 text-sm text-ink-muted">Mock data for now — wired to /api/claims later.</p>
-        <div className="mt-5 overflow-hidden rounded-xl border border-border bg-surface">
-          <div className="hidden grid-cols-[80px_1fr_160px_120px_120px] gap-4 border-b border-border bg-surface-2 px-5 py-2 text-[11px] uppercase tracking-wider text-ink-subtle md:grid">
-            <span>ID</span>
-            <span>Listing</span>
-            <span>Type</span>
-            <span>Submitted</span>
-            <span>Status</span>
-          </div>
-          {MY_CLAIMS.map((c) => {
-            const meta = CLAIM_STATE_META[c.state];
-            return (
-              <div key={c.id} className="border-b border-border px-5 py-4 last:border-0">
-                <div className="grid grid-cols-1 items-center gap-3 md:grid-cols-[80px_1fr_160px_120px_120px] md:gap-4">
-                  <code className="font-mono text-xs text-ink-subtle">{c.id}</code>
-                  <div>
-                    <div className="text-sm font-medium text-ink">{c.entryTitle}</div>
-                    <code className="font-mono text-[11px] text-ink-subtle">{c.entryRef}</code>
-                  </div>
-                  <span className="text-xs text-ink-muted">{CLAIM_TYPE_LABEL[c.type]}</span>
-                  <span className="font-mono text-xs text-ink-subtle">{c.submittedAt}</span>
-                  <span className={cn("inline-flex w-fit items-center rounded-md border px-2 py-0.5 text-[11px]", meta.tone)}>
-                    {meta.label}
-                  </span>
-                </div>
-                {c.reviewerNote && (
-                  <div className="mt-2 text-xs text-ink-muted md:pl-[88px]">
-                    <span className="font-mono text-ink-subtle">reviewer · </span>
-                    {c.reviewerNote}
-                  </div>
-                )}
-                <div className="mt-2 flex flex-wrap gap-1.5 md:pl-[88px]">
-                  {c.proof.map((p, i) => (
-                    <span
-                      key={i}
-                      className={cn(
-                        "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px]",
-                        p.verified
-                          ? "border-trust-trusted/40 bg-trust-trusted/10 text-ink"
-                          : "border-border bg-background text-ink-muted",
-                      )}
-                    >
-                      {p.verified && <Check className="h-3 w-3" />}
-                      <span className="font-mono">{p.kind}:</span> {p.value}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+        <h2 className="h-display-2 text-ink text-balance">What happens next</h2>
+        <p className="mt-2 text-sm text-ink-muted">
+          Claim requests enter the private listing lead queue. Public ownership metadata changes only after maintainer verification.
+        </p>
+        <div className="mt-5 grid gap-3 md:grid-cols-3">
+          {[
+            ["1", "Lead intake", "The request is stored in D1 with your proof and contact email."],
+            ["2", "Maintainer verification", "A maintainer checks repo, package, domain, or public identity proof."],
+            ["3", "Public update", "Verified claims are reflected in provenance only after normal review."],
+          ].map(([step, title, body]) => (
+            <div key={step} className="rounded-xl border border-border bg-surface p-5">
+              <div className="font-mono text-xs text-ink-subtle">0{step}</div>
+              <h3 className="mt-2 font-display text-lg font-semibold text-ink">{title}</h3>
+              <p className="mt-2 text-sm text-ink-muted">{body}</p>
+            </div>
+          ))}
         </div>
         <p className="mt-3 text-xs text-ink-subtle">
           Want to file a fresh submission instead?{" "}

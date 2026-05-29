@@ -1,12 +1,12 @@
 # React 19 Concurrent Features Specialist for Claude
-URL: https://heyclau.de/rules/react-19-concurrent-features-specialist
+URL: https://heyclau.de/entry/rules/react-19-concurrent-features-specialist
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://react.dev/reference/react
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-19-concurrent-features-specialist.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/react-19-concurrent-features-specialist
+- Canonical URL: https://heyclau.de/entry/rules/react-19-concurrent-features-specialist
 - Source URLs: https://react.dev/reference/react, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-19-concurrent-features-specialist.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

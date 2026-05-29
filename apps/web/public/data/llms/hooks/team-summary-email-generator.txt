@@ -1,11 +1,11 @@
 # Team Summary Email Generator - Hooks
-URL: https://heyclau.de/hooks/team-summary-email-generator
+URL: https://heyclau.de/entry/hooks/team-summary-email-generator
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/team-summary-email-generator
+- Canonical URL: https://heyclau.de/entry/hooks/team-summary-email-generator
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx
 - Safety notes: Runs automatically at session end and may execute test or build commands before sending a summary., Sends email through SendGrid, mail, or sendmail when TEAM_EMAIL and a delivery method are configured., Test and build commands are time-limited but can still consume local CPU, disk, or network resources.
 - Privacy notes: Email summaries include project name, user and host, working directory metadata, branch, changed file names, diff stats, recent commits, and test or build status., Sends summary content to the configured team address and, when used, the SendGrid API., Uses TEAM_EMAIL and SENDGRID_API_KEY environment variables without storing or rotating them.

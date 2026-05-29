@@ -14,7 +14,7 @@ export type Intent = {
     trust?: string;
     source?: string;
     platform?: string;
-    sort?: "popular" | "newest" | "title" | "trending";
+    sort?: "popular" | "newest" | "title";
   };
 };
 
@@ -23,7 +23,7 @@ export const INTENTS: Intent[] = [
     id: "ship-faster",
     label: "Ship faster",
     Icon: Rocket,
-    search: { category: "agents", sort: "trending" },
+    search: { category: "agents", sort: "popular" },
   },
   {
     id: "review-safely",
@@ -41,7 +41,7 @@ export const INTENTS: Intent[] = [
     id: "automate",
     label: "Automate workflows",
     Icon: Zap,
-    search: { category: "automations", sort: "trending" },
+    search: { category: "automations", sort: "popular" },
   },
   {
     id: "harden-agents",

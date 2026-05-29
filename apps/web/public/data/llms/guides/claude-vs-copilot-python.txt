@@ -1,11 +1,11 @@
 # Claude vs GitHub Copilot vs ChatGPT for Python Dev 2025
-URL: https://heyclau.de/guides/claude-vs-copilot-python
+URL: https://heyclau.de/entry/guides/claude-vs-copilot-python
 Category: guides
 Author: JSONbored
 Date added: 2025-10-27
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/guides/claude-vs-copilot-python
+- Canonical URL: https://heyclau.de/entry/guides/claude-vs-copilot-python
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-vs-copilot-python.mdx
 - Brand: GitHub Copilot
 - Brand domain: github.com

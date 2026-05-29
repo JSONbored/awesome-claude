@@ -1,5 +1,5 @@
 # Kubernetes MCP Server - MCP Servers
-URL: https://heyclau.de/mcp/kubernetes-mcp-server
+URL: https://heyclau.de/entry/mcp/kubernetes-mcp-server
 Category: mcp
 Author: feiskyer
 Date added: 2025-09-20
@@ -8,7 +8,7 @@ Repository: https://github.com/feiskyer/mcp-kubernetes-server
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx
 Download: /downloads/mcp/kubernetes-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/kubernetes-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/kubernetes-mcp-server
 - Source URLs: https://github.com/feiskyer/mcp-kubernetes-server, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx
 - Brand: Kubernetes
 - Brand domain: kubernetes.io

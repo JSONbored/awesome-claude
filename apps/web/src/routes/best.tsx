@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { BEST_LISTS, ENTRIES } from "@/mocks/entries";
+import { BEST_LISTS, ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 
 export const Route = createFileRoute("/best")({

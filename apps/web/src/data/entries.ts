@@ -71,6 +71,7 @@ type RegistryChangelogEntry = {
 const registryEntries = (atlasRegistry.entries ?? []) as RegistryEntry[];
 const registryChangelog = (atlasRegistry.changelog ?? []) as RegistryChangelogEntry[];
 const generatedAt = atlasRegistry.generatedAt;
+export const REGISTRY_GENERATED_AT = generatedAt;
 
 const CATEGORIES = new Set<Category>([
   "agents",
@@ -263,11 +264,6 @@ function buildEntry(entry: RegistryEntry): Entry {
     privacyNotesList: listText(entry.privacyNotes),
     prerequisites: entry.prerequisites,
     body: entry.body,
-    signals: {
-      upvotes: Math.max(0, Math.round((entry.githubStars ?? 0) / 40)),
-      weeklyInstalls: Math.max(0, Math.round((entry.githubStars ?? 0) / 12)),
-    },
-    trending: Math.max(0, Math.round((entry.githubStars ?? 0) / 500)),
     downloadSha256: entry.downloadSha256 ?? undefined,
     downloadUrl: entry.downloadUrl || undefined,
     packageVerified: entry.packageVerified,

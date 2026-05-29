@@ -18,36 +18,93 @@ export interface CategorySpec {
   blurb: string;
   fields: SpecField[];
   riskBearing: boolean;
+  webOnly?: boolean;
   exampleSafety?: string[];
   examplePrivacy?: string[];
 }
 
 const COMMON: SpecField[] = [
-  { key: "title", label: "Title", kind: "text", required: true, maxLen: 80 },
-  { key: "description", label: "One-line description", kind: "text", required: true, maxLen: 160 },
-  { key: "author", label: "Author or organization", kind: "text", required: true },
-  { key: "sourceUrl", label: "Source URL (GitHub)", kind: "url", required: true, placeholder: "https://github.com/…" },
-  { key: "tags", label: "Tags", kind: "tags", help: "Comma-separated, up to 8" },
+  { key: "name", label: "Name", kind: "text", required: true, maxLen: 120 },
+  {
+    key: "slug",
+    label: "Slug",
+    kind: "text",
+    required: true,
+    maxLen: 120,
+    placeholder: "kebab-case-name",
+    help: "Kebab-case only. Maintainers may adjust before import.",
+  },
+  {
+    key: "description",
+    label: "Description",
+    kind: "textarea",
+    required: true,
+    maxLen: 1000,
+    placeholder: "What it does, when to use it, and what makes it useful.",
+  },
+  {
+    key: "card_description",
+    label: "Card description",
+    kind: "text",
+    required: true,
+    maxLen: 180,
+    placeholder: "Short browse-card preview text.",
+  },
+  { key: "author", label: "Author or organization", kind: "text", maxLen: 120 },
+  {
+    key: "github_url",
+    label: "GitHub URL",
+    kind: "url",
+    placeholder: "https://github.com/owner/repo",
+  },
+  {
+    key: "docs_url",
+    label: "Docs URL",
+    kind: "url",
+    placeholder: "https://example.com/docs",
+  },
+  {
+    key: "contact_email",
+    label: "Public contact",
+    kind: "text",
+    maxLen: 120,
+    placeholder: "@github-handle or public email",
+    help: "This is copied into a public GitHub issue. Do not enter private contact details.",
+  },
+  { key: "tags", label: "Tags", kind: "tags", help: "Comma-separated, up to 8." },
 ];
+
+const SAFETY_EXAMPLES = [
+  "Runs local commands; review before installing.",
+  "May write files or call third-party APIs depending on configuration.",
+];
+
+const PRIVACY_EXAMPLES = [
+  "May send prompts, files, logs, or credentials to a third-party service.",
+  "Stores local config under the user's home directory.",
+];
+
+const COPY_FIELD: SpecField = {
+  key: "full_copyable_content",
+  label: "Full copyable content",
+  kind: "code",
+  required: true,
+  maxLen: 30_000,
+  help: "Paste the complete usable prompt, config, script, rule, or asset.",
+};
 
 export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
   agents: {
     category: "agents",
     blurb: "Reusable Claude agents with a defined role, system prompt, and tool surface.",
     riskBearing: false,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Full agent content", kind: "code", required: true, help: "Markdown or YAML the user will copy verbatim.", maxLen: 8000 },
-    ],
+    fields: [...COMMON, COPY_FIELD],
   },
   rules: {
     category: "rules",
-    blurb: "CLAUDE.md or AGENTS.md rule sets the model should follow.",
+    blurb: "CLAUDE.md, AGENTS.md, or editor rule sets the model should follow.",
     riskBearing: false,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Full rule content", kind: "code", required: true, maxLen: 8000 },
-    ],
+    fields: [...COMMON, COPY_FIELD],
   },
   mcp: {
     category: "mcp",
@@ -55,30 +112,29 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
     riskBearing: true,
     fields: [
       ...COMMON,
-      { key: "installCommand", label: "Install command", kind: "code", required: true, placeholder: "npx -y @org/mcp-server" },
-      { key: "configSnippet", label: "Client config snippet (JSON)", kind: "code", required: true, maxLen: 2000 },
-      { key: "credentials", label: "Required credentials or scopes", kind: "textarea", help: "Env vars, API keys, OAuth scopes." },
+      {
+        key: "install_command",
+        label: "Install command",
+        kind: "code",
+        required: true,
+        placeholder: "npx -y @org/mcp-server",
+      },
+      {
+        key: "usage_snippet",
+        label: "Usage snippet",
+        kind: "textarea",
+        required: true,
+        placeholder: "Show how someone actually uses or configures this server.",
+      },
+      {
+        key: "config_snippet",
+        label: "Client config snippet",
+        kind: "code",
+        maxLen: 4000,
+      },
     ],
-    exampleSafety: [
-      "Executes shell commands; review before granting tool access.",
-      "Writes to local filesystem outside the project root.",
-    ],
-    examplePrivacy: [
-      "Sends queried data to a third-party API.",
-      "Stores OAuth tokens in plain text under ~/.config.",
-    ],
-  },
-  hooks: {
-    category: "hooks",
-    blurb: "Claude Code lifecycle hooks (PreToolUse, PostToolUse, Stop, …).",
-    riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "trigger", label: "Trigger", kind: "select", required: true, options: ["PreToolUse", "PostToolUse", "Stop", "SubagentStop", "Notification"] },
-      { key: "full_copyable_content", label: "Hook script", kind: "code", required: true, maxLen: 6000 },
-    ],
-    exampleSafety: ["Runs on every tool use; keep idempotent.", "Shells out to external binaries."],
-    examplePrivacy: ["Logs tool inputs to local file."],
+    exampleSafety: SAFETY_EXAMPLES,
+    examplePrivacy: PRIVACY_EXAMPLES,
   },
   skills: {
     category: "skills",
@@ -86,26 +142,118 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
     riskBearing: true,
     fields: [
       ...COMMON,
-      { key: "skillType", label: "Skill type", kind: "select", required: true, options: ["procedural", "reference", "tool-wrapper", "domain"] },
-      { key: "skillLevel", label: "Skill level", kind: "select", required: true, options: ["intro", "intermediate", "advanced"] },
-      { key: "verificationStatus", label: "Verification status", kind: "select", required: true, options: ["author-tested", "community-tested", "unverified"] },
-      { key: "retrievalSources", label: "Retrieval sources (optional)", kind: "tags" },
-      { key: "testedPlatforms", label: "Tested platforms", kind: "tags", help: "claude-code, codex, cursor, windsurf, …" },
+      {
+        key: "usage_snippet",
+        label: "Usage snippet",
+        kind: "textarea",
+        required: true,
+      },
+      {
+        key: "skill_type",
+        label: "Skill type",
+        kind: "select",
+        required: true,
+        options: ["general", "capability-pack"],
+      },
+      {
+        key: "skill_level",
+        label: "Skill level",
+        kind: "select",
+        required: true,
+        options: ["foundational", "advanced", "expert"],
+      },
+      {
+        key: "verification_status",
+        label: "Verification status",
+        kind: "select",
+        required: true,
+        options: ["draft", "validated", "production"],
+      },
+      {
+        key: "install_command",
+        label: "Install command",
+        kind: "code",
+        placeholder: "Optional install command if this is package-backed.",
+      },
+      {
+        key: "download_url",
+        label: "Download/package URL",
+        kind: "url",
+        help: "Only use for a real package, archive, or release download. GitHub tree/blob paths belong in source or retrieval sources.",
+      },
+      COPY_FIELD,
+      {
+        key: "retrieval_sources",
+        label: "Retrieval sources",
+        kind: "textarea",
+        placeholder: "Official docs or source URLs used for verification.",
+      },
+      {
+        key: "tested_platforms",
+        label: "Tested platforms",
+        kind: "tags",
+        placeholder: "Claude, Codex, Cursor, Windsurf",
+      },
     ],
-    exampleSafety: ["Bundled scripts execute on the user's machine."],
-    examplePrivacy: ["Reads project files into context."],
+    exampleSafety: SAFETY_EXAMPLES,
+    examplePrivacy: PRIVACY_EXAMPLES,
   },
-  commands: {
-    category: "commands",
-    blurb: "Slash commands for Claude Code.",
+  hooks: {
+    category: "hooks",
+    blurb: "Claude Code lifecycle hooks.",
     riskBearing: true,
     fields: [
       ...COMMON,
-      { key: "commandSyntax", label: "Command syntax", kind: "code", required: true, placeholder: "/refactor <path> [--dry-run]" },
-      { key: "full_copyable_content", label: "Full command file", kind: "code", required: true, maxLen: 6000 },
+      {
+        key: "trigger",
+        label: "Trigger",
+        kind: "select",
+        required: true,
+        options: [
+          "PreToolUse",
+          "PostToolUse",
+          "UserPromptSubmit",
+          "Notification",
+          "Stop",
+          "SubagentStop",
+          "SessionStart",
+        ],
+      },
+      {
+        key: "usage_snippet",
+        label: "Usage snippet",
+        kind: "textarea",
+        required: true,
+      },
+      COPY_FIELD,
+      { key: "config_snippet", label: "Config snippet", kind: "code", maxLen: 4000 },
     ],
-    exampleSafety: ["Modifies files in the working tree."],
-    examplePrivacy: ["Sends file contents to the model."],
+    exampleSafety: SAFETY_EXAMPLES,
+    examplePrivacy: PRIVACY_EXAMPLES,
+  },
+  commands: {
+    category: "commands",
+    blurb: "Slash commands for Claude Code or adjacent agent harnesses.",
+    riskBearing: true,
+    fields: [
+      ...COMMON,
+      {
+        key: "command_syntax",
+        label: "Command syntax",
+        kind: "code",
+        required: true,
+        placeholder: "/refactor <path> [--dry-run]",
+      },
+      {
+        key: "usage_snippet",
+        label: "Usage snippet",
+        kind: "textarea",
+        required: true,
+      },
+      COPY_FIELD,
+    ],
+    exampleSafety: SAFETY_EXAMPLES,
+    examplePrivacy: PRIVACY_EXAMPLES,
   },
   statuslines: {
     category: "statuslines",
@@ -113,10 +261,18 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
     riskBearing: true,
     fields: [
       ...COMMON,
-      { key: "scriptLanguage", label: "Script language", kind: "select", required: true, options: ["bash", "zsh", "python", "node", "deno"] },
-      { key: "full_copyable_content", label: "Script", kind: "code", required: true, maxLen: 4000 },
+      {
+        key: "script_language",
+        label: "Script language",
+        kind: "select",
+        required: true,
+        options: ["bash", "zsh", "fish", "python", "javascript", "other"],
+      },
+      COPY_FIELD,
+      { key: "config_snippet", label: "Config snippet", kind: "code", maxLen: 4000 },
     ],
-    exampleSafety: ["Runs on every prompt render — keep fast and side-effect free."],
+    exampleSafety: SAFETY_EXAMPLES,
+    examplePrivacy: PRIVACY_EXAMPLES,
   },
   guides: {
     category: "guides",
@@ -124,111 +280,112 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
     riskBearing: false,
     fields: [
       ...COMMON,
-      { key: "guide_content", label: "Guide content (Markdown)", kind: "code", required: true, maxLen: 30_000 },
+      {
+        key: "guide_content",
+        label: "Guide content",
+        kind: "code",
+        required: true,
+        maxLen: 30_000,
+      },
     ],
   },
   collections: {
     category: "collections",
-    blurb: "Curated collections of other registry entries.",
+    blurb: "Curated collections of registry entries.",
     riskBearing: false,
     fields: [
       ...COMMON,
-      { key: "items", label: "Items (one slug per line)", kind: "textarea", required: true, placeholder: "agents/code-reviewer\nmcp/postgres-mcp" },
+      {
+        key: "items",
+        label: "Items",
+        kind: "textarea",
+        required: true,
+        placeholder: "agents/code-reviewer\nmcp/postgres-mcp",
+      },
     ],
   },
   tools: {
     category: "tools",
-    blurb: "Commercial or hosted tools. These go through the commercial intake.",
+    blurb: "Commercial or hosted tools route through the lead intake, not free content import.",
     riskBearing: false,
+    webOnly: true,
     fields: [...COMMON],
   },
   plugins: {
     category: "plugins",
-    blurb: "Cross-harness plugin bundles (Claude Code, Codex, Gemini, Cursor, Zed). A plugin packages MCP servers, skills, commands, and hooks together.",
+    blurb: "Cross-harness plugin bundles. This category is not yet issue-imported from the public website.",
     riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "harness", label: "Harness compatibility", kind: "tags", required: true, help: "claude-code, codex, gemini, cursor, …" },
-      { key: "bundleContents", label: "What the bundle contains", kind: "tags", required: true, help: "mcp, skill, command, hook, agent, rule" },
-      { key: "installCommand", label: "Install command", kind: "code", required: true },
-      { key: "configSnippet", label: "Marketplace manifest or config (JSON)", kind: "code", required: true, maxLen: 4000 },
-    ],
-    exampleSafety: ["Bundle installs MCP servers — review each server's safety notes."],
-    examplePrivacy: ["Forwards prompts and tool outputs to bundled MCP servers."],
+    webOnly: true,
+    fields: [...COMMON],
   },
   automations: {
     category: "automations",
-    blurb: "Scheduled or event-triggered agent workflows that run without a human in the loop.",
+    blurb: "Scheduled or event-triggered agent workflows. This category is not yet issue-imported from the public website.",
     riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "harness", label: "Harness compatibility", kind: "tags", required: true },
-      { key: "triggerKind", label: "Trigger kind", kind: "select", required: true, options: ["scheduled", "event", "manual"] },
-      { key: "schedule", label: "Cadence or trigger description", kind: "text", required: true, placeholder: "daily 09:00 UTC, on PR open" },
-      { key: "full_copyable_content", label: "Automation definition", kind: "code", required: true, maxLen: 6000 },
-    ],
-    exampleSafety: ["Runs unattended — confirm the agent cannot take destructive actions.", "Bound the cost and rate-limit retries."],
-    examplePrivacy: ["May send repository or inbox content to the model on every run."],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "codex-plugins": {
     category: "codex-plugins",
-    blurb: "Plugins that extend OpenAI's Codex CLI/agent.",
+    blurb: "Legacy harness-prefixed category. Submit through GitHub if needed.",
     riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Plugin manifest", kind: "code", required: true, maxLen: 4000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "codex-automations": {
     category: "codex-automations",
-    blurb: "Scheduled or event-triggered Codex automations.",
+    blurb: "Legacy harness-prefixed category. Submit through GitHub if needed.",
     riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Automation definition", kind: "code", required: true, maxLen: 4000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "harness-configs": {
     category: "harness-configs",
-    blurb: "Reusable agent harness/runtime configurations.",
+    blurb: "Legacy harness config category. Submit through GitHub if needed.",
     riskBearing: true,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Harness config", kind: "code", required: true, maxLen: 8000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "aider-recipes": {
     category: "aider-recipes",
-    blurb: "Aider playbooks, conventions, and configs.",
+    blurb: "Legacy Aider recipe category. Submit through GitHub if needed.",
     riskBearing: false,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Recipe (markdown or YAML)", kind: "code", required: true, maxLen: 6000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "continue-configs": {
     category: "continue-configs",
-    blurb: "Continue.dev model and rule configurations.",
+    blurb: "Legacy Continue config category. Submit through GitHub if needed.",
     riskBearing: false,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Continue config.json", kind: "code", required: true, maxLen: 6000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
   "zed-extensions": {
     category: "zed-extensions",
-    blurb: "Extensions for Zed's agent panel and assistant.",
+    blurb: "Legacy Zed extension category. Submit through GitHub if needed.",
     riskBearing: false,
-    fields: [
-      ...COMMON,
-      { key: "full_copyable_content", label: "Extension manifest", kind: "code", required: true, maxLen: 4000 },
-    ],
+    webOnly: true,
+    fields: [...COMMON],
   },
 };
 
 export interface PreflightIssue {
   kind: "blocker" | "warning" | "info";
   message: string;
+}
+
+export function slugify(value: string): string {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+function httpsUrl(value: string) {
+  if (!value.trim()) return true;
+  return value.trim().toLowerCase().startsWith("https://");
 }
 
 export function preflight(category: Category | "", data: Record<string, string>): PreflightIssue[] {
@@ -238,48 +395,50 @@ export function preflight(category: Category | "", data: Record<string, string>)
     return issues;
   }
   const spec = SUBMISSION_SPEC[category];
+  if (spec.webOnly) {
+    issues.push({
+      kind: "warning",
+      message: "This category needs maintainer routing before website import is enabled.",
+    });
+  }
   for (const f of spec.fields) {
     if (f.required && !data[f.key]?.trim()) {
       issues.push({ kind: "blocker", message: `Missing required field: ${f.label}` });
     }
   }
-  if (data.sourceUrl && !/^https?:\/\//.test(data.sourceUrl)) {
-    issues.push({ kind: "blocker", message: "Source URL must be a full https:// URL." });
+  if (data.slug && slugify(data.slug) !== data.slug.trim()) {
+    issues.push({ kind: "blocker", message: "Slug must be lowercase kebab-case." });
   }
-  if (data.sourceUrl && !/github\.com|gitlab\.com|bitbucket\.org/.test(data.sourceUrl)) {
-    issues.push({ kind: "warning", message: "Source URL is not on a known Git host. Reviewers may ask for provenance." });
+  for (const field of ["github_url", "docs_url", "download_url"]) {
+    if (!httpsUrl(data[field] || "")) {
+      issues.push({ kind: "blocker", message: `${field.replaceAll("_", " ")} must be HTTPS.` });
+    }
+  }
+  if (!data.github_url?.trim() && !data.docs_url?.trim()) {
+    issues.push({ kind: "blocker", message: "Add at least one source or docs URL." });
   }
   if (spec.riskBearing) {
-    if (!data.safetyNotes?.trim()) {
+    if (!data.safety_notes?.trim()) {
       issues.push({ kind: "blocker", message: "Safety notes are required for this category." });
     }
-    if (!data.privacyNotes?.trim() && category !== "statuslines") {
-      issues.push({ kind: "warning", message: "Privacy notes are strongly recommended." });
+    if (!data.privacy_notes?.trim()) {
+      issues.push({ kind: "blocker", message: "Privacy notes are required for this category." });
     }
-  }
-  // Fuzzy dup mock
-  if (data.title && /claude code/i.test(data.title)) {
-    issues.push({ kind: "info", message: "A similar title exists in the registry. Reviewers will check for duplicates." });
   }
   return issues;
 }
 
 export function buildIssueDraft(category: Category | "", data: Record<string, string>): string {
-  const lines = [
-    `### Submission: ${data.title || "(untitled)"}`,
-    "",
-    `- **Category**: ${category || "(none)"}`,
-    `- **Author**: ${data.author || ""}`,
-    `- **Source**: ${data.sourceUrl || ""}`,
-    "",
-    "#### Description",
-    data.description || "",
-  ];
-  if (data.safetyNotes) {
-    lines.push("", "#### Safety notes", data.safetyNotes);
-  }
-  if (data.privacyNotes) {
-    lines.push("", "#### Privacy notes", data.privacyNotes);
-  }
-  return lines.join("\n");
+  const spec = category ? SUBMISSION_SPEC[category] : null;
+  const fields = spec?.fields ?? COMMON;
+  return fields
+    .filter((field) => data[field.key]?.trim() || field.key === "category")
+    .flatMap((field) => [
+      `### ${field.label}`,
+      "",
+      field.key === "category" ? category || "" : data[field.key] || "",
+      "",
+    ])
+    .join("\n")
+    .trimEnd();
 }

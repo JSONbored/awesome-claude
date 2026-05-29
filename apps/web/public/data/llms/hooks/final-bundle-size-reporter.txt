@@ -1,11 +1,11 @@
 # Final Bundle Size Reporter - Hooks
-URL: https://heyclau.de/hooks/final-bundle-size-reporter
+URL: https://heyclau.de/entry/hooks/final-bundle-size-reporter
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/final-bundle-size-reporter
+- Canonical URL: https://heyclau.de/entry/hooks/final-bundle-size-reporter
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

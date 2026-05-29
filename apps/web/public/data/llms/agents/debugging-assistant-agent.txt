@@ -1,11 +1,11 @@
 # Debugging Assistant Agent - Agents
-URL: https://heyclau.de/agents/debugging-assistant-agent
+URL: https://heyclau.de/entry/agents/debugging-assistant-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-09-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/debugging-assistant-agent
+- Canonical URL: https://heyclau.de/entry/agents/debugging-assistant-agent
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

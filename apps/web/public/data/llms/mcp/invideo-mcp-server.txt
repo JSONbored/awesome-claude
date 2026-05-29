@@ -1,5 +1,5 @@
 # Invideo MCP Server for Claude
-URL: https://heyclau.de/mcp/invideo-mcp-server
+URL: https://heyclau.de/entry/mcp/invideo-mcp-server
 Category: mcp
 Author: invideo
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://invideo.io/ai/mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx
 Download: /downloads/mcp/invideo-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/invideo-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/invideo-mcp-server
 - Source URLs: https://invideo.io/ai/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/invideo-mcp-server.mdx
 - Brand: Invideo
 - Brand domain: invideo.io

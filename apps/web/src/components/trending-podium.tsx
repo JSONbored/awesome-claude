@@ -1,24 +1,15 @@
 import * as React from "react";
 import { Link } from "@tanstack/react-router";
 import { Star, ArrowUpRight, TrendingUp } from "lucide-react";
-import { Sparkline } from "@/components/sparkline";
 import { CategoryPill, TrustBadge, SourceBadge } from "@/components/badges";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
-/** Deterministic 7-point sparkline from the entry's stable signals. */
-export function sparklineFor(e: Entry): number[] {
-  const base = (e.signals?.weeklyInstalls ?? e.stars ?? 100) / 7;
-  const trend = e.trending ?? 0;
-  // pseudo-random but stable per slug
-  let seed = 0;
-  for (let i = 0; i < e.slug.length; i++) seed = (seed * 31 + e.slug.charCodeAt(i)) % 997;
-  return Array.from({ length: 7 }, (_, i) => {
-    const wobble = ((seed * (i + 3)) % 17) / 17 - 0.5;
-    return Math.max(1, base * (1 + (trend / 100) * i + wobble * 0.3));
-  });
-}
+type TrendingEntry = Entry & {
+  trendingScore?: number;
+  trendingReasons?: string[];
+};
 
 const RANK_STYLES = [
   { ring: "ring-2 ring-trust-trusted/50", chip: "bg-trust-trusted text-background", label: "01" },
@@ -26,7 +17,7 @@ const RANK_STYLES = [
   { ring: "ring-1 ring-trust-limited/40", chip: "bg-trust-limited text-background", label: "03" },
 ];
 
-export function TrendingPodium({ entries }: { entries: Entry[] }) {
+export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
   const top = entries.slice(0, 3);
   if (top.length === 0) return null;
 
@@ -59,7 +50,8 @@ export function TrendingPodium({ entries }: { entries: Entry[] }) {
                 #{style.label}
               </span>
               <div className="inline-flex items-center gap-1 font-mono text-xs text-trust-trusted tabular-nums">
-                <TrendingUp className="h-3 w-3" />+{e.trending ?? 0}
+                <TrendingUp className="h-3 w-3" />
+                {typeof e.trendingScore === "number" ? `+${e.trendingScore}` : "static"}
               </div>
             </div>
 
@@ -80,21 +72,14 @@ export function TrendingPodium({ entries }: { entries: Entry[] }) {
             </Link>
 
             <div className="mt-3 flex items-end justify-between gap-3">
-              <Sparkline
-                data={sparklineFor(e)}
-                width={120}
-                height={28}
-                strokeClassName="stroke-trust-trusted"
-                fillClassName="fill-trust-trusted/10"
-                ariaLabel={`7-day momentum for ${e.title}`}
-              />
+              <div className="min-w-0 text-[11px] text-ink-subtle">
+                {(e.trendingReasons ?? ["source-backed ranking"]).slice(0, 2).join(" · ")}
+              </div>
               <div className="flex flex-col items-end gap-0.5 font-mono text-[11px] text-ink-muted tabular-nums">
                 <div className="inline-flex items-center gap-1">
-                  <Star className="h-3 w-3" /> {formatCompact(e.stars)}
+                  <Star className="h-3 w-3" /> {formatCompact(e.stars ?? 0)}
                 </div>
-                {e.signals?.weeklyInstalls ? (
-                  <div className="text-ink-subtle">{formatCompact(e.signals.weeklyInstalls)}/wk</div>
-                ) : null}
+                <div className="text-ink-subtle">{e.source === "unverified" ? "unverified" : "source-backed"}</div>
               </div>
             </div>
 

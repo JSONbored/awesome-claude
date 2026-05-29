@@ -1,12 +1,12 @@
 # Exa
-URL: https://heyclau.de/tools/exa
+URL: https://heyclau.de/entry/tools/exa
 Category: tools
 Author: Exa
 Date added: 2026-04-27
 Documentation: https://docs.exa.ai
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/exa
+- Canonical URL: https://heyclau.de/entry/tools/exa
 - Source URLs: https://docs.exa.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/exa.mdx, https://exa.ai
 - Brand: Exa
 - Brand domain: exa.ai

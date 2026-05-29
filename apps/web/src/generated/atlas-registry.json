@@ -1,6 +1,194 @@
 {
   "schemaVersion": 1,
   "generatedAt": "2026-05-26T00:00:00.000Z",
+  "artifactContracts": [
+    {
+      "path": "/data/directory-index.json",
+      "bytes": 2368585,
+      "sha256": "aec70610041951347be3b9274ee9f96b04daada954d8696dc8d1fe746e655d31",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/search-index.json",
+      "bytes": 922157,
+      "sha256": "4f2fe99d4ab505369a4a3812ea037ea73a78b930ae6582832d851a2f60e12660",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/raycast-index.json",
+      "bytes": 1220718,
+      "sha256": "42a1c5635dc326d1ddece25e2ba1094f120d971f55e8683622411a5d877b04d1",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/ecosystem-feed.json",
+      "bytes": 750690,
+      "sha256": "3aa1b198b766496a4a860ca0a669c5d2f62d68fba3c5a70e509cf1a78b74e8d5",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/mcp-registry-feed.json",
+      "bytes": 45050,
+      "sha256": "8314f17f55a0a4ae9e9fac436c9c97ef888ae804d61e6ccff17d984366c5a34e",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/plugin-export-feed.json",
+      "bytes": 255612,
+      "sha256": "27a76533010cd4ecfe7bb75507f7235f9a38dd91b54f77969b71eb89f9e4726d",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/registry-changelog.json",
+      "bytes": 224712,
+      "sha256": "8ba09a97c771964482dd116d5e7ee58d5c4d4d88763e690c3c4191de19c378f5",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/registry-trust-report.json",
+      "bytes": 309765,
+      "sha256": "605c500dc2be318c928e51a991114257a335713ec18b0389e0443eb51c1f78f5",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/index.json",
+      "bytes": 3139,
+      "sha256": "856105f5f0477024474388e409f9800bce6eade03b4bfa43bb740d679823abe6",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/submission-spec.json",
+      "bytes": 62374,
+      "sha256": "169dd50f0fd59d0e658363ef26edeb05628d8c9c9d3d4b3fa30314027b196838",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/content-quality-report.json",
+      "bytes": 342198,
+      "sha256": "649f82212f4d52e8c58e82a8060b543eb72b8f840f0294022dd6492b5d22b737",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/content-quality-prompts.json",
+      "bytes": 15255,
+      "sha256": "4b4bf38caf0b9536f2965ae8a0834dc688384795eeb7d0eb9bb8ad5ebb8f585d",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/jsonld-snapshots.json",
+      "bytes": 1260912,
+      "sha256": "bb512671838e1a621cfb462433972f90e5478d4e79060d8ce4ea56e0c97703d3",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/llms-full.txt",
+      "bytes": 3994003,
+      "sha256": "b1b511cd8b41892f0417d5a4d86b7325efe773a7ad70293962a628249971ae3b",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/agents.json",
+      "bytes": 686078,
+      "sha256": "aa66801947a758564187b38580dc49c8e15e02d84756b557a97afa553e086ced",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/mcp.json",
+      "bytes": 222053,
+      "sha256": "0ce80cf3c74ac07c5b193d8a5f33c910c576d2dc147ebb157cbcbdff8c5b3b98",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/tools.json",
+      "bytes": 145996,
+      "sha256": "d0a0ef870063b023abb5eeb1be0e8a7a04b7362ce26657d4f66494a9f693b0cc",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/skills.json",
+      "bytes": 455625,
+      "sha256": "e23f7d387401533bfde7492fd0c1278fad938ac4b261f677c568ffde2af16559",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/rules.json",
+      "bytes": 319777,
+      "sha256": "3e8b6bd11958c5086c841677274a042f2aee8e7b162309a3f20514e75b2574b9",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/commands.json",
+      "bytes": 83627,
+      "sha256": "ec81a9ef5b2df8e34ac4b487c937fb3ed8258a3b8ec7268e77772b6fae618fee",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/hooks.json",
+      "bytes": 252779,
+      "sha256": "82773d986000c9a897857ca935c98c4306c760bb4952e15ea362bd6a72f5abcf",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/guides.json",
+      "bytes": 59203,
+      "sha256": "0dc9916f90ec03f8cd765ae76738d5701ad6b1fa1d04aba0e082a70b0a41c807",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/collections.json",
+      "bytes": 39536,
+      "sha256": "64b6d4599861ba1a611355b92ae66806f12e9427b0f93e2f64e5343754843f7b",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/categories/statuslines.json",
+      "bytes": 105333,
+      "sha256": "0d13a1721978aae21de41ae40d95faac5d1d2026a0afd9132389541024239bc8",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/claude.json",
+      "bytes": 455653,
+      "sha256": "1c5bfa38f7fa10f266737a1bffd6171e3da9bab63b79fddb8ad4d65afe518166",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/codex.json",
+      "bytes": 455651,
+      "sha256": "0895a127b5922fb40a2cf84fc5e12e066814d98a1b0b080e4e2fd9ce728c890c",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/windsurf.json",
+      "bytes": 455657,
+      "sha256": "d4777a6c62d0323c563f14d8b6233422e6ce3a2a6d789047caaa9e629c5c631e",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/gemini.json",
+      "bytes": 455653,
+      "sha256": "feceea899a73d950bb91ffa7afae1bea75aa3371f00e1bdb073a03e1a1bd5077",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/cursor.json",
+      "bytes": 455653,
+      "sha256": "d6daaf6bbb3c61213b0f9fd3d977294b77da392d8e1ec8f81bf687fa7c2efbcb",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/feeds/platforms/generic-agents.json",
+      "bytes": 455669,
+      "sha256": "40cb5a64cc49f98a6d1a24adf8504bef07ef8a98157b2af24ea6ce0becdb6939",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    },
+    {
+      "path": "/data/registry-manifest.json",
+      "bytes": 445169,
+      "sha256": "8977899870f33eb651d5652e9290c265874b625d51fd6d9d9fdbe8e668194242",
+      "builtAt": "2026-05-26T00:00:00.000Z"
+    }
+  ],
   "entries": [
     {
       "category": "commands",
@@ -20061,175 +20249,200 @@
       "slug": "yield-intelligence-mcp",
       "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
       "dateAdded": "2026-05-26",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "b4bcd5ff003d7a629c5b7333d29f9fdfd3fce9af16439578ad0b9d2b570e957b"
     },
     {
       "category": "tools",
       "slug": "authsome",
       "title": "Authsome",
       "dateAdded": "2026-05-25",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "0b2e136f2ea2543aec20758216818c09ba4a8c92760948e113a09db0e55ce50f"
     },
     {
       "category": "hooks",
       "slug": "retro-daily",
       "title": "Retro Daily - Hooks",
       "dateAdded": "2026-05-19",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "e5506753338938dc89d3e3fb2c296fa3809f5b52ada911f67a159d536f98bbc3"
     },
     {
       "category": "mcp",
       "slug": "packrift-mcp-server",
       "title": "Packrift MCP Server",
       "dateAdded": "2026-05-10",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "19e4d817890aedd79630d0d4b5ef633e9ec5b40199f00f3edc2179a58c40bb5d"
     },
     {
       "category": "mcp",
       "slug": "xquik-mcp-server",
       "title": "Xquik MCP Server",
       "dateAdded": "2026-05-09",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "cb50d191e619eb78f5c28ea05e620edc78a419fe33b462db0e5fe39f8493c02a"
     },
     {
       "category": "mcp",
       "slug": "memesio-mcp-server",
       "title": "Memesio MCP Server",
       "dateAdded": "2026-05-08",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "b1610e34d5d6e65c96957a3456e2ee7640dcb2ec5eaefae85b6fbd8772879e75"
     },
     {
       "category": "mcp",
       "slug": "legal-fournier-spain-legal-mcp",
       "title": "Spain Legal by Legal Fournier",
       "dateAdded": "2026-05-08",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "d5988c55e8662f090bb56a1aeaa5b565a006cc11aed16fba01cb95bce9bc0b2a"
     },
     {
       "category": "skills",
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
       "dateAdded": "2026-04-30",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "afefa550cbc07f043ae1f38ddb9b8cccab0ab2e8fe4edba41f9dc170da1ce25d"
     },
     {
       "category": "mcp",
       "slug": "zyntra-mail",
       "title": "Zyntra - Temp e-mails MCP",
       "dateAdded": "2026-04-30",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "11e4a72c114f62dcacfafe075f76b27e59f0f82c7cf8b0511d89f2069a1cccea"
     },
     {
       "category": "tools",
       "slug": "aider",
       "title": "Aider",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "77399df68f71475e789735e441dfd6abca3a3f9eac092f43be76c39adab9f451"
     },
     {
       "category": "tools",
       "slug": "apify",
       "title": "Apify",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "aac6941b806dc88a4e2b8f0a46e18b4c6353b65aa1dc71b9b518a2881017204b"
     },
     {
       "category": "tools",
       "slug": "arcade-ai",
       "title": "Arcade",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "9e1280bf34d181fc571629998acd5c847737eb0c2e42254ca908ecba5b21de8e"
     },
     {
       "category": "tools",
       "slug": "arize-phoenix",
       "title": "Arize Phoenix",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "128847f8aaa12f297f5f701e3d9627dd01b0ca0f05241435a440f8ffda563990"
     },
     {
       "category": "tools",
       "slug": "bolt-new",
       "title": "Bolt",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "d26989caf829528217e52e83f763b69a6830cc5860f6bddc21177acad9e2ec86"
     },
     {
       "category": "tools",
       "slug": "braintrust",
       "title": "Braintrust",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "5feece9e11b89bccf4d43e72d1e5950b52aebabe3e960977e52f57dc7d040142"
     },
     {
       "category": "tools",
       "slug": "browser-use",
       "title": "Browser Use",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "146ce21f5b2a3c8469f6998139cef8d391d8cbbfdfc8c95d36ead836b5f21ba1"
     },
     {
       "category": "tools",
       "slug": "browserbase",
       "title": "Browserbase",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "00d8cbb9f9c9b4f7dd208986c3ef786dc437516386342b1270863a83190e8b1f"
     },
     {
       "category": "tools",
       "slug": "claude-code",
       "title": "Claude Code",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "e1cc6e56031c5d2a1e89504f2e7a225057180c2116ae781870c66e3a1d5a0603"
     },
     {
       "category": "tools",
       "slug": "cline",
       "title": "Cline",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "7da1ecbb5fba1b7e0c7c3875dcfc71e4d4ef3a7f9683be8c45e6fba50c9c0f90"
     },
     {
       "category": "tools",
       "slug": "cloudflare-agents-sdk",
       "title": "Cloudflare Agents SDK",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "a0c889b04c278c032b53aa9bf6a900e19341aeff77fb3ec7bf1f29fe9c9b9141"
     },
     {
       "category": "tools",
       "slug": "coderabbit",
       "title": "CodeRabbit",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "f554d9e5f74a89ebf7db3b2b10de179b23938e8065872d35c0bb2b017c936ca4"
     },
     {
       "category": "tools",
       "slug": "composio",
       "title": "Composio",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "c99136a503b79cd3825f610ad3798df5ddb4e9ce03e130b9f494c69e8c39ba20"
     },
     {
       "category": "tools",
       "slug": "continue",
       "title": "Continue",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "e46b7755c901a13d5ca12c0a4535e386b4f32747271f974fcb1d20995d3f2a41"
     },
     {
       "category": "tools",
       "slug": "crewai",
       "title": "CrewAI",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "255c64f9d4063d378f34131509d0f2b464a8b24081153d531af454fcf0627163"
     },
     {
       "category": "tools",
       "slug": "cursor",
       "title": "Cursor",
       "dateAdded": "2026-04-27",
-      "type": "added"
+      "type": "added",
+      "artifactHash": "fa4c67a178f82ec9a033f50246c1c851dec1626fa9ecc81f3066e4984b5ad77c"
     }
   ]
 }

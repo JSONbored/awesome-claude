@@ -207,11 +207,7 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
           <div className="flex items-center gap-1 font-mono">
             <Star className="h-3 w-3" /> {fmtNum(entry.stars)}
           </div>
-          {entry.signals?.weeklyInstalls ? (
-            <div className="font-mono text-ink-subtle">{fmtNum(entry.signals.weeklyInstalls)}/wk</div>
-          ) : (
-            <div className="font-mono text-ink-subtle/40">—</div>
-          )}
+          <div className="font-mono text-ink-subtle">stars</div>
         </div>
         <div className="flex items-center gap-1.5">
           <PeekButton ref={peekRef} entry={entry} />

@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Mail, Check, ArrowRight } from "lucide-react";
+import { subscribeToNewsletter } from "@/lib/api/newsletter";
 import { cn } from "@/lib/utils";
 
 type Variant = "quiet" | "card" | "footer-strip";
@@ -19,18 +20,6 @@ const DEFAULTS = {
   cadence: "Weekly · Sundays",
 };
 
-async function submit(email: string, source: string) {
-  try {
-    await fetch("/api/newsletter/subscribe", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, source }),
-    });
-  } catch {
-    // local stub — silent fail is fine for the demo, success state is optimistic
-  }
-}
-
 export function NewsletterInline({
   variant = "quiet",
   title = DEFAULTS.title,
@@ -42,14 +31,20 @@ export function NewsletterInline({
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email || busy) return;
     setBusy(true);
-    await submit(email, source);
+    setError("");
+    const result = await subscribeToNewsletter({ email, source });
     setBusy(false);
-    setDone(true);
+    if (result.ok) {
+      setDone(true);
+      return;
+    }
+    setError(result.error);
   }
 
   if (variant === "footer-strip") {
@@ -87,6 +82,7 @@ export function NewsletterInline({
               )}
             </button>
           </form>
+          {error && <p className="text-xs text-trust-blocked">{error}</p>}
         </div>
       </div>
     );
@@ -135,7 +131,7 @@ export function NewsletterInline({
           </button>
         </form>
         <p className="mt-3 text-[11px] text-ink-subtle">
-          Unsubscribe any time. No tracking pixels. No partner blasts.
+          {error || "Unsubscribe any time. No tracking pixels. No partner blasts."}
         </p>
       </section>
     );
@@ -182,6 +178,7 @@ export function NewsletterInline({
           </button>
         </form>
       </div>
+      {error && <p className="mt-2 text-xs text-trust-blocked">{error}</p>}
     </section>
   );
 }

@@ -3,13 +3,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
-import { ENTRIES } from "@/mocks/entries";
+import { ENTRIES } from "@/data/entries";
 import { CategoryPill, PlatformChip, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { CopyButton } from "@/components/copy-button";
 import { SourceCitations } from "@/components/source-citations";
 import { useCompare } from "@/lib/compare";
-import { search } from "@/mocks/search";
+import { search } from "@/data/search";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
@@ -79,22 +79,6 @@ const ROWS: RowDef[] = [
     render: (e) => (
       <span className="font-mono text-sm tabular-nums text-ink">
         {e.stars !== undefined ? formatCompact(e.stars) : "—"}
-      </span>
-    ),
-  },
-  {
-    label: "Weekly installs",
-    render: (e) => (
-      <span className="font-mono text-sm tabular-nums text-ink">
-        {e.signals?.weeklyInstalls !== undefined ? formatCompact(e.signals.weeklyInstalls) : "—"}
-      </span>
-    ),
-  },
-  {
-    label: "Upvotes",
-    render: (e) => (
-      <span className="font-mono text-sm tabular-nums text-ink">
-        {e.signals?.upvotes !== undefined ? formatCompact(e.signals.upvotes) : "—"}
       </span>
     ),
   },

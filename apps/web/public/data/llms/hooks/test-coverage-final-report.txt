@@ -1,11 +1,11 @@
 # Test Coverage Final Report - Hooks
-URL: https://heyclau.de/hooks/test-coverage-final-report
+URL: https://heyclau.de/entry/hooks/test-coverage-final-report
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/test-coverage-final-report
+- Canonical URL: https://heyclau.de/entry/hooks/test-coverage-final-report
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

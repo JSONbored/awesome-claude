@@ -7,8 +7,9 @@
  * ETag derived from the body bytes is stable across requests. The dispatcher
  * helper `respondFeed` handles `If-None-Match` and emits cache headers.
  */
-import { ENTRIES } from "@/mocks/entries";
-import { CHANGELOG, RELEASE_NOTES } from "@/mocks/changelog";
+import { ENTRIES } from "@/data/entries";
+import { CHANGELOG, RELEASE_NOTES } from "@/data/changelog";
+import { getGrowthSurfaces } from "@/lib/growth-surfaces";
 import { CATEGORIES, type Category } from "@/types/registry";
 
 export const SITE_NAME = "HeyClaude";
@@ -210,6 +211,23 @@ export function changelogStreamItems(stream: "release" | "policy" | "security"):
   }));
 }
 
+export async function trendingItems(): Promise<FeedItem[]> {
+  const surfaces = await getGrowthSurfaces();
+  const hasLiveSignals =
+    surfaces.communitySignalsAvailable ||
+    surfaces.votesAvailable ||
+    surfaces.intentEventsAvailable;
+  if (!hasLiveSignals) return [];
+  return surfaces.communityTrending.slice(0, 100).map((entry) => ({
+    title: entry.title,
+    link: `/entry/${entry.category}/${entry.slug}`,
+    guid: `trending:${entry.category}/${entry.slug}`,
+    pubDate: entry.dateAdded || new Date(0).toISOString(),
+    description: entry.description,
+    category: entry.category,
+  }));
+}
+
 export const FEED_CATEGORIES = CATEGORIES.map((c) => c.id);
 
 /* --------- Saved-search materialization (URL-encoded) -------- */
@@ -369,6 +387,23 @@ export async function allFeedHealth(base: string): Promise<FeedHealth[]> {
       ),
     );
   }
+
+  const trending = await trendingItems();
+  out.push(
+    await healthFor(
+      "trending",
+      "Trending",
+      "/feeds/trending.xml",
+      trending,
+      buildRss({
+        title: `${SITE_NAME} trending`,
+        description: "Registry entries with current public community, vote, and intent signals.",
+        link: base,
+        selfLink: `${base}/feeds/trending.xml`,
+        items: trending,
+      }),
+    ),
+  );
 
   return out;
 }

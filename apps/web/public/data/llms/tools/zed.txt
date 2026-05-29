@@ -1,5 +1,5 @@
 # Zed
-URL: https://heyclau.de/tools/zed
+URL: https://heyclau.de/entry/tools/zed
 Category: tools
 Author: Zed Industries
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://zed.dev/docs
 Repository: https://github.com/zed-industries/zed
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/zed
+- Canonical URL: https://heyclau.de/entry/tools/zed
 - Source URLs: https://zed.dev/docs, https://github.com/zed-industries/zed, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zed.mdx, https://zed.dev
 - Brand: Zed
 - Brand domain: zed.dev

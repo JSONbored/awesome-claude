@@ -48,6 +48,8 @@ describe("sitemap policy", () => {
     expect(source).toContain('"/llms-full.txt"');
     expect(source).toContain('"/feed.xml"');
     expect(source).toContain('"/atom.xml"');
+    expect(source).toContain('"/feeds/trending.xml"');
+    expect(source).toContain('"/data/feeds/index.json"');
     expect(source).toContain('"/validators"');
     expect(source).toContain('"/validators/mcp-config"');
     expect(source).toContain('"/validators/skill-package"');

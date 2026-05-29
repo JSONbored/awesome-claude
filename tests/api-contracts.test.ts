@@ -33,6 +33,7 @@ const apiRoutes = [
   "/api/og",
   "/api/submissions",
   "/api/submissions/preflight",
+  "/api/submissions/queue",
   "/api/download",
   "/api/jobs",
   "/api/listing-leads",

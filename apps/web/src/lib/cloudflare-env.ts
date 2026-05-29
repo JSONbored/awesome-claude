@@ -6,7 +6,30 @@ type RuntimeContext = {
   request: Request;
 };
 
+type CloudflareRuntimeRequest = Request & {
+  runtime?: {
+    cloudflare?: {
+      env?: unknown;
+      context?: unknown;
+    };
+  };
+};
+
 const runtimeStorage = new AsyncLocalStorage<RuntimeContext>();
+
+function envRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object"
+    ? (value as Record<string, unknown>)
+    : null;
+}
+
+function nitroGlobalEnv(): Record<string, unknown> | null {
+  return envRecord((globalThis as typeof globalThis & { __env__?: unknown }).__env__);
+}
+
+function requestCloudflareRuntime(request: Request) {
+  return (request as CloudflareRuntimeRequest).runtime?.cloudflare ?? null;
+}
 
 export function runWithCloudflareRuntime<T>(
   request: Request,
@@ -14,14 +37,16 @@ export function runWithCloudflareRuntime<T>(
   ctx: unknown,
   callback: () => T,
 ) {
+  const requestRuntime = requestCloudflareRuntime(request);
   return runtimeStorage.run(
     {
       request,
-      ctx,
+      ctx: ctx ?? requestRuntime?.context,
       env:
-        env && typeof env === "object"
-          ? (env as Record<string, unknown>)
-          : {},
+        envRecord(env) ??
+        envRecord(requestRuntime?.env) ??
+        nitroGlobalEnv() ??
+        {},
     },
     callback,
   );
@@ -32,7 +57,7 @@ export function getCloudflareRuntime() {
 }
 
 export function getCloudflareEnv() {
-  return getCloudflareRuntime()?.env ?? {};
+  return getCloudflareRuntime()?.env ?? nitroGlobalEnv() ?? {};
 }
 
 export function getCloudflareBinding<T = unknown>(name: string): T | undefined {

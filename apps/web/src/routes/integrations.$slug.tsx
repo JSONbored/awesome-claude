@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { getIntegration, INTEGRATIONS } from "@/mocks/integrations";
+import { getIntegration, INTEGRATIONS } from "@/data/integrations";
 import { IntegrationMarkTile } from "@/components/integration-marks";
 import { IntegrationCard } from "@/components/integration-card";
 import { LiveVersionBadge } from "@/components/live-version-badge";

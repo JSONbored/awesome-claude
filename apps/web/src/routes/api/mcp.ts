@@ -11,10 +11,15 @@ import {
   readRequestTextWithinLimit,
 } from "@/lib/api-security";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
+import { getCloudflareBinding } from "@/lib/cloudflare-env";
 import { loadJsonDataFile, loadTextDataFile } from "@/lib/content";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const route = getApiRouteDefinition("mcp.streamable");
+
+type StaticAssetsBinding = {
+  fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+};
 
 const mcpCorsHeaders = {
   "access-control-allow-origin": "*",
@@ -59,6 +64,40 @@ function mcpMethodNotAllowed() {
   );
 }
 
+function assetRequest(origin: string, fileName: string) {
+  return new Request(`${origin}/data/${fileName}`);
+}
+
+function createMcpArtifactReaders(origin: string, assets?: StaticAssetsBinding) {
+  const loadAssetText = async (fileName: string) => {
+    const response = await (assets?.fetch(assetRequest(origin, fileName)) ??
+      fetch(assetRequest(origin, fileName)));
+    if (!response.ok) {
+      throw new Error(`Failed to load ${fileName} asset (${response.status})`);
+    }
+    return response.text();
+  };
+
+  const readTextArtifact = async (fileName: string) => {
+    try {
+      return await loadTextDataFile(fileName);
+    } catch {
+      return loadAssetText(fileName);
+    }
+  };
+
+  return {
+    readTextArtifact,
+    readJsonArtifact: async <T,>(fileName: string): Promise<T> => {
+      try {
+        return await loadJsonDataFile<T>(fileName);
+      } catch {
+        return JSON.parse(await loadAssetText(fileName)) as T;
+      }
+    },
+  };
+}
+
 async function validateMcpRequest(request: Request) {
   const requestId = getApiRequestId(request);
   if (route.originCheck && !isAllowedOrigin(request)) {
@@ -98,17 +137,19 @@ async function handleMcpRequest(request: Request) {
   const checkedRequest = validationResult.request;
 
   try {
-    const host = new URL(checkedRequest.url).host;
+    const url = new URL(checkedRequest.url);
+    const host = url.host;
+    const artifactReaders = createMcpArtifactReaders(
+      url.origin,
+      getCloudflareBinding<StaticAssetsBinding>("ASSETS"),
+    );
     const transport = new WebStandardStreamableHTTPServerTransport({
       sessionIdGenerator: undefined,
       enableJsonResponse: true,
       enableDnsRebindingProtection: true,
       allowedHosts: [host],
     });
-    const server = createHeyClaudeMcpServer({
-      readJsonArtifact: loadJsonDataFile,
-      readTextArtifact: loadTextDataFile,
-    });
+    const server = createHeyClaudeMcpServer(artifactReaders);
 
     await server.connect(transport);
     return applyMcpHeaders(await transport.handleRequest(checkedRequest));

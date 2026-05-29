@@ -1,5 +1,5 @@
 # Notion MCP Server for Claude
-URL: https://heyclau.de/mcp/notion-mcp-server
+URL: https://heyclau.de/entry/mcp/notion-mcp-server
 Category: mcp
 Author: Notion
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://developers.notion.com/docs/mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/notion-mcp-server.mdx
 Download: /downloads/mcp/notion-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/notion-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/notion-mcp-server
 - Source URLs: https://developers.notion.com/docs/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/notion-mcp-server.mdx
 - Brand: Notion
 - Brand domain: notion.so

@@ -1,12 +1,12 @@
 # Test Runner Hook - Hooks
-URL: https://heyclau.de/hooks/test-runner-hook
+URL: https://heyclau.de/entry/hooks/test-runner-hook
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://jestjs.io/docs/getting-started
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/test-runner-hook
+- Canonical URL: https://heyclau.de/entry/hooks/test-runner-hook
 - Source URLs: https://jestjs.io/docs/getting-started, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-runner-hook.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -67,7 +67,7 @@ describe("generated README catalog", () => {
   it("includes every file-backed content entry with its canonical URL and description", () => {
     for (const entry of entries) {
       expect(readme, `${entry.category}/${entry.slug}`).toContain(
-        `https://heyclau.de/${entry.category}/${entry.slug}`,
+        `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(readme, `${entry.category}/${entry.slug}`).toContain(
         entry.description,

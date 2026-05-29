@@ -1,5 +1,5 @@
 # Proxmox VE API Orchestrator Skill
-URL: https://heyclau.de/skills/proxmox-ve-api-orchestrator
+URL: https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx
 Download: /downloads/skills/proxmox-ve-api-orchestrator.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/proxmox-ve-api-orchestrator
+- Canonical URL: https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator
 - Source URLs: https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-orchestrator.mdx
 - Package URL: /downloads/skills/proxmox-ve-api-orchestrator.zip
 - Package SHA256: 8c49dff8580bad344aeda18707159b9ad25bc7eef25946d6c429ac65cb7565b0

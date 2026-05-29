@@ -1,5 +1,5 @@
 # Hubspot MCP Server for Claude
-URL: https://heyclau.de/mcp/hubspot-mcp-server
+URL: https://heyclau.de/entry/mcp/hubspot-mcp-server
 Category: mcp
 Author: HubSpot
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://developers.hubspot.com/mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hubspot-mcp-server.mdx
 Download: /downloads/mcp/hubspot-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/hubspot-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/hubspot-mcp-server
 - Source URLs: https://developers.hubspot.com/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/hubspot-mcp-server.mdx
 - Brand: HubSpot
 - Brand domain: hubspot.com

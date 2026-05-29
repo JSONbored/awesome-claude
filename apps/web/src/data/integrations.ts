@@ -1,4 +1,7 @@
+import { REGISTRY_GENERATED_AT } from "@/data/entries";
 import type { Integration } from "@/types/registry";
+
+const REGISTRY_UPDATED_DATE = REGISTRY_GENERATED_AT.slice(0, 10);
 
 export const INTEGRATIONS: Integration[] = [
   {
@@ -16,7 +19,7 @@ export const INTEGRATIONS: Integration[] = [
     ],
     primaryAction: { label: "Open browser", href: "/browse" },
     secondaryAction: { label: "Trending", href: "/trending" },
-    updatedAt: "2026-05-26",
+    updatedAt: REGISTRY_UPDATED_DATE,
     surface: { kind: "web", label: "Web", snippet: "https://heyclau.de" },
     trustPosture: "Read-only static + cached responses. No personal data persisted without consent.",
   },
@@ -36,7 +39,7 @@ export const INTEGRATIONS: Integration[] = [
     primaryAction: { label: "Install in Raycast", href: "https://www.raycast.com/jsonbored/heyclaude" },
     secondaryAction: { label: "Source", href: "https://github.com/jsonbored/awesome-claude/tree/main/integrations/raycast" },
     version: "2.4.0",
-    updatedAt: "2026-05-21",
+    updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       { client: "Raycast Store", snippet: "raycast://extensions/jsonbored/heyclaude" },
       { client: "CLI fallback", snippet: "npx heyclaude search 'postgres mcp'" },
@@ -66,8 +69,8 @@ export const INTEGRATIONS: Integration[] = [
     ],
     primaryAction: { label: "Run via npx", href: "https://www.npmjs.com/package/@heyclaude/mcp" },
     secondaryAction: { label: "Source", href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp" },
-    version: "1.6.2",
-    updatedAt: "2026-05-26",
+    version: "0.3.0",
+    updatedAt: REGISTRY_UPDATED_DATE,
     install: [
       {
         client: "Claude Desktop",
@@ -107,7 +110,7 @@ export const INTEGRATIONS: Integration[] = [
     primaryAction: { label: "Open API docs", href: "/api-docs" },
     secondaryAction: { label: "Manifest", href: "https://heyclau.de/api/registry/manifest" },
     version: "v1",
-    updatedAt: "2026-05-25",
+    updatedAt: REGISTRY_UPDATED_DATE,
     surface: {
       kind: "api",
       label: "REST API",
@@ -128,10 +131,10 @@ export const INTEGRATIONS: Integration[] = [
       "Indexed under /data/skill-adapters/cursor/",
       "Drop straight into .cursor/rules/",
     ],
-    primaryAction: { label: "Browse adapters", href: "/platforms/cursor" },
+    primaryAction: { label: "Browse adapters", href: "/platforms" },
     secondaryAction: { label: "Spec", href: "/api-docs#cursor-adapter" },
     version: "schema 1",
-    updatedAt: "2026-05-25",
+    updatedAt: REGISTRY_UPDATED_DATE,
   },
   {
     slug: "llms-txt",
@@ -144,11 +147,11 @@ export const INTEGRATIONS: Integration[] = [
     bullets: [
       "/llms.txt — full directory map for retrieval",
       "/llms-full.txt — entire corpus in one file",
-      "/<category>/<slug>/llms.txt — per-entry text export",
+      "/data/llms/<category>/<slug>.txt — per-entry text export",
     ],
     primaryAction: { label: "View llms.txt", href: "https://heyclau.de/llms.txt" },
     secondaryAction: { label: "Full corpus", href: "https://heyclau.de/llms-full.txt" },
-    updatedAt: "2026-05-25",
+    updatedAt: REGISTRY_UPDATED_DATE,
   },
   {
     slug: "rss-changelog",
@@ -165,7 +168,7 @@ export const INTEGRATIONS: Integration[] = [
     ],
     primaryAction: { label: "RSS", href: "https://heyclau.de/feed.xml" },
     secondaryAction: { label: "Atom", href: "https://heyclau.de/atom.xml" },
-    updatedAt: "2026-05-26",
+    updatedAt: REGISTRY_UPDATED_DATE,
   },
   {
     slug: "ecosystem-feed",
@@ -181,7 +184,7 @@ export const INTEGRATIONS: Integration[] = [
     ],
     primaryAction: { label: "Open JSON", href: "https://heyclau.de/data/ecosystem-feed.json" },
     secondaryAction: { label: "Integrations index", href: "/integrations" },
-    updatedAt: "2026-05-25",
+    updatedAt: REGISTRY_UPDATED_DATE,
   },
   {
     slug: "github-actions",
@@ -198,7 +201,7 @@ export const INTEGRATIONS: Integration[] = [
     ],
     primaryAction: { label: "View workflows", href: "https://github.com/jsonbored/awesome-claude/tree/main/.github/workflows" },
     secondaryAction: { label: "Submit a resource", href: "/submit" },
-    updatedAt: "2026-05-26",
+    updatedAt: REGISTRY_UPDATED_DATE,
   },
 ];
 

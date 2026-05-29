@@ -31,7 +31,7 @@ const SHORTCUTS: { group: string; items: Shortcut[] }[] = [
       { keys: ["g", "t"], label: "Trending" },
       { keys: ["g", "e"], label: "Ecosystem" },
       { keys: ["g", "c"], label: "Changelog" },
-      { keys: ["g", "v"], label: "Validators" },
+      { keys: ["g", "v"], label: "Review coverage" },
       { keys: ["g", "q"], label: "Quality" },
       { keys: ["g", "f"], label: "Feeds" },
       { keys: ["g", "s"], label: "Subscriptions" },

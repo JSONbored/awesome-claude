@@ -38,7 +38,7 @@ export function getTrustReasons(entry: Entry): TrustReason[] {
     label: `Trust posture: ${entry.trust}`,
     detail:
       entry.trust === "trusted"
-        ? "Reviewed by a validator and source-checked."
+        ? "Reviewed by a maintainer and source-checked."
         : entry.trust === "review"
           ? "Read the source before installing. Surface-level review only."
           : entry.trust === "limited"
@@ -87,10 +87,10 @@ export function getTrustReasons(entry: Entry): TrustReason[] {
   reasons.push({
     id: "reviewed",
     severity: entry.reviewed ? "ok" : "warning",
-    label: entry.reviewed ? "Validator-reviewed" : "Awaiting validator review",
+    label: entry.reviewed ? "Maintainer-reviewed" : "Awaiting maintainer review",
     detail: entry.reviewed
-      ? "A validator signed off on the metadata."
-      : "No validator has reviewed this entry yet.",
+      ? "A maintainer signed off on the metadata."
+      : "No maintainer has reviewed this entry yet.",
     docHref: "/validators",
   });
 

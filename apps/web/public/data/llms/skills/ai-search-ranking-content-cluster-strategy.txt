@@ -1,5 +1,5 @@
 # AI Search Ranking Content Cluster Strategy Skill
-URL: https://heyclau.de/skills/ai-search-ranking-content-cluster-strategy
+URL: https://heyclau.de/entry/skills/ai-search-ranking-content-cluster-strategy
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://developers.google.com/search/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx
 Download: /downloads/skills/ai-search-ranking-content-cluster-strategy.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/ai-search-ranking-content-cluster-strategy
+- Canonical URL: https://heyclau.de/entry/skills/ai-search-ranking-content-cluster-strategy
 - Source URLs: https://developers.google.com/search/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-search-ranking-content-cluster-strategy.mdx
 - Package URL: /downloads/skills/ai-search-ranking-content-cluster-strategy.zip
 - Package SHA256: cc04f016dc2ee3f988e6fd411ff7406fc999b0c5f2377e7fc6e71d5f795dc2e8

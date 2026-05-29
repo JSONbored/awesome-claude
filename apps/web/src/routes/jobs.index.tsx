@@ -1,14 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createServerFn } from "@tanstack/react-start";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowUpRight, Search, Sparkles, X } from "lucide-react";
-import { JOB_LISTINGS } from "@/mocks/jobs";
 import type { JobListing, JobTier } from "@/types/registry";
 import { cn } from "@/lib/utils";
 import { JobCard } from "@/components/job-card";
 import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { NewsletterInline } from "@/components/newsletter-inline";
 
+const loadPublicJobs = createServerFn({ method: "GET" }).handler(async () => {
+  const { buildPublicJobsIndex, getJobs } = await import("@/lib/jobs");
+  return buildPublicJobsIndex(await getJobs()).entries;
+});
+
 export const Route = createFileRoute("/jobs/")({
+  loader: async () => {
+    return {
+      jobs: (await loadPublicJobs()).map(normalizeJobListing).filter((job) => job.slug),
+    };
+  },
   head: () => ({
     meta: [
       { title: "Claude & AI workflow jobs — HeyClaude" },
@@ -34,7 +44,41 @@ export const Route = createFileRoute("/jobs/")({
 type RemoteFilter = "all" | "remote" | "onsite";
 type SortMode = "default" | "newest" | "salary";
 
+function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown>): JobListing {
+  const postedAt = String(value.postedAt || value.lastVerifiedAt || new Date(0).toISOString());
+  return {
+    slug: String(value.slug || ""),
+    title: String(value.title || "Untitled role"),
+    company: String(value.company || "Unknown company"),
+    companyUrl: typeof value.companyUrl === "string" ? value.companyUrl : undefined,
+    location: String(value.location || "Remote"),
+    isRemote: Boolean(value.isRemote),
+    isWorldwide: Boolean(value.isWorldwide),
+    type: String(value.type || "Role"),
+    postedAt,
+    lastVerifiedAt: typeof value.lastVerifiedAt === "string" ? value.lastVerifiedAt : undefined,
+    compensation: typeof value.compensation === "string" ? value.compensation : undefined,
+    equity: typeof value.equity === "string" ? value.equity : undefined,
+    bonus: typeof value.bonus === "string" ? value.bonus : undefined,
+    description: String(value.description || ""),
+    benefits: Array.isArray(value.benefits) ? value.benefits.map(String) : undefined,
+    responsibilities: Array.isArray(value.responsibilities) ? value.responsibilities.map(String) : undefined,
+    requirements: Array.isArray(value.requirements) ? value.requirements.map(String) : undefined,
+    labels: Array.isArray(value.labels) ? value.labels.map(String) : undefined,
+    applyUrl: typeof value.applyUrl === "string" ? value.applyUrl : undefined,
+    tier: (value.tier as JobTier) || "free",
+    sourceKind: value.sourceKind as JobListing["sourceKind"],
+    sourceUrl: typeof value.sourceUrl === "string" ? value.sourceUrl : undefined,
+    curationNote: typeof value.curationNote === "string" ? value.curationNote : undefined,
+    featured: Boolean(value.featured),
+    sponsored: Boolean(value.sponsored),
+  };
+}
+
 function JobsPage() {
+  const loaderData = Route.useLoaderData();
+  const [jobs, setJobs] = useState<JobListing[]>(loaderData.jobs);
+  const [loadingJobs, setLoadingJobs] = useState(loaderData.jobs.length === 0);
   const [q, setQ] = useState("");
   const [tier, setTier] = useState<JobTier | "all">("all");
   const [remote, setRemote] = useState<RemoteFilter>("all");
@@ -43,13 +87,35 @@ function JobsPage() {
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>("default");
 
+  useEffect(() => {
+    let cancelled = false;
+    async function loadJobs() {
+      try {
+        const response = await fetch("/api/jobs?limit=100", {
+          headers: { accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`jobs API returned ${response.status}`);
+        const payload = (await response.json()) as { entries?: Array<Partial<JobListing> & Record<string, unknown>> };
+        if (!cancelled) setJobs((payload.entries ?? []).map(normalizeJobListing).filter((job) => job.slug));
+      } catch {
+        if (!cancelled) setJobs([]);
+      } finally {
+        if (!cancelled) setLoadingJobs(false);
+      }
+    }
+    void loadJobs();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   const allTypes = useMemo(
-    () => Array.from(new Set(JOB_LISTINGS.map((j) => j.type))).sort(),
-    [],
+    () => Array.from(new Set(jobs.map((j) => j.type))).sort(),
+    [jobs],
   );
 
   const filtered = useMemo(() => {
-    return JOB_LISTINGS.filter((j) => {
+    return jobs.filter((j) => {
       if (tier !== "all" && j.tier !== tier) return false;
       if (remote === "remote" && !j.isRemote) return false;
       if (remote === "onsite" && j.isRemote) return false;
@@ -62,7 +128,7 @@ function JobsPage() {
         .toLowerCase();
       return blob.includes(q.toLowerCase());
     });
-  }, [q, tier, remote, type, freshOnly, featuredOnly]);
+  }, [jobs, q, tier, remote, type, freshOnly, featuredOnly]);
 
   const sorted = useMemo(() => {
     if (sortMode === "newest") {
@@ -79,14 +145,14 @@ function JobsPage() {
     return sortJobs(filtered);
   }, [filtered, sortMode]);
 
-  const spotlight = useMemo(() => pickDailySpotlight(JOB_LISTINGS), []);
+  const spotlight = useMemo(() => pickDailySpotlight(jobs), [jobs]);
 
   // Counts for facets
   const counts = useMemo(() => {
     const base = (extra: (j: JobListing) => boolean) =>
-      JOB_LISTINGS.filter(extra).length;
+      jobs.filter(extra).length;
     return {
-      total: JOB_LISTINGS.length,
+      total: jobs.length,
       remote: base((j) => !!j.isRemote),
       fresh: base((j) => isFresh(j.postedAt)),
       featured: base((j) => j.tier === "featured" || j.tier === "sponsored"),
@@ -96,7 +162,7 @@ function JobsPage() {
         free: base((j) => j.tier === "free"),
       },
     };
-  }, []);
+  }, [jobs]);
 
   const hasFilters =
     q || tier !== "all" || remote !== "all" || type !== "all" || freshOnly || featuredOnly;
@@ -237,7 +303,7 @@ function JobsPage() {
             ))}
             {sorted.length === 0 && (
               <div className="rounded-xl border border-dashed border-border bg-surface px-5 py-12 text-center text-sm text-ink-muted">
-                No roles match these filters.
+                {loadingJobs ? "Loading active roles..." : "No roles match these filters."}
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 # HeyClaude MCP Server
-URL: https://heyclau.de/mcp/heyclaude-mcp
+URL: https://heyclau.de/entry/mcp/heyclaude-mcp
 Category: mcp
 Author: HeyClaude Team
 Date added: 2025-11-25
@@ -7,7 +7,7 @@ Documentation: https://github.com/JSONbored/awesome-claude/tree/main/packages/mc
 Repository: https://github.com/JSONbored/awesome-claude
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/heyclaude-mcp.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/heyclaude-mcp
+- Canonical URL: https://heyclau.de/entry/mcp/heyclaude-mcp
 - Source URLs: https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp, https://github.com/JSONbored/awesome-claude, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/heyclaude-mcp.mdx
 - Brand: HeyClaude
 - Brand domain: heyclau.de

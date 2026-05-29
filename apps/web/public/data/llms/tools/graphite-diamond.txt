@@ -1,12 +1,12 @@
 # Graphite Diamond
-URL: https://heyclau.de/tools/graphite-diamond
+URL: https://heyclau.de/entry/tools/graphite-diamond
 Category: tools
 Author: Graphite
 Date added: 2026-04-27
 Documentation: https://graphite.dev
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/graphite-diamond
+- Canonical URL: https://heyclau.de/entry/tools/graphite-diamond
 - Source URLs: https://graphite.dev, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/graphite-diamond.mdx, https://graphite.dev/diamond
 - Brand: Graphite Diamond
 - Brand domain: graphite.dev

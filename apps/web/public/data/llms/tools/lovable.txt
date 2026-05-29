@@ -1,12 +1,12 @@
 # Lovable
-URL: https://heyclau.de/tools/lovable
+URL: https://heyclau.de/entry/tools/lovable
 Category: tools
 Author: Lovable
 Date added: 2026-04-27
 Documentation: https://docs.lovable.dev
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/lovable
+- Canonical URL: https://heyclau.de/entry/tools/lovable
 - Source URLs: https://docs.lovable.dev, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lovable.mdx, https://lovable.dev
 - Brand: Lovable
 - Brand domain: lovable.dev

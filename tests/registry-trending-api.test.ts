@@ -9,7 +9,7 @@ const state = vi.hoisted(() => ({
   intent: { available: true, counts: {} as Counts },
 }));
 
-vi.mock("@/lib/content", () => ({ getDirectoryEntries: () => Promise.resolve(state.entries) }));
+vi.mock("@/data/entries", () => ({ ENTRIES: state.entries }));
 vi.mock("@/lib/votes", () => ({ safeVoteCounts: () => Promise.resolve(state.votes) }));
 vi.mock("@/lib/community-signals", () => ({ entryCommunityTarget: (category: string, slug: string) => `entry:${category}/${slug}`, safeCommunitySignalCounts: () => Promise.resolve(state.community) }));
 vi.mock("@/lib/intent-events", () => ({ safeIntentEventCounts: () => Promise.resolve(state.intent) }));
@@ -20,8 +20,9 @@ function entry(slug: string, overrides: Record<string, unknown> = {}) {
     slug,
     title: `Entry ${slug}`,
     description: "Public trending fixture",
-    canonicalUrl: `https://heyclau.de/mcp/${slug}`,
-    platformCompatibility: [{ platform: "Claude", supportLevel: "native" }],
+    canonicalUrl: `https://heyclau.de/entry/mcp/${slug}`,
+    platforms: ["claude-code"],
+    platformCompatibility: [{ platform: "claude-code", support: "native-skill" }],
     tags: ["fixture"],
     dateAdded: "2026-05-24",
     downloadTrust: "external",
@@ -37,7 +38,8 @@ const request = (path: string) =>
 describe("/api/registry/trending", () => {
   beforeEach(() => {
     vi.resetModules();
-    state.entries = [entry("alpha"), entry("beta"), entry("skill", { category: "skills" })];
+    state.entries.length = 0;
+    state.entries.push(entry("alpha"), entry("beta"), entry("skill", { category: "skills" }));
     state.votes = { available: true, counts: { "mcp:beta": 3, "mcp:alpha": 1 } };
     state.community = { available: true, counts: { "entry:mcp/beta": { used: 1, works: 2, broken: 0 } } };
     state.intent = { available: true, counts: { "mcp:beta": { copy: 1, open: 1, install: 1, download: 0, vote: 0 } } };
@@ -67,7 +69,8 @@ describe("/api/registry/trending", () => {
   });
 
   it("degrades to static trust reasons when dynamic state is unavailable", async () => {
-    state.entries = [entry("verified", { downloadTrust: "first-party", verificationStatus: "production" })];
+    state.entries.length = 0;
+    state.entries.push(entry("verified", { downloadTrust: "first-party", verificationStatus: "production" }));
     state.votes = { available: false, counts: { "mcp:verified": 0 } };
     state.community = { available: false, counts: { "entry:mcp/verified": { used: 0, works: 0, broken: 0 } } };
     state.intent = { available: false, counts: { "mcp:verified": { copy: 0, open: 0, install: 0, download: 0, vote: 0 } } };

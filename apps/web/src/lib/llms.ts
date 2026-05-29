@@ -7,7 +7,7 @@
  *
  * Both are deterministic for a given registry snapshot so ETags are stable.
  */
-import { ENTRIES } from "@/mocks/entries";
+import { ENTRIES } from "@/data/entries";
 import { CATEGORIES } from "@/types/registry";
 import { etagFor } from "@/lib/feeds";
 import { applySecurityHeaders } from "@/lib/security-headers";

@@ -403,6 +403,11 @@ export const submissionPreflightBodySchema = z.object({
   honeypot: z.string().max(256).optional().default(""),
 });
 
+export const submissionQueueQuerySchema = z.object({
+  number: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
+});
+
 const submissionPreflightNoteSchema = z.object({
   code: z.string().max(80),
   message: z.string().max(500),
@@ -467,6 +472,45 @@ export const submissionPreflightResponseSchema = z.union([
   submissionPreflightSuccessResponseSchema,
   submissionPreflightDiscardResponseSchema,
 ]);
+
+const submissionQueueStatusSchema = z.enum([
+  "queued",
+  "in_review",
+  "ready",
+  "approved",
+  "import_pr_open",
+  "needs_author_input",
+  "source_needs_verification",
+  "stale",
+  "imported",
+  "closed",
+]);
+
+const submissionQueueItemSchema = z.object({
+  number: z.number().int().positive(),
+  url: z.string().url(),
+  title: z.string().max(300),
+  author: z.string().max(120),
+  authorUrl: z.string().url().optional(),
+  category: z.string().max(80),
+  slug: z.string().max(160),
+  status: submissionQueueStatusSchema,
+  state: z.enum(["open", "closed"]),
+  labels: z.array(z.string().max(120)).max(32),
+  blockers: z.array(z.string().max(240)).max(12),
+  updatedAt: z.string(),
+  createdAt: z.string(),
+  closedAt: z.string().nullable().optional(),
+  importPrUrl: z.string().url().optional(),
+});
+
+export const submissionQueueResponseSchema = z.object({
+  ok: z.literal(true),
+  generatedAt: z.string(),
+  repo: z.string(),
+  count: z.number().int().nonnegative(),
+  entries: z.array(submissionQueueItemSchema).max(100),
+});
 
 export const downloadQuerySchema = z.object({
   asset: z.string().trim().max(256),
@@ -989,6 +1033,24 @@ export const apiRouteDefinitions = {
     rateLimit: {
       scope: "submissions-preflight",
       limit: 30,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "submissions.queue": route({
+    id: "submissions.queue",
+    method: "GET",
+    path: "/api/submissions/queue",
+    summary: "List public content submission issue status",
+    description:
+      "Returns sanitized, read-only status for public content-submission issues. This endpoint reads GitHub issue metadata only; it cannot approve, reject, label, import, create branches, create PRs, or publish registry content.",
+    tags: ["Submissions"],
+    originCheck: true,
+    querySchema: submissionQueueQuerySchema,
+    responseSchema: submissionQueueResponseSchema,
+    rateLimit: {
+      scope: "submissions-queue",
+      limit: 60,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",
     },

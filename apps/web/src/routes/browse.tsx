@@ -6,12 +6,12 @@ import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
-import { search } from "@/mocks/search";
+import { search } from "@/data/search";
 import { CATEGORIES, type Category, type Platform, type SourceStatus, type TrustLevel } from "@/types/registry";
 import { Search as SearchIcon, SlidersHorizontal, ArrowDownNarrowWide, Clock, Star, X, Settings2, Bell, ExternalLink } from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { useRecents, type SavedSearch } from "@/lib/recents";
-import { ENTRIES } from "@/mocks/entries";
+import { ENTRIES } from "@/data/entries";
 import { SavedSearchManager } from "@/components/saved-search-manager";
 import { FilterSummaryBar, type ActiveFilter } from "@/components/filter-summary-bar";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
@@ -39,7 +39,7 @@ function SavedSearchChipRow({
         trust: s.trust ?? "",
         source: s.source ?? "",
         platform: s.platform ?? "",
-        sort: (s.sort as "popular" | "newest" | "title" | "trending") ?? "popular",
+        sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
         view: "row" as const,
         compare: "",
       },
@@ -93,7 +93,7 @@ const searchSchema = z.object({
   trust: fallback(z.string(), "").default(""),
   source: fallback(z.string(), "").default(""),
   platform: fallback(z.string(), "").default(""),
-  sort: fallback(z.enum(["popular", "newest", "title", "trending"]), "popular").default("popular"),
+  sort: fallback(z.enum(["popular", "newest", "title"]), "popular").default("popular"),
   view: fallback(z.enum(["row", "grid", "compact"]), "row").default("row"),
   compare: fallback(z.string(), "").default(""),
 });
@@ -443,7 +443,6 @@ function Browse() {
                     className="h-7 rounded-md border border-border bg-surface px-2 text-xs text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                   >
                     <option value="popular">Popular</option>
-                    <option value="trending">Trending</option>
                     <option value="newest">Newest</option>
                     <option value="title">A–Z</option>
                   </select>

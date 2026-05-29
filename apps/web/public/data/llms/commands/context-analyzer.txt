@@ -1,12 +1,12 @@
 # Context Analyzer for Claude Code
-URL: https://heyclau.de/commands/context-analyzer
+URL: https://heyclau.de/entry/commands/context-analyzer
 Category: commands
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/analysis
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/context-analyzer.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/context-analyzer
+- Canonical URL: https://heyclau.de/entry/commands/context-analyzer
 - Source URLs: https://docs.claude.com/en/docs/claude-code/analysis, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/context-analyzer.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

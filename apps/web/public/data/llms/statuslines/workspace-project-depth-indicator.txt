@@ -1,12 +1,12 @@
 # Workspace Project Depth Indicator - Statuslines
-URL: https://heyclau.de/statuslines/workspace-project-depth-indicator
+URL: https://heyclau.de/entry/statuslines/workspace-project-depth-indicator
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/workspace-project-depth-indicator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/workspace-project-depth-indicator
+- Canonical URL: https://heyclau.de/entry/statuslines/workspace-project-depth-indicator
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/workspace-project-depth-indicator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

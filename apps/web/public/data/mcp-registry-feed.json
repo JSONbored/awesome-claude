@@ -19,7 +19,7 @@
       },
       "installCommand": "claude mcp add airtable --env AIRTABLE_API_KEY=YOUR_KEY -- npx -y airtable-mcp-server && claude mcp list",
       "configSnippet": "{\n  \"airtable\": {\n    \"env\": {\n      \"AIRTABLE_API_KEY\": \"${AIRTABLE_API_KEY}\"\n    },\n    \"args\": [\n      \"-y\",\n      \"airtable-mcp-server\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/airtable-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/airtable-mcp-server"
     },
     {
       "name": "asana-mcp-server",
@@ -32,7 +32,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status asana",
       "configSnippet": "{\n  \"asana\": {\n    \"url\": \"https://mcp.asana.com/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/asana-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/asana-mcp-server"
     },
     {
       "name": "aws-services-mcp-server",
@@ -49,7 +49,7 @@
       },
       "installCommand": "uvx awslabs.core-mcp-server@latest && claude mcp list",
       "configSnippet": "{\n  \"aws\": {\n    \"env\": {\n      \"AWS_REGION\": \"${AWS_REGION:-us-east-1}\",\n      \"AWS_PROFILE\": \"${AWS_PROFILE}\",\n      \"FASTMCP_LOG_LEVEL\": \"${FASTMCP_LOG_LEVEL:-ERROR}\"\n    },\n    \"args\": [\n      \"awslabs.core-mcp-server@latest\"\n    ],\n    \"command\": \"uvx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/aws-services-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/aws-services-mcp-server"
     },
     {
       "name": "box-mcp-server",
@@ -62,7 +62,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status box",
       "configSnippet": "{\n  \"box\": {\n    \"url\": \"https://mcp.box.com/\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/box-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/box-mcp-server"
     },
     {
       "name": "canva-mcp-server",
@@ -75,7 +75,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status canva",
       "configSnippet": "{\n  \"canva\": {\n    \"url\": \"https://mcp.canva.com/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/canva-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/canva-mcp-server"
     },
     {
       "name": "desktop-mcp-setup",
@@ -88,7 +88,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http server-name https://api.example.com/mcp && claude mcp list",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"filesystem\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"@modelcontextprotocol/server-filesystem\", \"/Users/username/Documents\"]\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/desktop-mcp-setup"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/desktop-mcp-setup"
     },
     {
       "name": "clickup-mcp-server",
@@ -105,7 +105,7 @@
       },
       "installCommand": "claude mcp add clickup --env CLICKUP_API_KEY=YOUR_KEY --env CLICKUP_TEAM_ID=YOUR_TEAM_ID -- npx -y @hauptsache.net/clickup-mcp && claude mcp list",
       "configSnippet": "{\n  \"clickup\": {\n    \"env\": {\n      \"CLICKUP_API_KEY\": \"${CLICKUP_API_KEY}\",\n      \"CLICKUP_TEAM_ID\": \"${CLICKUP_TEAM_ID}\"\n    },\n    \"args\": [\n      \"-y\",\n      \"@hauptsache.net/clickup-mcp\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/clickup-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/clickup-mcp-server"
     },
     {
       "name": "cloudflare-mcp-server",
@@ -118,7 +118,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add cloudflare --env CLOUDFLARE_API_TOKEN=YOUR_TOKEN --env CLOUDFLARE_ACCOUNT_ID=YOUR_ACCOUNT_ID && claude mcp list",
       "configSnippet": "{\n  \"cloudflare\": {\n    \"env\": {\n      \"CLOUDFLARE_API_TOKEN\": \"${CLOUDFLARE_API_TOKEN}\",\n      \"CLOUDFLARE_ACCOUNT_ID\": \"${CLOUDFLARE_ACCOUNT_ID}\"\n    },\n    \"args\": [\n      \"-y\",\n      \"@cloudflare/mcp-server-cloudflare\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/cloudflare-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/cloudflare-mcp-server"
     },
     {
       "name": "cloudinary-mcp-server",
@@ -131,7 +131,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add cloudinary --env CLOUDINARY_CLOUD_NAME=YOUR_CLOUD_NAME --env CLOUDINARY_API_KEY=YOUR_KEY --env CLOUDINARY_API_SECRET=YOUR_SECRET",
       "configSnippet": "{\n  \"cloudinary\": {\n    \"env\": {\n      \"CLOUDINARY_API_KEY\": \"${CLOUDINARY_API_KEY}\",\n      \"CLOUDINARY_API_SECRET\": \"${CLOUDINARY_API_SECRET}\",\n      \"CLOUDINARY_CLOUD_NAME\": \"${CLOUDINARY_CLOUD_NAME}\"\n    },\n    \"url\": \"https://mcp.cloudinary.com/\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/cloudinary-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/cloudinary-mcp-server"
     },
     {
       "name": "contrastapi-mcp-server",
@@ -158,7 +158,7 @@
       },
       "installCommand": "claude mcp add --transport http contrastapi https://api.contrastcyber.com/mcp/",
       "configSnippet": "{\n  \"contrastapi\": {\n    \"url\": \"https://api.contrastcyber.com/mcp/\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/contrastapi-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/contrastapi-mcp-server"
     },
     {
       "name": "daloopa-mcp-server",
@@ -171,7 +171,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status daloopa",
       "configSnippet": "{\n  \"daloopa\": {\n    \"url\": \"https://mcp.daloopa.com/server/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/daloopa-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/daloopa-mcp-server"
     },
     {
       "name": "discord-mcp-server",
@@ -188,7 +188,7 @@
       },
       "installCommand": "npx -y @smithery/cli@latest install @SaseQ/discord-mcp --client claude && claude mcp list",
       "configSnippet": "{\n  \"discord-mcp\": {\n    \"env\": {\n      \"DISCORD_TOKEN\": \"${DISCORD_TOKEN}\",\n      \"DISCORD_GUILD_ID\": \"${DISCORD_GUILD_ID}\"\n    },\n    \"args\": [\n      \"-jar\",\n      \"/absolute/path/to/discord-mcp-0.0.1-SNAPSHOT.jar\"\n    ],\n    \"command\": \"java\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/discord-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/discord-mcp-server"
     },
     {
       "name": "docker-mcp-server",
@@ -201,7 +201,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add docker -- npx -y @docker/mcp-server && claude mcp list",
       "configSnippet": "{\n  \"docker\": {\n    \"env\": {\n      \"DOCKER_HOST\": \"${DOCKER_HOST:-unix:///var/run/docker.sock}\",\n      \"DOCKER_API_VERSION\": \"${DOCKER_API_VERSION:-1.43}\"\n    },\n    \"args\": [\n      \"-y\",\n      \"@docker/mcp-server\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/docker-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/docker-mcp-server"
     },
     {
       "name": "figma-mcp-server",
@@ -214,7 +214,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status figma",
       "configSnippet": "{\n  \"figma\": {\n    \"url\": \"http://127.0.0.1:3845/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/figma-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/figma-mcp-server"
     },
     {
       "name": "filesystem-mcp-server",
@@ -227,7 +227,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status filesystem",
       "configSnippet": "{\n  \"filesystem\": {\n    \"args\": [\n      \"-y\",\n      \"@modelcontextprotocol/server-filesystem\",\n      \"/path/to/allowed/directory\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/filesystem-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/filesystem-mcp-server"
     },
     {
       "name": "fireflies-mcp-server",
@@ -240,7 +240,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status fireflies",
       "configSnippet": "{\n  \"fireflies\": {\n    \"url\": \"https://api.fireflies.ai/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/fireflies-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/fireflies-mcp-server"
     },
     {
       "name": "git-mcp-server",
@@ -253,7 +253,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status git",
       "configSnippet": "{\n  \"git\": {\n    \"args\": [\n      \"-y\",\n      \"@modelcontextprotocol/server-git\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/git-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/git-mcp-server"
     },
     {
       "name": "github-mcp-server",
@@ -266,7 +266,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- npx -y @modelcontextprotocol/server-github && claude mcp list",
       "configSnippet": "{\n  \"github\": {\n    \"env\": {\n      \"GITHUB_PERSONAL_ACCESS_TOKEN\": \"${GITHUB_PERSONAL_ACCESS_TOKEN}\"\n    },\n    \"args\": [\n      \"-y\",\n      \"@modelcontextprotocol/server-github\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/github-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/github-mcp-server"
     },
     {
       "name": "heyclaude-mcp",
@@ -283,7 +283,7 @@
       },
       "installCommand": "npx -y mcp-remote https://heyclau.de/api/mcp",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/heyclaude-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp"
     },
     {
       "name": "hubspot-mcp-server",
@@ -296,7 +296,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status hubspot",
       "configSnippet": "{\n  \"hubspot\": {\n    \"url\": \"https://mcp.hubspot.com/anthropic\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/hubspot-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/hubspot-mcp-server"
     },
     {
       "name": "hugging-face-mcp-server",
@@ -309,7 +309,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status hugging-face",
       "configSnippet": "{\n  \"huggingface\": {\n    \"url\": \"https://huggingface.co/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/hugging-face-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/hugging-face-mcp-server"
     },
     {
       "name": "intercom-mcp-server",
@@ -322,7 +322,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status intercom",
       "configSnippet": "{\n  \"intercom\": {\n    \"url\": \"https://mcp.intercom.com/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/intercom-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/intercom-mcp-server"
     },
     {
       "name": "invideo-mcp-server",
@@ -335,7 +335,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status invideo",
       "configSnippet": "{\n  \"invideo\": {\n    \"url\": \"https://mcp.invideo.io/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/invideo-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/invideo-mcp-server"
     },
     {
       "name": "jam-mcp-server",
@@ -348,7 +348,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status jam",
       "configSnippet": "{\n  \"jam\": {\n    \"url\": \"https://mcp.jam.dev/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/jam-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/jam-mcp-server"
     },
     {
       "name": "jira-mcp-server",
@@ -361,7 +361,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status jira",
       "configSnippet": "{\n  \"atlassian\": {\n    \"url\": \"https://mcp.atlassian.com/v1/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/jira-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/jira-mcp-server"
     },
     {
       "name": "kubernetes-mcp-server",
@@ -378,7 +378,7 @@
       },
       "installCommand": "claude mcp add kubernetes --env KUBECONFIG=/path/to/your/kubeconfig -- uvx mcp-kubernetes-server && claude mcp list",
       "configSnippet": "{\n  \"kubernetes\": {\n    \"env\": {\n      \"KUBECONFIG\": \"${KUBECONFIG:-~/.kube/config}\"\n    },\n    \"args\": [\n      \"mcp-kubernetes-server\"\n    ],\n    \"command\": \"uvx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/kubernetes-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/kubernetes-mcp-server"
     },
     {
       "name": "linear-mcp-server",
@@ -391,7 +391,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status linear",
       "configSnippet": "{\n  \"linear\": {\n    \"url\": \"https://mcp.linear.app/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/linear-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/linear-mcp-server"
     },
     {
       "name": "memesio-mcp-server",
@@ -412,7 +412,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http memesio https://memesio.com/api/mcp",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"memesio\": {\n      \"type\": \"http\",\n      \"url\": \"https://memesio.com/api/mcp\"\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/memesio-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/memesio-mcp-server"
     },
     {
       "name": "monday-mcp-server",
@@ -425,7 +425,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status monday",
       "configSnippet": "{\n  \"monday\": {\n    \"url\": \"https://mcp.monday.com/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/monday-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/monday-mcp-server"
     },
     {
       "name": "netlify-mcp-server",
@@ -438,7 +438,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status netlify",
       "configSnippet": "{\n  \"netlify\": {\n    \"url\": \"https://netlify-mcp.netlify.app/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/netlify-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/netlify-mcp-server"
     },
     {
       "name": "notion-mcp-server",
@@ -451,7 +451,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status notion",
       "configSnippet": "{\n  \"notion\": {\n    \"url\": \"https://mcp.notion.com/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/notion-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/notion-mcp-server"
     },
     {
       "name": "packrift-mcp-server",
@@ -476,7 +476,7 @@
       },
       "installCommand": "No local install package is required for the hosted endpoint. Configure the remote MCP URL: https://mcp.packrift.com/mcp",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"packrift\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.packrift.com/mcp\"\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/packrift-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/packrift-mcp-server"
     },
     {
       "name": "paypal-mcp-server",
@@ -489,7 +489,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status paypal",
       "configSnippet": "{\n  \"paypal\": {\n    \"url\": \"https://mcp.paypal.com/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/paypal-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/paypal-mcp-server"
     },
     {
       "name": "plaid-mcp-server",
@@ -502,7 +502,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status plaid",
       "configSnippet": "{\n  \"plaid\": {\n    \"url\": \"https://api.dashboard.plaid.com/mcp/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/plaid-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/plaid-mcp-server"
     },
     {
       "name": "postgresql-mcp-server",
@@ -515,7 +515,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp list && claude mcp status postgres",
       "configSnippet": "{\n  \"postgres\": {\n    \"args\": [\n      \"-y\",\n      \"@modelcontextprotocol/server-postgres\",\n      \"postgresql://localhost/mydb\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/postgresql-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/postgresql-mcp-server"
     },
     {
       "name": "prompt-to-asset",
@@ -538,7 +538,7 @@
       },
       "installCommand": "npx -y prompt-to-asset",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"prompt-to-asset\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"prompt-to-asset\"]\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/prompt-to-asset"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/prompt-to-asset"
     },
     {
       "name": "reddit-mcp-buddy",
@@ -555,7 +555,7 @@
       },
       "installCommand": "claude mcp add reddit-buddy -- npx reddit-mcp-buddy && claude mcp list",
       "configSnippet": "{\n  \"reddit\": {\n    \"args\": [\n      \"reddit-mcp-buddy\"\n    ],\n    \"command\": \"npx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/reddit-mcp-buddy"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/reddit-mcp-buddy"
     },
     {
       "name": "redis-mcp-server",
@@ -572,7 +572,7 @@
       },
       "installCommand": "uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0 && claude mcp list",
       "configSnippet": "{\n  \"redis\": {\n    \"args\": [\n      \"--from\",\n      \"git+https://github.com/redis/mcp-redis.git\",\n      \"redis-mcp-server\",\n      \"--url\",\n      \"redis://localhost:6379/0\"\n    ],\n    \"command\": \"uvx\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/redis-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/redis-mcp-server"
     },
     {
       "name": "sentry-mcp-server",
@@ -585,7 +585,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http sentry https://mcp.sentry.dev/mcp && claude mcp list",
       "configSnippet": "{\n  \"sentry\": {\n    \"url\": \"https://mcp.sentry.dev/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/sentry-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/sentry-mcp-server"
     },
     {
       "name": "socket-mcp-server",
@@ -602,7 +602,7 @@
       },
       "installCommand": "claude mcp add --transport http socket https://mcp.socket.dev/ && claude mcp list",
       "configSnippet": "{\n  \"socket\": {\n    \"url\": \"https://mcp.socket.dev/\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/socket-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/socket-mcp-server"
     },
     {
       "name": "legal-fournier-spain-legal-mcp",
@@ -623,7 +623,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"legal-fournier-spain-legal\": {\n      \"type\": \"http\",\n      \"url\": \"https://legalfournier.com/mcp/spain-legal\"\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/legal-fournier-spain-legal-mcp"
     },
     {
       "name": "square-mcp-server",
@@ -636,7 +636,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport sse square https://mcp.squareup.com/sse && claude mcp list",
       "configSnippet": "{\n  \"square\": {\n    \"url\": \"https://mcp.squareup.com/sse\",\n    \"transport\": \"sse\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/square-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/square-mcp-server"
     },
     {
       "name": "stripe-mcp-server",
@@ -649,7 +649,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http stripe https://mcp.stripe.com && claude mcp list",
       "configSnippet": "{\n  \"stripe\": {\n    \"url\": \"https://mcp.stripe.com\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/stripe-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/stripe-mcp-server"
     },
     {
       "name": "stytch-mcp-server",
@@ -662,7 +662,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http stytch http://mcp.stytch.dev/mcp && claude mcp list",
       "configSnippet": "{\n  \"stytch\": {\n    \"url\": \"http://mcp.stytch.dev/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/stytch-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/stytch-mcp-server"
     },
     {
       "name": "vercel-mcp-server",
@@ -675,7 +675,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http vercel https://mcp.vercel.com && claude mcp list",
       "configSnippet": "{\n  \"vercel\": {\n    \"url\": \"https://mcp.vercel.com\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/vercel-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/vercel-mcp-server"
     },
     {
       "name": "workato-mcp-server",
@@ -688,7 +688,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http workato YOUR_WORKATO_MCP_URL && claude mcp list",
       "configSnippet": "{\n  \"workato\": {\n    \"url\": \"https://your-workspace.workato.com/mcp\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/workato-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/workato-mcp-server"
     },
     {
       "name": "xquik-mcp-server",
@@ -708,7 +708,7 @@
       },
       "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"xquik\": {\n      \"command\": \"npx\",\n      \"args\": [\n        \"-y\",\n        \"mcp-remote@0.1.38\",\n        \"https://xquik.com/mcp\",\n        \"--header\",\n        \"x-api-key:${XQUIK_API_KEY}\"\n      ],\n      \"env\": {\n        \"XQUIK_API_KEY\": \"xq_YOUR_KEY_HERE\"\n      }\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/xquik-mcp-server"
     },
     {
       "name": "yield-intelligence-mcp",
@@ -725,7 +725,7 @@
       },
       "installCommand": "claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"yield-intelligence\": {\n      \"url\": \"https://api.intuitek.ai/yield/mcp\",\n      \"transport\": \"sse\"\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/yield-intelligence-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/yield-intelligence-mcp"
     },
     {
       "name": "zapier-mcp-server",
@@ -738,7 +738,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add --transport http zapier YOUR_GENERATED_URL && claude mcp list",
       "configSnippet": "{\n  \"zapier\": {\n    \"url\": \"https://mcp.zapier.com/YOUR_GENERATED_URL\",\n    \"transport\": \"http\"\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/zapier-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/zapier-mcp-server"
     },
     {
       "name": "zyntra-mail",
@@ -761,7 +761,7 @@
       "brandAssetSource": "brandfetch",
       "installCommand": "claude mcp add zyntra-mail --transport http https://mcp.zyntra.app/mcp",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"zyntra-mail\": {\n      \"type\": \"http\",\n      \"url\": \"https://mcp.zyntra.app/mcp\",\n      \"headers\": {\n        \"X-API-Key\": \"YOUR_API_KEY\"\n      }\n    }\n  }\n}",
-      "heyclaudeUrl": "https://heyclau.de/mcp/zyntra-mail"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/zyntra-mail"
     }
   ]
 }

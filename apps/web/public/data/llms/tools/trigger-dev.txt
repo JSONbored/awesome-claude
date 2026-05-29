@@ -1,5 +1,5 @@
 # Trigger.dev
-URL: https://heyclau.de/tools/trigger-dev
+URL: https://heyclau.de/entry/tools/trigger-dev
 Category: tools
 Author: Trigger.dev
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://trigger.dev/docs
 Repository: https://github.com/triggerdotdev/trigger.dev
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/trigger-dev
+- Canonical URL: https://heyclau.de/entry/tools/trigger-dev
 - Source URLs: https://trigger.dev/docs, https://github.com/triggerdotdev/trigger.dev, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx, https://trigger.dev
 - Brand: Trigger.dev
 - Brand domain: trigger.dev

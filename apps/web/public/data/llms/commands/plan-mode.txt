@@ -1,12 +1,12 @@
 # Plan Mode & Extended Thinking for Claude Code
-URL: https://heyclau.de/commands/plan-mode
+URL: https://heyclau.de/entry/commands/plan-mode
 Category: commands
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/extended-thinking
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/plan-mode.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/plan-mode
+- Canonical URL: https://heyclau.de/entry/commands/plan-mode
 - Source URLs: https://docs.claude.com/en/docs/claude-code/extended-thinking, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/plan-mode.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

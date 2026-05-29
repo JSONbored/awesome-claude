@@ -1,5 +1,5 @@
 # Mintlify AI Documentation Automation Skill
-URL: https://heyclau.de/skills/mintlify-documentation-automation
+URL: https://heyclau.de/entry/skills/mintlify-documentation-automation
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://mintlify.com/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mintlify-documentation-automation.mdx
 Download: /downloads/skills/mintlify-documentation-automation.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/mintlify-documentation-automation
+- Canonical URL: https://heyclau.de/entry/skills/mintlify-documentation-automation
 - Source URLs: https://mintlify.com/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mintlify-documentation-automation.mdx
 - Package URL: /downloads/skills/mintlify-documentation-automation.zip
 - Package SHA256: 23f581d57c2ddb576db5b593baf9f02b5de5314dda4042592ee3ed366bdc27c9

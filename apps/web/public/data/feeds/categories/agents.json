@@ -58,7 +58,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/agent-skills-framework-engineer",
+      "canonicalUrl": "https://heyclau.de/entry/agents/agent-skills-framework-engineer",
       "llmsUrl": "https://heyclau.de/data/llms/agents/agent-skills-framework-engineer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/agent-skills-framework-engineer",
       "trustSignals": {
@@ -132,7 +132,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/ai-code-review-security-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/ai-code-review-security-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/ai-code-review-security-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/ai-code-review-security-agent",
       "trustSignals": {
@@ -205,7 +205,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/ai-devops-automation-engineer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/ai-devops-automation-engineer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/ai-devops-automation-engineer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/ai-devops-automation-engineer-agent",
       "trustSignals": {
@@ -278,7 +278,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/api-builder-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/api-builder-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/api-builder-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/api-builder-agent",
       "trustSignals": {
@@ -354,7 +354,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/autogen-conversation-agent-builder",
+      "canonicalUrl": "https://heyclau.de/entry/agents/autogen-conversation-agent-builder",
       "llmsUrl": "https://heyclau.de/data/llms/agents/autogen-conversation-agent-builder.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/autogen-conversation-agent-builder",
       "trustSignals": {
@@ -427,7 +427,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/backend-architect-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/backend-architect-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/backend-architect-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/backend-architect-agent",
       "trustSignals": {
@@ -501,7 +501,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/claude-haiku-45-speed-optimizer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/claude-haiku-45-speed-optimizer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/claude-haiku-45-speed-optimizer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/claude-haiku-45-speed-optimizer-agent",
       "trustSignals": {
@@ -576,7 +576,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/claude-mcp-skills-integration-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/claude-mcp-skills-integration-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/claude-mcp-skills-integration-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/claude-mcp-skills-integration-agent",
       "trustSignals": {
@@ -652,7 +652,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/claude-md-knowledge-manager-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/claude-md-knowledge-manager-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/claude-md-knowledge-manager-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/claude-md-knowledge-manager-agent",
       "trustSignals": {
@@ -731,7 +731,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/cloud-infrastructure-architect-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/cloud-infrastructure-architect-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/cloud-infrastructure-architect-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/cloud-infrastructure-architect-agent",
       "trustSignals": {
@@ -804,7 +804,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/code-reviewer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/code-reviewer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/code-reviewer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/code-reviewer-agent",
       "trustSignals": {
@@ -882,7 +882,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/codebase-migration-refactoring-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/codebase-migration-refactoring-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/codebase-migration-refactoring-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/codebase-migration-refactoring-agent",
       "trustSignals": {
@@ -957,7 +957,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/context-window-optimizer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/context-window-optimizer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/context-window-optimizer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/context-window-optimizer-agent",
       "trustSignals": {
@@ -1032,7 +1032,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/data-pipeline-engineering-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/data-pipeline-engineering-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/data-pipeline-engineering-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/data-pipeline-engineering-agent",
       "trustSignals": {
@@ -1107,7 +1107,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/database-expert",
+      "canonicalUrl": "https://heyclau.de/entry/agents/database-expert",
       "llmsUrl": "https://heyclau.de/data/llms/agents/database-expert.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/database-expert",
       "trustSignals": {
@@ -1181,7 +1181,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/database-specialist-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/database-specialist-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/database-specialist-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/database-specialist-agent",
       "trustSignals": {
@@ -1254,7 +1254,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/debugging-assistant-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/debugging-assistant-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/debugging-assistant-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/debugging-assistant-agent",
       "trustSignals": {
@@ -1332,7 +1332,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/devops-sre-expert",
+      "canonicalUrl": "https://heyclau.de/entry/agents/devops-sre-expert",
       "llmsUrl": "https://heyclau.de/data/llms/agents/devops-sre-expert.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/devops-sre-expert",
       "trustSignals": {
@@ -1405,7 +1405,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/domain-specialist-ai-agents",
+      "canonicalUrl": "https://heyclau.de/entry/agents/domain-specialist-ai-agents",
       "llmsUrl": "https://heyclau.de/data/llms/agents/domain-specialist-ai-agents.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/domain-specialist-ai-agents",
       "trustSignals": {
@@ -1478,7 +1478,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/extended-thinking-orchestrator",
+      "canonicalUrl": "https://heyclau.de/entry/agents/extended-thinking-orchestrator",
       "llmsUrl": "https://heyclau.de/data/llms/agents/extended-thinking-orchestrator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/extended-thinking-orchestrator",
       "trustSignals": {
@@ -1552,7 +1552,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/frontend-specialist-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/frontend-specialist-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/frontend-specialist-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/frontend-specialist-agent",
       "trustSignals": {
@@ -1627,7 +1627,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/full-stack-ai-development-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/full-stack-ai-development-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/full-stack-ai-development-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/full-stack-ai-development-agent",
       "trustSignals": {
@@ -1704,7 +1704,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/github-copilot-interop-bridge",
+      "canonicalUrl": "https://heyclau.de/entry/agents/github-copilot-interop-bridge",
       "llmsUrl": "https://heyclau.de/data/llms/agents/github-copilot-interop-bridge.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/github-copilot-interop-bridge",
       "trustSignals": {
@@ -1776,7 +1776,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/life-sciences-research-specialist",
+      "canonicalUrl": "https://heyclau.de/entry/agents/life-sciences-research-specialist",
       "llmsUrl": "https://heyclau.de/data/llms/agents/life-sciences-research-specialist.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/life-sciences-research-specialist",
       "trustSignals": {
@@ -1852,7 +1852,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/multi-agent-orchestration-specialist",
+      "canonicalUrl": "https://heyclau.de/entry/agents/multi-agent-orchestration-specialist",
       "llmsUrl": "https://heyclau.de/data/llms/agents/multi-agent-orchestration-specialist.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/multi-agent-orchestration-specialist",
       "trustSignals": {
@@ -1925,7 +1925,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/parallel-subagent-distributor",
+      "canonicalUrl": "https://heyclau.de/entry/agents/parallel-subagent-distributor",
       "llmsUrl": "https://heyclau.de/data/llms/agents/parallel-subagent-distributor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/parallel-subagent-distributor",
       "trustSignals": {
@@ -1999,7 +1999,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/performance-optimizer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/performance-optimizer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/performance-optimizer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/performance-optimizer-agent",
       "trustSignals": {
@@ -2072,7 +2072,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/plugin-ecosystem-architect",
+      "canonicalUrl": "https://heyclau.de/entry/agents/plugin-ecosystem-architect",
       "llmsUrl": "https://heyclau.de/data/llms/agents/plugin-ecosystem-architect.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/plugin-ecosystem-architect",
       "trustSignals": {
@@ -2144,7 +2144,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/product-management-ai-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/product-management-ai-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/product-management-ai-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/product-management-ai-agent",
       "trustSignals": {
@@ -2217,7 +2217,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/production-reliability-engineer",
+      "canonicalUrl": "https://heyclau.de/entry/agents/production-reliability-engineer",
       "llmsUrl": "https://heyclau.de/data/llms/agents/production-reliability-engineer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/production-reliability-engineer",
       "trustSignals": {
@@ -2289,7 +2289,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/prompt-optimization-specialist",
+      "canonicalUrl": "https://heyclau.de/entry/agents/prompt-optimization-specialist",
       "llmsUrl": "https://heyclau.de/data/llms/agents/prompt-optimization-specialist.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/prompt-optimization-specialist",
       "trustSignals": {
@@ -2366,7 +2366,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/semantic-kernel-enterprise-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/semantic-kernel-enterprise-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/semantic-kernel-enterprise-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/semantic-kernel-enterprise-agent",
       "trustSignals": {
@@ -2440,7 +2440,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/slash-command-orchestrator-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/slash-command-orchestrator-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/slash-command-orchestrator-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/slash-command-orchestrator-agent",
       "trustSignals": {
@@ -2515,7 +2515,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/subagent-factory-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/subagent-factory-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/subagent-factory-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/subagent-factory-agent",
       "trustSignals": {
@@ -2587,7 +2587,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/technical-documentation-writer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/technical-documentation-writer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/technical-documentation-writer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/technical-documentation-writer-agent",
       "trustSignals": {
@@ -2661,7 +2661,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/test-automation-engineer-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/test-automation-engineer-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/test-automation-engineer-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/test-automation-engineer-agent",
       "trustSignals": {
@@ -2735,7 +2735,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/token-cost-budget-optimizer",
+      "canonicalUrl": "https://heyclau.de/entry/agents/token-cost-budget-optimizer",
       "llmsUrl": "https://heyclau.de/data/llms/agents/token-cost-budget-optimizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/token-cost-budget-optimizer",
       "trustSignals": {
@@ -2807,7 +2807,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/ui-ux-design-expert-agent",
+      "canonicalUrl": "https://heyclau.de/entry/agents/ui-ux-design-expert-agent",
       "llmsUrl": "https://heyclau.de/data/llms/agents/ui-ux-design-expert-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/ui-ux-design-expert-agent",
       "trustSignals": {
@@ -2880,7 +2880,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/agents/web-async-agent-coordinator",
+      "canonicalUrl": "https://heyclau.de/entry/agents/web-async-agent-coordinator",
       "llmsUrl": "https://heyclau.de/data/llms/agents/web-async-agent-coordinator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/agents/web-async-agent-coordinator",
       "trustSignals": {

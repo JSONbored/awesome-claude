@@ -1,5 +1,5 @@
 # Git-Cliff Release Changelog Capability Pack Skill
-URL: https://heyclau.de/skills/git-cliff-release-changelog-capability-pack
+URL: https://heyclau.de/entry/skills/git-cliff-release-changelog-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -7,7 +7,7 @@ Documentation: https://git-cliff.org/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx
 Download: /downloads/skills/git-cliff-release-changelog-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/git-cliff-release-changelog-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/git-cliff-release-changelog-capability-pack
 - Source URLs: https://git-cliff.org/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx
 - Package URL: /downloads/skills/git-cliff-release-changelog-capability-pack.zip
 - Package SHA256: 88297534195c8e594486b5e5c230f5c99b1053118e534e7dbf598514e79a4741

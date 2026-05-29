@@ -113,6 +113,12 @@ function FeedsPage() {
             blurb="Same content as the RSS feed in Atom 1.0 format."
             segment="all"
           />
+          <FeedRow
+            href="/feeds/trending.xml"
+            label="Trending"
+            blurb="Entries with current public community, vote, and intent signals when live signals are available."
+            segment="trending"
+          />
         </div>
       </section>
 

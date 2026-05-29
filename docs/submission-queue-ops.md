@@ -123,10 +123,10 @@ Maintainers still review the generated PR before merge.
   failure, and missing required safety/privacy notes for sensitive behavior.
   It emits concise annotations only when it fails.
 - Installed external security apps provide contributor and repo trust signals.
-  Superagent Marketplace checks (`Contributor trust` and `Security scan`) are
-  the primary low-noise contributor security layer, while advisory Superagent
-  CLI and Pipelock workflows are non-required until they prove stable on
-  HeyClaude PRs.
+  The Superagent Marketplace `Superagent Security Scan` is the required
+  contributor security layer. The local Superagent CLI workflow and Pipelock
+  remain advisory/manual unless maintainers deliberately promote them in branch
+  protection.
 - Product-shaped tools, hosted apps, services, SaaS products, subscriptions, and
   sponsored/featured placement interest route through
   `https://heyclau.de/tools/submit` unless a maintainer explicitly approves a

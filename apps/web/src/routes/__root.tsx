@@ -13,7 +13,6 @@ import { ThemeProvider } from "@/lib/theme";
 import { CompareProvider } from "@/lib/compare";
 import { WatchProvider } from "@/lib/watch";
 import { RecentsProvider } from "@/lib/recents";
-import { generateAlerts } from "@/mocks/alerts";
 import { TopBar, Footer } from "@/components/app-shell";
 import { ComparisonTray } from "@/components/comparison-tray";
 import { CompareDrawer } from "@/components/compare-drawer";
@@ -150,7 +149,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <WatchProvider alertGenerator={generateAlerts}>
+        <WatchProvider>
           <RecentsProvider>
             <CompareProvider>
               <ShortcutsProvider>

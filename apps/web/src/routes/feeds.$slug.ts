@@ -8,6 +8,7 @@ import {
   origin,
   respondFeed,
   SITE_NAME,
+  trendingItems,
   type SavedSearchQuery,
 } from "@/lib/feeds";
 import type { Category } from "@/types/registry";
@@ -15,13 +16,12 @@ import type { Category } from "@/types/registry";
 const CHANGELOG_STREAMS = ["release", "policy", "security"] as const;
 type ChangelogStream = (typeof CHANGELOG_STREAMS)[number];
 
-export const Route = createFileRoute("/feeds/$")({
+export const Route = createFileRoute("/feeds/$slug")({
   server: {
     handlers: {
       GET: async ({ request, params }) => {
-        const splat = (params as { _splat?: string })._splat ?? "";
-        const slug = splat.replace(/\.xml$/, "");
-        if (!slug || splat === slug) throw notFound();
+        const slug = params.slug.replace(/\.xml$/, "");
+        if (slug === params.slug) throw notFound();
 
         const base = origin(request);
         const url = new URL(request.url);
@@ -52,6 +52,10 @@ export const Route = createFileRoute("/feeds/$")({
           items = applySavedSearch(q);
           title = `${SITE_NAME} — ${label}`;
           description = `Live results for the saved search "${label}".`;
+        } else if (slug === "trending") {
+          items = await trendingItems();
+          title = `${SITE_NAME} — trending`;
+          description = "Registry entries with current public community, vote, and intent signals.";
         } else {
           throw notFound();
         }

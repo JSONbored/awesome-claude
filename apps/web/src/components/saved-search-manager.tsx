@@ -40,7 +40,7 @@ function applyToBrowseSearch(s: SavedSearch) {
     trust: s.trust ?? "",
     source: s.source ?? "",
     platform: s.platform ?? "",
-    sort: (s.sort as "popular" | "newest" | "title" | "trending") ?? "popular",
+    sort: (s.sort as "popular" | "newest" | "title") ?? "popular",
     view: "row" as const,
     compare: "",
   };

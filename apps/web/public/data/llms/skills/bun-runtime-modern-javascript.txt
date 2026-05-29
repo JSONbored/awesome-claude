@@ -1,5 +1,5 @@
 # Bun JavaScript Runtime Development Skill
-URL: https://heyclau.de/skills/bun-runtime-modern-javascript
+URL: https://heyclau.de/entry/skills/bun-runtime-modern-javascript
 Category: skills
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://bun.sh/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/bun-runtime-modern-javascript.mdx
 Download: /downloads/skills/bun-runtime-modern-javascript.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/bun-runtime-modern-javascript
+- Canonical URL: https://heyclau.de/entry/skills/bun-runtime-modern-javascript
 - Source URLs: https://bun.sh/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/bun-runtime-modern-javascript.mdx
 - Package URL: /downloads/skills/bun-runtime-modern-javascript.zip
 - Package SHA256: d9c1c744531414228b49e8915b9cf9d652c874f79cb3845e8b2bc2d9d4dac381

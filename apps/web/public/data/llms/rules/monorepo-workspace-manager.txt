@@ -1,12 +1,12 @@
 # Monorepo Workspace Manager - CLAUDE.md Rules for Claude Code
-URL: https://heyclau.de/rules/monorepo-workspace-manager
+URL: https://heyclau.de/entry/rules/monorepo-workspace-manager
 Category: rules
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://turbo.build/repo/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/monorepo-workspace-manager.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/monorepo-workspace-manager
+- Canonical URL: https://heyclau.de/entry/rules/monorepo-workspace-manager
 - Source URLs: https://turbo.build/repo/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/monorepo-workspace-manager.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

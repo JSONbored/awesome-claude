@@ -2,28 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ShieldCheck, GitBranch, FileText, BadgeCheck, AlertTriangle, ChevronDown, MessageSquareWarning } from "lucide-react";
 import { useState } from "react";
 import { CATEGORIES } from "@/types/registry";
-import { ENTRIES, QUALITY_STATS } from "@/mocks/entries";
-import { ARTIFACT_CONTRACTS, CHANGELOG } from "@/mocks/changelog";
+import { ENTRIES, QUALITY_STATS } from "@/data/entries";
+import { ARTIFACT_CONTRACTS, CHANGELOG } from "@/data/changelog";
 import { FeedHealthPanel } from "@/components/feed-health-panel";
-import { Sparkline } from "@/components/sparkline";
 import { CountUp } from "@/components/count-up";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { cn } from "@/lib/utils";
-
-
-// Deterministic faux 14-build trend per metric, seeded by stat value.
-function trend(seed: number, target: number): number[] {
-  const out: number[] = [];
-  let v = Math.max(0, target - 6);
-  for (let i = 0; i < 14; i++) {
-    v += (((seed * (i + 1)) % 5) - 1);
-    if (v < 0) v = 0;
-    if (i === 13) v = target;
-    out.push(v);
-  }
-  return out;
-}
 
 export const Route = createFileRoute("/quality")({
   head: () => ({
@@ -87,10 +72,10 @@ function QualityPage() {
       </p>
 
       <div className="mt-10 grid gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-4">
-        <Stat icon={BadgeCheck} label="Total entries" value={total} percent={100} seed={3} />
-        <Stat icon={GitBranch} label="Source-backed" value={QUALITY_STATS.sourceBacked} percent={pct(QUALITY_STATS.sourceBacked)} seed={7} />
-        <Stat icon={ShieldCheck} label="Safety notes present" value={QUALITY_STATS.withSafetyNotes} percent={pct(QUALITY_STATS.withSafetyNotes)} seed={11} />
-        <Stat icon={FileText} label="Reviewed by maintainer" value={QUALITY_STATS.reviewed} percent={pct(QUALITY_STATS.reviewed)} seed={13} />
+        <Stat icon={BadgeCheck} label="Total entries" value={total} percent={100} />
+        <Stat icon={GitBranch} label="Source-backed" value={QUALITY_STATS.sourceBacked} percent={pct(QUALITY_STATS.sourceBacked)} />
+        <Stat icon={ShieldCheck} label="Safety notes present" value={QUALITY_STATS.withSafetyNotes} percent={pct(QUALITY_STATS.withSafetyNotes)} />
+        <Stat icon={FileText} label="Reviewed by maintainer" value={QUALITY_STATS.reviewed} percent={pct(QUALITY_STATS.reviewed)} />
       </div>
 
       <h2 className="mt-12 h-display-2 text-ink text-balance">Coverage by category</h2>
@@ -279,13 +264,11 @@ function Stat({
   label,
   value,
   percent,
-  seed,
 }: {
   icon: React.ElementType;
   label: string;
   value: number;
   percent: number;
-  seed: number;
 }) {
   return (
     <div className="bg-surface p-5">
@@ -296,16 +279,9 @@ function Stat({
       <div className="mt-3 font-display text-3xl font-semibold tabular-nums text-ink">
         <CountUp value={value} />
       </div>
-      <div className="flex items-end justify-between gap-2">
+      <div className="mt-1 flex items-end justify-between gap-2">
         <div className="text-xs text-ink-muted">{label}</div>
-        <Sparkline
-          data={trend(seed, value)}
-          width={64}
-          height={18}
-          ariaLabel={`${label} trend, last 14 builds`}
-          strokeClassName="stroke-accent"
-          fillClassName="fill-accent/15"
-        />
+        <span className="font-mono text-[11px] text-ink-subtle">current snapshot</span>
       </div>
     </div>
   );

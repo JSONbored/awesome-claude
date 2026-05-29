@@ -2,27 +2,54 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
-import { Flame, TrendingUp, ArrowUpRight, ArrowRight, Rss, Star, Clock, Info } from "lucide-react";
-import { search } from "@/mocks/search";
+import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
+import { BRIEF_ISSUES } from "@/data/entries";
+import { getEntry, search } from "@/data/search";
 import { CategoryPill, SourceBadge, TrustBadge } from "@/components/badges";
-import { CATEGORIES } from "@/types/registry";
-import { BRIEF_ISSUES } from "@/mocks/entries";
-import { formatCompact, timeAgo } from "@/lib/format";
-import { cn } from "@/lib/utils";
-import { Sparkline } from "@/components/sparkline";
-import { TrendingPodium, sparklineFor } from "@/components/trending-podium";
+import { TrendingPodium } from "@/components/trending-podium";
 import { ShareMenu } from "@/components/share-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { CATEGORIES, type Entry } from "@/types/registry";
+import { formatCompact } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 const trendingSchema = z.object({
   window: fallback(z.enum(["7d", "30d", "all"]), "7d").default("7d"),
   category: fallback(z.string(), "").default(""),
 });
+
+type SignalState = {
+  votes?: boolean;
+  community?: boolean;
+  intent?: boolean;
+};
+
+type TrendingEntry = Entry & {
+  trendingScore?: number;
+  trendingReasons?: string[];
+};
+
+type TrendingPayload = {
+  signalsAvailable?: SignalState;
+  entries?: Array<{
+    category: string;
+    slug: string;
+    score?: number;
+    reasons?: string[];
+  }>;
+};
+
+type TrendingMode = "live" | "fallback" | "unavailable";
+
+const REASON_LABELS: Record<string, string> = {
+  upvotes: "reader upvotes",
+  community_used: "community usage reports",
+  community_works: "community works reports",
+  recent_intent: "recent install/copy intent",
+  first_party_package: "first-party package metadata",
+  production_verified: "production verification metadata",
+  source_backed_fallback: "source-backed fallback ranking",
+};
 
 export const Route = createFileRoute("/trending")({
   validateSearch: zodValidator(trendingSchema),
@@ -32,41 +59,117 @@ export const Route = createFileRoute("/trending")({
       {
         name: "description",
         content:
-          "Trending Claude Code MCP servers, agents, skills, hooks, and commands this week.",
+          "Trending Claude Code MCP servers, agents, skills, hooks, and commands from live community and intent signals.",
       },
     ],
   }),
   component: TrendingPage,
 });
 
-function MovementCell({ score, window }: { score: number; window: "7d" | "30d" | "all" }) {
-  const icon =
-    score > 20 ? (
-      <TrendingUp className="h-3.5 w-3.5 text-trust-trusted" aria-label="Rising fast" />
-    ) : score > 0 ? (
-      <ArrowUpRight className="h-3.5 w-3.5 text-trust-trusted" aria-label="Rising" />
-    ) : (
-      <ArrowRight className="h-3.5 w-3.5 text-ink-subtle" aria-label="Steady" />
-    );
-  const delta = score > 0 ? `+${score}` : `${score}`;
+function hasLiveSignals(signals?: SignalState) {
+  return Boolean(signals?.votes || signals?.community || signals?.intent);
+}
+
+function fallbackRows(): TrendingEntry[] {
+  return search({ sort: "popular" })
+    .filter((entry) => entry.source !== "unverified")
+    .slice(0, 100)
+    .map((entry) => ({
+      ...entry,
+      trendingScore: undefined,
+      trendingReasons: ["source_backed_fallback"],
+    }));
+}
+
+function rowsFromPayload(payload: TrendingPayload): TrendingEntry[] {
+  const rows: TrendingEntry[] = [];
+  for (const item of payload.entries ?? []) {
+    const entry = getEntry(item.category, item.slug);
+    if (!entry) continue;
+    rows.push({
+      ...entry,
+      trendingScore: Math.round(Number(item.score ?? 0)),
+      trendingReasons: item.reasons ?? [],
+    });
+  }
+  return rows;
+}
+
+function useTrendingRows() {
+  const [rows, setRows] = React.useState<TrendingEntry[]>([]);
+  const [mode, setMode] = React.useState<TrendingMode>("unavailable");
+  const [signals, setSignals] = React.useState<SignalState>({});
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      try {
+        const response = await fetch("/api/registry/trending?limit=100", {
+          headers: { accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`trending API returned ${response.status}`);
+        const payload = (await response.json()) as TrendingPayload;
+        const live = hasLiveSignals(payload.signalsAvailable);
+        const liveRows = rowsFromPayload(payload);
+        if (!cancelled) {
+          setSignals(payload.signalsAvailable ?? {});
+          setRows(live && liveRows.length > 0 ? liveRows : fallbackRows());
+          setMode(live && liveRows.length > 0 ? "live" : "fallback");
+        }
+      } catch {
+        if (!cancelled) {
+          setSignals({});
+          setRows(fallbackRows());
+          setMode("fallback");
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return { rows, mode, signals, loading };
+}
+
+function MovementCell({ entry, mode }: { entry: TrendingEntry; mode: TrendingMode }) {
+  const score = entry.trendingScore ?? 0;
+  const reasons = entry.trendingReasons ?? [];
+  const live = mode === "live";
   return (
     <TooltipProvider delayDuration={150}>
       <Tooltip>
         <TooltipTrigger asChild>
           <button
             type="button"
-            className="inline-flex items-center gap-1 font-mono text-sm text-trust-trusted tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 rounded-sm"
-            aria-label="Why is this trending?"
+            className={cn(
+              "inline-flex items-center gap-1 rounded-sm font-mono text-sm tabular-nums focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+              live ? "text-trust-trusted" : "text-ink-muted",
+            )}
+            aria-label="Why is this ranked here?"
           >
-            {icon}
-            <span>{window === "all" ? "—" : delta}</span>
+            {live ? <TrendingUp className="h-3.5 w-3.5" /> : <ArrowRight className="h-3.5 w-3.5" />}
+            <span>{live ? `+${score}` : "static"}</span>
             <Info className="h-3 w-3 text-ink-subtle" />
           </button>
         </TooltipTrigger>
-        <TooltipContent side="left" className="max-w-[220px] bg-ink text-background">
+        <TooltipContent side="left" className="max-w-[240px] bg-ink text-background">
           <div className="space-y-1 text-[11px]">
-            <div className="font-medium">Why is this trending?</div>
-            <div className="opacity-80">Install velocity, upvote delta, and source-backed weight over the selected window.</div>
+            <div className="font-medium">{live ? "Live ranking inputs" : "Fallback ranking"}</div>
+            {reasons.length ? (
+              <ul className="space-y-0.5 opacity-80">
+                {reasons.map((reason) => (
+                  <li key={reason}>{REASON_LABELS[reason] ?? reason}</li>
+                ))}
+              </ul>
+            ) : (
+              <div className="opacity-80">No public signal reasons were reported.</div>
+            )}
           </div>
         </TooltipContent>
       </Tooltip>
@@ -78,36 +181,23 @@ function TrendingPage() {
   const sp = Route.useSearch();
   const navigate = Route.useNavigate();
   const latestBrief = BRIEF_ISSUES[0];
+  const { rows: allRows, mode, signals, loading } = useTrendingRows();
 
-  const all =
-    sp.window === "all"
-      ? search({ sort: "popular" }).slice(0, 50)
-      : search({ sort: "trending" }).filter((e) => (e.trending ?? 0) > 0);
-  const rows = sp.category ? all.filter((e) => e.category === sp.category) : all;
+  const rows = sp.category ? allRows.filter((entry) => entry.category === sp.category) : allRows;
   const podium = rows.slice(0, 3);
   const list = rows.slice(3);
+  const liveSignals = hasLiveSignals(signals);
 
-  // Per-category counts for chip strip
   const countsByCategory = React.useMemo(() => {
-    const m: Record<string, number> = {};
-    for (const e of all) m[e.category] = (m[e.category] ?? 0) + 1;
-    return m;
-  }, [all]);
-
-  // "Fell off" rail: deterministic small set from popular-but-not-trending
-  const fellOff = React.useMemo(() => {
-    const trendingSet = new Set(all.map((e) => `${e.category}/${e.slug}`));
-    return search({ sort: "popular" })
-      .filter((e) => !trendingSet.has(`${e.category}/${e.slug}`))
-      .slice(0, 3);
-  }, [all]);
+    const counts: Record<string, number> = {};
+    for (const entry of allRows) counts[entry.category] = (counts[entry.category] ?? 0) + 1;
+    return counts;
+  }, [allRows]);
 
   const set = (patch: Partial<typeof sp>) =>
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
 
-  const shareUrl = `/trending?window=${sp.window}${sp.category ? `&category=${sp.category}` : ""}`;
-  const windowLabel =
-    sp.window === "all" ? "all-time" : sp.window === "30d" ? "last 30 days" : "last 7 days";
+  const shareUrl = `/trending${sp.category ? `?category=${sp.category}` : ""}`;
 
   return (
     <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6">
@@ -115,18 +205,24 @@ function TrendingPage() {
         <div>
           <div className="flex items-center gap-2">
             <Flame className="h-4 w-4 text-trust-limited" />
-            <span className="eyebrow">Trending · {windowLabel}</span>
+            <span className="eyebrow">Trending · live registry signals</span>
           </div>
           <h1 className="mt-2 h-display-1 text-ink text-balance">
             What developers are pinning
           </h1>
           <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-            Ranked by install velocity, upvote movement, and source-backed signal.{" "}
-            <span className="font-mono text-xs text-ink-subtle">
-              {rows.length} resources · updated{" "}
-              {timeAgo(new Date(Date.now() - 12 * 60_000).toISOString())}
+            Ranked by public upvotes, community usage reports, recent install/copy intent, and
+            source-backed trust signals when those live inputs are available.
+            <span className="ml-1 font-mono text-xs text-ink-subtle">
+              {rows.length} resources
             </span>
           </p>
+          {mode === "fallback" && (
+            <div className="mt-3 max-w-2xl rounded-lg border border-border bg-surface px-3 py-2 text-xs text-ink-muted">
+              Live trending signals are unavailable or empty right now, so this view is showing
+              source-backed popular entries instead of simulated momentum.
+            </div>
+          )}
           {latestBrief && (
             <Link
               to="/brief"
@@ -139,7 +235,7 @@ function TrendingPage() {
         <div className="flex items-center gap-2">
           <ShareMenu
             url={shareUrl}
-            title={`Trending Claude workflows · ${windowLabel}`}
+            title="Trending Claude workflows"
             description="Live ranking of MCP servers, agents, skills, and commands."
           />
           <a
@@ -151,37 +247,22 @@ function TrendingPage() {
         </div>
       </div>
 
-      {/* Sticky toolbar */}
       <div className="sticky top-16 z-20 -mx-4 mt-8 border-y border-border bg-background/95 px-4 py-3 backdrop-blur sm:-mx-6 sm:px-6">
         <div className="flex flex-wrap items-center gap-3">
-          <div
-            className="inline-flex overflow-hidden rounded-md border border-border"
-            role="radiogroup"
-            aria-label="Time window"
-          >
-            {(["7d", "30d", "all"] as const).map((w) => (
-              <button
-                key={w}
-                type="button"
-                onClick={() => set({ window: w })}
-                aria-pressed={sp.window === w}
-                className={cn(
-                  "px-2.5 py-1 text-xs font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
-                  sp.window === w
-                    ? "bg-ink text-background"
-                    : "bg-surface text-ink-muted hover:text-ink",
-                )}
-              >
-                {w === "all" ? "All-time" : w}
-              </button>
-            ))}
+          <div className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle">
+            <Clock className="h-3 w-3" />
+            {loading
+              ? "loading signals"
+              : liveSignals
+                ? "live D1/community/intent signals"
+                : "source-backed fallback"}
           </div>
-          <div className="ml-auto inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle">
-            <Clock className="h-3 w-3" /> updated 12m ago
+          <div className="ml-auto text-[11px] text-ink-subtle">
+            Votes {signals.votes ? "on" : "off"} · Community {signals.community ? "on" : "off"} · Intent{" "}
+            {signals.intent ? "on" : "off"}
           </div>
         </div>
 
-        {/* Category chip strip with counts */}
         <div className="relative mt-3 -mx-1">
           <div className="flex gap-1.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
@@ -195,27 +276,27 @@ function TrendingPage() {
                   : "border-border bg-surface text-ink-muted hover:text-ink",
               )}
             >
-              All · {all.length}
+              All · {allRows.length}
             </button>
-            {CATEGORIES.map((c) => {
-              const n = countsByCategory[c.id] ?? 0;
-              const active = sp.category === c.id;
+            {CATEGORIES.map((category) => {
+              const count = countsByCategory[category.id] ?? 0;
+              const active = sp.category === category.id;
               return (
                 <button
-                  key={c.id}
+                  key={category.id}
                   type="button"
-                  disabled={n === 0 && !active}
-                  onClick={() => set({ category: active ? "" : c.id })}
+                  disabled={count === 0 && !active}
+                  onClick={() => set({ category: active ? "" : category.id })}
                   aria-pressed={active}
                   className={cn(
                     "shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
                     active
                       ? "border-ink bg-ink text-background"
                       : "border-border bg-surface text-ink-muted hover:text-ink",
-                    n === 0 && !active && "opacity-40",
+                    count === 0 && !active && "opacity-40",
                   )}
                 >
-                  {c.label} <span className="text-ink-subtle">· {n}</span>
+                  {category.label} <span className="text-ink-subtle">· {count}</span>
                 </button>
               );
             })}
@@ -224,16 +305,15 @@ function TrendingPage() {
         </div>
       </div>
 
-      {/* Podium */}
       {podium.length > 0 && <TrendingPodium entries={podium} />}
 
       {rows.length === 0 ? (
         <div className="mt-12 flex flex-col items-center gap-3 rounded-lg border border-dashed border-border p-12 text-center">
           <div className="font-display text-lg font-semibold text-ink">
-            No trending resources in this slice
+            No resources in this slice
           </div>
           <p className="max-w-sm text-sm text-ink-muted">
-            Try a wider window or another category.
+            Try another category or come back when live signals have new activity.
           </p>
           <button
             type="button"
@@ -245,95 +325,46 @@ function TrendingPage() {
         </div>
       ) : list.length > 0 ? (
         <ol className="mt-6 overflow-hidden rounded-xl border border-border bg-surface">
-          {list.map((e, i) => (
+          {list.map((entry, index) => (
             <li
-              key={`${e.category}/${e.slug}`}
-              className="grid grid-cols-[48px_1fr_auto] items-center gap-4 border-b border-border px-5 py-4 last:border-0 hover:bg-surface-2 sm:grid-cols-[56px_1fr_90px_140px_auto]"
+              key={`${entry.category}/${entry.slug}`}
+              className="grid grid-cols-[48px_1fr_auto] items-center gap-4 border-b border-border px-5 py-4 last:border-0 hover:bg-surface-2 sm:grid-cols-[56px_1fr_120px_auto]"
             >
               <div className="font-display text-3xl font-semibold tabular-nums text-ink-subtle">
-                {String(i + 4).padStart(2, "0")}
+                {String(index + 4).padStart(2, "0")}
               </div>
               <Link
                 to="/entry/$category/$slug"
-                params={{ category: e.category, slug: e.slug }}
+                params={{ category: entry.category, slug: entry.slug }}
                 className="min-w-0 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
               >
                 <div className="flex flex-wrap items-center gap-2">
-                  <CategoryPill>{e.category}</CategoryPill>
-                  <TrustBadge level={e.trust} />
-                  <SourceBadge status={e.source} />
+                  <CategoryPill>{entry.category}</CategoryPill>
+                  <TrustBadge level={entry.trust} />
+                  <SourceBadge status={entry.source} />
                 </div>
                 <div className="mt-1 font-display text-base font-semibold text-ink hover:underline">
-                  {e.title}
+                  {entry.title}
                 </div>
-                <p className="line-clamp-1 text-sm text-ink-muted">{e.description}</p>
+                <p className="line-clamp-1 text-sm text-ink-muted">{entry.description}</p>
               </Link>
-              <div className="hidden sm:block">
-                <Sparkline
-                  data={sparklineFor(e)}
-                  width={80}
-                  height={22}
-                  strokeClassName="stroke-trust-trusted"
-                  fillClassName="fill-trust-trusted/10"
-                  ariaLabel={`Momentum for ${e.title}`}
-                />
-              </div>
               <div className="hidden flex-col items-end gap-0.5 font-mono text-xs text-ink-muted tabular-nums sm:flex">
                 <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3" /> {formatCompact(e.stars ?? 0)}
+                  <Star className="h-3 w-3" /> {formatCompact(entry.stars ?? 0)}
                 </div>
-                {e.signals?.weeklyInstalls ? (
-                  <div className="text-ink-subtle">
-                    {formatCompact(e.signals.weeklyInstalls)}/wk
-                  </div>
-                ) : null}
+                <div className="text-ink-subtle">
+                  {entry.source === "unverified" ? "unverified source" : "source-backed"}
+                </div>
               </div>
-              <MovementCell score={e.trending ?? 0} window={sp.window} />
+              <MovementCell entry={entry} mode={mode} />
             </li>
           ))}
         </ol>
       ) : null}
 
-      {/* Fell off this period */}
-      {fellOff.length > 0 && sp.window !== "all" && (
-        <div className="mt-10 rounded-xl border border-dashed border-border bg-surface/50 p-4">
-          <div className="flex items-center justify-between gap-2">
-            <div>
-              <div className="eyebrow">Cooled off</div>
-              <div className="font-display text-base font-semibold text-ink">
-                Trended last period, not this one
-              </div>
-            </div>
-            <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">
-              See all →
-            </Link>
-          </div>
-          <ul className="mt-3 grid gap-2 sm:grid-cols-3">
-            {fellOff.map((e) => (
-              <li key={`${e.category}/${e.slug}`}>
-                <Link
-                  to="/entry/$category/$slug"
-                  params={{ category: e.category, slug: e.slug }}
-                  className="block rounded-lg border border-border bg-surface p-3 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
-                >
-                  <div className="flex items-center gap-1.5">
-                    <CategoryPill>{e.category}</CategoryPill>
-                  </div>
-                  <div className="mt-1 line-clamp-1 font-display text-sm font-semibold text-ink">
-                    {e.title}
-                  </div>
-                  <p className="line-clamp-1 text-xs text-ink-muted">{e.description}</p>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* Bottom CTAs */}
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-surface px-4 py-3 text-sm">
         <div className="flex items-center gap-2 text-ink-muted">
-          <Rss className="h-4 w-4" /> Subscribe to weekly trending
+          <Rss className="h-4 w-4" /> Subscribe to the trending feed
         </div>
         <div className="flex flex-wrap gap-2">
           <a

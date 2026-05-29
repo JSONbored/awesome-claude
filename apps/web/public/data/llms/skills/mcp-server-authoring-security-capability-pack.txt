@@ -1,5 +1,5 @@
 # MCP Server Authoring Security Capability Pack Skill
-URL: https://heyclau.de/skills/mcp-server-authoring-security-capability-pack
+URL: https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://modelcontextprotocol.io/specification/2025-06-18/basic/se
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx
 Download: /downloads/skills/mcp-server-authoring-security-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/mcp-server-authoring-security-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack
 - Source URLs: https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx
 - Package URL: /downloads/skills/mcp-server-authoring-security-capability-pack.zip
 - Package SHA256: 88cfe7f7cbd688806926439fcef04929c691deaaa01909a87d5658bbeb8c28bb

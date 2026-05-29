@@ -1,11 +1,11 @@
 # Semantic Kernel Enterprise Agent - Agents
-URL: https://heyclau.de/agents/semantic-kernel-enterprise-agent
+URL: https://heyclau.de/entry/agents/semantic-kernel-enterprise-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/semantic-kernel-enterprise-agent
+- Canonical URL: https://heyclau.de/entry/agents/semantic-kernel-enterprise-agent
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx
 - Brand: Microsoft
 - Brand domain: microsoft.com

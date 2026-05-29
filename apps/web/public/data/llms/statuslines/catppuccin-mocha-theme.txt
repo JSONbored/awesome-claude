@@ -1,5 +1,5 @@
 # Catppuccin Mocha Theme - Statuslines
-URL: https://heyclau.de/statuslines/catppuccin-mocha-theme
+URL: https://heyclau.de/entry/statuslines/catppuccin-mocha-theme
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://github.com/catppuccin/catppuccin
 Repository: https://github.com/catppuccin/catppuccin
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/catppuccin-mocha-theme.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/catppuccin-mocha-theme
+- Canonical URL: https://heyclau.de/entry/statuslines/catppuccin-mocha-theme
 - Source URLs: https://github.com/catppuccin/catppuccin, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/catppuccin-mocha-theme.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

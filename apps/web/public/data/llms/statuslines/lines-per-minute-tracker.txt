@@ -1,12 +1,12 @@
 # Lines Per Minute Tracker - Statuslines
-URL: https://heyclau.de/statuslines/lines-per-minute-tracker
+URL: https://heyclau.de/entry/statuslines/lines-per-minute-tracker
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/lines-per-minute-tracker.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/lines-per-minute-tracker
+- Canonical URL: https://heyclau.de/entry/statuslines/lines-per-minute-tracker
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/lines-per-minute-tracker.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

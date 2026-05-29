@@ -1,5 +1,5 @@
 # MCP Server Security Hardening Skill
-URL: https://heyclau.de/skills/mcp-server-security-hardening
+URL: https://heyclau.de/entry/skills/mcp-server-security-hardening
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://modelcontextprotocol.io/specification/2025-06-18
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-security-hardening.mdx
 Download: /downloads/skills/mcp-server-security-hardening.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/mcp-server-security-hardening
+- Canonical URL: https://heyclau.de/entry/skills/mcp-server-security-hardening
 - Source URLs: https://modelcontextprotocol.io/specification/2025-06-18, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-security-hardening.mdx
 - Package URL: /downloads/skills/mcp-server-security-hardening.zip
 - Package SHA256: d55bf62f2aa6f52fa38a0e362cd9e5da2cc52c9d6012037f4a98919fbd342a88

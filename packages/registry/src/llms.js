@@ -74,7 +74,7 @@ function entryLastVerified(entry) {
 
 export function buildEntryCitationFacts(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
-  const permalink = `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`;
+  const permalink = `${siteUrl.replace(/\/$/, "")}/entry/${entry.category}/${entry.slug}`;
   const facts = [
     ["Canonical URL", permalink],
     ["Source URLs", listValue(entrySourceUrls(entry))],
@@ -113,7 +113,7 @@ export function buildEntryCitationFacts(entry, params = {}) {
 
 export function renderEntryLlms(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
-  const permalink = `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`;
+  const permalink = `${siteUrl.replace(/\/$/, "")}/entry/${entry.category}/${entry.slug}`;
   const lines = [
     `# ${clean(entry.title)}`,
     "",
@@ -174,7 +174,7 @@ export function renderCorpusLlms(entries, params = {}) {
 
   for (const entry of entries) {
     lines.push(
-      `- [${entry.title}](${normalizedSiteUrl}/${entry.category}/${entry.slug}) (${entry.category})`,
+      `- [${entry.title}](${normalizedSiteUrl}/entry/${entry.category}/${entry.slug}) (${entry.category})`,
     );
   }
 

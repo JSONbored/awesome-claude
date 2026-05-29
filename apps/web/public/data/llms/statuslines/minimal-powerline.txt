@@ -1,5 +1,5 @@
 # Minimal Powerline - Statuslines
-URL: https://heyclau.de/statuslines/minimal-powerline
+URL: https://heyclau.de/entry/statuslines/minimal-powerline
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-01
@@ -7,7 +7,7 @@ Documentation: https://github.com/powerline/powerline
 Repository: https://github.com/powerline/powerline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/minimal-powerline
+- Canonical URL: https://heyclau.de/entry/statuslines/minimal-powerline
 - Source URLs: https://github.com/powerline/powerline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -48,8 +48,9 @@ body:
       label: Scope
       description: List allowed areas to edit.
       placeholder: |
-        - apps/web/src/components/browse-directory.tsx
-        - apps/web/src/lib/search helpers
+        - apps/web/src/routes/browse.tsx
+        - apps/web/src/components/resource-card.tsx
+        - apps/web/src/mocks/search.ts
         - focused tests
     validations:
       required: true

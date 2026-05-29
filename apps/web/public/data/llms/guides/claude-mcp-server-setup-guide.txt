@@ -1,11 +1,11 @@
 # Claude MCP Server Setup 2025
-URL: https://heyclau.de/guides/claude-mcp-server-setup-guide
+URL: https://heyclau.de/entry/guides/claude-mcp-server-setup-guide
 Category: guides
 Author: JSONbored
 Date added: 2025-10-27
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/guides/claude-mcp-server-setup-guide
+- Canonical URL: https://heyclau.de/entry/guides/claude-mcp-server-setup-guide
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-mcp-server-setup-guide.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

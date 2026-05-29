@@ -265,7 +265,7 @@ describe("HeyClaude remote MCP route", () => {
       count: 2,
       entries: [
         expect.objectContaining({
-          canonicalUrl: expect.stringContaining("/mcp/"),
+          canonicalUrl: expect.stringContaining("/entry/mcp/"),
         }),
         expect.any(Object),
       ],

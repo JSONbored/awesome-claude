@@ -65,16 +65,49 @@ function saveState(state: StoredState) {
   }
 }
 
-export function WatchProvider({
-  children,
-  alertGenerator,
-}: {
-  children: React.ReactNode;
-  alertGenerator: (targets: WatchTarget[]) => Alert[];
-}) {
+interface RegistryEvent {
+  id?: string;
+  kind?: string;
+  category?: string;
+  slug?: string;
+  action?: string;
+  date?: string;
+  title?: string;
+  commit?: string;
+}
+
+function eventTargetId(event: RegistryEvent): string | null {
+  if (event.kind === "entry" && event.category && event.slug) {
+    return `entry:${event.category}/${event.slug}`;
+  }
+  return null;
+}
+
+function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
+  const targetId = eventTargetId(event);
+  if (!targetId || targetId !== target.id || !event.date) return null;
+  const action = event.action === "removed" ? "removed" : event.action === "added" ? "added" : "updated";
+  const label = event.title || target.label;
+  return {
+    id: event.id || `${target.id}:${event.date}:${action}`,
+    targetId: target.id,
+    kind: target.kind,
+    title: `${label} ${action}`,
+    body:
+      action === "removed"
+        ? "This watched registry entry was removed from the source content."
+        : "This watched registry entry changed in the source content.",
+    severity: action === "removed" ? "warning" : "info",
+    href: target.href,
+    date: event.date,
+  };
+}
+
+export function WatchProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = React.useState(false);
   const [targets, setTargets] = React.useState<WatchTarget[]>([]);
   const [lastSeenAt, setLastSeenAt] = React.useState("1970-01-01");
+  const [remoteEvents, setRemoteEvents] = React.useState<RegistryEvent[]>([]);
 
   React.useEffect(() => {
     const s = loadState();
@@ -88,7 +121,41 @@ export function WatchProvider({
     saveState({ targets, lastSeenAt });
   }, [targets, lastSeenAt, hydrated]);
 
-  const alerts = React.useMemo(() => alertGenerator(targets), [targets, alertGenerator]);
+  React.useEffect(() => {
+    if (!hydrated || targets.length === 0) {
+      setRemoteEvents([]);
+      return;
+    }
+    let cancelled = false;
+    async function loadAlerts() {
+      try {
+        const response = await fetch("/api/public/alerts", {
+          headers: { accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(`alerts API returned ${response.status}`);
+        const payload = (await response.json()) as { events?: RegistryEvent[] };
+        if (!cancelled) setRemoteEvents(Array.isArray(payload.events) ? payload.events : []);
+      } catch {
+        if (!cancelled) setRemoteEvents([]);
+      }
+    }
+    void loadAlerts();
+    return () => {
+      cancelled = true;
+    };
+  }, [hydrated, targets.length]);
+
+  const alerts = React.useMemo(() => {
+    const byId = new Map(targets.map((target) => [target.id, target]));
+    return remoteEvents
+      .map((event) => {
+        const targetId = eventTargetId(event);
+        const target = targetId ? byId.get(targetId) : undefined;
+        return target ? eventToAlert(event, target) : null;
+      })
+      .filter((alert): alert is Alert => Boolean(alert))
+      .sort((left, right) => right.date.localeCompare(left.date));
+  }, [targets, remoteEvents]);
 
   const value = React.useMemo<WatchCtx>(() => {
     const ids = new Set(targets.map((t) => t.id));

@@ -1,12 +1,12 @@
 # Dependency Update Checker - Hooks
-URL: https://heyclau.de/hooks/dependency-update-checker
+URL: https://heyclau.de/entry/hooks/dependency-update-checker
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://docs.npmjs.com/cli/v8/commands/npm-audit
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/dependency-update-checker
+- Canonical URL: https://heyclau.de/entry/hooks/dependency-update-checker
 - Source URLs: https://docs.npmjs.com/cli/v8/commands/npm-audit, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-update-checker.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

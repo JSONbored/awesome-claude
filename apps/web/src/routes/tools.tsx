@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, BadgeCheck } from "lucide-react";
-import { COMMERCIAL_TOOLS } from "@/mocks/tools";
+import { COMMERCIAL_TOOLS } from "@/data/tools";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 
 export const Route = createFileRoute("/tools")({
@@ -39,8 +39,8 @@ function ToolsPage() {
         {COMMERCIAL_TOOLS.map((t) => (
           <Link
             key={t.slug}
-            to="/tools/$slug"
-            params={{ slug: t.slug }}
+            to="/entry/$category/$slug"
+            params={{ category: "tools", slug: t.slug }}
             className="group flex flex-col gap-3 rounded-xl border border-border bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2"
           >
             <div className="flex items-start justify-between gap-2">

@@ -1,11 +1,11 @@
 # Multi Line Statusline - Statuslines
-URL: https://heyclau.de/statuslines/multi-line-statusline
+URL: https://heyclau.de/entry/statuslines/multi-line-statusline
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-01
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-line-statusline.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/multi-line-statusline
+- Canonical URL: https://heyclau.de/entry/statuslines/multi-line-statusline
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-line-statusline.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

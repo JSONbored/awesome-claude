@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Rss, Plus, RefreshCw, Minus, Shield, FileText, Package } from "lucide-react";
-import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/mocks/changelog";
+import { CHANGELOG, RELEASE_NOTES, type ReleaseStream } from "@/data/changelog";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { cn } from "@/lib/utils";
 

@@ -1,14 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import * as React from "react";
 import { ArrowRight, Rss } from "lucide-react";
-import { INTEGRATIONS } from "@/mocks/integrations";
+import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
 import { CompatibilityMatrix, type MatrixRow, type CellDetail } from "@/components/compatibility-matrix";
 import { HarnessCoverage } from "@/components/harness-coverage";
 import { DropInSetup } from "@/components/drop-in-setup";
 import { SponsorsSection } from "@/components/sponsors-section";
-import { ECOSYSTEM_FEEDS } from "@/mocks/ecosystem-feeds";
-import { ENTRIES } from "@/mocks/entries";
+import { ECOSYSTEM_FEEDS } from "@/data/ecosystem-feeds";
+import { ENTRIES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { HARNESSES } from "@/types/registry";
 import { CopyButton } from "@/components/copy-button";
 import { CountUp } from "@/components/count-up";
@@ -192,7 +192,11 @@ function EcosystemPage() {
         <Stat label="Entries indexed" value={<CountUp value={entries} />} />
         <Stat label="Harnesses supported" value={<CountUp value={harnessCount} />} />
         <Stat label="Integrations live" value={<CountUp value={live} />} />
-        <Stat label="Last build" value="2026-05-26 · 08:12 UTC" mono />
+        <Stat
+          label="Last build"
+          value={new Date(REGISTRY_GENERATED_AT).toISOString().slice(0, 16).replace("T", " ")}
+          mono
+        />
       </div>
 
       {/* Sticky sub-nav */}
@@ -505,4 +509,3 @@ function Stat({
     </div>
   );
 }
-

@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, BookOpen, ExternalLink, GitBranch, ShieldCheck, AlertTriangle, ListChecks, Code2, Sparkles, Star, FileText, OctagonX } from "lucide-react";
-import { getEntry, related } from "@/mocks/search";
+import { getEntry, related } from "@/data/search";
 import { CategoryPill, PlatformChip, SourceBadge, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { WatchButton } from "@/components/watch-button";
@@ -15,6 +15,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
+import { EntrySignalsPanel } from "@/components/entry-signals-panel";
 import { TRUST_LABEL } from "@/types/registry";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState } from "react";
@@ -23,7 +24,6 @@ import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-pre
 import { variantsForEntry } from "@/components/copy-segmented";
 import { HarnessVariantPicker } from "@/components/harness-variant-picker";
 import type { Harness } from "@/types/registry";
-import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/entry/$category/$slug")({
@@ -170,7 +170,7 @@ function Dossier() {
               title={entry.title}
               description={entry.description}
               ogUrl={`/og/${entry.category}/${entry.slug}`}
-              llmsUrl={`/llms/${entry.category}/${entry.slug}.txt`}
+              llmsUrl={`/data/llms/${entry.category}/${entry.slug}.txt`}
             />
           </div>
 
@@ -390,11 +390,7 @@ function Dossier() {
 
 
           <DossierSection id="signals" title="Signals">
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <Signal label="Stars" value={entry.stars} />
-              <Signal label="Weekly" value={entry.signals?.weeklyInstalls} />
-              <Signal label="Upvotes" value={entry.signals?.upvotes} />
-            </div>
+            <EntrySignalsPanel category={entry.category} slug={entry.slug} />
           </DossierSection>
 
           <NewsletterInline
@@ -457,16 +453,5 @@ function Readiness({ label, value, ok }: { label: string; value: string; ok: boo
         {value}
       </span>
     </li>
-  );
-}
-
-function Signal({ label, value }: { label: string; value?: number }) {
-  return (
-    <div>
-      <div className="font-display text-lg font-semibold tabular-nums text-ink">
-        {value !== undefined ? formatCompact(value) : "—"}
-      </div>
-      <div className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</div>
-    </div>
   );
 }

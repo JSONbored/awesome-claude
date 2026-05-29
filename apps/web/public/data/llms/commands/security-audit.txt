@@ -1,12 +1,12 @@
 # /security-audit - Security Scanner Command for Claude Code
-URL: https://heyclau.de/commands/security-audit
+URL: https://heyclau.de/entry/commands/security-audit
 Category: commands
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.ai/commands/security-audit
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security-audit.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/security-audit
+- Canonical URL: https://heyclau.de/entry/commands/security-audit
 - Source URLs: https://docs.claude.ai/commands/security-audit, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/security-audit.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -1,5 +1,5 @@
 # JSON Schema Validate + Transform Skill
-URL: https://heyclau.de/skills/json-schema-validation-transformation
+URL: https://heyclau.de/entry/skills/json-schema-validation-transformation
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://ajv.js.org/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx
 Download: /downloads/skills/json-schema-validation-transformation.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/json-schema-validation-transformation
+- Canonical URL: https://heyclau.de/entry/skills/json-schema-validation-transformation
 - Source URLs: https://ajv.js.org/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/json-schema-validation-transformation.mdx
 - Package URL: /downloads/skills/json-schema-validation-transformation.zip
 - Package SHA256: 851adc6e2004750ad392111dbccb5a131aec55693c028a0e460cd09f0acb9b8f

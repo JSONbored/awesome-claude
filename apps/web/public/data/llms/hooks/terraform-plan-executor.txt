@@ -1,11 +1,11 @@
 # Terraform Plan Executor - Hooks
-URL: https://heyclau.de/hooks/terraform-plan-executor
+URL: https://heyclau.de/entry/hooks/terraform-plan-executor
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/terraform-plan-executor
+- Canonical URL: https://heyclau.de/entry/hooks/terraform-plan-executor
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx
 - Safety notes: Runs automatically after write or edit activity on .tf and .tfvars files., Invokes terraform fmt, validate, init, and plan in the Terraform file directory, and terraform fmt may modify the touched file., Terraform init and plan can contact configured backends and providers and may consume cloud API quota.
 - Privacy notes: Reads Terraform configuration, variables, provider settings, and plan output to summarize infrastructure changes., Plan output may reveal resource addresses, cloud account structure, regions, tags, and sensitive-looking variable names., Uses locally configured Terraform credentials, provider plugins, and backend configuration without managing those secrets.

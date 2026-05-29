@@ -142,7 +142,7 @@ function duplicateCandidates(params: {
       title: entry.title,
       url:
         entry.canonicalUrl ||
-        `${siteConfig.url}/${entry.category}/${entry.slug}`,
+        `${siteConfig.url}/entry/${entry.category}/${entry.slug}`,
       reasons: [...new Set(reasons)],
     });
   }

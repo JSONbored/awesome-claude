@@ -2,8 +2,8 @@
  * GET /api/public/alerts
  *
  * Reads the in-edge-cache list of registry events written by the GitHub
- * webhook handler. Returns an empty list when the cache is cold — the
- * client UI uses its mock generator as a fallback in that case.
+ * webhook handler. Returns an empty list when the cache is cold or webhook
+ * configuration is missing; the client should render that as no live alerts.
  */
 import { createFileRoute } from "@tanstack/react-router";
 

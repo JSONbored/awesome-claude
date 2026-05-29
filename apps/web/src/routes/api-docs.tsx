@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
-import { ENDPOINTS, OPENAPI_TAGS } from "@/mocks/openapi";
+import { ENDPOINTS, OPENAPI_TAGS } from "@/data/openapi";
 import { OpenApiEndpointCard, MethodPill } from "@/components/openapi";
 import { cn } from "@/lib/utils";
 

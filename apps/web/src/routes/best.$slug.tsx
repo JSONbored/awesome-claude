@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, CalendarDays, User } from "lucide-react";
-import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/mocks/entries";
+import { BEST_LISTS, ENTRIES, type BestList, type BestPick } from "@/data/entries";
 import type { Entry } from "@/types/registry";
 import { ResourceCard } from "@/components/resource-card";
 import { NewsletterInline } from "@/components/newsletter-inline";

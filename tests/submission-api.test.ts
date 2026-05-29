@@ -218,6 +218,151 @@ describe("website submission API", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
+  it("lists sanitized public submission queue entries from GitHub issues", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.endsWith("/issues/88/comments")) {
+          return Promise.resolve(
+            new Response(
+              JSON.stringify([
+                {
+                  body: "Import PR opened at https://github.com/JSONbored/awesome-claude/pull/188",
+                },
+              ]),
+              {
+                status: 200,
+                headers: { "content-type": "application/json" },
+              },
+            ),
+          );
+        }
+        if (url.includes("/issues?")) {
+          return Promise.resolve(
+            new Response(
+              JSON.stringify([
+                {
+                  number: 88,
+                  html_url:
+                    "https://github.com/JSONbored/awesome-claude/issues/88",
+                  title: "Submit Skill: Queue Secret Skill",
+                  body: [
+                    "### Name",
+                    "Queue Secret Skill",
+                    "",
+                    "### Slug",
+                    "queue-secret-skill",
+                    "",
+                    "### Category",
+                    "skills",
+                    "",
+                    "### Internal context",
+                    "DO_NOT_LEAK_RAW_BODY",
+                  ].join("\n"),
+                  user: {
+                    login: "submitter",
+                    html_url: "https://github.com/submitter",
+                  },
+                  labels: [
+                    { name: "content-submission" },
+                    { name: "community-skills" },
+                    { name: "import-pr-open" },
+                  ],
+                  state: "open",
+                  created_at: "2026-05-01T00:00:00Z",
+                  updated_at: "2026-05-02T00:00:00Z",
+                  closed_at: null,
+                  comments_url:
+                    "https://api.github.com/repos/JSONbored/awesome-claude/issues/88/comments",
+                },
+              ]),
+              {
+                status: 200,
+                headers: { "content-type": "application/json" },
+              },
+            ),
+          );
+        }
+        return Promise.resolve(new Response("{}", { status: 404 }));
+      }),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=5", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.22",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const raw = await response.text();
+    expect(raw).not.toContain("DO_NOT_LEAK_RAW_BODY");
+    expect(JSON.parse(raw)).toMatchObject({
+      ok: true,
+      repo: "JSONbored/awesome-claude",
+      count: 1,
+      entries: [
+        {
+          number: 88,
+          url: "https://github.com/JSONbored/awesome-claude/issues/88",
+          author: "submitter",
+          authorUrl: "https://github.com/submitter",
+          category: "skills",
+          slug: "queue-secret-skill",
+          status: "import_pr_open",
+          state: "open",
+          importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/188",
+        },
+      ],
+    });
+  });
+
+  it("does not expose non-submission issues through the queue endpoint", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify({
+              number: 99,
+              html_url: "https://github.com/JSONbored/awesome-claude/issues/99",
+              title: "General issue",
+              body: "Not a content submission.",
+              labels: [{ name: "bug" }],
+              state: "open",
+              created_at: "2026-05-01T00:00:00Z",
+              updated_at: "2026-05-02T00:00:00Z",
+              closed_at: null,
+            }),
+            {
+              status: 200,
+              headers: { "content-type": "application/json" },
+            },
+          ),
+        ),
+      ),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?number=99", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.23",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toMatchObject({
+      error: { code: "submission_not_found" },
+    });
+  });
+
   it("preflights valid submissions without GitHub writes", async () => {
     const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
@@ -251,7 +396,7 @@ describe("website submission API", () => {
         category: "mcp",
         slug: "direct-submit-api-asset",
         title: "Direct Submit API Asset",
-        canonicalUrl: "https://heyclau.de/mcp/direct-submit-api-asset",
+        canonicalUrl: "https://heyclau.de/entry/mcp/direct-submit-api-asset",
         documentationUrl: "https://example.com/docs",
         trustSignals: { sourceUrls: ["https://example.com/docs"] },
       },

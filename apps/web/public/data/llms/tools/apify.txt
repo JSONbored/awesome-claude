@@ -1,12 +1,12 @@
 # Apify
-URL: https://heyclau.de/tools/apify
+URL: https://heyclau.de/entry/tools/apify
 Category: tools
 Author: Apify
 Date added: 2026-04-27
 Documentation: https://docs.apify.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/apify
+- Canonical URL: https://heyclau.de/entry/tools/apify
 - Source URLs: https://docs.apify.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/apify.mdx, https://apify.com
 - Brand: Apify
 - Brand domain: apify.com

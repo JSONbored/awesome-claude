@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { GitCommit, Users } from "lucide-react";
-import { CHANGELOG } from "@/mocks/changelog";
-import { CONTRIBUTORS } from "@/mocks/contributors";
+import { CHANGELOG } from "@/data/changelog";
+import { CONTRIBUTORS } from "@/data/contributors";
 import { CategoryPill } from "./badges";
 
 const KIND_DOT: Record<string, string> = {

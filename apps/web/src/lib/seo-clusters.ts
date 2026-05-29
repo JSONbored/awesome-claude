@@ -492,7 +492,7 @@ function toClusterItem(item: DirectoryEntry | ToolListing): SeoClusterItem {
     description: item.cardDescription || item.description,
     category: item.category,
     slug: item.slug,
-    url: isTool ? `/tools/${item.slug}` : `/${item.category}/${item.slug}`,
+    url: isTool ? `/tools/${item.slug}` : `/entry/${item.category}/${item.slug}`,
     tags: item.tags || [],
     disclosure: item.disclosure,
   };

@@ -14,7 +14,9 @@
 Configured in [`wrangler.jsonc`](./wrangler.jsonc):
 
 - `SITE_DB` (D1) for durable upvotes, reviewed jobs listings, listing leads, commercial placements, community signals, and future dynamic site state.
-- Shared between `prod` and `dev` environments in the current setup.
+- Production uses the existing `heyclaude-votes` database for continuity.
+- Development uses the separate `heyclaude-dev-site-state` database so PR/dev
+  testing does not mutate production votes, jobs, leads, or community signals.
 - `API_REGISTRY_RATE_LIMIT`, `API_DYNAMIC_RATE_LIMIT`,
   `API_STRICT_RATE_LIMIT`, and `API_MCP_RATE_LIMIT` for Cloudflare-native
   per-route rate limiting. The MCP binding is intentionally separate so the
@@ -32,15 +34,16 @@ pnpm --filter web exec wrangler d1 create heyclaude-site-state
 
 2. Set `database_name` and `database_id` returned by Cloudflare in [`wrangler.jsonc`](./wrangler.jsonc) for `SITE_DB`.
 
-Existing environments may still point at the historical `heyclaude-votes`
-database name for continuity. The binding is the source of truth; new
-environments should use a site-state name because the same D1 database now
-stores votes, jobs, leads, placements, intents, and community signals.
+Production currently points at the historical `heyclaude-votes` database name
+for continuity. The binding is the source of truth; new environments should use
+a site-state name because the same D1 database now stores votes, jobs, leads,
+placements, intents, and community signals.
 
 3. Apply migrations:
 
 ```bash
 pnpm --filter web db:migrate:remote
+pnpm --filter web exec wrangler d1 migrations apply SITE_DB --remote --env dev
 ```
 
 Local migration:
@@ -105,14 +108,31 @@ enrichment, Polar handoff, and follow-up templates.
 These are the project-standard commands:
 
 ```bash
-pnpm --filter web deploy
+pnpm --filter web deploy:prod
 ```
 
 That command runs:
 
 1. registry artifact generation
 2. `vite build`, which emits `dist/client` and `dist/server/index.mjs`
-3. `wrangler deploy`
+3. `wrangler deploy --config wrangler.jsonc --env ""`
+
+Development deploy:
+
+```bash
+pnpm --filter web deploy:dev
+```
+
+That command targets `heyclaude-dev` with:
+
+```bash
+wrangler deploy --config wrangler.jsonc --env dev
+```
+
+Always pass the explicit Wrangler config and environment. TanStack/Nitro emits a
+redirected `dist/server/wrangler.json`; invoking `wrangler deploy` without
+`--config wrangler.jsonc` can make Wrangler validate that generated redirected
+config and reject it when environments are present.
 
 For local Worker-runtime preview:
 
@@ -165,6 +185,31 @@ longer a Next.js app.
 - `NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_FEATURED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_JOB_BOARD_URL`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+- `SUBMISSIONS_REQUIRE_TURNSTILE`
+
+Use separate production and development Turnstile widgets/secrets. The public
+site key is non-secret, but the matching `TURNSTILE_SECRET_KEY` must be set as a
+Worker secret for the same environment. If `SUBMISSIONS_REQUIRE_TURNSTILE=1`
+and the secret is missing, submission creation deliberately returns a 503 with a
+GitHub issue fallback URL rather than accepting unauthenticated writes.
+
+The development Worker uses Cloudflare's official always-pass Turnstile test
+site key in `wrangler.jsonc`, so it must be paired with the matching official
+test secret in the dev Worker only:
+
+```bash
+printf '%s' '1x0000000000000000000000000000000AA' |
+  pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY --env dev
+```
+
+Required secrets, per environment:
+
+```bash
+pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY
+pnpm --filter web exec wrangler secret put GITHUB_SUBMISSIONS_TOKEN
+pnpm --filter web exec wrangler secret put ADMIN_API_TOKEN
+```
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill values.
 

@@ -1,5 +1,5 @@
 # PostgreSQL Query Optimization Skill
-URL: https://heyclau.de/skills/postgresql-query-optimization
+URL: https://heyclau.de/entry/skills/postgresql-query-optimization
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://www.postgresql.org/docs/current/performance-tips.html
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx
 Download: /downloads/skills/postgresql-query-optimization.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/postgresql-query-optimization
+- Canonical URL: https://heyclau.de/entry/skills/postgresql-query-optimization
 - Source URLs: https://www.postgresql.org/docs/current/performance-tips.html, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/postgresql-query-optimization.mdx
 - Package URL: /downloads/skills/postgresql-query-optimization.zip
 - Package SHA256: a180b68a318eb007218f5d5de00e12deaf980f75f5e4519eeecc550cba7715df

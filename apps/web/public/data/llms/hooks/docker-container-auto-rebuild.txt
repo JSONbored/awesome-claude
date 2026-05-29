@@ -1,12 +1,12 @@
 # Docker Container Auto Rebuild - Hooks
-URL: https://heyclau.de/hooks/docker-container-auto-rebuild
+URL: https://heyclau.de/entry/hooks/docker-container-auto-rebuild
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Documentation: https://docs.docker.com/compose/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/docker-container-auto-rebuild
+- Canonical URL: https://heyclau.de/entry/hooks/docker-container-auto-rebuild
 - Source URLs: https://docs.docker.com/compose/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/docker-container-auto-rebuild.mdx
 - Brand: Docker
 - Brand domain: docker.com

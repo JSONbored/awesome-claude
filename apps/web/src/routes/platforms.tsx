@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/mocks/platforms";
+import { SUPPORTED_PLATFORMS, PLATFORM_MATRIX } from "@/data/platforms";
 import { PLATFORM_LABEL, PLATFORM_SUPPORT_LABEL } from "@/types/registry";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 

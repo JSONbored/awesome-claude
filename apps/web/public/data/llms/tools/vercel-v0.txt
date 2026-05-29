@@ -1,12 +1,12 @@
 # v0
-URL: https://heyclau.de/tools/vercel-v0
+URL: https://heyclau.de/entry/tools/vercel-v0
 Category: tools
 Author: Vercel
 Date added: 2026-04-27
 Documentation: https://v0.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/vercel-v0
+- Canonical URL: https://heyclau.de/entry/tools/vercel-v0
 - Source URLs: https://v0.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-v0.mdx, https://v0.dev
 - Brand: v0
 - Brand domain: v0.dev

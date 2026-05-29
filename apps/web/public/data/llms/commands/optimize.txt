@@ -1,12 +1,12 @@
 # /optimize - Performance Optimizer Command for Claude Code
-URL: https://heyclau.de/commands/optimize
+URL: https://heyclau.de/entry/commands/optimize
 Category: commands
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://docs.claude.ai/commands/optimize
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/optimize.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/optimize
+- Canonical URL: https://heyclau.de/entry/commands/optimize
 - Source URLs: https://docs.claude.ai/commands/optimize, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/optimize.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

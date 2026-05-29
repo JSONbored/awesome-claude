@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Calendar } from "lucide-react";
-import { BRIEF_ISSUES } from "@/mocks/entries";
+import { BRIEF_ISSUES } from "@/data/entries";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 

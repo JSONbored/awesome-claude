@@ -21,7 +21,7 @@ import {
   PARTNERS,
   SPONSORS,
   type Partner,
-} from "@/mocks/sponsors";
+} from "@/data/sponsors";
 import { cn } from "@/lib/utils";
 
 export function SponsorsSection() {
@@ -78,7 +78,9 @@ export function SponsorsSection() {
           <div>
             <div className="eyebrow">Ecosystem partners</div>
             <h3 className="mt-1 font-display text-lg font-semibold tracking-tight text-ink">
-              {filled.length} active · {open.length} open
+              {filled.length > 0
+                ? `${filled.length} active · ${open.length} open`
+                : `${open.length} open partnership slots`}
             </h3>
           </div>
           <PartnerDrawer trigger={
@@ -206,23 +208,41 @@ function PartnerDrawer({
     e.preventDefault();
     setSubmitting(true);
     const data = new FormData(e.currentTarget);
-    const payload = {
-      kind: "partnership",
-      company: String(data.get("company") ?? ""),
-      email: String(data.get("email") ?? ""),
-      role: String(data.get("role") ?? ""),
-      offer: String(data.get("offer") ?? ""),
-      notes: String(data.get("notes") ?? ""),
-    };
-    // Mock submit — replace with /api/public/partnership-leads once wired.
-    await new Promise((r) => setTimeout(r, 400));
-    toast.success("Thanks — we'll reply within a week.", {
-      description: `Logged ${payload.company} · ${payload.offer || "partnership"}`,
-    });
-    formRef.current?.reset();
-    setSubmitting(false);
-    // Close drawer by clicking nearest close button — handled via DrawerClose below.
-    (document.querySelector("[data-partner-close]") as HTMLButtonElement | null)?.click();
+    const company = String(data.get("company") ?? "").trim();
+    const website = String(data.get("website") ?? "").trim();
+    const email = String(data.get("email") ?? "").trim();
+    const role = String(data.get("role") ?? "").trim();
+    const offer = String(data.get("offer") ?? "").trim();
+    const notes = String(data.get("notes") ?? "").trim();
+
+    try {
+      const response = await fetch("/api/listing-leads", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          kind: "tool",
+          tierInterest: "sponsored",
+          contactName: company,
+          contactEmail: email,
+          companyName: company,
+          listingTitle: offer || role || "Ecosystem partnership",
+          websiteUrl: website,
+          message: [role ? `Role: ${role}` : "", notes].filter(Boolean).join("\n\n"),
+        }),
+      });
+      if (!response.ok) throw new Error(`Lead intake returned ${response.status}`);
+      toast.success("Thanks — we'll reply within a week.", {
+        description: `Logged ${company} · ${offer || "partnership"}`,
+      });
+      formRef.current?.reset();
+      (document.querySelector("[data-partner-close]") as HTMLButtonElement | null)?.click();
+    } catch {
+      toast.error("Could not submit partner interest.", {
+        description: "Use the contact or GitHub issue path if this keeps failing.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -241,6 +261,9 @@ function PartnerDrawer({
             <div className="grid gap-3 sm:grid-cols-2">
               <Field label="Company" name="company" required />
               <Field label="Email" name="email" type="email" required />
+            </div>
+            <div className="mt-3">
+              <Field label="Website" name="website" type="url" required placeholder="https://example.com" />
             </div>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
               <Field label="Role" name="role" defaultValue={defaultRole} placeholder="e.g. Compute, AI, Tooling" />

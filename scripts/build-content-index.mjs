@@ -480,6 +480,21 @@ async function main() {
     schemaVersion: 1,
     generatedAt:
       directoryIndexArtifact?.value?.generatedAt ?? new Date().toISOString(),
+    artifactContracts: artifactResults
+      .filter((file) => !file.path.startsWith("entries/"))
+      .filter((file) => !file.path.startsWith("llms/"))
+      .filter((file) => !file.path.startsWith("raycast/"))
+      .filter((file) => !file.path.startsWith("skill-adapters/"))
+      .map((file) => ({
+        path: `/data/${file.path}`,
+        bytes: fs.statSync(file.outputPath).size,
+        sha256: crypto
+          .createHash("sha256")
+          .update(fs.readFileSync(file.outputPath))
+          .digest("hex"),
+        builtAt:
+          directoryIndexArtifact?.value?.generatedAt ?? new Date().toISOString(),
+      })),
     entries: entries.map(pickAtlasEntry),
     changelog: (changelogArtifact?.value?.entries ?? []).slice(0, 25).map(
       (entry) => ({
@@ -488,6 +503,7 @@ async function main() {
         title: entry.title,
         dateAdded: entry.dateAdded,
         type: entry.type,
+        artifactHash: entry.artifactHash,
       }),
     ),
   };

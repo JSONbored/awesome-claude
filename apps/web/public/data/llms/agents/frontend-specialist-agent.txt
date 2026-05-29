@@ -1,12 +1,12 @@
 # Frontend Specialist Agent - Agents
-URL: https://heyclau.de/agents/frontend-specialist-agent
+URL: https://heyclau.de/entry/agents/frontend-specialist-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://react.dev/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/frontend-specialist-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/frontend-specialist-agent
+- Canonical URL: https://heyclau.de/entry/agents/frontend-specialist-agent
 - Source URLs: https://react.dev/, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/frontend-specialist-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

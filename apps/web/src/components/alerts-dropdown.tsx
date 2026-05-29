@@ -66,8 +66,7 @@ export function AlertsDropdown() {
 
         {alerts.length === 0 ? (
           <div className="px-5 py-10 text-center text-xs text-ink-muted">
-            Nothing watched yet — tap the bell on any listing, validator, or changelog stream to get
-            alerts here.
+            Nothing watched yet — tap the bell on any listing to get source-change alerts here.
           </div>
         ) : (
           <div className="max-h-[60vh] overflow-y-auto">
@@ -125,7 +124,7 @@ export function AlertsDropdown() {
         )}
 
         <footer className="border-t border-border px-4 py-2.5 text-[11px] text-ink-muted">
-          Alerts run locally — nothing is sent to a server.
+          Alerts are read from the public registry event feed; watched targets stay in this browser.
         </footer>
       </PopoverContent>
     </Popover>

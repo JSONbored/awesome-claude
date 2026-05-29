@@ -1,7 +1,7 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowUpRight, Github } from "lucide-react";
-import { getContributor, CONTRIBUTORS } from "@/mocks/contributors";
-import { ENTRIES } from "@/mocks/entries";
+import { getContributor, CONTRIBUTORS } from "@/data/contributors";
+import { ENTRIES } from "@/data/entries";
 import { ResourceCard } from "@/components/resource-card";
 import { Monogram } from "@/components/monogram";
 

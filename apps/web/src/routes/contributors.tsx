@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Github } from "lucide-react";
-import { CONTRIBUTORS } from "@/mocks/contributors";
+import { CONTRIBUTORS } from "@/data/contributors";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Monogram } from "@/components/monogram";
 
