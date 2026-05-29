@@ -1076,11 +1076,88 @@ export function buildCorpusLlmsArtifact(
   params?: Record<string, unknown>,
 ): string;
 export const QUALITY_REPORT_SCHEMA_VERSION: number;
+export const SOURCE_HEALTH_REPORT_SCHEMA_VERSION: number;
 export const LLMS_ARTIFACT_SCHEMA_VERSION: number;
 export const SUBMISSION_SPEC_SCHEMA_VERSION: number;
+
+export type SourceHealthFreshness =
+  | "fresh"
+  | "aging"
+  | "stale"
+  | "dormant"
+  | "unknown";
+
+export type SourceHealthEntry = {
+  key: string;
+  category: string;
+  slug: string;
+  title: string;
+  sourceStatus: "available" | "missing";
+  sourceQuality: string;
+  freshness: SourceHealthFreshness;
+  ageDays: number | null;
+  lastActivityAt: string;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
+  packageTrust: DownloadTrust;
+  packageVerified: boolean;
+  hasPackageTrust: boolean;
+  riskBearing: boolean;
+  needsAttention: boolean;
+  attentionReasons: string[];
+};
+
+export type SourceHealthReport = {
+  schemaVersion: number;
+  kind: "source-health-report";
+  generatedAt: string;
+  count: number;
+  thresholds: {
+    freshMaxDays: number;
+    agingMaxDays: number;
+    staleMaxDays: number;
+  };
+  summary: {
+    sourceBackedCount: number;
+    sourceBackedPercent: number;
+    missingSourceCount: number;
+    freshCount: number;
+    agingCount: number;
+    staleCount: number;
+    dormantCount: number;
+    unknownFreshnessCount: number;
+    riskBearingCount: number;
+    missingSafetyNotesCount: number;
+    missingPrivacyNotesCount: number;
+    packageTrustCount: number;
+    packageTrustPercent: number;
+    needsAttentionCount: number;
+  };
+  categoryBreakdown: Record<
+    string,
+    {
+      count: number;
+      sourceBacked: number;
+      stale: number;
+      missingSafetyNotes: number;
+      missingPrivacyNotes: number;
+      packageTrust: number;
+      needsAttention: number;
+    }
+  >;
+  entries: SourceHealthEntry[];
+};
+
 export function buildSourceProvenance(
   entry: Partial<ContentEntry>,
 ): SourceProvenance;
+export function buildEntrySourceHealth(
+  entry: Partial<ContentEntry>,
+  referenceDate?: Date | string,
+): SourceHealthEntry;
+export function buildSourceHealthReport(
+  entries: Partial<ContentEntry>[],
+): SourceHealthReport;
 export function buildEntryQuality(
   entry: Partial<ContentEntry>,
   referenceDate?: Date | string,
