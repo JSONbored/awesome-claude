@@ -17,7 +17,7 @@
     {
       "path": "/data/raycast-index.json",
       "bytes": 1235881,
-      "sha256": "bd17bea8c0af22c2c867ccc227e184b55db86b84041c7daafb008ad9c8834f2e",
+      "sha256": "ccdc93f73c0a58b04ee3d42631fc84134404c0e32b957aad90374d1df09c4344",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -41,7 +41,7 @@
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "66bf65607433518e995314f861bd40d76f1252b80474aae2f5b7c99b0b43ed71",
+      "sha256": "5ac9552aaec34f494b78b60a816b496aec7c02dcaeacbc433780d6b899990e76",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -82,8 +82,8 @@
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3994003,
-      "sha256": "b1b511cd8b41892f0417d5a4d86b7325efe773a7ad70293962a628249971ae3b",
+      "bytes": 3994185,
+      "sha256": "ff8226f431e9f654260c0a0f53ec74dfb5acad58ea7fae3c930509cae31d6782",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -185,7 +185,7 @@
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "f8a900af4fd1a154c910d3a89554278befdbb8c8555281ff9b0c2a4f2c0f64b9",
+      "sha256": "040cd565d4474ab6fd93a87914694ae8951b1ece02231df867bc48cb62de1947",
       "builtAt": "2026-05-26T00:00:00.000Z"
     }
   ],
@@ -23334,7 +23334,7 @@
       "title": "Retro Daily - Hooks",
       "dateAdded": "2026-05-19",
       "type": "added",
-      "artifactHash": "920eafc41344aeab00937eb5020c1daba0a6065bcd3027b6dadb26ec154c5484"
+      "artifactHash": "273522cd4a9d9082adce3e3089cd08208fc9aa7aa9529020d98bdf5d675eb2d6"
     },
     {
       "category": "mcp",

@@ -38,7 +38,7 @@
       "canonicalUrl": "https://heyclau.de/entry/hooks/retro-daily",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
-      "artifactHash": "920eafc41344aeab00937eb5020c1daba0a6065bcd3027b6dadb26ec154c5484"
+      "artifactHash": "273522cd4a9d9082adce3e3089cd08208fc9aa7aa9529020d98bdf5d675eb2d6"
     },
     {
       "key": "mcp:packrift-mcp-server",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "a176c7cd7cdde8e28d8fb386d2b5588152bf4282a834aa541ad3889186a4e2d9"
+  "signature": "5d6592f1a85a423e4d4eb4c0c1c5e91eae57e911b1de55ed9f10f929edbb2a9d"
 }
