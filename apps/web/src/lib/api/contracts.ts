@@ -307,11 +307,13 @@ export const registrySearchQuerySchema = z.object({
   offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
 });
 
-export const registryTrendingQuerySchema = z.object({
-  category: categorySchema,
-  platform: platformSchema,
-  limit: z.coerce.number().int().min(1).max(50).optional().default(12),
-});
+export const registryTrendingQuerySchema = z
+  .object({
+    category: categorySchema,
+    platform: platformSchema,
+    limit: z.coerce.number().int().min(1).max(50).optional().default(12),
+  })
+  .strict();
 
 export const registryDiffQuerySchema = z.object({
   since: z.string().trim().max(128).optional().default(""),

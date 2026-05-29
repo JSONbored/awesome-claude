@@ -7,19 +7,31 @@ const state = vi.hoisted(() => ({
   votes: { available: true, counts: {} as Counts },
   community: { available: true, counts: {} as Counts },
   intent: { available: true, counts: {} as Counts },
+  voteReads: 0,
+  communityReads: 0,
+  intentReads: 0,
 }));
 
 vi.mock("@/data/entries", () => ({ ENTRIES: state.entries }));
 vi.mock("@/lib/votes", () => ({
-  safeVoteCounts: () => Promise.resolve(state.votes),
+  safeVoteCounts: () => {
+    state.voteReads += 1;
+    return Promise.resolve(state.votes);
+  },
 }));
 vi.mock("@/lib/community-signals", () => ({
   entryCommunityTarget: (category: string, slug: string) =>
     `entry:${category}/${slug}`,
-  safeCommunitySignalCounts: () => Promise.resolve(state.community),
+  safeCommunitySignalCounts: () => {
+    state.communityReads += 1;
+    return Promise.resolve(state.community);
+  },
 }));
 vi.mock("@/lib/intent-events", () => ({
-  safeIntentEventCounts: () => Promise.resolve(state.intent),
+  safeIntentEventCounts: () => {
+    state.intentReads += 1;
+    return Promise.resolve(state.intent);
+  },
 }));
 
 function entry(slug: string, overrides: Record<string, unknown> = {}) {
@@ -70,6 +82,9 @@ describe("/api/registry/trending", () => {
         "mcp:beta": { copy: 1, open: 1, install: 1, download: 0, vote: 0 },
       },
     };
+    state.voteReads = 0;
+    state.communityReads = 0;
+    state.intentReads = 0;
   });
 
   it("returns bounded privacy-safe trending entries with filters and reasons", async () => {
@@ -148,5 +163,18 @@ describe("/api/registry/trending", () => {
     const response = await GET(request("/api/registry/trending?limit=1000"));
 
     expect(response.status).toBe(400);
+  });
+
+  it("rejects unknown query parameters before route execution", async () => {
+    const { GET } =
+      await import("../apps/web/src/routes/api/registry/trending");
+    const response = await GET(
+      request("/api/registry/trending?limit=1&cachebust=abc123"),
+    );
+
+    expect(response.status).toBe(400);
+    expect(state.voteReads).toBe(0);
+    expect(state.communityReads).toBe(0);
+    expect(state.intentReads).toBe(0);
   });
 });
