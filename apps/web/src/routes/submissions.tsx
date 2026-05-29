@@ -309,8 +309,8 @@ function SubmissionsPage() {
               )}
               {q.authorCommentedWithoutBodyUpdate && (
                 <div className="mt-2 text-xs text-trust-blocked md:pl-[88px]">
-                  Author replied after review, but the original issue body still needs to be
-                  edited before validation can move forward.
+                  Author replied after review, but the original issue body still needs to be edited
+                  before validation can move forward.
                 </div>
               )}
             </div>

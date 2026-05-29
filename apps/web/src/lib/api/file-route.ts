@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-type ApiRouteHandler = (args: {
-  request: Request;
-  params: Record<string, string>;
-}) => unknown;
+type ApiRouteHandler = (args: { request: Request; params: Record<string, string> }) => unknown;
 
 type ApiRouteOptions = {
   server: {
@@ -16,7 +13,9 @@ type ApiRouteOptions = {
 // routeTree-related TypeScript suppressions in every endpoint.
 export function createApiFileRoute(path: string) {
   return (options: ApiRouteOptions) =>
-    (createFileRoute as unknown as (routePath: string) => (routeOptions: ApiRouteOptions) => unknown)(
-      path,
-    )(options);
+    (
+      createFileRoute as unknown as (
+        routePath: string,
+      ) => (routeOptions: ApiRouteOptions) => unknown
+    )(path)(options);
 }

@@ -629,7 +629,9 @@ export function looksLikeSubmissionIssue(issue = {}) {
         normalizeCategory(label.slice("community-".length)),
       );
     });
-    return hasCategoryLabel || looksLikeSubmitTitle(title) || hasSubmissionShape;
+    return (
+      hasCategoryLabel || looksLikeSubmitTitle(title) || hasSubmissionShape
+    );
   }
 
   if (looksLikeSubmitTitle(title)) return true;
@@ -866,7 +868,9 @@ function parseTimestamp(value) {
 }
 
 function stableTextFingerprint(value) {
-  const text = String(value ?? "").replace(/\r\n/g, "\n").trim();
+  const text = String(value ?? "")
+    .replace(/\r\n/g, "\n")
+    .trim();
   let hash = 0x811c9dc5;
   for (let index = 0; index < text.length; index += 1) {
     hash ^= text.charCodeAt(index);
@@ -1375,11 +1379,11 @@ export function buildSubmissionQueue(issues = [], options = {}) {
               ? "remind"
               : nextAction === "update_issue_body_required"
                 ? "update_issue_body"
-              : status === "needs_author_input"
-                ? "author_input"
-                : status === "source_needs_verification"
-                  ? "verify_source"
-                  : "",
+                : status === "needs_author_input"
+                  ? "author_input"
+                  : status === "source_needs_verification"
+                    ? "verify_source"
+                    : "",
         category: report.category || "",
         slug: report.fields?.slug || "",
         name: report.fields?.name || "",

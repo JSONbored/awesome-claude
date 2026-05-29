@@ -1244,7 +1244,9 @@ export function buildSubmissionQueue(
 export function submissionBodyFingerprint(
   issue?: Record<string, unknown>,
 ): string;
-export function submissionBodyUpdatedAt(issue?: Record<string, unknown>): string;
+export function submissionBodyUpdatedAt(
+  issue?: Record<string, unknown>,
+): string;
 export function submissionActivityState(issue?: Record<string, unknown>): {
   bodyFingerprint: string;
   bodyUpdatedAt: string;

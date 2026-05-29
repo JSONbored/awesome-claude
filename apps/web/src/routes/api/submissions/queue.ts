@@ -178,7 +178,11 @@ function commentImportPr(comments: GitHubComment[]) {
   return undefined;
 }
 
-function activityIssue(issue: GitHubIssue, comments: GitHubComment[], timeline: GitHubTimelineEvent[]) {
+function activityIssue(
+  issue: GitHubIssue,
+  comments: GitHubComment[],
+  timeline: GitHubTimelineEvent[],
+) {
   return {
     body: issue.body || "",
     createdAt: issue.created_at,
@@ -199,9 +203,7 @@ async function mapIssue(issue: GitHubIssue, repo: string, token: string) {
   const bodyImportPrUrl = importPrFromText(issue.body || "");
   const importPrUrl =
     bodyImportPrUrl ||
-    (status === "import_pr_open" || status === "imported"
-      ? commentImportPr(comments)
-      : undefined);
+    (status === "import_pr_open" || status === "imported" ? commentImportPr(comments) : undefined);
   const blockers = blockersFor(labels);
   if (activity.authorCommentedWithoutBodyUpdate) {
     blockers.push("Author replied after review, but the issue body was not updated.");
@@ -252,9 +254,7 @@ async function listIssues(params: { repo: string; token: string; limit: number }
     ok: true as const,
     status: response.status,
     token: params.token,
-    issues: payload.filter(
-      (issue) => !issue.pull_request && looksLikeSubmissionIssue(issue),
-    ),
+    issues: payload.filter((issue) => !issue.pull_request && looksLikeSubmissionIssue(issue)),
   };
 }
 

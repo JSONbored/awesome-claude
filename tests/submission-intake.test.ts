@@ -848,9 +848,9 @@ npx unslop --help`;
         now: "2026-04-30T00:00:00Z",
       }),
     ).toBe("reminder_due");
-    expect(
-      submissionAgeDays(bodyEdited, { now: "2026-04-30T00:00:00Z" }),
-    ).toBe(1);
+    expect(submissionAgeDays(bodyEdited, { now: "2026-04-30T00:00:00Z" })).toBe(
+      1,
+    );
     expect(
       submissionStaleState(bodyEdited, validateSubmission(bodyEdited), {
         now: "2026-04-30T00:00:00Z",

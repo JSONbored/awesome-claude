@@ -115,7 +115,8 @@ async function main() {
 
   ensureGhAuth();
 
-  const repo = argValue("--repo") || process.env.GITHUB_REPOSITORY || defaultRepo;
+  const repo =
+    argValue("--repo") || process.env.GITHUB_REPOSITORY || defaultRepo;
   const outputPath =
     argValue("--output") || path.join("reports", "submission-queue.json");
   const now = argValue("--now") || new Date().toISOString();
@@ -151,8 +152,12 @@ async function main() {
     `ready=${queue.summary.ready} needs_author_input=${queue.summary.needsAuthorInput} stale=${queue.summary.stale} close_eligible=${queue.summary.closeEligible} skipped=${queue.summary.skipped}`,
   );
   console.log("");
-  console.log("Issue  Group                Status                    Action                    Body edited           Author follow-up  Title");
-  console.log("-----  -------------------  ------------------------  ------------------------  --------------------  ----------------  -----");
+  console.log(
+    "Issue  Group                Status                    Action                    Body edited           Author follow-up  Title",
+  );
+  console.log(
+    "-----  -------------------  ------------------------  ------------------------  --------------------  ----------------  -----",
+  );
   for (const entry of queue.entries) {
     const title =
       entry.title.length > 58 ? `${entry.title.slice(0, 55)}...` : entry.title;
@@ -162,8 +167,12 @@ async function main() {
         String(entry.triageGroup || "-").padEnd(19),
         String(entry.status || "-").padEnd(24),
         String(entry.nextAction || "-").padEnd(24),
-        String(entry.bodyUpdatedAt || "-").slice(0, 19).padEnd(20),
-        String(entry.authorCommentedWithoutBodyUpdate ? "body edit needed" : "-")
+        String(entry.bodyUpdatedAt || "-")
+          .slice(0, 19)
+          .padEnd(20),
+        String(
+          entry.authorCommentedWithoutBodyUpdate ? "body edit needed" : "-",
+        )
           .slice(0, 16)
           .padEnd(16),
         title,
