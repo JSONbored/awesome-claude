@@ -39,6 +39,7 @@ describe("PR change classifier", () => {
     git(cwd, ["init", "--initial-branch=main"]);
     git(cwd, ["config", "user.email", "test@example.com"]);
     git(cwd, ["config", "user.name", "Test User"]);
+    git(cwd, ["config", "commit.gpgsign", "false"]);
     fs.writeFileSync(path.join(cwd, "README.md"), "# fixture\n");
     git(cwd, ["add", "README.md"]);
     git(cwd, ["commit", "-m", "init"]);
