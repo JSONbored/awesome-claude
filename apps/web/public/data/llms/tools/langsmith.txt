@@ -1,12 +1,12 @@
 # LangSmith
-URL: https://heyclau.de/tools/langsmith
+URL: https://heyclau.de/entry/tools/langsmith
 Category: tools
 Author: LangChain
 Date added: 2026-04-27
 Documentation: https://docs.smith.langchain.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/langsmith
+- Canonical URL: https://heyclau.de/entry/tools/langsmith
 - Source URLs: https://docs.smith.langchain.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langsmith.mdx, https://www.langchain.com/langsmith
 - Brand: LangSmith
 - Brand domain: langchain.com

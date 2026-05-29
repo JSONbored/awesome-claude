@@ -1,5 +1,5 @@
 # Browser Use
-URL: https://heyclau.de/tools/browser-use
+URL: https://heyclau.de/entry/tools/browser-use
 Category: tools
 Author: Browser Use
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://docs.browser-use.com
 Repository: https://github.com/browser-use/browser-use
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/browser-use
+- Canonical URL: https://heyclau.de/entry/tools/browser-use
 - Source URLs: https://docs.browser-use.com, https://github.com/browser-use/browser-use, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx, https://browser-use.com
 - Brand: Browser Use
 - Brand domain: browser-use.com

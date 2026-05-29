@@ -53,14 +53,7 @@ jobs:
             exit 1
           fi
           if [ -z "$ADMIN_API_TOKEN" ]; then
-            if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
-              echo "::warning::Skipping scheduled jobs source revalidation because JOBS_ADMIN_API_TOKEN or ADMIN_API_TOKEN is not configured."
-              {
-                echo "skip=true"
-              } >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            echo "::error::Missing JOBS_ADMIN_API_TOKEN or ADMIN_API_TOKEN."
+            echo "::error::Missing JOBS_ADMIN_API_TOKEN or ADMIN_API_TOKEN. Scheduled source revalidation must fail visibly instead of silently skipping active jobs."
             exit 1
           fi
           {

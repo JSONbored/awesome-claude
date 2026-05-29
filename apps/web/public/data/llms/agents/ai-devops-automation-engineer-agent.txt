@@ -1,11 +1,11 @@
 # AI DevOps Engineer Agent - Automate Infrastructure & CI/CD
-URL: https://heyclau.de/agents/ai-devops-automation-engineer-agent
+URL: https://heyclau.de/entry/agents/ai-devops-automation-engineer-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/ai-devops-automation-engineer-agent
+- Canonical URL: https://heyclau.de/entry/agents/ai-devops-automation-engineer-agent
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

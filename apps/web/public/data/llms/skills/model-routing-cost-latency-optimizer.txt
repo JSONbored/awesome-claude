@@ -1,5 +1,5 @@
 # Model Routing Cost and Latency Optimizer Skill
-URL: https://heyclau.de/skills/model-routing-cost-latency-optimizer
+URL: https://heyclau.de/entry/skills/model-routing-cost-latency-optimizer
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://platform.openai.com/docs/guides/latency-optimization
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx
 Download: /downloads/skills/model-routing-cost-latency-optimizer.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/model-routing-cost-latency-optimizer
+- Canonical URL: https://heyclau.de/entry/skills/model-routing-cost-latency-optimizer
 - Source URLs: https://platform.openai.com/docs/guides/latency-optimization, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/model-routing-cost-latency-optimizer.mdx
 - Package URL: /downloads/skills/model-routing-cost-latency-optimizer.zip
 - Package SHA256: 8d45355903bb0faf1b2104e91a605180579611f7647fd252e981b0d4873d574f

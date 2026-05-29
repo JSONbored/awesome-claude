@@ -1,11 +1,11 @@
 # Data Pipeline Engineering Agent - Agents
-URL: https://heyclau.de/agents/data-pipeline-engineering-agent
+URL: https://heyclau.de/entry/agents/data-pipeline-engineering-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/data-pipeline-engineering-agent
+- Canonical URL: https://heyclau.de/entry/agents/data-pipeline-engineering-agent
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

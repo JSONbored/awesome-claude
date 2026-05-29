@@ -379,7 +379,16 @@
     "repoUrl": "https://github.com/remarkjs/remark",
     "githubStars": 8880,
     "githubForks": 374,
-    "repoUpdatedAt": "2026-05-18T12:37:10Z"
+    "repoUpdatedAt": "2026-05-18T12:37:10Z",
+    "repoStats": {
+      "repository": "remarkjs/remark",
+      "url": "https://github.com/remarkjs/remark",
+      "stars": 8880,
+      "forks": 374,
+      "updatedAt": "2026-05-18T12:37:10Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

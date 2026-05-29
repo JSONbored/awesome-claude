@@ -1,13 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const envMock = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 const directoryEntriesMock = vi.hoisted(() => vi.fn());
 
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: envMock.value }),
-}));
-
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getDirectoryEntries: directoryEntriesMock,
 }));
 
@@ -93,10 +88,6 @@ describe("website submission API", () => {
   beforeEach(() => {
     directoryEntriesMock.mockReset();
     directoryEntriesMock.mockResolvedValue([]);
-    envMock.value = {
-      GITHUB_SUBMISSIONS_TOKEN: "test-token",
-      GITHUB_SUBMISSIONS_REPO: "JSONbored/awesome-claude",
-    };
     process.env.GITHUB_SUBMISSIONS_TOKEN = "test-token";
     process.env.GITHUB_SUBMISSION_TOKEN = "";
     process.env.GITHUB_TOKEN = "";
@@ -119,7 +110,7 @@ describe("website submission API", () => {
   });
 
   it("creates a reviewable GitHub issue without writing content directly", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.11"),
     );
@@ -152,7 +143,7 @@ describe("website submission API", () => {
   });
 
   it("rejects invalid submission fields before GitHub issue creation", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: { name: "Incomplete" } }, "203.0.113.12"),
     );
@@ -168,7 +159,7 @@ describe("website submission API", () => {
     directoryEntriesMock.mockResolvedValue([
       { category: "mcp", slug: "direct-submit-api-asset" },
     ]);
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.13"),
     );
@@ -208,7 +199,7 @@ describe("website submission API", () => {
       }),
     );
 
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.18"),
     );
@@ -227,8 +218,205 @@ describe("website submission API", () => {
     expect(fetch).toHaveBeenCalledTimes(1);
   });
 
+  it("lists sanitized public submission queue entries from GitHub issues", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.includes("/issues/88/comments")) {
+          return Promise.resolve(
+            new Response(
+              JSON.stringify([
+                {
+                  body: "Import PR opened at https://github.com/JSONbored/awesome-claude/pull/188",
+                },
+              ]),
+              {
+                status: 200,
+                headers: { "content-type": "application/json" },
+              },
+            ),
+          );
+        }
+        if (url.includes("/issues?")) {
+          return Promise.resolve(
+            new Response(
+              JSON.stringify([
+                {
+                  number: 88,
+                  html_url:
+                    "https://github.com/JSONbored/awesome-claude/issues/88",
+                  title: "Submit Skill: Queue Secret Skill",
+                  body: [
+                    "### Name",
+                    "Queue Secret Skill",
+                    "",
+                    "### Slug",
+                    "queue-secret-skill",
+                    "",
+                    "### Category",
+                    "skills",
+                    "",
+                    "### Internal context",
+                    "DO_NOT_LEAK_RAW_BODY",
+                  ].join("\n"),
+                  user: {
+                    login: "submitter",
+                    html_url: "https://github.com/submitter",
+                  },
+                  labels: [
+                    { name: "content-submission" },
+                    { name: "community-skills" },
+                    { name: "import-pr-open" },
+                  ],
+                  state: "open",
+                  created_at: "2026-05-01T00:00:00Z",
+                  updated_at: "2026-05-02T00:00:00Z",
+                  closed_at: null,
+                  comments_url:
+                    "https://api.github.com/repos/JSONbored/awesome-claude/issues/88/comments",
+                },
+              ]),
+              {
+                status: 200,
+                headers: { "content-type": "application/json" },
+              },
+            ),
+          );
+        }
+        return Promise.resolve(new Response("{}", { status: 404 }));
+      }),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=5", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.22",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    const raw = await response.text();
+    expect(raw).not.toContain("DO_NOT_LEAK_RAW_BODY");
+    expect(JSON.parse(raw)).toMatchObject({
+      ok: true,
+      repo: "JSONbored/awesome-claude",
+      count: 1,
+      entries: [
+        {
+          number: 88,
+          url: "https://github.com/JSONbored/awesome-claude/issues/88",
+          author: "submitter",
+          authorUrl: "https://github.com/submitter",
+          category: "skills",
+          slug: "queue-secret-skill",
+          status: "import_pr_open",
+          state: "open",
+          importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/188",
+        },
+      ],
+    });
+
+    const fetchMock = fetch as unknown as {
+      mock: { calls: Array<[RequestInfo | URL, RequestInit]> };
+    };
+    expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({
+      authorization: "Bearer test-token",
+      "user-agent":
+        "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
+      "x-github-api-version": "2022-11-28",
+    });
+  });
+
+  it("fails visibly when GitHub rejects a token-backed queue read", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(JSON.stringify({ message: "Forbidden" }), {
+            status: 403,
+            headers: { "content-type": "application/json" },
+          }),
+        ),
+      ),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=5", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.24",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(502);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: false,
+      error: {
+        code: "provider_error",
+      },
+    });
+
+    const fetchMock = fetch as unknown as {
+      mock: { calls: Array<[RequestInfo | URL, RequestInit]> };
+    };
+    expect(fetchMock.mock.calls).toHaveLength(1);
+    expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({
+      authorization: "Bearer test-token",
+      "user-agent":
+        "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)",
+    });
+  });
+
+  it("does not expose non-submission issues through the queue endpoint", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve(
+          new Response(
+            JSON.stringify({
+              number: 99,
+              html_url: "https://github.com/JSONbored/awesome-claude/issues/99",
+              title: "General issue",
+              body: "Not a content submission.",
+              labels: [{ name: "bug" }],
+              state: "open",
+              created_at: "2026-05-01T00:00:00Z",
+              updated_at: "2026-05-02T00:00:00Z",
+              closed_at: null,
+            }),
+            {
+              status: 200,
+              headers: { "content-type": "application/json" },
+            },
+          ),
+        ),
+      ),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?number=99", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.23",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toMatchObject({
+      error: { code: "submission_not_found" },
+    });
+  });
+
   it("preflights valid submissions without GitHub writes", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({ fields: validFields() }, "203.0.113.20"),
     );
@@ -260,12 +448,12 @@ describe("website submission API", () => {
         category: "mcp",
         slug: "direct-submit-api-asset",
         title: "Direct Submit API Asset",
-        canonicalUrl: "https://heyclau.de/mcp/direct-submit-api-asset",
+        canonicalUrl: "https://heyclau.de/entry/mcp/direct-submit-api-asset",
         documentationUrl: "https://example.com/docs",
         trustSignals: { sourceUrls: ["https://example.com/docs"] },
       },
     ]);
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({ fields: validFields() }, "203.0.113.21"),
     );
@@ -287,7 +475,7 @@ describe("website submission API", () => {
   });
 
   it("preflights product-shaped submissions toward the tools flow", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -320,7 +508,7 @@ describe("website submission API", () => {
   });
 
   it("preflights local download requests as blockers", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -351,7 +539,7 @@ describe("website submission API", () => {
   });
 
   it("preflights risky drafts with expected safety and privacy notes", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -388,7 +576,7 @@ describe("website submission API", () => {
   });
 
   it("silently discards honeypot submissions", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request(
         { fields: validFields(), honeypot: "https://spam.example" },
@@ -405,12 +593,8 @@ describe("website submission API", () => {
   });
 
   it("requires Turnstile when the secret is configured", async () => {
-    envMock.value = {
-      ...envMock.value,
-      TURNSTILE_SECRET_KEY: "turnstile-secret",
-    };
     process.env.TURNSTILE_SECRET_KEY = "turnstile-secret";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.15"),
     );
@@ -423,13 +607,9 @@ describe("website submission API", () => {
   });
 
   it("fails closed when production Turnstile is required but not configured", async () => {
-    envMock.value = {
-      ...envMock.value,
-      SUBMISSIONS_REQUIRE_TURNSTILE: "1",
-    };
     process.env.TURNSTILE_SECRET_KEY = "";
     process.env.SUBMISSIONS_REQUIRE_TURNSTILE = "1";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.19"),
     );
@@ -442,11 +622,10 @@ describe("website submission API", () => {
   });
 
   it("returns a GitHub fallback when issue creation is not configured", async () => {
-    envMock.value = {};
     process.env.GITHUB_SUBMISSIONS_TOKEN = "";
     process.env.GITHUB_SUBMISSION_TOKEN = "";
     process.env.GITHUB_TOKEN = "";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.16"),
     );
@@ -463,7 +642,7 @@ describe("website submission API", () => {
   });
 
   it("rate limits repeated direct submissions by client IP", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     for (let index = 0; index < 8; index += 1) {
       const response = await POST(
         request(

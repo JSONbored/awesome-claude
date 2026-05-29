@@ -1,5 +1,5 @@
 # ContrastAPI Security Tools
-URL: https://heyclau.de/mcp/contrastapi-mcp-server
+URL: https://heyclau.de/entry/mcp/contrastapi-mcp-server
 Category: mcp
 Author: UPinar
 Submitted by: UPinar
@@ -10,7 +10,7 @@ Documentation: https://api.contrastcyber.com
 Repository: https://github.com/UPinar/contrastapi
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/contrastapi-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/contrastapi-mcp-server
 - Source URLs: https://api.contrastcyber.com, https://github.com/UPinar/contrastapi, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx
 - Brand: ContrastAPI
 - Brand domain: contrastcyber.com

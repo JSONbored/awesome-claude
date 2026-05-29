@@ -1,18 +1,22 @@
-# Web Deployment Notes (OpenNext Cloudflare)
+# Web Deployment Notes (TanStack Start on Cloudflare)
 
 ## Runtime model
 
-- This project deploys as OpenNext Cloudflare Workers.
+- This project deploys as a TanStack Start app bundled by Vite/Nitro for
+  Cloudflare Workers.
 - Production worker: `heyclaude-prod`
 - Development worker: `heyclaude-dev`
-- Next.js pages and API routes (for example `/api/votes/*` and `/api/newsletter/*`) run inside each Worker.
+- File routes under `apps/web/src/routes/**` include both page routes and
+  server-side API handlers that run inside each Worker.
 
 ## Required bindings
 
 Configured in [`wrangler.jsonc`](./wrangler.jsonc):
 
 - `SITE_DB` (D1) for durable upvotes, reviewed jobs listings, listing leads, commercial placements, community signals, and future dynamic site state.
-- Shared between `prod` and `dev` environments in the current setup.
+- Production uses the existing `heyclaude-votes` database for continuity.
+- Development uses the separate `heyclaude-dev-site-state` database so PR/dev
+  testing does not mutate production votes, jobs, leads, or community signals.
 - `API_REGISTRY_RATE_LIMIT`, `API_DYNAMIC_RATE_LIMIT`,
   `API_STRICT_RATE_LIMIT`, and `API_MCP_RATE_LIMIT` for Cloudflare-native
   per-route rate limiting. The MCP binding is intentionally separate so the
@@ -30,15 +34,16 @@ pnpm --filter web exec wrangler d1 create heyclaude-site-state
 
 2. Set `database_name` and `database_id` returned by Cloudflare in [`wrangler.jsonc`](./wrangler.jsonc) for `SITE_DB`.
 
-Existing environments may still point at the historical `heyclaude-votes`
-database name for continuity. The binding is the source of truth; new
-environments should use a site-state name because the same D1 database now
-stores votes, jobs, leads, placements, intents, and community signals.
+Production currently points at the historical `heyclaude-votes` database name
+for continuity. The binding is the source of truth; new environments should use
+a site-state name because the same D1 database now stores votes, jobs, leads,
+placements, intents, and community signals.
 
 3. Apply migrations:
 
 ```bash
 pnpm --filter web db:migrate:remote
+pnpm --filter web exec wrangler d1 migrations apply SITE_DB --remote --env dev
 ```
 
 Local migration:
@@ -98,19 +103,36 @@ jobs, sitemap coverage, and `JobPosting` JSON-LD. See
 `docs/jobs-revenue-ops.md` for the lead review, scheduled source revalidation,
 enrichment, Polar handoff, and follow-up templates.
 
-## OpenNext build/deploy commands
+## Build/deploy commands
 
 These are the project-standard commands:
 
 ```bash
-pnpm --filter web deploy
+pnpm --filter web deploy:prod
 ```
 
 That command runs:
 
 1. registry artifact generation
-2. `opennextjs-cloudflare build`
-3. `opennextjs-cloudflare deploy`
+2. `vite build`, which emits `dist/client` and `dist/server/index.mjs`
+3. `wrangler deploy --config wrangler.jsonc --env ""`
+
+Development deploy:
+
+```bash
+pnpm --filter web deploy:dev
+```
+
+That command targets `heyclaude-dev` with:
+
+```bash
+wrangler deploy --config wrangler.jsonc --env dev
+```
+
+Always pass the explicit Wrangler config and environment. TanStack/Nitro emits a
+redirected `dist/server/wrangler.json`; invoking `wrangler deploy` without
+`--config wrangler.jsonc` can make Wrangler validate that generated redirected
+config and reject it when environments are present.
 
 For local Worker-runtime preview:
 
@@ -155,11 +177,39 @@ pnpm --filter web exec wrangler secret put DISCORD_WEBHOOK_URL
 
 Public vars (non-secret), set in Cloudflare dashboard for each worker environment:
 
+These names are preserved for deployment compatibility even though the app is no
+longer a Next.js app.
+
 - `NEXT_PUBLIC_DISCORD_URL`
 - `NEXT_PUBLIC_TWITTER_URL`
 - `NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_FEATURED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_JOB_BOARD_URL`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+- `SUBMISSIONS_REQUIRE_TURNSTILE`
+
+Use separate production and development Turnstile widgets/secrets. The public
+site key is non-secret, but the matching `TURNSTILE_SECRET_KEY` must be set as a
+Worker secret for the same environment. If `SUBMISSIONS_REQUIRE_TURNSTILE=1`
+and the secret is missing, submission creation deliberately returns a 503 with a
+GitHub issue fallback URL rather than accepting unauthenticated writes.
+
+The development Worker uses Cloudflare's official always-pass Turnstile test
+site key in `wrangler.jsonc`, so it must be paired with the matching official
+test secret in the dev Worker only:
+
+```bash
+printf '%s' '1x0000000000000000000000000000000AA' |
+  pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY --env dev
+```
+
+Required secrets, per environment:
+
+```bash
+pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY
+pnpm --filter web exec wrangler secret put GITHUB_SUBMISSIONS_TOKEN
+pnpm --filter web exec wrangler secret put ADMIN_API_TOKEN
+```
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill values.
 
@@ -186,10 +236,14 @@ The sync command creates or updates draft templates only. It does not publish
 templates, create Broadcasts, schedule campaigns, or send email. Keep those
 steps manual inside Resend.
 
-## OpenNext Cloudflare notes used in this project
+## TanStack/Nitro Cloudflare notes used in this project
 
-- `next.config.mjs` initializes Cloudflare local development via `initOpenNextCloudflareForDev()`.
-- Route handlers avoid `export const runtime = "edge"` for OpenNext Cloudflare compatibility.
+- `apps/web/vite.config.ts` enables TanStack Start with Nitro output.
+- `apps/web/src/server.ts` wraps requests in Cloudflare runtime context so API
+  helpers can read Worker bindings without importing framework-specific globals.
+- `wrangler.jsonc` points at `dist/server/index.mjs` and `dist/client`.
+- Nitro also writes generated deployment metadata under `dist/`; generated
+  build output must not be committed.
 - Static asset cache headers are set in `public/_headers`.
 
 ## Git-integrated Cloudflare worker settings

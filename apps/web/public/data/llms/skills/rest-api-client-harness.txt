@@ -1,5 +1,5 @@
 # REST API Client Harness Skill
-URL: https://heyclau.de/skills/rest-api-client-harness
+URL: https://heyclau.de/entry/skills/rest-api-client-harness
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/rest-api-client-harness.mdx
 Download: /downloads/skills/rest-api-client-harness.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/rest-api-client-harness
+- Canonical URL: https://heyclau.de/entry/skills/rest-api-client-harness
 - Source URLs: https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/rest-api-client-harness.mdx
 - Package URL: /downloads/skills/rest-api-client-harness.zip
 - Package SHA256: 7ca26f7e32710870302ff983bbd1f2b443b756a67af553ece30441be5e3b329c

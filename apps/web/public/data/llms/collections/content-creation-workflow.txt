@@ -1,11 +1,11 @@
 # Content Creation
-URL: https://heyclau.de/collections/content-creation-workflow
+URL: https://heyclau.de/entry/collections/content-creation-workflow
 Category: collections
 Author: JSONbored
 Date added: 2025-10-02
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/content-creation-workflow.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/collections/content-creation-workflow
+- Canonical URL: https://heyclau.de/entry/collections/content-creation-workflow
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/content-creation-workflow.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

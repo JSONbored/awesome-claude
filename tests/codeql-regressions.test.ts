@@ -1,3 +1,5 @@
+import fs from "node:fs";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -40,7 +42,7 @@ describe("CodeQL regression coverage", () => {
         email: "Reader@Example.com",
         source: "footer",
       }),
-    ).toEqual({ email: "reader@example.com", source: "footer" });
+    ).toEqual({ email: "reader@example.com", segments: [], source: "footer" });
 
     expect(() =>
       newsletterSubscribeBodySchema.parse({
@@ -58,5 +60,34 @@ describe("CodeQL regression coverage", () => {
         applyUrl: "https://example.com/jobs/ai-engineer",
       }),
     ).toThrow();
+  });
+
+  it("keeps newsletter mutations behind bounded same-origin handlers", () => {
+    const repoRoot = new URL("..", import.meta.url);
+    const read = (relativePath: string) =>
+      fs.readFileSync(new URL(relativePath, repoRoot), "utf8");
+
+    const subscribeRoute = read(
+      "apps/web/src/routes/api/public/newsletter/subscribe.ts",
+    );
+    const unsubscribeRoute = read(
+      "apps/web/src/routes/api/public/newsletter/unsubscribe.ts",
+    );
+    const newsletterClient = read("apps/web/src/lib/api/newsletter.ts");
+
+    expect(subscribeRoute).not.toContain("Access-Control-Allow-Origin");
+    expect(subscribeRoute).not.toContain("request.json()");
+    expect(subscribeRoute).toContain("POST(request, { params })");
+
+    expect(unsubscribeRoute).not.toContain("Access-Control-Allow-Origin");
+    expect(unsubscribeRoute).not.toContain("request.json()");
+    expect(unsubscribeRoute).toContain("readRequestTextWithinLimit");
+    expect(unsubscribeRoute).toContain("isAllowedOrigin");
+    expect(unsubscribeRoute).toContain("isRateLimited");
+
+    expect(newsletterClient).toContain('fetch("/api/newsletter/subscribe"');
+    expect(newsletterClient).not.toContain(
+      'fetch("/api/public/newsletter/subscribe"',
+    );
   });
 });

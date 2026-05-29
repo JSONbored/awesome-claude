@@ -1,12 +1,12 @@
 # /explain - Code Explanation Command for Claude Code
-URL: https://heyclau.de/commands/explain
+URL: https://heyclau.de/entry/commands/explain
 Category: commands
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://docs.claude.ai/commands/explain
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/explain.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/explain
+- Canonical URL: https://heyclau.de/entry/commands/explain
 - Source URLs: https://docs.claude.ai/commands/explain, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/explain.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

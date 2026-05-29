@@ -1,10 +1,7 @@
-import {
-  buildSubmissionIssueDraft,
-  validateSubmission,
-} from "@heyclaude/registry/submission";
+import { buildSubmissionIssueDraft, validateSubmission } from "@heyclaude/registry/submission";
 import { analyzeIssueSubmissionRisk } from "@heyclaude/registry/submission-risk";
 
-import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content";
+import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
 
 const DEFAULT_REPO = "JSONbored/awesome-claude";
@@ -80,12 +77,7 @@ function githubIssueFallbackUrl(issue: { title: string; body: string }) {
 }
 
 function submittedSourceUrls(fields: Record<string, unknown>) {
-  return [
-    fields.github_url,
-    fields.docs_url,
-    fields.source_url,
-    fields.download_url,
-  ]
+  return [fields.github_url, fields.docs_url, fields.source_url, fields.download_url]
     .map(normalizeUrl)
     .filter(Boolean);
 }
@@ -108,9 +100,7 @@ function duplicateCandidates(params: {
   category: string;
   slug: string;
 }) {
-  const title = normalizeComparable(
-    params.fields.name || params.fields.title || "",
-  );
+  const title = normalizeComparable(params.fields.name || params.fields.title || "");
   const sourceUrls = submittedSourceUrls(params.fields);
   const sourceUrlSet = new Set(sourceUrls);
   const candidates: DuplicateCandidate[] = [];
@@ -128,9 +118,7 @@ function duplicateCandidates(params: {
     }
 
     if (sourceUrlSet.size) {
-      const shared = entrySourceUrls(entry).find((url) =>
-        sourceUrlSet.has(url),
-      );
+      const shared = entrySourceUrls(entry).find((url) => sourceUrlSet.has(url));
       if (shared) reasons.push("source_url");
     }
 
@@ -140,9 +128,7 @@ function duplicateCandidates(params: {
       category: entry.category,
       slug: entry.slug,
       title: entry.title,
-      url:
-        entry.canonicalUrl ||
-        `${siteConfig.url}/${entry.category}/${entry.slug}`,
+      url: entry.canonicalUrl || `${siteConfig.url}/entry/${entry.category}/${entry.slug}`,
       reasons: [...new Set(reasons)],
     });
   }
@@ -166,18 +152,14 @@ function isToolsRouteError(message: string) {
   );
 }
 
-function missingNoteWarnings(
-  risk: ReturnType<typeof analyzeIssueSubmissionRisk>,
-) {
+function missingNoteWarnings(risk: ReturnType<typeof analyzeIssueSubmissionRisk>) {
   const warnings = risk.classificationWarnings ?? [];
   const safety = warnings.find((item) => item.id === "missing_safety_notes");
   const privacy = warnings.find((item) => item.id === "missing_privacy_notes");
   return { safety, privacy };
 }
 
-export async function buildSubmissionPreflight(
-  fields: Record<string, unknown>,
-) {
+export async function buildSubmissionPreflight(fields: Record<string, unknown>) {
   const issue = buildSubmissionIssueDraft({
     ...fields,
     submitted_via: "website-preflight",
@@ -235,23 +217,15 @@ export async function buildSubmissionPreflight(
   }
 
   for (const duplicate of duplicates) {
-    if (
-      duplicate.reasons.includes("slug") ||
-      duplicate.reasons.includes("source_url")
-    ) {
-      blockers.push(
-        blocker("duplicate_existing", `Likely duplicate of ${duplicate.key}.`),
-      );
+    if (duplicate.reasons.includes("slug") || duplicate.reasons.includes("source_url")) {
+      blockers.push(blocker("duplicate_existing", `Likely duplicate of ${duplicate.key}.`));
     }
   }
 
   for (const duplicate of duplicates) {
     if (duplicate.reasons.includes("title")) {
       warnings.push(
-        warning(
-          "possible_duplicate_title",
-          `Similar existing title: ${duplicate.key}.`,
-        ),
+        warning("possible_duplicate_title", `Similar existing title: ${duplicate.key}.`),
       );
     }
   }
@@ -270,9 +244,7 @@ export async function buildSubmissionPreflight(
     warnings.push(warning("missing_safety_notes", noteWarnings.safety.summary));
   }
   if (noteWarnings.privacy) {
-    warnings.push(
-      warning("missing_privacy_notes", noteWarnings.privacy.summary),
-    );
+    warnings.push(warning("missing_privacy_notes", noteWarnings.privacy.summary));
   }
 
   const routeSuggestion = validation.errors?.some(isToolsRouteError)
@@ -310,10 +282,7 @@ export async function buildSubmissionPreflight(
     expectedNotes: {
       safety: Boolean(noteWarnings.safety),
       privacy: Boolean(noteWarnings.privacy),
-      reasons: [
-        noteWarnings.safety?.detail,
-        noteWarnings.privacy?.detail,
-      ].filter(Boolean),
+      reasons: [noteWarnings.safety?.detail, noteWarnings.privacy?.detail].filter(Boolean),
     },
     blockers,
     warnings,

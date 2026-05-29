@@ -84,38 +84,48 @@ const generatedArtifactInfra = touches(
   /^apps\/web\/src\/generated\//,
   "README.md",
 );
+const submissionAutomationInfra = touches(
+  /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
+);
 
 const flags = {
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
-  registry: generatedArtifactInfra,
-  web: touches(
-    /^apps\/web\//,
-    /^emails\//,
-    /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
-    /^scripts\/(generate-openapi|run-playwright|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
-    /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
-    "playwright.config.ts",
-    "vitest.config.ts",
-    "package.json",
-    "pnpm-lock.yaml",
-  ),
+  registry:
+    contentCategoryTouched ||
+    generatedArtifactInfra ||
+    submissionAutomationInfra,
+  web:
+    contentCategoryTouched ||
+    submissionAutomationInfra ||
+    touches(
+      /^apps\/web\//,
+      /^emails\//,
+      /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
+      /^scripts\/(generate-openapi|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
+      /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
+      "vitest.config.ts",
+      "package.json",
+      "pnpm-lock.yaml",
+    ),
   mcp: touches(
     /^packages\/mcp\//,
-    /^apps\/web\/src\/app\/api\/mcp\//,
+    /^apps\/web\/src\/routes\/api\/mcp\.ts$/,
     /^scripts\/validate-mcp-package\.mjs$/,
     /^tests\/mcp-.*\.test\.ts$/,
     "package.json",
     "pnpm-lock.yaml",
   ),
-  raycast: touches(
-    /^integrations\/raycast\//,
-    /^apps\/web\/public\/data\/raycast/,
-    /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
-    /^tests\/registry-artifacts\.test\.ts$/,
-    "package.json",
-    "pnpm-lock.yaml",
-  ),
+  raycast:
+    contentCategoryTouched ||
+    touches(
+      /^integrations\/raycast\//,
+      /^apps\/web\/public\/data\/raycast/,
+      /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
+      /^tests\/registry-artifacts\.test\.ts$/,
+      "package.json",
+      "pnpm-lock.yaml",
+    ),
   packages: touches(
     /^apps\/web\/public\/downloads\//,
     /^content\/skills\/.*\.zip$/,
@@ -124,16 +134,17 @@ const flags = {
     "package.json",
     "pnpm-lock.yaml",
   ),
-  ci: touches(
-    /^\.github\/workflows\//,
-    /^scripts\/ci\//,
-    /^\.trunk\//,
-    "renovate.json",
-    "package.json",
-    "pnpm-lock.yaml",
-    "playwright.config.ts",
-    "vitest.config.ts",
-  ),
+  ci:
+    submissionAutomationInfra ||
+    touches(
+      /^\.github\/workflows\//,
+      /^scripts\/ci\//,
+      /^\.trunk\//,
+      "renovate.json",
+      "package.json",
+      "pnpm-lock.yaml",
+      "vitest.config.ts",
+    ),
 };
 
 flags.docs = touches(

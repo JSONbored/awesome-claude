@@ -1,5 +1,5 @@
 # IndexNow Search Indexing Accelerator Skill
-URL: https://heyclau.de/skills/indexnow-search-indexing-accelerator
+URL: https://heyclau.de/entry/skills/indexnow-search-indexing-accelerator
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://www.indexnow.org/documentation
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx
 Download: /downloads/skills/indexnow-search-indexing-accelerator.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/indexnow-search-indexing-accelerator
+- Canonical URL: https://heyclau.de/entry/skills/indexnow-search-indexing-accelerator
 - Source URLs: https://www.indexnow.org/documentation, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/indexnow-search-indexing-accelerator.mdx
 - Package URL: /downloads/skills/indexnow-search-indexing-accelerator.zip
 - Package SHA256: 50f1cfd7cb8c10daafd7e7d88904e1afcf852a63e55cefd52aa673a83c2969b2

@@ -1,11 +1,11 @@
 # Claude 4 Extended Thinking
-URL: https://heyclau.de/guides/claude-4-extended-thinking-tutorial
+URL: https://heyclau.de/entry/guides/claude-4-extended-thinking-tutorial
 Category: guides
 Author: JSONbored
 Date added: 2025-10-27
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/guides/claude-4-extended-thinking-tutorial
+- Canonical URL: https://heyclau.de/entry/guides/claude-4-extended-thinking-tutorial
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-4-extended-thinking-tutorial.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

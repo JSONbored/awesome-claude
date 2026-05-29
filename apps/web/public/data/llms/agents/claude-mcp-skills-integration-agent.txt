@@ -1,12 +1,12 @@
 # Claude MCP Skills Integration Agent - Claude Code Agents
-URL: https://heyclau.de/agents/claude-mcp-skills-integration-agent
+URL: https://heyclau.de/entry/agents/claude-mcp-skills-integration-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-23
 Documentation: https://modelcontextprotocol.io/introduction
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/claude-mcp-skills-integration-agent
+- Canonical URL: https://heyclau.de/entry/agents/claude-mcp-skills-integration-agent
 - Source URLs: https://modelcontextprotocol.io/introduction, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-mcp-skills-integration-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

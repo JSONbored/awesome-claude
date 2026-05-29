@@ -1,32 +1,41 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "timezone": "America/Denver",
+  "timezone": "America/Phoenix",
+  "schedule": ["before 6am on monday"],
   "labels": ["dependencies"],
   "rangeStrategy": "pin",
   "dependencyDashboard": true,
   "minimumReleaseAge": "2 days",
-  "prConcurrentLimit": 5,
-  "branchConcurrentLimit": 5,
-  "separateMajorMinor": true,
-  "separateMultipleMajor": true,
+  "prConcurrentLimit": 1,
+  "branchConcurrentLimit": 1,
+  "separateMajorMinor": false,
+  "separateMultipleMajor": false,
+  "rebaseWhen": "behind-base-branch",
   "lockFileMaintenance": {
     "enabled": false
   },
   "packageRules": [
     {
-      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
-      "groupName": "non-major dependencies",
+      "description": "Keep dependency updates in one review queue so coupled majors validate together",
+      "matchManagers": ["npm", "github-actions"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "groupName": "dependencies",
+      "groupSlug": "dependencies",
       "automerge": false
     },
     {
+      "description": "Hold TypeScript on the latest 5.x line until Vite path resolution dependencies declare TypeScript 6 support",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<6.0.0",
+      "automerge": false
+    },
+    {
+      "description": "Queue major dependency updates in the Dependency Dashboard before opening noisy breaking-change PRs",
+      "matchManagers": ["npm", "github-actions"],
       "matchUpdateTypes": ["major"],
-      "groupName": "major dependencies",
-      "automerge": false
-    },
-    {
-      "matchManagers": ["github-actions"],
-      "groupName": "github actions",
+      "dependencyDashboardApproval": true,
       "automerge": false
     },
     {

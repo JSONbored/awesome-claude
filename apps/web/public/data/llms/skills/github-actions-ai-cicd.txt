@@ -1,5 +1,5 @@
 # GitHub Actions AI-Powered CI/CD Automation Skill
-URL: https://heyclau.de/skills/github-actions-ai-cicd
+URL: https://heyclau.de/entry/skills/github-actions-ai-cicd
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://docs.github.com/en/actions
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-ai-cicd.mdx
 Download: /downloads/skills/github-actions-ai-cicd.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/github-actions-ai-cicd
+- Canonical URL: https://heyclau.de/entry/skills/github-actions-ai-cicd
 - Source URLs: https://docs.github.com/en/actions, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-ai-cicd.mdx
 - Brand: GitHub
 - Brand domain: github.com

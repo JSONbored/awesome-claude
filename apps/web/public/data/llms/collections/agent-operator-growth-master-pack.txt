@@ -1,11 +1,11 @@
 # Agent Operator Growth Master Pack
-URL: https://heyclau.de/collections/agent-operator-growth-master-pack
+URL: https://heyclau.de/entry/collections/agent-operator-growth-master-pack
 Category: collections
 Author: JSONbored
 Date added: 2026-04-11
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/agent-operator-growth-master-pack.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/collections/agent-operator-growth-master-pack
+- Canonical URL: https://heyclau.de/entry/collections/agent-operator-growth-master-pack
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/agent-operator-growth-master-pack.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -253,7 +253,13 @@
     "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
     "githubStars": null,
     "githubForks": null,
-    "repoUpdatedAt": null
+    "repoUpdatedAt": null,
+    "repoStats": {
+      "repository": "thebrierfox/intuitek-ace",
+      "url": "https://github.com/thebrierfox/intuitek-ace",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

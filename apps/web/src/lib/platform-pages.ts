@@ -1,12 +1,7 @@
-import "server-only";
-
 import type { ContentEntry } from "@heyclaude/registry";
-import {
-  buildSkillPlatformCompatibility,
-  platformFeedSlug,
-} from "@heyclaude/registry/artifacts";
+import { buildSkillPlatformCompatibility, platformFeedSlug } from "@heyclaude/registry/artifacts";
 
-import { getAllEntries } from "@/lib/content";
+import { getAllEntries } from "@/lib/content.server";
 
 export type PlatformPageDefinition = {
   slug: string;
@@ -158,9 +153,7 @@ export function getPlatformPageDefinitions() {
 
 export async function getPlatformPages() {
   const entries = await getAllEntries();
-  return platformPageDefinitions.map((definition) =>
-    buildPlatformPage(definition, entries),
-  );
+  return platformPageDefinitions.map((definition) => buildPlatformPage(definition, entries));
 }
 
 export async function getPlatformPage(slug: string) {

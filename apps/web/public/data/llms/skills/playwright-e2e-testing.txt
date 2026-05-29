@@ -1,5 +1,5 @@
 # Playwright E2E Testing Automation Skill
-URL: https://heyclau.de/skills/playwright-e2e-testing
+URL: https://heyclau.de/entry/skills/playwright-e2e-testing
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://playwright.dev/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-e2e-testing.mdx
 Download: /downloads/skills/playwright-e2e-testing.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/playwright-e2e-testing
+- Canonical URL: https://heyclau.de/entry/skills/playwright-e2e-testing
 - Source URLs: https://playwright.dev/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/playwright-e2e-testing.mdx
 - Package URL: /downloads/skills/playwright-e2e-testing.zip
 - Package SHA256: 61fb431b4e7253846d6c180b34c22226e431cd3234bd5f6917fdf18702df5dbe

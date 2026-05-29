@@ -29,15 +29,18 @@ import {
   validateSubmissionDraftFromSpec,
 } from "./submissions.js";
 
-const repoRoot = path.resolve(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../..",
-);
-const defaultDataDir = path.join(repoRoot, "apps", "web", "public", "data");
 const safePathPartPattern = /^[a-z0-9-]+$/;
 const jsonMimeType = "application/json";
 const DISCOVERY_RESOURCE_LIMIT = 25;
 const DISCOVERY_FETCH_TIMEOUT_MS = 5000;
+
+function entryCanonicalUrl(entry) {
+  return (
+    entry.canonicalUrl ||
+    entry.url ||
+    `${SITE_URL}/entry/${entry.category}/${entry.slug}`
+  );
+}
 
 export const MCP_PUBLIC_POLICY = {
   apiKeyRequired: false,
@@ -276,7 +279,24 @@ for (const tool of TOOL_DEFINITIONS) {
 }
 
 function dataDirFromOptions(options = {}) {
-  return options.dataDir || process.env.HEYCLAUDE_DATA_DIR || defaultDataDir;
+  const envDataDir =
+    typeof process !== "undefined" ? process.env?.HEYCLAUDE_DATA_DIR : "";
+  if (options.dataDir || envDataDir) {
+    return options.dataDir || envDataDir;
+  }
+
+  const moduleUrl = import.meta.url;
+  if (!moduleUrl) {
+    throw new Error(
+      "HEYCLAUDE_DATA_DIR or readTextArtifact is required outside the Node package runtime.",
+    );
+  }
+
+  const repoRoot = path.resolve(
+    path.dirname(fileURLToPath(moduleUrl)),
+    "../../..",
+  );
+  return path.join(repoRoot, "apps", "web", "public", "data");
 }
 
 function isSafePathPart(value) {
@@ -585,11 +605,8 @@ function toSearchResult(entry, ranking = null) {
     downloadTrust: entry.downloadTrust || null,
     safetyNotes: notes(entry.safetyNotes),
     privacyNotes: notes(entry.privacyNotes),
-    url: entry.url || `${SITE_URL}/${entry.category}/${entry.slug}`,
-    canonicalUrl:
-      entry.canonicalUrl ||
-      entry.url ||
-      `${SITE_URL}/${entry.category}/${entry.slug}`,
+    url: entry.url || entryCanonicalUrl(entry),
+    canonicalUrl: entryCanonicalUrl(entry),
     searchScore: ranking?.score ?? 0,
     searchReasons: ranking?.reasons ?? [],
     trust: entryTrustSummary(entry),
@@ -1201,7 +1218,7 @@ export async function getEntryDetail(args = {}, options = {}) {
   return {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
-    canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    canonicalUrl: entryCanonicalUrl(entry),
     entry: {
       ...entry,
       safetyNotes: notes(entry.safetyNotes),
@@ -1261,7 +1278,7 @@ export async function getCopyableAsset(args = {}, options = {}) {
     category: entry.category,
     slug: entry.slug,
     title: entry.title,
-    canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    canonicalUrl: entryCanonicalUrl(entry),
     platform: platform || "",
     primaryAsset: primary,
     assets,
@@ -1301,7 +1318,7 @@ export async function compareEntries(args = {}, options = {}) {
       slug: entry.slug,
       title: entry.title,
       description: entry.description,
-      canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+      canonicalUrl: entryCanonicalUrl(entry),
       tags: entry.tags || [],
       platforms: entry.platforms || [],
       selectedCompatibility,
@@ -1544,6 +1561,21 @@ function publicApiBaseUrl(options = {}) {
 }
 
 /**
+ * Remove trailing slashes without using a potentially expensive regex on
+ * caller-controlled API base URL overrides.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+function stripTrailingSlashes(value) {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
+/**
  * Fetch JSON from a public HeyClaude API path. Tests inject a deterministic
  * fetcher via `options.fetchPublicApi`; production uses `fetch()` with a
  * bounded {@link DISCOVERY_FETCH_TIMEOUT_MS} timeout, `redirect: "error"`,
@@ -1561,7 +1593,7 @@ async function fetchPublicApiJson(apiPath, options = {}) {
   if (typeof options.fetchPublicApi === "function") {
     return options.fetchPublicApi(apiPath);
   }
-  const baseUrl = publicApiBaseUrl(options).replace(/\/+$/, "");
+  const baseUrl = stripTrailingSlashes(publicApiBaseUrl(options));
   const url = `${baseUrl}${apiPath.startsWith("/") ? "" : "/"}${apiPath}`;
   const controller = new AbortController();
   const timeout = setTimeout(
@@ -1661,8 +1693,7 @@ function toTrendingEntry(entry) {
     slug: entry.slug,
     title: entry.title || "",
     description: entry.description || "",
-    canonicalUrl:
-      entry.canonicalUrl || `${SITE_URL}/${entry.category}/${entry.slug}`,
+    canonicalUrl: entryCanonicalUrl(entry),
     platforms: Array.isArray(entry.platforms) ? entry.platforms : [],
     tags: Array.isArray(entry.tags) ? entry.tags : [],
     dateAdded: entry.dateAdded || "",
@@ -2083,7 +2114,7 @@ export async function getInstallGuidance(args = {}, options = {}) {
   return {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
-    canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    canonicalUrl: entryCanonicalUrl(entry),
     title: entry.title,
     installCommand: entry.installCommand || entry.commandSyntax || "",
     configSnippet: entry.configSnippet || "",
@@ -2254,7 +2285,7 @@ export async function explainEntryTrust(args = {}, options = {}) {
     ok: true,
     key: `${entry.category}:${entry.slug}`,
     title: entry.title,
-    canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    canonicalUrl: entryCanonicalUrl(entry),
     trust: entryTrustSummary(entry),
   };
 }
@@ -2275,7 +2306,7 @@ export async function reviewEntrySafety(args = {}, options = {}) {
       category: entry.category,
       slug: entry.slug,
       title: entry.title,
-      canonicalUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+      canonicalUrl: entryCanonicalUrl(entry),
       selectedCompatibility: platform
         ? compatibility.find((item) => item.platform === platform) || null
         : null,

@@ -1,11 +1,11 @@
 # Multi Agent Orchestration Specialist - Agents
-URL: https://heyclau.de/agents/multi-agent-orchestration-specialist
+URL: https://heyclau.de/entry/agents/multi-agent-orchestration-specialist
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/multi-agent-orchestration-specialist
+- Canonical URL: https://heyclau.de/entry/agents/multi-agent-orchestration-specialist
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx
 - Brand: LangGraph
 - Brand domain: langchain.com

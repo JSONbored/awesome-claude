@@ -727,9 +727,12 @@ describe("D1 dynamic state helpers", () => {
       slug: "reviewed-ai-engineer",
       action: "revalidate",
       checkedAt: "2026-04-28T00:00:00.000Z",
+      expiresAt: null,
     });
     expect(db.runCalls.at(-1)?.query).toContain("stale_check_count = 0");
+    expect(db.runCalls.at(-1)?.query).toContain("expires_at = CASE");
     expect(db.runCalls.at(-1)?.values).toContain("2026-04-28T00:00:00.000Z");
+    expect(db.runCalls.at(-1)?.values).toContain(null);
 
     await updateAdminJobState(db, {
       slug: "reviewed-ai-engineer",

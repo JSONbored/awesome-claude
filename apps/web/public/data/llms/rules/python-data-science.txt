@@ -1,12 +1,12 @@
 # Python Data Science - CLAUDE.md Rules for Claude Code
-URL: https://heyclau.de/rules/python-data-science
+URL: https://heyclau.de/entry/rules/python-data-science
 Category: rules
 Author: JSONbored
 Date added: 2025-09-15
 Documentation: https://pandas.pydata.org/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/python-data-science
+- Canonical URL: https://heyclau.de/entry/rules/python-data-science
 - Source URLs: https://pandas.pydata.org/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/python-data-science.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

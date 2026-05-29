@@ -1,5 +1,5 @@
 # Memesio MCP Server
-URL: https://heyclau.de/mcp/memesio-mcp-server
+URL: https://heyclau.de/entry/mcp/memesio-mcp-server
 Category: mcp
 Author: Memesio
 Submitted by: vy35
@@ -8,7 +8,7 @@ Date added: 2026-05-08
 Documentation: https://memesio.com/developers/mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/memesio-mcp-server.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/memesio-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/memesio-mcp-server
 - Source URLs: https://memesio.com/developers/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/memesio-mcp-server.mdx
 - Brand: Memesio
 - Brand domain: memesio.com

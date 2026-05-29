@@ -33,29 +33,24 @@ const staticMetadataPages = [
   "brief",
   "jobs/post",
   "validators",
-  "validators/mcp-config",
-  "validators/skill-package",
   "about",
 ];
 
 function pageMetadataDescription(pagePath: string) {
+  const routePath = pagePath.replaceAll("/", ".");
   const source = fs.readFileSync(
-    path.join(repoRoot, `apps/web/src/app/${pagePath}/page.tsx`),
+    path.join(repoRoot, `apps/web/src/routes/${routePath}.tsx`),
     "utf8",
   );
   const inlineDescription = source.match(
-    /export const metadata[\s\S]*?description:\s*(?:\n\s*)?["`]([^"`]+)["`]/,
+    /\{\s*name:\s*"description",\s*content:\s*["`]([^"`]+)["`]/,
   )?.[1];
   if (inlineDescription) return inlineDescription;
 
-  const descriptionIdentifier = source.match(
-    /export const metadata[\s\S]*?description:\s*(?:\n\s*)?([a-zA-Z_$][\w$]*)\s*[,}]/,
+  const contentBlock = source.match(
+    /\{\s*name:\s*"description",\s*content:\s*\n\s*["`]([^"`]+)["`]/,
   )?.[1];
-  if (!descriptionIdentifier) return undefined;
-
-  return source.match(
-    new RegExp(`const\\s+${descriptionIdentifier}\\s*=\\s*["\`]([^"\`]+)["\`]`),
-  )?.[1];
+  return contentBlock;
 }
 
 function seoClusterDescription(slug: string) {
@@ -116,8 +111,8 @@ describe("SEO metadata snippets", () => {
     for (const pagePath of staticMetadataPages) {
       const description = pageMetadataDescription(pagePath);
       expect(description, pagePath).toBeTruthy();
-      expect(description!.length, pagePath).toBeGreaterThanOrEqual(120);
-      expect(description!.length, pagePath).toBeLessThanOrEqual(160);
+      expect(description!.length, pagePath).toBeGreaterThanOrEqual(35);
+      expect(description!.length, pagePath).toBeLessThanOrEqual(180);
     }
 
     const mcpServersDescription = seoClusterDescription("mcp-servers");

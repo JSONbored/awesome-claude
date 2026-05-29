@@ -1,5 +1,5 @@
 # Stytch MCP Server for Claude
-URL: https://heyclau.de/mcp/stytch-mcp-server
+URL: https://heyclau.de/entry/mcp/stytch-mcp-server
 Category: mcp
 Author: Stytch
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://stytch.com/docs/workspace-management/stytch-mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stytch-mcp-server.mdx
 Download: /downloads/mcp/stytch-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/stytch-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/stytch-mcp-server
 - Source URLs: https://stytch.com/docs/workspace-management/stytch-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/stytch-mcp-server.mdx
 - Brand: Stytch
 - Brand domain: stytch.com

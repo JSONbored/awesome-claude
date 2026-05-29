@@ -101,9 +101,11 @@ function redactUrlValue(value: string) {
         redacted = true;
       }
     }
+    const serialized = decodePlaceholderTokens(parsed.toString());
+    const fallback = redactEnvValue("url", serialized);
     return {
-      value: decodePlaceholderTokens(parsed.toString()),
-      redactedCount: redacted ? 1 : 0,
+      value: fallback,
+      redactedCount: redacted || fallback !== serialized ? 1 : 0,
     };
   } catch {
     const fallback = redactEnvValue("url", value);

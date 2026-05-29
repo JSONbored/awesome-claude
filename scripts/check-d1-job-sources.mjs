@@ -42,6 +42,7 @@ function parseArgs(argv) {
 function getToken() {
   return String(
     process.env.ADMIN_API_TOKEN ||
+      process.env.JOBS_ADMIN_API_TOKEN ||
       process.env.LEADS_ADMIN_TOKEN ||
       process.env.ADMIN_LEADS_TOKEN ||
       "",
@@ -63,7 +64,9 @@ function getBaseUrl(args) {
 
 async function adminFetch(url, options = {}) {
   const token = getToken();
-  if (!token) throw new Error("Missing ADMIN_API_TOKEN.");
+  if (!token) {
+    throw new Error("Missing ADMIN_API_TOKEN or JOBS_ADMIN_API_TOKEN.");
+  }
   const response = await fetch(url, {
     ...options,
     headers: {
@@ -239,8 +242,10 @@ export function evaluateCheckedJob(job, sourceResult, checkedAt) {
   const lifecycle = evaluateJobSourceLifecycle(
     {
       currentStatus: job.status,
+      tier: job.tier,
       staleCheckCount: job.staleCheckCount,
       expiresAt: job.expiresAt,
+      paidPlacementExpiresAt: job.paidPlacementExpiresAt,
       sourceOk: result.ok,
       titleMatched: result.titleMatched,
       companyMatched: result.companyMatched,
@@ -265,6 +270,9 @@ export function evaluateCheckedJob(job, sourceResult, checkedAt) {
     nextStatus: lifecycle.status,
     action,
     lifecycleReason: lifecycle.reason,
+    ...(Object.prototype.hasOwnProperty.call(lifecycle, "expiresAt")
+      ? { expiresAt: lifecycle.expiresAt }
+      : {}),
     ...result,
   };
 }
@@ -292,6 +300,9 @@ export async function runJobSourceCheck(args) {
           slug: job.slug,
           action: result.action,
           checkedAt,
+          ...(Object.prototype.hasOwnProperty.call(result, "expiresAt")
+            ? { expiresAt: result.expiresAt }
+            : {}),
         }),
       });
     }

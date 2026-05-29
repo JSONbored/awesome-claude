@@ -1,8 +1,6 @@
-import "server-only";
-
 import type { DirectoryEntry, ToolListing } from "@heyclaude/registry";
 
-import { getDirectoryEntries } from "@/lib/content";
+import { getDirectoryEntries } from "@/lib/content.server";
 import { getTools } from "@/lib/tools";
 
 export type SeoClusterDefinition = {
@@ -110,12 +108,7 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     seoDescription:
       "Browse coding, observability, automation, browser, security, and agent infrastructure tools for Claude-native teams.",
     categories: ["tools"],
-    tags: [
-      "ai-coding",
-      "observability",
-      "workflow-automation",
-      "agent-framework",
-    ],
+    tags: ["ai-coding", "observability", "workflow-automation", "agent-framework"],
     itemLimit: 24,
   },
   {
@@ -456,33 +449,20 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
   },
 ];
 
-function scoreItem(
-  item: DirectoryEntry | ToolListing,
-  definition: SeoClusterDefinition,
-) {
+function scoreItem(item: DirectoryEntry | ToolListing, definition: SeoClusterDefinition) {
   const itemTags = new Set((item.tags || []).map((tag) => tag.toLowerCase()));
-  const itemKeywords = new Set(
-    (item.keywords || []).map((keyword) => keyword.toLowerCase()),
-  );
-  const tagScore = (definition.tags || []).filter((tag) =>
-    itemTags.has(tag.toLowerCase()),
-  ).length;
+  const itemKeywords = new Set((item.keywords || []).map((keyword) => keyword.toLowerCase()));
+  const tagScore = (definition.tags || []).filter((tag) => itemTags.has(tag.toLowerCase())).length;
   const keywordScore = (definition.keywords || []).filter((keyword) =>
     itemKeywords.has(keyword.toLowerCase()),
   ).length;
-  const searchableText = [
-    item.title,
-    item.description,
-    item.cardDescription,
-    item.category,
-  ]
+  const searchableText = [item.title, item.description, item.cardDescription, item.category]
     .filter(Boolean)
     .join(" ")
     .toLowerCase();
-  const textScore = [
-    ...(definition.tags || []),
-    ...(definition.keywords || []),
-  ].filter((term) => searchableText.includes(term.toLowerCase())).length;
+  const textScore = [...(definition.tags || []), ...(definition.keywords || [])].filter((term) =>
+    searchableText.includes(term.toLowerCase()),
+  ).length;
   const pickScore = item.disclosure === "heyclaude_pick" ? 2 : 0;
   return tagScore * 3 + keywordScore * 2 + textScore + pickScore;
 }
@@ -494,7 +474,7 @@ function toClusterItem(item: DirectoryEntry | ToolListing): SeoClusterItem {
     description: item.cardDescription || item.description,
     category: item.category,
     slug: item.slug,
-    url: isTool ? `/tools/${item.slug}` : `/${item.category}/${item.slug}`,
+    url: isTool ? `/tools/${item.slug}` : `/entry/${item.category}/${item.slug}`,
     tags: item.tags || [],
     disclosure: item.disclosure,
   };
@@ -518,8 +498,7 @@ function matchesClusterRequirements(
     const hasInstallSurface = Boolean(
       item.installCommand || item.downloadUrl || item.configSnippet,
     );
-    const hasTrustedInstall =
-      item.downloadTrust === "first-party" || item.packageVerified === true;
+    const hasTrustedInstall = item.downloadTrust === "first-party" || item.packageVerified === true;
     if (!hasInstallSurface || !hasTrustedInstall) return false;
   }
 
@@ -531,21 +510,13 @@ export function getSeoClusterDefinitions() {
 }
 
 export async function getSeoCluster(slug: string): Promise<SeoCluster | null> {
-  const definition =
-    seoClusterDefinitions.find((cluster) => cluster.slug === slug) ?? null;
+  const definition = seoClusterDefinitions.find((cluster) => cluster.slug === slug) ?? null;
   if (!definition) return null;
 
-  const [entries, tools] = await Promise.all([
-    getDirectoryEntries(),
-    getTools(),
-  ]);
-  const pool = [
-    ...entries.filter((entry) => entry.category !== "tools"),
-    ...tools,
-  ].filter(
+  const [entries, tools] = await Promise.all([getDirectoryEntries(), getTools()]);
+  const pool = [...entries.filter((entry) => entry.category !== "tools"), ...tools].filter(
     (item) =>
-      definition.categories.includes(item.category) &&
-      matchesClusterRequirements(item, definition),
+      definition.categories.includes(item.category) && matchesClusterRequirements(item, definition),
   );
 
   const items = pool

@@ -1,5 +1,5 @@
 # Docker Compose Production Blueprints Skill
-URL: https://heyclau.de/skills/docker-compose-production-blueprints
+URL: https://heyclau.de/entry/skills/docker-compose-production-blueprints
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://docs.docker.com/compose/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docker-compose-production-blueprints.mdx
 Download: /downloads/skills/docker-compose-production-blueprints.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/docker-compose-production-blueprints
+- Canonical URL: https://heyclau.de/entry/skills/docker-compose-production-blueprints
 - Source URLs: https://docs.docker.com/compose/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/docker-compose-production-blueprints.mdx
 - Brand: Docker
 - Brand domain: docker.com

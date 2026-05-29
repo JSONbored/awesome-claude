@@ -1,12 +1,12 @@
 # Claude Code
-URL: https://heyclau.de/tools/claude-code
+URL: https://heyclau.de/entry/tools/claude-code
 Category: tools
 Author: Anthropic
 Date added: 2026-04-27
 Documentation: https://docs.anthropic.com/en/docs/claude-code/overview
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/claude-code
+- Canonical URL: https://heyclau.de/entry/tools/claude-code
 - Source URLs: https://docs.anthropic.com/en/docs/claude-code/overview, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/claude-code.mdx, https://www.anthropic.com/claude-code
 - Brand: Claude Code
 - Brand domain: anthropic.com

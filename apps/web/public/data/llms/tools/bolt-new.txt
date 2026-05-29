@@ -1,12 +1,12 @@
 # Bolt
-URL: https://heyclau.de/tools/bolt-new
+URL: https://heyclau.de/entry/tools/bolt-new
 Category: tools
 Author: StackBlitz
 Date added: 2026-04-27
 Documentation: https://support.bolt.new
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/bolt-new
+- Canonical URL: https://heyclau.de/entry/tools/bolt-new
 - Source URLs: https://support.bolt.new, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/bolt-new.mdx, https://bolt.new
 - Brand: Bolt
 - Brand domain: bolt.new

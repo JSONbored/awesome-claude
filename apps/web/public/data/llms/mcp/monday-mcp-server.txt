@@ -1,5 +1,5 @@
 # Monday MCP Server for Claude
-URL: https://heyclau.de/mcp/monday-mcp-server
+URL: https://heyclau.de/entry/mcp/monday-mcp-server
 Category: mcp
 Author: Monday.com
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://developer.monday.com/apps/docs/mondaycom-mcp-integration
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/monday-mcp-server.mdx
 Download: /downloads/mcp/monday-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/monday-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/monday-mcp-server
 - Source URLs: https://developer.monday.com/apps/docs/mondaycom-mcp-integration, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/monday-mcp-server.mdx
 - Brand: Monday.com
 - Brand domain: monday.com

@@ -304,7 +304,16 @@
     "repoUrl": "https://github.com/SocketDev/socket-mcp",
     "githubStars": 107,
     "githubForks": 19,
-    "repoUpdatedAt": "2026-05-19T04:13:47Z"
+    "repoUpdatedAt": "2026-05-19T04:13:47Z",
+    "repoStats": {
+      "repository": "SocketDev/socket-mcp",
+      "url": "https://github.com/SocketDev/socket-mcp",
+      "stars": 107,
+      "forks": 19,
+      "updatedAt": "2026-05-19T04:13:47Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

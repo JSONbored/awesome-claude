@@ -67,6 +67,11 @@ Raycast `Cache` stores the latest successful registry feed, entry details, and j
 
 ## Validation
 
+This integration intentionally uses Raycast's npm-based tooling and keeps its
+own `package-lock.json`. The root workspace remains pnpm-managed; do not remove
+the Raycast npm island unless Raycast tooling is deliberately migrated and
+validated separately.
+
 ```bash
 npm run test:junit
 npm run lint

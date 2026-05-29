@@ -1,5 +1,5 @@
 # Postgresql MCP Server - MCP Servers
-URL: https://heyclau.de/mcp/postgresql-mcp-server
+URL: https://heyclau.de/entry/mcp/postgresql-mcp-server
 Category: mcp
 Author: Anthropic
 Date added: 2025-09-16
@@ -7,7 +7,7 @@ Documentation: https://modelcontextprotocol.io/examples
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/postgresql-mcp-server.mdx
 Download: /downloads/mcp/postgresql-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/postgresql-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/postgresql-mcp-server
 - Source URLs: https://modelcontextprotocol.io/examples, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/postgresql-mcp-server.mdx
 - Brand: Anthropic
 - Brand domain: anthropic.com

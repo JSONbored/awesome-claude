@@ -1,5 +1,5 @@
 # Reddit MCP Buddy for Claude
-URL: https://heyclau.de/mcp/reddit-mcp-buddy
+URL: https://heyclau.de/entry/mcp/reddit-mcp-buddy
 Category: mcp
 Author: karanb192
 Date added: 2025-09-27
@@ -8,7 +8,7 @@ Repository: https://github.com/karanb192/reddit-mcp-buddy
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/reddit-mcp-buddy.mdx
 Download: /downloads/mcp/reddit-mcp-buddy.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/reddit-mcp-buddy
+- Canonical URL: https://heyclau.de/entry/mcp/reddit-mcp-buddy
 - Source URLs: https://github.com/karanb192/reddit-mcp-buddy, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/reddit-mcp-buddy.mdx
 - Brand: Reddit
 - Brand domain: reddit.com

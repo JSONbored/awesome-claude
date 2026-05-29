@@ -1,11 +1,11 @@
 # MCP Server Status Monitor - Statuslines
-URL: https://heyclau.de/statuslines/mcp-server-status-monitor
+URL: https://heyclau.de/entry/statuslines/mcp-server-status-monitor
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/mcp-server-status-monitor.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/mcp-server-status-monitor
+- Canonical URL: https://heyclau.de/entry/statuslines/mcp-server-status-monitor
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/mcp-server-status-monitor.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

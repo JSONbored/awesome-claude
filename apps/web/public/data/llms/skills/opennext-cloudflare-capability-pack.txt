@@ -1,5 +1,5 @@
 # OpenNext Cloudflare Capability Pack Skill
-URL: https://heyclau.de/skills/opennext-cloudflare-capability-pack
+URL: https://heyclau.de/entry/skills/opennext-cloudflare-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://opennext.js.org/cloudflare/get-started
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx
 Download: /downloads/skills/opennext-cloudflare-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/opennext-cloudflare-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/opennext-cloudflare-capability-pack
 - Source URLs: https://opennext.js.org/cloudflare/get-started, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx
 - Brand: Cloudflare
 - Brand domain: cloudflare.com

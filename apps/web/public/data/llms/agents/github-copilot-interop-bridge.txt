@@ -1,11 +1,11 @@
 # Github Copilot Interop Bridge - Agents
-URL: https://heyclau.de/agents/github-copilot-interop-bridge
+URL: https://heyclau.de/entry/agents/github-copilot-interop-bridge
 Category: agents
 Author: JSONbored
 Date added: 2025-10-25
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/github-copilot-interop-bridge
+- Canonical URL: https://heyclau.de/entry/agents/github-copilot-interop-bridge
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx
 - Brand: GitHub Copilot
 - Brand domain: github.com

@@ -235,7 +235,16 @@
     "repoUrl": "https://github.com/JSONbored/awesome-claude",
     "githubStars": 218,
     "githubForks": 29,
-    "repoUpdatedAt": "2026-05-17T08:04:08Z"
+    "repoUpdatedAt": "2026-05-17T08:04:08Z",
+    "repoStats": {
+      "repository": "JSONbored/awesome-claude",
+      "url": "https://github.com/JSONbored/awesome-claude",
+      "stars": 218,
+      "forks": 29,
+      "updatedAt": "2026-05-17T08:04:08Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

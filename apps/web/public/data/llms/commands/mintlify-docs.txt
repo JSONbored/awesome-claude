@@ -1,12 +1,12 @@
 # Mintlify Documentation Generator for Claude
-URL: https://heyclau.de/commands/mintlify-docs
+URL: https://heyclau.de/entry/commands/mintlify-docs
 Category: commands
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://mintlify.com/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mintlify-docs.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/mintlify-docs
+- Canonical URL: https://heyclau.de/entry/commands/mintlify-docs
 - Source URLs: https://mintlify.com/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/mintlify-docs.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

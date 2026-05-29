@@ -16,7 +16,7 @@
       "sourceUrl": "https://cursor.com/docs/context/rules",
       "installCommand": "/cursor-rules [options] <project_type>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/cursor-rules"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/cursor-rules"
     },
     {
       "name": "debug",
@@ -26,7 +26,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/debug",
       "installCommand": "/debug",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/debug"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/debug"
     },
     {
       "name": "docs",
@@ -36,7 +36,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/docs",
       "installCommand": "/docs [options] <file_or_project>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/docs"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/docs"
     },
     {
       "name": "explain",
@@ -46,7 +46,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/explain",
       "installCommand": "/explain [options] <code_or_file>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/explain"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/explain"
     },
     {
       "name": "optimize",
@@ -56,7 +56,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/optimize",
       "installCommand": "/optimize [options] <file_or_function>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/optimize"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/optimize"
     },
     {
       "name": "refactor",
@@ -66,7 +66,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/refactor",
       "installCommand": "/refactor [options] <file_or_selection>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/refactor"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/refactor"
     },
     {
       "name": "refactor-code",
@@ -76,7 +76,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/refactor",
       "installCommand": "/refactor [options] <file_or_selection>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/refactor-code"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/refactor-code"
     },
     {
       "name": "review",
@@ -86,7 +86,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/review",
       "installCommand": "/review [options] <file_or_directory>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/review"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/review"
     },
     {
       "name": "security",
@@ -96,7 +96,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/security",
       "installCommand": "/security [options] <file_or_project>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/security"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/security"
     },
     {
       "name": "security-audit",
@@ -106,7 +106,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/security-audit",
       "installCommand": "/security-audit [scope]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/security-audit"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/security-audit"
     },
     {
       "name": "test-advanced",
@@ -116,7 +116,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/test",
       "installCommand": "/test [options] <file_or_function>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/test-advanced"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/test-advanced"
     },
     {
       "name": "zod-audit",
@@ -126,7 +126,7 @@
       "sourceUrl": "https://owasp.org/www-project-top-ten/",
       "installCommand": "/zod-audit",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/zod-audit"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/zod-audit"
     },
     {
       "name": "accessibility-checker",
@@ -136,7 +136,7 @@
       "sourceUrl": "https://www.w3.org/WAI/WCAG21/quickref/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/accessibility-checker.sh && chmod +x .claude/hooks/accessibility-checker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/accessibility-checker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/accessibility-checker"
     },
     {
       "name": "agent-evals-regression-gate",
@@ -184,7 +184,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/agent-evals-regression-gate"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/agent-evals-regression-gate"
     },
     {
       "name": "agent-skills-framework-engineer",
@@ -194,7 +194,7 @@
       "sourceUrl": "https://www.anthropic.com/engineering/building-agents-with-the-claude-agent-sdk",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/agent-skills-framework-engineer"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/agent-skills-framework-engineer"
     },
     {
       "name": "skills-installer",
@@ -204,7 +204,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/skills",
       "installCommand": "/skills-installer [action] [skill-name]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/skills-installer"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/skills-installer"
     },
     {
       "name": "ai-agent-observability-incident-response",
@@ -252,7 +252,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/ai-agent-observability-incident-response"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/ai-agent-observability-incident-response"
     },
     {
       "name": "ai-business-idea-validation-capability-pack",
@@ -300,7 +300,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/ai-business-idea-validation-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack"
     },
     {
       "name": "ai-code-review-security-agent",
@@ -310,7 +310,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/ai-code-review-security-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/ai-code-review-security-agent"
     },
     {
       "name": "ai-devops-automation-engineer-agent",
@@ -320,7 +320,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-devops-automation-engineer-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/ai-devops-automation-engineer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/ai-devops-automation-engineer-agent"
     },
     {
       "name": "ai-search-ranking-content-cluster-strategy",
@@ -368,7 +368,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/ai-search-ranking-content-cluster-strategy"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/ai-search-ranking-content-cluster-strategy"
     },
     {
       "name": "airtable-mcp-server",
@@ -382,7 +382,7 @@
       "sourceUrl": "https://github.com/domdomegg/airtable-mcp-server",
       "installCommand": "claude mcp add airtable --env AIRTABLE_API_KEY=YOUR_KEY -- npx -y airtable-mcp-server && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/airtable-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/airtable-mcp-server"
     },
     {
       "name": "api-builder-agent",
@@ -392,7 +392,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/api-builder-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/api-builder-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/api-builder-agent"
     },
     {
       "name": "api-endpoint-documentation-generator",
@@ -402,7 +402,7 @@
       "sourceUrl": "https://swagger.io/docs/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/api-endpoint-documentation-generator.sh && chmod +x .claude/hooks/api-endpoint-documentation-generator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/api-endpoint-documentation-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/api-endpoint-documentation-generator"
     },
     {
       "name": "asana-mcp-server",
@@ -416,7 +416,7 @@
       "sourceUrl": "https://developers.asana.com/docs/using-asanas-model-control-protocol-mcp-server",
       "installCommand": "claude mcp list && claude mcp status asana",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/asana-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/asana-mcp-server"
     },
     {
       "name": "audio-transcription-summarization",
@@ -464,7 +464,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/audio-transcription-summarization"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/audio-transcription-summarization"
     },
     {
       "name": "auto-code-formatter-hook",
@@ -474,7 +474,7 @@
       "sourceUrl": "https://prettier.io/docs/en/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/auto-code-formatter-hook.sh && chmod +x .claude/hooks/auto-code-formatter-hook.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/auto-code-formatter-hook"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/auto-code-formatter-hook"
     },
     {
       "name": "auto-save-backup",
@@ -484,7 +484,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/auto-save-backup.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/auto-save-backup.sh && chmod +x .claude/hooks/auto-save-backup.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/auto-save-backup"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/auto-save-backup"
     },
     {
       "name": "autogen-conversation-agent-builder",
@@ -498,7 +498,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/autogen-conversation-agent-builder.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/autogen-conversation-agent-builder"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/autogen-conversation-agent-builder"
     },
     {
       "name": "autogen-workflow",
@@ -508,7 +508,7 @@
       "sourceUrl": "https://microsoft.github.io/autogen/",
       "installCommand": "/autogen-workflow [options] <workflow_description>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/autogen-workflow"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/autogen-workflow"
     },
     {
       "name": "aws-cloudformation-validator",
@@ -522,7 +522,7 @@
       "sourceUrl": "https://aws.amazon.com/cloudformation/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/aws-cloudformation-validator.sh && chmod +x .claude/hooks/aws-cloudformation-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/aws-cloudformation-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/aws-cloudformation-validator"
     },
     {
       "name": "aws-services-mcp-server",
@@ -536,7 +536,7 @@
       "sourceUrl": "https://github.com/awslabs/mcp",
       "installCommand": "uvx awslabs.core-mcp-server@latest && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/aws-services-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/aws-services-mcp-server"
     },
     {
       "name": "backend-architect-agent",
@@ -546,7 +546,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/backend-architect-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/backend-architect-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/backend-architect-agent"
     },
     {
       "name": "base-l2-smart-contract-launchpad",
@@ -594,7 +594,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/base-l2-smart-contract-launchpad"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/base-l2-smart-contract-launchpad"
     },
     {
       "name": "box-mcp-server",
@@ -608,7 +608,7 @@
       "sourceUrl": "https://box.dev/guides/box-mcp/remote/",
       "installCommand": "claude mcp list && claude mcp status box",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/box-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/box-mcp-server"
     },
     {
       "name": "browser-agent-workflow-automation",
@@ -656,7 +656,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/browser-agent-workflow-automation"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/browser-agent-workflow-automation"
     },
     {
       "name": "bun-runtime-modern-javascript",
@@ -704,7 +704,7 @@
           "verifiedAt": "2025-10-23"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/bun-runtime-modern-javascript"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/bun-runtime-modern-javascript"
     },
     {
       "name": "canva-mcp-server",
@@ -718,7 +718,7 @@
       "sourceUrl": "https://www.canva.dev/docs/connect/canva-mcp-server-setup/",
       "installCommand": "claude mcp list && claude mcp status canva",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/canva-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/canva-mcp-server"
     },
     {
       "name": "checkpoint-manager",
@@ -728,7 +728,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/checkpointing",
       "installCommand": "/checkpoint-manager [action] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/checkpoint-manager"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/checkpoint-manager"
     },
     {
       "name": "desktop-mcp-setup",
@@ -742,7 +742,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/desktop-mcp-setup.mdx",
       "installCommand": "claude mcp add --transport http server-name https://api.example.com/mcp && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/desktop-mcp-setup"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/desktop-mcp-setup"
     },
     {
       "name": "claude-haiku-45-speed-optimizer-agent",
@@ -752,7 +752,7 @@
       "sourceUrl": "https://docs.anthropic.com/en/docs/about-claude/models",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/claude-haiku-45-speed-optimizer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/claude-haiku-45-speed-optimizer-agent"
     },
     {
       "name": "claude-mcp-skills-integration-agent",
@@ -762,7 +762,7 @@
       "sourceUrl": "https://modelcontextprotocol.io/introduction",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/claude-mcp-skills-integration-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/claude-mcp-skills-integration-agent"
     },
     {
       "name": "claudemd-builder",
@@ -772,7 +772,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/claude-md",
       "installCommand": "/claudemd-builder [action] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/claudemd-builder"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/claudemd-builder"
     },
     {
       "name": "claude-md-knowledge-manager-agent",
@@ -782,7 +782,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/custom-instructions",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/claude-md-knowledge-manager-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/claude-md-knowledge-manager-agent"
     },
     {
       "name": "cli-data-viz-quickstart",
@@ -830,7 +830,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/cli-data-viz-quickstart"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/cli-data-viz-quickstart"
     },
     {
       "name": "clickup-mcp-server",
@@ -844,7 +844,7 @@
       "sourceUrl": "https://github.com/hauptsacheNet/clickup-mcp",
       "installCommand": "claude mcp add clickup --env CLICKUP_API_KEY=YOUR_KEY --env CLICKUP_TEAM_ID=YOUR_TEAM_ID -- npx -y @hauptsache.net/clickup-mcp && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/clickup-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/clickup-mcp-server"
     },
     {
       "name": "cloud-backup-on-session-stop",
@@ -858,7 +858,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/cloud-backup-on-session-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/cloud-backup-on-session-stop.sh && chmod +x .claude/hooks/cloud-backup-on-session-stop.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/cloud-backup-on-session-stop"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/cloud-backup-on-session-stop"
     },
     {
       "name": "cloud-infrastructure-architect-agent",
@@ -872,7 +872,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/cloud-infrastructure-architect-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/cloud-infrastructure-architect-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/cloud-infrastructure-architect-agent"
     },
     {
       "name": "cloudflare-mcp-server",
@@ -886,7 +886,7 @@
       "sourceUrl": "https://developers.cloudflare.com/agents/model-context-protocol/mcp-servers-for-cloudflare/",
       "installCommand": "claude mcp add cloudflare --env CLOUDFLARE_API_TOKEN=YOUR_TOKEN --env CLOUDFLARE_ACCOUNT_ID=YOUR_ACCOUNT_ID && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/cloudflare-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/cloudflare-mcp-server"
     },
     {
       "name": "cloudflare-workers-ai-edge",
@@ -939,7 +939,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/cloudflare-workers-ai-edge"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/cloudflare-workers-ai-edge"
     },
     {
       "name": "cloudflare-workers-d1-kv-r2-capability-pack",
@@ -992,7 +992,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/cloudflare-workers-d1-kv-r2-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/cloudflare-workers-d1-kv-r2-capability-pack"
     },
     {
       "name": "cloudinary-mcp-server",
@@ -1006,7 +1006,7 @@
       "sourceUrl": "https://cloudinary.com/documentation/cloudinary_llm_mcp#mcp_servers",
       "installCommand": "claude mcp add cloudinary --env CLOUDINARY_CLOUD_NAME=YOUR_CLOUD_NAME --env CLOUDINARY_API_KEY=YOUR_KEY --env CLOUDINARY_API_SECRET=YOUR_SECRET",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/cloudinary-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/cloudinary-mcp-server"
     },
     {
       "name": "code-complexity-alert-monitor",
@@ -1016,7 +1016,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/code-complexity-alert-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/code-complexity-alert-monitor.sh && chmod +x .claude/hooks/code-complexity-alert-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/code-complexity-alert-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/code-complexity-alert-monitor"
     },
     {
       "name": "coderabbit-lite-pr-review-capability-pack",
@@ -1064,7 +1064,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/coderabbit-lite-pr-review-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack"
     },
     {
       "name": "code-reviewer-agent",
@@ -1074,7 +1074,7 @@
       "sourceUrl": "https://google.github.io/eng-practices/review/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/code-reviewer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/code-reviewer-agent"
     },
     {
       "name": "code-test-runner-hook",
@@ -1084,7 +1084,7 @@
       "sourceUrl": "https://jestjs.io/docs/getting-started",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/code-test-runner-hook.sh && chmod +x .claude/hooks/code-test-runner-hook.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/code-test-runner-hook"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/code-test-runner-hook"
     },
     {
       "name": "codebase-migration-refactoring-agent",
@@ -1094,7 +1094,7 @@
       "sourceUrl": "https://refactoring.guru/refactoring/catalog",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/codebase-migration-refactoring-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/codebase-migration-refactoring-agent"
     },
     {
       "name": "codex-automations-orchestrator-capability-pack",
@@ -1142,7 +1142,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/codex-automations-orchestrator-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack"
     },
     {
       "name": "codex-plugin-creator-capability-pack",
@@ -1190,7 +1190,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/codex-plugin-creator-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack"
     },
     {
       "name": "context-analyzer",
@@ -1200,7 +1200,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/analysis",
       "installCommand": "/context-analyzer [scope] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/context-analyzer"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/context-analyzer"
     },
     {
       "name": "context-window-optimizer-agent",
@@ -1210,7 +1210,7 @@
       "sourceUrl": "https://epoch.ai/data-insights/context-windows",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/context-window-optimizer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/context-window-optimizer-agent"
     },
     {
       "name": "contrastapi-mcp-server",
@@ -1234,7 +1234,7 @@
       "sourceUrl": "https://github.com/UPinar/contrastapi",
       "installCommand": "claude mcp add --transport http contrastapi https://api.contrastcyber.com/mcp/",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/contrastapi-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/contrastapi-mcp-server"
     },
     {
       "name": "css-unused-selector-detector",
@@ -1244,7 +1244,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/css-unused-selector-detector.sh && chmod +x .claude/hooks/css-unused-selector-detector.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/css-unused-selector-detector"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/css-unused-selector-detector"
     },
     {
       "name": "csv-excel-data-wrangler",
@@ -1292,7 +1292,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/csv-excel-data-wrangler"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/csv-excel-data-wrangler"
     },
     {
       "name": "cursor-windsurf-ai-ide-setup",
@@ -1345,7 +1345,7 @@
           "verifiedAt": "2025-10-23"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/cursor-windsurf-ai-ide-setup"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/cursor-windsurf-ai-ide-setup"
     },
     {
       "name": "daloopa-mcp-server",
@@ -1359,7 +1359,7 @@
       "sourceUrl": "https://docs.daloopa.com/docs/daloopa-mcp",
       "installCommand": "claude mcp list && claude mcp status daloopa",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/daloopa-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/daloopa-mcp-server"
     },
     {
       "name": "data-pipeline-engineering-agent",
@@ -1369,7 +1369,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/data-pipeline-engineering-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/data-pipeline-engineering-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/data-pipeline-engineering-agent"
     },
     {
       "name": "database-connection-cleanup",
@@ -1379,7 +1379,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-connection-cleanup.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/database-connection-cleanup.sh && chmod +x .claude/hooks/database-connection-cleanup.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/database-connection-cleanup"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/database-connection-cleanup"
     },
     {
       "name": "database-expert",
@@ -1389,7 +1389,7 @@
       "sourceUrl": "https://www.postgresql.org/docs/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/database-expert"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/database-expert"
     },
     {
       "name": "database-migration-runner",
@@ -1399,7 +1399,7 @@
       "sourceUrl": "https://knexjs.org/guide/migrations.html",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/database-migration-runner.sh && chmod +x .claude/hooks/database-migration-runner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/database-migration-runner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/database-migration-runner"
     },
     {
       "name": "database-query-performance-logger",
@@ -1409,7 +1409,7 @@
       "sourceUrl": "https://www.postgresql.org/docs/current/runtime-config-logging.html",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/database-query-performance-logger.sh && chmod +x .claude/hooks/database-query-performance-logger.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/database-query-performance-logger"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/database-query-performance-logger"
     },
     {
       "name": "database-specialist-agent",
@@ -1419,7 +1419,7 @@
       "sourceUrl": "https://www.postgresql.org/docs/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/database-specialist-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/database-specialist-agent"
     },
     {
       "name": "dead-code-eliminator",
@@ -1429,7 +1429,7 @@
       "sourceUrl": "https://github.com/nadeesha/ts-prune",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/dead-code-eliminator.sh && chmod +x .claude/hooks/dead-code-eliminator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/dead-code-eliminator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/dead-code-eliminator"
     },
     {
       "name": "debugging-assistant-agent",
@@ -1439,7 +1439,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/debugging-assistant-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/debugging-assistant-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/debugging-assistant-agent"
     },
     {
       "name": "dependency-security-audit-on-stop",
@@ -1449,7 +1449,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-audit-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/dependency-security-audit-on-stop.sh && chmod +x .claude/hooks/dependency-security-audit-on-stop.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/dependency-security-audit-on-stop"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/dependency-security-audit-on-stop"
     },
     {
       "name": "dependency-security-scanner",
@@ -1459,7 +1459,7 @@
       "sourceUrl": "https://docs.npmjs.com/cli/v8/commands/npm-audit",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/dependency-security-scanner.sh && chmod +x .claude/hooks/dependency-security-scanner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/dependency-security-scanner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/dependency-security-scanner"
     },
     {
       "name": "dependency-update-checker",
@@ -1469,7 +1469,7 @@
       "sourceUrl": "https://docs.npmjs.com/cli/v8/commands/npm-audit",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/dependency-update-checker.sh && chmod +x .claude/hooks/dependency-update-checker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/dependency-update-checker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/dependency-update-checker"
     },
     {
       "name": "devops-sre-expert",
@@ -1483,7 +1483,7 @@
       "sourceUrl": "https://kubernetes.io/docs/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/devops-sre-expert"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/devops-sre-expert"
     },
     {
       "name": "discord-activity-notifier",
@@ -1497,7 +1497,7 @@
       "sourceUrl": "https://discord.com/developers/docs/resources/webhook",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/discord-activity-notifier.sh && chmod +x .claude/hooks/discord-activity-notifier.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/discord-activity-notifier"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/discord-activity-notifier"
     },
     {
       "name": "discord-mcp-server",
@@ -1511,7 +1511,7 @@
       "sourceUrl": "https://github.com/saseq/discord-mcp",
       "installCommand": "npx -y @smithery/cli@latest install @SaseQ/discord-mcp --client claude && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/discord-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/discord-mcp-server"
     },
     {
       "name": "documentation-auto-generator-on-stop",
@@ -1521,7 +1521,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-auto-generator-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-auto-generator-on-stop.sh && chmod +x .claude/hooks/documentation-auto-generator-on-stop.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/documentation-auto-generator-on-stop"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/documentation-auto-generator-on-stop"
     },
     {
       "name": "docker-compose-production-blueprints",
@@ -1574,7 +1574,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/docker-compose-production-blueprints"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/docker-compose-production-blueprints"
     },
     {
       "name": "docker-container-auto-rebuild",
@@ -1588,7 +1588,7 @@
       "sourceUrl": "https://docs.docker.com/compose/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/docker-container-auto-rebuild.sh && chmod +x .claude/hooks/docker-container-auto-rebuild.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/docker-container-auto-rebuild"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/docker-container-auto-rebuild"
     },
     {
       "name": "docker-image-security-scanner",
@@ -1602,7 +1602,7 @@
       "sourceUrl": "https://aquasecurity.github.io/trivy/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/docker-image-security-scanner.sh && chmod +x .claude/hooks/docker-image-security-scanner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/docker-image-security-scanner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/docker-image-security-scanner"
     },
     {
       "name": "docker-mcp-server",
@@ -1616,7 +1616,7 @@
       "sourceUrl": "https://docs.docker.com/engine/api/",
       "installCommand": "claude mcp add docker -- npx -y @docker/mcp-server && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/docker-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/docker-mcp-server"
     },
     {
       "name": "documentation-coverage-checker",
@@ -1626,7 +1626,7 @@
       "sourceUrl": "https://jsdoc.app/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-coverage-checker.sh && chmod +x .claude/hooks/documentation-coverage-checker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/documentation-coverage-checker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/documentation-coverage-checker"
     },
     {
       "name": "documentation-generator",
@@ -1636,7 +1636,7 @@
       "sourceUrl": "https://jsdoc.app/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/documentation-generator.sh && chmod +x .claude/hooks/documentation-generator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/documentation-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/documentation-generator"
     },
     {
       "name": "docx-report-generator",
@@ -1684,7 +1684,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/docx-report-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/docx-report-generator"
     },
     {
       "name": "domain-specialist-ai-agents",
@@ -1694,7 +1694,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/domain-specialist-ai-agents"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/domain-specialist-ai-agents"
     },
     {
       "name": "environment-cleanup-handler",
@@ -1704,7 +1704,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-cleanup-handler.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/environment-cleanup-handler.sh && chmod +x .claude/hooks/environment-cleanup-handler.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/environment-cleanup-handler"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/environment-cleanup-handler"
     },
     {
       "name": "environment-variable-validator",
@@ -1714,7 +1714,7 @@
       "sourceUrl": "https://12factor.net/config",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/environment-variable-validator.sh && chmod +x .claude/hooks/environment-variable-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/environment-variable-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/environment-variable-validator"
     },
     {
       "name": "error-rate-monitor",
@@ -1724,7 +1724,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/error-rate-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/error-rate-monitor.sh && chmod +x .claude/hooks/error-rate-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/error-rate-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/error-rate-monitor"
     },
     {
       "name": "ethereum-base-smart-contract-security-capability-pack",
@@ -1772,7 +1772,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/ethereum-base-smart-contract-security-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/ethereum-base-smart-contract-security-capability-pack"
     },
     {
       "name": "ethereum-solidity-security-foundry",
@@ -1820,7 +1820,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/ethereum-solidity-security-foundry"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/ethereum-solidity-security-foundry"
     },
     {
       "name": "extended-thinking-orchestrator",
@@ -1830,7 +1830,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/extended-thinking-orchestrator.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/extended-thinking-orchestrator"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/extended-thinking-orchestrator"
     },
     {
       "name": "fastapi-python-backend",
@@ -1878,7 +1878,7 @@
           "verifiedAt": "2025-10-23"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/fastapi-python-backend"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/fastapi-python-backend"
     },
     {
       "name": "figma-mcp-server",
@@ -1892,7 +1892,7 @@
       "sourceUrl": "https://help.figma.com/hc/en-us/articles/32132100833559",
       "installCommand": "claude mcp list && claude mcp status figma",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/figma-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/figma-mcp-server"
     },
     {
       "name": "file-size-warning-monitor",
@@ -1902,7 +1902,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/file-size-warning-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/file-size-warning-monitor.sh && chmod +x .claude/hooks/file-size-warning-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/file-size-warning-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/file-size-warning-monitor"
     },
     {
       "name": "filesystem-mcp-server",
@@ -1916,7 +1916,7 @@
       "sourceUrl": "https://modelcontextprotocol.io/examples",
       "installCommand": "claude mcp list && claude mcp status filesystem",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/filesystem-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/filesystem-mcp-server"
     },
     {
       "name": "final-bundle-size-reporter",
@@ -1926,7 +1926,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/final-bundle-size-reporter.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/final-bundle-size-reporter.sh && chmod +x .claude/hooks/final-bundle-size-reporter.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/final-bundle-size-reporter"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/final-bundle-size-reporter"
     },
     {
       "name": "fireflies-mcp-server",
@@ -1940,7 +1940,7 @@
       "sourceUrl": "https://guide.fireflies.ai/articles/8272956938-learn-about-the-fireflies-mcp-server-model-context-protocol",
       "installCommand": "claude mcp list && claude mcp status fireflies",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/fireflies-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/fireflies-mcp-server"
     },
     {
       "name": "frontend-specialist-agent",
@@ -1950,7 +1950,7 @@
       "sourceUrl": "https://react.dev/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/frontend-specialist-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/frontend-specialist-agent"
     },
     {
       "name": "full-stack-ai-development-agent",
@@ -1960,7 +1960,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/full-stack-ai-development-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/full-stack-ai-development-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/full-stack-ai-development-agent"
     },
     {
       "name": "generate-tests",
@@ -1970,7 +1970,7 @@
       "sourceUrl": "https://docs.claude.ai/commands/test-gen",
       "installCommand": "/test-gen [options] <file_or_function>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/generate-tests"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/generate-tests"
     },
     {
       "name": "git-auto-commit-on-stop",
@@ -1980,7 +1980,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-auto-commit-on-stop.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/git-auto-commit-on-stop.sh && chmod +x .claude/hooks/git-auto-commit-on-stop.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/git-auto-commit-on-stop"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/git-auto-commit-on-stop"
     },
     {
       "name": "git-branch-protection",
@@ -1990,7 +1990,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/git-branch-protection.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/git-branch-protection.sh && chmod +x .claude/hooks/git-branch-protection.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/git-branch-protection"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/git-branch-protection"
     },
     {
       "name": "git-mcp-server",
@@ -2004,7 +2004,7 @@
       "sourceUrl": "https://modelcontextprotocol.io/examples",
       "installCommand": "claude mcp list && claude mcp status git",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/git-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/git-mcp-server"
     },
     {
       "name": "git-pre-commit-validator",
@@ -2014,7 +2014,7 @@
       "sourceUrl": "https://pre-commit.com/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/git-pre-commit-validator.sh && chmod +x .claude/hooks/git-pre-commit-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/git-pre-commit-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/git-pre-commit-validator"
     },
     {
       "name": "git-smart-commit",
@@ -2024,7 +2024,7 @@
       "sourceUrl": "https://www.conventionalcommits.org/",
       "installCommand": "/git-smart-commit [type] [message]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/git-smart-commit"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/git-smart-commit"
     },
     {
       "name": "git-cliff-release-changelog-capability-pack",
@@ -2072,7 +2072,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/git-cliff-release-changelog-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/git-cliff-release-changelog-capability-pack"
     },
     {
       "name": "github-actions-ai-cicd",
@@ -2125,7 +2125,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/github-actions-ai-cicd"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/github-actions-ai-cicd"
     },
     {
       "name": "github-actions-secure-cicd-capability-pack",
@@ -2178,7 +2178,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/github-actions-secure-cicd-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/github-actions-secure-cicd-capability-pack"
     },
     {
       "name": "github-actions-workflow-validator",
@@ -2192,7 +2192,7 @@
       "sourceUrl": "https://docs.github.com/en/actions",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/github-actions-workflow-validator.sh && chmod +x .claude/hooks/github-actions-workflow-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/github-actions-workflow-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/github-actions-workflow-validator"
     },
     {
       "name": "github-copilot-interop-bridge",
@@ -2206,7 +2206,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/github-copilot-interop-bridge.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/github-copilot-interop-bridge"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/github-copilot-interop-bridge"
     },
     {
       "name": "github-mcp-server",
@@ -2220,7 +2220,7 @@
       "sourceUrl": "https://www.npmjs.com/package/@modelcontextprotocol/server-github",
       "installCommand": "claude mcp add github --env GITHUB_PERSONAL_ACCESS_TOKEN=YOUR_TOKEN -- npx -y @modelcontextprotocol/server-github && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/github-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/github-mcp-server"
     },
     {
       "name": "go-module-tidy",
@@ -2230,7 +2230,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/go-module-tidy.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/go-module-tidy.sh && chmod +x .claude/hooks/go-module-tidy.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/go-module-tidy"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/go-module-tidy"
     },
     {
       "name": "google-workspace-gemini-automation",
@@ -2283,7 +2283,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/google-workspace-gemini-automation"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/google-workspace-gemini-automation"
     },
     {
       "name": "graphql-schema-validator",
@@ -2293,7 +2293,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/graphql-schema-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/graphql-schema-validator.sh && chmod +x .claude/hooks/graphql-schema-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/graphql-schema-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/graphql-schema-validator"
     },
     {
       "name": "heyclaude-content-submission-factory",
@@ -2341,7 +2341,7 @@
           "verifiedAt": "2026-04-30"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/heyclaude-content-submission-factory"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory"
     },
     {
       "name": "heyclaude-mcp",
@@ -2355,7 +2355,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude",
       "installCommand": "npx -y mcp-remote https://heyclau.de/api/mcp",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/heyclaude-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp"
     },
     {
       "name": "heyclaude-skill-submission-factory",
@@ -2403,7 +2403,7 @@
           "verifiedAt": "2026-04-27"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/heyclaude-skill-submission-factory"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory"
     },
     {
       "name": "hooks-generator",
@@ -2413,7 +2413,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/hooks",
       "installCommand": "/hooks-generator [hook-type] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/hooks-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/hooks-generator"
     },
     {
       "name": "hubspot-mcp-server",
@@ -2427,7 +2427,7 @@
       "sourceUrl": "https://developers.hubspot.com/mcp",
       "installCommand": "claude mcp list && claude mcp status hubspot",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/hubspot-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/hubspot-mcp-server"
     },
     {
       "name": "hugging-face-mcp-server",
@@ -2441,7 +2441,7 @@
       "sourceUrl": "https://huggingface.co/settings/mcp",
       "installCommand": "claude mcp list && claude mcp status hugging-face",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/hugging-face-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/hugging-face-mcp-server"
     },
     {
       "name": "husky-commit-governance-capability-pack",
@@ -2489,7 +2489,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/husky-commit-governance-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/husky-commit-governance-capability-pack"
     },
     {
       "name": "i18n-translation-validator",
@@ -2499,7 +2499,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/i18n-translation-validator.sh && chmod +x .claude/hooks/i18n-translation-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/i18n-translation-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/i18n-translation-validator"
     },
     {
       "name": "image-ocr-table-extraction",
@@ -2547,7 +2547,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/image-ocr-table-extraction"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/image-ocr-table-extraction"
     },
     {
       "name": "indexnow-search-indexing-accelerator",
@@ -2595,7 +2595,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/indexnow-search-indexing-accelerator"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/indexnow-search-indexing-accelerator"
     },
     {
       "name": "intercom-mcp-server",
@@ -2609,7 +2609,7 @@
       "sourceUrl": "https://developers.intercom.com/docs/guides/mcp",
       "installCommand": "claude mcp list && claude mcp status intercom",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/intercom-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/intercom-mcp-server"
     },
     {
       "name": "invideo-mcp-server",
@@ -2623,7 +2623,7 @@
       "sourceUrl": "https://invideo.io/ai/mcp",
       "installCommand": "claude mcp list && claude mcp status invideo",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/invideo-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/invideo-mcp-server"
     },
     {
       "name": "jam-mcp-server",
@@ -2637,7 +2637,7 @@
       "sourceUrl": "https://jam.dev/docs/debug-a-jam/mcp",
       "installCommand": "claude mcp list && claude mcp status jam",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/jam-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/jam-mcp-server"
     },
     {
       "name": "jest-snapshot-auto-updater",
@@ -2647,7 +2647,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/jest-snapshot-auto-updater.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/jest-snapshot-auto-updater.sh && chmod +x .claude/hooks/jest-snapshot-auto-updater.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/jest-snapshot-auto-updater"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/jest-snapshot-auto-updater"
     },
     {
       "name": "jira-mcp-server",
@@ -2661,7 +2661,7 @@
       "sourceUrl": "https://www.atlassian.com/platform/remote-mcp-server",
       "installCommand": "claude mcp list && claude mcp status jira",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/jira-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/jira-mcp-server"
     },
     {
       "name": "json-schema-validation-transformation",
@@ -2709,7 +2709,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/json-schema-validation-transformation"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/json-schema-validation-transformation"
     },
     {
       "name": "json-schema-validator",
@@ -2719,7 +2719,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/json-schema-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/json-schema-validator.sh && chmod +x .claude/hooks/json-schema-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/json-schema-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/json-schema-validator"
     },
     {
       "name": "kubernetes-manifest-validator",
@@ -2733,7 +2733,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/kubernetes-manifest-validator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/kubernetes-manifest-validator.sh && chmod +x .claude/hooks/kubernetes-manifest-validator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/kubernetes-manifest-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/kubernetes-manifest-validator"
     },
     {
       "name": "kubernetes-mcp-server",
@@ -2747,7 +2747,7 @@
       "sourceUrl": "https://github.com/feiskyer/mcp-kubernetes-server",
       "installCommand": "claude mcp add kubernetes --env KUBECONFIG=/path/to/your/kubeconfig -- uvx mcp-kubernetes-server && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/kubernetes-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/kubernetes-mcp-server"
     },
     {
       "name": "life-sciences-research-specialist",
@@ -2757,7 +2757,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/life-sciences-research-specialist"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/life-sciences-research-specialist"
     },
     {
       "name": "linear-mcp-server",
@@ -2771,7 +2771,7 @@
       "sourceUrl": "https://linear.app/docs/mcp",
       "installCommand": "claude mcp list && claude mcp status linear",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/linear-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/linear-mcp-server"
     },
     {
       "name": "log-parsing-incident-timeline",
@@ -2819,7 +2819,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/log-parsing-incident-timeline"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/log-parsing-incident-timeline"
     },
     {
       "name": "markdown-knowledge-base-composer",
@@ -2867,7 +2867,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/markdown-knowledge-base-composer"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/markdown-knowledge-base-composer"
     },
     {
       "name": "markdown-link-checker",
@@ -2877,7 +2877,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/markdown-link-checker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/markdown-link-checker.sh && chmod +x .claude/hooks/markdown-link-checker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/markdown-link-checker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/markdown-link-checker"
     },
     {
       "name": "mcp-server-authoring-security-capability-pack",
@@ -2925,7 +2925,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/mcp-server-authoring-security-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack"
     },
     {
       "name": "mcp-server-security-hardening",
@@ -2973,7 +2973,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/mcp-server-security-hardening"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/mcp-server-security-hardening"
     },
     {
       "name": "mcp-setup",
@@ -2983,7 +2983,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/mcp",
       "installCommand": "/mcp-setup [server-type] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/mcp-setup"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/mcp-setup"
     },
     {
       "name": "mcp-tool-contract-testing",
@@ -3031,7 +3031,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/mcp-tool-contract-testing"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/mcp-tool-contract-testing"
     },
     {
       "name": "memesio-mcp-server",
@@ -3053,7 +3053,7 @@
       "sourceUrl": "https://memesio.com/developers/mcp",
       "installCommand": "claude mcp add --transport http memesio https://memesio.com/api/mcp",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/memesio-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/memesio-mcp-server"
     },
     {
       "name": "memory-usage-monitor",
@@ -3063,7 +3063,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/memory-usage-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/memory-usage-monitor.sh && chmod +x .claude/hooks/memory-usage-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/memory-usage-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/memory-usage-monitor"
     },
     {
       "name": "mintlify-documentation-automation",
@@ -3111,7 +3111,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/mintlify-documentation-automation"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/mintlify-documentation-automation"
     },
     {
       "name": "mintlify-docs",
@@ -3121,7 +3121,7 @@
       "sourceUrl": "https://mintlify.com/docs",
       "installCommand": "/mintlify-docs [options] <documentation_scope>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/mintlify-docs"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/mintlify-docs"
     },
     {
       "name": "model-routing-cost-latency-optimizer",
@@ -3169,7 +3169,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/model-routing-cost-latency-optimizer"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/model-routing-cost-latency-optimizer"
     },
     {
       "name": "monday-mcp-server",
@@ -3183,7 +3183,7 @@
       "sourceUrl": "https://developer.monday.com/apps/docs/mondaycom-mcp-integration",
       "installCommand": "claude mcp list && claude mcp status monday",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/monday-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/monday-mcp-server"
     },
     {
       "name": "multi-agent-orchestration-specialist",
@@ -3197,7 +3197,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/multi-agent-orchestration-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/multi-agent-orchestration-specialist"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/multi-agent-orchestration-specialist"
     },
     {
       "name": "n8n-ai-agent-workflow-architect",
@@ -3250,7 +3250,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/n8n-ai-agent-workflow-architect"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/n8n-ai-agent-workflow-architect"
     },
     {
       "name": "n8n-operations-resilience-capability-pack",
@@ -3303,7 +3303,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/n8n-operations-resilience-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/n8n-operations-resilience-capability-pack"
     },
     {
       "name": "n8n-production-security-capability-pack",
@@ -3356,7 +3356,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/n8n-production-security-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/n8n-production-security-capability-pack"
     },
     {
       "name": "netlify-mcp-server",
@@ -3370,7 +3370,7 @@
       "sourceUrl": "https://docs.netlify.com/build/build-with-ai/netlify-mcp-server/",
       "installCommand": "claude mcp list && claude mcp status netlify",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/netlify-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/netlify-mcp-server"
     },
     {
       "name": "nextjs-route-analyzer",
@@ -3380,7 +3380,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/nextjs-route-analyzer.sh && chmod +x .claude/hooks/nextjs-route-analyzer.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/nextjs-route-analyzer"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/nextjs-route-analyzer"
     },
     {
       "name": "notion-mcp-server",
@@ -3394,7 +3394,7 @@
       "sourceUrl": "https://developers.notion.com/docs/mcp",
       "installCommand": "claude mcp list && claude mcp status notion",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/notion-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/notion-mcp-server"
     },
     {
       "name": "openclaw-agent-ops-hardening",
@@ -3442,7 +3442,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/openclaw-agent-ops-hardening"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/openclaw-agent-ops-hardening"
     },
     {
       "name": "openclaw-operator-capability-pack",
@@ -3490,7 +3490,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/openclaw-operator-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack"
     },
     {
       "name": "openclaw-skill-authoring-factory-capability-pack",
@@ -3538,7 +3538,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/openclaw-skill-authoring-factory-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack"
     },
     {
       "name": "opennext-cloudflare-capability-pack",
@@ -3591,7 +3591,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/opennext-cloudflare-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/opennext-cloudflare-capability-pack"
     },
     {
       "name": "package-vulnerability-scanner",
@@ -3601,7 +3601,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/package-vulnerability-scanner.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/package-vulnerability-scanner.sh && chmod +x .claude/hooks/package-vulnerability-scanner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/package-vulnerability-scanner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/package-vulnerability-scanner"
     },
     {
       "name": "packrift-mcp-server",
@@ -3623,7 +3623,7 @@
       "sourceUrl": "https://github.com/Packrift/packrift-mcp",
       "installCommand": "No local install package is required for the hosted endpoint. Configure the remote MCP URL: https://mcp.packrift.com/mcp",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/packrift-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/packrift-mcp-server"
     },
     {
       "name": "pagespeed-insights-optimizer",
@@ -3671,7 +3671,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/pagespeed-insights-optimizer"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/pagespeed-insights-optimizer"
     },
     {
       "name": "parallel-subagent-distributor",
@@ -3681,7 +3681,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/sub-agents",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/parallel-subagent-distributor"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/parallel-subagent-distributor"
     },
     {
       "name": "paypal-mcp-server",
@@ -3695,7 +3695,7 @@
       "sourceUrl": "https://www.paypal.ai/",
       "installCommand": "claude mcp list && claude mcp status paypal",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/paypal-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/paypal-mcp-server"
     },
     {
       "name": "performance-benchmark-report",
@@ -3705,7 +3705,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-benchmark-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/performance-benchmark-report.sh && chmod +x .claude/hooks/performance-benchmark-report.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/performance-benchmark-report"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/performance-benchmark-report"
     },
     {
       "name": "performance-impact-monitor",
@@ -3715,7 +3715,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/performance-impact-monitor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/performance-impact-monitor.sh && chmod +x .claude/hooks/performance-impact-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/performance-impact-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/performance-impact-monitor"
     },
     {
       "name": "performance-monitor",
@@ -3725,7 +3725,7 @@
       "sourceUrl": "https://web.dev/vitals/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/performance-monitor.sh && chmod +x .claude/hooks/performance-monitor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/performance-monitor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/performance-monitor"
     },
     {
       "name": "performance-optimizer-agent",
@@ -3735,7 +3735,7 @@
       "sourceUrl": "https://web.dev/performance/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/performance-optimizer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/performance-optimizer-agent"
     },
     {
       "name": "plaid-mcp-server",
@@ -3749,7 +3749,7 @@
       "sourceUrl": "https://plaid.com/blog/plaid-mcp-ai-assistant-claude/",
       "installCommand": "claude mcp list && claude mcp status plaid",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/plaid-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/plaid-mcp-server"
     },
     {
       "name": "plan-mode",
@@ -3759,7 +3759,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/extended-thinking",
       "installCommand": "/plan-mode [task] [depth]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/plan-mode"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/plan-mode"
     },
     {
       "name": "playwright-e2e-testing",
@@ -3807,7 +3807,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/playwright-e2e-testing"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/playwright-e2e-testing"
     },
     {
       "name": "playwright-mcp-browser-automation-engineer",
@@ -3855,7 +3855,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/playwright-mcp-browser-automation-engineer"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/playwright-mcp-browser-automation-engineer"
     },
     {
       "name": "playwright-test-runner",
@@ -3865,7 +3865,7 @@
       "sourceUrl": "https://playwright.dev",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/playwright-test-runner.sh && chmod +x .claude/hooks/playwright-test-runner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/playwright-test-runner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/playwright-test-runner"
     },
     {
       "name": "plugin-ecosystem-architect",
@@ -3875,7 +3875,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/plugin-ecosystem-architect.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/plugin-ecosystem-architect"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/plugin-ecosystem-architect"
     },
     {
       "name": "postgresql-mcp-server",
@@ -3889,7 +3889,7 @@
       "sourceUrl": "https://modelcontextprotocol.io/examples",
       "installCommand": "claude mcp list && claude mcp status postgres",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/postgresql-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/postgresql-mcp-server"
     },
     {
       "name": "postgresql-query-optimization",
@@ -3937,7 +3937,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/postgresql-query-optimization"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/postgresql-query-optimization"
     },
     {
       "name": "prisma-schema-sync",
@@ -3947,7 +3947,7 @@
       "sourceUrl": "https://www.prisma.io/docs",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/prisma-schema-sync.sh && chmod +x .claude/hooks/prisma-schema-sync.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/prisma-schema-sync"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/prisma-schema-sync"
     },
     {
       "name": "product-management-ai-agent",
@@ -3957,7 +3957,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/product-management-ai-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/product-management-ai-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/product-management-ai-agent"
     },
     {
       "name": "production-reliability-engineer",
@@ -3967,7 +3967,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/production-reliability-engineer.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/production-reliability-engineer"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/production-reliability-engineer"
     },
     {
       "name": "prompt-injection-defense-guardrails",
@@ -4015,7 +4015,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/prompt-injection-defense-guardrails"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/prompt-injection-defense-guardrails"
     },
     {
       "name": "prompt-optimization-specialist",
@@ -4025,7 +4025,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/prompt-optimization-specialist.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/prompt-optimization-specialist"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/prompt-optimization-specialist"
     },
     {
       "name": "prompt-to-asset",
@@ -4045,7 +4045,7 @@
       "sourceUrl": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
       "installCommand": "npx -y prompt-to-asset",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/prompt-to-asset"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/prompt-to-asset"
     },
     {
       "name": "proxmox-ve-api-capability-pack",
@@ -4093,7 +4093,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/proxmox-ve-api-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/proxmox-ve-api-capability-pack"
     },
     {
       "name": "proxmox-ve-api-orchestrator",
@@ -4141,7 +4141,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/proxmox-ve-api-orchestrator"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator"
     },
     {
       "name": "python-import-optimizer",
@@ -4151,7 +4151,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-import-optimizer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/python-import-optimizer.sh && chmod +x .claude/hooks/python-import-optimizer.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/python-import-optimizer"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/python-import-optimizer"
     },
     {
       "name": "python-linter-integration",
@@ -4161,7 +4161,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/python-linter-integration.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/python-linter-integration.sh && chmod +x .claude/hooks/python-linter-integration.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/python-linter-integration"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/python-linter-integration"
     },
     {
       "name": "raycast-extension-dev-publish-capability-pack",
@@ -4214,7 +4214,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/raycast-extension-dev-publish-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack"
     },
     {
       "name": "react-component-test-generator",
@@ -4224,7 +4224,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/react-component-test-generator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/react-component-test-generator.sh && chmod +x .claude/hooks/react-component-test-generator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/react-component-test-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/react-component-test-generator"
     },
     {
       "name": "real-time-activity-tracker",
@@ -4234,7 +4234,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/real-time-activity-tracker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/real-time-activity-tracker.sh && chmod +x .claude/hooks/real-time-activity-tracker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/real-time-activity-tracker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/real-time-activity-tracker"
     },
     {
       "name": "reddit-mcp-buddy",
@@ -4248,7 +4248,7 @@
       "sourceUrl": "https://github.com/karanb192/reddit-mcp-buddy",
       "installCommand": "claude mcp add reddit-buddy -- npx reddit-mcp-buddy && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/reddit-mcp-buddy"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/reddit-mcp-buddy"
     },
     {
       "name": "redis-cache-invalidator",
@@ -4262,7 +4262,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/redis-cache-invalidator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/redis-cache-invalidator.sh && chmod +x .claude/hooks/redis-cache-invalidator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/redis-cache-invalidator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/redis-cache-invalidator"
     },
     {
       "name": "redis-mcp-server",
@@ -4276,7 +4276,7 @@
       "sourceUrl": "https://github.com/redis/mcp-redis",
       "installCommand": "uvx --from git+https://github.com/redis/mcp-redis.git redis-mcp-server --url redis://localhost:6379/0 && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/redis-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/redis-mcp-server"
     },
     {
       "name": "rest-api-client-harness",
@@ -4324,7 +4324,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/rest-api-client-harness"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/rest-api-client-harness"
     },
     {
       "name": "retro-daily",
@@ -4336,7 +4336,7 @@
       "sourceUrl": "https://github.com/gyanesh-m/retro-daily",
       "installCommand": "/plugin marketplace add gyanesh-m/retro-daily && /plugin install retro-daily@retro-daily",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/retro-daily"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/retro-daily"
     },
     {
       "name": "rust-cargo-check",
@@ -4346,7 +4346,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/rust-cargo-check.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/rust-cargo-check.sh && chmod +x .claude/hooks/rust-cargo-check.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/rust-cargo-check"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/rust-cargo-check"
     },
     {
       "name": "saas-pricing-experimentation-engine",
@@ -4394,7 +4394,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/saas-pricing-experimentation-engine"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/saas-pricing-experimentation-engine"
     },
     {
       "name": "scss-auto-compiler",
@@ -4404,7 +4404,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/scss-auto-compiler.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/scss-auto-compiler.sh && chmod +x .claude/hooks/scss-auto-compiler.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/scss-auto-compiler"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/scss-auto-compiler"
     },
     {
       "name": "security-scanner-hook",
@@ -4414,7 +4414,7 @@
       "sourceUrl": "https://owasp.org/www-project-top-ten/",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/security-scanner-hook.sh && chmod +x .claude/hooks/security-scanner-hook.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/security-scanner-hook"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/security-scanner-hook"
     },
     {
       "name": "semantic-kernel-enterprise-agent",
@@ -4428,7 +4428,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/semantic-kernel-enterprise-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/semantic-kernel-enterprise-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/semantic-kernel-enterprise-agent"
     },
     {
       "name": "sensitive-data-alert-scanner",
@@ -4438,7 +4438,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/sensitive-data-alert-scanner.sh && chmod +x .claude/hooks/sensitive-data-alert-scanner.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/sensitive-data-alert-scanner"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/sensitive-data-alert-scanner"
     },
     {
       "name": "sentry-mcp-server",
@@ -4452,7 +4452,7 @@
       "sourceUrl": "https://docs.sentry.io/product/sentry-mcp/",
       "installCommand": "claude mcp add --transport http sentry https://mcp.sentry.dev/mcp && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/sentry-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/sentry-mcp-server"
     },
     {
       "name": "session-metrics-collector",
@@ -4462,7 +4462,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/session-metrics-collector.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/session-metrics-collector.sh && chmod +x .claude/hooks/session-metrics-collector.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/session-metrics-collector"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/session-metrics-collector"
     },
     {
       "name": "slack-progress-notifier",
@@ -4476,7 +4476,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/slack-progress-notifier.sh && chmod +x .claude/hooks/slack-progress-notifier.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/slack-progress-notifier"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/slack-progress-notifier"
     },
     {
       "name": "slash-command-gen",
@@ -4486,7 +4486,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/slash-commands",
       "installCommand": "/slash-command-gen [command-name] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/slash-command-gen"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/slash-command-gen"
     },
     {
       "name": "slash-command-orchestrator-agent",
@@ -4496,7 +4496,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/slash-commands",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/slash-command-orchestrator-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/slash-command-orchestrator-agent"
     },
     {
       "name": "socket-mcp-server",
@@ -4510,7 +4510,7 @@
       "sourceUrl": "https://github.com/SocketDev/socket-mcp",
       "installCommand": "claude mcp add --transport http socket https://mcp.socket.dev/ && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/socket-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/socket-mcp-server"
     },
     {
       "name": "legal-fournier-spain-legal-mcp",
@@ -4532,7 +4532,7 @@
       "sourceUrl": "https://legalfournier.com/en/mcp/spain-legal/",
       "installCommand": "claude mcp add --transport http legal-fournier-spain-legal https://legalfournier.com/mcp/spain-legal",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/legal-fournier-spain-legal-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/legal-fournier-spain-legal-mcp"
     },
     {
       "name": "square-mcp-server",
@@ -4546,7 +4546,7 @@
       "sourceUrl": "https://developer.squareup.com/docs/mcp",
       "installCommand": "claude mcp add --transport sse square https://mcp.squareup.com/sse && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/square-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/square-mcp-server"
     },
     {
       "name": "stripe-mcp-server",
@@ -4560,7 +4560,7 @@
       "sourceUrl": "https://docs.stripe.com/mcp",
       "installCommand": "claude mcp add --transport http stripe https://mcp.stripe.com && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/stripe-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/stripe-mcp-server"
     },
     {
       "name": "stytch-mcp-server",
@@ -4574,7 +4574,7 @@
       "sourceUrl": "https://stytch.com/docs/workspace-management/stytch-mcp",
       "installCommand": "claude mcp add --transport http stytch http://mcp.stytch.dev/mcp && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/stytch-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/stytch-mcp-server"
     },
     {
       "name": "subagent-create",
@@ -4584,7 +4584,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/sub-agents",
       "installCommand": "/subagent-create [role] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/subagent-create"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/subagent-create"
     },
     {
       "name": "subagent-factory-agent",
@@ -4594,7 +4594,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/sub-agents",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/subagent-factory-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/subagent-factory-agent"
     },
     {
       "name": "supabase-realtime-database",
@@ -4647,7 +4647,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/supabase-realtime-database"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/supabase-realtime-database"
     },
     {
       "name": "svelte-component-compiler",
@@ -4657,7 +4657,7 @@
       "sourceUrl": "https://svelte.dev/docs",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/svelte-component-compiler.sh && chmod +x .claude/hooks/svelte-component-compiler.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/svelte-component-compiler"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/svelte-component-compiler"
     },
     {
       "name": "svelte-sveltekit-fullstack",
@@ -4705,7 +4705,7 @@
           "verifiedAt": "2025-10-23"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/svelte-sveltekit-fullstack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/svelte-sveltekit-fullstack"
     },
     {
       "name": "tdd-workflow",
@@ -4715,7 +4715,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/testing",
       "installCommand": "/tdd-workflow [feature] [options]",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/tdd-workflow"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/tdd-workflow"
     },
     {
       "name": "team-summary-email-generator",
@@ -4725,7 +4725,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/team-summary-email-generator.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/team-summary-email-generator.sh && chmod +x .claude/hooks/team-summary-email-generator.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/team-summary-email-generator"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/team-summary-email-generator"
     },
     {
       "name": "technical-documentation-writer-agent",
@@ -4735,7 +4735,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/technical-documentation-writer-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/technical-documentation-writer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/technical-documentation-writer-agent"
     },
     {
       "name": "terraform-plan-executor",
@@ -4745,7 +4745,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/terraform-plan-executor.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/terraform-plan-executor.sh && chmod +x .claude/hooks/terraform-plan-executor.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/terraform-plan-executor"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/terraform-plan-executor"
     },
     {
       "name": "test-automation-engineer-agent",
@@ -4755,7 +4755,7 @@
       "sourceUrl": "https://playwright.dev/",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/test-automation-engineer-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/test-automation-engineer-agent"
     },
     {
       "name": "test-coverage-final-report",
@@ -4765,7 +4765,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/test-coverage-final-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/test-coverage-final-report.sh && chmod +x .claude/hooks/test-coverage-final-report.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/test-coverage-final-report"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/test-coverage-final-report"
     },
     {
       "name": "test-runner-hook",
@@ -4775,7 +4775,7 @@
       "sourceUrl": "https://jestjs.io/docs/getting-started",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/test-runner-hook.sh && chmod +x .claude/hooks/test-runner-hook.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/test-runner-hook"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/test-runner-hook"
     },
     {
       "name": "token-cost-budget-optimizer",
@@ -4785,7 +4785,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/token-cost-budget-optimizer.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/token-cost-budget-optimizer"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/token-cost-budget-optimizer"
     },
     {
       "name": "trpc-type-safe-api",
@@ -4833,7 +4833,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/trpc-type-safe-api"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/trpc-type-safe-api"
     },
     {
       "name": "typescript-compilation-checker",
@@ -4843,7 +4843,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/typescript-compilation-checker.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/typescript-compilation-checker.sh && chmod +x .claude/hooks/typescript-compilation-checker.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/typescript-compilation-checker"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/typescript-compilation-checker"
     },
     {
       "name": "ui-ux-design-expert-agent",
@@ -4853,7 +4853,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ui-ux-design-expert-agent.mdx",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/ui-ux-design-expert-agent"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/ui-ux-design-expert-agent"
     },
     {
       "name": "unraid-api-automation-operator",
@@ -4901,7 +4901,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/unraid-api-automation-operator"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/unraid-api-automation-operator"
     },
     {
       "name": "unraid-api-v2-capability-pack",
@@ -4949,7 +4949,7 @@
           "verifiedAt": "2026-04-10"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/unraid-api-v2-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/unraid-api-v2-capability-pack"
     },
     {
       "name": "unraid-ca-template-authoring-capability-pack",
@@ -5002,7 +5002,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/unraid-ca-template-authoring-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack"
     },
     {
       "name": "v0-generate",
@@ -5012,7 +5012,7 @@
       "sourceUrl": "https://v0.dev/docs",
       "installCommand": "/v0-generate [options] <component_description>",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/commands/v0-generate"
+      "heyclaudeUrl": "https://heyclau.de/entry/commands/v0-generate"
     },
     {
       "name": "v0-rapid-prototyping",
@@ -5060,7 +5060,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/v0-rapid-prototyping"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/v0-rapid-prototyping"
     },
     {
       "name": "vercel-mcp-server",
@@ -5074,7 +5074,7 @@
       "sourceUrl": "https://vercel.com/docs/mcp/vercel-mcp",
       "installCommand": "claude mcp add --transport http vercel https://mcp.vercel.com && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/vercel-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/vercel-mcp-server"
     },
     {
       "name": "vite-build-optimization",
@@ -5122,7 +5122,7 @@
           "verifiedAt": "2025-10-23"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/vite-build-optimization"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/vite-build-optimization"
     },
     {
       "name": "vue-composition-api-linter",
@@ -5132,7 +5132,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/vue-composition-api-linter.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/vue-composition-api-linter.sh && chmod +x .claude/hooks/vue-composition-api-linter.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/vue-composition-api-linter"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/vue-composition-api-linter"
     },
     {
       "name": "web-async-agent-coordinator",
@@ -5142,7 +5142,7 @@
       "sourceUrl": "https://docs.claude.com/en/docs/claude-code/web-interface",
       "installCommand": "",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/agents/web-async-agent-coordinator"
+      "heyclaudeUrl": "https://heyclau.de/entry/agents/web-async-agent-coordinator"
     },
     {
       "name": "webassembly-module-development",
@@ -5190,7 +5190,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/webassembly-module-development"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/webassembly-module-development"
     },
     {
       "name": "webpack-bundle-analyzer",
@@ -5200,7 +5200,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/webpack-bundle-analyzer.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/webpack-bundle-analyzer.sh && chmod +x .claude/hooks/webpack-bundle-analyzer.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/webpack-bundle-analyzer"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/webpack-bundle-analyzer"
     },
     {
       "name": "website-crawler-summarizer",
@@ -5248,7 +5248,7 @@
           "verifiedAt": "2025-10-15"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/website-crawler-summarizer"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/website-crawler-summarizer"
     },
     {
       "name": "windsurf-collaborative-development",
@@ -5301,7 +5301,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/windsurf-collaborative-development"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/windsurf-collaborative-development"
     },
     {
       "name": "workato-mcp-server",
@@ -5315,7 +5315,7 @@
       "sourceUrl": "https://docs.workato.com/mcp.html",
       "installCommand": "claude mcp add --transport http workato YOUR_WORKATO_MCP_URL && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/workato-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/workato-mcp-server"
     },
     {
       "name": "workflow-completion-report",
@@ -5325,7 +5325,7 @@
       "sourceUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/workflow-completion-report.mdx",
       "installCommand": "mkdir -p .claude/hooks && touch .claude/hooks/workflow-completion-report.sh && chmod +x .claude/hooks/workflow-completion-report.sh",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/hooks/workflow-completion-report"
+      "heyclaudeUrl": "https://heyclau.de/entry/hooks/workflow-completion-report"
     },
     {
       "name": "xquik-mcp-server",
@@ -5342,7 +5342,7 @@
       "sourceUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
       "installCommand": "npx -y mcp-remote@0.1.38 https://xquik.com/mcp --header \"x-api-key:${XQUIK_API_KEY}\"",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/xquik-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/xquik-mcp-server"
     },
     {
       "name": "yield-intelligence-mcp",
@@ -5356,7 +5356,7 @@
       "sourceUrl": "https://github.com/thebrierfox/intuitek-ace",
       "installCommand": "claude mcp add --transport sse yield-intelligence https://api.intuitek.ai/yield/mcp && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/yield-intelligence-mcp"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/yield-intelligence-mcp"
     },
     {
       "name": "zapier-mcp-server",
@@ -5370,7 +5370,7 @@
       "sourceUrl": "https://help.zapier.com/hc/en-us/articles/36265392843917",
       "installCommand": "claude mcp add --transport http zapier YOUR_GENERATED_URL && claude mcp list",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/zapier-mcp-server"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/zapier-mcp-server"
     },
     {
       "name": "zero-budget-saas-launch-capability-pack",
@@ -5418,7 +5418,7 @@
           "verifiedAt": "2026-04-11"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/zero-budget-saas-launch-capability-pack"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack"
     },
     {
       "name": "zod-schema-validator",
@@ -5466,7 +5466,7 @@
           "verifiedAt": "2025-10-16"
         }
       ],
-      "heyclaudeUrl": "https://heyclau.de/skills/zod-schema-validator"
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/zod-schema-validator"
     },
     {
       "name": "zyntra-mail",
@@ -5490,7 +5490,7 @@
       "sourceUrl": "https://docs.zyntra.app/mcp",
       "installCommand": "claude mcp add zyntra-mail --transport http https://mcp.zyntra.app/mcp",
       "platformCompatibility": [],
-      "heyclaudeUrl": "https://heyclau.de/mcp/zyntra-mail"
+      "heyclaudeUrl": "https://heyclau.de/entry/mcp/zyntra-mail"
     }
   ]
 }

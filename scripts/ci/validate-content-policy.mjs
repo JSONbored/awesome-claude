@@ -53,6 +53,17 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
   "embedded_secret",
 ]);
 
+const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
+  "Executable JavaScript frontmatter is not allowed in content policy validation";
+
+const SAFE_MATTER_OPTIONS = {
+  engines: {
+    javascript() {
+      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
+    },
+  },
+};
+
 function parseArgs(argv = process.argv.slice(2)) {
   const args = {};
   for (let index = 0; index < argv.length; index += 1) {
@@ -211,9 +222,12 @@ function stringList(value) {
 
 function parseMdxFrontmatter(content) {
   try {
-    const parsed = matter(String(content));
+    const parsed = matter(String(content), SAFE_MATTER_OPTIONS);
     return { data: parsed.data || {}, content: parsed.content || "" };
-  } catch {
+  } catch (error) {
+    if (error?.message === UNSAFE_FRONTMATTER_LANGUAGE_ERROR) {
+      throw error;
+    }
     return { data: {}, content: String(content) };
   }
 }
@@ -351,14 +365,52 @@ function isNewDirectContentEntry(entry) {
   return false;
 }
 
-function existingEntryHasOnlyMetadataUpdates(entry) {
-  const current = entry.fields || {};
-  const base = entry.baseFields || {};
-  const metadataKeys = new Set(["safety_notes", "privacy_notes"]);
+const EXISTING_ENTRY_METADATA_UPDATE_KEYS = new Set([
+  "privacyNotes",
+  "safetyNotes",
+]);
 
-  for (const key of Object.keys({ ...current, ...base })) {
-    if (metadataKeys.has(key)) continue;
-    if (normalizeText(current[key]) !== normalizeText(base[key])) return false;
+function canonicalFrontmatterValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => canonicalFrontmatterValue(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalFrontmatterValue(value[key])]),
+    );
+  }
+
+  return normalizeText(value);
+}
+
+function frontmatterChangedOutsideAllowedMetadata(
+  currentData = {},
+  baseData = {},
+) {
+  for (const key of Object.keys({ ...currentData, ...baseData }).sort()) {
+    if (EXISTING_ENTRY_METADATA_UPDATE_KEYS.has(key)) continue;
+    if (
+      JSON.stringify(canonicalFrontmatterValue(currentData[key])) !==
+      JSON.stringify(canonicalFrontmatterValue(baseData[key]))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function existingEntryHasOnlyMetadataUpdates(entry) {
+  if (
+    frontmatterChangedOutsideAllowedMetadata(
+      entry.frontmatterData,
+      entry.baseFrontmatterData,
+    )
+  ) {
+    return false;
   }
 
   return (
@@ -662,10 +714,7 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
-    if (
-      !isNewDirectContentEntry(entry) &&
-      existingEntryHasOnlyMetadataUpdates(entry)
-    ) {
+    if (!isNewDirectContentEntry(entry)) {
       if (submitterProvenanceChanged(entry)) {
         addProvenanceFinding(
           report,
@@ -674,8 +723,12 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
           "Direct contributor PRs cannot change submitter provenance on existing content",
           `${entry.filename}: leave existing submittedBy/submittedByUrl unchanged; maintainers can handle attribution corrections separately.`,
         );
+        continue;
       }
-      continue;
+
+      if (existingEntryHasOnlyMetadataUpdates(entry)) {
+        continue;
+      }
     }
 
     const provenance = entry.provenance;
@@ -754,11 +807,21 @@ function directContentRequestChangesReasons(report = {}) {
       "Install instructions include a destructive or remote-code execution pipeline.",
     embedded_secret:
       "Submission appears to include a real secret or API token.",
+    malicious_data_theft_capability:
+      "Submission appears to advertise credential, token, session, or wallet theft.",
     prohibited_content:
       "Submission appears to include clearly unacceptable content.",
   };
   for (const [id, reason] of Object.entries(flagReasons)) {
     if (flags.has(id)) reasons.push(`${reason} (${id}).`);
+  }
+
+  for (const flag of report.reviewFlags || []) {
+    if (flag.severity === "critical" && !flagReasons[flag.id]) {
+      reasons.push(
+        `Critical content policy finding must be resolved (${flag.id}).`,
+      );
+    }
   }
 
   const warningReasons = {
@@ -850,7 +913,6 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       typeof file.baseContent === "string"
         ? parseMdxFrontmatter(file.baseContent)
         : { data: {} };
-    const baseFields = frontmatterFields(baseParsed.data, category);
     const baseProvenance = frontmatterProvenance(baseParsed.data);
     if (fields.category && fields.category !== category) {
       addClassificationWarning(
@@ -877,9 +939,10 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       status: normalizeText(file.status) || "modified",
       baseExists: typeof file.baseContent === "string",
       fields,
-      baseFields,
       provenance,
       baseProvenance,
+      frontmatterData: parsed.data || {},
+      baseFrontmatterData: baseParsed.data || {},
       contentBody: parsed.content || "",
       baseContentBody: baseParsed.content || "",
     });

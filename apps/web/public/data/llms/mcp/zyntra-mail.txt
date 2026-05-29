@@ -1,5 +1,5 @@
 # Zyntra - Temp e-mails MCP
-URL: https://heyclau.de/mcp/zyntra-mail
+URL: https://heyclau.de/entry/mcp/zyntra-mail
 Category: mcp
 Author: dd77ss
 Submitted by: dd77ss
@@ -9,7 +9,7 @@ Date added: 2026-04-30
 Documentation: https://docs.zyntra.app/mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zyntra-mail.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/zyntra-mail
+- Canonical URL: https://heyclau.de/entry/mcp/zyntra-mail
 - Source URLs: https://docs.zyntra.app/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/zyntra-mail.mdx
 - Brand: Zyntra
 - Brand domain: zyntra.app

@@ -1,5 +1,5 @@
 # Code Review Automation Capability Pack Skill
-URL: https://heyclau.de/skills/coderabbit-lite-pr-review-capability-pack
+URL: https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -7,7 +7,7 @@ Documentation: https://docs.github.com/en/pull-requests/collaborating-with-pull-
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx
 Download: /downloads/skills/coderabbit-lite-pr-review-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/coderabbit-lite-pr-review-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack
 - Source URLs: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx
 - Package URL: /downloads/skills/coderabbit-lite-pr-review-capability-pack.zip
 - Package SHA256: 5e2a8567d4a88913443a4a9e76823180775eb767e51770c0a3c8ca5e39ffe59b

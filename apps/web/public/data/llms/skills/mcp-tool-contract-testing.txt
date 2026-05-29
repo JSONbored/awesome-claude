@@ -1,5 +1,5 @@
 # MCP Tool Contract Testing Skill
-URL: https://heyclau.de/skills/mcp-tool-contract-testing
+URL: https://heyclau.de/entry/skills/mcp-tool-contract-testing
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://modelcontextprotocol.io/specification/2025-06-18/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-tool-contract-testing.mdx
 Download: /downloads/skills/mcp-tool-contract-testing.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/mcp-tool-contract-testing
+- Canonical URL: https://heyclau.de/entry/skills/mcp-tool-contract-testing
 - Source URLs: https://modelcontextprotocol.io/specification/2025-06-18/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-tool-contract-testing.mdx
 - Package URL: /downloads/skills/mcp-tool-contract-testing.zip
 - Package SHA256: 7e8f76baf26241e849bdb0108bf57628864ffb91a056e3878de27247f1d7d352

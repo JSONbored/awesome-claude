@@ -1,11 +1,11 @@
 # Nextjs Route Analyzer - Hooks
-URL: https://heyclau.de/hooks/nextjs-route-analyzer
+URL: https://heyclau.de/entry/hooks/nextjs-route-analyzer
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/nextjs-route-analyzer
+- Canonical URL: https://heyclau.de/entry/hooks/nextjs-route-analyzer
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/nextjs-route-analyzer.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

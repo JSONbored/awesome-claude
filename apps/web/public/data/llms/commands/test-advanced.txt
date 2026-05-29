@@ -1,12 +1,12 @@
 # /test-advanced - Test Suite Command for Claude Code
-URL: https://heyclau.de/commands/test-advanced
+URL: https://heyclau.de/entry/commands/test-advanced
 Category: commands
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://docs.claude.ai/commands/test
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/test-advanced.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/test-advanced
+- Canonical URL: https://heyclau.de/entry/commands/test-advanced
 - Source URLs: https://docs.claude.ai/commands/test, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/test-advanced.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

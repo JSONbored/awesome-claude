@@ -61,4 +61,5 @@ jobs:
             data
           add-paths: |
             apps/web/public/data/**
+            apps/web/src/generated/atlas-registry.json
             apps/web/src/generated/site-stats.json

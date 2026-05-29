@@ -1,5 +1,5 @@
 # Windsurf AI-Native Collaborative Development Skill
-URL: https://heyclau.de/skills/windsurf-collaborative-development
+URL: https://heyclau.de/entry/skills/windsurf-collaborative-development
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://docs.codeium.com/windsurf
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/windsurf-collaborative-development.mdx
 Download: /downloads/skills/windsurf-collaborative-development.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/windsurf-collaborative-development
+- Canonical URL: https://heyclau.de/entry/skills/windsurf-collaborative-development
 - Source URLs: https://docs.codeium.com/windsurf, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/windsurf-collaborative-development.mdx
 - Brand: Windsurf
 - Brand domain: windsurf.com

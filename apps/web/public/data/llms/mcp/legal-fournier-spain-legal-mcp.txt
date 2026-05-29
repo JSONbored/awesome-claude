@@ -1,5 +1,5 @@
 # Spain Legal by Legal Fournier
-URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+URL: https://heyclau.de/entry/mcp/legal-fournier-spain-legal-mcp
 Category: mcp
 Author: Legal Fournier
 Submitted by: vy35
@@ -8,7 +8,7 @@ Date added: 2026-05-08
 Documentation: https://legalfournier.com/en/mcp/spain-legal/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/legal-fournier-spain-legal-mcp
+- Canonical URL: https://heyclau.de/entry/mcp/legal-fournier-spain-legal-mcp
 - Source URLs: https://legalfournier.com/en/mcp/spain-legal/, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/legal-fournier-spain-legal-mcp.mdx
 - Brand: Legal Fournier
 - Brand domain: legalfournier.com

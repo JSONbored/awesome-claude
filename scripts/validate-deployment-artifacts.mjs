@@ -4,9 +4,15 @@ const requiredPaths = [
   "/data/raycast-index.json",
   "/data/feeds/index.json",
   "/data/submission-spec.json",
+  "/openapi.json",
 ];
 const indexNowKeyPath = "/48486ebc7ddc47af875118345161ae70.txt";
-const requiredRenderedPaths = ["/sitemap.xml", "/robots.txt", "/api/jobs"];
+const requiredRenderedPaths = [
+  "/sitemap.xml",
+  "/robots.txt",
+  "/api/jobs",
+  "/openapi.yaml",
+];
 const canonicalOrigin = "https://heyclau.de";
 
 function parseArgs(argv) {
@@ -91,12 +97,17 @@ for (const pathname of requiredPaths) {
     }
     const entries = readEntries(payload);
     if (
-      !["/data/feeds/index.json", "/data/submission-spec.json"].includes(
-        pathname,
-      ) &&
+      ![
+        "/data/feeds/index.json",
+        "/data/submission-spec.json",
+        "/openapi.json",
+      ].includes(pathname) &&
       !Array.isArray(entries)
     ) {
       fail(`${pathname} must return an envelope with entries`);
+    }
+    if (pathname === "/openapi.json" && payload.openapi !== "3.1.0") {
+      fail("/openapi.json must return the generated OpenAPI 3.1 document");
     }
   } catch (error) {
     fail(error instanceof Error ? error.message : String(error));

@@ -1,12 +1,12 @@
 # GitHub Copilot
-URL: https://heyclau.de/tools/github-copilot
+URL: https://heyclau.de/entry/tools/github-copilot
 Category: tools
 Author: GitHub
 Date added: 2026-04-27
 Documentation: https://docs.github.com/en/copilot
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/github-copilot
+- Canonical URL: https://heyclau.de/entry/tools/github-copilot
 - Source URLs: https://docs.github.com/en/copilot, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/github-copilot.mdx, https://github.com/features/copilot
 - Brand: GitHub Copilot
 - Brand domain: github.com

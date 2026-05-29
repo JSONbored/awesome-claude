@@ -1,11 +1,11 @@
 # Sensitive Data Alert Scanner - Hooks
-URL: https://heyclau.de/hooks/sensitive-data-alert-scanner
+URL: https://heyclau.de/entry/hooks/sensitive-data-alert-scanner
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/sensitive-data-alert-scanner
+- Canonical URL: https://heyclau.de/entry/hooks/sensitive-data-alert-scanner
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/sensitive-data-alert-scanner.mdx
 - Safety notes: Runs on notification events and scans recent tool input for patterns that resemble secrets or sensitive data., Produces alerts only and does not redact files, rotate credentials, or block the original tool action., Pattern-based detection can miss real secrets or flag harmless placeholders.
 - Privacy notes: Reads hook input fields such as tool names, file paths, commands, and text snippets supplied to the notification event., May print matched sensitive-looking strings or surrounding context to local hook output., Does not send findings to a remote service in the bundled script.

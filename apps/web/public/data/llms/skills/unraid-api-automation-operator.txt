@@ -1,5 +1,5 @@
 # Unraid API Automation Operator Skill
-URL: https://heyclau.de/skills/unraid-api-automation-operator
+URL: https://heyclau.de/entry/skills/unraid-api-automation-operator
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://docs.unraid.net/API/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-automation-operator.mdx
 Download: /downloads/skills/unraid-api-automation-operator.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/unraid-api-automation-operator
+- Canonical URL: https://heyclau.de/entry/skills/unraid-api-automation-operator
 - Source URLs: https://docs.unraid.net/API/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-automation-operator.mdx
 - Package URL: /downloads/skills/unraid-api-automation-operator.zip
 - Package SHA256: 64de5cc69848cd40c32125cbc81f12b07c4f64c9db8975b1a95dc99517ffe87a

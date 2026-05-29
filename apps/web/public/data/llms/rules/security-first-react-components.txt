@@ -1,12 +1,12 @@
 # Security-First React Components for Claude
-URL: https://heyclau.de/rules/security-first-react-components
+URL: https://heyclau.de/entry/rules/security-first-react-components
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://owasp.org/www-project-top-ten/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-first-react-components.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/security-first-react-components
+- Canonical URL: https://heyclau.de/entry/rules/security-first-react-components
 - Source URLs: https://owasp.org/www-project-top-ten/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/security-first-react-components.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

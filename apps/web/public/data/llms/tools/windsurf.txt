@@ -1,12 +1,12 @@
 # Windsurf
-URL: https://heyclau.de/tools/windsurf
+URL: https://heyclau.de/entry/tools/windsurf
 Category: tools
 Author: Windsurf
 Date added: 2026-04-27
 Documentation: https://docs.windsurf.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/windsurf
+- Canonical URL: https://heyclau.de/entry/tools/windsurf
 - Source URLs: https://docs.windsurf.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/windsurf.mdx, https://windsurf.com
 - Brand: Windsurf
 - Brand domain: windsurf.com

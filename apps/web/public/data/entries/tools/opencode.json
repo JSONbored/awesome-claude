@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/sst/opencode",
     "githubStars": 162457,
     "githubForks": 19131,
-    "repoUpdatedAt": "2026-05-19T11:42:52Z"
+    "repoUpdatedAt": "2026-05-19T11:42:52Z",
+    "repoStats": {
+      "repository": "sst/opencode",
+      "url": "https://github.com/sst/opencode",
+      "stars": 162457,
+      "forks": 19131,
+      "updatedAt": "2026-05-19T11:42:52Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

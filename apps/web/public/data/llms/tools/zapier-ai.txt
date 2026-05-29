@@ -1,12 +1,12 @@
 # Zapier AI
-URL: https://heyclau.de/tools/zapier-ai
+URL: https://heyclau.de/entry/tools/zapier-ai
 Category: tools
 Author: Zapier
 Date added: 2026-04-27
 Documentation: https://help.zapier.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/zapier-ai
+- Canonical URL: https://heyclau.de/entry/tools/zapier-ai
 - Source URLs: https://help.zapier.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/zapier-ai.mdx, https://zapier.com/ai
 - Brand: Zapier
 - Brand domain: zapier.com

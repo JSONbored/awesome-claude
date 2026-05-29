@@ -309,7 +309,16 @@
     "repoUrl": "https://github.com/saseq/discord-mcp",
     "githubStars": 311,
     "githubForks": 72,
-    "repoUpdatedAt": "2026-05-18T02:46:12Z"
+    "repoUpdatedAt": "2026-05-18T02:46:12Z",
+    "repoStats": {
+      "repository": "saseq/discord-mcp",
+      "url": "https://github.com/saseq/discord-mcp",
+      "stars": 311,
+      "forks": 72,
+      "updatedAt": "2026-05-18T02:46:12Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

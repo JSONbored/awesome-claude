@@ -44,7 +44,7 @@ describe("SEO JSON-LD policy", () => {
     const itemList = buildItemListJsonLd(
       entries.slice(0, 3).map((entry) => ({
         name: entry.title,
-        url: `https://heyclau.de/${entry.category}/${entry.slug}`,
+        url: `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       })),
       { name: "Test list" },
     );
@@ -70,7 +70,7 @@ describe("SEO JSON-LD policy", () => {
       entryJsonLd["@type"],
     );
     expect(entryJsonLd.url).toBe(
-      `https://heyclau.de/${entry.category}/${entry.slug}`,
+      `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
     );
     expect(
       (entryJsonLd as Record<string, unknown>).aggregateRating,
@@ -115,7 +115,7 @@ describe("SEO JSON-LD policy", () => {
     });
 
     expect(facts).toContain(
-      `Canonical URL: https://heyclau.de/${skillWithPackage!.category}/${skillWithPackage!.slug}`,
+      `Canonical URL: https://heyclau.de/entry/${skillWithPackage!.category}/${skillWithPackage!.slug}`,
     );
     expect(facts).toContain(
       `Package SHA256: ${skillWithPackage!.downloadSha256}`,

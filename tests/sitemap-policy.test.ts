@@ -41,17 +41,19 @@ describe("sitemap policy", () => {
 
   it("includes machine-readable distribution surfaces in the sitemap source", () => {
     const source = fs.readFileSync(
-      path.join(repoRoot, "apps/web/src/app/sitemap.ts"),
+      path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"),
       "utf8",
     );
     expect(source).toContain('"/llms.txt"');
     expect(source).toContain('"/llms-full.txt"');
     expect(source).toContain('"/feed.xml"');
     expect(source).toContain('"/atom.xml"');
+    expect(source).toContain('"/feeds/trending.xml"');
+    expect(source).toContain('"/data/feeds/index.json"');
     expect(source).toContain('"/validators"');
-    expect(source).toContain('"/validators/mcp-config"');
-    expect(source).toContain('"/validators/skill-package"');
+    expect(source).not.toContain('"/validators/mcp-config"');
+    expect(source).not.toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
-    expect(source).toContain("siteLastModified");
+    expect(source).toContain("ENTRIES.map");
   });
 });

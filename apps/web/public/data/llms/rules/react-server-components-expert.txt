@@ -1,12 +1,12 @@
 # React Server Components Expert for Claude
-URL: https://heyclau.de/rules/react-server-components-expert
+URL: https://heyclau.de/entry/rules/react-server-components-expert
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://react.dev/reference/rsc/server-components
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-server-components-expert.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/react-server-components-expert
+- Canonical URL: https://heyclau.de/entry/rules/react-server-components-expert
 - Source URLs: https://react.dev/reference/rsc/server-components, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-server-components-expert.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

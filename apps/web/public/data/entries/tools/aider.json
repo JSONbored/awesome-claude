@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/Aider-AI/aider",
     "githubStars": 45006,
     "githubForks": 4443,
-    "repoUpdatedAt": "2026-05-19T11:28:44Z"
+    "repoUpdatedAt": "2026-05-19T11:28:44Z",
+    "repoStats": {
+      "repository": "Aider-AI/aider",
+      "url": "https://github.com/Aider-AI/aider",
+      "stars": 45006,
+      "forks": 4443,
+      "updatedAt": "2026-05-19T11:28:44Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

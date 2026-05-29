@@ -69,7 +69,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/accessibility-first-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/accessibility-first-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/accessibility-first-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/accessibility-first-statusline",
       "trustSignals": {
@@ -155,7 +155,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/ai-model-performance-dashboard",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/ai-model-performance-dashboard",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/ai-model-performance-dashboard.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/ai-model-performance-dashboard",
       "trustSignals": {
@@ -239,7 +239,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/api-latency-breakdown",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/api-latency-breakdown",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/api-latency-breakdown.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/api-latency-breakdown",
       "trustSignals": {
@@ -324,7 +324,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/block-timer-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/block-timer-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/block-timer-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/block-timer-tracker",
       "trustSignals": {
@@ -408,7 +408,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/burn-rate-monitor",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/burn-rate-monitor",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/burn-rate-monitor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/burn-rate-monitor",
       "trustSignals": {
@@ -492,7 +492,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/cache-efficiency-monitor",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/cache-efficiency-monitor",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/cache-efficiency-monitor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/cache-efficiency-monitor",
       "trustSignals": {
@@ -577,9 +577,18 @@
       "githubStars": 19184,
       "githubForks": 352,
       "repoUpdatedAt": "2026-05-19T11:04:59Z",
-      "canonicalUrl": "https://heyclau.de/statuslines/catppuccin-mocha-theme",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/catppuccin-mocha-theme",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/catppuccin-mocha-theme.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/catppuccin-mocha-theme",
+      "repoStats": {
+        "repository": "catppuccin/catppuccin",
+        "url": "https://github.com/catppuccin/catppuccin",
+        "stars": 19184,
+        "forks": 352,
+        "updatedAt": "2026-05-19T11:04:59Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -668,7 +677,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/docker-health-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/docker-health-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/docker-health-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/docker-health-statusline",
       "trustSignals": {
@@ -752,7 +761,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/daily-usage-percentage-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/daily-usage-percentage-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/daily-usage-percentage-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/daily-usage-percentage-tracker",
       "trustSignals": {
@@ -836,7 +845,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/five-hour-window-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/five-hour-window-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/five-hour-window-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/five-hour-window-tracker",
       "trustSignals": {
@@ -921,7 +930,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/git-status-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/git-status-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/git-status-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/git-status-statusline",
       "trustSignals": {
@@ -1005,7 +1014,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/lines-per-minute-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/lines-per-minute-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/lines-per-minute-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/lines-per-minute-tracker",
       "trustSignals": {
@@ -1088,7 +1097,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/mcp-server-status-monitor",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/mcp-server-status-monitor",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/mcp-server-status-monitor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/mcp-server-status-monitor",
       "trustSignals": {
@@ -1170,9 +1179,18 @@
       "githubStars": 14752,
       "githubForks": 1001,
       "repoUpdatedAt": "2026-05-19T10:46:19Z",
-      "canonicalUrl": "https://heyclau.de/statuslines/minimal-powerline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/minimal-powerline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/minimal-powerline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/minimal-powerline",
+      "repoStats": {
+        "repository": "powerline/powerline",
+        "url": "https://github.com/powerline/powerline",
+        "stars": 14752,
+        "forks": 1001,
+        "updatedAt": "2026-05-19T10:46:19Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1254,7 +1272,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/model-switch-history-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/model-switch-history-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/model-switch-history-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/model-switch-history-tracker",
       "trustSignals": {
@@ -1338,7 +1356,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/multi-line-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/multi-line-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/multi-line-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/multi-line-statusline",
       "trustSignals": {
@@ -1421,7 +1439,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/multi-provider-token-counter",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/multi-provider-token-counter",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/multi-provider-token-counter.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/multi-provider-token-counter",
       "trustSignals": {
@@ -1505,7 +1523,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/multi-session-overlap-indicator",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/multi-session-overlap-indicator",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/multi-session-overlap-indicator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/multi-session-overlap-indicator",
       "trustSignals": {
@@ -1590,7 +1608,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/oh-my-zsh-robbyrussell",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/oh-my-zsh-robbyrussell",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/oh-my-zsh-robbyrussell.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/oh-my-zsh-robbyrussell",
       "trustSignals": {
@@ -1683,7 +1701,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/python-rich-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/python-rich-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/python-rich-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/python-rich-statusline",
       "trustSignals": {
@@ -1766,7 +1784,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/real-time-cost-tracker",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/real-time-cost-tracker",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/real-time-cost-tracker.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/real-time-cost-tracker",
       "trustSignals": {
@@ -1849,7 +1867,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/session-health-score",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/session-health-score",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/session-health-score.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/session-health-score",
       "trustSignals": {
@@ -1933,7 +1951,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/session-timer-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/session-timer-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/session-timer-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/session-timer-statusline",
       "trustSignals": {
@@ -2016,7 +2034,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/simple-text-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/simple-text-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/simple-text-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/simple-text-statusline",
       "trustSignals": {
@@ -2097,7 +2115,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/starship-powerline-theme",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/starship-powerline-theme",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/starship-powerline-theme.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/starship-powerline-theme",
       "trustSignals": {
@@ -2180,7 +2198,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/statuslines/workspace-project-depth-indicator",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/workspace-project-depth-indicator",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/workspace-project-depth-indicator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/workspace-project-depth-indicator",
       "trustSignals": {

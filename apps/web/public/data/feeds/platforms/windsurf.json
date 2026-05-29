@@ -126,7 +126,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/agent-evals-regression-gate",
+      "canonicalUrl": "https://heyclau.de/entry/skills/agent-evals-regression-gate",
       "llmsUrl": "https://heyclau.de/data/llms/skills/agent-evals-regression-gate.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/agent-evals-regression-gate",
       "trustSignals": {
@@ -281,7 +281,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/ai-agent-observability-incident-response",
+      "canonicalUrl": "https://heyclau.de/entry/skills/ai-agent-observability-incident-response",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ai-agent-observability-incident-response.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ai-agent-observability-incident-response",
       "trustSignals": {
@@ -438,7 +438,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/ai-business-idea-validation-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ai-business-idea-validation-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ai-business-idea-validation-capability-pack",
       "trustSignals": {
@@ -593,7 +593,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/ai-search-ranking-content-cluster-strategy",
+      "canonicalUrl": "https://heyclau.de/entry/skills/ai-search-ranking-content-cluster-strategy",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ai-search-ranking-content-cluster-strategy.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ai-search-ranking-content-cluster-strategy",
       "trustSignals": {
@@ -750,9 +750,18 @@
       "githubStars": 99754,
       "githubForks": 12214,
       "repoUpdatedAt": "2026-05-19T11:32:31Z",
-      "canonicalUrl": "https://heyclau.de/skills/audio-transcription-summarization",
+      "canonicalUrl": "https://heyclau.de/entry/skills/audio-transcription-summarization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/audio-transcription-summarization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/audio-transcription-summarization",
+      "repoStats": {
+        "repository": "openai/whisper",
+        "url": "https://github.com/openai/whisper",
+        "stars": 99754,
+        "forks": 12214,
+        "updatedAt": "2026-05-19T11:32:31Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -905,7 +914,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/base-l2-smart-contract-launchpad",
+      "canonicalUrl": "https://heyclau.de/entry/skills/base-l2-smart-contract-launchpad",
       "llmsUrl": "https://heyclau.de/data/llms/skills/base-l2-smart-contract-launchpad.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/base-l2-smart-contract-launchpad",
       "trustSignals": {
@@ -1060,7 +1069,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/browser-agent-workflow-automation",
+      "canonicalUrl": "https://heyclau.de/entry/skills/browser-agent-workflow-automation",
       "llmsUrl": "https://heyclau.de/data/llms/skills/browser-agent-workflow-automation.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/browser-agent-workflow-automation",
       "trustSignals": {
@@ -1218,7 +1227,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/bun-runtime-modern-javascript",
+      "canonicalUrl": "https://heyclau.de/entry/skills/bun-runtime-modern-javascript",
       "llmsUrl": "https://heyclau.de/data/llms/skills/bun-runtime-modern-javascript.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/bun-runtime-modern-javascript",
       "trustSignals": {
@@ -1375,7 +1384,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/cli-data-viz-quickstart",
+      "canonicalUrl": "https://heyclau.de/entry/skills/cli-data-viz-quickstart",
       "llmsUrl": "https://heyclau.de/data/llms/skills/cli-data-viz-quickstart.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/cli-data-viz-quickstart",
       "trustSignals": {
@@ -1538,7 +1547,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/cloudflare-workers-ai-edge",
+      "canonicalUrl": "https://heyclau.de/entry/skills/cloudflare-workers-ai-edge",
       "llmsUrl": "https://heyclau.de/data/llms/skills/cloudflare-workers-ai-edge.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/cloudflare-workers-ai-edge",
       "trustSignals": {
@@ -1701,7 +1710,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/cloudflare-workers-d1-kv-r2-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/cloudflare-workers-d1-kv-r2-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/cloudflare-workers-d1-kv-r2-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/cloudflare-workers-d1-kv-r2-capability-pack",
       "trustSignals": {
@@ -1858,7 +1867,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/coderabbit-lite-pr-review-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/coderabbit-lite-pr-review-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/coderabbit-lite-pr-review-capability-pack",
       "trustSignals": {
@@ -2015,9 +2024,18 @@
       "githubStars": 83749,
       "githubForks": 12151,
       "repoUpdatedAt": "2026-05-19T11:39:05Z",
-      "canonicalUrl": "https://heyclau.de/skills/codex-automations-orchestrator-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-automations-orchestrator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-automations-orchestrator-capability-pack",
+      "repoStats": {
+        "repository": "openai/codex",
+        "url": "https://github.com/openai/codex",
+        "stars": 83749,
+        "forks": 12151,
+        "updatedAt": "2026-05-19T11:39:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -2172,9 +2190,18 @@
       "githubStars": 83749,
       "githubForks": 12151,
       "repoUpdatedAt": "2026-05-19T11:39:05Z",
-      "canonicalUrl": "https://heyclau.de/skills/codex-plugin-creator-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-plugin-creator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-plugin-creator-capability-pack",
+      "repoStats": {
+        "repository": "openai/codex",
+        "url": "https://github.com/openai/codex",
+        "stars": 83749,
+        "forks": 12151,
+        "updatedAt": "2026-05-19T11:39:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -2330,7 +2357,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/csv-excel-data-wrangler",
+      "canonicalUrl": "https://heyclau.de/entry/skills/csv-excel-data-wrangler",
       "llmsUrl": "https://heyclau.de/data/llms/skills/csv-excel-data-wrangler.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/csv-excel-data-wrangler",
       "trustSignals": {
@@ -2493,7 +2520,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/cursor-windsurf-ai-ide-setup",
+      "canonicalUrl": "https://heyclau.de/entry/skills/cursor-windsurf-ai-ide-setup",
       "llmsUrl": "https://heyclau.de/data/llms/skills/cursor-windsurf-ai-ide-setup.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/cursor-windsurf-ai-ide-setup",
       "trustSignals": {
@@ -2653,7 +2680,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/docker-compose-production-blueprints",
+      "canonicalUrl": "https://heyclau.de/entry/skills/docker-compose-production-blueprints",
       "llmsUrl": "https://heyclau.de/data/llms/skills/docker-compose-production-blueprints.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/docker-compose-production-blueprints",
       "trustSignals": {
@@ -2810,7 +2837,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/docx-report-generator",
+      "canonicalUrl": "https://heyclau.de/entry/skills/docx-report-generator",
       "llmsUrl": "https://heyclau.de/data/llms/skills/docx-report-generator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/docx-report-generator",
       "trustSignals": {
@@ -2968,7 +2995,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/ethereum-base-smart-contract-security-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/ethereum-base-smart-contract-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ethereum-base-smart-contract-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ethereum-base-smart-contract-security-capability-pack",
       "trustSignals": {
@@ -3123,7 +3150,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/ethereum-solidity-security-foundry",
+      "canonicalUrl": "https://heyclau.de/entry/skills/ethereum-solidity-security-foundry",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ethereum-solidity-security-foundry.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ethereum-solidity-security-foundry",
       "trustSignals": {
@@ -3281,7 +3308,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/fastapi-python-backend",
+      "canonicalUrl": "https://heyclau.de/entry/skills/fastapi-python-backend",
       "llmsUrl": "https://heyclau.de/data/llms/skills/fastapi-python-backend.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/fastapi-python-backend",
       "trustSignals": {
@@ -3438,7 +3465,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/git-cliff-release-changelog-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/git-cliff-release-changelog-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/git-cliff-release-changelog-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/git-cliff-release-changelog-capability-pack",
       "trustSignals": {
@@ -3601,7 +3628,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/github-actions-ai-cicd",
+      "canonicalUrl": "https://heyclau.de/entry/skills/github-actions-ai-cicd",
       "llmsUrl": "https://heyclau.de/data/llms/skills/github-actions-ai-cicd.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/github-actions-ai-cicd",
       "trustSignals": {
@@ -3763,7 +3790,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/github-actions-secure-cicd-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/github-actions-secure-cicd-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/github-actions-secure-cicd-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/github-actions-secure-cicd-capability-pack",
       "trustSignals": {
@@ -3923,7 +3950,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/google-workspace-gemini-automation",
+      "canonicalUrl": "https://heyclau.de/entry/skills/google-workspace-gemini-automation",
       "llmsUrl": "https://heyclau.de/data/llms/skills/google-workspace-gemini-automation.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/google-workspace-gemini-automation",
       "trustSignals": {
@@ -4080,7 +4107,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/heyclaude-content-submission-factory",
+      "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-content-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-content-submission-factory",
       "trustSignals": {
@@ -4240,7 +4267,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/heyclaude-skill-submission-factory",
+      "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-skill-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-skill-submission-factory",
       "trustSignals": {
@@ -4397,7 +4424,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/husky-commit-governance-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/husky-commit-governance-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/husky-commit-governance-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/husky-commit-governance-capability-pack",
       "trustSignals": {
@@ -4555,7 +4582,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/image-ocr-table-extraction",
+      "canonicalUrl": "https://heyclau.de/entry/skills/image-ocr-table-extraction",
       "llmsUrl": "https://heyclau.de/data/llms/skills/image-ocr-table-extraction.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/image-ocr-table-extraction",
       "trustSignals": {
@@ -4710,7 +4737,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/indexnow-search-indexing-accelerator",
+      "canonicalUrl": "https://heyclau.de/entry/skills/indexnow-search-indexing-accelerator",
       "llmsUrl": "https://heyclau.de/data/llms/skills/indexnow-search-indexing-accelerator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/indexnow-search-indexing-accelerator",
       "trustSignals": {
@@ -4868,7 +4895,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/json-schema-validation-transformation",
+      "canonicalUrl": "https://heyclau.de/entry/skills/json-schema-validation-transformation",
       "llmsUrl": "https://heyclau.de/data/llms/skills/json-schema-validation-transformation.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/json-schema-validation-transformation",
       "trustSignals": {
@@ -5025,9 +5052,18 @@
       "githubStars": 63927,
       "githubForks": 2568,
       "repoUpdatedAt": "2026-05-19T11:22:40Z",
-      "canonicalUrl": "https://heyclau.de/skills/log-parsing-incident-timeline",
+      "canonicalUrl": "https://heyclau.de/entry/skills/log-parsing-incident-timeline",
       "llmsUrl": "https://heyclau.de/data/llms/skills/log-parsing-incident-timeline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/log-parsing-incident-timeline",
+      "repoStats": {
+        "repository": "BurntSushi/ripgrep",
+        "url": "https://github.com/BurntSushi/ripgrep",
+        "stars": 63927,
+        "forks": 2568,
+        "updatedAt": "2026-05-19T11:22:40Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -5182,9 +5218,18 @@
       "githubStars": 8880,
       "githubForks": 374,
       "repoUpdatedAt": "2026-05-18T12:37:10Z",
-      "canonicalUrl": "https://heyclau.de/skills/markdown-knowledge-base-composer",
+      "canonicalUrl": "https://heyclau.de/entry/skills/markdown-knowledge-base-composer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/markdown-knowledge-base-composer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/markdown-knowledge-base-composer",
+      "repoStats": {
+        "repository": "remarkjs/remark",
+        "url": "https://github.com/remarkjs/remark",
+        "stars": 8880,
+        "forks": 374,
+        "updatedAt": "2026-05-18T12:37:10Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -5339,7 +5384,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/mcp-server-authoring-security-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/mcp-server-authoring-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/mcp-server-authoring-security-capability-pack",
       "trustSignals": {
@@ -5494,7 +5539,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/mcp-server-security-hardening",
+      "canonicalUrl": "https://heyclau.de/entry/skills/mcp-server-security-hardening",
       "llmsUrl": "https://heyclau.de/data/llms/skills/mcp-server-security-hardening.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/mcp-server-security-hardening",
       "trustSignals": {
@@ -5649,7 +5694,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/mcp-tool-contract-testing",
+      "canonicalUrl": "https://heyclau.de/entry/skills/mcp-tool-contract-testing",
       "llmsUrl": "https://heyclau.de/data/llms/skills/mcp-tool-contract-testing.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/mcp-tool-contract-testing",
       "trustSignals": {
@@ -5806,7 +5851,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/mintlify-documentation-automation",
+      "canonicalUrl": "https://heyclau.de/entry/skills/mintlify-documentation-automation",
       "llmsUrl": "https://heyclau.de/data/llms/skills/mintlify-documentation-automation.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/mintlify-documentation-automation",
       "trustSignals": {
@@ -5961,7 +6006,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/model-routing-cost-latency-optimizer",
+      "canonicalUrl": "https://heyclau.de/entry/skills/model-routing-cost-latency-optimizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/model-routing-cost-latency-optimizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/model-routing-cost-latency-optimizer",
       "trustSignals": {
@@ -6121,7 +6166,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/n8n-ai-agent-workflow-architect",
+      "canonicalUrl": "https://heyclau.de/entry/skills/n8n-ai-agent-workflow-architect",
       "llmsUrl": "https://heyclau.de/data/llms/skills/n8n-ai-agent-workflow-architect.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/n8n-ai-agent-workflow-architect",
       "trustSignals": {
@@ -6283,7 +6328,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/n8n-operations-resilience-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/n8n-operations-resilience-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/n8n-operations-resilience-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/n8n-operations-resilience-capability-pack",
       "trustSignals": {
@@ -6445,7 +6490,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/n8n-production-security-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/n8n-production-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/n8n-production-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/n8n-production-security-capability-pack",
       "trustSignals": {
@@ -6600,9 +6645,18 @@
       "githubStars": 373140,
       "githubForks": 77409,
       "repoUpdatedAt": "2026-05-19T11:43:27Z",
-      "canonicalUrl": "https://heyclau.de/skills/openclaw-agent-ops-hardening",
+      "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-agent-ops-hardening",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-agent-ops-hardening.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-agent-ops-hardening",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -6757,9 +6811,18 @@
       "githubStars": 373140,
       "githubForks": 77409,
       "repoUpdatedAt": "2026-05-19T11:43:27Z",
-      "canonicalUrl": "https://heyclau.de/skills/openclaw-operator-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-operator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-operator-capability-pack",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -6914,9 +6977,18 @@
       "githubStars": 373140,
       "githubForks": 77409,
       "repoUpdatedAt": "2026-05-19T11:43:27Z",
-      "canonicalUrl": "https://heyclau.de/skills/openclaw-skill-authoring-factory-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-skill-authoring-factory-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-skill-authoring-factory-capability-pack",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -7076,7 +7148,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/opennext-cloudflare-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/opennext-cloudflare-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/opennext-cloudflare-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/opennext-cloudflare-capability-pack",
       "trustSignals": {
@@ -7232,7 +7304,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/pagespeed-insights-optimizer",
+      "canonicalUrl": "https://heyclau.de/entry/skills/pagespeed-insights-optimizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/pagespeed-insights-optimizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/pagespeed-insights-optimizer",
       "trustSignals": {
@@ -7389,7 +7461,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/playwright-e2e-testing",
+      "canonicalUrl": "https://heyclau.de/entry/skills/playwright-e2e-testing",
       "llmsUrl": "https://heyclau.de/data/llms/skills/playwright-e2e-testing.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/playwright-e2e-testing",
       "trustSignals": {
@@ -7544,7 +7616,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/playwright-mcp-browser-automation-engineer",
+      "canonicalUrl": "https://heyclau.de/entry/skills/playwright-mcp-browser-automation-engineer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/playwright-mcp-browser-automation-engineer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/playwright-mcp-browser-automation-engineer",
       "trustSignals": {
@@ -7702,7 +7774,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/postgresql-query-optimization",
+      "canonicalUrl": "https://heyclau.de/entry/skills/postgresql-query-optimization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/postgresql-query-optimization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/postgresql-query-optimization",
       "trustSignals": {
@@ -7857,7 +7929,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/prompt-injection-defense-guardrails",
+      "canonicalUrl": "https://heyclau.de/entry/skills/prompt-injection-defense-guardrails",
       "llmsUrl": "https://heyclau.de/data/llms/skills/prompt-injection-defense-guardrails.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/prompt-injection-defense-guardrails",
       "trustSignals": {
@@ -8014,7 +8086,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/proxmox-ve-api-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/proxmox-ve-api-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/proxmox-ve-api-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/proxmox-ve-api-capability-pack",
       "trustSignals": {
@@ -8169,7 +8241,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/proxmox-ve-api-orchestrator",
+      "canonicalUrl": "https://heyclau.de/entry/skills/proxmox-ve-api-orchestrator",
       "llmsUrl": "https://heyclau.de/data/llms/skills/proxmox-ve-api-orchestrator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/proxmox-ve-api-orchestrator",
       "trustSignals": {
@@ -8331,7 +8403,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/raycast-extension-dev-publish-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/raycast-extension-dev-publish-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/raycast-extension-dev-publish-capability-pack",
       "trustSignals": {
@@ -8489,7 +8561,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/rest-api-client-harness",
+      "canonicalUrl": "https://heyclau.de/entry/skills/rest-api-client-harness",
       "llmsUrl": "https://heyclau.de/data/llms/skills/rest-api-client-harness.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/rest-api-client-harness",
       "trustSignals": {
@@ -8644,7 +8716,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/saas-pricing-experimentation-engine",
+      "canonicalUrl": "https://heyclau.de/entry/skills/saas-pricing-experimentation-engine",
       "llmsUrl": "https://heyclau.de/data/llms/skills/saas-pricing-experimentation-engine.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/saas-pricing-experimentation-engine",
       "trustSignals": {
@@ -8807,7 +8879,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/supabase-realtime-database",
+      "canonicalUrl": "https://heyclau.de/entry/skills/supabase-realtime-database",
       "llmsUrl": "https://heyclau.de/data/llms/skills/supabase-realtime-database.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/supabase-realtime-database",
       "trustSignals": {
@@ -8965,7 +9037,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/svelte-sveltekit-fullstack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/svelte-sveltekit-fullstack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/svelte-sveltekit-fullstack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/svelte-sveltekit-fullstack",
       "trustSignals": {
@@ -9123,7 +9195,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/trpc-type-safe-api",
+      "canonicalUrl": "https://heyclau.de/entry/skills/trpc-type-safe-api",
       "llmsUrl": "https://heyclau.de/data/llms/skills/trpc-type-safe-api.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/trpc-type-safe-api",
       "trustSignals": {
@@ -9278,7 +9350,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/unraid-api-automation-operator",
+      "canonicalUrl": "https://heyclau.de/entry/skills/unraid-api-automation-operator",
       "llmsUrl": "https://heyclau.de/data/llms/skills/unraid-api-automation-operator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/unraid-api-automation-operator",
       "trustSignals": {
@@ -9435,7 +9507,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/unraid-api-v2-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/unraid-api-v2-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/unraid-api-v2-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/unraid-api-v2-capability-pack",
       "trustSignals": {
@@ -9597,7 +9669,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/unraid-ca-template-authoring-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/unraid-ca-template-authoring-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/unraid-ca-template-authoring-capability-pack",
       "trustSignals": {
@@ -9755,7 +9827,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/v0-rapid-prototyping",
+      "canonicalUrl": "https://heyclau.de/entry/skills/v0-rapid-prototyping",
       "llmsUrl": "https://heyclau.de/data/llms/skills/v0-rapid-prototyping.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/v0-rapid-prototyping",
       "trustSignals": {
@@ -9913,7 +9985,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/vite-build-optimization",
+      "canonicalUrl": "https://heyclau.de/entry/skills/vite-build-optimization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/vite-build-optimization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/vite-build-optimization",
       "trustSignals": {
@@ -10071,7 +10143,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/webassembly-module-development",
+      "canonicalUrl": "https://heyclau.de/entry/skills/webassembly-module-development",
       "llmsUrl": "https://heyclau.de/data/llms/skills/webassembly-module-development.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/webassembly-module-development",
       "trustSignals": {
@@ -10228,9 +10300,18 @@
       "githubStars": 11200,
       "githubForks": 712,
       "repoUpdatedAt": "2026-05-19T04:59:43Z",
-      "canonicalUrl": "https://heyclau.de/skills/website-crawler-summarizer",
+      "canonicalUrl": "https://heyclau.de/entry/skills/website-crawler-summarizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/website-crawler-summarizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/website-crawler-summarizer",
+      "repoStats": {
+        "repository": "mozilla/readability",
+        "url": "https://github.com/mozilla/readability",
+        "stars": 11200,
+        "forks": 712,
+        "updatedAt": "2026-05-19T04:59:43Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -10391,7 +10472,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/windsurf-collaborative-development",
+      "canonicalUrl": "https://heyclau.de/entry/skills/windsurf-collaborative-development",
       "llmsUrl": "https://heyclau.de/data/llms/skills/windsurf-collaborative-development.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/windsurf-collaborative-development",
       "trustSignals": {
@@ -10548,7 +10629,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/zero-budget-saas-launch-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/zero-budget-saas-launch-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/zero-budget-saas-launch-capability-pack",
       "trustSignals": {
@@ -10706,7 +10787,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/skills/zod-schema-validator",
+      "canonicalUrl": "https://heyclau.de/entry/skills/zod-schema-validator",
       "llmsUrl": "https://heyclau.de/data/llms/skills/zod-schema-validator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/zod-schema-validator",
       "trustSignals": {

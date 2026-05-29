@@ -1,12 +1,12 @@
 # Documentation Generator - Hooks
-URL: https://heyclau.de/hooks/documentation-generator
+URL: https://heyclau.de/entry/hooks/documentation-generator
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://jsdoc.app/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/documentation-generator
+- Canonical URL: https://heyclau.de/entry/hooks/documentation-generator
 - Source URLs: https://jsdoc.app/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/documentation-generator.mdx
 - Safety notes: Runs automatically after write/edit tool use and may invoke local documentation generators such as npx jsdoc, jsdoc2md, typedoc, pdoc, pydoc, go doc, or cargo doc., Can write generated documentation under ./docs and may be slow on large source files or projects with expensive documentation tooling.
 - Privacy notes: Reads modified source, README, Markdown, and package metadata files to count comments, links, functions, classes, and documentation sections., Generated documentation may include source comments, API details, project names, and README content from the local workspace.

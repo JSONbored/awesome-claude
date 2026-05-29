@@ -1,5 +1,5 @@
 # Markdown Knowledge Base Composer Skill
-URL: https://heyclau.de/skills/markdown-knowledge-base-composer
+URL: https://heyclau.de/entry/skills/markdown-knowledge-base-composer
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -8,7 +8,7 @@ Repository: https://github.com/remarkjs/remark
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx
 Download: /downloads/skills/markdown-knowledge-base-composer.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/markdown-knowledge-base-composer
+- Canonical URL: https://heyclau.de/entry/skills/markdown-knowledge-base-composer
 - Source URLs: https://github.com/remarkjs/remark, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx
 - Package URL: /downloads/skills/markdown-knowledge-base-composer.zip
 - Package SHA256: 1a7c976ec10973f41970cd3328f73888927501684a89edc34ffe23e53d58567a

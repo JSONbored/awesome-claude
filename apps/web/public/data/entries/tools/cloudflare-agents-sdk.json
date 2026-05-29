@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/cloudflare/agents",
     "githubStars": 4931,
     "githubForks": 552,
-    "repoUpdatedAt": "2026-05-19T11:37:01Z"
+    "repoUpdatedAt": "2026-05-19T11:37:01Z",
+    "repoStats": {
+      "repository": "cloudflare/agents",
+      "url": "https://github.com/cloudflare/agents",
+      "stars": 4931,
+      "forks": 552,
+      "updatedAt": "2026-05-19T11:37:01Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

@@ -1,5 +1,5 @@
 # Roo Code
-URL: https://heyclau.de/tools/roo-code
+URL: https://heyclau.de/entry/tools/roo-code
 Category: tools
 Author: Roo Code
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://docs.roocode.com
 Repository: https://github.com/RooCodeInc/Roo-Code
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/roo-code
+- Canonical URL: https://heyclau.de/entry/tools/roo-code
 - Source URLs: https://docs.roocode.com, https://github.com/RooCodeInc/Roo-Code, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx, https://roocode.com
 - Brand: Roo Code
 - Brand domain: roocode.com

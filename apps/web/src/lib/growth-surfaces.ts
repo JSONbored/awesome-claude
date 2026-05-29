@@ -1,18 +1,13 @@
-import "server-only";
-
 import { cache } from "react";
 
-import { getDirectoryEntries } from "@/lib/content";
-import {
-  entryCommunityTarget,
-  safeCommunitySignalCounts,
-} from "@/lib/community-signals";
+import { ENTRIES } from "@/data/entries";
+import { entryCommunityTarget, safeCommunitySignalCounts } from "@/lib/community-signals";
 import { buildDiscoverySurfaceLists } from "@/lib/growth-surface-rules";
 import { communityDiscoveryScore } from "@/lib/growth-ranking";
 import { safeIntentEventCounts } from "@/lib/intent-events";
 import { safeVoteCounts } from "@/lib/votes";
 
-type GrowthEntry = Awaited<ReturnType<typeof getDirectoryEntries>>[number];
+type GrowthEntry = (typeof ENTRIES)[number];
 
 function entryKey(entry: GrowthEntry) {
   return `${entry.category}:${entry.slug}`;
@@ -23,7 +18,7 @@ function signalTarget(entry: GrowthEntry) {
 }
 
 export const getGrowthSurfaces = cache(async () => {
-  const entries = await getDirectoryEntries();
+  const entries = ENTRIES;
   const entryKeys = entries.map(entryKey);
   const communityTargets = entries.map((entry) => ({
     targetKind: "entry" as const,
@@ -42,7 +37,7 @@ export const getGrowthSurfaces = cache(async () => {
         communitySignals: communityState.counts[signalTarget(entry)],
         intentCounts: intentState.counts[entryKey(entry)],
         votes: voteState.counts[entryKey(entry)] ?? 0,
-        firstPartyPackage: entry.downloadTrust === "first-party",
+        firstPartyPackage: Boolean(entry.downloadUrl && entry.packageVerified),
         productionVerified: entry.verificationStatus === "production",
       }),
     }))
@@ -50,9 +45,7 @@ export const getGrowthSurfaces = cache(async () => {
     .sort(
       (left, right) =>
         right.score - left.score ||
-        String(right.entry.dateAdded).localeCompare(
-          String(left.entry.dateAdded),
-        ),
+        String(right.entry.dateAdded).localeCompare(String(left.entry.dateAdded)),
     )
     .slice(0, 12)
     .map((item) => item.entry);

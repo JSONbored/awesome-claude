@@ -1,5 +1,5 @@
 # FastAPI Python API Development Skill
-URL: https://heyclau.de/skills/fastapi-python-backend
+URL: https://heyclau.de/entry/skills/fastapi-python-backend
 Category: skills
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://fastapi.tiangolo.com/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fastapi-python-backend.mdx
 Download: /downloads/skills/fastapi-python-backend.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/fastapi-python-backend
+- Canonical URL: https://heyclau.de/entry/skills/fastapi-python-backend
 - Source URLs: https://fastapi.tiangolo.com/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/fastapi-python-backend.mdx
 - Package URL: /downloads/skills/fastapi-python-backend.zip
 - Package SHA256: a62b1a1e1fcee8faa7b1fb5cd68fa3c5112a74337fea3729a6bc5738c24f36d9

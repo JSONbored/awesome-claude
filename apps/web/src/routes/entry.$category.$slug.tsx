@@ -1,0 +1,903 @@
+import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import {
+  ArrowUpRight,
+  BookOpen,
+  ExternalLink,
+  GitBranch,
+  ShieldCheck,
+  AlertTriangle,
+  ListChecks,
+  Code2,
+  Sparkles,
+  Star,
+  FileText,
+  OctagonX,
+  Package,
+  Terminal,
+  Layers,
+  BadgeCheck,
+  Globe2,
+} from "lucide-react";
+import { getEntry, related } from "@/data/search";
+import {
+  CategoryPill,
+  PlatformChip,
+  SourceBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
+import { TrustDrilldown } from "@/components/trust-drilldown";
+import { WatchButton } from "@/components/watch-button";
+import { CopyButton } from "@/components/copy-button";
+import { ResourceCard } from "@/components/resource-card";
+// (HoverChevrons removed — related uses static grid)
+import { ShareMenu } from "@/components/share-menu";
+import { DossierTOC, type TocItem } from "@/components/dossier-toc";
+import { EntryFacets } from "@/components/entry-facets";
+import { HarnessBadge } from "@/components/harness-badge";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { NewsletterInline } from "@/components/newsletter-inline";
+import { SourceCitations } from "@/components/source-citations";
+import { ProvenanceBlock } from "@/components/provenance-block";
+import { StickyMetaBar } from "@/components/sticky-meta-bar";
+import { EntrySignalsPanel } from "@/components/entry-signals-panel";
+import { TRUST_LABEL, PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
+import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
+import { useEffect, useMemo, useState } from "react";
+import { useRecents } from "@/lib/recents";
+import { useCopyPref, useHarnessPref, type CopyVariant } from "@/lib/dossier-prefs";
+import { variantsForEntry } from "@/components/copy-segmented";
+import { HarnessVariantPicker } from "@/components/harness-variant-picker";
+import type { Harness } from "@/types/registry";
+import { cn } from "@/lib/utils";
+
+const loadFullEntry = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { getEntry } = await import("@/lib/content.server");
+    const { renderMarkdown } = await import("@/lib/detail-assembly");
+    const { buildEntry } = await import("@/data/entry-normalize");
+    const entry = await getEntry(data.category, data.slug);
+    if (!entry) return null;
+
+    const [bodyHtml, sections] = await Promise.all([
+      entry.body ? renderMarkdown(entry.body) : Promise.resolve(undefined),
+      Promise.all(
+        (entry.sections ?? []).map(async (section) => ({
+          ...section,
+          html: section.markdown ? await renderMarkdown(section.markdown) : undefined,
+        })),
+      ),
+    ]);
+
+    return buildEntry({ ...entry, bodyHtml, sections });
+  });
+
+export const Route = createFileRoute("/entry/$category/$slug")({
+  loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
+    const fullEntry = await loadFullEntry({
+      data: { category: params.category, slug: params.slug },
+    }).catch(() => null);
+    const entry = fullEntry ?? getEntry(params.category, params.slug);
+    if (!entry) throw notFound();
+    return { entry };
+  },
+  head: ({ params, loaderData }) => {
+    if (!loaderData) return { meta: [] };
+    const e = loaderData.entry;
+    const url = `/entry/${params.category}/${params.slug}`;
+    const ld = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      name: e.title,
+      description: e.description,
+      url,
+      datePublished: e.dateAdded,
+      dateModified: e.reviewedAt ?? e.dateAdded,
+      about: e.category,
+      author: { "@type": "Person", name: e.author },
+      ...(e.sourceUrl ? { isBasedOn: e.sourceUrl } : {}),
+    };
+    const breadcrumbs = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Directory", item: "/browse" },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: e.category,
+          item: `/browse?category=${e.category}`,
+        },
+        { "@type": "ListItem", position: 3, name: e.title, item: url },
+      ],
+    };
+    const ogUrl = `/og/${params.category}/${params.slug}`;
+    return {
+      meta: [
+        { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : `${e.title} — HeyClaude` },
+        { name: "description", content: e.seoDescription ?? e.description },
+        { property: "og:title", content: `${e.title} — HeyClaude` },
+        { property: "og:description", content: e.seoDescription ?? e.description },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
+        { property: "og:image", content: ogUrl },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: e.title },
+        { name: "twitter:description", content: e.description },
+        { name: "twitter:image", content: ogUrl },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        { type: "application/ld+json", children: JSON.stringify(ld) },
+        { type: "application/ld+json", children: JSON.stringify(breadcrumbs) },
+      ],
+    };
+  },
+  component: Dossier,
+});
+
+function Dossier() {
+  const data = Route.useLoaderData() as { entry: Entry };
+  const entry = data.entry;
+  const rel = related(entry);
+  const recents = useRecents();
+  useEffect(() => {
+    recents.pushEntry({ category: entry.category, slug: entry.slug, title: entry.title });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entry.category, entry.slug]);
+  const harnessAvailable = useMemo<Harness[]>(
+    () => (entry.harnessVariants ? (Object.keys(entry.harnessVariants) as Harness[]) : []),
+    [entry.harnessVariants],
+  );
+  const [harness, setHarness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
+  const liveVariants = useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
+  const firstAvailable: CopyVariant = liveVariants.find((v) => v.value)?.id ?? "install";
+  const [pref, setPref] = useCopyPref();
+  const variantHas = (v: CopyVariant) => !!liveVariants.find((x) => x.id === v)?.value;
+  const tab: CopyVariant = pref && variantHas(pref) ? pref : firstAvailable;
+  const setTab = (v: CopyVariant) => setPref(v);
+
+  const tabPayload = liveVariants.find((v) => v.id === tab)?.value;
+
+  const risk = installRiskLevel(entry);
+  const hasSchema = hasSchemaDetails(entry);
+
+  const tocItems = useMemo<TocItem[]>(() => {
+    const items: TocItem[] = [];
+    if (risk !== "low") items.push({ id: "risk-callout", label: "Install risk" });
+    if (entry.safetyNotes) items.push({ id: "safety", label: "Safety notes" });
+    if (entry.privacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
+    if (entry.prerequisites && entry.prerequisites.length > 0)
+      items.push({ id: "prerequisites", label: "Prerequisites" });
+    if (hasSchema) items.push({ id: "schema", label: "Schema details" });
+    items.push({ id: "about", label: "About this resource" });
+    items.push({ id: "citations", label: "Source citations" });
+    if (rel.length > 0) items.push({ id: "related", label: "Related" });
+    items.push({ id: "signals", label: "Signals" });
+    return items;
+  }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, hasSchema, rel.length]);
+
+  const entryUrl = `/entry/${entry.category}/${entry.slug}`;
+
+  return (
+    <div className="mx-auto max-w-[1200px] px-4 py-8 sm:px-6">
+      <StickyMetaBar entry={entry} watchSentinelId="dossier-header-sentinel" />
+      {/* Breadcrumb */}
+      <Breadcrumbs
+        items={[
+          { label: "Directory", to: "/browse" },
+          { label: entry.category, to: "/browse", search: { category: entry.category } },
+          { label: entry.title },
+        ]}
+      />
+
+      {/* Header */}
+      <header className="mt-6 grid gap-6 border-b border-border pb-8 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2">
+            <CategoryPill>{entry.category}</CategoryPill>
+            <TrustDrilldown entry={entry} />
+            <SourceBadge status={entry.source} />
+            <InstallRiskBadge entry={entry} />
+            <NotesPresenceChips entry={entry} className="ml-1" />
+            {entry.claimed && (
+              <span className="inline-flex items-center gap-1 rounded-md bg-surface-2 px-1.5 py-0.5 text-[11px] text-ink-muted">
+                <Sparkles className="h-3 w-3" />
+                Claimed
+              </span>
+            )}
+            <WatchButton
+              id={`entry:${entry.category}/${entry.slug}`}
+              kind="entry"
+              label={entry.title}
+              href={`/entry/${entry.category}/${entry.slug}`}
+              size="sm"
+            />
+            <ShareMenu
+              url={entryUrl}
+              title={entry.title}
+              description={entry.description}
+              ogUrl={`/og/${entry.category}/${entry.slug}`}
+              llmsUrl={`/data/llms/${entry.category}/${entry.slug}.txt`}
+            />
+          </div>
+
+          <h1 className="mt-4 h-display-1 text-ink text-balance">{entry.title}</h1>
+          <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
+            {entry.description}
+          </p>
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink-muted">
+            <span>
+              by <span className="text-ink">{entry.author}</span>
+            </span>
+            <span>·</span>
+            <span>added {entry.dateAdded}</span>
+            {entry.repoStats?.stars !== undefined && (
+              <>
+                <span>·</span>
+                <span className="inline-flex items-center gap-1" title="Source repository stars">
+                  <Star className="h-3 w-3" />
+                  {entry.repoStats.stars.toLocaleString()} source repo stars
+                </span>
+              </>
+            )}
+            <span>·</span>
+            <div className="flex flex-wrap gap-1">
+              {entry.platforms.map((p) => (
+                <PlatformChip key={p} id={p} />
+              ))}
+            </div>
+          </div>
+          {entry.harness && entry.harness.length > 0 && (
+            <div className="mt-3 flex flex-wrap items-center gap-1.5">
+              <span className="eyebrow mr-1">Harness</span>
+              {entry.harness.map((h) => (
+                <HarnessBadge key={h} id={h} />
+              ))}
+            </div>
+          )}
+          <EntryFacets entry={entry} density="card" className="mt-3" />
+        </div>
+
+        {/* Sticky install panel */}
+        <aside className="lg:sticky lg:top-20 lg:self-start">
+          <div className="overflow-hidden rounded-xl border border-border bg-surface">
+            <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
+              <div className="eyebrow">Install</div>
+              {entry.sourceUrl && (
+                <a
+                  href={entry.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink"
+                >
+                  Source <ArrowUpRight className="h-3 w-3" />
+                </a>
+              )}
+            </div>
+            {harnessAvailable.length >= 2 && (
+              <div className="border-b border-border px-3 py-2">
+                <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">
+                  Harness variant
+                </div>
+                <HarnessVariantPicker
+                  available={harnessAvailable}
+                  value={harness as Harness | null}
+                  onChange={setHarness}
+                />
+              </div>
+            )}
+            <div className="flex gap-1 border-b border-border px-3 pt-2">
+              {(["install", "config", "full"] as const).map((t) => {
+                const payload = liveVariants.find((v) => v.id === t)?.value;
+                if (!payload) return null;
+                return (
+                  <button
+                    key={t}
+                    onClick={() => setTab(t)}
+                    aria-pressed={tab === t}
+                    className={cn(
+                      "rounded-t-md px-2.5 py-1.5 text-xs font-medium capitalize focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+                      tab === t ? "bg-background text-ink" : "text-ink-muted hover:text-ink",
+                    )}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="bg-background p-3">
+              {tabPayload ? (
+                <>
+                  <pre className="max-h-64 overflow-auto rounded-md bg-surface-2 p-3 font-mono text-[12px] leading-relaxed text-ink">
+                    <code>{tabPayload}</code>
+                  </pre>
+                  <div className="mt-3 flex items-center gap-2">
+                    <CopyButton
+                      value={tabPayload}
+                      label={`Copy ${tab}`}
+                      size="md"
+                      className="flex-1 justify-center"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div className="rounded-md bg-surface-2 p-4 text-xs text-ink-muted">
+                  No installable payload for this tab.
+                </div>
+              )}
+            </div>
+
+            <div className="border-t border-border px-4 py-3">
+              <div className="eyebrow mb-2">Readiness</div>
+              <ul className="space-y-1.5 text-xs">
+                <Readiness
+                  label="Trust"
+                  value={TRUST_LABEL[entry.trust]}
+                  ok={entry.trust === "trusted"}
+                />
+                <Readiness label="Source" value={entry.source} ok={entry.source !== "unverified"} />
+                <Readiness
+                  label="Safety notes"
+                  value={entry.safetyNotes ? "Present" : "Missing"}
+                  ok={!!entry.safetyNotes}
+                />
+                <Readiness
+                  label="Reviewed"
+                  value={entry.reviewed ? "Yes" : "No"}
+                  ok={!!entry.reviewed}
+                />
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-3 flex flex-col gap-1.5 text-xs">
+            {entry.docsUrl && (
+              <a
+                href={entry.docsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                <BookOpen className="h-3.5 w-3.5" /> Documentation{" "}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+            {entry.sourceUrl && (
+              <a
+                href={entry.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                <GitBranch className="h-3.5 w-3.5" /> Source repository{" "}
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            )}
+            <Link
+              to="/browse"
+              className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+            >
+              <Code2 className="h-3.5 w-3.5" /> Registry JSON · LLM text
+            </Link>
+          </div>
+        </aside>
+      </header>
+      <div id="dossier-header-sentinel" aria-hidden className="h-px w-full" />
+
+      {/* Body */}
+      <div className="grid gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_280px]">
+        <div className="min-w-0 space-y-8">
+          {risk !== "low" && (
+            <section
+              id="risk-callout"
+              className={cn(
+                "scroll-mt-24 flex items-start gap-3 rounded-xl border p-4 text-sm",
+                risk === "high"
+                  ? "border-trust-blocked/40 bg-trust-blocked/5"
+                  : "border-trust-review/40 bg-trust-review/5",
+              )}
+            >
+              {risk === "high" ? (
+                <OctagonX className="mt-0.5 h-4 w-4 shrink-0 text-trust-blocked" aria-hidden />
+              ) : (
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trust-review" aria-hidden />
+              )}
+              <div className="min-w-0 flex-1">
+                <div className="font-semibold text-ink">
+                  {INSTALL_RISK_LABEL[risk]} —{" "}
+                  {risk === "high" ? "do not install without review" : "review before installing"}
+                </div>
+                <p className="mt-1 text-ink-muted">{INSTALL_RISK_DETAIL[risk]}</p>
+              </div>
+            </section>
+          )}
+          {entry.safetyNotes && (
+            <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
+              <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
+            </DossierSection>
+          )}
+          {entry.privacyNotes && (
+            <DossierSection id="privacy" icon={AlertTriangle} title="Privacy notes">
+              <NoteList value={entry.privacyNotesList ?? [entry.privacyNotes]} />
+            </DossierSection>
+          )}
+          {entry.prerequisites && entry.prerequisites.length > 0 && (
+            <DossierSection id="prerequisites" icon={ListChecks} title="Prerequisites">
+              <ul className="space-y-1.5">
+                {entry.prerequisites.map((p) => (
+                  <li key={p} className="flex items-start gap-2">
+                    <ListChecks
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted"
+                      aria-hidden
+                    />
+                    <span>{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </DossierSection>
+          )}
+          {hasSchema && <SchemaDetails entry={entry} />}
+          <DossierSection id="about" title="About this resource">
+            {entry.bodyHtml ? (
+              <MarkdownHtml html={entry.bodyHtml} />
+            ) : entry.body ? (
+              <pre className="whitespace-pre-wrap rounded-lg border border-border bg-surface-2 p-3 font-mono text-xs">
+                {entry.body}
+              </pre>
+            ) : (
+              <p>
+                {entry.title} is curated in the HeyClaude registry. Review the source repository
+                before installing. Trust and source signals are derived from metadata review, not
+                from runtime scanning.
+              </p>
+            )}
+            {entry.headings && entry.headings.length > 0 && (
+              <div className="mt-5 rounded-lg border border-border bg-surface-2 p-3">
+                <div className="eyebrow mb-2">Content outline</div>
+                <ul className="grid gap-1 text-xs text-ink-muted sm:grid-cols-2">
+                  {entry.headings.slice(0, 16).map((heading) => (
+                    <li key={heading.id}>
+                      <a href={`#${heading.id}`} className="hover:text-ink">
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {entry.tags.map((t) => (
+                <span
+                  key={t}
+                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
+                >
+                  #{t}
+                </span>
+              ))}
+            </div>
+          </DossierSection>
+
+          <DossierSection id="citations" icon={FileText} title="Source citations">
+            <SourceCitations entry={entry} />
+          </DossierSection>
+
+          {rel.length > 0 && (
+            <DossierSection id="related" title="Related resources">
+              <div className="grid gap-3 sm:grid-cols-2">
+                {rel.slice(0, 4).map((e) => (
+                  <ResourceCard key={`${e.category}/${e.slug}`} entry={e} variant="grid" />
+                ))}
+              </div>
+              <div className="mt-3 text-right">
+                <Link
+                  to="/browse"
+                  search={{ category: entry.category }}
+                  className="story-link text-xs font-medium text-ink"
+                >
+                  More in {entry.category} →
+                </Link>
+              </div>
+            </DossierSection>
+          )}
+
+          <DossierSection id="signals" title="Signals">
+            <EntrySignalsPanel category={entry.category} slug={entry.slug} />
+          </DossierSection>
+
+          <NewsletterInline
+            variant="quiet"
+            title="More like this, weekly"
+            description="A short, calm digest of reviewed Claude resources. Unsubscribe any time."
+            source={`entry:${entry.category}/${entry.slug}`}
+          />
+        </div>
+
+        <aside className="space-y-6">
+          <div className="hidden lg:block lg:sticky lg:top-20">
+            <DossierTOC items={tocItems} />
+          </div>
+          <ProvenanceBlock entry={entry} />
+          <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
+            HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for
+            malware. Always read the source before installing tools that touch your filesystem,
+            network, or credentials.
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function hasSchemaDetails(entry: Entry) {
+  return Boolean(
+    entry.skillType ||
+    entry.skillLevel ||
+    entry.verificationStatus ||
+    entry.verifiedAt ||
+    entry.retrievalSources?.length ||
+    entry.testedPlatforms?.length ||
+    entry.platformCompatibility?.length ||
+    entry.trigger ||
+    entry.commandSyntax ||
+    entry.argumentHint ||
+    entry.allowedTools?.length ||
+    entry.scriptLanguage ||
+    entry.scriptBody ||
+    entry.items?.length ||
+    entry.installationOrder?.length ||
+    entry.estimatedSetupTime ||
+    entry.difficulty ||
+    entry.websiteUrl ||
+    entry.pricingModel ||
+    entry.disclosure ||
+    entry.applicationCategory ||
+    entry.operatingSystem ||
+    entry.repoStats ||
+    entry.downloadUrl ||
+    entry.packageVerified !== undefined ||
+    entry.downloadSha256 ||
+    entry.copySnippet ||
+    entry.fullCopy,
+  );
+}
+
+function SchemaDetails({ entry }: { entry: Entry }) {
+  return (
+    <DossierSection id="schema" icon={BadgeCheck} title="Schema details">
+      <div className="space-y-5">
+        <FieldGrid>
+          <FieldRow label="Install type" value={entry.installType} />
+          <FieldRow
+            label="Reading time"
+            value={entry.readingTime ? `${entry.readingTime} min` : undefined}
+          />
+          <FieldRow label="Difficulty score" value={entry.difficultyScore?.toString()} />
+          <FieldRow label="Troubleshooting" value={booleanLabel(entry.hasTroubleshooting)} />
+          <FieldRow label="Breaking changes" value={booleanLabel(entry.hasBreakingChanges)} />
+        </FieldGrid>
+
+        {entry.repoStats && (
+          <MetadataGroup title="Source repository stats" icon={Star}>
+            <FieldGrid>
+              <FieldRow label="Scope" value={entry.repoStats.label ?? "Source repo"} />
+              <FieldRow
+                label="Stars"
+                value={
+                  entry.repoStats.stars !== undefined
+                    ? `${entry.repoStats.stars.toLocaleString()} source repo stars`
+                    : undefined
+                }
+              />
+              <FieldRow
+                label="Forks"
+                value={
+                  entry.repoStats.forks !== undefined
+                    ? entry.repoStats.forks.toLocaleString()
+                    : undefined
+                }
+              />
+              <FieldRow label="Updated" value={entry.repoStats.updatedAt} />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        {(entry.downloadUrl || entry.packageVerified !== undefined || entry.downloadSha256) && (
+          <MetadataGroup title="Package metadata" icon={Package}>
+            <FieldGrid>
+              <FieldRow label="Download URL" value={entry.downloadUrl} href={entry.downloadUrl} />
+              <FieldRow label="Package verified" value={booleanLabel(entry.packageVerified)} />
+              <FieldRow label="SHA-256" value={entry.downloadSha256} mono />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        {(entry.skillType ||
+          entry.skillLevel ||
+          entry.verificationStatus ||
+          entry.verifiedAt ||
+          entry.retrievalSources?.length ||
+          entry.testedPlatforms?.length ||
+          entry.platformCompatibility?.length) && (
+          <MetadataGroup title="Skill and platform metadata" icon={Package}>
+            <FieldGrid>
+              <FieldRow label="Skill type" value={entry.skillType} />
+              <FieldRow label="Skill level" value={entry.skillLevel} />
+              <FieldRow label="Verification" value={entry.verificationStatus} />
+              <FieldRow label="Verified at" value={entry.verifiedAt} />
+            </FieldGrid>
+            <PillList label="Retrieval sources" values={entry.retrievalSources} />
+            <PillList label="Tested platforms" values={entry.testedPlatforms} />
+            {entry.platformCompatibility?.length ? (
+              <div className="mt-3 overflow-hidden rounded-lg border border-border">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-surface-2 text-ink-subtle">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Platform</th>
+                      <th className="px-3 py-2 font-medium">Support</th>
+                      <th className="px-3 py-2 font-medium">Install path</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {entry.platformCompatibility.map((item) => (
+                      <tr key={`${item.platform}-${item.installPath ?? ""}`}>
+                        <td className="px-3 py-2 text-ink">{item.platform}</td>
+                        <td className="px-3 py-2 text-ink-muted">
+                          {PLATFORM_SUPPORT_LABEL[item.support]}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-ink-muted">
+                          {item.installPath ?? item.adapterPath ?? "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+          </MetadataGroup>
+        )}
+
+        {(entry.trigger ||
+          entry.commandSyntax ||
+          entry.argumentHint ||
+          entry.allowedTools?.length ||
+          entry.scriptLanguage ||
+          entry.scriptBody) && (
+          <MetadataGroup title="Runtime and command metadata" icon={Terminal}>
+            <FieldGrid>
+              <FieldRow label="Trigger" value={entry.trigger} />
+              <FieldRow label="Command syntax" value={entry.commandSyntax} mono />
+              <FieldRow label="Argument hint" value={entry.argumentHint} />
+              <FieldRow label="Script language" value={entry.scriptLanguage} />
+            </FieldGrid>
+            <PillList label="Allowed tools" values={entry.allowedTools} />
+            <CodeDisclosure label="Script body" value={entry.scriptBody} />
+          </MetadataGroup>
+        )}
+
+        {(entry.items?.length ||
+          entry.installationOrder?.length ||
+          entry.estimatedSetupTime ||
+          entry.difficulty) && (
+          <MetadataGroup title="Collection metadata" icon={Layers}>
+            <FieldGrid>
+              <FieldRow
+                label="Items"
+                value={entry.items?.length ? `${entry.items.length} entries` : undefined}
+              />
+              <FieldRow label="Estimated setup" value={entry.estimatedSetupTime} />
+              <FieldRow label="Difficulty" value={entry.difficulty} />
+            </FieldGrid>
+            <CollectionItemList values={entry.items} />
+            <PillList label="Installation order" values={entry.installationOrder} />
+          </MetadataGroup>
+        )}
+
+        {(entry.websiteUrl ||
+          entry.pricingModel ||
+          entry.disclosure ||
+          entry.applicationCategory ||
+          entry.operatingSystem) && (
+          <MetadataGroup title="Tool listing metadata" icon={Globe2}>
+            <FieldGrid>
+              <FieldRow label="Website" value={entry.websiteUrl} href={entry.websiteUrl} />
+              <FieldRow label="Pricing" value={entry.pricingModel} />
+              <FieldRow label="Disclosure" value={entry.disclosure} />
+              <FieldRow label="Application category" value={entry.applicationCategory} />
+              <FieldRow label="Operating system" value={entry.operatingSystem} />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        <CodeDisclosure label="Full copyable content" value={entry.fullCopy ?? entry.copySnippet} />
+      </div>
+    </DossierSection>
+  );
+}
+
+function booleanLabel(value?: boolean) {
+  if (value === undefined) return undefined;
+  return value ? "Yes" : "No";
+}
+
+function MetadataGroup({
+  title,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-surface-2 p-3">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-ink">
+        <Icon className="h-3.5 w-3.5" aria-hidden />
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function FieldGrid({ children }: { children: React.ReactNode }) {
+  return <dl className="grid gap-3 sm:grid-cols-2">{children}</dl>;
+}
+
+function FieldRow({
+  label,
+  value,
+  href,
+  mono,
+}: {
+  label: string;
+  value?: string;
+  href?: string;
+  mono?: boolean;
+}) {
+  if (!value) return null;
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</dt>
+      <dd className={cn("mt-0.5 break-words text-sm text-ink", mono && "font-mono text-xs")}>
+        {href ? (
+          <a href={href} target="_blank" rel="noreferrer" className="hover:underline">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
+    </div>
+  );
+}
+
+function PillList({ label, values }: { label: string; values?: string[] }) {
+  if (!values?.length) return null;
+  return (
+    <div className="mt-3">
+      <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">{label}</div>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((value) => (
+          <span
+            key={value}
+            className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
+          >
+            {value}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CollectionItemList({ values }: { values?: string[] }) {
+  if (!values?.length) return null;
+  return (
+    <div className="mt-3">
+      <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">
+        Included entries
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((value) => {
+          const [category, slug] = value.split("/");
+          if (category && slug) {
+            return (
+              <Link
+                key={value}
+                to="/entry/$category/$slug"
+                params={{ category, slug }}
+                className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted hover:text-ink"
+              >
+                {value}
+              </Link>
+            );
+          }
+          return (
+            <span
+              key={value}
+              className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-xs text-ink-muted"
+            >
+              {value}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function CodeDisclosure({ label, value }: { label: string; value?: string }) {
+  if (!value) return null;
+  return (
+    <details className="mt-3 rounded-lg border border-border bg-background">
+      <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-ink">{label}</summary>
+      <pre className="max-h-96 overflow-auto border-t border-border p-3 font-mono text-[12px] leading-relaxed text-ink">
+        <code>{value}</code>
+      </pre>
+    </details>
+  );
+}
+
+function NoteList({ value }: { value: string[] }) {
+  return (
+    <ul className="space-y-1.5">
+      {value.map((item) => (
+        <li key={item} className="flex items-start gap-2">
+          <ListChecks className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" aria-hidden />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function MarkdownHtml({ html }: { html: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+
+function DossierSection({
+  id,
+  title,
+  icon: Icon,
+  tone,
+  children,
+}: {
+  id?: string;
+  title: string;
+  icon?: React.ElementType;
+  tone?: "trust";
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      id={id}
+      className={cn(
+        "surface-raised scroll-mt-24 rounded-xl border bg-surface p-5",
+        tone === "trust" ? "border-trust-trusted/40" : "border-border",
+      )}
+    >
+      <div className="mb-3 flex items-center gap-2">
+        {Icon && <Icon className="h-4 w-4 text-ink" />}
+        <h2 className="font-display text-base font-semibold tracking-tight text-ink">{title}</h2>
+      </div>
+      <div className="prose-editorial text-sm">{children}</div>
+    </section>
+  );
+}
+
+function Readiness({ label, value, ok }: { label: string; value: string; ok: boolean }) {
+  return (
+    <li className="flex items-center justify-between">
+      <span className="text-ink-muted">{label}</span>
+      <span
+        className={cn("font-medium capitalize", ok ? "text-trust-trusted" : "text-trust-review")}
+      >
+        {value}
+      </span>
+    </li>
+  );
+}

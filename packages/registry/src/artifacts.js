@@ -196,7 +196,11 @@ export function dataUrl(...segments) {
 }
 
 function entryCanonicalUrl(entry, siteUrl = SITE_URL) {
-  return `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`;
+  return `${siteUrl.replace(/\/$/, "")}/entry/${entry.category}/${entry.slug}`;
+}
+
+function categoryCanonicalUrl(category, siteUrl = SITE_URL) {
+  return `${siteUrl.replace(/\/$/, "")}/browse?category=${encodeURIComponent(category)}`;
 }
 
 function entryLlmsUrl(entry, siteUrl = SITE_URL) {
@@ -205,6 +209,27 @@ function entryLlmsUrl(entry, siteUrl = SITE_URL) {
 
 function entryApiUrl(entry, siteUrl = SITE_URL) {
   return `${siteUrl.replace(/\/$/, "")}/api/registry/entries/${entry.category}/${entry.slug}`;
+}
+
+function buildRepoStats(entry) {
+  const hasStats =
+    typeof entry.githubStars === "number" ||
+    typeof entry.githubForks === "number" ||
+    typeof entry.repoUpdatedAt === "string";
+  if (!entry.repoUrl && !hasStats) return undefined;
+  return {
+    repository: entry.repoUrl
+      ? String(entry.repoUrl).replace(/^https:\/\/github\.com\//, "")
+      : undefined,
+    url: entry.repoUrl || undefined,
+    stars:
+      typeof entry.githubStars === "number" ? entry.githubStars : undefined,
+    forks:
+      typeof entry.githubForks === "number" ? entry.githubForks : undefined,
+    updatedAt: entry.repoUpdatedAt || undefined,
+    appliesTo: entry.repoUrl ? "listing_source_repo" : "none",
+    label: "Source repo",
+  };
 }
 
 export function buildDirectoryEntries(entries) {
@@ -222,6 +247,7 @@ export function buildDirectoryEntries(entries) {
       canonicalUrl: entryCanonicalUrl(entry),
       llmsUrl: entryLlmsUrl(entry),
       apiUrl: entryApiUrl(entry),
+      repoStats: buildRepoStats(entry),
       trustSignals: buildEntryTrustSignals(entry),
     };
   });
@@ -256,6 +282,7 @@ export function buildSearchEntries(entries) {
     ),
     documentationUrl: entry.documentationUrl || "",
     repoUrl: entry.repoUrl || "",
+    repoStats: buildRepoStats(entry),
     url: entryCanonicalUrl(entry),
     canonicalUrl: entryCanonicalUrl(entry),
     llmsUrl: entryLlmsUrl(entry),
@@ -642,9 +669,7 @@ export function buildCursorSkillAdapter(entry) {
     ? entry.downloadUrl.startsWith("/")
       ? `${SITE_URL}${entry.downloadUrl}`
       : entry.downloadUrl
-    : entry.repoUrl ||
-      entry.documentationUrl ||
-      `${SITE_URL}/skills/${entry.slug}`;
+    : entry.repoUrl || entry.documentationUrl || entryCanonicalUrl(entry);
 
   return [
     "---",
@@ -696,6 +721,7 @@ export function buildRaycastEntries(entries) {
       seoTitle: entry.seoTitle || entry.title,
       seoDescription: entry.seoDescription || entry.description,
       repoUrl: entry.repoUrl || "",
+      repoStats: buildRepoStats(entry),
       documentationUrl: entry.documentationUrl || "",
       downloadTrust: entry.downloadTrust,
       verificationStatus: entry.verificationStatus || "",
@@ -708,7 +734,10 @@ export function buildEntryDetail(entry) {
   return {
     schemaVersion: ENTRY_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
-    entry,
+    entry: {
+      ...entry,
+      repoStats: buildRepoStats(entry),
+    },
     trustSignals: buildEntryTrustSignals(entry),
   };
 }
@@ -733,6 +762,7 @@ export function buildRaycastDetail(entry) {
     seoDescription: entry.seoDescription || entry.description,
     ...buildEntryNoteFields(entry),
     repoUrl: entry.repoUrl || "",
+    repoStats: buildRepoStats(entry),
     documentationUrl: entry.documentationUrl || "",
     downloadTrust: entry.downloadTrust ?? null,
     verificationStatus: entry.verificationStatus || "",
@@ -785,7 +815,7 @@ export function buildReadOnlyEcosystemFeed(entries, params = {}) {
         slug: entry.slug,
         title: entry.title,
         description: entry.cardDescription || entry.description,
-        url: `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`,
+        url: entryCanonicalUrl(entry, siteUrl),
         ...buildEntryProvenanceFields(entry),
         ...buildEntryBrandFields(entry),
         websiteUrl: entry.websiteUrl || "",
@@ -848,7 +878,7 @@ export function buildMcpRegistryFeed(entries) {
         : undefined,
       installCommand: entry.installCommand || "",
       configSnippet: entry.configSnippet || "",
-      heyclaudeUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+      heyclaudeUrl: entryCanonicalUrl(entry),
     })),
   };
 }
@@ -868,7 +898,7 @@ export function buildPluginExportFeed(entries) {
     installCommand: entry.installCommand || entry.commandSyntax || "",
     platformCompatibility:
       entry.category === "skills" ? buildSkillPlatformCompatibility(entry) : [],
-    heyclaudeUrl: `${SITE_URL}/${entry.category}/${entry.slug}`,
+    heyclaudeUrl: entryCanonicalUrl(entry),
   }));
 
   return {
@@ -959,7 +989,7 @@ export function buildCategoryDistributionFeed(entries, category, params = {}) {
     count: categoryEntries.length,
     entries: buildDirectoryEntries(categoryEntries).map((entry) => ({
       ...entry,
-      canonicalUrl: `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`,
+      canonicalUrl: entryCanonicalUrl(entry, siteUrl),
     })),
   };
 }
@@ -981,7 +1011,7 @@ export function buildPlatformDistributionFeed(entries, platform, params = {}) {
     count: platformEntries.length,
     entries: buildDirectoryEntries(platformEntries).map((entry) => ({
       ...entry,
-      canonicalUrl: `${siteUrl.replace(/\/$/, "")}/${entry.category}/${entry.slug}`,
+      canonicalUrl: entryCanonicalUrl(entry, siteUrl),
     })),
   };
 }
@@ -996,7 +1026,7 @@ export function buildDistributionFeedIndex(entries, params = {}) {
       label: spec?.label ?? category,
       count,
       feedUrl: dataUrl("feeds", "categories", `${category}.json`),
-      canonicalUrl: `${siteUrl.replace(/\/$/, "")}/${category}`,
+      canonicalUrl: categoryCanonicalUrl(category, siteUrl),
     };
   });
   const platforms = [

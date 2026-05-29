@@ -1,0 +1,183 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Calendar } from "lucide-react";
+import { BRIEF_ISSUES, WEEKLY_BRIEF } from "@/data/entries";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { NewsletterInline } from "@/components/newsletter-inline";
+
+export const Route = createFileRoute("/brief")({
+  head: () => ({
+    meta: [
+      { title: "Weekly Brief — HeyClaude" },
+      {
+        name: "description",
+        content: "Weekly Brief on Claude Code, MCP, agents, and reviewed workflows.",
+      },
+      { property: "og:title", content: "HeyClaude Weekly Brief" },
+      {
+        property: "og:description",
+        content: "Reviewed picks, what shipped, and what to watch. No hype.",
+      },
+    ],
+  }),
+  component: BriefPage,
+});
+
+const latest = BRIEF_ISSUES[0];
+
+function BriefPage() {
+  return (
+    <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
+      <Breadcrumbs home items={[{ label: "Weekly Brief" }]} />
+      <div className="mt-4 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0">
+          <div className="eyebrow flex items-center gap-1.5">
+            <Calendar className="h-3 w-3" /> Weekly Brief
+          </div>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">
+            One concise read on Claude workflows.
+          </h1>
+          <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
+            Reviewed picks, what shipped, and what to watch. Sundays. No hype, no listicle filler.
+          </p>
+
+          {latest && (
+            <article className="mt-10 overflow-hidden rounded-2xl border border-accent/30 bg-gradient-to-br from-surface to-accent/[0.06] surface-raised">
+              <div className="grid gap-0 sm:grid-cols-[120px_minmax(0,1fr)]">
+                <div className="flex flex-col items-center justify-center border-b border-accent/20 bg-accent/[0.04] p-5 sm:border-b-0 sm:border-r">
+                  <div className="eyebrow text-ink-subtle">Issue</div>
+                  <div className="font-display text-5xl font-semibold leading-none tracking-tight text-ink">
+                    {String(latest.number).padStart(2, "0")}
+                  </div>
+                  <div className="mt-2 font-mono text-[11px] text-ink-subtle">{latest.date}</div>
+                </div>
+                <div className="p-6">
+                  <div className="eyebrow text-accent-ink dark:text-accent">Latest issue</div>
+                  <h2 className="mt-1 h-display-2 text-ink text-balance">{latest.title}</h2>
+                  <p className="mt-2 text-pretty text-sm text-ink-muted drop-cap">
+                    {latest.summary}
+                  </p>
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <BriefMetric label="New entries" value={WEEKLY_BRIEF.newEntries.length} />
+                    <BriefMetric
+                      label="Trusted installs"
+                      value={WEEKLY_BRIEF.trustedInstalls.length}
+                    />
+                    <BriefMetric
+                      label="Source-backed picks"
+                      value={WEEKLY_BRIEF.sourceBackedPicks.length}
+                    />
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {latest.tags.map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
+                      >
+                        #{t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </article>
+          )}
+
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <BriefList title="New in the registry" items={WEEKLY_BRIEF.newEntries} />
+            <BriefList title="Trusted installs" items={WEEKLY_BRIEF.trustedInstalls} />
+            <BriefList title="Source-backed picks" items={WEEKLY_BRIEF.sourceBackedPicks} />
+          </div>
+
+          <div className="mt-12 flex items-end justify-between border-b border-border pb-3">
+            <h2 className="font-display text-xl font-semibold tracking-tight text-ink">Archive</h2>
+            <span className="font-mono text-[11px] text-ink-subtle">
+              {BRIEF_ISSUES.length - 1} past issues
+            </span>
+          </div>
+          <ol className="mt-4 space-y-3 stagger-children">
+            {BRIEF_ISSUES.slice(1).map((b) => (
+              <li
+                key={b.slug}
+                className="group hover-lift rounded-xl border border-border bg-surface p-5 transition-[border-color,background-color] duration-200 ease-out hover:border-ink/20 hover:bg-surface-2"
+              >
+                <div className="flex items-center justify-between text-xs text-ink-subtle">
+                  <span className="font-mono">Issue #{String(b.number).padStart(2, "0")}</span>
+                  <span>{b.date}</span>
+                </div>
+                <h3 className="mt-2 font-display text-lg font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                  {b.title}
+                </h3>
+                <p className="mt-1 text-pretty text-sm text-ink-muted">{b.summary}</p>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {b.tags.map((t) => (
+                    <span
+                      key={t}
+                      className="inline-flex rounded-md border border-border bg-background px-2 py-0.5 text-[11px] text-ink-muted"
+                    >
+                      #{t}
+                    </span>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <aside className="lg:sticky lg:top-20 lg:self-start">
+          <NewsletterInline
+            variant="card"
+            title="Subscribe"
+            description="Free, weekly, one read. Reviewed Claude workflow picks delivered every Sunday."
+            cadence="Weekly · Sundays"
+            source="brief"
+          />
+          <div className="mt-5 rounded-xl border border-border bg-surface p-5 text-xs text-ink-muted">
+            <div className="eyebrow mb-2">What to expect</div>
+            <ul className="space-y-1.5">
+              <li>· 5–7 reviewed picks across MCP, skills, hooks, and commands</li>
+              <li>· What changed in the registry this week</li>
+              <li>· One workflow walkthrough worth stealing</li>
+              <li>· Open roles from teams building with Claude</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  );
+}
+
+function BriefMetric({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="rounded-lg border border-border bg-background p-3">
+      <div className="font-mono text-lg font-semibold tabular-nums text-ink">{value}</div>
+      <div className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</div>
+    </div>
+  );
+}
+
+function BriefList({
+  title,
+  items,
+}: {
+  title: string;
+  items: Array<{ ref: string; title: string; reason?: string; date?: string }>;
+}) {
+  return (
+    <section className="rounded-xl border border-border bg-surface p-4">
+      <h2 className="font-display text-base font-semibold text-ink">{title}</h2>
+      <ul className="mt-3 space-y-3 text-sm">
+        {items.map((item) => (
+          <li key={item.ref}>
+            <a href={`/entry/${item.ref}`} className="font-medium text-ink hover:underline">
+              {item.title}
+            </a>
+            <div className="mt-0.5 font-mono text-[11px] text-ink-subtle">{item.ref}</div>
+            {(item.reason || item.date) && (
+              <p className="mt-1 text-xs text-ink-muted">{item.reason ?? item.date}</p>
+            )}
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}

@@ -31,6 +31,14 @@ const outputPath = path.join(
   repoRoot,
   "cloudflare/api-schema-heyclaude-openapi.yaml",
 );
+const publicYamlOutputPath = path.join(
+  repoRoot,
+  "apps/web/public/openapi.yaml",
+);
+const publicJsonOutputPath = path.join(
+  repoRoot,
+  "apps/web/public/openapi.json",
+);
 
 function methodName(method: ApiRouteDefinition["method"]) {
   return method.toLowerCase() as "get" | "post" | "patch";
@@ -227,17 +235,34 @@ function buildOpenApiDocument() {
 }
 
 async function main() {
-  const rawGenerated = `${stringify(buildOpenApiDocument(), {
+  const document = buildOpenApiDocument();
+  const rawGenerated = `${stringify(document, {
     lineWidth: 100,
     singleQuote: false,
   })}\n`;
   const generated = await formatWithPrettier(rawGenerated, { parser: "yaml" });
+  const generatedPublicYaml = await formatWithPrettier(rawGenerated, {
+    parser: "yaml",
+    printWidth: 100,
+  });
+  const generatedJson = await formatWithPrettier(JSON.stringify(document), {
+    parser: "json",
+    printWidth: 100,
+  });
 
   if (process.argv.includes("--check")) {
-    const current = fs.existsSync(outputPath)
-      ? fs.readFileSync(outputPath, "utf8")
-      : "";
-    if (current !== generated) {
+    const outputs = [
+      [outputPath, generated],
+      [publicYamlOutputPath, generatedPublicYaml],
+      [publicJsonOutputPath, generatedJson],
+    ] as const;
+    const staleOutput = outputs.find(([filePath, expected]) => {
+      const current = fs.existsSync(filePath)
+        ? fs.readFileSync(filePath, "utf8")
+        : "";
+      return current !== expected;
+    });
+    if (staleOutput) {
       console.error(
         "OpenAPI schema is stale. Run `pnpm generate:openapi` and commit the result.",
       );
@@ -247,7 +272,11 @@ async function main() {
   }
 
   fs.writeFileSync(outputPath, generated);
+  fs.writeFileSync(publicYamlOutputPath, generatedPublicYaml);
+  fs.writeFileSync(publicJsonOutputPath, generatedJson);
   console.log(`Wrote ${path.relative(repoRoot, outputPath)}`);
+  console.log(`Wrote ${path.relative(repoRoot, publicYamlOutputPath)}`);
+  console.log(`Wrote ${path.relative(repoRoot, publicJsonOutputPath)}`);
 }
 
 main().catch((error) => {

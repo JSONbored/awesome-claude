@@ -1,12 +1,12 @@
 # Multi Provider Token Counter - Statuslines
-URL: https://heyclau.de/statuslines/multi-provider-token-counter
+URL: https://heyclau.de/entry/statuslines/multi-provider-token-counter
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://docs.anthropic.com/claude/docs/models-overview
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-provider-token-counter.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/multi-provider-token-counter
+- Canonical URL: https://heyclau.de/entry/statuslines/multi-provider-token-counter
 - Source URLs: https://docs.anthropic.com/claude/docs/models-overview, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-provider-token-counter.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

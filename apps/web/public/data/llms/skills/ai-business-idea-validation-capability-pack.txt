@@ -1,5 +1,5 @@
 # AI Business Idea Validation Capability Pack Skill
-URL: https://heyclau.de/skills/ai-business-idea-validation-capability-pack
+URL: https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -7,7 +7,7 @@ Documentation: https://www.ycombinator.com/library
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx
 Download: /downloads/skills/ai-business-idea-validation-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/ai-business-idea-validation-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack
 - Source URLs: https://www.ycombinator.com/library, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx
 - Package URL: /downloads/skills/ai-business-idea-validation-capability-pack.zip
 - Package SHA256: 9955465ac6dea7ab8837ab2ad18bf6a53f6635c72c85c7cff24025a9efbd8cfe

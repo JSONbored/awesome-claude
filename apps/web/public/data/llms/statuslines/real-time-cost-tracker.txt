@@ -1,11 +1,11 @@
 # Real Time Cost Tracker - Statuslines
-URL: https://heyclau.de/statuslines/real-time-cost-tracker
+URL: https://heyclau.de/entry/statuslines/real-time-cost-tracker
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/real-time-cost-tracker.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/real-time-cost-tracker
+- Canonical URL: https://heyclau.de/entry/statuslines/real-time-cost-tracker
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/real-time-cost-tracker.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

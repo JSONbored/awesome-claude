@@ -1,5 +1,5 @@
 # Vite Frontend Build Performance Optimization Skill
-URL: https://heyclau.de/skills/vite-build-optimization
+URL: https://heyclau.de/entry/skills/vite-build-optimization
 Category: skills
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://vitejs.dev/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/vite-build-optimization.mdx
 Download: /downloads/skills/vite-build-optimization.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/vite-build-optimization
+- Canonical URL: https://heyclau.de/entry/skills/vite-build-optimization
 - Source URLs: https://vitejs.dev/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/vite-build-optimization.mdx
 - Package URL: /downloads/skills/vite-build-optimization.zip
 - Package SHA256: 3bc2f1a78615abff0539bd4f50e36337af9c433c6b145a16b2720fa8f00c26b1

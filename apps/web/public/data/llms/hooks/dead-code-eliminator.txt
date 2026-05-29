@@ -1,5 +1,5 @@
 # Dead Code Eliminator - Hooks
-URL: https://heyclau.de/hooks/dead-code-eliminator
+URL: https://heyclau.de/entry/hooks/dead-code-eliminator
 Category: hooks
 Author: JSONbored
 Date added: 2025-10-19
@@ -7,7 +7,7 @@ Documentation: https://github.com/nadeesha/ts-prune
 Repository: https://github.com/nadeesha/ts-prune
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/dead-code-eliminator
+- Canonical URL: https://heyclau.de/entry/hooks/dead-code-eliminator
 - Source URLs: https://github.com/nadeesha/ts-prune, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

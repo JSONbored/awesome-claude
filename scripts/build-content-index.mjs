@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import prettier from "prettier";
 
 import {
   categorySpec,
@@ -23,6 +24,7 @@ const entryDataDir = path.join(publicDataDir, "entries");
 const entryLlmsDir = path.join(publicDataDir, "llms");
 const raycastDetailDir = path.join(publicDataDir, "raycast");
 const siteStatsFile = path.join(generatedDir, "site-stats.json");
+const atlasRegistryFile = path.join(generatedDir, "atlas-registry.json");
 const skillsDownloadsDir = path.join(
   repoRoot,
   "apps/web/public/downloads/skills",
@@ -170,6 +172,168 @@ function writeFileIfChanged(filePath, content) {
 function writeJsonFile(filePath, value) {
   ensureDir(path.dirname(filePath));
   return writeFileIfChanged(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+async function writePrettierJsonFile(filePath, value) {
+  ensureDir(path.dirname(filePath));
+  const options = (await prettier.resolveConfig(filePath)) ?? {};
+  const formatted = await prettier.format(
+    `${JSON.stringify(value, null, 2)}\n`,
+    {
+      ...options,
+      parser: "json",
+    },
+  );
+  return writeFileIfChanged(filePath, formatted);
+}
+
+const ATLAS_CREDENTIAL_PLACEHOLDER_REPLACEMENTS = [
+  [
+    "postgresql://user:password@host:port/database",
+    "PostgreSQL connection URI with user, password, host, port, and database",
+  ],
+  [
+    "postgresql://user:password@localhost:5432/mydb",
+    "PostgreSQL connection URI stored in POSTGRES_CONNECTION_STRING",
+  ],
+  [
+    "redis://user:password@host:port/db",
+    "Redis connection URI with user, password, host, port, and database",
+  ],
+  [
+    "redis://:password@host:6379",
+    "Redis connection URI with password authentication",
+  ],
+  [
+    "redis://username:password@host:6379",
+    "Redis connection URI with ACL username and password authentication",
+  ],
+];
+
+function scrubAtlasCredentialPlaceholders(value) {
+  if (typeof value === "string") {
+    let scrubbed = value;
+    for (const [
+      placeholder,
+      replacement,
+    ] of ATLAS_CREDENTIAL_PLACEHOLDER_REPLACEMENTS) {
+      scrubbed = scrubbed.split(placeholder).join(replacement);
+    }
+    return scrubbed;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => scrubAtlasCredentialPlaceholders(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        scrubAtlasCredentialPlaceholders(item),
+      ]),
+    );
+  }
+
+  return value;
+}
+
+function pickAtlasEntry(entry) {
+  const repoStats =
+    entry.repoUrl ||
+    entry.githubStars != null ||
+    entry.githubForks != null ||
+    entry.repoUpdatedAt
+      ? {
+          repository: entry.repoUrl
+            ? entry.repoUrl.replace(/^https:\/\/github\.com\//, "")
+            : undefined,
+          url: entry.repoUrl || undefined,
+          stars: entry.githubStars,
+          forks: entry.githubForks,
+          updatedAt: entry.repoUpdatedAt,
+          appliesTo: entry.repoUrl ? "listing_source_repo" : "none",
+          label: "Source repo",
+        }
+      : undefined;
+
+  return scrubAtlasCredentialPlaceholders({
+    category: entry.category,
+    slug: entry.slug,
+    title: entry.title,
+    description: entry.description,
+    seoTitle: entry.seoTitle,
+    seoDescription: entry.seoDescription,
+    author: entry.author,
+    submittedBy: entry.submittedBy,
+    submittedByUrl: entry.submittedByUrl,
+    submittedAt: entry.submittedAt,
+    submissionIssueUrl: entry.submissionIssueUrl,
+    importPrUrl: entry.importPrUrl,
+    reviewedBy: entry.reviewedBy,
+    reviewedAt: entry.reviewedAt,
+    claimStatus: entry.claimStatus,
+    authorProfileUrl: entry.authorProfileUrl,
+    dateAdded: entry.dateAdded,
+    contentUpdatedAt: entry.contentUpdatedAt,
+    tags: entry.tags,
+    keywords: entry.keywords,
+    cardDescription: entry.cardDescription,
+    installCommand: entry.installCommand,
+    configSnippet: entry.configSnippet,
+    usageSnippet: entry.usageSnippet,
+    documentationUrl: entry.documentationUrl,
+    githubUrl: entry.githubUrl,
+    repoUrl: entry.repoUrl,
+    brandName: entry.brandName,
+    brandDomain: entry.brandDomain,
+    brandIconUrl: entry.brandIconUrl,
+    prerequisites: entry.prerequisites,
+    safetyNotes: entry.safetyNotes,
+    privacyNotes: entry.privacyNotes,
+    downloadUrl: entry.downloadUrl,
+    downloadSha256: entry.downloadSha256,
+    packageVerified: entry.packageVerified,
+    downloadTrust: entry.downloadTrust,
+    githubStars: entry.githubStars,
+    githubForks: entry.githubForks,
+    repoUpdatedAt: entry.repoUpdatedAt,
+    repoStats,
+    trustSignals: entry.trustSignals
+      ? {
+          firstPartyEditorial: entry.trustSignals.firstPartyEditorial,
+          sourceStatus: entry.trustSignals.sourceStatus,
+          lastVerifiedAt: entry.trustSignals.lastVerifiedAt,
+          platforms: entry.trustSignals.platforms,
+          supportLevels: entry.trustSignals.supportLevels,
+        }
+      : undefined,
+    platformCompatibility: entry.platformCompatibility,
+    commandSyntax: entry.commandSyntax,
+    argumentHint: entry.argumentHint,
+    allowedTools: entry.allowedTools,
+    scriptLanguage: entry.scriptLanguage,
+    trigger: entry.trigger,
+    items: entry.items,
+    installationOrder: entry.installationOrder,
+    estimatedSetupTime: entry.estimatedSetupTime,
+    difficulty: entry.difficulty,
+    skillType: entry.skillType,
+    skillLevel: entry.skillLevel,
+    verificationStatus: entry.verificationStatus,
+    verifiedAt: entry.verifiedAt,
+    retrievalSources: entry.retrievalSources,
+    testedPlatforms: entry.testedPlatforms,
+    pricingModel: entry.pricingModel,
+    disclosure: entry.disclosure,
+    applicationCategory: entry.applicationCategory,
+    operatingSystem: entry.operatingSystem,
+    readingTime: entry.readingTime,
+    difficultyScore: entry.difficultyScore,
+    hasPrerequisites: entry.hasPrerequisites,
+    hasTroubleshooting: entry.hasTroubleshooting,
+    hasBreakingChanges: entry.hasBreakingChanges,
+  });
 }
 
 function writeTextFile(filePath, value) {
@@ -422,6 +586,48 @@ async function main() {
     siteStatsFile,
     `${JSON.stringify(siteStatsPayload, null, 2)}\n`,
   );
+  const directoryIndexArtifact = artifactFiles.find(
+    (file) => file.path === "directory-index.json",
+  );
+  const changelogArtifact = artifactFiles.find(
+    (file) => file.path === "registry-changelog.json",
+  );
+  const atlasRegistryPayload = {
+    schemaVersion: 1,
+    generatedAt:
+      directoryIndexArtifact?.value?.generatedAt ?? new Date().toISOString(),
+    artifactContracts: artifactResults
+      .filter((file) => !file.path.startsWith("entries/"))
+      .filter((file) => !file.path.startsWith("llms/"))
+      .filter((file) => !file.path.startsWith("raycast/"))
+      .filter((file) => !file.path.startsWith("skill-adapters/"))
+      .map((file) => ({
+        path: `/data/${file.path}`,
+        bytes: fs.statSync(file.outputPath).size,
+        sha256: crypto
+          .createHash("sha256")
+          .update(fs.readFileSync(file.outputPath))
+          .digest("hex"),
+        builtAt:
+          directoryIndexArtifact?.value?.generatedAt ??
+          new Date().toISOString(),
+      })),
+    entries: entries.map(pickAtlasEntry),
+    changelog: (changelogArtifact?.value?.entries ?? [])
+      .slice(0, 25)
+      .map((entry) => ({
+        category: entry.category,
+        slug: entry.slug,
+        title: entry.title,
+        dateAdded: entry.dateAdded,
+        type: entry.type,
+        artifactHash: entry.artifactHash,
+      })),
+  };
+  const wroteAtlasRegistry = await writePrettierJsonFile(
+    atlasRegistryFile,
+    atlasRegistryPayload,
+  );
   for (const result of artifactResults.filter(
     (file) => !file.path.includes("/"),
   )) {
@@ -440,6 +646,9 @@ async function main() {
   );
   console.log(
     `${wroteSiteStats ? "Wrote" : "Unchanged"} ${path.relative(repoRoot, siteStatsFile)}`,
+  );
+  console.log(
+    `${wroteAtlasRegistry ? "Wrote" : "Unchanged"} ${path.relative(repoRoot, atlasRegistryFile)}`,
   );
 }
 

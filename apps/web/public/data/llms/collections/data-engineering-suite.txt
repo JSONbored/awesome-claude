@@ -1,11 +1,11 @@
 # Data Engineering Suite
-URL: https://heyclau.de/collections/data-engineering-suite
+URL: https://heyclau.de/entry/collections/data-engineering-suite
 Category: collections
 Author: JSONbored
 Date added: 2025-10-02
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/data-engineering-suite.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/collections/data-engineering-suite
+- Canonical URL: https://heyclau.de/entry/collections/data-engineering-suite
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/data-engineering-suite.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

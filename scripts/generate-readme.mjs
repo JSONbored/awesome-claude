@@ -64,7 +64,7 @@ function headingAnchor(category) {
 }
 
 function readmeEntryLine(category, entry) {
-  return `- **[${entry.title}](https://heyclau.de/${category}/${entry.slug})** - ${entry.description}`;
+  return `- **[${entry.title}](https://heyclau.de/entry/${category}/${entry.slug})** - ${entry.description}`;
 }
 
 const entriesByCategory = Object.fromEntries(
@@ -337,7 +337,7 @@ function validateReadmeCatalog(readmeContent) {
     }
 
     for (const entry of entries) {
-      const url = `https://heyclau.de/${category}/${entry.slug}`;
+      const url = `https://heyclau.de/entry/${category}/${entry.slug}`;
       if (!readmeContent.includes(url)) {
         errors.push(`README catalog is missing ${category}/${entry.slug}.`);
       }

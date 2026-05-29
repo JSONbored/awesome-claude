@@ -1,5 +1,5 @@
 # Svelte SvelteKit Full-Stack Development Skill
-URL: https://heyclau.de/skills/svelte-sveltekit-fullstack
+URL: https://heyclau.de/entry/skills/svelte-sveltekit-fullstack
 Category: skills
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://kit.svelte.dev/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/svelte-sveltekit-fullstack.mdx
 Download: /downloads/skills/svelte-sveltekit-fullstack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/svelte-sveltekit-fullstack
+- Canonical URL: https://heyclau.de/entry/skills/svelte-sveltekit-fullstack
 - Source URLs: https://kit.svelte.dev/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/svelte-sveltekit-fullstack.mdx
 - Package URL: /downloads/skills/svelte-sveltekit-fullstack.zip
 - Package SHA256: 446158b7bf996f8a2538d024e254e925b83c93d8c1ae180f1a7576ed3a654a57

@@ -1,5 +1,5 @@
 # Socket MCP Server for Claude
-URL: https://heyclau.de/mcp/socket-mcp-server
+URL: https://heyclau.de/entry/mcp/socket-mcp-server
 Category: mcp
 Author: Socket
 Date added: 2025-09-18
@@ -8,7 +8,7 @@ Repository: https://github.com/SocketDev/socket-mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx
 Download: /downloads/mcp/socket-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/socket-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/socket-mcp-server
 - Source URLs: https://github.com/SocketDev/socket-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx
 - Brand: Socket
 - Brand domain: socket.dev

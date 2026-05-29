@@ -1,12 +1,12 @@
 # Next.js 15 Performance Architect for Claude
-URL: https://heyclau.de/rules/nextjs-15-performance-architect
+URL: https://heyclau.de/entry/rules/nextjs-15-performance-architect
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://nextjs.org/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/nextjs-15-performance-architect.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/nextjs-15-performance-architect
+- Canonical URL: https://heyclau.de/entry/rules/nextjs-15-performance-architect
 - Source URLs: https://nextjs.org/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/nextjs-15-performance-architect.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

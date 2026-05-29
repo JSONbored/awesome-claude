@@ -9,19 +9,19 @@ handled by external security apps where possible.
 Superagent Marketplace is the primary low-noise contributor security layer for
 pull requests.
 
-- Expected checks: `Contributor trust` and `Security scan`.
+- Required check: `Superagent Security Scan`.
 - Expected labels: `contributor:verified`, `contributor:flagged`,
   `pr:verified`, and `pr:flagged`.
-- Keep these checks advisory until they have passed cleanly on several normal
-  HeyClaude PRs.
+- Keep CLA signatures and agreement checks disabled; HeyClaude does not require
+  contributor license agreement signatures.
 - Do not add `.github/superagent.yml` unless the app produces noise that needs
   repository-specific tuning.
 
-The separate `Superagent Repo Scan` workflow is advisory. It runs
-the locked `safety-agent-cli` dev dependency from the trusted base branch only
-when `SUPERAGENT_API_KEY` and `DAYTONA_API_KEY` are available. Fork pull
-requests do not receive those secrets and should be covered by the Marketplace
-app checks instead.
+The separate `Superagent Repo Scan` workflow is advisory/manual. It runs the
+locked `safety-agent-cli` dev dependency from the trusted base branch only when
+`SUPERAGENT_API_KEY` and `DAYTONA_API_KEY` are available. Fork pull requests do
+not receive those secrets and should be covered by the Marketplace app check
+instead.
 
 ## Socket
 

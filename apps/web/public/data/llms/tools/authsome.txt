@@ -1,5 +1,5 @@
 # Authsome
-URL: https://heyclau.de/tools/authsome
+URL: https://heyclau.de/entry/tools/authsome
 Category: tools
 Author: Agentr
 Submitted by: zriyansh
@@ -8,7 +8,7 @@ Documentation: https://authsome.ai/docs
 Repository: https://github.com/agentrhq/authsome
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/authsome
+- Canonical URL: https://heyclau.de/entry/tools/authsome
 - Source URLs: https://authsome.ai/docs, https://github.com/agentrhq/authsome, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx, https://authsome.ai
 - Brand: Authsome
 - Brand domain: authsome.ai

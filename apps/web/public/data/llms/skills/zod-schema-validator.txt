@@ -1,5 +1,5 @@
 # Zod Schema Validation Skill
-URL: https://heyclau.de/skills/zod-schema-validator
+URL: https://heyclau.de/entry/skills/zod-schema-validator
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://zod.dev/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zod-schema-validator.mdx
 Download: /downloads/skills/zod-schema-validator.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/zod-schema-validator
+- Canonical URL: https://heyclau.de/entry/skills/zod-schema-validator
 - Source URLs: https://zod.dev/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zod-schema-validator.mdx
 - Package URL: /downloads/skills/zod-schema-validator.zip
 - Package SHA256: 56133067087d163b8ff5a35aa325a55b75ce8916a75bfc7523075b5e3e76974f

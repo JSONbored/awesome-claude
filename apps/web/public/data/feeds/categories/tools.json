@@ -52,9 +52,18 @@
       "githubStars": 45006,
       "githubForks": 4443,
       "repoUpdatedAt": "2026-05-19T11:28:44Z",
-      "canonicalUrl": "https://heyclau.de/tools/aider",
+      "canonicalUrl": "https://heyclau.de/entry/tools/aider",
       "llmsUrl": "https://heyclau.de/data/llms/tools/aider.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/aider",
+      "repoStats": {
+        "repository": "Aider-AI/aider",
+        "url": "https://github.com/Aider-AI/aider",
+        "stars": 45006,
+        "forks": 4443,
+        "updatedAt": "2026-05-19T11:28:44Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -122,7 +131,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/apify",
+      "canonicalUrl": "https://heyclau.de/entry/tools/apify",
       "llmsUrl": "https://heyclau.de/data/llms/tools/apify.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/apify",
       "trustSignals": {
@@ -191,7 +200,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/arcade-ai",
+      "canonicalUrl": "https://heyclau.de/entry/tools/arcade-ai",
       "llmsUrl": "https://heyclau.de/data/llms/tools/arcade-ai.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/arcade-ai",
       "trustSignals": {
@@ -260,9 +269,18 @@
       "githubStars": 9739,
       "githubForks": 879,
       "repoUpdatedAt": "2026-05-19T11:06:07Z",
-      "canonicalUrl": "https://heyclau.de/tools/arize-phoenix",
+      "canonicalUrl": "https://heyclau.de/entry/tools/arize-phoenix",
       "llmsUrl": "https://heyclau.de/data/llms/tools/arize-phoenix.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/arize-phoenix",
+      "repoStats": {
+        "repository": "Arize-ai/phoenix",
+        "url": "https://github.com/Arize-ai/phoenix",
+        "stars": 9739,
+        "forks": 879,
+        "updatedAt": "2026-05-19T11:06:07Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -361,9 +379,15 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/authsome",
+      "canonicalUrl": "https://heyclau.de/entry/tools/authsome",
       "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome",
+      "repoStats": {
+        "repository": "agentrhq/authsome",
+        "url": "https://github.com/agentrhq/authsome",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -431,7 +455,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/bolt-new",
+      "canonicalUrl": "https://heyclau.de/entry/tools/bolt-new",
       "llmsUrl": "https://heyclau.de/data/llms/tools/bolt-new.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/bolt-new",
       "trustSignals": {
@@ -500,7 +524,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/braintrust",
+      "canonicalUrl": "https://heyclau.de/entry/tools/braintrust",
       "llmsUrl": "https://heyclau.de/data/llms/tools/braintrust.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/braintrust",
       "trustSignals": {
@@ -569,9 +593,18 @@
       "githubStars": 94603,
       "githubForks": 10672,
       "repoUpdatedAt": "2026-05-19T11:41:57Z",
-      "canonicalUrl": "https://heyclau.de/tools/browser-use",
+      "canonicalUrl": "https://heyclau.de/entry/tools/browser-use",
       "llmsUrl": "https://heyclau.de/data/llms/tools/browser-use.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/browser-use",
+      "repoStats": {
+        "repository": "browser-use/browser-use",
+        "url": "https://github.com/browser-use/browser-use",
+        "stars": 94603,
+        "forks": 10672,
+        "updatedAt": "2026-05-19T11:41:57Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -639,7 +672,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/browserbase",
+      "canonicalUrl": "https://heyclau.de/entry/tools/browserbase",
       "llmsUrl": "https://heyclau.de/data/llms/tools/browserbase.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/browserbase",
       "trustSignals": {
@@ -705,7 +738,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/claude-code",
+      "canonicalUrl": "https://heyclau.de/entry/tools/claude-code",
       "llmsUrl": "https://heyclau.de/data/llms/tools/claude-code.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/claude-code",
       "trustSignals": {
@@ -774,9 +807,18 @@
       "githubStars": 62015,
       "githubForks": 6468,
       "repoUpdatedAt": "2026-05-19T11:36:25Z",
-      "canonicalUrl": "https://heyclau.de/tools/cline",
+      "canonicalUrl": "https://heyclau.de/entry/tools/cline",
       "llmsUrl": "https://heyclau.de/data/llms/tools/cline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/cline",
+      "repoStats": {
+        "repository": "cline/cline",
+        "url": "https://github.com/cline/cline",
+        "stars": 62015,
+        "forks": 6468,
+        "updatedAt": "2026-05-19T11:36:25Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -844,9 +886,18 @@
       "githubStars": 4931,
       "githubForks": 552,
       "repoUpdatedAt": "2026-05-19T11:37:01Z",
-      "canonicalUrl": "https://heyclau.de/tools/cloudflare-agents-sdk",
+      "canonicalUrl": "https://heyclau.de/entry/tools/cloudflare-agents-sdk",
       "llmsUrl": "https://heyclau.de/data/llms/tools/cloudflare-agents-sdk.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/cloudflare-agents-sdk",
+      "repoStats": {
+        "repository": "cloudflare/agents",
+        "url": "https://github.com/cloudflare/agents",
+        "stars": 4931,
+        "forks": 552,
+        "updatedAt": "2026-05-19T11:37:01Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -913,7 +964,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/coderabbit",
+      "canonicalUrl": "https://heyclau.de/entry/tools/coderabbit",
       "llmsUrl": "https://heyclau.de/data/llms/tools/coderabbit.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/coderabbit",
       "trustSignals": {
@@ -981,9 +1032,18 @@
       "githubStars": 28340,
       "githubForks": 4571,
       "repoUpdatedAt": "2026-05-19T11:38:54Z",
-      "canonicalUrl": "https://heyclau.de/tools/composio",
+      "canonicalUrl": "https://heyclau.de/entry/tools/composio",
       "llmsUrl": "https://heyclau.de/data/llms/tools/composio.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/composio",
+      "repoStats": {
+        "repository": "ComposioHQ/composio",
+        "url": "https://github.com/ComposioHQ/composio",
+        "stars": 28340,
+        "forks": 4571,
+        "updatedAt": "2026-05-19T11:38:54Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1051,9 +1111,18 @@
       "githubStars": 33266,
       "githubForks": 4532,
       "repoUpdatedAt": "2026-05-19T11:16:17Z",
-      "canonicalUrl": "https://heyclau.de/tools/continue",
+      "canonicalUrl": "https://heyclau.de/entry/tools/continue",
       "llmsUrl": "https://heyclau.de/data/llms/tools/continue.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/continue",
+      "repoStats": {
+        "repository": "continuedev/continue",
+        "url": "https://github.com/continuedev/continue",
+        "stars": 33266,
+        "forks": 4532,
+        "updatedAt": "2026-05-19T11:16:17Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -1121,9 +1190,18 @@
       "githubStars": 51712,
       "githubForks": 7160,
       "repoUpdatedAt": "2026-05-19T11:43:25Z",
-      "canonicalUrl": "https://heyclau.de/tools/crewai",
+      "canonicalUrl": "https://heyclau.de/entry/tools/crewai",
       "llmsUrl": "https://heyclau.de/data/llms/tools/crewai.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/crewai",
+      "repoStats": {
+        "repository": "crewAIInc/crewAI",
+        "url": "https://github.com/crewAIInc/crewAI",
+        "stars": 51712,
+        "forks": 7160,
+        "updatedAt": "2026-05-19T11:43:25Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1191,7 +1269,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/cursor",
+      "canonicalUrl": "https://heyclau.de/entry/tools/cursor",
       "llmsUrl": "https://heyclau.de/data/llms/tools/cursor.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/cursor",
       "trustSignals": {
@@ -1260,7 +1338,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/devin",
+      "canonicalUrl": "https://heyclau.de/entry/tools/devin",
       "llmsUrl": "https://heyclau.de/data/llms/tools/devin.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/devin",
       "trustSignals": {
@@ -1329,7 +1407,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/exa",
+      "canonicalUrl": "https://heyclau.de/entry/tools/exa",
       "llmsUrl": "https://heyclau.de/data/llms/tools/exa.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/exa",
       "trustSignals": {
@@ -1398,9 +1476,18 @@
       "githubStars": 121680,
       "githubForks": 7410,
       "repoUpdatedAt": "2026-05-19T11:41:31Z",
-      "canonicalUrl": "https://heyclau.de/tools/firecrawl",
+      "canonicalUrl": "https://heyclau.de/entry/tools/firecrawl",
       "llmsUrl": "https://heyclau.de/data/llms/tools/firecrawl.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/firecrawl",
+      "repoStats": {
+        "repository": "mendableai/firecrawl",
+        "url": "https://github.com/mendableai/firecrawl",
+        "stars": 121680,
+        "forks": 7410,
+        "updatedAt": "2026-05-19T11:41:31Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1468,9 +1555,18 @@
       "githubStars": 7848,
       "githubForks": 949,
       "repoUpdatedAt": "2026-05-19T10:43:48Z",
-      "canonicalUrl": "https://heyclau.de/tools/garak",
+      "canonicalUrl": "https://heyclau.de/entry/tools/garak",
       "llmsUrl": "https://heyclau.de/data/llms/tools/garak.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/garak",
+      "repoStats": {
+        "repository": "NVIDIA/garak",
+        "url": "https://github.com/NVIDIA/garak",
+        "stars": 7848,
+        "forks": 949,
+        "updatedAt": "2026-05-19T10:43:48Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1536,9 +1632,18 @@
       "githubStars": 5358,
       "githubForks": 457,
       "repoUpdatedAt": "2026-05-19T08:02:52Z",
-      "canonicalUrl": "https://heyclau.de/tools/giskard",
+      "canonicalUrl": "https://heyclau.de/entry/tools/giskard",
       "llmsUrl": "https://heyclau.de/data/llms/tools/giskard.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/giskard",
+      "repoStats": {
+        "repository": "Giskard-AI/giskard",
+        "url": "https://github.com/Giskard-AI/giskard",
+        "stars": 5358,
+        "forks": 457,
+        "updatedAt": "2026-05-19T08:02:52Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1605,7 +1710,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/github-copilot",
+      "canonicalUrl": "https://heyclau.de/entry/tools/github-copilot",
       "llmsUrl": "https://heyclau.de/data/llms/tools/github-copilot.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/github-copilot",
       "trustSignals": {
@@ -1673,7 +1778,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/graphite-diamond",
+      "canonicalUrl": "https://heyclau.de/entry/tools/graphite-diamond",
       "llmsUrl": "https://heyclau.de/data/llms/tools/graphite-diamond.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/graphite-diamond",
       "trustSignals": {
@@ -1742,9 +1847,18 @@
       "githubStars": 5692,
       "githubForks": 579,
       "repoUpdatedAt": "2026-05-19T11:11:23Z",
-      "canonicalUrl": "https://heyclau.de/tools/helicone",
+      "canonicalUrl": "https://heyclau.de/entry/tools/helicone",
       "llmsUrl": "https://heyclau.de/data/llms/tools/helicone.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/helicone",
+      "repoStats": {
+        "repository": "Helicone/helicone",
+        "url": "https://github.com/Helicone/helicone",
+        "stars": 5692,
+        "forks": 579,
+        "updatedAt": "2026-05-19T11:11:23Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1812,7 +1926,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/hyperbrowser",
+      "canonicalUrl": "https://heyclau.de/entry/tools/hyperbrowser",
       "llmsUrl": "https://heyclau.de/data/llms/tools/hyperbrowser.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/hyperbrowser",
       "trustSignals": {
@@ -1881,7 +1995,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/lakera-guard",
+      "canonicalUrl": "https://heyclau.de/entry/tools/lakera-guard",
       "llmsUrl": "https://heyclau.de/data/llms/tools/lakera-guard.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/lakera-guard",
       "trustSignals": {
@@ -1950,9 +2064,18 @@
       "githubStars": 27479,
       "githubForks": 2805,
       "repoUpdatedAt": "2026-05-19T11:21:59Z",
-      "canonicalUrl": "https://heyclau.de/tools/langfuse",
+      "canonicalUrl": "https://heyclau.de/entry/tools/langfuse",
       "llmsUrl": "https://heyclau.de/data/llms/tools/langfuse.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/langfuse",
+      "repoStats": {
+        "repository": "langfuse/langfuse",
+        "url": "https://github.com/langfuse/langfuse",
+        "stars": 27479,
+        "forks": 2805,
+        "updatedAt": "2026-05-19T11:21:59Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -2020,9 +2143,18 @@
       "githubStars": 32402,
       "githubForks": 5495,
       "repoUpdatedAt": "2026-05-19T11:43:29Z",
-      "canonicalUrl": "https://heyclau.de/tools/langgraph",
+      "canonicalUrl": "https://heyclau.de/entry/tools/langgraph",
       "llmsUrl": "https://heyclau.de/data/llms/tools/langgraph.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/langgraph",
+      "repoStats": {
+        "repository": "langchain-ai/langgraph",
+        "url": "https://github.com/langchain-ai/langgraph",
+        "stars": 32402,
+        "forks": 5495,
+        "updatedAt": "2026-05-19T11:43:29Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -2090,7 +2222,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/langsmith",
+      "canonicalUrl": "https://heyclau.de/entry/tools/langsmith",
       "llmsUrl": "https://heyclau.de/data/llms/tools/langsmith.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/langsmith",
       "trustSignals": {
@@ -2159,7 +2291,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/lovable",
+      "canonicalUrl": "https://heyclau.de/entry/tools/lovable",
       "llmsUrl": "https://heyclau.de/data/llms/tools/lovable.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/lovable",
       "trustSignals": {
@@ -2228,7 +2360,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/make",
+      "canonicalUrl": "https://heyclau.de/entry/tools/make",
       "llmsUrl": "https://heyclau.de/data/llms/tools/make.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/make",
       "trustSignals": {
@@ -2297,9 +2429,18 @@
       "githubStars": 24031,
       "githubForks": 2092,
       "repoUpdatedAt": "2026-05-19T11:18:03Z",
-      "canonicalUrl": "https://heyclau.de/tools/mastra",
+      "canonicalUrl": "https://heyclau.de/entry/tools/mastra",
       "llmsUrl": "https://heyclau.de/data/llms/tools/mastra.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/mastra",
+      "repoStats": {
+        "repository": "mastra-ai/mastra",
+        "url": "https://github.com/mastra-ai/mastra",
+        "stars": 24031,
+        "forks": 2092,
+        "updatedAt": "2026-05-19T11:18:03Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -2367,9 +2508,18 @@
       "githubStars": 58173,
       "githubForks": 8786,
       "repoUpdatedAt": "2026-05-19T11:43:25Z",
-      "canonicalUrl": "https://heyclau.de/tools/microsoft-autogen",
+      "canonicalUrl": "https://heyclau.de/entry/tools/microsoft-autogen",
       "llmsUrl": "https://heyclau.de/data/llms/tools/microsoft-autogen.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/microsoft-autogen",
+      "repoStats": {
+        "repository": "microsoft/autogen",
+        "url": "https://github.com/microsoft/autogen",
+        "stars": 58173,
+        "forks": 8786,
+        "updatedAt": "2026-05-19T11:43:25Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -2436,9 +2586,18 @@
       "githubStars": 188659,
       "githubForks": 57807,
       "repoUpdatedAt": "2026-05-19T11:37:32Z",
-      "canonicalUrl": "https://heyclau.de/tools/n8n",
+      "canonicalUrl": "https://heyclau.de/entry/tools/n8n",
       "llmsUrl": "https://heyclau.de/data/llms/tools/n8n.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/n8n",
+      "repoStats": {
+        "repository": "n8n-io/n8n",
+        "url": "https://github.com/n8n-io/n8n",
+        "stars": 188659,
+        "forks": 57807,
+        "updatedAt": "2026-05-19T11:37:32Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -2506,9 +2665,18 @@
       "githubStars": 162457,
       "githubForks": 19131,
       "repoUpdatedAt": "2026-05-19T11:42:52Z",
-      "canonicalUrl": "https://heyclau.de/tools/opencode",
+      "canonicalUrl": "https://heyclau.de/entry/tools/opencode",
       "llmsUrl": "https://heyclau.de/data/llms/tools/opencode.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/opencode",
+      "repoStats": {
+        "repository": "sst/opencode",
+        "url": "https://github.com/sst/opencode",
+        "stars": 162457,
+        "forks": 19131,
+        "updatedAt": "2026-05-19T11:42:52Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -2575,7 +2743,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/pipedream",
+      "canonicalUrl": "https://heyclau.de/entry/tools/pipedream",
       "llmsUrl": "https://heyclau.de/data/llms/tools/pipedream.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/pipedream",
       "trustSignals": {
@@ -2643,9 +2811,18 @@
       "githubStars": 21394,
       "githubForks": 1867,
       "repoUpdatedAt": "2026-05-19T11:24:05Z",
-      "canonicalUrl": "https://heyclau.de/tools/promptfoo",
+      "canonicalUrl": "https://heyclau.de/entry/tools/promptfoo",
       "llmsUrl": "https://heyclau.de/data/llms/tools/promptfoo.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/promptfoo",
+      "repoStats": {
+        "repository": "promptfoo/promptfoo",
+        "url": "https://github.com/promptfoo/promptfoo",
+        "stars": 21394,
+        "forks": 1867,
+        "updatedAt": "2026-05-19T11:24:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -2713,7 +2890,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/protect-ai",
+      "canonicalUrl": "https://heyclau.de/entry/tools/protect-ai",
       "llmsUrl": "https://heyclau.de/data/llms/tools/protect-ai.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/protect-ai",
       "trustSignals": {
@@ -2782,7 +2959,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/raycast",
+      "canonicalUrl": "https://heyclau.de/entry/tools/raycast",
       "llmsUrl": "https://heyclau.de/data/llms/tools/raycast.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/raycast",
       "trustSignals": {
@@ -2851,7 +3028,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/replit-agent",
+      "canonicalUrl": "https://heyclau.de/entry/tools/replit-agent",
       "llmsUrl": "https://heyclau.de/data/llms/tools/replit-agent.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/replit-agent",
       "trustSignals": {
@@ -2920,9 +3097,18 @@
       "githubStars": 24101,
       "githubForks": 3278,
       "repoUpdatedAt": "2026-05-19T11:16:25Z",
-      "canonicalUrl": "https://heyclau.de/tools/roo-code",
+      "canonicalUrl": "https://heyclau.de/entry/tools/roo-code",
       "llmsUrl": "https://heyclau.de/data/llms/tools/roo-code.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/roo-code",
+      "repoStats": {
+        "repository": "RooCodeInc/Roo-Code",
+        "url": "https://github.com/RooCodeInc/Roo-Code",
+        "stars": 24101,
+        "forks": 3278,
+        "updatedAt": "2026-05-19T11:16:25Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -2990,7 +3176,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/smithery",
+      "canonicalUrl": "https://heyclau.de/entry/tools/smithery",
       "llmsUrl": "https://heyclau.de/data/llms/tools/smithery.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/smithery",
       "trustSignals": {
@@ -3058,7 +3244,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/sourcegraph-cody",
+      "canonicalUrl": "https://heyclau.de/entry/tools/sourcegraph-cody",
       "llmsUrl": "https://heyclau.de/data/llms/tools/sourcegraph-cody.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/sourcegraph-cody",
       "trustSignals": {
@@ -3127,9 +3313,18 @@
       "githubStars": 22712,
       "githubForks": 1523,
       "repoUpdatedAt": "2026-05-19T11:40:46Z",
-      "canonicalUrl": "https://heyclau.de/tools/stagehand",
+      "canonicalUrl": "https://heyclau.de/entry/tools/stagehand",
       "llmsUrl": "https://heyclau.de/data/llms/tools/stagehand.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/stagehand",
+      "repoStats": {
+        "repository": "browserbase/stagehand",
+        "url": "https://github.com/browserbase/stagehand",
+        "stars": 22712,
+        "forks": 1523,
+        "updatedAt": "2026-05-19T11:40:46Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -3197,9 +3392,18 @@
       "githubStars": 14969,
       "githubForks": 1227,
       "repoUpdatedAt": "2026-05-19T09:26:29Z",
-      "canonicalUrl": "https://heyclau.de/tools/trigger-dev",
+      "canonicalUrl": "https://heyclau.de/entry/tools/trigger-dev",
       "llmsUrl": "https://heyclau.de/data/llms/tools/trigger-dev.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/trigger-dev",
+      "repoStats": {
+        "repository": "triggerdotdev/trigger.dev",
+        "url": "https://github.com/triggerdotdev/trigger.dev",
+        "stars": 14969,
+        "forks": 1227,
+        "updatedAt": "2026-05-19T09:26:29Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -3267,7 +3471,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/vercel-v0",
+      "canonicalUrl": "https://heyclau.de/entry/tools/vercel-v0",
       "llmsUrl": "https://heyclau.de/data/llms/tools/vercel-v0.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/vercel-v0",
       "trustSignals": {
@@ -3335,9 +3539,18 @@
       "githubStars": 24333,
       "githubForks": 4432,
       "repoUpdatedAt": "2026-05-19T11:09:31Z",
-      "canonicalUrl": "https://heyclau.de/tools/vercel-ai-sdk",
+      "canonicalUrl": "https://heyclau.de/entry/tools/vercel-ai-sdk",
       "llmsUrl": "https://heyclau.de/data/llms/tools/vercel-ai-sdk.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/vercel-ai-sdk",
+      "repoStats": {
+        "repository": "vercel/ai",
+        "url": "https://github.com/vercel/ai",
+        "stars": 24333,
+        "forks": 4432,
+        "updatedAt": "2026-05-19T11:09:31Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": true,
         "packageVerified": false,
@@ -3405,7 +3618,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/weave",
+      "canonicalUrl": "https://heyclau.de/entry/tools/weave",
       "llmsUrl": "https://heyclau.de/data/llms/tools/weave.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/weave",
       "trustSignals": {
@@ -3473,7 +3686,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/windsurf",
+      "canonicalUrl": "https://heyclau.de/entry/tools/windsurf",
       "llmsUrl": "https://heyclau.de/data/llms/tools/windsurf.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/windsurf",
       "trustSignals": {
@@ -3542,7 +3755,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/workato",
+      "canonicalUrl": "https://heyclau.de/entry/tools/workato",
       "llmsUrl": "https://heyclau.de/data/llms/tools/workato.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/workato",
       "trustSignals": {
@@ -3611,7 +3824,7 @@
       "githubStars": null,
       "githubForks": null,
       "repoUpdatedAt": null,
-      "canonicalUrl": "https://heyclau.de/tools/zapier-ai",
+      "canonicalUrl": "https://heyclau.de/entry/tools/zapier-ai",
       "llmsUrl": "https://heyclau.de/data/llms/tools/zapier-ai.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/zapier-ai",
       "trustSignals": {
@@ -3680,9 +3893,18 @@
       "githubStars": 83231,
       "githubForks": 8570,
       "repoUpdatedAt": "2026-05-19T11:31:57Z",
-      "canonicalUrl": "https://heyclau.de/tools/zed",
+      "canonicalUrl": "https://heyclau.de/entry/tools/zed",
       "llmsUrl": "https://heyclau.de/data/llms/tools/zed.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/zed",
+      "repoStats": {
+        "repository": "zed-industries/zed",
+        "url": "https://github.com/zed-industries/zed",
+        "stars": 83231,
+        "forks": 8570,
+        "updatedAt": "2026-05-19T11:31:57Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,

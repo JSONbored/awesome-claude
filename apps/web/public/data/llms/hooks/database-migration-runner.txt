@@ -1,12 +1,12 @@
 # Database Migration Runner - Hooks
-URL: https://heyclau.de/hooks/database-migration-runner
+URL: https://heyclau.de/entry/hooks/database-migration-runner
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://knexjs.org/guide/migrations.html
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/database-migration-runner
+- Canonical URL: https://heyclau.de/entry/hooks/database-migration-runner
 - Source URLs: https://knexjs.org/guide/migrations.html, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-migration-runner.mdx
 - Safety notes: Runs automatically after write or edit activity on migration, schema, and SQL files., Invokes local framework status commands such as knex migrate status, Django showmigrations, and Rails migrate status when available., Scans raw SQL for destructive statements and reports warnings but does not apply migrations itself.
 - Privacy notes: Reads migration, schema, SQL, package, and framework configuration files to infer migration state., Command output may reveal database names, migration names, table names, or schema details in the local hook output.

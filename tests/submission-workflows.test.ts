@@ -35,6 +35,8 @@ describe("submission automation workflows", () => {
     git(tmpDir, ["init", "-b", "main"]);
     git(tmpDir, ["config", "user.name", "HeyClaude Test"]);
     git(tmpDir, ["config", "user.email", "test@example.com"]);
+    git(tmpDir, ["config", "commit.gpgsign", "false"]);
+    git(tmpDir, ["config", "tag.gpgsign", "false"]);
     writeFile(path.join(tmpDir, "README.md"), "# Test\n");
     git(tmpDir, ["add", "README.md"]);
     git(tmpDir, ["commit", "-m", "test: initial content"]);
@@ -234,6 +236,9 @@ describe("submission automation workflows", () => {
     expect(source).toContain("HeyClaude Submission Bot");
     expect(source).toContain("steps.auto_import_precheck.outputs.eligible");
     expect(source).toContain("managedValidationLabels");
+    expect(source).toContain(
+      "if (label && !riskLabels.has(label)) labels.add(label);",
+    );
     expect(source).toContain("issues.setLabels");
     expect(source).toContain("Post HeyClaude submission check comment");
     expect(source).toContain("<!-- heyclaude-submission-check -->");
@@ -693,7 +698,7 @@ describe("submission automation workflows", () => {
     );
   });
 
-  it("routes hook-only content PRs to hook validation only", () => {
+  it("routes hook-only content PRs through hook and public artifact validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`
 title: Retro Daily
@@ -705,10 +710,10 @@ description: Daily Claude Code retro dashboard hook.
 
     expect(lanes.content).toBe("true");
     expect(lanes.content_categories_json).toBe('["hooks"]');
-    expect(lanes.registry).toBe("false");
-    expect(lanes.web).toBe("false");
+    expect(lanes.registry).toBe("true");
+    expect(lanes.web).toBe("true");
     expect(lanes.mcp).toBe("false");
-    expect(lanes.raycast).toBe("false");
+    expect(lanes.raycast).toBe("true");
     expect(lanes.packages).toBe("false");
   });
 
@@ -915,6 +920,52 @@ usageSnippet: "claude mcp add attacker-mcp -- npx -y attacker-mcp"
     );
   });
 
+  it("blocks external trust metadata updates on existing entries with stale provenance", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/1
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+      "Source-backed MCP server content.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/existing-mcp.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/999
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_submitter_mismatch_content/mcp/existing-mcp.mdx",
+        }),
+      ]),
+    );
+  });
+
   it("blocks community local download requests through content policy", () => {
     const result = runContentPolicyForChangedFiles({
       "content/skills/example-skill.mdx": contentFixture(
@@ -932,6 +983,37 @@ downloadUrl: /downloads/example-skill.zip
     });
 
     expect(result.ok).toBe(false);
+    expect(result.report?.failures.join("\n")).toContain(
+      "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    );
+  });
+
+  it("blocks hook content that requests HeyClaude-hosted download archives", () => {
+    const result = runContentPolicyForChangedFiles({
+      "content/hooks/downloaded-hook.mdx": contentFixture(
+        `
+title: Downloaded Hook
+slug: downloaded-hook
+category: hooks
+description: Hook package submitted as a hosted archive.
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+downloadUrl: /downloads/downloaded-hook.zip
+scriptLanguage: bash
+scriptBody: |-
+  #!/bin/bash
+  echo "Downloaded hook"
+`,
+        "Use this hook only after reviewing the source archive.",
+      ),
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "community_local_download_request" }),
+      ]),
+    );
     expect(result.report?.failures.join("\n")).toContain(
       "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
     );
@@ -980,6 +1062,50 @@ submittedByUrl: https://github.com/contributor
     );
     expect(result.report?.failures.join("\n")).toContain(
       "needs privacyNotes disclosure",
+    );
+  });
+
+  it("allows sensitive hook content when safety and privacy notes are present", () => {
+    const result = runContentPolicyForChangedFiles({
+      "content/hooks/session-start-retro.mdx": contentFixture(
+        `
+title: Session Start Retro
+slug: session-start-retro
+category: hooks
+description: SessionStart hook for reviewing local Claude Code activity.
+repoUrl: https://github.com/contributor/session-start-retro
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Runs as a local SessionStart background hook and writes only user-local summary files.
+privacyNotes:
+  - Reads local Claude Code project logs and keeps summaries on the user's machine.
+scriptLanguage: bash
+scriptBody: |-
+  #!/bin/bash
+  echo "Session start summary"
+`,
+        "This SessionStart background hook reads local workspace logs and summarizes user activity.",
+      ),
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.report?.failures).toEqual([]);
+    expect(result.report?.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "background_worker_or_daemon" }),
+        expect.objectContaining({ id: "local_or_personal_data_access" }),
+      ]),
+    );
+    expect(result.report?.classificationWarnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "missing_safety_notes" }),
+      ]),
+    );
+    expect(result.report?.classificationWarnings).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "missing_privacy_notes" }),
+      ]),
     );
   });
 
@@ -1318,7 +1444,7 @@ description: Example description
     expect(source).toContain("content_categories_json");
   });
 
-  it("routes hook-only content PRs to hook content validation", () => {
+  it("routes hook-only content PRs to hook content and public artifact validation", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
     });
@@ -1327,15 +1453,15 @@ description: Example description
     expect(outputs.content_hooks).toBe("true");
     expect(outputs.content_mcp).toBe("false");
     expect(outputs.content_categories_json).toBe('["hooks"]');
-    expect(outputs.web).toBe("false");
+    expect(outputs.web).toBe("true");
     expect(outputs.mcp).toBe("false");
-    expect(outputs.raycast).toBe("false");
+    expect(outputs.raycast).toBe("true");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
     expect(outputs.ci).toBe("false");
   });
 
-  it("routes multi-category content PRs to only touched category validators", () => {
+  it("routes multi-category content PRs to touched category and artifact validators", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
       "content/mcp/example-server.mdx": "---\ntitle: Example Server\n---\n",
@@ -1345,10 +1471,10 @@ description: Example description
     expect(outputs.content_hooks).toBe("true");
     expect(outputs.content_mcp).toBe("true");
     expect(outputs.content_skills).toBe("false");
-    expect(outputs.web).toBe("false");
-    expect(outputs.raycast).toBe("false");
+    expect(outputs.web).toBe("true");
+    expect(outputs.raycast).toBe("true");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
   });
 
   it("routes generated registry artifacts to artifact validation", () => {
@@ -1442,9 +1568,14 @@ description: Example description
       "SOURCE_BASE_URL: ${{ steps.source-check.outputs.base-url }}",
     );
     expect(jobsSource).toContain('args=(--base-url "$SOURCE_BASE_URL"');
-    expect(jobsSource).toContain('echo "skip=true"');
     expect(jobsSource).toContain('} >> "$GITHUB_OUTPUT"');
-    expect(jobsSource).toContain("Skipping scheduled jobs source revalidation");
+    expect(jobsSource).not.toContain('echo "skip=true"');
+    expect(jobsSource).not.toContain(
+      "Skipping scheduled jobs source revalidation",
+    );
+    expect(jobsSource).toContain(
+      "Scheduled source revalidation must fail visibly",
+    );
     expect(jobsSource).toContain(
       "if: steps.source-check.outputs.skip != 'true'",
     );

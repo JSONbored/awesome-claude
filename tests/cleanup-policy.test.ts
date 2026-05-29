@@ -5,12 +5,24 @@ import { describe, expect, it } from "vitest";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 const forbiddenPaths = [
+  ".lovable",
+  "apps/web/.lovable",
+  "bun.lock",
+  "apps/web/bun.lock",
+  "apps/web/bunfig.toml",
+  "apps/web/next.config.js",
+  "apps/web/next.config.mjs",
+  "apps/web/open-next.config.ts",
+  "apps/web/open-next.config.js",
+  "apps/web/src/app",
+  "apps/web/src/mocks",
   "apps/web/public/data/content-index.json",
   "apps/web/src/data/curated-jobs.json",
   "apps/web/src/generated/content-category-spec.json",
   "apps/web/src/lib/entry-presentation.ts",
   "apps/web/src/lib/llms-export.ts",
   "apps/web/src/generated/legacy-vote-seed.json",
+  "apps/web/src/data/signals.ts",
   "content/archive/legacy-data",
   "content/data/legacy-vote-seed.json",
   "scripts/content-schema.mjs",
@@ -95,9 +107,10 @@ describe("cleanup policy", () => {
   it("keeps app code on canonical registry imports", () => {
     const sourceFiles = [
       "apps/web/src/lib/site.ts",
-      "apps/web/src/components/submit-form.tsx",
-      "apps/web/src/components/directory-entry-card.tsx",
-      "apps/web/src/app/[category]/[slug]/page.tsx",
+      "apps/web/src/data/entries.ts",
+      "apps/web/src/routes/browse.tsx",
+      "apps/web/src/routes/entry.$category.$slug.tsx",
+      "apps/web/src/routes/submit.tsx",
     ];
 
     for (const relativePath of sourceFiles) {
@@ -108,10 +121,53 @@ describe("cleanup policy", () => {
     }
   });
 
+  it("keeps generic entry pages from presenting repo stars as ratings", () => {
+    const entryRoute = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/entry.$category.$slug.tsx"),
+      "utf8",
+    );
+    expect(entryRoute).not.toContain("SoftwareApplication");
+    expect(entryRoute).not.toContain("aggregateRating");
+    expect(entryRoute).not.toContain("— stars");
+    expect(entryRoute).toContain("source repo stars");
+  });
+
+  it("keeps Atlas fixture-era public signals and broken feed links out of production source", () => {
+    const forbiddenSourcePatterns = [
+      /@\/mocks\b/,
+      /\/feeds\/ecosystem\.json/,
+      /updated 12m ago|2026-05-26 · 08:12 UTC|14-build trend/i,
+      /Checksum drift detected|New entries signed|Latest health probe completed/i,
+      /(?:upvotes|weeklyInstalls|trending):\s*Math\./,
+    ];
+    const sourceRoots = ["apps/web/src", "scripts"];
+    for (const root of sourceRoots) {
+      const rootPath = path.join(repoRoot, root);
+      const stack = [rootPath];
+      while (stack.length) {
+        const current = stack.pop()!;
+        for (const item of fs.readdirSync(current, { withFileTypes: true })) {
+          const absolutePath = path.join(current, item.name);
+          const relativePath = path.relative(repoRoot, absolutePath);
+          if (item.isDirectory()) {
+            if (item.name !== "generated") stack.push(absolutePath);
+            continue;
+          }
+          if (!item.isFile() || !/\.(tsx?|mjs|js)$/.test(item.name)) continue;
+          if (relativePath === "scripts/validate-codebase-clean.mjs") continue;
+          const source = fs.readFileSync(absolutePath, "utf8");
+          for (const pattern of forbiddenSourcePatterns) {
+            expect(source, relativePath).not.toMatch(pattern);
+          }
+        }
+      }
+    }
+  });
+
   it("keeps branch-era array artifact fallbacks out of active readers", () => {
     const retiredFallbacks = [
       {
-        file: "apps/web/src/components/browse-directory.tsx",
+        file: "apps/web/src/routes/browse.tsx",
         snippets: [
           "type DirectoryEntriesPayload =\n  | DirectoryEntry[]",
           "if (Array.isArray(payload)) return payload;",
@@ -131,7 +187,9 @@ describe("cleanup policy", () => {
     ];
 
     for (const { file, snippets } of retiredFallbacks) {
-      const source = fs.readFileSync(path.join(repoRoot, file), "utf8");
+      const absolutePath = path.join(repoRoot, file);
+      if (!fs.existsSync(absolutePath)) continue;
+      const source = fs.readFileSync(absolutePath, "utf8");
       for (const snippet of snippets) {
         expect(source).not.toContain(snippet);
       }

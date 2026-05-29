@@ -1,5 +1,5 @@
 # Aider
-URL: https://heyclau.de/tools/aider
+URL: https://heyclau.de/entry/tools/aider
 Category: tools
 Author: Aider
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://aider.chat/docs
 Repository: https://github.com/Aider-AI/aider
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/aider
+- Canonical URL: https://heyclau.de/entry/tools/aider
 - Source URLs: https://aider.chat/docs, https://github.com/Aider-AI/aider, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/aider.mdx, https://aider.chat
 - Brand: Aider
 - Brand domain: aider.chat

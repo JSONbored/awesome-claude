@@ -1,5 +1,5 @@
 # CLI Data Visualization Quickstart Skill
-URL: https://heyclau.de/skills/cli-data-viz-quickstart
+URL: https://heyclau.de/entry/skills/cli-data-viz-quickstart
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://matplotlib.org/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cli-data-viz-quickstart.mdx
 Download: /downloads/skills/cli-data-viz-quickstart.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/cli-data-viz-quickstart
+- Canonical URL: https://heyclau.de/entry/skills/cli-data-viz-quickstart
 - Source URLs: https://matplotlib.org/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cli-data-viz-quickstart.mdx
 - Package URL: /downloads/skills/cli-data-viz-quickstart.zip
 - Package SHA256: 442cc6c1e4836a11a8dcee585d55624556f6b79bbb2351d75630a6b4746d8ead

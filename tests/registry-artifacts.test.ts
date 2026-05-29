@@ -46,6 +46,23 @@ import {
   repoRoot,
 } from "./helpers/registry-fixtures";
 
+const sharedTmpHookLogPathPattern =
+  /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
+const nonPredictableTmpHookLogPathPattern =
+  /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
+
+function findPredictableSharedTmpHookLogPaths(scriptBody: string) {
+  const paths = new Set<string>();
+  for (const match of scriptBody.matchAll(sharedTmpHookLogPathPattern)) {
+    const tmpPath = match[2];
+    if (!tmpPath || nonPredictableTmpHookLogPathPattern.test(tmpPath)) {
+      continue;
+    }
+    paths.add(tmpPath);
+  }
+  return [...paths];
+}
+
 describe("registry artifacts", () => {
   const contentEntries = loadContentEntries();
   const directoryEntries = loadDirectoryEntries();
@@ -147,6 +164,118 @@ describe("registry artifacts", () => {
     });
     expect(directoryEntries.length).toBe(contentEntries.length);
     expect(searchEntries.length).toBe(contentEntries.length);
+  });
+
+  it("keeps Atlas list data compact while preserving full entry detail fields", () => {
+    const atlasPayload = JSON.parse(
+      fs.readFileSync(
+        path.join(repoRoot, "apps/web/src/generated/atlas-registry.json"),
+        "utf8",
+      ),
+    ) as { entries: Array<Record<string, unknown>> };
+    const atlasSkill = atlasPayload.entries.find(
+      (entry) =>
+        entry.category === "skills" &&
+        entry.slug === "agent-evals-regression-gate",
+    );
+    const skillDetail = readDataJson<{ entry: Record<string, unknown> }>(
+      "entries/skills/agent-evals-regression-gate.json",
+    ).entry;
+
+    expect(atlasSkill).toMatchObject({
+      skillType: "general",
+      skillLevel: "advanced",
+      verificationStatus: "draft",
+      testedPlatforms: expect.arrayContaining(["Claude", "Codex"]),
+    });
+    expect(atlasSkill).not.toHaveProperty("body");
+    expect(atlasSkill).not.toHaveProperty("sections");
+    expect(atlasSkill).not.toHaveProperty("copySnippet");
+    expect(skillDetail).toMatchObject({
+      copySnippet: expect.any(String),
+      body: expect.any(String),
+      sections: expect.arrayContaining([
+        expect.objectContaining({ title: expect.any(String) }),
+      ]),
+      headings: expect.arrayContaining([
+        expect.objectContaining({ text: expect.any(String) }),
+      ]),
+    });
+  });
+
+  it("publishes schema-specific fields for category-aware detail rendering", () => {
+    const cases = [
+      [
+        "entries/hooks/accessibility-checker.json",
+        {
+          trigger: "PostToolUse",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/commands/cursor-rules.json",
+        {
+          commandSyntax: expect.any(String),
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/statuslines/accessibility-first-statusline.json",
+        {
+          scriptLanguage: "bash",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/collections/agent-operator-growth-master-pack.json",
+        {
+          items: expect.arrayContaining([
+            expect.objectContaining({ slug: expect.any(String) }),
+          ]),
+          installationOrder: expect.arrayContaining([expect.any(String)]),
+          estimatedSetupTime: "95 minutes",
+        },
+      ],
+      [
+        "entries/tools/aider.json",
+        {
+          websiteUrl: "https://aider.chat",
+          pricingModel: "open-source",
+          disclosure: "editorial",
+        },
+      ],
+    ] as const;
+
+    for (const [relativePath, expected] of cases) {
+      const detail = readDataJson<{ entry: Record<string, unknown> }>(
+        relativePath,
+      ).entry;
+      expect(detail).toMatchObject(expected);
+    }
+  });
+
+  it("attributes GitHub stars as source repository stats instead of listing popularity", () => {
+    const sourceStatEntry = directoryEntries.find(
+      (entry) => typeof entry.githubStars === "number",
+    );
+    expect(sourceStatEntry).toBeTruthy();
+    expect(sourceStatEntry?.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
+
+    const detail = readDataJson<{ entry: Record<string, unknown> }>(
+      `entries/${sourceStatEntry!.category}/${sourceStatEntry!.slug}.json`,
+    ).entry;
+    expect(detail.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
   });
 
   it("does not split surrogate pairs when truncating JSON-backed text", () => {
@@ -506,7 +635,8 @@ Use this hook after reviewing the notes.`,
     ]).entries;
     const entryJsonLd = snapshot.documents.find(
       (document) =>
-        document["@id"] === "https://heyclau.de/mcp/duplicate-jsonld#entry",
+        document["@id"] ===
+        "https://heyclau.de/entry/mcp/duplicate-jsonld#entry",
     );
 
     expect(entryJsonLd?.keywords).toBe("mcp, fixture");
@@ -645,7 +775,7 @@ Use this hook after reviewing the notes.`,
       expect(entry.sections).toBeUndefined();
       expect(entry.scriptBody).toBeUndefined();
       expect(entry.canonicalUrl).toBe(
-        `https://heyclau.de/${entry.category}/${entry.slug}`,
+        `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(entry.llmsUrl).toBe(
         `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
@@ -682,6 +812,7 @@ Use this hook after reviewing the notes.`,
     const scriptBody = detailPayload.entry.scriptBody;
 
     expect(scriptBody).not.toContain("/tmp/claude-startup.log");
+    expect(findPredictableSharedTmpHookLogPaths(scriptBody)).toEqual([]);
     expect(scriptBody).toContain(
       'DEBUG_LOG_DIR="${RETRO_DAILY_HOME:-$HOME/.claude/metrics}"',
     );
@@ -786,7 +917,7 @@ Use this hook after reviewing the notes.`,
         copyText,
       });
       expect(raycastFeedEntry.canonicalUrl).toBe(
-        `https://heyclau.de/${entry.category}/${entry.slug}`,
+        `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(raycastFeedEntry.llmsUrl).toBe(
         `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,

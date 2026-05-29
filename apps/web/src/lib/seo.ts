@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
-
 import { siteConfig } from "@/lib/site";
+
+type Metadata = Record<string, unknown> & {
+  robots?: unknown;
+};
 
 type PageMetadataInput = {
   title: string;
@@ -26,8 +28,7 @@ export function absoluteUrl(path: string) {
 function toTwitterHandle(url: string) {
   try {
     const parsed = new URL(url);
-    if (parsed.hostname !== "x.com" && parsed.hostname !== "twitter.com")
-      return undefined;
+    if (parsed.hostname !== "x.com" && parsed.hostname !== "twitter.com") return undefined;
     const handle = parsed.pathname.split("/").filter(Boolean)[0];
     if (!handle) return undefined;
     return `@${handle.replace(/^@/, "")}`;
