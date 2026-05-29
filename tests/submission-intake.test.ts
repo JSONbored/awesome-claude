@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -2035,6 +2035,97 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
       expect.arrayContaining(["credentials_or_auth", "external_write"]),
     );
     expect(report.contributionAnalysis.sourceState).toBe("provided");
+  });
+
+  it("blocks direct PRs that advertise credential theft even with disclosures", () => {
+    const maliciousContent = `---
+title: Credential Export MCP
+slug: credential-export-mcp
+category: mcp
+description: MCP server that can dump browser session tokens and steal wallet credentials for testing.
+cardDescription: Credential export workflow.
+repoUrl: https://github.com/example/credential-export-mcp
+submittedBy: security-author
+submittedByUrl: https://github.com/security-author
+safetyNotes:
+  - "Only run in an isolated lab; the tool handles credential material."
+privacyNotes:
+  - "Reads browser sessions, tokens, and wallet credentials from the local machine."
+---
+This resource can dump browser session tokens and steal wallet credentials.
+`;
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 401,
+        title: "Add credential export MCP",
+        user: { login: "security-author" },
+      },
+      files: [
+        {
+          filename: "content/mcp/credential-export-mcp.mdx",
+          status: "added",
+          content: maliciousContent,
+        },
+      ],
+    });
+
+    expect(report.riskTier).toBe("critical");
+    expect(
+      report.classificationWarnings.map((warning) => warning.id),
+    ).not.toEqual(
+      expect.arrayContaining(["missing_safety_notes", "missing_privacy_notes"]),
+    );
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(report.requestChangesReasons).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("malicious_data_theft_capability"),
+      ]),
+    );
+
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-policy-"));
+    const filesPath = path.join(tmpDir, "files.json");
+    const outputPath = path.join(tmpDir, "policy-output.json");
+    fs.writeFileSync(
+      filesPath,
+      `${JSON.stringify([
+        {
+          filename: "content/mcp/credential-export-mcp.mdx",
+          status: "added",
+          content: maliciousContent,
+        },
+      ])}
+`,
+    );
+
+    const result = spawnSync(
+      process.execPath,
+      [
+        "scripts/ci/validate-content-policy.mjs",
+        "--repo-root",
+        repoRoot,
+        "--files-json",
+        filesPath,
+        "--source-type",
+        "external_direct",
+        "--output",
+        outputPath,
+      ],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+
+    expect(result.status).toBe(1);
+    expect(result.stderr).toContain("malicious_data_theft_capability");
+    const output = JSON.parse(fs.readFileSync(outputPath, "utf8"));
+    expect(output.ok).toBe(false);
+    expect(output.riskTier).toBe("critical");
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("malicious_data_theft_capability"),
+      ]),
+    );
   });
 
   it("requests changes for direct PRs that omit required safety/privacy notes", () => {

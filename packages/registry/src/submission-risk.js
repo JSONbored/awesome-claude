@@ -1228,11 +1228,21 @@ export function directContentRequestChangesReasons(report = {}) {
       "Install instructions include a destructive or remote-code execution pipeline.",
     embedded_secret:
       "Submission appears to include a real secret or API token.",
+    malicious_data_theft_capability:
+      "Submission appears to advertise credential, token, session, or wallet theft.",
     prohibited_content:
       "Submission appears to include clearly unacceptable content.",
   };
   for (const [id, reason] of Object.entries(flagReasons)) {
     if (flags.has(id)) reasons.push(`${reason} (${id}).`);
+  }
+
+  for (const flag of report.reviewFlags || []) {
+    if (flag.severity === "critical" && !flagReasons[flag.id]) {
+      reasons.push(
+        `Critical content policy finding must be resolved (${flag.id}).`,
+      );
+    }
   }
 
   const warningReasons = {
