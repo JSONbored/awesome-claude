@@ -7,9 +7,9 @@ import { logApiError, logApiWarn } from "@/lib/api-logs";
 import { getCloudflareEnv } from "@/lib/cloudflare-env";
 
 const GITHUB_API_VERSION = "2022-11-28";
+const GITHUB_USER_AGENT = "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)";
 const DEFAULT_REPO = "JSONbored/awesome-claude";
 const IMPORT_PR_PATTERN = /https:\/\/github\.com\/JSONbored\/awesome-claude\/pull\/\d+/i;
-const AUTH_FALLBACK_STATUSES = new Set([401, 403]);
 
 type GitHubLabel = string | { name?: string };
 
@@ -47,6 +47,7 @@ function githubHeaders(token: string) {
   return {
     accept: "application/vnd.github+json",
     ...(token ? { authorization: `Bearer ${token}` } : {}),
+    "user-agent": GITHUB_USER_AGENT,
     "x-github-api-version": GITHUB_API_VERSION,
   };
 }
@@ -132,32 +133,9 @@ async function fetchGitHub<T>(url: string, token: string) {
   return { response, payload };
 }
 
-async function fetchGitHubPublicRead<T>(url: string, token: string) {
-  const first = await fetchGitHub<T>(url, token);
-  if (!token || first.response.ok || !AUTH_FALLBACK_STATUSES.has(first.response.status)) {
-    return {
-      ...first,
-      token,
-      authFallback: false,
-      authFailureStatus: undefined,
-    };
-  }
-
-  const fallback = await fetchGitHub<T>(url, "");
-  return {
-    ...fallback,
-    token: "",
-    authFallback: true,
-    authFailureStatus: first.response.status,
-  };
-}
-
 async function fetchIssueCommentsImportPr(issue: GitHubIssue, token: string) {
   if (!issue.comments_url) return undefined;
-  const { response, payload } = await fetchGitHubPublicRead<GitHubComment[]>(
-    issue.comments_url,
-    token,
-  );
+  const { response, payload } = await fetchGitHub<GitHubComment[]>(issue.comments_url, token);
   if (!response.ok || !Array.isArray(payload)) return undefined;
   for (const comment of [...payload].reverse()) {
     const url = importPrFromText(String(comment.body || ""));
@@ -204,42 +182,34 @@ async function listIssues(params: { repo: string; token: string; limit: number }
   url.searchParams.set("direction", "desc");
   url.searchParams.set("per_page", String(params.limit));
 
-  const { response, payload, token, authFallback, authFailureStatus } =
-    await fetchGitHubPublicRead<GitHubIssue[]>(url.toString(), params.token);
+  const { response, payload } = await fetchGitHub<GitHubIssue[]>(url.toString(), params.token);
   if (!response.ok || !Array.isArray(payload)) {
     return {
       ok: false as const,
       status: response.status,
       issues: [],
-      token,
-      authFallback,
-      authFailureStatus,
+      token: params.token,
     };
   }
   return {
     ok: true as const,
     status: response.status,
-    token,
-    authFallback,
-    authFailureStatus,
+    token: params.token,
     issues: payload.filter((issue) => !issue.pull_request),
   };
 }
 
 async function getIssue(params: { repo: string; token: string; number: number }) {
-  const { response, payload, token, authFallback, authFailureStatus } =
-    await fetchGitHubPublicRead<GitHubIssue>(
-      `https://api.github.com/repos/${params.repo}/issues/${params.number}`,
-      params.token,
-    );
+  const { response, payload } = await fetchGitHub<GitHubIssue>(
+    `https://api.github.com/repos/${params.repo}/issues/${params.number}`,
+    params.token,
+  );
   if (!response.ok || !payload || payload.pull_request) {
     return {
       ok: false as const,
       status: response.status,
       issue: null,
-      token,
-      authFallback,
-      authFailureStatus,
+      token: params.token,
     };
   }
   const labels = labelNames(payload);
@@ -248,18 +218,14 @@ async function getIssue(params: { repo: string; token: string; number: number })
       ok: false as const,
       status: 404,
       issue: null,
-      token,
-      authFallback,
-      authFailureStatus,
+      token: params.token,
     };
   }
   return {
     ok: true as const,
     status: response.status,
     issue: payload,
-    token,
-    authFallback,
-    authFailureStatus,
+    token: params.token,
   };
 }
 
@@ -278,13 +244,6 @@ export const GET = createApiHandler("submissions.queue", async ({ request, query
   const result = parsed.number
     ? await getIssue({ repo, token, number: parsed.number })
     : await listIssues({ repo, token, limit: parsed.limit });
-
-  if (result.authFallback) {
-    logApiWarn(request, "submissions.queue.auth_fallback", {
-      repo,
-      status: result.authFailureStatus,
-    });
-  }
 
   if (!result.ok) {
     const code = parsed.number ? "submission_not_found" : "github_provider_error";
