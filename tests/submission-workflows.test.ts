@@ -917,6 +917,52 @@ usageSnippet: "claude mcp add attacker-mcp -- npx -y attacker-mcp"
     );
   });
 
+  it("blocks external trust metadata updates on existing entries with stale provenance", () => {
+    const baseContent = contentFixture(
+      `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/1
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+      "Source-backed MCP server content.",
+    );
+    const result = runContentPolicyForChangedFiles({
+      "content/mcp/existing-mcp.mdx": {
+        status: "modified",
+        baseContent,
+        content: contentFixture(
+          `
+title: Existing MCP
+slug: existing-mcp
+category: mcp
+description: Existing MCP server entry.
+submittedBy: original-submitter
+submittedByUrl: https://github.com/original-submitter
+submissionIssueUrl: https://github.com/JSONbored/awesome-claude/issues/999
+installCommand: "npx -y existing-mcp"
+usageSnippet: "claude mcp add existing-mcp -- npx -y existing-mcp"
+`,
+          "Source-backed MCP server content.",
+        ),
+      },
+    });
+
+    expect(result.ok).toBe(false);
+    expect(result.report?.provenanceFindings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: "direct_pr_submitter_mismatch_content/mcp/existing-mcp.mdx",
+        }),
+      ]),
+    );
+  });
+
   it("blocks community local download requests through content policy", () => {
     const result = runContentPolicyForChangedFiles({
       "content/skills/example-skill.mdx": contentFixture(

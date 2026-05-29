@@ -365,14 +365,52 @@ function isNewDirectContentEntry(entry) {
   return false;
 }
 
-function existingEntryHasOnlyMetadataUpdates(entry) {
-  const current = entry.fields || {};
-  const base = entry.baseFields || {};
-  const metadataKeys = new Set(["safety_notes", "privacy_notes"]);
+const EXISTING_ENTRY_METADATA_UPDATE_KEYS = new Set([
+  "privacyNotes",
+  "safetyNotes",
+]);
 
-  for (const key of Object.keys({ ...current, ...base })) {
-    if (metadataKeys.has(key)) continue;
-    if (normalizeText(current[key]) !== normalizeText(base[key])) return false;
+function canonicalFrontmatterValue(value) {
+  if (Array.isArray(value)) {
+    return value.map((item) => canonicalFrontmatterValue(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((key) => [key, canonicalFrontmatterValue(value[key])]),
+    );
+  }
+
+  return normalizeText(value);
+}
+
+function frontmatterChangedOutsideAllowedMetadata(
+  currentData = {},
+  baseData = {},
+) {
+  for (const key of Object.keys({ ...currentData, ...baseData }).sort()) {
+    if (EXISTING_ENTRY_METADATA_UPDATE_KEYS.has(key)) continue;
+    if (
+      JSON.stringify(canonicalFrontmatterValue(currentData[key])) !==
+      JSON.stringify(canonicalFrontmatterValue(baseData[key]))
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function existingEntryHasOnlyMetadataUpdates(entry) {
+  if (
+    frontmatterChangedOutsideAllowedMetadata(
+      entry.frontmatterData,
+      entry.baseFrontmatterData,
+    )
+  ) {
+    return false;
   }
 
   return (
@@ -676,10 +714,7 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
   if (sourceType !== "external_direct") return;
 
   for (const entry of entries) {
-    if (
-      !isNewDirectContentEntry(entry) &&
-      existingEntryHasOnlyMetadataUpdates(entry)
-    ) {
+    if (!isNewDirectContentEntry(entry)) {
       if (submitterProvenanceChanged(entry)) {
         addProvenanceFinding(
           report,
@@ -688,8 +723,12 @@ function validatePrProvenance(report, entries, prAuthor, sourceType) {
           "Direct contributor PRs cannot change submitter provenance on existing content",
           `${entry.filename}: leave existing submittedBy/submittedByUrl unchanged; maintainers can handle attribution corrections separately.`,
         );
+        continue;
       }
-      continue;
+
+      if (existingEntryHasOnlyMetadataUpdates(entry)) {
+        continue;
+      }
     }
 
     const provenance = entry.provenance;
@@ -874,7 +913,6 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       typeof file.baseContent === "string"
         ? parseMdxFrontmatter(file.baseContent)
         : { data: {} };
-    const baseFields = frontmatterFields(baseParsed.data, category);
     const baseProvenance = frontmatterProvenance(baseParsed.data);
     if (fields.category && fields.category !== category) {
       addClassificationWarning(
@@ -901,9 +939,10 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       status: normalizeText(file.status) || "modified",
       baseExists: typeof file.baseContent === "string",
       fields,
-      baseFields,
       provenance,
       baseProvenance,
+      frontmatterData: parsed.data || {},
+      baseFrontmatterData: baseParsed.data || {},
       contentBody: parsed.content || "",
       baseContentBody: baseParsed.content || "",
     });
