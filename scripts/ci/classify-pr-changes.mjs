@@ -88,8 +88,8 @@ const generatedArtifactInfra = touches(
 const flags = {
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
-  registry: generatedArtifactInfra,
-  web: touches(
+  registry: contentCategoryTouched || generatedArtifactInfra,
+  web: contentCategoryTouched || touches(
     /^apps\/web\//,
     /^emails\//,
     /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
@@ -107,7 +107,7 @@ const flags = {
     "package.json",
     "pnpm-lock.yaml",
   ),
-  raycast: touches(
+  raycast: contentCategoryTouched || touches(
     /^integrations\/raycast\//,
     /^apps\/web\/public\/data\/raycast/,
     /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
