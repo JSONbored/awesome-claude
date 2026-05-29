@@ -321,6 +321,90 @@ describe("website submission API", () => {
     });
   });
 
+  it("falls back to unauthenticated GitHub reads when the queue token is rejected", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce(
+          new Response(JSON.stringify({ message: "Forbidden" }), {
+            status: 403,
+            headers: { "content-type": "application/json" },
+          }),
+        )
+        .mockResolvedValueOnce(
+          new Response(
+            JSON.stringify([
+              {
+                number: 89,
+                html_url:
+                  "https://github.com/JSONbored/awesome-claude/issues/89",
+                title: "Submit Skill: Public Queue Skill",
+                body: [
+                  "### Name",
+                  "Public Queue Skill",
+                  "",
+                  "### Category",
+                  "skills",
+                ].join("\n"),
+                user: {
+                  login: "submitter",
+                  html_url: "https://github.com/submitter",
+                },
+                labels: [
+                  { name: "content-submission" },
+                  { name: "community-skills" },
+                ],
+                state: "open",
+                created_at: "2026-05-01T00:00:00Z",
+                updated_at: "2026-05-02T00:00:00Z",
+                closed_at: null,
+              },
+            ]),
+            {
+              status: 200,
+              headers: { "content-type": "application/json" },
+            },
+          ),
+        ),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=5", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.24",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      count: 1,
+      entries: [
+        {
+          number: 89,
+          category: "skills",
+          slug: "public-queue-skill",
+          status: "queued",
+        },
+      ],
+    });
+
+    const fetchMock = fetch as unknown as {
+      mock: { calls: Array<[RequestInfo | URL, RequestInit]> };
+    };
+    expect(fetchMock.mock.calls).toHaveLength(2);
+    expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({
+      authorization: "Bearer test-token",
+    });
+    expect(fetchMock.mock.calls[1]?.[1]?.headers).not.toHaveProperty(
+      "authorization",
+    );
+  });
+
   it("does not expose non-submission issues through the queue endpoint", async () => {
     vi.stubGlobal(
       "fetch",
