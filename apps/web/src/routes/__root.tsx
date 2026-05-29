@@ -21,6 +21,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { ShortcutsProvider } from "@/components/shortcuts-dialog";
 import { SkipLink } from "@/components/skip-link";
 import { RouteProgress } from "@/components/route-progress";
+import { siteConfig } from "@/lib/site";
 
 function NotFoundComponent() {
   return (
@@ -133,6 +134,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <script
+          id="umami-analytics"
+          defer
+          src={siteConfig.umamiScriptUrl}
+          data-website-id={siteConfig.umamiWebsiteId}
+        />
       </head>
       <body>
         {children}
