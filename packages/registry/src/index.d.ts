@@ -144,6 +144,16 @@ export type RegistryTrustReport = {
   entries: RegistryTrustReportEntry[];
 };
 
+export type RepoStats = {
+  url?: string;
+  stars?: number | null;
+  forks?: number | null;
+  updatedAt?: string | null;
+  source?: "github" | "unknown";
+  appliesTo?: "listing_source_repo" | "none";
+  label?: string;
+};
+
 export type ContentEntry = {
   category: string;
   slug: string;
@@ -232,6 +242,7 @@ export type ContentEntry = {
   githubStars?: number | null;
   githubForks?: number | null;
   repoUpdatedAt?: string | null;
+  repoStats?: RepoStats;
   canonicalUrl?: string;
   llmsUrl?: string;
   apiUrl?: string;
@@ -307,8 +318,10 @@ export type ListingLead = {
 };
 export type JobSourceLifecycleInput = {
   currentStatus?: string;
+  tier?: string;
   staleCheckCount?: number;
-  expiresAt?: string;
+  expiresAt?: string | null;
+  paidPlacementExpiresAt?: string | null;
   sourceOk?: boolean;
   titleMatched?: boolean;
   companyMatched?: boolean;
@@ -320,6 +333,7 @@ export type JobSourceLifecycleResult = {
   staleCheckCount: number;
   indexable: boolean;
   reason: string;
+  expiresAt?: string | null;
 };
 export type JobSourceTruth = {
   sourceOk?: boolean;
@@ -807,6 +821,7 @@ export type SearchDocument = {
   supportLevels?: string[];
   documentationUrl: string;
   repoUrl: string;
+  repoStats?: RepoStats;
   url: string;
   canonicalUrl: string;
   llmsUrl: string;

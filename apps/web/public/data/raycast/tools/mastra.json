@@ -18,6 +18,15 @@
   "seoTitle": "Mastra TypeScript agent framework",
   "seoDescription": "Mastra is a TypeScript framework for AI agents, workflows, memory, tool calling, and evaluation-backed applications. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/mastra-ai/mastra",
+  "repoStats": {
+    "repository": "mastra-ai/mastra",
+    "url": "https://github.com/mastra-ai/mastra",
+    "stars": 24031,
+    "forks": 2092,
+    "updatedAt": "2026-05-19T11:18:03Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://mastra.ai/docs",
   "downloadTrust": null,
   "verificationStatus": "",

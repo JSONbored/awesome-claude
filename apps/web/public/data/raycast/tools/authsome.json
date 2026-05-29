@@ -34,6 +34,12 @@
     "Telemetry is opt-in and respects `DO_NOT_TRACK=1`, `POSTHOG_DISABLED=1`, and `AUTHSOME_ANALYTICS=0`."
   ],
   "repoUrl": "https://github.com/agentrhq/authsome",
+  "repoStats": {
+    "repository": "agentrhq/authsome",
+    "url": "https://github.com/agentrhq/authsome",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://authsome.ai/docs",
   "downloadTrust": null,
   "verificationStatus": "",

@@ -82,9 +82,13 @@ const ROWS: RowDef[] = [
     render: (e) => <NotesPresenceChips entry={e} />,
   },
   {
-    label: "Stars",
+    label: "Source repo",
     render: (e) => (
-      <span className="font-mono text-sm text-ink">{e.stars?.toLocaleString() ?? "—"}</span>
+      <span className="font-mono text-sm text-ink">
+        {e.repoStats?.stars !== undefined
+          ? `${e.repoStats.stars.toLocaleString()} repo stars`
+          : "—"}
+      </span>
     ),
   },
   {

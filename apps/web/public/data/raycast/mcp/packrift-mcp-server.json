@@ -26,6 +26,15 @@
   "seoTitle": "Packrift MCP Server - MCP Servers for Claude",
   "seoDescription": "Remote MCP server for Packrift packaging catalog search, pricing and inventory context, and ecommerce cart URL creation.",
   "repoUrl": "https://github.com/Packrift/packrift-mcp",
+  "repoStats": {
+    "repository": "Packrift/packrift-mcp",
+    "url": "https://github.com/Packrift/packrift-mcp",
+    "stars": 0,
+    "forks": 1,
+    "updatedAt": "2026-05-19T11:41:33Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://packrift.com/pages/agents",
   "downloadTrust": null,
   "verificationStatus": "",

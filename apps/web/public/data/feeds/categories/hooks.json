@@ -1027,6 +1027,15 @@
       "canonicalUrl": "https://heyclau.de/entry/hooks/dead-code-eliminator",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/dead-code-eliminator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/dead-code-eliminator",
+      "repoStats": {
+        "repository": "nadeesha/ts-prune",
+        "url": "https://github.com/nadeesha/ts-prune",
+        "stars": 2067,
+        "forks": 68,
+        "updatedAt": "2026-04-13T08:47:15Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -4111,6 +4120,12 @@
       "canonicalUrl": "https://heyclau.de/entry/hooks/retro-daily",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
+      "repoStats": {
+        "repository": "gyanesh-m/retro-daily",
+        "url": "https://github.com/gyanesh-m/retro-daily",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,

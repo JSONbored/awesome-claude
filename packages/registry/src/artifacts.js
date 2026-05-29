@@ -211,6 +211,25 @@ function entryApiUrl(entry, siteUrl = SITE_URL) {
   return `${siteUrl.replace(/\/$/, "")}/api/registry/entries/${entry.category}/${entry.slug}`;
 }
 
+function buildRepoStats(entry) {
+  const hasStats =
+    typeof entry.githubStars === "number" ||
+    typeof entry.githubForks === "number" ||
+    typeof entry.repoUpdatedAt === "string";
+  if (!entry.repoUrl && !hasStats) return undefined;
+  return {
+    repository: entry.repoUrl
+      ? String(entry.repoUrl).replace(/^https:\/\/github\.com\//, "")
+      : undefined,
+    url: entry.repoUrl || undefined,
+    stars: typeof entry.githubStars === "number" ? entry.githubStars : undefined,
+    forks: typeof entry.githubForks === "number" ? entry.githubForks : undefined,
+    updatedAt: entry.repoUpdatedAt || undefined,
+    appliesTo: entry.repoUrl ? "listing_source_repo" : "none",
+    label: "Source repo",
+  };
+}
+
 export function buildDirectoryEntries(entries) {
   return entries.map((entry) => {
     const {
@@ -226,6 +245,7 @@ export function buildDirectoryEntries(entries) {
       canonicalUrl: entryCanonicalUrl(entry),
       llmsUrl: entryLlmsUrl(entry),
       apiUrl: entryApiUrl(entry),
+      repoStats: buildRepoStats(entry),
       trustSignals: buildEntryTrustSignals(entry),
     };
   });
@@ -260,6 +280,7 @@ export function buildSearchEntries(entries) {
     ),
     documentationUrl: entry.documentationUrl || "",
     repoUrl: entry.repoUrl || "",
+    repoStats: buildRepoStats(entry),
     url: entryCanonicalUrl(entry),
     canonicalUrl: entryCanonicalUrl(entry),
     llmsUrl: entryLlmsUrl(entry),
@@ -698,6 +719,7 @@ export function buildRaycastEntries(entries) {
       seoTitle: entry.seoTitle || entry.title,
       seoDescription: entry.seoDescription || entry.description,
       repoUrl: entry.repoUrl || "",
+      repoStats: buildRepoStats(entry),
       documentationUrl: entry.documentationUrl || "",
       downloadTrust: entry.downloadTrust,
       verificationStatus: entry.verificationStatus || "",
@@ -710,7 +732,10 @@ export function buildEntryDetail(entry) {
   return {
     schemaVersion: ENTRY_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
-    entry,
+    entry: {
+      ...entry,
+      repoStats: buildRepoStats(entry),
+    },
     trustSignals: buildEntryTrustSignals(entry),
   };
 }
@@ -735,6 +760,7 @@ export function buildRaycastDetail(entry) {
     seoDescription: entry.seoDescription || entry.description,
     ...buildEntryNoteFields(entry),
     repoUrl: entry.repoUrl || "",
+    repoStats: buildRepoStats(entry),
     documentationUrl: entry.documentationUrl || "",
     downloadTrust: entry.downloadTrust ?? null,
     verificationStatus: entry.verificationStatus || "",

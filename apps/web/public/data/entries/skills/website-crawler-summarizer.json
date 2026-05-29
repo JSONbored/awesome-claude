@@ -411,7 +411,16 @@
     "repoUrl": "https://github.com/mozilla/readability",
     "githubStars": 11200,
     "githubForks": 712,
-    "repoUpdatedAt": "2026-05-19T04:59:43Z"
+    "repoUpdatedAt": "2026-05-19T04:59:43Z",
+    "repoStats": {
+      "repository": "mozilla/readability",
+      "url": "https://github.com/mozilla/readability",
+      "stars": 11200,
+      "forks": 712,
+      "updatedAt": "2026-05-19T04:59:43Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

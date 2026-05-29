@@ -239,14 +239,40 @@ function scrubAtlasCredentialPlaceholders(value) {
 }
 
 function pickAtlasEntry(entry) {
+  const repoStats =
+    entry.repoUrl ||
+    entry.githubStars != null ||
+    entry.githubForks != null ||
+    entry.repoUpdatedAt
+      ? {
+          repository: entry.repoUrl
+            ? entry.repoUrl.replace(/^https:\/\/github\.com\//, "")
+            : undefined,
+          url: entry.repoUrl || undefined,
+          stars: entry.githubStars,
+          forks: entry.githubForks,
+          updatedAt: entry.repoUpdatedAt,
+          appliesTo: entry.repoUrl ? "listing_source_repo" : "none",
+          label: "Source repo",
+        }
+      : undefined;
+
   return scrubAtlasCredentialPlaceholders({
     category: entry.category,
     slug: entry.slug,
     title: entry.title,
     description: entry.description,
+    seoTitle: entry.seoTitle,
+    seoDescription: entry.seoDescription,
     author: entry.author,
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl,
+    submittedAt: entry.submittedAt,
+    submissionIssueUrl: entry.submissionIssueUrl,
+    importPrUrl: entry.importPrUrl,
+    reviewedBy: entry.reviewedBy,
+    reviewedAt: entry.reviewedAt,
+    claimStatus: entry.claimStatus,
     authorProfileUrl: entry.authorProfileUrl,
     dateAdded: entry.dateAdded,
     contentUpdatedAt: entry.contentUpdatedAt,
@@ -270,6 +296,9 @@ function pickAtlasEntry(entry) {
     packageVerified: entry.packageVerified,
     downloadTrust: entry.downloadTrust,
     githubStars: entry.githubStars,
+    githubForks: entry.githubForks,
+    repoUpdatedAt: entry.repoUpdatedAt,
+    repoStats,
     trustSignals: entry.trustSignals
       ? {
           firstPartyEditorial: entry.trustSignals.firstPartyEditorial,
@@ -281,7 +310,29 @@ function pickAtlasEntry(entry) {
       : undefined,
     platformCompatibility: entry.platformCompatibility,
     commandSyntax: entry.commandSyntax,
+    argumentHint: entry.argumentHint,
+    allowedTools: entry.allowedTools,
     scriptLanguage: entry.scriptLanguage,
+    trigger: entry.trigger,
+    items: entry.items,
+    installationOrder: entry.installationOrder,
+    estimatedSetupTime: entry.estimatedSetupTime,
+    difficulty: entry.difficulty,
+    skillType: entry.skillType,
+    skillLevel: entry.skillLevel,
+    verificationStatus: entry.verificationStatus,
+    verifiedAt: entry.verifiedAt,
+    retrievalSources: entry.retrievalSources,
+    testedPlatforms: entry.testedPlatforms,
+    pricingModel: entry.pricingModel,
+    disclosure: entry.disclosure,
+    applicationCategory: entry.applicationCategory,
+    operatingSystem: entry.operatingSystem,
+    readingTime: entry.readingTime,
+    difficultyScore: entry.difficultyScore,
+    hasPrerequisites: entry.hasPrerequisites,
+    hasTroubleshooting: entry.hasTroubleshooting,
+    hasBreakingChanges: entry.hasBreakingChanges,
   });
 }
 

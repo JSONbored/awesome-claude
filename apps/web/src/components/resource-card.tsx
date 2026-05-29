@@ -21,6 +21,19 @@ import { cn } from "@/lib/utils";
 import { formatCompact, timeAgo } from "@/lib/format";
 const fmtNum = (n?: number) => formatCompact(n);
 
+function SourceRepoStars({ entry, compact = false }: { entry: Entry; compact?: boolean }) {
+  if (entry.repoStats?.stars === undefined) return null;
+  return (
+    <span
+      className="inline-flex items-center gap-1 font-mono text-[11px] text-ink-subtle"
+      title="Source repository stars"
+    >
+      <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+      {!compact && <span className="hidden sm:inline"> repo</span>}
+    </span>
+  );
+}
+
 export function ResourceCard({
   entry,
   variant = "row",
@@ -92,8 +105,8 @@ export function ResourceCard({
           <span className="hidden min-w-0 max-w-[40%] truncate text-xs text-ink-muted sm:inline">
             {entry.cardDescription ?? entry.description}
           </span>
-          <span className="hidden items-center gap-1 font-mono text-[11px] text-ink-subtle sm:inline-flex">
-            <Star className="h-3 w-3" /> {fmtNum(entry.stars)}
+          <span className="hidden sm:inline-flex">
+            <SourceRepoStars entry={entry} compact />
           </span>
           <TrustBadge level={entry.trust} />
         </Link>
@@ -122,8 +135,8 @@ export function ResourceCard({
         >
           <div className="flex items-start justify-between gap-2">
             <CategoryPill>{entry.category}</CategoryPill>
-            <div className="flex items-center gap-1 text-xs text-ink-muted tabular-nums">
-              <Star className="h-3 w-3" /> {fmtNum(entry.stars)}
+            <div className="flex min-h-4 items-center text-xs text-ink-muted tabular-nums">
+              <SourceRepoStars entry={entry} compact />
             </div>
           </div>
           <div>
@@ -225,11 +238,17 @@ export function ResourceCard({
 
       {/* Right cluster: fixed-width slots so missing buttons don't shift the stats column */}
       <div className="flex flex-shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-1.5 text-xs text-ink-muted sm:gap-x-4">
-        <div className="flex w-[72px] flex-col items-end gap-0.5 tabular-nums">
-          <div className="flex items-center gap-1 font-mono">
-            <Star className="h-3 w-3" /> {fmtNum(entry.stars)}
-          </div>
-          <div className="font-mono text-ink-subtle">stars</div>
+        <div className="flex w-[90px] flex-col items-end gap-0.5 tabular-nums">
+          {entry.repoStats?.stars !== undefined ? (
+            <>
+              <div className="flex items-center gap-1 font-mono">
+                <Star className="h-3 w-3" /> {fmtNum(entry.repoStats.stars)}
+              </div>
+              <div className="font-mono text-ink-subtle">repo stars</div>
+            </>
+          ) : (
+            <span aria-hidden className="block h-7" />
+          )}
         </div>
         <div className="flex items-center gap-1.5">
           <PeekButton ref={peekRef} entry={entry} />

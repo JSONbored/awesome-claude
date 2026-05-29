@@ -329,7 +329,7 @@ export function CommandBar({
               const hasSafety = Boolean(r.safetyNotes);
               const hasPrivacy = Boolean(r.privacyNotes);
               const installable = Boolean(r.installCommand);
-              const stars = typeof r.stars === "number" ? r.stars : null;
+              const stars = typeof r.repoStats?.stars === "number" ? r.repoStats.stars : null;
               return (
                 <li
                   key={`${r.category}/${r.slug}`}
@@ -379,7 +379,7 @@ export function CommandBar({
                       {stars !== null && (
                         <span
                           className="inline-flex items-center gap-1 tabular-nums"
-                          title={`${stars.toLocaleString()} stars`}
+                          title={`${stars.toLocaleString()} source repository stars`}
                         >
                           <Star className="h-3 w-3" aria-hidden />
                           {stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}

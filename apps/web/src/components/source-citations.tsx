@@ -53,6 +53,14 @@ export function SourceCitations({ entry }: { entry: Entry }) {
       Icon: BookOpen,
     });
   }
+  if (entry.websiteUrl && entry.websiteUrl !== entry.docsUrl && entry.websiteUrl !== entry.sourceUrl) {
+    cites.push({
+      label: "Website",
+      href: entry.websiteUrl,
+      hint: hostOf(entry.websiteUrl),
+      Icon: ExternalLink,
+    });
+  }
   if (entry.downloadUrl) {
     cites.push({
       label: entry.downloadSha256 ? "Package (SHA-256 pinned)" : "Package download",

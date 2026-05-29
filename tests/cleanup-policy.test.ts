@@ -121,6 +121,17 @@ describe("cleanup policy", () => {
     }
   });
 
+  it("keeps generic entry pages from presenting repo stars as ratings", () => {
+    const entryRoute = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/entry.$category.$slug.tsx"),
+      "utf8",
+    );
+    expect(entryRoute).not.toContain("SoftwareApplication");
+    expect(entryRoute).not.toContain("aggregateRating");
+    expect(entryRoute).not.toContain("— stars");
+    expect(entryRoute).toContain("source repo stars");
+  });
+
   it("keeps Atlas fixture-era public signals and broken feed links out of production source", () => {
     const forbiddenSourcePatterns = [
       /@\/mocks\b/,

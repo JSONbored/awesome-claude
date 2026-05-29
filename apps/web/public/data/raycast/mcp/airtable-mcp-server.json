@@ -18,6 +18,15 @@
   "seoTitle": "Airtable MCP Server for Claude",
   "seoDescription": "Read and write records, manage bases and tables in Airtable directly from Claude. Discover tools for AI development. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/domdomegg/airtable-mcp-server",
+  "repoStats": {
+    "repository": "domdomegg/airtable-mcp-server",
+    "url": "https://github.com/domdomegg/airtable-mcp-server",
+    "stars": 444,
+    "forks": 131,
+    "updatedAt": "2026-05-11T01:11:21Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/domdomegg/airtable-mcp-server",
   "downloadTrust": "first-party",
   "verificationStatus": "",

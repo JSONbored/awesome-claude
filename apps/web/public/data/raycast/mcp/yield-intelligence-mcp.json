@@ -24,6 +24,12 @@
     "Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored."
   ],
   "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
+  "repoStats": {
+    "repository": "thebrierfox/intuitek-ace",
+    "url": "https://github.com/thebrierfox/intuitek-ace",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/thebrierfox/intuitek-ace",
   "downloadTrust": null,
   "verificationStatus": "",

@@ -76,9 +76,11 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
                 {(e.trendingReasons ?? ["source-backed ranking"]).slice(0, 2).join(" · ")}
               </div>
               <div className="flex flex-col items-end gap-0.5 font-mono text-[11px] text-ink-muted tabular-nums">
-                <div className="inline-flex items-center gap-1">
-                  <Star className="h-3 w-3" /> {formatCompact(e.stars ?? 0)}
-                </div>
+                {e.repoStats?.stars !== undefined && (
+                  <div className="inline-flex items-center gap-1" title="Source repository stars">
+                    <Star className="h-3 w-3" /> {formatCompact(e.repoStats.stars)}
+                  </div>
+                )}
                 <div className="text-ink-subtle">
                   {e.source === "unverified" ? "unverified" : "source-backed"}
                 </div>

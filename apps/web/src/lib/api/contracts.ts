@@ -684,7 +684,7 @@ export const adminJobsPatchBodySchema = z
       "revalidate",
     ]),
     checkedAt: z.string().trim().max(64).optional().default(""),
-    expiresAt: z.string().trim().max(64).optional().default(""),
+    expiresAt: z.union([z.string().trim().max(64), z.null()]).optional(),
   })
   .strict();
 

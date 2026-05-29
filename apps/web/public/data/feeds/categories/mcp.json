@@ -81,6 +81,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/airtable-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/airtable-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/airtable-mcp-server",
+      "repoStats": {
+        "repository": "domdomegg/airtable-mcp-server",
+        "url": "https://github.com/domdomegg/airtable-mcp-server",
+        "stars": 444,
+        "forks": 131,
+        "updatedAt": "2026-05-11T01:11:21Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -269,6 +278,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/aws-services-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/aws-services-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/aws-services-mcp-server",
+      "repoStats": {
+        "repository": "awslabs/mcp",
+        "url": "https://github.com/awslabs/mcp",
+        "stars": 9085,
+        "forks": 1532,
+        "updatedAt": "2026-05-19T08:34:58Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -643,6 +661,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/clickup-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/clickup-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/clickup-mcp-server",
+      "repoStats": {
+        "repository": "hauptsacheNet/clickup-mcp",
+        "url": "https://github.com/hauptsacheNet/clickup-mcp",
+        "stars": 44,
+        "forks": 17,
+        "updatedAt": "2026-05-03T13:43:35Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -925,6 +952,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/contrastapi-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/contrastapi-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/contrastapi-mcp-server",
+      "repoStats": {
+        "repository": "UPinar/contrastapi",
+        "url": "https://github.com/UPinar/contrastapi",
+        "stars": 25,
+        "forks": 3,
+        "updatedAt": "2026-05-18T16:57:58Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1114,6 +1150,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/discord-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/discord-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/discord-mcp-server",
+      "repoStats": {
+        "repository": "saseq/discord-mcp",
+        "url": "https://github.com/saseq/discord-mcp",
+        "stars": 311,
+        "forks": 72,
+        "updatedAt": "2026-05-18T02:46:12Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -1769,6 +1814,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/heyclaude-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/heyclaude-mcp",
+      "repoStats": {
+        "repository": "JSONbored/awesome-claude",
+        "url": "https://github.com/JSONbored/awesome-claude",
+        "stars": 218,
+        "forks": 29,
+        "updatedAt": "2026-05-17T08:04:08Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -2428,6 +2482,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/kubernetes-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/kubernetes-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/kubernetes-mcp-server",
+      "repoStats": {
+        "repository": "feiskyer/mcp-kubernetes-server",
+        "url": "https://github.com/feiskyer/mcp-kubernetes-server",
+        "stars": 18,
+        "forks": 9,
+        "updatedAt": "2026-05-13T09:23:32Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -2974,6 +3037,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/packrift-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/packrift-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/packrift-mcp-server",
+      "repoStats": {
+        "repository": "Packrift/packrift-mcp",
+        "url": "https://github.com/Packrift/packrift-mcp",
+        "stars": 0,
+        "forks": 1,
+        "updatedAt": "2026-05-19T11:41:33Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -3340,6 +3412,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/prompt-to-asset",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/prompt-to-asset.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/prompt-to-asset",
+      "repoStats": {
+        "repository": "MohamedAbdallah-14/prompt-to-asset",
+        "url": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
+        "stars": 6,
+        "forks": 0,
+        "updatedAt": "2026-05-19T10:08:35Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -3436,6 +3517,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/reddit-mcp-buddy",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/reddit-mcp-buddy.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/reddit-mcp-buddy",
+      "repoStats": {
+        "repository": "karanb192/reddit-mcp-buddy",
+        "url": "https://github.com/karanb192/reddit-mcp-buddy",
+        "stars": 652,
+        "forks": 82,
+        "updatedAt": "2026-05-19T03:36:39Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -3531,6 +3621,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/redis-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/redis-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/redis-mcp-server",
+      "repoStats": {
+        "repository": "redis/mcp-redis",
+        "url": "https://github.com/redis/mcp-redis",
+        "stars": 512,
+        "forks": 96,
+        "updatedAt": "2026-05-19T09:13:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -3720,6 +3819,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/socket-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/socket-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/socket-mcp-server",
+      "repoStats": {
+        "repository": "SocketDev/socket-mcp",
+        "url": "https://github.com/SocketDev/socket-mcp",
+        "stars": 107,
+        "forks": 19,
+        "updatedAt": "2026-05-19T04:13:47Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -4370,6 +4478,15 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/xquik-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
+      "repoStats": {
+        "repository": "Xquik-dev/x-twitter-scraper",
+        "url": "https://github.com/Xquik-dev/x-twitter-scraper",
+        "stars": 87,
+        "forks": 8,
+        "updatedAt": "2026-05-18T21:56:17Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -4466,6 +4583,12 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/yield-intelligence-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
+      "repoStats": {
+        "repository": "thebrierfox/intuitek-ace",
+        "url": "https://github.com/thebrierfox/intuitek-ace",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,

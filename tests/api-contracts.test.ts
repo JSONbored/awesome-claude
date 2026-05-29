@@ -59,6 +59,13 @@ describe("OpenAPI route coverage", () => {
     path.join(repoRoot, "cloudflare/api-schema-heyclaude-openapi.yaml"),
     "utf8",
   );
+  const publicYamlSchema = fs.readFileSync(
+    path.join(repoRoot, "apps/web/public/openapi.yaml"),
+    "utf8",
+  );
+  const publicJsonSchema = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, "apps/web/public/openapi.json"), "utf8"),
+  ) as { openapi?: string; paths?: Record<string, unknown> };
   const parsedSchema = parse(schema) as {
     paths: Record<
       string,
@@ -87,6 +94,14 @@ describe("OpenAPI route coverage", () => {
     ).toEqual(apiRoutes.toSorted());
   });
 
+  it("publishes static OpenAPI JSON and YAML assets for the docs surface", () => {
+    expect(publicYamlSchema).toBe(schema);
+    expect(publicJsonSchema.openapi).toBe("3.1.0");
+    expect(Object.keys(publicJsonSchema.paths ?? {}).sort()).toEqual(
+      Object.keys(parsedSchema.paths).sort(),
+    );
+  });
+
   it("renders every documented endpoint tag in the Atlas API docs data", () => {
     const documentedEndpointIds = new Set(ENDPOINTS.map((endpoint) => endpoint.id));
     const renderedTagIds = new Set(OPENAPI_TAGS.map((tag) => tag.id));
@@ -99,6 +114,17 @@ describe("OpenAPI route coverage", () => {
         );
       }
     }
+
+    expect(ENDPOINTS.find((endpoint) => endpoint.id === "registry-search")).toMatchObject({
+      liveRequest: true,
+      parameters: expect.arrayContaining([
+        expect.objectContaining({ name: "q", in: "query", example: "mcp" }),
+        expect.objectContaining({ name: "limit", in: "query", example: "5" }),
+      ]),
+    });
+    expect(ENDPOINTS.find((endpoint) => endpoint.id === "submissions-create")).toMatchObject({
+      liveRequest: false,
+    });
   });
 
   it("keeps route handlers as central-router adapters", () => {

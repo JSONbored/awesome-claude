@@ -580,6 +580,15 @@
       "canonicalUrl": "https://heyclau.de/entry/statuslines/catppuccin-mocha-theme",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/catppuccin-mocha-theme.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/catppuccin-mocha-theme",
+      "repoStats": {
+        "repository": "catppuccin/catppuccin",
+        "url": "https://github.com/catppuccin/catppuccin",
+        "stars": 19184,
+        "forks": 352,
+        "updatedAt": "2026-05-19T11:04:59Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,
@@ -1173,6 +1182,15 @@
       "canonicalUrl": "https://heyclau.de/entry/statuslines/minimal-powerline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/minimal-powerline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/minimal-powerline",
+      "repoStats": {
+        "repository": "powerline/powerline",
+        "url": "https://github.com/powerline/powerline",
+        "stars": 14752,
+        "forks": 1001,
+        "updatedAt": "2026-05-19T10:46:19Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": false,

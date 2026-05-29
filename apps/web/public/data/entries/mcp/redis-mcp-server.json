@@ -323,7 +323,16 @@
     "repoUrl": "https://github.com/redis/mcp-redis",
     "githubStars": 512,
     "githubForks": 96,
-    "repoUpdatedAt": "2026-05-19T09:13:05Z"
+    "repoUpdatedAt": "2026-05-19T09:13:05Z",
+    "repoStats": {
+      "repository": "redis/mcp-redis",
+      "url": "https://github.com/redis/mcp-redis",
+      "stars": 512,
+      "forks": 96,
+      "updatedAt": "2026-05-19T09:13:05Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

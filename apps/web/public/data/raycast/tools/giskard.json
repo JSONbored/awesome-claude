@@ -18,6 +18,15 @@
   "seoTitle": "Giskard AI testing platform",
   "seoDescription": "Giskard supports AI testing, evaluation, scanning, and monitoring for ML and LLM application quality. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/Giskard-AI/giskard",
+  "repoStats": {
+    "repository": "Giskard-AI/giskard",
+    "url": "https://github.com/Giskard-AI/giskard",
+    "stars": 5358,
+    "forks": 457,
+    "updatedAt": "2026-05-19T08:02:52Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.giskard.ai",
   "downloadTrust": null,
   "verificationStatus": "",

@@ -14,6 +14,15 @@
   "seoTitle": "Markdown Knowledge Base Composer Skill",
   "seoDescription": "Aggregate Markdown folders into cohesive knowledge bases with automated table of contents generation, cross-link validation and rewriting, heading normalizat...",
   "repoUrl": "https://github.com/remarkjs/remark",
+  "repoStats": {
+    "repository": "remarkjs/remark",
+    "url": "https://github.com/remarkjs/remark",
+    "stars": 8880,
+    "forks": 374,
+    "updatedAt": "2026-05-18T12:37:10Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/remarkjs/remark",
   "downloadTrust": "first-party",
   "verificationStatus": "draft",

@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/mendableai/firecrawl",
     "githubStars": 121680,
     "githubForks": 7410,
-    "repoUpdatedAt": "2026-05-19T11:41:31Z"
+    "repoUpdatedAt": "2026-05-19T11:41:31Z",
+    "repoStats": {
+      "repository": "mendableai/firecrawl",
+      "url": "https://github.com/mendableai/firecrawl",
+      "stars": 121680,
+      "forks": 7410,
+      "updatedAt": "2026-05-19T11:41:31Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

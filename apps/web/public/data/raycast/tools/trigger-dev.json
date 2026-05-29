@@ -18,6 +18,15 @@
   "seoTitle": "Trigger.dev background jobs for AI workflows",
   "seoDescription": "Trigger.dev supports background jobs, schedules, long-running tasks, and durable workflows for TypeScript applications. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/triggerdotdev/trigger.dev",
+  "repoStats": {
+    "repository": "triggerdotdev/trigger.dev",
+    "url": "https://github.com/triggerdotdev/trigger.dev",
+    "stars": 14969,
+    "forks": 1227,
+    "updatedAt": "2026-05-19T09:26:29Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://trigger.dev/docs",
   "downloadTrust": null,
   "verificationStatus": "",

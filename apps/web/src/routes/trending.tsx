@@ -355,9 +355,11 @@ function TrendingPage() {
                 <p className="line-clamp-1 text-sm text-ink-muted">{entry.description}</p>
               </Link>
               <div className="hidden flex-col items-end gap-0.5 font-mono text-xs text-ink-muted tabular-nums sm:flex">
-                <div className="flex items-center gap-1">
-                  <Star className="h-3 w-3" /> {formatCompact(entry.stars ?? 0)}
-                </div>
+                {entry.repoStats?.stars !== undefined && (
+                  <div className="flex items-center gap-1" title="Source repository stars">
+                    <Star className="h-3 w-3" /> {formatCompact(entry.repoStats.stars)}
+                  </div>
+                )}
                 <div className="text-ink-subtle">
                   {entry.source === "unverified" ? "unverified source" : "source-backed"}
                 </div>

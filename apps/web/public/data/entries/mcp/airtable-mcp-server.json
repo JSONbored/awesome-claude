@@ -310,7 +310,16 @@
     "repoUrl": "https://github.com/domdomegg/airtable-mcp-server",
     "githubStars": 444,
     "githubForks": 131,
-    "repoUpdatedAt": "2026-05-11T01:11:21Z"
+    "repoUpdatedAt": "2026-05-11T01:11:21Z",
+    "repoStats": {
+      "repository": "domdomegg/airtable-mcp-server",
+      "url": "https://github.com/domdomegg/airtable-mcp-server",
+      "stars": 444,
+      "forks": 131,
+      "updatedAt": "2026-05-11T01:11:21Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

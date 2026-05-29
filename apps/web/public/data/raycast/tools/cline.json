@@ -18,6 +18,15 @@
   "seoTitle": "Cline autonomous coding agent for VS Code",
   "seoDescription": "Cline is an open-source autonomous coding agent extension for planning, editing, terminal commands, and tools. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/cline/cline",
+  "repoStats": {
+    "repository": "cline/cline",
+    "url": "https://github.com/cline/cline",
+    "stars": 62015,
+    "forks": 6468,
+    "updatedAt": "2026-05-19T11:36:25Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.cline.bot",
   "downloadTrust": null,
   "verificationStatus": "",

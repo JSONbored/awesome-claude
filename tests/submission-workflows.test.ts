@@ -1444,9 +1444,14 @@ description: Example description
       "SOURCE_BASE_URL: ${{ steps.source-check.outputs.base-url }}",
     );
     expect(jobsSource).toContain('args=(--base-url "$SOURCE_BASE_URL"');
-    expect(jobsSource).toContain('echo "skip=true"');
     expect(jobsSource).toContain('} >> "$GITHUB_OUTPUT"');
-    expect(jobsSource).toContain("Skipping scheduled jobs source revalidation");
+    expect(jobsSource).not.toContain('echo "skip=true"');
+    expect(jobsSource).not.toContain(
+      "Skipping scheduled jobs source revalidation",
+    );
+    expect(jobsSource).toContain(
+      "Scheduled source revalidation must fail visibly",
+    );
     expect(jobsSource).toContain(
       "if: steps.source-check.outputs.skip != 'true'",
     );

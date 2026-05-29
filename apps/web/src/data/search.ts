@@ -42,9 +42,23 @@ export function search(filters: SearchFilters = {}): Entry[] {
   rows = [...rows].sort((a, b) => {
     if (sort === "newest") return a.dateAdded < b.dateAdded ? 1 : -1;
     if (sort === "title") return a.title.localeCompare(b.title);
-    return (b.stars ?? 0) - (a.stars ?? 0);
+    return recommendedScore(b) - recommendedScore(a);
   });
   return rows;
+}
+
+function recommendedScore(entry: Entry) {
+  const dateScore = Number.isNaN(Date.parse(entry.dateAdded || ""))
+    ? 0
+    : Date.parse(entry.dateAdded) / 86_400_000_000_000;
+  return (
+    (entry.packageVerified ? 20 : 0) +
+    (entry.source === "first-party" ? 12 : entry.source === "source-backed" ? 8 : 0) +
+    (entry.safetyNotes ? 6 : 0) +
+    (entry.privacyNotes ? 4 : 0) +
+    (entry.reviewed ? 4 : 0) +
+    dateScore
+  );
 }
 
 export function getEntry(category: string, slug: string): Entry | undefined {

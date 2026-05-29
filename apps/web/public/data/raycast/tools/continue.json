@@ -18,6 +18,15 @@
   "seoTitle": "Continue open-source AI coding assistant",
   "seoDescription": "Continue is an open-source AI coding assistant for editor chat, autocomplete, custom models, and coding workflows. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/continuedev/continue",
+  "repoStats": {
+    "repository": "continuedev/continue",
+    "url": "https://github.com/continuedev/continue",
+    "stars": 33266,
+    "forks": 4532,
+    "updatedAt": "2026-05-19T11:16:17Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.continue.dev",
   "downloadTrust": null,
   "verificationStatus": "",

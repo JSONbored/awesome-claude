@@ -154,7 +154,16 @@
     "repoUrl": "https://github.com/Xquik-dev/x-twitter-scraper",
     "githubStars": 87,
     "githubForks": 8,
-    "repoUpdatedAt": "2026-05-18T21:56:17Z"
+    "repoUpdatedAt": "2026-05-18T21:56:17Z",
+    "repoStats": {
+      "repository": "Xquik-dev/x-twitter-scraper",
+      "url": "https://github.com/Xquik-dev/x-twitter-scraper",
+      "stars": 87,
+      "forks": 8,
+      "updatedAt": "2026-05-18T21:56:17Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

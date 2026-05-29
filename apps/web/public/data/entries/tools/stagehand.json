@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/browserbase/stagehand",
     "githubStars": 22712,
     "githubForks": 1523,
-    "repoUpdatedAt": "2026-05-19T11:40:46Z"
+    "repoUpdatedAt": "2026-05-19T11:40:46Z",
+    "repoStats": {
+      "repository": "browserbase/stagehand",
+      "url": "https://github.com/browserbase/stagehand",
+      "stars": 22712,
+      "forks": 1523,
+      "updatedAt": "2026-05-19T11:40:46Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

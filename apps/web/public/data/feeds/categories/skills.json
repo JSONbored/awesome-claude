@@ -752,6 +752,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/audio-transcription-summarization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/audio-transcription-summarization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/audio-transcription-summarization",
+      "repoStats": {
+        "repository": "openai/whisper",
+        "url": "https://github.com/openai/whisper",
+        "stars": 99754,
+        "forks": 12214,
+        "updatedAt": "2026-05-19T11:32:31Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -2017,6 +2026,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-automations-orchestrator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-automations-orchestrator-capability-pack",
+      "repoStats": {
+        "repository": "openai/codex",
+        "url": "https://github.com/openai/codex",
+        "stars": 83749,
+        "forks": 12151,
+        "updatedAt": "2026-05-19T11:39:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -2174,6 +2192,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-plugin-creator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-plugin-creator-capability-pack",
+      "repoStats": {
+        "repository": "openai/codex",
+        "url": "https://github.com/openai/codex",
+        "stars": 83749,
+        "forks": 12151,
+        "updatedAt": "2026-05-19T11:39:05Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -5027,6 +5054,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/log-parsing-incident-timeline",
       "llmsUrl": "https://heyclau.de/data/llms/skills/log-parsing-incident-timeline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/log-parsing-incident-timeline",
+      "repoStats": {
+        "repository": "BurntSushi/ripgrep",
+        "url": "https://github.com/BurntSushi/ripgrep",
+        "stars": 63927,
+        "forks": 2568,
+        "updatedAt": "2026-05-19T11:22:40Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -5184,6 +5220,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/markdown-knowledge-base-composer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/markdown-knowledge-base-composer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/markdown-knowledge-base-composer",
+      "repoStats": {
+        "repository": "remarkjs/remark",
+        "url": "https://github.com/remarkjs/remark",
+        "stars": 8880,
+        "forks": 374,
+        "updatedAt": "2026-05-18T12:37:10Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -6602,6 +6647,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-agent-ops-hardening",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-agent-ops-hardening.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-agent-ops-hardening",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -6759,6 +6813,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-operator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-operator-capability-pack",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -6916,6 +6979,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-skill-authoring-factory-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-skill-authoring-factory-capability-pack",
+      "repoStats": {
+        "repository": "openclaw/openclaw",
+        "url": "https://github.com/openclaw/openclaw",
+        "stars": 373140,
+        "forks": 77409,
+        "updatedAt": "2026-05-19T11:43:27Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,
@@ -10230,6 +10302,15 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/website-crawler-summarizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/website-crawler-summarizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/website-crawler-summarizer",
+      "repoStats": {
+        "repository": "mozilla/readability",
+        "url": "https://github.com/mozilla/readability",
+        "stars": 11200,
+        "forks": 712,
+        "updatedAt": "2026-05-19T04:59:43Z",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
       "trustSignals": {
         "firstPartyEditorial": false,
         "packageVerified": true,

@@ -115,10 +115,10 @@ function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
           <span>
             by <span className="text-ink">{entry.author}</span>
           </span>
-          {typeof entry.stars === "number" && (
-            <span className="inline-flex items-center gap-1 tabular-nums">
+          {typeof entry.repoStats?.stars === "number" && (
+            <span className="inline-flex items-center gap-1 tabular-nums" title="Source repo stars">
               <Star className="h-3 w-3" aria-hidden />
-              {entry.stars.toLocaleString()}
+              {entry.repoStats.stars.toLocaleString()} repo
             </span>
           )}
           <NotesPresenceChips entry={entry} className="ml-auto" />

@@ -95,10 +95,12 @@ const ROWS: RowDef[] = [
     ),
   },
   {
-    label: "Stars",
+    label: "Source repo",
     render: (e) => (
       <span className="font-mono text-sm tabular-nums text-ink">
-        {e.stars !== undefined ? formatCompact(e.stars) : "—"}
+        {e.repoStats?.stars !== undefined
+          ? `${formatCompact(e.repoStats.stars)} repo stars`
+          : "—"}
       </span>
     ),
   },

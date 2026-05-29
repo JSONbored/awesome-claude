@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/langchain-ai/langgraph",
     "githubStars": 32402,
     "githubForks": 5495,
-    "repoUpdatedAt": "2026-05-19T11:43:29Z"
+    "repoUpdatedAt": "2026-05-19T11:43:29Z",
+    "repoStats": {
+      "repository": "langchain-ai/langgraph",
+      "url": "https://github.com/langchain-ai/langgraph",
+      "stars": 32402,
+      "forks": 5495,
+      "updatedAt": "2026-05-19T11:43:29Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

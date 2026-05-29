@@ -18,6 +18,15 @@
   "seoTitle": "Zed collaborative code editor with AI",
   "seoDescription": "Zed is a fast collaborative code editor with AI assistance, native performance, and developer collaboration workflows. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/zed-industries/zed",
+  "repoStats": {
+    "repository": "zed-industries/zed",
+    "url": "https://github.com/zed-industries/zed",
+    "stars": 83231,
+    "forks": 8570,
+    "updatedAt": "2026-05-19T11:31:57Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://zed.dev/docs",
   "downloadTrust": null,
   "verificationStatus": "",

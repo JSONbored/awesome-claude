@@ -101,7 +101,16 @@
     "repoUrl": "https://github.com/Packrift/packrift-mcp",
     "githubStars": 0,
     "githubForks": 1,
-    "repoUpdatedAt": "2026-05-19T11:41:33Z"
+    "repoUpdatedAt": "2026-05-19T11:41:33Z",
+    "repoStats": {
+      "repository": "Packrift/packrift-mcp",
+      "url": "https://github.com/Packrift/packrift-mcp",
+      "stars": 0,
+      "forks": 1,
+      "updatedAt": "2026-05-19T11:41:33Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

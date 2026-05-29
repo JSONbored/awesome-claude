@@ -18,6 +18,15 @@
   "seoTitle": "Vercel AI SDK for TypeScript AI apps",
   "seoDescription": "Vercel AI SDK helps build AI applications with model providers, streaming UI, tools, agents, and framework adapters. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/vercel/ai",
+  "repoStats": {
+    "repository": "vercel/ai",
+    "url": "https://github.com/vercel/ai",
+    "stars": 24333,
+    "forks": 4432,
+    "updatedAt": "2026-05-19T11:09:31Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://ai-sdk.dev/docs",
   "downloadTrust": null,
   "verificationStatus": "",

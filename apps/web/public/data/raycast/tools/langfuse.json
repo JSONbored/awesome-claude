@@ -18,6 +18,15 @@
   "seoTitle": "Langfuse open-source LLM observability",
   "seoDescription": "Langfuse is an open-source LLM engineering platform for tracing, prompt management, metrics, and evaluation. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/langfuse/langfuse",
+  "repoStats": {
+    "repository": "langfuse/langfuse",
+    "url": "https://github.com/langfuse/langfuse",
+    "stars": 27479,
+    "forks": 2805,
+    "updatedAt": "2026-05-19T11:21:59Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://langfuse.com/docs",
   "downloadTrust": null,
   "verificationStatus": "",

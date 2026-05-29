@@ -18,6 +18,15 @@
   "seoTitle": "Reddit MCP Buddy for Claude",
   "seoDescription": "Browse Reddit, search posts, and analyze user activity directly from Claude - no API keys required Discover tools for AI development.",
   "repoUrl": "https://github.com/karanb192/reddit-mcp-buddy",
+  "repoStats": {
+    "repository": "karanb192/reddit-mcp-buddy",
+    "url": "https://github.com/karanb192/reddit-mcp-buddy",
+    "stars": 652,
+    "forks": 82,
+    "updatedAt": "2026-05-19T03:36:39Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/karanb192/reddit-mcp-buddy",
   "downloadTrust": "first-party",
   "verificationStatus": "",

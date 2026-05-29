@@ -1,4 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
 import {
   ArrowUpRight,
   BookOpen,
@@ -12,6 +14,11 @@ import {
   Star,
   FileText,
   OctagonX,
+  Package,
+  Terminal,
+  Layers,
+  BadgeCheck,
+  Globe2,
 } from "lucide-react";
 import { getEntry, related } from "@/data/search";
 import {
@@ -33,9 +40,10 @@ import { HarnessBadge } from "@/components/harness-badge";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { NewsletterInline } from "@/components/newsletter-inline";
 import { SourceCitations } from "@/components/source-citations";
+import { ProvenanceBlock } from "@/components/provenance-block";
 import { StickyMetaBar } from "@/components/sticky-meta-bar";
 import { EntrySignalsPanel } from "@/components/entry-signals-panel";
-import { TRUST_LABEL } from "@/types/registry";
+import { TRUST_LABEL, PLATFORM_SUPPORT_LABEL, type Entry } from "@/types/registry";
 import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL } from "@/lib/trust";
 import { useEffect, useMemo, useState } from "react";
 import { useRecents } from "@/lib/recents";
@@ -45,9 +53,34 @@ import { HarnessVariantPicker } from "@/components/harness-variant-picker";
 import type { Harness } from "@/types/registry";
 import { cn } from "@/lib/utils";
 
+const loadFullEntry = createServerFn({ method: "GET" })
+  .inputValidator(z.object({ category: z.string().min(1), slug: z.string().min(1) }))
+  .handler(async ({ data }) => {
+    const { getEntry } = await import("@/lib/content");
+    const { renderMarkdown } = await import("@/lib/detail-assembly");
+    const { buildEntry } = await import("@/data/entry-normalize");
+    const entry = await getEntry(data.category, data.slug);
+    if (!entry) return null;
+
+    const [bodyHtml, sections] = await Promise.all([
+      entry.body ? renderMarkdown(entry.body) : Promise.resolve(undefined),
+      Promise.all(
+        (entry.sections ?? []).map(async (section) => ({
+          ...section,
+          html: section.markdown ? await renderMarkdown(section.markdown) : undefined,
+        })),
+      ),
+    ]);
+
+    return buildEntry({ ...entry, bodyHtml, sections });
+  });
+
 export const Route = createFileRoute("/entry/$category/$slug")({
-  loader: ({ params }): { entry: import("@/types/registry").Entry } => {
-    const entry = getEntry(params.category, params.slug);
+  loader: async ({ params }): Promise<{ entry: import("@/types/registry").Entry }> => {
+    const fullEntry = await loadFullEntry({
+      data: { category: params.category, slug: params.slug },
+    }).catch(() => null);
+    const entry = fullEntry ?? getEntry(params.category, params.slug);
     if (!entry) throw notFound();
     return { entry };
   },
@@ -57,22 +90,15 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const url = `/entry/${params.category}/${params.slug}`;
     const ld = {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
+      "@type": "WebPage",
       name: e.title,
       description: e.description,
-      applicationCategory: e.category,
-      operatingSystem: e.platforms.join(", "),
+      url,
+      datePublished: e.dateAdded,
+      dateModified: e.reviewedAt ?? e.dateAdded,
+      about: e.category,
       author: { "@type": "Person", name: e.author },
-      ...(e.stars
-        ? {
-            aggregateRating: {
-              "@type": "AggregateRating",
-              ratingValue: "4.5",
-              ratingCount: e.stars,
-            },
-          }
-        : {}),
-      ...(e.sourceUrl ? { url: e.sourceUrl } : {}),
+      ...(e.sourceUrl ? { isBasedOn: e.sourceUrl } : {}),
     };
     const breadcrumbs = {
       "@context": "https://schema.org",
@@ -91,10 +117,10 @@ export const Route = createFileRoute("/entry/$category/$slug")({
     const ogUrl = `/og/${params.category}/${params.slug}`;
     return {
       meta: [
-        { title: `${e.title} — HeyClaude` },
-        { name: "description", content: e.description },
+        { title: e.seoTitle ? `${e.seoTitle} — HeyClaude` : `${e.title} — HeyClaude` },
+        { name: "description", content: e.seoDescription ?? e.description },
         { property: "og:title", content: `${e.title} — HeyClaude` },
-        { property: "og:description", content: e.description },
+        { property: "og:description", content: e.seoDescription ?? e.description },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
         { property: "og:image", content: ogUrl },
@@ -114,7 +140,7 @@ export const Route = createFileRoute("/entry/$category/$slug")({
 });
 
 function Dossier() {
-  const data = Route.useLoaderData() as { entry: import("@/types/registry").Entry };
+  const data = Route.useLoaderData() as { entry: Entry };
   const entry = data.entry;
   const rel = related(entry);
   const recents = useRecents();
@@ -137,6 +163,7 @@ function Dossier() {
   const tabPayload = liveVariants.find((v) => v.id === tab)?.value;
 
   const risk = installRiskLevel(entry);
+  const hasSchema = hasSchemaDetails(entry);
 
   const tocItems = useMemo<TocItem[]>(() => {
     const items: TocItem[] = [];
@@ -145,12 +172,13 @@ function Dossier() {
     if (entry.privacyNotes) items.push({ id: "privacy", label: "Privacy notes" });
     if (entry.prerequisites && entry.prerequisites.length > 0)
       items.push({ id: "prerequisites", label: "Prerequisites" });
+    if (hasSchema) items.push({ id: "schema", label: "Schema details" });
     items.push({ id: "about", label: "About this resource" });
     items.push({ id: "citations", label: "Source citations" });
     if (rel.length > 0) items.push({ id: "related", label: "Related" });
     items.push({ id: "signals", label: "Signals" });
     return items;
-  }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, rel.length]);
+  }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, hasSchema, rel.length]);
 
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
@@ -207,12 +235,12 @@ function Dossier() {
             </span>
             <span>·</span>
             <span>added {entry.dateAdded}</span>
-            {entry.stars !== undefined && (
+            {entry.repoStats?.stars !== undefined && (
               <>
                 <span>·</span>
-                <span className="inline-flex items-center gap-1">
+                <span className="inline-flex items-center gap-1" title="Source repository stars">
                   <Star className="h-3 w-3" />
-                  {entry.stars.toLocaleString()}
+                  {entry.repoStats.stars.toLocaleString()} source repo stars
                 </span>
               </>
             )}
@@ -389,12 +417,12 @@ function Dossier() {
           )}
           {entry.safetyNotes && (
             <DossierSection id="safety" icon={ShieldCheck} title="Safety notes" tone="trust">
-              <p>{entry.safetyNotes}</p>
+              <NoteList value={entry.safetyNotesList ?? [entry.safetyNotes]} />
             </DossierSection>
           )}
           {entry.privacyNotes && (
             <DossierSection id="privacy" icon={AlertTriangle} title="Privacy notes">
-              <p>{entry.privacyNotes}</p>
+              <NoteList value={entry.privacyNotesList ?? [entry.privacyNotes]} />
             </DossierSection>
           )}
           {entry.prerequisites && entry.prerequisites.length > 0 && (
@@ -412,11 +440,35 @@ function Dossier() {
               </ul>
             </DossierSection>
           )}
+          {hasSchema && <SchemaDetails entry={entry} />}
           <DossierSection id="about" title="About this resource">
-            <p>
-              {entry.body ??
-                `${entry.title} is curated in the HeyClaude registry. Review the source repository before installing. Trust and source signals are derived from metadata review, not from runtime scanning.`}
-            </p>
+            {entry.bodyHtml ? (
+              <MarkdownHtml html={entry.bodyHtml} />
+            ) : entry.body ? (
+              <pre className="whitespace-pre-wrap rounded-lg border border-border bg-surface-2 p-3 font-mono text-xs">
+                {entry.body}
+              </pre>
+            ) : (
+              <p>
+                {entry.title} is curated in the HeyClaude registry. Review the source repository
+                before installing. Trust and source signals are derived from metadata review, not
+                from runtime scanning.
+              </p>
+            )}
+            {entry.headings && entry.headings.length > 0 && (
+              <div className="mt-5 rounded-lg border border-border bg-surface-2 p-3">
+                <div className="eyebrow mb-2">Content outline</div>
+                <ul className="grid gap-1 text-xs text-ink-muted sm:grid-cols-2">
+                  {entry.headings.slice(0, 16).map((heading) => (
+                    <li key={heading.id}>
+                      <a href={`#${heading.id}`} className="hover:text-ink">
+                        {heading.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="mt-4 flex flex-wrap gap-1.5">
               {entry.tags.map((t) => (
                 <span
@@ -468,6 +520,7 @@ function Dossier() {
           <div className="hidden lg:block lg:sticky lg:top-20">
             <DossierTOC items={tocItems} />
           </div>
+          <ProvenanceBlock entry={entry} />
           <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
             HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for
             malware. Always read the source before installing tools that touch your filesystem,
@@ -477,6 +530,285 @@ function Dossier() {
       </div>
     </div>
   );
+}
+
+function hasSchemaDetails(entry: Entry) {
+  return Boolean(
+    entry.skillType ||
+      entry.skillLevel ||
+      entry.verificationStatus ||
+      entry.verifiedAt ||
+      entry.retrievalSources?.length ||
+      entry.testedPlatforms?.length ||
+      entry.platformCompatibility?.length ||
+      entry.trigger ||
+      entry.commandSyntax ||
+      entry.argumentHint ||
+      entry.allowedTools?.length ||
+      entry.scriptLanguage ||
+      entry.scriptBody ||
+      entry.items?.length ||
+      entry.installationOrder?.length ||
+      entry.estimatedSetupTime ||
+      entry.difficulty ||
+      entry.websiteUrl ||
+      entry.pricingModel ||
+      entry.disclosure ||
+      entry.applicationCategory ||
+      entry.operatingSystem ||
+      entry.repoStats ||
+      entry.copySnippet,
+  );
+}
+
+function SchemaDetails({ entry }: { entry: Entry }) {
+  return (
+    <DossierSection id="schema" icon={BadgeCheck} title="Schema details">
+      <div className="space-y-5">
+        <FieldGrid>
+          <FieldRow label="Install type" value={entry.installType} />
+          <FieldRow
+            label="Reading time"
+            value={entry.readingTime ? `${entry.readingTime} min` : undefined}
+          />
+          <FieldRow label="Difficulty score" value={entry.difficultyScore?.toString()} />
+          <FieldRow label="Troubleshooting" value={booleanLabel(entry.hasTroubleshooting)} />
+          <FieldRow label="Breaking changes" value={booleanLabel(entry.hasBreakingChanges)} />
+        </FieldGrid>
+
+        {entry.repoStats && (
+          <MetadataGroup title="Source repository stats" icon={Star}>
+            <FieldGrid>
+              <FieldRow label="Scope" value={entry.repoStats.label ?? "Source repo"} />
+              <FieldRow
+                label="Stars"
+                value={
+                  entry.repoStats.stars !== undefined
+                    ? `${entry.repoStats.stars.toLocaleString()} source repo stars`
+                    : undefined
+                }
+              />
+              <FieldRow
+                label="Forks"
+                value={
+                  entry.repoStats.forks !== undefined
+                    ? entry.repoStats.forks.toLocaleString()
+                    : undefined
+                }
+              />
+              <FieldRow label="Updated" value={entry.repoStats.updatedAt} />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        {(entry.skillType ||
+          entry.skillLevel ||
+          entry.verificationStatus ||
+          entry.verifiedAt ||
+          entry.retrievalSources?.length ||
+          entry.testedPlatforms?.length ||
+          entry.platformCompatibility?.length) && (
+          <MetadataGroup title="Skill and platform metadata" icon={Package}>
+            <FieldGrid>
+              <FieldRow label="Skill type" value={entry.skillType} />
+              <FieldRow label="Skill level" value={entry.skillLevel} />
+              <FieldRow label="Verification" value={entry.verificationStatus} />
+              <FieldRow label="Verified at" value={entry.verifiedAt} />
+            </FieldGrid>
+            <PillList label="Retrieval sources" values={entry.retrievalSources} />
+            <PillList label="Tested platforms" values={entry.testedPlatforms} />
+            {entry.platformCompatibility?.length ? (
+              <div className="mt-3 overflow-hidden rounded-lg border border-border">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-surface-2 text-ink-subtle">
+                    <tr>
+                      <th className="px-3 py-2 font-medium">Platform</th>
+                      <th className="px-3 py-2 font-medium">Support</th>
+                      <th className="px-3 py-2 font-medium">Install path</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-border">
+                    {entry.platformCompatibility.map((item) => (
+                      <tr key={`${item.platform}-${item.installPath ?? ""}`}>
+                        <td className="px-3 py-2 text-ink">{item.platform}</td>
+                        <td className="px-3 py-2 text-ink-muted">
+                          {PLATFORM_SUPPORT_LABEL[item.support]}
+                        </td>
+                        <td className="px-3 py-2 font-mono text-[11px] text-ink-muted">
+                          {item.installPath ?? item.adapterPath ?? "—"}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : null}
+          </MetadataGroup>
+        )}
+
+        {(entry.trigger ||
+          entry.commandSyntax ||
+          entry.argumentHint ||
+          entry.allowedTools?.length ||
+          entry.scriptLanguage ||
+          entry.scriptBody) && (
+          <MetadataGroup title="Runtime and command metadata" icon={Terminal}>
+            <FieldGrid>
+              <FieldRow label="Trigger" value={entry.trigger} />
+              <FieldRow label="Command syntax" value={entry.commandSyntax} mono />
+              <FieldRow label="Argument hint" value={entry.argumentHint} />
+              <FieldRow label="Script language" value={entry.scriptLanguage} />
+            </FieldGrid>
+            <PillList label="Allowed tools" values={entry.allowedTools} />
+            <CodeDisclosure label="Script body" value={entry.scriptBody} />
+          </MetadataGroup>
+        )}
+
+        {(entry.items?.length ||
+          entry.installationOrder?.length ||
+          entry.estimatedSetupTime ||
+          entry.difficulty) && (
+          <MetadataGroup title="Collection metadata" icon={Layers}>
+            <FieldGrid>
+              <FieldRow
+                label="Items"
+                value={entry.items?.length ? `${entry.items.length} entries` : undefined}
+              />
+              <FieldRow label="Estimated setup" value={entry.estimatedSetupTime} />
+              <FieldRow label="Difficulty" value={entry.difficulty} />
+            </FieldGrid>
+            <PillList label="Included entries" values={entry.items} />
+            <PillList label="Installation order" values={entry.installationOrder} />
+          </MetadataGroup>
+        )}
+
+        {(entry.websiteUrl ||
+          entry.pricingModel ||
+          entry.disclosure ||
+          entry.applicationCategory ||
+          entry.operatingSystem) && (
+          <MetadataGroup title="Tool listing metadata" icon={Globe2}>
+            <FieldGrid>
+              <FieldRow label="Website" value={entry.websiteUrl} href={entry.websiteUrl} />
+              <FieldRow label="Pricing" value={entry.pricingModel} />
+              <FieldRow label="Disclosure" value={entry.disclosure} />
+              <FieldRow label="Application category" value={entry.applicationCategory} />
+              <FieldRow label="Operating system" value={entry.operatingSystem} />
+            </FieldGrid>
+          </MetadataGroup>
+        )}
+
+        <CodeDisclosure label="Full copyable content" value={entry.copySnippet} />
+      </div>
+    </DossierSection>
+  );
+}
+
+function booleanLabel(value?: boolean) {
+  if (value === undefined) return undefined;
+  return value ? "Yes" : "No";
+}
+
+function MetadataGroup({
+  title,
+  icon: Icon,
+  children,
+}: {
+  title: string;
+  icon: React.ElementType;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-lg border border-border bg-surface-2 p-3">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-ink">
+        <Icon className="h-3.5 w-3.5" aria-hidden />
+        {title}
+      </div>
+      {children}
+    </div>
+  );
+}
+
+function FieldGrid({ children }: { children: React.ReactNode }) {
+  return <dl className="grid gap-3 sm:grid-cols-2">{children}</dl>;
+}
+
+function FieldRow({
+  label,
+  value,
+  href,
+  mono,
+}: {
+  label: string;
+  value?: string;
+  href?: string;
+  mono?: boolean;
+}) {
+  if (!value) return null;
+  return (
+    <div>
+      <dt className="text-[10px] uppercase tracking-wider text-ink-subtle">{label}</dt>
+      <dd className={cn("mt-0.5 break-words text-sm text-ink", mono && "font-mono text-xs")}>
+        {href ? (
+          <a href={href} target="_blank" rel="noreferrer" className="hover:underline">
+            {value}
+          </a>
+        ) : (
+          value
+        )}
+      </dd>
+    </div>
+  );
+}
+
+function PillList({ label, values }: { label: string; values?: string[] }) {
+  if (!values?.length) return null;
+  return (
+    <div className="mt-3">
+      <div className="mb-1.5 text-[10px] uppercase tracking-wider text-ink-subtle">{label}</div>
+      <div className="flex flex-wrap gap-1.5">
+        {values.map((value) => (
+          <span
+            key={value}
+            className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
+          >
+            {value}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CodeDisclosure({ label, value }: { label: string; value?: string }) {
+  if (!value) return null;
+  return (
+    <details className="mt-3 rounded-lg border border-border bg-background">
+      <summary className="cursor-pointer px-3 py-2 text-xs font-medium text-ink">
+        {label}
+      </summary>
+      <pre className="max-h-96 overflow-auto border-t border-border p-3 font-mono text-[12px] leading-relaxed text-ink">
+        <code>{value}</code>
+      </pre>
+    </details>
+  );
+}
+
+function NoteList({ value }: { value: string[] }) {
+  return (
+    <ul className="space-y-1.5">
+      {value.map((item) => (
+        <li key={item} className="flex items-start gap-2">
+          <ListChecks className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" aria-hidden />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function MarkdownHtml({ html }: { html: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
 function DossierSection({

@@ -18,6 +18,15 @@
   "seoTitle": "Redis MCP Server for Claude",
   "seoDescription": "Official Redis MCP server providing natural language interface for Redis data management and operations Discover tools for AI development.",
   "repoUrl": "https://github.com/redis/mcp-redis",
+  "repoStats": {
+    "repository": "redis/mcp-redis",
+    "url": "https://github.com/redis/mcp-redis",
+    "stars": 512,
+    "forks": 96,
+    "updatedAt": "2026-05-19T09:13:05Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/redis/mcp-redis",
   "downloadTrust": "first-party",
   "verificationStatus": "",

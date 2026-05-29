@@ -14,6 +14,15 @@
   "seoTitle": "Dead Code Eliminator - Hooks",
   "seoDescription": "Automatically detects and removes unused code, imports, and dependencies with safe deletion verification and rollback support using Knip 5.x, ts-prune, depch...",
   "repoUrl": "https://github.com/nadeesha/ts-prune",
+  "repoStats": {
+    "repository": "nadeesha/ts-prune",
+    "url": "https://github.com/nadeesha/ts-prune",
+    "stars": 2067,
+    "forks": 68,
+    "updatedAt": "2026-04-13T08:47:15Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/nadeesha/ts-prune",
   "downloadTrust": null,
   "verificationStatus": "",

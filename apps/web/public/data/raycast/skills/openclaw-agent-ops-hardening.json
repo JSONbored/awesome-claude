@@ -14,6 +14,15 @@
   "seoTitle": "OpenClaw Agent Ops Hardening Skill",
   "seoDescription": "AI operations skill for OpenClaw environments focused on policy enforcement, secure runtime design, and operational resilience.",
   "repoUrl": "https://github.com/openclaw/openclaw",
+  "repoStats": {
+    "repository": "openclaw/openclaw",
+    "url": "https://github.com/openclaw/openclaw",
+    "stars": 373140,
+    "forks": 77409,
+    "updatedAt": "2026-05-19T11:43:27Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/openclaw/openclaw",
   "downloadTrust": "first-party",
   "verificationStatus": "draft",

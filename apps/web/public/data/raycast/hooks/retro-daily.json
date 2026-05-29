@@ -30,6 +30,12 @@
     "The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard."
   ],
   "repoUrl": "https://github.com/gyanesh-m/retro-daily",
+  "repoStats": {
+    "repository": "gyanesh-m/retro-daily",
+    "url": "https://github.com/gyanesh-m/retro-daily",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "",
   "downloadTrust": null,
   "verificationStatus": "",

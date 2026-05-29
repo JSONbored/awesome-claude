@@ -18,6 +18,15 @@
   "seoTitle": "Discord MCP Server for Claude",
   "seoDescription": "Discord bot integration for community management, moderation, and server automation Discover tools for AI development. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/saseq/discord-mcp",
+  "repoStats": {
+    "repository": "saseq/discord-mcp",
+    "url": "https://github.com/saseq/discord-mcp",
+    "stars": 311,
+    "forks": 72,
+    "updatedAt": "2026-05-18T02:46:12Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/saseq/discord-mcp",
   "downloadTrust": "first-party",
   "verificationStatus": "",

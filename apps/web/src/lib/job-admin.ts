@@ -170,7 +170,7 @@ function assertJobPublicationQuality(job: Record<string, unknown>) {
   }
 }
 
-function optionalText(value: string | undefined) {
+function optionalText(value: string | null | undefined) {
   const normalized = String(value ?? "").trim();
   return normalized || null;
 }
@@ -411,11 +411,15 @@ export async function updateAdminJobState(
     slug: string;
     action: JobAdminAction;
     checkedAt?: string;
-    expiresAt?: string;
+    expiresAt?: string | null;
   },
 ) {
   const checkedAt = optionalText(input.checkedAt) ?? new Date().toISOString();
-  const expiresAt = optionalText(input.expiresAt);
+  const hasExpiresAt = Object.prototype.hasOwnProperty.call(
+    input,
+    "expiresAt",
+  );
+  const expiresAt = input.expiresAt === null ? null : optionalText(input.expiresAt);
 
   if (input.action === "activate" || input.action === "reactivate") {
     const existing = await queryAdminJobBySlug(db, input.slug);
@@ -434,10 +438,11 @@ export async function updateAdminJobState(
           source_checked_at = ?,
           last_checked_at = ?,
           stale_check_count = 0,
+          expires_at = CASE WHEN ? = 1 THEN ? ELSE expires_at END,
           updated_at = CURRENT_TIMESTAMP
         WHERE slug = ?`,
       )
-      .bind(checkedAt, checkedAt, input.slug)
+      .bind(checkedAt, checkedAt, hasExpiresAt ? 1 : 0, expiresAt, input.slug)
       .run();
     if (Number(result.meta?.changes ?? 0) === 0) {
       throw new JobNotFoundError(input.slug);
@@ -483,7 +488,7 @@ export async function updateAdminJobState(
       `UPDATE jobs_listings
       SET
         status = ?,
-        expires_at = COALESCE(?, expires_at),
+        expires_at = CASE WHEN ? = 1 THEN ? ELSE expires_at END,
         source_checked_at = CASE WHEN ? IN ('activate', 'reactivate') THEN ? ELSE source_checked_at END,
         last_checked_at = CASE WHEN ? IN ('activate', 'reactivate') THEN ? ELSE last_checked_at END,
         stale_check_count = CASE WHEN ? IN ('activate', 'reactivate') THEN 0 ELSE stale_check_count END,
@@ -492,6 +497,7 @@ export async function updateAdminJobState(
     )
     .bind(
       nextStatus,
+      hasExpiresAt ? 1 : 0,
       expiresAt,
       input.action,
       checkedAt,

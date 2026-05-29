@@ -18,6 +18,15 @@
   "seoTitle": "Stagehand AI browser automation",
   "seoDescription": "Stagehand is an open-source browser automation framework for combining code, browser control, and AI actions. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/browserbase/stagehand",
+  "repoStats": {
+    "repository": "browserbase/stagehand",
+    "url": "https://github.com/browserbase/stagehand",
+    "stars": 22712,
+    "forks": 1523,
+    "updatedAt": "2026-05-19T11:40:46Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.stagehand.dev",
   "downloadTrust": null,
   "verificationStatus": "",

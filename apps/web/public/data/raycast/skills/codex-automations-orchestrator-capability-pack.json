@@ -14,6 +14,15 @@
   "seoTitle": "Codex Automations Orchestrator Capability Pack Skill",
   "seoDescription": "Advanced AI skill for Codex automation design, recurring task governance, and safe long-running operational workflows. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/openai/codex",
+  "repoStats": {
+    "repository": "openai/codex",
+    "url": "https://github.com/openai/codex",
+    "stars": 83749,
+    "forks": 12151,
+    "updatedAt": "2026-05-19T11:39:05Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/openai/codex",
   "downloadTrust": "first-party",
   "verificationStatus": "validated",

@@ -18,6 +18,15 @@
   "seoTitle": "Helicone LLM observability and cost tracking",
   "seoDescription": "Helicone provides LLM logging, metrics, cost tracking, feedback, and gateway workflows for AI applications. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/Helicone/helicone",
+  "repoStats": {
+    "repository": "Helicone/helicone",
+    "url": "https://github.com/Helicone/helicone",
+    "stars": 5692,
+    "forks": 579,
+    "updatedAt": "2026-05-19T11:11:23Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.helicone.ai",
   "downloadTrust": null,
   "verificationStatus": "",

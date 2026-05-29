@@ -224,7 +224,13 @@
     "repoUrl": "https://github.com/gyanesh-m/retro-daily",
     "githubStars": null,
     "githubForks": null,
-    "repoUpdatedAt": null
+    "repoUpdatedAt": null,
+    "repoStats": {
+      "repository": "gyanesh-m/retro-daily",
+      "url": "https://github.com/gyanesh-m/retro-daily",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

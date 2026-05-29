@@ -18,6 +18,15 @@
   "seoTitle": "Microsoft AutoGen multi-agent AI framework",
   "seoDescription": "Microsoft AutoGen is an open-source framework for multi-agent AI applications, workflows, and autonomous systems. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/microsoft/autogen",
+  "repoStats": {
+    "repository": "microsoft/autogen",
+    "url": "https://github.com/microsoft/autogen",
+    "stars": 58173,
+    "forks": 8786,
+    "updatedAt": "2026-05-19T11:43:25Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://microsoft.github.io/autogen/",
   "downloadTrust": null,
   "verificationStatus": "",

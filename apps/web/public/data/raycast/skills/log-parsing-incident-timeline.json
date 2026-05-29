@@ -14,6 +14,15 @@
   "seoTitle": "Log Parsing + Incident Timeline Skill",
   "seoDescription": "Parse web, application, and system logs into structured incidents and timelines with anomaly detection. Supports multiple log formats (Apache/Nginx access lo...",
   "repoUrl": "https://github.com/BurntSushi/ripgrep",
+  "repoStats": {
+    "repository": "BurntSushi/ripgrep",
+    "url": "https://github.com/BurntSushi/ripgrep",
+    "stars": 63927,
+    "forks": 2568,
+    "updatedAt": "2026-05-19T11:22:40Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/BurntSushi/ripgrep",
   "downloadTrust": "first-party",
   "verificationStatus": "draft",

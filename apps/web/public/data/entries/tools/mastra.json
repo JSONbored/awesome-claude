@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/mastra-ai/mastra",
     "githubStars": 24031,
     "githubForks": 2092,
-    "repoUpdatedAt": "2026-05-19T11:18:03Z"
+    "repoUpdatedAt": "2026-05-19T11:18:03Z",
+    "repoStats": {
+      "repository": "mastra-ai/mastra",
+      "url": "https://github.com/mastra-ai/mastra",
+      "stars": 24031,
+      "forks": 2092,
+      "updatedAt": "2026-05-19T11:18:03Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

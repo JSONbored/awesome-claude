@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/microsoft/autogen",
     "githubStars": 58173,
     "githubForks": 8786,
-    "repoUpdatedAt": "2026-05-19T11:43:25Z"
+    "repoUpdatedAt": "2026-05-19T11:43:25Z",
+    "repoStats": {
+      "repository": "microsoft/autogen",
+      "url": "https://github.com/microsoft/autogen",
+      "stars": 58173,
+      "forks": 8786,
+      "updatedAt": "2026-05-19T11:43:25Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

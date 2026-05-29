@@ -11,12 +11,12 @@ export const Route = createFileRoute("/api-docs")({
       { title: "API documentation — HeyClaude" },
       {
         name: "description",
-        content: "Public REST API for the HeyClaude registry, with a built-in playground.",
+        content: "Public REST API for the HeyClaude registry, with live read-only examples.",
       },
       { property: "og:title", content: "HeyClaude API docs" },
       {
         property: "og:description",
-        content: "Search, trending, manifest, integrity, diff, submissions — with a playground.",
+        content: "Search, trending, manifest, integrity, diff, submissions, and generated OpenAPI specs.",
       },
     ],
   }),
@@ -46,6 +46,20 @@ function ApiDocsPage() {
             Public read endpoints — no auth required. Rate-limited per IP. Verify artifact integrity
             via the registry manifest.
           </p>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <a
+              href="/openapi.json"
+              className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-ink hover:bg-surface-2"
+            >
+              OpenAPI JSON
+            </a>
+            <a
+              href="/openapi.yaml"
+              className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs text-ink hover:bg-surface-2"
+            >
+              OpenAPI YAML
+            </a>
+          </div>
           <div className="mt-4 relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-subtle" />
             <input

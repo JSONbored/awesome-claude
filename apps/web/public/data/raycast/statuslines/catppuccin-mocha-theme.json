@@ -14,6 +14,15 @@
   "seoTitle": "Catppuccin Mocha Theme - Statuslines",
   "seoDescription": "Soothing Catppuccin Mocha theme statusline with 26 pastel colors, Powerline separators, and modular segments for Git, model info, and token tracking. Discove...",
   "repoUrl": "https://github.com/catppuccin/catppuccin",
+  "repoStats": {
+    "repository": "catppuccin/catppuccin",
+    "url": "https://github.com/catppuccin/catppuccin",
+    "stars": 19184,
+    "forks": 352,
+    "updatedAt": "2026-05-19T11:04:59Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/catppuccin/catppuccin",
   "downloadTrust": null,
   "verificationStatus": "",

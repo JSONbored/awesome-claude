@@ -408,6 +408,36 @@ describe("central API router security", () => {
     });
   });
 
+  it("accepts a dedicated jobs admin token without replacing the primary admin token", async () => {
+    const previousAdmin = process.env.ADMIN_API_TOKEN;
+    const previousJobs = process.env.JOBS_ADMIN_API_TOKEN;
+    process.env.ADMIN_API_TOKEN = "primary-admin-token";
+    process.env.JOBS_ADMIN_API_TOKEN = "jobs-admin-token";
+
+    try {
+      const { isAdminAuthorized } = await import("@/lib/admin-auth");
+      expect(
+        isAdminAuthorized(
+          new Request("https://heyclau.de/api/admin/jobs", {
+            headers: { authorization: "Bearer jobs-admin-token" },
+          }),
+        ),
+      ).toBe(true);
+      expect(
+        isAdminAuthorized(
+          new Request("https://heyclau.de/api/admin/jobs", {
+            headers: { "x-admin-token": "primary-admin-token" },
+          }),
+        ),
+      ).toBe(true);
+    } finally {
+      if (previousAdmin === undefined) delete process.env.ADMIN_API_TOKEN;
+      else process.env.ADMIN_API_TOKEN = previousAdmin;
+      if (previousJobs === undefined) delete process.env.JOBS_ADMIN_API_TOKEN;
+      else process.env.JOBS_ADMIN_API_TOKEN = previousJobs;
+    }
+  });
+
   it("rejects invalid admin lead status filters and neutralizes CSV formulas", async () => {
     expect(() =>
       apiRouteDefinitions["adminListingLeads.list"].querySchema?.parse({

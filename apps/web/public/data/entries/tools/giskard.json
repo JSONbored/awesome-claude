@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/Giskard-AI/giskard",
     "githubStars": 5358,
     "githubForks": 457,
-    "repoUpdatedAt": "2026-05-19T08:02:52Z"
+    "repoUpdatedAt": "2026-05-19T08:02:52Z",
+    "repoStats": {
+      "repository": "Giskard-AI/giskard",
+      "url": "https://github.com/Giskard-AI/giskard",
+      "stars": 5358,
+      "forks": 457,
+      "updatedAt": "2026-05-19T08:02:52Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

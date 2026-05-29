@@ -18,6 +18,15 @@
   "seoTitle": "Arize Phoenix LLM observability",
   "seoDescription": "Arize Phoenix provides open-source observability and evaluation for LLM applications, traces, datasets, and experiments.",
   "repoUrl": "https://github.com/Arize-ai/phoenix",
+  "repoStats": {
+    "repository": "Arize-ai/phoenix",
+    "url": "https://github.com/Arize-ai/phoenix",
+    "stars": 9739,
+    "forks": 879,
+    "updatedAt": "2026-05-19T11:06:07Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://arize.com/docs/phoenix",
   "downloadTrust": null,
   "verificationStatus": "",

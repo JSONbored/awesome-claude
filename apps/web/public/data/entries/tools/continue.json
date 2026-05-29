@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/continuedev/continue",
     "githubStars": 33266,
     "githubForks": 4532,
-    "repoUpdatedAt": "2026-05-19T11:16:17Z"
+    "repoUpdatedAt": "2026-05-19T11:16:17Z",
+    "repoStats": {
+      "repository": "continuedev/continue",
+      "url": "https://github.com/continuedev/continue",
+      "stars": 33266,
+      "forks": 4532,
+      "updatedAt": "2026-05-19T11:16:17Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

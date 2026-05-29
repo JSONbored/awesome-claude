@@ -18,6 +18,15 @@
   "seoTitle": "Garak LLM vulnerability scanner",
   "seoDescription": "Garak is an open-source LLM vulnerability scanner for probing model behavior, prompt attacks, and safety risks. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/NVIDIA/garak",
+  "repoStats": {
+    "repository": "NVIDIA/garak",
+    "url": "https://github.com/NVIDIA/garak",
+    "stars": 7848,
+    "forks": 949,
+    "updatedAt": "2026-05-19T10:43:48Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/NVIDIA/garak",
   "downloadTrust": null,
   "verificationStatus": "",

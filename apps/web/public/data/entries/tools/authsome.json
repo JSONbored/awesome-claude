@@ -106,7 +106,13 @@
     "repoUrl": "https://github.com/agentrhq/authsome",
     "githubStars": null,
     "githubForks": null,
-    "repoUpdatedAt": null
+    "repoUpdatedAt": null,
+    "repoStats": {
+      "repository": "agentrhq/authsome",
+      "url": "https://github.com/agentrhq/authsome",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

@@ -18,6 +18,15 @@
   "seoTitle": "n8n workflow automation for AI teams",
   "seoDescription": "n8n is a source-available workflow automation platform for integrations, AI workflows, triggers, and data pipelines. HeyClaude adds source links, install...",
   "repoUrl": "https://github.com/n8n-io/n8n",
+  "repoStats": {
+    "repository": "n8n-io/n8n",
+    "url": "https://github.com/n8n-io/n8n",
+    "stars": 188659,
+    "forks": 57807,
+    "updatedAt": "2026-05-19T11:37:32Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.n8n.io",
   "downloadTrust": null,
   "verificationStatus": "",

@@ -132,20 +132,40 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
   const [body, setBody] = useState(endpoint.body?.example ?? "");
   const [sending, setSending] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   const send = async () => {
     setSending(true);
     setResponse(null);
-    setResponse(JSON.stringify(endpoint.sampleResponse, null, 2));
-    setSending(false);
+    setError(null);
+    try {
+      if (!endpoint.liveRequest) {
+        setResponse(JSON.stringify(endpoint.sampleResponse, null, 2));
+        return;
+      }
+
+      const url = buildRequestUrl(endpoint, values);
+      const result = await fetch(url, { headers: { accept: "*/*" } });
+      const contentType = result.headers.get("content-type") ?? "";
+      const payload = contentType.includes("application/json")
+        ? JSON.stringify(await result.json(), null, 2)
+        : await result.text();
+      setResponse(`${result.status} ${result.statusText}\n${payload}`);
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : String(requestError));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
     <div className="space-y-4 bg-surface-2 p-5">
       <div className="flex items-center justify-between">
-        <div className="eyebrow">Example</div>
-        <span className="text-[10px] text-ink-subtle">Sample response only</span>
+        <div className="eyebrow">{endpoint.liveRequest ? "Live request" : "Example"}</div>
+        <span className="text-[10px] text-ink-subtle">
+          {endpoint.liveRequest ? "Read-only GET" : "Sample response only"}
+        </span>
       </div>
       {endpoint.parameters && endpoint.parameters.length > 0 && (
         <div className="space-y-3">
@@ -181,12 +201,17 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         ) : (
           <Send className="h-3.5 w-3.5" />
         )}
-        Show sample
+        {endpoint.liveRequest ? "Send read-only request" : "Show sample"}
       </button>
+      {error && (
+        <div className="rounded-md border border-trust-blocked/30 bg-trust-blocked/10 p-3 text-xs text-trust-blocked">
+          {error}
+        </div>
+      )}
       {response && (
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <div className="eyebrow">Response · 200 OK</div>
+            <div className="eyebrow">Response</div>
             <CopyButton value={response} label="Copy" />
           </div>
           <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink">
@@ -209,6 +234,24 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
       )}
     </div>
   );
+}
+
+function buildRequestUrl(endpoint: OpenApiEndpoint, values: Record<string, string>) {
+  let path = endpoint.path.replace(/\{(\w+)\}/g, (_match, name) => {
+    const value = values[name] || endpoint.parameters?.find((p) => p.name === name)?.example;
+    return encodeURIComponent(value || "");
+  });
+
+  const params = new URLSearchParams();
+  endpoint.parameters
+    ?.filter((param) => param.in === "query")
+    .forEach((param) => {
+      const value = values[param.name] || param.example || "";
+      if (value) params.set(param.name, value);
+    });
+  const query = params.toString();
+  if (query) path = `${path}?${query}`;
+  return path;
 }
 
 function ParamInput({

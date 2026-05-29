@@ -28,6 +28,15 @@
   "seoTitle": "ContrastAPI MCP Server for Claude Security Research",
   "seoDescription": "Use ContrastAPI with Claude for 49 MCP security tools covering CVE risk scoring, MITRE ATLAS/D3FEND, domain audit, IOC enrichment, and web intelligence.",
   "repoUrl": "https://github.com/UPinar/contrastapi",
+  "repoStats": {
+    "repository": "UPinar/contrastapi",
+    "url": "https://github.com/UPinar/contrastapi",
+    "stars": 25,
+    "forks": 3,
+    "updatedAt": "2026-05-18T16:57:58Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://api.contrastcyber.com",
   "downloadTrust": null,
   "verificationStatus": "",

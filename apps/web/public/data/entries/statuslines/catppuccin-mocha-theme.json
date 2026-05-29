@@ -227,7 +227,16 @@
     "repoUrl": "https://github.com/catppuccin/catppuccin",
     "githubStars": 19184,
     "githubForks": 352,
-    "repoUpdatedAt": "2026-05-19T11:04:59Z"
+    "repoUpdatedAt": "2026-05-19T11:04:59Z",
+    "repoStats": {
+      "repository": "catppuccin/catppuccin",
+      "url": "https://github.com/catppuccin/catppuccin",
+      "stars": 19184,
+      "forks": 352,
+      "updatedAt": "2026-05-19T11:04:59Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

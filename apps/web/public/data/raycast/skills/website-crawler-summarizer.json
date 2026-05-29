@@ -14,6 +14,15 @@
   "seoTitle": "Website Crawler + Summarizer Skill",
   "seoDescription": "Crawl domains respectfully, extract readable content, dedupe, and generate structured summaries. Perfect for research, competitive analysis, and content aggr...",
   "repoUrl": "https://github.com/mozilla/readability",
+  "repoStats": {
+    "repository": "mozilla/readability",
+    "url": "https://github.com/mozilla/readability",
+    "stars": 11200,
+    "forks": 712,
+    "updatedAt": "2026-05-19T04:59:43Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/mozilla/readability",
   "downloadTrust": "first-party",
   "verificationStatus": "draft",

@@ -146,6 +146,118 @@ describe("registry artifacts", () => {
     expect(searchEntries.length).toBe(contentEntries.length);
   });
 
+  it("keeps Atlas list data compact while preserving full entry detail fields", () => {
+    const atlasPayload = JSON.parse(
+      fs.readFileSync(
+        path.join(repoRoot, "apps/web/src/generated/atlas-registry.json"),
+        "utf8",
+      ),
+    ) as { entries: Array<Record<string, unknown>> };
+    const atlasSkill = atlasPayload.entries.find(
+      (entry) =>
+        entry.category === "skills" &&
+        entry.slug === "agent-evals-regression-gate",
+    );
+    const skillDetail = readDataJson<{ entry: Record<string, unknown> }>(
+      "entries/skills/agent-evals-regression-gate.json",
+    ).entry;
+
+    expect(atlasSkill).toMatchObject({
+      skillType: "general",
+      skillLevel: "advanced",
+      verificationStatus: "draft",
+      testedPlatforms: expect.arrayContaining(["Claude", "Codex"]),
+    });
+    expect(atlasSkill).not.toHaveProperty("body");
+    expect(atlasSkill).not.toHaveProperty("sections");
+    expect(atlasSkill).not.toHaveProperty("copySnippet");
+    expect(skillDetail).toMatchObject({
+      copySnippet: expect.any(String),
+      body: expect.any(String),
+      sections: expect.arrayContaining([
+        expect.objectContaining({ title: expect.any(String) }),
+      ]),
+      headings: expect.arrayContaining([
+        expect.objectContaining({ text: expect.any(String) }),
+      ]),
+    });
+  });
+
+  it("publishes schema-specific fields for category-aware detail rendering", () => {
+    const cases = [
+      [
+        "entries/hooks/accessibility-checker.json",
+        {
+          trigger: "PostToolUse",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/commands/cursor-rules.json",
+        {
+          commandSyntax: expect.any(String),
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/statuslines/accessibility-first-statusline.json",
+        {
+          scriptLanguage: "bash",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/collections/agent-operator-growth-master-pack.json",
+        {
+          items: expect.arrayContaining([
+            expect.objectContaining({ slug: expect.any(String) }),
+          ]),
+          installationOrder: expect.arrayContaining([expect.any(String)]),
+          estimatedSetupTime: "95 minutes",
+        },
+      ],
+      [
+        "entries/tools/aider.json",
+        {
+          websiteUrl: "https://aider.chat",
+          pricingModel: "open-source",
+          disclosure: "editorial",
+        },
+      ],
+    ] as const;
+
+    for (const [relativePath, expected] of cases) {
+      const detail = readDataJson<{ entry: Record<string, unknown> }>(
+        relativePath,
+      ).entry;
+      expect(detail).toMatchObject(expected);
+    }
+  });
+
+  it("attributes GitHub stars as source repository stats instead of listing popularity", () => {
+    const sourceStatEntry = directoryEntries.find(
+      (entry) => typeof entry.githubStars === "number",
+    );
+    expect(sourceStatEntry).toBeTruthy();
+    expect(sourceStatEntry?.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
+
+    const detail = readDataJson<{ entry: Record<string, unknown> }>(
+      `entries/${sourceStatEntry!.category}/${sourceStatEntry!.slug}.json`,
+    ).entry;
+    expect(detail.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
+  });
+
   it("does not split surrogate pairs when truncating JSON-backed text", () => {
     const value = `${"a".repeat(RAYCAST_COPY_PREVIEW_LIMIT - 3)}📚 tail`;
     const truncated = truncateText(value, RAYCAST_COPY_PREVIEW_LIMIT);

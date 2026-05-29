@@ -14,6 +14,15 @@
   "seoTitle": "Codex Plugin Creator Capability Pack Skill",
   "seoDescription": "Advanced AI skill for Codex plugin architecture, secure manifest authoring, and plugin lifecycle operations. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/openai/codex",
+  "repoStats": {
+    "repository": "openai/codex",
+    "url": "https://github.com/openai/codex",
+    "stars": 83749,
+    "forks": 12151,
+    "updatedAt": "2026-05-19T11:39:05Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/openai/codex",
   "downloadTrust": "first-party",
   "verificationStatus": "validated",

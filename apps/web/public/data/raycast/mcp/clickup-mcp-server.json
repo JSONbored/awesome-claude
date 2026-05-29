@@ -18,6 +18,15 @@
   "seoTitle": "Clickup MCP Server for Claude",
   "seoDescription": "Task management and project tracking with ClickUp integration Discover tools for AI development. HeyClaude adds source links, install steps, compatibility,...",
   "repoUrl": "https://github.com/hauptsacheNet/clickup-mcp",
+  "repoStats": {
+    "repository": "hauptsacheNet/clickup-mcp",
+    "url": "https://github.com/hauptsacheNet/clickup-mcp",
+    "stars": 44,
+    "forks": 17,
+    "updatedAt": "2026-05-03T13:43:35Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/hauptsacheNet/clickup-mcp",
   "downloadTrust": "first-party",
   "verificationStatus": "",

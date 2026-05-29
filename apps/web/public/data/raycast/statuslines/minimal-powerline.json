@@ -14,6 +14,15 @@
   "seoTitle": "Minimal Powerline - Statuslines",
   "seoDescription": "Clean, performance-optimized statusline with Powerline glyphs showing model, directory, and token count Discover tools for AI development.",
   "repoUrl": "https://github.com/powerline/powerline",
+  "repoStats": {
+    "repository": "powerline/powerline",
+    "url": "https://github.com/powerline/powerline",
+    "stars": 14752,
+    "forks": 1001,
+    "updatedAt": "2026-05-19T10:46:19Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/powerline/powerline",
   "downloadTrust": null,
   "verificationStatus": "",

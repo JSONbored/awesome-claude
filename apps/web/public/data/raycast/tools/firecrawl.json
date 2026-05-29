@@ -18,6 +18,15 @@
   "seoTitle": "Firecrawl web crawling API for LLMs",
   "seoDescription": "Firecrawl turns websites into clean markdown, structured data, and LLM-ready content for AI applications. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/mendableai/firecrawl",
+  "repoStats": {
+    "repository": "mendableai/firecrawl",
+    "url": "https://github.com/mendableai/firecrawl",
+    "stars": 121680,
+    "forks": 7410,
+    "updatedAt": "2026-05-19T11:41:31Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.firecrawl.dev",
   "downloadTrust": null,
   "verificationStatus": "",

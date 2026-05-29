@@ -85,7 +85,25 @@ export interface SkillFields {
   skillLevel?: SkillLevel;
   verificationStatus?: VerificationStatus;
   retrievalSources?: string[];
-  testedPlatforms?: Platform[];
+  testedPlatforms?: string[];
+}
+
+export interface RepoStats {
+  repository?: string;
+  url?: string;
+  stars?: number;
+  forks?: number;
+  updatedAt?: string;
+  appliesTo?: "listing_source_repo" | "upstream_reference" | "directory_repo" | "none";
+  label?: string;
+}
+
+export interface EntrySection {
+  title: string;
+  id: string;
+  markdown?: string;
+  html?: string;
+  codeBlocks?: Array<{ language?: string; code: string }>;
 }
 
 export interface Entry extends Provenance, BrandInfo, SkillFields {
@@ -93,6 +111,8 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   slug: string;
   title: string;
   description: string;
+  seoTitle?: string;
+  seoDescription?: string;
   cardDescription?: string;
   author: string;
   tags: string[];
@@ -123,6 +143,8 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   repoUrl?: string;
   trust: TrustLevel;
   source: SourceStatus;
+  repoStats?: RepoStats;
+  /** @deprecated Repo stars are source metadata, not listing popularity. */
   stars?: number;
   dateAdded: string;
   reviewed?: boolean;
@@ -134,21 +156,43 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   privacyNotesList?: string[];
   prerequisites?: string[];
   body?: string;
+  bodyHtml?: string;
+  sections?: EntrySection[];
+  headings?: Array<{ depth: number; text: string; id: string }>;
+  codeBlocks?: Array<{ language?: string; code: string }>;
   /** SHA-256 checksum for downloadable package, if any. */
   downloadSha256?: string;
   downloadUrl?: string;
   packageVerified?: boolean;
+  usageSnippet?: string;
+  copySnippet?: string;
   /** Hooks */
   trigger?: HookTrigger;
   /** Commands */
   commandSyntax?: string;
+  argumentHint?: string;
+  allowedTools?: string[];
   /** Statuslines */
   scriptLanguage?: "bash" | "zsh" | "fish" | "python" | "javascript" | "other";
+  scriptBody?: string;
   /** Collections */
   items?: string[];
   installationOrder?: string[];
+  estimatedSetupTime?: string;
+  difficulty?: string;
   /** Skills/MCP */
   platformCompatibility?: PlatformCompatibility[];
+  verifiedAt?: string;
+  readingTime?: number;
+  difficultyScore?: number;
+  hasPrerequisites?: boolean;
+  hasTroubleshooting?: boolean;
+  hasBreakingChanges?: boolean;
+  websiteUrl?: string;
+  pricingModel?: string;
+  disclosure?: string;
+  applicationCategory?: string;
+  operatingSystem?: string;
   /** Plugins: which harnesses this plugin works with. */
   harness?: Harness[];
   /** Plugins: what the bundle packages. */

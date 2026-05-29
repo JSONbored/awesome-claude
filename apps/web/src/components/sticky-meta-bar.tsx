@@ -109,10 +109,10 @@ export function StickyMetaBar({
             <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink sm:truncate">
               <span className="line-clamp-2 sm:line-clamp-1">{entry.title}</span>
             </span>
-            {typeof entry.stars === "number" && (
+            {typeof entry.repoStats?.stars === "number" && (
               <span className="hidden shrink-0 items-center gap-1 text-[11px] tabular-nums text-ink-muted lg:inline-flex">
                 <Star className="h-3 w-3" aria-hidden />
-                {entry.stars.toLocaleString()}
+                {entry.repoStats.stars.toLocaleString()} repo
               </span>
             )}
             {/* Compact safety/privacy icons under md */}

@@ -18,6 +18,15 @@
   "seoTitle": "OpenCode terminal AI coding agent",
   "seoDescription": "OpenCode is a terminal-first AI coding agent for local codebase edits, model-flexible workflows, and automation. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/sst/opencode",
+  "repoStats": {
+    "repository": "sst/opencode",
+    "url": "https://github.com/sst/opencode",
+    "stars": 162457,
+    "forks": 19131,
+    "updatedAt": "2026-05-19T11:42:52Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://opencode.ai",
   "downloadTrust": null,
   "verificationStatus": "",

@@ -18,6 +18,15 @@
   "seoTitle": "Browser Use automation library for AI agents",
   "seoDescription": "Browser Use is an open-source library for building AI agents that navigate, click, type, and inspect websites. HeyClaude adds source links, install steps,...",
   "repoUrl": "https://github.com/browser-use/browser-use",
+  "repoStats": {
+    "repository": "browser-use/browser-use",
+    "url": "https://github.com/browser-use/browser-use",
+    "stars": 94603,
+    "forks": 10672,
+    "updatedAt": "2026-05-19T11:41:57Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://docs.browser-use.com",
   "downloadTrust": null,
   "verificationStatus": "",

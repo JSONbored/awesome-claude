@@ -22,6 +22,7 @@ export interface OpenApiEndpoint {
   responseExample: string;
   sampleResponse: unknown;
   curlExtra?: string;
+  liveRequest?: boolean;
 }
 
 const TAG_BLURBS: Record<string, string> = {
@@ -66,10 +67,130 @@ function paramsFromPath(path: string): OpenApiParam[] {
     in: "path" as const,
     required: true,
     type: "string" as const,
-    example:
-      match[1] === "category" ? "mcp" : match[1] === "slug" ? "github-mcp-server" : "example",
+    example: exampleForPathParam(match[1], path),
   }));
   return params;
+}
+
+function exampleForPathParam(name: string, path: string) {
+  if (name === "category") return path.includes("/data/feeds/") ? "skills" : "tools";
+  if (name === "slug") return "aider";
+  if (name === "platform") return "claude";
+  if (name === "kind") return "icon";
+  if (name === "domain") return "anthropic.com";
+  return "example";
+}
+
+const QUERY_PARAM_EXAMPLES: Record<string, OpenApiParam[]> = {
+  "registry.search": [
+    {
+      name: "q",
+      in: "query",
+      type: "string",
+      description: "Search query.",
+      example: "mcp",
+    },
+    {
+      name: "limit",
+      in: "query",
+      type: "number",
+      description: "Maximum result count.",
+      example: "5",
+    },
+  ],
+  "registry.trending": [
+    {
+      name: "limit",
+      in: "query",
+      type: "number",
+      description: "Maximum result count.",
+      example: "5",
+    },
+  ],
+  "registry.diff": [
+    {
+      name: "limit",
+      in: "query",
+      type: "number",
+      description: "Maximum changelog event count.",
+      example: "10",
+    },
+  ],
+  "registry.integrity": [
+    {
+      name: "artifact",
+      in: "query",
+      type: "string",
+      description: "Optional artifact path from the registry manifest.",
+      example: "directory-index.json",
+    },
+  ],
+  "submissions.queue": [
+    {
+      name: "limit",
+      in: "query",
+      type: "number",
+      description: "Maximum issue count.",
+      example: "10",
+    },
+  ],
+  download: [
+    {
+      name: "category",
+      in: "query",
+      type: "string",
+      description: "Entry category.",
+      example: "skills",
+    },
+    {
+      name: "slug",
+      in: "query",
+      type: "string",
+      description: "Entry slug.",
+      example: "agent-evals-regression-gate",
+    },
+  ],
+  "jobs.list": [
+    {
+      name: "limit",
+      in: "query",
+      type: "number",
+      description: "Maximum job count.",
+      example: "10",
+    },
+  ],
+  "communitySignals.read": [
+    {
+      name: "target",
+      in: "query",
+      type: "string",
+      description: "Entry key or tool target.",
+      example: "tools:aider",
+    },
+  ],
+  "og.render": [
+    {
+      name: "title",
+      in: "query",
+      type: "string",
+      description: "Preview title.",
+      example: "HeyClaude",
+    },
+  ],
+};
+
+function paramsFor(definition: ReturnType<typeof listApiRouteDefinitions>[number]) {
+  return [...paramsFromPath(definition.path), ...(QUERY_PARAM_EXAMPLES[definition.id] ?? [])];
+}
+
+function canTryLive(definition: ReturnType<typeof listApiRouteDefinitions>[number]) {
+  if (definition.method !== "GET") return false;
+  if (definition.tags.includes("Admin")) return false;
+  if (definition.responseContentType === "image/png") return false;
+  if (definition.responseContentType === "application/octet-stream") return false;
+  if (definition.id === "brandAsset.read") return false;
+  if (definition.id === "download") return false;
+  return true;
 }
 
 function bodyExample(id: string) {
@@ -186,10 +307,11 @@ export const ENDPOINTS: OpenApiEndpoint[] = listApiRouteDefinitions().map((defin
     tag: tagId(tag),
     summary: definition.summary,
     description: definition.description ?? definition.summary,
-    parameters: paramsFromPath(definition.path),
+    parameters: paramsFor(definition),
     body,
     responseExample: JSON.stringify(sample, null, 2),
     sampleResponse: sample,
+    liveRequest: canTryLive(definition),
   };
 });
 

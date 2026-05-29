@@ -18,6 +18,15 @@
   "seoTitle": "AWS Services MCP Server - MCP Servers",
   "seoDescription": "Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring Discover tools for AI development.",
   "repoUrl": "https://github.com/awslabs/mcp",
+  "repoStats": {
+    "repository": "awslabs/mcp",
+    "url": "https://github.com/awslabs/mcp",
+    "stars": 9085,
+    "forks": 1532,
+    "updatedAt": "2026-05-19T08:34:58Z",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
   "documentationUrl": "https://github.com/awslabs/mcp",
   "downloadTrust": "first-party",
   "verificationStatus": "",
