@@ -695,7 +695,7 @@ describe("submission automation workflows", () => {
     );
   });
 
-  it("routes hook-only content PRs to hook validation only", () => {
+  it("routes hook-only content PRs through hook and public artifact validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`
 title: Retro Daily
@@ -707,10 +707,10 @@ description: Daily Claude Code retro dashboard hook.
 
     expect(lanes.content).toBe("true");
     expect(lanes.content_categories_json).toBe('["hooks"]');
-    expect(lanes.registry).toBe("false");
-    expect(lanes.web).toBe("false");
+    expect(lanes.registry).toBe("true");
+    expect(lanes.web).toBe("true");
     expect(lanes.mcp).toBe("false");
-    expect(lanes.raycast).toBe("false");
+    expect(lanes.raycast).toBe("true");
     expect(lanes.packages).toBe("false");
   });
 
@@ -1320,7 +1320,7 @@ description: Example description
     expect(source).toContain("content_categories_json");
   });
 
-  it("routes hook-only content PRs to hook content validation", () => {
+  it("routes hook-only content PRs to hook content and public artifact validation", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
     });
@@ -1329,15 +1329,15 @@ description: Example description
     expect(outputs.content_hooks).toBe("true");
     expect(outputs.content_mcp).toBe("false");
     expect(outputs.content_categories_json).toBe('["hooks"]');
-    expect(outputs.web).toBe("false");
+    expect(outputs.web).toBe("true");
     expect(outputs.mcp).toBe("false");
-    expect(outputs.raycast).toBe("false");
+    expect(outputs.raycast).toBe("true");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
     expect(outputs.ci).toBe("false");
   });
 
-  it("routes multi-category content PRs to only touched category validators", () => {
+  it("routes multi-category content PRs to touched category and artifact validators", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
       "content/mcp/example-server.mdx": "---\ntitle: Example Server\n---\n",
@@ -1347,10 +1347,10 @@ description: Example description
     expect(outputs.content_hooks).toBe("true");
     expect(outputs.content_mcp).toBe("true");
     expect(outputs.content_skills).toBe("false");
-    expect(outputs.web).toBe("false");
-    expect(outputs.raycast).toBe("false");
+    expect(outputs.web).toBe("true");
+    expect(outputs.raycast).toBe("true");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("false");
+    expect(outputs.registry).toBe("true");
   });
 
   it("routes generated registry artifacts to artifact validation", () => {
