@@ -86,6 +86,10 @@ describe("OpenAPI route coverage", () => {
       schemas?: Record<string, { properties?: Record<string, unknown> }>;
     };
   };
+  const parsedPublicYamlSchema = parse(publicYamlSchema) as {
+    openapi?: string;
+    paths?: Record<string, unknown>;
+  };
 
   it("documents every public and limited dynamic API route", () => {
     for (const route of apiRoutes) {
@@ -98,7 +102,10 @@ describe("OpenAPI route coverage", () => {
   });
 
   it("publishes static OpenAPI JSON and YAML assets for the docs surface", () => {
-    expect(publicYamlSchema).toBe(schema);
+    expect(parsedPublicYamlSchema.openapi).toBe("3.1.0");
+    expect(Object.keys(parsedPublicYamlSchema.paths ?? {}).sort()).toEqual(
+      Object.keys(parsedSchema.paths).sort(),
+    );
     expect(publicJsonSchema.openapi).toBe("3.1.0");
     expect(Object.keys(publicJsonSchema.paths ?? {}).sort()).toEqual(
       Object.keys(parsedSchema.paths).sort(),

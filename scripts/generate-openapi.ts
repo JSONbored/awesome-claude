@@ -240,7 +240,8 @@ async function main() {
     lineWidth: 100,
     singleQuote: false,
   })}\n`;
-  const generated = await formatWithPrettier(rawGenerated, {
+  const generated = await formatWithPrettier(rawGenerated, { parser: "yaml" });
+  const generatedPublicYaml = await formatWithPrettier(rawGenerated, {
     parser: "yaml",
     printWidth: 100,
   });
@@ -252,7 +253,7 @@ async function main() {
   if (process.argv.includes("--check")) {
     const outputs = [
       [outputPath, generated],
-      [publicYamlOutputPath, generated],
+      [publicYamlOutputPath, generatedPublicYaml],
       [publicJsonOutputPath, generatedJson],
     ] as const;
     const staleOutput = outputs.find(([filePath, expected]) => {
@@ -271,7 +272,7 @@ async function main() {
   }
 
   fs.writeFileSync(outputPath, generated);
-  fs.writeFileSync(publicYamlOutputPath, generated);
+  fs.writeFileSync(publicYamlOutputPath, generatedPublicYaml);
   fs.writeFileSync(publicJsonOutputPath, generatedJson);
   console.log(`Wrote ${path.relative(repoRoot, outputPath)}`);
   console.log(`Wrote ${path.relative(repoRoot, publicYamlOutputPath)}`);
