@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "timezone": "America/Denver",
+  "timezone": "America/Phoenix",
+  "schedule": ["before 6am on monday"],
   "labels": ["dependencies"],
   "rangeStrategy": "pin",
   "dependencyDashboard": true,
