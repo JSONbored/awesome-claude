@@ -187,8 +187,59 @@ async function writePrettierJsonFile(filePath, value) {
   return writeFileIfChanged(filePath, formatted);
 }
 
+const ATLAS_CREDENTIAL_PLACEHOLDER_REPLACEMENTS = [
+  [
+    "postgresql://user:password@host:port/database",
+    "PostgreSQL connection URI with user, password, host, port, and database",
+  ],
+  [
+    "postgresql://user:password@localhost:5432/mydb",
+    "PostgreSQL connection URI stored in POSTGRES_CONNECTION_STRING",
+  ],
+  [
+    "redis://user:password@host:port/db",
+    "Redis connection URI with user, password, host, port, and database",
+  ],
+  [
+    "redis://:password@host:6379",
+    "Redis connection URI with password authentication",
+  ],
+  [
+    "redis://username:password@host:6379",
+    "Redis connection URI with ACL username and password authentication",
+  ],
+];
+
+function scrubAtlasCredentialPlaceholders(value) {
+  if (typeof value === "string") {
+    let scrubbed = value;
+    for (const [
+      placeholder,
+      replacement,
+    ] of ATLAS_CREDENTIAL_PLACEHOLDER_REPLACEMENTS) {
+      scrubbed = scrubbed.split(placeholder).join(replacement);
+    }
+    return scrubbed;
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => scrubAtlasCredentialPlaceholders(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        scrubAtlasCredentialPlaceholders(item),
+      ]),
+    );
+  }
+
+  return value;
+}
+
 function pickAtlasEntry(entry) {
-  return {
+  return scrubAtlasCredentialPlaceholders({
     category: entry.category,
     slug: entry.slug,
     title: entry.title,
@@ -231,7 +282,7 @@ function pickAtlasEntry(entry) {
     platformCompatibility: entry.platformCompatibility,
     commandSyntax: entry.commandSyntax,
     scriptLanguage: entry.scriptLanguage,
-  };
+  });
 }
 
 function writeTextFile(filePath, value) {

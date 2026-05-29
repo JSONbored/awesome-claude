@@ -58,7 +58,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 1. Ensure PostgreSQL is running and accessible
 2. Create a read-only database user with SELECT permissions (if needed)
-3. Construct your PostgreSQL connection string with user, password, host, port, and database
+3. Construct your PostgreSQL connection string: postgresql://user:password@host:port/database
 4. Create a .mcp.json file in your project root with PostgreSQL server configuration
 5. Add the postgres server config with npx command and connection string as argument
 6. Verify installation: claude mcp list
@@ -68,7 +68,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 1. Ensure PostgreSQL is running and accessible
 2. Create a read-only database user with SELECT permissions (if needed)
-3. Construct your PostgreSQL connection string with user, password, host, port, and database
+3. Construct your PostgreSQL connection string: postgresql://user:password@host:port/database
 4. Open Claude Desktop configuration file (see configPath below)
 5. Add the PostgreSQL MCP server configuration with npx command and connection string
 6. Add connection string as argument to the server command
@@ -77,7 +77,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 ## Requirements
 - PostgreSQL database (local or remote PostgreSQL server)
-- PostgreSQL connection string with user, password, host, port, and database
+- PostgreSQL connection string (postgresql://user:password@host:port/database format)
 - Node.js and npx (for running @modelcontextprotocol/server-postgres package)
 - Network access (if connecting to remote PostgreSQL server)
 - Database user with SELECT permissions (read-only access required)
@@ -169,7 +169,7 @@ const result = await postgres.query({
 ## Troubleshooting
 ### Connection refused or database not accessible
 
-Verify PostgreSQL is running with pg_isready command. Check that the connection string includes the expected user, password, host, port, and database values. Test with psql command first using your real PostgreSQL URI. Verify firewall allows connections on port 5432 (default). Check PostgreSQL is listening on correct interface (localhost vs 0.0.0.0). Verify hostname resolves correctly for remote connections.
+Verify PostgreSQL is running with pg_isready command. Check connection string format: postgresql://user:password@host:port/database. Test with psql command first (psql 'postgresql://user:password@host:port/database'). Verify firewall allows connections on port 5432 (default). Check PostgreSQL is listening on correct interface (localhost vs 0.0.0.0). Verify hostname resolves correctly for remote connections.
 
 ### SSL connection error - wrong version number or verify failed
 

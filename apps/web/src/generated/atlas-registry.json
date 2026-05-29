@@ -4,8 +4,8 @@
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2368576,
-      "sha256": "d88bc81110450d34da28160bf1f25d3be97a4630c815e990b93e84aad26b6cdd",
+      "bytes": 2368585,
+      "sha256": "aec70610041951347be3b9274ee9f96b04daada954d8696dc8d1fe746e655d31",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -17,7 +17,7 @@
     {
       "path": "/data/raycast-index.json",
       "bytes": 1220718,
-      "sha256": "ffd3386c461f2835003ba297bff19540950ba13fa33e2005174885e0659ce15a",
+      "sha256": "42a1c5635dc326d1ddece25e2ba1094f120d971f55e8683622411a5d877b04d1",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -41,7 +41,7 @@
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "c05b30de757f7cd47dd6f8cc6c5e70c7165253ded3c318da6d7d46aa475c5a43",
+      "sha256": "8ba09a97c771964482dd116d5e7ee58d5c4d4d88763e690c3c4191de19c378f5",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -82,8 +82,8 @@
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3994007,
-      "sha256": "6255dba587d05001812abe9fbf8c6bf142e1a90e519afe49b95ab8fe88ef8d61",
+      "bytes": 3994003,
+      "sha256": "b1b511cd8b41892f0417d5a4d86b7325efe773a7ad70293962a628249971ae3b",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -94,8 +94,8 @@
     },
     {
       "path": "/data/feeds/categories/mcp.json",
-      "bytes": 222044,
-      "sha256": "026c894fd995f28f438b73f5718851f2c9fc8421c4f9ba01e4569f348b5e71f8",
+      "bytes": 222053,
+      "sha256": "0ce80cf3c74ac07c5b193d8a5f33c910c576d2dc147ebb157cbcbdff8c5b3b98",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -185,7 +185,7 @@
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "84bb23b6e0ec6bc24da45c339aebcc8c11acba38cbceaf2fc67a05e89a91de90",
+      "sha256": "8977899870f33eb651d5652e9290c265874b625d51fd6d9d9fdbe8e668194242",
       "builtAt": "2026-05-26T00:00:00.000Z"
     }
   ],
@@ -13014,7 +13014,7 @@
       "brandIconUrl": "/api/brand-assets/icon/anthropic.com",
       "prerequisites": [
         "PostgreSQL database (local or remote PostgreSQL server)",
-        "PostgreSQL connection string with user, password, host, port, and database",
+        "PostgreSQL connection string (PostgreSQL connection URI with user, password, host, port, and database format)",
         "Node.js and npx (for running @modelcontextprotocol/server-postgres package)",
         "Network access (if connecting to remote PostgreSQL server)",
         "Database user with SELECT permissions (read-only access required)",

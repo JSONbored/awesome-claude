@@ -60502,7 +60502,7 @@ Claude: *uses list_issues tool to fetch assigned issues*
 
 ```bash
 # Claude creates .env.local for secrets
-POSTGRES_CONNECTION_STRING="your-postgresql-connection-uri"
+POSTGRES_CONNECTION_STRING=postgresql://user:password@localhost:5432/mydb
 ```
 
 **Usage:**
@@ -74347,7 +74347,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 1. Ensure PostgreSQL is running and accessible
 2. Create a read-only database user with SELECT permissions (if needed)
-3. Construct your PostgreSQL connection string with user, password, host, port, and database
+3. Construct your PostgreSQL connection string: postgresql://user:password@host:port/database
 4. Create a .mcp.json file in your project root with PostgreSQL server configuration
 5. Add the postgres server config with npx command and connection string as argument
 6. Verify installation: claude mcp list
@@ -74357,7 +74357,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 1. Ensure PostgreSQL is running and accessible
 2. Create a read-only database user with SELECT permissions (if needed)
-3. Construct your PostgreSQL connection string with user, password, host, port, and database
+3. Construct your PostgreSQL connection string: postgresql://user:password@host:port/database
 4. Open Claude Desktop configuration file (see configPath below)
 5. Add the PostgreSQL MCP server configuration with npx command and connection string
 6. Add connection string as argument to the server command
@@ -74366,7 +74366,7 @@ Streamline your database exploration and analysis by connecting Claude to Postgr
 
 ## Requirements
 - PostgreSQL database (local or remote PostgreSQL server)
-- PostgreSQL connection string with user, password, host, port, and database
+- PostgreSQL connection string (postgresql://user:password@host:port/database format)
 - Node.js and npx (for running @modelcontextprotocol/server-postgres package)
 - Network access (if connecting to remote PostgreSQL server)
 - Database user with SELECT permissions (read-only access required)
@@ -74458,7 +74458,7 @@ const result = await postgres.query({
 ## Troubleshooting
 ### Connection refused or database not accessible
 
-Verify PostgreSQL is running with pg_isready command. Check that the connection string includes the expected user, password, host, port, and database values. Test with psql command first using your real PostgreSQL URI. Verify firewall allows connections on port 5432 (default). Check PostgreSQL is listening on correct interface (localhost vs 0.0.0.0). Verify hostname resolves correctly for remote connections.
+Verify PostgreSQL is running with pg_isready command. Check connection string format: postgresql://user:password@host:port/database. Test with psql command first (psql 'postgresql://user:password@host:port/database'). Verify firewall allows connections on port 5432 (default). Check PostgreSQL is listening on correct interface (localhost vs 0.0.0.0). Verify hostname resolves correctly for remote connections.
 
 ### SSL connection error - wrong version number or verify failed
 
@@ -81670,11 +81670,11 @@ const user = await redis.get("user:123");
 ## Troubleshooting
 ### Connection refused or Redis server not accessible
 
-Verify Redis server is running with `redis-cli ping` (should return PONG). Check connection URL format with explicit user, password, host, port, and database values, or use `redis://localhost:6379/0` for local unauthenticated development. Confirm network firewall allows port 6379 (or your custom port). Test connection with `redis-cli -u URL` command. For remote servers, verify hostname resolution and network connectivity. Check Redis server logs for connection errors.
+Verify Redis server is running with `redis-cli ping` (should return PONG). Check connection URL format: `redis://localhost:6379/0` or `redis://user:password@host:port/db`. Confirm network firewall allows port 6379 (or your custom port). Test connection with `redis-cli -u URL` command. For remote servers, verify hostname resolution and network connectivity. Check Redis server logs for connection errors.
 
 ### NOAUTH Authentication required error
 
-Redis requires authentication. Add the password or ACL username/password to the Redis URL instead of using an unauthenticated local URL. Use AUTH command in redis-cli to test: `AUTH password` or `AUTH username password`. Verify `requirepass` in redis.conf matches your password. Check ACL user exists with `ACL LIST` command. For ACL users, ensure user has proper permissions.
+Redis requires authentication. Add password to connection URL: `redis://:password@host:6379` (empty username) or `redis://username:password@host:6379` (with username for ACL). Use AUTH command in redis-cli to test: `AUTH password` or `AUTH username password`. Verify `requirepass` in redis.conf matches your password. Check ACL user exists with `ACL LIST` command. For ACL users, ensure user has proper permissions.
 
 ### NOPERM user has no permissions to run command or access key
 

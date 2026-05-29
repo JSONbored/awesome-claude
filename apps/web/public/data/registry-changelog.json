@@ -1730,7 +1730,7 @@
       "canonicalUrl": "https://heyclau.de/entry/commands/mcp-setup",
       "llmsUrl": "https://heyclau.de/data/llms/commands/mcp-setup.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/commands/mcp-setup",
-      "artifactHash": "11cd998884be11f7beea7a71d38670d042d8d236ac5aace2a95115d2ae0ef2a3"
+      "artifactHash": "6125e054a8e25f7ea77318c76fe5d2363365d53ce3b8cf22cf02201bc71e8848"
     },
     {
       "key": "statuslines:model-switch-history-tracker",
@@ -3062,7 +3062,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/redis-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/redis-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/redis-mcp-server",
-      "artifactHash": "ad537298c2e340e88749897bffd0a233d4f3d1872fd1f9167d845bd62c0c2bbe"
+      "artifactHash": "2b76001ffd9fd33e96a7907ba1ae719afad4936bd2aa42cbd960d1aedcbab37e"
     },
     {
       "key": "hooks:accessibility-checker",
@@ -4478,7 +4478,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/postgresql-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/postgresql-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/postgresql-mcp-server",
-      "artifactHash": "d9745eb2cbdc869bc85f570c7f3380bb126ad47411c88ed9e735eb924c7e88d7"
+      "artifactHash": "972e787434e5a039f9ed5d7f148987dba3ce28ee07bdcc5b8c54006a74fc2713"
     },
     {
       "key": "hooks:security-scanner-hook",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "bea80ab67c1123d3a74454e264bc4ee38d681b8621272245b3959efe723a369e"
+  "signature": "46dfa1bff2d1e9dbf8033692eec52fc26a671fc6520e3ece7b9a6796a3e924ec"
 }
