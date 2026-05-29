@@ -2,6 +2,7 @@ packages:
   - apps/*
   - packages/*
 overrides:
+  "@aws-sdk/client-s3": 3.1050.0
   fast-uri: 3.1.2
   fast-xml-builder: 1.2.0
   fast-xml-parser: 5.8.0
@@ -9,7 +10,8 @@ overrides:
   ip-address: 10.2.0
   postcss: 8.5.15
   qs: 6.15.2
-  vite: 7.3.2
+  typescript: 5.9.3
+  vite: 8.0.14
   ws: 8.21.0
 allowBuilds:
   esbuild: true

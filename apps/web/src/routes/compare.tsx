@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
 import {
@@ -22,11 +21,11 @@ import type { Entry } from "@/types/registry";
 const defaultSearch = { ids: "" };
 
 const searchSchema = z.object({
-  ids: fallback(z.string(), defaultSearch.ids).default(defaultSearch.ids),
+  ids: z.string().catch(defaultSearch.ids).default(defaultSearch.ids),
 });
 
 export const Route = createFileRoute("/compare")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: searchSchema,
   search: {
     middlewares: [stripSearchParams(defaultSearch)],
   },

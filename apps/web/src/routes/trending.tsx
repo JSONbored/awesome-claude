@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
 import { BRIEF_ISSUES } from "@/data/entries";
 import { getEntry, search } from "@/data/search";
@@ -19,10 +18,8 @@ const defaultSearch = {
 };
 
 const trendingSchema = z.object({
-  window: fallback(z.enum(["7d", "30d", "all"]), defaultSearch.window).default(
-    defaultSearch.window,
-  ),
-  category: fallback(z.string(), defaultSearch.category).default(defaultSearch.category),
+  window: z.enum(["7d", "30d", "all"]).catch(defaultSearch.window).default(defaultSearch.window),
+  category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
 });
 
 type SignalState = {
@@ -59,7 +56,7 @@ const REASON_LABELS: Record<string, string> = {
 };
 
 export const Route = createFileRoute("/trending")({
-  validateSearch: zodValidator(trendingSchema),
+  validateSearch: trendingSchema,
   search: {
     middlewares: [stripSearchParams(defaultSearch)],
   },

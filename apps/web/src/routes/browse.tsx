@@ -1,7 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link, stripSearchParams, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
-import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
 import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
@@ -117,22 +116,18 @@ const defaultSearch = {
 };
 
 const searchSchema = z.object({
-  q: fallback(z.string(), defaultSearch.q).default(defaultSearch.q),
-  category: fallback(z.string(), defaultSearch.category).default(defaultSearch.category),
-  trust: fallback(z.string(), defaultSearch.trust).default(defaultSearch.trust),
-  source: fallback(z.string(), defaultSearch.source).default(defaultSearch.source),
-  platform: fallback(z.string(), defaultSearch.platform).default(defaultSearch.platform),
-  sort: fallback(z.enum(["popular", "newest", "title"]), defaultSearch.sort).default(
-    defaultSearch.sort,
-  ),
-  view: fallback(z.enum(["row", "grid", "compact"]), defaultSearch.view).default(
-    defaultSearch.view,
-  ),
-  compare: fallback(z.string(), defaultSearch.compare).default(defaultSearch.compare),
+  q: z.string().catch(defaultSearch.q).default(defaultSearch.q),
+  category: z.string().catch(defaultSearch.category).default(defaultSearch.category),
+  trust: z.string().catch(defaultSearch.trust).default(defaultSearch.trust),
+  source: z.string().catch(defaultSearch.source).default(defaultSearch.source),
+  platform: z.string().catch(defaultSearch.platform).default(defaultSearch.platform),
+  sort: z.enum(["popular", "newest", "title"]).catch(defaultSearch.sort).default(defaultSearch.sort),
+  view: z.enum(["row", "grid", "compact"]).catch(defaultSearch.view).default(defaultSearch.view),
+  compare: z.string().catch(defaultSearch.compare).default(defaultSearch.compare),
 });
 
 export const Route = createFileRoute("/browse")({
-  validateSearch: zodValidator(searchSchema),
+  validateSearch: searchSchema,
   search: {
     middlewares: [stripSearchParams(defaultSearch)],
   },
