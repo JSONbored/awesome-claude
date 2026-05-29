@@ -46,21 +46,28 @@ describe("PR change classifier", () => {
 
     const contentDir = path.join(cwd, "content", "agents");
     fs.mkdirSync(contentDir, { recursive: true });
-    fs.writeFileSync(path.join(contentDir, "example.mdx"), "---\ntitle: Example\n---\n");
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
     git(cwd, ["add", "content/agents/example.mdx"]);
     git(cwd, ["commit", "-m", "add content entry"]);
 
     const outputPath = path.join(cwd, "github-output.txt");
-    execFileSync("node", [path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs")], {
-      cwd,
-      env: {
-        ...process.env,
-        BASE_SHA: baseSha,
-        GITHUB_EVENT_NAME: "pull_request",
-        GITHUB_OUTPUT: outputPath,
+    execFileSync(
+      "node",
+      [path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs")],
+      {
+        cwd,
+        env: {
+          ...process.env,
+          BASE_SHA: baseSha,
+          GITHUB_EVENT_NAME: "pull_request",
+          GITHUB_OUTPUT: outputPath,
+        },
+        encoding: "utf8",
       },
-      encoding: "utf8",
-    });
+    );
 
     const outputs = parseOutput(fs.readFileSync(outputPath, "utf8"));
     expect(outputs).toMatchObject({
