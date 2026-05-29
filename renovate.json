@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
-  "timezone": "America/Denver",
+  "timezone": "America/Phoenix",
+  "schedule": ["before 6am on monday"],
   "labels": ["dependencies"],
   "rangeStrategy": "pin",
   "dependencyDashboard": true,
@@ -28,6 +29,13 @@
       "matchManagers": ["npm"],
       "matchPackageNames": ["typescript"],
       "allowedVersions": "<6.0.0",
+      "automerge": false
+    },
+    {
+      "description": "Queue major dependency updates in the Dependency Dashboard before opening noisy breaking-change PRs",
+      "matchManagers": ["npm", "github-actions"],
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
       "automerge": false
     },
     {
