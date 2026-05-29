@@ -84,13 +84,20 @@ const generatedArtifactInfra = touches(
   /^apps\/web\/src\/generated\//,
   "README.md",
 );
+const submissionAutomationInfra = touches(
+  /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
+);
 
 const flags = {
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
-  registry: contentCategoryTouched || generatedArtifactInfra,
+  registry:
+    contentCategoryTouched ||
+    generatedArtifactInfra ||
+    submissionAutomationInfra,
   web:
     contentCategoryTouched ||
+    submissionAutomationInfra ||
     touches(
       /^apps\/web\//,
       /^emails\//,
@@ -127,15 +134,17 @@ const flags = {
     "package.json",
     "pnpm-lock.yaml",
   ),
-  ci: touches(
-    /^\.github\/workflows\//,
-    /^scripts\/ci\//,
-    /^\.trunk\//,
-    "renovate.json",
-    "package.json",
-    "pnpm-lock.yaml",
-    "vitest.config.ts",
-  ),
+  ci:
+    submissionAutomationInfra ||
+    touches(
+      /^\.github\/workflows\//,
+      /^scripts\/ci\//,
+      /^\.trunk\//,
+      "renovate.json",
+      "package.json",
+      "pnpm-lock.yaml",
+      "vitest.config.ts",
+    ),
 };
 
 flags.docs = touches(

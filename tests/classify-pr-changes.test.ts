@@ -25,6 +25,44 @@ function parseOutput(output: string) {
   );
 }
 
+function createFixtureRepo() {
+  const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-classify-"));
+  tempDirs.push(cwd);
+
+  git(cwd, ["init", "--initial-branch=main"]);
+  git(cwd, ["config", "user.email", "test@example.com"]);
+  git(cwd, ["config", "user.name", "Test User"]);
+  git(cwd, ["config", "commit.gpgsign", "false"]);
+  fs.writeFileSync(path.join(cwd, "README.md"), "# fixture\n");
+  git(cwd, ["add", "README.md"]);
+  git(cwd, ["commit", "-m", "init"]);
+
+  return {
+    cwd,
+    baseSha: git(cwd, ["rev-parse", "HEAD"]),
+  };
+}
+
+function runClassifier(cwd: string, baseSha: string) {
+  const outputPath = path.join(cwd, "github-output.txt");
+  execFileSync(
+    "node",
+    [path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs")],
+    {
+      cwd,
+      env: {
+        ...process.env,
+        BASE_SHA: baseSha,
+        GITHUB_EVENT_NAME: "pull_request",
+        GITHUB_OUTPUT: outputPath,
+      },
+      encoding: "utf8",
+    },
+  );
+
+  return parseOutput(fs.readFileSync(outputPath, "utf8"));
+}
+
 describe("PR change classifier", () => {
   afterEach(() => {
     for (const dir of tempDirs.splice(0)) {
@@ -33,17 +71,7 @@ describe("PR change classifier", () => {
   });
 
   it("routes content entry changes through public artifact validation lanes", () => {
-    const cwd = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-classify-"));
-    tempDirs.push(cwd);
-
-    git(cwd, ["init", "--initial-branch=main"]);
-    git(cwd, ["config", "user.email", "test@example.com"]);
-    git(cwd, ["config", "user.name", "Test User"]);
-    git(cwd, ["config", "commit.gpgsign", "false"]);
-    fs.writeFileSync(path.join(cwd, "README.md"), "# fixture\n");
-    git(cwd, ["add", "README.md"]);
-    git(cwd, ["commit", "-m", "init"]);
-    const baseSha = git(cwd, ["rev-parse", "HEAD"]);
+    const { cwd, baseSha } = createFixtureRepo();
 
     const contentDir = path.join(cwd, "content", "agents");
     fs.mkdirSync(contentDir, { recursive: true });
@@ -54,28 +82,32 @@ describe("PR change classifier", () => {
     git(cwd, ["add", "content/agents/example.mdx"]);
     git(cwd, ["commit", "-m", "add content entry"]);
 
-    const outputPath = path.join(cwd, "github-output.txt");
-    execFileSync(
-      "node",
-      [path.join(repoRoot, "scripts/ci/classify-pr-changes.mjs")],
-      {
-        cwd,
-        env: {
-          ...process.env,
-          BASE_SHA: baseSha,
-          GITHUB_EVENT_NAME: "pull_request",
-          GITHUB_OUTPUT: outputPath,
-        },
-        encoding: "utf8",
-      },
-    );
-
-    const outputs = parseOutput(fs.readFileSync(outputPath, "utf8"));
+    const outputs = runClassifier(cwd, baseSha);
     expect(outputs).toMatchObject({
       content: "true",
       content_agents: "true",
       registry: "true",
       raycast: "true",
+      web: "true",
+    });
+  });
+
+  it("routes submission automation changes through full owned validation lanes", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const scriptDir = path.join(cwd, "scripts");
+    fs.mkdirSync(scriptDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(scriptDir, "import-submission-issue.mjs"),
+      "console.log('changed');\n",
+    );
+    git(cwd, ["add", "scripts/import-submission-issue.mjs"]);
+    git(cwd, ["commit", "-m", "update submission automation"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      ci: "true",
+      content: "false",
+      registry: "true",
       web: "true",
     });
   });
