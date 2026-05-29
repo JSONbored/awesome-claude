@@ -91,7 +91,7 @@
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "@types/sanitize-html": "2.16.1",
-    "@vitejs/plugin-react": "5.0.4",
+    "@vitejs/plugin-react": "6.0.2",
     "eslint": "9.32.0",
     "eslint-config-prettier": "10.1.1",
     "eslint-plugin-prettier": "5.2.6",
