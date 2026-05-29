@@ -414,9 +414,9 @@ export function parseFeedSnapshotMetadata(
     if (!isRecord(parsed)) return null;
 
     const generatedAt = optionalString(parsed.generatedAt);
-    const signature = optionalString(parsed.signature) || generatedAt;
+    const signature = optionalString(parsed.signature);
     const detailCacheNamespace =
-      optionalString(parsed.detailCacheNamespace) || signature;
+      optionalString(parsed.detailCacheNamespace) || signature || generatedAt;
     if (!signature && !generatedAt) return null;
 
     return {
