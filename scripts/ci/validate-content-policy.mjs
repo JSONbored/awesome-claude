@@ -53,6 +53,17 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
   "embedded_secret",
 ]);
 
+const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
+  "Executable JavaScript frontmatter is not allowed in content policy validation";
+
+const SAFE_MATTER_OPTIONS = {
+  engines: {
+    javascript() {
+      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
+    },
+  },
+};
+
 function parseArgs(argv = process.argv.slice(2)) {
   const args = {};
   for (let index = 0; index < argv.length; index += 1) {
@@ -211,9 +222,12 @@ function stringList(value) {
 
 function parseMdxFrontmatter(content) {
   try {
-    const parsed = matter(String(content));
+    const parsed = matter(String(content), SAFE_MATTER_OPTIONS);
     return { data: parsed.data || {}, content: parsed.content || "" };
-  } catch {
+  } catch (error) {
+    if (error?.message === UNSAFE_FRONTMATTER_LANGUAGE_ERROR) {
+      throw error;
+    }
     return { data: {}, content: String(content) };
   }
 }
