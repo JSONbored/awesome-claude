@@ -97,7 +97,7 @@
     "eslint-plugin-prettier": "5.2.6",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-react-refresh": "0.4.20",
-    "globals": "15.15.0",
+    "globals": "16.5.0",
     "nitro": "3.0.260429-beta",
     "node-addon-api": "8.5.0",
     "node-gyp": "12.1.0",
