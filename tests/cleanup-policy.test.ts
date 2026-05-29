@@ -95,9 +95,10 @@ describe("cleanup policy", () => {
   it("keeps app code on canonical registry imports", () => {
     const sourceFiles = [
       "apps/web/src/lib/site.ts",
-      "apps/web/src/components/submit-form.tsx",
-      "apps/web/src/components/directory-entry-card.tsx",
-      "apps/web/src/app/[category]/[slug]/page.tsx",
+      "apps/web/src/mocks/entries.ts",
+      "apps/web/src/routes/browse.tsx",
+      "apps/web/src/routes/entry.$category.$slug.tsx",
+      "apps/web/src/routes/submit.tsx",
     ];
 
     for (const relativePath of sourceFiles) {
@@ -131,7 +132,9 @@ describe("cleanup policy", () => {
     ];
 
     for (const { file, snippets } of retiredFallbacks) {
-      const source = fs.readFileSync(path.join(repoRoot, file), "utf8");
+      const absolutePath = path.join(repoRoot, file);
+      if (!fs.existsSync(absolutePath)) continue;
+      const source = fs.readFileSync(absolutePath, "utf8");
       for (const snippet of snippets) {
         expect(source).not.toContain(snippet);
       }

@@ -1,6 +1,8 @@
-import type { Metadata } from "next";
-
 import { siteConfig } from "@/lib/site";
+
+type Metadata = Record<string, unknown> & {
+  robots?: unknown;
+};
 
 type PageMetadataInput = {
   title: string;

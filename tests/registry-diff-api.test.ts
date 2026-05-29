@@ -22,10 +22,6 @@ const changelogMock = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: {} }),
-}));
-
 vi.mock("@/lib/content", () => ({
   getRegistryChangelog: () => Promise.resolve(changelogMock.value),
 }));
@@ -79,7 +75,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("returns the full changelog when no since cursor is given", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request(""));
 
     expect(response.status).toBe(200);
@@ -94,7 +90,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("returns an empty result set when since matches currentSignature", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(
       request(`?since=${changelogMock.value.signature}`),
     );
@@ -110,7 +106,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("filters added entries by sinceDate and always surfaces updated/removed entries", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=10"));
 
     expect(response.status).toBe(200);
@@ -127,7 +123,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("returns only updated/removed entries when sinceDate is newer than every added entry", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2030-01-01&limit=10"));
 
     expect(response.status).toBe(200);
@@ -142,7 +138,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("returns every entry when sinceDate is older than every added entry", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2024-01-01&limit=10"));
 
     expect(response.status).toBe(200);
@@ -151,7 +147,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("preserves entries order (changelog order, not filter-class order)", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=10"));
     const body = await response.json();
     const keys = body.entries.map((entry: { key: string }) => entry.key);
@@ -166,7 +162,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("applies limit AFTER filtering", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=2"));
     const body = await response.json();
     expect(body.totalAvailable).toBe(4);
@@ -175,7 +171,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("falls back to the no-filter path when since is unparseable as a date or hash", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=not-a-real-cursor"));
     const body = await response.json();
     // Neither a hash match nor a parseable date — treat as no filter (existing
@@ -185,7 +181,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("emits the snapshot note for an unknown hash since", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(
       request("?since=ffffffffffffffffffffffffffffffff"),
     );
@@ -195,7 +191,7 @@ describe("/api/registry/diff", () => {
   });
 
   it("emits the date-cursor note explaining filtered semantics", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01"));
     const body = await response.json();
     expect(body.note).toMatch(/Date cursors filter/);
@@ -205,7 +201,7 @@ describe("/api/registry/diff", () => {
   it("still returns response.ok for the e2e smoke shape", async () => {
     // Mirrors tests/e2e/site-regression.spec.ts:95 — the e2e test only checks
     // response.ok, so this regression-pins that contract.
-    const { GET } = await import("../apps/web/src/app/api/registry/diff/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/diff");
     const response = await GET(request("?since=2026-01-01&limit=5"));
     expect(response.ok).toBe(true);
   });

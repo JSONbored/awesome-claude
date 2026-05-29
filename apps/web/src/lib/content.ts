@@ -1,10 +1,7 @@
-import "server-only";
-
 import { cache } from "react";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type {
   ArtifactManifestV2,
   CategorySummary,
@@ -15,6 +12,7 @@ import type {
   SearchDocument,
 } from "@heyclaude/registry";
 
+import { getCloudflareBinding } from "@/lib/cloudflare-env";
 import { categoryDescriptions, categoryLabels, siteConfig } from "@/lib/site";
 
 export type { CategorySummary, ContentEntry, DirectoryEntry };
@@ -62,16 +60,13 @@ export async function loadJsonDataFile<T>(fileName: string): Promise<T> {
     return await readLocalJsonDataFile<T>(fileName);
   } catch {
     // In the Cloudflare Worker runtime, read from the static ASSETS binding.
-    const { env } = getCloudflareContext();
-    const envRecord = env as unknown as {
-      ASSETS: {
-        fetch: (
-          input: RequestInfo | URL,
-          init?: RequestInit,
-        ) => Promise<Response>;
-      };
-    };
-    const response = await envRecord.ASSETS.fetch(
+    const assets = getCloudflareBinding<{
+      fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+    }>("ASSETS");
+    if (!assets) {
+      throw new Error(`Static ASSETS binding is not available for ${fileName}`);
+    }
+    const response = await assets.fetch(
       new Request(`${DATA_ORIGIN}/data/${fileName}`),
     );
     if (!response.ok) {
@@ -85,16 +80,13 @@ export async function loadTextDataFile(fileName: string): Promise<string> {
   try {
     return await readLocalDataFile(fileName);
   } catch {
-    const { env } = getCloudflareContext();
-    const envRecord = env as unknown as {
-      ASSETS: {
-        fetch: (
-          input: RequestInfo | URL,
-          init?: RequestInit,
-        ) => Promise<Response>;
-      };
-    };
-    const response = await envRecord.ASSETS.fetch(
+    const assets = getCloudflareBinding<{
+      fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;
+    }>("ASSETS");
+    if (!assets) {
+      throw new Error(`Static ASSETS binding is not available for ${fileName}`);
+    }
+    const response = await assets.fetch(
       new Request(`${DATA_ORIGIN}/data/${fileName}`),
     );
     if (!response.ok) {

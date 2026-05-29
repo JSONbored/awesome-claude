@@ -9,7 +9,6 @@ const state = vi.hoisted(() => ({
   intent: { available: true, counts: {} as Counts },
 }));
 
-vi.mock("@opennextjs/cloudflare", () => ({ getCloudflareContext: () => ({ env: {} }) }));
 vi.mock("@/lib/content", () => ({ getDirectoryEntries: () => Promise.resolve(state.entries) }));
 vi.mock("@/lib/votes", () => ({ safeVoteCounts: () => Promise.resolve(state.votes) }));
 vi.mock("@/lib/community-signals", () => ({ entryCommunityTarget: (category: string, slug: string) => `entry:${category}/${slug}`, safeCommunitySignalCounts: () => Promise.resolve(state.community) }));
@@ -45,7 +44,7 @@ describe("/api/registry/trending", () => {
   });
 
   it("returns bounded privacy-safe trending entries with filters and reasons", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/trending/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/trending");
     const response = await GET(request("/api/registry/trending?category=mcp&platform=%20Claude%20&limit=2"));
     const body = await response.json();
 
@@ -73,7 +72,7 @@ describe("/api/registry/trending", () => {
     state.community = { available: false, counts: { "entry:mcp/verified": { used: 0, works: 0, broken: 0 } } };
     state.intent = { available: false, counts: { "mcp:verified": { copy: 0, open: 0, install: 0, download: 0, vote: 0 } } };
 
-    const { GET } = await import("../apps/web/src/app/api/registry/trending/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/trending");
     const body = await (await GET(request("/api/registry/trending"))).json();
 
     expect(body.signalsAvailable).toEqual({ votes: false, community: false, intent: false });
@@ -87,7 +86,7 @@ describe("/api/registry/trending", () => {
   });
 
   it("rejects malformed query parameters before route execution", async () => {
-    const { GET } = await import("../apps/web/src/app/api/registry/trending/route");
+    const { GET } = await import("../apps/web/src/routes/api/registry/trending");
     const response = await GET(request("/api/registry/trending?limit=1000"));
 
     expect(response.status).toBe(400);

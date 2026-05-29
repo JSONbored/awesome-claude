@@ -1,11 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const envMock = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
 const directoryEntriesMock = vi.hoisted(() => vi.fn());
-
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: envMock.value }),
-}));
 
 vi.mock("@/lib/content", () => ({
   getDirectoryEntries: directoryEntriesMock,
@@ -93,10 +88,6 @@ describe("website submission API", () => {
   beforeEach(() => {
     directoryEntriesMock.mockReset();
     directoryEntriesMock.mockResolvedValue([]);
-    envMock.value = {
-      GITHUB_SUBMISSIONS_TOKEN: "test-token",
-      GITHUB_SUBMISSIONS_REPO: "JSONbored/awesome-claude",
-    };
     process.env.GITHUB_SUBMISSIONS_TOKEN = "test-token";
     process.env.GITHUB_SUBMISSION_TOKEN = "";
     process.env.GITHUB_TOKEN = "";
@@ -119,7 +110,7 @@ describe("website submission API", () => {
   });
 
   it("creates a reviewable GitHub issue without writing content directly", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.11"),
     );
@@ -152,7 +143,7 @@ describe("website submission API", () => {
   });
 
   it("rejects invalid submission fields before GitHub issue creation", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: { name: "Incomplete" } }, "203.0.113.12"),
     );
@@ -168,7 +159,7 @@ describe("website submission API", () => {
     directoryEntriesMock.mockResolvedValue([
       { category: "mcp", slug: "direct-submit-api-asset" },
     ]);
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.13"),
     );
@@ -208,7 +199,7 @@ describe("website submission API", () => {
       }),
     );
 
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.18"),
     );
@@ -228,7 +219,7 @@ describe("website submission API", () => {
   });
 
   it("preflights valid submissions without GitHub writes", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({ fields: validFields() }, "203.0.113.20"),
     );
@@ -265,7 +256,7 @@ describe("website submission API", () => {
         trustSignals: { sourceUrls: ["https://example.com/docs"] },
       },
     ]);
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({ fields: validFields() }, "203.0.113.21"),
     );
@@ -287,7 +278,7 @@ describe("website submission API", () => {
   });
 
   it("preflights product-shaped submissions toward the tools flow", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -320,7 +311,7 @@ describe("website submission API", () => {
   });
 
   it("preflights local download requests as blockers", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -351,7 +342,7 @@ describe("website submission API", () => {
   });
 
   it("preflights risky drafts with expected safety and privacy notes", async () => {
-    const { POST } = await import("@/app/api/submissions/preflight/route");
+    const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(
       preflightRequest({
         fields: validFields({
@@ -388,7 +379,7 @@ describe("website submission API", () => {
   });
 
   it("silently discards honeypot submissions", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request(
         { fields: validFields(), honeypot: "https://spam.example" },
@@ -405,12 +396,8 @@ describe("website submission API", () => {
   });
 
   it("requires Turnstile when the secret is configured", async () => {
-    envMock.value = {
-      ...envMock.value,
-      TURNSTILE_SECRET_KEY: "turnstile-secret",
-    };
     process.env.TURNSTILE_SECRET_KEY = "turnstile-secret";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.15"),
     );
@@ -423,13 +410,9 @@ describe("website submission API", () => {
   });
 
   it("fails closed when production Turnstile is required but not configured", async () => {
-    envMock.value = {
-      ...envMock.value,
-      SUBMISSIONS_REQUIRE_TURNSTILE: "1",
-    };
     process.env.TURNSTILE_SECRET_KEY = "";
     process.env.SUBMISSIONS_REQUIRE_TURNSTILE = "1";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.19"),
     );
@@ -442,11 +425,10 @@ describe("website submission API", () => {
   });
 
   it("returns a GitHub fallback when issue creation is not configured", async () => {
-    envMock.value = {};
     process.env.GITHUB_SUBMISSIONS_TOKEN = "";
     process.env.GITHUB_SUBMISSION_TOKEN = "";
     process.env.GITHUB_TOKEN = "";
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     const response = await POST(
       request({ fields: validFields() }, "203.0.113.16"),
     );
@@ -463,7 +445,7 @@ describe("website submission API", () => {
   });
 
   it("rate limits repeated direct submissions by client IP", async () => {
-    const { POST } = await import("@/app/api/submissions/route");
+    const { POST } = await import("@/routes/api/submissions");
     for (let index = 0; index < 8; index += 1) {
       const response = await POST(
         request(

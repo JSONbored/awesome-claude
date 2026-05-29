@@ -21,7 +21,7 @@ Advisory checks before merging:
 The advisory checks should stay non-required until they have passed cleanly on
 several normal HeyClaude PRs. Socket should apply only to dependency PRs.
 
-Development deploys may target the OpenNext Cloudflare dev Worker only:
+Development deploys may target the Cloudflare dev Worker only:
 
 ```bash
 pnpm --filter web run deploy:dev

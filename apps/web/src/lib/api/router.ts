@@ -1,7 +1,6 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { NextResponse } from "next/server";
 import { ZodError, type z } from "zod";
 
+import { getCloudflareBinding } from "@/lib/cloudflare-env";
 import {
   getApiRouteDefinition,
   type ApiRouteDefinition,
@@ -75,7 +74,7 @@ export function apiError(
   headers.set("content-type", "application/json; charset=utf-8");
   if (!headers.has("cache-control")) headers.set("cache-control", "no-store");
 
-  return NextResponse.json(
+  return Response.json(
     {
       ok: false,
       error: {
@@ -92,7 +91,7 @@ export function apiError(
 export function apiJson(payload: unknown, init: ResponseInit = {}) {
   const headers = applySecurityHeaders(new Headers(init.headers));
   if (!headers.has("cache-control")) headers.set("cache-control", "no-store");
-  return NextResponse.json(payload, { ...init, headers });
+  return Response.json(payload, { ...init, headers });
 }
 
 export function withApiHeaders(response: Response) {
@@ -106,14 +105,9 @@ async function getCloudflareRateLimitBinding(
   const bindingName = definition.rateLimit?.binding;
   if (!bindingName) return null;
 
-  try {
-    const { env } = getCloudflareContext();
-    const binding = (env as unknown as Record<string, unknown>)[bindingName];
-    if (binding && typeof (binding as RateLimitBinding).limit === "function") {
-      return binding as RateLimitBinding;
-    }
-  } catch {
-    return null;
+  const binding = getCloudflareBinding<RateLimitBinding>(bindingName);
+  if (binding && typeof binding.limit === "function") {
+    return binding;
   }
 
   return null;

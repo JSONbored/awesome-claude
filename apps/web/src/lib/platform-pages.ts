@@ -1,5 +1,3 @@
-import "server-only";
-
 import type { ContentEntry } from "@heyclaude/registry";
 import {
   buildSkillPlatformCompatibility,

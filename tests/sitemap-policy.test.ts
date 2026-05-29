@@ -41,7 +41,7 @@ describe("sitemap policy", () => {
 
   it("includes machine-readable distribution surfaces in the sitemap source", () => {
     const source = fs.readFileSync(
-      path.join(repoRoot, "apps/web/src/app/sitemap.ts"),
+      path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"),
       "utf8",
     );
     expect(source).toContain('"/llms.txt"');
@@ -52,6 +52,6 @@ describe("sitemap policy", () => {
     expect(source).toContain('"/validators/mcp-config"');
     expect(source).toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
-    expect(source).toContain("siteLastModified");
+    expect(source).toContain("ENTRIES.map");
   });
 });

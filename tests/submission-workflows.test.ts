@@ -35,6 +35,8 @@ describe("submission automation workflows", () => {
     git(tmpDir, ["init", "-b", "main"]);
     git(tmpDir, ["config", "user.name", "HeyClaude Test"]);
     git(tmpDir, ["config", "user.email", "test@example.com"]);
+    git(tmpDir, ["config", "commit.gpgsign", "false"]);
+    git(tmpDir, ["config", "tag.gpgsign", "false"]);
     writeFile(path.join(tmpDir, "README.md"), "# Test\n");
     git(tmpDir, ["add", "README.md"]);
     git(tmpDir, ["commit", "-m", "test: initial content"]);

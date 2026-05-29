@@ -1,5 +1,3 @@
-import "server-only";
-
 import { cache } from "react";
 
 import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content";

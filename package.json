@@ -42,7 +42,6 @@
     "submission:queue": "node scripts/build-submission-queue.mjs",
     "submission:stale": "node scripts/manage-stale-submissions.mjs",
     "test": "vitest run",
-    "test:e2e": "node scripts/run-playwright.mjs",
     "test:seo-jsonld": "vitest run tests/seo-jsonld.test.ts",
     "test:commercial-intake": "vitest run tests/commercial-intake.test.ts",
     "test:registry-artifacts": "vitest run tests/registry-artifacts.test.ts",
@@ -66,7 +65,6 @@
   "devDependencies": {
     "@commitlint/cli": "21.0.1",
     "@commitlint/config-conventional": "21.0.1",
-    "@playwright/test": "1.60.0",
     "husky": "9.1.7",
     "prettier": "3.8.3",
     "react": "19.2.6",

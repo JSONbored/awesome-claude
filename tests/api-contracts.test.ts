@@ -10,7 +10,7 @@ function findRouteFiles(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = path.join(directory, entry.name);
     if (entry.isDirectory()) return findRouteFiles(entryPath);
-    return /route\.tsx?$/.test(entry.name) ? [entryPath] : [];
+    return /\.tsx?$/.test(entry.name) ? [entryPath] : [];
   });
 }
 
@@ -85,14 +85,14 @@ describe("OpenAPI route coverage", () => {
 
   it("keeps route handlers as central-router adapters", () => {
     const routeFiles = findRouteFiles(
-      path.join(repoRoot, "apps/web/src/app/api"),
-    );
+      path.join(repoRoot, "apps/web/src/routes/api"),
+    ).filter((filePath) => !filePath.includes(`${path.sep}public${path.sep}`));
 
     expect(routeFiles.length).toBeGreaterThan(0);
     for (const filePath of routeFiles) {
       const source = fs.readFileSync(filePath, "utf8");
       if (
-        filePath.endsWith(`${path.sep}api${path.sep}mcp${path.sep}route.ts`)
+        filePath.endsWith(`${path.sep}api${path.sep}mcp.ts`)
       ) {
         expect(source, filePath).toContain(
           'getApiRouteDefinition("mcp.streamable")',

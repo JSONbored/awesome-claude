@@ -93,9 +93,8 @@ const flags = {
     /^apps\/web\//,
     /^emails\//,
     /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
-    /^scripts\/(generate-openapi|run-playwright|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
+    /^scripts\/(generate-openapi|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
     /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
-    "playwright.config.ts",
     "vitest.config.ts",
     "package.json",
     "pnpm-lock.yaml",
@@ -131,7 +130,6 @@ const flags = {
     "renovate.json",
     "package.json",
     "pnpm-lock.yaml",
-    "playwright.config.ts",
     "vitest.config.ts",
   ),
 };

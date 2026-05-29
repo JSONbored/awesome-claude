@@ -39,8 +39,8 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 ## Controls
 
 - API route contracts live in `apps/web/src/lib/api/contracts.ts`. Route files
-  under `apps/web/src/app/api/**` are thin adapters that delegate to the central
-  router in `apps/web/src/lib/api/router.ts`.
+  under `apps/web/src/routes/api/**` are thin TanStack server handlers that
+  delegate to the central router in `apps/web/src/lib/api/router.ts`.
 - Request params, queries, and JSON bodies are validated with Zod. The generated
   OpenAPI document in `cloudflare/api-schema-heyclaude-openapi.yaml` is derived
   from those Zod contracts with `pnpm generate:openapi` and checked with
@@ -68,8 +68,8 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
   `API_MCP_RATE_LIMIT` binding with a `60 requests/minute/IP` production cap.
   In-process limits remain a local/dev fallback when the Worker binding is
   unavailable.
-- Next and Worker responses attach security headers in code as well as static
-  asset headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
+- Worker responses attach security headers in code as well as static asset
+  headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
 - No endpoint may import content into the registry, create pull requests, or
   publish submissions directly. GitHub automation may open PRs for source-backed

@@ -1,0 +1,7 @@
+{
+  "repo": "JSONbored/claude-atlas",
+  "sourceBranch": "codex/handoff-claude-atlas",
+  "sourceCommit": "b1267896718d27e9ee7ac2a7a38961e899a4efcf",
+  "importedAt": "2026-05-29T01:25:01Z",
+  "notes": "One-time Lovable handoff snapshot. awesome-claude is the public production source after migration."
+}

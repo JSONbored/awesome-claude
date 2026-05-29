@@ -1,11 +1,13 @@
-# Web Deployment Notes (OpenNext Cloudflare)
+# Web Deployment Notes (TanStack Start on Cloudflare)
 
 ## Runtime model
 
-- This project deploys as OpenNext Cloudflare Workers.
+- This project deploys as a TanStack Start app bundled by Vite/Nitro for
+  Cloudflare Workers.
 - Production worker: `heyclaude-prod`
 - Development worker: `heyclaude-dev`
-- Next.js pages and API routes (for example `/api/votes/*` and `/api/newsletter/*`) run inside each Worker.
+- File routes under `apps/web/src/routes/**` include both page routes and
+  server-side API handlers that run inside each Worker.
 
 ## Required bindings
 
@@ -98,7 +100,7 @@ jobs, sitemap coverage, and `JobPosting` JSON-LD. See
 `docs/jobs-revenue-ops.md` for the lead review, scheduled source revalidation,
 enrichment, Polar handoff, and follow-up templates.
 
-## OpenNext build/deploy commands
+## Build/deploy commands
 
 These are the project-standard commands:
 
@@ -109,8 +111,8 @@ pnpm --filter web deploy
 That command runs:
 
 1. registry artifact generation
-2. `opennextjs-cloudflare build`
-3. `opennextjs-cloudflare deploy`
+2. `vite build`, which emits `dist/client` and `dist/server/index.mjs`
+3. `wrangler deploy`
 
 For local Worker-runtime preview:
 
@@ -155,6 +157,9 @@ pnpm --filter web exec wrangler secret put DISCORD_WEBHOOK_URL
 
 Public vars (non-secret), set in Cloudflare dashboard for each worker environment:
 
+These names are preserved for deployment compatibility even though the app is no
+longer a Next.js app.
+
 - `NEXT_PUBLIC_DISCORD_URL`
 - `NEXT_PUBLIC_TWITTER_URL`
 - `NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL`
@@ -186,10 +191,14 @@ The sync command creates or updates draft templates only. It does not publish
 templates, create Broadcasts, schedule campaigns, or send email. Keep those
 steps manual inside Resend.
 
-## OpenNext Cloudflare notes used in this project
+## TanStack/Nitro Cloudflare notes used in this project
 
-- `next.config.mjs` initializes Cloudflare local development via `initOpenNextCloudflareForDev()`.
-- Route handlers avoid `export const runtime = "edge"` for OpenNext Cloudflare compatibility.
+- `apps/web/vite.config.ts` enables TanStack Start with Nitro output.
+- `apps/web/src/server.ts` wraps requests in Cloudflare runtime context so API
+  helpers can read Worker bindings without importing framework-specific globals.
+- `wrangler.jsonc` points at `dist/server/index.mjs` and `dist/client`.
+- Nitro also writes generated deployment metadata under `dist/`; generated
+  build output must not be committed.
 - Static asset cache headers are set in `public/_headers`.
 
 ## Git-integrated Cloudflare worker settings

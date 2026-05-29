@@ -250,7 +250,6 @@ if (fs.existsSync(tasksPath)) {
     "validate:emails",
     "test:mcp",
     "test",
-    "test:e2e",
     "type-check",
     "build",
   ]) {
@@ -279,7 +278,6 @@ for (const scriptName of [
   "validate:emails",
   "test:mcp",
   "test",
-  "test:e2e",
   "type-check",
   "build",
   "validate:tasks",

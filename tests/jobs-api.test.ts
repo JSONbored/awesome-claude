@@ -6,10 +6,6 @@ const jobsMock = vi.hoisted(() => ({
   value: [] as JobListing[],
 }));
 
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: {} }),
-}));
-
 vi.mock("@/lib/jobs", async () => {
   const actual =
     await vi.importActual<typeof import("@/lib/jobs")>("@/lib/jobs");
@@ -96,7 +92,7 @@ describe("/api/jobs", () => {
   });
 
   it("returns every active job with pagination metadata when no filters are applied", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(request(""));
 
     expect(response.status).toBe(200);
@@ -114,7 +110,7 @@ describe("/api/jobs", () => {
   });
 
   it("combines region, compensation, sourceKind, and claimedEmployer filters", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(
       request(
         "?location=eu&compensation=true&sourceKind=official_ats&claimedEmployer=true",
@@ -152,7 +148,7 @@ describe("/api/jobs", () => {
       }),
     ];
 
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(
       request("?postedAfter=2026-05-01T00:00:00.000Z"),
     );
@@ -165,7 +161,7 @@ describe("/api/jobs", () => {
   });
 
   it("applies postedAfter as an inclusive date cursor", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(
       request("?postedAfter=2026-05-01T00:00:00.000Z"),
     );
@@ -178,7 +174,7 @@ describe("/api/jobs", () => {
   });
 
   it("filters by job type via case-insensitive substring", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(request("?type=contract"));
 
     const body = await response.json();
@@ -187,7 +183,7 @@ describe("/api/jobs", () => {
   });
 
   it("returns an empty entries array but valid metadata when filters match nothing", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(
       request(
         "?location=mars&compensation=true&sourceKind=official_ats&claimedEmployer=true",
@@ -207,7 +203,7 @@ describe("/api/jobs", () => {
   });
 
   it("paginates with offset/limit and advertises nextOffset only when more results remain", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const first = await GET(request("?limit=2&offset=0"));
     const firstBody = await first.json();
     expect(firstBody).toMatchObject({
@@ -230,7 +226,7 @@ describe("/api/jobs", () => {
   });
 
   it("rejects an invalid postedAfter value", async () => {
-    const { GET } = await import("../apps/web/src/app/api/jobs/route");
+    const { GET } = await import("../apps/web/src/routes/api/jobs");
     const response = await GET(request("?postedAfter=not-a-date"));
     expect(response.status).toBe(400);
   });

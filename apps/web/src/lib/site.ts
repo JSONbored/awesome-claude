@@ -10,6 +10,22 @@ type CategorySpecEntry = {
 
 const categories = categorySpec.categories as Record<string, CategorySpecEntry>;
 
+function publicEnv(name: string) {
+  const viteValue = import.meta.env[name];
+  if (typeof viteValue === "string" && viteValue.trim()) {
+    return viteValue.trim();
+  }
+
+  if (typeof process !== "undefined") {
+    const processValue = process.env?.[name];
+    if (typeof processValue === "string" && processValue.trim()) {
+      return processValue.trim();
+    }
+  }
+
+  return "";
+}
+
 export const siteConfig = {
   name: "HeyClaude",
   shortName: "heyclaude",
@@ -18,22 +34,22 @@ export const siteConfig = {
   url: "https://heyclau.de",
   githubUrl: "https://github.com/JSONbored/awesome-claude",
   jobsEmail: "jobs@heyclau.de",
-  twitterUrl: process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/jsonbored",
+  twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
   discordUrl:
-    process.env.NEXT_PUBLIC_DISCORD_URL ||
+    publicEnv("NEXT_PUBLIC_DISCORD_URL") ||
     "https://discord.com/invite/Ax3Py4YDrq",
   polarFreeJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_FREE_JOB_URL || "/jobs/post?tier=free",
-  polarJobBoardUrl: process.env.NEXT_PUBLIC_POLAR_JOB_BOARD_URL || "/advertise",
+    publicEnv("NEXT_PUBLIC_POLAR_FREE_JOB_URL") || "/jobs/post?tier=free",
+  polarJobBoardUrl: publicEnv("NEXT_PUBLIC_POLAR_JOB_BOARD_URL") || "/advertise",
   polarFeaturedJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_FEATURED_JOB_URL || "/advertise",
+    publicEnv("NEXT_PUBLIC_POLAR_FEATURED_JOB_URL") || "/advertise",
   polarSponsoredJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL || "/advertise",
+    publicEnv("NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL") || "/advertise",
   polarFeaturedJob90Url:
-    process.env.NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL ||
+    publicEnv("NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL") ||
     "/jobs/post?tier=featured",
   polarSponsoredJob90Url:
-    process.env.NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL ||
+    publicEnv("NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL") ||
     "/jobs/post?tier=sponsored",
   nav: [
     { href: "/browse", label: "Browse" },

@@ -1,26 +1,7 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getEnvString } from "@/lib/cloudflare-env";
 
 export function getAdminToken() {
-  try {
-    const { env } = getCloudflareContext();
-    const envRecord = env as unknown as Record<string, unknown>;
-    return String(
-      envRecord["ADMIN_API_TOKEN"] ||
-        envRecord["LEADS_ADMIN_TOKEN"] ||
-        envRecord["ADMIN_LEADS_TOKEN"] ||
-        process.env.ADMIN_API_TOKEN ||
-        process.env.LEADS_ADMIN_TOKEN ||
-        process.env.ADMIN_LEADS_TOKEN ||
-        "",
-    ).trim();
-  } catch {
-    return String(
-      process.env.ADMIN_API_TOKEN ||
-        process.env.LEADS_ADMIN_TOKEN ||
-        process.env.ADMIN_LEADS_TOKEN ||
-        "",
-    ).trim();
-  }
+  return getEnvString("ADMIN_API_TOKEN", "LEADS_ADMIN_TOKEN", "ADMIN_LEADS_TOKEN");
 }
 
 export function isAdminAuthorized(request: Request) {

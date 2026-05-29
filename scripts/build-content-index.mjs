@@ -23,6 +23,7 @@ const entryDataDir = path.join(publicDataDir, "entries");
 const entryLlmsDir = path.join(publicDataDir, "llms");
 const raycastDetailDir = path.join(publicDataDir, "raycast");
 const siteStatsFile = path.join(generatedDir, "site-stats.json");
+const atlasRegistryFile = path.join(generatedDir, "atlas-registry.json");
 const skillsDownloadsDir = path.join(
   repoRoot,
   "apps/web/public/downloads/skills",
@@ -170,6 +171,53 @@ function writeFileIfChanged(filePath, content) {
 function writeJsonFile(filePath, value) {
   ensureDir(path.dirname(filePath));
   return writeFileIfChanged(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+function pickAtlasEntry(entry) {
+  return {
+    category: entry.category,
+    slug: entry.slug,
+    title: entry.title,
+    description: entry.description,
+    author: entry.author,
+    submittedBy: entry.submittedBy,
+    submittedByUrl: entry.submittedByUrl,
+    authorProfileUrl: entry.authorProfileUrl,
+    dateAdded: entry.dateAdded,
+    contentUpdatedAt: entry.contentUpdatedAt,
+    tags: entry.tags,
+    keywords: entry.keywords,
+    cardDescription: entry.cardDescription,
+    installCommand: entry.installCommand,
+    configSnippet: entry.configSnippet,
+    usageSnippet: entry.usageSnippet,
+    documentationUrl: entry.documentationUrl,
+    githubUrl: entry.githubUrl,
+    repoUrl: entry.repoUrl,
+    brandName: entry.brandName,
+    brandDomain: entry.brandDomain,
+    brandIconUrl: entry.brandIconUrl,
+    prerequisites: entry.prerequisites,
+    safetyNotes: entry.safetyNotes,
+    privacyNotes: entry.privacyNotes,
+    downloadUrl: entry.downloadUrl,
+    downloadSha256: entry.downloadSha256,
+    packageVerified: entry.packageVerified,
+    downloadTrust: entry.downloadTrust,
+    githubStars: entry.githubStars,
+    trustSignals: entry.trustSignals
+      ? {
+          firstPartyEditorial: entry.trustSignals.firstPartyEditorial,
+          sourceStatus: entry.trustSignals.sourceStatus,
+          lastVerifiedAt: entry.trustSignals.lastVerifiedAt,
+          platforms: entry.trustSignals.platforms,
+          supportLevels: entry.trustSignals.supportLevels,
+        }
+      : undefined,
+    platformCompatibility: entry.platformCompatibility,
+    commandSyntax: entry.commandSyntax,
+    scriptLanguage: entry.scriptLanguage,
+  };
 }
 
 function writeTextFile(filePath, value) {
@@ -422,6 +470,31 @@ async function main() {
     siteStatsFile,
     `${JSON.stringify(siteStatsPayload, null, 2)}\n`,
   );
+  const directoryIndexArtifact = artifactFiles.find(
+    (file) => file.path === "directory-index.json",
+  );
+  const changelogArtifact = artifactFiles.find(
+    (file) => file.path === "registry-changelog.json",
+  );
+  const atlasRegistryPayload = {
+    schemaVersion: 1,
+    generatedAt:
+      directoryIndexArtifact?.value?.generatedAt ?? new Date().toISOString(),
+    entries: entries.map(pickAtlasEntry),
+    changelog: (changelogArtifact?.value?.entries ?? []).slice(0, 25).map(
+      (entry) => ({
+        category: entry.category,
+        slug: entry.slug,
+        title: entry.title,
+        dateAdded: entry.dateAdded,
+        type: entry.type,
+      }),
+    ),
+  };
+  const wroteAtlasRegistry = writeJsonFile(
+    atlasRegistryFile,
+    atlasRegistryPayload,
+  );
   for (const result of artifactResults.filter(
     (file) => !file.path.includes("/"),
   )) {
@@ -440,6 +513,9 @@ async function main() {
   );
   console.log(
     `${wroteSiteStats ? "Wrote" : "Unchanged"} ${path.relative(repoRoot, siteStatsFile)}`,
+  );
+  console.log(
+    `${wroteAtlasRegistry ? "Wrote" : "Unchanged"} ${path.relative(repoRoot, atlasRegistryFile)}`,
   );
 }
 

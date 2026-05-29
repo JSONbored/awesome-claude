@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "heyclaude-prod",
-  "main": ".open-next/worker.js",
+  "main": "dist/server/index.mjs",
   "compatibility_date": "2026-04-05",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
@@ -21,7 +21,7 @@
     "mode": "smart",
   },
   "assets": {
-    "directory": ".open-next/assets",
+    "directory": "dist/client",
     "binding": "ASSETS",
   },
   "services": [

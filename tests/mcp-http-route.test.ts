@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { GET, OPTIONS, POST } from "../apps/web/src/app/api/mcp/route";
+import { GET, OPTIONS, POST } from "../apps/web/src/routes/api/mcp";
 
 function mcpRequest(body: unknown, headers: Record<string, string> = {}) {
   return new Request("https://heyclau.de/api/mcp", {

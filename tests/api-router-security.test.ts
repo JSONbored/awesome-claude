@@ -5,12 +5,6 @@ import path from "node:path";
 import { apiRouteDefinitions } from "../apps/web/src/lib/api/contracts";
 import { repoRoot } from "./helpers/registry-fixtures";
 
-const envMock = vi.hoisted(() => ({ value: {} as Record<string, unknown> }));
-
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: envMock.value }),
-}));
-
 function submissionRequest(
   body: unknown,
   headers: Record<string, string> = {},
@@ -31,7 +25,6 @@ describe("central API router security", () => {
   beforeEach(() => {
     vi.resetModules();
     vi.unstubAllGlobals();
-    envMock.value = {};
     delete process.env.BRANDFETCH_CLIENT_ID;
   });
 
@@ -267,7 +260,6 @@ describe("central API router security", () => {
   });
 
   it("rejects Brandfetch icons outside the trusted asset CDN", async () => {
-    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
     process.env.BRANDFETCH_CLIENT_ID = "test-client";
     const fetchMock = vi.fn(async () =>
       Response.json([
@@ -280,7 +272,7 @@ describe("central API router security", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const { GET } =
-      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+      await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -295,7 +287,6 @@ describe("central API router security", () => {
   });
 
   it("rejects Brandfetch icon redirects outside the trusted asset CDN", async () => {
-    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
     process.env.BRANDFETCH_CLIENT_ID = "test-client";
     const fetchMock = vi
       .fn()
@@ -318,7 +309,7 @@ describe("central API router security", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const { GET } =
-      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+      await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -333,7 +324,6 @@ describe("central API router security", () => {
   });
 
   it("rejects SVG Brandfetch icon responses from trusted hosts", async () => {
-    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
     process.env.BRANDFETCH_CLIENT_ID = "test-client";
     const fetchMock = vi
       .fn()
@@ -356,7 +346,7 @@ describe("central API router security", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const { GET } =
-      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+      await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -371,7 +361,6 @@ describe("central API router security", () => {
   });
 
   it("rejects oversized Brandfetch icon responses before buffering", async () => {
-    envMock.value = { BRANDFETCH_CLIENT_ID: "test-client" };
     process.env.BRANDFETCH_CLIENT_ID = "test-client";
     const fetchMock = vi
       .fn()
@@ -394,7 +383,7 @@ describe("central API router security", () => {
     vi.stubGlobal("fetch", fetchMock);
 
     const { GET } =
-      await import("@/app/api/brand-assets/[kind]/[domain]/route");
+      await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -409,7 +398,7 @@ describe("central API router security", () => {
   });
 
   it("requires admin tokens for reviewed D1 jobs endpoints", async () => {
-    const { GET } = await import("@/app/api/admin/jobs/health/route");
+    const { GET } = await import("@/routes/api/admin/jobs/health");
     const response = await GET(
       new Request("https://heyclau.de/api/admin/jobs/health", {
         headers: { origin: "https://heyclau.de" },

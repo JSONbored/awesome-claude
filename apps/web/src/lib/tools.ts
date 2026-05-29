@@ -1,5 +1,3 @@
-import "server-only";
-
 import type { DirectoryEntry, ToolListing } from "@heyclaude/registry";
 import { compareToolListings } from "@heyclaude/registry/commercial";
 

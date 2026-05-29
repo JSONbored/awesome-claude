@@ -1,0 +1,191 @@
+import * as React from "react";
+import {
+  Activity,
+  Clock,
+  GitBranch,
+  Layers,
+  ShieldCheck,
+  Sparkles,
+  Terminal,
+  Zap,
+} from "lucide-react";
+import {
+  BUNDLE_CONTENT_LABEL,
+  PLATFORM_LABEL,
+  TRIGGER_KIND_LABEL,
+  type Entry,
+} from "@/types/registry";
+import { cn } from "@/lib/utils";
+
+/**
+ * Per-category facet row. Renders the category-specific metadata that the
+ * generic card otherwise hides: hook trigger, command syntax, statusline
+ * language, skill level, collection items, plugin bundle, automation cadence.
+ *
+ * `density="card"` is compact (chip row), `density="dossier"` is the richer
+ * layout used on the entry page.
+ */
+export function EntryFacets({
+  entry,
+  density = "card",
+  className,
+}: {
+  entry: Entry;
+  density?: "card" | "dossier";
+  className?: string;
+}) {
+  const facets = facetsFor(entry);
+  if (facets.length === 0) return null;
+
+  if (density === "card") {
+    return (
+      <div className={cn("flex flex-wrap items-center gap-1.5", className)}>
+        {facets.map((f, i) => (
+          <FacetChip key={i} facet={f} />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("flex flex-col gap-2", className)}>
+      {facets.map((f, i) => (
+        <div key={i} className="flex items-start gap-2 text-sm">
+          {f.icon ? (
+            <f.icon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" aria-hidden />
+          ) : null}
+          <div className="min-w-0">
+            <span className="font-medium text-ink">{f.label}</span>{" "}
+            <span className="text-ink-muted">{f.value}</span>
+            {f.detail && <div className="mt-0.5 text-xs text-ink-subtle">{f.detail}</div>}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+interface Facet {
+  label: string;
+  value: string;
+  detail?: string;
+  icon?: React.ElementType;
+  tone?: "default" | "accent" | "trust";
+  mono?: boolean;
+}
+
+function FacetChip({ facet }: { facet: Facet }) {
+  const Icon = facet.icon;
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-1 rounded-md border px-1.5 py-0.5 text-[11px]",
+        facet.tone === "accent"
+          ? "border-accent/30 bg-accent/10 text-accent-ink dark:text-accent"
+          : "border-border bg-surface text-ink-muted",
+        facet.mono && "font-mono",
+      )}
+      title={`${facet.label}: ${facet.value}`}
+    >
+      {Icon ? <Icon className="h-3 w-3" aria-hidden /> : null}
+      <span className="text-ink-subtle">{facet.label}:</span>
+      <span className="text-ink">{facet.value}</span>
+    </span>
+  );
+}
+
+function facetsFor(e: Entry): Facet[] {
+  switch (e.category) {
+    case "hooks":
+      return e.trigger
+        ? [
+            {
+              label: "Trigger",
+              value: e.trigger,
+              icon: Zap,
+              tone: "accent",
+              detail: "Runs at this lifecycle event. Keep idempotent.",
+            },
+          ]
+        : [];
+    case "commands":
+      return e.commandSyntax
+        ? [
+            {
+              label: "Invocation",
+              value: e.commandSyntax,
+              icon: Terminal,
+              mono: true,
+            },
+          ]
+        : [];
+    case "statuslines":
+      return e.scriptLanguage
+        ? [
+            {
+              label: "Language",
+              value: e.scriptLanguage,
+              icon: Terminal,
+              detail: "Runs on every prompt render — keep fast and side-effect free.",
+            },
+          ]
+        : [];
+    case "skills": {
+      const out: Facet[] = [];
+      if (e.skillLevel) out.push({ label: "Level", value: e.skillLevel, icon: Sparkles });
+      if (e.skillType) out.push({ label: "Type", value: e.skillType });
+      if (e.verificationStatus)
+        out.push({ label: "Verified", value: e.verificationStatus, icon: ShieldCheck });
+      return out;
+    }
+    case "collections":
+      return e.items && e.items.length > 0
+        ? [
+            {
+              label: "Bundle",
+              value: `${e.items.length} item${e.items.length === 1 ? "" : "s"}`,
+              icon: Layers,
+              detail: e.installationOrder
+                ? `Install order: ${e.installationOrder.slice(0, 3).join(" → ")}`
+                : undefined,
+            },
+          ]
+        : [];
+    case "plugins": {
+      const out: Facet[] = [];
+      if (e.harness && e.harness.length > 0) {
+        out.push({
+          label: "Harness",
+          value: e.harness.map((h) => PLATFORM_LABEL[h]).join(" · "),
+          icon: GitBranch,
+          tone: "accent",
+        });
+      }
+      if (e.bundleContents && e.bundleContents.length > 0) {
+        out.push({
+          label: "Bundle",
+          value: e.bundleContents.map((b) => BUNDLE_CONTENT_LABEL[b]).join(" + "),
+          icon: Layers,
+        });
+      }
+      return out;
+    }
+    case "automations": {
+      const out: Facet[] = [];
+      if (e.triggerKind) {
+        out.push({
+          label: TRIGGER_KIND_LABEL[e.triggerKind],
+          value: e.schedule ?? "—",
+          icon: Clock,
+          tone: "accent",
+        });
+      } else if (e.schedule) {
+        out.push({ label: "Schedule", value: e.schedule, icon: Clock });
+      }
+      if (e.lastRun) out.push({ label: "Last run", value: e.lastRun, icon: Activity });
+      return out;
+    }
+    default:
+      return [];
+  }
+}
