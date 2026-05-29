@@ -1625,6 +1625,12 @@ export function validateSubmission(issue) {
     }
   }
 
+  if (normalizeValue(fields.affiliate_url) && category !== TOOLS_CATEGORY) {
+    errors.push(
+      "Contributor submissions cannot include affiliate_url outside maintainer-reviewed tools listings",
+    );
+  }
+
   if (category === "skills" && isGitHubSourcePath(fields.download_url)) {
     errors.push(
       "download_url must point to a package, archive, or release download; use github_url or retrieval_sources for GitHub source tree/blob paths",

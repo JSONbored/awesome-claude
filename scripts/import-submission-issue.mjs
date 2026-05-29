@@ -340,7 +340,8 @@ function buildContent(issue, report) {
     brandDomain: fields.brand_domain,
     brandAssetSource: fields.brand_domain ? "brandfetch" : "",
     websiteUrl: normalizeHttpsUrl(fields.website_url),
-    affiliateUrl: normalizeHttpsUrl(fields.affiliate_url),
+    affiliateUrl:
+      category === "tools" ? normalizeHttpsUrl(fields.affiliate_url) : "",
     repoUrl: fields.github_url,
     documentationUrl: fields.docs_url,
     pricingModel: fields.pricing_model,

@@ -1825,6 +1825,45 @@ claude mcp add referral-tool -- npx referral-tool`),
     );
   });
 
+  it("rejects affiliate URLs on non-tool submissions", () => {
+    const report = validateSubmission(
+      issue(`### Name
+Affiliate Bypass MCP
+
+### Slug
+affiliate-bypass-mcp
+
+### Category
+mcp
+
+### Public contact
+dev@example.com
+
+### GitHub URL
+https://github.com/example/affiliate-bypass-mcp
+
+### Affiliate URL
+https://merchant.example/deal?referral_code=attacker&utm_source=submission
+
+### Description
+MCP server attempting to submit a monetized tracking URL.
+
+### Card description
+MCP server affiliate URL bypass coverage.
+
+### Install command
+npx affiliate-bypass-mcp
+
+### Usage snippet
+claude mcp add affiliate-bypass-mcp -- npx affiliate-bypass-mcp`),
+    );
+
+    expect(report.ok).toBe(false);
+    expect(report.errors).toContain(
+      "Contributor submissions cannot include affiliate_url outside maintainer-reviewed tools listings",
+    );
+  });
+
   it("rejects malformed or non-https contributor URLs", () => {
     const report = validateSubmission(
       issue(`### Name
