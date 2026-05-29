@@ -12,6 +12,7 @@ import {
   listRegistryPrompts,
   listRegistryResources,
   listRegistryResourceTemplates,
+  planWorkflowToolbox,
   READ_ONLY_TOOL_NAMES,
   readRegistryResource,
   TOOL_DEFINITIONS,
@@ -769,6 +770,36 @@ describe("HeyClaude read-only MCP helpers", () => {
       (entry: any) => entry.slug === "kubernetes-cluster-helper",
     );
     expect(matched.searchScore).toBeGreaterThan(0);
+  });
+
+  it("clamps the planner runtime limit to 10 even when called directly", async () => {
+    // Direct runtime calls bypass the 1-10 input schema, so the tool must
+    // clamp internally. Categories are spread so diversity selection still
+    // fills up to the clamp instead of capping early at 2 per category.
+    const categories = ["mcp", "agents", "skills", "hooks", "commands"];
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: Array.from({ length: 15 }, (_, index) => ({
+          category: categories[index % categories.length],
+          slug: `automation-entry-${index}`,
+          title: `Automation Workflow Helper ${index}`,
+          description: "Automates the workflow with guided steps.",
+          tags: ["automation", "workflow"],
+          keywords: ["automation"],
+          platforms: ["Claude"],
+        })),
+      };
+    };
+
+    const result = await planWorkflowToolbox(
+      { goal: "automation workflow", limit: 20 },
+      { readJsonArtifact },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.count).toBe(result.entries.length);
+    expect(result.entries.length).toBeLessThanOrEqual(10);
   });
 
   it("searches registry artifacts with trust filters", async () => {
