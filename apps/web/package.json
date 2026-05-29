@@ -104,7 +104,7 @@
     "prettier": "3.8.3",
     "typescript": "6.0.3",
     "typescript-eslint": "8.56.1",
-    "vite": "7.3.2",
+    "vite": "8.0.14",
     "vite-tsconfig-paths": "6.0.2",
     "wrangler": "4.95.0"
   }
