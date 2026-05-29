@@ -37,8 +37,7 @@ export const siteConfig = {
   twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
   discordUrl: publicEnv("NEXT_PUBLIC_DISCORD_URL") || "https://discord.com/invite/Ax3Py4YDrq",
   umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "https://umami.heyclau.de/script.js",
-  umamiWebsiteId:
-    publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
+  umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
   turnstileSiteKey: publicEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY") || "1x00000000000000000000AA",
   polarFreeJobUrl: publicEnv("NEXT_PUBLIC_POLAR_FREE_JOB_URL") || "/jobs/post?tier=free",
   polarJobBoardUrl: publicEnv("NEXT_PUBLIC_POLAR_JOB_BOARD_URL") || "/advertise",
