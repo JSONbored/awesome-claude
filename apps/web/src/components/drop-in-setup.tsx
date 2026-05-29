@@ -215,7 +215,9 @@ export function DropInSetup() {
           <div className="mt-3">
             <div className="text-[11px] uppercase tracking-wider text-ink-subtle">Verify</div>
             <div className="mt-1 flex items-center gap-2 rounded-md border border-border bg-surface-2 px-3 py-2">
-              <code className="flex-1 truncate font-mono text-[11px] text-ink">{active.verify}</code>
+              <code className="flex-1 truncate font-mono text-[11px] text-ink">
+                {active.verify}
+              </code>
               <CopyButton value={active.verify} label="Copy" size="sm" />
             </div>
           </div>

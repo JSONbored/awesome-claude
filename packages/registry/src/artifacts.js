@@ -646,9 +646,7 @@ export function buildCursorSkillAdapter(entry) {
     ? entry.downloadUrl.startsWith("/")
       ? `${SITE_URL}${entry.downloadUrl}`
       : entry.downloadUrl
-    : entry.repoUrl ||
-      entry.documentationUrl ||
-      entryCanonicalUrl(entry);
+    : entry.repoUrl || entry.documentationUrl || entryCanonicalUrl(entry);
 
   return [
     "---",

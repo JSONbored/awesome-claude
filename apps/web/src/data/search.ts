@@ -16,7 +16,8 @@ export function search(filters: SearchFilters = {}): Entry[] {
   const q = filters.q?.trim().toLowerCase() ?? "";
   let rows = ENTRIES.filter((e) => {
     if (filters.categories?.length && !filters.categories.includes(e.category)) return false;
-    if (filters.platforms?.length && !e.platforms.some((p) => filters.platforms!.includes(p))) return false;
+    if (filters.platforms?.length && !e.platforms.some((p) => filters.platforms!.includes(p)))
+      return false;
     if (filters.trust?.length && !filters.trust.includes(e.trust)) return false;
     if (filters.source?.length && !filters.source.includes(e.source)) return false;
     if (filters.installable && !e.installCommand && !e.configSnippet && !e.fullCopy) return false;

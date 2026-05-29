@@ -12,7 +12,12 @@ const METHOD_STYLES: Record<OpenApiEndpoint["method"], string> = {
 
 export function MethodPill({ method }: { method: OpenApiEndpoint["method"] }) {
   return (
-    <span className={cn("inline-flex h-5 items-center rounded border px-1.5 font-mono text-[10px] font-semibold", METHOD_STYLES[method])}>
+    <span
+      className={cn(
+        "inline-flex h-5 items-center rounded border px-1.5 font-mono text-[10px] font-semibold",
+        METHOD_STYLES[method],
+      )}
+    >
       {method}
     </span>
   );
@@ -40,7 +45,9 @@ export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint })
                         <td className="w-32 px-3 py-2 align-top">
                           <code className="font-mono text-ink">{p.name}</code>
                           {p.required && <span className="ml-1 text-trust-blocked">*</span>}
-                          <div className="text-[10px] uppercase tracking-wider text-ink-subtle">{p.in}</div>
+                          <div className="text-[10px] uppercase tracking-wider text-ink-subtle">
+                            {p.in}
+                          </div>
                         </td>
                         <td className="px-3 py-2">
                           <div className="text-ink">{p.type}</div>
@@ -48,7 +55,12 @@ export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint })
                           {p.enumValues && (
                             <div className="mt-1 flex flex-wrap gap-1">
                               {p.enumValues.map((v) => (
-                                <code key={v} className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[10px]">{v}</code>
+                                <code
+                                  key={v}
+                                  className="rounded bg-surface-2 px-1 py-0.5 font-mono text-[10px]"
+                                >
+                                  {v}
+                                </code>
                               ))}
                             </div>
                           )}
@@ -63,12 +75,16 @@ export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint })
           {endpoint.body && (
             <div>
               <div className="eyebrow mb-2">Request body</div>
-              <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink"><code>{endpoint.body.example}</code></pre>
+              <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink">
+                <code>{endpoint.body.example}</code>
+              </pre>
             </div>
           )}
           <div>
             <div className="eyebrow mb-2">Response</div>
-            <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink"><code>{endpoint.responseExample}</code></pre>
+            <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink">
+              <code>{endpoint.responseExample}</code>
+            </pre>
           </div>
           <CurlBlock endpoint={endpoint} />
         </div>
@@ -81,7 +97,10 @@ export function OpenApiEndpointCard({ endpoint }: { endpoint: OpenApiEndpoint })
 function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
   const base = "https://heyclau.de";
   const params =
-    endpoint.parameters?.filter((p) => p.in === "query" && p.example).map((p) => `${p.name}=${p.example}`).join("&") ?? "";
+    endpoint.parameters
+      ?.filter((p) => p.in === "query" && p.example)
+      .map((p) => `${p.name}=${p.example}`)
+      .join("&") ?? "";
   const url = endpoint.path.replace(/\{(\w+)\}/g, (_m, name) => {
     const ex = endpoint.parameters?.find((p) => p.in === "path" && p.name === name)?.example;
     return ex ?? `:${name}`;
@@ -97,7 +116,9 @@ function CurlBlock({ endpoint }: { endpoint: OpenApiEndpoint }) {
         <div className="eyebrow">curl</div>
         <CopyButton value={curl} label="Copy" />
       </div>
-      <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink"><code>{curl}</code></pre>
+      <pre className="overflow-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink">
+        <code>{curl}</code>
+      </pre>
     </div>
   );
 }
@@ -129,7 +150,12 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
       {endpoint.parameters && endpoint.parameters.length > 0 && (
         <div className="space-y-3">
           {endpoint.parameters.map((p) => (
-            <ParamInput key={p.name} param={p} value={values[p.name] ?? ""} onChange={(v) => setValues({ ...values, [p.name]: v })} />
+            <ParamInput
+              key={p.name}
+              param={p}
+              value={values[p.name] ?? ""}
+              onChange={(v) => setValues({ ...values, [p.name]: v })}
+            />
           ))}
         </div>
       )}
@@ -150,7 +176,11 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         disabled={sending}
         className="inline-flex h-9 w-full items-center justify-center gap-1.5 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90 disabled:opacity-50"
       >
-        {sending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
+        {sending ? (
+          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+        ) : (
+          <Send className="h-3.5 w-3.5" />
+        )}
         Show sample
       </button>
       {response && (
@@ -159,7 +189,9 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
             <div className="eyebrow">Response · 200 OK</div>
             <CopyButton value={response} label="Copy" />
           </div>
-          <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink"><code>{response}</code></pre>
+          <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink">
+            <code>{response}</code>
+          </pre>
         </div>
       )}
       <button
@@ -171,13 +203,23 @@ export function OpenApiPlayground({ endpoint }: { endpoint: OpenApiEndpoint }) {
         MCP / Raycast equivalents
       </button>
       {showAdvanced && (
-        <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink"><code>{`# MCP\nclaude code call heyclaude.${endpoint.id.replace(/-/g, "_")}\n\n# Raycast\nraycast://extensions/jsonbored/heyclaude/${endpoint.id}`}</code></pre>
+        <pre className="overflow-auto rounded-md border border-border bg-background p-3 font-mono text-[11px] text-ink">
+          <code>{`# MCP\nclaude code call heyclaude.${endpoint.id.replace(/-/g, "_")}\n\n# Raycast\nraycast://extensions/jsonbored/heyclaude/${endpoint.id}`}</code>
+        </pre>
       )}
     </div>
   );
 }
 
-function ParamInput({ param, value, onChange }: { param: OpenApiParam; value: string; onChange: (v: string) => void }) {
+function ParamInput({
+  param,
+  value,
+  onChange,
+}: {
+  param: OpenApiParam;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <label className="block">
       <div className="mb-1 flex items-center gap-2 text-[10px] uppercase tracking-wider text-ink-subtle">
@@ -193,7 +235,9 @@ function ParamInput({ param, value, onChange }: { param: OpenApiParam; value: st
         >
           <option value="">—</option>
           {param.enumValues.map((v) => (
-            <option key={v} value={v}>{v}</option>
+            <option key={v} value={v}>
+              {v}
+            </option>
           ))}
         </select>
       ) : (

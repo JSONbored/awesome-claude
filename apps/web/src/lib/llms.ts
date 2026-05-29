@@ -28,7 +28,9 @@ export function buildLlmsTxt(origin: string): string {
     lines.push(`## ${c.label}`);
     lines.push("");
     for (const e of entries) {
-      lines.push(`- [${e.title}](${origin}/entry/${e.category}/${e.slug}): ${e.cardDescription ?? e.description}`);
+      lines.push(
+        `- [${e.title}](${origin}/entry/${e.category}/${e.slug}): ${e.cardDescription ?? e.description}`,
+      );
     }
     lines.push("");
   }
@@ -101,11 +103,13 @@ const TEXT_CACHE = "public, max-age=300, stale-while-revalidate=3600";
 export async function respondText(request: Request, body: string): Promise<Response> {
   const etag = await etagFor(body);
   const ifNoneMatch = request.headers.get("if-none-match");
-  const headers = applySecurityHeaders(new Headers({
-    "Content-Type": "text/plain; charset=utf-8",
-    "Cache-Control": TEXT_CACHE,
-    ETag: etag,
-  }));
+  const headers = applySecurityHeaders(
+    new Headers({
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": TEXT_CACHE,
+      ETag: etag,
+    }),
+  );
   if (ifNoneMatch && ifNoneMatch === etag) {
     return new Response(null, { status: 304, headers });
   }

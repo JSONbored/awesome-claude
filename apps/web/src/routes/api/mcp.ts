@@ -40,7 +40,13 @@ function applyMcpHeaders(response: Response) {
   });
 }
 
-function mcpError(request: Request, code: string, status: number, requestId: string, message?: string) {
+function mcpError(
+  request: Request,
+  code: string,
+  status: number,
+  requestId: string,
+  message?: string,
+) {
   logApiWarn(request, `${route.id}.${code}`);
   return applyMcpHeaders(apiError(code, status, { requestId, message }));
 }
@@ -88,7 +94,7 @@ function createMcpArtifactReaders(origin: string, assets?: StaticAssetsBinding) 
 
   return {
     readTextArtifact,
-    readJsonArtifact: async <T,>(fileName: string): Promise<T> => {
+    readJsonArtifact: async <T>(fileName: string): Promise<T> => {
       try {
         return await loadJsonDataFile<T>(fileName);
       } catch {
@@ -157,7 +163,9 @@ async function handleMcpRequest(request: Request) {
     logApiError(request, `${route.id}.unhandled_error`, {
       error: error instanceof Error ? error.message : "unknown",
     });
-    return applyMcpHeaders(apiError("internal_error", 500, { requestId: getApiRequestId(request) }));
+    return applyMcpHeaders(
+      apiError("internal_error", 500, { requestId: getApiRequestId(request) }),
+    );
   }
 }
 

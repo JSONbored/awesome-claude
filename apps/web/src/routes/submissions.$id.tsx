@@ -45,20 +45,53 @@ interface QueueItem {
   importPrUrl?: string;
 }
 
-const STATUS_META: Record<
-  QueueStatus,
-  { icon: typeof Clock; label: string; tone: string }
-> = {
+const STATUS_META: Record<QueueStatus, { icon: typeof Clock; label: string; tone: string }> = {
   queued: { icon: Clock, label: "Queued", tone: "border-border bg-surface text-ink-muted" },
-  in_review: { icon: GitPullRequest, label: "In review", tone: "border-accent/40 bg-accent/15 text-ink" },
-  ready: { icon: CheckCircle2, label: "Ready for maintainer", tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink" },
-  approved: { icon: CheckCircle2, label: "Approved for import", tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink" },
-  import_pr_open: { icon: GitPullRequest, label: "Import PR open", tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink" },
-  needs_author_input: { icon: ShieldAlert, label: "Needs author input", tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink" },
-  source_needs_verification: { icon: ShieldAlert, label: "Source needs verification", tone: "border-trust-review/40 bg-trust-review/10 text-ink" },
-  stale: { icon: ShieldAlert, label: "Stale", tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink" },
-  imported: { icon: CheckCircle2, label: "Imported", tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink" },
-  closed: { icon: XCircle, label: "Closed", tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink" },
+  in_review: {
+    icon: GitPullRequest,
+    label: "In review",
+    tone: "border-accent/40 bg-accent/15 text-ink",
+  },
+  ready: {
+    icon: CheckCircle2,
+    label: "Ready for maintainer",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+  },
+  approved: {
+    icon: CheckCircle2,
+    label: "Approved for import",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+  },
+  import_pr_open: {
+    icon: GitPullRequest,
+    label: "Import PR open",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+  },
+  needs_author_input: {
+    icon: ShieldAlert,
+    label: "Needs author input",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+  },
+  source_needs_verification: {
+    icon: ShieldAlert,
+    label: "Source needs verification",
+    tone: "border-trust-review/40 bg-trust-review/10 text-ink",
+  },
+  stale: {
+    icon: ShieldAlert,
+    label: "Stale",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+  },
+  imported: {
+    icon: CheckCircle2,
+    label: "Imported",
+    tone: "border-trust-trusted/40 bg-trust-trusted/10 text-ink",
+  },
+  closed: {
+    icon: XCircle,
+    label: "Closed",
+    tone: "border-trust-blocked/40 bg-trust-blocked/10 text-ink",
+  },
 };
 
 export const Route = createFileRoute("/submissions/$id")({
@@ -67,8 +100,7 @@ export const Route = createFileRoute("/submissions/$id")({
       { title: `Submission #${params.id} — HeyClaude` },
       {
         name: "description",
-        content:
-          "Read-only public submission status from the linked GitHub issue.",
+        content: "Read-only public submission status from the linked GitHub issue.",
       },
     ],
   }),
@@ -157,13 +189,16 @@ function SubmissionDetailPage() {
                 <span className="rounded-md border border-border bg-surface px-2 py-0.5 text-[11px] text-ink-muted">
                   {category?.label ?? item.category}
                 </span>
-                <span className={cn("inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px]", meta.tone)}>
+                <span
+                  className={cn(
+                    "inline-flex items-center gap-1 rounded-md border px-2 py-0.5 text-[11px]",
+                    meta.tone,
+                  )}
+                >
                   <Icon className="h-3 w-3" /> {meta.label}
                 </span>
               </div>
-              <h1 className="mt-3 h-display-1 text-ink text-balance">
-                {item.title}
-              </h1>
+              <h1 className="mt-3 h-display-1 text-ink text-balance">{item.title}</h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-muted">
                 <span className="inline-flex items-center gap-1.5">
                   <UserRound className="h-3.5 w-3.5" />
@@ -207,9 +242,8 @@ function SubmissionDetailPage() {
             <div className="space-y-8">
               <Section title="Public status">
                 <p className="text-sm leading-relaxed text-ink-muted">
-                  This is a sanitized, read-only projection of the public GitHub
-                  issue. Review decisions, author discussion, labels, and import
-                  actions are maintained on GitHub.
+                  This is a sanitized, read-only projection of the public GitHub issue. Review
+                  decisions, author discussion, labels, and import actions are maintained on GitHub.
                 </p>
               </Section>
 
@@ -223,7 +257,10 @@ function SubmissionDetailPage() {
                 <Section title="Current blockers">
                   <ul className="space-y-2 text-sm text-ink-muted">
                     {item.blockers.map((blocker) => (
-                      <li key={blocker} className="rounded-md border border-trust-blocked/30 bg-trust-blocked/10 px-3 py-2">
+                      <li
+                        key={blocker}
+                        className="rounded-md border border-trust-blocked/30 bg-trust-blocked/10 px-3 py-2"
+                      >
                         {blocker}
                       </li>
                     ))}
@@ -252,8 +289,8 @@ function SubmissionDetailPage() {
                   <div className="eyebrow">Review discussion</div>
                 </div>
                 <p className="mt-3 text-sm text-ink-muted">
-                  Full reviewer comments and author replies stay on the GitHub
-                  issue so public status cannot drift from maintainer action.
+                  Full reviewer comments and author replies stay on the GitHub issue so public
+                  status cannot drift from maintainer action.
                 </p>
                 <a
                   href={item.url}

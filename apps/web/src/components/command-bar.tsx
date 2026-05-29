@@ -70,24 +70,88 @@ export function CommandBar({
   }, []);
 
   const results = React.useMemo(
-    () => (q.trim() ? search({ q, sort: "popular" }).slice(0, 6).filter((r) => !quickCat || r.category === quickCat) : []),
+    () =>
+      q.trim()
+        ? search({ q, sort: "popular" })
+            .slice(0, 6)
+            .filter((r) => !quickCat || r.category === quickCat)
+        : [],
     [q, quickCat],
   );
 
-
   const actions = React.useMemo<ActionItem[]>(() => {
     const all: ActionItem[] = [
-      { id: "go-browse", label: "Browse all resources", hint: "/browse", Icon: Compass, run: () => navigate({ to: "/browse" }) },
-      { id: "go-trending", label: "Trending this week", hint: "/trending", Icon: Flame, run: () => navigate({ to: "/trending" }) },
-      { id: "go-ecosystem", label: "Ecosystem & integrations", hint: "/ecosystem", Icon: GitBranch, run: () => navigate({ to: "/ecosystem" }) },
-      { id: "go-quality", label: "Registry quality", hint: "/quality", Icon: ShieldCheck, run: () => navigate({ to: "/quality" }) },
-      { id: "go-best", label: "Best of HeyClaude", hint: "/best", Icon: Sparkles, run: () => navigate({ to: "/best" }) },
-      { id: "go-submit", label: "Submit a resource", hint: "/submit", Icon: Send, run: () => navigate({ to: "/submit" }) },
-      { id: "go-feeds", label: "RSS feeds & email subscriptions", hint: "/feeds", Icon: GitBranch, run: () => navigate({ to: "/feeds" }) },
-      { id: "go-subscriptions", label: "Manage subscriptions", hint: "/subscriptions", Icon: Sparkles, run: () => navigate({ to: "/subscriptions" }) },
-      { id: "go-saved", label: "Saved searches", hint: "/browse", Icon: Sparkles, run: () => navigate({ to: "/browse" }) },
+      {
+        id: "go-browse",
+        label: "Browse all resources",
+        hint: "/browse",
+        Icon: Compass,
+        run: () => navigate({ to: "/browse" }),
+      },
+      {
+        id: "go-trending",
+        label: "Trending this week",
+        hint: "/trending",
+        Icon: Flame,
+        run: () => navigate({ to: "/trending" }),
+      },
+      {
+        id: "go-ecosystem",
+        label: "Ecosystem & integrations",
+        hint: "/ecosystem",
+        Icon: GitBranch,
+        run: () => navigate({ to: "/ecosystem" }),
+      },
+      {
+        id: "go-quality",
+        label: "Registry quality",
+        hint: "/quality",
+        Icon: ShieldCheck,
+        run: () => navigate({ to: "/quality" }),
+      },
+      {
+        id: "go-best",
+        label: "Best of HeyClaude",
+        hint: "/best",
+        Icon: Sparkles,
+        run: () => navigate({ to: "/best" }),
+      },
+      {
+        id: "go-submit",
+        label: "Submit a resource",
+        hint: "/submit",
+        Icon: Send,
+        run: () => navigate({ to: "/submit" }),
+      },
+      {
+        id: "go-feeds",
+        label: "RSS feeds & email subscriptions",
+        hint: "/feeds",
+        Icon: GitBranch,
+        run: () => navigate({ to: "/feeds" }),
+      },
+      {
+        id: "go-subscriptions",
+        label: "Manage subscriptions",
+        hint: "/subscriptions",
+        Icon: Sparkles,
+        run: () => navigate({ to: "/subscriptions" }),
+      },
+      {
+        id: "go-saved",
+        label: "Saved searches",
+        hint: "/browse",
+        Icon: Sparkles,
+        run: () => navigate({ to: "/browse" }),
+      },
       { id: "toggle-theme", label: "Toggle theme", Icon: Sun, run: () => toggleTheme() },
-      { id: "shortcuts", label: "Show keyboard shortcuts", hint: "?", Icon: Keyboard, run: () => shortcuts?.open() },
+      {
+        id: "shortcuts",
+        label: "Show keyboard shortcuts",
+        hint: "?",
+        Icon: Keyboard,
+        run: () => shortcuts?.open(),
+      },
     ];
     if (!q.trim()) return all;
     const needle = q.toLowerCase();
@@ -95,9 +159,7 @@ export function CommandBar({
   }, [q, navigate, toggleTheme, shortcuts]);
 
   // Build a flat option list (results first, then actions) for keyboard nav.
-  type Opt =
-    | { kind: "result"; r: (typeof results)[number] }
-    | { kind: "action"; a: ActionItem };
+  type Opt = { kind: "result"; r: (typeof results)[number] } | { kind: "action"; a: ActionItem };
   const options: Opt[] = React.useMemo(
     () => [
       ...results.map((r) => ({ kind: "result" as const, r })),
@@ -140,11 +202,7 @@ export function CommandBar({
   const showPanel = open && options.length > 0;
 
   return (
-    <div
-      ref={wrapperRef}
-      onBlur={handleBlur}
-      className={cn("relative w-full", className)}
-    >
+    <div ref={wrapperRef} onBlur={handleBlur} className={cn("relative w-full", className)}>
       <label htmlFor={COMMAND_BAR_INPUT_ID} className="sr-only">
         Search the HeyClaude registry
       </label>
@@ -237,7 +295,10 @@ export function CommandBar({
               <button
                 key={c.id || "all"}
                 type="button"
-                onMouseDown={(e) => { e.preventDefault(); setQuickCat(c.id); }}
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  setQuickCat(c.id);
+                }}
                 className={cn(
                   "inline-flex h-6 items-center rounded-full border px-2 text-[11px] transition-colors",
                   quickCat === c.id
@@ -257,7 +318,10 @@ export function CommandBar({
             className="max-h-96 overflow-y-auto py-1"
           >
             {results.length > 0 && (
-              <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-mono uppercase tracking-wider text-ink-subtle">
+              <li
+                role="presentation"
+                className="px-3 pb-1 pt-2 text-[10px] font-mono uppercase tracking-wider text-ink-subtle"
+              >
                 Results
               </li>
             )}
@@ -295,19 +359,28 @@ export function CommandBar({
                         </span>
                       )}
                       <span
-                        className={cn("inline-flex items-center gap-1", hasSafety ? "text-ink-muted" : "text-ink-subtle")}
+                        className={cn(
+                          "inline-flex items-center gap-1",
+                          hasSafety ? "text-ink-muted" : "text-ink-subtle",
+                        )}
                         title={hasSafety ? "Safety notes present" : "No safety notes"}
                       >
                         <Shield className="h-3 w-3" aria-hidden /> {hasSafety ? "safety" : "—"}
                       </span>
                       <span
-                        className={cn("inline-flex items-center gap-1", hasPrivacy ? "text-ink-muted" : "text-ink-subtle")}
+                        className={cn(
+                          "inline-flex items-center gap-1",
+                          hasPrivacy ? "text-ink-muted" : "text-ink-subtle",
+                        )}
                         title={hasPrivacy ? "Privacy notes present" : "No privacy notes"}
                       >
                         <Lock className="h-3 w-3" aria-hidden /> {hasPrivacy ? "privacy" : "—"}
                       </span>
                       {stars !== null && (
-                        <span className="inline-flex items-center gap-1 tabular-nums" title={`${stars.toLocaleString()} stars`}>
+                        <span
+                          className="inline-flex items-center gap-1 tabular-nums"
+                          title={`${stars.toLocaleString()} stars`}
+                        >
                           <Star className="h-3 w-3" aria-hidden />
                           {stars >= 1000 ? `${(stars / 1000).toFixed(1)}k` : stars}
                         </span>
@@ -318,7 +391,10 @@ export function CommandBar({
               );
             })}
             {actions.length > 0 && (
-              <li role="presentation" className="px-3 pb-1 pt-2 text-[10px] font-mono uppercase tracking-wider text-ink-subtle">
+              <li
+                role="presentation"
+                className="px-3 pb-1 pt-2 text-[10px] font-mono uppercase tracking-wider text-ink-subtle"
+              >
                 Actions
               </li>
             )}
@@ -347,7 +423,9 @@ export function CommandBar({
                     <Icon className="h-3.5 w-3.5 text-ink-muted" aria-hidden />
                     <span className="font-medium text-ink">{a.label}</span>
                     {a.hint && (
-                      <span className="ml-auto font-mono text-[11px] text-ink-subtle">{a.hint}</span>
+                      <span className="ml-auto font-mono text-[11px] text-ink-subtle">
+                        {a.hint}
+                      </span>
                     )}
                   </button>
                 </li>

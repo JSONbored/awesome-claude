@@ -33,8 +33,7 @@ export async function unsubscribeFromNewsletter(input: {
       body: JSON.stringify(input),
     });
     const data = (await res.json().catch(() => ({}))) as { error?: string };
-    if (!res.ok)
-      return { ok: false, error: data.error ?? `Unsubscribe failed (${res.status}).` };
+    if (!res.ok) return { ok: false, error: data.error ?? `Unsubscribe failed (${res.status}).` };
     return { ok: true };
   } catch {
     return { ok: false, error: "Network error. Try again in a moment." };

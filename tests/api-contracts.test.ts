@@ -92,9 +92,7 @@ describe("OpenAPI route coverage", () => {
     expect(routeFiles.length).toBeGreaterThan(0);
     for (const filePath of routeFiles) {
       const source = fs.readFileSync(filePath, "utf8");
-      if (
-        filePath.endsWith(`${path.sep}api${path.sep}mcp.ts`)
-      ) {
+      if (filePath.endsWith(`${path.sep}api${path.sep}mcp.ts`)) {
         expect(source, filePath).toContain(
           'getApiRouteDefinition("mcp.streamable")',
         );
@@ -233,10 +231,13 @@ describe("OpenAPI route coverage", () => {
         | Record<string, { schema?: { $ref?: string } }>
         | undefined
     )?.["application/json"]?.schema;
-    const component =
-      parsedSchema.components?.schemas?.RegistryTrendingResponse?.properties as
-        | Record<string, { maxItems?: number; minimum?: number; maximum?: number }>
-        | undefined;
+    const component = parsedSchema.components?.schemas?.RegistryTrendingResponse
+      ?.properties as
+      | Record<
+          string,
+          { maxItems?: number; minimum?: number; maximum?: number }
+        >
+      | undefined;
 
     expect(responseSchema?.$ref).toBe(
       "#/components/schemas/RegistryTrendingResponse",

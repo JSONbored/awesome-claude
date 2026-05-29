@@ -112,8 +112,7 @@ export function useCopyPref(): [CopyVariant | null, (v: CopyVariant) => void] {
   return [pref, writeCopyPref];
 }
 
-const scrollKey = (category: string, slug: string) =>
-  `${SCROLL_KEY_PREFIX}${category}/${slug}`;
+const scrollKey = (category: string, slug: string) => `${SCROLL_KEY_PREFIX}${category}/${slug}`;
 
 export function readScrollPos(category: string, slug: string): number | null {
   const s = safeSession();
@@ -150,8 +149,7 @@ export function clearScrollPos(category: string, slug: string) {
 }
 
 /** Per-entry selected harness variant (persisted across tabs + refresh). */
-const harnessKey = (category: string, slug: string) =>
-  `${HARNESS_KEY_PREFIX}${category}/${slug}`;
+const harnessKey = (category: string, slug: string) => `${HARNESS_KEY_PREFIX}${category}/${slug}`;
 
 export function useHarnessPref(
   category: string,

@@ -1,7 +1,26 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowUpRight, BookOpen, ExternalLink, GitBranch, ShieldCheck, AlertTriangle, ListChecks, Code2, Sparkles, Star, FileText, OctagonX } from "lucide-react";
+import {
+  ArrowUpRight,
+  BookOpen,
+  ExternalLink,
+  GitBranch,
+  ShieldCheck,
+  AlertTriangle,
+  ListChecks,
+  Code2,
+  Sparkles,
+  Star,
+  FileText,
+  OctagonX,
+} from "lucide-react";
 import { getEntry, related } from "@/data/search";
-import { CategoryPill, PlatformChip, SourceBadge, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
+import {
+  CategoryPill,
+  PlatformChip,
+  SourceBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { WatchButton } from "@/components/watch-button";
 import { CopyButton } from "@/components/copy-button";
@@ -60,7 +79,12 @@ export const Route = createFileRoute("/entry/$category/$slug")({
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Directory", item: "/browse" },
-        { "@type": "ListItem", position: 2, name: e.category, item: `/browse?category=${e.category}` },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: e.category,
+          item: `/browse?category=${e.category}`,
+        },
         { "@type": "ListItem", position: 3, name: e.title, item: url },
       ],
     };
@@ -128,7 +152,6 @@ function Dossier() {
     return items;
   }, [risk, entry.safetyNotes, entry.privacyNotes, entry.prerequisites, rel.length]);
 
-
   const entryUrl = `/entry/${entry.category}/${entry.slug}`;
 
   return (
@@ -174,12 +197,14 @@ function Dossier() {
             />
           </div>
 
-          <h1 className="mt-4 h-display-1 text-ink text-balance">
-            {entry.title}
-          </h1>
-          <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">{entry.description}</p>
+          <h1 className="mt-4 h-display-1 text-ink text-balance">{entry.title}</h1>
+          <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
+            {entry.description}
+          </p>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink-muted">
-            <span>by <span className="text-ink">{entry.author}</span></span>
+            <span>
+              by <span className="text-ink">{entry.author}</span>
+            </span>
             <span>·</span>
             <span>added {entry.dateAdded}</span>
             {entry.stars !== undefined && (
@@ -208,8 +233,6 @@ function Dossier() {
           )}
           <EntryFacets entry={entry} density="card" className="mt-3" />
         </div>
-
-
 
         {/* Sticky install panel */}
         <aside className="lg:sticky lg:top-20 lg:self-start">
@@ -265,7 +288,12 @@ function Dossier() {
                     <code>{tabPayload}</code>
                   </pre>
                   <div className="mt-3 flex items-center gap-2">
-                    <CopyButton value={tabPayload} label={`Copy ${tab}`} size="md" className="flex-1 justify-center" />
+                    <CopyButton
+                      value={tabPayload}
+                      label={`Copy ${tab}`}
+                      size="md"
+                      className="flex-1 justify-center"
+                    />
                   </div>
                 </>
               ) : (
@@ -278,26 +306,53 @@ function Dossier() {
             <div className="border-t border-border px-4 py-3">
               <div className="eyebrow mb-2">Readiness</div>
               <ul className="space-y-1.5 text-xs">
-                <Readiness label="Trust" value={TRUST_LABEL[entry.trust]} ok={entry.trust === "trusted"} />
+                <Readiness
+                  label="Trust"
+                  value={TRUST_LABEL[entry.trust]}
+                  ok={entry.trust === "trusted"}
+                />
                 <Readiness label="Source" value={entry.source} ok={entry.source !== "unverified"} />
-                <Readiness label="Safety notes" value={entry.safetyNotes ? "Present" : "Missing"} ok={!!entry.safetyNotes} />
-                <Readiness label="Reviewed" value={entry.reviewed ? "Yes" : "No"} ok={!!entry.reviewed} />
+                <Readiness
+                  label="Safety notes"
+                  value={entry.safetyNotes ? "Present" : "Missing"}
+                  ok={!!entry.safetyNotes}
+                />
+                <Readiness
+                  label="Reviewed"
+                  value={entry.reviewed ? "Yes" : "No"}
+                  ok={!!entry.reviewed}
+                />
               </ul>
             </div>
           </div>
 
           <div className="mt-3 flex flex-col gap-1.5 text-xs">
             {entry.docsUrl && (
-              <a href={entry.docsUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink">
-                <BookOpen className="h-3.5 w-3.5" /> Documentation <ExternalLink className="h-3 w-3" />
+              <a
+                href={entry.docsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                <BookOpen className="h-3.5 w-3.5" /> Documentation{" "}
+                <ExternalLink className="h-3 w-3" />
               </a>
             )}
             {entry.sourceUrl && (
-              <a href={entry.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink">
-                <GitBranch className="h-3.5 w-3.5" /> Source repository <ExternalLink className="h-3 w-3" />
+              <a
+                href={entry.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+              >
+                <GitBranch className="h-3.5 w-3.5" /> Source repository{" "}
+                <ExternalLink className="h-3 w-3" />
               </a>
             )}
-            <Link to="/browse" className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink">
+            <Link
+              to="/browse"
+              className="inline-flex items-center gap-1.5 text-ink-muted hover:text-ink"
+            >
               <Code2 className="h-3.5 w-3.5" /> Registry JSON · LLM text
             </Link>
           </div>
@@ -324,7 +379,10 @@ function Dossier() {
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-trust-review" aria-hidden />
               )}
               <div className="min-w-0 flex-1">
-                <div className="font-semibold text-ink">{INSTALL_RISK_LABEL[risk]} — {risk === "high" ? "do not install without review" : "review before installing"}</div>
+                <div className="font-semibold text-ink">
+                  {INSTALL_RISK_LABEL[risk]} —{" "}
+                  {risk === "high" ? "do not install without review" : "review before installing"}
+                </div>
                 <p className="mt-1 text-ink-muted">{INSTALL_RISK_DETAIL[risk]}</p>
               </div>
             </section>
@@ -344,7 +402,10 @@ function Dossier() {
               <ul className="space-y-1.5">
                 {entry.prerequisites.map((p) => (
                   <li key={p} className="flex items-start gap-2">
-                    <ListChecks className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted" aria-hidden />
+                    <ListChecks
+                      className="mt-0.5 h-3.5 w-3.5 shrink-0 text-ink-muted"
+                      aria-hidden
+                    />
                     <span>{p}</span>
                   </li>
                 ))}
@@ -358,7 +419,10 @@ function Dossier() {
             </p>
             <div className="mt-4 flex flex-wrap gap-1.5">
               {entry.tags.map((t) => (
-                <span key={t} className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted">
+                <span
+                  key={t}
+                  className="inline-flex rounded-md border border-border bg-surface px-2 py-0.5 text-xs text-ink-muted"
+                >
                   #{t}
                 </span>
               ))}
@@ -388,7 +452,6 @@ function Dossier() {
             </DossierSection>
           )}
 
-
           <DossierSection id="signals" title="Signals">
             <EntrySignalsPanel category={entry.category} slug={entry.slug} />
           </DossierSection>
@@ -406,8 +469,9 @@ function Dossier() {
             <DossierTOC items={tocItems} />
           </div>
           <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
-            HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for malware.
-            Always read the source before installing tools that touch your filesystem, network, or credentials.
+            HeyClaude reviews metadata, provenance, and surface-level safety. We don't scan for
+            malware. Always read the source before installing tools that touch your filesystem,
+            network, or credentials.
           </div>
         </aside>
       </div>
@@ -449,7 +513,9 @@ function Readiness({ label, value, ok }: { label: string; value: string; ok: boo
   return (
     <li className="flex items-center justify-between">
       <span className="text-ink-muted">{label}</span>
-      <span className={cn("font-medium capitalize", ok ? "text-trust-trusted" : "text-trust-review")}>
+      <span
+        className={cn("font-medium capitalize", ok ? "text-trust-trusted" : "text-trust-review")}
+      >
         {value}
       </span>
     </li>

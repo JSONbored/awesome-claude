@@ -85,7 +85,10 @@ function AdvertisePage() {
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         {PLANS.map((p) => (
-          <div key={p.name} className="flex flex-col rounded-xl border border-border bg-surface p-6">
+          <div
+            key={p.name}
+            className="flex flex-col rounded-xl border border-border bg-surface p-6"
+          >
             <div className="eyebrow">{p.name}</div>
             <div className="mt-2 font-display text-2xl font-semibold text-ink">{p.price}</div>
             <p className="mt-2 text-sm text-ink-muted">{p.blurb}</p>
@@ -102,10 +105,7 @@ function AdvertisePage() {
       </div>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-[1fr_320px]">
-        <form
-          onSubmit={submitLead}
-          className="rounded-xl border border-border bg-surface p-6"
-        >
+        <form onSubmit={submitLead} className="rounded-xl border border-border bg-surface p-6">
           <div className="eyebrow">Get in touch</div>
           <div className="mt-4 space-y-4">
             <Field name="company" label="Company" required />
@@ -144,10 +144,23 @@ function AdvertisePage() {
   );
 }
 
-function Field({ name, label, type = "text", required }: { name: string; label: string; type?: string; required?: boolean }) {
+function Field({
+  name,
+  label,
+  type = "text",
+  required,
+}: {
+  name: string;
+  label: string;
+  type?: string;
+  required?: boolean;
+}) {
   return (
     <label className="block">
-      <div className="eyebrow mb-1.5">{label}{required && " *"}</div>
+      <div className="eyebrow mb-1.5">
+        {label}
+        {required && " *"}
+      </div>
       <input
         name={name}
         type={type}

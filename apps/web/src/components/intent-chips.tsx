@@ -73,7 +73,10 @@ export function IntentChips({
               size === "sm" ? "h-6 px-2 text-[11px]" : "h-7 px-2.5 text-xs",
             )}
           >
-            <Icon className="h-3 w-3 text-ink-subtle transition-colors group-hover:text-ink" aria-hidden />
+            <Icon
+              className="h-3 w-3 text-ink-subtle transition-colors group-hover:text-ink"
+              aria-hidden
+            />
             {i.label}
           </Link>
         );

@@ -41,11 +41,8 @@ describe("Cloudflare runtime environment adapter", () => {
       },
     };
 
-    const env = runWithCloudflareRuntime(
-      request,
-      undefined,
-      undefined,
-      () => getCloudflareEnv(),
+    const env = runWithCloudflareRuntime(request, undefined, undefined, () =>
+      getCloudflareEnv(),
     );
 
     expect(env.SITE_DB).toBe(db);

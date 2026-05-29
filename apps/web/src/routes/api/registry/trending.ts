@@ -29,7 +29,8 @@ const platformAliases = (value: string) => {
 const entryPlatforms = (entry: Entry) => {
   const values = new Set<string>();
   for (const platform of entry.platforms ?? []) values.add(normalizePlatform(platform));
-  for (const item of entry.platformCompatibility ?? []) values.add(normalizePlatform(item.platform));
+  for (const item of entry.platformCompatibility ?? [])
+    values.add(normalizePlatform(item.platform));
   return [...values];
 };
 const matchesPlatform = (entry: Entry, value: string) => {
@@ -40,7 +41,14 @@ const matchesPlatform = (entry: Entry, value: string) => {
 };
 
 const reasonCodes = (input: ReturnType<typeof trendInput>) =>
-  [input.votes ? "upvotes" : "", input.communitySignals?.used ? "community_used" : "", input.communitySignals?.works ? "community_works" : "", totalIntentCount(input.intentCounts) ? "recent_intent" : "", input.firstPartyPackage ? "first_party_package" : "", input.productionVerified ? "production_verified" : ""].filter(Boolean);
+  [
+    input.votes ? "upvotes" : "",
+    input.communitySignals?.used ? "community_used" : "",
+    input.communitySignals?.works ? "community_works" : "",
+    totalIntentCount(input.intentCounts) ? "recent_intent" : "",
+    input.firstPartyPackage ? "first_party_package" : "",
+    input.productionVerified ? "production_verified" : "",
+  ].filter(Boolean);
 
 function entryCanonicalUrl(entry: Entry) {
   const embedded = (entry as LegacyGeneratedFields).canonicalUrl;
@@ -61,30 +69,80 @@ function isFirstPartyPackage(entry: Entry) {
 }
 
 function trendInput(entry: Entry, states: Awaited<ReturnType<typeof readStates>>) {
-  return { communitySignals: states.community.counts[communityTarget(entry)], intentCounts: states.intent.counts[entryKey(entry)], votes: states.votes.counts[entryKey(entry)] ?? 0, firstPartyPackage: isFirstPartyPackage(entry), productionVerified: entry.verificationStatus === "production" };
+  return {
+    communitySignals: states.community.counts[communityTarget(entry)],
+    intentCounts: states.intent.counts[entryKey(entry)],
+    votes: states.votes.counts[entryKey(entry)] ?? 0,
+    firstPartyPackage: isFirstPartyPackage(entry),
+    productionVerified: entry.verificationStatus === "production",
+  };
 }
 
 async function readStates(entries: Entry[]) {
   const keys = entries.map(entryKey);
-  const [votes, community, intent] = await Promise.all([safeVoteCounts(keys), safeCommunitySignalCounts(entries.map((entry) => ({ targetKind: "entry" as const, targetKey: communityTarget(entry) }))), safeIntentEventCounts(keys)]);
+  const [votes, community, intent] = await Promise.all([
+    safeVoteCounts(keys),
+    safeCommunitySignalCounts(
+      entries.map((entry) => ({ targetKind: "entry" as const, targetKey: communityTarget(entry) })),
+    ),
+    safeIntentEventCounts(keys),
+  ]);
   return { votes, community, intent };
 }
 
 export const GET = createApiHandler("registry.trending", async ({ request, query: parsed }) => {
   const { category, platform, limit } = parsed as InferApiQuery<typeof registryTrendingQuerySchema>;
   const entries = ENTRIES;
-  const scopedEntries = entries.filter((entry) => (!category || entry.category === category) && matchesPlatform(entry, platform));
+  const scopedEntries = entries.filter(
+    (entry) => (!category || entry.category === category) && matchesPlatform(entry, platform),
+  );
   const states = await readStates(scopedEntries);
   const ranked = scopedEntries
-    .map((entry) => { const input = trendInput(entry, states); return { entry, score: communityDiscoveryScore(input), reasons: reasonCodes(input) }; })
+    .map((entry) => {
+      const input = trendInput(entry, states);
+      return { entry, score: communityDiscoveryScore(input), reasons: reasonCodes(input) };
+    })
     .filter((item) => item.score > 0)
-    .sort((left, right) => right.score - left.score || String(right.entry.dateAdded).localeCompare(String(left.entry.dateAdded)) || String(left.entry.title).localeCompare(String(right.entry.title)))
+    .sort(
+      (left, right) =>
+        right.score - left.score ||
+        String(right.entry.dateAdded).localeCompare(String(left.entry.dateAdded)) ||
+        String(left.entry.title).localeCompare(String(right.entry.title)),
+    )
     .slice(0, limit)
-    .map(({ entry, score, reasons }) => ({ category: entry.category, slug: entry.slug, title: entry.title, description: entry.description, canonicalUrl: entryCanonicalUrl(entry), platforms: entryPlatforms(entry), tags: entry.tags ?? [], dateAdded: entry.dateAdded, score, reasons, trustSignals: { sourceStatus: entrySourceStatus(entry) } }));
+    .map(({ entry, score, reasons }) => ({
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      description: entry.description,
+      canonicalUrl: entryCanonicalUrl(entry),
+      platforms: entryPlatforms(entry),
+      tags: entry.tags ?? [],
+      dateAdded: entry.dateAdded,
+      score,
+      reasons,
+      trustSignals: { sourceStatus: entrySourceStatus(entry) },
+    }));
 
-  return cachedJsonResponse(request, { schemaVersion: 1, kind: "registry-trending", category: category || "all", platform: platform || "all", limit, count: ranked.length, signalsAvailable: { votes: states.votes.available, community: states.community.available, intent: states.intent.available }, entries: ranked }, { headers: { "cache-control": "public, max-age=60, stale-while-revalidate=300" } });
+  return cachedJsonResponse(
+    request,
+    {
+      schemaVersion: 1,
+      kind: "registry-trending",
+      category: category || "all",
+      platform: platform || "all",
+      limit,
+      count: ranked.length,
+      signalsAvailable: {
+        votes: states.votes.available,
+        community: states.community.available,
+        intent: states.intent.available,
+      },
+      entries: ranked,
+    },
+    { headers: { "cache-control": "public, max-age=60, stale-while-revalidate=300" } },
+  );
 });
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/registry/trending")({

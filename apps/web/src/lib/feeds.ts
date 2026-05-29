@@ -181,9 +181,7 @@ export function siteWideItems(): FeedItem[] {
     category: n.stream,
   }));
 
-  return [...changes, ...notes]
-    .sort((a, b) => (a.pubDate < b.pubDate ? 1 : -1))
-    .slice(0, 100);
+  return [...changes, ...notes].sort((a, b) => (a.pubDate < b.pubDate ? 1 : -1)).slice(0, 100);
 }
 
 export function categoryItems(category: Category): FeedItem[] {
@@ -214,9 +212,7 @@ export function changelogStreamItems(stream: "release" | "policy" | "security"):
 export async function trendingItems(): Promise<FeedItem[]> {
   const surfaces = await getGrowthSurfaces();
   const hasLiveSignals =
-    surfaces.communitySignalsAvailable ||
-    surfaces.votesAvailable ||
-    surfaces.intentEventsAvailable;
+    surfaces.communitySignalsAvailable || surfaces.votesAvailable || surfaces.intentEventsAvailable;
   if (!hasLiveSignals) return [];
   return surfaces.communityTrending.slice(0, 100).map((entry) => ({
     title: entry.title,

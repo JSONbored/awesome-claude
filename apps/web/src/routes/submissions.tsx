@@ -1,12 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  AlertTriangle,
-  CheckCircle2,
-  Clock,
-  GitPullRequest,
-  XCircle,
-} from "lucide-react";
+import { AlertTriangle, CheckCircle2, Clock, GitPullRequest, XCircle } from "lucide-react";
 import { CATEGORIES } from "@/types/registry";
 import { cn } from "@/lib/utils";
 
@@ -131,8 +125,7 @@ export const Route = createFileRoute("/submissions")({
       { property: "og:title", content: "Submission queue — HeyClaude" },
       {
         property: "og:description",
-        content:
-          "Transparent read-only view of what's queued, blocked, approved, and imported.",
+        content: "Transparent read-only view of what's queued, blocked, approved, and imported.",
       },
     ],
   }),
@@ -196,13 +189,10 @@ function SubmissionsPage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <div className="eyebrow">Public queue</div>
-          <h1 className="mt-2 h-display-1 text-ink text-balance">
-            Submission queue
-          </h1>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">Submission queue</h1>
           <p className="mt-3 max-w-xl text-ink-muted">
-            Read-only status pulled from public GitHub content-submission issues.
-            Approval, import, and review still happen on GitHub after maintainer
-            review.
+            Read-only status pulled from public GitHub content-submission issues. Approval, import,
+            and review still happen on GitHub after maintainer review.
           </p>
         </div>
         <Link
@@ -248,11 +238,7 @@ function SubmissionsPage() {
           </div>
         )}
 
-        {!loading && error && (
-          <div className="px-5 py-8 text-sm text-trust-blocked">
-            {error}
-          </div>
-        )}
+        {!loading && error && <div className="px-5 py-8 text-sm text-trust-blocked">{error}</div>}
 
         {!loading && !error && entries.length === 0 && (
           <div className="px-5 py-8 text-sm text-ink-muted">
@@ -300,7 +286,12 @@ function SubmissionsPage() {
                 <span className="font-mono text-xs text-ink-subtle">
                   {q.updatedAt.slice(0, 10)}
                 </span>
-                <span className={cn("inline-flex w-fit items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px]", meta.tone)}>
+                <span
+                  className={cn(
+                    "inline-flex w-fit items-center gap-1.5 rounded-md border px-2 py-0.5 text-[11px]",
+                    meta.tone,
+                  )}
+                >
                   <Icon className="h-3 w-3" /> {meta.label}
                 </span>
               </div>
@@ -318,9 +309,7 @@ function SubmissionsPage() {
 
       <p className="mt-6 text-xs text-ink-subtle">
         Queue data comes from{" "}
-        <code className="rounded bg-surface px-1 py-0.5 font-mono">
-          /api/submissions/queue
-        </code>
+        <code className="rounded bg-surface px-1 py-0.5 font-mono">/api/submissions/queue</code>
         {data?.generatedAt ? ` · refreshed ${data.generatedAt.slice(0, 16).replace("T", " ")}` : ""}
         . This page is read-only and cannot approve, reject, label, or import submissions.
       </p>

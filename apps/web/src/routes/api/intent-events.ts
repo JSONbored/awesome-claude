@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { intentEventsBodySchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  apiJson,
-  createApiHandler,
-  type InferApiBody,
-} from "@/lib/api/router";
+import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiWarn } from "@/lib/api-logs";
 import { getSiteDb } from "@/lib/db";
 import {
@@ -47,10 +42,7 @@ export const POST = createApiHandler(
         )
         .bind(eventType, entryKey || null, sessionId || null)
         .run();
-      return apiJson(
-        { ok: true, stored: true },
-        { headers: { "cache-control": "no-store" } },
-      );
+      return apiJson({ ok: true, stored: true }, { headers: { "cache-control": "no-store" } });
     } catch {
       logApiWarn(request, "intent_events.insert_failed", { eventType });
       return apiJson(
@@ -60,7 +52,6 @@ export const POST = createApiHandler(
     }
   },
 );
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/intent-events")({

@@ -8,9 +8,15 @@ export const Route = createFileRoute("/brief")({
   head: () => ({
     meta: [
       { title: "Weekly Brief — HeyClaude" },
-      { name: "description", content: "Weekly Brief on Claude Code, MCP, agents, and reviewed workflows." },
+      {
+        name: "description",
+        content: "Weekly Brief on Claude Code, MCP, agents, and reviewed workflows.",
+      },
       { property: "og:title", content: "HeyClaude Weekly Brief" },
-      { property: "og:description", content: "Reviewed picks, what shipped, and what to watch. No hype." },
+      {
+        property: "og:description",
+        content: "Reviewed picks, what shipped, and what to watch. No hype.",
+      },
     ],
   }),
   component: BriefPage,
@@ -46,10 +52,10 @@ function BriefPage() {
                 </div>
                 <div className="p-6">
                   <div className="eyebrow text-accent-ink dark:text-accent">Latest issue</div>
-                  <h2 className="mt-1 h-display-2 text-ink text-balance">
-                    {latest.title}
-                  </h2>
-                  <p className="mt-2 text-pretty text-sm text-ink-muted drop-cap">{latest.summary}</p>
+                  <h2 className="mt-1 h-display-2 text-ink text-balance">{latest.title}</h2>
+                  <p className="mt-2 text-pretty text-sm text-ink-muted drop-cap">
+                    {latest.summary}
+                  </p>
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {latest.tags.map((t) => (
                       <span

@@ -37,9 +37,7 @@ type RateLimitBinding = {
 
 function getRequestId(request: Request) {
   return (
-    request.headers.get("cf-ray") ||
-    request.headers.get("x-request-id") ||
-    crypto.randomUUID()
+    request.headers.get("cf-ray") || request.headers.get("x-request-id") || crypto.randomUUID()
   );
 }
 
@@ -113,10 +111,7 @@ async function getCloudflareRateLimitBinding(
   return null;
 }
 
-async function isCloudflareRateLimited(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+async function isCloudflareRateLimited(definition: ApiRouteDefinition, request: Request) {
   const binding = await getCloudflareRateLimitBinding(definition);
   if (!binding || !definition.rateLimit) return false;
 
@@ -129,10 +124,7 @@ async function isCloudflareRateLimited(
   }
 }
 
-async function enforceRateLimit(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+async function enforceRateLimit(definition: ApiRouteDefinition, request: Request) {
   const limit = definition.rateLimit;
   if (!limit) return false;
 
@@ -150,10 +142,7 @@ export function getApiRequestId(request: Request) {
   return getRequestId(request);
 }
 
-export async function enforceApiRateLimit(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+export async function enforceApiRateLimit(definition: ApiRouteDefinition, request: Request) {
   return enforceRateLimit(definition, request);
 }
 
@@ -163,9 +152,7 @@ async function parseRequest(
   routeContext?: NextRouteContext,
 ) {
   const params = routeContext?.params ? await routeContext.params : {};
-  const parsedParams = definition.paramsSchema
-    ? definition.paramsSchema.parse(params)
-    : params;
+  const parsedParams = definition.paramsSchema ? definition.paramsSchema.parse(params) : params;
   const parsedQuery = definition.querySchema
     ? definition.querySchema.parse(getQueryObject(request))
     : {};
@@ -203,10 +190,7 @@ export function createApiHandler<TDefinition extends ApiRouteDefinition>(
       return apiError("forbidden_origin", 403, { requestId });
     }
 
-    if (
-      (route.bodySchema || route.requiresJsonBody) &&
-      !hasJsonContentType(request)
-    ) {
+    if ((route.bodySchema || route.requiresJsonBody) && !hasJsonContentType(request)) {
       logApiWarn(request, `${route.id}.invalid_content_type`);
       return apiError("invalid_content_type", 415, { requestId });
     }

@@ -9,9 +9,15 @@ export const Route = createFileRoute("/api-docs")({
   head: () => ({
     meta: [
       { title: "API documentation — HeyClaude" },
-      { name: "description", content: "Public REST API for the HeyClaude registry, with a built-in playground." },
+      {
+        name: "description",
+        content: "Public REST API for the HeyClaude registry, with a built-in playground.",
+      },
       { property: "og:title", content: "HeyClaude API docs" },
-      { property: "og:description", content: "Search, trending, manifest, integrity, diff, submissions — with a playground." },
+      {
+        property: "og:description",
+        content: "Search, trending, manifest, integrity, diff, submissions — with a playground.",
+      },
     ],
   }),
   component: ApiDocsPage,
@@ -37,8 +43,8 @@ function ApiDocsPage() {
           <div className="eyebrow">API · v1</div>
           <h1 className="mt-2 h-display-2 text-ink text-balance">Reference</h1>
           <p className="mt-2 text-xs text-ink-muted">
-            Public read endpoints — no auth required. Rate-limited per IP. Verify artifact integrity via the
-            registry manifest.
+            Public read endpoints — no auth required. Rate-limited per IP. Verify artifact integrity
+            via the registry manifest.
           </p>
           <div className="mt-4 relative">
             <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-subtle" />
@@ -75,9 +81,15 @@ function ApiDocsPage() {
           </nav>
           <div className="mt-6 rounded-md border border-border bg-surface p-3 text-[11px] text-ink-muted">
             <div className="eyebrow mb-1">Integrity-aware sync</div>
-            Use <Link to="/api-docs" hash="registry-diff" className="underline">/api/registry/diff</Link> with a
-            cursor, then verify against the SHA-256 in{" "}
-            <Link to="/api-docs" hash="registry-manifest" className="underline">/api/registry/manifest</Link>.
+            Use{" "}
+            <Link to="/api-docs" hash="registry-diff" className="underline">
+              /api/registry/diff
+            </Link>{" "}
+            with a cursor, then verify against the SHA-256 in{" "}
+            <Link to="/api-docs" hash="registry-manifest" className="underline">
+              /api/registry/manifest
+            </Link>
+            .
           </div>
         </aside>
 
@@ -88,9 +100,7 @@ function ApiDocsPage() {
             return (
               <section key={tag.id} className={cn("mb-12")}>
                 <div className="eyebrow">{tag.label}</div>
-                <h2 className="mt-1 h-display-2 text-ink text-balance">
-                  {tag.blurb}
-                </h2>
+                <h2 className="mt-1 h-display-2 text-ink text-balance">{tag.blurb}</h2>
                 <div className="mt-5 space-y-6">
                   {inTag.map((e) => (
                     <OpenApiEndpointCard key={e.id} endpoint={e} />

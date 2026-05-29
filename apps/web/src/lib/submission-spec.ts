@@ -313,14 +313,16 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
   },
   plugins: {
     category: "plugins",
-    blurb: "Cross-harness plugin bundles. This category is not yet issue-imported from the public website.",
+    blurb:
+      "Cross-harness plugin bundles. This category is not yet issue-imported from the public website.",
     riskBearing: true,
     webOnly: true,
     fields: [...COMMON],
   },
   automations: {
     category: "automations",
-    blurb: "Scheduled or event-triggered agent workflows. This category is not yet issue-imported from the public website.",
+    blurb:
+      "Scheduled or event-triggered agent workflows. This category is not yet issue-imported from the public website.",
     riskBearing: true,
     webOnly: true,
     fields: [...COMMON],

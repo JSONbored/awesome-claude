@@ -59,8 +59,8 @@ function ValidatorsPage() {
       </h1>
       <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
         HeyClaude does not publish a named validator roster yet. This page exposes the real registry
-        coverage we can stand behind today: source status, maintainer review flags, and safety/privacy
-        metadata completeness.
+        coverage we can stand behind today: source status, maintainer review flags, and
+        safety/privacy metadata completeness.
       </p>
 
       <div className="mt-8 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-4">
@@ -80,7 +80,12 @@ function ValidatorsPage() {
 
       <div className="mt-8 flex flex-wrap items-center gap-2">
         <FilterChipGroup label="Filter review coverage by area" multi={false}>
-          <FilterChip role="radio" size="md" active={active === "all"} onClick={() => setActive("all")}>
+          <FilterChip
+            role="radio"
+            size="md"
+            active={active === "all"}
+            onClick={() => setActive("all")}
+          >
             All
           </FilterChip>
           {EXPERTISE_OPTIONS.map((option) => (
@@ -105,7 +110,9 @@ function ValidatorsPage() {
           <article key={coverage.id} className="rounded-xl border border-border bg-surface p-5">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="font-display text-lg font-semibold tracking-tight text-ink">{coverage.label}</h2>
+                <h2 className="font-display text-lg font-semibold tracking-tight text-ink">
+                  {coverage.label}
+                </h2>
                 <p className="mt-1 text-sm text-ink-muted">{coverage.description}</p>
               </div>
               <span className="rounded-md border border-border bg-background px-2 py-1 font-mono text-[11px] text-ink-muted">
@@ -115,9 +122,21 @@ function ValidatorsPage() {
 
             <div className="mt-4 grid gap-2 text-xs sm:grid-cols-2">
               <Metric label="Reviewed" value={coverage.reviewed} total={coverage.entries} />
-              <Metric label="Source-backed" value={coverage.sourceBacked} total={coverage.entries} />
-              <Metric label="Safety notes" value={coverage.withSafetyNotes} total={coverage.entries} />
-              <Metric label="Privacy notes" value={coverage.withPrivacyNotes} total={coverage.entries} />
+              <Metric
+                label="Source-backed"
+                value={coverage.sourceBacked}
+                total={coverage.entries}
+              />
+              <Metric
+                label="Safety notes"
+                value={coverage.withSafetyNotes}
+                total={coverage.entries}
+              />
+              <Metric
+                label="Privacy notes"
+                value={coverage.withPrivacyNotes}
+                total={coverage.entries}
+              />
             </div>
 
             <div className="mt-5 border-t border-border pt-4">
@@ -140,7 +159,9 @@ function ValidatorsPage() {
                           <TrustBadge level={entry.trust} />
                           <SourceBadge status={entry.source} />
                         </div>
-                        <div className="mt-1 line-clamp-1 text-sm font-medium text-ink">{entry.title}</div>
+                        <div className="mt-1 line-clamp-1 text-sm font-medium text-ink">
+                          {entry.title}
+                        </div>
                       </Link>
                     </li>
                   ))}
@@ -157,7 +178,8 @@ function ValidatorsPage() {
         <div className="mt-5 overflow-hidden rounded-xl border border-border bg-surface">
           {RECENT_REVIEWED.length === 0 ? (
             <p className="px-5 py-8 text-sm text-ink-muted">
-              No reviewed entries with public timestamps are present in the generated registry snapshot.
+              No reviewed entries with public timestamps are present in the generated registry
+              snapshot.
             </p>
           ) : (
             RECENT_REVIEWED.map((entry) => (
@@ -172,7 +194,9 @@ function ValidatorsPage() {
                     <CategoryPill>{entry.category}</CategoryPill>
                     <TrustBadge level={entry.trust} />
                   </div>
-                  <div className="mt-1 truncate font-display font-semibold text-ink">{entry.title}</div>
+                  <div className="mt-1 truncate font-display font-semibold text-ink">
+                    {entry.title}
+                  </div>
                 </div>
                 <span className="font-mono text-xs text-ink-subtle sm:text-right">
                   {entry.reviewedAt?.slice(0, 10)}
@@ -212,7 +236,15 @@ function ValidatorsPage() {
   );
 }
 
-function SummaryStat({ label, value, help }: { label: string; value: React.ReactNode; help?: string }) {
+function SummaryStat({
+  label,
+  value,
+  help,
+}: {
+  label: string;
+  value: React.ReactNode;
+  help?: string;
+}) {
   return (
     <div className="bg-surface p-5">
       <div className="flex items-center justify-between">

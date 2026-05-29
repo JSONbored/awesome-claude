@@ -7,9 +7,7 @@ import { cn } from "@/lib/utils";
 function coverageFor(h: Harness) {
   // An entry "covers" a harness when it lists the harness in `harness[]`
   // OR in its `platforms[]`. This matches how Browse filters.
-  const matches = ENTRIES.filter(
-    (e) => e.harness?.includes(h) || e.platforms.includes(h),
-  ).length;
+  const matches = ENTRIES.filter((e) => e.harness?.includes(h) || e.platforms.includes(h)).length;
   const pct = ENTRIES.length ? Math.round((matches / ENTRIES.length) * 100) : 0;
   return { count: matches, pct };
 }
@@ -38,7 +36,9 @@ export function HarnessCoverage() {
                   <span className="h-7 w-7 shrink-0 rounded-md border border-border bg-surface-2" />
                 )}
                 <div className="min-w-0">
-                  <div className="truncate font-display text-sm font-semibold text-ink">{h.label}</div>
+                  <div className="truncate font-display text-sm font-semibold text-ink">
+                    {h.label}
+                  </div>
                   <div className="font-mono text-[10px] text-ink-subtle">{count} entries</div>
                 </div>
               </div>
@@ -53,8 +53,12 @@ export function HarnessCoverage() {
             </div>
 
             <div className="flex items-end justify-between gap-2">
-              <span className="text-[10px] uppercase tracking-wider text-ink-subtle">Current registry snapshot</span>
-              <span className="font-mono text-[11px] text-ink-muted">{count}/{ENTRIES.length}</span>
+              <span className="text-[10px] uppercase tracking-wider text-ink-subtle">
+                Current registry snapshot
+              </span>
+              <span className="font-mono text-[11px] text-ink-muted">
+                {count}/{ENTRIES.length}
+              </span>
             </div>
           </Link>
         );

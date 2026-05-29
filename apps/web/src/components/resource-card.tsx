@@ -3,7 +3,14 @@ import { Link } from "@tanstack/react-router";
 import { Star, ArrowUpRight, Plus, Check, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
 import type { Entry } from "@/types/registry";
-import { CategoryPill, PlatformChip, SourceBadge, TrustBadge, InstallRiskBadge, NotesPresenceChips } from "./badges";
+import {
+  CategoryPill,
+  PlatformChip,
+  SourceBadge,
+  TrustBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "./badges";
 import { CopyButton } from "./copy-button";
 import { EntryFacets } from "./entry-facets";
 import { PeekButton, setHotPeek, clearHotPeek, type PeekHandle } from "./peek-button";
@@ -14,7 +21,15 @@ import { cn } from "@/lib/utils";
 import { formatCompact, timeAgo } from "@/lib/format";
 const fmtNum = (n?: number) => formatCompact(n);
 
-export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; variant?: "row" | "grid" | "compact"; rank?: number }) {
+export function ResourceCard({
+  entry,
+  variant = "row",
+  rank,
+}: {
+  entry: Entry;
+  variant?: "row" | "grid" | "compact";
+  rank?: number;
+}) {
   const compare = useCompare();
   const inCompare = compare.has(entry.slug);
   const peekRef = React.useRef<PeekHandle>(null);
@@ -54,10 +69,12 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
     }
   };
 
-
   if (variant === "compact") {
     return (
-      <div {...peekListeners} className="group relative flex items-center gap-3 border-b border-border px-4 py-2 text-sm transition-colors duration-200 ease-out hover:bg-surface-2 sm:px-6">
+      <div
+        {...peekListeners}
+        className="group relative flex items-center gap-3 border-b border-border px-4 py-2 text-sm transition-colors duration-200 ease-out hover:bg-surface-2 sm:px-6"
+      >
         <Link
           to="/entry/$category/$slug"
           params={{ category: entry.category, slug: entry.slug }}
@@ -80,11 +97,14 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
           </span>
           <TrustBadge level={entry.trust} />
         </Link>
-        <PeekButton ref={peekRef} entry={entry} className="opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100" />
+        <PeekButton
+          ref={peekRef}
+          entry={entry}
+          className="opacity-0 transition-opacity group-hover:opacity-100 focus-within:opacity-100"
+        />
       </div>
     );
   }
-
 
   if (variant === "grid") {
     return (
@@ -107,8 +127,12 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
             </div>
           </div>
           <div>
-            <h3 className="font-display text-base font-semibold leading-tight text-ink">{entry.title}</h3>
-            <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">{entry.cardDescription ?? entry.description}</p>
+            <h3 className="font-display text-base font-semibold leading-tight text-ink">
+              {entry.title}
+            </h3>
+            <p className="mt-1.5 line-clamp-2 text-sm text-ink-muted">
+              {entry.cardDescription ?? entry.description}
+            </p>
           </div>
           <EntryFacets entry={entry} density="card" />
           <div className="mt-auto flex flex-wrap items-center gap-1.5">
@@ -159,17 +183,16 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
         </div>
         <PeekHint hovered={hovered} />
       </div>
-
     );
   }
-
 
   return (
     <div
       {...peekListeners}
       className={cn(
         "group relative flex flex-col gap-3 border-b border-border px-4 py-4 transition-colors duration-200 ease-out hover:bg-surface-2 sm:flex-row sm:items-center sm:gap-5 sm:px-6",
-        inCompare && "bg-accent/5 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent",
+        inCompare &&
+          "bg-accent/5 before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:bg-accent",
       )}
     >
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
@@ -200,7 +223,6 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
         </div>
       </div>
 
-
       {/* Right cluster: fixed-width slots so missing buttons don't shift the stats column */}
       <div className="flex flex-shrink-0 flex-wrap items-center justify-end gap-x-3 gap-y-1.5 text-xs text-ink-muted sm:gap-x-4">
         <div className="flex w-[72px] flex-col items-end gap-0.5 tabular-nums">
@@ -213,7 +235,11 @@ export function ResourceCard({ entry, variant = "row", rank }: { entry: Entry; v
           <PeekButton ref={peekRef} entry={entry} />
           <div className="w-[78px]">
             {installPayload ? (
-              <CopyButton value={installPayload} label="Install" className="w-full justify-center" />
+              <CopyButton
+                value={installPayload}
+                label="Install"
+                className="w-full justify-center"
+              />
             ) : (
               <span aria-hidden className="block h-7 w-full" />
             )}

@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { newsletterSubscribeBodySchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  apiJson,
-  createApiHandler,
-  type InferApiBody,
-} from "@/lib/api/router";
+import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiError, logApiInfo, redactEmail } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env";
 
@@ -57,10 +52,7 @@ export const POST = createApiHandler(
         email: redactEmail(email),
         source,
       });
-      return apiJson(
-        { ok: true },
-        { headers: { "cache-control": "no-store" } },
-      );
+      return apiJson({ ok: true }, { headers: { "cache-control": "no-store" } });
     }
 
     if (response.status === 409) {
@@ -69,10 +61,7 @@ export const POST = createApiHandler(
         email: redactEmail(email),
         source,
       });
-      return apiJson(
-        { ok: true },
-        { headers: { "cache-control": "no-store" } },
-      );
+      return apiJson({ ok: true }, { headers: { "cache-control": "no-store" } });
     }
 
     logApiError(request, "newsletter.subscribe.provider_error", {
@@ -83,7 +72,6 @@ export const POST = createApiHandler(
     return apiError("provider_error", 502, { requestId });
   },
 );
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/newsletter/subscribe")({

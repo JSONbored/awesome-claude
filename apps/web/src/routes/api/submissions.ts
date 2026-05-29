@@ -1,18 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import {
-  buildSubmissionIssueDraft,
-  validateSubmission,
-} from "@heyclaude/registry/submission";
+import { buildSubmissionIssueDraft, validateSubmission } from "@heyclaude/registry/submission";
 
 import { submissionBodySchema } from "@/lib/api/contracts";
 import { getClientIp } from "@/lib/api-security";
-import {
-  apiError,
-  apiJson,
-  createApiHandler,
-  type InferApiBody,
-} from "@/lib/api/router";
+import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn } from "@/lib/api-logs";
 import { getCloudflareEnv } from "@/lib/cloudflare-env";
 import { getDirectoryEntries } from "@/lib/content";
@@ -38,11 +30,7 @@ function githubIssueFallbackUrl(issue: { title: string; body: string }) {
   return url.toString();
 }
 
-async function verifyTurnstile(params: {
-  request: Request;
-  token: string;
-  secret: string;
-}) {
+async function verifyTurnstile(params: { request: Request; token: string; secret: string }) {
   const { request, token, secret } = params;
   if (!secret) return { ok: true, skipped: true };
   if (!token) return { ok: false, skipped: false };
@@ -54,14 +42,11 @@ async function verifyTurnstile(params: {
   if (ip !== "unknown") body.set("remoteip", ip);
 
   try {
-    const response = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        body,
-        signal: AbortSignal.timeout(6000),
-      },
-    );
+    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      body,
+      signal: AbortSignal.timeout(6000),
+    });
     if (!response.ok) return { ok: false, skipped: false };
     const result = (await response.json()) as { success?: boolean };
     return { ok: result.success === true, skipped: false };
@@ -73,9 +58,7 @@ async function verifyTurnstile(params: {
 async function hasDuplicateEntry(category: string, slug: string) {
   try {
     const entries = await getDirectoryEntries();
-    return entries.some(
-      (entry) => entry.category === category && entry.slug === slug,
-    );
+    return entries.some((entry) => entry.category === category && entry.slug === slug);
   } catch {
     return false;
   }
@@ -88,24 +71,21 @@ async function createGitHubIssue(params: {
   body: string;
   labels: string[];
 }) {
-  const response = await fetch(
-    `https://api.github.com/repos/${params.repo}/issues`,
-    {
-      method: "POST",
-      headers: {
-        accept: "application/vnd.github+json",
-        authorization: `Bearer ${params.token}`,
-        "content-type": "application/json",
-        "x-github-api-version": GITHUB_API_VERSION,
-      },
-      body: JSON.stringify({
-        title: params.title,
-        body: params.body,
-        labels: params.labels,
-      }),
-      signal: AbortSignal.timeout(8000),
+  const response = await fetch(`https://api.github.com/repos/${params.repo}/issues`, {
+    method: "POST",
+    headers: {
+      accept: "application/vnd.github+json",
+      authorization: `Bearer ${params.token}`,
+      "content-type": "application/json",
+      "x-github-api-version": GITHUB_API_VERSION,
     },
-  );
+    body: JSON.stringify({
+      title: params.title,
+      body: params.body,
+      labels: params.labels,
+    }),
+    signal: AbortSignal.timeout(8000),
+  });
 
   const body = (await response.json().catch(() => ({}))) as {
     html_url?: string;
@@ -171,8 +151,7 @@ async function findPendingSubmissionIssue(params: {
     return duplicate
       ? {
           issueUrl: String(duplicate.html_url || ""),
-          issueNumber:
-            typeof duplicate.number === "number" ? duplicate.number : undefined,
+          issueNumber: typeof duplicate.number === "number" ? duplicate.number : undefined,
         }
       : null;
   } catch {
@@ -181,179 +160,163 @@ async function findPendingSubmissionIssue(params: {
 }
 
 function requiresTurnstile(env: Record<string, unknown>) {
-  const value = envValue(env, [
-    "SUBMISSIONS_REQUIRE_TURNSTILE",
-    "REQUIRE_TURNSTILE",
-  ]).toLowerCase();
+  const value = envValue(env, ["SUBMISSIONS_REQUIRE_TURNSTILE", "REQUIRE_TURNSTILE"]).toLowerCase();
   return value === "1" || value === "true" || value === "yes";
 }
 
-export const POST = createApiHandler(
-  "submissions.create",
-  async ({ request, body, requestId }) => {
-    const payload = body as InferApiBody<typeof submissionBodySchema>;
-    if (String(payload.honeypot ?? "").trim()) {
-      logApiInfo(request, "submissions.honeypot_discarded");
-      return apiJson(
-        { ok: true, queued: false },
-        { headers: { "cache-control": "no-store" } },
-      );
-    }
+export const POST = createApiHandler("submissions.create", async ({ request, body, requestId }) => {
+  const payload = body as InferApiBody<typeof submissionBodySchema>;
+  if (String(payload.honeypot ?? "").trim()) {
+    logApiInfo(request, "submissions.honeypot_discarded");
+    return apiJson({ ok: true, queued: false }, { headers: { "cache-control": "no-store" } });
+  }
 
-    const fields =
-      payload.fields && typeof payload.fields === "object"
-        ? payload.fields
-        : {};
-    const issue = buildSubmissionIssueDraft({
-      ...fields,
-      submitted_via: "website",
-    });
-    const report = validateSubmission({
-      title: issue.title,
-      body: issue.body,
-      labels: issue.labels,
-    });
-    const fallbackUrl = githubIssueFallbackUrl(issue);
+  const fields = payload.fields && typeof payload.fields === "object" ? payload.fields : {};
+  const issue = buildSubmissionIssueDraft({
+    ...fields,
+    submitted_via: "website",
+  });
+  const report = validateSubmission({
+    title: issue.title,
+    body: issue.body,
+    labels: issue.labels,
+  });
+  const fallbackUrl = githubIssueFallbackUrl(issue);
 
-    if (report.skipped || !report.ok) {
-      logApiWarn(request, "submissions.invalid_payload", {
-        category: report.category,
+  if (report.skipped || !report.ok) {
+    logApiWarn(request, "submissions.invalid_payload", {
+      category: report.category,
+      errors: report.errors,
+    });
+    return apiError("invalid_submission", 400, {
+      requestId,
+      details: {
         errors: report.errors,
-      });
-      return apiError("invalid_submission", 400, {
-        requestId,
-        details: {
-          errors: report.errors,
-          warnings: report.warnings,
-          fallbackUrl,
-        },
-      });
-    }
-
-    const category = report.category;
-    const slug = String(report.fields.slug || "");
-    if (await hasDuplicateEntry(category, slug)) {
-      logApiWarn(request, "submissions.duplicate_slug", { category, slug });
-      return apiError("duplicate_slug", 409, {
-        requestId,
-        details: { category, slug, fallbackUrl },
-      });
-    }
-
-    const env = getEnvRecord();
-    const turnstileSecret = envValue(env, ["TURNSTILE_SECRET_KEY"]);
-    if (!turnstileSecret && requiresTurnstile(env)) {
-      logApiError(request, "submissions.turnstile_not_configured", {
-        category,
-        slug,
-      });
-      return apiError("turnstile_not_configured", 503, {
-        requestId,
-        details: { fallbackUrl },
-      });
-    }
-
-    const turnstile = await verifyTurnstile({
-      request,
-      token: String(payload.turnstileToken || ""),
-      secret: turnstileSecret,
-    });
-    if (!turnstile.ok) {
-      logApiWarn(request, "submissions.turnstile_failed", { category, slug });
-      return apiError("turnstile_failed", 400, {
-        requestId,
-        details: { fallbackUrl },
-      });
-    }
-
-    const token = envValue(env, [
-      "GITHUB_SUBMISSIONS_TOKEN",
-      "GITHUB_SUBMISSION_TOKEN",
-      "GITHUB_TOKEN",
-    ]);
-    const repo =
-      envValue(env, [
-        "GITHUB_SUBMISSIONS_REPO",
-        "GITHUB_SUBMISSION_REPO",
-        "GITHUB_REPOSITORY",
-      ]) || DEFAULT_REPO;
-
-    if (!token) {
-      logApiError(request, "submissions.github_not_configured", {
-        category,
-        slug,
-      });
-      return apiError("submissions_not_configured", 503, {
-        requestId,
-        details: { fallbackUrl },
-      });
-    }
-
-    const pendingDuplicate = await findPendingSubmissionIssue({
-      repo,
-      token,
-      category,
-      slug,
-    });
-    if (pendingDuplicate) {
-      logApiWarn(request, "submissions.duplicate_pending_issue", {
-        category,
-        slug,
-        issueNumber: pendingDuplicate.issueNumber,
-      });
-      return apiError("duplicate_pending_issue", 409, {
-        requestId,
-        details: {
-          category,
-          slug,
-          issueUrl: pendingDuplicate.issueUrl,
-          issueNumber: pendingDuplicate.issueNumber,
-          fallbackUrl,
-        },
-      });
-    }
-
-    const created = await createGitHubIssue({
-      repo,
-      token,
-      title: issue.title,
-      body: issue.body,
-      labels: issue.labels,
-    });
-
-    if (!created.ok) {
-      logApiError(request, "submissions.github_provider_error", {
-        category,
-        slug,
-        status: created.status,
-      });
-      return apiError("provider_error", 502, {
-        requestId,
-        details: {
-          status: created.status,
-          fallbackUrl,
-        },
-      });
-    }
-
-    logApiInfo(request, "submissions.issue_created", {
-      category,
-      slug,
-      issueNumber: created.issueNumber,
-    });
-    return apiJson(
-      {
-        ok: true,
-        category,
-        slug,
-        issueUrl: created.issueUrl,
-        issueNumber: created.issueNumber,
+        warnings: report.warnings,
+        fallbackUrl,
       },
-      { headers: { "cache-control": "no-store" } },
-    );
-  },
-);
+    });
+  }
 
+  const category = report.category;
+  const slug = String(report.fields.slug || "");
+  if (await hasDuplicateEntry(category, slug)) {
+    logApiWarn(request, "submissions.duplicate_slug", { category, slug });
+    return apiError("duplicate_slug", 409, {
+      requestId,
+      details: { category, slug, fallbackUrl },
+    });
+  }
+
+  const env = getEnvRecord();
+  const turnstileSecret = envValue(env, ["TURNSTILE_SECRET_KEY"]);
+  if (!turnstileSecret && requiresTurnstile(env)) {
+    logApiError(request, "submissions.turnstile_not_configured", {
+      category,
+      slug,
+    });
+    return apiError("turnstile_not_configured", 503, {
+      requestId,
+      details: { fallbackUrl },
+    });
+  }
+
+  const turnstile = await verifyTurnstile({
+    request,
+    token: String(payload.turnstileToken || ""),
+    secret: turnstileSecret,
+  });
+  if (!turnstile.ok) {
+    logApiWarn(request, "submissions.turnstile_failed", { category, slug });
+    return apiError("turnstile_failed", 400, {
+      requestId,
+      details: { fallbackUrl },
+    });
+  }
+
+  const token = envValue(env, [
+    "GITHUB_SUBMISSIONS_TOKEN",
+    "GITHUB_SUBMISSION_TOKEN",
+    "GITHUB_TOKEN",
+  ]);
+  const repo =
+    envValue(env, ["GITHUB_SUBMISSIONS_REPO", "GITHUB_SUBMISSION_REPO", "GITHUB_REPOSITORY"]) ||
+    DEFAULT_REPO;
+
+  if (!token) {
+    logApiError(request, "submissions.github_not_configured", {
+      category,
+      slug,
+    });
+    return apiError("submissions_not_configured", 503, {
+      requestId,
+      details: { fallbackUrl },
+    });
+  }
+
+  const pendingDuplicate = await findPendingSubmissionIssue({
+    repo,
+    token,
+    category,
+    slug,
+  });
+  if (pendingDuplicate) {
+    logApiWarn(request, "submissions.duplicate_pending_issue", {
+      category,
+      slug,
+      issueNumber: pendingDuplicate.issueNumber,
+    });
+    return apiError("duplicate_pending_issue", 409, {
+      requestId,
+      details: {
+        category,
+        slug,
+        issueUrl: pendingDuplicate.issueUrl,
+        issueNumber: pendingDuplicate.issueNumber,
+        fallbackUrl,
+      },
+    });
+  }
+
+  const created = await createGitHubIssue({
+    repo,
+    token,
+    title: issue.title,
+    body: issue.body,
+    labels: issue.labels,
+  });
+
+  if (!created.ok) {
+    logApiError(request, "submissions.github_provider_error", {
+      category,
+      slug,
+      status: created.status,
+    });
+    return apiError("provider_error", 502, {
+      requestId,
+      details: {
+        status: created.status,
+        fallbackUrl,
+      },
+    });
+  }
+
+  logApiInfo(request, "submissions.issue_created", {
+    category,
+    slug,
+    issueNumber: created.issueNumber,
+  });
+  return apiJson(
+    {
+      ok: true,
+      category,
+      slug,
+      issueUrl: created.issueUrl,
+      issueNumber: created.issueNumber,
+    },
+    { headers: { "cache-control": "no-store" } },
+  );
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/submissions")({

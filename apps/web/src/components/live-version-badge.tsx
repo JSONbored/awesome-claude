@@ -54,11 +54,7 @@ export function LiveVersionBadge({
         "inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-[11px] text-ink-muted",
         className,
       )}
-      title={
-        live
-          ? `Latest on npm · published ${timeAgo(updatedAt)}`
-          : "Last known release"
-      }
+      title={live ? `Latest on npm · published ${timeAgo(updatedAt)}` : "Last known release"}
     >
       <Package className="h-3 w-3" aria-hidden />
       {version ? <span className="text-ink">v{version.replace(/^v/, "")}</span> : <span>—</span>}

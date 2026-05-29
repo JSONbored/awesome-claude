@@ -86,7 +86,8 @@ function eventTargetId(event: RegistryEvent): string | null {
 function eventToAlert(event: RegistryEvent, target: WatchTarget): Alert | null {
   const targetId = eventTargetId(event);
   if (!targetId || targetId !== target.id || !event.date) return null;
-  const action = event.action === "removed" ? "removed" : event.action === "added" ? "added" : "updated";
+  const action =
+    event.action === "removed" ? "removed" : event.action === "added" ? "added" : "updated";
   const label = event.title || target.label;
   return {
     id: event.id || `${target.id}:${event.date}:${action}`,

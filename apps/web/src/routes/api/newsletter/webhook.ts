@@ -3,12 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Webhook } from "svix";
 
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
-import {
-  logApiError,
-  logApiInfo,
-  logApiWarn,
-  redactEmail,
-} from "@/lib/api-logs";
+import { logApiError, logApiInfo, logApiWarn, redactEmail } from "@/lib/api-logs";
 import { getEnvString } from "@/lib/cloudflare-env";
 
 type ResendEvent = {
@@ -23,11 +18,7 @@ function getEventEmail(data?: Record<string, unknown>) {
 
 function shouldNotify(event: ResendEvent) {
   const type = String(event.type ?? "");
-  return (
-    type.startsWith("contact.") ||
-    type === "email.delivered" ||
-    type === "email.bounced"
-  );
+  return type.startsWith("contact.") || type === "email.delivered" || type === "email.bounced";
 }
 
 function toDiscordContent(event: ResendEvent) {
@@ -53,11 +44,7 @@ function toDiscordContent(event: ResendEvent) {
   return `Resend event: \`${type}\` (\`${email}\`)`;
 }
 
-function verifyWebhookSignature(params: {
-  rawBody: string;
-  request: Request;
-  secret: string;
-}) {
+function verifyWebhookSignature(params: { rawBody: string; request: Request; secret: string }) {
   const { rawBody, request, secret } = params;
   if (!secret) return true;
 
@@ -149,7 +136,6 @@ export const POST = createApiHandler(
     return apiJson({ ok: true, forwarded: true });
   },
 );
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/newsletter/webhook")({

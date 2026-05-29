@@ -17,20 +17,59 @@ export const Route = createFileRoute("/claim")({
   head: () => ({
     meta: [
       { title: "Claim a listing — HeyClaude" },
-      { name: "description", content: "Claim a HeyClaude listing, attach proof of ownership, and track claim status." },
+      {
+        name: "description",
+        content: "Claim a HeyClaude listing, attach proof of ownership, and track claim status.",
+      },
     ],
   }),
   component: ClaimPage,
 });
 
 const PROOF_FIELDS = [
-  { id: "email", label: "Contact email", placeholder: "you@example.com", help: "Required so maintainers can verify and follow up.", type: "email" },
-  { id: "github", label: "GitHub handle", placeholder: "@your-handle", help: "We verify push/admin on the linked repo." },
-  { id: "repo", label: "Repo permission", placeholder: "owner/repo", help: "Public repo where you have admin or maintain." },
-  { id: "package", label: "Package owner", placeholder: "npm: @scope/pkg or PyPI handle", help: "Optional but speeds up review." },
-  { id: "domain", label: "Domain TXT record", placeholder: "heyclaude-claim=…", help: "Optional. Use for brand or domain ownership." },
-  { id: "commit", label: "Signed commit", placeholder: "Commit SHA on the source repo", help: "Optional. GPG/SSH-signed commits speed up review." },
-  { id: "link", label: "Public link", placeholder: "Tweet, blog post, or company page", help: "Optional. Public attestation from a known account." },
+  {
+    id: "email",
+    label: "Contact email",
+    placeholder: "you@example.com",
+    help: "Required so maintainers can verify and follow up.",
+    type: "email",
+  },
+  {
+    id: "github",
+    label: "GitHub handle",
+    placeholder: "@your-handle",
+    help: "We verify push/admin on the linked repo.",
+  },
+  {
+    id: "repo",
+    label: "Repo permission",
+    placeholder: "owner/repo",
+    help: "Public repo where you have admin or maintain.",
+  },
+  {
+    id: "package",
+    label: "Package owner",
+    placeholder: "npm: @scope/pkg or PyPI handle",
+    help: "Optional but speeds up review.",
+  },
+  {
+    id: "domain",
+    label: "Domain TXT record",
+    placeholder: "heyclaude-claim=…",
+    help: "Optional. Use for brand or domain ownership.",
+  },
+  {
+    id: "commit",
+    label: "Signed commit",
+    placeholder: "Commit SHA on the source repo",
+    help: "Optional. GPG/SSH-signed commits speed up review.",
+  },
+  {
+    id: "link",
+    label: "Public link",
+    placeholder: "Tweet, blog post, or company page",
+    help: "Optional. Public attestation from a known account.",
+  },
 ] as const;
 
 const TYPE_OPTIONS: ClaimType[] = ["maintain", "transfer", "correct", "remove"];
@@ -47,8 +86,11 @@ function ClaimPage() {
   const matches = React.useMemo(() => {
     if (!query || picked) return [];
     const q = query.toLowerCase();
-    return ENTRIES.filter((e) =>
-      e.title.toLowerCase().includes(q) || e.slug.includes(q) || e.author.toLowerCase().includes(q),
+    return ENTRIES.filter(
+      (e) =>
+        e.title.toLowerCase().includes(q) ||
+        e.slug.includes(q) ||
+        e.author.toLowerCase().includes(q),
     ).slice(0, 6);
   }, [query, picked]);
 
@@ -59,8 +101,7 @@ function ClaimPage() {
     if (!picked || !contactEmail || submitting) return;
     setSubmitting(true);
     setError("");
-    const proofLines = PROOF_FIELDS
-      .filter((field) => field.id !== "email")
+    const proofLines = PROOF_FIELDS.filter((field) => field.id !== "email")
       .map((field) => {
         const value = (proof[field.id] ?? "").trim();
         return value ? `${field.label}: ${value}` : "";
@@ -102,8 +143,9 @@ function ClaimPage() {
           <Check className="h-6 w-6 text-trust-trusted" />
         </div>
         <h1 className="mt-4 h-display-2 text-ink text-balance">Claim submitted</h1>
-      <p className="mt-2 text-sm text-ink-muted">
-          We'll verify the proof you attached and reply by email. Claims do not change public listings until maintainer review is complete.
+        <p className="mt-2 text-sm text-ink-muted">
+          We'll verify the proof you attached and reply by email. Claims do not change public
+          listings until maintainer review is complete.
         </p>
         <button
           type="button"
@@ -124,9 +166,7 @@ function ClaimPage() {
   return (
     <div className="mx-auto max-w-[1200px] px-4 py-12 sm:px-6">
       <div className="eyebrow">Maintainer</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        Claim a listing
-      </h1>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">Claim a listing</h1>
       <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
         Take ownership of an entry, transfer it, request a correction, or pull it down. The more
         proof you attach, the faster review goes.
@@ -261,12 +301,16 @@ function ClaimPage() {
                     <span
                       className={cn(
                         "mt-0.5 flex h-4 w-4 items-center justify-center rounded-full border",
-                        ok ? "border-trust-trusted bg-trust-trusted/15 text-trust-trusted" : "border-border text-ink-subtle",
+                        ok
+                          ? "border-trust-trusted bg-trust-trusted/15 text-trust-trusted"
+                          : "border-border text-ink-subtle",
                       )}
                     >
                       {ok ? <Check className="h-3 w-3" /> : null}
                     </span>
-                    <span className={cn("text-xs", ok ? "text-ink" : "text-ink-muted")}>{f.label}</span>
+                    <span className={cn("text-xs", ok ? "text-ink" : "text-ink-muted")}>
+                      {f.label}
+                    </span>
                   </li>
                 );
               })}
@@ -293,13 +337,22 @@ function ClaimPage() {
       <section className="mt-16">
         <h2 className="h-display-2 text-ink text-balance">What happens next</h2>
         <p className="mt-2 text-sm text-ink-muted">
-          Claim requests enter the private listing lead queue. Public ownership metadata changes only after maintainer verification.
+          Claim requests enter the private listing lead queue. Public ownership metadata changes
+          only after maintainer verification.
         </p>
         <div className="mt-5 grid gap-3 md:grid-cols-3">
           {[
             ["1", "Lead intake", "The request is stored in D1 with your proof and contact email."],
-            ["2", "Maintainer verification", "A maintainer checks repo, package, domain, or public identity proof."],
-            ["3", "Public update", "Verified claims are reflected in provenance only after normal review."],
+            [
+              "2",
+              "Maintainer verification",
+              "A maintainer checks repo, package, domain, or public identity proof.",
+            ],
+            [
+              "3",
+              "Public update",
+              "Verified claims are reflected in provenance only after normal review.",
+            ],
           ].map(([step, title, body]) => (
             <div key={step} className="rounded-xl border border-border bg-surface p-5">
               <div className="font-mono text-xs text-ink-subtle">0{step}</div>

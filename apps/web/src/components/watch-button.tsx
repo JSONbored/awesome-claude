@@ -31,7 +31,10 @@ export function WatchButton({
       onClick={() => {
         watch.toggle({ id, kind, label, href });
         if (active) toast(`Stopped watching ${label}`);
-        else toast.success(`Watching ${label}`, { description: "You'll see updates in the alerts menu." });
+        else
+          toast.success(`Watching ${label}`, {
+            description: "You'll see updates in the alerts menu.",
+          });
       }}
       aria-pressed={active}
       aria-label={`${active ? "Unwatch" : "Watch"} ${label}`}
@@ -45,11 +48,7 @@ export function WatchButton({
       )}
     >
       <Icon className={cn(size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4")} />
-      <span>
-        {active
-          ? (fullLabel?.on ?? "Watching")
-          : (fullLabel?.off ?? "Watch")}
-      </span>
+      <span>{active ? (fullLabel?.on ?? "Watching") : (fullLabel?.off ?? "Watch")}</span>
     </button>
   );
 }

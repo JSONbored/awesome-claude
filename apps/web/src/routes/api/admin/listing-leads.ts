@@ -1,9 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import {
-  nextLeadStatus,
-  normalizeCommercialStatus,
-} from "@heyclaude/registry/commercial";
+import { nextLeadStatus, normalizeCommercialStatus } from "@heyclaude/registry/commercial";
 
 import {
   adminListingLeadsPatchBodySchema,
@@ -49,9 +46,7 @@ function normalizeKind(value: string | null) {
 function leadsToCsv(rows: Record<string, unknown>[]) {
   return [
     CSV_COLUMNS.join(","),
-    ...rows.map((row) =>
-      CSV_COLUMNS.map((column) => csvEscape(row[column])).join(","),
-    ),
+    ...rows.map((row) => CSV_COLUMNS.map((column) => csvEscape(row[column])).join(",")),
   ].join("\n");
 }
 
@@ -69,9 +64,7 @@ export const GET = createApiHandler(
       return apiError("site_db_not_configured", 503, { requestId });
     }
 
-    const query = parsedQuery as InferApiQuery<
-      typeof adminListingLeadsQuerySchema
-    >;
+    const query = parsedQuery as InferApiQuery<typeof adminListingLeadsQuerySchema>;
     const kind = normalizeKind(query.kind);
     const status = normalizeCommercialStatus(query.status);
     const limit = Math.max(1, Math.min(MAX_LIMIT, Math.trunc(query.limit)));
@@ -114,17 +107,13 @@ export const GET = createApiHandler(
       .all();
 
     if (format === "csv") {
-      return new Response(
-        `${leadsToCsv(results as Record<string, unknown>[])}\n`,
-        {
-          headers: {
-            "cache-control": "no-store",
-            "content-disposition":
-              'attachment; filename="heyclaude-listing-leads.csv"',
-            "content-type": "text/csv; charset=utf-8",
-          },
+      return new Response(`${leadsToCsv(results as Record<string, unknown>[])}\n`, {
+        headers: {
+          "cache-control": "no-store",
+          "content-disposition": 'attachment; filename="heyclaude-listing-leads.csv"',
+          "content-type": "text/csv; charset=utf-8",
         },
-      );
+      });
     }
 
     return apiJson(
@@ -152,9 +141,7 @@ export const PATCH = createApiHandler(
       return apiError("site_db_not_configured", 503, { requestId });
     }
 
-    const payload = body as InferApiBody<
-      typeof adminListingLeadsPatchBodySchema
-    >;
+    const payload = body as InferApiBody<typeof adminListingLeadsPatchBodySchema>;
     const id = payload.id;
     const action = payload.action;
     if (!Number.isInteger(id) || id <= 0 || !action) {
@@ -176,9 +163,7 @@ export const PATCH = createApiHandler(
     }
 
     await db
-      .prepare(
-        "UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-      )
+      .prepare("UPDATE listing_leads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?")
       .bind(nextStatus, id)
       .run();
 
@@ -198,7 +183,6 @@ export const PATCH = createApiHandler(
     );
   },
 );
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/admin/listing-leads")({

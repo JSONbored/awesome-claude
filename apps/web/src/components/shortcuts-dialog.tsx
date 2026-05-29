@@ -81,9 +81,7 @@ export function ShortcutsProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     const isTyping = (el: EventTarget | null) =>
-      !!(el as HTMLElement | null)?.matches?.(
-        "input, textarea, select, [contenteditable='true']",
-      );
+      !!(el as HTMLElement | null)?.matches?.("input, textarea, select, [contenteditable='true']");
 
     const handler = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -131,10 +129,7 @@ export function ShortcutsProvider({ children }: { children: React.ReactNode }) {
                 <div className="eyebrow mb-2">{g.group}</div>
                 <ul className="space-y-1.5">
                   {g.items.map((s) => (
-                    <li
-                      key={s.label}
-                      className="flex items-center justify-between gap-3 text-sm"
-                    >
+                    <li key={s.label} className="flex items-center justify-between gap-3 text-sm">
                       <span className="text-ink-muted">{s.label}</span>
                       <span className="flex items-center gap-1">
                         {s.keys.map((k, i) => (

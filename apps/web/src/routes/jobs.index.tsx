@@ -22,9 +22,15 @@ export const Route = createFileRoute("/jobs/")({
   head: () => ({
     meta: [
       { title: "Claude & AI workflow jobs — HeyClaude" },
-      { name: "description", content: "Source-verified roles building Claude Code, MCP servers, and agent workflows." },
+      {
+        name: "description",
+        content: "Source-verified roles building Claude Code, MCP servers, and agent workflows.",
+      },
       { property: "og:title", content: "Claude & AI workflow jobs" },
-      { property: "og:description", content: "Source-verified jobs for Claude Code, MCP, and agent workflows." },
+      {
+        property: "og:description",
+        content: "Source-verified jobs for Claude Code, MCP, and agent workflows.",
+      },
       { property: "og:url", content: "/jobs" },
     ],
     links: [{ rel: "canonical", href: "/jobs" }],
@@ -62,7 +68,9 @@ function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown
     bonus: typeof value.bonus === "string" ? value.bonus : undefined,
     description: String(value.description || ""),
     benefits: Array.isArray(value.benefits) ? value.benefits.map(String) : undefined,
-    responsibilities: Array.isArray(value.responsibilities) ? value.responsibilities.map(String) : undefined,
+    responsibilities: Array.isArray(value.responsibilities)
+      ? value.responsibilities.map(String)
+      : undefined,
     requirements: Array.isArray(value.requirements) ? value.requirements.map(String) : undefined,
     labels: Array.isArray(value.labels) ? value.labels.map(String) : undefined,
     applyUrl: typeof value.applyUrl === "string" ? value.applyUrl : undefined,
@@ -95,8 +103,11 @@ function JobsPage() {
           headers: { accept: "application/json" },
         });
         if (!response.ok) throw new Error(`jobs API returned ${response.status}`);
-        const payload = (await response.json()) as { entries?: Array<Partial<JobListing> & Record<string, unknown>> };
-        if (!cancelled) setJobs((payload.entries ?? []).map(normalizeJobListing).filter((job) => job.slug));
+        const payload = (await response.json()) as {
+          entries?: Array<Partial<JobListing> & Record<string, unknown>>;
+        };
+        if (!cancelled)
+          setJobs((payload.entries ?? []).map(normalizeJobListing).filter((job) => job.slug));
       } catch {
         if (!cancelled) setJobs([]);
       } finally {
@@ -109,10 +120,7 @@ function JobsPage() {
     };
   }, []);
 
-  const allTypes = useMemo(
-    () => Array.from(new Set(jobs.map((j) => j.type))).sort(),
-    [jobs],
-  );
+  const allTypes = useMemo(() => Array.from(new Set(jobs.map((j) => j.type))).sort(), [jobs]);
 
   const filtered = useMemo(() => {
     return jobs.filter((j) => {
@@ -149,8 +157,7 @@ function JobsPage() {
 
   // Counts for facets
   const counts = useMemo(() => {
-    const base = (extra: (j: JobListing) => boolean) =>
-      jobs.filter(extra).length;
+    const base = (extra: (j: JobListing) => boolean) => jobs.filter(extra).length;
     return {
       total: jobs.length,
       remote: base((j) => !!j.isRemote),
@@ -172,11 +179,10 @@ function JobsPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="min-w-0">
           <div className="eyebrow">Hiring</div>
-          <h1 className="mt-2 h-display-1 text-ink text-balance">
-            Roles building with Claude.
-          </h1>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">Roles building with Claude.</h1>
           <p className="mt-2 max-w-2xl text-ink-muted">
-            Source-verified jobs from teams shipping agent workflows, MCP servers, and Claude Code platforms.
+            Source-verified jobs from teams shipping agent workflows, MCP servers, and Claude Code
+            platforms.
             <span className="ml-1 text-ink-subtle">
               {counts.total} open · {counts.remote} remote · {counts.fresh} this week.
             </span>

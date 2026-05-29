@@ -271,8 +271,7 @@ describe("central API router security", () => {
     );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { GET } =
-      await import("@/routes/api/brand-assets/$kind/$domain");
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -308,8 +307,7 @@ describe("central API router security", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { GET } =
-      await import("@/routes/api/brand-assets/$kind/$domain");
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -345,8 +343,7 @@ describe("central API router security", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { GET } =
-      await import("@/routes/api/brand-assets/$kind/$domain");
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },
@@ -382,8 +379,7 @@ describe("central API router security", () => {
       );
     vi.stubGlobal("fetch", fetchMock);
 
-    const { GET } =
-      await import("@/routes/api/brand-assets/$kind/$domain");
+    const { GET } = await import("@/routes/api/brand-assets/$kind/$domain");
     const response = await GET(
       new Request("https://heyclau.de/api/brand-assets/icon/example.com"),
       { params: { kind: "icon", domain: "example.com" } },

@@ -207,15 +207,11 @@ function TrendingPage() {
             <Flame className="h-4 w-4 text-trust-limited" />
             <span className="eyebrow">Trending · live registry signals</span>
           </div>
-          <h1 className="mt-2 h-display-1 text-ink text-balance">
-            What developers are pinning
-          </h1>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">What developers are pinning</h1>
           <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
             Ranked by public upvotes, community usage reports, recent install/copy intent, and
             source-backed trust signals when those live inputs are available.
-            <span className="ml-1 font-mono text-xs text-ink-subtle">
-              {rows.length} resources
-            </span>
+            <span className="ml-1 font-mono text-xs text-ink-subtle">{rows.length} resources</span>
           </p>
           {mode === "fallback" && (
             <div className="mt-3 max-w-2xl rounded-lg border border-border bg-surface px-3 py-2 text-xs text-ink-muted">
@@ -258,8 +254,8 @@ function TrendingPage() {
                 : "source-backed fallback"}
           </div>
           <div className="ml-auto text-[11px] text-ink-subtle">
-            Votes {signals.votes ? "on" : "off"} · Community {signals.community ? "on" : "off"} · Intent{" "}
-            {signals.intent ? "on" : "off"}
+            Votes {signals.votes ? "on" : "off"} · Community {signals.community ? "on" : "off"} ·
+            Intent {signals.intent ? "on" : "off"}
           </div>
         </div>
 

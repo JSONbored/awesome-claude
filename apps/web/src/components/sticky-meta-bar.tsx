@@ -4,12 +4,7 @@ import type { Entry, Harness } from "@/types/registry";
 import { CategoryPill, TrustBadge, InstallRiskBadge, NotesPresenceChips } from "./badges";
 import { Star, ArrowUp, Shield, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  useHarnessPref,
-  readScrollPos,
-  writeScrollPos,
-  clearScrollPos,
-} from "@/lib/dossier-prefs";
+import { useHarnessPref, readScrollPos, writeScrollPos, clearScrollPos } from "@/lib/dossier-prefs";
 import { CopySegmented, variantsForEntry } from "./copy-segmented";
 
 /**
@@ -20,7 +15,13 @@ import { CopySegmented, variantsForEntry } from "./copy-segmented";
  * - Restores per-entry scroll position on revisit.
  * - Slim accent scroll-progress bar across the bottom edge.
  */
-export function StickyMetaBar({ entry, watchSentinelId }: { entry: Entry; watchSentinelId: string }) {
+export function StickyMetaBar({
+  entry,
+  watchSentinelId,
+}: {
+  entry: Entry;
+  watchSentinelId: string;
+}) {
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -35,10 +36,10 @@ export function StickyMetaBar({ entry, watchSentinelId }: { entry: Entry; watchS
   useEffect(() => {
     const sentinel = document.getElementById(watchSentinelId);
     if (!sentinel) return;
-    const io = new IntersectionObserver(
-      ([e]) => setVisible(!e.isIntersecting),
-      { threshold: 0, rootMargin: "-72px 0px 0px 0px" },
-    );
+    const io = new IntersectionObserver(([e]) => setVisible(!e.isIntersecting), {
+      threshold: 0,
+      rootMargin: "-72px 0px 0px 0px",
+    });
     io.observe(sentinel);
     return () => io.disconnect();
   }, [watchSentinelId]);
@@ -117,11 +118,17 @@ export function StickyMetaBar({ entry, watchSentinelId }: { entry: Entry; watchS
             {/* Compact safety/privacy icons under md */}
             <span className="ml-auto inline-flex shrink-0 items-center gap-1 md:hidden">
               <Shield
-                className={cn("h-3.5 w-3.5", hasSafety ? "text-trust-trusted" : "text-ink-subtle/50")}
+                className={cn(
+                  "h-3.5 w-3.5",
+                  hasSafety ? "text-trust-trusted" : "text-ink-subtle/50",
+                )}
                 aria-label={hasSafety ? "Safety notes present" : "Safety notes missing"}
               />
               <Lock
-                className={cn("h-3.5 w-3.5", hasPrivacy ? "text-trust-trusted" : "text-ink-subtle/50")}
+                className={cn(
+                  "h-3.5 w-3.5",
+                  hasPrivacy ? "text-trust-trusted" : "text-ink-subtle/50",
+                )}
                 aria-label={hasPrivacy ? "Privacy notes present" : "Privacy notes missing"}
               />
             </span>

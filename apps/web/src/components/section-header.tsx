@@ -38,10 +38,7 @@ export function SectionHeader({
       <div className={cn("min-w-0", align === "center" && "mx-auto")}>
         {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
         <Title
-          className={cn(
-            "text-ink text-balance",
-            size === "lg" ? "h-display-1" : "h-display-2",
-          )}
+          className={cn("text-ink text-balance", size === "lg" ? "h-display-1" : "h-display-2")}
         >
           {title}
         </Title>

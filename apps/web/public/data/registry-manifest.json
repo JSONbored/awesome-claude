@@ -3222,7 +3222,7 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "aa53b733d58cf05454b868fc1c4091132c82949710c47bd8c7eb111a54facbce"
+      "sha256": "2505cd79ac7ad37109d5361e6b6db20ca220de196a867aed77facbc4fdce2cdb"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
@@ -3232,7 +3232,7 @@
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "f3c5752d863c4596ac54b774db32e6982c630175c5a5a75790586762ae1eaa2c"
+      "sha256": "8d151a892d243634d2c0271ae5c99d04b8c56af4060a6c873cc70874fa01e0c6"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
@@ -3252,7 +3252,7 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "acba0aca8c224354bdfb24baa9eadb1cd9a4c55549b08fb7cb492a4f221143a6"
+      "sha256": "e4d46a37bcaebd8a307e773dc3ef99d7855531a8bed03f0b588172e1efa8adae"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
@@ -3287,7 +3287,7 @@
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "a7c360b4102cf2966c26520723d8dda6a6bb9dae32cef6a78e1f16ab2ff287ea"
+      "sha256": "00f38d8b14d4ce304b6469f86177bfbb8eb440f0a9c274a039c4047ed36c9853"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -6857,17 +6857,17 @@
     "entries/commands/mcp-setup.json": {
       "path": "/data/entries%2Fcommands%2Fmcp-setup.json",
       "type": "json",
-      "sha256": "6125e054a8e25f7ea77318c76fe5d2363365d53ce3b8cf22cf02201bc71e8848"
+      "sha256": "11cd998884be11f7beea7a71d38670d042d8d236ac5aace2a95115d2ae0ef2a3"
     },
     "llms/commands/mcp-setup.txt": {
       "path": "/data/llms%2Fcommands%2Fmcp-setup.txt",
       "type": "text",
-      "sha256": "bb315f7ee6081de3bdd6541ac27b0b5a3dc605b027d58eea9d1e1a1b8eed3130"
+      "sha256": "70504861f094396980a583f0849015992277b502b136143ae91de3c433183867"
     },
     "raycast/commands/mcp-setup.json": {
       "path": "/data/raycast%2Fcommands%2Fmcp-setup.json",
       "type": "json",
-      "sha256": "387527dc262c66c2b82a5c1002207bc708eff4e26c04f6a392c745f7f4e7355f"
+      "sha256": "80933fbb464f711f0b6a8506de16200ffe2a48fddb761060b849f9c3fe71a8e5"
     },
     "entries/statuslines/mcp-server-status-monitor.json": {
       "path": "/data/entries%2Fstatuslines%2Fmcp-server-status-monitor.json",
@@ -7657,12 +7657,12 @@
     "entries/mcp/postgresql-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpostgresql-mcp-server.json",
       "type": "json",
-      "sha256": "972e787434e5a039f9ed5d7f148987dba3ce28ee07bdcc5b8c54006a74fc2713"
+      "sha256": "d9745eb2cbdc869bc85f570c7f3380bb126ad47411c88ed9e735eb924c7e88d7"
     },
     "llms/mcp/postgresql-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fpostgresql-mcp-server.txt",
       "type": "text",
-      "sha256": "e6e5c5fc0099a79749790eab64cffaecf2f1ba9f1ea402f0c2d7e881103c04d2"
+      "sha256": "37b45eaf74fd1218eec050d1fd6354ce9b9c23b370537a1f214fc220d8acf5fd"
     },
     "raycast/mcp/postgresql-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpostgresql-mcp-server.json",
@@ -8147,12 +8147,12 @@
     "entries/mcp/redis-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fredis-mcp-server.json",
       "type": "json",
-      "sha256": "2b76001ffd9fd33e96a7907ba1ae719afad4936bd2aa42cbd960d1aedcbab37e"
+      "sha256": "ad537298c2e340e88749897bffd0a233d4f3d1872fd1f9167d845bd62c0c2bbe"
     },
     "llms/mcp/redis-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fredis-mcp-server.txt",
       "type": "text",
-      "sha256": "276056e2820ff6a7d58746908aaa3aaf6c0a9b5b4649d5886d3b0836085e34f3"
+      "sha256": "b7965b97cf3a5b3c6ef7ce729863540aec3d52d2b23199bb2a9f10e94473ee87"
     },
     "raycast/mcp/redis-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fredis-mcp-server.json",
@@ -9457,7 +9457,7 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "88515bc6f0fe7ae00eb3f7694d1a525f8b6b4d417879e216b9d25e2fa5051d42"
+      "sha256": "b060eb898e11679e8581b8840c310f1422c948f0c7d1fd670314b1bf37680dc1"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",

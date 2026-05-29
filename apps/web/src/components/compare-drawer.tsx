@@ -122,10 +122,7 @@ function SnippetCell({ entry }: { entry: Entry }) {
     [entry.harnessVariants],
   );
   const [harness, setHarness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
-  const variants = React.useMemo(
-    () => variantsForEntry(entry, harness),
-    [entry, harness],
-  );
+  const variants = React.useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
   const [pref] = useCopyPref();
   const firstAvailable = variants.find((v) => v.value)?.id ?? "install";
   const active = pref && variants.find((v) => v.id === pref)?.value ? pref : firstAvailable;
@@ -169,7 +166,13 @@ export function CompareDrawer() {
     clear();
     toast("Compare cleared", {
       description: `${items.length} item${items.length === 1 ? "" : "s"} removed`,
-      action: { label: "Undo", onClick: () => { hydrate(snapshot); setOpen(true); } },
+      action: {
+        label: "Undo",
+        onClick: () => {
+          hydrate(snapshot);
+          setOpen(true);
+        },
+      },
     });
   };
 
@@ -177,7 +180,6 @@ export function CompareDrawer() {
     toggle(e);
     toast(`Removed “${e.title}” from compare`);
   };
-
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -195,8 +197,16 @@ export function CompareDrawer() {
                   </span>
                   <CopySegmented
                     variants={[
-                      { id: "install", label: "Install", value: items.find((e) => e.installCommand)?.installCommand },
-                      { id: "config", label: "Config", value: items.find((e) => e.configSnippet)?.configSnippet },
+                      {
+                        id: "install",
+                        label: "Install",
+                        value: items.find((e) => e.installCommand)?.installCommand,
+                      },
+                      {
+                        id: "config",
+                        label: "Config",
+                        value: items.find((e) => e.configSnippet)?.configSnippet,
+                      },
                       { id: "full", label: "Full", value: items.find((e) => e.fullCopy)?.fullCopy },
                     ]}
                     hideCopy

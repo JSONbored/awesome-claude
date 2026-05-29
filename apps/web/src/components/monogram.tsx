@@ -34,7 +34,13 @@ export function Monogram({
         "flex shrink-0 items-center justify-center rounded-lg font-display font-semibold text-[color:var(--accent-ink)]",
         className,
       )}
-      style={{ width: size, height: size, background: bg, fontSize: fontPx, letterSpacing: "-0.02em" }}
+      style={{
+        width: size,
+        height: size,
+        background: bg,
+        fontSize: fontPx,
+        letterSpacing: "-0.02em",
+      }}
     >
       {initials}
     </div>

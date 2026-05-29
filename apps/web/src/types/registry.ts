@@ -165,8 +165,16 @@ export const CATEGORIES: { id: Category; label: string; blurb: string; legacy?: 
   { id: "agents", label: "Agents", blurb: "Autonomous and semi-autonomous agents" },
   { id: "mcp", label: "MCP servers", blurb: "Model Context Protocol servers and bridges" },
   { id: "skills", label: "Skills", blurb: "Reusable Claude Skills and capability packs" },
-  { id: "plugins", label: "Plugins", blurb: "Cross-harness bundles: Claude Code, Codex, Gemini, Cursor, Zed" },
-  { id: "automations", label: "Automations", blurb: "Scheduled or event-triggered agent workflows" },
+  {
+    id: "plugins",
+    label: "Plugins",
+    blurb: "Cross-harness bundles: Claude Code, Codex, Gemini, Cursor, Zed",
+  },
+  {
+    id: "automations",
+    label: "Automations",
+    blurb: "Scheduled or event-triggered agent workflows",
+  },
   { id: "commands", label: "Commands", blurb: "Slash commands for Claude Code and Codex" },
   { id: "hooks", label: "Hooks", blurb: "Pre/post hooks for agent lifecycles" },
   { id: "rules", label: "Rules", blurb: "Editor rules and CLAUDE.md / AGENTS.md presets" },
@@ -175,12 +183,42 @@ export const CATEGORIES: { id: Category; label: string; blurb: string; legacy?: 
   { id: "collections", label: "Collections", blurb: "Curated bundles of registry entries" },
   { id: "tools", label: "Tools", blurb: "Commercial tools and integrations" },
   // Legacy harness-prefixed categories — kept for backwards compatibility, hidden from top-level browse.
-  { id: "codex-plugins", label: "Codex plugins", blurb: "Plugins extending OpenAI Codex agent", legacy: true },
-  { id: "codex-automations", label: "Codex automations", blurb: "Scheduled Codex automations", legacy: true },
-  { id: "harness-configs", label: "Harness configs", blurb: "Reusable harness/runtime configurations", legacy: true },
-  { id: "aider-recipes", label: "Aider recipes", blurb: "Aider playbooks and configs", legacy: true },
-  { id: "continue-configs", label: "Continue configs", blurb: "Continue.dev model and rule configs", legacy: true },
-  { id: "zed-extensions", label: "Zed extensions", blurb: "Extensions for Zed's agent panel", legacy: true },
+  {
+    id: "codex-plugins",
+    label: "Codex plugins",
+    blurb: "Plugins extending OpenAI Codex agent",
+    legacy: true,
+  },
+  {
+    id: "codex-automations",
+    label: "Codex automations",
+    blurb: "Scheduled Codex automations",
+    legacy: true,
+  },
+  {
+    id: "harness-configs",
+    label: "Harness configs",
+    blurb: "Reusable harness/runtime configurations",
+    legacy: true,
+  },
+  {
+    id: "aider-recipes",
+    label: "Aider recipes",
+    blurb: "Aider playbooks and configs",
+    legacy: true,
+  },
+  {
+    id: "continue-configs",
+    label: "Continue configs",
+    blurb: "Continue.dev model and rule configs",
+    legacy: true,
+  },
+  {
+    id: "zed-extensions",
+    label: "Zed extensions",
+    blurb: "Extensions for Zed's agent panel",
+    legacy: true,
+  },
 ];
 
 export const PRIMARY_CATEGORIES = CATEGORIES.filter((c) => !c.legacy);
@@ -320,13 +358,7 @@ export interface CommercialTool {
 
 /* -------- Integrations -------- */
 
-export type IntegrationKind =
-  | "extension"
-  | "mcp-server"
-  | "feed"
-  | "adapter"
-  | "api"
-  | "package";
+export type IntegrationKind = "extension" | "mcp-server" | "feed" | "adapter" | "api" | "package";
 export type IntegrationStatus = "live" | "beta" | "read-only";
 
 export interface Integration {
@@ -334,7 +366,13 @@ export interface Integration {
   name: string;
   tagline: string;
   kind: IntegrationKind;
-  tier: "Official extension" | "First-party server" | "Public feed" | "Adapter" | "Public API" | "npm package";
+  tier:
+    | "Official extension"
+    | "First-party server"
+    | "Public feed"
+    | "Adapter"
+    | "Public API"
+    | "npm package";
   status: IntegrationStatus;
   mark:
     | "raycast"

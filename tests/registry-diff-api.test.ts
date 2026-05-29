@@ -65,11 +65,31 @@ describe("/api/registry/diff", () => {
       count: 5,
       signature: "deadbeefdeadbeefdeadbeefdeadbeef",
       entries: [
-        makeEntry({ key: "skills:new-may", type: "added", dateAdded: "2026-05-19" }),
-        makeEntry({ key: "mcp:new-apr", type: "added", dateAdded: "2026-04-01" }),
-        makeEntry({ key: "hooks:old-2025", type: "added", dateAdded: "2025-10-10" }),
-        makeEntry({ key: "skills:edit-recent", type: "updated", dateAdded: "2025-12-01" }),
-        makeEntry({ key: "mcp:removed-thing", type: "removed", dateAdded: "2025-09-01" }),
+        makeEntry({
+          key: "skills:new-may",
+          type: "added",
+          dateAdded: "2026-05-19",
+        }),
+        makeEntry({
+          key: "mcp:new-apr",
+          type: "added",
+          dateAdded: "2026-04-01",
+        }),
+        makeEntry({
+          key: "hooks:old-2025",
+          type: "added",
+          dateAdded: "2025-10-10",
+        }),
+        makeEntry({
+          key: "skills:edit-recent",
+          type: "updated",
+          dateAdded: "2025-12-01",
+        }),
+        makeEntry({
+          key: "mcp:removed-thing",
+          type: "removed",
+          dateAdded: "2025-09-01",
+        }),
       ],
     };
   });

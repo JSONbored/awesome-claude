@@ -12,17 +12,31 @@ import { repoRoot } from "./helpers/registry-fixtures";
 
 describe("Atlas production data wiring", () => {
   it("builds platform rows only from real registry entries", () => {
-    const entryKeys = new Set(ENTRIES.map((entry) => `${entry.category}/${entry.slug}`));
+    const entryKeys = new Set(
+      ENTRIES.map((entry) => `${entry.category}/${entry.slug}`),
+    );
     const rows = Object.values(PLATFORM_MATRIX).flat();
     expect(rows.length).toBeGreaterThan(0);
     for (const row of rows) {
-      expect(entryKeys.has(`${row.category}/${row.slug}`), `${row.category}/${row.slug}`).toBe(true);
+      expect(
+        entryKeys.has(`${row.category}/${row.slug}`),
+        `${row.category}/${row.slug}`,
+      ).toBe(true);
     }
   });
 
   it("does not publish the old fake validator roster", () => {
-    const source = fs.readFileSync(path.join(repoRoot, "apps/web/src/data/validators.ts"), "utf8");
-    for (const fakeName of ["Jeremy Harris", "Marvin Wong", "Nora Patel", "Ops Guild", "Claude Workflows"]) {
+    const source = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/data/validators.ts"),
+      "utf8",
+    );
+    for (const fakeName of [
+      "Jeremy Harris",
+      "Marvin Wong",
+      "Nora Patel",
+      "Ops Guild",
+      "Claude Workflows",
+    ]) {
       expect(source).not.toContain(fakeName);
     }
     expect(REVIEW_SUMMARY.publicRosterAvailable).toBe(false);
@@ -30,7 +44,9 @@ describe("Atlas production data wiring", () => {
   });
 
   it("derives ecosystem feed metadata from artifact contracts", () => {
-    const contractsByPath = new Map(ARTIFACT_CONTRACTS.map((artifact) => [artifact.path, artifact]));
+    const contractsByPath = new Map(
+      ARTIFACT_CONTRACTS.map((artifact) => [artifact.path, artifact]),
+    );
     expect(ECOSYSTEM_FEEDS.length).toBeGreaterThan(0);
     for (const feed of ECOSYSTEM_FEEDS) {
       const contract = contractsByPath.get(feed.path);
@@ -42,9 +58,18 @@ describe("Atlas production data wiring", () => {
   });
 
   it("keeps linked public feed URLs backed by real routes or artifacts", () => {
-    const appShell = fs.readFileSync(path.join(repoRoot, "apps/web/src/components/app-shell.tsx"), "utf8");
-    const feedsRoute = fs.readFileSync(path.join(repoRoot, "apps/web/src/routes/feeds.$slug.ts"), "utf8");
-    const sitemapRoute = fs.readFileSync(path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"), "utf8");
+    const appShell = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/components/app-shell.tsx"),
+      "utf8",
+    );
+    const feedsRoute = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/feeds.$slug.ts"),
+      "utf8",
+    );
+    const sitemapRoute = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/sitemap[.]xml.ts"),
+      "utf8",
+    );
     const retiredFeedPath = ["/feeds", "ecosystem.json"].join("/");
 
     expect(appShell).toContain("/data/feeds/index.json");

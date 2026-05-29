@@ -3,20 +3,13 @@ import { createFileRoute } from "@tanstack/react-router";
 import { normalizeBrandDomain } from "@heyclaude/registry";
 
 import { brandAssetParamsSchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  createApiHandler,
-  type InferApiParams,
-} from "@/lib/api/router";
+import { apiError, createApiHandler, type InferApiParams } from "@/lib/api/router";
 import { getEnvString } from "@/lib/cloudflare-env";
 import { applySecurityHeaders } from "@/lib/security-headers";
 
 const CACHE_CONTROL = "public, max-age=86400, stale-while-revalidate=604800";
 const MAX_BRAND_ASSET_BYTES = 1024 * 1024;
-const TRUSTED_BRAND_ASSET_HOSTS = new Set([
-  "asset.brandfetch.io",
-  "cdn.brandfetch.io",
-]);
+const TRUSTED_BRAND_ASSET_HOSTS = new Set(["asset.brandfetch.io", "cdn.brandfetch.io"]);
 const TRUSTED_BRAND_ASSET_CONTENT_TYPES = new Set([
   "image/avif",
   "image/jpeg",
@@ -35,9 +28,7 @@ type BrandSearchResult = {
 };
 
 async function resolveBrandIconUrl(domain: string, clientId: string) {
-  const searchUrl = new URL(
-    `https://api.brandfetch.io/v2/search/${encodeURIComponent(domain)}`,
-  );
+  const searchUrl = new URL(`https://api.brandfetch.io/v2/search/${encodeURIComponent(domain)}`);
   searchUrl.searchParams.set("c", clientId);
 
   const searchResponse = await fetch(searchUrl, {
@@ -49,8 +40,7 @@ async function resolveBrandIconUrl(domain: string, clientId: string) {
   if (!Array.isArray(results)) return "";
 
   const exact =
-    results.find((result) => normalizeBrandDomain(result.domain) === domain) ||
-    results[0];
+    results.find((result) => normalizeBrandDomain(result.domain) === domain) || results[0];
   return typeof exact?.icon === "string" ? exact.icon : "";
 }
 
@@ -80,15 +70,8 @@ async function fetchTrustedBrandAsset(value: string) {
       signal: AbortSignal.timeout(6000),
     });
 
-    if (
-      upstream.status >= 300 &&
-      upstream.status < 400 &&
-      upstream.headers.has("location")
-    ) {
-      const nextUrl = new URL(
-        upstream.headers.get("location") || "",
-        upstreamUrl,
-      ).toString();
+    if (upstream.status >= 300 && upstream.status < 400 && upstream.headers.has("location")) {
+      const nextUrl = new URL(upstream.headers.get("location") || "", upstreamUrl).toString();
       upstreamUrl = normalizeTrustedBrandAssetUrl(nextUrl);
       if (!upstreamUrl) return null;
       continue;
@@ -100,10 +83,7 @@ async function fetchTrustedBrandAsset(value: string) {
   return null;
 }
 
-async function readArrayBufferWithinLimit(
-  response: Response,
-  maxBytes: number,
-) {
+async function readArrayBufferWithinLimit(response: Response, maxBytes: number) {
   const declaredLength = Number(response.headers.get("content-length"));
   if (Number.isFinite(declaredLength) && declaredLength > maxBytes) {
     return null;
@@ -138,66 +118,53 @@ async function readArrayBufferWithinLimit(
   return body.buffer;
 }
 
-export const GET = createApiHandler(
-  "brandAsset.read",
-  async ({ params, requestId }) => {
-    const { domain } = params as InferApiParams<typeof brandAssetParamsSchema>;
-    const normalizedDomain = normalizeBrandDomain(domain);
-    const clientId = brandfetchClientId();
+export const GET = createApiHandler("brandAsset.read", async ({ params, requestId }) => {
+  const { domain } = params as InferApiParams<typeof brandAssetParamsSchema>;
+  const normalizedDomain = normalizeBrandDomain(domain);
+  const clientId = brandfetchClientId();
 
-    if (!normalizedDomain) {
-      return apiError("invalid_brand_domain", 400, { requestId });
-    }
-    if (!clientId) {
-      return apiError("brand_asset_not_configured", 503, { requestId });
-    }
+  if (!normalizedDomain) {
+    return apiError("invalid_brand_domain", 400, { requestId });
+  }
+  if (!clientId) {
+    return apiError("brand_asset_not_configured", 503, { requestId });
+  }
 
-    const upstreamCandidate = await resolveBrandIconUrl(
-      normalizedDomain,
-      clientId,
-    );
-    if (!upstreamCandidate) {
-      return apiError("brand_asset_not_found", 404, { requestId });
-    }
+  const upstreamCandidate = await resolveBrandIconUrl(normalizedDomain, clientId);
+  if (!upstreamCandidate) {
+    return apiError("brand_asset_not_found", 404, { requestId });
+  }
 
-    const upstream = await fetchTrustedBrandAsset(upstreamCandidate);
-    if (!upstream) {
-      return apiError("brand_asset_invalid", 502, { requestId });
-    }
+  const upstream = await fetchTrustedBrandAsset(upstreamCandidate);
+  if (!upstream) {
+    return apiError("brand_asset_invalid", 502, { requestId });
+  }
 
-    if (!upstream.ok) {
-      return apiError("brand_asset_not_found", 404, { requestId });
-    }
+  if (!upstream.ok) {
+    return apiError("brand_asset_not_found", 404, { requestId });
+  }
 
-    const contentType = upstream.headers.get("content-type") || "image/png";
-    const normalizedContentType = contentType
-      .toLowerCase()
-      .split(";")[0]
-      .trim();
-    if (!TRUSTED_BRAND_ASSET_CONTENT_TYPES.has(normalizedContentType)) {
-      return apiError("brand_asset_invalid", 502, { requestId });
-    }
+  const contentType = upstream.headers.get("content-type") || "image/png";
+  const normalizedContentType = contentType.toLowerCase().split(";")[0].trim();
+  if (!TRUSTED_BRAND_ASSET_CONTENT_TYPES.has(normalizedContentType)) {
+    return apiError("brand_asset_invalid", 502, { requestId });
+  }
 
-    const body = await readArrayBufferWithinLimit(
-      upstream,
-      MAX_BRAND_ASSET_BYTES,
-    );
-    if (!body) {
-      return apiError("brand_asset_too_large", 502, { requestId });
-    }
+  const body = await readArrayBufferWithinLimit(upstream, MAX_BRAND_ASSET_BYTES);
+  if (!body) {
+    return apiError("brand_asset_too_large", 502, { requestId });
+  }
 
-    const headers = applySecurityHeaders(new Headers());
-    headers.set("cache-control", CACHE_CONTROL);
-    headers.set("content-type", normalizedContentType);
-    headers.set("x-brand-asset-source", "brandfetch");
+  const headers = applySecurityHeaders(new Headers());
+  headers.set("cache-control", CACHE_CONTROL);
+  headers.set("content-type", normalizedContentType);
+  headers.set("x-brand-asset-source", "brandfetch");
 
-    return new Response(body, {
-      status: 200,
-      headers,
-    });
-  },
-);
-
+  return new Response(body, {
+    status: 200,
+    headers,
+  });
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/brand-assets/$kind/$domain")({

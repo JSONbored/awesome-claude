@@ -114,15 +114,16 @@ function SubscriptionsPage() {
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
         <Stat icon={<Bell className="h-4 w-4" />} label="Saved alerts" value={alertCount} />
         <Stat icon={<Rss className="h-4 w-4" />} label="Followed streams" value={followCount} />
-        <Stat icon={<Mail className="h-4 w-4" />} label="Active email segments" value={segmentCount} />
+        <Stat
+          icon={<Mail className="h-4 w-4" />}
+          label="Active email segments"
+          value={segmentCount}
+        />
       </div>
 
       {msg && (
         <p
-          className={cn(
-            "mt-4 text-xs",
-            msg.ok ? "text-trust-trusted" : "text-trust-blocked",
-          )}
+          className={cn("mt-4 text-xs", msg.ok ? "text-trust-trusted" : "text-trust-blocked")}
           role="status"
         >
           {msg.text}
@@ -130,8 +131,12 @@ function SubscriptionsPage() {
       )}
 
       <section className="mt-8">
-        <h2 className="font-display text-base font-semibold text-ink">Followed categories &amp; streams</h2>
-        <p className="text-xs text-ink-muted">Rename for your own reference, or unfollow at any time.</p>
+        <h2 className="font-display text-base font-semibold text-ink">
+          Followed categories &amp; streams
+        </h2>
+        <p className="text-xs text-ink-muted">
+          Rename for your own reference, or unfollow at any time.
+        </p>
         <div className="mt-3 rounded-xl border border-border bg-surface">
           {recents.follows.length === 0 ? (
             <div className="p-4">
@@ -236,7 +241,9 @@ function SubscriptionsPage() {
         </p>
         <div className="mt-3 rounded-xl border border-border bg-surface">
           {recents.segments.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-ink-muted">No email segments yet.</div>
+            <div className="px-4 py-6 text-center text-sm text-ink-muted">
+              No email segments yet.
+            </div>
           ) : (
             <ul className="divide-y divide-border">
               {recents.segments.map((s) => (
@@ -298,8 +305,8 @@ function SubscriptionsPage() {
 
       <p className="mt-10 flex items-center gap-2 text-xs text-ink-subtle">
         <X className="h-3 w-3" />
-        Subscriptions are stored on this device. Clearing browser data will remove them locally
-        but won't unsubscribe you from email — visit this page to manage.
+        Subscriptions are stored on this device. Clearing browser data will remove them locally but
+        won't unsubscribe you from email — visit this page to manage.
       </p>
 
       <AlertDialog open={!!confirm} onOpenChange={(o) => !o && setConfirm(null)}>

@@ -32,7 +32,9 @@ function IntegrationDetail() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link to="/integrations" className="hover:text-ink">Integrations</Link>
+        <Link to="/integrations" className="hover:text-ink">
+          Integrations
+        </Link>
         <span className="mx-1.5">/</span>
         <span className="text-ink">{integration.slug}</span>
       </nav>
@@ -105,7 +107,9 @@ function IntegrationDetail() {
                       <span className="text-xs font-medium text-ink">{i.client}</span>
                       <CopyButton value={i.snippet} label="Copy" />
                     </div>
-                    <pre className="overflow-auto p-3 font-mono text-[11px] text-ink"><code>{i.snippet}</code></pre>
+                    <pre className="overflow-auto p-3 font-mono text-[11px] text-ink">
+                      <code>{i.snippet}</code>
+                    </pre>
                   </div>
                 ))}
               </div>
@@ -122,8 +126,8 @@ function IntegrationDetail() {
         <aside className="space-y-4">
           <div className="rounded-xl border border-border bg-surface p-4 text-xs text-ink-muted">
             <div className="eyebrow mb-2">All integrations are read-only by default</div>
-            HeyClaude integrations consume the registry. Writes (submissions, claims, paid placements) route
-            through reviewed flows on the site, never through extensions.
+            HeyClaude integrations consume the registry. Writes (submissions, claims, paid
+            placements) route through reviewed flows on the site, never through extensions.
           </div>
           <div>
             <div className="eyebrow mb-2">Related</div>

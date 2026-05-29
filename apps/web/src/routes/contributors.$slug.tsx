@@ -15,7 +15,12 @@ export const Route = createFileRoute("/contributors/$slug")({
     meta: loaderData
       ? [
           { title: `${loaderData.contributor.name} — HeyClaude contributor` },
-          { name: "description", content: loaderData.contributor.bio ?? `Resources contributed by ${loaderData.contributor.name}.` },
+          {
+            name: "description",
+            content:
+              loaderData.contributor.bio ??
+              `Resources contributed by ${loaderData.contributor.name}.`,
+          },
           { property: "og:title", content: `${loaderData.contributor.name} — HeyClaude` },
           { property: "og:description", content: loaderData.contributor.bio ?? "" },
         ]
@@ -34,7 +39,9 @@ function ContributorPage() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
       <nav className="text-xs text-ink-muted">
-        <Link to="/contributors" className="hover:text-ink">Contributors</Link>
+        <Link to="/contributors" className="hover:text-ink">
+          Contributors
+        </Link>
         <span className="mx-1.5">/</span>
         <span className="text-ink">{contributor.handle}</span>
       </nav>
@@ -43,10 +50,10 @@ function ContributorPage() {
         <Monogram name={contributor.name || contributor.handle} size={72} />
         <div className="flex-1">
           <div className="eyebrow">Contributor</div>
-          <h1 className="mt-1 h-display-1 text-ink text-balance">
-            {contributor.name}
-          </h1>
-          {contributor.bio && <p className="mt-3 max-w-2xl text-pretty text-base text-ink-muted">{contributor.bio}</p>}
+          <h1 className="mt-1 h-display-1 text-ink text-balance">{contributor.name}</h1>
+          {contributor.bio && (
+            <p className="mt-3 max-w-2xl text-pretty text-base text-ink-muted">{contributor.bio}</p>
+          )}
           <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
             <span className="rounded-md border border-border bg-surface px-2 py-0.5 font-mono text-ink-muted">
               @{contributor.handle}
@@ -97,14 +104,22 @@ function ContributorPage() {
       )}
 
       <div className="mt-12 rounded-xl border border-border bg-surface p-6 text-sm text-ink-muted">
-        Want to contribute? <Link to="/submit" className="text-ink underline">Submit a resource</Link>{" "}
+        Want to contribute?{" "}
+        <Link to="/submit" className="text-ink underline">
+          Submit a resource
+        </Link>{" "}
         — every accepted entry credits its author and submitter.
       </div>
 
       <div className="mt-6 flex flex-wrap gap-2 text-xs text-ink-subtle">
         Other contributors:{" "}
         {CONTRIBUTORS.filter((c) => c.slug !== contributor.slug).map((c) => (
-          <Link key={c.slug} to="/contributors/$slug" params={{ slug: c.slug }} className="text-ink-muted hover:text-ink">
+          <Link
+            key={c.slug}
+            to="/contributors/$slug"
+            params={{ slug: c.slug }}
+            className="text-ink-muted hover:text-ink"
+          >
             {c.handle}
           </Link>
         ))}

@@ -42,7 +42,6 @@ export function CountUp({
     return () => cancelAnimationFrame(raf);
   }, [value, duration, reduced, from]);
 
-
   return (
     <span className={className} aria-label={value.toLocaleString()}>
       {compact ? formatCompact(n) : n.toLocaleString()}

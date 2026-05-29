@@ -66,7 +66,8 @@ function paramsFromPath(path: string): OpenApiParam[] {
     in: "path" as const,
     required: true,
     type: "string" as const,
-    example: match[1] === "category" ? "mcp" : match[1] === "slug" ? "github-mcp-server" : "example",
+    example:
+      match[1] === "category" ? "mcp" : match[1] === "slug" ? "github-mcp-server" : "example",
   }));
   return params;
 }
@@ -112,7 +113,11 @@ function bodyExample(id: string) {
     return JSON.stringify({ email: "reader@example.com", source: "api-docs" }, null, 2);
   }
   if (id === "votes.toggle") {
-    return JSON.stringify({ key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true }, null, 2);
+    return JSON.stringify(
+      { key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true },
+      null,
+      2,
+    );
   }
   if (id === "mcp") {
     return JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }, null, 2);
@@ -147,9 +152,7 @@ function sampleResponse(id: string) {
   }
   if (id.includes("registry.search")) {
     return {
-      results: [
-        { category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" },
-      ],
+      results: [{ category: "mcp", slug: "github-mcp-server", title: "GitHub MCP Server" }],
       facets: {},
       pagination: { limit: 20, offset: 0, total: 1 },
     };

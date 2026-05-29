@@ -1561,6 +1561,21 @@ function publicApiBaseUrl(options = {}) {
 }
 
 /**
+ * Remove trailing slashes without using a potentially expensive regex on
+ * caller-controlled API base URL overrides.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+function stripTrailingSlashes(value) {
+  let end = value.length;
+  while (end > 0 && value.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
+
+/**
  * Fetch JSON from a public HeyClaude API path. Tests inject a deterministic
  * fetcher via `options.fetchPublicApi`; production uses `fetch()` with a
  * bounded {@link DISCOVERY_FETCH_TIMEOUT_MS} timeout, `redirect: "error"`,
@@ -1578,7 +1593,7 @@ async function fetchPublicApiJson(apiPath, options = {}) {
   if (typeof options.fetchPublicApi === "function") {
     return options.fetchPublicApi(apiPath);
   }
-  const baseUrl = publicApiBaseUrl(options).replace(/\/+$/, "");
+  const baseUrl = stripTrailingSlashes(publicApiBaseUrl(options));
   const url = `${baseUrl}${apiPath.startsWith("/") ? "" : "/"}${apiPath}`;
   const controller = new AbortController();
   const timeout = setTimeout(
@@ -1678,8 +1693,7 @@ function toTrendingEntry(entry) {
     slug: entry.slug,
     title: entry.title || "",
     description: entry.description || "",
-    canonicalUrl:
-      entryCanonicalUrl(entry),
+    canonicalUrl: entryCanonicalUrl(entry),
     platforms: Array.isArray(entry.platforms) ? entry.platforms : [],
     tags: Array.isArray(entry.tags) ? entry.tags : [],
     dateAdded: entry.dateAdded || "",

@@ -61,15 +61,9 @@ function readActiveCommunity(targetKey: string): SignalState["activeCommunity"] 
   }
 }
 
-function writeActiveCommunity(
-  targetKey: string,
-  active: SignalState["activeCommunity"],
-) {
+function writeActiveCommunity(targetKey: string, active: SignalState["activeCommunity"]) {
   if (typeof window === "undefined") return;
-  window.localStorage.setItem(
-    `${COMMUNITY_STORAGE_PREFIX}${targetKey}`,
-    JSON.stringify(active),
-  );
+  window.localStorage.setItem(`${COMMUNITY_STORAGE_PREFIX}${targetKey}`, JSON.stringify(active));
 }
 
 async function postJson(path: string, payload: unknown) {
@@ -91,13 +85,7 @@ function asCommunityCounts(value: unknown): CommunityCounts {
   };
 }
 
-export function EntrySignalsPanel({
-  category,
-  slug,
-}: {
-  category: Category;
-  slug: string;
-}) {
+export function EntrySignalsPanel({ category, slug }: { category: Category; slug: string }) {
   const key = entryKey(category, slug);
   const targetKey = communityTargetKey(category, slug);
   const [state, setState] = React.useState<SignalState>({
@@ -127,10 +115,8 @@ export function EntrySignalsPanel({
     ]).then(([votesResult, communityResult]) => {
       if (cancelled) return;
 
-      const votes =
-        votesResult.status === "fulfilled" ? votesResult.value : undefined;
-      const community =
-        communityResult.status === "fulfilled" ? communityResult.value : undefined;
+      const votes = votesResult.status === "fulfilled" ? votesResult.value : undefined;
+      const community = communityResult.status === "fulfilled" ? communityResult.value : undefined;
       const voteCounts =
         votes?.counts && typeof votes.counts === "object"
           ? (votes.counts as Record<string, unknown>)
@@ -200,10 +186,7 @@ export function EntrySignalsPanel({
       activeCommunity: nextActive,
       community: {
         ...current.community,
-        [signalType]: Math.max(
-          0,
-          current.community[signalType] + (active ? 1 : -1),
-        ),
+        [signalType]: Math.max(0, current.community[signalType] + (active ? 1 : -1)),
       },
     }));
 
@@ -229,10 +212,7 @@ export function EntrySignalsPanel({
         activeCommunity: rolledBack,
         community: {
           ...current.community,
-          [signalType]: Math.max(
-            0,
-            current.community[signalType] + (active ? -1 : 1),
-          ),
+          [signalType]: Math.max(0, current.community[signalType] + (active ? -1 : 1)),
         },
       }));
     }
@@ -283,8 +263,7 @@ export function EntrySignalsPanel({
       <p className="text-xs text-ink-muted">
         {state.loading ? (
           <span className="inline-flex items-center gap-1">
-            <LoaderCircle className="h-3 w-3 animate-spin" /> Loading live
-            community signals…
+            <LoaderCircle className="h-3 w-3 animate-spin" /> Loading live community signals…
           </span>
         ) : live ? (
           "Live aggregate signals from D1. These are popularity/usage hints, not safety approvals."

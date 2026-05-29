@@ -83,10 +83,7 @@ export function AlertsDropdown() {
                       const unread = a.date > lastSeenAt;
                       const body = (
                         <div className="flex gap-3 px-4 py-3">
-                          <Icon
-                            className={cn("mt-0.5 h-4 w-4 shrink-0", meta.cls)}
-                            aria-hidden
-                          />
+                          <Icon className={cn("mt-0.5 h-4 w-4 shrink-0", meta.cls)} aria-hidden />
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
                               <span className="text-sm font-medium text-ink">{a.title}</span>

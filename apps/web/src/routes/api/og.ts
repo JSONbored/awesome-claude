@@ -2,7 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createApiHandler } from "@/lib/api/router";
 
 const PNG_1X1_TRANSPARENT = Uint8Array.from(
-  atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII="),
+  atob(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=",
+  ),
   (char) => char.charCodeAt(0),
 );
 

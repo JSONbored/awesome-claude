@@ -35,17 +35,17 @@ export interface SavedSearch {
 }
 
 export interface Follow {
-  id: string;            // local id
-  label: string;         // display label (rename-able)
-  followId: string;      // e.g. "category:mcp"
+  id: string; // local id
+  label: string; // display label (rename-able)
+  followId: string; // e.g. "category:mcp"
   source?: string;
   email?: string;
-  segmentId?: string;    // resolved Resend segment id (optional)
+  segmentId?: string; // resolved Resend segment id (optional)
   createdAt: string;
 }
 
 export interface Segment {
-  id: string;            // Resend segment id or follow id
+  id: string; // Resend segment id or follow id
   label: string;
   email: string;
   subscribedAt: string;
@@ -157,10 +157,7 @@ export function RecentsProvider({ children }: { children: React.ReactNode }) {
         }),
       saveSearch: (s) =>
         setSaved((cur) =>
-          [
-            { ...s, id: `s-${Date.now()}`, savedAt: new Date().toISOString() },
-            ...cur,
-          ].slice(0, 12),
+          [{ ...s, id: `s-${Date.now()}`, savedAt: new Date().toISOString() }, ...cur].slice(0, 12),
         ),
       renameSaved: (id, label) =>
         setSaved((cur) =>

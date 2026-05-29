@@ -22,7 +22,9 @@ export function HarnessBadge({
       )}
       title={`Works with ${PLATFORM_LABEL[id]}`}
     >
-      {mark && <IntegrationMark name={mark} size={size === "xs" ? 10 : 11} className="opacity-80" />}
+      {mark && (
+        <IntegrationMark name={mark} size={size === "xs" ? 10 : 11} className="opacity-80" />
+      )}
       {PLATFORM_LABEL[id]}
     </span>
   );

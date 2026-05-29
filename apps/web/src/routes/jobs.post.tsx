@@ -8,17 +8,40 @@ export const Route = createFileRoute("/jobs/post")({
   head: () => ({
     meta: [
       { title: "Post a job — HeyClaude" },
-      { name: "description", content: "Reach developers shipping Claude Code, MCP, and agent workflows." },
+      {
+        name: "description",
+        content: "Reach developers shipping Claude Code, MCP, and agent workflows.",
+      },
     ],
   }),
   component: PostJobPage,
 });
 
 const TIERS: { id: JobTier; label: string; price: string; bullets: string[] }[] = [
-  { id: "free", label: "Community", price: "$0", bullets: ["Standard listing", "Source-verified", "30-day display"] },
-  { id: "standard", label: "Standard", price: "$49", bullets: ["Everything in Community", "Pinned for 7 days", "Email digest"] },
-  { id: "featured", label: "Featured", price: "$149", bullets: ["Top of the list", "Featured badge", "Cross-posted to Raycast extension"] },
-  { id: "sponsored", label: "Sponsored", price: "$349", bullets: ["Maintainer-reviewed copy", "Long-form description", "Featured in Weekly Brief"] },
+  {
+    id: "free",
+    label: "Community",
+    price: "$0",
+    bullets: ["Standard listing", "Source-verified", "30-day display"],
+  },
+  {
+    id: "standard",
+    label: "Standard",
+    price: "$49",
+    bullets: ["Everything in Community", "Pinned for 7 days", "Email digest"],
+  },
+  {
+    id: "featured",
+    label: "Featured",
+    price: "$149",
+    bullets: ["Top of the list", "Featured badge", "Cross-posted to Raycast extension"],
+  },
+  {
+    id: "sponsored",
+    label: "Sponsored",
+    price: "$349",
+    bullets: ["Maintainer-reviewed copy", "Long-form description", "Featured in Weekly Brief"],
+  },
 ];
 
 function PostJobPage() {
@@ -81,7 +104,10 @@ function PostJobPage() {
         <p className="mt-2 text-sm text-ink-muted">
           We'll verify the source and reach out within two business days.
         </p>
-        <Link to="/jobs" className="mt-6 inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2">
+        <Link
+          to="/jobs"
+          className="mt-6 inline-flex h-10 items-center rounded-md border border-border bg-surface px-4 text-sm text-ink hover:bg-surface-2"
+        >
           Back to jobs
         </Link>
       </div>
@@ -93,8 +119,8 @@ function PostJobPage() {
       <div className="eyebrow">Hiring</div>
       <h1 className="mt-2 h-display-1 text-ink text-balance">Post a role</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        All listings are reviewed for source authenticity. Featured and Sponsored tiers also get a copy pass
-        from a maintainer.
+        All listings are reviewed for source authenticity. Featured and Sponsored tiers also get a
+        copy pass from a maintainer.
       </p>
 
       <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -105,16 +131,26 @@ function PostJobPage() {
             onClick={() => setTier(t.id)}
             className={cn(
               "flex flex-col gap-2 rounded-xl border p-4 text-left transition-colors duration-200 ease-out",
-              tier === t.id ? "border-ink bg-ink text-background" : "border-border bg-surface text-ink hover:bg-surface-2",
+              tier === t.id
+                ? "border-ink bg-ink text-background"
+                : "border-border bg-surface text-ink hover:bg-surface-2",
             )}
           >
             <div className="flex items-baseline justify-between">
               <span className="font-display font-semibold">{t.label}</span>
               <span className="font-mono text-sm">{t.price}</span>
             </div>
-            <ul className={cn("space-y-1 text-xs", tier === t.id ? "text-background/80" : "text-ink-muted")}>
+            <ul
+              className={cn(
+                "space-y-1 text-xs",
+                tier === t.id ? "text-background/80" : "text-ink-muted",
+              )}
+            >
               {t.bullets.map((b) => (
-                <li key={b} className="flex gap-2"><span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-current" />{b}</li>
+                <li key={b} className="flex gap-2">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-current" />
+                  {b}
+                </li>
               ))}
             </ul>
           </button>
@@ -130,14 +166,27 @@ function PostJobPage() {
         <Field name="companyUrl" label="Company URL" type="url" required />
         <Field name="location" label="Location" required />
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field name="employmentType" label="Employment type" placeholder="Full-time, Contract…" required />
+          <Field
+            name="employmentType"
+            label="Employment type"
+            placeholder="Full-time, Contract…"
+            required
+          />
           <Field name="compensation" label="Compensation" placeholder="$210k–$300k" />
         </div>
         <TextArea name="description" label="Description" required />
         <Field name="applyUrl" label="Apply URL" type="url" required />
-        <Field name="email" label="Your email (we'll contact you for verification)" type="email" required />
+        <Field
+          name="email"
+          label="Your email (we'll contact you for verification)"
+          type="email"
+          required
+        />
         <div className="flex items-center justify-between border-t border-border pt-4">
-          <div className="text-xs text-ink-muted">Selected tier: <span className="font-medium text-ink">{TIERS.find((t) => t.id === tier)?.label}</span></div>
+          <div className="text-xs text-ink-muted">
+            Selected tier:{" "}
+            <span className="font-medium text-ink">{TIERS.find((t) => t.id === tier)?.label}</span>
+          </div>
           <button
             type="submit"
             disabled={submitting}
@@ -152,10 +201,25 @@ function PostJobPage() {
   );
 }
 
-function Field({ name, label, required, type = "text", placeholder }: { name: string; label: string; required?: boolean; type?: string; placeholder?: string }) {
+function Field({
+  name,
+  label,
+  required,
+  type = "text",
+  placeholder,
+}: {
+  name: string;
+  label: string;
+  required?: boolean;
+  type?: string;
+  placeholder?: string;
+}) {
   return (
     <label className="block">
-      <div className="eyebrow mb-1.5">{label}{required && " *"}</div>
+      <div className="eyebrow mb-1.5">
+        {label}
+        {required && " *"}
+      </div>
       <input
         name={name}
         type={type}
@@ -170,7 +234,10 @@ function Field({ name, label, required, type = "text", placeholder }: { name: st
 function TextArea({ name, label, required }: { name: string; label: string; required?: boolean }) {
   return (
     <label className="block">
-      <div className="eyebrow mb-1.5">{label}{required && " *"}</div>
+      <div className="eyebrow mb-1.5">
+        {label}
+        {required && " *"}
+      </div>
       <textarea
         name={name}
         required={required}

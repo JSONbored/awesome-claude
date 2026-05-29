@@ -8,7 +8,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = React.useState<Theme>("light");
 
   React.useEffect(() => {
-    const stored = (typeof window !== "undefined" && localStorage.getItem("hc-theme")) as Theme | null;
+    const stored = (typeof window !== "undefined" &&
+      localStorage.getItem("hc-theme")) as Theme | null;
     const sys =
       typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches
         ? "dark"
@@ -38,7 +39,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const reduced =
           typeof window !== "undefined" &&
           window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const startVT = doc && (doc as Document & { startViewTransition?: (cb: () => void) => unknown }).startViewTransition;
+        const startVT =
+          doc &&
+          (doc as Document & { startViewTransition?: (cb: () => void) => unknown })
+            .startViewTransition;
         if (!reduced && typeof startVT === "function") {
           startVT.call(doc, swap);
         } else {

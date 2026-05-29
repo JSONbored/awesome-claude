@@ -19,7 +19,13 @@ const SURFACE_ICON = {
   api: Terminal,
 } as const;
 
-export function IntegrationCard({ integration, compact }: { integration: Integration; compact?: boolean }) {
+export function IntegrationCard({
+  integration,
+  compact,
+}: {
+  integration: Integration;
+  compact?: boolean;
+}) {
   const surface = integration.surface;
   const SurfaceIcon = surface ? SURFACE_ICON[surface.kind] : null;
   return (
@@ -46,7 +52,12 @@ export function IntegrationCard({ integration, compact }: { integration: Integra
             </div>
           </div>
         </div>
-        <span className={cn("inline-flex shrink-0 items-center gap-1 text-[11px] font-medium uppercase tracking-wider", STATUS_STYLES[integration.status])}>
+        <span
+          className={cn(
+            "inline-flex shrink-0 items-center gap-1 text-[11px] font-medium uppercase tracking-wider",
+            STATUS_STYLES[integration.status],
+          )}
+        >
           <span className="h-1.5 w-1.5 rounded-full bg-current" />
           {integration.status}
         </span>
@@ -57,7 +68,9 @@ export function IntegrationCard({ integration, compact }: { integration: Integra
           className="flex min-w-0 items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1.5"
           onClick={(e) => e.preventDefault()}
         >
-          <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-ink">{surface.snippet}</code>
+          <code className="min-w-0 flex-1 truncate font-mono text-[11px] text-ink">
+            {surface.snippet}
+          </code>
           <CopyButton value={surface.snippet} label="Copy" size="sm" />
         </div>
       )}
@@ -83,7 +96,9 @@ export function IntegrationCard({ integration, compact }: { integration: Integra
           ) : (
             <>
               {integration.version && <span>{integration.version}</span>}
-              {integration.updatedAt && <span className="text-ink-subtle">· {integration.updatedAt}</span>}
+              {integration.updatedAt && (
+                <span className="text-ink-subtle">· {integration.updatedAt}</span>
+              )}
             </>
           )}
         </div>

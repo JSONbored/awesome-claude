@@ -96,7 +96,8 @@ const forbiddenPatterns = [
     label: "placeholder script marker",
   },
   {
-    pattern: /local stub|silent fail is fine for the demo|Submitted \(mock\)|Claim submitted \(mock\)/i,
+    pattern:
+      /local stub|silent fail is fine for the demo|Submitted \(mock\)|Claim submitted \(mock\)/i,
     label: "public fixture-only behavior",
   },
   {
@@ -108,7 +109,8 @@ const forbiddenPatterns = [
     label: "hardcoded Atlas freshness or trend claim",
   },
   {
-    pattern: /Checksum drift detected|New entries signed|Latest health probe completed/i,
+    pattern:
+      /Checksum drift detected|New entries signed|Latest health probe completed/i,
     label: "seeded fake alert event",
   },
   {

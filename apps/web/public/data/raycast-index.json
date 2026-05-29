@@ -8981,7 +8981,7 @@
       "installCommand": "/mcp-setup [server-type] [options]",
       "configSnippet": "",
       "copyText": "Command:\n/mcp-setup [server-type] [options]\n\nUsage:\n/mcp-setup [server-type] [options]\n\nReference:\nThe `/mcp-setup` command guides you through configuring Model Context Protocol (MCP) servers in Claude Code, enabling seamless integration with external tools, databases, and APIs through Anthropic's open-source standard.\n\n## Features\n\n- **Remote MCP Server Support**: Connect to cloud-hosted MCP servers with native OAuth authentication\n- **Local Server Configuration**: Set up containerized MCP servers using Docker MCP Toolkit\n- **Project-Scoped Setup**: Configure `.mcp.json` for team-wide server access\n- **User-Global Setup**: Install personal MCP servers available across all projects\n- **OAuth Management**: One-click authentication with secure credential storage\n- **Tool Discovery**: Auto...",
-      "copyTextLength": 12020,
+      "copyTextLength": 12006,
       "copyTextTruncated": true,
       "detailMarkdown": "# MCP Server Setup for Claude Code\n\nConfigure and connect MCP servers to Claude Code with OAuth authentication, tool access, and remote server support for seamless external integrations\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\n/mcp-setup [server-type] [options]\n```\n\n## Usage\n/mcp-setup [server-type] [options]",
       "detailUrl": "/data/raycast/commands/mcp-setup.json",

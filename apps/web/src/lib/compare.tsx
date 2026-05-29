@@ -21,7 +21,11 @@ const Ctx = React.createContext<CompareCtx | null>(null);
 
 function resolve(param: string): Entry[] {
   if (!param) return [];
-  const refs = param.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4);
+  const refs = param
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 4);
   const seen = new Set<string>();
   const out: Entry[] = [];
   for (const ref of refs) {

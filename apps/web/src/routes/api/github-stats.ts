@@ -33,10 +33,7 @@ function getGithubToken() {
   return getEnvString("GITHUB_TOKEN");
 }
 
-async function fetchGitHubStats(
-  owner: string,
-  repo: string,
-): Promise<GitHubStats> {
+async function fetchGitHubStats(owner: string, repo: string): Promise<GitHubStats> {
   const headers: HeadersInit = {
     accept: "application/vnd.github+json",
     "x-github-api-version": GITHUB_API_VERSION,
@@ -48,39 +45,28 @@ async function fetchGitHubStats(
     headers.authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(
-    `https://api.github.com/repos/${owner}/${repo}`,
-    {
-      headers,
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    },
-  );
+  const response = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+    headers,
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
 
   if (!response.ok) {
     throw new Error(`github_api_${response.status}`);
   }
 
   const data = (await response.json()) as Record<string, unknown>;
-  const stars =
-    typeof data.stargazers_count === "number" ? data.stargazers_count : null;
+  const stars = typeof data.stargazers_count === "number" ? data.stargazers_count : null;
   const forks = typeof data.forks_count === "number" ? data.forks_count : null;
-  const updatedAt =
-    typeof data.updated_at === "string" ? data.updated_at : null;
+  const updatedAt = typeof data.updated_at === "string" ? data.updated_at : null;
 
   return { stars, forks, updatedAt };
 }
 
-async function fetchShieldsFallback(
-  owner: string,
-  repo: string,
-): Promise<GitHubStats | null> {
+async function fetchShieldsFallback(owner: string, repo: string): Promise<GitHubStats | null> {
   try {
-    const response = await fetch(
-      `https://img.shields.io/github/stars/${owner}/${repo}.json`,
-      {
-        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-      },
-    );
+    const response = await fetch(`https://img.shields.io/github/stars/${owner}/${repo}.json`, {
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
     if (!response.ok) return null;
     const payload = (await response.json()) as {
       value?: string;
@@ -95,52 +81,45 @@ async function fetchShieldsFallback(
   }
 }
 
-export const GET = createApiHandler(
-  "githubStats.read",
-  async ({ request, requestId }) => {
-    const repo = parseRepo(siteConfig.githubUrl);
-    if (!repo) {
-      logApiError(request, "github.stats.invalid_repo_url");
-      return apiError("invalid_repo_url", 500, { requestId });
-    }
+export const GET = createApiHandler("githubStats.read", async ({ request, requestId }) => {
+  const repo = parseRepo(siteConfig.githubUrl);
+  if (!repo) {
+    logApiError(request, "github.stats.invalid_repo_url");
+    return apiError("invalid_repo_url", 500, { requestId });
+  }
 
-    try {
-      let payload = await fetchGitHubStats(repo.owner, repo.repo).catch(
-        async () => {
-          const fallback = await fetchShieldsFallback(repo.owner, repo.repo);
-          if (!fallback) throw new Error("github_and_shields_failed");
-          return fallback;
-        },
-      );
+  try {
+    let payload = await fetchGitHubStats(repo.owner, repo.repo).catch(async () => {
+      const fallback = await fetchShieldsFallback(repo.owner, repo.repo);
+      if (!fallback) throw new Error("github_and_shields_failed");
+      return fallback;
+    });
 
-      if (sample(0.05)) {
-        logApiInfo(request, "github.stats.sample", {
-          stars: payload.stars,
-          forks: payload.forks,
-        });
-      }
-
-      return apiJson(
-        {
-          repo: `${repo.owner}/${repo.repo}`,
-          ...payload,
-        },
-        {
-          headers: {
-            "cache-control":
-              "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400",
-          },
-        },
-      );
-    } catch (error) {
-      logApiError(request, "github.stats.fetch_failed", {
-        error: error instanceof Error ? error.message : "unknown",
+    if (sample(0.05)) {
+      logApiInfo(request, "github.stats.sample", {
+        stars: payload.stars,
+        forks: payload.forks,
       });
-      return apiError("upstream_unavailable", 502, { requestId });
     }
-  },
-);
 
+    return apiJson(
+      {
+        repo: `${repo.owner}/${repo.repo}`,
+        ...payload,
+      },
+      {
+        headers: {
+          "cache-control": "public, max-age=300, s-maxage=21600, stale-while-revalidate=86400",
+        },
+      },
+    );
+  } catch (error) {
+    logApiError(request, "github.stats.fetch_failed", {
+      error: error instanceof Error ? error.message : "unknown",
+    });
+    return apiError("upstream_unavailable", 502, { requestId });
+  }
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/github-stats")({

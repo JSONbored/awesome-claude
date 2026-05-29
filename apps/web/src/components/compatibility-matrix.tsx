@@ -26,11 +26,19 @@ export interface CellDetail {
   docUrl?: string;
 }
 
-export const SUPPORT_META: Record<Support, { label: string; glyph: string; tone: string; cellBg: string }> = {
-  native:   { label: "Native",      glyph: "●", tone: "text-trust-trusted",                  cellBg: "bg-trust-trusted/8" },
-  adapter:  { label: "Adapter",     glyph: "◐", tone: "text-accent-ink dark:text-accent",    cellBg: "bg-accent/10" },
-  manual:   { label: "Manual",      glyph: "○", tone: "text-ink-muted",                      cellBg: "" },
-  none:     { label: "Unsupported", glyph: "—", tone: "text-ink-subtle",                     cellBg: "" },
+export const SUPPORT_META: Record<
+  Support,
+  { label: string; glyph: string; tone: string; cellBg: string }
+> = {
+  native: { label: "Native", glyph: "●", tone: "text-trust-trusted", cellBg: "bg-trust-trusted/8" },
+  adapter: {
+    label: "Adapter",
+    glyph: "◐",
+    tone: "text-accent-ink dark:text-accent",
+    cellBg: "bg-accent/10",
+  },
+  manual: { label: "Manual", glyph: "○", tone: "text-ink-muted", cellBg: "" },
+  none: { label: "Unsupported", glyph: "—", tone: "text-ink-subtle", cellBg: "" },
 };
 
 export function CompatibilityMatrix({
@@ -142,7 +150,10 @@ export function CompatibilityMatrix({
           </thead>
           <tbody>
             {filtered.map((row) => (
-              <tr key={row.capability} className="border-b border-border last:border-0 hover:bg-surface-2/40">
+              <tr
+                key={row.capability}
+                className="border-b border-border last:border-0 hover:bg-surface-2/40"
+              >
                 <th scope="row" className="px-4 py-3 text-left align-top">
                   <div className="text-sm font-medium text-ink">{row.capability}</div>
                   <div className="text-xs text-ink-subtle">{row.blurb}</div>
@@ -151,8 +162,7 @@ export function CompatibilityMatrix({
                   const v = row.cells[c.id];
                   const meta = SUPPORT_META[v];
                   const dim =
-                    (focusClient && focusClient !== c.id) ||
-                    (focusSupport && focusSupport !== v);
+                    (focusClient && focusClient !== c.id) || (focusSupport && focusSupport !== v);
                   const detail = details?.[`${row.capability}::${c.id}`];
                   const hasDetail = !!(detail?.snippet || detail?.docUrl || detail?.why);
                   return (
@@ -203,7 +213,10 @@ export function CompatibilityMatrix({
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={clients.length + 1} className="px-4 py-8 text-center text-sm text-ink-muted">
+                <td
+                  colSpan={clients.length + 1}
+                  className="px-4 py-8 text-center text-sm text-ink-muted"
+                >
                   No capabilities match "{query}".
                 </td>
               </tr>
@@ -225,7 +238,9 @@ export function CompatibilityMatrix({
               onClick={() => setFocusSupport(active ? null : k)}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md border px-2 py-1 transition-colors duration-200 ease-out",
-                active ? "border-accent bg-accent/10 text-ink" : "border-border bg-surface hover:text-ink",
+                active
+                  ? "border-accent bg-accent/10 text-ink"
+                  : "border-border bg-surface hover:text-ink",
               )}
             >
               <span className={cn("font-mono text-base leading-none", m.tone)}>{m.glyph}</span>
@@ -264,7 +279,12 @@ function CellPopover({
             <code>{detail.snippet}</code>
           </pre>
           <div className="border-t border-border bg-background p-1.5">
-            <CopyButton value={detail.snippet} label="Copy snippet" size="sm" className="w-full justify-center" />
+            <CopyButton
+              value={detail.snippet}
+              label="Copy snippet"
+              size="sm"
+              className="w-full justify-center"
+            />
           </div>
         </div>
       )}

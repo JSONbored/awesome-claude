@@ -154,7 +154,9 @@ export const Route = createFileRoute("/api/public/github/webhook")({
             }
           }
         } else if (event === "release") {
-          const rel = payload.release as { tag_name?: string; published_at?: string; html_url?: string } | undefined;
+          const rel = payload.release as
+            | { tag_name?: string; published_at?: string; html_url?: string }
+            | undefined;
           events.push({
             id: `release:${rel?.tag_name ?? Date.now()}`,
             kind: "changelog",

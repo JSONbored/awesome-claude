@@ -61,12 +61,48 @@ export const SPONSORS: Sponsor[] = [
  * placement. Real partners replace open slots before launch.
  */
 export const PARTNERS: Partner[] = [
-  { slug: "open-ai", name: "Open slot", role: "ai", valueExchange: "Model or evaluation credits for registry validation.", slotState: "open" },
-  { slug: "open-search", name: "Open slot", role: "search", valueExchange: "Search/discovery distribution for source-backed registry metadata.", slotState: "open" },
-  { slug: "open-infra", name: "Open slot", role: "infra", valueExchange: "Infrastructure support for previews, analytics, or public APIs.", slotState: "open" },
-  { slug: "open-compute", name: "Open slot", role: "compute", valueExchange: "Compute or GPU credits for maintainer review tooling.", slotState: "open" },
-  { slug: "open-tooling", name: "Open slot", role: "tooling", valueExchange: "Developer tooling for contributors.", slotState: "open" },
-  { slug: "open-hiring", name: "Open slot", role: "hiring", valueExchange: "Featured hiring partner placement.", slotState: "open" },
+  {
+    slug: "open-ai",
+    name: "Open slot",
+    role: "ai",
+    valueExchange: "Model or evaluation credits for registry validation.",
+    slotState: "open",
+  },
+  {
+    slug: "open-search",
+    name: "Open slot",
+    role: "search",
+    valueExchange: "Search/discovery distribution for source-backed registry metadata.",
+    slotState: "open",
+  },
+  {
+    slug: "open-infra",
+    name: "Open slot",
+    role: "infra",
+    valueExchange: "Infrastructure support for previews, analytics, or public APIs.",
+    slotState: "open",
+  },
+  {
+    slug: "open-compute",
+    name: "Open slot",
+    role: "compute",
+    valueExchange: "Compute or GPU credits for maintainer review tooling.",
+    slotState: "open",
+  },
+  {
+    slug: "open-tooling",
+    name: "Open slot",
+    role: "tooling",
+    valueExchange: "Developer tooling for contributors.",
+    slotState: "open",
+  },
+  {
+    slug: "open-hiring",
+    name: "Open slot",
+    role: "hiring",
+    valueExchange: "Featured hiring partner placement.",
+    slotState: "open",
+  },
 ];
 
 export const PARTNER_ROLE_LABEL: Record<PartnerRole, string> = {

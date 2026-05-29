@@ -1,5 +1,13 @@
 import * as React from "react";
-import { ExternalLink, GitBranch, BookOpen, Package, ShieldCheck, User, Calendar } from "lucide-react";
+import {
+  ExternalLink,
+  GitBranch,
+  BookOpen,
+  Package,
+  ShieldCheck,
+  User,
+  Calendar,
+} from "lucide-react";
 import type { Entry } from "@/types/registry";
 
 type Citation = {
@@ -30,10 +38,20 @@ export function SourceCitations({ entry }: { entry: Entry }) {
       verifiedAt: entry.brandVerifiedAt ?? entry.reviewedAt,
     });
   } else if (entry.repoUrl) {
-    cites.push({ label: "Repository", href: entry.repoUrl, hint: hostOf(entry.repoUrl), Icon: GitBranch });
+    cites.push({
+      label: "Repository",
+      href: entry.repoUrl,
+      hint: hostOf(entry.repoUrl),
+      Icon: GitBranch,
+    });
   }
   if (entry.docsUrl) {
-    cites.push({ label: "Documentation", href: entry.docsUrl, hint: hostOf(entry.docsUrl), Icon: BookOpen });
+    cites.push({
+      label: "Documentation",
+      href: entry.docsUrl,
+      hint: hostOf(entry.docsUrl),
+      Icon: BookOpen,
+    });
   }
   if (entry.downloadUrl) {
     cites.push({

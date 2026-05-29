@@ -40,9 +40,11 @@ export const CHANGELOG: ChangelogEntry[] = registryChanges.map((entry) => ({
 
 const generatedAt = String(atlasRegistry.generatedAt);
 const rawArtifactContracts =
-  (atlasRegistry as {
-    artifactContracts?: ArtifactContract[];
-  }).artifactContracts ?? [];
+  (
+    atlasRegistry as {
+      artifactContracts?: ArtifactContract[];
+    }
+  ).artifactContracts ?? [];
 
 export const ARTIFACT_CONTRACTS: ArtifactContract[] = (
   rawArtifactContracts.length
@@ -77,7 +79,10 @@ function emptyDiff(): ChangelogDiff {
 }
 
 export const RELEASE_NOTES: ReleaseNote[] = (() => {
-  const grouped = new Map<string, { counts: NonNullable<ReleaseNote["counts"]>; diff: ChangelogDiff }>();
+  const grouped = new Map<
+    string,
+    { counts: NonNullable<ReleaseNote["counts"]>; diff: ChangelogDiff }
+  >();
 
   for (const change of registryChanges) {
     const date = change.dateAdded || String(atlasRegistry.generatedAt).slice(0, 10);
@@ -98,9 +103,7 @@ export const RELEASE_NOTES: ReleaseNote[] = (() => {
     .slice(0, 8)
     .map(([date, bucket]) => {
       const total =
-        (bucket.counts.added ?? 0) +
-        (bucket.counts.updated ?? 0) +
-        (bucket.counts.removed ?? 0);
+        (bucket.counts.added ?? 0) + (bucket.counts.updated ?? 0) + (bucket.counts.removed ?? 0);
       return {
         date,
         stream: "release",

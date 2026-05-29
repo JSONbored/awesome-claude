@@ -110,7 +110,9 @@ export const Route = createFileRoute("/")({
 function Home() {
   const popular = search({ sort: "popular" }).slice(0, 6);
   const newest = search({ sort: "newest" }).slice(0, 4);
-  const sourceBacked = ENTRIES.filter((e) => e.source !== "unverified" && e.trust === "trusted").slice(0, 4);
+  const sourceBacked = ENTRIES.filter(
+    (e) => e.source !== "unverified" && e.trust === "trusted",
+  ).slice(0, 4);
   const claudeNative = PRIMARY_CATEGORIES;
   const adjacent = CATEGORIES.filter((c) => c.legacy);
   const latestBrief = BRIEF_ISSUES[0];
@@ -136,26 +138,30 @@ function Home() {
 
           <h1
             className="mt-6 max-w-3xl font-display font-semibold leading-[1.02] tracking-[-0.03em] text-ink text-balance"
-            style={{ fontSize: "clamp(2.5rem, 1.4rem + 4.4vw, 4.25rem)", viewTransitionName: "hero-title" }}
+            style={{
+              fontSize: "clamp(2.5rem, 1.4rem + 4.4vw, 4.25rem)",
+              viewTransitionName: "hero-title",
+            }}
           >
             What are you{" "}
             <span className="relative inline-block">
               <span className="relative z-10">trying to build</span>
-              <span className="absolute inset-x-0 bottom-1 h-3 -skew-y-1 bg-accent/70" aria-hidden />
+              <span
+                className="absolute inset-x-0 bottom-1 h-3 -skew-y-1 bg-accent/70"
+                aria-hidden
+              />
             </span>
             ?
           </h1>
           <p className="mt-5 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-            Search MCP servers, skills, hooks, commands, agents, and rules — or start with an intent.
-            GitHub-native. Source-backed. Reviewed before installing.
+            Search MCP servers, skills, hooks, commands, agents, and rules — or start with an
+            intent. GitHub-native. Source-backed. Reviewed before installing.
           </p>
-
 
           <div className="mt-8 max-w-2xl">
             <CommandBar size="lg" autoFocus />
             <IntentChips className="mt-4" />
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-ink-subtle">
-
               <span className="hidden sm:inline">
                 Press <Kbd>⌘</Kbd> <Kbd>K</Kbd> · try
               </span>
@@ -200,11 +206,44 @@ function Home() {
       {/* Trust strip — moved up under hero */}
       <section className="mx-auto max-w-[1400px] px-4 py-8 sm:px-6">
         <div className="grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-5">
-          <TrustStat icon={ShieldCheck} label="Trusted" value={TRUSTED_COUNT} hint="metadata reviewed" to="/browse" search={{ trust: "trusted" }} />
-          <TrustStat icon={GitBranch} label="Source-backed" value={SOURCE_BACKED_COUNT} hint="repo verified" to="/browse" search={{ source: "source-backed" }} />
-          <TrustStat icon={Sparkles} label="Reviewed" value={REVIEWED_COUNT} hint="maintainer-checked" to="/browse" search={{ sort: "newest" }} />
-          <TrustStat icon={Flame} label="Live signals" value={TOTAL} hint="tracked entries" to="/trending" />
-          <TrustStat icon={Package} label="Categories" value={CATEGORIES.length} hint="surfaces indexed" to="/browse" />
+          <TrustStat
+            icon={ShieldCheck}
+            label="Trusted"
+            value={TRUSTED_COUNT}
+            hint="metadata reviewed"
+            to="/browse"
+            search={{ trust: "trusted" }}
+          />
+          <TrustStat
+            icon={GitBranch}
+            label="Source-backed"
+            value={SOURCE_BACKED_COUNT}
+            hint="repo verified"
+            to="/browse"
+            search={{ source: "source-backed" }}
+          />
+          <TrustStat
+            icon={Sparkles}
+            label="Reviewed"
+            value={REVIEWED_COUNT}
+            hint="maintainer-checked"
+            to="/browse"
+            search={{ sort: "newest" }}
+          />
+          <TrustStat
+            icon={Flame}
+            label="Live signals"
+            value={TOTAL}
+            hint="tracked entries"
+            to="/trending"
+          />
+          <TrustStat
+            icon={Package}
+            label="Categories"
+            value={CATEGORIES.length}
+            hint="surfaces indexed"
+            to="/browse"
+          />
         </div>
       </section>
 
@@ -257,7 +296,9 @@ function Home() {
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-ink-muted hover:border-border-strong hover:text-ink"
                 >
                   {c.label}
-                  <span className="font-mono text-[10px] text-ink-subtle tabular-nums">{count}</span>
+                  <span className="font-mono text-[10px] text-ink-subtle tabular-nums">
+                    {count}
+                  </span>
                 </Link>
               );
             })}
@@ -269,7 +310,9 @@ function Home() {
         <section className="mx-auto max-w-[1400px] px-4 py-6 sm:px-6">
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <div className="eyebrow">Recently viewed</div>
-            <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">Browse all →</Link>
+            <Link to="/browse" className="text-xs text-ink-muted hover:text-ink">
+              Browse all →
+            </Link>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {recentEntries.map((e) => (
@@ -315,7 +358,9 @@ function Home() {
               <GitBranch className="mt-0.5 h-4 w-4 text-ink-muted" />
               <div>
                 <div className="eyebrow">Compare side-by-side</div>
-                <div className="mt-0.5 text-xs text-ink-subtle">Source-backed · safe to install</div>
+                <div className="mt-0.5 text-xs text-ink-subtle">
+                  Source-backed · safe to install
+                </div>
               </div>
             </div>
             <Link
@@ -346,7 +391,13 @@ function Home() {
       {/* Two-up: new + pulse */}
       <section className="mx-auto grid max-w-[1400px] gap-8 px-4 py-6 sm:px-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <RailHeader eyebrow="New this week" title="Just added" icon={Sparkles} to="/browse" ctaLabel="Browse all" />
+          <RailHeader
+            eyebrow="New this week"
+            title="Just added"
+            icon={Sparkles}
+            to="/browse"
+            ctaLabel="Browse all"
+          />
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {newest.map((e) => (
               <ResourceCard key={e.slug} entry={e} variant="grid" />
@@ -363,7 +414,9 @@ function Home() {
                   <div className="text-xs text-ink-subtle">
                     Weekly Brief #{latestBrief.number} · {latestBrief.date}
                   </div>
-                  <div className="font-display text-sm font-semibold text-ink">{latestBrief.title}</div>
+                  <div className="font-display text-sm font-semibold text-ink">
+                    {latestBrief.title}
+                  </div>
                 </div>
               </div>
               <span className="text-xs text-ink-muted">Read →</span>
@@ -386,7 +439,8 @@ function Home() {
                 Built something worth pinning?
               </h2>
               <p className="mt-2 max-w-md text-sm text-background/70">
-                Free, source-backed, useful. Submissions are reviewed for metadata, safety notes, and provenance.
+                Free, source-backed, useful. Submissions are reviewed for metadata, safety notes,
+                and provenance.
               </p>
               <p className="mt-3 font-mono text-[11px] uppercase tracking-wider text-background/50">
                 12 reviewed last week · 3 merged · avg review 36h
@@ -475,11 +529,16 @@ function TrustStat({
           <CountUp value={value} />
         </div>
         <div className="mt-1 text-xs text-ink-muted">{label}</div>
-        {hint && <div className="text-[10px] font-mono uppercase tracking-wider text-ink-subtle">{hint}</div>}
+        {hint && (
+          <div className="text-[10px] font-mono uppercase tracking-wider text-ink-subtle">
+            {hint}
+          </div>
+        )}
       </div>
     </>
   );
-  const cls = "flex items-center gap-3 bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60";
+  const cls =
+    "flex items-center gap-3 bg-surface p-5 transition-colors duration-200 ease-out hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/60";
   if (to) {
     return (
       <Link to={to} search={search as never} className={cls}>

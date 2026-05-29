@@ -145,7 +145,11 @@ export function CopySegmented({
             text,
           )}
         >
-          {justCopied ? <Check className="h-3 w-3" aria-hidden /> : <Copy className="h-3 w-3" aria-hidden />}
+          {justCopied ? (
+            <Check className="h-3 w-3" aria-hidden />
+          ) : (
+            <Copy className="h-3 w-3" aria-hidden />
+          )}
           <span>{justCopied ? "Copied" : "Copy"}</span>
         </button>
       )}

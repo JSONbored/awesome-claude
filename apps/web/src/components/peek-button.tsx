@@ -10,12 +10,7 @@ import {
   SheetDescription,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Kbd } from "@/components/badges";
 import {
   CategoryPill,
@@ -99,10 +94,7 @@ function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
     [entry.harnessVariants],
   );
   const [harness, setHarness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
-  const variants = React.useMemo(
-    () => variantsForEntry(entry, harness),
-    [entry, harness],
-  );
+  const variants = React.useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
 
   return (
     <>
@@ -167,7 +159,7 @@ function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
             labelId={`peek-snippet-${entry.slug}`}
           />
         </div>
-        {variants.find((v) => v.id === (variants.find((x) => x.value)?.id))?.value && (
+        {variants.find((v) => v.id === variants.find((x) => x.value)?.id)?.value && (
           <SnippetPreview variants={variants} />
         )}
       </div>

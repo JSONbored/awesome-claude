@@ -7,8 +7,24 @@ import { toast } from "sonner";
 import { ResourceCard } from "@/components/resource-card";
 import { FilterChip, FilterChipGroup } from "@/components/filter-chip";
 import { search } from "@/data/search";
-import { CATEGORIES, type Category, type Platform, type SourceStatus, type TrustLevel } from "@/types/registry";
-import { Search as SearchIcon, SlidersHorizontal, ArrowDownNarrowWide, Clock, Star, X, Settings2, Bell, ExternalLink } from "lucide-react";
+import {
+  CATEGORIES,
+  type Category,
+  type Platform,
+  type SourceStatus,
+  type TrustLevel,
+} from "@/types/registry";
+import {
+  Search as SearchIcon,
+  SlidersHorizontal,
+  ArrowDownNarrowWide,
+  Clock,
+  Star,
+  X,
+  Settings2,
+  Bell,
+  ExternalLink,
+} from "lucide-react";
 import { useCompare } from "@/lib/compare";
 import { useRecents, type SavedSearch } from "@/lib/recents";
 import { ENTRIES } from "@/data/entries";
@@ -60,7 +76,9 @@ function SavedSearchChipRow({
             className="inline-flex h-6 items-center gap-1 rounded-full border border-border bg-surface px-2 text-[11px] text-ink hover:bg-surface-2"
             title={`Open: ${s.label}`}
           >
-            {s.alerts?.enabled && <Bell className="h-2.5 w-2.5 text-accent" aria-label="Alerts on" />}
+            {s.alerts?.enabled && (
+              <Bell className="h-2.5 w-2.5 text-accent" aria-label="Alerts on" />
+            )}
             {s.label}
           </button>
         ))}
@@ -103,9 +121,15 @@ export const Route = createFileRoute("/browse")({
   head: () => ({
     meta: [
       { title: "Browse — HeyClaude directory" },
-      { name: "description", content: "Search and filter every resource in the HeyClaude registry." },
+      {
+        name: "description",
+        content: "Search and filter every resource in the HeyClaude registry.",
+      },
       { property: "og:title", content: "Browse — HeyClaude directory" },
-      { property: "og:description", content: "Search and filter every resource in the HeyClaude registry." },
+      {
+        property: "og:description",
+        content: "Search and filter every resource in the HeyClaude registry.",
+      },
       { property: "og:url", content: "/browse" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -122,7 +146,9 @@ function Browse() {
 
   // Debounce free-text query: local state drives the input; URL updates 250ms after idle.
   const [qInput, setQInput] = React.useState(sp.q);
-  React.useEffect(() => { setQInput(sp.q); }, [sp.q]);
+  React.useEffect(() => {
+    setQInput(sp.q);
+  }, [sp.q]);
   React.useEffect(() => {
     if (qInput === sp.q) return;
     const t = window.setTimeout(() => {
@@ -132,20 +158,33 @@ function Browse() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [qInput]);
 
-
   // Density preference: URL wins; otherwise hydrate from localStorage on mount.
-  const urlHasView = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("view");
+  const urlHasView =
+    typeof window !== "undefined" && new URLSearchParams(window.location.search).has("view");
   React.useEffect(() => {
     if (urlHasView) {
-      try { localStorage.setItem("hc:density", sp.view); } catch { /* noop */ }
+      try {
+        localStorage.setItem("hc:density", sp.view);
+      } catch {
+        /* noop */
+      }
       return;
     }
     try {
       const stored = localStorage.getItem("hc:density");
-      if (stored && stored !== sp.view && (stored === "row" || stored === "grid" || stored === "compact")) {
-        navigate({ search: (prev: typeof sp) => ({ ...prev, view: stored as typeof sp.view }), replace: true });
+      if (
+        stored &&
+        stored !== sp.view &&
+        (stored === "row" || stored === "grid" || stored === "compact")
+      ) {
+        navigate({
+          search: (prev: typeof sp) => ({ ...prev, view: stored as typeof sp.view }),
+          replace: true,
+        });
       }
-    } catch { /* noop */ }
+    } catch {
+      /* noop */
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -165,7 +204,11 @@ function Browse() {
 
   const set = (patch: Partial<typeof sp>) => {
     if (patch.view) {
-      try { localStorage.setItem("hc:density", patch.view); } catch { /* noop */ }
+      try {
+        localStorage.setItem("hc:density", patch.view);
+      } catch {
+        /* noop */
+      }
     }
     navigate({ search: (prev: typeof sp) => ({ ...prev, ...patch }) });
   };
@@ -198,7 +241,16 @@ function Browse() {
 
   const clearAll = () =>
     navigate({
-      search: { q: "", category: "", trust: "", source: "", platform: "", sort: "popular", view: sp.view, compare: sp.compare },
+      search: {
+        q: "",
+        category: "",
+        trust: "",
+        source: "",
+        platform: "",
+        sort: "popular",
+        view: sp.view,
+        compare: sp.compare,
+      },
     });
 
   const saveCurrent = () => {
@@ -221,7 +273,9 @@ function Browse() {
   // Pagination — render in chunks so very-large result sets don't tank perf.
   const PAGE = 30;
   const [shown, setShown] = React.useState(PAGE);
-  React.useEffect(() => { setShown(PAGE); }, [sp.q, sp.category, sp.trust, sp.source, sp.platform, sp.sort]);
+  React.useEffect(() => {
+    setShown(PAGE);
+  }, [sp.q, sp.category, sp.trust, sp.source, sp.platform, sp.sort]);
 
   // Per-axis result counts: count if this filter were the only one in its axis.
   const axisCount = (axis: "category" | "trust" | "source" | "platform", value: string) => {
@@ -240,7 +294,8 @@ function Browse() {
   const searchRef = React.useRef<HTMLInputElement>(null);
   useKeyboardShortcuts({
     "/": () => searchRef.current?.focus(),
-    "]": () => set({ view: sp.view === "compact" ? "row" : sp.view === "row" ? "grid" : "compact" }),
+    "]": () =>
+      set({ view: sp.view === "compact" ? "row" : sp.view === "row" ? "grid" : "compact" }),
     "[": () => set({ view: sp.view === "grid" ? "row" : sp.view === "row" ? "compact" : "grid" }),
   });
 
@@ -250,17 +305,44 @@ function Browse() {
     .slice(0, 6);
 
   const activeFilters: ActiveFilter[] = [];
-  if (sp.q) activeFilters.push({ key: "q", label: "Search", value: sp.q, onClear: () => set({ q: "" }) });
-  if (sp.category) activeFilters.push({ key: "category", label: "Category", value: sp.category, onClear: () => set({ category: "" }) });
-  if (sp.trust) activeFilters.push({ key: "trust", label: "Trust", value: sp.trust, onClear: () => set({ trust: "" }) });
-  if (sp.source) activeFilters.push({ key: "source", label: "Source", value: sp.source, onClear: () => set({ source: "" }) });
-  if (sp.platform) activeFilters.push({ key: "platform", label: "Platform", value: sp.platform, onClear: () => set({ platform: "" }) });
+  if (sp.q)
+    activeFilters.push({ key: "q", label: "Search", value: sp.q, onClear: () => set({ q: "" }) });
+  if (sp.category)
+    activeFilters.push({
+      key: "category",
+      label: "Category",
+      value: sp.category,
+      onClear: () => set({ category: "" }),
+    });
+  if (sp.trust)
+    activeFilters.push({
+      key: "trust",
+      label: "Trust",
+      value: sp.trust,
+      onClear: () => set({ trust: "" }),
+    });
+  if (sp.source)
+    activeFilters.push({
+      key: "source",
+      label: "Source",
+      value: sp.source,
+      onClear: () => set({ source: "" }),
+    });
+  if (sp.platform)
+    activeFilters.push({
+      key: "platform",
+      label: "Platform",
+      value: sp.platform,
+      onClear: () => set({ platform: "" }),
+    });
 
   // Nearest-match: drop one filter at a time (least likely first) until we have results.
   const suggestions = useMemo(() => {
-    if (results.length > 0 || activeFilters.length === 0) return [] as { label: string; apply: () => void; count: number }[];
+    if (results.length > 0 || activeFilters.length === 0)
+      return [] as { label: string; apply: () => void; count: number }[];
     const trials: { label: string; patch: Partial<typeof sp> }[] = [];
-    if (sp.platform) trials.push({ label: `Remove platform "${sp.platform}"`, patch: { platform: "" } });
+    if (sp.platform)
+      trials.push({ label: `Remove platform "${sp.platform}"`, patch: { platform: "" } });
     if (sp.source) trials.push({ label: `Remove source "${sp.source}"`, patch: { source: "" } });
     if (sp.trust) trials.push({ label: `Remove trust "${sp.trust}"`, patch: { trust: "" } });
     if (sp.category) trials.push({ label: `Search all categories`, patch: { category: "" } });
@@ -291,7 +373,11 @@ function Browse() {
           <div className="sticky top-20 flex flex-col gap-6">
             <FilterSection title="Category">
               <FilterChipGroup label="Filter by category" multi={false}>
-                <FilterChip role="radio" active={!sp.category} onClick={() => set({ category: "" })}>
+                <FilterChip
+                  role="radio"
+                  active={!sp.category}
+                  onClick={() => set({ category: "" })}
+                >
                   All
                 </FilterChip>
                 {CATEGORIES.map((c) => (
@@ -340,7 +426,16 @@ function Browse() {
 
             <FilterSection title="Platform">
               <FilterChipGroup label="Filter by platform">
-                {(["claude-code", "claude-desktop", "cursor", "vscode", "cli", "raycast"] as Platform[]).map((p) => (
+                {(
+                  [
+                    "claude-code",
+                    "claude-desktop",
+                    "cursor",
+                    "vscode",
+                    "cli",
+                    "raycast",
+                  ] as Platform[]
+                ).map((p) => (
                   <FilterChip
                     key={p}
                     active={sp.platform === p}
@@ -363,7 +458,8 @@ function Browse() {
                   onClick={clearAll}
                   className="inline-flex items-center gap-1 text-xs text-ink-muted hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
                 >
-                  <X className="h-3 w-3" /> Clear {activeCount} {activeCount === 1 ? "filter" : "filters"}
+                  <X className="h-3 w-3" /> Clear {activeCount}{" "}
+                  {activeCount === 1 ? "filter" : "filters"}
                 </button>
                 <button
                   type="button"
@@ -390,7 +486,9 @@ function Browse() {
                 aria-label="Search the directory"
                 className="h-11 flex-1 bg-transparent text-sm text-ink placeholder:text-ink-subtle focus:outline-none"
               />
-              <kbd className="hidden rounded border border-border bg-background px-1.5 font-mono text-[10px] text-ink-subtle sm:inline">/</kbd>
+              <kbd className="hidden rounded border border-border bg-background px-1.5 font-mono text-[10px] text-ink-subtle sm:inline">
+                /
+              </kbd>
               {qInput && (
                 <button
                   type="button"
@@ -405,9 +503,13 @@ function Browse() {
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div className="flex flex-wrap items-center gap-3 text-xs text-ink-muted">
                 <span>
-                  Showing <span className="font-mono text-ink">{Math.min(shown, results.length)}</span>
+                  Showing{" "}
+                  <span className="font-mono text-ink">{Math.min(shown, results.length)}</span>
                   {results.length > shown && (
-                    <> of <span className="font-mono text-ink">{results.length}</span></>
+                    <>
+                      {" "}
+                      of <span className="font-mono text-ink">{results.length}</span>
+                    </>
                   )}{" "}
                   {results.length === 1 ? "resource" : "resources"}
                   {sp.category && (
@@ -447,7 +549,11 @@ function Browse() {
                     <option value="title">A–Z</option>
                   </select>
                 </label>
-                <div className="inline-flex overflow-hidden rounded-md border border-border" role="radiogroup" aria-label="Result density">
+                <div
+                  className="inline-flex overflow-hidden rounded-md border border-border"
+                  role="radiogroup"
+                  aria-label="Result density"
+                >
                   {(["compact", "row", "grid"] as const).map((v) => (
                     <button
                       key={v}
@@ -455,7 +561,9 @@ function Browse() {
                       aria-pressed={sp.view === v}
                       className={cn(
                         "px-2 py-1 text-xs capitalize transition-colors duration-200 ease-out motion-safe:active:scale-[0.97]",
-                        sp.view === v ? "bg-ink text-background" : "bg-surface text-ink-muted hover:text-ink",
+                        sp.view === v
+                          ? "bg-ink text-background"
+                          : "bg-surface text-ink-muted hover:text-ink",
                       )}
                     >
                       {v === "row" ? "List" : v === "grid" ? "Card" : "Compact"}
@@ -474,50 +582,55 @@ function Browse() {
               onSave={saveCurrent}
             />
             <div className="hidden text-[10px] text-ink-subtle sm:block">
-              <kbd className="rounded border border-border bg-surface px-1 font-mono">/</kbd> search ·{" "}
-              <kbd className="rounded border border-border bg-surface px-1 font-mono">[ ]</kbd> view density ·{" "}
-              <kbd className="rounded border border-border bg-surface px-1 font-mono">esc</kbd> clear input
+              <kbd className="rounded border border-border bg-surface px-1 font-mono">/</kbd> search
+              · <kbd className="rounded border border-border bg-surface px-1 font-mono">[ ]</kbd>{" "}
+              view density ·{" "}
+              <kbd className="rounded border border-border bg-surface px-1 font-mono">esc</kbd>{" "}
+              clear input
             </div>
           </div>
 
           {activeFilters.length > 0 && (
-            <FilterSummaryBar
-              filters={activeFilters}
-              onClearAll={clearAll}
-              className="mt-3"
-            />
+            <FilterSummaryBar filters={activeFilters} onClearAll={clearAll} className="mt-3" />
           )}
 
-          {sp.category && (() => {
-            const cat = CATEGORIES.find((c) => c.id === sp.category);
-            return cat ? (
-              <div className="mt-3 rounded-md border border-border bg-surface-2 px-3 py-2 text-xs text-ink-muted">
-                <span className="font-medium text-ink">{cat.label}.</span> {cat.blurb}
-              </div>
-            ) : null;
-          })()}
+          {sp.category &&
+            (() => {
+              const cat = CATEGORIES.find((c) => c.id === sp.category);
+              return cat ? (
+                <div className="mt-3 rounded-md border border-border bg-surface-2 px-3 py-2 text-xs text-ink-muted">
+                  <span className="font-medium text-ink">{cat.label}.</span> {cat.blurb}
+                </div>
+              ) : null;
+            })()}
 
           {/* Mobile filter chips */}
           <div className="relative mt-4 lg:hidden">
-            <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden" role="radiogroup" aria-label="Filter by category">
-            {[{ id: "", label: "All" }, ...CATEGORIES.map((c) => ({ id: c.id, label: c.label }))].map((c) => (
-              <Link
-                key={c.id || "all"}
-                to="/browse"
-                search={{ ...sp, category: c.id }}
-                className="shrink-0"
-              >
-                <FilterChip
-                  role="radio"
-                  active={(sp.category || "") === c.id}
-                  onClick={() => {}}
+            <div
+              className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              role="radiogroup"
+              aria-label="Filter by category"
+            >
+              {[
+                { id: "", label: "All" },
+                ...CATEGORIES.map((c) => ({ id: c.id, label: c.label })),
+              ].map((c) => (
+                <Link
+                  key={c.id || "all"}
+                  to="/browse"
+                  search={{ ...sp, category: c.id }}
+                  className="shrink-0"
                 >
-                  {c.label}
-                </FilterChip>
-              </Link>
-            ))}
+                  <FilterChip role="radio" active={(sp.category || "") === c.id} onClick={() => {}}>
+                    {c.label}
+                  </FilterChip>
+                </Link>
+              ))}
             </div>
-            <span aria-hidden className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent" />
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-background to-transparent"
+            />
           </div>
 
           {/* Recents + saved searches — collapsed by default to reclaim vertical space */}
@@ -539,7 +652,10 @@ function Browse() {
                     <Star className="mt-1 h-3.5 w-3.5 shrink-0 text-ink-subtle" aria-hidden />
                     <div className="flex flex-wrap gap-1.5">
                       {recents.saved.map((s) => (
-                        <span key={s.id} className="inline-flex items-center gap-1 rounded-md border border-border bg-background pl-2 pr-1 py-0.5 text-xs">
+                        <span
+                          key={s.id}
+                          className="inline-flex items-center gap-1 rounded-md border border-border bg-background pl-2 pr-1 py-0.5 text-xs"
+                        >
                           <Link
                             to="/browse"
                             search={{
@@ -558,7 +674,10 @@ function Browse() {
                           </Link>
                           <button
                             type="button"
-                            onClick={() => { recents.removeSaved(s.id); toast(`Removed “${s.label}”`); }}
+                            onClick={() => {
+                              recents.removeSaved(s.id);
+                              toast(`Removed “${s.label}”`);
+                            }}
                             aria-label={`Remove saved search ${s.label}`}
                             className="text-ink-subtle hover:text-ink"
                           >
@@ -594,7 +713,13 @@ function Browse() {
             <div className="mt-12 flex flex-col items-center gap-3 rounded-lg border border-dashed border-border p-12 text-center">
               <SlidersHorizontal className="h-5 w-5 text-ink-muted" />
               <div className="font-display text-lg font-semibold text-ink">
-                {sp.q ? <>No matches for <span className="text-accent-ink">"{sp.q}"</span></> : "No matches with current filters"}
+                {sp.q ? (
+                  <>
+                    No matches for <span className="text-accent-ink">"{sp.q}"</span>
+                  </>
+                ) : (
+                  "No matches with current filters"
+                )}
               </div>
               <p className="max-w-sm text-sm text-ink-muted">
                 The directory is curated, so some long-tail resources may not yet be indexed.
@@ -610,7 +735,9 @@ function Browse() {
                         className="inline-flex w-full items-center justify-between gap-3 rounded-md border border-border bg-surface px-3 py-1.5 text-ink transition-colors duration-200 ease-out hover:bg-surface-2 motion-safe:active:scale-[0.99]"
                       >
                         <span>{s.label}</span>
-                        <span className="font-mono text-xs text-ink-muted">{s.count} match{s.count === 1 ? "" : "es"}</span>
+                        <span className="font-mono text-xs text-ink-muted">
+                          {s.count} match{s.count === 1 ? "" : "es"}
+                        </span>
                       </button>
                     </li>
                   ))}
@@ -674,7 +801,8 @@ function Browse() {
                     onClick={() => setShown((n) => n + PAGE)}
                     className="inline-flex h-9 items-center gap-1.5 rounded-md border border-border bg-surface px-4 text-sm font-medium text-ink transition-colors duration-200 ease-out hover:bg-surface-2 motion-safe:active:scale-[0.98]"
                   >
-                    Load {Math.min(PAGE, results.length - shown)} more · {results.length - shown} remaining
+                    Load {Math.min(PAGE, results.length - shown)} more · {results.length - shown}{" "}
+                    remaining
                   </button>
                 </div>
               )}

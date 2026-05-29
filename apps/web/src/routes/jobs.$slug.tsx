@@ -13,11 +13,15 @@ import type { JobListing, JobTier } from "@/types/registry";
 const loadJobDetailData = createServerFn({ method: "GET" })
   .inputValidator(z.object({ slug: z.string().min(1) }))
   .handler(async ({ data }) => {
-    const { buildPublicJobsIndex, getJobBySlug, getJobs, toPublicJobListing } = await import("@/lib/jobs");
+    const { buildPublicJobsIndex, getJobBySlug, getJobs, toPublicJobListing } =
+      await import("@/lib/jobs");
     const [job, jobs] = await Promise.all([getJobBySlug(data.slug), getJobs()]);
     return {
       job: job ? toPublicJobListing(job) : null,
-      related: buildPublicJobsIndex(jobs.filter((item) => item.slug !== data.slug)).entries.slice(0, 4),
+      related: buildPublicJobsIndex(jobs.filter((item) => item.slug !== data.slug)).entries.slice(
+        0,
+        4,
+      ),
     };
   });
 
@@ -38,13 +42,25 @@ export const Route = createFileRoute("/jobs/$slug")({
     const url = `/jobs/${params.slug}`;
     return {
       meta: [
-        { title: job ? `${job.title} at ${job.company} — HeyClaude jobs` : "Claude workflow role — HeyClaude" },
+        {
+          title: job
+            ? `${job.title} at ${job.company} — HeyClaude jobs`
+            : "Claude workflow role — HeyClaude",
+        },
         {
           name: "description",
-          content: job?.description || "Source-verified roles building Claude Code, MCP servers, and agent workflows.",
+          content:
+            job?.description ||
+            "Source-verified roles building Claude Code, MCP servers, and agent workflows.",
         },
-        { property: "og:title", content: job ? `${job.title} at ${job.company}` : "Claude workflow role — HeyClaude" },
-        { property: "og:description", content: job?.description || "Source-verified role from the HeyClaude jobs board." },
+        {
+          property: "og:title",
+          content: job ? `${job.title} at ${job.company}` : "Claude workflow role — HeyClaude",
+        },
+        {
+          property: "og:description",
+          content: job?.description || "Source-verified role from the HeyClaude jobs board.",
+        },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
@@ -67,8 +83,8 @@ export const Route = createFileRoute("/jobs/$slug")({
         <div className="eyebrow">404</div>
         <h1 className="mt-2 font-display text-3xl text-ink">Role not found</h1>
         <p className="mt-2 text-sm text-ink-muted">
-          We couldn't find a role matching <code className="font-mono">{slug}</code>. It may have been
-          filled or removed.
+          We couldn't find a role matching <code className="font-mono">{slug}</code>. It may have
+          been filled or removed.
         </p>
         <Link
           to="/jobs"
@@ -100,7 +116,9 @@ function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown
     bonus: typeof value.bonus === "string" ? value.bonus : undefined,
     description: String(value.description || ""),
     benefits: Array.isArray(value.benefits) ? value.benefits.map(String) : undefined,
-    responsibilities: Array.isArray(value.responsibilities) ? value.responsibilities.map(String) : undefined,
+    responsibilities: Array.isArray(value.responsibilities)
+      ? value.responsibilities.map(String)
+      : undefined,
     requirements: Array.isArray(value.requirements) ? value.requirements.map(String) : undefined,
     labels: Array.isArray(value.labels) ? value.labels.map(String) : undefined,
     applyUrl: typeof value.applyUrl === "string" ? value.applyUrl : undefined,
@@ -127,9 +145,13 @@ function JobDetail() {
           headers: { accept: "application/json" },
         });
         if (!response.ok) throw new Error(`jobs API returned ${response.status}`);
-        const payload = (await response.json()) as { entries?: Array<Partial<JobListing> & Record<string, unknown>> };
+        const payload = (await response.json()) as {
+          entries?: Array<Partial<JobListing> & Record<string, unknown>>;
+        };
         if (!cancelled) {
-          const normalized = (payload.entries ?? []).map(normalizeJobListing).filter((item) => item.slug);
+          const normalized = (payload.entries ?? [])
+            .map(normalizeJobListing)
+            .filter((item) => item.slug);
           setJobs(normalized);
           setJob(normalized.find((item) => item.slug === slug) ?? null);
         }
@@ -206,9 +228,7 @@ function JobDetail() {
                 </span>
               )}
             </div>
-            <h1 className="mt-2 h-display-1 text-ink text-balance">
-              {job.title}
-            </h1>
+            <h1 className="mt-2 h-display-1 text-ink text-balance">{job.title}</h1>
             <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-xs text-ink-muted">
               <span className="inline-flex items-center gap-1">
                 <MapPin className="h-3 w-3" /> {job.location}
@@ -218,7 +238,11 @@ function JobDetail() {
                   Remote{job.isWorldwide ? " · worldwide" : ""}
                 </span>
               )}
-              {job.compensation && <span>· <span className="text-ink">{job.compensation}</span></span>}
+              {job.compensation && (
+                <span>
+                  · <span className="text-ink">{job.compensation}</span>
+                </span>
+              )}
               {job.equity && <span>· Equity: {job.equity}</span>}
               <span>· Posted {relativePosted(job.postedAt)}</span>
             </div>
@@ -313,11 +337,7 @@ function JobDetail() {
               <ul className="space-y-2.5">
                 {more.map((m) => (
                   <li key={m.slug}>
-                    <Link
-                      to="/jobs/$slug"
-                      params={{ slug: m.slug }}
-                      className="group block"
-                    >
+                    <Link to="/jobs/$slug" params={{ slug: m.slug }} className="group block">
                       <div className="text-sm font-medium leading-snug text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
                         {m.title}
                       </div>

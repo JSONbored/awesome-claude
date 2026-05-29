@@ -51,128 +51,118 @@ async function requireReadyJobsDb(request: Request, requestId: string) {
   return { db, response: null };
 }
 
-export const GET = createApiHandler(
-  "adminJobs.list",
-  async ({ request, query, requestId }) => {
-    if (!isAdminAuthorized(request)) {
-      logApiWarn(request, "admin.jobs.unauthorized");
-      return apiError("unauthorized", 401, { requestId });
+export const GET = createApiHandler("adminJobs.list", async ({ request, query, requestId }) => {
+  if (!isAdminAuthorized(request)) {
+    logApiWarn(request, "admin.jobs.unauthorized");
+    return apiError("unauthorized", 401, { requestId });
+  }
+
+  const ready = await requireReadyJobsDb(request, requestId);
+  if (ready.response) return ready.response;
+
+  const filters = query as InferApiQuery<typeof adminJobsQuerySchema>;
+  const jobs = await queryAdminJobs(ready.db, filters);
+  return apiJson(
+    {
+      schemaVersion: 1,
+      count: jobs.length,
+      limit: filters.limit,
+      offset: filters.offset,
+      entries: jobs,
+    },
+    { headers: { "cache-control": "no-store" } },
+  );
+});
+
+export const POST = createApiHandler("adminJobs.upsert", async ({ request, body, requestId }) => {
+  if (!isAdminAuthorized(request)) {
+    logApiWarn(request, "admin.jobs.unauthorized");
+    return apiError("unauthorized", 401, { requestId });
+  }
+
+  const ready = await requireReadyJobsDb(request, requestId);
+  if (ready.response) return ready.response;
+
+  const payload = body as InferApiBody<typeof adminJobsUpsertBodySchema>;
+  try {
+    await upsertAdminJob(ready.db, payload);
+  } catch (caught) {
+    if (caught instanceof JobPublicationQualityError) {
+      logApiWarn(request, "admin.jobs.quality_gate_failed", {
+        slug: payload.slug,
+        errors: caught.errors,
+      });
+      return apiError("job_quality_gate_failed", 400, {
+        requestId,
+        details: caught.errors,
+      });
     }
+    throw caught;
+  }
+  logApiInfo(request, "admin.jobs.upserted", {
+    slug: payload.slug,
+    status: payload.status,
+    tier: payload.tier,
+    source: payload.source,
+  });
 
-    const ready = await requireReadyJobsDb(request, requestId);
-    if (ready.response) return ready.response;
-
-    const filters = query as InferApiQuery<typeof adminJobsQuerySchema>;
-    const jobs = await queryAdminJobs(ready.db, filters);
-    return apiJson(
-      {
-        schemaVersion: 1,
-        count: jobs.length,
-        limit: filters.limit,
-        offset: filters.offset,
-        entries: jobs,
-      },
-      { headers: { "cache-control": "no-store" } },
-    );
-  },
-);
-
-export const POST = createApiHandler(
-  "adminJobs.upsert",
-  async ({ request, body, requestId }) => {
-    if (!isAdminAuthorized(request)) {
-      logApiWarn(request, "admin.jobs.unauthorized");
-      return apiError("unauthorized", 401, { requestId });
-    }
-
-    const ready = await requireReadyJobsDb(request, requestId);
-    if (ready.response) return ready.response;
-
-    const payload = body as InferApiBody<typeof adminJobsUpsertBodySchema>;
-    try {
-      await upsertAdminJob(ready.db, payload);
-    } catch (caught) {
-      if (caught instanceof JobPublicationQualityError) {
-        logApiWarn(request, "admin.jobs.quality_gate_failed", {
-          slug: payload.slug,
-          errors: caught.errors,
-        });
-        return apiError("job_quality_gate_failed", 400, {
-          requestId,
-          details: caught.errors,
-        });
-      }
-      throw caught;
-    }
-    logApiInfo(request, "admin.jobs.upserted", {
+  return apiJson(
+    {
+      ok: true,
       slug: payload.slug,
       status: payload.status,
-      tier: payload.tier,
-      source: payload.source,
-    });
+    },
+    { headers: { "cache-control": "no-store" } },
+  );
+});
 
-    return apiJson(
-      {
-        ok: true,
-        slug: payload.slug,
-        status: payload.status,
-      },
-      { headers: { "cache-control": "no-store" } },
-    );
-  },
-);
+export const PATCH = createApiHandler("adminJobs.update", async ({ request, body, requestId }) => {
+  if (!isAdminAuthorized(request)) {
+    logApiWarn(request, "admin.jobs.unauthorized");
+    return apiError("unauthorized", 401, { requestId });
+  }
 
-export const PATCH = createApiHandler(
-  "adminJobs.update",
-  async ({ request, body, requestId }) => {
-    if (!isAdminAuthorized(request)) {
-      logApiWarn(request, "admin.jobs.unauthorized");
-      return apiError("unauthorized", 401, { requestId });
-    }
+  const ready = await requireReadyJobsDb(request, requestId);
+  if (ready.response) return ready.response;
 
-    const ready = await requireReadyJobsDb(request, requestId);
-    if (ready.response) return ready.response;
-
-    const payload = body as InferApiBody<typeof adminJobsPatchBodySchema>;
-    try {
-      await updateAdminJobState(ready.db, payload);
-    } catch (caught) {
-      if (caught instanceof JobPublicationQualityError) {
-        logApiWarn(request, "admin.jobs.quality_gate_failed", {
-          slug: payload.slug,
-          action: payload.action,
-          errors: caught.errors,
-        });
-        return apiError("job_quality_gate_failed", 400, {
-          requestId,
-          details: caught.errors,
-        });
-      }
-      if (caught instanceof JobNotFoundError) {
-        logApiWarn(request, "admin.jobs.not_found", {
-          slug: payload.slug,
-          action: payload.action,
-        });
-        return apiError("job_not_found", 404, { requestId });
-      }
-      throw caught;
-    }
-    logApiInfo(request, "admin.jobs.updated", {
-      slug: payload.slug,
-      action: payload.action,
-    });
-
-    return apiJson(
-      {
-        ok: true,
+  const payload = body as InferApiBody<typeof adminJobsPatchBodySchema>;
+  try {
+    await updateAdminJobState(ready.db, payload);
+  } catch (caught) {
+    if (caught instanceof JobPublicationQualityError) {
+      logApiWarn(request, "admin.jobs.quality_gate_failed", {
         slug: payload.slug,
         action: payload.action,
-      },
-      { headers: { "cache-control": "no-store" } },
-    );
-  },
-);
+        errors: caught.errors,
+      });
+      return apiError("job_quality_gate_failed", 400, {
+        requestId,
+        details: caught.errors,
+      });
+    }
+    if (caught instanceof JobNotFoundError) {
+      logApiWarn(request, "admin.jobs.not_found", {
+        slug: payload.slug,
+        action: payload.action,
+      });
+      return apiError("job_not_found", 404, { requestId });
+    }
+    throw caught;
+  }
+  logApiInfo(request, "admin.jobs.updated", {
+    slug: payload.slug,
+    action: payload.action,
+  });
 
+  return apiJson(
+    {
+      ok: true,
+      slug: payload.slug,
+      action: payload.action,
+    },
+    { headers: { "cache-control": "no-store" } },
+  );
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/admin/jobs")({

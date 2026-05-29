@@ -127,13 +127,16 @@ function asCategory(value: string): Category {
 
 function compactText(value: unknown): string | undefined {
   if (typeof value === "string") return value.trim() || undefined;
-  if (Array.isArray(value)) return value.filter((item) => typeof item === "string" && item.trim()).join(" ");
+  if (Array.isArray(value))
+    return value.filter((item) => typeof item === "string" && item.trim()).join(" ");
   return undefined;
 }
 
 function listText(value: unknown): string[] | undefined {
   if (Array.isArray(value)) {
-    const rows = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    const rows = value.filter(
+      (item): item is string => typeof item === "string" && item.trim().length > 0,
+    );
     return rows.length ? rows : undefined;
   }
   if (typeof value === "string" && value.trim()) return [value.trim()];
@@ -155,7 +158,11 @@ function inferPlatforms(entry: RegistryEntry): Platform[] {
     if (platform) platforms.add(platform);
   }
 
-  const tags = new Set([entry.category, ...(entry.tags ?? []), ...(entry.keywords ?? [])].map((item) => item.toLowerCase()));
+  const tags = new Set(
+    [entry.category, ...(entry.tags ?? []), ...(entry.keywords ?? [])].map((item) =>
+      item.toLowerCase(),
+    ),
+  );
   if (tags.has("cursor")) platforms.add("cursor");
   if (tags.has("codex")) platforms.add("codex");
   if (tags.has("gemini")) platforms.add("gemini");
@@ -168,7 +175,11 @@ function inferPlatforms(entry: RegistryEntry): Platform[] {
     platforms.add("claude-code");
     platforms.add("claude-desktop");
   }
-  if (["skills", "commands", "hooks", "agents", "rules", "statuslines", "guides"].includes(entry.category)) {
+  if (
+    ["skills", "commands", "hooks", "agents", "rules", "statuslines", "guides"].includes(
+      entry.category,
+    )
+  ) {
     platforms.add("claude-code");
   }
   if (entry.category === "tools") platforms.add("cli");
@@ -185,8 +196,10 @@ function inferInstallType(entry: RegistryEntry): InstallType {
 }
 
 function inferSource(entry: RegistryEntry): SourceStatus {
-  if (entry.downloadTrust === "first-party" || entry.trustSignals?.firstPartyEditorial) return "first-party";
-  if (entry.repoUrl || entry.githubUrl || entry.trustSignals?.sourceStatus === "available") return "source-backed";
+  if (entry.downloadTrust === "first-party" || entry.trustSignals?.firstPartyEditorial)
+    return "first-party";
+  if (entry.repoUrl || entry.githubUrl || entry.trustSignals?.sourceStatus === "available")
+    return "source-backed";
   if (entry.documentationUrl) return "external";
   return "unverified";
 }
@@ -196,7 +209,8 @@ function inferTrust(entry: RegistryEntry, source: SourceStatus): TrustLevel {
   if (entry.packageVerified && entry.downloadSha256) return "trusted";
   if (entry.trustSignals?.firstPartyEditorial) return "trusted";
   if (source === "unverified") return "limited";
-  if (["mcp", "hooks", "skills", "commands", "statuslines"].includes(entry.category) && !hasNotes) return "review";
+  if (["mcp", "hooks", "skills", "commands", "statuslines"].includes(entry.category) && !hasNotes)
+    return "review";
   return "review";
 }
 
@@ -378,9 +392,17 @@ const BEST_LIST_SEEDS: BestListSeed[] = [
 ];
 
 function entryScore(entry: Entry, tags: string[] = []) {
-  const tagSet = new Set([...(entry.tags ?? []), ...(entry.keywords ?? [])].map((tag) => tag.toLowerCase()));
+  const tagSet = new Set(
+    [...(entry.tags ?? []), ...(entry.keywords ?? [])].map((tag) => tag.toLowerCase()),
+  );
   const tagScore = tags.reduce((score, tag) => score + (tagSet.has(tag.toLowerCase()) ? 10 : 0), 0);
-  return tagScore + (entry.packageVerified ? 12 : 0) + (entry.safetyNotes ? 8 : 0) + (entry.privacyNotes ? 4 : 0) + Math.min(entry.stars ?? 0, 10_000) / 500;
+  return (
+    tagScore +
+    (entry.packageVerified ? 12 : 0) +
+    (entry.safetyNotes ? 8 : 0) +
+    (entry.privacyNotes ? 4 : 0) +
+    Math.min(entry.stars ?? 0, 10_000) / 500
+  );
 }
 
 function makeBestPick(entry: Entry): BestPick {
@@ -397,14 +419,19 @@ function makeBestPick(entry: Entry): BestPick {
     why: reasons.length
       ? `${entry.title} is included because it has ${reasons.join(", ")}.`
       : `${entry.title} is relevant to this use case, but should be reviewed before adoption.`,
-    reachForInstead: entry.trust !== "trusted" ? "If this will touch credentials, local files, or production systems, inspect the upstream source first." : undefined,
+    reachForInstead:
+      entry.trust !== "trusted"
+        ? "If this will touch credentials, local files, or production systems, inspect the upstream source first."
+        : undefined,
   };
 }
 
 export const BEST_LISTS: BestList[] = BEST_LIST_SEEDS.map((seed) => {
   const candidates = ENTRIES.filter((entry) => {
     if (entry.category === seed.category) return true;
-    const tagSet = new Set([...(entry.tags ?? []), ...(entry.keywords ?? [])].map((tag) => tag.toLowerCase()));
+    const tagSet = new Set(
+      [...(entry.tags ?? []), ...(entry.keywords ?? [])].map((tag) => tag.toLowerCase()),
+    );
     return seed.tags?.some((tag) => tagSet.has(tag.toLowerCase())) ?? false;
   })
     .sort((a, b) => entryScore(b, seed.tags) - entryScore(a, seed.tags))

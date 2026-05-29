@@ -61,7 +61,9 @@ export function JobCard({ job, variant = "row" }: Props) {
         "hover:border-ink/20 hover:bg-surface-2",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         sponsored && "border-accent/40 bg-gradient-to-br from-surface to-accent/[0.06]",
-        featured && !sponsored && "border-border bg-gradient-to-r from-accent/[0.05] to-transparent",
+        featured &&
+          !sponsored &&
+          "border-border bg-gradient-to-r from-accent/[0.05] to-transparent",
         !sponsored && !featured && "border-border",
       )}
       aria-label={`${job.title} at ${job.company}`}
@@ -146,9 +148,12 @@ export function JobCard({ job, variant = "row" }: Props) {
         </div>
 
         <div className="hidden shrink-0 flex-col items-end gap-2 text-right sm:flex">
-          <span className="font-mono text-[11px] text-ink-subtle">{relativePosted(job.postedAt)}</span>
+          <span className="font-mono text-[11px] text-ink-subtle">
+            {relativePosted(job.postedAt)}
+          </span>
           <span className="inline-flex items-center gap-1 text-xs text-ink-muted opacity-0 transition-opacity duration-200 ease-out group-hover:opacity-100">
-            View role <ArrowUpRight className="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
+            View role{" "}
+            <ArrowUpRight className="h-3 w-3 transition-transform duration-200 ease-out group-hover:translate-x-0.5" />
           </span>
         </div>
       </div>

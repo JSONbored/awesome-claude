@@ -26,7 +26,9 @@ function urlItem(pathname: string, priority: string, changefreq = "weekly") {
     `    <changefreq>${changefreq}</changefreq>`,
     `    <priority>${priority}</priority>`,
     "  </url>",
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 }
 
 async function renderSitemap() {

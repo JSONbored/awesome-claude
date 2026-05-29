@@ -8,7 +8,8 @@ export const Route = createFileRoute("/tools/submit")({
       { title: "Submit a commercial tool — HeyClaude" },
       {
         name: "description",
-        content: "Route commercial Claude tools, sponsorships, listing claims, and paid review interest through HeyClaude lead capture.",
+        content:
+          "Route commercial Claude tools, sponsorships, listing claims, and paid review interest through HeyClaude lead capture.",
       },
     ],
   }),
@@ -23,8 +24,9 @@ function SubmitTool() {
         <div className="eyebrow">Commercial routing</div>
         <h1 className="mt-3 h-display-1 text-ink text-balance">Submit a commercial tool</h1>
         <p className="mt-4 max-w-2xl text-ink-muted">
-          Free, source-backed resources belong in the community directory. Commercial tools, sponsorships, listing claims,
-          and paid review interest should go through the lead flow so the public registry stays useful.
+          Free, source-backed resources belong in the community directory. Commercial tools,
+          sponsorships, listing claims, and paid review interest should go through the lead flow so
+          the public registry stays useful.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <Link

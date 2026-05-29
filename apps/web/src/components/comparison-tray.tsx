@@ -54,7 +54,9 @@ export function ComparisonTray() {
         >
           Compare {items.length} <ArrowRight className="h-3 w-3" />
         </Link>
-        <span className="sr-only" aria-hidden>{open ? "open" : "closed"}</span>
+        <span className="sr-only" aria-hidden>
+          {open ? "open" : "closed"}
+        </span>
       </div>
     </div>
   );

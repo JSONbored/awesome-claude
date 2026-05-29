@@ -501,10 +501,11 @@ Use this hook after reviewing the notes.`,
         githubUrl: "https://github.com/example/duplicate-jsonld",
       },
     ]).entries;
-      const entryJsonLd = snapshot.documents.find(
-        (document) =>
-          document["@id"] === "https://heyclau.de/entry/mcp/duplicate-jsonld#entry",
-      );
+    const entryJsonLd = snapshot.documents.find(
+      (document) =>
+        document["@id"] ===
+        "https://heyclau.de/entry/mcp/duplicate-jsonld#entry",
+    );
 
     expect(entryJsonLd?.keywords).toBe("mcp, fixture");
     expect(entryJsonLd?.sameAs).toEqual([

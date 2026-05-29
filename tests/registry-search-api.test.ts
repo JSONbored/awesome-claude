@@ -55,8 +55,7 @@ describe("/api/registry/search", () => {
   });
 
   it("returns page metadata while preserving full-result facets", async () => {
-    const { GET } =
-      await import("../apps/web/src/routes/api/registry/search");
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
     const response = await GET(
       new Request(
         "https://heyclau.de/api/registry/search?q=fixture&limit=2&offset=2",
@@ -103,8 +102,7 @@ describe("/api/registry/search", () => {
       },
     ];
 
-    const { GET } =
-      await import("../apps/web/src/routes/api/registry/search");
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
     const response = await GET(
       new Request("https://heyclau.de/api/registry/search?q=code review", {
         headers: { origin: "https://heyclau.de" },
@@ -129,8 +127,7 @@ describe("/api/registry/search", () => {
       makeEntry(`fixture-${index}`),
     );
 
-    const { GET } =
-      await import("../apps/web/src/routes/api/registry/search");
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
     const cappedPage = await GET(
       new Request(
         "https://heyclau.de/api/registry/search?limit=50&offset=9990",
@@ -159,8 +156,7 @@ describe("/api/registry/search", () => {
   });
 
   it("treats explicit empty category and platform as 'no filter'", async () => {
-    const { GET } =
-      await import("../apps/web/src/routes/api/registry/search");
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
     const response = await GET(
       new Request(
         "https://heyclau.de/api/registry/search?q=fixture&category=&platform=",
@@ -179,8 +175,7 @@ describe("/api/registry/search", () => {
   });
 
   it("still rejects malformed non-empty category and platform", async () => {
-    const { GET } =
-      await import("../apps/web/src/routes/api/registry/search");
+    const { GET } = await import("../apps/web/src/routes/api/registry/search");
     const badPlatform = await GET(
       new Request(
         "https://heyclau.de/api/registry/search?q=fixture&platform=%21bad",

@@ -9,9 +9,26 @@ import {
   type Platform,
   type Entry,
 } from "@/types/registry";
-import { ShieldCheck, AlertTriangle, OctagonX, ShieldAlert, GitBranch, BadgeCheck, Globe, HelpCircle, Lock, Eye, EyeOff } from "lucide-react";
+import {
+  ShieldCheck,
+  AlertTriangle,
+  OctagonX,
+  ShieldAlert,
+  GitBranch,
+  BadgeCheck,
+  Globe,
+  HelpCircle,
+  Lock,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { IntegrationMark, platformMark } from "./integration-marks";
-import { installRiskLevel, INSTALL_RISK_LABEL, INSTALL_RISK_DETAIL, type InstallRisk } from "@/lib/trust";
+import {
+  installRiskLevel,
+  INSTALL_RISK_LABEL,
+  INSTALL_RISK_DETAIL,
+  type InstallRisk,
+} from "@/lib/trust";
 
 const trustStyles: Record<TrustLevel, { dot: string; text: string; ring: string }> = {
   trusted: { dot: "bg-trust-trusted", text: "text-trust-trusted", ring: "ring-trust-trusted/30" },
@@ -77,7 +94,13 @@ export function PlatformChip({ id }: { id: Platform }) {
   );
 }
 
-export function CategoryPill({ children, className }: { children: React.ReactNode; className?: string }) {
+export function CategoryPill({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <span
       className={cn(
@@ -139,13 +162,7 @@ export function InstallRiskBadge({
 }
 
 /** Tiny presence chips for safety/privacy notes — muted when missing. */
-export function NotesPresenceChips({
-  entry,
-  className,
-}: {
-  entry: Entry;
-  className?: string;
-}) {
+export function NotesPresenceChips({ entry, className }: { entry: Entry; className?: string }) {
   const hasSafety = !!(entry.safetyNotes || entry.safetyNotesList?.length);
   const hasPrivacy = !!(entry.privacyNotes || entry.privacyNotesList?.length);
   return (
@@ -154,7 +171,9 @@ export function NotesPresenceChips({
         title={hasSafety ? "Safety notes present" : "Safety notes missing"}
         className={cn(
           "inline-flex items-center gap-1 whitespace-nowrap rounded-md border px-1.5 py-0.5 font-mono text-[10px] leading-none",
-          hasSafety ? "border-trust-trusted/30 text-trust-trusted" : "border-border text-ink-subtle/70",
+          hasSafety
+            ? "border-trust-trusted/30 text-trust-trusted"
+            : "border-border text-ink-subtle/70",
         )}
       >
         <Lock className="h-2.5 w-2.5" aria-hidden /> Safety {hasSafety ? "✓" : "·"}
@@ -163,10 +182,17 @@ export function NotesPresenceChips({
         title={hasPrivacy ? "Privacy notes present" : "Privacy notes missing"}
         className={cn(
           "inline-flex items-center gap-1 whitespace-nowrap rounded-md border px-1.5 py-0.5 font-mono text-[10px] leading-none",
-          hasPrivacy ? "border-trust-trusted/30 text-trust-trusted" : "border-border text-ink-subtle/70",
+          hasPrivacy
+            ? "border-trust-trusted/30 text-trust-trusted"
+            : "border-border text-ink-subtle/70",
         )}
       >
-        {hasPrivacy ? <Eye className="h-2.5 w-2.5" aria-hidden /> : <EyeOff className="h-2.5 w-2.5" aria-hidden />} Privacy {hasPrivacy ? "✓" : "·"}
+        {hasPrivacy ? (
+          <Eye className="h-2.5 w-2.5" aria-hidden />
+        ) : (
+          <EyeOff className="h-2.5 w-2.5" aria-hidden />
+        )}{" "}
+        Privacy {hasPrivacy ? "✓" : "·"}
       </span>
     </span>
   );

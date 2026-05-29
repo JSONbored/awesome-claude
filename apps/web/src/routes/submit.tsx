@@ -1,13 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Check,
-  Info,
-  Loader2,
-  ShieldAlert,
-} from "lucide-react";
+import { AlertTriangle, ArrowRight, Check, Info, Loader2, ShieldAlert } from "lucide-react";
 import { CATEGORIES, type Category } from "@/types/registry";
 import {
   SUBMISSION_SPEC,
@@ -42,9 +35,15 @@ export const Route = createFileRoute("/submit")({
   head: () => ({
     meta: [
       { title: "Submit a resource — HeyClaude" },
-      { name: "description", content: "Submit a Claude workflow resource for review. Free, source-backed, useful." },
+      {
+        name: "description",
+        content: "Submit a Claude workflow resource for review. Free, source-backed, useful.",
+      },
       { property: "og:title", content: "Submit a resource — HeyClaude" },
-      { property: "og:description", content: "Free, source-backed, useful. Paid tools route to the commercial intake." },
+      {
+        property: "og:description",
+        content: "Free, source-backed, useful. Paid tools route to the commercial intake.",
+      },
     ],
   }),
   component: SubmitPage,
@@ -101,7 +100,9 @@ function SubmitPage() {
     () => preflightResult?.issuePreview?.body ?? buildIssueDraft(category, data),
     [category, data, preflightResult],
   );
-  const issueTitle = preflightResult?.issuePreview?.title ?? `Submit ${category || "Entry"}: ${data.name || "(untitled)"}`;
+  const issueTitle =
+    preflightResult?.issuePreview?.title ??
+    `Submit ${category || "Entry"}: ${data.name || "(untitled)"}`;
 
   const set = (key: string, value: string) => {
     setPreflightResult(null);
@@ -126,7 +127,9 @@ function SubmitPage() {
       });
       const payload = (await response.json().catch(() => null)) as PreflightResponse | null;
       if (!response.ok || !payload?.ok) {
-        throw new Error("Server preflight failed. Use the GitHub fallback if this keeps happening.");
+        throw new Error(
+          "Server preflight failed. Use the GitHub fallback if this keeps happening.",
+        );
       }
       setPreflightResult(payload);
       return payload;
@@ -152,22 +155,20 @@ function SubmitPage() {
           turnstileToken,
         }),
       });
-      const payload = (await response.json().catch(() => null)) as
-        | {
-            ok?: boolean;
+      const payload = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        issueUrl?: string;
+        issueNumber?: number;
+        error?: {
+          message?: string;
+          details?: {
+            fallbackUrl?: string;
             issueUrl?: string;
             issueNumber?: number;
-            error?: {
-              message?: string;
-              details?: {
-                fallbackUrl?: string;
-                issueUrl?: string;
-                issueNumber?: number;
-                errors?: string[];
-              };
-            };
-          }
-        | null;
+            errors?: string[];
+          };
+        };
+      } | null;
       if (!response.ok || !payload?.ok) {
         const fallbackUrl = payload?.error?.details?.fallbackUrl;
         const detailErrors = payload?.error?.details?.errors?.join(" ");
@@ -225,28 +226,29 @@ function SubmitPage() {
   }
 
   const unsupportedWebCategory = Boolean(spec?.webOnly);
-  const canContinue = step === 0 ? !!category && !unsupportedWebCategory : step === 3 ? blockers.length === 0 : true;
+  const canContinue =
+    step === 0 ? !!category && !unsupportedWebCategory : step === 3 ? blockers.length === 0 : true;
   const serverBlocked = Boolean(
     preflightResult &&
-      (!preflightResult.valid || preflightResult.routeSuggestion !== "github_issue"),
+    (!preflightResult.valid || preflightResult.routeSuggestion !== "github_issue"),
   );
   const finalDisabled =
-    !canContinue ||
-    preflightBusy ||
-    submitBusy ||
-    !preflightResult ||
-    serverBlocked;
+    !canContinue || preflightBusy || submitBusy || !preflightResult || serverBlocked;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <div className="eyebrow">Contribute</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        Submit a resource
-      </h1>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">Submit a resource</h1>
       <p className="mt-2 text-sm text-ink-muted">
         Free, source-backed, useful. Commercial tools go through{" "}
-        <a href="/advertise" className="text-ink underline">advertise</a>. Jobs go through{" "}
-        <a href="/jobs/post" className="text-ink underline">post a job</a>.
+        <a href="/advertise" className="text-ink underline">
+          advertise
+        </a>
+        . Jobs go through{" "}
+        <a href="/jobs/post" className="text-ink underline">
+          post a job
+        </a>
+        .
       </p>
 
       <ol className="mt-8 grid grid-cols-4 gap-2">
@@ -307,20 +309,25 @@ function SubmitPage() {
                     )}
                   >
                     <div className="font-medium">{c.label}</div>
-                    <div className={cn("mt-0.5 text-[11px]", category === c.id ? "text-background/70" : "text-ink-muted")}>
+                    <div
+                      className={cn(
+                        "mt-0.5 text-[11px]",
+                        category === c.id ? "text-background/70" : "text-ink-muted",
+                      )}
+                    >
                       {disabled ? "Maintainer-routed" : c.blurb}
                     </div>
                   </button>
                 );
               })}
             </div>
-            {spec && (
-              <p className="mt-4 text-xs text-ink-muted">{spec.blurb}</p>
-            )}
+            {spec && <p className="mt-4 text-xs text-ink-muted">{spec.blurb}</p>}
             {unsupportedWebCategory && (
               <div className="mt-4 rounded-md border border-border bg-background p-3 text-xs text-ink-muted">
                 This category is not yet enabled for direct website import. Use{" "}
-                <a href="/advertise" className="text-ink underline">commercial intake</a>{" "}
+                <a href="/advertise" className="text-ink underline">
+                  commercial intake
+                </a>{" "}
                 for tools, or open a GitHub issue manually for maintainer routing.
               </div>
             )}
@@ -330,7 +337,12 @@ function SubmitPage() {
         {step === 1 && spec && (
           <div className="space-y-4">
             {spec.fields.map((f) => (
-              <FieldRender key={f.key} field={f} value={data[f.key] ?? ""} onChange={(v) => set(f.key, v)} />
+              <FieldRender
+                key={f.key}
+                field={f}
+                value={data[f.key] ?? ""}
+                onChange={(v) => set(f.key, v)}
+              />
             ))}
           </div>
         )}
@@ -394,7 +406,9 @@ function SubmitPage() {
               <div className="mb-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-ink-muted">
                 {issueTitle}
               </div>
-              <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 text-[11px] text-ink"><code>{issueDraft}</code></pre>
+              <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 text-[11px] text-ink">
+                <code>{issueDraft}</code>
+              </pre>
               {preflightResult?.fallbackUrl && (
                 <p className="mt-2 text-xs text-ink-muted">
                   GitHub fallback:{" "}
@@ -440,7 +454,9 @@ function SubmitPage() {
             disabled={step === STEPS.length - 1 ? finalDisabled : !canContinue}
             className="inline-flex h-10 items-center gap-2 rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90 disabled:opacity-40"
           >
-            {step === STEPS.length - 1 && (preflightBusy || submitBusy) && <Loader2 className="h-4 w-4 animate-spin" />}
+            {step === STEPS.length - 1 && (preflightBusy || submitBusy) && (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            )}
             {step === STEPS.length - 1
               ? !preflightResult
                 ? "Run server preflight"
@@ -502,7 +518,8 @@ function ServerPreflightBlock({
     <div className="space-y-2">
       {result.valid && result.routeSuggestion === "github_issue" ? (
         <div className="flex items-center gap-2 rounded-md border border-trust-trusted/40 bg-trust-trusted/10 px-3 py-2 text-sm text-ink">
-          <Check className="h-4 w-4 text-trust-trusted" /> Schema passed. Maintainer review is still required.
+          <Check className="h-4 w-4 text-trust-trusted" /> Schema passed. Maintainer review is still
+          required.
         </div>
       ) : (
         <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
@@ -534,7 +551,13 @@ function ServerPreflightBlock({
   );
 }
 
-function PreflightRow({ kind, message }: { kind: "blocker" | "warning" | "info"; message: string }) {
+function PreflightRow({
+  kind,
+  message,
+}: {
+  kind: "blocker" | "warning" | "info";
+  message: string;
+}) {
   return (
     <div
       className={cn(
@@ -611,8 +634,8 @@ function TurnstileBox({
   if (!siteKey) {
     return (
       <div className="rounded-md border border-trust-review/40 bg-trust-review/10 px-3 py-2 text-xs text-ink-muted">
-        Turnstile site key is not configured in this build. If automatic
-        submission is unavailable, use the GitHub fallback link above.
+        Turnstile site key is not configured in this build. If automatic submission is unavailable,
+        use the GitHub fallback link above.
       </div>
     );
   }
@@ -626,12 +649,21 @@ function TurnstileBox({
   );
 }
 
-function FieldRender({ field, value, onChange }: { field: SpecField; value: string; onChange: (v: string) => void }) {
+function FieldRender({
+  field,
+  value,
+  onChange,
+}: {
+  field: SpecField;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   const id = `f-${field.key}`;
   return (
     <div>
       <label htmlFor={id} className="eyebrow mb-1.5 block">
-        {field.label}{field.required && " *"}
+        {field.label}
+        {field.required && " *"}
       </label>
       {field.kind === "textarea" || field.kind === "code" ? (
         <textarea
@@ -657,7 +689,9 @@ function FieldRender({ field, value, onChange }: { field: SpecField; value: stri
         >
           <option value="">Select…</option>
           {field.options?.map((o) => (
-            <option key={o} value={o}>{o}</option>
+            <option key={o} value={o}>
+              {o}
+            </option>
           ))}
         </select>
       ) : (
@@ -699,9 +733,11 @@ function TextArea({
       />
       {examples && examples.length > 0 && (
         <div className="mt-1.5 text-[11px] text-ink-subtle">
-          Examples: {examples.map((e, i) => (
+          Examples:{" "}
+          {examples.map((e, i) => (
             <span key={i}>
-              <em>{e}</em>{i < examples.length - 1 && " · "}
+              <em>{e}</em>
+              {i < examples.length - 1 && " · "}
             </span>
           ))}
         </div>

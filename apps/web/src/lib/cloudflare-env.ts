@@ -18,9 +18,7 @@ type CloudflareRuntimeRequest = Request & {
 const runtimeStorage = new AsyncLocalStorage<RuntimeContext>();
 
 function envRecord(value: unknown): Record<string, unknown> | null {
-  return value && typeof value === "object"
-    ? (value as Record<string, unknown>)
-    : null;
+  return value && typeof value === "object" ? (value as Record<string, unknown>) : null;
 }
 
 function nitroGlobalEnv(): Record<string, unknown> | null {
@@ -42,11 +40,7 @@ export function runWithCloudflareRuntime<T>(
     {
       request,
       ctx: ctx ?? requestRuntime?.context,
-      env:
-        envRecord(env) ??
-        envRecord(requestRuntime?.env) ??
-        nitroGlobalEnv() ??
-        {},
+      env: envRecord(env) ?? envRecord(requestRuntime?.env) ?? nitroGlobalEnv() ?? {},
     },
     callback,
   );

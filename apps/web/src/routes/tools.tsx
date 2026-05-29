@@ -7,9 +7,16 @@ export const Route = createFileRoute("/tools")({
   head: () => ({
     meta: [
       { title: "Tools — HeyClaude" },
-      { name: "description", content: "Commercial tools and platforms that work well with Claude." },
+      {
+        name: "description",
+        content: "Commercial tools and platforms that work well with Claude.",
+      },
       { property: "og:title", content: "Tools that pair well with Claude" },
-      { property: "og:description", content: "Editorial picks and disclosed partners. Free, open-source resources live in the directory." },
+      {
+        property: "og:description",
+        content:
+          "Editorial picks and disclosed partners. Free, open-source resources live in the directory.",
+      },
     ],
   }),
   component: ToolsPage,
@@ -27,10 +34,16 @@ function ToolsPage() {
           </h1>
           <p className="mt-2 max-w-2xl text-ink-muted">
             Editorial picks and disclosed partners. Free, open-source community resources live in{" "}
-            <Link to="/browse" className="text-ink underline">the directory</Link>.
+            <Link to="/browse" className="text-ink underline">
+              the directory
+            </Link>
+            .
           </p>
         </div>
-        <Link to="/tools/submit" className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90">
+        <Link
+          to="/tools/submit"
+          className="inline-flex h-10 items-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+        >
           Submit a tool
         </Link>
       </div>
@@ -46,7 +59,9 @@ function ToolsPage() {
             <div className="flex items-start justify-between gap-2">
               <div>
                 <div className="font-display text-lg font-semibold text-ink">{t.name}</div>
-                <div className="mt-0.5 text-xs text-ink-muted">{t.category} · {t.pricingModel}</div>
+                <div className="mt-0.5 text-xs text-ink-muted">
+                  {t.category} · {t.pricingModel}
+                </div>
               </div>
               <DisclosureBadge value={t.disclosure} />
             </div>
@@ -54,7 +69,12 @@ function ToolsPage() {
             <div className="mt-auto flex items-center justify-between text-xs text-ink-muted">
               <div className="flex flex-wrap gap-1">
                 {t.tags.slice(0, 3).map((tag) => (
-                  <span key={tag} className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]">{tag}</span>
+                  <span
+                    key={tag}
+                    className="rounded border border-border px-1.5 py-0.5 font-mono text-[10px]"
+                  >
+                    {tag}
+                  </span>
                 ))}
               </div>
               <span className="inline-flex items-center gap-1 text-ink group-hover:underline">
@@ -69,9 +89,14 @@ function ToolsPage() {
 }
 
 function DisclosureBadge({ value }: { value: string }) {
-  const tone = value === "sponsored" || value === "affiliate" ? "text-trust-review border-trust-review/40" : "text-trust-trusted border-trust-trusted/40";
+  const tone =
+    value === "sponsored" || value === "affiliate"
+      ? "text-trust-review border-trust-review/40"
+      : "text-trust-trusted border-trust-trusted/40";
   return (
-    <span className={`inline-flex items-center gap-1 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider ${tone}`}>
+    <span
+      className={`inline-flex items-center gap-1 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] uppercase tracking-wider ${tone}`}
+    >
       <BadgeCheck className="h-3 w-3" />
       {value.replace("_", " ")}
     </span>

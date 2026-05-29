@@ -89,16 +89,25 @@ const COVERAGE_DEFS: Array<{
   {
     id: "Privacy",
     label: "Privacy",
-    description: "Entries that should disclose data flow, credentials, logs, or third-party requests.",
-    matches: (entry) => RISK_CATEGORIES.has(entry.category) || entry.tags.some((tag) => /auth|api|data|privacy/i.test(tag)),
+    description:
+      "Entries that should disclose data flow, credentials, logs, or third-party requests.",
+    matches: (entry) =>
+      RISK_CATEGORIES.has(entry.category) ||
+      entry.tags.some((tag) => /auth|api|data|privacy/i.test(tag)),
   },
 ];
 
 function needsAttention(entry: Entry) {
   if (entry.source === "unverified") return true;
   if (!entry.reviewed) return true;
-  if (RISK_CATEGORIES.has(entry.category) && !entry.safetyNotes && !entry.safetyNotesList?.length) return true;
-  if ((entry.category === "mcp" || entry.category === "skills") && !entry.privacyNotes && !entry.privacyNotesList?.length) return true;
+  if (RISK_CATEGORIES.has(entry.category) && !entry.safetyNotes && !entry.safetyNotesList?.length)
+    return true;
+  if (
+    (entry.category === "mcp" || entry.category === "skills") &&
+    !entry.privacyNotes &&
+    !entry.privacyNotesList?.length
+  )
+    return true;
   return false;
 }
 
@@ -115,8 +124,12 @@ export const REVIEW_COVERAGE: ReviewCoverage[] = COVERAGE_DEFS.map((def) => {
     entries: entries.length,
     reviewed: entries.filter((entry) => entry.reviewed).length,
     sourceBacked: entries.filter((entry) => entry.source !== "unverified").length,
-    withSafetyNotes: entries.filter((entry) => Boolean(entry.safetyNotes || entry.safetyNotesList?.length)).length,
-    withPrivacyNotes: entries.filter((entry) => Boolean(entry.privacyNotes || entry.privacyNotesList?.length)).length,
+    withSafetyNotes: entries.filter((entry) =>
+      Boolean(entry.safetyNotes || entry.safetyNotesList?.length),
+    ).length,
+    withPrivacyNotes: entries.filter((entry) =>
+      Boolean(entry.privacyNotes || entry.privacyNotesList?.length),
+    ).length,
     needsAttention: entries.filter(needsAttention).slice(0, 5),
   };
 });
@@ -125,8 +138,12 @@ export const REVIEW_SUMMARY = {
   total: ENTRIES.length,
   reviewed: ENTRIES.filter((entry) => entry.reviewed).length,
   sourceBacked: ENTRIES.filter((entry) => entry.source !== "unverified").length,
-  withSafetyNotes: ENTRIES.filter((entry) => Boolean(entry.safetyNotes || entry.safetyNotesList?.length)).length,
-  withPrivacyNotes: ENTRIES.filter((entry) => Boolean(entry.privacyNotes || entry.privacyNotesList?.length)).length,
+  withSafetyNotes: ENTRIES.filter((entry) =>
+    Boolean(entry.safetyNotes || entry.safetyNotesList?.length),
+  ).length,
+  withPrivacyNotes: ENTRIES.filter((entry) =>
+    Boolean(entry.privacyNotes || entry.privacyNotesList?.length),
+  ).length,
   needsAttention: ENTRIES.filter(needsAttention).length,
   publicRosterAvailable: false,
   pct,

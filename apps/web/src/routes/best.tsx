@@ -13,7 +13,10 @@ export const Route = createFileRoute("/best")({
           "Editorial best-of lists for Claude Code MCP servers, agents, skills, hooks, and rules.",
       },
       { property: "og:title", content: "Best of HeyClaude" },
-      { property: "og:description", content: "Curated picks for Claude Code, MCP, agents, skills, and more." },
+      {
+        property: "og:description",
+        content: "Curated picks for Claude Code, MCP, agents, skills, and more.",
+      },
       { property: "og:url", content: "/best" },
     ],
     links: [{ rel: "canonical", href: "/best" }],
@@ -33,12 +36,10 @@ function BestPage() {
   return (
     <div className="mx-auto max-w-[1100px] px-4 py-12 sm:px-6">
       <div className="eyebrow">Best lists · editorial</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        Curated for real workflows
-      </h1>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">Curated for real workflows</h1>
       <p className="mt-4 max-w-2xl text-pretty text-base text-ink-muted sm:text-lg">
-        Tightly scoped picks for specific jobs. Every list explains why each entry made the cut and what
-        you'd reach for instead.
+        Tightly scoped picks for specific jobs. Every list explains why each entry made the cut and
+        what you'd reach for instead.
       </p>
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
@@ -66,7 +67,9 @@ function BestPage() {
                 <ul className="space-y-1 border-t border-border pt-3 text-xs text-ink-muted">
                   {previewTitles.map((t, i) => (
                     <li key={t} className="flex items-baseline gap-2">
-                      <span className="font-mono text-[10px] text-ink-subtle">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="font-mono text-[10px] text-ink-subtle">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
                       <span className="truncate text-ink">{t}</span>
                     </li>
                   ))}
@@ -86,9 +89,7 @@ function BestPage() {
         })}
       </div>
 
-      <h2 className="mt-16 h-display-2 text-ink text-balance">
-        Editor's pick · {featured.title}
-      </h2>
+      <h2 className="mt-16 h-display-2 text-ink text-balance">Editor's pick · {featured.title}</h2>
       <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {featuredPicks.map((e) => (
           <ResourceCard key={e.slug} entry={e} variant="grid" />

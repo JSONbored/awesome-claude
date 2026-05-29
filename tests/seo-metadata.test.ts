@@ -42,10 +42,14 @@ function pageMetadataDescription(pagePath: string) {
     path.join(repoRoot, `apps/web/src/routes/${routePath}.tsx`),
     "utf8",
   );
-  const inlineDescription = source.match(/\{\s*name:\s*"description",\s*content:\s*["`]([^"`]+)["`]/)?.[1];
+  const inlineDescription = source.match(
+    /\{\s*name:\s*"description",\s*content:\s*["`]([^"`]+)["`]/,
+  )?.[1];
   if (inlineDescription) return inlineDescription;
 
-  const contentBlock = source.match(/\{\s*name:\s*"description",\s*content:\s*\n\s*["`]([^"`]+)["`]/)?.[1];
+  const contentBlock = source.match(
+    /\{\s*name:\s*"description",\s*content:\s*\n\s*["`]([^"`]+)["`]/,
+  )?.[1];
   return contentBlock;
 }
 

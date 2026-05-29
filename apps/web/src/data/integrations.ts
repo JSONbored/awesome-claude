@@ -21,7 +21,8 @@ export const INTEGRATIONS: Integration[] = [
     secondaryAction: { label: "Trending", href: "/trending" },
     updatedAt: REGISTRY_UPDATED_DATE,
     surface: { kind: "web", label: "Web", snippet: "https://heyclau.de" },
-    trustPosture: "Read-only static + cached responses. No personal data persisted without consent.",
+    trustPosture:
+      "Read-only static + cached responses. No personal data persisted without consent.",
   },
   {
     slug: "raycast",
@@ -36,8 +37,14 @@ export const INTEGRATIONS: Integration[] = [
       "Copy install commands, config, and full assets without leaving Raycast",
       "Browse jobs and submit content inline",
     ],
-    primaryAction: { label: "Install in Raycast", href: "https://www.raycast.com/jsonbored/heyclaude" },
-    secondaryAction: { label: "Source", href: "https://github.com/jsonbored/awesome-claude/tree/main/integrations/raycast" },
+    primaryAction: {
+      label: "Install in Raycast",
+      href: "https://www.raycast.com/jsonbored/heyclaude",
+    },
+    secondaryAction: {
+      label: "Source",
+      href: "https://github.com/jsonbored/awesome-claude/tree/main/integrations/raycast",
+    },
     version: "2.4.0",
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
@@ -68,7 +75,10 @@ export const INTEGRATIONS: Integration[] = [
       "Stdio + remote HTTP transport",
     ],
     primaryAction: { label: "Run via npx", href: "https://www.npmjs.com/package/@heyclaude/mcp" },
-    secondaryAction: { label: "Source", href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp" },
+    secondaryAction: {
+      label: "Source",
+      href: "https://github.com/jsonbored/awesome-claude/tree/main/packages/mcp",
+    },
     version: "0.3.0",
     updatedAt: REGISTRY_UPDATED_DATE,
     install: [
@@ -92,7 +102,8 @@ export const INTEGRATIONS: Integration[] = [
       { client: "Remote HTTP", snippet: "https://heyclau.de/api/mcp" },
     ],
     surface: { kind: "mcp", label: "MCP", snippet: "npx -y @heyclaude/mcp" },
-    trustPosture: "Read-only. Server does not create issues, push to GitHub, install packages, or write local files.",
+    trustPosture:
+      "Read-only. Server does not create issues, push to GitHub, install packages, or write local files.",
   },
   {
     slug: "public-api",
@@ -116,7 +127,8 @@ export const INTEGRATIONS: Integration[] = [
       label: "REST API",
       snippet: "curl https://heyclau.de/api/registry/manifest",
     },
-    trustPosture: "Every artifact ships with a SHA-256 in the registry manifest. Use /api/registry/integrity to verify.",
+    trustPosture:
+      "Every artifact ships with a SHA-256 in the registry manifest. Use /api/registry/integrity to verify.",
   },
   {
     slug: "cursor-mdc",
@@ -199,7 +211,10 @@ export const INTEGRATIONS: Integration[] = [
       "Package artifact security scan",
       "Auto-refreshed GitHub stats and README",
     ],
-    primaryAction: { label: "View workflows", href: "https://github.com/jsonbored/awesome-claude/tree/main/.github/workflows" },
+    primaryAction: {
+      label: "View workflows",
+      href: "https://github.com/jsonbored/awesome-claude/tree/main/.github/workflows",
+    },
     secondaryAction: { label: "Submit a resource", href: "/submit" },
     updatedAt: REGISTRY_UPDATED_DATE,
   },

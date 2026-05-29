@@ -9,17 +9,33 @@ export const Route = createFileRoute("/changelog")({
   head: () => ({
     meta: [
       { title: "Changelog — HeyClaude" },
-      { name: "description", content: "Registry releases, content policy updates, and integrity/security changes." },
+      {
+        name: "description",
+        content: "Registry releases, content policy updates, and integrity/security changes.",
+      },
       { property: "og:title", content: "Changelog — HeyClaude" },
-      { property: "og:description", content: "What changed in the registry, content policy, and integrity controls." },
+      {
+        property: "og:description",
+        content: "What changed in the registry, content policy, and integrity controls.",
+      },
       { property: "og:url", content: "/changelog" },
       { property: "og:type", content: "article" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "canonical", href: "/changelog" },
-      { rel: "alternate", type: "application/rss+xml", href: "/feed.xml", title: "HeyClaude changelog (RSS)" },
-      { rel: "alternate", type: "application/atom+xml", href: "/atom.xml", title: "HeyClaude changelog (Atom)" },
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        href: "/feed.xml",
+        title: "HeyClaude changelog (RSS)",
+      },
+      {
+        rel: "alternate",
+        type: "application/atom+xml",
+        href: "/atom.xml",
+        title: "HeyClaude changelog (Atom)",
+      },
     ],
     scripts: [
       {
@@ -47,10 +63,28 @@ export const Route = createFileRoute("/changelog")({
   component: ChangelogPage,
 });
 
-const STREAM_META: Record<ReleaseStream, { label: string; tone: string; dot: string; Icon: typeof Package }> = {
-  release: { label: "Release", tone: "border-accent/40 bg-accent/15 text-ink", dot: "bg-accent", Icon: Package },
-  policy: { label: "Policy", tone: "border-border bg-surface text-ink-muted", dot: "bg-ink/60", Icon: FileText },
-  security: { label: "Security", tone: "border-trust-review/40 bg-trust-review/10 text-ink", dot: "bg-trust-review", Icon: Shield },
+const STREAM_META: Record<
+  ReleaseStream,
+  { label: string; tone: string; dot: string; Icon: typeof Package }
+> = {
+  release: {
+    label: "Release",
+    tone: "border-accent/40 bg-accent/15 text-ink",
+    dot: "bg-accent",
+    Icon: Package,
+  },
+  policy: {
+    label: "Policy",
+    tone: "border-border bg-surface text-ink-muted",
+    dot: "bg-ink/60",
+    Icon: FileText,
+  },
+  security: {
+    label: "Security",
+    tone: "border-trust-review/40 bg-trust-review/10 text-ink",
+    dot: "bg-trust-review",
+    Icon: Shield,
+  },
 };
 
 const FILTERS: { id: "all" | ReleaseStream; label: string }[] = [
@@ -71,9 +105,7 @@ function ChangelogPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="eyebrow">Changelog</div>
-          <h1 className="mt-2 h-display-1 text-ink text-balance">
-            What changed
-          </h1>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">What changed</h1>
           <p className="mt-3 max-w-xl text-ink-muted">
             One timeline for registry releases, content policy updates, and integrity / security
             changes. Every entry ships a content hash so external clients can verify.
@@ -130,7 +162,12 @@ function ChangelogPage() {
                 />
                 <article className="rounded-xl border border-border bg-surface p-5">
                   <header className="flex flex-wrap items-center gap-2 text-xs">
-                    <span className={cn("inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5", meta.tone)}>
+                    <span
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5",
+                        meta.tone,
+                      )}
+                    >
                       <Icon className="h-3 w-3" /> {meta.label}
                     </span>
                     <span className="font-mono text-ink-subtle">{note.date}</span>
@@ -179,7 +216,10 @@ function ChangelogPage() {
                           if (!items?.length) return null;
                           const Icon = KIND_ICON[k];
                           return (
-                            <div key={k} className="rounded-lg border border-border bg-background p-3">
+                            <div
+                              key={k}
+                              className="rounded-lg border border-border bg-background p-3"
+                            >
                               <div className="mb-2 flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-ink-subtle">
                                 <Icon className="h-3 w-3" /> {k} · {items.length}
                               </div>
@@ -211,7 +251,10 @@ function ChangelogPage() {
                     </details>
                   )}
                   {note.href && (
-                    <Link to={note.href} className="mt-3 inline-block text-xs font-medium text-ink hover:underline">
+                    <Link
+                      to={note.href}
+                      className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
+                    >
                       Read more →
                     </Link>
                   )}
@@ -225,10 +268,11 @@ function ChangelogPage() {
           <div className="rounded-xl border border-border bg-surface p-5">
             <div className="eyebrow mb-2">Subscribe</div>
             <p className="text-xs text-ink-muted">
-              Poll the diff endpoint or subscribe via your feed reader. Every payload carries a SHA-256.
+              Poll the diff endpoint or subscribe via your feed reader. Every payload carries a
+              SHA-256.
             </p>
             <pre className="mt-3 overflow-x-auto rounded-md bg-background p-3 font-mono text-[11px] text-ink">
-{`curl https://heyclau.de/api/registry/diff?since=2026-05-19`}
+              {`curl https://heyclau.de/api/registry/diff?since=2026-05-19`}
             </pre>
           </div>
 
@@ -257,7 +301,10 @@ function ChangelogPage() {
                 );
               })}
             </ul>
-            <Link to="/quality" className="mt-3 inline-block text-xs font-medium text-ink hover:underline">
+            <Link
+              to="/quality"
+              className="mt-3 inline-block text-xs font-medium text-ink hover:underline"
+            >
               See registry quality →
             </Link>
           </div>

@@ -72,15 +72,19 @@ function BestDetail() {
         <ArrowLeft className="h-4 w-4" /> All best lists
       </Link>
 
-      <div className="mt-6 eyebrow">Best · {list.category} · {resolved.length} picks</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        {list.title}
-      </h1>
+      <div className="mt-6 eyebrow">
+        Best · {list.category} · {resolved.length} picks
+      </div>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">{list.title}</h1>
       <p className="mt-4 max-w-2xl text-pretty text-lg text-ink-muted">{list.subtitle}</p>
 
       <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-subtle">
-        <span className="inline-flex items-center gap-1.5"><User className="h-3.5 w-3.5" /> Curated by {list.curator}</span>
-        <span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" /> Updated {list.updatedAt}</span>
+        <span className="inline-flex items-center gap-1.5">
+          <User className="h-3.5 w-3.5" /> Curated by {list.curator}
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <CalendarDays className="h-3.5 w-3.5" /> Updated {list.updatedAt}
+        </span>
       </div>
 
       <blockquote className="mt-8 max-w-3xl border-l-2 border-accent pl-5">
@@ -99,7 +103,9 @@ function BestDetail() {
             <div className="flex flex-col gap-3">
               <ResourceCard entry={p.entry} variant="grid" />
               <div className="rounded-lg border border-border bg-surface-2 p-4 text-sm">
-                <div className="eyebrow mb-1 text-accent-ink dark:text-accent">Why it made the cut</div>
+                <div className="eyebrow mb-1 text-accent-ink dark:text-accent">
+                  Why it made the cut
+                </div>
                 <p className="text-pretty text-ink">{p.why}</p>
                 {p.reachForInstead && (
                   <>
@@ -115,7 +121,8 @@ function BestDetail() {
 
       <div className="mt-12 flex items-center justify-between rounded-xl border border-dashed border-border p-5 text-sm">
         <p className="text-ink-muted">
-          Missing a pick? Propose an edit to this list — every change goes through the same review queue as new entries.
+          Missing a pick? Propose an edit to this list — every change goes through the same review
+          queue as new entries.
         </p>
         <Link
           to="/submit"

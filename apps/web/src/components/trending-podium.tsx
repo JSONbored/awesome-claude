@@ -79,7 +79,9 @@ export function TrendingPodium({ entries }: { entries: TrendingEntry[] }) {
                 <div className="inline-flex items-center gap-1">
                   <Star className="h-3 w-3" /> {formatCompact(e.stars ?? 0)}
                 </div>
-                <div className="text-ink-subtle">{e.source === "unverified" ? "unverified" : "source-backed"}</div>
+                <div className="text-ink-subtle">
+                  {e.source === "unverified" ? "unverified" : "source-backed"}
+                </div>
               </div>
             </div>
 

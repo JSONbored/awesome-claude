@@ -21,17 +21,14 @@ export const Route = createFileRoute("/api/public/feeds/health")({
       GET: async ({ request }) => {
         const feeds = await allFeedHealth(origin(request));
         const generatedAt = new Date().toISOString();
-        return new Response(
-          JSON.stringify({ generatedAt, count: feeds.length, feeds }),
-          {
-            status: 200,
-            headers: {
-              "Content-Type": "application/json",
-              "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
-              ...CORS,
-            },
+        return new Response(JSON.stringify({ generatedAt, count: feeds.length, feeds }), {
+          status: 200,
+          headers: {
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+            ...CORS,
           },
-        );
+        });
       },
     },
   },

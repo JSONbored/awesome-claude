@@ -22,13 +22,12 @@ const PLATFORM_TAGLINES: Record<Platform, string> = {
   continue: "Continue.dev configs and compatible context packs",
 };
 
-export const SUPPORTED_PLATFORMS: { id: Platform; label: string; tagline: string }[] = HARNESSES.map(
-  (harness) => ({
+export const SUPPORTED_PLATFORMS: { id: Platform; label: string; tagline: string }[] =
+  HARNESSES.map((harness) => ({
     id: harness.id,
     label: harness.label,
     tagline: PLATFORM_TAGLINES[harness.id] ?? PLATFORM_LABEL[harness.id],
-  }),
-);
+  }));
 
 export interface PlatformRowEntry {
   category: Category;
@@ -47,7 +46,8 @@ function compatibilityFor(platform: Platform, entry: (typeof ENTRIES)[number]) {
 function supportFor(platform: Platform, entry: (typeof ENTRIES)[number]): PlatformSupport {
   const compatibility = compatibilityFor(platform, entry);
   if (compatibility?.support) return compatibility.support;
-  if (entry.harness?.includes(platform) || entry.platforms.includes(platform)) return "manual-context";
+  if (entry.harness?.includes(platform) || entry.platforms.includes(platform))
+    return "manual-context";
   return "unsupported";
 }
 

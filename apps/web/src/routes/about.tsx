@@ -7,9 +7,16 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About — HeyClaude" },
-      { name: "description", content: "HeyClaude is a GitHub-native directory and decision layer for Claude Code, MCP servers, skills, and AI workflow resources." },
+      {
+        name: "description",
+        content:
+          "HeyClaude is a GitHub-native directory and decision layer for Claude Code, MCP servers, skills, and AI workflow resources.",
+      },
       { property: "og:title", content: "About — HeyClaude" },
-      { property: "og:description", content: "The decision layer for Claude Code and AI agent workflows." },
+      {
+        property: "og:description",
+        content: "The decision layer for Claude Code and AI agent workflows.",
+      },
     ],
   }),
   component: AboutPage,
@@ -68,22 +75,45 @@ function AboutPage() {
         <h2 className="h-display-2 text-ink text-balance">Three surfaces, one registry</h2>
         <p className="mt-3 text-sm text-ink-muted">
           The website, the public read-only API, and our{" "}
-          <Link to="/integrations" className="text-ink underline">integrations</Link> (Raycast extension, MCP server,
-          editor adapters) all read from the same content with the same contracts. If you build on one, you can
-          build on all of them — see the{" "}
-          <Link to="/api-docs" className="text-ink underline">API docs</Link> and{" "}
-          <Link to="/quality" className="text-ink underline">quality dashboard</Link>.
+          <Link to="/integrations" className="text-ink underline">
+            integrations
+          </Link>{" "}
+          (Raycast extension, MCP server, editor adapters) all read from the same content with the
+          same contracts. If you build on one, you can build on all of them — see the{" "}
+          <Link to="/api-docs" className="text-ink underline">
+            API docs
+          </Link>{" "}
+          and{" "}
+          <Link to="/quality" className="text-ink underline">
+            quality dashboard
+          </Link>
+          .
         </p>
       </section>
 
       <section className="mt-12">
         <h2 className="h-display-2 text-ink text-balance">Contribute</h2>
         <p className="mt-3 text-sm text-ink-muted">
-          <Link to="/submit" className="text-ink underline">Submit a resource</Link>,{" "}
-          <Link to="/claim" className="text-ink underline">claim a listing</Link>, or browse the{" "}
-          <Link to="/contributors" className="text-ink underline">contributors page</Link>. Commercial paths
-          (<Link to="/advertise" className="text-ink underline">advertise</Link>,{" "}
-          <Link to="/jobs/post" className="text-ink underline">post a job</Link>) are deliberately separate.
+          <Link to="/submit" className="text-ink underline">
+            Submit a resource
+          </Link>
+          ,{" "}
+          <Link to="/claim" className="text-ink underline">
+            claim a listing
+          </Link>
+          , or browse the{" "}
+          <Link to="/contributors" className="text-ink underline">
+            contributors page
+          </Link>
+          . Commercial paths (
+          <Link to="/advertise" className="text-ink underline">
+            advertise
+          </Link>
+          ,{" "}
+          <Link to="/jobs/post" className="text-ink underline">
+            post a job
+          </Link>
+          ) are deliberately separate.
         </p>
       </section>
 

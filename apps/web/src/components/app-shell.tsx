@@ -35,7 +35,9 @@ export function TopBar() {
     <header
       className={cn(
         "sticky top-0 z-40 bg-background/85 backdrop-blur transition-shadow duration-200",
-        elevated ? "border-b border-border shadow-[0_1px_0_0_rgb(0_0_0_/_0.03)]" : "border-b border-transparent",
+        elevated
+          ? "border-b border-border shadow-[0_1px_0_0_rgb(0_0_0_/_0.03)]"
+          : "border-b border-transparent",
       )}
     >
       <ScrollProgress />
@@ -113,7 +115,11 @@ export function TopBar() {
 export function Footer() {
   return (
     <footer className="mt-24 border-t border-border bg-surface">
-      <NewsletterInline variant="footer-strip" source="footer" className="border-0 border-b border-border bg-background" />
+      <NewsletterInline
+        variant="footer-strip"
+        source="footer"
+        className="border-0 border-b border-border bg-background"
+      />
       <div className="mx-auto grid max-w-[1400px] gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 md:grid-cols-12">
         <div className="sm:col-span-2 md:col-span-3">
           <div className="flex items-center gap-2">
@@ -174,12 +180,22 @@ export function Footer() {
         <div className="mx-auto flex max-w-[1400px] flex-col items-start gap-3 px-4 py-5 text-xs text-ink-subtle sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <span>© {new Date().getFullYear()} HeyClaude · heyclau.de</span>
           <nav className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <Link to="/legal" className="hover:text-ink">Legal</Link>
-            <span aria-hidden className="text-ink-subtle/60">·</span>
-            <Link to="/legal" className="hover:text-ink">Privacy</Link>
-            <span aria-hidden className="text-ink-subtle/60">·</span>
+            <Link to="/legal" className="hover:text-ink">
+              Legal
+            </Link>
+            <span aria-hidden className="text-ink-subtle/60">
+              ·
+            </span>
+            <Link to="/legal" className="hover:text-ink">
+              Privacy
+            </Link>
+            <span aria-hidden className="text-ink-subtle/60">
+              ·
+            </span>
             <ShortcutsFooterLink />
-            <span aria-hidden className="text-ink-subtle/60">·</span>
+            <span aria-hidden className="text-ink-subtle/60">
+              ·
+            </span>
             <span className="font-mono">Not affiliated with Anthropic.</span>
           </nav>
         </div>
@@ -205,11 +221,7 @@ function FeedChip({ href, label }: { href: string; label: string }) {
 function ShortcutsFooterLink() {
   const shortcuts = useShortcuts();
   return (
-    <button
-      type="button"
-      onClick={() => shortcuts?.open()}
-      className="hover:text-ink"
-    >
+    <button type="button" onClick={() => shortcuts?.open()} className="hover:text-ink">
       Keyboard shortcuts
     </button>
   );
@@ -224,8 +236,7 @@ function FooterCol({
   links: { to: string; label: string }[];
   span?: number;
 }) {
-  const spanClass =
-    span === 3 ? "md:col-span-3" : span === 4 ? "md:col-span-4" : "md:col-span-2";
+  const spanClass = span === 3 ? "md:col-span-3" : span === 4 ? "md:col-span-4" : "md:col-span-2";
   return (
     <div className={spanClass}>
       <div className="eyebrow mb-3">{title}</div>

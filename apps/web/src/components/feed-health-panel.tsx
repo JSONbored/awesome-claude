@@ -94,7 +94,9 @@ export function FeedHealthPanel({ compact = false }: { compact?: boolean }) {
             key={f.id}
             className={cn(
               "grid gap-1 border-l-2 px-4 py-3 text-xs tabular-nums sm:grid-cols-[1.4fr_repeat(4,minmax(0,1fr))_auto] sm:items-center",
-              f.isCurrent ? "border-l-trust-trusted/50" : "border-l-trust-blocked/60 bg-trust-blocked/[0.02]",
+              f.isCurrent
+                ? "border-l-trust-trusted/50"
+                : "border-l-trust-blocked/60 bg-trust-blocked/[0.02]",
             )}
           >
             <div className="flex items-center gap-2">

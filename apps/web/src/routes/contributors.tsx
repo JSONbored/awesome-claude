@@ -26,12 +26,12 @@ function ContributorsPage() {
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <Breadcrumbs home items={[{ label: "Contributors" }]} />
       <div className="mt-4 eyebrow">People</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        Contributors
-      </h1>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">Contributors</h1>
       <p className="mt-2 max-w-2xl text-ink-muted">
         Derived from accepted submissions. Provenance is preserved on every entry.{" "}
-        <span className="text-ink-subtle">{sorted.length} contributors · {total} accepted entries.</span>
+        <span className="text-ink-subtle">
+          {sorted.length} contributors · {total} accepted entries.
+        </span>
       </p>
 
       {top && (
@@ -41,7 +41,9 @@ function ContributorsPage() {
             <Monogram name={top.name || top.handle} size={56} className="rounded-full" />
             <div className="min-w-0 flex-1">
               <div className="font-display text-xl font-semibold text-ink">{top.name}</div>
-              <div className="text-sm text-ink-muted">@{top.handle} · {top.acceptedCount} accepted</div>
+              <div className="text-sm text-ink-muted">
+                @{top.handle} · {top.acceptedCount} accepted
+              </div>
               {top.bio && <p className="mt-1 text-sm text-ink-muted">{top.bio}</p>}
             </div>
             {top.github && (
@@ -68,8 +70,12 @@ function ContributorsPage() {
           >
             <Monogram name={c.name || c.handle} size={40} className="rounded-full" />
             <div className="min-w-0 flex-1">
-              <div className="truncate font-display text-sm font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">{c.name}</div>
-              <div className="truncate text-xs text-ink-muted">@{c.handle} · {c.acceptedCount} accepted</div>
+              <div className="truncate font-display text-sm font-semibold text-ink transition-colors duration-200 ease-out group-hover:text-ink-hover">
+                {c.name}
+              </div>
+              <div className="truncate text-xs text-ink-muted">
+                @{c.handle} · {c.acceptedCount} accepted
+              </div>
             </div>
             {c.github && (
               <a
@@ -91,7 +97,8 @@ function ContributorsPage() {
         <div>
           <h2 className="font-display text-lg font-semibold text-ink">Want to be on this list?</h2>
           <p className="mt-1 max-w-md text-sm text-ink-muted">
-            Submit a resource you've built or curated. Maintainer review is required, but provenance is always preserved.
+            Submit a resource you've built or curated. Maintainer review is required, but provenance
+            is always preserved.
           </p>
         </div>
         <Link

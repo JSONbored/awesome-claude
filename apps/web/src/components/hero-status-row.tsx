@@ -30,8 +30,16 @@ export function HeroStatusRow({
         </span>
         Indexed {indexedLabel} · {resourceCount} resources · {reviewedCount} reviewed
       </span>
-      <Link to="/integrations/$slug" params={{ slug: "mcp-server" }} className="hidden sm:inline-flex">
-        <LiveVersionBadge pkg="@modelcontextprotocol/sdk" fallbackVersion="1.0.0" showDownloads={false} />
+      <Link
+        to="/integrations/$slug"
+        params={{ slug: "mcp-server" }}
+        className="hidden sm:inline-flex"
+      >
+        <LiveVersionBadge
+          pkg="@modelcontextprotocol/sdk"
+          fallbackVersion="1.0.0"
+          showDownloads={false}
+        />
       </Link>
       <Link
         to="/brief"

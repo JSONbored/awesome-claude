@@ -95,10 +95,7 @@ export function SubscribeForm({
       </div>
       {message && (
         <p
-          className={cn(
-            "text-xs",
-            state === "ok" ? "text-trust-trusted" : "text-trust-blocked",
-          )}
+          className={cn("text-xs", state === "ok" ? "text-trust-trusted" : "text-trust-blocked")}
           role="status"
         >
           {message}

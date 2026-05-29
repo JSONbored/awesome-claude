@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import prettier from "prettier";
 
 import {
   categorySpec,
@@ -171,6 +172,19 @@ function writeFileIfChanged(filePath, content) {
 function writeJsonFile(filePath, value) {
   ensureDir(path.dirname(filePath));
   return writeFileIfChanged(filePath, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+async function writePrettierJsonFile(filePath, value) {
+  ensureDir(path.dirname(filePath));
+  const options = (await prettier.resolveConfig(filePath)) ?? {};
+  const formatted = await prettier.format(
+    `${JSON.stringify(value, null, 2)}\n`,
+    {
+      ...options,
+      parser: "json",
+    },
+  );
+  return writeFileIfChanged(filePath, formatted);
 }
 
 function pickAtlasEntry(entry) {
@@ -493,21 +507,22 @@ async function main() {
           .update(fs.readFileSync(file.outputPath))
           .digest("hex"),
         builtAt:
-          directoryIndexArtifact?.value?.generatedAt ?? new Date().toISOString(),
+          directoryIndexArtifact?.value?.generatedAt ??
+          new Date().toISOString(),
       })),
     entries: entries.map(pickAtlasEntry),
-    changelog: (changelogArtifact?.value?.entries ?? []).slice(0, 25).map(
-      (entry) => ({
+    changelog: (changelogArtifact?.value?.entries ?? [])
+      .slice(0, 25)
+      .map((entry) => ({
         category: entry.category,
         slug: entry.slug,
         title: entry.title,
         dateAdded: entry.dateAdded,
         type: entry.type,
         artifactHash: entry.artifactHash,
-      }),
-    ),
+      })),
   };
-  const wroteAtlasRegistry = writeJsonFile(
+  const wroteAtlasRegistry = await writePrettierJsonFile(
     atlasRegistryFile,
     atlasRegistryPayload,
   );

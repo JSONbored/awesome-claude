@@ -26,7 +26,10 @@ export function HoverChevrons({
     const root = ref.current;
     if (!root) return null;
     // Find first scrollable child (overflow-x-auto)
-    return (root.querySelector('[data-scroll-x]') as HTMLElement) ?? (root.firstElementChild as HTMLElement);
+    return (
+      (root.querySelector("[data-scroll-x]") as HTMLElement) ??
+      (root.firstElementChild as HTMLElement)
+    );
   };
 
   const update = React.useCallback(() => {

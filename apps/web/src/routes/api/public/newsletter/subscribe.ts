@@ -26,8 +26,22 @@ const CORS = {
 
 const Schema = z.object({
   email: z.string().email().max(255),
-  segments: z.array(z.string().min(1).max(64).regex(/^[a-z0-9:_-]+$/i)).max(20).optional(),
-  source: z.string().min(1).max(64).regex(/^[a-z0-9_-]+$/i).optional(),
+  segments: z
+    .array(
+      z
+        .string()
+        .min(1)
+        .max(64)
+        .regex(/^[a-z0-9:_-]+$/i),
+    )
+    .max(20)
+    .optional(),
+  source: z
+    .string()
+    .min(1)
+    .max(64)
+    .regex(/^[a-z0-9_-]+$/i)
+    .optional(),
 });
 
 function envSegmentId(followId: string): string | undefined {

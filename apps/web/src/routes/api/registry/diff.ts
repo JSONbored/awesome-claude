@@ -5,9 +5,7 @@ import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { getRegistryChangelog } from "@/lib/content";
 import { cachedJsonResponse } from "@/lib/http-cache";
 
-type ChangelogEntry = Awaited<
-  ReturnType<typeof getRegistryChangelog>
->["entries"][number];
+type ChangelogEntry = Awaited<ReturnType<typeof getRegistryChangelog>>["entries"][number];
 
 function parseSinceDate(value: string | null) {
   if (!value) return null;
@@ -40,10 +38,7 @@ function entriesUpdatedOrRemoved(entries: ChangelogEntry[]) {
 // Merge two slices of the same changelog in original-order, deduping by `key`
 // (the changelog generator already enforces one row per key; the dedupe is a
 // defensive belt-and-suspenders in case overlap is ever introduced).
-function mergeChangelogEntries(
-  all: ChangelogEntry[],
-  selected: ChangelogEntry[],
-) {
+function mergeChangelogEntries(all: ChangelogEntry[], selected: ChangelogEntry[]) {
   const keepKeys = new Set(selected.map((entry) => entry.key));
   const seen = new Set<string>();
   const merged: ChangelogEntry[] = [];
@@ -56,61 +51,52 @@ function mergeChangelogEntries(
   return merged;
 }
 
-export const GET = createApiHandler(
-  "registry.diff",
-  async ({ request, query: parsedQuery }) => {
-    const { since, limit } = parsedQuery as InferApiQuery<
-      typeof registryDiffQuerySchema
-    >;
-    const sinceDate = parseSinceDate(since);
-    const changelog = await getRegistryChangelog();
-    const currentSignature = changelog.signature ?? "";
+export const GET = createApiHandler("registry.diff", async ({ request, query: parsedQuery }) => {
+  const { since, limit } = parsedQuery as InferApiQuery<typeof registryDiffQuerySchema>;
+  const sinceDate = parseSinceDate(since);
+  const changelog = await getRegistryChangelog();
+  const currentSignature = changelog.signature ?? "";
 
-    let entries: ChangelogEntry[];
-    if (since && since === currentSignature) {
-      entries = [];
-    } else if (sinceDate) {
-      // Date-cursor fetch: include `added` entries at or after the cursor plus
-      // every `updated`/`removed` row (un-date-filterable). Merge in changelog
-      // order, deduped by key.
-      const addedSince = entriesAddedSince(changelog.entries, sinceDate);
-      const editsAndRemovals = entriesUpdatedOrRemoved(changelog.entries);
-      entries = mergeChangelogEntries(changelog.entries, [
-        ...addedSince,
-        ...editsAndRemovals,
-      ]);
-    } else {
-      entries = changelog.entries;
-    }
+  let entries: ChangelogEntry[];
+  if (since && since === currentSignature) {
+    entries = [];
+  } else if (sinceDate) {
+    // Date-cursor fetch: include `added` entries at or after the cursor plus
+    // every `updated`/`removed` row (un-date-filterable). Merge in changelog
+    // order, deduped by key.
+    const addedSince = entriesAddedSince(changelog.entries, sinceDate);
+    const editsAndRemovals = entriesUpdatedOrRemoved(changelog.entries);
+    entries = mergeChangelogEntries(changelog.entries, [...addedSince, ...editsAndRemovals]);
+  } else {
+    entries = changelog.entries;
+  }
 
-    return cachedJsonResponse(
-      request,
-      {
-        schemaVersion: 1,
-        kind: "registry-diff",
-        generatedAt: changelog.generatedAt,
-        since: since || null,
-        currentSignature,
-        hasChanges: entries.length > 0,
-        count: Math.min(entries.length, limit),
-        totalAvailable: entries.length,
-        note:
-          since && looksLikeHash(since) && since !== currentSignature
-            ? "Unknown hash for this static registry snapshot; returning latest available changes."
-            : sinceDate
-              ? "Date cursors filter `added` entries by the cursor and include every `updated`/`removed` entry so edited entries are not missed; use currentSignature for precise polling."
-              : undefined,
-        entries: entries.slice(0, limit),
+  return cachedJsonResponse(
+    request,
+    {
+      schemaVersion: 1,
+      kind: "registry-diff",
+      generatedAt: changelog.generatedAt,
+      since: since || null,
+      currentSignature,
+      hasChanges: entries.length > 0,
+      count: Math.min(entries.length, limit),
+      totalAvailable: entries.length,
+      note:
+        since && looksLikeHash(since) && since !== currentSignature
+          ? "Unknown hash for this static registry snapshot; returning latest available changes."
+          : sinceDate
+            ? "Date cursors filter `added` entries by the cursor and include every `updated`/`removed` entry so edited entries are not missed; use currentSignature for precise polling."
+            : undefined,
+      entries: entries.slice(0, limit),
+    },
+    {
+      headers: {
+        "cache-control": "public, max-age=60, stale-while-revalidate=600",
       },
-      {
-        headers: {
-          "cache-control": "public, max-age=60, stale-while-revalidate=600",
-        },
-      },
-    );
-  },
-);
-
+    },
+  );
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/registry/diff")({

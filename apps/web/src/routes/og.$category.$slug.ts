@@ -13,9 +13,7 @@ export const Route = createFileRoute("/og/$category/$slug")({
         const entry = getEntry(params.category, params.slug);
         const title = entry?.title ?? params.slug;
         const desc =
-          entry?.cardDescription ??
-          entry?.description ??
-          "Curated in the HeyClaude registry.";
+          entry?.cardDescription ?? entry?.description ?? "Curated in the HeyClaude registry.";
         const author = entry?.author ?? "HeyClaude";
         const category = entry?.category ?? params.category;
 

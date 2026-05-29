@@ -62,9 +62,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <div className="eyebrow text-trust-blocked">Something broke</div>
-        <h1 className="mt-2 h-display-2 text-ink text-balance">
-          This page didn't load
-        </h1>
+        <h1 className="mt-2 h-display-2 text-ink text-balance">This page didn't load</h1>
         <p className="mt-2 text-sm text-ink-muted">Try refreshing — your filters are preserved.</p>
         <div className="mt-6 flex justify-center gap-2">
           <button
@@ -165,7 +163,12 @@ function RootComponent() {
                 <ComparisonTray />
                 <CompareDrawer />
                 <BackToTop />
-                <Toaster position="bottom-right" mobileOffset={{ bottom: "16px" }} richColors closeButton />
+                <Toaster
+                  position="bottom-right"
+                  mobileOffset={{ bottom: "16px" }}
+                  richColors
+                  closeButton
+                />
               </ShortcutsProvider>
             </CompareProvider>
           </RecentsProvider>

@@ -7,9 +7,16 @@ export const Route = createFileRoute("/platforms")({
   head: () => ({
     meta: [
       { title: "Platform compatibility — HeyClaude" },
-      { name: "description", content: "Where each Claude resource works: Claude Code, Cursor, Windsurf, Codex, Gemini." },
+      {
+        name: "description",
+        content: "Where each Claude resource works: Claude Code, Cursor, Windsurf, Codex, Gemini.",
+      },
       { property: "og:title", content: "Platform compatibility — HeyClaude" },
-      { property: "og:description", content: "Native skills, generated adapters, and manual-context fallbacks across every supported client." },
+      {
+        property: "og:description",
+        content:
+          "Native skills, generated adapters, and manual-context fallbacks across every supported client.",
+      },
     ],
   }),
   component: PlatformsPage,
@@ -20,11 +27,10 @@ function PlatformsPage() {
     <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6">
       <Breadcrumbs home items={[{ label: "Platforms" }]} />
       <div className="mt-4 eyebrow">Compatibility</div>
-      <h1 className="mt-2 h-display-1 text-ink text-balance">
-        Platform support matrix
-      </h1>
+      <h1 className="mt-2 h-display-1 text-ink text-balance">Platform support matrix</h1>
       <p className="mt-2 max-w-2xl text-ink-muted">
-        Native skills, generated adapters, and manual-context fallbacks across every supported client.
+        Native skills, generated adapters, and manual-context fallbacks across every supported
+        client.
       </p>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -36,7 +42,10 @@ function PlatformsPage() {
               <p className="mt-1 text-xs text-ink-muted">{p.tagline}</p>
               <ul className="mt-4 space-y-2 text-xs">
                 {rows.map((r) => (
-                  <li key={`${r.category}/${r.slug}`} className="flex items-center justify-between gap-2 border-t border-border pt-2 first:border-0 first:pt-0">
+                  <li
+                    key={`${r.category}/${r.slug}`}
+                    className="flex items-center justify-between gap-2 border-t border-border pt-2 first:border-0 first:pt-0"
+                  >
                     <Link
                       to="/entry/$category/$slug"
                       params={{ category: r.category, slug: r.slug }}

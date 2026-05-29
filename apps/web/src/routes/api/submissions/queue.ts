@@ -1,24 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  normalizeCategory,
-  parseIssueFormBody,
-  slugify,
-} from "@heyclaude/registry/submission";
+import { normalizeCategory, parseIssueFormBody, slugify } from "@heyclaude/registry/submission";
 
 import { submissionQueueQuerySchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  apiJson,
-  createApiHandler,
-  type InferApiQuery,
-} from "@/lib/api/router";
+import { apiError, apiJson, createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
 import { getCloudflareEnv } from "@/lib/cloudflare-env";
 
 const GITHUB_API_VERSION = "2022-11-28";
 const DEFAULT_REPO = "JSONbored/awesome-claude";
-const IMPORT_PR_PATTERN =
-  /https:\/\/github\.com\/JSONbored\/awesome-claude\/pull\/\d+/i;
+const IMPORT_PR_PATTERN = /https:\/\/github\.com\/JSONbored\/awesome-claude\/pull\/\d+/i;
 
 type GitHubLabel = string | { name?: string };
 
@@ -62,9 +52,7 @@ function githubHeaders(token: string) {
 
 function labelNames(issue: GitHubIssue) {
   return (issue.labels ?? [])
-    .map((label) =>
-      typeof label === "string" ? label : String(label.name ?? ""),
-    )
+    .map((label) => (typeof label === "string" ? label : String(label.name ?? "")))
     .map((label) => label.trim())
     .filter(Boolean);
 }
@@ -75,9 +63,7 @@ function hasLabel(labels: string[], label: string) {
 }
 
 function parseCategory(labels: string[], fields: Record<string, string>) {
-  const communityLabel = labels.find((label) =>
-    label.toLowerCase().startsWith("community-"),
-  );
+  const communityLabel = labels.find((label) => label.toLowerCase().startsWith("community-"));
   if (communityLabel) {
     const category = normalizeCategory(communityLabel.slice("community-".length));
     if (category) return category;
@@ -147,10 +133,7 @@ async function fetchGitHub<T>(url: string, token: string) {
 
 async function fetchIssueCommentsImportPr(issue: GitHubIssue, token: string) {
   if (!issue.comments_url) return undefined;
-  const { response, payload } = await fetchGitHub<GitHubComment[]>(
-    issue.comments_url,
-    token,
-  );
+  const { response, payload } = await fetchGitHub<GitHubComment[]>(issue.comments_url, token);
   if (!response.ok || !Array.isArray(payload)) return undefined;
   for (const comment of [...payload].reverse()) {
     const url = importPrFromText(String(comment.body || ""));
@@ -189,24 +172,15 @@ async function mapIssue(issue: GitHubIssue, token: string) {
   };
 }
 
-async function listIssues(params: {
-  repo: string;
-  token: string;
-  limit: number;
-}) {
-  const url = new URL(
-    `https://api.github.com/repos/${params.repo}/issues`,
-  );
+async function listIssues(params: { repo: string; token: string; limit: number }) {
+  const url = new URL(`https://api.github.com/repos/${params.repo}/issues`);
   url.searchParams.set("state", "all");
   url.searchParams.set("labels", "content-submission");
   url.searchParams.set("sort", "updated");
   url.searchParams.set("direction", "desc");
   url.searchParams.set("per_page", String(params.limit));
 
-  const { response, payload } = await fetchGitHub<GitHubIssue[]>(
-    url.toString(),
-    params.token,
-  );
+  const { response, payload } = await fetchGitHub<GitHubIssue[]>(url.toString(), params.token);
   if (!response.ok || !Array.isArray(payload)) {
     return { ok: false as const, status: response.status, issues: [] };
   }
@@ -217,11 +191,7 @@ async function listIssues(params: {
   };
 }
 
-async function getIssue(params: {
-  repo: string;
-  token: string;
-  number: number;
-}) {
+async function getIssue(params: { repo: string; token: string; number: number }) {
   const { response, payload } = await fetchGitHub<GitHubIssue>(
     `https://api.github.com/repos/${params.repo}/issues/${params.number}`,
     params.token,
@@ -236,62 +206,55 @@ async function getIssue(params: {
   return { ok: true as const, status: response.status, issue: payload };
 }
 
-export const GET = createApiHandler(
-  "submissions.queue",
-  async ({ request, query, requestId }) => {
-    const parsed = query as InferApiQuery<typeof submissionQueueQuerySchema>;
-    const env = getCloudflareEnv();
-    const repo =
-      envValue(env, [
-        "GITHUB_SUBMISSIONS_REPO",
-        "GITHUB_SUBMISSION_REPO",
-        "GITHUB_REPOSITORY",
-      ]) || DEFAULT_REPO;
-    const token = envValue(env, [
-      "GITHUB_SUBMISSIONS_TOKEN",
-      "GITHUB_SUBMISSION_TOKEN",
-      "GITHUB_TOKEN",
-    ]);
+export const GET = createApiHandler("submissions.queue", async ({ request, query, requestId }) => {
+  const parsed = query as InferApiQuery<typeof submissionQueueQuerySchema>;
+  const env = getCloudflareEnv();
+  const repo =
+    envValue(env, ["GITHUB_SUBMISSIONS_REPO", "GITHUB_SUBMISSION_REPO", "GITHUB_REPOSITORY"]) ||
+    DEFAULT_REPO;
+  const token = envValue(env, [
+    "GITHUB_SUBMISSIONS_TOKEN",
+    "GITHUB_SUBMISSION_TOKEN",
+    "GITHUB_TOKEN",
+  ]);
 
-    const result = parsed.number
-      ? await getIssue({ repo, token, number: parsed.number })
-      : await listIssues({ repo, token, limit: parsed.limit });
+  const result = parsed.number
+    ? await getIssue({ repo, token, number: parsed.number })
+    : await listIssues({ repo, token, limit: parsed.limit });
 
-    if (!result.ok) {
-      const code = parsed.number ? "submission_not_found" : "github_provider_error";
-      if (result.status === 404) {
-        logApiWarn(request, "submissions.queue.not_found", {
-          repo,
-          number: parsed.number,
-        });
-        return apiError(code, 404, { requestId });
-      }
-      logApiError(request, "submissions.queue.provider_error", {
+  if (!result.ok) {
+    const code = parsed.number ? "submission_not_found" : "github_provider_error";
+    if (result.status === 404) {
+      logApiWarn(request, "submissions.queue.not_found", {
         repo,
-        status: result.status,
+        number: parsed.number,
       });
-      return apiError("provider_error", 502, { requestId });
+      return apiError(code, 404, { requestId });
     }
+    logApiError(request, "submissions.queue.provider_error", {
+      repo,
+      status: result.status,
+    });
+    return apiError("provider_error", 502, { requestId });
+  }
 
-    const issues = "issue" in result ? [result.issue] : result.issues;
-    const entries = [];
-    for (const issue of issues) {
-      if (issue) entries.push(await mapIssue(issue, token));
-    }
+  const issues = "issue" in result ? [result.issue] : result.issues;
+  const entries = [];
+  for (const issue of issues) {
+    if (issue) entries.push(await mapIssue(issue, token));
+  }
 
-    return apiJson(
-      {
-        ok: true,
-        generatedAt: new Date().toISOString(),
-        repo,
-        count: entries.length,
-        entries,
-      },
-      { headers: { "cache-control": "public, max-age=60" } },
-    );
-  },
-);
-
+  return apiJson(
+    {
+      ok: true,
+      generatedAt: new Date().toISOString(),
+      repo,
+      count: entries.length,
+      entries,
+    },
+    { headers: { "cache-control": "public, max-age=60" } },
+  );
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/submissions/queue")({

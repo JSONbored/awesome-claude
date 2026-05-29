@@ -1,10 +1,7 @@
 import { cache } from "react";
 
 import { ENTRIES } from "@/data/entries";
-import {
-  entryCommunityTarget,
-  safeCommunitySignalCounts,
-} from "@/lib/community-signals";
+import { entryCommunityTarget, safeCommunitySignalCounts } from "@/lib/community-signals";
 import { buildDiscoverySurfaceLists } from "@/lib/growth-surface-rules";
 import { communityDiscoveryScore } from "@/lib/growth-ranking";
 import { safeIntentEventCounts } from "@/lib/intent-events";
@@ -48,9 +45,7 @@ export const getGrowthSurfaces = cache(async () => {
     .sort(
       (left, right) =>
         right.score - left.score ||
-        String(right.entry.dateAdded).localeCompare(
-          String(left.entry.dateAdded),
-        ),
+        String(right.entry.dateAdded).localeCompare(String(left.entry.dateAdded)),
     )
     .slice(0, 12)
     .map((item) => item.entry);

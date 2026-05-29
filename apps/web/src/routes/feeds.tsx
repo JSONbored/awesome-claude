@@ -5,7 +5,6 @@ import { CopyButton } from "@/components/copy-button";
 import { SubscribeForm } from "@/components/subscribe-form";
 import { FeedHealthPanel } from "@/components/feed-health-panel";
 
-
 export const Route = createFileRoute("/feeds")({
   head: () => ({
     meta: [
@@ -69,11 +68,7 @@ function FeedRow({
             Email
           </summary>
           <div className="mt-2 w-72">
-            <SubscribeForm
-              segments={[segment]}
-              source={`feeds:${segment}`}
-              label="Follow"
-            />
+            <SubscribeForm segments={[segment]} source={`feeds:${segment}`} label="Follow" />
           </div>
         </details>
       </div>
@@ -89,8 +84,8 @@ function FeedsPage() {
         Stay current on registry changes
       </h1>
       <p className="mt-2 text-sm text-ink-muted">
-        Subscribe by RSS or Atom in any reader, or get curated updates by email.
-        Every email has one-click unsubscribe.
+        Subscribe by RSS or Atom in any reader, or get curated updates by email. Every email has
+        one-click unsubscribe.
       </p>
 
       <div className="mt-8">
@@ -98,7 +93,6 @@ function FeedsPage() {
       </div>
 
       <section className="mt-8">
-
         <h2 className="font-display text-base font-semibold text-ink">Site-wide</h2>
         <div className="mt-2">
           <FeedRow

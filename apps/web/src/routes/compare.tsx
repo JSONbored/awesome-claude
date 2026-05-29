@@ -4,7 +4,12 @@ import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
 import { ENTRIES } from "@/data/entries";
-import { CategoryPill, PlatformChip, InstallRiskBadge, NotesPresenceChips } from "@/components/badges";
+import {
+  CategoryPill,
+  PlatformChip,
+  InstallRiskBadge,
+  NotesPresenceChips,
+} from "@/components/badges";
 import { TrustDrilldown } from "@/components/trust-drilldown";
 import { CopyButton } from "@/components/copy-button";
 import { SourceCitations } from "@/components/source-citations";
@@ -39,7 +44,11 @@ function resolveIds(ids: string): Entry[] {
   if (!ids) return [];
   const seen = new Set<string>();
   const out: Entry[] = [];
-  for (const ref of ids.split(",").map((s) => s.trim()).filter(Boolean).slice(0, 4)) {
+  for (const ref of ids
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .slice(0, 4)) {
     if (seen.has(ref)) continue;
     const [cat, slug] = ref.split("/");
     const e = ENTRIES.find((x) => x.category === cat && x.slug === slug);
@@ -61,9 +70,15 @@ const ROWS: RowDef[] = [
   { label: "Install risk", render: (e) => <InstallRiskBadge entry={e} /> },
   { label: "Notes", render: (e) => <NotesPresenceChips entry={e} /> },
   { label: "Category", render: (e) => <CategoryPill>{e.category}</CategoryPill> },
-  { label: "Source", render: (e) => <span className="text-sm capitalize text-ink">{e.source}</span> },
+  {
+    label: "Source",
+    render: (e) => <span className="text-sm capitalize text-ink">{e.source}</span>,
+  },
   { label: "Author", render: (e) => <span className="text-sm text-ink">{e.author}</span> },
-  { label: "Added", render: (e) => <span className="font-mono text-xs text-ink-muted">{e.dateAdded}</span> },
+  {
+    label: "Added",
+    render: (e) => <span className="font-mono text-xs text-ink-muted">{e.dateAdded}</span>,
+  },
   {
     label: "Platforms",
     render: (e) => (
@@ -213,9 +228,7 @@ function ComparePage() {
       <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
         <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
           <div className="eyebrow">Comparison</div>
-          <h1 className="mt-2 h-display-2 text-ink text-balance">
-            Nothing to compare yet
-          </h1>
+          <h1 className="mt-2 h-display-2 text-ink text-balance">Nothing to compare yet</h1>
           <p className="mt-2 text-sm text-ink-muted">
             Add 2–4 resources from the directory to see them side by side.
           </p>
@@ -304,7 +317,12 @@ function ComparePage() {
                   scope="col"
                   className="min-w-[220px] border-b border-border bg-surface p-3 text-left align-top"
                 >
-                  <AddColumn open={pickerOpen} setOpen={setPickerOpen} onPick={addItem} exclude={items} />
+                  <AddColumn
+                    open={pickerOpen}
+                    setOpen={setPickerOpen}
+                    onPick={addItem}
+                    exclude={items}
+                  />
                 </th>
               )}
             </tr>
@@ -356,8 +374,7 @@ function Skeleton({ ids }: { ids: string }) {
   return (
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
       <div className="rounded-xl border border-border bg-surface p-6 text-sm text-ink-muted">
-        Loading comparison for{" "}
-        <code className="font-mono text-ink">{ids}</code>…
+        Loading comparison for <code className="font-mono text-ink">{ids}</code>…
       </div>
     </div>
   );
@@ -377,9 +394,7 @@ function AddColumn({
   const [q, setQ] = React.useState("");
   const results = React.useMemo(() => {
     const list = search({ q, sort: "popular" }).slice(0, 8);
-    return list.filter(
-      (e) => !exclude.some((x) => x.category === e.category && x.slug === e.slug),
-    );
+    return list.filter((e) => !exclude.some((x) => x.category === e.category && x.slug === e.slug));
   }, [q, exclude]);
 
   if (!open) {

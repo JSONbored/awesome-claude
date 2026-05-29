@@ -3,7 +3,11 @@ import * as React from "react";
 import { ArrowRight, Rss } from "lucide-react";
 import { INTEGRATIONS } from "@/data/integrations";
 import { IntegrationCard } from "@/components/integration-card";
-import { CompatibilityMatrix, type MatrixRow, type CellDetail } from "@/components/compatibility-matrix";
+import {
+  CompatibilityMatrix,
+  type MatrixRow,
+  type CellDetail,
+} from "@/components/compatibility-matrix";
 import { HarnessCoverage } from "@/components/harness-coverage";
 import { DropInSetup } from "@/components/drop-in-setup";
 import { SponsorsSection } from "@/components/sponsors-section";
@@ -28,37 +32,93 @@ const MATRIX: MatrixRow[] = [
   {
     capability: "Search registry",
     blurb: "Query across all categories",
-    cells: { "claude-code": "native", "claude-desktop": "native", codex: "native", cursor: "adapter", windsurf: "adapter", raycast: "native", web: "native" },
+    cells: {
+      "claude-code": "native",
+      "claude-desktop": "native",
+      codex: "native",
+      cursor: "adapter",
+      windsurf: "adapter",
+      raycast: "native",
+      web: "native",
+    },
   },
   {
     capability: "Install MCP server",
     blurb: "Copy config or one-shot install",
-    cells: { "claude-code": "native", "claude-desktop": "native", codex: "native", cursor: "native", windsurf: "native", raycast: "manual", web: "manual" },
+    cells: {
+      "claude-code": "native",
+      "claude-desktop": "native",
+      codex: "native",
+      cursor: "native",
+      windsurf: "native",
+      raycast: "manual",
+      web: "manual",
+    },
   },
   {
     capability: "Copy slash command",
     blurb: "Drop a /command into the project",
-    cells: { "claude-code": "native", "claude-desktop": "manual", codex: "manual", cursor: "adapter", windsurf: "adapter", raycast: "native", web: "manual" },
+    cells: {
+      "claude-code": "native",
+      "claude-desktop": "manual",
+      codex: "manual",
+      cursor: "adapter",
+      windsurf: "adapter",
+      raycast: "native",
+      web: "manual",
+    },
   },
   {
     capability: "Cursor .mdc adapter",
     blurb: "Auto-generated rules per Skill",
-    cells: { "claude-code": "none", "claude-desktop": "none", codex: "none", cursor: "native", windsurf: "adapter", raycast: "manual", web: "manual" },
+    cells: {
+      "claude-code": "none",
+      "claude-desktop": "none",
+      codex: "none",
+      cursor: "native",
+      windsurf: "adapter",
+      raycast: "manual",
+      web: "manual",
+    },
   },
   {
     capability: "RSS / Atom changelog",
     blurb: "Subscribe to registry deltas",
-    cells: { "claude-code": "manual", "claude-desktop": "manual", codex: "manual", cursor: "manual", windsurf: "manual", raycast: "native", web: "native" },
+    cells: {
+      "claude-code": "manual",
+      "claude-desktop": "manual",
+      codex: "manual",
+      cursor: "manual",
+      windsurf: "manual",
+      raycast: "native",
+      web: "native",
+    },
   },
   {
     capability: "llms.txt corpus",
     blurb: "LLM-ingestible directory",
-    cells: { "claude-code": "native", "claude-desktop": "native", codex: "native", cursor: "native", windsurf: "native", raycast: "manual", web: "native" },
+    cells: {
+      "claude-code": "native",
+      "claude-desktop": "native",
+      codex: "native",
+      cursor: "native",
+      windsurf: "native",
+      raycast: "manual",
+      web: "native",
+    },
   },
   {
     capability: "OpenAPI playground",
     blurb: "Hit the API with real keys",
-    cells: { "claude-code": "manual", "claude-desktop": "manual", codex: "manual", cursor: "manual", windsurf: "manual", raycast: "manual", web: "native" },
+    cells: {
+      "claude-code": "manual",
+      "claude-desktop": "manual",
+      codex: "manual",
+      cursor: "manual",
+      windsurf: "manual",
+      raycast: "manual",
+      web: "native",
+    },
   },
 ];
 
@@ -148,8 +208,7 @@ export const Route = createFileRoute("/ecosystem")({
         { property: "og:title", content: "Ecosystem — HeyClaude" },
         {
           property: "og:description",
-          content:
-            "Where the HeyClaude registry runs, how to plug it in, and who's powering it.",
+          content: "Where the HeyClaude registry runs, how to plug it in, and who's powering it.",
         },
         { property: "og:url", content: "/ecosystem" },
       ],
@@ -171,12 +230,10 @@ function EcosystemPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <div className="eyebrow">Ecosystem</div>
-          <h1 className="mt-2 h-display-1 text-ink text-balance">
-            One registry, many clients
-          </h1>
+          <h1 className="mt-2 h-display-1 text-ink text-balance">One registry, many clients</h1>
           <p className="mt-3 max-w-xl text-ink-muted">
-            HeyClaude ships as a website, MCP server, Raycast extension, Cursor adapter, and a public
-            REST API. Pick the surface that fits the client you're using.
+            HeyClaude ships as a website, MCP server, Raycast extension, Cursor adapter, and a
+            public REST API. Pick the surface that fits the client you're using.
           </p>
         </div>
         <Link
@@ -270,7 +327,10 @@ function EcosystemPage() {
             </p>
           </div>
           <div className="grid w-full max-w-md gap-2">
-            <QuickStart label="Pin manifest" value="curl https://heyclau.de/api/registry/manifest" />
+            <QuickStart
+              label="Pin manifest"
+              value="curl https://heyclau.de/api/registry/manifest"
+            />
             <QuickStart label="Run MCP" value="npx -y @heyclaude/mcp" />
             <QuickStart label="Install Raycast" value="raycast://extensions/jsonbored/heyclaude" />
           </div>
@@ -362,7 +422,6 @@ const KIND_LABEL: Record<string, string> = {
   package: "Package",
 };
 
-
 function IntegrationsGrid() {
   const [kind, setKind] = React.useState<string>("all");
   const kinds = Array.from(new Set(INTEGRATIONS.map((i) => i.kind)));
@@ -374,7 +433,12 @@ function IntegrationsGrid() {
           All
         </Chip>
         {kinds.map((k) => (
-          <Chip key={k} active={kind === k} onClick={() => setKind(k)} count={INTEGRATIONS.filter((i) => i.kind === k).length}>
+          <Chip
+            key={k}
+            active={kind === k}
+            onClick={() => setKind(k)}
+            count={INTEGRATIONS.filter((i) => i.kind === k).length}
+          >
             {KIND_LABEL[k] ?? k}
           </Chip>
         ))}
@@ -412,7 +476,9 @@ function Chip({
     >
       {children}
       {typeof count === "number" && (
-        <span className={cn("font-mono text-[10px]", active ? "text-background/70" : "text-ink-subtle")}>
+        <span
+          className={cn("font-mono text-[10px]", active ? "text-background/70" : "text-ink-subtle")}
+        >
           {count}
         </span>
       )}
@@ -451,7 +517,10 @@ function AdapterFeeds() {
             {f.purpose}
             <div className="mt-0.5 flex flex-wrap gap-1">
               {f.consumers.map((c) => (
-                <span key={c} className="inline-flex rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle">
+                <span
+                  key={c}
+                  className="inline-flex rounded border border-border bg-background px-1.5 py-0.5 font-mono text-[10px] text-ink-subtle"
+                >
                   {c}
                 </span>
               ))}
@@ -460,7 +529,9 @@ function AdapterFeeds() {
           <span className="font-mono text-xs text-ink-subtle">
             {new Date(f.lastBuilt).toISOString().slice(0, 16).replace("T", " ")}
           </span>
-          <span className="text-right font-mono text-xs text-ink-muted">{(f.bytes / 1024).toFixed(1)} KB</span>
+          <span className="text-right font-mono text-xs text-ink-muted">
+            {(f.bytes / 1024).toFixed(1)} KB
+          </span>
           <code className="truncate font-mono text-xs text-ink-muted">{f.sha256}</code>
           <div className="flex justify-end">
             <CopyButton value={`https://heyclau.de${f.path}`} label="Copy URL" size="sm" />
@@ -483,15 +554,7 @@ function QuickStart({ label, value }: { label: string; value: string }) {
   );
 }
 
-function Stat({
-  label,
-  value,
-  mono,
-}: {
-  label: string;
-  value: React.ReactNode;
-  mono?: boolean;
-}) {
+function Stat({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {
   return (
     <div className="bg-surface p-5">
       <div className="flex items-center justify-between">

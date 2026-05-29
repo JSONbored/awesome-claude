@@ -47,7 +47,9 @@ function contentTypeFor(path: string): EcosystemFeed["contentType"] {
   return "json";
 }
 
-export const ECOSYSTEM_FEEDS: EcosystemFeed[] = ARTIFACT_CONTRACTS.filter((artifact) => PURPOSES[artifact.path])
+export const ECOSYSTEM_FEEDS: EcosystemFeed[] = ARTIFACT_CONTRACTS.filter(
+  (artifact) => PURPOSES[artifact.path],
+)
   .map((artifact) => {
     const meta = PURPOSES[artifact.path]!;
     return {

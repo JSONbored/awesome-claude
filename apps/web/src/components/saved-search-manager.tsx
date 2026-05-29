@@ -70,7 +70,11 @@ interface ManagerProps {
   trigger?: React.ReactNode;
 }
 
-const CHANNEL_META: { id: AlertChannel; label: string; Icon: React.ComponentType<{ className?: string }> }[] = [
+const CHANNEL_META: {
+  id: AlertChannel;
+  label: string;
+  Icon: React.ComponentType<{ className?: string }>;
+}[] = [
   { id: "inapp", label: "In-app", Icon: MonitorDot },
   { id: "email", label: "Email", Icon: Mail },
   { id: "rss", label: "RSS", Icon: Rss },
@@ -98,9 +102,7 @@ function AlertEditor({
   const toggleChannel = (c: AlertChannel) =>
     setDraft((d) => ({
       ...d,
-      channels: d.channels.includes(c)
-        ? d.channels.filter((x) => x !== c)
-        : [...d.channels, c],
+      channels: d.channels.includes(c) ? d.channels.filter((x) => x !== c) : [...d.channels, c],
     }));
 
   const needsEmail = draft.channels.includes("email");
@@ -232,7 +234,8 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
         <DialogHeader>
           <DialogTitle>Saved searches</DialogTitle>
           <DialogDescription>
-            Reopen, rename, schedule alerts, or remove. Alerts can fire in-app, by email, or via a personal RSS feed.
+            Reopen, rename, schedule alerts, or remove. Alerts can fire in-app, by email, or via a
+            personal RSS feed.
           </DialogDescription>
         </DialogHeader>
         {recents.saved.length === 0 ? (
@@ -240,7 +243,8 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
             <Star className="h-5 w-5 text-ink-subtle" />
             <p>No saved searches yet.</p>
             <p className="text-xs">
-              Open <span className="font-mono text-ink">/browse</span>, apply filters, then tap “Save this search”.
+              Open <span className="font-mono text-ink">/browse</span>, apply filters, then tap
+              “Save this search”.
             </p>
           </div>
         ) : (
@@ -312,7 +316,11 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
                           alertsOn ? "text-accent" : "text-ink-muted hover:text-ink",
                         )}
                       >
-                        {alertsOn ? <Bell className="h-3.5 w-3.5" /> : <BellOff className="h-3.5 w-3.5" />}
+                        {alertsOn ? (
+                          <Bell className="h-3.5 w-3.5" />
+                        ) : (
+                          <BellOff className="h-3.5 w-3.5" />
+                        )}
                       </button>
                       <button
                         type="button"
@@ -325,7 +333,10 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
                       <button
                         type="button"
                         aria-label="Delete"
-                        onClick={() => { recents.removeSaved(s.id); toast(`Removed “${s.label}”`); }}
+                        onClick={() => {
+                          recents.removeSaved(s.id);
+                          toast(`Removed “${s.label}”`);
+                        }}
                         className="rounded p-1 text-ink-muted hover:text-trust-blocked"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -341,7 +352,11 @@ export function SavedSearchManager({ open, onOpenChange, trigger }: ManagerProps
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-1 text-[11px] text-ink-subtle">
-                    {s.q && <span>q: <span className="font-mono text-ink-muted">{s.q}</span></span>}
+                    {s.q && (
+                      <span>
+                        q: <span className="font-mono text-ink-muted">{s.q}</span>
+                      </span>
+                    )}
                     {s.category && <span>· {s.category}</span>}
                     {s.trust && <span>· {s.trust}</span>}
                     {s.source && <span>· {s.source}</span>}

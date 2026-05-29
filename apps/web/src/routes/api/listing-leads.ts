@@ -3,18 +3,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { validateListingLeadPayload } from "@heyclaude/registry/commercial";
 
 import { listingLeadBodySchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  apiJson,
-  createApiHandler,
-  type InferApiBody,
-} from "@/lib/api/router";
-import {
-  logApiError,
-  logApiInfo,
-  logApiWarn,
-  redactEmail,
-} from "@/lib/api-logs";
+import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
+import { logApiError, logApiInfo, logApiWarn, redactEmail } from "@/lib/api-logs";
 import { getSiteDb } from "@/lib/db";
 
 export const POST = createApiHandler(
@@ -83,10 +73,7 @@ export const POST = createApiHandler(
         tier: data.tierInterest,
         email: redactEmail(data.contactEmail),
       });
-      return apiJson(
-        { ok: true },
-        { headers: { "cache-control": "no-store" } },
-      );
+      return apiJson({ ok: true }, { headers: { "cache-control": "no-store" } });
     } catch {
       logApiError(request, "listing_leads.insert_failed", {
         kind: data.kind,
@@ -96,7 +83,6 @@ export const POST = createApiHandler(
     }
   },
 );
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/listing-leads")({

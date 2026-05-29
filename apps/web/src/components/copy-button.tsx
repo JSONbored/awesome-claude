@@ -68,7 +68,9 @@ export function CopyButton({
         <Copy className="h-3.5 w-3.5" />
       )}
       {iconOnly ? (
-        <span className="sr-only" aria-live="polite">{copied ? "Copied" : label}</span>
+        <span className="sr-only" aria-live="polite">
+          {copied ? "Copied" : label}
+        </span>
       ) : (
         <span aria-live="polite">{copied ? "Copied" : label}</span>
       )}

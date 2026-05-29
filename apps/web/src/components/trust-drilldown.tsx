@@ -49,17 +49,11 @@ export function TrustDrilldown({
           <TrustBadge level={entry.trust} />
         </button>
       </PopoverTrigger>
-      <PopoverContent
-        align={align}
-        sideOffset={6}
-        className="w-[360px] max-w-[90vw] p-0"
-      >
+      <PopoverContent align={align} sideOffset={6} className="w-[360px] max-w-[90vw] p-0">
         <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-3">
           <div>
             <div className="eyebrow">Trust drilldown</div>
-            <div className="mt-0.5 font-display text-sm font-semibold text-ink">
-              {entry.title}
-            </div>
+            <div className="mt-0.5 font-display text-sm font-semibold text-ink">{entry.title}</div>
           </div>
           <Link
             to="/quality"

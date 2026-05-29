@@ -49,8 +49,7 @@ export const CONTRIBUTORS: Contributor[] = (() => {
 
   return [...grouped.values()].sort(
     (left, right) =>
-      right.acceptedCount - left.acceptedCount ||
-      left.name.localeCompare(right.name),
+      right.acceptedCount - left.acceptedCount || left.name.localeCompare(right.name),
   );
 })();
 

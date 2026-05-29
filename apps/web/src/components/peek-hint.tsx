@@ -28,13 +28,7 @@ function dismiss() {
  * card hover cluster the first time a user lingers on a card for ≥600 ms.
  * Auto-dismisses after 8 s, on `P` press, or via the close affordance.
  */
-export function PeekHint({
-  hovered,
-  className,
-}: {
-  hovered: boolean;
-  className?: string;
-}) {
+export function PeekHint({ hovered, className }: { hovered: boolean; className?: string }) {
   const [visible, setVisible] = React.useState(false);
   const [eligible, setEligible] = React.useState(false);
 

@@ -3,11 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { downloadQuerySchema } from "@/lib/api/contracts";
-import {
-  apiError,
-  createApiHandler,
-  type InferApiQuery,
-} from "@/lib/api/router";
+import { apiError, createApiHandler, type InferApiQuery } from "@/lib/api/router";
 import { logApiError, logApiInfo, logApiWarn, sample } from "@/lib/api-logs";
 import { getCloudflareBinding } from "@/lib/cloudflare-env";
 
@@ -37,9 +33,7 @@ async function readAssetBuffer(asset: string, requestUrl: string) {
     if (!assets) {
       throw new Error("asset_not_found:no_assets_binding");
     }
-    const response = await assets.fetch(
-      new Request(new URL(asset, requestUrl)),
-    );
+    const response = await assets.fetch(new Request(new URL(asset, requestUrl)));
     if (!response.ok) {
       throw new Error(`asset_not_found:${response.status}`);
     }
@@ -47,44 +41,40 @@ async function readAssetBuffer(asset: string, requestUrl: string) {
   }
 }
 
-export const GET = createApiHandler(
-  "download",
-  async ({ request, query, requestId }) => {
-    const { asset } = query as InferApiQuery<typeof downloadQuerySchema>;
+export const GET = createApiHandler("download", async ({ request, query, requestId }) => {
+  const { asset } = query as InferApiQuery<typeof downloadQuerySchema>;
 
-    if (asset.length > 256) {
-      logApiWarn(request, "download.invalid_asset_length");
-      return apiError("invalid_asset", 400, { requestId });
+  if (asset.length > 256) {
+    logApiWarn(request, "download.invalid_asset_length");
+    return apiError("invalid_asset", 400, { requestId });
+  }
+
+  if (!isAllowedAssetPath(asset)) {
+    logApiWarn(request, "download.invalid_asset_pattern");
+    return apiError("invalid_asset", 400, { requestId });
+  }
+
+  const filename = path.basename(asset);
+
+  try {
+    const body = await readAssetBuffer(asset, request.url);
+    if (sample(0.02)) {
+      logApiInfo(request, "download.sample", { asset });
     }
-
-    if (!isAllowedAssetPath(asset)) {
-      logApiWarn(request, "download.invalid_asset_pattern");
-      return apiError("invalid_asset", 400, { requestId });
-    }
-
-    const filename = path.basename(asset);
-
-    try {
-      const body = await readAssetBuffer(asset, request.url);
-      if (sample(0.02)) {
-        logApiInfo(request, "download.sample", { asset });
-      }
-      return new Response(body, {
-        status: 200,
-        headers: {
-          "content-type": getContentType(asset),
-          "content-disposition": `attachment; filename="${filename}"`,
-          "cache-control": "public, max-age=31536000, immutable",
-          "x-content-type-options": "nosniff",
-        },
-      });
-    } catch {
-      logApiError(request, "download.not_found", { asset });
-      return apiError("not_found", 404, { requestId });
-    }
-  },
-);
-
+    return new Response(body, {
+      status: 200,
+      headers: {
+        "content-type": getContentType(asset),
+        "content-disposition": `attachment; filename="${filename}"`,
+        "cache-control": "public, max-age=31536000, immutable",
+        "x-content-type-options": "nosniff",
+      },
+    });
+  } catch {
+    logApiError(request, "download.not_found", { asset });
+    return apiError("not_found", 404, { requestId });
+  }
+});
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/download")({

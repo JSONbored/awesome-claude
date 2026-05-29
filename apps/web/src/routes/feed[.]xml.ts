@@ -1,12 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  buildRss,
-  origin,
-  respondFeed,
-  SITE_NAME,
-  SITE_TAGLINE,
-  siteWideItems,
-} from "@/lib/feeds";
+import { buildRss, origin, respondFeed, SITE_NAME, SITE_TAGLINE, siteWideItems } from "@/lib/feeds";
 
 export const Route = createFileRoute("/feed.xml")({
   server: {

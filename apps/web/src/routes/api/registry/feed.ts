@@ -6,10 +6,7 @@ import { cachedJsonResponse } from "@/lib/http-cache";
 import { siteConfig } from "@/lib/site";
 
 export const GET = createApiHandler("registry.feed", async ({ request }) => {
-  const [manifest, categories] = await Promise.all([
-    getRegistryManifest(),
-    getCategorySummaries(),
-  ]);
+  const [manifest, categories] = await Promise.all([getRegistryManifest(), getCategorySummaries()]);
 
   return cachedJsonResponse(request, {
     schemaVersion: 1,
@@ -23,10 +20,8 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
     endpoints: {
       manifest: "/api/registry/manifest",
       categories: "/api/registry/categories",
-      search:
-        "/api/registry/search?q={query}&category={category}&platform={platform}&limit=20",
-      trending:
-        "/api/registry/trending?category={category}&platform={platform}&limit=12",
+      search: "/api/registry/search?q={query}&category={category}&platform={platform}&limit=20",
+      trending: "/api/registry/trending?category={category}&platform={platform}&limit=12",
       diff: "/api/registry/diff?since={hash-or-date}&limit=100",
       integrity: "/api/registry/integrity?artifact={artifact}&hash={sha256}",
       entry: "/api/registry/entries/{category}/{slug}",
@@ -58,7 +53,6 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
     categories,
   });
 });
-
 
 // @ts-ignore Generated API route is added to routeTree during Vite build.
 export const Route = createFileRoute("/api/registry/feed")({

@@ -50,10 +50,9 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
   // The "latest" endpoint doesn't include time; pull from packument time if needed
   let publishedAt: string | null = null;
   try {
-    const packumentRes = await fetch(
-      `https://registry.npmjs.org/${encodeURIComponent(pkg)}`,
-      { headers: { accept: "application/vnd.npm.install-v1+json" } },
-    );
+    const packumentRes = await fetch(`https://registry.npmjs.org/${encodeURIComponent(pkg)}`, {
+      headers: { accept: "application/vnd.npm.install-v1+json" },
+    });
     if (packumentRes.ok) {
       const p = (await packumentRes.json()) as { time?: Record<string, string> };
       publishedAt = p.time?.[latest.version] ?? null;
@@ -69,9 +68,7 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
   }
 
   const repository =
-    typeof latest.repository === "string"
-      ? latest.repository
-      : latest.repository?.url ?? null;
+    typeof latest.repository === "string" ? latest.repository : (latest.repository?.url ?? null);
 
   const data: NpmMeta = {
     name: latest.name,
@@ -108,10 +105,10 @@ export const Route = createFileRoute("/api/public/npm/$")({
             },
           });
         } catch (err) {
-          return new Response(
-            JSON.stringify({ error: (err as Error).message }),
-            { status: 502, headers: { "Content-Type": "application/json" } },
-          );
+          return new Response(JSON.stringify({ error: (err as Error).message }), {
+            status: 502,
+            headers: { "Content-Type": "application/json" },
+          });
         }
       },
     },

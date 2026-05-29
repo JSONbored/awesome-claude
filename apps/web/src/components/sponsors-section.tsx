@@ -16,12 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IntegrationMark } from "@/components/integration-marks";
-import {
-  PARTNER_ROLE_LABEL,
-  PARTNERS,
-  SPONSORS,
-  type Partner,
-} from "@/data/sponsors";
+import { PARTNER_ROLE_LABEL, PARTNERS, SPONSORS, type Partner } from "@/data/sponsors";
 import { cn } from "@/lib/utils";
 
 export function SponsorsSection() {
@@ -83,11 +78,13 @@ export function SponsorsSection() {
                 : `${open.length} open partnership slots`}
             </h3>
           </div>
-          <PartnerDrawer trigger={
-            <Button variant="outline" size="sm" className="gap-1.5">
-              <Mail className="h-3.5 w-3.5" /> Become a partner
-            </Button>
-          }/>
+          <PartnerDrawer
+            trigger={
+              <Button variant="outline" size="sm" className="gap-1.5">
+                <Mail className="h-3.5 w-3.5" /> Become a partner
+              </Button>
+            }
+          />
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -253,7 +250,8 @@ function PartnerDrawer({
           <DrawerHeader>
             <DrawerTitle>Become an ecosystem partner</DrawerTitle>
             <DrawerDescription>
-              Credits, infrastructure, product, or services — tell us what you'd offer and we'll get back within a week. Sponsorships never affect registry ranking or trust badges.
+              Credits, infrastructure, product, or services — tell us what you'd offer and we'll get
+              back within a week. Sponsorships never affect registry ranking or trust badges.
             </DrawerDescription>
           </DrawerHeader>
 
@@ -263,11 +261,26 @@ function PartnerDrawer({
               <Field label="Email" name="email" type="email" required />
             </div>
             <div className="mt-3">
-              <Field label="Website" name="website" type="url" required placeholder="https://example.com" />
+              <Field
+                label="Website"
+                name="website"
+                type="url"
+                required
+                placeholder="https://example.com"
+              />
             </div>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              <Field label="Role" name="role" defaultValue={defaultRole} placeholder="e.g. Compute, AI, Tooling" />
-              <Field label="What you'd offer" name="offer" placeholder="Credits, infra, product, cash" />
+              <Field
+                label="Role"
+                name="role"
+                defaultValue={defaultRole}
+                placeholder="e.g. Compute, AI, Tooling"
+              />
+              <Field
+                label="What you'd offer"
+                name="offer"
+                placeholder="Credits, infra, product, cash"
+              />
             </div>
             <div className="mt-3">
               <Label htmlFor="notes" className="text-xs text-ink-muted">
@@ -283,7 +296,11 @@ function PartnerDrawer({
             </div>
 
             <DrawerFooter className="px-0">
-              <Button type="submit" disabled={submitting} className="bg-ink text-background hover:bg-ink/90">
+              <Button
+                type="submit"
+                disabled={submitting}
+                className="bg-ink text-background hover:bg-ink/90"
+              >
                 {submitting ? "Sending…" : "Send inquiry"}
               </Button>
               <DrawerClose asChild>
@@ -334,7 +351,13 @@ function Field({
 }
 
 function kindBadge(kind: string) {
-  return kind === "ai" ? "AI" : kind === "infra" ? "INFRA" : kind === "credits" ? "CREDITS" : "SERVICE";
+  return kind === "ai"
+    ? "AI"
+    : kind === "infra"
+      ? "INFRA"
+      : kind === "credits"
+        ? "CREDITS"
+        : "SERVICE";
 }
 
 // Silence unused warning for cn until used elsewhere in this file.

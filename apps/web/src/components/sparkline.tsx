@@ -26,13 +26,7 @@ export function Sparkline({
   ariaLabel?: string;
 }) {
   if (!data || data.length === 0) {
-    return (
-      <div
-        className={cn("inline-block", className)}
-        style={{ width, height }}
-        aria-hidden
-      />
-    );
+    return <div className={cn("inline-block", className)} style={{ width, height }} aria-hidden />;
   }
   const min = Math.min(...data);
   const max = Math.max(...data);

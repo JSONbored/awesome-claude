@@ -25713,7 +25713,7 @@
       "difficulty": "beginner",
       "prerequisites": [
         "PostgreSQL database (local or remote PostgreSQL server)",
-        "PostgreSQL connection string (postgresql://user:password@host:port/database format)",
+        "PostgreSQL connection string with user, password, host, port, and database",
         "Node.js and npx (for running @modelcontextprotocol/server-postgres package)",
         "Network access (if connecting to remote PostgreSQL server)",
         "Database user with SELECT permissions (read-only access required)",

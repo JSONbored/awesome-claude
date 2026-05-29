@@ -64,23 +64,23 @@
   --radius: 0.5rem;
 
   /* Light: Paper & Ink + Citron */
-  --background: oklch(0.972 0.012 95);       /* warm paper #f7f5ef */
-  --surface:    oklch(0.985 0.008 95);       /* card #fbfaf6 */
-  --surface-2:  oklch(0.945 0.012 95);       /* hover/zebra */
-  --ink:        oklch(0.18 0.01 90);         /* near-black */
-  --ink-muted:  oklch(0.45 0.012 90);
+  --background: oklch(0.972 0.012 95); /* warm paper #f7f5ef */
+  --surface: oklch(0.985 0.008 95); /* card #fbfaf6 */
+  --surface-2: oklch(0.945 0.012 95); /* hover/zebra */
+  --ink: oklch(0.18 0.01 90); /* near-black */
+  --ink-muted: oklch(0.45 0.012 90);
   --ink-subtle: oklch(0.62 0.012 90);
-  --border:     oklch(0.88 0.012 90);
+  --border: oklch(0.88 0.012 90);
   --border-strong: oklch(0.78 0.012 90);
   --foreground: var(--ink);
 
-  --accent:      oklch(0.92 0.20 115);       /* citron #d4ff3a-ish, light variant */
-  --accent-ink:  oklch(0.18 0.01 90);        /* text ON the citron fill — do not use as hover text */
-  --accent-soft: oklch(0.96 0.10 115);
-  --ink-hover:   oklch(0.18 0.01 90);        /* link/title hover ink (light) */
+  --accent: oklch(0.92 0.2 115); /* citron #d4ff3a-ish, light variant */
+  --accent-ink: oklch(0.18 0.01 90); /* text ON the citron fill — do not use as hover text */
+  --accent-soft: oklch(0.96 0.1 115);
+  --ink-hover: oklch(0.18 0.01 90); /* link/title hover ink (light) */
 
   --trust-trusted: oklch(0.62 0.15 150);
-  --trust-review:  oklch(0.72 0.16 80);
+  --trust-review: oklch(0.72 0.16 80);
   --trust-limited: oklch(0.65 0.16 50);
   --trust-blocked: oklch(0.58 0.22 27);
 
@@ -96,25 +96,25 @@
 
 .dark {
   /* Dark: Noir + Citron */
-  --background: oklch(0.14 0 0);             /* #0c0c0c */
-  --surface:    oklch(0.18 0 0);             /* #171717 */
-  --surface-2:  oklch(0.23 0 0);             /* #262626 */
-  --ink:        oklch(0.96 0.005 90);
-  --ink-muted:  oklch(0.72 0.008 90);
+  --background: oklch(0.14 0 0); /* #0c0c0c */
+  --surface: oklch(0.18 0 0); /* #171717 */
+  --surface-2: oklch(0.23 0 0); /* #262626 */
+  --ink: oklch(0.96 0.005 90);
+  --ink-muted: oklch(0.72 0.008 90);
   --ink-subtle: oklch(0.55 0.008 90);
-  --border:     oklch(0.28 0 0);
+  --border: oklch(0.28 0 0);
   --border-strong: oklch(0.38 0 0);
   --foreground: var(--ink);
 
-  --accent:      oklch(0.94 0.22 115);       /* #d4ff3a */
-  --accent-ink:  oklch(0.14 0 0);            /* text ON the citron fill */
-  --accent-soft: oklch(0.30 0.10 115);
-  --ink-hover:   oklch(0.94 0.22 115);       /* link/title hover ink (dark) = citron, readable on dark */
+  --accent: oklch(0.94 0.22 115); /* #d4ff3a */
+  --accent-ink: oklch(0.14 0 0); /* text ON the citron fill */
+  --accent-soft: oklch(0.3 0.1 115);
+  --ink-hover: oklch(0.94 0.22 115); /* link/title hover ink (dark) = citron, readable on dark */
 
   --trust-trusted: oklch(0.78 0.18 150);
-  --trust-review:  oklch(0.82 0.17 80);
+  --trust-review: oklch(0.82 0.17 80);
   --trust-limited: oklch(0.75 0.17 50);
-  --trust-blocked: oklch(0.70 0.22 27);
+  --trust-blocked: oklch(0.7 0.22 27);
 
   --sidebar: var(--surface);
   --sidebar-foreground: var(--ink);
@@ -141,7 +141,9 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-feature-settings: "ss01", "cv11";
-    transition: background-color 200ms ease-out, color 200ms ease-out;
+    transition:
+      background-color 200ms ease-out,
+      color 200ms ease-out;
   }
 
   ::selection {
@@ -149,13 +151,21 @@
     color: var(--accent-ink);
   }
 
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
 
-  .font-display { font-family: var(--font-display); }
-  .font-mono    { font-family: var(--font-mono); }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .font-mono {
+    font-family: var(--font-mono);
+  }
 
   .eyebrow {
     font-family: var(--font-display);
@@ -172,26 +182,41 @@
 
   .grid-bg {
     background-image:
-      linear-gradient(to right, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px),
-      linear-gradient(to bottom, color-mix(in oklab, var(--border) 60%, transparent) 1px, transparent 1px);
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--border) 60%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--border) 60%, transparent) 1px,
+        transparent 1px
+      );
     background-size: 32px 32px;
   }
 }
 
 @layer utilities {
   .hover-lift {
-    transition: transform 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
-                border-color 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
-                background-color 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
-                box-shadow 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
-                color 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
+    transition:
+      transform 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
+      border-color 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
+      background-color 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
+      box-shadow 200ms cubic-bezier(0.2, 0.6, 0.2, 1),
+      color 200ms cubic-bezier(0.2, 0.6, 0.2, 1);
   }
   @media (hover: hover) {
-    .hover-lift:hover { transform: translateY(-1px); }
+    .hover-lift:hover {
+      transform: translateY(-1px);
+    }
   }
 
-  .text-balance { text-wrap: balance; }
-  .text-pretty  { text-wrap: pretty; }
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
 
   /* Display headings — fluid, tight, editorial */
   .h-display-1 {
@@ -226,18 +251,42 @@
     opacity: 0;
     animation: stagger-fade 360ms cubic-bezier(0.2, 0.6, 0.2, 1) forwards;
   }
-  .stagger-children > *:nth-child(1)  { animation-delay:  20ms; }
-  .stagger-children > *:nth-child(2)  { animation-delay:  60ms; }
-  .stagger-children > *:nth-child(3)  { animation-delay: 100ms; }
-  .stagger-children > *:nth-child(4)  { animation-delay: 140ms; }
-  .stagger-children > *:nth-child(5)  { animation-delay: 180ms; }
-  .stagger-children > *:nth-child(6)  { animation-delay: 220ms; }
-  .stagger-children > *:nth-child(7)  { animation-delay: 260ms; }
-  .stagger-children > *:nth-child(8)  { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(n+9){ animation-delay: 340ms; }
+  .stagger-children > *:nth-child(1) {
+    animation-delay: 20ms;
+  }
+  .stagger-children > *:nth-child(2) {
+    animation-delay: 60ms;
+  }
+  .stagger-children > *:nth-child(3) {
+    animation-delay: 100ms;
+  }
+  .stagger-children > *:nth-child(4) {
+    animation-delay: 140ms;
+  }
+  .stagger-children > *:nth-child(5) {
+    animation-delay: 180ms;
+  }
+  .stagger-children > *:nth-child(6) {
+    animation-delay: 220ms;
+  }
+  .stagger-children > *:nth-child(7) {
+    animation-delay: 260ms;
+  }
+  .stagger-children > *:nth-child(8) {
+    animation-delay: 300ms;
+  }
+  .stagger-children > *:nth-child(n + 9) {
+    animation-delay: 340ms;
+  }
   @keyframes stagger-fade {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   /* Shimmer for skeletons */
@@ -248,7 +297,8 @@
   }
   .skeleton-shimmer::after {
     content: "";
-    position: absolute; inset: 0;
+    position: absolute;
+    inset: 0;
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -259,7 +309,9 @@
     animation: shimmer 1.4s ease-in-out infinite;
   }
   @keyframes shimmer {
-    100% { transform: translateX(100%); }
+    100% {
+      transform: translateX(100%);
+    }
   }
 
   /* Editorial drop cap for long-form intros */
@@ -279,8 +331,13 @@
     line-height: 1.7;
     max-width: 68ch;
   }
-  .prose-editorial p { margin: 0.9em 0; }
-  .prose-editorial strong { color: var(--ink); font-weight: 600; }
+  .prose-editorial p {
+    margin: 0.9em 0;
+  }
+  .prose-editorial strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
   .prose-editorial a {
     color: var(--ink);
     text-decoration: underline;
@@ -309,7 +366,9 @@
   /* Active-section rail for TOCs */
   .toc-rail {
     border-left: 2px solid transparent;
-    transition: border-color 200ms ease-out, color 200ms ease-out;
+    transition:
+      border-color 200ms ease-out,
+      color 200ms ease-out;
   }
   .toc-rail[data-active="true"] {
     border-left-color: var(--accent);
@@ -328,7 +387,9 @@
   }
   .hover-lift:hover,
   .group:hover .group-hover\:translate-x-0\.5,
-  .group:hover .group-hover\:-translate-y-px { transform: none !important; }
+  .group:hover .group-hover\:-translate-y-px {
+    transform: none !important;
+  }
 }
 
 :focus-visible {
