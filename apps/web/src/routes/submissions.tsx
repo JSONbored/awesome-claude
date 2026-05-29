@@ -29,6 +29,11 @@ interface QueueItem {
   labels: string[];
   blockers: string[];
   updatedAt: string;
+  bodyFingerprint?: string;
+  bodyUpdatedAt?: string;
+  authorCommentedAfterReview?: boolean;
+  authorCommentedWithoutBodyUpdate?: boolean;
+  lastAuthorCommentAt?: string;
   createdAt: string;
   closedAt?: string | null;
   importPrUrl?: string;
@@ -301,6 +306,12 @@ function SubmissionsPage() {
                     <li key={blocker}>- {blocker}</li>
                   ))}
                 </ul>
+              )}
+              {q.authorCommentedWithoutBodyUpdate && (
+                <div className="mt-2 text-xs text-trust-blocked md:pl-[88px]">
+                  Author replied after review, but the original issue body still needs to be
+                  edited before validation can move forward.
+                </div>
               )}
             </div>
           );

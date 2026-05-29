@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { communitySignalsBodySchema, communitySignalsQuerySchema } from "@/lib/api/contracts";
 import {
@@ -140,8 +140,7 @@ export const POST = createApiHandler(
   },
 );
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/community-signals")({
+export const Route = createApiFileRoute("/api/community-signals")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

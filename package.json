@@ -40,6 +40,7 @@
     "test:mcp": "vitest run tests/mcp-server.test.ts tests/mcp-cli.test.ts",
     "submission:risk": "node scripts/analyze-submission-risk.mjs",
     "submission:queue": "node scripts/build-submission-queue.mjs",
+    "submission:queue:live": "node scripts/build-live-submission-queue.mjs",
     "submission:stale": "node scripts/manage-stale-submissions.mjs",
     "test": "vitest run",
     "test:seo-jsonld": "vitest run tests/seo-jsonld.test.ts",

@@ -4892,6 +4892,11 @@
                             "maxItems": 12
                           },
                           "updatedAt": { "type": "string" },
+                          "bodyFingerprint": { "type": "string", "maxLength": 40 },
+                          "bodyUpdatedAt": { "type": "string" },
+                          "authorCommentedAfterReview": { "type": "boolean" },
+                          "authorCommentedWithoutBodyUpdate": { "type": "boolean" },
+                          "lastAuthorCommentAt": { "type": "string" },
                           "createdAt": { "type": "string" },
                           "closedAt": { "type": ["string", "null"] },
                           "importPrUrl": { "type": "string", "format": "uri" }

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { ENTRIES } from "@/data/entries";
 import { registryTrendingQuerySchema } from "@/lib/api/contracts";
@@ -144,8 +144,7 @@ export const GET = createApiHandler("registry.trending", async ({ request, query
   );
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/registry/trending")({
+export const Route = createApiFileRoute("/api/registry/trending")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

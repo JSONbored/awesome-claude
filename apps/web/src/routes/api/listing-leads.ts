@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { validateListingLeadPayload } from "@heyclaude/registry/commercial";
 
@@ -84,8 +84,7 @@ export const POST = createApiHandler(
   },
 );
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/listing-leads")({
+export const Route = createApiFileRoute("/api/listing-leads")({
   server: {
     handlers: {
       POST: async ({ request, params }) => POST(request, { params }),

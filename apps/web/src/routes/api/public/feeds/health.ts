@@ -4,7 +4,7 @@
  * Reports build time, item counts, ETag, and freshness for every feed.
  * Body is deterministic for a given registry snapshot.
  */
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { apiJson, createApiHandler } from "@/lib/api/router";
 import { allFeedHealth, origin } from "@/lib/feeds";
 
@@ -28,8 +28,7 @@ const GET = createApiHandler("publicFeeds.health", async ({ request }) => {
   );
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/public/feeds/health")({
+export const Route = createApiFileRoute("/api/public/feeds/health")({
   server: {
     handlers: {
       OPTIONS: async () => new Response(null, { status: 204, headers: CORS }),

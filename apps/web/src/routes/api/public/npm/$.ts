@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 /**
  * GET /api/public/npm/<pkg>
@@ -83,8 +83,7 @@ async function fetchMeta(pkg: string): Promise<NpmMeta> {
   return data;
 }
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/public/npm/$")({
+export const Route = createApiFileRoute("/api/public/npm/$")({
   server: {
     handlers: {
       GET: async ({ params }) => {

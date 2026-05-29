@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { registryDiffQuerySchema } from "@/lib/api/contracts";
 import { createApiHandler, type InferApiQuery } from "@/lib/api/router";
@@ -98,8 +98,7 @@ export const GET = createApiHandler("registry.diff", async ({ request, query: pa
   );
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/registry/diff")({
+export const Route = createApiFileRoute("/api/registry/diff")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

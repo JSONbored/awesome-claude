@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { intentEventsBodySchema } from "@/lib/api/contracts";
 import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
@@ -53,8 +53,7 @@ export const POST = createApiHandler(
   },
 );
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/intent-events")({
+export const Route = createApiFileRoute("/api/intent-events")({
   server: {
     handlers: {
       POST: async ({ request, params }) => POST(request, { params }),

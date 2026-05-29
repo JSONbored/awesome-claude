@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { createHeyClaudeMcpServer } from "@heyclaude/mcp/server";
 import { WebStandardStreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js";
 
@@ -188,7 +188,7 @@ export function DELETE(request: Request) {
   return handleMcpRequest(request);
 }
 
-export const Route = createFileRoute("/api/mcp")({
+export const Route = createApiFileRoute("/api/mcp")({
   server: {
     handlers: {
       OPTIONS: async ({ request }) => OPTIONS(request),

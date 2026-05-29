@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { votesToggleBodySchema } from "@/lib/api/contracts";
 import { apiError, apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
@@ -63,8 +63,7 @@ export const POST = createApiHandler("votes.toggle", async ({ request, body, req
   }
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/votes/toggle")({
+export const Route = createApiFileRoute("/api/votes/toggle")({
   server: {
     handlers: {
       POST: async ({ request, params }) => POST(request, { params }),

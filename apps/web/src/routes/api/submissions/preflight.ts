@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { buildSubmissionPreflight } from "@/lib/submission-preflight";
 import { apiJson, createApiHandler, type InferApiBody } from "@/lib/api/router";
@@ -22,8 +22,7 @@ export const POST = createApiHandler("submissions.preflight", async ({ request, 
   });
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/submissions/preflight")({
+export const Route = createApiFileRoute("/api/submissions/preflight")({
   server: {
     handlers: {
       POST: async ({ request, params }) => POST(request, { params }),

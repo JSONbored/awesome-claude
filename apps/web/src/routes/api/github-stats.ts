@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
 
@@ -121,8 +121,7 @@ export const GET = createApiHandler("githubStats.read", async ({ request, reques
   }
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/github-stats")({
+export const Route = createApiFileRoute("/api/github-stats")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

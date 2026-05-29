@@ -6,7 +6,7 @@
  * compatibility with the Atlas client path while applying the same origin,
  * content-type, body-size, and rate-limit controls as dynamic API routes.
  */
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { z, ZodError } from "zod";
 
 import { apiError, apiJson } from "@/lib/api/router";
@@ -143,8 +143,7 @@ async function POST(request: Request): Promise<Response> {
   return apiJson({ ok: true });
 }
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/public/newsletter/unsubscribe")({
+export const Route = createApiFileRoute("/api/public/newsletter/unsubscribe")({
   server: {
     handlers: {
       POST: async ({ request }) => POST(request),

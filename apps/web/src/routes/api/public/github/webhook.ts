@@ -11,7 +11,7 @@
  * minimal — fan-out to email (single-send) is invoked here later, once the
  * Resend templates ship.
  */
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 import { getEnvString } from "@/lib/cloudflare-env";
@@ -100,8 +100,7 @@ async function appendEvents(events: RegistryEvent[]): Promise<void> {
   );
 }
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/public/github/webhook")({
+export const Route = createApiFileRoute("/api/public/github/webhook")({
   server: {
     handlers: {
       POST: async ({ request }) => {

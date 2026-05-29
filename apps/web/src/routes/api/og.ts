@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { createApiHandler } from "@/lib/api/router";
 
 const PNG_1X1_TRANSPARENT = Uint8Array.from(
@@ -17,7 +17,7 @@ export const GET = createApiHandler("og.render", async () => {
   });
 });
 
-export const Route = createFileRoute("/api/og")({
+export const Route = createApiFileRoute("/api/og")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

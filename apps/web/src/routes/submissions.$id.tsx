@@ -40,6 +40,11 @@ interface QueueItem {
   labels: string[];
   blockers: string[];
   updatedAt: string;
+  bodyFingerprint?: string;
+  bodyUpdatedAt?: string;
+  authorCommentedAfterReview?: boolean;
+  authorCommentedWithoutBodyUpdate?: boolean;
+  lastAuthorCommentAt?: string;
   createdAt: string;
   closedAt?: string | null;
   importPrUrl?: string;
@@ -251,6 +256,33 @@ function SubmissionDetailPage() {
                 <div className="rounded-md border border-border bg-surface px-3 py-2 font-mono text-sm text-ink">
                   {item.category}/{item.slug}
                 </div>
+              </Section>
+
+              <Section title="Validation source">
+                <div className="grid gap-2 text-sm text-ink-muted sm:grid-cols-2">
+                  <div className="rounded-md border border-border bg-surface px-3 py-2">
+                    <div className="font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
+                      Issue body last edited
+                    </div>
+                    <div className="mt-1 font-mono text-ink">
+                      {item.bodyUpdatedAt ? item.bodyUpdatedAt.slice(0, 10) : "unknown"}
+                    </div>
+                  </div>
+                  <div className="rounded-md border border-border bg-surface px-3 py-2">
+                    <div className="font-mono text-[11px] uppercase tracking-wider text-ink-subtle">
+                      Author reply state
+                    </div>
+                    <div className="mt-1 text-ink">
+                      {item.authorCommentedWithoutBodyUpdate
+                        ? "Reply needs issue-body edit"
+                        : "No unresolved body-edit mismatch"}
+                    </div>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-ink-subtle">
+                  Validation uses the issue body fields as the source of truth. Comments do not
+                  update import eligibility.
+                </p>
               </Section>
 
               {item.blockers.length > 0 && (

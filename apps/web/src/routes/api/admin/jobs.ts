@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 
 import {
   adminJobsPatchBodySchema,
@@ -164,8 +164,7 @@ export const PATCH = createApiHandler("adminJobs.update", async ({ request, body
   );
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/admin/jobs")({
+export const Route = createApiFileRoute("/api/admin/jobs")({
   server: {
     handlers: {
       GET: async ({ request, params }) => GET(request, { params }),

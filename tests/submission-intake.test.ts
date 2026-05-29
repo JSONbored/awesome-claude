@@ -11,6 +11,8 @@ import {
   looksLikeSubmissionIssue,
   parseIssueFormBody,
   recommendedSubmissionLabels,
+  submissionActivityState,
+  submissionAgeDays,
   submissionQueueStatus,
   submissionStaleState,
   validateSubmission,
@@ -672,7 +674,7 @@ npx unslop --help`);
       { now: "2026-04-30T00:00:00Z" },
     );
     expect(queue.count).toBe(2);
-    expect(queue.schemaVersion).toBe(3);
+    expect(queue.schemaVersion).toBe(4);
     expect(queue.summary.ready).toBe(1);
     expect(queue.summary.importReady).toBe(1);
     expect(queue.summary.needsChanges).toBe(1);
@@ -713,6 +715,193 @@ npx unslop --help`);
     expect(queue.entries[1].commentDraft).toContain(
       "can't continue review until the issue has the required metadata",
     );
+    expect(queue.entries[1].bodyFingerprint).toMatch(/^fnv1a:[0-9a-f]{8}$/);
+    expect(queue.entries[1].bodyUpdatedAt).toBe("2026-04-26T00:00:00.000Z");
+    expect(queue.entries[1].authorCommentedAfterReview).toBe(false);
+    expect(queue.entries[1].authorCommentedWithoutBodyUpdate).toBe(false);
+    expect(queue.entries[1].lastAuthorCommentAt).toBe("");
+  });
+
+  it("keeps author comment follow-ups blocked until the issue body is edited", () => {
+    const invalidBody = `### Name
+Unslop
+
+### Slug
+unslop
+
+### Category
+skills
+
+### Public contact
+dev@example.com
+
+### Description
+Writing cleanup.
+
+### Card description
+Writing cleanup.
+
+### Usage snippet
+npx unslop --help`;
+    const submission = {
+      ...issue(invalidBody, ["content-submission", "needs-author-input"]),
+      bodyUpdatedAt: "2026-04-28T00:00:00Z",
+      createdAt: "2026-04-20T00:00:00Z",
+      updatedAt: "2026-04-29T00:00:00Z",
+      comments: [
+        {
+          user: { login: "JSONbored" },
+          created_at: "2026-04-28T12:00:00Z",
+          body: "Please update the issue body.",
+        },
+        {
+          user: { login: "contributor" },
+          created_at: "2026-04-29T00:00:00Z",
+          body: "Fixed in this comment.",
+        },
+      ],
+    };
+
+    const activity = submissionActivityState(submission);
+    expect(activity.authorCommentedAfterReview).toBe(true);
+    expect(activity.authorCommentedWithoutBodyUpdate).toBe(true);
+    expect(activity.lastAuthorCommentAt).toBe("2026-04-29T00:00:00.000Z");
+
+    const queue = buildSubmissionQueue([submission], {
+      now: "2026-04-30T00:00:00Z",
+    });
+    const [entry] = queue.entries;
+
+    expect(entry.status).toBe("needs_author_input");
+    expect(entry.nextAction).toBe("update_issue_body_required");
+    expect(entry.actionDue).toBe("update_issue_body");
+    expect(entry.authorCommentedAfterReview).toBe(true);
+    expect(entry.authorCommentedWithoutBodyUpdate).toBe(true);
+    expect(entry.commentDraft).toContain("original issue fields updated");
+    expect(entry.reviewChecklist).toContain(
+      "Ask the author to edit the original issue body; comments do not update validation.",
+    );
+  });
+
+  it("uses validation-relevant body edits instead of comments for stale age", () => {
+    const invalidBody = `### Name
+Unslop
+
+### Slug
+unslop
+
+### Category
+skills
+
+### Public contact
+dev@example.com
+
+### Description
+Writing cleanup.
+
+### Card description
+Writing cleanup.
+
+### Usage snippet
+npx unslop --help`;
+    const commentOnly = {
+      ...issue(invalidBody, ["content-submission", "needs-author-input"]),
+      bodyUpdatedAt: "2026-04-20T00:00:00Z",
+      updatedAt: "2026-04-29T00:00:00Z",
+      comments: [
+        {
+          user: { login: "contributor" },
+          created_at: "2026-04-29T00:00:00Z",
+          body: "Bump.",
+        },
+      ],
+    };
+    const bodyEdited = {
+      ...issue(invalidBody, ["content-submission", "needs-author-input"]),
+      createdAt: "2026-04-20T00:00:00Z",
+      updatedAt: "2026-04-29T00:00:00Z",
+      timeline: [
+        {
+          event: "edited",
+          created_at: "2026-04-29T00:00:00Z",
+          changes: {
+            body: {
+              from: invalidBody.replace("Writing cleanup.", "Old copy."),
+            },
+          },
+        },
+      ],
+      comments: [
+        {
+          user: { login: "contributor" },
+          created_at: "2026-04-20T00:00:00Z",
+          body: "Older comment.",
+        },
+      ],
+    };
+
+    expect(
+      submissionAgeDays(commentOnly, { now: "2026-04-30T00:00:00Z" }),
+    ).toBe(10);
+    expect(
+      submissionStaleState(commentOnly, validateSubmission(commentOnly), {
+        now: "2026-04-30T00:00:00Z",
+      }),
+    ).toBe("reminder_due");
+    expect(
+      submissionAgeDays(bodyEdited, { now: "2026-04-30T00:00:00Z" }),
+    ).toBe(1);
+    expect(
+      submissionStaleState(bodyEdited, validateSubmission(bodyEdited), {
+        now: "2026-04-30T00:00:00Z",
+      }),
+    ).toBe("fresh");
+  });
+
+  it("skips mislabeled maintainer product issues without submission fields", () => {
+    const productIssue = {
+      title: "Growth Sprint 1: improve browse conversion",
+      body: `### Goal
+Improve browse conversion.
+
+### Scope
+- apps/web/src/routes/browse.tsx
+- focused tests`,
+      labels: [
+        { name: "content-submission" },
+        { name: "help wanted" },
+        { name: "growth:conversion" },
+      ],
+      number: 99,
+      url: "https://github.com/owner/repo/issues/99",
+      author: { login: "JSONbored" },
+      updatedAt: "2026-04-29T00:00:00Z",
+    };
+
+    expect(looksLikeSubmissionIssue(productIssue)).toBe(false);
+    expect(buildSubmissionQueue([productIssue]).count).toBe(0);
+  });
+
+  it("keeps offline and live queue scripts explicit about their inputs", () => {
+    const offline = spawnSync(
+      process.execPath,
+      ["scripts/build-submission-queue.mjs"],
+      { cwd: repoRoot, encoding: "utf8" },
+    );
+    expect(offline.status).toBe(1);
+    expect(offline.stderr).toContain("--issues-json <path>");
+
+    const live = spawnSync(
+      process.execPath,
+      ["scripts/build-live-submission-queue.mjs"],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+        env: { ...process.env, PATH: "" },
+      },
+    );
+    expect(live.status).toBe(1);
+    expect(live.stderr).toContain("GitHub CLI not found");
   });
 
   it("tracks stale author-input states without touching maintainer-approved issues", () => {

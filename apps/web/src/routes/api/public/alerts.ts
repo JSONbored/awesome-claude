@@ -5,7 +5,7 @@
  * webhook handler. Returns an empty list when the cache is cold or webhook
  * configuration is missing; the client should render that as no live alerts.
  */
-import { createFileRoute } from "@tanstack/react-router";
+import { createApiFileRoute } from "@/lib/api/file-route";
 import { apiJson, createApiHandler } from "@/lib/api/router";
 
 const CACHE_KEY = "https://heyclau.de/internal/alerts-cache";
@@ -38,8 +38,7 @@ const GET = createApiHandler("publicAlerts.read", async () => {
   );
 });
 
-// @ts-ignore Generated API route is added to routeTree during Vite build.
-export const Route = createFileRoute("/api/public/alerts")({
+export const Route = createApiFileRoute("/api/public/alerts")({
   server: {
     handlers: {
       OPTIONS: async () => new Response(null, { status: 204, headers: CORS }),
