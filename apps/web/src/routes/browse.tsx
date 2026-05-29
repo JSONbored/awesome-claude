@@ -121,7 +121,10 @@ const searchSchema = z.object({
   trust: z.string().catch(defaultSearch.trust).default(defaultSearch.trust),
   source: z.string().catch(defaultSearch.source).default(defaultSearch.source),
   platform: z.string().catch(defaultSearch.platform).default(defaultSearch.platform),
-  sort: z.enum(["popular", "newest", "title"]).catch(defaultSearch.sort).default(defaultSearch.sort),
+  sort: z
+    .enum(["popular", "newest", "title"])
+    .catch(defaultSearch.sort)
+    .default(defaultSearch.sort),
   view: z.enum(["row", "grid", "compact"]).catch(defaultSearch.view).default(defaultSearch.view),
   compare: z.string().catch(defaultSearch.compare).default(defaultSearch.compare),
 });
