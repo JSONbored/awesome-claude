@@ -236,6 +236,9 @@ describe("submission automation workflows", () => {
     expect(source).toContain("HeyClaude Submission Bot");
     expect(source).toContain("steps.auto_import_precheck.outputs.eligible");
     expect(source).toContain("managedValidationLabels");
+    expect(source).toContain(
+      "if (label && !riskLabels.has(label)) labels.add(label);",
+    );
     expect(source).toContain("issues.setLabels");
     expect(source).toContain("Post HeyClaude submission check comment");
     expect(source).toContain("<!-- heyclaude-submission-check -->");
