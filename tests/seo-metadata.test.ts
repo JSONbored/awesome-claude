@@ -37,9 +37,7 @@ const staticMetadataPages = [
 ];
 
 function pageMetadataDescription(pagePath: string) {
-  const routePath = pagePath
-    .replaceAll("/", ".")
-    .replace(/^jobs\.post$/, "jobs.post");
+  const routePath = pagePath.replaceAll("/", ".");
   const source = fs.readFileSync(
     path.join(repoRoot, `apps/web/src/routes/${routePath}.tsx`),
     "utf8",

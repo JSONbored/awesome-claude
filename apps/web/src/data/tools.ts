@@ -2,8 +2,18 @@ import { ENTRIES } from "@/data/entries";
 import type { CommercialTool, Disclosure, PricingModel } from "@/types/registry";
 
 function pricingModelFor(entry: (typeof ENTRIES)[number]): PricingModel {
-  if (entry.repoUrl || entry.sourceUrl?.includes("github.com")) return "open-source";
+  if (entry.repoUrl || isGithubUrl(entry.sourceUrl)) return "open-source";
   return "freemium";
+}
+
+function isGithubUrl(value: string | undefined) {
+  if (!value) return false;
+  try {
+    const hostname = new URL(value).hostname.toLowerCase();
+    return hostname === "github.com" || hostname.endsWith(".github.com");
+  } catch {
+    return false;
+  }
 }
 
 function disclosureFor(entry: (typeof ENTRIES)[number]): Disclosure {
