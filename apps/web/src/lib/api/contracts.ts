@@ -525,6 +525,44 @@ export const githubStatsResponseSchema = z.object({
   updatedAt: z.string().nullable(),
 });
 
+export const publicAlertsResponseSchema = z.object({
+  events: z
+    .array(
+      z
+        .object({
+          id: z.string().optional(),
+          kind: z.string().optional(),
+          category: z.string().optional(),
+          slug: z.string().optional(),
+          action: z.string().optional(),
+          date: z.string().optional(),
+          title: z.string().optional(),
+          commit: z.string().optional(),
+        })
+        .passthrough(),
+    )
+    .max(500),
+});
+
+export const publicFeedsHealthResponseSchema = z.object({
+  generatedAt: z.string(),
+  count: z.number().int().nonnegative(),
+  feeds: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        url: z.string(),
+        itemCount: z.number().int().nonnegative(),
+        latestItemAt: z.string().nullable(),
+        lastBuilt: z.string(),
+        etag: z.string(),
+        isCurrent: z.boolean(),
+      }),
+    )
+    .max(100),
+});
+
 export const listingLeadBodySchema = z
   .object({
     kind: z.enum(["job", "tool", "claim"]),
@@ -1269,6 +1307,38 @@ export const apiRouteDefinitions = {
     responseSchema: githubStatsResponseSchema,
     rateLimit: {
       scope: "github-stats",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "publicAlerts.read": route({
+    id: "publicAlerts.read",
+    method: "GET",
+    path: "/api/public/alerts",
+    summary: "Read public registry alert events",
+    description:
+      "Returns the current in-edge-cache registry event list used by browser-local watch alerts. Cold cache or missing webhook configuration returns an empty events array rather than simulated activity.",
+    tags: ["Dynamic"],
+    responseSchema: publicAlertsResponseSchema,
+    rateLimit: {
+      scope: "public-alerts",
+      limit: 180,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "publicFeeds.health": route({
+    id: "publicFeeds.health",
+    method: "GET",
+    path: "/api/public/feeds/health",
+    summary: "Read public feed health metadata",
+    description:
+      "Returns deterministic feed item counts, freshness, and ETag metadata for every public distribution feed.",
+    tags: ["Distribution"],
+    responseSchema: publicFeedsHealthResponseSchema,
+    rateLimit: {
+      scope: "public-feeds-health",
       limit: 120,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",

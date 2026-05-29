@@ -40,8 +40,6 @@ async function renderSitemap() {
     "/tools",
     "/tools/submit",
     "/validators",
-    "/validators/mcp-config",
-    "/validators/skill-package",
     "/jobs",
     "/jobs/post",
     "/submit",

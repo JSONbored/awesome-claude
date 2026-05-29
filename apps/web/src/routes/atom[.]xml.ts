@@ -26,7 +26,7 @@ export const Route = createFileRoute("/atom.xml")({
           items,
           lastBuilt,
         });
-        return respondFeed(request, xml, lastBuilt);
+        return respondFeed(request, xml, lastBuilt, "application/atom+xml; charset=utf-8");
       },
     },
   },

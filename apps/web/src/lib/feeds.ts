@@ -140,11 +140,12 @@ export async function respondFeed(
   request: Request,
   body: string,
   lastBuilt: string,
+  contentType = "application/rss+xml; charset=utf-8",
 ): Promise<Response> {
   const etag = await etagFor(body);
   const ifNoneMatch = request.headers.get("if-none-match");
   const headers: Record<string, string> = {
-    "Content-Type": "application/xml; charset=utf-8",
+    "Content-Type": contentType,
     "Cache-Control": XML_CACHE,
     ETag: etag,
     "Last-Modified": new Date(lastBuilt).toUTCString(),

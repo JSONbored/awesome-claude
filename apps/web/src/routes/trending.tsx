@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { ArrowRight, Clock, Flame, Info, Rss, Star, TrendingUp } from "lucide-react";
@@ -13,9 +13,16 @@ import { CATEGORIES, type Entry } from "@/types/registry";
 import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
+const defaultSearch = {
+  window: "7d" as const,
+  category: "",
+};
+
 const trendingSchema = z.object({
-  window: fallback(z.enum(["7d", "30d", "all"]), "7d").default("7d"),
-  category: fallback(z.string(), "").default(""),
+  window: fallback(z.enum(["7d", "30d", "all"]), defaultSearch.window).default(
+    defaultSearch.window,
+  ),
+  category: fallback(z.string(), defaultSearch.category).default(defaultSearch.category),
 });
 
 type SignalState = {
@@ -53,6 +60,9 @@ const REASON_LABELS: Record<string, string> = {
 
 export const Route = createFileRoute("/trending")({
   validateSearch: zodValidator(trendingSchema),
+  search: {
+    middlewares: [stripSearchParams(defaultSearch)],
+  },
   head: () => ({
     meta: [
       { title: "Trending Claude workflows — HeyClaude" },
@@ -106,7 +116,7 @@ function useTrendingRows() {
     async function load() {
       setLoading(true);
       try {
-        const response = await fetch("/api/registry/trending?limit=100", {
+        const response = await fetch("/api/registry/trending?limit=50", {
           headers: { accept: "application/json" },
         });
         if (!response.ok) throw new Error(`trending API returned ${response.status}`);

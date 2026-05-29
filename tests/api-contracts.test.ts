@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
+import { ENDPOINTS, OPENAPI_TAGS } from "../apps/web/src/data/openapi";
 import { listApiRouteDefinitions } from "../apps/web/src/lib/api/contracts";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -44,6 +45,8 @@ const apiRoutes = [
   "/api/community-signals",
   "/api/community-signals/query",
   "/api/github-stats",
+  "/api/public/alerts",
+  "/api/public/feeds/health",
   "/feed.xml",
   "/atom.xml",
   "/data/feeds/index.json",
@@ -82,6 +85,20 @@ describe("OpenAPI route coverage", () => {
     expect(
       [...new Set(listApiRouteDefinitions().map((route) => route.path))].sort(),
     ).toEqual(apiRoutes.toSorted());
+  });
+
+  it("renders every documented endpoint tag in the Atlas API docs data", () => {
+    const documentedEndpointIds = new Set(ENDPOINTS.map((endpoint) => endpoint.id));
+    const renderedTagIds = new Set(OPENAPI_TAGS.map((tag) => tag.id));
+
+    for (const route of listApiRouteDefinitions()) {
+      expect(documentedEndpointIds, route.id).toContain(route.id.replaceAll(".", "-"));
+      for (const tag of route.tags) {
+        expect(renderedTagIds, `${route.id}:${tag}`).toContain(
+          tag.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        );
+      }
+    }
   });
 
   it("keeps route handlers as central-router adapters", () => {

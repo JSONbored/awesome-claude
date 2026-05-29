@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, stripSearchParams } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { X, ArrowRight, ExternalLink, Plus, Search as SearchIcon } from "lucide-react";
@@ -19,12 +19,17 @@ import { formatCompact } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Entry } from "@/types/registry";
 
+const defaultSearch = { ids: "" };
+
 const searchSchema = z.object({
-  ids: fallback(z.string(), "").default(""),
+  ids: fallback(z.string(), defaultSearch.ids).default(defaultSearch.ids),
 });
 
 export const Route = createFileRoute("/compare")({
   validateSearch: zodValidator(searchSchema),
+  search: {
+    middlewares: [stripSearchParams(defaultSearch)],
+  },
   head: () => ({
     meta: [
       { title: "Compare resources — HeyClaude" },

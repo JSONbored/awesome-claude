@@ -51,8 +51,8 @@ describe("sitemap policy", () => {
     expect(source).toContain('"/feeds/trending.xml"');
     expect(source).toContain('"/data/feeds/index.json"');
     expect(source).toContain('"/validators"');
-    expect(source).toContain('"/validators/mcp-config"');
-    expect(source).toContain('"/validators/skill-package"');
+    expect(source).not.toContain('"/validators/mcp-config"');
+    expect(source).not.toContain('"/validators/skill-package"');
     expect(source).not.toContain("lastModified: new Date()");
     expect(source).toContain("ENTRIES.map");
   });

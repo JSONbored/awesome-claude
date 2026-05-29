@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, stripSearchParams, useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
 import { useMemo } from "react";
@@ -105,19 +105,37 @@ function SavedSearchChipRow({
   );
 }
 
+const defaultSearch = {
+  q: "",
+  category: "",
+  trust: "",
+  source: "",
+  platform: "",
+  sort: "popular" as const,
+  view: "row" as const,
+  compare: "",
+};
+
 const searchSchema = z.object({
-  q: fallback(z.string(), "").default(""),
-  category: fallback(z.string(), "").default(""),
-  trust: fallback(z.string(), "").default(""),
-  source: fallback(z.string(), "").default(""),
-  platform: fallback(z.string(), "").default(""),
-  sort: fallback(z.enum(["popular", "newest", "title"]), "popular").default("popular"),
-  view: fallback(z.enum(["row", "grid", "compact"]), "row").default("row"),
-  compare: fallback(z.string(), "").default(""),
+  q: fallback(z.string(), defaultSearch.q).default(defaultSearch.q),
+  category: fallback(z.string(), defaultSearch.category).default(defaultSearch.category),
+  trust: fallback(z.string(), defaultSearch.trust).default(defaultSearch.trust),
+  source: fallback(z.string(), defaultSearch.source).default(defaultSearch.source),
+  platform: fallback(z.string(), defaultSearch.platform).default(defaultSearch.platform),
+  sort: fallback(z.enum(["popular", "newest", "title"]), defaultSearch.sort).default(
+    defaultSearch.sort,
+  ),
+  view: fallback(z.enum(["row", "grid", "compact"]), defaultSearch.view).default(
+    defaultSearch.view,
+  ),
+  compare: fallback(z.string(), defaultSearch.compare).default(defaultSearch.compare),
 });
 
 export const Route = createFileRoute("/browse")({
   validateSearch: zodValidator(searchSchema),
+  search: {
+    middlewares: [stripSearchParams(defaultSearch)],
+  },
   head: () => ({
     meta: [
       { title: "Browse — HeyClaude directory" },

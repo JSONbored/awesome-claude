@@ -27,7 +27,7 @@ export interface OpenApiEndpoint {
 const TAG_BLURBS: Record<string, string> = {
   Registry: "Search, trending, manifest, integrity, diff",
   Entries: "Per-entry payloads and LLM text",
-  Community: "Votes, signals, intent events",
+  Dynamic: "Votes, signals, intent events, GitHub stats",
   Submissions: "Preflight, issue creation, and public queue status",
   Commercial: "Lead intake for jobs, tools, claims, and sponsorship",
   Jobs: "Public reviewed jobs board API",
@@ -40,7 +40,7 @@ const TAG_BLURBS: Record<string, string> = {
 const TAG_ORDER = [
   "Registry",
   "Entries",
-  "Community",
+  "Dynamic",
   "Submissions",
   "Commercial",
   "Jobs",
