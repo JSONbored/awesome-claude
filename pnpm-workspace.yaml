@@ -2,7 +2,7 @@ packages:
   - apps/*
   - packages/*
 overrides:
-  "@aws-sdk/client-s3": 3.1050.0
+  "@aws-sdk/client-s3": 3.1055.0
   fast-uri: 3.1.2
   fast-xml-builder: 1.2.0
   fast-xml-parser: 5.8.0
