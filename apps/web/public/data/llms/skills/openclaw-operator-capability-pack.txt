@@ -1,5 +1,5 @@
 # OpenClaw Operator Capability Pack Skill
-URL: https://heyclau.de/skills/openclaw-operator-capability-pack
+URL: https://heyclau.de/entry/skills/openclaw-operator-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -8,7 +8,7 @@ Repository: https://github.com/openclaw/openclaw
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx
 Download: /downloads/skills/openclaw-operator-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/openclaw-operator-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/openclaw-operator-capability-pack
 - Source URLs: https://github.com/openclaw/openclaw, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx
 - Package URL: /downloads/skills/openclaw-operator-capability-pack.zip
 - Package SHA256: d67f69f050a67f21b64fd103dc9a901b46624621d7aaae84606ba3f657c12749

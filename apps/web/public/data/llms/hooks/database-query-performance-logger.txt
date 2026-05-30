@@ -1,12 +1,12 @@
 # Database Query Performance Logger - Hooks
-URL: https://heyclau.de/hooks/database-query-performance-logger
+URL: https://heyclau.de/entry/hooks/database-query-performance-logger
 Category: hooks
 Author: JSONbored
 Date added: 2025-10-19
 Documentation: https://www.postgresql.org/docs/current/runtime-config-logging.html
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/database-query-performance-logger
+- Canonical URL: https://heyclau.de/entry/hooks/database-query-performance-logger
 - Source URLs: https://www.postgresql.org/docs/current/runtime-config-logging.html, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/database-query-performance-logger.mdx
 - Safety notes: Runs automatically after bash, write, or edit activity and inspects files that look like query, model, repository, DAO, or SQL files., Creates .claude/logs/query-performance.log and appends database command or file-analysis events., Uses grep-based heuristics for query warnings and should not be treated as proof of a performance defect.
 - Privacy notes: Reads query-related source files and may print file paths, query patterns, and database command strings to local hook output., Stores analyzed file paths and database command text in .claude/logs/query-performance.log., Database command text may include connection names, database names, or other operational details if typed directly into the command.

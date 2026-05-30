@@ -24,7 +24,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("returns the documented intent-event fallback when SITE_DB is unavailable", async () => {
-    const { POST } = await import("@/app/api/intent-events/route");
+    const { POST } = await import("@/routes/api/intent-events");
 
     const response = await POST(
       jsonRequest("/api/intent-events", {
@@ -43,7 +43,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("returns zero community-signal counts when SITE_DB is unavailable", async () => {
-    const { GET } = await import("@/app/api/community-signals/route");
+    const { GET } = await import("@/routes/api/community-signals");
 
     const response = await GET(
       new Request(
@@ -60,7 +60,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("rejects mismatched community-signal read targets", async () => {
-    const { GET } = await import("@/app/api/community-signals/route");
+    const { GET } = await import("@/routes/api/community-signals");
 
     const response = await GET(
       new Request(
@@ -76,7 +76,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("accepts community-signal writes without storing when SITE_DB is unavailable", async () => {
-    const { POST } = await import("@/app/api/community-signals/route");
+    const { POST } = await import("@/routes/api/community-signals");
 
     const response = await POST(
       jsonRequest("/api/community-signals", {
@@ -98,7 +98,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("rejects mismatched community-signal write targets", async () => {
-    const { POST } = await import("@/app/api/community-signals/route");
+    const { POST } = await import("@/routes/api/community-signals");
 
     const response = await POST(
       jsonRequest("/api/community-signals", {
@@ -118,7 +118,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("returns batch community-signal fallbacks when SITE_DB is unavailable", async () => {
-    const { POST } = await import("@/app/api/community-signals/query/route");
+    const { POST } = await import("@/routes/api/community-signals/query");
 
     const response = await POST(
       jsonRequest("/api/community-signals/query", {
@@ -142,7 +142,7 @@ describe("dynamic API route fallback behavior", () => {
   });
 
   it("rejects mismatched batch community-signal targets", async () => {
-    const { POST } = await import("@/app/api/community-signals/query/route");
+    const { POST } = await import("@/routes/api/community-signals/query");
 
     const response = await POST(
       jsonRequest("/api/community-signals/query", {

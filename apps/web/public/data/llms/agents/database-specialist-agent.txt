@@ -1,12 +1,12 @@
 # Database Specialist Agent - Agents
-URL: https://heyclau.de/agents/database-specialist-agent
+URL: https://heyclau.de/entry/agents/database-specialist-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://www.postgresql.org/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-specialist-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/database-specialist-agent
+- Canonical URL: https://heyclau.de/entry/agents/database-specialist-agent
 - Source URLs: https://www.postgresql.org/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/database-specialist-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

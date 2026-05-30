@@ -225,7 +225,16 @@
     "repoUrl": "https://github.com/powerline/powerline",
     "githubStars": 14752,
     "githubForks": 1001,
-    "repoUpdatedAt": "2026-05-19T10:46:19Z"
+    "repoUpdatedAt": "2026-05-19T10:46:19Z",
+    "repoStats": {
+      "repository": "powerline/powerline",
+      "url": "https://github.com/powerline/powerline",
+      "stars": 14752,
+      "forks": 1001,
+      "updatedAt": "2026-05-19T10:46:19Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

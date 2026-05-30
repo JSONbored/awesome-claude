@@ -1,12 +1,12 @@
 # WCAG 2.2 Accessibility Auditor for Claude
-URL: https://heyclau.de/rules/wcag-accessibility-auditor
+URL: https://heyclau.de/entry/rules/wcag-accessibility-auditor
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://www.w3.org/WAI/WCAG22/quickref/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/wcag-accessibility-auditor
+- Canonical URL: https://heyclau.de/entry/rules/wcag-accessibility-auditor
 - Source URLs: https://www.w3.org/WAI/WCAG22/quickref/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/wcag-accessibility-auditor.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

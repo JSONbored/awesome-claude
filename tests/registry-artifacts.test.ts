@@ -18,6 +18,9 @@ import {
   buildJsonLdSnapshots,
   buildRegistryChangelogFeed,
   buildRegistryTrustReport,
+  buildSourceHealthReport,
+  buildEntrySourceHealth,
+  SOURCE_HEALTH_REPORT_SCHEMA_VERSION,
   buildReadOnlyEcosystemFeed,
   buildRaycastEnvelope,
   buildRaycastDetailMarkdown,
@@ -42,6 +45,23 @@ import {
   readDataJson,
   repoRoot,
 } from "./helpers/registry-fixtures";
+
+const sharedTmpHookLogPathPattern =
+  /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
+const nonPredictableTmpHookLogPathPattern =
+  /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
+
+function findPredictableSharedTmpHookLogPaths(scriptBody: string) {
+  const paths = new Set<string>();
+  for (const match of scriptBody.matchAll(sharedTmpHookLogPathPattern)) {
+    const tmpPath = match[2];
+    if (!tmpPath || nonPredictableTmpHookLogPathPattern.test(tmpPath)) {
+      continue;
+    }
+    paths.add(tmpPath);
+  }
+  return [...paths];
+}
 
 describe("registry artifacts", () => {
   const contentEntries = loadContentEntries();
@@ -144,6 +164,118 @@ describe("registry artifacts", () => {
     });
     expect(directoryEntries.length).toBe(contentEntries.length);
     expect(searchEntries.length).toBe(contentEntries.length);
+  });
+
+  it("keeps Atlas list data compact while preserving full entry detail fields", () => {
+    const atlasPayload = JSON.parse(
+      fs.readFileSync(
+        path.join(repoRoot, "apps/web/src/generated/atlas-registry.json"),
+        "utf8",
+      ),
+    ) as { entries: Array<Record<string, unknown>> };
+    const atlasSkill = atlasPayload.entries.find(
+      (entry) =>
+        entry.category === "skills" &&
+        entry.slug === "agent-evals-regression-gate",
+    );
+    const skillDetail = readDataJson<{ entry: Record<string, unknown> }>(
+      "entries/skills/agent-evals-regression-gate.json",
+    ).entry;
+
+    expect(atlasSkill).toMatchObject({
+      skillType: "general",
+      skillLevel: "advanced",
+      verificationStatus: "draft",
+      testedPlatforms: expect.arrayContaining(["Claude", "Codex"]),
+    });
+    expect(atlasSkill).not.toHaveProperty("body");
+    expect(atlasSkill).not.toHaveProperty("sections");
+    expect(atlasSkill).not.toHaveProperty("copySnippet");
+    expect(skillDetail).toMatchObject({
+      copySnippet: expect.any(String),
+      body: expect.any(String),
+      sections: expect.arrayContaining([
+        expect.objectContaining({ title: expect.any(String) }),
+      ]),
+      headings: expect.arrayContaining([
+        expect.objectContaining({ text: expect.any(String) }),
+      ]),
+    });
+  });
+
+  it("publishes schema-specific fields for category-aware detail rendering", () => {
+    const cases = [
+      [
+        "entries/hooks/accessibility-checker.json",
+        {
+          trigger: "PostToolUse",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/commands/cursor-rules.json",
+        {
+          commandSyntax: expect.any(String),
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/statuslines/accessibility-first-statusline.json",
+        {
+          scriptLanguage: "bash",
+          scriptBody: expect.any(String),
+          copySnippet: expect.any(String),
+        },
+      ],
+      [
+        "entries/collections/agent-operator-growth-master-pack.json",
+        {
+          items: expect.arrayContaining([
+            expect.objectContaining({ slug: expect.any(String) }),
+          ]),
+          installationOrder: expect.arrayContaining([expect.any(String)]),
+          estimatedSetupTime: "95 minutes",
+        },
+      ],
+      [
+        "entries/tools/aider.json",
+        {
+          websiteUrl: "https://aider.chat",
+          pricingModel: "open-source",
+          disclosure: "editorial",
+        },
+      ],
+    ] as const;
+
+    for (const [relativePath, expected] of cases) {
+      const detail = readDataJson<{ entry: Record<string, unknown> }>(
+        relativePath,
+      ).entry;
+      expect(detail).toMatchObject(expected);
+    }
+  });
+
+  it("attributes GitHub stars as source repository stats instead of listing popularity", () => {
+    const sourceStatEntry = directoryEntries.find(
+      (entry) => typeof entry.githubStars === "number",
+    );
+    expect(sourceStatEntry).toBeTruthy();
+    expect(sourceStatEntry?.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
+
+    const detail = readDataJson<{ entry: Record<string, unknown> }>(
+      `entries/${sourceStatEntry!.category}/${sourceStatEntry!.slug}.json`,
+    ).entry;
+    expect(detail.repoStats).toMatchObject({
+      appliesTo: "listing_source_repo",
+      label: "Source repo",
+      stars: sourceStatEntry?.githubStars,
+    });
   });
 
   it("does not split surrogate pairs when truncating JSON-backed text", () => {
@@ -503,7 +635,8 @@ Use this hook after reviewing the notes.`,
     ]).entries;
     const entryJsonLd = snapshot.documents.find(
       (document) =>
-        document["@id"] === "https://heyclau.de/mcp/duplicate-jsonld#entry",
+        document["@id"] ===
+        "https://heyclau.de/entry/mcp/duplicate-jsonld#entry",
     );
 
     expect(entryJsonLd?.keywords).toBe("mcp, fixture");
@@ -642,7 +775,7 @@ Use this hook after reviewing the notes.`,
       expect(entry.sections).toBeUndefined();
       expect(entry.scriptBody).toBeUndefined();
       expect(entry.canonicalUrl).toBe(
-        `https://heyclau.de/${entry.category}/${entry.slug}`,
+        `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(entry.llmsUrl).toBe(
         `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
@@ -679,6 +812,7 @@ Use this hook after reviewing the notes.`,
     const scriptBody = detailPayload.entry.scriptBody;
 
     expect(scriptBody).not.toContain("/tmp/claude-startup.log");
+    expect(findPredictableSharedTmpHookLogPaths(scriptBody)).toEqual([]);
     expect(scriptBody).toContain(
       'DEBUG_LOG_DIR="${RETRO_DAILY_HOME:-$HOME/.claude/metrics}"',
     );
@@ -783,7 +917,7 @@ Use this hook after reviewing the notes.`,
         copyText,
       });
       expect(raycastFeedEntry.canonicalUrl).toBe(
-        `https://heyclau.de/${entry.category}/${entry.slug}`,
+        `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(raycastFeedEntry.llmsUrl).toBe(
         `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
@@ -902,5 +1036,285 @@ Use this hook after reviewing the notes.`,
     expect(
       yieldLlms.match(/Ask Claude: "What are the best passive income/g),
     ).toHaveLength(1);
+  });
+});
+
+type SourceHealthFixture = {
+  category: string;
+  slug: string;
+  title?: string;
+  dateAdded?: string;
+  repoUpdatedAt?: string;
+  repoUrl?: string;
+  documentationUrl?: string;
+  downloadTrust?: string;
+  packageVerified?: boolean;
+  safetyNotes?: unknown;
+  privacyNotes?: unknown;
+};
+
+function healthEntry(input: SourceHealthFixture) {
+  return { title: `${input.category}:${input.slug}`, ...input };
+}
+
+// Anchor entry fixes the deterministic reference date at 2026-05-01.
+const sourceHealthFixtures = [
+  healthEntry({
+    category: "mcp",
+    slug: "fresh-secure",
+    dateAdded: "2026-05-01",
+    repoUpdatedAt: "2026-04-15",
+    repoUrl: "https://github.com/acme/fresh-secure",
+    downloadTrust: "first-party",
+    packageVerified: true,
+    safetyNotes: ["Runs a background worker."],
+    privacyNotes: ["Stores OAuth tokens locally."],
+  }),
+  healthEntry({
+    category: "hooks",
+    slug: "aging-gap",
+    dateAdded: "2026-01-01",
+    repoUpdatedAt: "2025-08-01",
+    documentationUrl: "https://example.com/docs",
+  }),
+  healthEntry({
+    category: "tools",
+    slug: "stale-tool",
+    dateAdded: "2025-01-01",
+    repoUpdatedAt: "2024-06-01",
+    repoUrl: "https://github.com/acme/stale-tool",
+  }),
+  healthEntry({
+    category: "agents",
+    slug: "dormant-agent",
+    dateAdded: "2024-01-01",
+    repoUpdatedAt: "2023-01-01",
+    repoUrl: "https://github.com/acme/dormant-agent",
+  }),
+  healthEntry({
+    category: "skills",
+    slug: "unknown-missing",
+    dateAdded: "",
+    repoUpdatedAt: "",
+  }),
+];
+
+describe("source health report", () => {
+  it("produces a deterministic, versioned report envelope", () => {
+    const first = buildSourceHealthReport(sourceHealthFixtures);
+    const second = buildSourceHealthReport(sourceHealthFixtures);
+    expect(first).toEqual(second);
+    expect(first.schemaVersion).toBe(SOURCE_HEALTH_REPORT_SCHEMA_VERSION);
+    expect(first.kind).toBe("source-health-report");
+    expect(first.generatedAt).toBe("2026-05-01T00:00:00.000Z");
+    expect(first.count).toBe(sourceHealthFixtures.length);
+    expect(first.thresholds).toEqual({
+      freshMaxDays: 180,
+      agingMaxDays: 365,
+      staleMaxDays: 730,
+    });
+  });
+
+  it("classifies freshness buckets relative to the generated date", () => {
+    const byKey = Object.fromEntries(
+      buildSourceHealthReport(sourceHealthFixtures).entries.map((row) => [
+        row.key,
+        row,
+      ]),
+    );
+    expect(byKey["mcp:fresh-secure"].freshness).toBe("fresh");
+    expect(byKey["hooks:aging-gap"].freshness).toBe("aging");
+    expect(byKey["tools:stale-tool"].freshness).toBe("stale");
+    expect(byKey["agents:dormant-agent"].freshness).toBe("dormant");
+    expect(byKey["skills:unknown-missing"].freshness).toBe("unknown");
+    expect(byKey["skills:unknown-missing"].ageDays).toBeNull();
+  });
+
+  it("derives source-backed status and package trust", () => {
+    const byKey = Object.fromEntries(
+      buildSourceHealthReport(sourceHealthFixtures).entries.map((row) => [
+        row.key,
+        row,
+      ]),
+    );
+    expect(byKey["mcp:fresh-secure"].sourceStatus).toBe("available");
+    expect(byKey["mcp:fresh-secure"].hasPackageTrust).toBe(true);
+    expect(byKey["mcp:fresh-secure"].packageTrust).toBe("first-party");
+    expect(byKey["skills:unknown-missing"].sourceStatus).toBe("missing");
+    expect(byKey["skills:unknown-missing"].hasPackageTrust).toBe(false);
+    expect(byKey["skills:unknown-missing"].packageTrust).toBeNull();
+  });
+
+  it("flags missing safety/privacy notes only on risk-bearing categories", () => {
+    const byKey = Object.fromEntries(
+      buildSourceHealthReport(sourceHealthFixtures).entries.map((row) => [
+        row.key,
+        row,
+      ]),
+    );
+    const hook = byKey["hooks:aging-gap"];
+    expect(hook.riskBearing).toBe(true);
+    expect(hook.attentionReasons).toEqual(
+      expect.arrayContaining(["missing-safety-notes", "missing-privacy-notes"]),
+    );
+    const tool = byKey["tools:stale-tool"];
+    expect(tool.riskBearing).toBe(false);
+    expect(tool.attentionReasons).not.toContain("missing-safety-notes");
+    expect(tool.attentionReasons).not.toContain("missing-privacy-notes");
+    expect(byKey["mcp:fresh-secure"].needsAttention).toBe(false);
+    expect(byKey["mcp:fresh-secure"].attentionReasons).toEqual([]);
+  });
+
+  it("marks stale, dormant, and source-less entries as needing attention", () => {
+    const byKey = Object.fromEntries(
+      buildSourceHealthReport(sourceHealthFixtures).entries.map((row) => [
+        row.key,
+        row,
+      ]),
+    );
+    expect(byKey["tools:stale-tool"].attentionReasons).toContain(
+      "stale-source",
+    );
+    expect(byKey["agents:dormant-agent"].attentionReasons).toContain(
+      "stale-source",
+    );
+    expect(byKey["skills:unknown-missing"].attentionReasons).toContain(
+      "missing-source",
+    );
+  });
+
+  it("aggregates summary counts and percentages deterministically", () => {
+    const { summary } = buildSourceHealthReport(sourceHealthFixtures);
+    expect(summary.sourceBackedCount).toBe(4);
+    expect(summary.missingSourceCount).toBe(1);
+    expect(summary.sourceBackedPercent).toBe(80);
+    expect(summary.freshCount).toBe(1);
+    expect(summary.agingCount).toBe(1);
+    expect(summary.staleCount).toBe(1);
+    expect(summary.dormantCount).toBe(1);
+    expect(summary.unknownFreshnessCount).toBe(1);
+    expect(summary.packageTrustCount).toBe(1);
+    expect(summary.packageTrustPercent).toBe(20);
+    expect(summary.riskBearingCount).toBe(3);
+    expect(summary.missingSafetyNotesCount).toBe(2);
+    expect(summary.missingPrivacyNotesCount).toBe(2);
+    expect(summary.needsAttentionCount).toBe(4);
+  });
+
+  it("builds a per-category breakdown across the full category order", () => {
+    const report = buildSourceHealthReport(sourceHealthFixtures);
+    expect(report.categoryBreakdown.hooks).toMatchObject({
+      count: 1,
+      missingSafetyNotes: 1,
+      missingPrivacyNotes: 1,
+      needsAttention: 1,
+    });
+    expect(report.categoryBreakdown.mcp).toMatchObject({
+      count: 1,
+      sourceBacked: 1,
+      packageTrust: 1,
+      needsAttention: 0,
+    });
+    expect(report.categoryBreakdown.rules).toMatchObject({
+      count: 0,
+      sourceBacked: 0,
+      needsAttention: 0,
+    });
+  });
+
+  it("handles an empty registry without dividing by zero", () => {
+    const report = buildSourceHealthReport([]);
+    expect(report.count).toBe(0);
+    expect(report.summary.sourceBackedPercent).toBe(0);
+    expect(report.summary.packageTrustPercent).toBe(0);
+    expect(report.entries).toEqual([]);
+  });
+
+  it("returns unknown (not dormant) for unparsable entry or reference dates", () => {
+    const base = healthEntry({
+      category: "mcp",
+      slug: "guard",
+      dateAdded: "2026-05-01",
+      repoUpdatedAt: "2026-04-01",
+      repoUrl: "https://github.com/acme/guard",
+    });
+    const badEntryDate = buildEntrySourceHealth(
+      { ...base, repoUpdatedAt: "not-a-date", dateAdded: "also-bad" },
+      new Date("2026-05-01T00:00:00.000Z"),
+    );
+    expect(badEntryDate.freshness).toBe("unknown");
+    expect(badEntryDate.ageDays).toBeNull();
+    expect(badEntryDate.lastActivityAt).toBe("");
+
+    const badReferenceDate = buildEntrySourceHealth(base, "not-a-date");
+    expect(badReferenceDate.freshness).toBe("unknown");
+    expect(badReferenceDate.ageDays).toBeNull();
+
+    const stringReference = buildEntrySourceHealth(
+      base,
+      "2026-05-01T00:00:00.000Z",
+    );
+    expect(stringReference.freshness).toBe("fresh");
+    expect(typeof stringReference.ageDays).toBe("number");
+  });
+
+  it("uses floor semantics for elapsed full days at freshness boundaries", () => {
+    const reference = new Date("2026-05-01T00:00:00.000Z");
+    const day = 86_400_000;
+    const hour = 3_600_000;
+    const ageOf = (daysBefore: number, extraHours = 0) =>
+      buildEntrySourceHealth(
+        {
+          category: "tools",
+          slug: "boundary",
+          repoUrl: "https://github.com/acme/boundary",
+          repoUpdatedAt: new Date(
+            reference.getTime() - daysBefore * day - extraHours * hour,
+          ).toISOString(),
+        },
+        reference,
+      );
+
+    // Exactly on the fresh/aging boundary stays fresh.
+    expect(ageOf(180).ageDays).toBe(180);
+    expect(ageOf(180).freshness).toBe("fresh");
+    // A partial extra day must NOT advance the bucket (Math.round would have
+    // rounded 180.5 -> 181 and mislabeled this "aging").
+    expect(ageOf(180, 12).ageDays).toBe(180);
+    expect(ageOf(180, 12).freshness).toBe("fresh");
+    // A full extra day crosses into the next bucket.
+    expect(ageOf(181).ageDays).toBe(181);
+    expect(ageOf(181).freshness).toBe("aging");
+
+    // aging/stale boundary at 365 days.
+    expect(ageOf(365).freshness).toBe("aging");
+    expect(ageOf(365, 12).freshness).toBe("aging");
+    expect(ageOf(366).freshness).toBe("stale");
+
+    // stale/dormant boundary at 730 days.
+    expect(ageOf(730).freshness).toBe("stale");
+    expect(ageOf(730, 12).freshness).toBe("stale");
+    expect(ageOf(731).freshness).toBe("dormant");
+  });
+
+  it("derives a consistent report from the real registry content", () => {
+    const entries = loadContentEntries();
+    const report = buildSourceHealthReport(entries);
+    expect(report.count).toBe(entries.length);
+    expect(report.entries).toHaveLength(entries.length);
+    const summedAttention = report.entries.filter(
+      (row) => row.needsAttention,
+    ).length;
+    expect(report.summary.needsAttentionCount).toBe(summedAttention);
+    expect(
+      report.summary.sourceBackedCount + report.summary.missingSourceCount,
+    ).toBe(report.count);
+    const freshnessTotal =
+      report.summary.freshCount +
+      report.summary.agingCount +
+      report.summary.staleCount +
+      report.summary.dormantCount +
+      report.summary.unknownFreshnessCount;
+    expect(freshnessTotal).toBe(report.count);
   });
 });

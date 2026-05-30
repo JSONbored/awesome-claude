@@ -124,7 +124,10 @@ export function buildItemListJsonLd(items = [], params = {}) {
 
 export function buildEntryJsonLd(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
-  const url = absoluteSiteUrl(siteUrl, `/${entry.category}/${entry.slug}`);
+  const url = absoluteSiteUrl(
+    siteUrl,
+    `/entry/${entry.category}/${entry.slug}`,
+  );
   const label =
     categorySpec.categories?.[entry.category]?.label || entry.category;
   const codeLikeCategories = new Set([
@@ -441,10 +444,19 @@ export function buildEntryJsonLdSnapshot(entry, params = {}) {
   const siteUrl = params.siteUrl || "https://heyclau.de";
   const label =
     categorySpec.categories?.[entry.category]?.label || entry.category;
-  const url = absoluteSiteUrl(siteUrl, `/${entry.category}/${entry.slug}`);
+  const url = absoluteSiteUrl(
+    siteUrl,
+    `/entry/${entry.category}/${entry.slug}`,
+  );
   const breadcrumb = buildBreadcrumbJsonLd([
     { name: "Home", url: siteUrl },
-    { name: label, url: absoluteSiteUrl(siteUrl, `/${entry.category}`) },
+    {
+      name: label,
+      url: absoluteSiteUrl(
+        siteUrl,
+        `/browse?category=${encodeURIComponent(entry.category)}`,
+      ),
+    },
     { name: entry.title, url },
   ]);
 
@@ -457,7 +469,7 @@ export function buildEntryJsonLdSnapshot(entry, params = {}) {
       breadcrumb,
       buildWebPageJsonLd({
         siteUrl,
-        path: `/${entry.category}/${entry.slug}`,
+        path: `/entry/${entry.category}/${entry.slug}`,
         name: entry.title,
         description: entry.seoDescription || entry.description,
         breadcrumbId: `${url}#breadcrumb`,

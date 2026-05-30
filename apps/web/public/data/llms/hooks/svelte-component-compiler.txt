@@ -1,12 +1,12 @@
 # Svelte Component Compiler - Hooks
-URL: https://heyclau.de/hooks/svelte-component-compiler
+URL: https://heyclau.de/entry/hooks/svelte-component-compiler
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Documentation: https://svelte.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/svelte-component-compiler
+- Canonical URL: https://heyclau.de/entry/hooks/svelte-component-compiler
 - Source URLs: https://svelte.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/svelte-component-compiler.mdx
 - Safety notes: Runs automatically after write/edit tool use for .svelte files and may invoke npx svelte-check inside the current project., Uses the local project toolchain and dependencies, so validation can be slow or fail when Svelte dependencies are missing.
 - Privacy notes: Reads modified .svelte components, package.json, svelte.config.js, and vite.config.js to infer framework, component, accessibility, and performance signals., Prints component statistics and validation output to the local Claude Code hook output stream.

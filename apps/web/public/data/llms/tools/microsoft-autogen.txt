@@ -1,5 +1,5 @@
 # Microsoft AutoGen
-URL: https://heyclau.de/tools/microsoft-autogen
+URL: https://heyclau.de/entry/tools/microsoft-autogen
 Category: tools
 Author: Microsoft
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://microsoft.github.io/autogen/
 Repository: https://github.com/microsoft/autogen
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/microsoft-autogen
+- Canonical URL: https://heyclau.de/entry/tools/microsoft-autogen
 - Source URLs: https://microsoft.github.io/autogen/, https://github.com/microsoft/autogen, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/microsoft-autogen.mdx
 - Brand: Microsoft
 - Brand domain: microsoft.github.io

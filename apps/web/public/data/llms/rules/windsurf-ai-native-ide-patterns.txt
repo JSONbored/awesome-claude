@@ -1,12 +1,12 @@
 # Windsurf AI-Native IDE Patterns for Claude
-URL: https://heyclau.de/rules/windsurf-ai-native-ide-patterns
+URL: https://heyclau.de/entry/rules/windsurf-ai-native-ide-patterns
 Category: rules
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://docs.codeium.com/windsurf
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/windsurf-ai-native-ide-patterns
+- Canonical URL: https://heyclau.de/entry/rules/windsurf-ai-native-ide-patterns
 - Source URLs: https://docs.codeium.com/windsurf, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/windsurf-ai-native-ide-patterns.mdx
 - Brand: Windsurf
 - Brand domain: windsurf.com

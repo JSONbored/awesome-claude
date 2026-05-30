@@ -1,11 +1,11 @@
 # Slack Progress Notifier - Hooks
-URL: https://heyclau.de/hooks/slack-progress-notifier
+URL: https://heyclau.de/entry/hooks/slack-progress-notifier
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/slack-progress-notifier
+- Canonical URL: https://heyclau.de/entry/hooks/slack-progress-notifier
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/slack-progress-notifier.mdx
 - Brand: Slack
 - Brand domain: slack.com

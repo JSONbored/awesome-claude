@@ -1,12 +1,12 @@
 # V0 Component Generator for Claude
-URL: https://heyclau.de/commands/v0-generate
+URL: https://heyclau.de/entry/commands/v0-generate
 Category: commands
 Author: JSONbored
 Date added: 2025-10-16
 Documentation: https://v0.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/commands/v0-generate.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/commands/v0-generate
+- Canonical URL: https://heyclau.de/entry/commands/v0-generate
 - Source URLs: https://v0.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/commands/v0-generate.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -1,5 +1,5 @@
 # CSV/Excel Data Wrangler Skill
-URL: https://heyclau.de/skills/csv-excel-data-wrangler
+URL: https://heyclau.de/entry/skills/csv-excel-data-wrangler
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://pandas.pydata.org/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/csv-excel-data-wrangler.mdx
 Download: /downloads/skills/csv-excel-data-wrangler.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/csv-excel-data-wrangler
+- Canonical URL: https://heyclau.de/entry/skills/csv-excel-data-wrangler
 - Source URLs: https://pandas.pydata.org/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/csv-excel-data-wrangler.mdx
 - Package URL: /downloads/skills/csv-excel-data-wrangler.zip
 - Package SHA256: 7a075dd66f661d1f928dff7924159040bd6ab2c898f782cbb2862ae79658178e

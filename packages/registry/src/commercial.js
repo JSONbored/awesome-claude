@@ -356,6 +356,7 @@ export function evaluateJobSourceLifecycle(input = {}, now = new Date()) {
   const currentStatus = String(input.currentStatus || "active")
     .trim()
     .toLowerCase();
+  const tier = normalizeCommercialTier(input.tier);
   const staleCheckCount = Math.max(
     0,
     Number.isFinite(Number(input.staleCheckCount))
@@ -363,10 +364,20 @@ export function evaluateJobSourceLifecycle(input = {}, now = new Date()) {
       : 0,
   );
   const expiresAt = input.expiresAt || "";
+  const paidPlacementExpiresAt = input.paidPlacementExpiresAt || "";
   const nowTime = now instanceof Date ? now.getTime() : new Date(now).getTime();
   const expiryTime = expiresAt ? new Date(expiresAt).getTime() : null;
+  const paidExpiryTime = paidPlacementExpiresAt
+    ? new Date(paidPlacementExpiresAt).getTime()
+    : null;
   const expired =
     expiryTime !== null && Number.isFinite(expiryTime) && expiryTime < nowTime;
+  const paidPlacementExpired =
+    paidExpiryTime !== null &&
+    Number.isFinite(paidExpiryTime) &&
+    paidExpiryTime < nowTime;
+  const paidOrPlacementScoped =
+    PAID_JOB_TIERS.includes(tier) || Boolean(paidPlacementExpiresAt);
   const sourceHealthy =
     input.sourceOk === true &&
     input.titleMatched !== false &&
@@ -374,12 +385,21 @@ export function evaluateJobSourceLifecycle(input = {}, now = new Date()) {
     input.closureDetected !== true &&
     input.applyDetected === true;
 
-  if (currentStatus === "closed" || currentStatus === "archived" || expired) {
+  if (currentStatus === "closed" || currentStatus === "archived") {
     return {
       status: "closed",
       staleCheckCount,
       indexable: false,
-      reason: expired ? "expired" : currentStatus,
+      reason: currentStatus,
+    };
+  }
+
+  if (paidPlacementExpired || (expired && paidOrPlacementScoped)) {
+    return {
+      status: "closed",
+      staleCheckCount,
+      indexable: false,
+      reason: paidPlacementExpired ? "paid_placement_expired" : "expired",
     };
   }
 
@@ -388,7 +408,17 @@ export function evaluateJobSourceLifecycle(input = {}, now = new Date()) {
       status: "active",
       staleCheckCount: 0,
       indexable: true,
-      reason: "source_verified",
+      reason: expired ? "source_verified_expiry_refreshed" : "source_verified",
+      expiresAt: expired ? null : expiresAt || undefined,
+    };
+  }
+
+  if (expired) {
+    return {
+      status: "stale_pending_review",
+      staleCheckCount: staleCheckCount + 1,
+      indexable: false,
+      reason: "expired_source_unverified",
     };
   }
 

@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/NVIDIA/garak",
     "githubStars": 7848,
     "githubForks": 949,
-    "repoUpdatedAt": "2026-05-19T10:43:48Z"
+    "repoUpdatedAt": "2026-05-19T10:43:48Z",
+    "repoStats": {
+      "repository": "NVIDIA/garak",
+      "url": "https://github.com/NVIDIA/garak",
+      "stars": 7848,
+      "forks": 949,
+      "updatedAt": "2026-05-19T10:43:48Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

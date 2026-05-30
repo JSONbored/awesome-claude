@@ -96,6 +96,34 @@ describe("MCP config validator", () => {
     }
   });
 
+  it("redacts URL path and fragment secrets from remote URLs and args", () => {
+    const result = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          remoteWithPathSecret: {
+            url: "https://example.com/mcp/sk-PATHSECRET1234567890",
+          },
+          stdioWithFragmentSecret: {
+            command: "npx",
+            args: [
+              "-y",
+              "@example/mcp",
+              "https://example.com/mcp#access_token=sk-FRAGSECRET1234567890",
+            ],
+          },
+        },
+      }),
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.redactedSecretCount).toBe(2);
+    for (const output of [result.fixedConfigText, result.reportText]) {
+      expect(output).not.toContain("sk-PATHSECRET1234567890");
+      expect(output).not.toContain("sk-FRAGSECRET1234567890");
+      expect(output).toContain("${URL}");
+    }
+  });
+
   it("redacts malformed URL-like values that contain secrets", () => {
     const result = validateMcpConfigText(
       JSON.stringify({

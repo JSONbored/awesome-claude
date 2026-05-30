@@ -1,11 +1,11 @@
 # Domain Specialist AI Agents - Agents
-URL: https://heyclau.de/agents/domain-specialist-ai-agents
+URL: https://heyclau.de/entry/agents/domain-specialist-ai-agents
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/domain-specialist-ai-agents
+- Canonical URL: https://heyclau.de/entry/agents/domain-specialist-ai-agents
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/domain-specialist-ai-agents.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

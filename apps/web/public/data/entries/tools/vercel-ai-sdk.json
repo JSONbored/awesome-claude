@@ -74,7 +74,16 @@
     "repoUrl": "https://github.com/vercel/ai",
     "githubStars": 24333,
     "githubForks": 4432,
-    "repoUpdatedAt": "2026-05-19T11:09:31Z"
+    "repoUpdatedAt": "2026-05-19T11:09:31Z",
+    "repoStats": {
+      "repository": "vercel/ai",
+      "url": "https://github.com/vercel/ai",
+      "stars": 24333,
+      "forks": 4432,
+      "updatedAt": "2026-05-19T11:09:31Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

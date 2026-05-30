@@ -1,5 +1,5 @@
 # Google Workspace Gemini Automation Skill
-URL: https://heyclau.de/skills/google-workspace-gemini-automation
+URL: https://heyclau.de/entry/skills/google-workspace-gemini-automation
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://ai.google.dev/gemini-api/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/google-workspace-gemini-automation.mdx
 Download: /downloads/skills/google-workspace-gemini-automation.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/google-workspace-gemini-automation
+- Canonical URL: https://heyclau.de/entry/skills/google-workspace-gemini-automation
 - Source URLs: https://ai.google.dev/gemini-api/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/google-workspace-gemini-automation.mdx
 - Brand: Google
 - Brand domain: google.com

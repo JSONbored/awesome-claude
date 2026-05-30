@@ -1,5 +1,5 @@
 # Retro Daily - Hooks
-URL: https://heyclau.de/hooks/retro-daily
+URL: https://heyclau.de/entry/hooks/retro-daily
 Category: hooks
 Author: gyanesh-m
 Submitted by: gyanesh-m
@@ -7,7 +7,7 @@ Date added: 2026-05-19
 Repository: https://github.com/gyanesh-m/retro-daily
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/retro-daily
+- Canonical URL: https://heyclau.de/entry/hooks/retro-daily
 - Source URLs: https://github.com/gyanesh-m/retro-daily, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx, https://gyanesh-m.github.io/retro-daily/
 - Safety notes: Runs automatically on Claude Code SessionStart and can spawn detached background claude -p workers., Uses WebSearch and Write in the scout worker unless RETRO_DAILY_NO_BACKGROUND_WORKERS=1 is set., Writes temporary scout and tagger output to /tmp before moving validated results into ~/.claude/metrics., First full setup can install large Python model dependencies for local classification., Scout findings may include web- or GitHub-derived text and should be treated as untrusted informational context, not executable instructions.
 - Privacy notes: Reads local Claude Code session history from ~/.claude/projects/*.jsonl to compute metrics., Writes derived metrics, logs, scout results, and session tags under ~/.claude/metrics., Session tagger builds a truncated digest from recent local session messages for claude -p labeling., Background scout may send weak-metric research queries to docs.anthropic.com and GitHub through WebSearch., The SessionStart hook may provide the rendered retro/scout dashboard to Claude Code as hookSpecificOutput.additionalContext, which is model-visible context in addition to the user-visible dashboard.
@@ -77,7 +77,7 @@ SessionStart hook that prints a daily Claude Code retro at the top of every sess
 - Optional: an authenticated `claude` session in your keychain so the background scout can call `claude -p` without prompting.
 
 ## Security and privacy disclosure
-Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`. The startup debug log is created at `~/.claude/metrics/startup.log` with user-only file permissions when possible.
+Retro Daily reads local Claude Code session history from `~/.claude/projects/*.jsonl` to compute metrics. It writes derived state, logs, scout results, and session tags under `~/.claude/metrics`. The startup debug log is created at `~/.claude/metrics/startup.log` with user-only file permissions when possible. Startup output is rendered as a display-only dashboard and raw dashboard, scout, and session-history-derived text is intentionally not mirrored into Claude Code `additionalContext`.
 
 By default, `scout.sh` and `tag-sessions.sh` can start detached, sandboxed `claude -p` background workers. The scout worker uses `WebSearch` and `Write` to research weak metrics, writes temporary results to `/tmp`, validates JSON, then moves the results into `~/.claude/metrics`. The session tagger builds a truncated digest from recent local session messages and asks `claude -p` to label those sessions; it denies network access and writes temporary results to `/tmp` before moving them into `~/.claude/metrics`.
 

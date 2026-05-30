@@ -1,0 +1,138 @@
+import * as React from "react";
+import {
+  ExternalLink,
+  GitBranch,
+  BookOpen,
+  Package,
+  ShieldCheck,
+  User,
+  Calendar,
+} from "lucide-react";
+import type { Entry } from "@/types/registry";
+
+type Citation = {
+  label: string;
+  href?: string;
+  hint?: string;
+  Icon: React.ElementType;
+  verifiedAt?: string;
+};
+
+function hostOf(url?: string): string | undefined {
+  if (!url) return undefined;
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
+}
+
+export function SourceCitations({ entry }: { entry: Entry }) {
+  const cites: Citation[] = [];
+  if (entry.sourceUrl) {
+    cites.push({
+      label: "Source repository",
+      href: entry.sourceUrl,
+      hint: hostOf(entry.sourceUrl),
+      Icon: GitBranch,
+      verifiedAt: entry.brandVerifiedAt ?? entry.reviewedAt,
+    });
+  } else if (entry.repoUrl) {
+    cites.push({
+      label: "Repository",
+      href: entry.repoUrl,
+      hint: hostOf(entry.repoUrl),
+      Icon: GitBranch,
+    });
+  }
+  if (entry.docsUrl) {
+    cites.push({
+      label: "Documentation",
+      href: entry.docsUrl,
+      hint: hostOf(entry.docsUrl),
+      Icon: BookOpen,
+    });
+  }
+  if (
+    entry.websiteUrl &&
+    entry.websiteUrl !== entry.docsUrl &&
+    entry.websiteUrl !== entry.sourceUrl
+  ) {
+    cites.push({
+      label: "Website",
+      href: entry.websiteUrl,
+      hint: hostOf(entry.websiteUrl),
+      Icon: ExternalLink,
+    });
+  }
+  if (entry.downloadUrl) {
+    cites.push({
+      label: entry.downloadSha256 ? "Package (SHA-256 pinned)" : "Package download",
+      href: entry.downloadUrl,
+      hint: hostOf(entry.downloadUrl),
+      Icon: Package,
+    });
+  }
+  if (entry.reviewedBy) {
+    cites.push({
+      label: `Reviewed by ${entry.reviewedBy}`,
+      hint: entry.reviewedAt,
+      Icon: ShieldCheck,
+    });
+  }
+  if (entry.submittedBy) {
+    cites.push({
+      label: `Submitted by ${entry.submittedBy}`,
+      href: entry.submittedByUrl,
+      hint: entry.submittedAt,
+      Icon: User,
+    });
+  }
+
+  if (cites.length === 0) {
+    return (
+      <p className="text-sm text-ink-subtle">No external citations recorded for this entry.</p>
+    );
+  }
+
+  return (
+    <ul className="divide-y divide-border">
+      {cites.map((c) => {
+        const Icon = c.Icon;
+        const body = (
+          <span className="flex items-center gap-3 py-2.5">
+            <Icon className="h-3.5 w-3.5 shrink-0 text-ink-muted" aria-hidden />
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-medium text-ink">{c.label}</span>
+              {c.hint && (
+                <span className="block font-mono text-[11px] text-ink-subtle">{c.hint}</span>
+              )}
+            </span>
+            {c.verifiedAt && (
+              <span className="hidden items-center gap-1 font-mono text-[10px] text-ink-subtle sm:inline-flex">
+                <Calendar className="h-3 w-3" aria-hidden /> {c.verifiedAt}
+              </span>
+            )}
+            {c.href && <ExternalLink className="h-3 w-3 text-ink-subtle" aria-hidden />}
+          </span>
+        );
+        return (
+          <li key={c.label}>
+            {c.href ? (
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noreferrer"
+                className="block rounded-md px-2 transition-colors duration-200 hover:bg-surface-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+              >
+                {body}
+              </a>
+            ) : (
+              <div className="px-2">{body}</div>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

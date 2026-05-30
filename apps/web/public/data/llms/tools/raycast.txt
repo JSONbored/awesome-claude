@@ -1,12 +1,12 @@
 # Raycast
-URL: https://heyclau.de/tools/raycast
+URL: https://heyclau.de/entry/tools/raycast
 Category: tools
 Author: Raycast
 Date added: 2026-04-27
 Documentation: https://developers.raycast.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/raycast
+- Canonical URL: https://heyclau.de/entry/tools/raycast
 - Source URLs: https://developers.raycast.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/raycast.mdx, https://www.raycast.com
 - Brand: Raycast
 - Brand domain: raycast.com

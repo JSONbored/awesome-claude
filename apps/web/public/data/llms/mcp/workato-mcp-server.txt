@@ -1,5 +1,5 @@
 # Workato MCP Server for Claude
-URL: https://heyclau.de/mcp/workato-mcp-server
+URL: https://heyclau.de/entry/mcp/workato-mcp-server
 Category: mcp
 Author: Workato
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://docs.workato.com/mcp.html
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/workato-mcp-server.mdx
 Download: /downloads/mcp/workato-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/workato-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/workato-mcp-server
 - Source URLs: https://docs.workato.com/mcp.html, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/workato-mcp-server.mdx
 - Brand: Workato
 - Brand domain: workato.com

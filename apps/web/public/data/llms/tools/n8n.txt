@@ -1,5 +1,5 @@
 # n8n
-URL: https://heyclau.de/tools/n8n
+URL: https://heyclau.de/entry/tools/n8n
 Category: tools
 Author: n8n
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://docs.n8n.io
 Repository: https://github.com/n8n-io/n8n
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/n8n
+- Canonical URL: https://heyclau.de/entry/tools/n8n
 - Source URLs: https://docs.n8n.io, https://github.com/n8n-io/n8n, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/n8n.mdx, https://n8n.io
 - Brand: n8n
 - Brand domain: n8n.io

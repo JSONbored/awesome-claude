@@ -1,5 +1,5 @@
 # PageSpeed Insights Optimization Skill for AI Agents
-URL: https://heyclau.de/skills/pagespeed-insights-optimizer
+URL: https://heyclau.de/entry/skills/pagespeed-insights-optimizer
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://web.dev/articles/vitals
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/pagespeed-insights-optimizer.mdx
 Download: /downloads/skills/pagespeed-insights-optimizer.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/pagespeed-insights-optimizer
+- Canonical URL: https://heyclau.de/entry/skills/pagespeed-insights-optimizer
 - Source URLs: https://web.dev/articles/vitals, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/pagespeed-insights-optimizer.mdx
 - Package URL: /downloads/skills/pagespeed-insights-optimizer.zip
 - Package SHA256: bcb96e6ace1641db8801d2c105e7491c4ecb18fc181ae9a73378e0578d932fc4

@@ -1,7 +1,6 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { NextResponse } from "next/server";
 import { ZodError, type z } from "zod";
 
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 import {
   getApiRouteDefinition,
   type ApiRouteDefinition,
@@ -38,9 +37,7 @@ type RateLimitBinding = {
 
 function getRequestId(request: Request) {
   return (
-    request.headers.get("cf-ray") ||
-    request.headers.get("x-request-id") ||
-    crypto.randomUUID()
+    request.headers.get("cf-ray") || request.headers.get("x-request-id") || crypto.randomUUID()
   );
 }
 
@@ -75,7 +72,7 @@ export function apiError(
   headers.set("content-type", "application/json; charset=utf-8");
   if (!headers.has("cache-control")) headers.set("cache-control", "no-store");
 
-  return NextResponse.json(
+  return Response.json(
     {
       ok: false,
       error: {
@@ -92,7 +89,7 @@ export function apiError(
 export function apiJson(payload: unknown, init: ResponseInit = {}) {
   const headers = applySecurityHeaders(new Headers(init.headers));
   if (!headers.has("cache-control")) headers.set("cache-control", "no-store");
-  return NextResponse.json(payload, { ...init, headers });
+  return Response.json(payload, { ...init, headers });
 }
 
 export function withApiHeaders(response: Response) {
@@ -106,23 +103,15 @@ async function getCloudflareRateLimitBinding(
   const bindingName = definition.rateLimit?.binding;
   if (!bindingName) return null;
 
-  try {
-    const { env } = getCloudflareContext();
-    const binding = (env as unknown as Record<string, unknown>)[bindingName];
-    if (binding && typeof (binding as RateLimitBinding).limit === "function") {
-      return binding as RateLimitBinding;
-    }
-  } catch {
-    return null;
+  const binding = getCloudflareBinding<RateLimitBinding>(bindingName);
+  if (binding && typeof binding.limit === "function") {
+    return binding;
   }
 
   return null;
 }
 
-async function isCloudflareRateLimited(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+async function isCloudflareRateLimited(definition: ApiRouteDefinition, request: Request) {
   const binding = await getCloudflareRateLimitBinding(definition);
   if (!binding || !definition.rateLimit) return false;
 
@@ -135,10 +124,7 @@ async function isCloudflareRateLimited(
   }
 }
 
-async function enforceRateLimit(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+async function enforceRateLimit(definition: ApiRouteDefinition, request: Request) {
   const limit = definition.rateLimit;
   if (!limit) return false;
 
@@ -156,10 +142,7 @@ export function getApiRequestId(request: Request) {
   return getRequestId(request);
 }
 
-export async function enforceApiRateLimit(
-  definition: ApiRouteDefinition,
-  request: Request,
-) {
+export async function enforceApiRateLimit(definition: ApiRouteDefinition, request: Request) {
   return enforceRateLimit(definition, request);
 }
 
@@ -169,9 +152,7 @@ async function parseRequest(
   routeContext?: NextRouteContext,
 ) {
   const params = routeContext?.params ? await routeContext.params : {};
-  const parsedParams = definition.paramsSchema
-    ? definition.paramsSchema.parse(params)
-    : params;
+  const parsedParams = definition.paramsSchema ? definition.paramsSchema.parse(params) : params;
   const parsedQuery = definition.querySchema
     ? definition.querySchema.parse(getQueryObject(request))
     : {};
@@ -209,10 +190,7 @@ export function createApiHandler<TDefinition extends ApiRouteDefinition>(
       return apiError("forbidden_origin", 403, { requestId });
     }
 
-    if (
-      (route.bodySchema || route.requiresJsonBody) &&
-      !hasJsonContentType(request)
-    ) {
+    if ((route.bodySchema || route.requiresJsonBody) && !hasJsonContentType(request)) {
       logApiWarn(request, `${route.id}.invalid_content_type`);
       return apiError("invalid_content_type", 415, { requestId });
     }

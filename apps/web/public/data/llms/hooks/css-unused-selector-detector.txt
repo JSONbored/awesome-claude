@@ -1,11 +1,11 @@
 # CSS Unused Selector Detector - Hooks
-URL: https://heyclau.de/hooks/css-unused-selector-detector
+URL: https://heyclau.de/entry/hooks/css-unused-selector-detector
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/css-unused-selector-detector
+- Canonical URL: https://heyclau.de/entry/hooks/css-unused-selector-detector
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/css-unused-selector-detector.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

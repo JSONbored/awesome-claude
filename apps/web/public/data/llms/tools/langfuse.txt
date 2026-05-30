@@ -1,5 +1,5 @@
 # Langfuse
-URL: https://heyclau.de/tools/langfuse
+URL: https://heyclau.de/entry/tools/langfuse
 Category: tools
 Author: Langfuse
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://langfuse.com/docs
 Repository: https://github.com/langfuse/langfuse
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/langfuse
+- Canonical URL: https://heyclau.de/entry/tools/langfuse
 - Source URLs: https://langfuse.com/docs, https://github.com/langfuse/langfuse, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx, https://langfuse.com
 - Brand: Langfuse
 - Brand domain: langfuse.com

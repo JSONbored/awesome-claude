@@ -1,5 +1,5 @@
 # V0 Rapid UI Prototyping Workflow Skill
-URL: https://heyclau.de/skills/v0-rapid-prototyping
+URL: https://heyclau.de/entry/skills/v0-rapid-prototyping
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://v0.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/v0-rapid-prototyping.mdx
 Download: /downloads/skills/v0-rapid-prototyping.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/v0-rapid-prototyping
+- Canonical URL: https://heyclau.de/entry/skills/v0-rapid-prototyping
 - Source URLs: https://v0.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/v0-rapid-prototyping.mdx
 - Package URL: /downloads/skills/v0-rapid-prototyping.zip
 - Package SHA256: 4d04ee6b712ac687c14c4a7d539bd4eb8182cac36364c413426c92a465602174

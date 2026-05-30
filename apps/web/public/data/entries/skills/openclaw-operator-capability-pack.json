@@ -248,7 +248,16 @@
     "repoUrl": "https://github.com/openclaw/openclaw",
     "githubStars": 373140,
     "githubForks": 77409,
-    "repoUpdatedAt": "2026-05-19T11:43:27Z"
+    "repoUpdatedAt": "2026-05-19T11:43:27Z",
+    "repoStats": {
+      "repository": "openclaw/openclaw",
+      "url": "https://github.com/openclaw/openclaw",
+      "stars": 373140,
+      "forks": 77409,
+      "updatedAt": "2026-05-19T11:43:27Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

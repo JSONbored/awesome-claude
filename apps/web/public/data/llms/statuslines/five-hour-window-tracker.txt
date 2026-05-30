@@ -1,12 +1,12 @@
 # Five Hour Window Tracker - Statuslines
-URL: https://heyclau.de/statuslines/five-hour-window-tracker
+URL: https://heyclau.de/entry/statuslines/five-hour-window-tracker
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/five-hour-window-tracker.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/five-hour-window-tracker
+- Canonical URL: https://heyclau.de/entry/statuslines/five-hour-window-tracker
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/five-hour-window-tracker.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

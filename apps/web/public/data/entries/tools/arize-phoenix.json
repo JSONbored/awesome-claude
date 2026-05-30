@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/Arize-ai/phoenix",
     "githubStars": 9739,
     "githubForks": 879,
-    "repoUpdatedAt": "2026-05-19T11:06:07Z"
+    "repoUpdatedAt": "2026-05-19T11:06:07Z",
+    "repoStats": {
+      "repository": "Arize-ai/phoenix",
+      "url": "https://github.com/Arize-ai/phoenix",
+      "stars": 9739,
+      "forks": 879,
+      "updatedAt": "2026-05-19T11:06:07Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

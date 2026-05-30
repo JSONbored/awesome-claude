@@ -1,12 +1,12 @@
 # Biome Strict Linting Rules - Production Code Quality Config
-URL: https://heyclau.de/rules/biome-strict-linting-rules
+URL: https://heyclau.de/entry/rules/biome-strict-linting-rules
 Category: rules
 Author: JSONbored
 Date added: 2025-10-19
 Documentation: https://biomejs.dev/linter/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/biome-strict-linting-rules
+- Canonical URL: https://heyclau.de/entry/rules/biome-strict-linting-rules
 - Source URLs: https://biomejs.dev/linter/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/biome-strict-linting-rules.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

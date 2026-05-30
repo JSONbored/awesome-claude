@@ -1,5 +1,5 @@
 # OpenClaw Skill Authoring Factory Capability Pack Skill
-URL: https://heyclau.de/skills/openclaw-skill-authoring-factory-capability-pack
+URL: https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -8,7 +8,7 @@ Repository: https://github.com/openclaw/openclaw
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx
 Download: /downloads/skills/openclaw-skill-authoring-factory-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/openclaw-skill-authoring-factory-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack
 - Source URLs: https://github.com/openclaw/openclaw, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx
 - Package URL: /downloads/skills/openclaw-skill-authoring-factory-capability-pack.zip
 - Package SHA256: cf3ec648f0dd4808a709afca8306947b6be5c9bc18e2b481cdf0436e846fe9e3

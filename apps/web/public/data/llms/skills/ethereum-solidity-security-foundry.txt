@@ -1,5 +1,5 @@
 # Ethereum Solidity Security Foundry Skill
-URL: https://heyclau.de/skills/ethereum-solidity-security-foundry
+URL: https://heyclau.de/entry/skills/ethereum-solidity-security-foundry
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://ethereum.org/developers/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-solidity-security-foundry.mdx
 Download: /downloads/skills/ethereum-solidity-security-foundry.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/ethereum-solidity-security-foundry
+- Canonical URL: https://heyclau.de/entry/skills/ethereum-solidity-security-foundry
 - Source URLs: https://ethereum.org/developers/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-solidity-security-foundry.mdx
 - Package URL: /downloads/skills/ethereum-solidity-security-foundry.zip
 - Package SHA256: 658d185c8a7a5c7981f9d4c0d5bb046f425a567016a35bbd8c8aaaf83284db5e

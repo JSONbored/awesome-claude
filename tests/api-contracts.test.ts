@@ -3,6 +3,7 @@ import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
+import { ENDPOINTS, OPENAPI_TAGS } from "../apps/web/src/data/openapi";
 import { listApiRouteDefinitions } from "../apps/web/src/lib/api/contracts";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -10,7 +11,7 @@ function findRouteFiles(directory: string): string[] {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
     const entryPath = path.join(directory, entry.name);
     if (entry.isDirectory()) return findRouteFiles(entryPath);
-    return /route\.tsx?$/.test(entry.name) ? [entryPath] : [];
+    return /\.tsx?$/.test(entry.name) ? [entryPath] : [];
   });
 }
 
@@ -33,8 +34,10 @@ const apiRoutes = [
   "/api/og",
   "/api/submissions",
   "/api/submissions/preflight",
+  "/api/submissions/queue",
   "/api/download",
   "/api/jobs",
+  "/api/jobs/{slug}",
   "/api/listing-leads",
   "/api/admin/listing-leads",
   "/api/admin/jobs",
@@ -43,6 +46,8 @@ const apiRoutes = [
   "/api/community-signals",
   "/api/community-signals/query",
   "/api/github-stats",
+  "/api/public/alerts",
+  "/api/public/feeds/health",
   "/feed.xml",
   "/atom.xml",
   "/data/feeds/index.json",
@@ -55,6 +60,16 @@ describe("OpenAPI route coverage", () => {
     path.join(repoRoot, "cloudflare/api-schema-heyclaude-openapi.yaml"),
     "utf8",
   );
+  const publicYamlSchema = fs.readFileSync(
+    path.join(repoRoot, "apps/web/public/openapi.yaml"),
+    "utf8",
+  );
+  const publicJsonSchema = JSON.parse(
+    fs.readFileSync(
+      path.join(repoRoot, "apps/web/public/openapi.json"),
+      "utf8",
+    ),
+  ) as { openapi?: string; paths?: Record<string, unknown> };
   const parsedSchema = parse(schema) as {
     paths: Record<
       string,
@@ -72,6 +87,10 @@ describe("OpenAPI route coverage", () => {
       schemas?: Record<string, { properties?: Record<string, unknown> }>;
     };
   };
+  const parsedPublicYamlSchema = parse(publicYamlSchema) as {
+    openapi?: string;
+    paths?: Record<string, unknown>;
+  };
 
   it("documents every public and limited dynamic API route", () => {
     for (const route of apiRoutes) {
@@ -83,17 +102,96 @@ describe("OpenAPI route coverage", () => {
     ).toEqual(apiRoutes.toSorted());
   });
 
+  it("publishes static OpenAPI JSON and YAML assets for the docs surface", () => {
+    expect(parsedPublicYamlSchema.openapi).toBe("3.1.0");
+    expect(Object.keys(parsedPublicYamlSchema.paths ?? {}).sort()).toEqual(
+      Object.keys(parsedSchema.paths).sort(),
+    );
+    expect(publicJsonSchema.openapi).toBe("3.1.0");
+    expect(Object.keys(publicJsonSchema.paths ?? {}).sort()).toEqual(
+      Object.keys(parsedSchema.paths).sort(),
+    );
+  });
+
+  it("renders every documented endpoint tag in the Atlas API docs data", () => {
+    const documentedEndpointIds = new Set(
+      ENDPOINTS.map((endpoint) => endpoint.id),
+    );
+    const renderedTagIds = new Set(OPENAPI_TAGS.map((tag) => tag.id));
+
+    for (const route of listApiRouteDefinitions()) {
+      expect(documentedEndpointIds, route.id).toContain(
+        route.id.replaceAll(".", "-"),
+      );
+      for (const tag of route.tags) {
+        expect(renderedTagIds, `${route.id}:${tag}`).toContain(
+          tag.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        );
+      }
+    }
+
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "registry-search"),
+    ).toMatchObject({
+      liveRequest: true,
+      parameters: expect.arrayContaining([
+        expect.objectContaining({ name: "q", in: "query", example: "mcp" }),
+        expect.objectContaining({ name: "limit", in: "query", example: "5" }),
+      ]),
+    });
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "submissions-create"),
+    ).toMatchObject({
+      liveRequest: false,
+    });
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "jobs-detail"),
+    ).toMatchObject({
+      liveRequest: true,
+      parameters: expect.arrayContaining([
+        expect.objectContaining({ name: "slug", in: "path" }),
+      ]),
+    });
+  });
+
+  it("keeps API docs examples tied to known contracts and real client paths", () => {
+    const routeIds = new Set(
+      listApiRouteDefinitions().map((route) => route.id.replaceAll(".", "-")),
+    );
+    for (const endpoint of ENDPOINTS) {
+      expect(routeIds, endpoint.id).toContain(endpoint.id);
+      expect(endpoint.responseExample, endpoint.id).not.toBe(
+        JSON.stringify({ ok: true }, null, 2),
+      );
+      expect(endpoint.responseExample, endpoint.id).not.toContain("heyclaude.");
+      expect(endpoint.responseExample, endpoint.id).not.toContain(
+        "raycast://extensions/jsonbored/heyclaude/",
+      );
+    }
+
+    const search = ENDPOINTS.find(
+      (endpoint) => endpoint.id === "registry-search",
+    );
+    expect(search?.clientExamples).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          label: "Raycast",
+          code: "raycast://extensions/jsonbored/heyclaude/search",
+        }),
+        expect.objectContaining({ label: "MCP" }),
+      ]),
+    );
+  });
+
   it("keeps route handlers as central-router adapters", () => {
     const routeFiles = findRouteFiles(
-      path.join(repoRoot, "apps/web/src/app/api"),
-    );
+      path.join(repoRoot, "apps/web/src/routes/api"),
+    ).filter((filePath) => !filePath.includes(`${path.sep}public${path.sep}`));
 
     expect(routeFiles.length).toBeGreaterThan(0);
     for (const filePath of routeFiles) {
       const source = fs.readFileSync(filePath, "utf8");
-      if (
-        filePath.endsWith(`${path.sep}api${path.sep}mcp${path.sep}route.ts`)
-      ) {
+      if (filePath.endsWith(`${path.sep}api${path.sep}mcp.ts`)) {
         expect(source, filePath).toContain(
           'getApiRouteDefinition("mcp.streamable")',
         );
@@ -232,10 +330,13 @@ describe("OpenAPI route coverage", () => {
         | Record<string, { schema?: { $ref?: string } }>
         | undefined
     )?.["application/json"]?.schema;
-    const component =
-      parsedSchema.components?.schemas?.RegistryTrendingResponse?.properties as
-        | Record<string, { maxItems?: number; minimum?: number; maximum?: number }>
-        | undefined;
+    const component = parsedSchema.components?.schemas?.RegistryTrendingResponse
+      ?.properties as
+      | Record<
+          string,
+          { maxItems?: number; minimum?: number; maximum?: number }
+        >
+      | undefined;
 
     expect(responseSchema?.$ref).toBe(
       "#/components/schemas/RegistryTrendingResponse",

@@ -1,5 +1,5 @@
 # Mastra
-URL: https://heyclau.de/tools/mastra
+URL: https://heyclau.de/entry/tools/mastra
 Category: tools
 Author: Mastra
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://mastra.ai/docs
 Repository: https://github.com/mastra-ai/mastra
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/mastra
+- Canonical URL: https://heyclau.de/entry/tools/mastra
 - Source URLs: https://mastra.ai/docs, https://github.com/mastra-ai/mastra, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx, https://mastra.ai
 - Brand: Mastra
 - Brand domain: mastra.ai

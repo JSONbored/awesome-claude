@@ -74,7 +74,16 @@
     "repoUrl": "https://github.com/promptfoo/promptfoo",
     "githubStars": 21394,
     "githubForks": 1867,
-    "repoUpdatedAt": "2026-05-19T11:24:05Z"
+    "repoUpdatedAt": "2026-05-19T11:24:05Z",
+    "repoStats": {
+      "repository": "promptfoo/promptfoo",
+      "url": "https://github.com/promptfoo/promptfoo",
+      "stars": 21394,
+      "forks": 1867,
+      "updatedAt": "2026-05-19T11:24:05Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

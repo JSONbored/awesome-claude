@@ -1,5 +1,5 @@
 # Airtable MCP Server for Claude
-URL: https://heyclau.de/mcp/airtable-mcp-server
+URL: https://heyclau.de/entry/mcp/airtable-mcp-server
 Category: mcp
 Author: domdomegg
 Date added: 2025-09-18
@@ -8,7 +8,7 @@ Repository: https://github.com/domdomegg/airtable-mcp-server
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/airtable-mcp-server.mdx
 Download: /downloads/mcp/airtable-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/airtable-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/airtable-mcp-server
 - Source URLs: https://github.com/domdomegg/airtable-mcp-server, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/airtable-mcp-server.mdx
 - Brand: Airtable
 - Brand domain: airtable.com

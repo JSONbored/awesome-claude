@@ -1,11 +1,11 @@
 # AWS Infra Bundle
-URL: https://heyclau.de/collections/aws-cloud-infrastructure-bundle
+URL: https://heyclau.de/entry/collections/aws-cloud-infrastructure-bundle
 Category: collections
 Author: JSONbored
 Date added: 2025-10-02
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/collections/aws-cloud-infrastructure-bundle
+- Canonical URL: https://heyclau.de/entry/collections/aws-cloud-infrastructure-bundle
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/aws-cloud-infrastructure-bundle.mdx
 - Brand: AWS
 - Brand domain: aws.amazon.com

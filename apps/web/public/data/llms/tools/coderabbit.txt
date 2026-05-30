@@ -1,12 +1,12 @@
 # CodeRabbit
-URL: https://heyclau.de/tools/coderabbit
+URL: https://heyclau.de/entry/tools/coderabbit
 Category: tools
 Author: CodeRabbit
 Date added: 2026-04-27
 Documentation: https://docs.coderabbit.ai
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/coderabbit
+- Canonical URL: https://heyclau.de/entry/tools/coderabbit
 - Source URLs: https://docs.coderabbit.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/coderabbit.mdx, https://www.coderabbit.ai
 - Brand: CodeRabbit
 - Brand domain: coderabbit.ai

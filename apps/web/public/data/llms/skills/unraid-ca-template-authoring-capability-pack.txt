@@ -1,5 +1,5 @@
 # Unraid CA Template Authoring Capability Pack Skill
-URL: https://heyclau.de/skills/unraid-ca-template-authoring-capability-pack
+URL: https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -7,7 +7,7 @@ Documentation: https://forums.unraid.net/forum/64-docker-engine/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx
 Download: /downloads/skills/unraid-ca-template-authoring-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/unraid-ca-template-authoring-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack
 - Source URLs: https://forums.unraid.net/forum/64-docker-engine/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx
 - Brand: Docker
 - Brand domain: docker.com

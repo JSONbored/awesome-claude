@@ -1,0 +1,223 @@
+import * as React from "react";
+import { Link } from "@tanstack/react-router";
+import { Eye, ExternalLink, Star, ArrowUpRight, BookOpen, GitBranch } from "lucide-react";
+import type { Entry, Harness } from "@/types/registry";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Kbd } from "@/components/badges";
+import {
+  CategoryPill,
+  TrustBadge,
+  InstallRiskBadge,
+  NotesPresenceChips,
+  SourceBadge,
+  PlatformChip,
+} from "./badges";
+import { SourceCitations } from "./source-citations";
+import { CopySegmented, variantsForEntry } from "./copy-segmented";
+import { HarnessVariantPicker } from "./harness-variant-picker";
+import { useHarnessPref, useCopyPref, type CopyVariant } from "@/lib/dossier-prefs";
+import { cn } from "@/lib/utils";
+import { setHotPeek, clearHotPeek, installPeekShortcut } from "@/lib/peek-hotkey";
+
+export interface PeekHandle {
+  open: () => void;
+}
+
+interface Props {
+  entry: Entry;
+  className?: string;
+}
+
+/**
+ * Quick-peek drawer trigger. Renders an icon-only button and an attached Sheet
+ * with a mini dossier. Exposes an imperative `open()` so cards can wire the
+ * global `P` hotkey to the focused/hovered card.
+ */
+export const PeekButton = React.forwardRef<PeekHandle, Props>(function PeekButton(
+  { entry, className },
+  ref,
+) {
+  const [open, setOpen] = React.useState(false);
+  React.useImperativeHandle(ref, () => ({ open: () => setOpen(true) }), []);
+  React.useEffect(() => {
+    installPeekShortcut();
+  }, []);
+  return (
+    <Sheet open={open} onOpenChange={setOpen}>
+      <TooltipProvider delayDuration={300}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <SheetTrigger asChild>
+              <button
+                type="button"
+                aria-label={`Peek ${entry.title} (press P)`}
+                aria-haspopup="dialog"
+                aria-keyshortcuts="P"
+                onClick={(e) => e.stopPropagation()}
+                className={cn(
+                  "inline-flex h-7 w-7 items-center justify-center rounded-md border border-border bg-surface text-ink-muted transition-colors hover:border-border-strong hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60",
+                  className,
+                )}
+              >
+                <Eye className="h-3.5 w-3.5" aria-hidden />
+              </button>
+            </SheetTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="flex items-center gap-1.5">
+            <span>Peek</span>
+            <Kbd>P</Kbd>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      <SheetContent
+        side="right"
+        className="w-full overflow-y-auto sm:max-w-md"
+        aria-labelledby={`peek-title-${entry.slug}`}
+      >
+        <PeekBody entry={entry} titleId={`peek-title-${entry.slug}`} />
+      </SheetContent>
+    </Sheet>
+  );
+});
+
+function PeekBody({ entry, titleId }: { entry: Entry; titleId: string }) {
+  const harnessAvailable = React.useMemo<Harness[]>(
+    () => (entry.harnessVariants ? (Object.keys(entry.harnessVariants) as Harness[]) : []),
+    [entry.harnessVariants],
+  );
+  const [harness, setHarness] = useHarnessPref(entry.category, entry.slug, harnessAvailable);
+  const variants = React.useMemo(() => variantsForEntry(entry, harness), [entry, harness]);
+
+  return (
+    <>
+      <SheetHeader className="space-y-3 text-left">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <CategoryPill>{entry.category}</CategoryPill>
+          <TrustBadge level={entry.trust} />
+          <SourceBadge status={entry.source} />
+          <InstallRiskBadge entry={entry} size="xs" />
+        </div>
+        <SheetTitle id={titleId} className="font-display text-lg leading-tight text-ink">
+          {entry.title}
+        </SheetTitle>
+        <SheetDescription className="text-sm text-ink-muted">
+          {entry.cardDescription ?? entry.description}
+        </SheetDescription>
+        <div className="flex flex-wrap items-center gap-2 text-xs text-ink-muted">
+          <span>
+            by <span className="text-ink">{entry.author}</span>
+          </span>
+          {typeof entry.repoStats?.stars === "number" && (
+            <span className="inline-flex items-center gap-1 tabular-nums" title="Source repo stars">
+              <Star className="h-3 w-3" aria-hidden />
+              {entry.repoStats.stars.toLocaleString()} repo
+            </span>
+          )}
+          <NotesPresenceChips entry={entry} className="ml-auto" />
+        </div>
+      </SheetHeader>
+
+      {entry.platforms?.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-1">
+          <span className="eyebrow mr-1">Platforms</span>
+          {entry.platforms.map((p) => (
+            <PlatformChip key={p} id={p} />
+          ))}
+        </div>
+      )}
+
+      {harnessAvailable.length >= 2 && (
+        <div className="mt-4">
+          <div id={`peek-harness-${entry.slug}`} className="eyebrow mb-2">
+            Harness variant
+          </div>
+          <HarnessVariantPicker
+            available={harnessAvailable}
+            value={harness as Harness | null}
+            onChange={setHarness}
+            labelId={`peek-harness-${entry.slug}`}
+          />
+        </div>
+      )}
+
+      <div className="mt-4">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <span id={`peek-snippet-${entry.slug}`} className="eyebrow mr-1">
+            Snippet
+          </span>
+          <CopySegmented
+            variants={variants}
+            entryTitle={entry.title}
+            labelId={`peek-snippet-${entry.slug}`}
+          />
+        </div>
+        {variants.find((v) => v.id === variants.find((x) => x.value)?.id)?.value && (
+          <SnippetPreview variants={variants} />
+        )}
+      </div>
+
+      <div className="mt-5">
+        <div className="eyebrow mb-2">Sources</div>
+        <SourceCitations entry={entry} />
+      </div>
+
+      <div className="mt-5 flex flex-wrap items-center gap-2">
+        <Link
+          to="/entry/$category/$slug"
+          params={{ category: entry.category, slug: entry.slug }}
+          className="inline-flex h-8 items-center gap-1.5 rounded-md bg-ink px-3 text-xs font-medium text-background hover:bg-ink/90"
+        >
+          Open dossier <ArrowUpRight className="h-3 w-3" />
+        </Link>
+        {entry.sourceUrl && (
+          <a
+            href={entry.sourceUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
+          >
+            <GitBranch className="h-3.5 w-3.5" /> Source <ExternalLink className="h-3 w-3" />
+          </a>
+        )}
+        {entry.docsUrl && (
+          <a
+            href={entry.docsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-3 text-xs font-medium text-ink hover:bg-surface-2"
+          >
+            <BookOpen className="h-3.5 w-3.5" /> Docs <ExternalLink className="h-3 w-3" />
+          </a>
+        )}
+      </div>
+    </>
+  );
+}
+
+function SnippetPreview({ variants }: { variants: ReturnType<typeof variantsForEntry> }) {
+  const [pref] = useCopyPref();
+  const firstAvailable = variants.find((v) => v.value)?.id ?? "install";
+  const active: CopyVariant =
+    pref && variants.find((v) => v.id === pref)?.value ? pref : firstAvailable;
+  const payload = variants.find((v) => v.id === active)?.value;
+  if (!payload) return null;
+  return (
+    <pre className="max-h-48 overflow-auto rounded-md border border-border bg-surface-2 p-3 font-mono text-[11px] leading-relaxed text-ink">
+      <code>{payload}</code>
+    </pre>
+  );
+}
+
+/**
+ * Re-export hooks for cards that want to register themselves as the "hot"
+ * peek target on focus/hover.
+ */
+export { setHotPeek, clearHotPeek };

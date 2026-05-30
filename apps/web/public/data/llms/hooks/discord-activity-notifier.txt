@@ -1,12 +1,12 @@
 # Discord Activity Notifier - Hooks
-URL: https://heyclau.de/hooks/discord-activity-notifier
+URL: https://heyclau.de/entry/hooks/discord-activity-notifier
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Documentation: https://discord.com/developers/docs/resources/webhook
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/discord-activity-notifier
+- Canonical URL: https://heyclau.de/entry/hooks/discord-activity-notifier
 - Source URLs: https://discord.com/developers/docs/resources/webhook, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/discord-activity-notifier.mdx
 - Brand: Discord
 - Brand domain: discord.com

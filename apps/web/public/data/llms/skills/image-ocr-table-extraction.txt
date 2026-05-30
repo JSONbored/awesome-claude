@@ -1,5 +1,5 @@
 # Image OCR + Table Extraction Skill
-URL: https://heyclau.de/skills/image-ocr-table-extraction
+URL: https://heyclau.de/entry/skills/image-ocr-table-extraction
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -7,7 +7,7 @@ Documentation: https://tesseract-ocr.github.io/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/image-ocr-table-extraction.mdx
 Download: /downloads/skills/image-ocr-table-extraction.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/image-ocr-table-extraction
+- Canonical URL: https://heyclau.de/entry/skills/image-ocr-table-extraction
 - Source URLs: https://tesseract-ocr.github.io/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/image-ocr-table-extraction.mdx
 - Package URL: /downloads/skills/image-ocr-table-extraction.zip
 - Package SHA256: 9b48b3202b664e1fbe69e162d3193cb5ad7f64a38a929268b4175c3433873764

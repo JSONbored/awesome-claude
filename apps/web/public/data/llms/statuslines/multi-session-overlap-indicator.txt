@@ -1,12 +1,12 @@
 # Multi Session Overlap Indicator - Statuslines
-URL: https://heyclau.de/statuslines/multi-session-overlap-indicator
+URL: https://heyclau.de/entry/statuslines/multi-session-overlap-indicator
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-session-overlap-indicator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/multi-session-overlap-indicator
+- Canonical URL: https://heyclau.de/entry/statuslines/multi-session-overlap-indicator
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/multi-session-overlap-indicator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

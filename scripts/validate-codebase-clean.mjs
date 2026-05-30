@@ -4,10 +4,22 @@ import path from "node:path";
 const repoRoot = process.cwd();
 
 const forbiddenPaths = [
+  ".lovable",
+  "apps/web/.lovable",
+  "bun.lock",
+  "apps/web/bun.lock",
+  "apps/web/bunfig.toml",
+  "apps/web/next.config.js",
+  "apps/web/next.config.mjs",
+  "apps/web/open-next.config.ts",
+  "apps/web/open-next.config.js",
+  "apps/web/src/app",
+  "apps/web/src/mocks",
   "apps/web/public/data/content-index.json",
   "apps/web/src/data/curated-jobs.json",
   "apps/web/src/generated/content-category-spec.json",
   "apps/web/src/generated/legacy-vote-seed.json",
+  "apps/web/src/data/signals.ts",
   "apps/web/src/lib/entry-presentation.ts",
   "apps/web/src/lib/llms-export.ts",
   "content/archive/legacy-data",
@@ -33,6 +45,8 @@ const forbiddenPaths = [
 const ignoredDirs = new Set([
   ".git",
   ".next",
+  "dist",
+  "dist-ssr",
   "node_modules",
   "apps/web/public/data",
   "integrations/raycast/node_modules",
@@ -80,6 +94,36 @@ const forbiddenPatterns = [
   {
     pattern: /\[Script content from first example\]/,
     label: "placeholder script marker",
+  },
+  {
+    pattern:
+      /local stub|silent fail is fine for the demo|Submitted \(mock\)|Claim submitted \(mock\)/i,
+    label: "public fixture-only behavior",
+  },
+  {
+    pattern: /Indexed 12 min ago/,
+    label: "hardcoded registry freshness claim",
+  },
+  {
+    pattern: /updated 12m ago|2026-05-26 · 08:12 UTC|14-build trend/i,
+    label: "hardcoded Atlas freshness or trend claim",
+  },
+  {
+    pattern:
+      /Checksum drift detected|New entries signed|Latest health probe completed/i,
+    label: "seeded fake alert event",
+  },
+  {
+    pattern: /\/feeds\/ecosystem\.json/,
+    label: "broken ecosystem feed URL",
+  },
+  {
+    pattern: /@\/mocks\b/,
+    label: "production import from retired mocks namespace",
+  },
+  {
+    pattern: /(?:upvotes|weeklyInstalls|trending):\s*Math\./,
+    label: "derived fake public signal metric",
   },
   {
     pattern: /Array\.isArray\(payload\)\s*\?\s*payload/,
@@ -194,6 +238,27 @@ function walk(dir) {
     if (!searchable) continue;
 
     const source = fs.readFileSync(fullPath, "utf8");
+    if (
+      relativePath.startsWith("apps/web/src/") &&
+      !relativePath.endsWith(".server.ts") &&
+      !relativePath.endsWith(".server.tsx") &&
+      !relativePath.includes("/generated/") &&
+      /from\s+["']node:/.test(source)
+    ) {
+      failures.push(
+        `${relativePath}: Node builtin import outside server-only module`,
+      );
+    }
+    if (/@\/lib\/content(?=["'])/.test(source)) {
+      failures.push(
+        `${relativePath}: import content artifacts through content.server`,
+      );
+    }
+    if (/@\/lib\/cloudflare-env(?=["'])/.test(source)) {
+      failures.push(
+        `${relativePath}: import Cloudflare runtime through cloudflare-env.server`,
+      );
+    }
     for (const { pattern, label } of forbiddenPatterns) {
       if (pattern.test(source)) failures.push(`${relativePath}: ${label}`);
     }
@@ -250,7 +315,6 @@ if (fs.existsSync(tasksPath)) {
     "validate:emails",
     "test:mcp",
     "test",
-    "test:e2e",
     "type-check",
     "build",
   ]) {
@@ -279,7 +343,6 @@ for (const scriptName of [
   "validate:emails",
   "test:mcp",
   "test",
-  "test:e2e",
   "type-check",
   "build",
   "validate:tasks",
@@ -308,6 +371,7 @@ for (const route of [
   "/api/registry/entries/{category}/{slug}/llms:",
   "/api/submissions:",
   "/api/listing-leads:",
+  "/api/jobs/{slug}:",
   "/api/admin/listing-leads:",
   "/api/admin/jobs:",
   "/api/admin/jobs/health:",

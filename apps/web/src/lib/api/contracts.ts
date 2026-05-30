@@ -1,11 +1,24 @@
 import { z } from "zod";
-import { normalizeBrandDomain } from "@heyclaude/registry";
+import { normalizeBrandDomain } from "@heyclaude/registry/brand-assets";
 import { validateJobPublicationQuality } from "@heyclaude/registry/commercial";
 
 const entryKeySchema = z.string().regex(/^[a-z0-9-]+:[a-z0-9-]+$/);
 const safeSlugSchema = z.string().regex(/^[a-z0-9-]+$/);
-const categorySchema = z.union([safeSlugSchema, z.literal("")]).optional().default("");
-const platformSchema = z.union([z.string().trim().toLowerCase().regex(/^[a-z0-9][a-z0-9 -]{0,48}$/), z.literal("")]).optional().default("");
+const categorySchema = z
+  .union([safeSlugSchema, z.literal("")])
+  .optional()
+  .default("");
+const platformSchema = z
+  .union([
+    z
+      .string()
+      .trim()
+      .toLowerCase()
+      .regex(/^[a-z0-9][a-z0-9 -]{0,48}$/),
+    z.literal(""),
+  ])
+  .optional()
+  .default("");
 const jobTierSchema = z.enum(["free", "standard", "featured", "sponsored"]);
 const jobStatusSchema = z.enum([
   "draft",
@@ -16,11 +29,7 @@ const jobStatusSchema = z.enum([
   "archived",
 ]);
 const jobSourceSchema = z.enum(["manual", "polar", "email", "curated"]);
-const jobSourceKindSchema = z.enum([
-  "official_ats",
-  "employer_careers",
-  "employer_submitted",
-]);
+const jobSourceKindSchema = z.enum(["official_ats", "employer_careers", "employer_submitted"]);
 const listingLeadStatusSchema = z.enum([
   "new",
   "pending_review",
@@ -70,11 +79,7 @@ function isAsciiEmail(value: string) {
     const isLowerAlpha = code >= 97 && code <= 122;
     const isDigit = code >= 48 && code <= 57;
     if (char === ".") {
-      if (
-        labelLength === 0 ||
-        previousDomainChar === "-" ||
-        previousDomainChar === "."
-      ) {
+      if (labelLength === 0 || previousDomainChar === "-" || previousDomainChar === ".") {
         return false;
       }
       dotCount += 1;
@@ -115,13 +120,7 @@ const isoDateLikeSchema = z
   .default("");
 
 export const jobSourceKindFilterSchema = z
-  .enum([
-    "all",
-    "official_ats",
-    "employer_careers",
-    "employer_submitted",
-    "",
-  ])
+  .enum(["all", "official_ats", "employer_careers", "employer_submitted", ""])
   .optional()
   .default("all");
 
@@ -136,10 +135,7 @@ export const publicJobsQuerySchema = z.object({
   type: z.string().trim().toLowerCase().max(60).optional().default(""),
   sourceKind: jobSourceKindFilterSchema,
   compensation: z.enum(["all", "true", "false", ""]).optional().default("all"),
-  claimedEmployer: z
-    .enum(["all", "true", "false", ""])
-    .optional()
-    .default("all"),
+  claimedEmployer: z.enum(["all", "true", "false", ""]).optional().default("all"),
   postedAfter: isoDateLikeSchema,
   limit: z.coerce.number().int().min(1).max(100).optional().default(100),
   offset: z.coerce
@@ -149,6 +145,73 @@ export const publicJobsQuerySchema = z.object({
     .max(10_000)
     .default(0)
     .meta({ type: "integer", minimum: 0, maximum: 10_000, default: 0 }),
+});
+
+export const publicJobParamsSchema = z.object({
+  slug: safeSlugSchema,
+});
+
+const publicJobListingSchema = z
+  .object({
+    slug: z.string(),
+    title: z.string(),
+    company: z.string(),
+    companyUrl: z.string().url().optional(),
+    location: z.string(),
+    description: z.string(),
+    descriptionMd: z.string().optional(),
+    type: z.string().optional(),
+    postedAt: z.string().optional(),
+    compensation: z.string().optional(),
+    equity: z.string().optional(),
+    bonus: z.string().optional(),
+    benefits: z.array(z.string()).max(24).optional(),
+    responsibilities: z.array(z.string()).max(24).optional(),
+    requirements: z.array(z.string()).max(24).optional(),
+    featured: z.boolean(),
+    sponsored: z.boolean().optional(),
+    applyUrl: z.string(),
+    tier: jobTierSchema.optional(),
+    status: jobStatusSchema.optional(),
+    source: jobSourceSchema.optional(),
+    sourceKind: jobSourceKindSchema.optional(),
+    sourceUrl: z.string().optional(),
+    firstSeenAt: z.string().optional(),
+    lastCheckedAt: z.string().optional(),
+    sourceCheckedAt: z.string().optional(),
+    curationNote: z.string().optional(),
+    claimedEmployer: z.boolean().optional(),
+    expiresAt: z.string().optional(),
+    isRemote: z.boolean().optional(),
+    isWorldwide: z.boolean().optional(),
+    webUrl: z.string().url(),
+    labels: z.array(z.string()).max(24),
+    sourceLabel: z.string(),
+    applySourceLabel: z.string(),
+    lastVerifiedAt: z.string().optional(),
+  })
+  .passthrough();
+
+export const publicJobsResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("jobs-index"),
+  generatedAt: z.string(),
+  count: z.number().int().nonnegative(),
+  total: z.number().int().nonnegative(),
+  totalAvailable: z.number().int().nonnegative(),
+  limit: z.number().int().min(1).max(100),
+  offset: z.number().int().min(0),
+  nextOffset: z.number().int().nullable(),
+  entries: z.array(publicJobListingSchema).max(100),
+});
+
+export const publicJobDetailResponseSchema = z.object({
+  schemaVersion: z.number(),
+  kind: z.literal("jobs-detail"),
+  slug: z.string(),
+  generatedAt: z.string(),
+  entry: publicJobListingSchema,
+  related: z.array(publicJobListingSchema).max(4),
 });
 
 export const apiErrorEnvelopeSchema = z.object({
@@ -279,7 +342,23 @@ export const registryTrendingResponseSchema = z.object({
   limit: z.number().int().min(1).max(50),
   count: z.number().int().nonnegative(),
   signalsAvailable: z.object({ votes: z.boolean(), community: z.boolean(), intent: z.boolean() }),
-  entries: z.array(z.object({ category: z.string(), slug: z.string(), title: z.string(), description: z.string(), canonicalUrl: z.string().url().optional(), platforms: z.array(z.string()).max(12), tags: z.array(z.string()).max(32), dateAdded: z.string(), score: z.number(), reasons: z.array(z.string()).max(6), trustSignals: z.object({ sourceStatus: z.string() }) })).max(50),
+  entries: z
+    .array(
+      z.object({
+        category: z.string(),
+        slug: z.string(),
+        title: z.string(),
+        description: z.string(),
+        canonicalUrl: z.string().url().optional(),
+        platforms: z.array(z.string()).max(12),
+        tags: z.array(z.string()).max(32),
+        dateAdded: z.string(),
+        score: z.number(),
+        reasons: z.array(z.string()).max(6),
+        trustSignals: z.object({ sourceStatus: z.string() }),
+      }),
+    )
+    .max(50),
 });
 
 export const registrySearchQuerySchema = z.object({
@@ -288,38 +367,30 @@ export const registrySearchQuerySchema = z.object({
   platform: platformSchema,
   hasSafetyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
   hasPrivacyNotes: z.enum(["all", "true", "false"]).optional().default("all"),
-  downloadTrust: z
-    .enum(["all", "first-party", "external", "none"])
-    .optional()
-    .default("all"),
-  claimStatus: z
-    .enum(["all", "unclaimed", "pending", "verified"])
-    .optional()
-    .default("all"),
-  sourceStatus: z
-    .enum(["all", "available", "missing"])
-    .optional()
-    .default("all"),
+  downloadTrust: z.enum(["all", "first-party", "external", "none"]).optional().default("all"),
+  claimStatus: z.enum(["all", "unclaimed", "pending", "verified"]).optional().default("all"),
+  sourceStatus: z.enum(["all", "available", "missing"]).optional().default("all"),
   limit: z.coerce.number().int().min(1).max(50).optional().default(20),
   offset: z.coerce.number().int().min(0).max(10_000).optional().default(0),
 });
 
-export const registryTrendingQuerySchema = z.object({
-  category: categorySchema,
-  platform: platformSchema,
-  limit: z.coerce.number().int().min(1).max(50).optional().default(12),
-});
+export const registryTrendingQuerySchema = z
+  .object({
+    category: categorySchema,
+    platform: platformSchema,
+    limit: z.coerce.number().int().min(1).max(50).optional().default(12),
+  })
+  .strict();
 
 export const registryDiffQuerySchema = z.object({
   since: z.string().trim().max(128).optional().default(""),
   limit: z.coerce.number().int().min(1).max(500).optional().default(100),
 });
 
-const registryIntegrityPairMessage =
-  "Provide both artifact and hash together for verification";
+const registryIntegrityPairMessage = "Provide both artifact and hash together for verification";
 
 // Empty is treated as "snapshot listing" by the route handler at
-// apps/web/src/app/api/registry/integrity/route.ts (`!artifact` → status
+// apps/web/src/routes/api/registry/integrity.ts (`!artifact` → status
 // `snapshot`, `artifact || null` in response). Accept it as a valid value
 // at the field level so clients that round-trip `null → ""` (HTML forms,
 // Raycast) don't get a 400 from the Zod gate. The pair-check below still
@@ -380,8 +451,16 @@ export const votesToggleBodySchema = z.object({
   vote: z.boolean(),
 });
 
+const newsletterSegmentIdSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(64)
+  .regex(/^[a-z0-9:_-]+$/i);
+
 export const newsletterSubscribeBodySchema = z.object({
   email: safeEmailSchema,
+  segments: z.array(newsletterSegmentIdSchema).max(20).optional().default([]),
   source: z.string().trim().max(64).optional().default("site"),
 });
 
@@ -401,6 +480,11 @@ export const submissionBodySchema = z.object({
 export const submissionPreflightBodySchema = z.object({
   fields: z.record(z.string(), z.unknown()).optional().default({}),
   honeypot: z.string().max(256).optional().default(""),
+});
+
+export const submissionQueueQuerySchema = z.object({
+  number: z.coerce.number().int().positive().optional(),
+  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
 });
 
 const submissionPreflightNoteSchema = z.object({
@@ -468,6 +552,50 @@ export const submissionPreflightResponseSchema = z.union([
   submissionPreflightDiscardResponseSchema,
 ]);
 
+const submissionQueueStatusSchema = z.enum([
+  "queued",
+  "in_review",
+  "ready",
+  "approved",
+  "import_pr_open",
+  "needs_author_input",
+  "source_needs_verification",
+  "stale",
+  "imported",
+  "closed",
+]);
+
+const submissionQueueItemSchema = z.object({
+  number: z.number().int().positive(),
+  url: z.string().url(),
+  title: z.string().max(300),
+  author: z.string().max(120),
+  authorUrl: z.string().url().optional(),
+  category: z.string().max(80),
+  slug: z.string().max(160),
+  status: submissionQueueStatusSchema,
+  state: z.enum(["open", "closed"]),
+  labels: z.array(z.string().max(120)).max(32),
+  blockers: z.array(z.string().max(240)).max(12),
+  updatedAt: z.string(),
+  bodyFingerprint: z.string().max(40).optional(),
+  bodyUpdatedAt: z.string().optional(),
+  authorCommentedAfterReview: z.boolean().optional(),
+  authorCommentedWithoutBodyUpdate: z.boolean().optional(),
+  lastAuthorCommentAt: z.string().optional(),
+  createdAt: z.string(),
+  closedAt: z.string().nullable().optional(),
+  importPrUrl: z.string().url().optional(),
+});
+
+export const submissionQueueResponseSchema = z.object({
+  ok: z.literal(true),
+  generatedAt: z.string(),
+  repo: z.string(),
+  count: z.number().int().nonnegative(),
+  entries: z.array(submissionQueueItemSchema).max(100),
+});
+
 export const downloadQuerySchema = z.object({
   asset: z.string().trim().max(256),
 });
@@ -479,13 +607,48 @@ export const githubStatsResponseSchema = z.object({
   updatedAt: z.string().nullable(),
 });
 
+export const publicAlertsResponseSchema = z.object({
+  events: z
+    .array(
+      z
+        .object({
+          id: z.string().optional(),
+          kind: z.string().optional(),
+          category: z.string().optional(),
+          slug: z.string().optional(),
+          action: z.string().optional(),
+          date: z.string().optional(),
+          title: z.string().optional(),
+          commit: z.string().optional(),
+        })
+        .passthrough(),
+    )
+    .max(500),
+});
+
+export const publicFeedsHealthResponseSchema = z.object({
+  generatedAt: z.string(),
+  count: z.number().int().nonnegative(),
+  feeds: z
+    .array(
+      z.object({
+        id: z.string(),
+        title: z.string(),
+        url: z.string(),
+        itemCount: z.number().int().nonnegative(),
+        latestItemAt: z.string().nullable(),
+        lastBuilt: z.string(),
+        etag: z.string(),
+        isCurrent: z.boolean(),
+      }),
+    )
+    .max(100),
+});
+
 export const listingLeadBodySchema = z
   .object({
     kind: z.enum(["job", "tool", "claim"]),
-    tierInterest: z
-      .enum(["free", "standard", "featured", "sponsored"])
-      .optional()
-      .default("free"),
+    tierInterest: z.enum(["free", "standard", "featured", "sponsored"]).optional().default("free"),
     contactName: z.string().trim().min(1).max(120),
     contactEmail: safeEmailSchema,
     companyName: z.string().trim().min(1).max(160),
@@ -538,13 +701,7 @@ export const adminJobsUpsertBodySchema = z
     title: z.string().trim().min(4).max(180),
     companyName: z.string().trim().min(2).max(160),
     companyUrl: optionalHttpsUrlSchema,
-    locationText: z
-      .string()
-      .trim()
-      .min(2)
-      .max(160)
-      .optional()
-      .default("Remote"),
+    locationText: z.string().trim().min(2).max(160).optional().default("Remote"),
     summary: z.string().trim().min(80).max(900),
     descriptionMd: z.string().trim().max(8000).optional().default(""),
     employmentType: z.string().trim().max(80).optional().default(""),
@@ -552,10 +709,7 @@ export const adminJobsUpsertBodySchema = z
     equitySummary: z.string().trim().max(160).optional().default(""),
     bonusSummary: z.string().trim().max(160).optional().default(""),
     benefits: z.array(z.string().trim().min(2).max(180)).max(16).optional(),
-    responsibilities: z
-      .array(z.string().trim().min(2).max(240))
-      .max(12)
-      .optional(),
+    responsibilities: z.array(z.string().trim().min(2).max(240)).max(12).optional(),
     requirements: z.array(z.string().trim().min(2).max(240)).max(12).optional(),
     applyUrl: optionalHttpsUrlSchema.refine((value) => Boolean(value), {
       message: "applyUrl is required",
@@ -568,13 +722,7 @@ export const adminJobsUpsertBodySchema = z
     firstSeenAt: z.string().trim().max(64).optional().default(""),
     lastCheckedAt: z.string().trim().max(64).optional().default(""),
     sourceCheckedAt: z.string().trim().max(64).optional().default(""),
-    staleCheckCount: z.coerce
-      .number()
-      .int()
-      .min(0)
-      .max(20)
-      .optional()
-      .default(0),
+    staleCheckCount: z.coerce.number().int().min(0).max(20).optional().default(0),
     curationNote: z.string().trim().max(1200).optional().default(""),
     paidPlacementExpiresAt: z.string().trim().max(64).optional().default(""),
     claimedEmployer: z.boolean().optional().default(false),
@@ -618,7 +766,7 @@ export const adminJobsPatchBodySchema = z
       "revalidate",
     ]),
     checkedAt: z.string().trim().max(64).optional().default(""),
-    expiresAt: z.string().trim().max(64).optional().default(""),
+    expiresAt: z.union([z.string().trim().max(64), z.null()]).optional(),
   })
   .strict();
 
@@ -993,6 +1141,24 @@ export const apiRouteDefinitions = {
       binding: "API_DYNAMIC_RATE_LIMIT",
     },
   }),
+  "submissions.queue": route({
+    id: "submissions.queue",
+    method: "GET",
+    path: "/api/submissions/queue",
+    summary: "List public content submission issue status",
+    description:
+      "Returns sanitized, read-only status for public content-submission issues. This endpoint reads GitHub issue metadata only; it cannot approve, reject, label, import, create branches, create PRs, or publish registry content.",
+    tags: ["Submissions"],
+    originCheck: true,
+    querySchema: submissionQueueQuerySchema,
+    responseSchema: submissionQueueResponseSchema,
+    rateLimit: {
+      scope: "submissions-queue",
+      limit: 60,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
   download: route({
     id: "download",
     method: "GET",
@@ -1036,8 +1202,27 @@ export const apiRouteDefinitions = {
     tags: ["Jobs"],
     originCheck: true,
     querySchema: publicJobsQuerySchema,
+    responseSchema: publicJobsResponseSchema,
     rateLimit: {
       scope: "jobs-list",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "jobs.detail": route({
+    id: "jobs.detail",
+    method: "GET",
+    path: "/api/jobs/{slug}",
+    summary: "Get one active reviewed job",
+    description:
+      "Returns one active D1-backed public job listing plus a small related set. Expired, closed, stale, unreviewed, or source-unhealthy jobs return 404.",
+    tags: ["Jobs"],
+    originCheck: true,
+    paramsSchema: publicJobParamsSchema,
+    responseSchema: publicJobDetailResponseSchema,
+    rateLimit: {
+      scope: "jobs-detail",
       limit: 120,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",
@@ -1223,6 +1408,38 @@ export const apiRouteDefinitions = {
     responseSchema: githubStatsResponseSchema,
     rateLimit: {
       scope: "github-stats",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "publicAlerts.read": route({
+    id: "publicAlerts.read",
+    method: "GET",
+    path: "/api/public/alerts",
+    summary: "Read public registry alert events",
+    description:
+      "Returns the current in-edge-cache registry event list used by browser-local watch alerts. Cold cache or missing webhook configuration returns an empty events array rather than simulated activity.",
+    tags: ["Dynamic"],
+    responseSchema: publicAlertsResponseSchema,
+    rateLimit: {
+      scope: "public-alerts",
+      limit: 180,
+      windowMs: 60_000,
+      binding: "API_DYNAMIC_RATE_LIMIT",
+    },
+  }),
+  "publicFeeds.health": route({
+    id: "publicFeeds.health",
+    method: "GET",
+    path: "/api/public/feeds/health",
+    summary: "Read public feed health metadata",
+    description:
+      "Returns deterministic feed item counts, freshness, and ETag metadata for every public distribution feed.",
+    tags: ["Distribution"],
+    responseSchema: publicFeedsHealthResponseSchema,
+    rateLimit: {
+      scope: "public-feeds-health",
       limit: 120,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",

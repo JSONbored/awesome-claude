@@ -1,5 +1,5 @@
 # Log Parsing + Incident Timeline Skill
-URL: https://heyclau.de/skills/log-parsing-incident-timeline
+URL: https://heyclau.de/entry/skills/log-parsing-incident-timeline
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -8,7 +8,7 @@ Repository: https://github.com/BurntSushi/ripgrep
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx
 Download: /downloads/skills/log-parsing-incident-timeline.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/log-parsing-incident-timeline
+- Canonical URL: https://heyclau.de/entry/skills/log-parsing-incident-timeline
 - Source URLs: https://github.com/BurntSushi/ripgrep, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx
 - Package URL: /downloads/skills/log-parsing-incident-timeline.zip
 - Package SHA256: ca52e864c9ea2178c5c2a5bdc80c951cdfc99a2ee86d75242ba3ec2ba5f3eed7

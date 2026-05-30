@@ -96,17 +96,12 @@ async function fetchRegistryManifestSnapshot(
 }
 
 function isSameFeedSnapshot(
-  cachedFeed: ParsedFeed,
   cachedMetadata: FeedSnapshotMetadata | null,
   manifestSnapshot: RegistryManifestSnapshot,
 ) {
-  if (cachedMetadata?.signature) {
-    return cachedMetadata.signature === manifestSnapshot.signature;
-  }
   return Boolean(
-    cachedFeed.generatedAt &&
-    manifestSnapshot.generatedAt &&
-    cachedFeed.generatedAt === manifestSnapshot.generatedAt,
+    cachedMetadata?.signature &&
+    cachedMetadata.signature === manifestSnapshot.signature,
   );
 }
 
@@ -179,7 +174,7 @@ export async function fetchFreshFeed(options: {
     if (
       cachedFeed.entries.length > 0 &&
       manifestSnapshot &&
-      isSameFeedSnapshot(cachedFeed, cachedMetadata, manifestSnapshot)
+      isSameFeedSnapshot(cachedMetadata, manifestSnapshot)
     ) {
       const metadata = buildFeedSnapshotMetadata(cachedFeed, manifestSnapshot);
       saveFeedSnapshotMetadata(options.cache, feedUrl, metadata);

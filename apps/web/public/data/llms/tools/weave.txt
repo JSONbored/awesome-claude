@@ -1,12 +1,12 @@
 # Weave
-URL: https://heyclau.de/tools/weave
+URL: https://heyclau.de/entry/tools/weave
 Category: tools
 Author: Weights and Biases
 Date added: 2026-04-27
 Documentation: https://weave-docs.wandb.ai
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/weave
+- Canonical URL: https://heyclau.de/entry/tools/weave
 - Source URLs: https://weave-docs.wandb.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/weave.mdx, https://wandb.ai/site/weave
 - Brand: Weave
 - Brand domain: wandb.ai

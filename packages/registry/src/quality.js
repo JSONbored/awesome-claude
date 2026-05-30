@@ -294,6 +294,206 @@ export function buildContentQualityReport(entries) {
   };
 }
 
+export const SOURCE_HEALTH_REPORT_SCHEMA_VERSION = 1;
+
+const SOURCE_HEALTH_RISK_CATEGORIES = new Set([
+  "mcp",
+  "hooks",
+  "skills",
+  "statuslines",
+  "commands",
+]);
+
+const SOURCE_FRESHNESS_THRESHOLDS = {
+  freshMaxDays: 180,
+  agingMaxDays: 365,
+  staleMaxDays: 730,
+};
+
+function isRiskBearingSourceCategory(category) {
+  return SOURCE_HEALTH_RISK_CATEGORIES.has(clean(category));
+}
+
+function hasMeaningfulNotes(value) {
+  return Array.isArray(value) && value.some((item) => clean(item).length > 0);
+}
+
+function percentOf(count, total) {
+  return total > 0 ? Math.round((count / total) * 100) : 0;
+}
+
+function deriveSourceFreshness(entry, referenceDate) {
+  const raw = clean(entry.repoUpdatedAt || entry.dateAdded);
+  if (!raw) {
+    return { freshness: "unknown", ageDays: null, lastActivityAt: "" };
+  }
+  const parsedTime = new Date(raw).getTime();
+  if (!Number.isFinite(parsedTime)) {
+    return { freshness: "unknown", ageDays: null, lastActivityAt: "" };
+  }
+  const referenceTime =
+    referenceDate instanceof Date
+      ? referenceDate.getTime()
+      : new Date(referenceDate).getTime();
+  if (!Number.isFinite(referenceTime)) {
+    return {
+      freshness: "unknown",
+      ageDays: null,
+      lastActivityAt: new Date(parsedTime).toISOString(),
+    };
+  }
+  const ageDays = Math.max(
+    0,
+    Math.floor((referenceTime - parsedTime) / 86_400_000),
+  );
+  let freshness = "dormant";
+  if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.freshMaxDays) {
+    freshness = "fresh";
+  } else if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.agingMaxDays) {
+    freshness = "aging";
+  } else if (ageDays <= SOURCE_FRESHNESS_THRESHOLDS.staleMaxDays) {
+    freshness = "stale";
+  }
+  return {
+    freshness,
+    ageDays,
+    lastActivityAt: new Date(parsedTime).toISOString(),
+  };
+}
+
+function derivePackageTrust(entry) {
+  const downloadTrust = clean(entry.downloadTrust);
+  const packageVerified = entry.packageVerified === true;
+  return {
+    packageTrust: downloadTrust || null,
+    packageVerified,
+    hasPackageTrust: downloadTrust === "first-party" || packageVerified,
+  };
+}
+
+export function buildEntrySourceHealth(entry, referenceDate) {
+  const provenance = buildSourceProvenance(entry);
+  const sourceStatus =
+    provenance.sourceUrls.length > 0 ? "available" : "missing";
+  const { freshness, ageDays, lastActivityAt } = deriveSourceFreshness(
+    entry,
+    referenceDate,
+  );
+  const pkg = derivePackageTrust(entry);
+  const hasSafetyNotes = hasMeaningfulNotes(entry.safetyNotes);
+  const hasPrivacyNotes = hasMeaningfulNotes(entry.privacyNotes);
+  const riskBearing = isRiskBearingSourceCategory(entry.category);
+
+  const attentionReasons = [];
+  if (sourceStatus === "missing") {
+    attentionReasons.push("missing-source");
+  }
+  if (freshness === "stale" || freshness === "dormant") {
+    attentionReasons.push("stale-source");
+  }
+  if (riskBearing && !hasSafetyNotes) {
+    attentionReasons.push("missing-safety-notes");
+  }
+  if (riskBearing && !hasPrivacyNotes) {
+    attentionReasons.push("missing-privacy-notes");
+  }
+
+  return {
+    key: `${entry.category}:${entry.slug}`,
+    category: entry.category,
+    slug: entry.slug,
+    title: entry.title,
+    sourceStatus,
+    sourceQuality: provenance.sourceQuality,
+    freshness,
+    ageDays,
+    lastActivityAt,
+    hasSafetyNotes,
+    hasPrivacyNotes,
+    packageTrust: pkg.packageTrust,
+    packageVerified: pkg.packageVerified,
+    hasPackageTrust: pkg.hasPackageTrust,
+    riskBearing,
+    needsAttention: attentionReasons.length > 0,
+    attentionReasons,
+  };
+}
+
+function buildSourceHealthCategoryBreakdown(rows) {
+  return Object.fromEntries(
+    categorySpec.categoryOrder.map((category) => {
+      const categoryRows = rows.filter((row) => row.category === category);
+      const countWhere = (predicate) =>
+        categoryRows.reduce((sum, row) => sum + (predicate(row) ? 1 : 0), 0);
+
+      return [
+        category,
+        {
+          count: categoryRows.length,
+          sourceBacked: countWhere((row) => row.sourceStatus === "available"),
+          stale: countWhere(
+            (row) => row.freshness === "stale" || row.freshness === "dormant",
+          ),
+          missingSafetyNotes: countWhere(
+            (row) => row.riskBearing && !row.hasSafetyNotes,
+          ),
+          missingPrivacyNotes: countWhere(
+            (row) => row.riskBearing && !row.hasPrivacyNotes,
+          ),
+          packageTrust: countWhere((row) => row.hasPackageTrust),
+          needsAttention: countWhere((row) => row.needsAttention),
+        },
+      ];
+    }),
+  );
+}
+
+export function buildSourceHealthReport(entries) {
+  const generatedAt = generatedAtForEntries(entries);
+  const referenceDate = new Date(generatedAt);
+  const rows = entries.map((entry) =>
+    buildEntrySourceHealth(entry, referenceDate),
+  );
+  const total = rows.length;
+  const countWhere = (predicate) =>
+    rows.reduce((sum, row) => sum + (predicate(row) ? 1 : 0), 0);
+
+  const sourceBackedCount = countWhere(
+    (row) => row.sourceStatus === "available",
+  );
+  const packageTrustCount = countWhere((row) => row.hasPackageTrust);
+
+  return {
+    schemaVersion: SOURCE_HEALTH_REPORT_SCHEMA_VERSION,
+    kind: "source-health-report",
+    generatedAt,
+    count: total,
+    thresholds: { ...SOURCE_FRESHNESS_THRESHOLDS },
+    summary: {
+      sourceBackedCount,
+      sourceBackedPercent: percentOf(sourceBackedCount, total),
+      missingSourceCount: total - sourceBackedCount,
+      freshCount: countWhere((row) => row.freshness === "fresh"),
+      agingCount: countWhere((row) => row.freshness === "aging"),
+      staleCount: countWhere((row) => row.freshness === "stale"),
+      dormantCount: countWhere((row) => row.freshness === "dormant"),
+      unknownFreshnessCount: countWhere((row) => row.freshness === "unknown"),
+      riskBearingCount: countWhere((row) => row.riskBearing),
+      missingSafetyNotesCount: countWhere(
+        (row) => row.riskBearing && !row.hasSafetyNotes,
+      ),
+      missingPrivacyNotesCount: countWhere(
+        (row) => row.riskBearing && !row.hasPrivacyNotes,
+      ),
+      packageTrustCount,
+      packageTrustPercent: percentOf(packageTrustCount, total),
+      needsAttentionCount: countWhere((row) => row.needsAttention),
+    },
+    categoryBreakdown: buildSourceHealthCategoryBreakdown(rows),
+    entries: rows,
+  };
+}
+
 export function buildContentPromptReport(entries, maxPrompts = 30) {
   const quality = buildContentQualityReport(entries);
   const prompts = quality.entries

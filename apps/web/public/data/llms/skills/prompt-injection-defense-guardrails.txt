@@ -1,5 +1,5 @@
 # Prompt Injection Defense Guardrails Skill
-URL: https://heyclau.de/skills/prompt-injection-defense-guardrails
+URL: https://heyclau.de/entry/skills/prompt-injection-defense-guardrails
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx
 Download: /downloads/skills/prompt-injection-defense-guardrails.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/prompt-injection-defense-guardrails
+- Canonical URL: https://heyclau.de/entry/skills/prompt-injection-defense-guardrails
 - Source URLs: https://genai.owasp.org/llmrisk/llm01-prompt-injection/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/prompt-injection-defense-guardrails.mdx
 - Package URL: /downloads/skills/prompt-injection-defense-guardrails.zip
 - Package SHA256: 8bf9869deb15e9db78456574e555a755fbefe6e70c4362761d1fcbd416496c03

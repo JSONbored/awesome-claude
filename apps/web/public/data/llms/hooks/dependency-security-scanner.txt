@@ -1,12 +1,12 @@
 # Dependency Security Scanner - Hooks
-URL: https://heyclau.de/hooks/dependency-security-scanner
+URL: https://heyclau.de/entry/hooks/dependency-security-scanner
 Category: hooks
 Author: JSONbored
 Date added: 2025-10-19
 Documentation: https://docs.npmjs.com/cli/v8/commands/npm-audit
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/dependency-security-scanner
+- Canonical URL: https://heyclau.de/entry/hooks/dependency-security-scanner
 - Source URLs: https://docs.npmjs.com/cli/v8/commands/npm-audit, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dependency-security-scanner.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

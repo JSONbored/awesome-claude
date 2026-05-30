@@ -1,12 +1,12 @@
 # Lakera Guard
-URL: https://heyclau.de/tools/lakera-guard
+URL: https://heyclau.de/entry/tools/lakera-guard
 Category: tools
 Author: Lakera
 Date added: 2026-04-27
 Documentation: https://docs.lakera.ai
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/lakera-guard
+- Canonical URL: https://heyclau.de/entry/tools/lakera-guard
 - Source URLs: https://docs.lakera.ai, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/lakera-guard.mdx, https://www.lakera.ai/guard
 - Brand: Lakera Guard
 - Brand domain: lakera.ai

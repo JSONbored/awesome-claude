@@ -1,5 +1,5 @@
 # Packrift MCP Server
-URL: https://heyclau.de/mcp/packrift-mcp-server
+URL: https://heyclau.de/entry/mcp/packrift-mcp-server
 Category: mcp
 Author: Packrift
 Submitted by: Packrift
@@ -9,7 +9,7 @@ Documentation: https://packrift.com/pages/agents
 Repository: https://github.com/Packrift/packrift-mcp
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/packrift-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/packrift-mcp-server
 - Source URLs: https://packrift.com/pages/agents, https://github.com/Packrift/packrift-mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx
 - Brand: Packrift
 - Brand domain: packrift.com

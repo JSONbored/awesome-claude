@@ -1,5 +1,5 @@
 # Codex Automations Orchestrator Capability Pack Skill
-URL: https://heyclau.de/skills/codex-automations-orchestrator-capability-pack
+URL: https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -8,7 +8,7 @@ Repository: https://github.com/openai/codex
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx
 Download: /downloads/skills/codex-automations-orchestrator-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/codex-automations-orchestrator-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack
 - Source URLs: https://github.com/openai/codex, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx
 - Package URL: /downloads/skills/codex-automations-orchestrator-capability-pack.zip
 - Package SHA256: 7e3ee39f61507d249f0b0b5ec49c35c6fc076b5ca2d6f85174eec8664de00867

@@ -1,12 +1,12 @@
 # Burn Rate Monitor - Statuslines
-URL: https://heyclau.de/statuslines/burn-rate-monitor
+URL: https://heyclau.de/entry/statuslines/burn-rate-monitor
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/burn-rate-monitor.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/burn-rate-monitor
+- Canonical URL: https://heyclau.de/entry/statuslines/burn-rate-monitor
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/burn-rate-monitor.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

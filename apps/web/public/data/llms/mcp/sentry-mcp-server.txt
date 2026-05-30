@@ -1,5 +1,5 @@
 # Sentry MCP Server for Claude
-URL: https://heyclau.de/mcp/sentry-mcp-server
+URL: https://heyclau.de/entry/mcp/sentry-mcp-server
 Category: mcp
 Author: Sentry
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://docs.sentry.io/product/sentry-mcp/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/sentry-mcp-server.mdx
 Download: /downloads/mcp/sentry-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/sentry-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/sentry-mcp-server
 - Source URLs: https://docs.sentry.io/product/sentry-mcp/, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/sentry-mcp-server.mdx
 - Brand: Sentry
 - Brand domain: sentry.io

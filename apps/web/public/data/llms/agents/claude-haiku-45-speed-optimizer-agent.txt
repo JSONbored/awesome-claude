@@ -1,12 +1,12 @@
 # Claude Haiku 45 Speed Optimizer Agent - Agents
-URL: https://heyclau.de/agents/claude-haiku-45-speed-optimizer-agent
+URL: https://heyclau.de/entry/agents/claude-haiku-45-speed-optimizer-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-23
 Documentation: https://docs.anthropic.com/en/docs/about-claude/models
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/claude-haiku-45-speed-optimizer-agent
+- Canonical URL: https://heyclau.de/entry/agents/claude-haiku-45-speed-optimizer-agent
 - Source URLs: https://docs.anthropic.com/en/docs/about-claude/models, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/claude-haiku-45-speed-optimizer-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -1,12 +1,12 @@
 # Environment Validator
-URL: https://heyclau.de/hooks/environment-variable-validator
+URL: https://heyclau.de/entry/hooks/environment-variable-validator
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://12factor.net/config
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/environment-variable-validator
+- Canonical URL: https://heyclau.de/entry/hooks/environment-variable-validator
 - Source URLs: https://12factor.net/config, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/environment-variable-validator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

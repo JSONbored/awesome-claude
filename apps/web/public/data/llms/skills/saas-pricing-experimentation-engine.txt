@@ -1,5 +1,5 @@
 # SaaS Pricing Experimentation Engine Skill
-URL: https://heyclau.de/skills/saas-pricing-experimentation-engine
+URL: https://heyclau.de/entry/skills/saas-pricing-experimentation-engine
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://stripe.com/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/saas-pricing-experimentation-engine.mdx
 Download: /downloads/skills/saas-pricing-experimentation-engine.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/saas-pricing-experimentation-engine
+- Canonical URL: https://heyclau.de/entry/skills/saas-pricing-experimentation-engine
 - Source URLs: https://stripe.com/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/saas-pricing-experimentation-engine.mdx
 - Package URL: /downloads/skills/saas-pricing-experimentation-engine.zip
 - Package SHA256: 0eebf445e5f54017b313993dbe934576dd54daf29da27ed35db45ff4f84dc005

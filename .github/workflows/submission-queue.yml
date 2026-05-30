@@ -42,6 +42,28 @@ jobs:
               per_page: 100
             });
             const userIssues = issues.filter((issue) => !issue.pull_request);
+            for (const issue of userIssues) {
+              try {
+                issue.comments = await github.paginate(github.rest.issues.listComments, {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  per_page: 100
+                });
+              } catch (error) {
+                core.warning(`Could not fetch comments for #${issue.number}: ${error.message}`);
+                issue.comments = [];
+              }
+              try {
+                issue.timeline = await github.paginate(github.rest.issues.listEventsForTimeline, {
+                  ...context.repo,
+                  issue_number: issue.number,
+                  per_page: 100
+                });
+              } catch (error) {
+                core.warning(`Could not fetch timeline for #${issue.number}: ${error.message}`);
+                issue.timeline = [];
+              }
+            }
             fs.writeFileSync(
               ".github/tmp/open-issues.json",
               JSON.stringify(userIssues, null, 2),

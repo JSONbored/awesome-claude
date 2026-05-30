@@ -1,5 +1,5 @@
 # Xquik MCP Server
-URL: https://heyclau.de/mcp/xquik-mcp-server
+URL: https://heyclau.de/entry/mcp/xquik-mcp-server
 Category: mcp
 Author: Xquik-dev
 Submitted by: kriptoburak
@@ -9,7 +9,7 @@ Documentation: https://docs.xquik.com/mcp/overview
 Repository: https://github.com/Xquik-dev/x-twitter-scraper
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/xquik-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/xquik-mcp-server
 - Source URLs: https://docs.xquik.com/mcp/overview, https://github.com/Xquik-dev/x-twitter-scraper, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/xquik-mcp-server.mdx
 - Brand: Xquik
 - Brand domain: xquik.com

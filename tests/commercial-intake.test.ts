@@ -285,6 +285,9 @@ describe("commercial intake contracts", () => {
     expect(workflow).toContain("--apply --allow-unhealthy");
     expect(workflow).toContain("--dry-run --fail-on-unhealthy");
     expect(workflow).toContain("GITHUB_STEP_SUMMARY");
+    expect(workflow).not.toContain(
+      "Skipping scheduled jobs source revalidation",
+    );
   });
 
   it("transitions curated job sources through verified, stale, and closed states", () => {
@@ -352,6 +355,29 @@ describe("commercial intake contracts", () => {
           companyMatched: true,
           closureDetected: false,
           applyDetected: true,
+          tier: "free",
+        },
+        new Date("2026-04-28T00:00:00Z"),
+      ),
+    ).toMatchObject({
+      status: "active",
+      reason: "source_verified_expiry_refreshed",
+      expiresAt: null,
+      indexable: true,
+    });
+
+    expect(
+      evaluateJobSourceLifecycle(
+        {
+          currentStatus: "active",
+          staleCheckCount: 0,
+          expiresAt: "2026-04-01T00:00:00Z",
+          sourceOk: true,
+          titleMatched: true,
+          companyMatched: true,
+          closureDetected: false,
+          applyDetected: true,
+          tier: "sponsored",
           paidPlacementExpiresAt: "2026-12-01T00:00:00Z",
         } as any,
         new Date("2026-04-28T00:00:00Z"),

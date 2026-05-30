@@ -1,12 +1,12 @@
 # Browserbase
-URL: https://heyclau.de/tools/browserbase
+URL: https://heyclau.de/entry/tools/browserbase
 Category: tools
 Author: Browserbase
 Date added: 2026-04-27
 Documentation: https://docs.browserbase.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/browserbase
+- Canonical URL: https://heyclau.de/entry/tools/browserbase
 - Source URLs: https://docs.browserbase.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browserbase.mdx, https://www.browserbase.com
 - Brand: Browserbase
 - Brand domain: browserbase.com

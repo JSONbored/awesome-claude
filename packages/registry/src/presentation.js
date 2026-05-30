@@ -238,7 +238,7 @@ export function getCopyText(entry) {
   if (body) return body;
   if (entry.documentationUrl) return entry.documentationUrl;
   if (entry.githubUrl) return entry.githubUrl;
-  return `${entry.title}\nhttps://heyclau.de/${entry.category}/${entry.slug}`;
+  return `${entry.title}\nhttps://heyclau.de/entry/${entry.category}/${entry.slug}`;
 }
 
 export function getDistributionBadges(entry) {

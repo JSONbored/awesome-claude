@@ -1,5 +1,5 @@
 # Cursor Windsurf AI Code Editor Skill - Claude Code Skills
-URL: https://heyclau.de/skills/cursor-windsurf-ai-ide-setup
+URL: https://heyclau.de/entry/skills/cursor-windsurf-ai-ide-setup
 Category: skills
 Author: JSONbored
 Date added: 2025-10-23
@@ -7,7 +7,7 @@ Documentation: https://cursor.sh/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
 Download: /downloads/skills/cursor-windsurf-ai-ide-setup.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/cursor-windsurf-ai-ide-setup
+- Canonical URL: https://heyclau.de/entry/skills/cursor-windsurf-ai-ide-setup
 - Source URLs: https://cursor.sh/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cursor-windsurf-ai-ide-setup.mdx
 - Brand: Windsurf
 - Brand domain: windsurf.com

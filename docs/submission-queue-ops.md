@@ -6,9 +6,16 @@ Fully valid, source-backed, non-artifact submissions can be approved for an
 import PR after policy gates pass, but automation does not auto-merge or publish
 content.
 
+The issue body is the source of truth for validation and import eligibility.
+Issue comments are discussion only. If maintainers ask for changes, authors must
+edit the original issue fields; comment replies do not update the validation
+snapshot, reset stale timers, or move a submission toward import-ready.
+
 ## Labels
 
-- `content-submission`: canonical routing label for directory submissions.
+- `content-submission`: canonical routing label for real directory
+  submissions only. Do not apply it to growth, product, bug, docs, or design
+  issues.
 - `needs-review`: default state for newly-routed submissions.
 - `needs-author-input`: validation is blocked on missing or malformed fields.
 - `source-needs-verification`: the submitted source URL is missing, ambiguous,
@@ -74,7 +81,13 @@ content.
 Each queue entry includes:
 
 - `nextAction`: `import`, `review_risk`, `verify_source`,
-  `request_author_input`, `send_stale_reminder`, `close_stale`, or `skip`.
+  `request_author_input`, `update_issue_body_required`,
+  `send_stale_reminder`, `close_stale`, or `skip`.
+- `bodyFingerprint` / `bodyUpdatedAt`: normalized issue-body identity and the
+  latest detected body edit timestamp used for stale windows.
+- `authorCommentedAfterReview` / `authorCommentedWithoutBodyUpdate` /
+  `lastAuthorCommentAt`: review-discussion signals used to catch cases where an
+  author replied after maintainer feedback but did not edit the source fields.
 - `missingLabels`: recommended queue labels not currently present on the
   GitHub issue.
 - `reviewChecklist`: deterministic maintainer checks assembled from schema,
@@ -98,6 +111,12 @@ Maintainers still review the generated PR before merge.
 - `Submission Queue` runs weekly and on demand. It writes a GitHub Actions
   summary from `pnpm submission:queue`, including deterministic security/safety
   tier and review flags for each submission-shaped issue.
+- `pnpm submission:queue` is the CI/offline builder. It requires
+  `--issues-json` and `--output`.
+- `pnpm submission:queue:live` is the maintainer command. It uses the
+  authenticated GitHub CLI to fetch open issues, comments, and body-edit
+  timeline events, then writes `reports/submission-queue.json` and prints a
+  concise table.
 - `Submission Stale Manager` runs weekly and on demand. Manual dispatch defaults
   to dry-run and does not accept runtime inputs. Scheduled runs can add labels,
   upsert one reminder comment, and close only eligible stale submissions.
@@ -123,16 +142,18 @@ Maintainers still review the generated PR before merge.
   failure, and missing required safety/privacy notes for sensitive behavior.
   It emits concise annotations only when it fails.
 - Installed external security apps provide contributor and repo trust signals.
-  Superagent Marketplace checks (`Contributor trust` and `Security scan`) are
-  the primary low-noise contributor security layer, while advisory Superagent
-  CLI and Pipelock workflows are non-required until they prove stable on
-  HeyClaude PRs.
+  The Superagent Marketplace `Superagent Security Scan` is the required
+  contributor security layer. The local Superagent CLI workflow and Pipelock
+  remain advisory/manual unless maintainers deliberately promote them in branch
+  protection.
 - Product-shaped tools, hosted apps, services, SaaS products, subscriptions, and
   sponsored/featured placement interest route through
   `https://heyclau.de/tools/submit` unless a maintainer explicitly approves a
   `content/tools` editorial entry.
 - Stale automation never imports content, creates PRs, or touches issues with
   `accepted`, `import-approved`, or `import-pr-open`.
+- Stale automation uses validation-relevant issue-body edits for age. Generic
+  comments do not reset stale state.
 - External contributor PRs cannot change `README.md`,
   `apps/web/public/data/**`, `apps/web/src/generated/**`, or
   `apps/web/public/downloads/**`.
@@ -144,7 +165,8 @@ Maintainers still review the generated PR before merge.
    source-verification, stale, close-eligible, or high-risk submissions.
 3. Apply missing labels only when they match the current maintainer decision.
 4. For `needs_author_input`, use the copyable draft as a starting point and wait
-   for the author to update the issue.
+   for the author to edit the original issue body. If the author replies only in
+   comments, use the `update_issue_body_required` draft.
 5. For `source_needs_verification`, verify canonical source/package URLs before
    approving.
 6. For `stale_reminder_due`, let the manager add `stale-submission` and post the
@@ -163,4 +185,8 @@ Direct product/app PRs belong under `content/tools/` and should include
 `applicationCategory`, and `operatingSystem` before merge.
 
 Authors can reopen or resubmit closed stale submissions when the missing fields
-or source details are ready.
+or source details are ready in the issue body.
+
+The Raycast integration intentionally keeps its npm/package-lock island because
+Raycast extension tooling expects npm workflows. Do not migrate it to pnpm as
+part of submission queue or root monorepo cleanup work.

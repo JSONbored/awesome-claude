@@ -1,9 +1,7 @@
-import "server-only";
-
 import type { DirectoryEntry, ToolListing } from "@heyclaude/registry";
 import { compareToolListings } from "@heyclaude/registry/commercial";
 
-import { getDirectoryEntriesByCategory } from "@/lib/content";
+import { getDirectoryEntriesByCategory } from "@/lib/content.server";
 import { getSiteDb } from "@/lib/db";
 
 type PlacementRow = {
@@ -14,10 +12,7 @@ type PlacementRow = {
   expires_at: string | null;
 };
 
-function toToolListing(
-  entry: DirectoryEntry,
-  placement?: PlacementRow,
-): ToolListing {
+function toToolListing(entry: DirectoryEntry, placement?: PlacementRow): ToolListing {
   const sponsored = placement?.tier === "sponsored";
   const featured = sponsored || placement?.tier === "featured";
 
@@ -33,10 +28,7 @@ function toToolListing(
           targetKind: "tool",
           targetKey: placement.target_key,
           tier: placement.tier as "standard" | "featured" | "sponsored",
-          disclosure: placement.disclosure as
-            | "editorial"
-            | "affiliate"
-            | "sponsored",
+          disclosure: placement.disclosure as "editorial" | "affiliate" | "sponsored",
           startsAt: placement.starts_at || undefined,
           expiresAt: placement.expires_at || undefined,
         }
@@ -75,10 +67,7 @@ export async function getTools(): Promise<ToolListing[]> {
 
   return entries
     .map((entry) =>
-      toToolListing(
-        entry,
-        placements.get(`tools:${entry.slug}`) ?? placements.get(entry.slug),
-      ),
+      toToolListing(entry, placements.get(`tools:${entry.slug}`) ?? placements.get(entry.slug)),
     )
     .sort(compareToolListings);
 }

@@ -75,7 +75,16 @@
     "repoUrl": "https://github.com/langfuse/langfuse",
     "githubStars": 27479,
     "githubForks": 2805,
-    "repoUpdatedAt": "2026-05-19T11:21:59Z"
+    "repoUpdatedAt": "2026-05-19T11:21:59Z",
+    "repoStats": {
+      "repository": "langfuse/langfuse",
+      "url": "https://github.com/langfuse/langfuse",
+      "stars": 27479,
+      "forks": 2805,
+      "updatedAt": "2026-05-19T11:21:59Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": true,

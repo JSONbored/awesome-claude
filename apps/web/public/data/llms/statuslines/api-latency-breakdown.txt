@@ -1,12 +1,12 @@
 # API Latency Breakdown - Statuslines
-URL: https://heyclau.de/statuslines/api-latency-breakdown
+URL: https://heyclau.de/entry/statuslines/api-latency-breakdown
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://docs.claude.com/en/docs/claude-code/statusline
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/api-latency-breakdown.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/api-latency-breakdown
+- Canonical URL: https://heyclau.de/entry/statuslines/api-latency-breakdown
 - Source URLs: https://docs.claude.com/en/docs/claude-code/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/api-latency-breakdown.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

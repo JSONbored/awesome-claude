@@ -1,12 +1,12 @@
 # React Next.js Expert - CLAUDE.md Rules for Claude Code
-URL: https://heyclau.de/rules/react-next-js-expert
+URL: https://heyclau.de/entry/rules/react-next-js-expert
 Category: rules
 Author: JSONbored
 Date added: 2025-09-15
 Documentation: https://nextjs.org/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-next-js-expert.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/react-next-js-expert
+- Canonical URL: https://heyclau.de/entry/rules/react-next-js-expert
 - Source URLs: https://nextjs.org/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/react-next-js-expert.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T23:21:14-06:00

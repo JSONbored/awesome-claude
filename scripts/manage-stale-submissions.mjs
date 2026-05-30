@@ -113,6 +113,12 @@ async function listComments(owner, repo, issueNumber) {
   );
 }
 
+async function listTimeline(owner, repo, issueNumber) {
+  return githubPaginate(
+    `/repos/${owner}/${repo}/issues/${issueNumber}/timeline`,
+  );
+}
+
 async function upsertReminder(owner, repo, issueNumber, body) {
   const comments = await listComments(owner, repo, issueNumber);
   const existing = comments.find((comment) => comment.body?.includes(marker));
@@ -144,7 +150,7 @@ function reminderBody(entry) {
     marker,
     "Thanks for submitting this entry. The validation queue still needs author input before maintainers can review it for import.",
     "",
-    "Please update the issue with the missing or corrected fields shown in the validation report. After you update the issue, the submission validator will rerun automatically.",
+    "Please edit the original issue body with the missing or corrected fields shown in the validation report. Comments are useful for discussion, but they do not update the validation source of truth or reset the stale timer. After you update the issue body, the submission validator will rerun automatically.",
   ];
   if (entry.errors.length) {
     lines.push("", "Current blockers:");
@@ -152,7 +158,7 @@ function reminderBody(entry) {
   }
   lines.push(
     "",
-    "If there is no update after the stale window, maintainers may close this issue as not planned. You can reopen or resubmit when the missing details are ready.",
+    "If there is no issue-body update after the stale window, maintainers may close this issue as not planned. You can reopen or resubmit when the missing details are ready.",
   );
   return lines.join("\n");
 }
@@ -162,7 +168,7 @@ function closeBody(entry) {
     marker,
     "Closing this submission as not planned because it has been waiting on author input past the stale window.",
     "",
-    "This is not a rejection of the project. Please reopen this issue or submit a new one when the missing fields or source details are ready.",
+    "This is not a rejection of the project. Please reopen this issue or submit a new one when the missing fields or source details are ready in the issue body.",
   ];
   if (entry.errors.length) {
     lines.push("", "Last known blockers:");
@@ -204,6 +210,20 @@ function normalizeIssue(issue) {
     createdAt: issue.created_at,
     author: issue.user?.login || "",
     labels: issue.labels || [],
+  };
+}
+
+async function hydrateIssueActivity(owner, repo, issue) {
+  const normalized = normalizeIssue(issue);
+  if (!looksLikeSubmissionIssue(normalized)) return null;
+  const [comments, timeline] = await Promise.all([
+    listComments(owner, repo, issue.number).catch(() => []),
+    listTimeline(owner, repo, issue.number).catch(() => []),
+  ]);
+  return {
+    ...normalized,
+    comments,
+    timeline,
   };
 }
 
@@ -356,12 +376,14 @@ async function main() {
   const apply = hasFlag("--apply");
   const now = argValue("--now") || new Date().toISOString();
   const { owner, repo } = repoParts();
-  const issues = (
+  const rawIssues = (
     await githubPaginate(`/repos/${owner}/${repo}/issues?state=open`)
-  )
-    .filter((issue) => !issue.pull_request)
-    .map(normalizeIssue)
-    .filter(looksLikeSubmissionIssue);
+  ).filter((issue) => !issue.pull_request);
+  const issues = [];
+  for (const issue of rawIssues) {
+    const hydrated = await hydrateIssueActivity(owner, repo, issue);
+    if (hydrated) issues.push(hydrated);
+  }
   const queue = buildSubmissionQueue(issues, { now });
   const issuesByNumber = new Map(issues.map((issue) => [issue.number, issue]));
 

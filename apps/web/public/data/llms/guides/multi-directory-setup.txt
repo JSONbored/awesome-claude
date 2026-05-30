@@ -1,11 +1,11 @@
 # Claude Code Multi-Directory Setup Enterprise Workflow 2025
-URL: https://heyclau.de/guides/multi-directory-setup
+URL: https://heyclau.de/entry/guides/multi-directory-setup
 Category: guides
 Author: JSONbored
 Date added: 2025-10-27
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/guides/multi-directory-setup
+- Canonical URL: https://heyclau.de/entry/guides/multi-directory-setup
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

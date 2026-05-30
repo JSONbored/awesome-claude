@@ -54,6 +54,27 @@ describe("jobs source checker planning", () => {
     });
   });
 
+  it("clears free source expiry only after a live source check succeeds", () => {
+    expect(
+      evaluateCheckedJob(
+        {
+          ...richJob,
+          status: "active",
+          tier: "free",
+          expiresAt: "2026-04-01T00:00:00.000Z",
+        },
+        sourceOk,
+        "2026-04-29T00:00:00.000Z",
+      ),
+    ).toMatchObject({
+      ok: true,
+      action: "revalidate",
+      nextStatus: "active",
+      lifecycleReason: "source_verified_expiry_refreshed",
+      expiresAt: null,
+    });
+  });
+
   it("keeps shallow active jobs out of public exposure even when the source is live", () => {
     const result = evaluateCheckedJob(
       {
@@ -120,12 +141,25 @@ describe("jobs source checker planning", () => {
 
   it("paginates admin job source fetches", async () => {
     const previousToken = process.env.ADMIN_API_TOKEN;
+    const previousJobsToken = process.env.JOBS_ADMIN_API_TOKEN;
     const previousFetch = globalThis.fetch;
-    process.env.ADMIN_API_TOKEN = "test-token";
+    delete process.env.ADMIN_API_TOKEN;
+    process.env.JOBS_ADMIN_API_TOKEN = "jobs-test-token";
     const requestedOffsets: string[] = [];
-    globalThis.fetch = (async (input: RequestInfo | URL) => {
+    const authorizationHeaders: string[] = [];
+    globalThis.fetch = (async (
+      input: RequestInfo | URL,
+      init?: RequestInit,
+    ) => {
+      const request = input instanceof Request ? input : null;
       const url = new URL(String(input));
       requestedOffsets.push(url.searchParams.get("offset") || "0");
+      authorizationHeaders.push(
+        request?.headers.get("authorization") ||
+          (init?.headers as Record<string, string> | undefined)
+            ?.authorization ||
+          "",
+      );
       const offset = Number(url.searchParams.get("offset") || 0);
       const count = offset === 0 ? 100 : offset === 100 ? 2 : 0;
       return new Response(
@@ -143,11 +177,20 @@ describe("jobs source checker planning", () => {
         fetchJobs("https://heyclau.de", "active"),
       ).resolves.toHaveLength(102);
       expect(requestedOffsets).toEqual(["0", "100"]);
+      expect(authorizationHeaders).toEqual([
+        "Bearer jobs-test-token",
+        "Bearer jobs-test-token",
+      ]);
     } finally {
       if (previousToken === undefined) {
         delete process.env.ADMIN_API_TOKEN;
       } else {
         process.env.ADMIN_API_TOKEN = previousToken;
+      }
+      if (previousJobsToken === undefined) {
+        delete process.env.JOBS_ADMIN_API_TOKEN;
+      } else {
+        process.env.JOBS_ADMIN_API_TOKEN = previousJobsToken;
       }
       globalThis.fetch = previousFetch;
     }

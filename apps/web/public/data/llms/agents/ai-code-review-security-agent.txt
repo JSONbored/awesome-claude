@@ -1,11 +1,11 @@
 # AI Code Review Security Agent - Agents
-URL: https://heyclau.de/agents/ai-code-review-security-agent
+URL: https://heyclau.de/entry/agents/ai-code-review-security-agent
 Category: agents
 Author: JSONbored
 Date added: 2025-10-16
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/ai-code-review-security-agent
+- Canonical URL: https://heyclau.de/entry/agents/ai-code-review-security-agent
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/ai-code-review-security-agent.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

@@ -1,5 +1,5 @@
 # YIELD INTELLIGENCE MCP — Passive Income Analysis
-URL: https://heyclau.de/mcp/yield-intelligence-mcp
+URL: https://heyclau.de/entry/mcp/yield-intelligence-mcp
 Category: mcp
 Author: thebrierfox
 Submitted by: thebrierfox
@@ -8,7 +8,7 @@ Documentation: https://github.com/thebrierfox/intuitek-ace
 Repository: https://github.com/thebrierfox/intuitek-ace
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/yield-intelligence-mcp
+- Canonical URL: https://heyclau.de/entry/mcp/yield-intelligence-mcp
 - Source URLs: https://github.com/thebrierfox/intuitek-ace, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx
 - Safety notes: Remote server: all analysis requests are sent to api.intuitek.ai over HTTPS. No local file access or system permissions required.
 - Privacy notes: Analysis inputs (portfolio amounts, target yields) are sent to the remote endpoint. No personally identifiable data is required or stored.

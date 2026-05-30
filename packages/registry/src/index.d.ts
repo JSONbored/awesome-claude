@@ -144,6 +144,16 @@ export type RegistryTrustReport = {
   entries: RegistryTrustReportEntry[];
 };
 
+export type RepoStats = {
+  url?: string;
+  stars?: number | null;
+  forks?: number | null;
+  updatedAt?: string | null;
+  source?: "github" | "unknown";
+  appliesTo?: "listing_source_repo" | "none";
+  label?: string;
+};
+
 export type ContentEntry = {
   category: string;
   slug: string;
@@ -232,6 +242,7 @@ export type ContentEntry = {
   githubStars?: number | null;
   githubForks?: number | null;
   repoUpdatedAt?: string | null;
+  repoStats?: RepoStats;
   canonicalUrl?: string;
   llmsUrl?: string;
   apiUrl?: string;
@@ -307,8 +318,10 @@ export type ListingLead = {
 };
 export type JobSourceLifecycleInput = {
   currentStatus?: string;
+  tier?: string;
   staleCheckCount?: number;
-  expiresAt?: string;
+  expiresAt?: string | null;
+  paidPlacementExpiresAt?: string | null;
   sourceOk?: boolean;
   titleMatched?: boolean;
   companyMatched?: boolean;
@@ -320,6 +333,7 @@ export type JobSourceLifecycleResult = {
   staleCheckCount: number;
   indexable: boolean;
   reason: string;
+  expiresAt?: string | null;
 };
 export type JobSourceTruth = {
   sourceOk?: boolean;
@@ -666,6 +680,11 @@ export type SubmissionQueueEntry = {
   url: string;
   author: string;
   updatedAt: string;
+  bodyFingerprint: string;
+  bodyUpdatedAt: string;
+  authorCommentedAfterReview: boolean;
+  authorCommentedWithoutBodyUpdate: boolean;
+  lastAuthorCommentAt: string;
   labels: string[];
   recommendedLabels: string[];
   missingLabels: string[];
@@ -682,6 +701,7 @@ export type SubmissionQueueEntry = {
     | "review_risk"
     | "verify_source"
     | "request_author_input"
+    | "update_issue_body_required"
     | "send_stale_reminder"
     | "close_stale"
     | "skip";
@@ -709,7 +729,13 @@ export type SubmissionQueueEntry = {
   sourceState: SubmissionContributionAnalysis["sourceState"];
   maintainerActions: string[];
   riskRecommendedAction: string;
-  actionDue: "" | "author_input" | "verify_source" | "remind" | "close";
+  actionDue:
+    | ""
+    | "author_input"
+    | "update_issue_body"
+    | "verify_source"
+    | "remind"
+    | "close";
   category: string;
   slug: string;
   name: string;
@@ -807,6 +833,7 @@ export type SearchDocument = {
   supportLevels?: string[];
   documentationUrl: string;
   repoUrl: string;
+  repoStats?: RepoStats;
   url: string;
   canonicalUrl: string;
   llmsUrl: string;
@@ -1076,11 +1103,88 @@ export function buildCorpusLlmsArtifact(
   params?: Record<string, unknown>,
 ): string;
 export const QUALITY_REPORT_SCHEMA_VERSION: number;
+export const SOURCE_HEALTH_REPORT_SCHEMA_VERSION: number;
 export const LLMS_ARTIFACT_SCHEMA_VERSION: number;
 export const SUBMISSION_SPEC_SCHEMA_VERSION: number;
+
+export type SourceHealthFreshness =
+  | "fresh"
+  | "aging"
+  | "stale"
+  | "dormant"
+  | "unknown";
+
+export type SourceHealthEntry = {
+  key: string;
+  category: string;
+  slug: string;
+  title: string;
+  sourceStatus: "available" | "missing";
+  sourceQuality: string;
+  freshness: SourceHealthFreshness;
+  ageDays: number | null;
+  lastActivityAt: string;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
+  packageTrust: DownloadTrust;
+  packageVerified: boolean;
+  hasPackageTrust: boolean;
+  riskBearing: boolean;
+  needsAttention: boolean;
+  attentionReasons: string[];
+};
+
+export type SourceHealthReport = {
+  schemaVersion: number;
+  kind: "source-health-report";
+  generatedAt: string;
+  count: number;
+  thresholds: {
+    freshMaxDays: number;
+    agingMaxDays: number;
+    staleMaxDays: number;
+  };
+  summary: {
+    sourceBackedCount: number;
+    sourceBackedPercent: number;
+    missingSourceCount: number;
+    freshCount: number;
+    agingCount: number;
+    staleCount: number;
+    dormantCount: number;
+    unknownFreshnessCount: number;
+    riskBearingCount: number;
+    missingSafetyNotesCount: number;
+    missingPrivacyNotesCount: number;
+    packageTrustCount: number;
+    packageTrustPercent: number;
+    needsAttentionCount: number;
+  };
+  categoryBreakdown: Record<
+    string,
+    {
+      count: number;
+      sourceBacked: number;
+      stale: number;
+      missingSafetyNotes: number;
+      missingPrivacyNotes: number;
+      packageTrust: number;
+      needsAttention: number;
+    }
+  >;
+  entries: SourceHealthEntry[];
+};
+
 export function buildSourceProvenance(
   entry: Partial<ContentEntry>,
 ): SourceProvenance;
+export function buildEntrySourceHealth(
+  entry: Partial<ContentEntry>,
+  referenceDate?: Date | string,
+): SourceHealthEntry;
+export function buildSourceHealthReport(
+  entries: Partial<ContentEntry>[],
+): SourceHealthReport;
 export function buildEntryQuality(
   entry: Partial<ContentEntry>,
   referenceDate?: Date | string,
@@ -1214,6 +1318,19 @@ export function buildSubmissionQueue(
   issues: Array<Record<string, unknown>>,
   options?: { now?: string },
 ): SubmissionQueue;
+export function submissionBodyFingerprint(
+  issue?: Record<string, unknown>,
+): string;
+export function submissionBodyUpdatedAt(
+  issue?: Record<string, unknown>,
+): string;
+export function submissionActivityState(issue?: Record<string, unknown>): {
+  bodyFingerprint: string;
+  bodyUpdatedAt: string;
+  lastAuthorCommentAt: string;
+  authorCommentedAfterReview: boolean;
+  authorCommentedWithoutBodyUpdate: boolean;
+};
 export function validateSubmission(
   issue: Record<string, unknown>,
 ): SubmissionValidationReport;

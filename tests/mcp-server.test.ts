@@ -781,7 +781,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result.entries.length).toBeLessThanOrEqual(2);
     expect(result.entries[0]).toMatchObject({
       category: "skills",
-      canonicalUrl: expect.stringContaining("/skills/"),
+      canonicalUrl: expect.stringContaining("/entry/skills/"),
       dateAdded: expect.any(String),
     });
     expect(result.entries[0].tags).toContain("evals");
@@ -845,7 +845,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(detail).toMatchObject({
       ok: true,
       key: `${skill.category}:${skill.slug}`,
-      canonicalUrl: `https://heyclau.de/${skill.category}/${skill.slug}`,
+      canonicalUrl: `https://heyclau.de/entry/${skill.category}/${skill.slug}`,
       entry: {
         safetyNotes: expect.any(Array),
         privacyNotes: expect.any(Array),
@@ -1847,7 +1847,7 @@ describe("HeyClaude read-only MCP helpers", () => {
               slug: skill.slug,
               title: skill.title,
               description: "Example trending entry.",
-              canonicalUrl: `https://heyclau.de/${skill.category}/${skill.slug}`,
+              canonicalUrl: `https://heyclau.de/entry/${skill.category}/${skill.slug}`,
               platforms: ["Claude"],
               tags: ["evals"],
               dateAdded: "2026-05-01",

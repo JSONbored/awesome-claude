@@ -309,7 +309,16 @@
     "repoUrl": "https://github.com/feiskyer/mcp-kubernetes-server",
     "githubStars": 18,
     "githubForks": 9,
-    "repoUpdatedAt": "2026-05-13T09:23:32Z"
+    "repoUpdatedAt": "2026-05-13T09:23:32Z",
+    "repoStats": {
+      "repository": "feiskyer/mcp-kubernetes-server",
+      "url": "https://github.com/feiskyer/mcp-kubernetes-server",
+      "stars": 18,
+      "forks": 9,
+      "updatedAt": "2026-05-13T09:23:32Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

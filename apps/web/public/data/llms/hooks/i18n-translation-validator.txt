@@ -1,11 +1,11 @@
 # I18n Translation Validator - Hooks
-URL: https://heyclau.de/hooks/i18n-translation-validator
+URL: https://heyclau.de/entry/hooks/i18n-translation-validator
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-19
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/i18n-translation-validator
+- Canonical URL: https://heyclau.de/entry/hooks/i18n-translation-validator
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/i18n-translation-validator.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

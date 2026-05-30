@@ -1,12 +1,12 @@
 # Security Scanner Hook - Hooks
-URL: https://heyclau.de/hooks/security-scanner-hook
+URL: https://heyclau.de/entry/hooks/security-scanner-hook
 Category: hooks
 Author: JSONbored
 Date added: 2025-09-16
 Documentation: https://owasp.org/www-project-top-ten/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/hooks/security-scanner-hook
+- Canonical URL: https://heyclau.de/entry/hooks/security-scanner-hook
 - Source URLs: https://owasp.org/www-project-top-ten/, https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/security-scanner-hook.mdx
 - Safety notes: Runs automatically after write, edit, or multiedit activity and invokes installed security tools against the touched file., May run truffleHog, Semgrep, npm audit, Bandit, or gosec depending on the file type and tools available., Treats scanner findings as warnings and does not guarantee that code is safe or unsafe.
 - Privacy notes: Reads modified file contents for security scanning and prints scanner output to local hook output., Semgrep and package audit commands may contact external rule, registry, or advisory services depending on local tool configuration., Scanner output may include file paths, code snippets, dependency names, and suspected secrets.

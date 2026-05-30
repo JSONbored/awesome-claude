@@ -1,12 +1,12 @@
 # Devops SRE Expert for Claude
-URL: https://heyclau.de/agents/devops-sre-expert
+URL: https://heyclau.de/entry/agents/devops-sre-expert
 Category: agents
 Author: JSONbored
 Date added: 2025-09-15
 Documentation: https://kubernetes.io/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/devops-sre-expert.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/devops-sre-expert
+- Canonical URL: https://heyclau.de/entry/agents/devops-sre-expert
 - Source URLs: https://kubernetes.io/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/agents/devops-sre-expert.mdx
 - Brand: Kubernetes
 - Brand domain: kubernetes.io

@@ -269,7 +269,16 @@
     "repoUrl": "https://github.com/nadeesha/ts-prune",
     "githubStars": 2067,
     "githubForks": 68,
-    "repoUpdatedAt": "2026-04-13T08:47:15Z"
+    "repoUpdatedAt": "2026-04-13T08:47:15Z",
+    "repoStats": {
+      "repository": "nadeesha/ts-prune",
+      "url": "https://github.com/nadeesha/ts-prune",
+      "stars": 2067,
+      "forks": 68,
+      "updatedAt": "2026-04-13T08:47:15Z",
+      "appliesTo": "listing_source_repo",
+      "label": "Source repo"
+    }
   },
   "trustSignals": {
     "firstPartyEditorial": false,

@@ -1,5 +1,5 @@
 # Raycast Extension Dev Publish Capability Pack Skill
-URL: https://heyclau.de/skills/raycast-extension-dev-publish-capability-pack
+URL: https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-10
@@ -7,7 +7,7 @@ Documentation: https://developers.raycast.com/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx
 Download: /downloads/skills/raycast-extension-dev-publish-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/raycast-extension-dev-publish-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack
 - Source URLs: https://developers.raycast.com/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx
 - Brand: Raycast
 - Brand domain: raycast.com

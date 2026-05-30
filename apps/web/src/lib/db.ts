@@ -1,4 +1,4 @@
-import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 
 export type D1RunResult = {
   success?: boolean;
@@ -20,13 +20,5 @@ export type D1DatabaseLike = {
 };
 
 export function getSiteDb(): D1DatabaseLike | null {
-  try {
-    const { env } = getCloudflareContext();
-    const envRecord = env as unknown as {
-      SITE_DB?: D1DatabaseLike;
-    };
-    return envRecord.SITE_DB ?? null;
-  } catch {
-    return null;
-  }
+  return getCloudflareBinding<D1DatabaseLike>("SITE_DB") ?? null;
 }

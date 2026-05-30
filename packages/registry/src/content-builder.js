@@ -289,7 +289,10 @@ export function buildContentEntryFromMdx(params) {
       : undefined,
     websiteUrl: data.websiteUrl ? String(data.websiteUrl) : undefined,
     ...brandAssets,
-    affiliateUrl: data.affiliateUrl ? String(data.affiliateUrl) : undefined,
+    affiliateUrl:
+      category === "tools" && data.affiliateUrl
+        ? String(data.affiliateUrl)
+        : undefined,
     pricingModel: data.pricingModel ? String(data.pricingModel) : undefined,
     disclosure: data.disclosure ? String(data.disclosure) : undefined,
     applicationCategory: data.applicationCategory

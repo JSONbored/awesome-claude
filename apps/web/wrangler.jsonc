@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "heyclaude-prod",
-  "main": ".open-next/worker.js",
-  "compatibility_date": "2026-04-05",
+  "main": "dist/server/index.mjs",
+  "compatibility_date": "2026-05-29",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "observability": {
     "enabled": true,
@@ -21,15 +21,9 @@
     "mode": "smart",
   },
   "assets": {
-    "directory": ".open-next/assets",
+    "directory": "dist/client",
     "binding": "ASSETS",
   },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "heyclaude-prod",
-    },
-  ],
   "ratelimits": [
     {
       "name": "API_REGISTRY_RATE_LIMIT",
@@ -96,15 +90,9 @@
         "NEXT_PUBLIC_POLAR_JOB_BOARD_URL": "/jobs/post?tier=standard",
         "NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL": "/jobs/post?tier=featured",
         "NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL": "/jobs/post?tier=sponsored",
-        "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "0x4AAAAAADGCrKA_ziDGt-xB",
+        "NEXT_PUBLIC_TURNSTILE_SITE_KEY": "1x00000000000000000000AA",
         "SUBMISSIONS_REQUIRE_TURNSTILE": "1",
       },
-      "services": [
-        {
-          "binding": "WORKER_SELF_REFERENCE",
-          "service": "heyclaude-dev",
-        },
-      ],
       "ratelimits": [
         {
           "name": "API_REGISTRY_RATE_LIMIT",
@@ -142,8 +130,8 @@
       "d1_databases": [
         {
           "binding": "SITE_DB",
-          "database_name": "heyclaude-votes",
-          "database_id": "2897db33-c0c7-4d15-af73-618cb83a0a33",
+          "database_name": "heyclaude-dev-site-state",
+          "database_id": "e2e92b77-b5b6-419f-90fe-25a8537d6c12",
           "migrations_dir": "migrations",
         },
       ],

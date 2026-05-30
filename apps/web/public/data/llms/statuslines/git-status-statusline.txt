@@ -1,12 +1,12 @@
 # Git Status Statusline - Statuslines
-URL: https://heyclau.de/statuslines/git-status-statusline
+URL: https://heyclau.de/entry/statuslines/git-status-statusline
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-01
 Documentation: https://git-scm.com/docs/git-status
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/git-status-statusline.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/git-status-statusline
+- Canonical URL: https://heyclau.de/entry/statuslines/git-status-statusline
 - Source URLs: https://git-scm.com/docs/git-status, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/git-status-statusline.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

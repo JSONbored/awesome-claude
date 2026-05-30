@@ -1,5 +1,5 @@
 # Website Crawler + Summarizer Skill
-URL: https://heyclau.de/skills/website-crawler-summarizer
+URL: https://heyclau.de/entry/skills/website-crawler-summarizer
 Category: skills
 Author: JSONbored
 Date added: 2025-10-15
@@ -8,7 +8,7 @@ Repository: https://github.com/mozilla/readability
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx
 Download: /downloads/skills/website-crawler-summarizer.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/website-crawler-summarizer
+- Canonical URL: https://heyclau.de/entry/skills/website-crawler-summarizer
 - Source URLs: https://github.com/mozilla/readability, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx
 - Package URL: /downloads/skills/website-crawler-summarizer.zip
 - Package SHA256: b9a4470d1a5231d0b35ddf03c620b7450b06dd6c394ca5b2aaee0dc956053792

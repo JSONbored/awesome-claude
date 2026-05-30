@@ -1,5 +1,5 @@
 # n8n Operations Resilience Capability Pack Skill
-URL: https://heyclau.de/skills/n8n-operations-resilience-capability-pack
+URL: https://heyclau.de/entry/skills/n8n-operations-resilience-capability-pack
 Category: skills
 Author: JSONbored
 Date added: 2026-04-11
@@ -7,7 +7,7 @@ Documentation: https://docs.n8n.io/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx
 Download: /downloads/skills/n8n-operations-resilience-capability-pack.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/n8n-operations-resilience-capability-pack
+- Canonical URL: https://heyclau.de/entry/skills/n8n-operations-resilience-capability-pack
 - Source URLs: https://docs.n8n.io/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx
 - Brand: n8n
 - Brand domain: n8n.io

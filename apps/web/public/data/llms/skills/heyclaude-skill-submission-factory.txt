@@ -1,5 +1,5 @@
 # HeyClaude Skill Submission Factory
-URL: https://heyclau.de/skills/heyclaude-skill-submission-factory
+URL: https://heyclau.de/entry/skills/heyclaude-skill-submission-factory
 Category: skills
 Author: JSONbored
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://heyclau.de/submit
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx
 Download: /downloads/skills/heyclaude-skill-submission-factory.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/heyclaude-skill-submission-factory
+- Canonical URL: https://heyclau.de/entry/skills/heyclaude-skill-submission-factory
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Package SHA256: 1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f

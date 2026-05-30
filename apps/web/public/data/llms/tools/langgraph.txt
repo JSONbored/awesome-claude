@@ -1,5 +1,5 @@
 # LangGraph
-URL: https://heyclau.de/tools/langgraph
+URL: https://heyclau.de/entry/tools/langgraph
 Category: tools
 Author: LangChain
 Date added: 2026-04-27
@@ -7,7 +7,7 @@ Documentation: https://langchain-ai.github.io/langgraph/
 Repository: https://github.com/langchain-ai/langgraph
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/langgraph
+- Canonical URL: https://heyclau.de/entry/tools/langgraph
 - Source URLs: https://langchain-ai.github.io/langgraph/, https://github.com/langchain-ai/langgraph, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langgraph.mdx, https://www.langchain.com/langgraph
 - Brand: LangGraph
 - Brand domain: langchain.com

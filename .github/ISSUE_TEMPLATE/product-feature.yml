@@ -48,8 +48,9 @@ body:
       label: Scope
       description: List allowed areas to edit.
       placeholder: |
-        - apps/web/src/components/browse-directory.tsx
-        - apps/web/src/lib/search helpers
+        - apps/web/src/routes/browse.tsx
+        - apps/web/src/components/resource-card.tsx
+        - apps/web/src/data/search.ts
         - focused tests
     validations:
       required: true
@@ -110,4 +111,6 @@ body:
         - label: PRs should use a Conventional Commit-style title and include `Closes #<issue>`.
           required: true
         - label: UI or page changes must include screenshots in the PR, or explain `No visual impact`.
+          required: true
+        - label: This is product/feature work, not a content submission; do not add the `content-submission` label.
           required: true

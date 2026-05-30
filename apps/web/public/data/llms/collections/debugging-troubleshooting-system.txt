@@ -1,11 +1,11 @@
 # Debug & Troubleshoot
-URL: https://heyclau.de/collections/debugging-troubleshooting-system
+URL: https://heyclau.de/entry/collections/debugging-troubleshooting-system
 Category: collections
 Author: JSONbored
 Date added: 2025-10-02
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/debugging-troubleshooting-system.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/collections/debugging-troubleshooting-system
+- Canonical URL: https://heyclau.de/entry/collections/debugging-troubleshooting-system
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/collections/debugging-troubleshooting-system.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

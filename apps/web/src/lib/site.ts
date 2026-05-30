@@ -1,4 +1,4 @@
-import { categorySpec } from "@heyclaude/registry";
+import { categorySpec } from "@heyclaude/registry/category-spec";
 
 type CategorySpecEntry = {
   label: string;
@@ -10,6 +10,22 @@ type CategorySpecEntry = {
 
 const categories = categorySpec.categories as Record<string, CategorySpecEntry>;
 
+function publicEnv(name: string) {
+  const viteValue = import.meta.env[name];
+  if (typeof viteValue === "string" && viteValue.trim()) {
+    return viteValue.trim();
+  }
+
+  if (typeof process !== "undefined") {
+    const processValue = process.env?.[name];
+    if (typeof processValue === "string" && processValue.trim()) {
+      return processValue.trim();
+    }
+  }
+
+  return "";
+}
+
 export const siteConfig = {
   name: "HeyClaude",
   shortName: "heyclaude",
@@ -18,23 +34,19 @@ export const siteConfig = {
   url: "https://heyclau.de",
   githubUrl: "https://github.com/JSONbored/awesome-claude",
   jobsEmail: "jobs@heyclau.de",
-  twitterUrl: process.env.NEXT_PUBLIC_TWITTER_URL || "https://x.com/jsonbored",
-  discordUrl:
-    process.env.NEXT_PUBLIC_DISCORD_URL ||
-    "https://discord.com/invite/Ax3Py4YDrq",
-  polarFreeJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_FREE_JOB_URL || "/jobs/post?tier=free",
-  polarJobBoardUrl: process.env.NEXT_PUBLIC_POLAR_JOB_BOARD_URL || "/advertise",
-  polarFeaturedJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_FEATURED_JOB_URL || "/advertise",
-  polarSponsoredJobUrl:
-    process.env.NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL || "/advertise",
+  twitterUrl: publicEnv("NEXT_PUBLIC_TWITTER_URL") || "https://x.com/jsonbored",
+  discordUrl: publicEnv("NEXT_PUBLIC_DISCORD_URL") || "https://discord.com/invite/Ax3Py4YDrq",
+  umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "https://umami.heyclau.de/script.js",
+  umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
+  turnstileSiteKey: publicEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY") || "1x00000000000000000000AA",
+  polarFreeJobUrl: publicEnv("NEXT_PUBLIC_POLAR_FREE_JOB_URL") || "/jobs/post?tier=free",
+  polarJobBoardUrl: publicEnv("NEXT_PUBLIC_POLAR_JOB_BOARD_URL") || "/advertise",
+  polarFeaturedJobUrl: publicEnv("NEXT_PUBLIC_POLAR_FEATURED_JOB_URL") || "/advertise",
+  polarSponsoredJobUrl: publicEnv("NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL") || "/advertise",
   polarFeaturedJob90Url:
-    process.env.NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL ||
-    "/jobs/post?tier=featured",
+    publicEnv("NEXT_PUBLIC_POLAR_FEATURED_JOB_90_URL") || "/jobs/post?tier=featured",
   polarSponsoredJob90Url:
-    process.env.NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL ||
-    "/jobs/post?tier=sponsored",
+    publicEnv("NEXT_PUBLIC_POLAR_SPONSORED_JOB_90_URL") || "/jobs/post?tier=sponsored",
   nav: [
     { href: "/browse", label: "Browse" },
     { href: "/best/agent-workflow-starter-kits", label: "Best" },
@@ -51,25 +63,18 @@ export const categoryLabels: Record<string, string> = Object.fromEntries(
 );
 
 export const categoryDescriptions: Record<string, string> = Object.fromEntries(
+  Object.entries(categories).map(([category, spec]) => [category, spec.description]),
+);
+
+export const categorySeoDescriptions: Record<string, string> = Object.fromEntries(
   Object.entries(categories).map(([category, spec]) => [
     category,
-    spec.description,
+    spec.seoDescription ?? spec.description,
   ]),
 );
 
-export const categorySeoDescriptions: Record<string, string> =
-  Object.fromEntries(
-    Object.entries(categories).map(([category, spec]) => [
-      category,
-      spec.seoDescription ?? spec.description,
-    ]),
-  );
-
 export const categoryUsageHints: Record<string, string> = Object.fromEntries(
-  Object.entries(categories).map(([category, spec]) => [
-    category,
-    spec.usageHint,
-  ]),
+  Object.entries(categories).map(([category, spec]) => [category, spec.usageHint]),
 );
 
 export const categoryQuickstarts: Record<string, string[]> = Object.fromEntries(

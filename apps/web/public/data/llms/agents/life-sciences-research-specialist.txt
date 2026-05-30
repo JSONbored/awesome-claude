@@ -1,11 +1,11 @@
 # Life Sciences Research Specialist - Agents
-URL: https://heyclau.de/agents/life-sciences-research-specialist
+URL: https://heyclau.de/entry/agents/life-sciences-research-specialist
 Category: agents
 Author: JSONbored
 Date added: 2025-10-25
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/agents/life-sciences-research-specialist
+- Canonical URL: https://heyclau.de/entry/agents/life-sciences-research-specialist
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/agents/life-sciences-research-specialist.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

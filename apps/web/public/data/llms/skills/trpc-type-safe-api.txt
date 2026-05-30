@@ -1,5 +1,5 @@
 # tRPC Type-Safe API Builder Skill
-URL: https://heyclau.de/skills/trpc-type-safe-api
+URL: https://heyclau.de/entry/skills/trpc-type-safe-api
 Category: skills
 Author: JSONbored
 Date added: 2025-10-16
@@ -7,7 +7,7 @@ Documentation: https://trpc.io/docs/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/trpc-type-safe-api.mdx
 Download: /downloads/skills/trpc-type-safe-api.zip
 ## Citation Facts
-- Canonical URL: https://heyclau.de/skills/trpc-type-safe-api
+- Canonical URL: https://heyclau.de/entry/skills/trpc-type-safe-api
 - Source URLs: https://trpc.io/docs/, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/trpc-type-safe-api.mdx
 - Package URL: /downloads/skills/trpc-type-safe-api.zip
 - Package SHA256: 33c0ad29db6fc2f841bd0bf3521a4ebb8111a34d702a317745ea11735d7422c0

@@ -1,12 +1,12 @@
 # Test-Driven Development Enforcer - CLAUDE.md Rules for Claude Code
-URL: https://heyclau.de/rules/test-driven-development-enforcer
+URL: https://heyclau.de/entry/rules/test-driven-development-enforcer
 Category: rules
 Author: JSONbored
 Date added: 2025-10-25
 Documentation: https://vitest.dev/guide/
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/test-driven-development-enforcer.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/rules/test-driven-development-enforcer
+- Canonical URL: https://heyclau.de/entry/rules/test-driven-development-enforcer
 - Source URLs: https://vitest.dev/guide/, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/test-driven-development-enforcer.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

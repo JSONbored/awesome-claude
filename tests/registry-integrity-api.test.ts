@@ -20,11 +20,7 @@ const manifestMock = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@opennextjs/cloudflare", () => ({
-  getCloudflareContext: () => ({ env: {} }),
-}));
-
-vi.mock("@/lib/content", () => ({
+vi.mock("@/lib/content.server", () => ({
   getRegistryManifest: () => Promise.resolve(manifestMock.value),
 }));
 
@@ -37,7 +33,7 @@ function request(path: string) {
 describe("/api/registry/integrity", () => {
   it("lists current artifact contracts without artifact bodies", async () => {
     const { GET } =
-      await import("../apps/web/src/app/api/registry/integrity/route");
+      await import("../apps/web/src/routes/api/registry/integrity");
     const response = await GET(request("/api/registry/integrity"));
 
     await expect(response.json()).resolves.toMatchObject({
@@ -58,7 +54,7 @@ describe("/api/registry/integrity", () => {
 
   it("verifies matching, mismatched, and path-normalized artifact hashes", async () => {
     const { GET } =
-      await import("../apps/web/src/app/api/registry/integrity/route");
+      await import("../apps/web/src/routes/api/registry/integrity");
     const match = await GET(
       request(
         "/api/registry/integrity?artifact=directory-index.json&hash=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -94,7 +90,7 @@ describe("/api/registry/integrity", () => {
 
   it("returns clear unknown artifact and malformed hash responses", async () => {
     const { GET } =
-      await import("../apps/web/src/app/api/registry/integrity/route");
+      await import("../apps/web/src/routes/api/registry/integrity");
     const unknown = await GET(
       request(
         "/api/registry/integrity?artifact=missing.json&hash=dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
@@ -160,7 +156,7 @@ describe("/api/registry/integrity", () => {
 
   it("treats explicit empty artifact and hash as 'snapshot listing'", async () => {
     const { GET } =
-      await import("../apps/web/src/app/api/registry/integrity/route");
+      await import("../apps/web/src/routes/api/registry/integrity");
     const emptyArtifact = await GET(
       request("/api/registry/integrity?artifact="),
     );
@@ -194,7 +190,7 @@ describe("/api/registry/integrity", () => {
     // hash. Explicit-empty hash is treated as "no hash provided", same as
     // omitting the param entirely, so the pair-check still fires.
     const { GET } =
-      await import("../apps/web/src/app/api/registry/integrity/route");
+      await import("../apps/web/src/routes/api/registry/integrity");
     const partialPair = await GET(
       request("/api/registry/integrity?artifact=directory-index.json&hash="),
     );

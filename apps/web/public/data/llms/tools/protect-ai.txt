@@ -1,12 +1,12 @@
 # Protect AI
-URL: https://heyclau.de/tools/protect-ai
+URL: https://heyclau.de/entry/tools/protect-ai
 Category: tools
 Author: Protect AI
 Date added: 2026-04-27
 Documentation: https://docs.protectai.com
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/protect-ai
+- Canonical URL: https://heyclau.de/entry/tools/protect-ai
 - Source URLs: https://docs.protectai.com, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/protect-ai.mdx, https://protectai.com
 - Brand: Protect AI
 - Brand domain: protectai.com

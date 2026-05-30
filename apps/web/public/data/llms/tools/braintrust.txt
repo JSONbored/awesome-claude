@@ -1,12 +1,12 @@
 # Braintrust
-URL: https://heyclau.de/tools/braintrust
+URL: https://heyclau.de/entry/tools/braintrust
 Category: tools
 Author: Braintrust
 Date added: 2026-04-27
 Documentation: https://www.braintrust.dev/docs
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/tools/braintrust
+- Canonical URL: https://heyclau.de/entry/tools/braintrust
 - Source URLs: https://www.braintrust.dev/docs, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/braintrust.mdx, https://www.braintrust.dev
 - Brand: Braintrust
 - Brand domain: braintrust.dev

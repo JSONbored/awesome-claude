@@ -192,7 +192,7 @@ jobs:
               ? ["auto-import-eligible"]
               : validationReport.recommendedLabels || [];
             for (const label of validationLabels) {
-              if (label) labels.add(label);
+              if (label && !riskLabels.has(label)) labels.add(label);
             }
             for (const label of riskReport.recommendedLabels || []) {
               if (label) labels.add(label);

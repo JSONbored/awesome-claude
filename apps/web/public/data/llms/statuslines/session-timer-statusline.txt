@@ -1,11 +1,11 @@
 # Session Timer
-URL: https://heyclau.de/statuslines/session-timer-statusline
+URL: https://heyclau.de/entry/statuslines/session-timer-statusline
 Category: statuslines
 Author: JSONbored
 Date added: 2025-10-01
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-timer-statusline.mdx
 ## Citation Facts
-- Canonical URL: https://heyclau.de/statuslines/session-timer-statusline
+- Canonical URL: https://heyclau.de/entry/statuslines/session-timer-statusline
 - Source URLs: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/session-timer-statusline.mdx
 - Author: JSONbored
 - Last verified: 2026-04-26T18:18:28-06:00

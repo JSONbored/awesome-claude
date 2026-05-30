@@ -603,14 +603,8 @@ export function issueLabels(issue) {
 
 export function looksLikeSubmissionIssue(issue = {}) {
   const labels = issueLabels(issue);
-  if (labels.includes("content-submission")) {
-    return true;
-  }
-
   const title = String(issue.title || "").trim();
   const body = String(issue.body || "");
-  if (looksLikeSubmitTitle(title)) return true;
-
   const normalizedBody = body.toLowerCase();
   const hasCategoryField =
     normalizedBody.includes("### category") ||
@@ -626,7 +620,15 @@ export function looksLikeSubmissionIssue(issue = {}) {
     normalizedBody.includes("json data") ||
     normalizedBody.includes("github url") ||
     normalizedBody.includes("docs url");
-  return hasCategoryField && hasNameOrSourceField;
+  const hasSubmissionShape = hasCategoryField && hasNameOrSourceField;
+
+  if (labels.includes("content-submission")) {
+    return looksLikeSubmitTitle(title) || hasSubmissionShape;
+  }
+
+  if (looksLikeSubmitTitle(title)) return true;
+
+  return hasSubmissionShape;
 }
 
 export function isLikelyAffiliateUrl(value) {
@@ -857,8 +859,183 @@ function parseTimestamp(value) {
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
-export function submissionAgeDays(issue = {}, options = {}) {
+function stableTextFingerprint(value) {
+  const text = String(value ?? "")
+    .replace(/\r\n/g, "\n")
+    .trim();
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < text.length; index += 1) {
+    hash ^= text.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193) >>> 0;
+  }
+  return `fnv1a:${hash.toString(16).padStart(8, "0")}`;
+}
+
+export function submissionBodyFingerprint(issue = {}) {
+  return stableTextFingerprint(issue.body || "");
+}
+
+function submissionSourceFieldsFingerprint(body = "") {
+  const fields = parseIssueFormBody(body);
+  const pairs = Object.entries(fields)
+    .map(([key, value]) => [key, normalizeValue(value)])
+    .filter(([, value]) => value)
+    .sort(([left], [right]) => left.localeCompare(right));
+  return stableTextFingerprint(JSON.stringify(pairs));
+}
+
+function issueTimelineEvents(issue = {}) {
+  if (Array.isArray(issue.timeline)) return issue.timeline;
+  if (Array.isArray(issue.events)) return issue.events;
+  return [];
+}
+
+function issueComments(issue = {}) {
+  return Array.isArray(issue.comments) ? issue.comments : [];
+}
+
+function commentAuthor(comment = {}) {
+  if (typeof comment.author === "string") return comment.author;
+  if (typeof comment.user === "string") return comment.user;
+  return String(comment.author?.login || comment.user?.login || "");
+}
+
+function issueAuthor(issue = {}) {
+  if (typeof issue.author === "string") return issue.author;
+  if (typeof issue.user === "string") return issue.user;
+  return String(issue.author?.login || issue.user?.login || "");
+}
+
+function commentTimestamp(comment = {}) {
+  return parseTimestamp(comment.createdAt || comment.created_at);
+}
+
+const MAINTAINER_REVIEW_ASSOCIATIONS = new Set([
+  "OWNER",
+  "MEMBER",
+  "COLLABORATOR",
+]);
+
+function commentAuthorAssociation(comment = {}) {
+  return String(
+    comment.authorAssociation ||
+      comment.author_association ||
+      comment.association ||
+      "",
+  ).toUpperCase();
+}
+
+function isTrustedReviewBotComment(comment = {}) {
+  const login = commentAuthor(comment).toLowerCase();
+  if (
+    !["github-actions[bot]", "heyclaude[bot]", "heyclaude-bot"].includes(login)
+  ) {
+    return false;
+  }
+
+  const body = String(comment.body || "").toLowerCase();
+  return (
+    body.includes("needs author input") ||
+    body.includes("edit the original issue") ||
+    body.includes("original issue fields") ||
+    body.includes("issue body")
+  );
+}
+
+function isMaintainerReviewComment(comment = {}) {
+  return (
+    MAINTAINER_REVIEW_ASSOCIATIONS.has(commentAuthorAssociation(comment)) ||
+    isTrustedReviewBotComment(comment)
+  );
+}
+
+export function submissionBodyUpdatedAt(issue = {}) {
+  const explicit = parseTimestamp(issue.bodyUpdatedAt || issue.body_updated_at);
+  if (explicit) return new Date(explicit).toISOString();
+
+  const currentFieldsFingerprint = submissionSourceFieldsFingerprint(
+    issue.body || "",
+  );
+  const bodyEditTimestamps = issueTimelineEvents(issue)
+    .filter((event) => {
+      const changes = event?.changes || {};
+      const previousBody =
+        typeof changes.body?.from === "string"
+          ? changes.body.from
+          : typeof changes.body_from === "string"
+            ? changes.body_from
+            : typeof changes.old_body === "string"
+              ? changes.old_body
+              : "";
+      const changedSubmissionFields = previousBody
+        ? submissionSourceFieldsFingerprint(previousBody) !==
+          currentFieldsFingerprint
+        : Boolean(changes.body || changes.body_from || changes.old_body);
+      return (
+        String(event?.event || "").toLowerCase() === "edited" &&
+        changedSubmissionFields
+      );
+    })
+    .map((event) => parseTimestamp(event.createdAt || event.created_at))
+    .filter(Boolean);
+  const latestEdit = bodyEditTimestamps.length
+    ? Math.max(...bodyEditTimestamps)
+    : 0;
+  if (latestEdit) return new Date(latestEdit).toISOString();
+
+  const createdAt = parseTimestamp(issue.createdAt || issue.created_at);
+  if (createdAt) return new Date(createdAt).toISOString();
+
   const updatedAt = parseTimestamp(issue.updatedAt || issue.updated_at);
+  return updatedAt ? new Date(updatedAt).toISOString() : "";
+}
+
+export function submissionActivityState(issue = {}) {
+  const author = issueAuthor(issue).toLowerCase();
+  const bodyUpdatedAt = submissionBodyUpdatedAt(issue);
+  const bodyUpdatedAtMs = parseTimestamp(bodyUpdatedAt);
+  const comments = issueComments(issue);
+  const authorCommentTimestamps = [];
+  const reviewCommentTimestamps = [];
+
+  for (const comment of comments) {
+    const timestamp = commentTimestamp(comment);
+    if (!timestamp) continue;
+    const commentAuthorLogin = commentAuthor(comment).toLowerCase();
+    if (author && commentAuthorLogin === author) {
+      authorCommentTimestamps.push(timestamp);
+    } else if (isMaintainerReviewComment(comment)) {
+      reviewCommentTimestamps.push(timestamp);
+    }
+  }
+
+  const lastAuthorCommentMs = authorCommentTimestamps.length
+    ? Math.max(...authorCommentTimestamps)
+    : 0;
+  const lastReviewCommentMs = reviewCommentTimestamps.length
+    ? Math.max(...reviewCommentTimestamps)
+    : 0;
+  const authorCommentedAfterReview =
+    Boolean(lastAuthorCommentMs && lastReviewCommentMs) &&
+    lastAuthorCommentMs > lastReviewCommentMs;
+  const authorCommentedWithoutBodyUpdate =
+    authorCommentedAfterReview &&
+    Boolean(bodyUpdatedAtMs) &&
+    lastAuthorCommentMs > bodyUpdatedAtMs;
+
+  return {
+    bodyFingerprint: submissionBodyFingerprint(issue),
+    bodyUpdatedAt,
+    lastAuthorCommentAt: lastAuthorCommentMs
+      ? new Date(lastAuthorCommentMs).toISOString()
+      : "",
+    authorCommentedAfterReview,
+    authorCommentedWithoutBodyUpdate,
+  };
+}
+
+export function submissionAgeDays(issue = {}, options = {}) {
+  const updatedAt = parseTimestamp(submissionBodyUpdatedAt(issue));
   const createdAt = parseTimestamp(issue.createdAt || issue.created_at);
   const reference = updatedAt || createdAt;
   if (!reference) return 0;
@@ -905,6 +1082,7 @@ function submissionQueueNextAction(
   issue = {},
   riskTier = "low",
   policyDecision = "maintainer_review",
+  activity = submissionActivityState(issue),
 ) {
   const labels = new Set(issueLabels(issue));
   if (labels.has("import-pr-open")) return "skip";
@@ -912,7 +1090,11 @@ function submissionQueueNextAction(
   if (status === "skipped") return "skip";
   if (status === "close_eligible") return "close_stale";
   if (status === "stale_reminder_due") return "send_stale_reminder";
-  if (status === "needs_author_input") return "request_author_input";
+  if (status === "needs_author_input") {
+    return activity.authorCommentedWithoutBodyUpdate
+      ? "update_issue_body_required"
+      : "request_author_input";
+  }
   if (status === "source_needs_verification") return "verify_source";
   if (policyDecision === "blocked") return "review_risk";
   if (riskTier === "high" || riskTier === "critical") return "review_risk";
@@ -1065,6 +1247,7 @@ function buildSubmissionReviewChecklist({
   status,
   sourceNeedsVerification,
   maintainerActions,
+  activity,
 }) {
   const items = [];
   if (report?.skipped) {
@@ -1073,7 +1256,11 @@ function buildSubmissionReviewChecklist({
     items.push("Confirm the category, slug, and public-facing metadata.");
   }
   if (!report?.ok) {
-    items.push("Wait for the author to fix required fields before import.");
+    items.push(
+      activity?.authorCommentedWithoutBodyUpdate
+        ? "Ask the author to edit the original issue body; comments do not update validation."
+        : "Wait for the author to fix required fields before import.",
+    );
   }
   if (sourceNeedsVerification) {
     items.push(
@@ -1106,6 +1293,13 @@ function buildSubmissionReviewChecklist({
 
 function buildSubmissionCommentDraft({ entry, report }) {
   const title = entry.name || entry.title || "this submission";
+  if (entry.nextAction === "update_issue_body_required") {
+    return [
+      `Thanks for following up on ${title}. I still need the original issue fields updated before review can continue.`,
+      "",
+      "Please edit the issue body itself with the corrected metadata/source details. Comments are useful for discussion, but they do not update the validation source of truth or import preview.",
+    ].join("\n");
+  }
   if (entry.nextAction === "request_author_input") {
     const problems = [...(report.errors || []), ...(report.warnings || [])]
       .filter(Boolean)
@@ -1118,7 +1312,7 @@ function buildSubmissionCommentDraft({ entry, report }) {
       problems ||
         "- Please update the issue body with the required fields from the category template.",
       "",
-      "Please edit the issue body with the missing details. Once it is updated, the validator can re-check it and maintainer review can continue.",
+      "Please edit the issue body with the missing details. Comments do not update the validation source of truth. Once the issue body is updated, the validator can re-check it and maintainer review can continue.",
     ].join("\n");
   }
   if (entry.nextAction === "verify_source") {
@@ -1132,7 +1326,7 @@ function buildSubmissionCommentDraft({ entry, report }) {
     return [
       `This submission is still waiting on author input before review can continue.`,
       "",
-      "Please update the issue with the missing details. If there is no update after the stale window, maintainers may close it as not planned. You can reopen or resubmit when the details are ready.",
+      "Please edit the original issue body with the missing details. Comments do not update validation. If there is no issue-body update after the stale window, maintainers may close it as not planned. You can reopen or resubmit when the details are ready.",
     ].join("\n");
   }
   if (entry.nextAction === "close_stale") {
@@ -1159,6 +1353,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         risk.contributionAnalysis?.capabilityRiskBuckets || [];
       const maintainerActions =
         risk.contributionAnalysis?.maintainerActionItems || [];
+      const activity = submissionActivityState(issue);
       const recommendedLabels = recommendedSubmissionLabels(issue, report);
       const labels = issueLabels(issue);
       const missingLabels = recommendedLabels.filter(
@@ -1169,6 +1364,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         issue,
         risk.riskTier,
         risk.policyDecision,
+        activity,
       );
       const sourceNeedsVerification = submissionSourceNeedsVerification(
         report,
@@ -1183,6 +1379,12 @@ export function buildSubmissionQueue(issues = [], options = {}) {
             ? issue.author
             : String(issue.author?.login || ""),
         updatedAt: String(issue.updatedAt || issue.updated_at || ""),
+        bodyFingerprint: activity.bodyFingerprint,
+        bodyUpdatedAt: activity.bodyUpdatedAt,
+        authorCommentedAfterReview: activity.authorCommentedAfterReview,
+        authorCommentedWithoutBodyUpdate:
+          activity.authorCommentedWithoutBodyUpdate,
+        lastAuthorCommentAt: activity.lastAuthorCommentAt,
         labels,
         recommendedLabels,
         missingLabels,
@@ -1206,11 +1408,13 @@ export function buildSubmissionQueue(issues = [], options = {}) {
             ? "close"
             : status === "stale_reminder_due"
               ? "remind"
-              : status === "needs_author_input"
-                ? "author_input"
-                : status === "source_needs_verification"
-                  ? "verify_source"
-                  : "",
+              : nextAction === "update_issue_body_required"
+                ? "update_issue_body"
+                : status === "needs_author_input"
+                  ? "author_input"
+                  : status === "source_needs_verification"
+                    ? "verify_source"
+                    : "",
         category: report.category || "",
         slug: report.fields?.slug || "",
         name: report.fields?.name || "",
@@ -1249,6 +1453,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
         status,
         sourceNeedsVerification,
         maintainerActions,
+        activity,
       });
       entry.commentDraft = buildSubmissionCommentDraft({ entry, report });
       return entry;
@@ -1271,7 +1476,7 @@ export function buildSubmissionQueue(issues = [], options = {}) {
     });
 
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     kind: "submission-queue",
     generatedAt: new Date().toISOString(),
     count: entries.length,
@@ -1418,6 +1623,12 @@ export function validateSubmission(issue) {
         `Contributor submissions cannot include affiliate/referral URLs: ${field}`,
       );
     }
+  }
+
+  if (normalizeValue(fields.affiliate_url) && category !== TOOLS_CATEGORY) {
+    errors.push(
+      "Contributor submissions cannot include affiliate_url outside maintainer-reviewed tools listings",
+    );
   }
 
   if (category === "skills" && isGitHubSourcePath(fields.download_url)) {

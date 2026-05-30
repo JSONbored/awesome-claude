@@ -4302,6 +4302,15 @@ paths:
                 email:
                   type: string
                   maxLength: 320
+                segments:
+                  type: array
+                  items:
+                    type: string
+                    minLength: 1
+                    maxLength: 64
+                    pattern: ^[a-z0-9:_-]+$/i
+                  maxItems: 20
+                  default: []
                 source:
                   type: string
                   maxLength: 64
@@ -5585,6 +5594,390 @@ paths:
                 required:
                   - ok
                   - error
+  /api/submissions/queue:
+    get:
+      tags:
+        - Submissions
+      summary: List public content submission issue status
+      description:
+        Returns sanitized, read-only status for public content-submission issues. This endpoint
+        reads GitHub issue metadata only; it cannot approve, reject, label, import, create branches,
+        create PRs, or publish registry content.
+      parameters:
+        - schema:
+            type: integer
+            exclusiveMinimum: 0
+          required: false
+          name: number
+          in: query
+        - schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          required: false
+          name: limit
+          in: query
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - true
+                  generatedAt:
+                    type: string
+                  repo:
+                    type: string
+                  count:
+                    type: integer
+                    minimum: 0
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        number:
+                          type: integer
+                          exclusiveMinimum: 0
+                        url:
+                          type: string
+                          format: uri
+                        title:
+                          type: string
+                          maxLength: 300
+                        author:
+                          type: string
+                          maxLength: 120
+                        authorUrl:
+                          type: string
+                          format: uri
+                        category:
+                          type: string
+                          maxLength: 80
+                        slug:
+                          type: string
+                          maxLength: 160
+                        status:
+                          type: string
+                          enum:
+                            - queued
+                            - in_review
+                            - ready
+                            - approved
+                            - import_pr_open
+                            - needs_author_input
+                            - source_needs_verification
+                            - stale
+                            - imported
+                            - closed
+                        state:
+                          type: string
+                          enum:
+                            - open
+                            - closed
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 120
+                          maxItems: 32
+                        blockers:
+                          type: array
+                          items:
+                            type: string
+                            maxLength: 240
+                          maxItems: 12
+                        updatedAt:
+                          type: string
+                        bodyFingerprint:
+                          type: string
+                          maxLength: 40
+                        bodyUpdatedAt:
+                          type: string
+                        authorCommentedAfterReview:
+                          type: boolean
+                        authorCommentedWithoutBodyUpdate:
+                          type: boolean
+                        lastAuthorCommentAt:
+                          type: string
+                        createdAt:
+                          type: string
+                        closedAt:
+                          type:
+                            - string
+                            - "null"
+                        importPrUrl:
+                          type: string
+                          format: uri
+                      required:
+                        - number
+                        - url
+                        - title
+                        - author
+                        - category
+                        - slug
+                        - status
+                        - state
+                        - labels
+                        - blockers
+                        - updatedAt
+                        - createdAt
+                    maxItems: 100
+                required:
+                  - ok
+                  - generatedAt
+                  - repo
+                  - count
+                  - entries
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
   /api/download:
     get:
       tags:
@@ -6292,7 +6685,704 @@ paths:
             application/json:
               schema:
                 type: object
-                additionalProperties: {}
+                properties:
+                  schemaVersion:
+                    type: number
+                  kind:
+                    type: string
+                    enum:
+                      - jobs-index
+                  generatedAt:
+                    type: string
+                  count:
+                    type: integer
+                    minimum: 0
+                  total:
+                    type: integer
+                    minimum: 0
+                  totalAvailable:
+                    type: integer
+                    minimum: 0
+                  limit:
+                    type: integer
+                    minimum: 1
+                    maximum: 100
+                  offset:
+                    type: integer
+                    minimum: 0
+                  nextOffset:
+                    type:
+                      - integer
+                      - "null"
+                  entries:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                        title:
+                          type: string
+                        company:
+                          type: string
+                        companyUrl:
+                          type: string
+                          format: uri
+                        location:
+                          type: string
+                        description:
+                          type: string
+                        descriptionMd:
+                          type: string
+                        type:
+                          type: string
+                        postedAt:
+                          type: string
+                        compensation:
+                          type: string
+                        equity:
+                          type: string
+                        bonus:
+                          type: string
+                        benefits:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        responsibilities:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        requirements:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        featured:
+                          type: boolean
+                        sponsored:
+                          type: boolean
+                        applyUrl:
+                          type: string
+                        tier:
+                          type: string
+                          enum:
+                            - free
+                            - standard
+                            - featured
+                            - sponsored
+                        status:
+                          type: string
+                          enum:
+                            - draft
+                            - pending_review
+                            - active
+                            - stale_pending_review
+                            - closed
+                            - archived
+                        source:
+                          type: string
+                          enum:
+                            - manual
+                            - polar
+                            - email
+                            - curated
+                        sourceKind:
+                          type: string
+                          enum:
+                            - official_ats
+                            - employer_careers
+                            - employer_submitted
+                        sourceUrl:
+                          type: string
+                        firstSeenAt:
+                          type: string
+                        lastCheckedAt:
+                          type: string
+                        sourceCheckedAt:
+                          type: string
+                        curationNote:
+                          type: string
+                        claimedEmployer:
+                          type: boolean
+                        expiresAt:
+                          type: string
+                        isRemote:
+                          type: boolean
+                        isWorldwide:
+                          type: boolean
+                        webUrl:
+                          type: string
+                          format: uri
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        sourceLabel:
+                          type: string
+                        applySourceLabel:
+                          type: string
+                        lastVerifiedAt:
+                          type: string
+                      required:
+                        - slug
+                        - title
+                        - company
+                        - location
+                        - description
+                        - featured
+                        - applyUrl
+                        - webUrl
+                        - labels
+                        - sourceLabel
+                        - applySourceLabel
+                      additionalProperties: {}
+                    maxItems: 100
+                required:
+                  - schemaVersion
+                  - kind
+                  - generatedAt
+                  - count
+                  - total
+                  - totalAvailable
+                  - limit
+                  - offset
+                  - nextOffset
+                  - entries
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/jobs/{slug}:
+    get:
+      tags:
+        - Jobs
+      summary: Get one active reviewed job
+      description:
+        Returns one active D1-backed public job listing plus a small related set. Expired,
+        closed, stale, unreviewed, or source-unhealthy jobs return 404.
+      parameters:
+        - schema:
+            type: string
+            pattern: ^[a-z0-9-]+$
+          required: true
+          name: slug
+          in: path
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schemaVersion:
+                    type: number
+                  kind:
+                    type: string
+                    enum:
+                      - jobs-detail
+                  slug:
+                    type: string
+                  generatedAt:
+                    type: string
+                  entry:
+                    type: object
+                    properties:
+                      slug:
+                        type: string
+                      title:
+                        type: string
+                      company:
+                        type: string
+                      companyUrl:
+                        type: string
+                        format: uri
+                      location:
+                        type: string
+                      description:
+                        type: string
+                      descriptionMd:
+                        type: string
+                      type:
+                        type: string
+                      postedAt:
+                        type: string
+                      compensation:
+                        type: string
+                      equity:
+                        type: string
+                      bonus:
+                        type: string
+                      benefits:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      responsibilities:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      requirements:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      featured:
+                        type: boolean
+                      sponsored:
+                        type: boolean
+                      applyUrl:
+                        type: string
+                      tier:
+                        type: string
+                        enum:
+                          - free
+                          - standard
+                          - featured
+                          - sponsored
+                      status:
+                        type: string
+                        enum:
+                          - draft
+                          - pending_review
+                          - active
+                          - stale_pending_review
+                          - closed
+                          - archived
+                      source:
+                        type: string
+                        enum:
+                          - manual
+                          - polar
+                          - email
+                          - curated
+                      sourceKind:
+                        type: string
+                        enum:
+                          - official_ats
+                          - employer_careers
+                          - employer_submitted
+                      sourceUrl:
+                        type: string
+                      firstSeenAt:
+                        type: string
+                      lastCheckedAt:
+                        type: string
+                      sourceCheckedAt:
+                        type: string
+                      curationNote:
+                        type: string
+                      claimedEmployer:
+                        type: boolean
+                      expiresAt:
+                        type: string
+                      isRemote:
+                        type: boolean
+                      isWorldwide:
+                        type: boolean
+                      webUrl:
+                        type: string
+                        format: uri
+                      labels:
+                        type: array
+                        items:
+                          type: string
+                        maxItems: 24
+                      sourceLabel:
+                        type: string
+                      applySourceLabel:
+                        type: string
+                      lastVerifiedAt:
+                        type: string
+                    required:
+                      - slug
+                      - title
+                      - company
+                      - location
+                      - description
+                      - featured
+                      - applyUrl
+                      - webUrl
+                      - labels
+                      - sourceLabel
+                      - applySourceLabel
+                    additionalProperties: {}
+                  related:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        slug:
+                          type: string
+                        title:
+                          type: string
+                        company:
+                          type: string
+                        companyUrl:
+                          type: string
+                          format: uri
+                        location:
+                          type: string
+                        description:
+                          type: string
+                        descriptionMd:
+                          type: string
+                        type:
+                          type: string
+                        postedAt:
+                          type: string
+                        compensation:
+                          type: string
+                        equity:
+                          type: string
+                        bonus:
+                          type: string
+                        benefits:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        responsibilities:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        requirements:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        featured:
+                          type: boolean
+                        sponsored:
+                          type: boolean
+                        applyUrl:
+                          type: string
+                        tier:
+                          type: string
+                          enum:
+                            - free
+                            - standard
+                            - featured
+                            - sponsored
+                        status:
+                          type: string
+                          enum:
+                            - draft
+                            - pending_review
+                            - active
+                            - stale_pending_review
+                            - closed
+                            - archived
+                        source:
+                          type: string
+                          enum:
+                            - manual
+                            - polar
+                            - email
+                            - curated
+                        sourceKind:
+                          type: string
+                          enum:
+                            - official_ats
+                            - employer_careers
+                            - employer_submitted
+                        sourceUrl:
+                          type: string
+                        firstSeenAt:
+                          type: string
+                        lastCheckedAt:
+                          type: string
+                        sourceCheckedAt:
+                          type: string
+                        curationNote:
+                          type: string
+                        claimedEmployer:
+                          type: boolean
+                        expiresAt:
+                          type: string
+                        isRemote:
+                          type: boolean
+                        isWorldwide:
+                          type: boolean
+                        webUrl:
+                          type: string
+                          format: uri
+                        labels:
+                          type: array
+                          items:
+                            type: string
+                          maxItems: 24
+                        sourceLabel:
+                          type: string
+                        applySourceLabel:
+                          type: string
+                        lastVerifiedAt:
+                          type: string
+                      required:
+                        - slug
+                        - title
+                        - company
+                        - location
+                        - description
+                        - featured
+                        - applyUrl
+                        - webUrl
+                        - labels
+                        - sourceLabel
+                        - applySourceLabel
+                      additionalProperties: {}
+                    maxItems: 4
+                required:
+                  - schemaVersion
+                  - kind
+                  - slug
+                  - generatedAt
+                  - entry
+                  - related
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:
@@ -7903,9 +8993,10 @@ paths:
                   maxLength: 64
                   default: ""
                 expiresAt:
-                  type: string
-                  maxLength: 64
-                  default: ""
+                  anyOf:
+                    - type: string
+                      maxLength: 64
+                    - type: "null"
               required:
                 - slug
                 - action
@@ -9582,6 +10673,593 @@ paths:
                   - stars
                   - forks
                   - updatedAt
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/public/alerts:
+    get:
+      tags:
+        - Dynamic
+      summary: Read public registry alert events
+      description:
+        Returns the current in-edge-cache registry event list used by browser-local watch
+        alerts. Cold cache or missing webhook configuration returns an empty events array rather
+        than simulated activity.
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        kind:
+                          type: string
+                        category:
+                          type: string
+                        slug:
+                          type: string
+                        action:
+                          type: string
+                        date:
+                          type: string
+                        title:
+                          type: string
+                        commit:
+                          type: string
+                      additionalProperties: {}
+                    maxItems: 500
+                required:
+                  - events
+        "400":
+          description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "401":
+          description: Unauthorized admin token or invalid webhook signature.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "403":
+          description: Forbidden origin.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "413":
+          description: Payload too large.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "415":
+          description: Invalid content type.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "429":
+          description: Route-level or Cloudflare-native rate limited.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "502":
+          description: Upstream provider error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+        "503":
+          description: Site DB not configured, provider not configured, or endpoint unavailable.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    enum:
+                      - false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        minLength: 1
+                      message:
+                        type: string
+                      details: {}
+                    required:
+                      - code
+                  requestId:
+                    type: string
+                required:
+                  - ok
+                  - error
+  /api/public/feeds/health:
+    get:
+      tags:
+        - Distribution
+      summary: Read public feed health metadata
+      description:
+        Returns deterministic feed item counts, freshness, and ETag metadata for every public
+        distribution feed.
+      responses:
+        "200":
+          description: Request accepted.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  generatedAt:
+                    type: string
+                  count:
+                    type: integer
+                    minimum: 0
+                  feeds:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        title:
+                          type: string
+                        url:
+                          type: string
+                        itemCount:
+                          type: integer
+                          minimum: 0
+                        latestItemAt:
+                          type:
+                            - string
+                            - "null"
+                        lastBuilt:
+                          type: string
+                        etag:
+                          type: string
+                        isCurrent:
+                          type: boolean
+                      required:
+                        - id
+                        - title
+                        - url
+                        - itemCount
+                        - latestItemAt
+                        - lastBuilt
+                        - etag
+                        - isCurrent
+                    maxItems: 100
+                required:
+                  - generatedAt
+                  - count
+                  - feeds
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

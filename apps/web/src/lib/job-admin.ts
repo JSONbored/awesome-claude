@@ -170,7 +170,7 @@ function assertJobPublicationQuality(job: Record<string, unknown>) {
   }
 }
 
-function optionalText(value: string | undefined) {
+function optionalText(value: string | null | undefined) {
   const normalized = String(value ?? "").trim();
   return normalized || null;
 }
@@ -192,9 +192,7 @@ export async function checkJobsSchema(db: D1DatabaseLike) {
     .filter(Boolean)
     .sort();
   const columnSet = new Set(columns);
-  const missingColumns = REQUIRED_JOB_COLUMNS.filter(
-    (column) => !columnSet.has(column),
-  );
+  const missingColumns = REQUIRED_JOB_COLUMNS.filter((column) => !columnSet.has(column));
 
   return {
     ok: missingColumns.length === 0,
@@ -215,9 +213,7 @@ export async function getJobsHealth(db: D1DatabaseLike) {
         .bind()
         .all<JobStatusCountRow>()
         .then(({ results }) =>
-          Object.fromEntries(
-            results.map((row) => [row.status, Number(row.count ?? 0)]),
-          ),
+          Object.fromEntries(results.map((row) => [row.status, Number(row.count ?? 0)])),
         )
     : {};
 
@@ -290,10 +286,7 @@ export async function queryAdminJobBySlug(
   return row ? mapJobListingRow(row) : null;
 }
 
-export async function upsertAdminJob(
-  db: D1DatabaseLike,
-  input: JobAdminUpsertInput,
-) {
+export async function upsertAdminJob(db: D1DatabaseLike, input: JobAdminUpsertInput) {
   assertJobPublicationQuality(input as Record<string, unknown>);
 
   await db
@@ -411,11 +404,12 @@ export async function updateAdminJobState(
     slug: string;
     action: JobAdminAction;
     checkedAt?: string;
-    expiresAt?: string;
+    expiresAt?: string | null;
   },
 ) {
   const checkedAt = optionalText(input.checkedAt) ?? new Date().toISOString();
-  const expiresAt = optionalText(input.expiresAt);
+  const hasExpiresAt = Object.prototype.hasOwnProperty.call(input, "expiresAt");
+  const expiresAt = input.expiresAt === null ? null : optionalText(input.expiresAt);
 
   if (input.action === "activate" || input.action === "reactivate") {
     const existing = await queryAdminJobBySlug(db, input.slug);
@@ -434,10 +428,11 @@ export async function updateAdminJobState(
           source_checked_at = ?,
           last_checked_at = ?,
           stale_check_count = 0,
+          expires_at = CASE WHEN ? = 1 THEN ? ELSE expires_at END,
           updated_at = CURRENT_TIMESTAMP
         WHERE slug = ?`,
       )
-      .bind(checkedAt, checkedAt, input.slug)
+      .bind(checkedAt, checkedAt, hasExpiresAt ? 1 : 0, expiresAt, input.slug)
       .run();
     if (Number(result.meta?.changes ?? 0) === 0) {
       throw new JobNotFoundError(input.slug);
@@ -465,10 +460,7 @@ export async function updateAdminJobState(
     return;
   }
 
-  const nextStatusByAction: Record<
-    Exclude<JobAdminAction, "revalidate" | "stale">,
-    JobStatus
-  > = {
+  const nextStatusByAction: Record<Exclude<JobAdminAction, "revalidate" | "stale">, JobStatus> = {
     review: "pending_review",
     activate: "active",
     close: "closed",
@@ -483,7 +475,7 @@ export async function updateAdminJobState(
       `UPDATE jobs_listings
       SET
         status = ?,
-        expires_at = COALESCE(?, expires_at),
+        expires_at = CASE WHEN ? = 1 THEN ? ELSE expires_at END,
         source_checked_at = CASE WHEN ? IN ('activate', 'reactivate') THEN ? ELSE source_checked_at END,
         last_checked_at = CASE WHEN ? IN ('activate', 'reactivate') THEN ? ELSE last_checked_at END,
         stale_check_count = CASE WHEN ? IN ('activate', 'reactivate') THEN 0 ELSE stale_check_count END,
@@ -492,6 +484,7 @@ export async function updateAdminJobState(
     )
     .bind(
       nextStatus,
+      hasExpiresAt ? 1 : 0,
       expiresAt,
       input.action,
       checkedAt,

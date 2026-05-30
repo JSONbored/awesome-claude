@@ -1,5 +1,5 @@
 # Jira MCP Server for Claude
-URL: https://heyclau.de/mcp/jira-mcp-server
+URL: https://heyclau.de/entry/mcp/jira-mcp-server
 Category: mcp
 Author: Atlassian
 Date added: 2025-09-18
@@ -7,7 +7,7 @@ Documentation: https://www.atlassian.com/platform/remote-mcp-server
 Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jira-mcp-server.mdx
 Download: /downloads/mcp/jira-mcp-server.mcpb
 ## Citation Facts
-- Canonical URL: https://heyclau.de/mcp/jira-mcp-server
+- Canonical URL: https://heyclau.de/entry/mcp/jira-mcp-server
 - Source URLs: https://www.atlassian.com/platform/remote-mcp-server, https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/jira-mcp-server.mdx
 - Brand: Jira
 - Brand domain: atlassian.com
