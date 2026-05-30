@@ -1,20 +1,22 @@
 import { getCloudflareEnv, getEnvString } from "@/lib/cloudflare-env.server";
 
-const ADMIN_TOKEN_NAMES = [
-  "ADMIN_API_TOKEN",
-  "JOBS_ADMIN_API_TOKEN",
-  "LEADS_ADMIN_TOKEN",
-  "ADMIN_LEADS_TOKEN",
-] as const;
+const PRIMARY_ADMIN_TOKEN_NAMES = ["ADMIN_API_TOKEN"] as const;
+const JOBS_ADMIN_TOKEN_NAMES = ["JOBS_ADMIN_API_TOKEN"] as const;
+const LEADS_ADMIN_TOKEN_NAMES = ["LEADS_ADMIN_TOKEN", "ADMIN_LEADS_TOKEN"] as const;
+
+type AdminTokenName =
+  | (typeof PRIMARY_ADMIN_TOKEN_NAMES)[number]
+  | (typeof JOBS_ADMIN_TOKEN_NAMES)[number]
+  | (typeof LEADS_ADMIN_TOKEN_NAMES)[number];
 
 export function getAdminToken() {
-  return getEnvString(...ADMIN_TOKEN_NAMES);
+  return getEnvString(...PRIMARY_ADMIN_TOKEN_NAMES);
 }
 
-export function getAdminTokens() {
+function getScopedAdminTokens(tokenNames: readonly AdminTokenName[]) {
   const env = getCloudflareEnv();
   const tokens = new Set<string>();
-  for (const name of ADMIN_TOKEN_NAMES) {
+  for (const name of tokenNames) {
     const runtimeValue = env[name];
     if (typeof runtimeValue === "string" && runtimeValue.trim()) {
       tokens.add(runtimeValue.trim());
@@ -27,8 +29,11 @@ export function getAdminTokens() {
   return [...tokens];
 }
 
-export function isAdminAuthorized(request: Request) {
-  const tokens = getAdminTokens();
+export function getAdminTokens() {
+  return getScopedAdminTokens(PRIMARY_ADMIN_TOKEN_NAMES);
+}
+
+function hasAdminToken(request: Request, tokens: readonly string[]) {
   if (tokens.length === 0) return false;
 
   const bearer = request.headers
@@ -37,4 +42,22 @@ export function isAdminAuthorized(request: Request) {
     .trim();
   const headerToken = request.headers.get("x-admin-token")?.trim();
   return tokens.some((token) => bearer === token || headerToken === token);
+}
+
+export function isAdminAuthorized(request: Request) {
+  return hasAdminToken(request, getAdminTokens());
+}
+
+export function isJobsAdminAuthorized(request: Request) {
+  return hasAdminToken(
+    request,
+    getScopedAdminTokens([...PRIMARY_ADMIN_TOKEN_NAMES, ...JOBS_ADMIN_TOKEN_NAMES]),
+  );
+}
+
+export function isLeadsAdminAuthorized(request: Request) {
+  return hasAdminToken(
+    request,
+    getScopedAdminTokens([...PRIMARY_ADMIN_TOKEN_NAMES, ...LEADS_ADMIN_TOKEN_NAMES]),
+  );
 }

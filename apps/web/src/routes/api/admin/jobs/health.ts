@@ -1,13 +1,13 @@
 import { createApiFileRoute } from "@/lib/api/file-route";
 
 import { apiError, apiJson, createApiHandler } from "@/lib/api/router";
-import { isAdminAuthorized } from "@/lib/admin-auth";
+import { isJobsAdminAuthorized } from "@/lib/admin-auth";
 import { logApiError, logApiWarn } from "@/lib/api-logs";
 import { getSiteDb } from "@/lib/db";
 import { getJobsHealth } from "@/lib/job-admin";
 
 export const GET = createApiHandler("adminJobs.health", async ({ request, requestId }) => {
-  if (!isAdminAuthorized(request)) {
+  if (!isJobsAdminAuthorized(request)) {
     logApiWarn(request, "admin.jobs.health.unauthorized");
     return apiError("unauthorized", 401, { requestId });
   }
