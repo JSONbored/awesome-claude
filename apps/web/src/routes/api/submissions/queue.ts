@@ -16,6 +16,8 @@ const GITHUB_API_VERSION = "2022-11-28";
 const GITHUB_USER_AGENT = "HeyClaude/1.0 (+https://heyclau.de; JSONbored/awesome-claude)";
 const DEFAULT_REPO = "JSONbored/awesome-claude";
 const IMPORT_PR_PATTERN = /https:\/\/github\.com\/JSONbored\/awesome-claude\/pull\/\d+/i;
+const LIST_ACTIVITY_PAGE_LIMIT = 2;
+const DETAIL_ACTIVITY_PAGE_LIMIT = 10;
 
 type GitHubLabel = string | { name?: string };
 
@@ -169,11 +171,11 @@ function nextPageUrl(response: Response) {
   return match?.[1] || "";
 }
 
-async function fetchGitHubPages<T>(url: string, token: string) {
+async function fetchGitHubPages<T>(url: string, token: string, maxPages: number) {
   const items: T[] = [];
   let nextUrl = withPerPage(url);
 
-  for (let page = 0; page < 10 && nextUrl; page += 1) {
+  for (let page = 0; page < maxPages && nextUrl; page += 1) {
     const { response, payload } = await fetchGitHub<T[]>(nextUrl, token);
     if (!response.ok || !Array.isArray(payload)) return items;
     items.push(...payload);
@@ -183,20 +185,26 @@ async function fetchGitHubPages<T>(url: string, token: string) {
   return items;
 }
 
-async function fetchIssueComments(issue: GitHubIssue, token: string) {
+async function fetchIssueComments(issue: GitHubIssue, token: string, maxPages: number) {
   if (!issue.comments_url) return [];
   try {
-    return await fetchGitHubPages<GitHubComment>(issue.comments_url, token);
+    return await fetchGitHubPages<GitHubComment>(issue.comments_url, token, maxPages);
   } catch {
     return [];
   }
 }
 
-async function fetchIssueTimeline(repo: string, issueNumber: number, token: string) {
+async function fetchIssueTimeline(
+  repo: string,
+  issueNumber: number,
+  token: string,
+  maxPages: number,
+) {
   try {
     return await fetchGitHubPages<GitHubTimelineEvent>(
       `https://api.github.com/repos/${repo}/issues/${issueNumber}/timeline`,
       token,
+      maxPages,
     );
   } catch {
     return [];
@@ -226,19 +234,30 @@ function activityIssue(
   };
 }
 
-async function mapIssue(issue: GitHubIssue, repo: string, token: string) {
+async function mapIssue(
+  issue: GitHubIssue,
+  repo: string,
+  token: string,
+  options: { activityPageLimit: number },
+) {
   const labels = labelNames(issue);
   const fields = parseIssueFormBody(issue.body || "");
   const status = statusFor(issue, labels);
+  const bodyImportPrUrl = importPrFromText(issue.body || "");
+  const needsCommentImportPr =
+    !bodyImportPrUrl && (status === "import_pr_open" || status === "imported");
+  const needsAuthorActivity = status === "needs_author_input";
   const [comments, timeline] = await Promise.all([
-    fetchIssueComments(issue, token),
-    fetchIssueTimeline(repo, issue.number, token),
+    needsCommentImportPr || needsAuthorActivity
+      ? fetchIssueComments(issue, token, options.activityPageLimit)
+      : Promise.resolve([]),
+    needsAuthorActivity
+      ? fetchIssueTimeline(repo, issue.number, token, options.activityPageLimit)
+      : Promise.resolve([]),
   ]);
   const activity = submissionActivityState(activityIssue(issue, comments, timeline));
-  const bodyImportPrUrl = importPrFromText(issue.body || "");
   const importPrUrl =
-    bodyImportPrUrl ||
-    (status === "import_pr_open" || status === "imported" ? commentImportPr(comments) : undefined);
+    bodyImportPrUrl || (needsCommentImportPr ? commentImportPr(comments) : undefined);
   const blockers = blockersFor(labels);
   if (activity.authorCommentedWithoutBodyUpdate) {
     blockers.push("Author replied after review, but the issue body was not updated.");
@@ -358,7 +377,14 @@ export const GET = createApiHandler("submissions.queue", async ({ request, query
   const issues = "issue" in result ? [result.issue] : result.issues;
   const entries = [];
   for (const issue of issues) {
-    if (issue) entries.push(await mapIssue(issue, repo, result.token));
+    if (issue) {
+      entries.push(
+        await mapIssue(issue, repo, result.token, {
+          activityPageLimit:
+            "issue" in result ? DETAIL_ACTIVITY_PAGE_LIMIT : LIST_ACTIVITY_PAGE_LIMIT,
+        }),
+      );
+    }
   }
 
   return apiJson(
