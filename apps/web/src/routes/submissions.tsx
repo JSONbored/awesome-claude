@@ -147,7 +147,7 @@ function useSubmissionQueue() {
     async function load() {
       setLoading(true);
       try {
-        const response = await fetch("/api/submissions/queue?limit=100");
+        const response = await fetch("/api/submissions/queue?limit=25");
         const payload = (await response.json().catch(() => null)) as
           | QueueResponse
           | { error?: { message?: string } }
