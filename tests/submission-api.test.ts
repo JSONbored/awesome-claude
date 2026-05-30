@@ -331,6 +331,119 @@ describe("website submission API", () => {
     });
   });
 
+  it("rejects oversized public submission queue reads", async () => {
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=100", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.25",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(400);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("bounds GitHub activity hydration for public submission queue lists", async () => {
+    const pagedResponse = (kind: string, page: number) =>
+      new Response(JSON.stringify([{ body: `${kind} page ${page}` }]), {
+        status: 200,
+        headers:
+          page === 1
+            ? {
+                "content-type": "application/json",
+                link: `<https://api.github.com/${kind}?page=2>; rel="next", <https://api.github.com/${kind}?page=3>; rel="last"`,
+              }
+            : { "content-type": "application/json" },
+      });
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((input: RequestInfo | URL) => {
+        const url = String(input);
+        if (url.includes("/issues/1/comments")) {
+          return Promise.resolve(
+            pagedResponse("comments", url.includes("page=2") ? 2 : 1),
+          );
+        }
+        if (url.includes("/issues/2/comments")) {
+          return Promise.resolve(
+            pagedResponse("author-comments", url.includes("page=2") ? 2 : 1),
+          );
+        }
+        if (url.includes("/issues/2/timeline")) {
+          return Promise.resolve(
+            pagedResponse("timeline", url.includes("page=2") ? 2 : 1),
+          );
+        }
+        if (url.includes("/issues?")) {
+          const issues = Array.from({ length: 25 }, (_, index) => {
+            const number = index + 1;
+            const labels = [
+              { name: "content-submission" },
+              { name: "community-skills" },
+            ];
+            if (number === 1) labels.push({ name: "import-pr-open" });
+            if (number === 2) labels.push({ name: "needs-author-input" });
+            return {
+              number,
+              html_url: `https://github.com/JSONbored/awesome-claude/issues/${number}`,
+              title: `Submit Skill: Queue Item ${number}`,
+              body: [
+                "### Name",
+                `Queue Item ${number}`,
+                "",
+                "### Slug",
+                `queue-item-${number}`,
+                "",
+                "### Category",
+                "skills",
+              ].join("\n"),
+              user: { login: "submitter" },
+              labels,
+              state: "open",
+              created_at: "2026-05-01T00:00:00Z",
+              updated_at: "2026-05-02T00:00:00Z",
+              closed_at: null,
+              comments_url: `https://api.github.com/repos/JSONbored/awesome-claude/issues/${number}/comments`,
+            };
+          });
+          return Promise.resolve(
+            new Response(JSON.stringify(issues), {
+              status: 200,
+              headers: { "content-type": "application/json" },
+            }),
+          );
+        }
+        return Promise.resolve(new Response("{}", { status: 404 }));
+      }),
+    );
+
+    const { GET } = await import("@/routes/api/submissions/queue");
+    const response = await GET(
+      new Request("https://heyclau.de/api/submissions/queue?limit=25", {
+        headers: {
+          origin: "https://heyclau.de",
+          "cf-connecting-ip": "203.0.113.26",
+        },
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      count: 25,
+    });
+
+    const fetchMock = fetch as unknown as {
+      mock: { calls: Array<[RequestInfo | URL, RequestInit]> };
+    };
+    expect(fetchMock.mock.calls).toHaveLength(7);
+    expect(String(fetchMock.mock.calls[0]?.[0])).toContain("per_page=25");
+  });
+
   it("fails visibly when GitHub rejects a token-backed queue read", async () => {
     vi.stubGlobal(
       "fetch",
