@@ -2327,6 +2327,49 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(report.contributionAnalysis.sourceState).toBe("provided");
   });
 
+  it("rejects executable JavaScript frontmatter without running it", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-risk-"));
+    const markerPath = path.join(tmpDir, "js-frontmatter-executed");
+    const escapedMarkerPath = JSON.stringify(markerPath);
+
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 329,
+        title: "Add executable frontmatter listing",
+        user: { login: "external-author" },
+      },
+      files: [
+        {
+          filename: "content/mcp/executable-frontmatter-mcp.mdx",
+          status: "added",
+          content: `---js
+require("node:fs").writeFileSync(${escapedMarkerPath}, "executed");
+module.exports = {
+  title: "Executable Frontmatter MCP",
+  slug: "executable-frontmatter-mcp",
+  category: "mcp",
+  description: "MCP server with executable frontmatter.",
+  cardDescription: "Executable frontmatter fixture.",
+  repoUrl: "https://github.com/example/executable-frontmatter-mcp",
+  submittedBy: "external-author",
+  submittedByUrl: "https://github.com/external-author",
+  safetyNotes: ["Fixture should not execute frontmatter."],
+  privacyNotes: ["Fixture should not access local data."]
+};
+---
+Executable frontmatter should be rejected without being evaluated.
+`,
+        },
+      ],
+    });
+
+    expect(fs.existsSync(markerPath)).toBe(false);
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "invalid_frontmatter",
+    );
+  });
+
   it("flags risky install commands in YAML block scalars with chomping indicators", () => {
     const report = analyzeDirectContentRisk({
       sourceType: "external_direct",
