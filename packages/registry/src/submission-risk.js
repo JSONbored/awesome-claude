@@ -32,6 +32,17 @@ const RISK_LABEL_BY_TIER = {
   critical: SUBMISSION_RISK_HIGH_LABEL,
 };
 
+const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
+  "Executable JavaScript frontmatter is not allowed in submission risk analysis";
+
+const SAFE_MATTER_OPTIONS = {
+  engines: {
+    javascript() {
+      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
+    },
+  },
+};
+
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "unsafe_install_pipeline",
   "financial_or_identity_sensitive",
@@ -227,7 +238,7 @@ function stringList(value) {
 function parseContentFrontmatter(value) {
   const content = String(value ?? "").replace(/^\uFEFF/, "");
   try {
-    const parsed = matter(content);
+    const parsed = matter(content, SAFE_MATTER_OPTIONS);
     return { data: parsed.data || {}, content: parsed.content || "" };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
