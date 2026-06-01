@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-01T00:00:00.000Z",
   "totalEntries": 388,
   "categoryOrder": [
     "agents",
@@ -3222,22 +3222,22 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "c88617c2ad4b9f5f4b747bf6ef14db0074d80bef367ae2069f44e29e455ff2d3"
+      "sha256": "b0cdfaba1dd8176259e5c086971d16decc648d48a991413107a2d698a0dd06d9"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "393db26c60a09a16daa6fc1fc51edd6550794e3869ea5e4d1a69e188ae4c7ff4"
+      "sha256": "952d6411524a66907fac0ba39b6c08fbb2944f4bb64084fe4f3bc5a63813caec"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "594c5c466da705ae6406fb65658415405e04c6fd70992c79ec95240d3094dc5e"
+      "sha256": "6e087c5945edf511fa69c248f40810d0a006d5260d94ff23603a32550a6292b3"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "9f18880b1d7acb8b3c8e5e783dc6a02accb6a79a09448c07b5a4f49f83674c9a"
+      "sha256": "80ca073abccc85cec5ff3841101d155a945248b339d9c692248907b2b23be5c9"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
@@ -3247,22 +3247,22 @@
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "0ae9edd43bbe27e663fb0cd1d12c70270804fcd3ee01e79c4a7676484add49fa"
+      "sha256": "b3ab47583e96cee3f0acbcd0a06a21c431821e16279d2b04ad3ed6dee4ab00ed"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "24d52d387e8028812b87395f2623f430219f4cfc3a9d27d61585595e536dc3ec"
+      "sha256": "5e08929a07cf8470cf431173ec9727179ec34c1a6f4521ba1ef3bf207acfec0b"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "884c5a5eecc99632d12d21af94a6bfdd18cbf9ba1ae0c5ad681c5e51c2b08ece"
+      "sha256": "fae5d9e9127ba530742162f6b6e579f7ccac3e9c9ec6886cd3fdf9b19708d4de"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "44a7d5b10e4bab84605fe0b15022d8735b43454090e39b7a4458646481f74292"
+      "sha256": "9f41235ef2ec49620cc286b3eb3ae5c7a91086f2c80c0cd3ee438a4953bf3c40"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3282,12 +3282,12 @@
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "9ad6355768a47116288a4a86f09579bd3c75d16f219a72089ee17df7e84255ef"
+      "sha256": "ee6ed4c043ff27b12aca3f4ebfc8418720d93df8930cc772016473d9a0068288"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "6045a2b91344d82717c241a5883f296b37ff9d57b75d493e0691e54e3646349f"
+      "sha256": "360c4765be8caf8b05e1798635e50ea971576d59aa5580ba621e7871a53be1e5"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -3587,7 +3587,7 @@
     "entries/skills/ai-business-idea-validation-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fai-business-idea-validation-capability-pack.json",
       "type": "json",
-      "sha256": "0fda81c8d6da3d11cd90c636621fbfcf3904c6def4fe9f714a7e3addb3c2a64b"
+      "sha256": "960b335f14409c33fa79774c8f9d13aa7886769d86297c6ebfd8627b88cf7253"
     },
     "llms/skills/ai-business-idea-validation-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fai-business-idea-validation-capability-pack.txt",
@@ -4737,7 +4737,7 @@
     "entries/skills/cloudflare-workers-d1-kv-r2-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcloudflare-workers-d1-kv-r2-capability-pack.json",
       "type": "json",
-      "sha256": "8ef41a2bb5e91d76a2c1a1bacdfb43b211feec627922ee3393d8ac79d5186311"
+      "sha256": "9c80aea27255ffa212f092f824c2494e7f75ddc36a1b7da30016993066880b80"
     },
     "llms/skills/cloudflare-workers-d1-kv-r2-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcloudflare-workers-d1-kv-r2-capability-pack.txt",
@@ -4802,7 +4802,7 @@
     "entries/skills/coderabbit-lite-pr-review-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcoderabbit-lite-pr-review-capability-pack.json",
       "type": "json",
-      "sha256": "cb6bab4c0b836b939a60e7e8d767e0e3098d9959b207da57bb23ba7785935c5f"
+      "sha256": "9d846393d87c2d0bb6df2180468d21cfc5b77b60f6562a7f461cb1dc0df58034"
     },
     "llms/skills/coderabbit-lite-pr-review-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcoderabbit-lite-pr-review-capability-pack.txt",
@@ -4897,7 +4897,7 @@
     "entries/skills/codex-automations-orchestrator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcodex-automations-orchestrator-capability-pack.json",
       "type": "json",
-      "sha256": "58cae3ad5bf5e6fa80808f6650c2612b51d225e522ee06fc8a5f0613adfb7774"
+      "sha256": "0fee9607ead070dac313c1d95d5d83f8be5c74dc039b7593ee2025d4487635d3"
     },
     "llms/skills/codex-automations-orchestrator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcodex-automations-orchestrator-capability-pack.txt",
@@ -4917,7 +4917,7 @@
     "entries/skills/codex-plugin-creator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcodex-plugin-creator-capability-pack.json",
       "type": "json",
-      "sha256": "5f77db8e2f55d19f06f7d9eabaaea84a85b3df7da4f65bfffb0ba3b6d6cbcc09"
+      "sha256": "19979e31f2693dedeb406e7ac028b2627481b523048e14410441e5897bffdf1c"
     },
     "llms/skills/codex-plugin-creator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcodex-plugin-creator-capability-pack.txt",
@@ -5602,7 +5602,7 @@
     "entries/skills/ethereum-base-smart-contract-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fethereum-base-smart-contract-security-capability-pack.json",
       "type": "json",
-      "sha256": "fc7e8a5f6a55dd4f1f9b132331b9c8f82a731b445c3191288f6ec7b024b4234a"
+      "sha256": "240b7aac1e4f721a85237fda78b34a70cfcc9634dd1eaaed19a140f8732e5c77"
     },
     "llms/skills/ethereum-base-smart-contract-security-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fethereum-base-smart-contract-security-capability-pack.txt",
@@ -6022,7 +6022,7 @@
     "entries/skills/git-cliff-release-changelog-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fgit-cliff-release-changelog-capability-pack.json",
       "type": "json",
-      "sha256": "b42986df790c5797fdb9508173fc2e59856f04c1cc055cd32f1e1d34ffcb454e"
+      "sha256": "fb561a55b80ba00ec008083dae78fdb1055724930b4738155e55cef07fa2908f"
     },
     "llms/skills/git-cliff-release-changelog-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fgit-cliff-release-changelog-capability-pack.txt",
@@ -6062,7 +6062,7 @@
     "entries/skills/github-actions-secure-cicd-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fgithub-actions-secure-cicd-capability-pack.json",
       "type": "json",
-      "sha256": "596f400f97a53c408ee2d3201ee0b6507fa6414e21a6678db5a786e9ae661196"
+      "sha256": "ff321872aae000fdfdaf2ccb7eb4932aeac86d681face19a34024d6b456e3488"
     },
     "llms/skills/github-actions-secure-cicd-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fgithub-actions-secure-cicd-capability-pack.txt",
@@ -6267,12 +6267,12 @@
     "entries/skills/heyclaude-content-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-content-submission-factory.json",
       "type": "json",
-      "sha256": "0e679bdde4828fef36c37d48fa58158bd254e3028c6440f4e94ef6a1d2c83ff7"
+      "sha256": "7689a8dc031dc2c7ebda72f3781296a708175b5a782d118c43037eabcd30076d"
     },
     "llms/skills/heyclaude-content-submission-factory.txt": {
       "path": "/data/llms%2Fskills%2Fheyclaude-content-submission-factory.txt",
       "type": "text",
-      "sha256": "233a64510dbaa15078b156e60384657d76da6cfdf03eb9a98e44134f37b145d7"
+      "sha256": "ddb7658c67993511356e8b1ac34e4acc1ca9e9cc09301ed009ad429575539e6f"
     },
     "raycast/skills/heyclaude-content-submission-factory.json": {
       "path": "/data/raycast%2Fskills%2Fheyclaude-content-submission-factory.json",
@@ -6302,12 +6302,12 @@
     "entries/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-skill-submission-factory.json",
       "type": "json",
-      "sha256": "d86b8abf2b4b9c65ad119c3578b692bd4e2068725f68332c3e23b57efbae855e"
+      "sha256": "f0c85a77632e031964e3f57c5820e9bd710033812fedce003b29beda1bc91097"
     },
     "llms/skills/heyclaude-skill-submission-factory.txt": {
       "path": "/data/llms%2Fskills%2Fheyclaude-skill-submission-factory.txt",
       "type": "text",
-      "sha256": "6043610803c038ae07c61c2ee05bd953eb8d99b39d501713b8e26f8a0fcffa0a"
+      "sha256": "57b536313563942a00a9cd3c22514d476e0c51f5e2479492f951ba667d562c57"
     },
     "raycast/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/raycast%2Fskills%2Fheyclaude-skill-submission-factory.json",
@@ -6367,7 +6367,7 @@
     "entries/skills/husky-commit-governance-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fhusky-commit-governance-capability-pack.json",
       "type": "json",
-      "sha256": "3f25885f40119fa2ad0b29c4663e1ab8de9f3b457ae1203a7d640577716e1157"
+      "sha256": "a7a33c18169b79facb56300b6368ee484ebf2339cb58a1d587b3c03a28a7c5ba"
     },
     "llms/skills/husky-commit-governance-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fhusky-commit-governance-capability-pack.txt",
@@ -6817,7 +6817,7 @@
     "entries/skills/mcp-server-authoring-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fmcp-server-authoring-security-capability-pack.json",
       "type": "json",
-      "sha256": "f50015865e97a584daae0f468e985dc6319811c1eb96d048a2de6247f1076a59"
+      "sha256": "75ed53006cfcf5b1f768706380ad83e9ca3e8be93ad2e49ed4a732d4431f44e2"
     },
     "llms/skills/mcp-server-authoring-security-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fmcp-server-authoring-security-capability-pack.txt",
@@ -7192,7 +7192,7 @@
     "entries/skills/n8n-operations-resilience-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fn8n-operations-resilience-capability-pack.json",
       "type": "json",
-      "sha256": "ebacb301f57aa7ae03280ba4d277dcfcf6e82b33e40ff47e90f97436b8a5afd6"
+      "sha256": "5070520fb6c0835de0759f1b0ce5db46d5cc2485a2b8222ccb4d6569a8abd286"
     },
     "llms/skills/n8n-operations-resilience-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fn8n-operations-resilience-capability-pack.txt",
@@ -7212,7 +7212,7 @@
     "entries/skills/n8n-production-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fn8n-production-security-capability-pack.json",
       "type": "json",
-      "sha256": "e9cc1c999de81c288f8b80a5986da0c977b39e788a5e51286eeed216a91a3b43"
+      "sha256": "bab5548103a0e3a01244f8311e185631119aa3c501c8059c92920e1460755987"
     },
     "llms/skills/n8n-production-security-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fn8n-production-security-capability-pack.txt",
@@ -7327,7 +7327,7 @@
     "entries/skills/openclaw-operator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-operator-capability-pack.json",
       "type": "json",
-      "sha256": "aefa1704370fd57c1178f5716173746df50885be10a8d78a3a73dcff3b0e49bc"
+      "sha256": "3290a9aa29c607da3ba570c3d82455e56ce962718993c5e470e53e64fa7e4bd1"
     },
     "llms/skills/openclaw-operator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fopenclaw-operator-capability-pack.txt",
@@ -7347,7 +7347,7 @@
     "entries/skills/openclaw-skill-authoring-factory-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.json",
       "type": "json",
-      "sha256": "f951eaa03d75656e4dd7414d7444a446ddfe3bc0c0954257c7b73674da61fdb8"
+      "sha256": "5a44b6c646ae1a97daff8b3503c3a0a4a039959e54bf33e46d956fe895d9f400"
     },
     "llms/skills/openclaw-skill-authoring-factory-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.txt",
@@ -7382,7 +7382,7 @@
     "entries/skills/opennext-cloudflare-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopennext-cloudflare-capability-pack.json",
       "type": "json",
-      "sha256": "8b0ac0c227d19f032017e72756e424c1e75be0ae8a04ce3670b0bd25feb78f48"
+      "sha256": "cc81393ae12e6d2b4a185bae13d9eb71c97ddc78f334498ae16c35d1fbab2176"
     },
     "llms/skills/opennext-cloudflare-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fopennext-cloudflare-capability-pack.txt",
@@ -7862,7 +7862,7 @@
     "entries/skills/proxmox-ve-api-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fproxmox-ve-api-capability-pack.json",
       "type": "json",
-      "sha256": "3ae2c57eead0c585acc1fb74d75469c444c3ea8e25a2f9fd1dbc435472773822"
+      "sha256": "a8ab68c3834281a91eea154bfdefcc2a57d8202a5b9488354e3ec3eb67063458"
     },
     "llms/skills/proxmox-ve-api-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fproxmox-ve-api-capability-pack.txt",
@@ -7992,7 +7992,7 @@
     "entries/skills/raycast-extension-dev-publish-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fraycast-extension-dev-publish-capability-pack.json",
       "type": "json",
-      "sha256": "bfaa1e5ffdbf705fc4720c984e5e12e5f8c0381618eff063b4018be851d2d45e"
+      "sha256": "a6a89b5d6e6403cd98ac18bf6b6cb31effe8e00667e6a13b26fbb525f39b0254"
     },
     "llms/skills/raycast-extension-dev-publish-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fraycast-extension-dev-publish-capability-pack.txt",
@@ -8957,7 +8957,7 @@
     "entries/skills/unraid-api-v2-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Funraid-api-v2-capability-pack.json",
       "type": "json",
-      "sha256": "09d8a52adae0fc86f59cc9e21b5bee6db14ac8ca4200d174a75ba3776128eefe"
+      "sha256": "fe7d55254d2e2e3d5a43e1ca2ec5d3ba731af469256a22f5551583d9644727cd"
     },
     "llms/skills/unraid-api-v2-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Funraid-api-v2-capability-pack.txt",
@@ -8977,7 +8977,7 @@
     "entries/skills/unraid-ca-template-authoring-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Funraid-ca-template-authoring-capability-pack.json",
       "type": "json",
-      "sha256": "1388865dc9439bcdc8e79ea557578b611dd0f6f6cbe94f32cbb5bb4bf293e339"
+      "sha256": "fae68838b713fb0f3e079290cd14eb5f0557e4c7128adc0f7b6c9e3532d176a8"
     },
     "llms/skills/unraid-ca-template-authoring-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Funraid-ca-template-authoring-capability-pack.txt",
@@ -9397,7 +9397,7 @@
     "entries/skills/zero-budget-saas-launch-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fzero-budget-saas-launch-capability-pack.json",
       "type": "json",
-      "sha256": "464c6f3c1d73ca38127a19a869b749702a1a105d6422f7a3fde80bbaae60c7fe"
+      "sha256": "65b74abaca9ef09f95222581d9db223039b501c82a19810a2164c75bdeb68c13"
     },
     "llms/skills/zero-budget-saas-launch-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fzero-budget-saas-launch-capability-pack.txt",
@@ -9452,7 +9452,7 @@
     "feeds/categories/agents.json": {
       "path": "/data/feeds%2Fcategories%2Fagents.json",
       "type": "json",
-      "sha256": "759caa2b2bfd219552196184809baa9e79cafd369d1b889eddce02dd5e11a3dc"
+      "sha256": "43e1734447e23950285cb3e9c471c0887ea6ae31ebb00c9221f2cb846e1010fd"
     },
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
@@ -9467,17 +9467,17 @@
     "feeds/categories/skills.json": {
       "path": "/data/feeds%2Fcategories%2Fskills.json",
       "type": "json",
-      "sha256": "be02d135edf71b86aa89202b5e483a0869cf23c068e081b578a026c3051ffd5c"
+      "sha256": "e6b9e15f797a08bf0bac998072943ad1cf2836560880c070374a3843b4a49462"
     },
     "feeds/categories/rules.json": {
       "path": "/data/feeds%2Fcategories%2Frules.json",
       "type": "json",
-      "sha256": "e453c85c16558daa0aa0b20715a5a3cfb2c5aeab63ae6d3ee74b0a3782d7d8a4"
+      "sha256": "0241ed30bb07a078b1a2a83566a6c09e52d263c44e0b8fcaab49810a2affe6cd"
     },
     "feeds/categories/commands.json": {
       "path": "/data/feeds%2Fcategories%2Fcommands.json",
       "type": "json",
-      "sha256": "2f6404ebb280d2bd66a7940d4faaa3d0549c738d5fd067931272317d25e5bca0"
+      "sha256": "79ab5197557843d465423ab7d2b7051ef1eabd613c8dad519dd4fb65bf8e4730"
     },
     "feeds/categories/hooks.json": {
       "path": "/data/feeds%2Fcategories%2Fhooks.json",
@@ -9487,47 +9487,47 @@
     "feeds/categories/guides.json": {
       "path": "/data/feeds%2Fcategories%2Fguides.json",
       "type": "json",
-      "sha256": "ed924bef6517019480ab782637741c6989d586b6e220ad09ea9bbc25389a25f1"
+      "sha256": "806f3298881da074eb6bde9049baa922c6b5457c07d123fc24ca8db101dac382"
     },
     "feeds/categories/collections.json": {
       "path": "/data/feeds%2Fcategories%2Fcollections.json",
       "type": "json",
-      "sha256": "f3bb35fa0677b106f1419c44cec601f2cb8b0a2940260da337305c58674d2b0f"
+      "sha256": "c45df722446999cc6d0072308da49856fcc23b0d0bfa8e34ddacca3570108e93"
     },
     "feeds/categories/statuslines.json": {
       "path": "/data/feeds%2Fcategories%2Fstatuslines.json",
       "type": "json",
-      "sha256": "4b12830152099de952aa9b4aaf2626b271599ac05d759e10248710da1fd458e5"
+      "sha256": "6210f555377b362776535b4b7c594cbe007d268b98e1a59a488930f4c6da8a15"
     },
     "feeds/platforms/claude.json": {
       "path": "/data/feeds%2Fplatforms%2Fclaude.json",
       "type": "json",
-      "sha256": "240ac05e1ac452add77c51566c3d8149d75ed2b13c38aea759d5f8079326d8a3"
+      "sha256": "b8781de51dd1d73ed1e49b91c7da577a5d208c9c5fbd2cb1469f06d1286c38b3"
     },
     "feeds/platforms/codex.json": {
       "path": "/data/feeds%2Fplatforms%2Fcodex.json",
       "type": "json",
-      "sha256": "b2859aed9684e5f1b4198c9f20f16b29fcebc4197a2d891d5fcfe338a6c9f3ed"
+      "sha256": "5893d639400f62f55d1b51476b5c5d673c534229ad5f4778d7b533087c2f7b10"
     },
     "feeds/platforms/windsurf.json": {
       "path": "/data/feeds%2Fplatforms%2Fwindsurf.json",
       "type": "json",
-      "sha256": "636d17cf425e6b3b4ccb721baf47bf90697cbadb349f2ecebd37fcbeddc8e026"
+      "sha256": "612c2938f317e1e664e28e0ff7c467412454dc5edcd45f50390d33e42e939867"
     },
     "feeds/platforms/gemini.json": {
       "path": "/data/feeds%2Fplatforms%2Fgemini.json",
       "type": "json",
-      "sha256": "bc0605f663cfef497e14119563f1c8c90dd1a312accf37469ebc726933432fa2"
+      "sha256": "0cd540e65e913c42824a1b718cf1459925bcc84b0815f710b52d31bd84edf27c"
     },
     "feeds/platforms/cursor.json": {
       "path": "/data/feeds%2Fplatforms%2Fcursor.json",
       "type": "json",
-      "sha256": "ca417f954e189186fb091801b7b04b0295e2e70949148894fc59ad82cbc3a8d1"
+      "sha256": "2d501d753ec33880fc5489ae936ea4fe0ec3f51677e0769e9bd9100c258316f0"
     },
     "feeds/platforms/generic-agents.json": {
       "path": "/data/feeds%2Fplatforms%2Fgeneric-agents.json",
       "type": "json",
-      "sha256": "8c25c3dd2ab11be8860756b7e09f9eb4283f564d92a9f578a6cfa6f8b8e3034f"
+      "sha256": "b557ebdfc4fc840fc5071dd4c262282633365d7457ef28c8acf8d8930818556a"
     }
   }
 }

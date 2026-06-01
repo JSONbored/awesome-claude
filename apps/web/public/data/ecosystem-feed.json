@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-01T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -1072,10 +1072,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "9955465ac6dea7ab8837ab2ad18bf6a53f6635c72c85c7cff24025a9efbd8cfe",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://www.ycombinator.com/library",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx",
+          "https://www.lennysnewsletter.com/",
+          "https://www.indiehackers.com/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -5104,10 +5106,13 @@
         "packageTrust": "first-party",
         "packageChecksum": "2b0c31db74f9b42751e2c14d8dab16fa3ded453bd4397a1347ac782ce5bc792a",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 5,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/cloudflare-workers-d1-kv-r2-capability-pack.mdx",
+          "https://developers.cloudflare.com/d1/",
+          "https://developers.cloudflare.com/kv/",
+          "https://developers.cloudflare.com/r2/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -5322,10 +5327,13 @@
         "packageTrust": "first-party",
         "packageChecksum": "5e2a8567d4a88913443a4a9e76823180775eb767e51770c0a3c8ca5e39ffe59b",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 5,
         "sourceUrls": [
           "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx",
+          "https://docs.github.com/en/pull-requests",
+          "https://owasp.org/www-project-top-ten/",
+          "https://cheatsheetseries.owasp.org/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -5656,10 +5664,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "7e3ee39f61507d249f0b0b5ec49c35c6fc076b5ca2d6f85174eec8664de00867",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx",
+          "https://spec.modelcontextprotocol.io/specification/",
+          "https://www.rfc-editor.org/rfc/rfc5545"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -5724,10 +5734,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "7ea59a73540f97320dc9819720d4dc25f6d117f44096d7aa6011a4857cced8f0",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://github.com/openai/codex",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx",
+          "https://github.com/modelcontextprotocol",
+          "https://spec.modelcontextprotocol.io/specification/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -8136,10 +8148,13 @@
         "packageTrust": "first-party",
         "packageChecksum": "3f10c007835d0f339dc11a96b12cc7951032f9d14ce505951d2c0bf0f43d4312",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 5,
         "sourceUrls": [
           "https://docs.base.org/get-started/deploy-smart-contracts",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ethereum-base-smart-contract-security-capability-pack.mdx",
+          "https://ethereum.org/developers/docs/",
+          "https://book.getfoundry.sh/",
+          "https://docs.openzeppelin.com/contracts"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -9581,10 +9596,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "88297534195c8e594486b5e5c230f5c99b1053118e534e7dbf598514e79a4741",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://git-cliff.org/docs/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx",
+          "https://www.conventionalcommits.org/en/v1.0.0/",
+          "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -9723,10 +9740,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "171cde88dd94e324d349dfa76d0910dfd8bd3da54f1f22898331b04f5132e4b0",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://docs.github.com/actions",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/github-actions-secure-cicd-capability-pack.mdx",
+          "https://docs.github.com/actions/security-for-github-actions/security-guides/automatic-token-authentication",
+          "https://docs.github.com/actions/learn-github-actions/reusing-workflows"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -10449,13 +10468,14 @@
         "packageTrust": "first-party",
         "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 3,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
+          "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-30",
+        "lastVerifiedAt": "2026-06-01",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -10574,10 +10594,15 @@
         "packageTrust": "first-party",
         "packageChecksum": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 7,
         "sourceUrls": [
           "https://heyclau.de/submit",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx",
+          "https://developers.openai.com/codex/skills",
+          "https://docs.claude.com/en/docs/claude-code/skills",
+          "https://docs.windsurf.com/windsurf/cascade/skills",
+          "https://docs.cursor.com/en/context",
+          "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-27",
@@ -10805,10 +10830,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "aef3f6a1d69042ef5f12ff5dc7958397dd7c5de9bbbcf55d4b7211f0e0eef66b",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://typicode.github.io/husky/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/husky-commit-governance-capability-pack.mdx",
+          "https://www.conventionalcommits.org/en/v1.0.0/",
+          "https://commitlint.js.org/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -12398,10 +12425,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "88cfe7f7cbd688806926439fcef04929c691deaaa01909a87d5658bbeb8c28bb",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx",
+          "https://modelcontextprotocol.io/specification/2025-06-18",
+          "https://modelcontextprotocol.io/docs/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -13716,10 +13745,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "39e4ad81bf6055fbe1832b8e0344f3e41dd23ae88b6b8e677102b6a0d97aedcc",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://docs.n8n.io/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-operations-resilience-capability-pack.mdx",
+          "https://docs.n8n.io/hosting/",
+          "https://docs.n8n.io/workflows/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -13787,10 +13818,13 @@
         "packageTrust": "first-party",
         "packageChecksum": "a4563ec065238789a4e01fa371b8681b120f9141ab6bd415563d8e1bb966e74a",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 5,
         "sourceUrls": [
           "https://docs.n8n.io/hosting/securing/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-production-security-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/n8n-production-security-capability-pack.mdx",
+          "https://docs.n8n.io/hosting/securing/overview/",
+          "https://docs.n8n.io/hosting/configuration/environment-variables/",
+          "https://docs.n8n.io/advanced-ai/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -14188,10 +14222,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "d67f69f050a67f21b64fd103dc9a901b46624621d7aaae84606ba3f657c12749",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx",
+          "https://github.com/openclaw/openclaw/blob/main/README.md",
+          "https://github.com/openclaw/openclaw/blob/main/CONTRIBUTING.md"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -14256,10 +14292,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "cf3ec648f0dd4808a709afca8306947b6be5c9bc18e2b481cdf0436e846fe9e3",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://github.com/openclaw/openclaw",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx",
+          "https://github.com/openclaw/openclaw/blob/main/README.md",
+          "https://github.com/openclaw/openclaw/blob/main/CONTRIBUTING.md"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -14385,10 +14423,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "0254c5d9edfe925907cfca3f06a24c866ecd42e1e7ef51ad64b2a5518199360c",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://opennext.js.org/cloudflare/get-started",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx",
+          "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/",
+          "https://developers.cloudflare.com/workers/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16058,10 +16098,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "0dd1737529e1488f32e951bd9543fd8cd433619c6dc3547f266e56e8b9bb9be8",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx",
+          "https://pve.proxmox.com/wiki/Main_Page",
+          "https://pve.proxmox.com/pve-docs/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -16505,10 +16547,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "27bea14be236882b4fbb89528b3f0229e0f27a18441c188269d833effef5bfb8",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://developers.raycast.com/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/raycast-extension-dev-publish-capability-pack.mdx",
+          "https://developers.raycast.com/basics/getting-started",
+          "https://developers.raycast.com/basics/publish-an-extension"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -19858,10 +19902,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "f1b76482519832597daed36f244bfe502df781fd2491b895ec246d4e0859ecea",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://docs.unraid.net/API/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-v2-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-api-v2-capability-pack.mdx",
+          "https://docs.unraid.net/API/how-to-use-the-api/",
+          "https://docs.unraid.net/category/release-notes/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-10",
@@ -19929,10 +19975,13 @@
         "packageTrust": "first-party",
         "packageChecksum": "e03f7ff071424a820999e7fb23065cac28e9689d159593aaf999e32a6d119ed7",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 5,
         "sourceUrls": [
           "https://forums.unraid.net/forum/64-docker-engine/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/unraid-ca-template-authoring-capability-pack.mdx",
+          "https://forums.unraid.net/",
+          "https://github.com/bergware/dynamix",
+          "https://docs.unraid.net/"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -21429,10 +21478,12 @@
         "packageTrust": "first-party",
         "packageChecksum": "77fa0891ce8a4bc6ffcc8a8ab9a2110d7a8ea5e073630f3912fefae2f4cc1e6f",
         "checksumPresent": true,
-        "sourceUrlCount": 2,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://developers.cloudflare.com/workers/",
-          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx",
+          "https://vercel.com/docs",
+          "https://resend.com/docs"
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-11",
@@ -21589,5 +21640,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "55579f25c46f97bd2bd919f34d72113035a8b963a2d184c1c868964fd6e0da09"
+  "signature": "90450006d90f312e19d5b3457ab39d235fea9b9c8dc23bf9a5de59e0d2ff685f"
 }

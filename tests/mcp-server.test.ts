@@ -967,7 +967,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       reviewModel: {
         autoMerge: false,
         prFirst: true,
-        importPrRequiresApprovalLabel: [],
+        importPrRequiresApprovalLabel: ["accepted", "import-approved"],
       },
       artifactPolicy: {
         communityZipHostingAllowed: false,

@@ -1,3 +1,14 @@
+import { siteConfig } from "./site";
+
+function urlOrigin(value: string) {
+  if (!value) return "";
+  try {
+    return new URL(value).origin;
+  } catch {
+    return "";
+  }
+}
+
 const scriptSrc = [
   "script-src 'self' 'unsafe-inline'",
   process.env.NODE_ENV === "production" ? "" : "'unsafe-eval'",
@@ -6,6 +17,21 @@ const scriptSrc = [
 ]
   .filter(Boolean)
   .join(" ");
+
+const connectSrc = Array.from(
+  new Set(
+    [
+      "connect-src 'self'",
+      "https://api.github.com",
+      "https://img.shields.io",
+      "https://umami.heyclau.de",
+      "https://challenges.cloudflare.com",
+      "https://submission-gate.heyclau.de",
+      process.env.NODE_ENV === "production" ? "" : "https://submission-gate-dev.heyclau.de",
+      urlOrigin(siteConfig.submissionGateUrl),
+    ].filter(Boolean),
+  ),
+).join(" ");
 
 const SECURITY_HEADERS = {
   "content-security-policy": [
@@ -17,7 +43,7 @@ const SECURITY_HEADERS = {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    "connect-src 'self' https://api.github.com https://img.shields.io https://umami.heyclau.de https://challenges.cloudflare.com https://submission-gate.heyclau.de https://submission-gate-dev.heyclau.de",
+    connectSrc,
     "frame-src https://challenges.cloudflare.com",
     "form-action 'self' https://github.com",
     "manifest-src 'self'",

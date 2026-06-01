@@ -52017,7 +52017,7 @@ Download: /downloads/skills/heyclaude-content-submission-factory.zip
 - Privacy notes: Drafting may include public source URLs, brand metadata, and resource descriptions., Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
-- Last verified: 2026-04-30
+- Last verified: 2026-06-01
 - Robots: indexable
 ## Summary
 Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.
@@ -52039,7 +52039,7 @@ This skill is pinned to HeyClaude PR-first submission behavior verified on **202
 
 ## Retrieval Sources
 - https://heyclau.de/submit
-- https://github.com/JSONbored/awesome-claude/pulls
+- https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
 
 ## Core Workflow
 1. Identify the best HeyClaude category from the evidence, not from the submitter's guess.
@@ -52105,7 +52105,7 @@ mcpValidation:
   schemaChecked: true
   duplicateSearch: "No likely duplicate found."
   submitUrl: https://heyclau.de/submit?...
-  githubPullsUrl: https://github.com/JSONbored/awesome-claude/pulls
+  contributionGuideUrl: https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
 maintainerNotes: Why this belongs in HeyClaude and what still needs review.
 ```
 
@@ -52345,7 +52345,7 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 ## Production Rules
 - Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.
 - Do not include private repo names, secrets, credentials, or internal operating details in a public skill.
-- Do not auto-publish registry content; prepare a maintainer-reviewed issue submission.
+- Do not auto-publish registry content; prepare a maintainer-reviewed PR submission.
 - Keep package resources minimal and directly referenced from `SKILL.md`.
 
 ## Troubleshooting

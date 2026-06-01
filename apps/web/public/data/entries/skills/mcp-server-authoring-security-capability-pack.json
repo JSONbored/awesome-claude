@@ -256,10 +256,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "88cfe7f7cbd688806926439fcef04929c691deaaa01909a87d5658bbeb8c28bb",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/mcp-server-authoring-security-capability-pack.mdx",
+      "https://modelcontextprotocol.io/specification/2025-06-18",
+      "https://modelcontextprotocol.io/docs/"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-10",

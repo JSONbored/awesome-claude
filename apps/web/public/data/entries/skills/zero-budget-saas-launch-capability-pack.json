@@ -245,10 +245,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "77fa0891ce8a4bc6ffcc8a8ab9a2110d7a8ea5e073630f3912fefae2f4cc1e6f",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://developers.cloudflare.com/workers/",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/zero-budget-saas-launch-capability-pack.mdx",
+      "https://vercel.com/docs",
+      "https://resend.com/docs"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",

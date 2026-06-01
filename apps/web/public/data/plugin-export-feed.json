@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-01T00:00:00.000Z",
   "count": 251,
   "plugins": [
     {
@@ -2307,38 +2307,38 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-content-submission-factory.mdc",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         }
       ],
       "heyclaudeUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory"

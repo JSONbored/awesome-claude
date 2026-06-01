@@ -40,6 +40,9 @@ CREATE TABLE IF NOT EXISTS submission_prs (
   PRIMARY KEY (repo, number)
 );
 
+CREATE INDEX IF NOT EXISTS idx_submission_prs_status
+  ON submission_prs (status, updated_at);
+
 CREATE TABLE IF NOT EXISTS submission_audit (
   id TEXT PRIMARY KEY,
   target_key TEXT NOT NULL,
@@ -51,7 +54,7 @@ CREATE TABLE IF NOT EXISTS submission_audit (
 );
 
 CREATE TABLE IF NOT EXISTS submission_user_tokens (
-  draft_id TEXT PRIMARY KEY,
+  draft_id TEXT PRIMARY KEY REFERENCES submission_drafts(id) ON DELETE CASCADE,
   encrypted_token TEXT NOT NULL,
   expires_at TEXT NOT NULL,
   consumed_at TEXT,
@@ -59,8 +62,12 @@ CREATE TABLE IF NOT EXISTS submission_user_tokens (
   updated_at TEXT NOT NULL
 );
 
+CREATE INDEX IF NOT EXISTS idx_submission_user_tokens_expires
+  ON submission_user_tokens (expires_at);
+
 CREATE TABLE IF NOT EXISTS idempotency_keys (
-  key TEXT PRIMARY KEY,
   target_key TEXT NOT NULL,
-  created_at TEXT NOT NULL
+  key TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (target_key, key)
 );

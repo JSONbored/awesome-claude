@@ -40,6 +40,7 @@ export const Route = createFileRoute("/submit")({
 });
 
 const STEPS = ["Category", "Details", "Safety & privacy", "Review"] as const;
+const GITHUB_AUTH_HOSTS = new Set(["github.com"]);
 
 type PreflightResponse = {
   ok: true;
@@ -67,6 +68,18 @@ type PreflightResponse = {
     url?: string;
   };
 };
+
+function safeGitHubAuthUrl(value: string) {
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || !GITHUB_AUTH_HOSTS.has(url.hostname)) {
+      return "";
+    }
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
 
 type SubmitResult = {
   statusUrl?: string;
@@ -172,8 +185,12 @@ function SubmitPage() {
       if (!response.ok || !payload?.ok) {
         throw new Error(payload?.error || "The private submission gate rejected the draft.");
       }
-      if (payload.authUrl) {
-        window.location.assign(payload.authUrl);
+      const authUrl = payload.authUrl ? safeGitHubAuthUrl(payload.authUrl) : "";
+      if (payload.authUrl && !authUrl) {
+        throw new Error("The submission gate returned an invalid GitHub auth URL.");
+      }
+      if (authUrl) {
+        window.location.assign(authUrl);
         return;
       }
       setDone({ statusUrl: payload.statusUrl, manualPr: payload.manualPr });

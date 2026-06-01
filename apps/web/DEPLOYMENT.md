@@ -186,7 +186,7 @@ longer a Next.js app.
 - `NEXT_PUBLIC_POLAR_FEATURED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_JOB_BOARD_URL`
 - `VITE_SUBMISSION_GATE_URL` or `NEXT_PUBLIC_SUBMISSION_GATE_URL` set to the
-  public private-gate Worker origin:
+  submission-gate Worker origin:
   `https://submission-gate-dev.heyclau.de` for development and
   `https://submission-gate.heyclau.de` for production.
 
@@ -197,6 +197,15 @@ Required secrets, per environment:
 
 ```bash
 pnpm --filter web exec wrangler secret put ADMIN_API_TOKEN
+```
+
+The submission-gate Worker also needs GitHub App secrets in its own Cloudflare
+environment. `GITHUB_APP_PRIVATE_KEY` must be PKCS#8 PEM, beginning with
+`-----BEGIN PRIVATE KEY-----`. Convert a GitHub RSA private key before storing
+it if needed:
+
+```bash
+openssl pkcs8 -topk8 -nocrypt -in github-app.pem -out github-app-pkcs8.pem
 ```
 
 For local development, copy `.dev.vars.example` to `.dev.vars` and fill values.

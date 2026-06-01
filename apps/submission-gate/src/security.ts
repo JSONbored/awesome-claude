@@ -57,6 +57,17 @@ export async function hmacSha256Hex(secret: string, payload: string) {
 }
 
 export function timingSafeEqual(left: string, right: string) {
+  const leftBytes = encoder.encode(left);
+  const rightBytes = encoder.encode(right);
+  const subtle = crypto.subtle as SubtleCrypto & {
+    timingSafeEqual?: (left: Uint8Array, right: Uint8Array) => boolean;
+  };
+  if (
+    leftBytes.length === rightBytes.length &&
+    typeof subtle.timingSafeEqual === "function"
+  ) {
+    return subtle.timingSafeEqual(leftBytes, rightBytes);
+  }
   const maxLength = Math.max(left.length, right.length);
   let diff = left.length === right.length ? 0 : 1;
   for (let index = 0; index < maxLength; index += 1) {
@@ -97,32 +108,53 @@ export function randomToken(bytes = 32) {
   return base64UrlEncode(data.buffer);
 }
 
-async function aesKey(secret: string) {
-  const digest = await crypto.subtle.digest("SHA-256", encoder.encode(secret));
-  return crypto.subtle.importKey("raw", digest, { name: "AES-GCM" }, false, [
-    "encrypt",
-    "decrypt",
-  ]);
+async function aesKey(secret: string, salt: Uint8Array) {
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    "HKDF",
+    false,
+    ["deriveKey"],
+  );
+  return crypto.subtle.deriveKey(
+    {
+      name: "HKDF",
+      hash: "SHA-256",
+      salt,
+      info: encoder.encode("heyclaude-submission-gate:user-token:v1"),
+    },
+    keyMaterial,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["encrypt", "decrypt"],
+  );
 }
 
 export async function encryptText(secret: string, plaintext: string) {
+  const salt = new Uint8Array(16);
   const iv = new Uint8Array(12);
+  crypto.getRandomValues(salt);
   crypto.getRandomValues(iv);
   const ciphertext = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv },
-    await aesKey(secret),
+    await aesKey(secret, salt),
     encoder.encode(plaintext),
   );
-  return `${base64UrlEncode(iv.buffer)}.${base64UrlEncode(ciphertext)}`;
+  return `${base64UrlEncode(salt.buffer)}.${base64UrlEncode(iv.buffer)}.${base64UrlEncode(ciphertext)}`;
 }
 
 export async function decryptText(secret: string, encrypted: string) {
-  const [ivText, ciphertextText] = encrypted.split(".");
-  if (!ivText || !ciphertextText) throw new Error("Invalid encrypted payload.");
-  const plaintext = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv: base64UrlDecode(ivText) },
-    await aesKey(secret),
-    base64UrlDecode(ciphertextText),
-  );
-  return new TextDecoder().decode(plaintext);
+  const [saltText, ivText, ciphertextText] = encrypted.split(".");
+  if (!saltText || !ivText || !ciphertextText)
+    throw new Error("Invalid encrypted payload.");
+  try {
+    const plaintext = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv: base64UrlDecode(ivText) },
+      await aesKey(secret, base64UrlDecode(saltText)),
+      base64UrlDecode(ciphertextText),
+    );
+    return new TextDecoder().decode(plaintext);
+  } catch {
+    throw new Error("Invalid encrypted payload.");
+  }
 }

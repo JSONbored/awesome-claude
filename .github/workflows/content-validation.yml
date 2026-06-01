@@ -64,7 +64,7 @@ jobs:
             echo "content_categories_json=[]" >> "$GITHUB_OUTPUT"
           fi
           if ! grep -q '^submission_gate=' "$GITHUB_OUTPUT"; then
-            if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ] && git diff --name-only "$BASE_SHA"...HEAD | grep -Eq '^(apps/submission-gate/|tests/submission-gate-|package.json|pnpm-lock.yaml|pnpm-workspace.yaml)$'; then
+            if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ] && git diff --name-only "$BASE_SHA"...HEAD | grep -Eq '^(apps/submission-gate/|tests/submission-gate-|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$)'; then
               echo "submission_gate=true" >> "$GITHUB_OUTPUT"
             else
               echo "submission_gate=false" >> "$GITHUB_OUTPUT"

@@ -256,10 +256,13 @@
     "packageTrust": "first-party",
     "packageChecksum": "5e2a8567d4a88913443a4a9e76823180775eb767e51770c0a3c8ca5e39ffe59b",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 5,
     "sourceUrls": [
       "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/code-review/about-pull-request-reviews",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/coderabbit-lite-pr-review-capability-pack.mdx",
+      "https://docs.github.com/en/pull-requests",
+      "https://owasp.org/www-project-top-ten/",
+      "https://cheatsheetseries.owasp.org/"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",

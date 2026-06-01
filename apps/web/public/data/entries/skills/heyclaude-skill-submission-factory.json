@@ -128,7 +128,7 @@
     ],
     "downloadTrust": "first-party",
     "downloadSha256": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
-    "body": "## Knowledge Freshness\n\nThis skill is pinned to Agent Skills and HeyClaude submission behavior verified on **2026-04-27**.\n\n## Retrieval Sources\n\n- https://heyclau.de/submit\n- https://developers.openai.com/codex/skills\n- https://docs.claude.com/en/docs/claude-code/skills\n- https://docs.windsurf.com/windsurf/cascade/skills\n- https://docs.cursor.com/en/context\n- https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md\n\n## Core Workflow\n\n1. Define the skill user, trigger language, and out-of-scope behavior.\n2. Create a single root folder with `SKILL.md`.\n3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.\n4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.\n5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.\n6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.\n\n## Capability Scope\n\n- Agent Skill package authoring\n- Compatibility metadata\n- Cursor `.mdc` adapter drafting\n- Package validation checklist\n- HeyClaude PR-first submission preparation\n\n## Compatibility\n\n### Native Agent Skills\n\n- Claude\n- Codex/OpenAI\n- Windsurf\n- Gemini\n\n### Adapter Targets\n\n- Cursor via `.cursor/rules/<skill-name>.mdc`\n- Generic AGENTS or tool-specific context files\n\n## Production Rules\n\n- Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.\n- Do not include private repo names, secrets, credentials, or internal operating details in a public skill.\n- Do not auto-publish registry content; prepare a maintainer-reviewed issue submission.\n- Keep package resources minimal and directly referenced from `SKILL.md`.\n\n## Troubleshooting\n\n**Issue:** The skill is too broad to trigger reliably\n**Fix:** Narrow the description to the exact workflow and add negative scope.\n\n**Issue:** Cursor users ask how to install it\n**Fix:** Generate a Cursor rule adapter and label it as an adapter, not a native skill.",
+    "body": "## Knowledge Freshness\n\nThis skill is pinned to Agent Skills and HeyClaude submission behavior verified on **2026-04-27**.\n\n## Retrieval Sources\n\n- https://heyclau.de/submit\n- https://developers.openai.com/codex/skills\n- https://docs.claude.com/en/docs/claude-code/skills\n- https://docs.windsurf.com/windsurf/cascade/skills\n- https://docs.cursor.com/en/context\n- https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md\n\n## Core Workflow\n\n1. Define the skill user, trigger language, and out-of-scope behavior.\n2. Create a single root folder with `SKILL.md`.\n3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.\n4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.\n5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.\n6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.\n\n## Capability Scope\n\n- Agent Skill package authoring\n- Compatibility metadata\n- Cursor `.mdc` adapter drafting\n- Package validation checklist\n- HeyClaude PR-first submission preparation\n\n## Compatibility\n\n### Native Agent Skills\n\n- Claude\n- Codex/OpenAI\n- Windsurf\n- Gemini\n\n### Adapter Targets\n\n- Cursor via `.cursor/rules/<skill-name>.mdc`\n- Generic AGENTS or tool-specific context files\n\n## Production Rules\n\n- Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.\n- Do not include private repo names, secrets, credentials, or internal operating details in a public skill.\n- Do not auto-publish registry content; prepare a maintainer-reviewed PR submission.\n- Keep package resources minimal and directly referenced from `SKILL.md`.\n\n## Troubleshooting\n\n**Issue:** The skill is too broad to trigger reliably\n**Fix:** Narrow the description to the exact workflow and add negative scope.\n\n**Issue:** Cursor users ask how to install it\n**Fix:** Generate a Cursor rule adapter and label it as an adapter, not a native skill.",
     "sections": [
       {
         "title": "Knowledge Freshness",
@@ -163,7 +163,7 @@
       {
         "title": "Production Rules",
         "id": "production-rules",
-        "markdown": "- Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.\n- Do not include private repo names, secrets, credentials, or internal operating details in a public skill.\n- Do not auto-publish registry content; prepare a maintainer-reviewed issue submission.\n- Keep package resources minimal and directly referenced from `SKILL.md`.",
+        "markdown": "- Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.\n- Do not include private repo names, secrets, credentials, or internal operating details in a public skill.\n- Do not auto-publish registry content; prepare a maintainer-reviewed PR submission.\n- Keep package resources minimal and directly referenced from `SKILL.md`.",
         "codeBlocks": []
       },
       {
@@ -234,10 +234,15 @@
     "packageTrust": "first-party",
     "packageChecksum": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 7,
     "sourceUrls": [
       "https://heyclau.de/submit",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx",
+      "https://developers.openai.com/codex/skills",
+      "https://docs.claude.com/en/docs/claude-code/skills",
+      "https://docs.windsurf.com/windsurf/cascade/skills",
+      "https://docs.cursor.com/en/context",
+      "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-27",

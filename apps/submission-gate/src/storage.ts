@@ -16,6 +16,34 @@ function now() {
   return new Date().toISOString();
 }
 
+function hexToBytes(value: string) {
+  if (!/^(?:[0-9a-f]{2})+$/i.test(value)) return null;
+  const bytes = new Uint8Array(value.length / 2);
+  for (let index = 0; index < value.length; index += 2) {
+    bytes[index / 2] = Number.parseInt(value.slice(index, index + 2), 16);
+  }
+  return bytes;
+}
+
+// Compares 64-character SHA-256 hex digests; non-32-byte inputs fail closed.
+function timingSafeHexEqual(left: string, right: string) {
+  const leftBytes = hexToBytes(left);
+  const rightBytes = hexToBytes(right);
+  if (!leftBytes || !rightBytes) return false;
+  if (leftBytes.length !== 32 || rightBytes.length !== 32) return false;
+  const subtle = crypto.subtle as SubtleCrypto & {
+    timingSafeEqual?: (left: Uint8Array, right: Uint8Array) => boolean;
+  };
+  if (typeof subtle.timingSafeEqual === "function") {
+    return subtle.timingSafeEqual(leftBytes, rightBytes);
+  }
+  let diff = 0;
+  for (let index = 0; index < leftBytes.length; index += 1) {
+    diff |= leftBytes[index] ^ rightBytes[index];
+  }
+  return diff === 0;
+}
+
 export async function createDraft(db: D1Database, draft: DraftInsert) {
   const timestamp = now();
   const authStateHash = draft.authState
@@ -64,7 +92,10 @@ export async function verifyDraftState(
 ) {
   const draft = await getDraft(db, draftId);
   if (!draft?.authStateHash) return false;
-  return draft.authStateHash === (await sha256Hex(state));
+  return timingSafeHexEqual(
+    String(draft.authStateHash),
+    await sha256Hex(state),
+  );
 }
 
 export async function updateDraftAuthState(
@@ -88,7 +119,7 @@ export async function storeDraftUserToken(
 ) {
   const timestamp = now();
   const expiresAt = new Date(
-    Date.parse(timestamp) + Math.max(60, params.ttlSeconds || 900) * 1000,
+    Date.parse(timestamp) + Math.max(60, params.ttlSeconds ?? 900) * 1000,
   ).toISOString();
   await db
     .prepare(
@@ -111,7 +142,7 @@ export async function storeDraftUserToken(
     .run();
 }
 
-export async function consumeDraftUserToken(db: D1Database, draftId: string) {
+export async function getDraftUserToken(db: D1Database, draftId: string) {
   const timestamp = now();
   const row = await db
     .prepare(
@@ -121,16 +152,21 @@ export async function consumeDraftUserToken(db: D1Database, draftId: string) {
     )
     .bind(draftId, timestamp)
     .first<{ encryptedToken?: string }>();
-  if (!row?.encryptedToken) return "";
-  await db
+  return row?.encryptedToken || "";
+}
+
+export async function consumeDraftUserToken(db: D1Database, draftId: string) {
+  const timestamp = now();
+  const row = await db
     .prepare(
       `UPDATE submission_user_tokens
        SET consumed_at = ?, updated_at = ?
-       WHERE draft_id = ?`,
+       WHERE draft_id = ? AND consumed_at IS NULL AND expires_at > ?
+       RETURNING draft_id AS draftId`,
     )
-    .bind(timestamp, timestamp, draftId)
-    .run();
-  return row.encryptedToken;
+    .bind(timestamp, timestamp, draftId, timestamp)
+    .first<{ draftId?: string }>();
+  return Boolean(row?.draftId);
 }
 
 export async function updateDraftStatus(
@@ -188,8 +224,8 @@ export async function upsertPrState(
         (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, import_pr_url, last_delivery_id, created_at, updated_at)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
-        head_repo = excluded.head_repo,
-        head_ref = excluded.head_ref,
+        head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
+        head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
         base_ref = excluded.base_ref,
         status = excluded.status,
         verdict = COALESCE(excluded.verdict, submission_prs.verdict),

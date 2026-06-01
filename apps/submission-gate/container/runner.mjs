@@ -1,4 +1,8 @@
-import { createHmac } from "node:crypto";
+import {
+  createHash,
+  createHmac,
+  timingSafeEqual as cryptoTimingSafeEqual,
+} from "node:crypto";
 import { createServer } from "node:http";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -16,9 +20,12 @@ const DEFAULT_VALIDATION_COMMANDS = [
 ];
 const ALLOWED_VALIDATION_COMMANDS = new Set(DEFAULT_VALIDATION_COMMANDS);
 const GITHUB_REPO_PATTERN =
-  /^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}\/[A-Za-z0-9_.-]{1,100}$/;
+  /^[A-Za-z0-9][A-Za-z0-9-]{0,99}\/[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 const GIT_REF_PATTERN =
   /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,200}$/;
+const UNSAFE_GIT_REF_CHARS = /[*[\]~^:\\]/;
+const DEFAULT_COMMAND_TIMEOUT_MS = 15 * 60 * 1000;
+const MAX_CAPTURE_CHARS = 1024 * 1024;
 
 function readBody(request) {
   return new Promise((resolve, reject) => {
@@ -37,12 +44,9 @@ function readBody(request) {
 }
 
 function timingSafeEqual(left, right) {
-  const maxLength = Math.max(left.length, right.length);
-  let diff = left.length === right.length ? 0 : 1;
-  for (let index = 0; index < maxLength; index += 1) {
-    diff |= (left.charCodeAt(index) || 0) ^ (right.charCodeAt(index) || 0);
-  }
-  return diff === 0;
+  const leftDigest = createHash("sha256").update(left).digest();
+  const rightDigest = createHash("sha256").update(right).digest();
+  return cryptoTimingSafeEqual(leftDigest, rightDigest);
 }
 
 function verifySignature(secret, payload, signature) {
@@ -51,7 +55,7 @@ function verifySignature(secret, payload, signature) {
   return timingSafeEqual(expected, signature);
 }
 
-function redactSensitiveOutput(value) {
+export function redactSensitiveOutput(value) {
   return String(value || "").replace(
     /x-access-token:[^@\s]+@/g,
     "x-access-token:<redacted>@",
@@ -60,7 +64,12 @@ function redactSensitiveOutput(value) {
 
 export function safeGitHubRepo(value) {
   const repo = String(value || "").trim();
-  if (!GITHUB_REPO_PATTERN.test(repo)) {
+  const [, name = ""] = repo.split("/");
+  if (
+    !GITHUB_REPO_PATTERN.test(repo) ||
+    name.endsWith(".git") ||
+    /(^[._-]|[._-]$)/.test(name)
+  ) {
     throw new Error("Import job has an invalid GitHub repository.");
   }
   return repo;
@@ -68,7 +77,13 @@ export function safeGitHubRepo(value) {
 
 export function safeGitRef(value, name) {
   const ref = String(value || "").trim();
-  if (!GIT_REF_PATTERN.test(ref)) {
+  if (
+    !GIT_REF_PATTERN.test(ref) ||
+    UNSAFE_GIT_REF_CHARS.test(ref) ||
+    ref.startsWith(".") ||
+    ref.endsWith("/") ||
+    ref.endsWith(".lock")
+  ) {
     throw new Error(`Import job has an invalid ${name}.`);
   }
   return ref;
@@ -90,29 +105,66 @@ export function resolveValidationCommands(value) {
   });
 }
 
+function appendCappedOutput(current, chunk) {
+  const next = current + String(chunk);
+  if (next.length <= MAX_CAPTURE_CHARS) return next;
+  return `[output truncated to last ${MAX_CAPTURE_CHARS} chars]\n${next.slice(-MAX_CAPTURE_CHARS)}`;
+}
+
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
+    const { timeoutMs = DEFAULT_COMMAND_TIMEOUT_MS, ...spawnOptions } = options;
     const child = spawn(command, args, {
-      ...options,
+      ...spawnOptions,
       shell: false,
       stdio: ["ignore", "pipe", "pipe"],
     });
     let stdout = "";
     let stderr = "";
+    let settled = false;
+    const finish = (callback, value) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeout);
+      callback(value);
+    };
+    const timeout = setTimeout(() => {
+      child.kill("SIGKILL");
+      finish(
+        reject,
+        new Error(
+          `${command} timed out after ${timeoutMs}ms: ${redactSensitiveOutput(
+            stderr || stdout,
+          )}`,
+        ),
+      );
+    }, timeoutMs);
     child.stdout.on("data", (chunk) => {
-      stdout += String(chunk);
+      stdout = appendCappedOutput(stdout, chunk);
     });
     child.stderr.on("data", (chunk) => {
-      stderr += String(chunk);
+      stderr = appendCappedOutput(stderr, chunk);
+    });
+    child.on("error", (error) => {
+      finish(
+        reject,
+        new Error(
+          `${command} failed to start: ${redactSensitiveOutput(
+            error?.message || String(error),
+          )}`,
+        ),
+      );
     });
     child.on("close", (code) => {
-      if (code === 0) resolve({ stdout, stderr });
-      else
-        reject(
+      if (code === 0) finish(resolve, { stdout, stderr });
+      else {
+        finish(
+          reject,
           new Error(
             `${command} failed: ${redactSensitiveOutput(stderr || stdout)}`,
           ),
         );
+      }
     });
   });
 }
@@ -155,6 +207,22 @@ async function githubJson(url, token, init = {}) {
   return payload;
 }
 
+async function findExistingImportPr(owner, name, branchName, baseRef, token) {
+  const head = `${owner}:${branchName}`;
+  const prs = await githubJson(
+    `https://api.github.com/repos/${owner}/${name}/pulls?state=open&head=${encodeURIComponent(head)}&base=${encodeURIComponent(baseRef)}`,
+    token,
+  );
+  const pr = Array.isArray(prs) ? prs[0] : null;
+  return pr?.html_url
+    ? {
+        ok: true,
+        pullRequestUrl: pr.html_url,
+        pullRequestNumber: pr.number,
+      }
+    : null;
+}
+
 async function handleImport(job) {
   const {
     repo,
@@ -184,6 +252,14 @@ async function handleImport(job) {
   const safeBranchName = safeGitRef(branchName, "branchName");
   const safeValidationCommands = resolveValidationCommands(validationCommands);
   const [owner, name] = safeRepo.split("/");
+  const existingPr = await findExistingImportPr(
+    owner,
+    name,
+    safeBranchName,
+    safeBaseRef,
+    githubToken,
+  );
+  if (existingPr) return existingPr;
   const workdir = await mkdtemp(path.join(tmpdir(), "heyclaude-import-"));
   try {
     const cloneUrl = `https://x-access-token:${githubToken}@github.com/${safeRepo}.git`;
@@ -218,7 +294,6 @@ async function handleImport(job) {
       await writeFile(absolutePath, file.content, "utf8");
     }
 
-    await run("corepack", ["enable"], { cwd: repoDir });
     await run("pnpm", ["install", "--frozen-lockfile"], { cwd: repoDir });
     for (const command of safeValidationCommands) {
       await runValidationCommand(command, repoDir);
@@ -239,7 +314,19 @@ async function handleImport(job) {
         },
       },
     );
-    await run("git", ["push", "origin", safeBranchName], { cwd: repoDir });
+    // Imports are serialized per target by the Worker Durable Object lock; force updates keep the maintainer-owned branch idempotent across retries.
+    await run("git", ["push", "--force", "origin", safeBranchName], {
+      cwd: repoDir,
+    });
+
+    const existingAfterPush = await findExistingImportPr(
+      owner,
+      name,
+      safeBranchName,
+      safeBaseRef,
+      githubToken,
+    );
+    if (existingAfterPush) return existingAfterPush;
 
     const pr = await githubJson(
       `https://api.github.com/repos/${owner}/${name}/pulls`,
@@ -282,7 +369,7 @@ export function createImportServer() {
       const body = await readBody(request);
       const secret = process.env.INTERNAL_SHARED_SECRET || "";
       if (
-        secret &&
+        !secret ||
         !verifySignature(
           secret,
           body,
@@ -297,8 +384,20 @@ export function createImportServer() {
       response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify(result));
     } catch (error) {
-      response.writeHead(500, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: false, error: error.message }));
+      const message = error?.message || String(error);
+      const status =
+        message === "payload too large"
+          ? 413
+          : error instanceof SyntaxError
+            ? 400
+            : 500;
+      response.writeHead(status, { "content-type": "application/json" });
+      response.end(
+        JSON.stringify({
+          ok: false,
+          error: redactSensitiveOutput(message),
+        }),
+      );
     }
   });
 }

@@ -496,13 +496,15 @@ const submissionPreflightSuccessResponseSchema = z.object({
   routeSuggestion: z.enum(["submit_pr", "fix_required", "route_away", "manual_review"]),
   category: z.string(),
   slug: z.string(),
-  prPreview: z.object({
-    title: z.string().max(300),
-    targetPath: z.string().max(240),
-    branchHint: z.string().max(200),
-    baseRef: z.string().max(120),
-    body: z.string().max(32_000),
-  }),
+  prPreview: z
+    .object({
+      title: z.string().max(300),
+      targetPath: z.string().max(240),
+      branchHint: z.string().max(200),
+      baseRef: z.string().max(120),
+      body: z.string().max(32_000),
+    })
+    .optional(),
   schema: z.object({
     ok: z.boolean(),
     skipped: z.boolean(),

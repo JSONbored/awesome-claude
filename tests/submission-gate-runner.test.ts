@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  redactSensitiveOutput,
   resolveValidationCommands,
   safeGitHubRepo,
   safeGitRef,
@@ -16,6 +17,12 @@ describe("submission gate import runner safety", () => {
       "invalid GitHub repository",
     );
     expect(() => safeGitHubRepo("JSONbored/awesome-claude --mirror")).toThrow(
+      "invalid GitHub repository",
+    );
+    expect(() => safeGitHubRepo("JSONbored/.awesome-claude")).toThrow(
+      "invalid GitHub repository",
+    );
+    expect(() => safeGitHubRepo("JSONbored/awesome-claude.git")).toThrow(
       "invalid GitHub repository",
     );
   });
@@ -34,6 +41,15 @@ describe("submission gate import runner safety", () => {
     expect(() => safeGitRef("feature/../main", "baseRef")).toThrow(
       "invalid baseRef",
     );
+    expect(() => safeGitRef("feature/trailing/", "baseRef")).toThrow(
+      "invalid baseRef",
+    );
+    expect(() => safeGitRef("feature.lock", "baseRef")).toThrow(
+      "invalid baseRef",
+    );
+    expect(() => safeGitRef("feature:main", "baseRef")).toThrow(
+      "invalid baseRef",
+    );
   });
 
   it("allows only fixed validation commands", () => {
@@ -48,5 +64,13 @@ describe("submission gate import runner safety", () => {
     expect(() =>
       resolveValidationCommands(["node scripts/import-from-job.js"]),
     ).toThrow("Unsupported validation command");
+  });
+
+  it("redacts token-bearing git URLs from runner errors", () => {
+    expect(
+      redactSensitiveOutput(
+        "fatal: https://x-access-token:ghs_secret@example.invalid/repo.git",
+      ),
+    ).toContain("x-access-token:<redacted>@");
   });
 });

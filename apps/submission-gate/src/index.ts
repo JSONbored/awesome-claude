@@ -26,6 +26,7 @@ import {
   defaultManualDecision,
   markerComment,
   type GateDecision,
+  type GateVerdict,
 } from "./review";
 import {
   decryptText,
@@ -39,6 +40,7 @@ import {
   consumeDraftUserToken,
   createDraft,
   getDraft,
+  getDraftUserToken,
   insertAudit,
   storeDraftUserToken,
   updateDraftAuthState,
@@ -74,6 +76,30 @@ type QueueMessage = {
   payload: Record<string, unknown>;
 };
 
+class SubmissionLockBusyError extends Error {
+  constructor(targetKey: string) {
+    super(`Submission lock is busy for ${targetKey}.`);
+    this.name = "SubmissionLockBusyError";
+  }
+}
+
+const GATE_VERDICTS = new Set<GateVerdict>([
+  "import",
+  "request_changes",
+  "close",
+  "manual",
+  "ignore",
+]);
+
+const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
+  "contact_email",
+  "contact_phone",
+  "email",
+  "phone",
+  "full_name",
+  "name_full",
+]);
+
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
   headers.set("content-type", "application/json; charset=utf-8");
@@ -85,6 +111,35 @@ function json(payload: unknown, init: ResponseInit = {}) {
     "content-type,x-github-event,x-github-delivery,x-hub-signature-256,x-heyclaude-internal-signature",
   );
   return Response.json(payload, { ...init, headers });
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function redactPublicDraftFields(fields: unknown) {
+  if (!isRecord(fields)) return {};
+  const scrubbed: Record<string, unknown> = { ...fields };
+  for (const key of Object.keys(scrubbed)) {
+    if (PUBLIC_DRAFT_FIELD_REDACTIONS.has(key.toLowerCase())) {
+      scrubbed[key] = "[redacted]";
+    }
+  }
+  return scrubbed;
+}
+
+function parseStoredDraftFields(
+  draftId: string,
+  fieldsJson: unknown,
+  fallback: Record<string, unknown> = {},
+) {
+  try {
+    const parsed = JSON.parse(String(fieldsJson || "{}"));
+    return isRecord(parsed) ? parsed : fallback;
+  } catch (error) {
+    console.warn("malformed draft fields json", { draftId, error });
+    return fallback;
+  }
 }
 
 function textResponse(body: string, init: ResponseInit = {}) {
@@ -173,7 +228,9 @@ async function createDraftRoute(request: Request, env: Env) {
 async function getDraftRoute(env: Env, id: string) {
   const draft = await getDraft(env.SUBMISSION_GATE_DB, id);
   if (!draft) return json({ ok: false, error: "not_found" }, { status: 404 });
-  const fields = JSON.parse(String(draft.fieldsJson || "{}"));
+  const fields = redactPublicDraftFields(
+    parseStoredDraftFields(id, draft.fieldsJson),
+  );
   return json({
     ok: true,
     draft: {
@@ -299,6 +356,8 @@ async function githubWebhookRoute(
 ) {
   const raw = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
+  const deliveryId =
+    request.headers.get("x-github-delivery") || crypto.randomUUID();
   const valid = await verifyGitHubWebhookSignature({
     secret: env.GITHUB_WEBHOOK_SECRET || "",
     payload: raw,
@@ -307,10 +366,14 @@ async function githubWebhookRoute(
   if (!valid)
     return json({ ok: false, error: "invalid_signature" }, { status: 401 });
 
-  const payload = JSON.parse(raw) as Record<string, unknown>;
+  let payload: Record<string, unknown>;
+  try {
+    payload = JSON.parse(raw) as Record<string, unknown>;
+  } catch (error) {
+    console.warn("invalid GitHub webhook payload", { deliveryId, error });
+    return json({ ok: false, error: "invalid_payload" }, { status: 400 });
+  }
   const eventName = request.headers.get("x-github-event") || "";
-  const deliveryId =
-    request.headers.get("x-github-delivery") || crypto.randomUUID();
   await putAuditObject(
     env,
     `webhooks/${eventName}/${deliveryId}.json`,
@@ -363,20 +426,42 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
   }
   const body = JSON.stringify(message);
   const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  const response = await fetch(env.PRIVATE_GATE_REVIEW_URL, {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-heyclaude-internal-signature": signature,
-    },
-    body,
-  });
+  let response: Response;
+  try {
+    response = await fetch(env.PRIVATE_GATE_REVIEW_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-heyclaude-internal-signature": signature,
+      },
+      body,
+      signal: AbortSignal.timeout(15_000),
+    });
+  } catch {
+    return defaultManualDecision("Private corpus review request failed.");
+  }
   if (!response.ok) {
     return defaultManualDecision(
       `Private corpus review returned ${response.status}.`,
     );
   }
-  return (await response.json()) as GateDecision;
+  const raw = (await response
+    .json()
+    .catch(() => null)) as Partial<GateDecision> | null;
+  if (!raw || !GATE_VERDICTS.has(raw.verdict as GateVerdict)) {
+    return defaultManualDecision(
+      "Private corpus review returned an unexpected payload.",
+    );
+  }
+  return {
+    verdict: raw.verdict as GateVerdict,
+    summary: typeof raw.summary === "string" ? raw.summary : "",
+    labels: Array.isArray(raw.labels)
+      ? raw.labels.filter((label): label is string => typeof label === "string")
+      : [],
+    close: raw.close === true,
+    importJob: isRecord(raw.importJob) ? raw.importJob : undefined,
+  };
 }
 
 async function withSubmissionLock(
@@ -389,15 +474,39 @@ async function withSubmissionLock(
     method: "POST",
     body: JSON.stringify({ ttlSeconds: 120 }),
   });
-  if (response.status === 423) return;
-  await fn();
+  if (response.status === 423) throw new SubmissionLockBusyError(targetKey);
+  if (!response.ok) {
+    throw new Error(`Submission lock acquire failed: ${response.status}`);
+  }
+  const lock = (await response.json().catch(() => ({}))) as {
+    fenceToken?: string;
+  };
+  if (!lock.fenceToken) {
+    throw new Error("Submission lock acquire did not return a fence token.");
+  }
+  try {
+    await fn();
+  } finally {
+    try {
+      await stub.fetch("https://lock.local/release", {
+        method: "POST",
+        body: JSON.stringify({ fenceToken: lock.fenceToken }),
+      });
+    } catch (error) {
+      console.error("submission lock release failed", {
+        targetKey,
+        fenceToken: lock.fenceToken,
+        error,
+      });
+    }
+  }
 }
 
 async function handleReviewMessage(env: Env, message: QueueMessage) {
   await withSubmissionLock(env, message.targetKey, async () => {
     if (message.kind === "submit_draft") {
       const draftId = String(message.payload.draftId || "");
-      const encryptedToken = await consumeDraftUserToken(
+      const encryptedToken = await getDraftUserToken(
         env.SUBMISSION_GATE_DB,
         draftId,
       );
@@ -406,11 +515,20 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           ? await decryptText(env.INTERNAL_SHARED_SECRET, encryptedToken)
           : "";
       const draft = await getDraft(env.SUBMISSION_GATE_DB, draftId);
-      if (!draft || !userToken) return;
-      const fields = JSON.parse(String(draft.fieldsJson || "{}")) as Record<
-        string,
-        unknown
-      >;
+      if (!draft || !userToken) {
+        console.debug("submit_draft skipped", {
+          draftId,
+          hasDraft: Boolean(draft),
+          hasToken: Boolean(userToken),
+        });
+        return;
+      }
+      if (draft.status === "pr_open" && draft.pullRequestUrl) return;
+      const fields = parseStoredDraftFields(draftId, draft.fieldsJson, {
+        category: draft.category,
+        slug: draft.slug,
+        name: draft.slug,
+      });
       const title = `Add ${String(draft.category)}: ${String(fields.name || fields.title || draft.slug)}`;
       const content = buildContributorMdx(fields);
       const pr = await createUserForkContentPr({
@@ -428,6 +546,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         ].join("\n"),
         apiVersion: env.GITHUB_API_VERSION,
       });
+      await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
       await updateDraftStatus(env.SUBMISSION_GATE_DB, draftId, "pr_open", pr);
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
@@ -504,7 +623,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             ...decision.importJob,
             repo: pull.base.repo.full_name,
             baseRef: pull.base.ref || env.PILOT_BASE_REF,
-            githubToken: token,
             source: {
               repo: pull.base.repo.full_name,
               number: pull.number,
@@ -521,26 +639,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
 }
 
 async function handleImportMessage(env: Env, message: QueueMessage) {
-  const body = JSON.stringify(message.payload);
-  const signature = env.INTERNAL_SHARED_SECRET
-    ? await signInternalPayload(env.INTERNAL_SHARED_SECRET, body)
-    : "";
-  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(message.targetKey);
-  const response = await stub.fetch("https://container.local/import", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-heyclaude-internal-signature": signature,
-    },
-    body,
-  });
-  if (!response.ok) {
-    throw new Error(`Import runner failed: ${response.status}`);
-  }
-  const result = (await response.json().catch(() => ({}))) as {
-    pullRequestUrl?: string;
-    pullRequestNumber?: number;
-  };
   const payload = message.payload as {
     repo?: string;
     number?: number;
@@ -551,9 +649,50 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
       installationId?: number;
     };
   };
+  const sourceInstallationId = Number(payload.source?.installationId || 0);
+  if (
+    !sourceInstallationId ||
+    !env.GITHUB_APP_ID ||
+    !env.GITHUB_APP_PRIVATE_KEY
+  ) {
+    throw new Error("Import job is missing GitHub App installation context.");
+  }
+  if (!env.INTERNAL_SHARED_SECRET) {
+    throw new Error("Import runner shared secret is not configured.");
+  }
+  const githubToken = await getInstallationToken({
+    appId: env.GITHUB_APP_ID,
+    privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
+    installationId: sourceInstallationId,
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+  const body = JSON.stringify({ ...payload, githubToken });
+  const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
+  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(message.targetKey);
+  const response = await stub.fetch("https://container.local/import", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-heyclaude-idempotency-key": message.targetKey,
+      "x-heyclaude-internal-signature": signature,
+    },
+    body,
+  });
+  const result = (await response.json().catch(() => ({}))) as {
+    pullRequestUrl?: string;
+    pullRequestNumber?: number;
+  };
+  if (!response.ok) {
+    if (!result.pullRequestUrl) {
+      throw new Error(`Import runner failed: ${response.status}`);
+    }
+    console.warn("import runner returned existing PR with non-OK response", {
+      status: response.status,
+      pullRequestUrl: result.pullRequestUrl,
+    });
+  }
   const sourceRepo = payload.source?.repo || payload.repo || "";
   const sourceNumber = Number(payload.source?.number || payload.number || 0);
-  const sourceInstallationId = Number(payload.source?.installationId || 0);
   if (sourceRepo && sourceNumber && result.pullRequestUrl) {
     await upsertPrState(env.SUBMISSION_GATE_DB, {
       repo: sourceRepo,
@@ -564,26 +703,17 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
       verdictSummary: "Maintainer-owned import PR opened.",
       importPrUrl: result.pullRequestUrl,
     });
-    const token =
-      sourceInstallationId && env.GITHUB_APP_ID && env.GITHUB_APP_PRIVATE_KEY
-        ? await getInstallationToken({
-            appId: env.GITHUB_APP_ID,
-            privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
-            installationId: sourceInstallationId,
-            apiVersion: env.GITHUB_API_VERSION,
-          })
-        : "";
-    if (token) {
+    if (githubToken) {
       const repo = parseRepo(sourceRepo);
       await addLabels({
-        token,
+        token: githubToken,
         repo,
         issueNumber: sourceNumber,
         labels: [LABELS.importOpen, LABELS.superseded],
         apiVersion: env.GITHUB_API_VERSION,
       });
       await upsertMarkerComment({
-        token,
+        token: githubToken,
         repo,
         issueNumber: sourceNumber,
         marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
@@ -602,7 +732,7 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
         apiVersion: env.GITHUB_API_VERSION,
       });
       await closeIssueOrPullRequest({
-        token,
+        token: githubToken,
         repo,
         issueNumber: sourceNumber,
         apiVersion: env.GITHUB_API_VERSION,
@@ -613,20 +743,29 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
 
 async function importCompleteRoute(request: Request, env: Env) {
   const body = await request.text();
+  if (!env.INTERNAL_SHARED_SECRET) {
+    return json({ ok: false, error: "not_configured" }, { status: 503 });
+  }
   const valid = await verifyInternalSignature({
-    secret: env.INTERNAL_SHARED_SECRET || "",
+    secret: env.INTERNAL_SHARED_SECRET,
     payload: body,
     signatureHeader: request.headers.get("x-heyclaude-internal-signature"),
   });
   if (!valid)
     return json({ ok: false, error: "invalid_signature" }, { status: 401 });
-  const payload = JSON.parse(body) as {
+  type ImportCompletePayload = {
     targetKey?: string;
     repo?: string;
     number?: number;
     importPrUrl?: string;
     summary?: string;
   };
+  let payload: ImportCompletePayload;
+  try {
+    payload = JSON.parse(body) as ImportCompletePayload;
+  } catch {
+    return json({ ok: false, error: "invalid_payload" }, { status: 400 });
+  }
   if (payload.repo && payload.number) {
     await upsertPrState(env.SUBMISSION_GATE_DB, {
       repo: payload.repo,
@@ -660,7 +799,11 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return createDraftRoute(request, env);
   }
   if (request.method === "GET" && url.pathname.startsWith("/drafts/")) {
-    return getDraftRoute(env, url.pathname.split("/").pop() || "");
+    const id = url.pathname.split("/").pop() || "";
+    if (!/^draft_[0-9a-f-]{36}$/i.test(id)) {
+      return json({ ok: false, error: "invalid_id" }, { status: 400 });
+    }
+    return getDraftRoute(env, id);
   }
   if (request.method === "GET" && url.pathname === "/auth/github/start") {
     const draftId = url.searchParams.get("draftId") || "";
@@ -703,7 +846,22 @@ export class SubmissionLock extends DurableObject {
   }
 
   async fetch(request: Request) {
-    if (new URL(request.url).pathname !== "/acquire") {
+    const pathname = new URL(request.url).pathname;
+    if (pathname === "/release") {
+      const body = (await request.json().catch(() => ({}))) as {
+        fenceToken?: string;
+      };
+      const storedToken = await this.ctx.storage.get<string>("fenceToken");
+      if (!body.fenceToken || body.fenceToken !== storedToken) {
+        return json(
+          { ok: false, error: "lock_token_mismatch" },
+          { status: 409 },
+        );
+      }
+      await this.ctx.storage.delete(["expiresAt", "fenceToken"]);
+      return json({ ok: true, released: true });
+    }
+    if (pathname !== "/acquire") {
       return json({ ok: false, error: "not_found" }, { status: 404 });
     }
     const body = (await request.json().catch(() => ({}))) as {
@@ -715,8 +873,15 @@ export class SubmissionLock extends DurableObject {
       return json({ ok: false, locked: true }, { status: 423 });
     }
     const ttlMs = Math.max(10, Math.min(600, body.ttlSeconds || 120)) * 1000;
+    const fenceToken = crypto.randomUUID();
     await this.ctx.storage.put("expiresAt", nowMs + ttlMs);
-    return json({ ok: true, locked: false, expiresAt: nowMs + ttlMs });
+    await this.ctx.storage.put("fenceToken", fenceToken);
+    return json({
+      ok: true,
+      locked: false,
+      expiresAt: nowMs + ttlMs,
+      fenceToken,
+    });
   }
 }
 
@@ -740,8 +905,15 @@ export default {
         }
         message.ack();
       } catch (error) {
-        console.error("submission gate queue failure", error);
-        message.retry();
+        if (error instanceof SubmissionLockBusyError) {
+          console.debug("submission lock contention, retrying", {
+            targetKey: body.targetKey,
+          });
+          message.retry({ delaySeconds: 5 });
+        } else {
+          console.error("submission gate queue failure", error);
+          message.retry();
+        }
       }
     }
   },

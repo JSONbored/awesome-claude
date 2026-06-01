@@ -2250,7 +2250,7 @@ export async function getSubmissionPolicy() {
       prFirst: true,
       maintainerReviewRequired: true,
       autoMerge: false,
-      importPrRequiresApprovalLabel: [],
+      importPrRequiresApprovalLabel: ["accepted", "import-approved"],
       mutatingAutomationOwner: "private submission gate",
     },
     artifactPolicy: {

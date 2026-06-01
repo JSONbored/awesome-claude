@@ -261,10 +261,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "0254c5d9edfe925907cfca3f06a24c866ecd42e1e7ef51ad64b2a5518199360c",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://opennext.js.org/cloudflare/get-started",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/opennext-cloudflare-capability-pack.mdx",
+      "https://developers.cloudflare.com/workers/framework-guides/web-apps/nextjs/",
+      "https://developers.cloudflare.com/workers/"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-10",

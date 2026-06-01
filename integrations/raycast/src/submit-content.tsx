@@ -62,6 +62,11 @@ export default function Command() {
 
       if (action === "pr") {
         await openPrDraft(values);
+        await showToast({
+          style: Toast.Style.Success,
+          title: "Opened PR draft",
+          message: values.title,
+        });
         return;
       }
 

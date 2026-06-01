@@ -156,7 +156,7 @@ function buildPrPreview(issue: { title: string; body: string }, category: string
     title: issue.title.replace(/^Submit /, "Add "),
     targetPath: category && slug ? `content/${category}/${slug}.mdx` : "",
     branchHint: category && slug ? `heyclaude/submit-${category}-${slug}` : "",
-    baseRef: "submission-gate-pilot",
+    baseRef: siteConfig.submissionBaseRef,
     body: issue.body,
   };
 }

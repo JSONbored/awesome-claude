@@ -2,14 +2,27 @@ import { base64UrlEncode } from "./security";
 
 const encoder = new TextEncoder();
 
+class GitHubApiError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "GitHubApiError";
+    this.status = status;
+  }
+}
+
 export type GitHubRepo = {
   owner: string;
   repo: string;
 };
 
 export function parseRepo(value: string): GitHubRepo {
-  const [owner, repo] = value.split("/");
-  if (!owner || !repo) throw new Error("Expected owner/repo repository name.");
+  const parts = value.trim().split("/");
+  if (parts.length !== 2 || !parts[0] || !parts[1]) {
+    throw new Error("Expected owner/repo repository name.");
+  }
+  const [owner, repo] = parts;
   return { owner, repo };
 }
 
@@ -26,6 +39,16 @@ export function buildGitHubAppAuthorizeUrl(params: {
 }
 
 function pemToArrayBuffer(pem: string) {
+  if (/-----BEGIN RSA PRIVATE KEY-----/.test(pem)) {
+    throw new Error(
+      "GITHUB_APP_PRIVATE_KEY must be PKCS#8 PEM (-----BEGIN PRIVATE KEY-----). Convert GitHub's RSA key with: openssl pkcs8 -topk8 -nocrypt -in github-app.pem -out github-app-pkcs8.pem",
+    );
+  }
+  if (!/-----BEGIN PRIVATE KEY-----/.test(pem)) {
+    throw new Error(
+      "GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block beginning with -----BEGIN PRIVATE KEY-----.",
+    );
+  }
   const base64 = pem
     .replace(/-----BEGIN [^-]+-----/g, "")
     .replace(/-----END [^-]+-----/g, "")
@@ -80,7 +103,8 @@ export async function githubJson<T>(
   const text = await response.text();
   const payload = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    throw new Error(
+    throw new GitHubApiError(
+      response.status,
       `GitHub API ${response.status}: ${payload?.message || text}`,
     );
   }
@@ -167,13 +191,18 @@ export async function upsertMarkerComment(params: {
   body: string;
   apiVersion?: string;
 }) {
-  const comments = await githubJson<Array<{ id: number; body?: string }>>(
-    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/comments?per_page=100`,
-    {
-      token: params.token,
-      apiVersion: params.apiVersion,
-    },
-  );
+  const comments: Array<{ id: number; body?: string }> = [];
+  for (let page = 1; page <= 20; page += 1) {
+    const pageComments = await githubJson<Array<{ id: number; body?: string }>>(
+      `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/comments?per_page=100&page=${page}`,
+      {
+        token: params.token,
+        apiVersion: params.apiVersion,
+      },
+    );
+    comments.push(...pageComments);
+    if (pageComments.length < 100) break;
+  }
   const existing = comments.find((comment) =>
     comment.body?.includes(params.marker),
   );
@@ -214,6 +243,10 @@ function base64Content(value: string) {
   return btoa(binary);
 }
 
+function encodeContentPath(path: string) {
+  return path.split("/").map(encodeURIComponent).join("/");
+}
+
 async function sleep(ms: number) {
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -221,11 +254,18 @@ async function sleep(ms: number) {
 async function githubJsonOrNull<T>(
   url: string,
   init: RequestInit & { token?: string; apiVersion?: string } = {},
+  nullStatuses = [404],
 ) {
   try {
     return await githubJson<T>(url, init);
-  } catch {
-    return null;
+  } catch (error) {
+    if (
+      error instanceof GitHubApiError &&
+      nullStatuses.includes(error.status)
+    ) {
+      return null;
+    }
+    throw error;
   }
 }
 
@@ -249,7 +289,13 @@ export async function createUserForkContentPr(params: {
     },
   );
 
-  await githubJsonOrNull(
+  type ForkRepo = {
+    full_name?: string;
+    name?: string;
+    owner?: { login?: string };
+  };
+
+  const createdFork = await githubJsonOrNull<ForkRepo>(
     `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/forks`,
     {
       method: "POST",
@@ -258,19 +304,33 @@ export async function createUserForkContentPr(params: {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ default_branch_only: true }),
     },
+    [404, 422],
   );
 
-  const forkFullName = `${user.login}/${upstream.repo}`;
+  let forkFullName =
+    createdFork?.full_name ||
+    `${createdFork?.owner?.login || user.login}/${createdFork?.name || upstream.repo}`;
+  let forkRepo = parseRepo(forkFullName);
+  let forkReady = false;
   for (let attempt = 0; attempt < 10; attempt += 1) {
-    const fork = await githubJsonOrNull(
-      `https://api.github.com/repos/${user.login}/${upstream.repo}`,
+    const fork = await githubJsonOrNull<ForkRepo>(
+      `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}`,
       {
         token: params.userToken,
         apiVersion: params.apiVersion,
       },
     );
-    if (fork) break;
+    if (fork) {
+      forkFullName =
+        fork.full_name || `${forkRepo.owner}/${fork.name || forkRepo.repo}`;
+      forkRepo = parseRepo(forkFullName);
+      forkReady = true;
+      break;
+    }
     await sleep(3000);
+  }
+  if (!forkReady) {
+    throw new Error(`GitHub fork was not ready for ${forkFullName}.`);
   }
 
   const baseRef = await githubJson<{ object: { sha: string } }>(
@@ -282,7 +342,7 @@ export async function createUserForkContentPr(params: {
   );
   const encodedBranch = `heads/${params.branchName}`;
   const existingBranch = await githubJsonOrNull(
-    `https://api.github.com/repos/${user.login}/${upstream.repo}/git/ref/${encodedBranch}`,
+    `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/git/ref/${encodedBranch}`,
     {
       token: params.userToken,
       apiVersion: params.apiVersion,
@@ -291,7 +351,7 @@ export async function createUserForkContentPr(params: {
 
   if (existingBranch) {
     await githubJson(
-      `https://api.github.com/repos/${user.login}/${upstream.repo}/git/refs/${encodedBranch}`,
+      `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/git/refs/${encodedBranch}`,
       {
         method: "PATCH",
         token: params.userToken,
@@ -302,7 +362,7 @@ export async function createUserForkContentPr(params: {
     );
   } else {
     await githubJson(
-      `https://api.github.com/repos/${user.login}/${upstream.repo}/git/refs`,
+      `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/git/refs`,
       {
         method: "POST",
         token: params.userToken,
@@ -316,15 +376,16 @@ export async function createUserForkContentPr(params: {
     );
   }
 
+  const encodedTargetPath = encodeContentPath(params.targetPath);
   const existingFile = await githubJsonOrNull<{ sha?: string }>(
-    `https://api.github.com/repos/${user.login}/${upstream.repo}/contents/${params.targetPath}?ref=${encodeURIComponent(params.branchName)}`,
+    `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/contents/${encodedTargetPath}?ref=${encodeURIComponent(params.branchName)}`,
     {
       token: params.userToken,
       apiVersion: params.apiVersion,
     },
   );
   await githubJson(
-    `https://api.github.com/repos/${user.login}/${upstream.repo}/contents/${params.targetPath}`,
+    `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/contents/${encodedTargetPath}`,
     {
       method: "PUT",
       token: params.userToken,
@@ -339,7 +400,7 @@ export async function createUserForkContentPr(params: {
     },
   );
 
-  const head = `${user.login}:${params.branchName}`;
+  const head = `${forkRepo.owner}:${params.branchName}`;
   const existingPrs = await githubJson<
     Array<{ number: number; html_url: string }>
   >(

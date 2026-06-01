@@ -254,10 +254,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "cf3ec648f0dd4808a709afca8306947b6be5c9bc18e2b481cdf0436e846fe9e3",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://github.com/openclaw/openclaw",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx",
+      "https://github.com/openclaw/openclaw/blob/main/README.md",
+      "https://github.com/openclaw/openclaw/blob/main/CONTRIBUTING.md"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",

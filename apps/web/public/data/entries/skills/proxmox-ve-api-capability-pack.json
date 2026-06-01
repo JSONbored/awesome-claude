@@ -256,10 +256,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "0dd1737529e1488f32e951bd9543fd8cd433619c6dc3547f266e56e8b9bb9be8",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://pve.proxmox.com/mediawiki/index.php?title=Proxmox_VE_API",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/proxmox-ve-api-capability-pack.mdx",
+      "https://pve.proxmox.com/wiki/Main_Page",
+      "https://pve.proxmox.com/pve-docs/"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-10",

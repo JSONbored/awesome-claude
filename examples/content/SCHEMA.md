@@ -76,9 +76,14 @@ pnpm build
 
 ## Submission workflow
 
-- Use `/submit` first for free Claude resources. The public preflight checks category fields, required copyable assets, slug shape, local package requests, and affiliate/referral URLs.
+- Use `/submit` first for free Claude resources. The public preflight checks:
+  - Category fields
+  - Required copyable assets
+  - Slug shape
+  - Local package requests
+  - Affiliate/referral URLs
 - Use direct pull requests when you are comfortable adding MDX directly and running the full gate.
-- Fully valid, source-backed, non-artifact PRs may open a maintainer-owned import PR after gates pass. Maintainers still review before merge.
+- Fully valid, source-backed, non-artifact PRs may trigger the gate to open a maintainer-owned import PR after passing checks. Maintainers still review before merge.
 - Tool/app/service promotions, listing claims, and jobs use the D1-backed website lead forms, not free content submissions.
 
 For vote-state sync checks:

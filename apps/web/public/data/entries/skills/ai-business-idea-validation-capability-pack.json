@@ -245,10 +245,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "9955465ac6dea7ab8837ab2ad18bf6a53f6635c72c85c7cff24025a9efbd8cfe",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://www.ycombinator.com/library",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/ai-business-idea-validation-capability-pack.mdx",
+      "https://www.lennysnewsletter.com/",
+      "https://www.indiehackers.com/"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",

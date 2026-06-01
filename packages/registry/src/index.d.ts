@@ -504,15 +504,6 @@ export type SubmissionFieldSpec = {
   options?: string[];
 };
 
-export type IssueTemplateSpec = {
-  schemaVersion: number;
-  category: string;
-  template?: string;
-  labels: string[];
-  title: string;
-  fields: SubmissionFieldSpec[];
-};
-
 export type SubmissionIssueDraft = {
   title: string;
   body: string;
@@ -1288,9 +1279,6 @@ export function buildSubmissionFieldModel(category: string): {
   template?: string;
   fields: SubmissionFieldSpec[];
 } | null;
-export function buildIssueTemplateSpec(
-  category: string,
-): IssueTemplateSpec | null;
 export function buildSubmissionSpecs(): Record<string, unknown>;
 export const CATEGORY_SCHEMAS: Record<
   string,

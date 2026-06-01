@@ -50,6 +50,29 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
+function assertSubmitUrl(value) {
+  let url;
+  try {
+    url = new URL(String(value || ""));
+  } catch {
+    throw new Error(
+      "build_submission_urls did not return an absolute submit URL.",
+    );
+  }
+  assert(
+    url.protocol === "https:",
+    "build_submission_urls submit URL must use HTTPS.",
+  );
+  assert(
+    url.origin === "https://heyclau.de",
+    "build_submission_urls submit URL used the wrong origin.",
+  );
+  assert(
+    url.pathname === "/submit",
+    "build_submission_urls did not return the submit URL.",
+  );
+}
+
 function assertSafetyMetadataShape(payload, label) {
   assert(
     Array.isArray(payload?.safetyNotes),
@@ -327,10 +350,7 @@ async function validateMcpTools(endpointUrl, options = {}) {
       }),
     );
     assert(urls.ok === true, "build_submission_urls did not return ok.");
-    assert(
-      String(urls.submitUrl || "").includes("/submit"),
-      "build_submission_urls did not return the submit URL.",
-    );
+    assertSubmitUrl(urls.submitUrl);
 
     if (toolNames.includes("prepare_submission_draft")) {
       const prepared = parseToolResult(

@@ -15,6 +15,14 @@ export type GateDecision = {
   importJob?: Record<string, unknown>;
 };
 
+const VERDICT_HEADLINES: Record<GateVerdict, string> = {
+  import: "Accepted for maintainer import.",
+  request_changes: "Changes requested.",
+  close: "Closed by the submission gate.",
+  manual: "Routed to manual maintainer review.",
+  ignore: "No gate action needed.",
+};
+
 export function markerComment(
   decision?: GateDecision,
   marker = DEFAULT_REVIEW_MARKER,
@@ -28,23 +36,14 @@ export function markerComment(
     ].join("\n");
   }
 
-  const headline =
-    decision.verdict === "import"
-      ? "Accepted for maintainer import."
-      : decision.verdict === "request_changes"
-        ? "Changes requested."
-        : decision.verdict === "close"
-          ? "Closed by the submission gate."
-          : decision.verdict === "manual"
-            ? "Routed to manual maintainer review."
-            : "No gate action needed.";
+  const headline = VERDICT_HEADLINES[decision.verdict];
 
   return [marker, headline, "", decision.summary].join("\n");
 }
 
 export function defaultManualDecision(
   reason = "Private corpus review is not configured.",
-) {
+): GateDecision {
   return {
     verdict: "manual" as const,
     summary: `${reason} A maintainer needs to review category fit, source truth, duplicate history, safety/privacy notes, and provenance before import.`,

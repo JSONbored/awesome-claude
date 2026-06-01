@@ -3,6 +3,8 @@ FROM node:24-bookworm
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates git openssh-client \
   && rm -rf /var/lib/apt/lists/* \
+  && corepack enable \
+  && corepack prepare pnpm@11.4.0 --activate \
   && groupadd --system runner \
   && useradd --system --gid runner --home-dir /runner --shell /usr/sbin/nologin runner
 

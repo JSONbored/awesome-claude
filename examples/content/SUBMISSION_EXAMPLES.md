@@ -4,7 +4,7 @@ Use these examples to decide whether a submission belongs in the free
 HeyClaude content review flow.
 
 Start with the [Submit page](https://heyclau.de/submit) or the
-[GitHub pull request list](https://github.com/JSONbored/awesome-claude/pulls).
+[HeyClaude contribution guide](https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md).
 Use [SCHEMA.md](SCHEMA.md) for field requirements and
 [package-security-policy.md](../../docs/package-security-policy.md) for ZIP and
 MCPB handling.

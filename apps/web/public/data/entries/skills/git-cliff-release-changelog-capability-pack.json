@@ -245,10 +245,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "88297534195c8e594486b5e5c230f5c99b1053118e534e7dbf598514e79a4741",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://git-cliff.org/docs/",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/git-cliff-release-changelog-capability-pack.mdx",
+      "https://www.conventionalcommits.org/en/v1.0.0/",
+      "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",

@@ -118,7 +118,10 @@ function buildPrDraft(githubUrl: string, fields: Record<string, string>) {
   const draft = buildSubmissionIssueDraft(fields);
   let pullsUrl: URL;
   try {
-    pullsUrl = new URL(`${githubUrl.replace(/\/$/, "")}/pulls`);
+    const repoUrl = new URL(githubUrl);
+    const [owner, repo] = repoUrl.pathname.split("/").filter(Boolean);
+    if (!owner || !repo) throw new Error("Missing GitHub owner/repo path.");
+    pullsUrl = new URL(`/${owner}/${repo.replace(/\.git$/, "")}/pulls`, repoUrl.origin);
   } catch {
     return {
       pullRequestUrl: "",

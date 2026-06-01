@@ -5,7 +5,10 @@ import {
   buildContributorMdx,
   draftFieldsFromBody,
 } from "../apps/submission-gate/src/drafts";
-import { buildGitHubAppAuthorizeUrl } from "../apps/submission-gate/src/github";
+import {
+  buildGitHubAppAuthorizeUrl,
+  createGitHubAppJwt,
+} from "../apps/submission-gate/src/github";
 import {
   decryptText,
   encryptText,
@@ -69,6 +72,18 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
+  it("caps generated branch names while keeping the full target slug", () => {
+    const target = buildDraftTarget(
+      { category: "skills", name: "A".repeat(240) },
+      "submission-gate-pilot",
+    );
+
+    expect(target.slug).toHaveLength(120);
+    expect(target.branchName.length).toBeLessThanOrEqual(120);
+    expect(target.branchName).toMatch(/^heyclaude\/submit-skills-/);
+    expect(target.targetPath).toBe(`content/skills/${target.slug}.mdx`);
+  });
+
   it("accepts nested or flat draft payloads from website tooling", () => {
     expect(
       draftFieldsFromBody({
@@ -100,6 +115,38 @@ describe("Cloudflare submission gate helpers", () => {
     expect(mdx).toContain('submittedBy: "@contributor"');
     expect(mdx).not.toContain("README.md");
     expect(mdx).not.toContain("apps/web/public/data");
+    expect(mdx).toContain(
+      "Useful source-backed skill.\n\n## Safety\n\nReview scripts before running.",
+    );
+  });
+
+  it("escapes contributor body text before writing MDX", () => {
+    const mdx = buildContributorMdx({
+      category: "guides",
+      name: "Unsafe MDX",
+      description: "<script>{danger}</script>",
+      guide_content: "import X from 'unsafe'\n<Component />",
+      safety_notes: "<Danger /> {run}",
+      privacy_notes: "[track](javascript:alert(1))",
+    });
+
+    const body = mdx.split("---\n").slice(2).join("---\n");
+    expect(body).not.toContain("<script>");
+    expect(body).not.toContain("<Component");
+    expect(body).not.toContain("{run}");
+    expect(body).toContain("&lt;script&gt;&#123;danger&#125;&lt;/script&gt;");
+    expect(body).toContain("\\import X from 'unsafe'");
+  });
+
+  it("rejects PKCS#1 GitHub App private keys with a conversion hint", async () => {
+    await expect(
+      createGitHubAppJwt({
+        appId: "123",
+        privateKeyPem:
+          "-----BEGIN RSA PRIVATE KEY-----\nZmFrZQ==\n-----END RSA PRIVATE KEY-----",
+        now: 1_780_300_000_000,
+      }),
+    ).rejects.toThrow("GITHUB_APP_PRIVATE_KEY must be PKCS#8 PEM");
   });
 
   it("signs internal import callbacks with the same HMAC verifier", async () => {
@@ -119,6 +166,7 @@ describe("Cloudflare submission gate helpers", () => {
     const encrypted = await encryptText("handoff-secret", "ghu_example");
 
     expect(encrypted).not.toContain("ghu_example");
+    expect(encrypted.split(".")).toHaveLength(3);
     await expect(decryptText("handoff-secret", encrypted)).resolves.toBe(
       "ghu_example",
     );

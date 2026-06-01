@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-01T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -98,7 +98,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-content-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-content-submission-factory",
-      "artifactHash": "0e679bdde4828fef36c37d48fa58158bd254e3028c6440f4e94ef6a1d2c83ff7"
+      "artifactHash": "7689a8dc031dc2c7ebda72f3781296a708175b5a782d118c43037eabcd30076d"
     },
     {
       "key": "mcp:zyntra-mail",
@@ -410,7 +410,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-skill-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-skill-submission-factory",
-      "artifactHash": "d86b8abf2b4b9c65ad119c3578b692bd4e2068725f68332c3e23b57efbae855e"
+      "artifactHash": "f0c85a77632e031964e3f57c5820e9bd710033812fedce003b29beda1bc91097"
     },
     {
       "key": "tools:hyperbrowser",
@@ -794,7 +794,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/ai-business-idea-validation-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ai-business-idea-validation-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ai-business-idea-validation-capability-pack",
-      "artifactHash": "0fda81c8d6da3d11cd90c636621fbfcf3904c6def4fe9f714a7e3addb3c2a64b"
+      "artifactHash": "960b335f14409c33fa79774c8f9d13aa7886769d86297c6ebfd8627b88cf7253"
     },
     {
       "key": "skills:coderabbit-lite-pr-review-capability-pack",
@@ -806,7 +806,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/coderabbit-lite-pr-review-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/coderabbit-lite-pr-review-capability-pack",
-      "artifactHash": "cb6bab4c0b836b939a60e7e8d767e0e3098d9959b207da57bb23ba7785935c5f"
+      "artifactHash": "9d846393d87c2d0bb6df2180468d21cfc5b77b60f6562a7f461cb1dc0df58034"
     },
     {
       "key": "skills:codex-automations-orchestrator-capability-pack",
@@ -818,7 +818,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-automations-orchestrator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-automations-orchestrator-capability-pack",
-      "artifactHash": "58cae3ad5bf5e6fa80808f6650c2612b51d225e522ee06fc8a5f0613adfb7774"
+      "artifactHash": "0fee9607ead070dac313c1d95d5d83f8be5c74dc039b7593ee2025d4487635d3"
     },
     {
       "key": "skills:codex-plugin-creator-capability-pack",
@@ -830,7 +830,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-plugin-creator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-plugin-creator-capability-pack",
-      "artifactHash": "5f77db8e2f55d19f06f7d9eabaaea84a85b3df7da4f65bfffb0ba3b6d6cbcc09"
+      "artifactHash": "19979e31f2693dedeb406e7ac028b2627481b523048e14410441e5897bffdf1c"
     },
     {
       "key": "skills:git-cliff-release-changelog-capability-pack",
@@ -842,7 +842,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/git-cliff-release-changelog-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/git-cliff-release-changelog-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/git-cliff-release-changelog-capability-pack",
-      "artifactHash": "b42986df790c5797fdb9508173fc2e59856f04c1cc055cd32f1e1d34ffcb454e"
+      "artifactHash": "fb561a55b80ba00ec008083dae78fdb1055724930b4738155e55cef07fa2908f"
     },
     {
       "key": "skills:husky-commit-governance-capability-pack",
@@ -854,7 +854,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/husky-commit-governance-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/husky-commit-governance-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/husky-commit-governance-capability-pack",
-      "artifactHash": "3f25885f40119fa2ad0b29c4663e1ab8de9f3b457ae1203a7d640577716e1157"
+      "artifactHash": "a7a33c18169b79facb56300b6368ee484ebf2339cb58a1d587b3c03a28a7c5ba"
     },
     {
       "key": "skills:n8n-operations-resilience-capability-pack",
@@ -866,7 +866,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/n8n-operations-resilience-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/n8n-operations-resilience-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/n8n-operations-resilience-capability-pack",
-      "artifactHash": "ebacb301f57aa7ae03280ba4d277dcfcf6e82b33e40ff47e90f97436b8a5afd6"
+      "artifactHash": "5070520fb6c0835de0759f1b0ce5db46d5cc2485a2b8222ccb4d6569a8abd286"
     },
     {
       "key": "skills:openclaw-skill-authoring-factory-capability-pack",
@@ -878,7 +878,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-skill-authoring-factory-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-skill-authoring-factory-capability-pack",
-      "artifactHash": "f951eaa03d75656e4dd7414d7444a446ddfe3bc0c0954257c7b73674da61fdb8"
+      "artifactHash": "5a44b6c646ae1a97daff8b3503c3a0a4a039959e54bf33e46d956fe895d9f400"
     },
     {
       "key": "skills:unraid-ca-template-authoring-capability-pack",
@@ -890,7 +890,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/unraid-ca-template-authoring-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/unraid-ca-template-authoring-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/unraid-ca-template-authoring-capability-pack",
-      "artifactHash": "1388865dc9439bcdc8e79ea557578b611dd0f6f6cbe94f32cbb5bb4bf293e339"
+      "artifactHash": "fae68838b713fb0f3e079290cd14eb5f0557e4c7128adc0f7b6c9e3532d176a8"
     },
     {
       "key": "skills:zero-budget-saas-launch-capability-pack",
@@ -902,7 +902,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/zero-budget-saas-launch-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/zero-budget-saas-launch-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/zero-budget-saas-launch-capability-pack",
-      "artifactHash": "464c6f3c1d73ca38127a19a869b749702a1a105d6422f7a3fde80bbaae60c7fe"
+      "artifactHash": "65b74abaca9ef09f95222581d9db223039b501c82a19810a2164c75bdeb68c13"
     },
     {
       "key": "skills:agent-evals-regression-gate",
@@ -974,7 +974,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/cloudflare-workers-d1-kv-r2-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/cloudflare-workers-d1-kv-r2-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/cloudflare-workers-d1-kv-r2-capability-pack",
-      "artifactHash": "8ef41a2bb5e91d76a2c1a1bacdfb43b211feec627922ee3393d8ac79d5186311"
+      "artifactHash": "9c80aea27255ffa212f092f824c2494e7f75ddc36a1b7da30016993066880b80"
     },
     {
       "key": "skills:docker-compose-production-blueprints",
@@ -998,7 +998,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/ethereum-base-smart-contract-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/ethereum-base-smart-contract-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/ethereum-base-smart-contract-security-capability-pack",
-      "artifactHash": "fc7e8a5f6a55dd4f1f9b132331b9c8f82a731b445c3191288f6ec7b024b4234a"
+      "artifactHash": "240b7aac1e4f721a85237fda78b34a70cfcc9634dd1eaaed19a140f8732e5c77"
     },
     {
       "key": "skills:ethereum-solidity-security-foundry",
@@ -1022,7 +1022,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/github-actions-secure-cicd-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/github-actions-secure-cicd-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/github-actions-secure-cicd-capability-pack",
-      "artifactHash": "596f400f97a53c408ee2d3201ee0b6507fa6414e21a6678db5a786e9ae661196"
+      "artifactHash": "ff321872aae000fdfdaf2ccb7eb4932aeac86d681face19a34024d6b456e3488"
     },
     {
       "key": "skills:google-workspace-gemini-automation",
@@ -1058,7 +1058,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/mcp-server-authoring-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/mcp-server-authoring-security-capability-pack",
-      "artifactHash": "f50015865e97a584daae0f468e985dc6319811c1eb96d048a2de6247f1076a59"
+      "artifactHash": "75ed53006cfcf5b1f768706380ad83e9ca3e8be93ad2e49ed4a732d4431f44e2"
     },
     {
       "key": "skills:mcp-server-security-hardening",
@@ -1118,7 +1118,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/n8n-production-security-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/n8n-production-security-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/n8n-production-security-capability-pack",
-      "artifactHash": "e9cc1c999de81c288f8b80a5986da0c977b39e788a5e51286eeed216a91a3b43"
+      "artifactHash": "bab5548103a0e3a01244f8311e185631119aa3c501c8059c92920e1460755987"
     },
     {
       "key": "skills:openclaw-agent-ops-hardening",
@@ -1142,7 +1142,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-operator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-operator-capability-pack",
-      "artifactHash": "aefa1704370fd57c1178f5716173746df50885be10a8d78a3a73dcff3b0e49bc"
+      "artifactHash": "3290a9aa29c607da3ba570c3d82455e56ce962718993c5e470e53e64fa7e4bd1"
     },
     {
       "key": "skills:opennext-cloudflare-capability-pack",
@@ -1154,7 +1154,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/opennext-cloudflare-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/opennext-cloudflare-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/opennext-cloudflare-capability-pack",
-      "artifactHash": "8b0ac0c227d19f032017e72756e424c1e75be0ae8a04ce3670b0bd25feb78f48"
+      "artifactHash": "cc81393ae12e6d2b4a185bae13d9eb71c97ddc78f334498ae16c35d1fbab2176"
     },
     {
       "key": "skills:pagespeed-insights-optimizer",
@@ -1202,7 +1202,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/proxmox-ve-api-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/proxmox-ve-api-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/proxmox-ve-api-capability-pack",
-      "artifactHash": "3ae2c57eead0c585acc1fb74d75469c444c3ea8e25a2f9fd1dbc435472773822"
+      "artifactHash": "a8ab68c3834281a91eea154bfdefcc2a57d8202a5b9488354e3ec3eb67063458"
     },
     {
       "key": "skills:proxmox-ve-api-orchestrator",
@@ -1226,7 +1226,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/raycast-extension-dev-publish-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/raycast-extension-dev-publish-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/raycast-extension-dev-publish-capability-pack",
-      "artifactHash": "bfaa1e5ffdbf705fc4720c984e5e12e5f8c0381618eff063b4018be851d2d45e"
+      "artifactHash": "a6a89b5d6e6403cd98ac18bf6b6cb31effe8e00667e6a13b26fbb525f39b0254"
     },
     {
       "key": "skills:saas-pricing-experimentation-engine",
@@ -1262,7 +1262,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/unraid-api-v2-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/unraid-api-v2-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/unraid-api-v2-capability-pack",
-      "artifactHash": "09d8a52adae0fc86f59cc9e21b5bee6db14ac8ca4200d174a75ba3776128eefe"
+      "artifactHash": "fe7d55254d2e2e3d5a43e1ca2ec5d3ba731af469256a22f5551583d9644727cd"
     },
     {
       "key": "mcp:heyclaude-mcp",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "78369a016e1c21ee47cff8dc507edb09030356e2ea2363b1baadfe052094d378"
+  "signature": "c8cc9063a9bb9efa03acf8a0e00e87519b45558bbb2484bcc41ab866370f616a"
 }

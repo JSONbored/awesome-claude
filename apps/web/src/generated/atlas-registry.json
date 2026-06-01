@@ -1,192 +1,192 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-01T00:00:00.000Z",
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2385288,
-      "sha256": "38996ffb78b2fb94c432976d95894ffb9cb67b3f986fe940d7e598b379ed251d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 2388345,
+      "sha256": "94395231d6b4acc2a00edb6fdfff642ff0860e800658c2a67c9f94d771906962",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/search-index.json",
-      "bytes": 938926,
-      "sha256": "5e7fef0d702843f8d6b2c766e8055a8387cb6b41a8e04c1b6ce6052d23cf6bc4",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 941963,
+      "sha256": "3f0e8a482c7f6d65da9421ce76513e2c17a7fb2e5a710e73a54ed65ef7735c06",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/raycast-index.json",
       "bytes": 1238941,
-      "sha256": "8dffbb63f395e892363257f41dae2a3eb60b1b64c43c29d81588746111ce2b27",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "52b8ec80ef0e0e325ca966ac3b6b79e0786fef684f54050ebb0eaefd0230fb89",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/ecosystem-feed.json",
-      "bytes": 750677,
-      "sha256": "583cc7a3ffdf75aefbc86e50b16eec5c19dc5234c2e9ad5df1cfcd9344d72a5b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 753714,
+      "sha256": "07a7513be1857485b2afef1657da5c027c14391bc053d1c59b0e512ab7e12ebf",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/mcp-registry-feed.json",
       "bytes": 45047,
       "sha256": "8502e3c73b63c720311d21b02d2ad4fc7db7ce95314698cd7864a5e45718ab2b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/plugin-export-feed.json",
       "bytes": 255599,
-      "sha256": "e6b49588535513adddcfa7c391db03e549d59ea4e9419dfd5682f96070041bba",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "e4195296602ec5d20ea5aaba85a33e81fe084c1c05466d0ee04e4cf14a4b649a",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "4aecd437be7f8ddb1f58871ebf5ae7098d39328fcd1887f3783c736f4c462390",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "5ee53d470711e861cf7a49972321950acae1bb1e534eb2646d49be680977a14d",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/registry-trust-report.json",
       "bytes": 309759,
-      "sha256": "c282ff6b568645a0c4042352802bb85d75dc3de7b5104482a8f007f484525ea1",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "c937c3811b0559f411b18117679cc64ff95896994af49893480414dfce95d19a",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/index.json",
       "bytes": 3139,
-      "sha256": "856105f5f0477024474388e409f9800bce6eade03b4bfa43bb740d679823abe6",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "1fe13670cbbf546f5fdd0651c9537550a82a1db179e7c82178342f7abc95b2ca",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/submission-spec.json",
       "bytes": 38633,
       "sha256": "89645f3a55781792bfe0dfc3a79436868713f53d004ec5f6809ba7ff957f6ef6",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-report.json",
       "bytes": 342198,
       "sha256": "649f82212f4d52e8c58e82a8060b543eb72b8f840f0294022dd6492b5d22b737",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-prompts.json",
       "bytes": 15255,
       "sha256": "4b4bf38caf0b9536f2965ae8a0834dc688384795eeb7d0eb9bb8ad5ebb8f585d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/jsonld-snapshots.json",
       "bytes": 1260891,
-      "sha256": "82261b55cf628db5baa8886698b28ccfe1d00f83149d330aa3f8ba6a1509c0c9",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "7e2bf996cedba9b5d526f8afd4991fa5004b1211947d0c0a4e47e5c59ac0c317",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3996959,
-      "sha256": "8ad74a90056f569a045abb1d61956b9c50a8fc6fe63dbe93cb7e55c40d2162bd",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 3997002,
+      "sha256": "e25b3d142c569a776f86cf121df9aa224a18c6f9a71cea22231b1f4da4be9809",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/agents.json",
       "bytes": 686078,
-      "sha256": "aa66801947a758564187b38580dc49c8e15e02d84756b557a97afa553e086ced",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "54592b52ff7377f0da93c05aa0c2d3e0b3d694f317b7d4289b52b489a4e7623c",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/mcp.json",
       "bytes": 226722,
       "sha256": "f6922a8b2523751f0756a62b02948108e0d01cc5d342ef0a53beb1a9c54d25bb",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/tools.json",
       "bytes": 153275,
       "sha256": "b179ca1607f6de5bc0b62d29b809a1c66fc7208d125ec2b5c8a899aa9a39f774",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/skills.json",
-      "bytes": 459276,
-      "sha256": "ebb67d444d51ac1c51d6163a5c07e139e0b0c42f12fe3b074819a8bbc306daa3",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462333,
+      "sha256": "8794daf822cb068ef9417477b15ab2c1086c1e5376319ff70d2c337718ea4887",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/rules.json",
       "bytes": 319777,
-      "sha256": "3e8b6bd11958c5086c841677274a042f2aee8e7b162309a3f20514e75b2574b9",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "78fe11e2d58008f716c964e79b5eda3141d53e175a9cb1657aa8d34f4ca9986d",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/commands.json",
       "bytes": 83627,
-      "sha256": "ec81a9ef5b2df8e34ac4b487c937fb3ed8258a3b8ec7268e77772b6fae618fee",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "93cbebe1048e147f0021e826fecc19cdc9999b7997126be6e161e81ba407afe9",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/hooks.json",
       "bytes": 253282,
       "sha256": "13c5ffd760fb276aa21581b4a82d176603fd30f75cfd3c095e7e81885b5be5cc",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/guides.json",
       "bytes": 59203,
-      "sha256": "0dc9916f90ec03f8cd765ae76738d5701ad6b1fa1d04aba0e082a70b0a41c807",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "aa0b6a6e775c9a21e25b3abc9b583cd9aecebeaf68bf9f171784239138ed930a",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/collections.json",
       "bytes": 39536,
-      "sha256": "64b6d4599861ba1a611355b92ae66806f12e9427b0f93e2f64e5343754843f7b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "bac2d3a60172796ca54ad060b6a4b113eb4c036ccd5ccfe3eadbea8f6fb80cff",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/statuslines.json",
       "bytes": 105934,
-      "sha256": "1f3654586fe6471cfea352ddb9ec0e5ee04f7c2272cfbcbf0d28ea93ea85c200",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "3e46ad93d5d5d0832f513210e7c39664cba997559204c9344671a79392e5f09e",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/claude.json",
-      "bytes": 459304,
-      "sha256": "02def98ca23f07b56dea534da5ecb1a2811b02dd7f6543cd2e7d2fa0ce015086",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462361,
+      "sha256": "09ee69704d4b6f14a567d931d350400f8b3110288e906c78222d0b79de84a059",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
-      "bytes": 459302,
-      "sha256": "f72b29cdf945774e06af389ec81333068fcd16832c424dad1c693adfccff229e",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462359,
+      "sha256": "3981a36b650d7fb16ea2203bf79433bf80df6716b7b526746671c60c9e347884",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
-      "bytes": 459308,
-      "sha256": "db0c576a3f158e80d56ed316a0b918c138486c7905b59b6a184d3df1e14957b0",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462365,
+      "sha256": "28c68ca191532650df4c899e6590c380058fa8cb332b75bf393fcecc4cb9aaaf",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
-      "bytes": 459304,
-      "sha256": "c4d97e9041039f117dcf4f2d2057706eca5ecd980ffad21ebb10dc13a9b761e2",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462361,
+      "sha256": "2ab2065e1ccfc269fed933c9dc2e7bf34fba11ccdd83d6f4511962d93da1933e",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
-      "bytes": 459304,
-      "sha256": "77c659b0506ed03b4e669a7f5e6ddfa142f4656ad4956b2e6a87e2af772afca4",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462361,
+      "sha256": "f122ee15196257c1a5fdf688fe551de760705b9c9563ece99173265ff065e9c6",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
-      "bytes": 459320,
-      "sha256": "eb82c808c85600772a688b2a73358fe3e9f2cb2666706f01369c05250633a321",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462377,
+      "sha256": "d1747b4414b8371f0e5cf397d61080bec58ab4a9a1b9f885d9f97aaa975a75c4",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "d6b73c9db5093c6b1515da65adc00b33a3d82d009763699401d70f61162b138f",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "281ce57e46c240802dc50525213f8c67de9662cd996701ffb64d30e4b293f8df",
+      "builtAt": "2026-06-01T00:00:00.000Z"
     }
   ],
   "entries": [
@@ -11143,47 +11143,47 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-content-submission-factory.mdc",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-01"
         }
       ],
       "skillType": "general",
       "skillLevel": "advanced",
       "verificationStatus": "validated",
-      "verifiedAt": "2026-04-30",
+      "verifiedAt": "2026-06-01",
       "retrievalSources": [
         "https://heyclau.de/submit",
-        "https://github.com/JSONbored/awesome-claude/pulls"
+        "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
       ],
       "testedPlatforms": ["Claude", "Codex", "Windsurf", "Gemini", "Cursor", "Generic AGENTS"],
       "readingTime": 6,
@@ -23397,7 +23397,7 @@
       "title": "HeyClaude Content Submission Factory",
       "dateAdded": "2026-04-30",
       "type": "added",
-      "artifactHash": "0e679bdde4828fef36c37d48fa58158bd254e3028c6440f4e94ef6a1d2c83ff7"
+      "artifactHash": "7689a8dc031dc2c7ebda72f3781296a708175b5a782d118c43037eabcd30076d"
     },
     {
       "category": "mcp",

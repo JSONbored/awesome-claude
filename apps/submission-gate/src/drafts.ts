@@ -1,4 +1,13 @@
-export type SubmissionDraftFields = Record<string, unknown>;
+export interface SubmissionDraftFields {
+  category?: unknown;
+  slug?: unknown;
+  name?: unknown;
+  title?: unknown;
+  description?: unknown;
+  card_description?: unknown;
+  contact_email?: unknown;
+  [key: string]: unknown;
+}
 
 const SUPPORTED_CATEGORIES = new Set([
   "agents",
@@ -12,9 +21,25 @@ const SUPPORTED_CATEGORIES = new Set([
   "statuslines",
   "tools",
 ]);
+const MAX_BRANCH_NAME_LENGTH = 120;
+const MAX_SOURCE_CONTENT_CHARS = 20_000;
+const SUBMISSION_BRANCH_PREFIX = "heyclaude/submit-";
 
 function text(value: unknown) {
   return String(value ?? "").trim();
+}
+
+function mdxPlainText(value: unknown) {
+  return text(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/{/g, "&#123;")
+    .replace(/}/g, "&#125;")
+    .replace(/\\/g, "\\\\")
+    .replace(/([`*_[\]()!])/g, "\\$1")
+    .replace(/^(import|export)(\s)/gim, "\\$1$2")
+    .replace(/^(#+)/gm, "\\$1");
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -40,6 +65,29 @@ export function normalizeCategory(value: unknown) {
   return SUPPORTED_CATEGORIES.has(category) ? category : "";
 }
 
+function shortHash(value: string) {
+  let hash = 0x811c9dc5;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(36).padStart(8, "0").slice(0, 8);
+}
+
+function submissionBranchName(category: string, slug: string) {
+  const prefix = `${SUBMISSION_BRANCH_PREFIX}${category}-`;
+  const full = `${prefix}${slug}`;
+  if (full.length <= MAX_BRANCH_NAME_LENGTH) return full;
+  const suffix = `-${shortHash(slug)}`;
+  const available = MAX_BRANCH_NAME_LENGTH - prefix.length - suffix.length;
+  if (available < 16) {
+    throw new Error(
+      "Draft category leaves too little room for a safe branch name.",
+    );
+  }
+  return `${prefix}${slug.slice(0, available).replace(/-+$/g, "")}${suffix}`;
+}
+
 export function buildDraftTarget(
   fields: SubmissionDraftFields,
   baseRef: string,
@@ -50,7 +98,7 @@ export function buildDraftTarget(
     throw new Error("Draft requires a supported category and slug.");
   }
 
-  const branchName = `heyclaude/submit-${category}-${slug}`;
+  const branchName = submissionBranchName(category, slug);
   return {
     category,
     slug,
@@ -61,7 +109,7 @@ export function buildDraftTarget(
 }
 
 function yamlScalar(value: unknown) {
-  const normalized = text(value).replace(/\r\n/g, "\n");
+  const normalized = text(value).replace(/\r\n/g, "\n").replace(/\n/g, "\\n");
   return JSON.stringify(normalized);
 }
 
@@ -79,9 +127,18 @@ function lines(value: unknown) {
 
 function oneLine(value: unknown, fallback = "") {
   const normalized = text(value || fallback).replace(/\s+/g, " ");
-  return normalized.length <= 160
+  const codePoints = Array.from(normalized);
+  return codePoints.length <= 160
     ? normalized
-    : `${normalized.slice(0, 157).trimEnd()}...`;
+    : `${codePoints.slice(0, 157).join("").trimEnd()}...`;
+}
+
+function validGitHubLogin(value: string) {
+  return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$/.test(value);
+}
+
+function boundedText(value: unknown, maxChars: number) {
+  return text(value).slice(0, maxChars);
 }
 
 export function buildContributorMdx(
@@ -91,21 +148,29 @@ export function buildContributorMdx(
   const target = buildDraftTarget(fields, "main");
   const title = text(fields.name || fields.title);
   const description = text(fields.description || fields.card_description);
-  const submittedBy = githubLogin
-    ? `@${githubLogin}`
+  const safeGitHubLogin =
+    githubLogin && validGitHubLogin(githubLogin) ? githubLogin : "";
+  const submittedBy = safeGitHubLogin
+    ? `@${safeGitHubLogin}`
     : text(fields.contact_email || "website");
-  const submittedByUrl = githubLogin ? `https://github.com/${githubLogin}` : "";
+  const submittedByUrl = safeGitHubLogin
+    ? `https://github.com/${safeGitHubLogin}`
+    : "";
   const tags = text(fields.tags)
     .split(",")
     .map((tag) => tag.trim())
     .filter(Boolean)
     .slice(0, 8);
-  const sourceContent = text(
+  const sourceContent = boundedText(
     fields.full_copyable_content || fields.guide_content,
+    MAX_SOURCE_CONTENT_CHARS,
   );
   const safetyNotes = lines(fields.safety_notes);
   const privacyNotes = lines(fields.privacy_notes);
-  const body = [
+  const safeDescription = mdxPlainText(description);
+  const timestamp = new Date();
+  const submittedAt = timestamp.toISOString();
+  const frontmatter = [
     "---",
     `title: ${yamlScalar(title)}`,
     `slug: ${yamlScalar(target.slug)}`,
@@ -116,10 +181,10 @@ export function buildContributorMdx(
     `seoDescription: ${yamlScalar(fields.seo_description || oneLine(description))}`,
     `author: ${yamlScalar(fields.author || submittedBy)}`,
     submittedByUrl ? `authorProfileUrl: ${yamlScalar(submittedByUrl)}` : "",
-    `dateAdded: ${yamlScalar(new Date().toISOString().slice(0, 10))}`,
+    `dateAdded: ${yamlScalar(submittedAt.slice(0, 10))}`,
     `submittedBy: ${yamlScalar(submittedBy)}`,
     submittedByUrl ? `submittedByUrl: ${yamlScalar(submittedByUrl)}` : "",
-    `submittedAt: ${yamlScalar(new Date().toISOString())}`,
+    `submittedAt: ${yamlScalar(submittedAt)}`,
     tags.length ? `tags: [${tags.map(yamlScalar).join(", ")}]` : "tags: []",
     text(fields.brand_name)
       ? `brandName: ${yamlScalar(fields.brand_name)}`
@@ -185,22 +250,28 @@ export function buildContributorMdx(
       ? `disclosure: ${yamlScalar(fields.disclosure)}`
       : "",
     "---",
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const sourceLines = lines(sourceContent).map(mdxPlainText).slice(0, 200);
+  const safetyBody =
+    mdxPlainText(fields.safety_notes) || "Maintainer review required.";
+  const privacyBody =
+    mdxPlainText(fields.privacy_notes) || "Maintainer review required.";
+  const body = [
     "",
-    description,
+    safeDescription,
     "",
-    ...lines(sourceContent).slice(0, 200),
-    "",
+    ...(sourceLines.length ? [...sourceLines, ""] : []),
     "## Safety",
     "",
-    text(fields.safety_notes) || "Maintainer review required.",
+    safetyBody,
     "",
     "## Privacy",
     "",
-    text(fields.privacy_notes) || "Maintainer review required.",
+    privacyBody,
     "",
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
+  ].join("\n");
 
-  return `${body}\n`;
+  return `${frontmatter}\n${body}`;
 }

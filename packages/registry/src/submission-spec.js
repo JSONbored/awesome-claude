@@ -1,5 +1,4 @@
 import categorySpec from "./category-spec.json" with { type: "json" };
-import { submissionLabelsForCategory } from "./submission-labels.js";
 
 export const SUBMISSION_SPEC_SCHEMA_VERSION = 2;
 
@@ -321,27 +320,6 @@ export function buildSubmissionFieldModel(category) {
     description: spec.description,
     template: spec.template,
     fields,
-  };
-}
-
-export function buildIssueTemplateSpec(category) {
-  const model = buildSubmissionFieldModel(category);
-  if (!model) return null;
-
-  return {
-    schemaVersion: SUBMISSION_SPEC_SCHEMA_VERSION,
-    category,
-    template: model.template,
-    labels: submissionLabelsForCategory(category),
-    title: `Submit ${model.label.replace(/s$/, "")}: `,
-    fields: model.fields.map((field) => ({
-      id: field.id,
-      label: field.label,
-      type: field.type,
-      required: Boolean(field.required),
-      options: field.options,
-      render: field.render,
-    })),
   };
 }
 

@@ -254,10 +254,12 @@
     "packageTrust": "first-party",
     "packageChecksum": "7e3ee39f61507d249f0b0b5ec49c35c6fc076b5ca2d6f85174eec8664de00867",
     "checksumPresent": true,
-    "sourceUrlCount": 2,
+    "sourceUrlCount": 4,
     "sourceUrls": [
       "https://github.com/openai/codex",
-      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx"
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx",
+      "https://spec.modelcontextprotocol.io/specification/",
+      "https://www.rfc-editor.org/rfc/rfc5545"
     ],
     "sourceStatus": "available",
     "lastVerifiedAt": "2026-04-11",
