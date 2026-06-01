@@ -31,7 +31,7 @@ function runGh(args, options = {}) {
   });
   if (result.error?.code === "ENOENT") {
     throw new Error(
-      "GitHub CLI not found. Install gh and authenticate before running pnpm submission:queue:live.",
+      "GitHub CLI not found. Install gh and authenticate before running this legacy backlog-drain script.",
     );
   }
   if (result.status !== 0) {
@@ -60,12 +60,12 @@ function ensureGhAuth() {
   );
   if (result.error?.code === "ENOENT") {
     throw new Error(
-      "GitHub CLI not found. Install gh and authenticate before running pnpm submission:queue:live.",
+      "GitHub CLI not found. Install gh and authenticate before running this legacy backlog-drain script.",
     );
   }
   if (result.status !== 0) {
     throw new Error(
-      "GitHub CLI is not authenticated for github.com. Run gh auth login, then retry pnpm submission:queue:live.",
+      "GitHub CLI is not authenticated for github.com. Run gh auth login, then retry the legacy backlog-drain script.",
     );
   }
 }

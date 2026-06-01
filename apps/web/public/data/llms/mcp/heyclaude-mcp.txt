@@ -16,7 +16,7 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Last verified: 2026-04-30T02:43:14-06:00
 - Robots: indexable
 ## Summary
-Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build issue-first submission URLs through MCP.
+Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build PR-first submission URLs through MCP.
 ## Tags
 - heyclaude
 - mcp
@@ -35,8 +35,8 @@ and prepare reviewable content submissions.
 
 The server does not publish content, create GitHub issues, open pull requests,
 manage accounts, write local project files, or mutate editor configuration.
-Submission helpers validate drafts and generate prefilled HeyClaude/GitHub URLs
-for a human-reviewed issue-first workflow.
+Submission helpers validate drafts and generate prefilled HeyClaude submit URLs
+for a human-reviewed PR-first workflow.
 
 ## Tools
 - `search_registry`: search public registry entries by query, category, and platform.
@@ -45,10 +45,10 @@ for a human-reviewed issue-first workflow.
 - `get_install_guidance`: fetch install commands, config snippets, package links, and usage notes.
 - `get_platform_adapter`: fetch generated platform adapter content such as Cursor rule adapters for skills.
 - `list_distribution_feeds`: discover registry JSON, RSS, Atom, category, platform, and artifact feeds.
-- `get_submission_schema`: inspect category-specific submission fields and issue-template metadata.
+- `get_submission_schema`: inspect category-specific submission fields.
 - `validate_submission_draft`: validate a content submission draft without making write calls.
 - `search_duplicate_entries`: check for likely duplicate registry entries before submitting.
-- `build_submission_urls`: build prefilled HeyClaude submit and GitHub issue URLs.
+- `build_submission_urls`: build a prefilled HeyClaude submit URL.
 - `get_category_submission_guidance`: fetch category-specific contribution guidance and review expectations.
 
 ## Install
@@ -99,7 +99,7 @@ Show install guidance for mcp/github-mcp-server.
 ```
 
 ```text
-Validate this HeyClaude content submission draft and build a prefilled issue URL.
+Validate this HeyClaude content submission draft and build a PR-first submit URL.
 ```
 
 ```text
@@ -135,5 +135,5 @@ fields, unsafe URLs, likely duplicates, and the next review step.
 ### I need to publish content automatically
 
 That is intentionally outside the MCP v1 boundary. Use the generated submit URL
-or GitHub issue URL, then let the maintainer-reviewed import workflow handle
-accepted submissions.
+or PR draft, then let the maintainer-reviewed import workflow handle accepted
+submissions.

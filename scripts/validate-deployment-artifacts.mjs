@@ -193,13 +193,9 @@ try {
   if (!submissionSpec?.categories?.skills) {
     fail("/data/submission-spec.json must expose category submission schemas");
   }
-  if (
-    !submissionSpec?.issueTemplates?.skills?.labels?.includes(
-      "content-submission",
-    )
-  ) {
+  if (submissionSpec?.issueTemplates?.skills?.template) {
     fail(
-      "/data/submission-spec.json must expose generated issue template labels",
+      "/data/submission-spec.json must not expose public content issue templates",
     );
   }
 } catch (error) {
@@ -276,11 +272,9 @@ try {
   );
   if (
     submissionResult?.ok !== true ||
-    !String(submissionResult.githubIssueUrl || "").includes(
-      "template=submit-mcp.yml",
-    )
+    !String(submissionResult.submitUrl || "").includes("/submit")
   ) {
-    fail("/api/mcp build_submission_urls tool did not return issue URLs");
+    fail("/api/mcp build_submission_urls tool did not return submit URL");
   }
 } catch (error) {
   fail(error instanceof Error ? error.message : String(error));

@@ -443,7 +443,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       expect(prompts.prompts.map((prompt) => prompt.name)).toEqual([
         "find_best_asset",
         "prepare_submission",
-        "review_submission_before_issue",
+        "review_submission_before_pr",
         "install_asset_safely",
       ]);
 
@@ -966,7 +966,8 @@ describe("HeyClaude read-only MCP helpers", () => {
       },
       reviewModel: {
         autoMerge: false,
-        importPrRequiresApprovalLabel: ["accepted", "import-approved"],
+        prFirst: true,
+        importPrRequiresApprovalLabel: [],
       },
       artifactPolicy: {
         communityZipHostingAllowed: false,
@@ -1254,7 +1255,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       fs.readFileSync(path.join(dataDir, "submission-spec.json"), "utf8"),
     ) as {
       categories: Record<string, { fields: Array<{ id: string }> }>;
-      issueTemplates: Record<string, unknown>;
+      prIntake: { mode: string };
     };
 
     expect(Object.keys(submissionSpec.categories)).toEqual(
@@ -1269,11 +1270,8 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result).toMatchObject({
       ok: true,
       category: "skills",
-      schema: {
-        template: "submit-skill.yml",
-      },
-      issueTemplate: {
-        labels: expect.arrayContaining(["content-submission", "skills"]),
+      prIntake: {
+        mode: "github_app_user_fork_pr",
       },
     });
     expect(result.schema.fields.map((field: any) => field.id)).toEqual(
@@ -1308,31 +1306,28 @@ describe("HeyClaude read-only MCP helpers", () => {
       valid: true,
       category: "skills",
       slug: "example-submission-skill",
-      issuePreview: {
-        title: "Submit Skill: Example Submission Skill",
-        labels: expect.arrayContaining(["content-submission", "skills"]),
+      prPreview: {
+        title: "Add Skill: Example Submission Skill",
       },
     });
 
     const urls = await callRegistryTool(
       "build_submission_urls",
-      { fields, includeIssueBody: true },
+      { fields, includePrBody: true },
       { dataDir },
     );
     expect(urls).toMatchObject({
       ok: true,
       valid: true,
       submitUrl: expect.stringContaining("https://heyclau.de/submit"),
-      githubIssueUrl: expect.stringContaining(
-        "https://github.com/JSONbored/awesome-claude/issues/new",
+      githubPullsUrl: expect.stringContaining(
+        "https://github.com/JSONbored/awesome-claude/pulls",
       ),
-      issueDraft: {
-        title: "Submit Skill: Example Submission Skill",
-        labels: expect.arrayContaining(["content-submission", "skills"]),
+      prDraft: {
+        title: "Add Skill: Example Submission Skill",
       },
     });
-    expect(urls.githubIssueUrl).toContain("template=submit-skill.yml");
-    expect(urls.issueDraft.body).toContain("### Brand domain");
+    expect(urls.prDraft.body).toContain("### Brand domain");
     expect(JSON.stringify(urls)).not.toMatch(/token|secret|authorization/i);
   });
 
@@ -1395,12 +1390,13 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       valid: true,
       category: "mcp",
-      issueDraft: {
-        title: "Submit MCP Server: Example Draft MCP",
-        labels: expect.arrayContaining(["content-submission", "community-mcp"]),
+      prDraft: {
+        title: "Add MCP Server: Example Draft MCP",
         body: expect.stringContaining("### Install command"),
       },
-      githubIssueUrl: expect.stringContaining("template=submit-mcp.yml"),
+      githubPullsUrl: expect.stringContaining(
+        "https://github.com/JSONbored/awesome-claude/pulls",
+      ),
       submissionPolicy: expect.stringContaining("does not auto-merge"),
       artifactPolicy: expect.stringContaining("quarantine/review"),
     });
@@ -1414,7 +1410,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       valid: true,
       recommendedAction: expect.stringMatching(
-        /open_review_issue|review_possible_duplicate/,
+        /open_review_pr|review_possible_duplicate/,
       ),
       duplicateReview: { ok: true },
       reviewChecklist: expect.arrayContaining([

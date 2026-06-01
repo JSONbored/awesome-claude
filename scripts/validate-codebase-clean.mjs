@@ -307,7 +307,6 @@ if (fs.existsSync(tasksPath)) {
   for (const scriptName of [
     "validate:clean",
     "validate:content:strict",
-    "validate:issue-templates",
     "validate:category-spec",
     "validate:packages",
     "validate:raycast-feed",
@@ -335,7 +334,6 @@ const scriptNames = JSON.parse(
 for (const scriptName of [
   "validate:clean",
   "validate:content:strict",
-  "validate:issue-templates",
   "validate:category-spec",
   "validate:packages",
   "validate:raycast-feed",
@@ -369,7 +367,7 @@ for (const route of [
   "/api/registry/diff:",
   "/api/registry/entries/{category}/{slug}:",
   "/api/registry/entries/{category}/{slug}/llms:",
-  "/api/submissions:",
+  "/api/submissions/preflight:",
   "/api/listing-leads:",
   "/api/jobs/{slug}:",
   "/api/admin/listing-leads:",

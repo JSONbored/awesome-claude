@@ -4,11 +4,7 @@ import { analyzeIssueSubmissionRisk } from "@heyclaude/registry/submission-risk"
 import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
 
-const DEFAULT_REPO = "JSONbored/awesome-claude";
 const TOOL_LISTING_FORM_URL = "/tools/submit";
-const MAX_FALLBACK_BODY_BYTES = 6000;
-const FALLBACK_BODY_TRUNCATION_NOTE =
-  "\n\n[HeyClaude preflight note: this fallback URL shortened the issue body. Submit from the website to keep the full draft.]";
 
 type DuplicateCandidate = {
   key: string;
@@ -50,30 +46,6 @@ function normalizeError(error: unknown) {
     };
   }
   return { message: String(error) };
-}
-
-function truncateFallbackBody(value: string) {
-  const encoder = new TextEncoder();
-  if (encoder.encode(value).length <= MAX_FALLBACK_BODY_BYTES) return value;
-
-  const noteBytes = encoder.encode(FALLBACK_BODY_TRUNCATION_NOTE).length;
-  const budget = Math.max(0, MAX_FALLBACK_BODY_BYTES - noteBytes);
-  let bytes = 0;
-  let body = "";
-  for (const char of value) {
-    const nextBytes = encoder.encode(char).length;
-    if (bytes + nextBytes > budget) break;
-    body += char;
-    bytes += nextBytes;
-  }
-  return `${body.trimEnd()}${FALLBACK_BODY_TRUNCATION_NOTE}`;
-}
-
-function githubIssueFallbackUrl(issue: { title: string; body: string }) {
-  const url = new URL(`https://github.com/${DEFAULT_REPO}/issues/new`);
-  url.searchParams.set("title", issue.title);
-  url.searchParams.set("body", truncateFallbackBody(issue.body));
-  return url.toString();
 }
 
 function submittedSourceUrls(fields: Record<string, unknown>) {
@@ -152,11 +124,41 @@ function isToolsRouteError(message: string) {
   );
 }
 
+function looksLikeCommercialListing(fields: Record<string, unknown>) {
+  const text = [
+    fields.name,
+    fields.title,
+    fields.description,
+    fields.card_description,
+    fields.docs_url,
+    fields.website_url,
+    fields.pricing_model,
+    fields.disclosure,
+  ]
+    .map(normalizeComparable)
+    .filter(Boolean)
+    .join(" ");
+  if (!text) return false;
+  return /\b(paid|pricing|enterprise|saas|hosted platform|sponsorship|sponsored|affiliate|listing)\b/.test(
+    text,
+  );
+}
+
 function missingNoteWarnings(risk: ReturnType<typeof analyzeIssueSubmissionRisk>) {
   const warnings = risk.classificationWarnings ?? [];
   const safety = warnings.find((item) => item.id === "missing_safety_notes");
   const privacy = warnings.find((item) => item.id === "missing_privacy_notes");
   return { safety, privacy };
+}
+
+function buildPrPreview(issue: { title: string; body: string }, category: string, slug: string) {
+  return {
+    title: issue.title.replace(/^Submit /, "Add "),
+    targetPath: category && slug ? `content/${category}/${slug}.mdx` : "",
+    branchHint: category && slug ? `heyclaude/submit-${category}-${slug}` : "",
+    baseRef: "submission-gate-pilot",
+    body: issue.body,
+  };
 }
 
 export async function buildSubmissionPreflight(fields: Record<string, unknown>) {
@@ -178,7 +180,6 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     },
     validation,
   );
-  const fallbackUrl = githubIssueFallbackUrl(issue);
   const category = normalizeText(validation.category || risk.subject?.category);
   const slug = normalizeText(validation.fields?.slug || risk.subject?.slug);
   const entries = await getDirectoryEntries().catch((error) => {
@@ -216,6 +217,17 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     blockers.push(blocker("schema_invalid", error));
   }
 
+  const shouldRouteCommercial =
+    category !== "tools" && looksLikeCommercialListing(validation.fields || fields);
+  if (shouldRouteCommercial) {
+    blockers.push(
+      blocker(
+        "route_away",
+        "Commercial tools, hosted services, paid listings, sponsorships, and affiliate-style submissions should use the tools/app listing flow.",
+      ),
+    );
+  }
+
   for (const duplicate of duplicates) {
     if (duplicate.reasons.includes("slug") || duplicate.reasons.includes("source_url")) {
       blockers.push(blocker("duplicate_existing", `Likely duplicate of ${duplicate.key}.`));
@@ -247,11 +259,15 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     warnings.push(warning("missing_privacy_notes", noteWarnings.privacy.summary));
   }
 
-  const routeSuggestion = validation.errors?.some(isToolsRouteError)
-    ? "tools_form"
+  const routeSuggestion = validation.errors?.some(isToolsRouteError) || shouldRouteCommercial
+    ? "route_away"
     : blockers.length
       ? "fix_required"
-      : "github_issue";
+      : risk.policyDecision === "maintainer_review" ||
+          risk.riskTier === "high" ||
+          risk.riskTier === "critical"
+        ? "manual_review"
+        : "submit_pr";
 
   return {
     ok: true,
@@ -259,12 +275,7 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     routeSuggestion,
     category,
     slug,
-    fallbackUrl,
-    issuePreview: {
-      title: issue.title,
-      labels: issue.labels,
-      body: issue.body,
-    },
+    prPreview: buildPrPreview(issue, category, slug),
     schema: {
       ok: validation.ok,
       skipped: validation.skipped,
@@ -288,18 +299,21 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     warnings,
     duplicates,
     nextAction:
-      routeSuggestion === "tools_form"
+      routeSuggestion === "route_away"
         ? {
             label: "Use the paid/editorial tool listing flow",
             url: TOOL_LISTING_FORM_URL,
           }
         : routeSuggestion === "fix_required"
           ? {
-              label: "Fix blockers before opening a submission issue",
+              label: "Fix blockers before opening a submission",
             }
-          : {
-              label: "Open a reviewable GitHub issue",
-              url: fallbackUrl,
-            },
+          : routeSuggestion === "manual_review"
+            ? {
+                label: "Prepare a single-entry PR with extra source and safety context",
+              }
+            : {
+                label: "Prepare a single-entry content PR",
+              },
   };
 }

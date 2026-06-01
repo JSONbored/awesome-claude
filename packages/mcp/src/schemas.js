@@ -236,7 +236,7 @@ export const SearchDuplicateEntriesInputSchema = z
 export const BuildSubmissionUrlsInputSchema = z
   .object({
     fields: SubmissionFieldsSchema,
-    includeIssueBody: z.boolean().optional(),
+    includePrBody: z.boolean().optional(),
   })
   .strict();
 

@@ -44,7 +44,7 @@ export const GET = createApiHandler("registry.feed", async ({ request }) => {
       registryEntries:
         "Search results, sharded feeds, and entry details expose factual trustSignals when source/checksum/compatibility data exists.",
       writes:
-        "Registry publishing is not exposed through the public API; submissions create reviewable GitHub issues only.",
+        "Registry publishing is not exposed through the public API; submissions are routed through PR-first private-gate review only.",
     },
     artifacts: manifest.artifacts,
     artifactContracts: manifest.artifactContracts,

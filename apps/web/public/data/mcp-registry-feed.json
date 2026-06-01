@@ -271,7 +271,7 @@
     {
       "name": "heyclaude-mcp",
       "title": "HeyClaude MCP Server",
-      "description": "Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build issue-first submission URLs through MCP.",
+      "description": "Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build PR-first submission URLs through MCP.",
       "websiteUrl": "https://github.com/JSONbored/awesome-claude/tree/main/packages/mcp",
       "brandName": "HeyClaude",
       "brandDomain": "heyclau.de",

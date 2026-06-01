@@ -1,11 +1,11 @@
 export const SUBMISSION_SITE_URL: string;
-export const GITHUB_NEW_ISSUE_URL: string;
+export const GITHUB_PULLS_URL: string;
 
 export function slugify(value: string): string;
 export function normalizeSubmissionFields(
   fields?: Record<string, unknown>,
 ): Record<string, string>;
-export function buildIssueDraftFromSpec(
+export function buildPrDraftFromSpec(
   spec: Record<string, unknown>,
   fields?: Record<string, unknown>,
 ): Record<string, unknown>;

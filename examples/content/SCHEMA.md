@@ -69,7 +69,6 @@ Run before merging content changes:
 
 ```bash
 pnpm validate:content
-pnpm validate:issue-templates
 pnpm validate:clean
 pnpm audit:content
 pnpm build
@@ -77,10 +76,10 @@ pnpm build
 
 ## Submission workflow
 
-- Use issues first for free Claude resources. The issue validator checks category fields, required copyable assets, slug shape, local package requests, and affiliate/referral URLs.
-- Use pull requests only when you are comfortable adding MDX directly and running the full gate.
-- Fully valid, source-backed, non-artifact issues may auto-open an import PR after gates pass. Maintainers still review before merge.
-- Tool/app/service promotions, listing claims, and jobs use the D1-backed website lead forms, not the free resource issue templates.
+- Use `/submit` first for free Claude resources. The public preflight checks category fields, required copyable assets, slug shape, local package requests, and affiliate/referral URLs.
+- Use direct pull requests when you are comfortable adding MDX directly and running the full gate.
+- Fully valid, source-backed, non-artifact PRs may open a maintainer-owned import PR after gates pass. Maintainers still review before merge.
+- Tool/app/service promotions, listing claims, and jobs use the D1-backed website lead forms, not free content submissions.
 
 For vote-state sync checks:
 

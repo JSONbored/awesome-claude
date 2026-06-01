@@ -28,11 +28,7 @@ import {
   deriveSeoFields,
   validateEntry,
 } from "@heyclaude/registry/content-schema";
-import {
-  buildIssueTemplateSpec,
-  buildSubmissionFieldModel,
-} from "@heyclaude/registry/submission-spec";
-import { submissionLabelsForCategory } from "@heyclaude/registry/submission-labels";
+import { buildSubmissionFieldModel } from "@heyclaude/registry/submission-spec";
 
 const repoRoot = path.resolve(import.meta.dirname, "..");
 
@@ -72,7 +68,7 @@ function importSubmissionDryRun(
 }
 
 describe("submission intake", () => {
-  it("derives web form and issue template fields from registry specs", () => {
+  it("derives PR-first web form fields from registry specs", () => {
     const model = buildSubmissionFieldModel("skills");
     expect(model).toBeTruthy();
     expect(
@@ -106,16 +102,6 @@ describe("submission intake", () => {
     expect(
       model?.fields.some(
         (field) => field.id === "brand_domain" && !field.required,
-      ),
-    ).toBe(true);
-
-    const issueTemplate = buildIssueTemplateSpec("mcp");
-    expect(issueTemplate).toBeTruthy();
-    expect(issueTemplate?.labels).toContain("content-submission");
-    expect(issueTemplate?.labels).toEqual(submissionLabelsForCategory("mcp"));
-    expect(
-      issueTemplate?.fields.some(
-        (field) => field.id === "install_command" && field.required,
       ),
     ).toBe(true);
   });
@@ -394,37 +380,14 @@ Not applicable: this fixture does not access user files or credentials.`),
     );
   });
 
-  it("keeps checked-in GitHub issue templates aligned with registry specs", () => {
+  it("does not expose public content issue templates", () => {
+    const templateDir = path.join(repoRoot, ".github", "ISSUE_TEMPLATE");
+    const contentTemplates = fs
+      .readdirSync(templateDir)
+      .filter((fileName) => fileName.startsWith("submit-"));
+    expect(contentTemplates).toEqual([]);
     for (const category of categorySpec.submissionOrder) {
-      const template = buildIssueTemplateSpec(category);
-      expect(template).toBeTruthy();
-      const templatePath = path.join(
-        repoRoot,
-        ".github",
-        "ISSUE_TEMPLATE",
-        template!.template,
-      );
-      const source = fs.readFileSync(templatePath, "utf8");
-      for (const label of template!.labels) {
-        expect(source).toContain(`  - "${label}"`);
-      }
-      for (const field of template!.fields.filter((field) => field.required)) {
-        expect(source).toContain(`    id: ${field.id}`);
-        expect(source).toContain("      required: true");
-      }
-      expect(source).toContain(
-        "eligible submissions may be approved for an import PR",
-      );
-      expect(source).toContain(
-        "Do not open a separate README change for issue submissions",
-      );
-      expect(source).toContain(
-        "I understand imports regenerate the README and registry artifacts automatically",
-      );
-      expect(source).toContain(
-        "community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads",
-      );
-      expect(source).toContain("not affiliate, referral, or tracking URLs");
+      expect(categorySpec.categories[category]?.template).toBe("");
     }
   });
 

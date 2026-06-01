@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Use this template for maintainer-authored product and feature work. Do not use it for free content submissions; use the category-specific submission forms instead.
+        Use this template for maintainer-authored product and feature work. Do not use it for free content submissions; use the PR-first submission flow instead.
 
         Good issues are narrow enough for one PR, explicit about what is out of scope, and clear about the proof required before merge.
   - type: textarea

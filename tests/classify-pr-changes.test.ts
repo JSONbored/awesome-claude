@@ -111,4 +111,21 @@ describe("PR change classifier", () => {
       web: "true",
     });
   });
+
+  it("routes private submission gate changes through the gate lane", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+    const gateDir = path.join(cwd, "apps", "submission-gate", "src");
+    fs.mkdirSync(gateDir, { recursive: true });
+    fs.writeFileSync(path.join(gateDir, "index.ts"), "export default {};\n");
+    git(cwd, ["add", "apps/submission-gate/src/index.ts"]);
+    git(cwd, ["commit", "-m", "update submission gate"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      submission_gate: "true",
+      content: "false",
+      registry: "false",
+      web: "false",
+    });
+  });
 });

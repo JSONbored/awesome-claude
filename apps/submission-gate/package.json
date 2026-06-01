@@ -1,0 +1,23 @@
+{
+  "name": "@heyclaude/submission-gate",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --config wrangler.jsonc --env dev",
+    "deploy": "pnpm run deploy:prod",
+    "deploy:dev": "wrangler deploy --config wrangler.jsonc --env dev",
+    "deploy:prod": "wrangler deploy --config wrangler.jsonc --env \"\"",
+    "deploy:dry-run": "pnpm run deploy:dry-run:dev",
+    "deploy:dry-run:dev": "wrangler deploy --config wrangler.jsonc --env dev --dry-run",
+    "deploy:dry-run:prod": "wrangler deploy --config wrangler.jsonc --env \"\" --dry-run",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv worker-configuration.d.ts"
+  },
+  "dependencies": {
+    "@cloudflare/containers": "0.3.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260601.1",
+    "wrangler": "4.95.0"
+  }
+}

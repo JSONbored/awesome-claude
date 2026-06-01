@@ -30,7 +30,7 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - `/api/newsletter/subscribe`
 - `/api/newsletter/webhook`
 - `/api/og`
-- `/api/submissions`
+- `/api/submissions/preflight`
 - `/api/listing-leads`
 - `/api/admin/listing-leads`
 - `/api/admin/jobs`
@@ -54,15 +54,16 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - Newsletter template syncing is a local operator script that talks to Resend
   Templates only; the public site does not expose campaign-send, scheduling, or
   template-management endpoints.
-- Website submissions require origin checks, payload limits, schema validation,
-  honeypot discard logging, existing-content duplicate checks, pending
-  GitHub-issue duplicate checks, and GitHub issue creation only.
+- Website submission preflight requires origin checks, payload limits, schema
+  validation, honeypot discard logging, and existing-content duplicate checks.
+  It never creates GitHub issues, branches, pull requests, labels, comments, or
+  registry content.
 - Website submissions do not accept or publish package uploads. Community
   ZIP/MCPB artifacts are review/quarantine material only; public downloads are
   maintainer-built artifacts after review.
-- Production submissions should set `SUBMISSIONS_REQUIRE_TURNSTILE=1` and
-  `TURNSTILE_SECRET_KEY`; if the requirement is enabled without a secret, the
-  endpoint fails closed instead of accepting direct website submissions.
+- PR creation and final review happen in the private Cloudflare submission gate
+  through GitHub App user auth, webhooks, Queues, Durable Objects, D1/R2, and a
+  Container import runner.
 - Cloudflare rate-limit bindings are configured for registry, dynamic, strict,
   and MCP routes. The public no-key MCP endpoint uses a dedicated
   `API_MCP_RATE_LIMIT` binding with a `60 requests/minute/IP` production cap.
@@ -71,10 +72,10 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - Worker responses attach security headers in code as well as static asset
   headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
-- No endpoint may import content into the registry, create pull requests, or
-  publish submissions directly. GitHub automation may open PRs for source-backed
-  submissions only after policy gates pass and a maintainer approval label is
-  applied. Maintainer review still gates merge.
+- No public website endpoint may import content into the registry, create
+  pull requests, or publish submissions directly. Maintainer-owned import PRs
+  are created only by the private gate after policy checks. Maintainer review
+  still gates merge.
 - Job lead intake is intentionally shallow. Paid job publication remains gated
   by the token-protected D1 admin flow, which requires enriched reviewed listing
   content before active paid rows can publish.

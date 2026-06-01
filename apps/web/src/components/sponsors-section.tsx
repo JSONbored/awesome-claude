@@ -235,7 +235,7 @@ function PartnerDrawer({
       (document.querySelector("[data-partner-close]") as HTMLButtonElement | null)?.click();
     } catch {
       toast.error("Could not submit partner interest.", {
-        description: "Use the contact or GitHub issue path if this keeps failing.",
+        description: "Use the contact link if this keeps failing.",
       });
     } finally {
       setSubmitting(false);

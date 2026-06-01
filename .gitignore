@@ -26,3 +26,5 @@ apps/web/public/downloads/mcp/*.mcpb
 # D1 schema migrations must stay tracked even if a global ignore has *.sql
 !apps/web/migrations/
 !apps/web/migrations/*.sql
+!apps/submission-gate/migrations/
+!apps/submission-gate/migrations/*.sql

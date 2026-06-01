@@ -30,12 +30,17 @@ Development deploys may target the Cloudflare dev Worker only:
 
 ```bash
 pnpm --filter web run deploy:dev
+pnpm --filter @heyclaude/submission-gate run deploy:dev
 ```
 
 The current PR artifact check uses that shared `heyclaude-dev` Worker when the
 workflow has Cloudflare credentials. This is branch validation, not a permanent
 per-PR environment. If Cloudflare Git previews publish a GitHub Deployment
 environment URL, CI resolves and validates that URL instead.
+
+The private submission gate has its own dev Worker,
+`heyclaude-submission-gate-dev`, and production should not point `/submit` at an
+untested gate.
 
 Do not run production deploy commands from feature branches. Production updates
 must flow through the protected `main` branch.

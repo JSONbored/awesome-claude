@@ -43,7 +43,6 @@ async function renderSitemap() {
     "/jobs",
     "/jobs/post",
     "/submit",
-    "/submissions",
     "/legal",
     "/advertise",
     "/api-docs",

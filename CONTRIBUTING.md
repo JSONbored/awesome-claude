@@ -2,7 +2,7 @@
 
 HeyClaude is a curated directory for Claude agents, MCP servers, skills, commands, hooks, rules, guides, collections, statuslines, and related AI workflow resources.
 
-The fastest path for most contributions is issue-first. The repository can turn well-formed, source-backed submissions into reviewable PRs, but maintainers still review before anything is merged.
+The fastest path for most contributions is PR-first. The website can turn a well-formed, source-backed submission into a single-entry PR for review, but maintainers still review before anything is merged.
 
 ## Contribution paths
 
@@ -12,17 +12,15 @@ Use the website form:
 
 - [heyclau.de/submit](https://heyclau.de/submit)
 
-This creates a structured GitHub issue with the right fields for the selected category. Fully valid, source-backed, non-artifact submissions may be approved for an import PR after policy gates pass. Automation does not auto-merge.
+This runs public preflight checks, asks you to continue with GitHub, then opens a focused PR with exactly one raw `content/<category>/<slug>.mdx` file. Fully valid, source-backed, non-artifact submissions may be copied into a maintainer-owned import PR after the private gate passes. Automation does not auto-merge.
 
-Maintainers trigger a submission import by applying `import-approved` or `accepted` after review. `needs-author-input`, `source-needs-verification`, `stale-submission`, and `import-pr-open` block or defer import until the issue is fixed, verified, reopened for review, or already represented by an import PR.
+The private gate can close hard failures, request changes for fixable gaps, route high-risk entries to manual review, or open a maintainer-owned import PR for deterministic low-risk passes. `main` remains maintainer-merge only.
 
 No CLA signature is required. Repo checks focus on submission quality, source verification, contributor trust, and security review.
 
-### 2. Open a GitHub submission issue
+### 2. Open a direct PR
 
-Use GitHub issue templates when the website is not convenient:
-
-- [New submission issue](https://github.com/JSONbored/awesome-claude/issues/new/choose)
+Direct PRs are the advanced path. Edit source content under `content/<category>/`, keep the PR focused on one entry, and target the current submission base during pilot.
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
 
@@ -35,9 +33,7 @@ For hooks, MCP servers, skills, commands, and statuslines, disclose meaningful s
 
 Use `prerequisites` only for setup requirements. Use `disclosure` only for commercial/tool listing status.
 
-### 3. Open a direct PR
-
-Direct PRs are the advanced path. Edit source content under `content/<category>/` and keep the PR focused. External contributor PRs should not include generated files.
+External contributor PRs should not include generated files.
 
 Do not edit these in external content PRs:
 
@@ -94,7 +90,6 @@ From the repo root:
 ```sh
 pnpm install --frozen-lockfile
 pnpm validate:content:strict
-pnpm validate:issue-templates
 pnpm validate:packages
 pnpm scan:packages
 pnpm test:submission-intake
@@ -107,8 +102,8 @@ pnpm build
 If you changed categories or submission fields, also run:
 
 ```sh
-pnpm generate:issue-templates
 pnpm generate:readme
+pnpm generate:openapi
 ```
 
 Direct contributors should usually leave generated output out of the PR unless a maintainer asks for it.

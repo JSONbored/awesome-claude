@@ -21,9 +21,9 @@ export type SkillPackageValidation = {
   facts: Array<{ label: string; value: string }>;
   submissionFields: Record<string, string>;
   submissionUrl: string;
-  issueTitle: string;
-  issueBody: string;
-  issueUrl: string;
+  prTitle: string;
+  prBody: string;
+  pullRequestUrl: string;
 };
 
 const TEXT_REFERENCE_PATTERN =
@@ -120,34 +120,22 @@ function buildSubmissionUrl(siteUrl: string, fields: Record<string, string>) {
   return `${siteUrl.replace(/\/$/, "")}/submit?${params.toString()}`;
 }
 
-function buildIssueDraftUrl(githubUrl: string, fields: Record<string, string>) {
+function buildPrDraft(githubUrl: string, fields: Record<string, string>) {
   const draft = buildSubmissionIssueDraft(fields);
-  let issueUrl: URL;
+  let pullsUrl: URL;
   try {
-    issueUrl = new URL(`${githubUrl.replace(/\/$/, "")}/issues/new`);
+    pullsUrl = new URL(`${githubUrl.replace(/\/$/, "")}/pulls`);
   } catch {
     return {
-      issueUrl: "",
-      issueTitle: draft.title,
-      issueBody: draft.body,
+      pullRequestUrl: "",
+      prTitle: draft.title.replace(/^Submit /, "Add "),
+      prBody: draft.body,
     };
   }
-  const model = buildSubmissionFieldModel("skills");
-  issueUrl.searchParams.set("template", "submit-skill.yml");
-  issueUrl.searchParams.set("title", draft.title);
-  for (const field of model?.fields ?? []) {
-    const value = fields[field.id];
-    if (value) issueUrl.searchParams.set(field.id, value);
-  }
-  for (const [key, value] of Object.entries(fields)) {
-    if (value && !issueUrl.searchParams.has(key)) {
-      issueUrl.searchParams.set(key, value);
-    }
-  }
   return {
-    issueUrl: issueUrl.toString(),
-    issueTitle: draft.title,
-    issueBody: draft.body,
+    pullRequestUrl: pullsUrl.toString(),
+    prTitle: draft.title.replace(/^Submit /, "Add "),
+    prBody: draft.body,
   };
 }
 
@@ -305,7 +293,7 @@ export function validateSkillPackageFiles(params: {
     params.siteUrl || "https://heyclau.de",
     submissionFields,
   );
-  const issueDraft = buildIssueDraftUrl(params.githubUrl, submissionFields);
+  const prDraft = buildPrDraft(params.githubUrl, submissionFields);
 
   return {
     ok: errors.length === 0,
@@ -325,8 +313,8 @@ export function validateSkillPackageFiles(params: {
     ],
     submissionFields,
     submissionUrl,
-    issueTitle: issueDraft.issueTitle,
-    issueBody: issueDraft.issueBody,
-    issueUrl: issueDraft.issueUrl,
+    prTitle: prDraft.prTitle,
+    prBody: prDraft.prBody,
+    pullRequestUrl: prDraft.pullRequestUrl,
   };
 }

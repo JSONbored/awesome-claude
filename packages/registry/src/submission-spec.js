@@ -79,7 +79,7 @@ const BASE_FIELDS = [
     required: false,
     placeholder: "@github-handle or email if you want it public",
     helpText:
-      "Optional. This is copied into a public GitHub issue, so do not include private contact details.",
+      "Optional. This may be copied into a public GitHub PR, so do not include private contact details.",
   },
   {
     id: "tags",
@@ -352,16 +352,14 @@ export function buildSubmissionSpecs() {
       buildSubmissionFieldModel(category),
     ]),
   );
-  const issueTemplates = Object.fromEntries(
-    categorySpec.submissionOrder.map((category) => [
-      category,
-      buildIssueTemplateSpec(category),
-    ]),
-  );
 
   return {
     schemaVersion: SUBMISSION_SPEC_SCHEMA_VERSION,
     categories,
-    issueTemplates,
+    prIntake: {
+      mode: "github_app_user_fork_pr",
+      submitUrl: "https://heyclau.de/submit",
+      pilotBaseRef: "submission-gate-pilot",
+    },
   };
 }

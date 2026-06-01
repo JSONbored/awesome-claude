@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Submit a resource
+    url: https://heyclau.de/submit
+    about: Use the website to create a single-entry PR for private-gate review.
   - name: General discussion
     url: https://github.com/JSONbored/awesome-claude/discussions
     about: Use GitHub Discussions for broader ideas, feedback, or questions.

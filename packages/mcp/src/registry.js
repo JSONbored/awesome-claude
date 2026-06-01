@@ -203,25 +203,25 @@ export const TOOL_DEFINITIONS = [
   {
     name: "get_submission_schema",
     description:
-      "Fetch read-only HeyClaude submission schemas and GitHub issue template fields by category.",
+      "Fetch read-only HeyClaude submission schemas for PR-first intake by category.",
     inputSchema: jsonSchemaForTool("get_submission_schema"),
   },
   {
     name: "validate_submission_draft",
     description:
-      "Validate a HeyClaude content submission draft locally without creating GitHub issues or publishing content.",
+      "Validate a HeyClaude content submission draft locally without creating GitHub issues, pull requests, or publishing content.",
     inputSchema: jsonSchemaForTool("validate_submission_draft"),
   },
   {
     name: "search_duplicate_entries",
     description:
-      "Search generated registry artifacts for likely duplicate entries before a user opens a submission issue.",
+      "Search generated registry artifacts for likely duplicate entries before a user opens a submission PR.",
     inputSchema: jsonSchemaForTool("search_duplicate_entries"),
   },
   {
     name: "build_submission_urls",
     description:
-      "Build prefilled HeyClaude submit and GitHub issue URLs for a validated submission draft without making write calls.",
+      "Build a prefilled HeyClaude submit URL for a validated PR-first submission draft without making write calls.",
     inputSchema: jsonSchemaForTool("build_submission_urls"),
   },
   {
@@ -233,7 +233,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "prepare_submission_draft",
     description:
-      "Build a read-only maintainer-reviewed HeyClaude submission draft with canonical issue text and URLs.",
+      "Build a read-only maintainer-reviewed HeyClaude submission draft with canonical PR text and URLs.",
     inputSchema: jsonSchemaForTool("prepare_submission_draft"),
   },
   {
@@ -1487,7 +1487,7 @@ export async function getClientSetup(args = {}) {
     snippets: client ? { [client]: snippets[client] } : snippets,
     notes: [
       "The public endpoint is read-only and does not need an API key.",
-      "Submission tools prepare maintainer-reviewed drafts; they do not open GitHub issues.",
+      "Submission tools prepare maintainer-reviewed PR-first drafts; they do not open GitHub issues.",
       "Use --url only when testing a custom preview or deployment.",
     ],
   };
@@ -1863,7 +1863,7 @@ export const PROMPT_DEFINITIONS = [
     name: "prepare_submission",
     title: "Prepare a HeyClaude submission",
     description:
-      "Guide a user through drafting a maintainer-reviewed HeyClaude submission without opening an issue automatically.",
+      "Guide a user through drafting a maintainer-reviewed HeyClaude submission without opening a PR automatically.",
     arguments: [
       { name: "category", description: "Submission category.", required: true },
       { name: "name", description: "Submission name or title." },
@@ -1874,8 +1874,8 @@ export const PROMPT_DEFINITIONS = [
     ],
   },
   {
-    name: "review_submission_before_issue",
-    title: "Review submission before opening issue",
+    name: "review_submission_before_pr",
+    title: "Review submission before opening PR",
     description:
       "Check a draft for schema gaps, duplicate risk, source review, and maintainer checklist items.",
     arguments: [
@@ -2050,8 +2050,8 @@ export function getRegistryPrompt(args = {}) {
 Use the read-only HeyClaude MCP tools. Start with search_registry or list_category_entries${category ? ` in category ${category}` : ""}${platform ? ` for platform ${platform}` : ""}. Compare credible candidates with compare_entries, inspect details with get_entry_detail, and cite exact category/slug pairs. Do not invent popularity metrics when source stats are absent.`,
     prepare_submission: `Prepare a HeyClaude submission draft${category ? ` for category ${category}` : ""}${promptArgument(values, "name") ? ` named ${promptArgument(values, "name")}` : ""}${sourceUrl ? ` from ${sourceUrl}` : ""}.
 
-Use get_submission_schema, get_submission_examples, prepare_submission_draft, review_submission_draft, and search_duplicate_entries. Return missing fields and the canonical issue draft URL/body. Do not create a GitHub issue or publish content.`,
-    review_submission_before_issue: `Review this HeyClaude submission draft before an issue is opened:
+Use get_submission_schema, get_submission_examples, prepare_submission_draft, review_submission_draft, and search_duplicate_entries. Return missing fields and the canonical PR-first submit URL/body. Do not create GitHub issues or publish content.`,
+    review_submission_before_pr: `Review this HeyClaude submission draft before a PR is opened:
 
 ${draft || "(draft not provided)"}
 
@@ -2247,11 +2247,11 @@ export async function getSubmissionPolicy() {
     ok: true,
     publicPolicy: MCP_PUBLIC_POLICY,
     reviewModel: {
-      issueFirst: true,
+      prFirst: true,
       maintainerReviewRequired: true,
       autoMerge: false,
-      importPrRequiresApprovalLabel: ["accepted", "import-approved"],
-      mutatingAutomationOwner: "GitHub Actions",
+      importPrRequiresApprovalLabel: [],
+      mutatingAutomationOwner: "private submission gate",
     },
     artifactPolicy: {
       communityHostedArchivesAllowed: false,

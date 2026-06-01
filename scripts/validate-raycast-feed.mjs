@@ -121,7 +121,6 @@ const directoryPayload = readJson(directoryPath);
 const feedSource = readSource(raycastFeedSourcePath);
 const registryCommandSource = readSource(raycastRegistryCommandSourcePath);
 const categoryLabelsBlock = objectBlock(feedSource, "categoryLabels");
-const issueTemplateBlock = objectBlock(feedSource, "issueTemplateByCategory");
 const categoryIconsBlock = objectBlock(registryCommandSource, "categoryIcons");
 
 assertNoLoneSurrogates(payload, "Raycast feed");
@@ -254,9 +253,6 @@ for (const entry of payload.entries) {
 for (const category of [...categories].sort()) {
   if (!objectDefinesKey(categoryLabelsBlock, category)) {
     fail(`${category}: missing Raycast category label`);
-  }
-  if (!objectDefinesKey(issueTemplateBlock, category)) {
-    fail(`${category}: missing Raycast issue template mapping`);
   }
   if (!objectDefinesKey(categoryIconsBlock, category)) {
     fail(`${category}: missing Raycast icon mapping`);

@@ -30,7 +30,7 @@ const TAG_BLURBS: Record<string, string> = {
   Registry: "Search, trending, manifest, integrity, diff",
   Entries: "Per-entry payloads and LLM text",
   Dynamic: "Votes, signals, intent events, GitHub stats",
-  Submissions: "Preflight, issue creation, and public queue status",
+  Submissions: "Read-only submission preflight for PR-first intake",
   Commercial: "Lead intake for jobs, tools, claims, and sponsorship",
   Jobs: "Public reviewed jobs board API",
   MCP: "Streamable HTTP MCP transport",
@@ -126,15 +126,6 @@ const QUERY_PARAM_EXAMPLES: Record<string, OpenApiParam[]> = {
       example: "directory-index.json",
     },
   ],
-  "submissions.queue": [
-    {
-      name: "limit",
-      in: "query",
-      type: "number",
-      description: "Maximum issue count.",
-      example: "10",
-    },
-  ],
   download: [
     {
       name: "category",
@@ -200,20 +191,6 @@ const BODY_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   "votes.toggle": { key: "mcp:github-mcp-server", clientId: "anon-client-1234", vote: true },
   "newsletter.subscribe": { email: "reader@example.com", source: "api-docs" },
   "newsletter.webhook": { type: "contact.created", data: { email: "reader@example.com" } },
-  "submissions.create": {
-    fields: {
-      name: "Example MCP Server",
-      slug: "example-mcp-server",
-      category: "mcp",
-      github_url: "https://github.com/example/example-mcp",
-      description: "A source-backed MCP server for a specific workflow.",
-      card_description: "Source-backed MCP server.",
-      install_command: "npx -y @example/mcp",
-      usage_snippet: "Add the server to your Claude config.",
-      safety_notes: "Runs a local MCP server process.",
-      privacy_notes: "May send configured tool inputs to the upstream service.",
-    },
-  },
   "submissions.preflight": {
     fields: {
       name: "Example MCP Server",
@@ -346,39 +323,19 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
   "votes.toggle": { ok: true, key: "mcp:github-mcp-server", voted: true, count: 12 },
   "newsletter.subscribe": { ok: true, subscribed: true },
   "newsletter.webhook": { ok: true, accepted: true },
-  "submissions.create": {
-    ok: true,
-    issueUrl: "https://github.com/JSONbored/awesome-claude/issues/123",
-    issueNumber: 123,
-  },
   "submissions.preflight": {
     ok: true,
     valid: true,
-    routeSuggestion: "github_issue",
+    routeSuggestion: "submit_pr",
+    prPreview: {
+      title: "Add MCP Server: Example MCP Server",
+      targetPath: "content/mcp/example-mcp-server.mdx",
+      branchHint: "heyclaude/submit-mcp-example-mcp-server",
+      baseRef: "submission-gate-pilot",
+      body: "### Name\n\nExample MCP Server",
+    },
     blockers: [],
     warnings: [],
-  },
-  "submissions.queue": {
-    ok: true,
-    generatedAt: "2026-05-29T00:00:00.000Z",
-    repo: "JSONbored/awesome-claude",
-    count: 1,
-    entries: [
-      {
-        number: 123,
-        url: "https://github.com/JSONbored/awesome-claude/issues/123",
-        title: "Submit MCP Server: Example",
-        author: "contributor",
-        category: "mcp",
-        slug: "example",
-        status: "in_review",
-        state: "open",
-        labels: ["content-submission", "needs-review"],
-        blockers: [],
-        updatedAt: "2026-05-29T00:00:00Z",
-        createdAt: "2026-05-29T00:00:00Z",
-      },
-    ],
   },
   download: "Binary package response.",
   "listingLeads.create": { ok: true, id: "lead_123", status: "new" },

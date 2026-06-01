@@ -57,7 +57,7 @@ export const INTEGRATIONS: Integration[] = [
       snippet: "raycast://extensions/jsonbored/heyclaude",
     },
     trustPosture:
-      "Read-only consumer of /data/raycast-index.json. No credentials are stored on disk; all writes route through the GitHub issue flow.",
+      "Read-only consumer of /data/raycast-index.json. No credentials are stored on disk; content writes route through the PR-first submission gate.",
   },
   {
     slug: "mcp-server",
@@ -207,7 +207,7 @@ export const INTEGRATIONS: Integration[] = [
     status: "live",
     mark: "github",
     bullets: [
-      "Issue → preflight → PR import flow",
+      "PR-first preflight and private gate flow",
       "Package artifact security scan",
       "Auto-refreshed GitHub stats and README",
     ],

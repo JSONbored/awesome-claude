@@ -24,6 +24,7 @@ jobs:
       mcp: ${{ steps.classify.outputs.mcp }}
       raycast: ${{ steps.classify.outputs.raycast }}
       packages: ${{ steps.classify.outputs.packages }}
+      submission_gate: ${{ steps.classify.outputs.submission_gate }}
       ci: ${{ steps.classify.outputs.ci }}
       docs: ${{ steps.classify.outputs.docs }}
       full: ${{ steps.classify.outputs.full }}
@@ -61,6 +62,13 @@ jobs:
           fi
           if ! grep -q '^content_categories_json=' "$GITHUB_OUTPUT"; then
             echo "content_categories_json=[]" >> "$GITHUB_OUTPUT"
+          fi
+          if ! grep -q '^submission_gate=' "$GITHUB_OUTPUT"; then
+            if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ] && git diff --name-only "$BASE_SHA"...HEAD | grep -Eq '^(apps/submission-gate/|tests/submission-gate-|package.json|pnpm-lock.yaml|pnpm-workspace.yaml)$'; then
+              echo "submission_gate=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "submission_gate=false" >> "$GITHUB_OUTPUT"
+            fi
           fi
 
   validate-ci:
@@ -287,9 +295,6 @@ jobs:
 
       - name: Validate category submission spec
         run: pnpm validate:category-spec
-
-      - name: Validate issue templates
-        run: pnpm validate:issue-templates
 
       - name: Audit content report
         run: pnpm audit:content
@@ -658,6 +663,39 @@ jobs:
         if: ${{ needs.classify-pr.outputs.packages == 'true' }}
         run: pnpm scan:packages
 
+  validate-submission-gate:
+    name: validate-submission-gate
+    needs: classify-pr
+    if: ${{ needs.classify-pr.outputs.submission_gate == 'true' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-validate-submission-gate-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.16.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Test private submission gate helpers
+        run: pnpm exec vitest run tests/submission-gate-worker.test.ts
+
+      - name: Dry-run submission gate Worker and Container
+        run: pnpm submission-gate:dry-run
+
   validate-pr-preview:
     name: validate-pr-preview
     if: ${{ github.event_name == 'pull_request' && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
@@ -726,6 +764,7 @@ jobs:
       - validate-mcp
       - validate-raycast
       - validate-packages
+      - validate-submission-gate
       - validate-pr-preview
     if: ${{ always() }}
     runs-on: ubuntu-latest

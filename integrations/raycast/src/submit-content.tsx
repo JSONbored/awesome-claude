@@ -13,7 +13,7 @@ import { useRef } from "react";
 import {
   SUBMIT_URL,
   buildContributeEntryUrl,
-  buildSubmitIssueUrl,
+  buildSubmitPrUrl,
   categoryLabels,
 } from "./feed";
 import {
@@ -25,7 +25,7 @@ import {
   type SubmissionFormValues,
 } from "./submission";
 
-type SubmissionAction = "submit" | "issue" | "copy";
+type SubmissionAction = "submit" | "pr" | "copy";
 
 const categoryItems = Object.entries(categoryLabels).map(
   ([category, label]) => ({
@@ -38,8 +38,8 @@ async function openSubmit(values: SubmissionFormValues) {
   await open(buildContributeEntryUrl(normalizeSubmissionDraft(values)));
 }
 
-async function openIssue(values: SubmissionFormValues) {
-  await open(buildSubmitIssueUrl(normalizeSubmissionDraft(values)));
+async function openPrDraft(values: SubmissionFormValues) {
+  await open(buildSubmitPrUrl(normalizeSubmissionDraft(values)));
 }
 
 async function copyDraft(values: SubmissionFormValues) {
@@ -60,8 +60,8 @@ export default function Command() {
     async onSubmit(values) {
       const action = submissionAction.current;
 
-      if (action === "issue") {
-        await openIssue(values);
+      if (action === "pr") {
+        await openPrDraft(values);
         return;
       }
 
@@ -106,10 +106,10 @@ export default function Command() {
             }}
           />
           <Action.SubmitForm
-            title="Open GitHub Issue Template"
+            title="Open PR Draft"
             icon={Icon.Globe}
             onSubmit={(values: SubmissionFormValues) => {
-              submissionAction.current = "issue";
+              submissionAction.current = "pr";
               return handleSubmit(values);
             }}
           />
@@ -128,8 +128,8 @@ export default function Command() {
               icon={Icon.Plus}
             />
             <Action.OpenInBrowser
-              title="Open GitHub Issue Chooser"
-              url="https://github.com/JSONbored/awesome-claude/issues/new/choose"
+              title="Open GitHub Pull Requests"
+              url="https://github.com/JSONbored/awesome-claude/pulls"
               icon={Icon.Globe}
             />
           </ActionPanel.Section>

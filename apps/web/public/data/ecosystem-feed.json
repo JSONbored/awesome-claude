@@ -10414,7 +10414,7 @@
       "category": "skills",
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
       "url": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -10539,7 +10539,7 @@
       "category": "skills",
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed PRs.",
       "url": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -21589,5 +21589,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "fb628ed10f8e910603fc382cc28ed85a753ab6e9f5d78ab35ccfd4883397eb32"
+  "signature": "55579f25c46f97bd2bd919f34d72113035a8b963a2d184c1c868964fd6e0da09"
 }

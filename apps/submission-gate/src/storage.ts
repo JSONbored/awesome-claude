@@ -1,0 +1,229 @@
+import { sha256Hex } from "./security";
+
+type DraftInsert = {
+  id: string;
+  status: string;
+  category: string;
+  slug: string;
+  targetPath: string;
+  branchName: string;
+  baseRef: string;
+  fields: Record<string, unknown>;
+  authState?: string;
+};
+
+function now() {
+  return new Date().toISOString();
+}
+
+export async function createDraft(db: D1Database, draft: DraftInsert) {
+  const timestamp = now();
+  const authStateHash = draft.authState ? await sha256Hex(draft.authState) : null;
+  await db
+    .prepare(
+      `INSERT INTO submission_drafts
+        (id, status, category, slug, target_path, branch_name, base_ref, fields_json, auth_state_hash, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .bind(
+      draft.id,
+      draft.status,
+      draft.category,
+      draft.slug,
+      draft.targetPath,
+      draft.branchName,
+      draft.baseRef,
+      JSON.stringify(draft.fields),
+      authStateHash,
+      timestamp,
+      timestamp,
+    )
+    .run();
+}
+
+export async function getDraft(db: D1Database, id: string) {
+  return db
+    .prepare(
+      `SELECT id, status, category, slug, target_path AS targetPath, branch_name AS branchName,
+        base_ref AS baseRef, fields_json AS fieldsJson, auth_state_hash AS authStateHash,
+        github_login AS githubLogin, fork_full_name AS forkFullName,
+        pull_request_url AS pullRequestUrl, pull_request_number AS pullRequestNumber,
+        verdict, verdict_summary AS verdictSummary, created_at AS createdAt, updated_at AS updatedAt
+       FROM submission_drafts WHERE id = ?`,
+    )
+    .bind(id)
+    .first<Record<string, unknown>>();
+}
+
+export async function verifyDraftState(db: D1Database, draftId: string, state: string) {
+  const draft = await getDraft(db, draftId);
+  if (!draft?.authStateHash) return false;
+  return draft.authStateHash === (await sha256Hex(state));
+}
+
+export async function updateDraftAuthState(db: D1Database, draftId: string, state: string) {
+  await db
+    .prepare(
+      `UPDATE submission_drafts
+       SET status = 'auth_required', auth_state_hash = ?, updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(await sha256Hex(state), now(), draftId)
+    .run();
+}
+
+export async function storeDraftUserToken(
+  db: D1Database,
+  params: { draftId: string; encryptedToken: string; ttlSeconds?: number },
+) {
+  const timestamp = now();
+  const expiresAt = new Date(
+    Date.parse(timestamp) + Math.max(60, params.ttlSeconds || 900) * 1000,
+  ).toISOString();
+  await db
+    .prepare(
+      `INSERT INTO submission_user_tokens
+        (draft_id, encrypted_token, expires_at, consumed_at, created_at, updated_at)
+       VALUES (?, ?, ?, NULL, ?, ?)
+       ON CONFLICT(draft_id) DO UPDATE SET
+        encrypted_token = excluded.encrypted_token,
+        expires_at = excluded.expires_at,
+        consumed_at = NULL,
+        updated_at = excluded.updated_at`,
+    )
+    .bind(params.draftId, params.encryptedToken, expiresAt, timestamp, timestamp)
+    .run();
+}
+
+export async function consumeDraftUserToken(db: D1Database, draftId: string) {
+  const timestamp = now();
+  const row = await db
+    .prepare(
+      `SELECT encrypted_token AS encryptedToken
+       FROM submission_user_tokens
+       WHERE draft_id = ? AND consumed_at IS NULL AND expires_at > ?`,
+    )
+    .bind(draftId, timestamp)
+    .first<{ encryptedToken?: string }>();
+  if (!row?.encryptedToken) return "";
+  await db
+    .prepare(
+      `UPDATE submission_user_tokens
+       SET consumed_at = ?, updated_at = ?
+       WHERE draft_id = ?`,
+    )
+    .bind(timestamp, timestamp, draftId)
+    .run();
+  return row.encryptedToken;
+}
+
+export async function updateDraftStatus(
+  db: D1Database,
+  id: string,
+  status: string,
+  values: Record<string, unknown> = {},
+) {
+  const timestamp = now();
+  await db
+    .prepare(
+      `UPDATE submission_drafts
+       SET status = ?, github_login = COALESCE(?, github_login),
+         fork_full_name = COALESCE(?, fork_full_name),
+         pull_request_url = COALESCE(?, pull_request_url),
+         pull_request_number = COALESCE(?, pull_request_number),
+         verdict = COALESCE(?, verdict),
+         verdict_summary = COALESCE(?, verdict_summary),
+         updated_at = ?
+       WHERE id = ?`,
+    )
+    .bind(
+      status,
+      values.githubLogin ?? null,
+      values.forkFullName ?? null,
+      values.pullRequestUrl ?? null,
+      values.pullRequestNumber ?? null,
+      values.verdict ?? null,
+      values.verdictSummary ?? null,
+      timestamp,
+      id,
+    )
+    .run();
+}
+
+export async function upsertPrState(
+  db: D1Database,
+  params: {
+    repo: string;
+    number: number;
+    headRepo?: string;
+    headRef?: string;
+    baseRef: string;
+    status: string;
+    verdict?: string;
+    verdictSummary?: string;
+    importPrUrl?: string;
+    deliveryId?: string;
+  },
+) {
+  const timestamp = now();
+  await db
+    .prepare(
+      `INSERT INTO submission_prs
+        (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, import_pr_url, last_delivery_id, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(repo, number) DO UPDATE SET
+        head_repo = excluded.head_repo,
+        head_ref = excluded.head_ref,
+        base_ref = excluded.base_ref,
+        status = excluded.status,
+        verdict = COALESCE(excluded.verdict, submission_prs.verdict),
+        verdict_summary = COALESCE(excluded.verdict_summary, submission_prs.verdict_summary),
+        import_pr_url = COALESCE(excluded.import_pr_url, submission_prs.import_pr_url),
+        last_delivery_id = COALESCE(excluded.last_delivery_id, submission_prs.last_delivery_id),
+        updated_at = excluded.updated_at`,
+    )
+    .bind(
+      params.repo,
+      params.number,
+      params.headRepo ?? null,
+      params.headRef ?? null,
+      params.baseRef,
+      params.status,
+      params.verdict ?? null,
+      params.verdictSummary ?? null,
+      params.importPrUrl ?? null,
+      params.deliveryId ?? null,
+      timestamp,
+      timestamp,
+    )
+    .run();
+}
+
+export async function insertAudit(
+  db: D1Database,
+  params: {
+    id: string;
+    targetKey: string;
+    eventType: string;
+    decision?: string;
+    summary?: string;
+    r2Key?: string;
+  },
+) {
+  await db
+    .prepare(
+      `INSERT INTO submission_audit
+        (id, target_key, event_type, decision, summary, r2_key, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    )
+    .bind(
+      params.id,
+      params.targetKey,
+      params.eventType,
+      params.decision ?? null,
+      params.summary ?? null,
+      params.r2Key ?? null,
+      now(),
+    )
+    .run();
+}

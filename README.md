@@ -127,8 +127,8 @@
     </td>
     <td width="25%" valign="top">
       <h3>🧾 Contribute</h3>
-      <p>Submit free, source-backed Claude resources through issue-first intake.</p>
-      <p><a href="https://heyclau.de/submit"><strong>Submit content</strong></a> · <a href="https://github.com/JSONbored/awesome-claude/issues/new/choose">Issue forms</a></p>
+      <p>Submit free, source-backed Claude resources through PR-first private-gate review.</p>
+      <p><a href="https://heyclau.de/submit"><strong>Submit content</strong></a></p>
     </td>
     <td width="25%" valign="top">
       <h3>⚙️ Integrate</h3>
@@ -148,11 +148,11 @@
 
 ### Contributor Guardrails
 
-Free Claude resources use issue-first intake by default. Fully valid,
-source-backed, non-artifact submissions can be approved for an import PR after
-policy gates pass. Maintainer review still gates merge. Tool, app, service
-promotion, listing claims, and jobs use the website lead forms instead of GitHub
-content issues.
+Free Claude resources use PR-first intake by default. Fully valid,
+source-backed, non-artifact submissions can be copied into a maintainer-owned
+import PR after policy gates pass. Maintainer review still gates merge. Tool,
+app, service promotion, listing claims, and jobs use the website lead forms
+instead of GitHub content submissions.
 
 `README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`, and
 `apps/web/public/downloads/**` are generated or maintainer-owned outputs.
@@ -165,21 +165,20 @@ packages use checksums and package trust metadata after review.
 
 ### Project Docs
 
-| Area          | Links                                                                                                                                                                                                      |
-| ------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Community     | [Contributing](CONTRIBUTING.md), [Code of conduct](CODE_OF_CONDUCT.md), [Security policy](SECURITY.md), [License](LICENSE)                                                                                 |
-| Content model | [Registry schema](content/SCHEMA.md), [content examples](examples/content/README.md), [issue forms](.github/ISSUE_TEMPLATE)                                                                                |
-| Packages      | [Registry package](packages/registry), [read-only MCP server](packages/mcp), [Raycast extension](integrations/raycast)                                                                                     |
-| Operations    | [Submission queue ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
-| Public policy | [Legal/disclaimer](https://heyclau.de/legal), [claim/update](https://heyclau.de/claim), [advertise](https://heyclau.de/advertise)                                                                          |
+| Area          | Links                                                                                                                                                                                                     |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Community     | [Contributing](CONTRIBUTING.md), [Code of conduct](CODE_OF_CONDUCT.md), [Security policy](SECURITY.md), [License](LICENSE)                                                                                |
+| Content model | [Registry schema](content/SCHEMA.md), [content examples](examples/content/README.md), [submit flow](https://heyclau.de/submit)                                                                            |
+| Packages      | [Registry package](packages/registry), [read-only MCP server](packages/mcp), [Raycast extension](integrations/raycast)                                                                                    |
+| Operations    | [Submission gate ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
+| Public policy | [Legal/disclaimer](https://heyclau.de/legal), [claim/update](https://heyclau.de/claim), [advertise](https://heyclau.de/advertise)                                                                         |
 
 ### Local Validation
 
 1. Add or update a file under `content/<category>/`
 2. Run `pnpm --filter web run prebuild`
-3. Run `pnpm validate:content:strict`, `pnpm validate:issue-templates`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build`
-4. Run `pnpm generate:issue-templates` if registry categories changed
-5. Commit generated registry artifacts only from maintainer/internal branches
+3. Run `pnpm validate:content:strict`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build`
+4. Commit generated registry artifacts only from maintainer/internal branches
 
 </details>
 
@@ -249,7 +248,7 @@ packages use checksums and package trust metadata after review.
 - **[Fireflies MCP Server for Claude](https://heyclau.de/entry/mcp/fireflies-mcp-server)** - Extract valuable insights from meeting transcripts and summaries
 - **[Git MCP Server for Claude](https://heyclau.de/entry/mcp/git-mcp-server)** - Official MCP server providing Git repository tools for reading, searching, and manipulating Git repositories
 - **[GitHub MCP Server for Claude](https://heyclau.de/entry/mcp/github-mcp-server)** - Official GitHub MCP server providing comprehensive GitHub API access for repository management, file operations, and search functionality
-- **[HeyClaude MCP Server](https://heyclau.de/entry/mcp/heyclaude-mcp)** - Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build issue-first submission URLs through MCP.
+- **[HeyClaude MCP Server](https://heyclau.de/entry/mcp/heyclaude-mcp)** - Search the public HeyClaude registry, fetch entry details, inspect compatibility, and build PR-first submission URLs through MCP.
 - **[Hubspot MCP Server for Claude](https://heyclau.de/entry/mcp/hubspot-mcp-server)** - Access and manage HubSpot CRM data including contacts, companies, and deals
 - **[Hugging Face MCP Server - MCP Servers](https://heyclau.de/entry/mcp/hugging-face-mcp-server)** - Access Hugging Face Hub and Gradio AI applications
 - **[Intercom MCP Server for Claude](https://heyclau.de/entry/mcp/intercom-mcp-server)** - Access customer conversations, tickets, and user data in real-time
@@ -368,7 +367,7 @@ Get a free API key on https://app.zyntra.app/
 - **[GitHub Actions Secure CI/CD Capability Pack Skill](https://heyclau.de/entry/skills/github-actions-secure-cicd-capability-pack)** - Expert GitHub Actions capability skill for secure workflow architecture, token minimization, supply-chain controls, and CI reliability.
 - **[Google Workspace Gemini Automation Skill](https://heyclau.de/entry/skills/google-workspace-gemini-automation)** - Create useful Gemini-powered Google Workspace automations for docs, sheets, email triage, and internal workflow productivity.
 - **[HeyClaude Content Submission Factory](https://heyclau.de/entry/skills/heyclaude-content-submission-factory)** - Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.
-- **[HeyClaude Skill Submission Factory](https://heyclau.de/entry/skills/heyclaude-skill-submission-factory)** - Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.
+- **[HeyClaude Skill Submission Factory](https://heyclau.de/entry/skills/heyclaude-skill-submission-factory)** - Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
 - **[Husky Commit Governance Capability Pack Skill](https://heyclau.de/entry/skills/husky-commit-governance-capability-pack)** - Expert husky capability pack for lightweight local quality gates, commit message enforcement, and low-friction contributor workflows.
 - **[Image OCR + Table Extraction Skill](https://heyclau.de/entry/skills/image-ocr-table-extraction)** - Extract text and tabular data from images, scanned documents, and PDFs using Tesseract OCR engine with OpenCV preprocessing. Supports multi-language OCR (100+ languages), table structure detection, confidence scoring, orientation correction, and exports to CSV, JSON, and structured formats.
 - **[IndexNow Search Indexing Accelerator Skill](https://heyclau.de/entry/skills/indexnow-search-indexing-accelerator)** - Accelerate search discovery and indexing updates with IndexNow-aware publishing workflows and crawl-efficient update signaling.

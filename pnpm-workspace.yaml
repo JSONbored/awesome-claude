@@ -30,3 +30,4 @@ minimumReleaseAgeExclude:
   - "@tanstack/start-plugin-core@1.171.8"
   - "@tanstack/start-server-core@1.169.6"
   - "@tanstack/start-storage-context@1.167.9"
+  - '@cloudflare/workers-types@4.20260601.1'

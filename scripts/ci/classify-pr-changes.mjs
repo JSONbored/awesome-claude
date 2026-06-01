@@ -87,6 +87,10 @@ const generatedArtifactInfra = touches(
 const submissionAutomationInfra = touches(
   /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
 );
+const submissionGateInfra = touches(
+  /^apps\/submission-gate\//,
+  /^tests\/submission-gate-.*\.test\.ts$/,
+);
 
 const flags = {
   content: contentCategoryTouched || contentValidationInfra,
@@ -134,6 +138,9 @@ const flags = {
     "package.json",
     "pnpm-lock.yaml",
   ),
+  submission_gate:
+    submissionGateInfra ||
+    touches("package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml"),
   ci:
     submissionAutomationInfra ||
     touches(

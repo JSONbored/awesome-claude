@@ -185,29 +185,17 @@ longer a Next.js app.
 - `NEXT_PUBLIC_POLAR_SPONSORED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_FEATURED_JOB_URL`
 - `NEXT_PUBLIC_POLAR_JOB_BOARD_URL`
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-- `SUBMISSIONS_REQUIRE_TURNSTILE`
+- `VITE_SUBMISSION_GATE_URL` or `NEXT_PUBLIC_SUBMISSION_GATE_URL` set to the
+  public private-gate Worker origin:
+  `https://submission-gate-dev.heyclau.de` for development and
+  `https://submission-gate.heyclau.de` for production.
 
-Use separate production and development Turnstile widgets/secrets. The public
-site key is non-secret, but the matching `TURNSTILE_SECRET_KEY` must be set as a
-Worker secret for the same environment. If `SUBMISSIONS_REQUIRE_TURNSTILE=1`
-and the secret is missing, submission creation deliberately returns a 503 with a
-GitHub issue fallback URL rather than accepting unauthenticated writes.
-
-The development Worker uses Cloudflare's official always-pass Turnstile test
-site key in `wrangler.jsonc`, so it must be paired with the matching official
-test secret in the dev Worker only:
-
-```bash
-printf '%s' '1x0000000000000000000000000000000AA' |
-  pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY --env dev
-```
+Content submission writes are routed through the private submission gate; the
+public website only runs preflight and hands the contributor to GitHub auth.
 
 Required secrets, per environment:
 
 ```bash
-pnpm --filter web exec wrangler secret put TURNSTILE_SECRET_KEY
-pnpm --filter web exec wrangler secret put GITHUB_SUBMISSIONS_TOKEN
 pnpm --filter web exec wrangler secret put ADMIN_API_TOKEN
 ```
 

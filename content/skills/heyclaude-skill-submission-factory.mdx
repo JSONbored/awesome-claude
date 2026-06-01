@@ -2,10 +2,10 @@
 title: HeyClaude Skill Submission Factory
 slug: heyclaude-skill-submission-factory
 category: skills
-description: "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions."
-cardDescription: "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues."
+description: "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions."
+cardDescription: "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed PRs."
 seoTitle: HeyClaude Skill Submission Factory Skill
-seoDescription: "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions."
+seoDescription: "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions."
 author: JSONbored
 authorProfileUrl: "https://github.com/JSONbored"
 dateAdded: "2026-04-27"
@@ -16,13 +16,13 @@ installCommand: "curl -L https://heyclau.de/downloads/skills/heyclaude-skill-sub
 usageSnippet: "Use this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry."
 copySnippet: |-
   # Trigger
-  "Create a portable Agent Skill and prepare a HeyClaude issue-first submission."
+  "Create a portable Agent Skill and prepare a HeyClaude PR-first submission."
 
   # Required output
   1) Valid SKILL.md package
   2) Platform compatibility table
   3) Cursor adapter draft when applicable
-  4) HeyClaude submission issue fields
+  4) HeyClaude submission PR fields
 skillType: general
 skillLevel: advanced
 verificationStatus: validated
@@ -86,7 +86,7 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.
 4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.
 5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.
-6. Prepare HeyClaude issue fields from the canonical submission form instead of auto-publishing.
+6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.
 
 ## Capability Scope
 
@@ -94,7 +94,7 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 - Compatibility metadata
 - Cursor `.mdc` adapter drafting
 - Package validation checklist
-- HeyClaude issue-first submission preparation
+- HeyClaude PR-first submission preparation
 
 ## Compatibility
 

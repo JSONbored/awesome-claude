@@ -9,7 +9,7 @@ function submissionRequest(
   body: unknown,
   headers: Record<string, string> = {},
 ) {
-  return new Request("https://heyclau.de/api/submissions", {
+  return new Request("https://heyclau.de/api/submissions/preflight", {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -30,7 +30,7 @@ describe("central API router security", () => {
 
   it("normalizes forbidden-origin errors and attaches security headers", async () => {
     const { createApiHandler, apiJson } = await import("@/lib/api/router");
-    const POST = createApiHandler("submissions.create", async () =>
+    const POST = createApiHandler("submissions.preflight", async () =>
       apiJson({ ok: true }),
     );
 
@@ -55,7 +55,7 @@ describe("central API router security", () => {
 
   it("rejects oversized JSON requests before body parsing", async () => {
     const { createApiHandler, apiJson } = await import("@/lib/api/router");
-    const POST = createApiHandler("submissions.create", async () =>
+    const POST = createApiHandler("submissions.preflight", async () =>
       apiJson({ ok: true }),
     );
 
@@ -75,7 +75,7 @@ describe("central API router security", () => {
 
   it("rejects oversized streamed JSON requests without content-length", async () => {
     const { createApiHandler, apiJson } = await import("@/lib/api/router");
-    const POST = createApiHandler("submissions.create", async () =>
+    const POST = createApiHandler("submissions.preflight", async () =>
       apiJson({ ok: true }),
     );
 
@@ -97,12 +97,12 @@ describe("central API router security", () => {
 
   it("rejects invalid JSON content type for body-backed endpoints", async () => {
     const { createApiHandler, apiJson } = await import("@/lib/api/router");
-    const POST = createApiHandler("submissions.create", async () =>
+    const POST = createApiHandler("submissions.preflight", async () =>
       apiJson({ ok: true }),
     );
 
     const response = await POST(
-      new Request("https://heyclau.de/api/submissions", {
+      new Request("https://heyclau.de/api/submissions/preflight", {
         method: "POST",
         headers: {
           "content-type": "text/plain",
@@ -242,9 +242,6 @@ describe("central API router security", () => {
     expect(wranglerConfig).toContain('"name": "API_DYNAMIC_RATE_LIMIT"');
     expect(wranglerConfig).toContain('"name": "API_STRICT_RATE_LIMIT"');
     expect(wranglerConfig).toContain('"name": "API_MCP_RATE_LIMIT"');
-    expect(apiRouteDefinitions["submissions.create"].rateLimit?.binding).toBe(
-      "API_STRICT_RATE_LIMIT",
-    );
     expect(
       apiRouteDefinitions["submissions.preflight"].rateLimit?.binding,
     ).toBe("API_DYNAMIC_RATE_LIMIT");

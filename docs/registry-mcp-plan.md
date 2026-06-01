@@ -55,14 +55,14 @@ artifact directory.
 
 - `find_best_asset`
 - `prepare_submission`
-- `review_submission_before_issue`
+- `review_submission_before_pr`
 - `install_asset_safely`
 
 ## Access and rate limits
 
 The public MCP endpoint does not require an API key. That is intentional: the
 tool surface is read-only and all submission helpers generate local validation
-reports, issue drafts, and URLs for maintainer review. They do not create
+reports, PR-first drafts, and submit URLs for maintainer review. They do not create
 GitHub issues, open pull requests, publish registry content, or host package
 artifacts.
 
@@ -80,6 +80,6 @@ when Cloudflare's binding is unavailable.
 - No local project-file writes.
 - No account, token, or GitHub OAuth handling.
 
-Submissions remain issue-first through the website and GitHub issue templates.
-Source-backed issues may be approved for review PRs after repository gates pass,
-but maintainers still review before merge.
+Submissions are PR-first through the website GitHub App flow. Source-backed
+submissions may be copied into maintainer-owned import PRs after private gates
+pass, but maintainers still review before merge.

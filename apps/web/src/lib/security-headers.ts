@@ -17,7 +17,7 @@ const SECURITY_HEADERS = {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self' data:",
-    "connect-src 'self' https://api.github.com https://img.shields.io https://umami.heyclau.de https://challenges.cloudflare.com",
+    "connect-src 'self' https://api.github.com https://img.shields.io https://umami.heyclau.de https://challenges.cloudflare.com https://submission-gate.heyclau.de https://submission-gate-dev.heyclau.de",
     "frame-src https://challenges.cloudflare.com",
     "form-action 'self' https://github.com",
     "manifest-src 'self'",

@@ -11,7 +11,7 @@ import {
   buildContributeEntryUrl,
   buildEntrySummary,
   buildSuggestChangeUrl,
-  buildSubmitIssueUrl,
+  buildSubmitPrUrl,
   categoryLabel,
   detailCacheKey,
   entryKey,
@@ -296,7 +296,7 @@ describe("Raycast feed helpers", () => {
     assert.equal(buildPostJobUrl(jobsUrl), "https://heyclau.de/jobs/post");
   });
 
-  it("builds issue-first contribution URLs without local write targets", () => {
+  it("builds PR-first contribution URLs without local write targets", () => {
     const contributeUrl = new URL(buildContributeEntryUrl(sampleEntry));
     assert.equal(contributeUrl.origin, "https://heyclau.de");
     assert.equal(contributeUrl.pathname, "/submit");
@@ -307,9 +307,9 @@ describe("Raycast feed helpers", () => {
     assert.equal(contributeUrl.searchParams.get("tags"), "docs, mcp");
 
     const suggestUrl = new URL(buildSuggestChangeUrl(sampleEntry));
-    assert.equal(suggestUrl.origin, "https://github.com");
-    assert.equal(suggestUrl.pathname, "/JSONbored/awesome-claude/issues/new");
-    assert.equal(suggestUrl.searchParams.get("template"), "submit-mcp.yml");
+    assert.equal(suggestUrl.origin, "https://heyclau.de");
+    assert.equal(suggestUrl.pathname, "/submit");
+    assert.equal(suggestUrl.searchParams.get("intent"), "update");
     assert.equal(suggestUrl.searchParams.get("category"), "mcp");
     assert.equal(suggestUrl.searchParams.get("slug"), "context7");
     assert.equal(suggestUrl.searchParams.get("brand_name"), "Upstash");
@@ -317,13 +317,13 @@ describe("Raycast feed helpers", () => {
     assert.match(suggestUrl.toString(), /^https:\/\//);
     assert.equal(suggestUrl.toString().includes("file:"), false);
 
-    const newSkillUrl = new URL(buildSubmitIssueUrl("skills"));
-    assert.equal(newSkillUrl.origin, "https://github.com");
-    assert.equal(newSkillUrl.searchParams.get("template"), "submit-skill.yml");
+    const newSkillUrl = new URL(buildSubmitPrUrl("skills"));
+    assert.equal(newSkillUrl.origin, "https://heyclau.de");
+    assert.equal(newSkillUrl.pathname, "/submit");
     assert.equal(newSkillUrl.searchParams.get("category"), "skills");
 
     const draftUrl = new URL(
-      buildSubmitIssueUrl({
+      buildSubmitPrUrl({
         category: "mcp",
         title: "Asana MCP Server",
         slug: "asana-mcp-server",
@@ -335,7 +335,6 @@ describe("Raycast feed helpers", () => {
         tags: ["asana", "project-management"],
       }),
     );
-    assert.equal(draftUrl.searchParams.get("template"), "submit-mcp.yml");
     assert.equal(draftUrl.searchParams.get("name"), "Asana MCP Server");
     assert.equal(draftUrl.searchParams.get("brand_domain"), "asana.com");
     const docsUrl = new URL(String(draftUrl.searchParams.get("docs_url")));

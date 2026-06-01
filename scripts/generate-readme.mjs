@@ -205,8 +205,8 @@ ${categoryGrid}
     </td>
     <td width="25%" valign="top">
       <h3>🧾 Contribute</h3>
-      <p>Submit free, source-backed Claude resources through issue-first intake.</p>
-      <p><a href="https://heyclau.de/submit"><strong>Submit content</strong></a> · <a href="https://github.com/JSONbored/awesome-claude/issues/new/choose">Issue forms</a></p>
+      <p>Submit free, source-backed Claude resources through PR-first private-gate review.</p>
+      <p><a href="https://heyclau.de/submit"><strong>Submit content</strong></a></p>
     </td>
     <td width="25%" valign="top">
       <h3>⚙️ Integrate</h3>
@@ -226,11 +226,11 @@ ${categoryGrid}
 
 ### Contributor Guardrails
 
-Free Claude resources use issue-first intake by default. Fully valid,
-source-backed, non-artifact submissions can be approved for an import PR after
-policy gates pass. Maintainer review still gates merge. Tool, app, service
-promotion, listing claims, and jobs use the website lead forms instead of GitHub
-content issues.
+Free Claude resources use PR-first intake by default. Fully valid,
+source-backed, non-artifact submissions can be copied into a maintainer-owned
+import PR after policy gates pass. Maintainer review still gates merge. Tool,
+app, service promotion, listing claims, and jobs use the website lead forms
+instead of GitHub content submissions.
 
 \`README.md\`, \`apps/web/public/data/**\`, \`apps/web/src/generated/**\`, and
 \`apps/web/public/downloads/**\` are generated or maintainer-owned outputs.
@@ -246,18 +246,17 @@ packages use checksums and package trust metadata after review.
 | Area | Links |
 | --- | --- |
 | Community | [Contributing](CONTRIBUTING.md), [Code of conduct](CODE_OF_CONDUCT.md), [Security policy](SECURITY.md), [License](LICENSE) |
-| Content model | [Registry schema](content/SCHEMA.md), [content examples](examples/content/README.md), [issue forms](.github/ISSUE_TEMPLATE) |
+| Content model | [Registry schema](content/SCHEMA.md), [content examples](examples/content/README.md), [submit flow](https://heyclau.de/submit) |
 | Packages | [Registry package](packages/registry), [read-only MCP server](packages/mcp), [Raycast extension](integrations/raycast) |
-| Operations | [Submission queue ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
+| Operations | [Submission gate ops](docs/submission-queue-ops.md), [package trust model](docs/package-security-policy.md), [API security contract](docs/api-security-contract.md), [deployment](apps/web/DEPLOYMENT.md) |
 | Public policy | [Legal/disclaimer](https://heyclau.de/legal), [claim/update](https://heyclau.de/claim), [advertise](https://heyclau.de/advertise) |
 
 ### Local Validation
 
 1. Add or update a file under \`content/<category>/\`
 2. Run \`pnpm --filter web run prebuild\`
-3. Run \`pnpm validate:content:strict\`, \`pnpm validate:issue-templates\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\`
-4. Run \`pnpm generate:issue-templates\` if registry categories changed
-5. Commit generated registry artifacts only from maintainer/internal branches
+3. Run \`pnpm validate:content:strict\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\`
+4. Commit generated registry artifacts only from maintainer/internal branches
 
 </details>
 

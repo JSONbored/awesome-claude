@@ -1,10 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { AlertTriangle, ArrowRight, Check, Info, Loader2, ShieldAlert } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  Check,
+  GitPullRequest,
+  Info,
+  Loader2,
+  ShieldAlert,
+} from "lucide-react";
 import { CATEGORIES, type Category } from "@/types/registry";
 import {
   SUBMISSION_SPEC,
-  buildIssueDraft,
+  buildSubmissionPacket,
   preflight,
   slugify,
   type SpecField,
@@ -13,33 +21,15 @@ import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
 
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (
-        element: HTMLElement,
-        options: {
-          sitekey: string;
-          callback?: (token: string) => void;
-          "expired-callback"?: () => void;
-          "error-callback"?: () => void;
-        },
-      ) => string;
-      reset: (widgetId?: string) => void;
-      remove?: (widgetId?: string) => void;
-    };
-  }
-}
-
 export const Route = createFileRoute("/submit")({
   head: () => ({
     meta: [
-      { title: "Submit a resource — HeyClaude" },
+      { title: "Submit a resource - HeyClaude" },
       {
         name: "description",
-        content: "Submit a Claude workflow resource for review. Free, source-backed, useful.",
+        content: "Submit a Claude workflow resource for PR-first private-gate review.",
       },
-      { property: "og:title", content: "Submit a resource — HeyClaude" },
+      { property: "og:title", content: "Submit a resource - HeyClaude" },
       {
         property: "og:description",
         content: "Free, source-backed, useful. Paid tools route to the commercial intake.",
@@ -54,11 +44,14 @@ const STEPS = ["Category", "Details", "Safety & privacy", "Review"] as const;
 type PreflightResponse = {
   ok: true;
   valid: boolean;
-  routeSuggestion: "github_issue" | "fix_required" | "tools_form";
-  fallbackUrl?: string;
-  issuePreview?: {
+  routeSuggestion: "submit_pr" | "fix_required" | "route_away" | "manual_review";
+  category?: string;
+  slug?: string;
+  prPreview?: {
     title: string;
-    labels: string[];
+    targetPath: string;
+    branchHint: string;
+    baseRef: string;
     body: string;
   };
   blockers?: Array<{ code: string; message: string }>;
@@ -76,9 +69,13 @@ type PreflightResponse = {
 };
 
 type SubmitResult = {
-  issueUrl?: string;
-  issueNumber?: number;
-  fallbackUrl?: string;
+  statusUrl?: string;
+  manualPr?: {
+    targetPath: string;
+    branchName: string;
+    baseRef: string;
+    body: string;
+  };
 };
 
 function SubmitPage() {
@@ -91,18 +88,18 @@ function SubmitPage() {
   const [preflightBusy, setPreflightBusy] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [submitBusy, setSubmitBusy] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState("");
 
   const spec = category ? SUBMISSION_SPEC[category] : null;
   const issues = useMemo(() => preflight(category, data), [category, data]);
   const blockers = issues.filter((i) => i.kind === "blocker");
-  const issueDraft = useMemo(
-    () => preflightResult?.issuePreview?.body ?? buildIssueDraft(category, data),
+  const prPacket = useMemo(
+    () => preflightResult?.prPreview?.body ?? buildSubmissionPacket(category, data),
     [category, data, preflightResult],
   );
-  const issueTitle =
-    preflightResult?.issuePreview?.title ??
-    `Submit ${category || "Entry"}: ${data.name || "(untitled)"}`;
+  const prTitle =
+    preflightResult?.prPreview?.title ??
+    `Add ${category || "Entry"}: ${data.name || "(untitled)"}`;
+  const prTarget = preflightResult?.prPreview?.targetPath || "content/<category>/<slug>.mdx";
 
   const set = (key: string, value: string) => {
     setPreflightResult(null);
@@ -127,9 +124,7 @@ function SubmitPage() {
       });
       const payload = (await response.json().catch(() => null)) as PreflightResponse | null;
       if (!response.ok || !payload?.ok) {
-        throw new Error(
-          "Server preflight failed. Use the GitHub fallback if this keeps happening.",
-        );
+        throw new Error("Server preflight failed. Retry before continuing to GitHub.");
       }
       setPreflightResult(payload);
       return payload;
@@ -142,51 +137,51 @@ function SubmitPage() {
     }
   }
 
-  async function submitToGitHub() {
+  async function continueWithGitHub() {
     if (!category || submitBusy) return;
     setSubmitBusy(true);
     setSubmitError("");
     try {
-      const response = await fetch("/api/submissions", {
+      if (!siteConfig.submissionGateUrl) {
+        setDone({
+          manualPr: {
+            targetPath: prTarget,
+            branchName:
+              preflightResult?.prPreview?.branchHint ||
+              `heyclaude/submit-${category}-${data.slug || slugify(data.name || "")}`,
+            baseRef: preflightResult?.prPreview?.baseRef || "submission-gate-pilot",
+            body: prPacket,
+          },
+        });
+        return;
+      }
+
+      const endpoint = new URL("/drafts", siteConfig.submissionGateUrl).toString();
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          fields: { ...data, category },
-          turnstileToken,
-        }),
+        body: JSON.stringify({ fields: { ...data, category } }),
       });
-      const payload = (await response.json().catch(() => null)) as {
-        ok?: boolean;
-        issueUrl?: string;
-        issueNumber?: number;
-        error?: {
-          message?: string;
-          details?: {
-            fallbackUrl?: string;
-            issueUrl?: string;
-            issueNumber?: number;
-            errors?: string[];
-          };
-        };
-      } | null;
+      const payload = (await response.json().catch(() => null)) as
+        | {
+            ok?: boolean;
+            configured?: boolean;
+            authUrl?: string;
+            statusUrl?: string;
+            manualPr?: SubmitResult["manualPr"];
+            error?: string;
+          }
+        | null;
       if (!response.ok || !payload?.ok) {
-        const fallbackUrl = payload?.error?.details?.fallbackUrl;
-        const detailErrors = payload?.error?.details?.errors?.join(" ");
-        setDone(fallbackUrl ? { fallbackUrl } : null);
-        throw new Error(
-          detailErrors ||
-            payload?.error?.message ||
-            "Submission could not be created. Use the GitHub fallback link.",
-        );
+        throw new Error(payload?.error || "The private submission gate rejected the draft.");
       }
-      setDone({
-        issueUrl: payload.issueUrl,
-        issueNumber: payload.issueNumber,
-      });
+      if (payload.authUrl) {
+        window.location.assign(payload.authUrl);
+        return;
+      }
+      setDone({ statusUrl: payload.statusUrl, manualPr: payload.manualPr });
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Submission failed.");
-      if (window.turnstile) window.turnstile.reset();
-      setTurnstileToken("");
     } finally {
       setSubmitBusy(false);
     }
@@ -199,28 +194,41 @@ function SubmitPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, category, blockers.length]);
 
-  if (done?.issueUrl || done?.fallbackUrl) {
+  if (done?.statusUrl || done?.manualPr) {
     return (
-      <div className="mx-auto max-w-md px-4 py-24 text-center sm:px-6">
+      <div className="mx-auto max-w-xl px-4 py-24 text-center sm:px-6">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-trust-trusted/15">
-          <Check className="h-6 w-6 text-trust-trusted" />
+          <GitPullRequest className="h-6 w-6 text-trust-trusted" />
         </div>
         <h1 className="mt-4 h-display-2 text-ink text-balance">
-          {done.issueUrl ? "Submission received" : "Use the GitHub fallback"}
+          {done.statusUrl ? "Submission queued" : "Manual PR draft ready"}
         </h1>
         <p className="mt-2 text-sm text-ink-muted">
-          {done.issueUrl
-            ? "A public GitHub issue was created for maintainer review. Imports only happen after maintainer approval."
-            : "The website could not create the issue automatically, but the validated draft is ready for GitHub."}
+          {done.statusUrl
+            ? "The private gate is handling the GitHub PR flow. The status page will update as the PR is created and reviewed."
+            : "The private gate URL is not configured in this build. Create a single-entry PR with the file below; do not open a GitHub issue."}
         </p>
-        <a
-          href={done.issueUrl || done.fallbackUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
-        >
-          {done.issueNumber ? `Open issue #${done.issueNumber}` : "Open GitHub issue"}
-        </a>
+        {done.statusUrl && (
+          <a
+            href={done.statusUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex h-10 items-center justify-center rounded-md bg-ink px-4 text-sm font-medium text-background hover:bg-ink/90"
+          >
+            Open submission status
+          </a>
+        )}
+        {done.manualPr && (
+          <div className="mt-6 text-left">
+            <div className="mb-2 flex items-center justify-between">
+              <div className="eyebrow">{done.manualPr.targetPath}</div>
+              <CopyButton value={done.manualPr.body} label="Copy" />
+            </div>
+            <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 text-[11px] text-ink">
+              <code>{done.manualPr.body}</code>
+            </pre>
+          </div>
+        )}
       </div>
     );
   }
@@ -230,7 +238,8 @@ function SubmitPage() {
     step === 0 ? !!category && !unsupportedWebCategory : step === 3 ? blockers.length === 0 : true;
   const serverBlocked = Boolean(
     preflightResult &&
-    (!preflightResult.valid || preflightResult.routeSuggestion !== "github_issue"),
+      (!preflightResult.valid ||
+        ["fix_required", "route_away"].includes(preflightResult.routeSuggestion)),
   );
   const finalDisabled =
     !canContinue || preflightBusy || submitBusy || !preflightResult || serverBlocked;
@@ -240,7 +249,8 @@ function SubmitPage() {
       <div className="eyebrow">Contribute</div>
       <h1 className="mt-2 h-display-1 text-ink text-balance">Submit a resource</h1>
       <p className="mt-2 text-sm text-ink-muted">
-        Free, source-backed, useful. Commercial tools go through{" "}
+        Free, source-backed, useful. The site opens a single-entry GitHub PR for private-gate
+        review. Commercial tools go through{" "}
         <a href="/advertise" className="text-ink underline">
           advertise
         </a>
@@ -278,7 +288,7 @@ function SubmitPage() {
             void runServerPreflight();
             return;
           }
-          if (!serverBlocked) void submitToGitHub();
+          if (!serverBlocked) void continueWithGitHub();
         }}
         className="mt-8 rounded-xl border border-border bg-surface p-6"
       >
@@ -324,11 +334,11 @@ function SubmitPage() {
             {spec && <p className="mt-4 text-xs text-ink-muted">{spec.blurb}</p>}
             {unsupportedWebCategory && (
               <div className="mt-4 rounded-md border border-border bg-background p-3 text-xs text-ink-muted">
-                This category is not yet enabled for direct website import. Use{" "}
+                This category is not enabled for website-created PRs yet. Use{" "}
                 <a href="/advertise" className="text-ink underline">
                   commercial intake
                 </a>{" "}
-                for tools, or open a GitHub issue manually for maintainer routing.
+                for tools or contact a maintainer for special routing.
               </div>
             )}
           </div>
@@ -400,37 +410,17 @@ function SubmitPage() {
 
             <div>
               <div className="mb-2 flex items-center justify-between">
-                <div className="eyebrow">Issue draft</div>
-                <CopyButton value={issueDraft} label="Copy" />
+                <div className="eyebrow">PR draft</div>
+                <CopyButton value={prPacket} label="Copy" />
               </div>
-              <div className="mb-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-ink-muted">
-                {issueTitle}
+              <div className="mb-2 grid gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-xs text-ink-muted">
+                <span>{prTitle}</span>
+                <span>{prTarget}</span>
               </div>
               <pre className="max-h-[420px] overflow-auto rounded-md border border-border bg-background p-3 text-[11px] text-ink">
-                <code>{issueDraft}</code>
+                <code>{prPacket}</code>
               </pre>
-              {preflightResult?.fallbackUrl && (
-                <p className="mt-2 text-xs text-ink-muted">
-                  GitHub fallback:{" "}
-                  <a
-                    className="text-ink underline"
-                    href={preflightResult.fallbackUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    open this draft as an issue
-                  </a>
-                </p>
-              )}
             </div>
-
-            {preflightResult?.valid && (
-              <TurnstileBox
-                token={turnstileToken}
-                onToken={setTurnstileToken}
-                onReset={() => setTurnstileToken("")}
-              />
-            )}
 
             {submitError && (
               <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
@@ -447,7 +437,7 @@ function SubmitPage() {
             disabled={step === 0}
             className="text-sm text-ink-muted hover:text-ink disabled:opacity-40"
           >
-            ← Back
+            Back
           </button>
           <button
             type="submit"
@@ -462,8 +452,11 @@ function SubmitPage() {
                 ? "Run server preflight"
                 : serverBlocked
                   ? "Fix blockers"
-                  : "Submit for review"
+                  : "Continue with GitHub"
               : "Continue"}
+            {step === STEPS.length - 1 && !serverBlocked && preflightResult && (
+              <ArrowRight className="h-4 w-4" />
+            )}
           </button>
         </div>
       </form>
@@ -485,7 +478,7 @@ function ServerPreflightBlock({
   if (busy) {
     return (
       <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-sm text-ink-muted">
-        <Loader2 className="h-4 w-4 animate-spin" /> Running server preflight…
+        <Loader2 className="h-4 w-4 animate-spin" /> Running server preflight...
       </div>
     );
   }
@@ -516,10 +509,15 @@ function ServerPreflightBlock({
   const duplicates = result.duplicates ?? [];
   return (
     <div className="space-y-2">
-      {result.valid && result.routeSuggestion === "github_issue" ? (
+      {result.valid && result.routeSuggestion === "submit_pr" ? (
         <div className="flex items-center gap-2 rounded-md border border-trust-trusted/40 bg-trust-trusted/10 px-3 py-2 text-sm text-ink">
-          <Check className="h-4 w-4 text-trust-trusted" /> Schema passed. Maintainer review is still
-          required.
+          <Check className="h-4 w-4 text-trust-trusted" /> Preflight passed. The next step opens
+          a single-entry PR through GitHub.
+        </div>
+      ) : result.valid && result.routeSuggestion === "manual_review" ? (
+        <div className="flex items-center gap-2 rounded-md border border-trust-review/40 bg-trust-review/10 px-3 py-2 text-sm text-ink">
+          <ShieldAlert className="h-4 w-4 text-trust-review" /> This can be submitted, but the
+          private gate will route it to manual maintainer review.
         </div>
       ) : (
         <div className="rounded-md border border-trust-blocked/40 bg-trust-blocked/10 px-3 py-2 text-sm text-ink">
@@ -539,11 +537,8 @@ function ServerPreflightBlock({
           message={`Possible duplicate: ${item.key} (${item.reasons.join(", ")})`}
         />
       ))}
-      {result.nextAction?.url && result.routeSuggestion !== "github_issue" && (
-        <a
-          href={result.nextAction.url}
-          className="inline-flex text-sm font-medium text-ink underline"
-        >
+      {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (
+        <a href={result.nextAction.url} className="inline-flex text-sm font-medium text-ink underline">
           {result.nextAction.label}
         </a>
       )}
@@ -575,76 +570,6 @@ function PreflightRow({
         <Info className="mt-0.5 h-4 w-4 text-ink-muted" />
       )}
       <span>{message}</span>
-    </div>
-  );
-}
-
-function TurnstileBox({
-  token,
-  onToken,
-  onReset,
-}: {
-  token: string;
-  onToken: (token: string) => void;
-  onReset: () => void;
-}) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const widgetIdRef = useRef<string>("");
-  const siteKey = siteConfig.turnstileSiteKey;
-
-  useEffect(() => {
-    if (!siteKey || !containerRef.current) return;
-    let cancelled = false;
-    const render = () => {
-      if (cancelled || !containerRef.current || !window.turnstile || widgetIdRef.current) return;
-      widgetIdRef.current = window.turnstile.render(containerRef.current, {
-        sitekey: siteKey,
-        callback: onToken,
-        "expired-callback": onReset,
-        "error-callback": onReset,
-      });
-    };
-
-    if (!window.turnstile) {
-      const existing = document.querySelector<HTMLScriptElement>("script[data-turnstile]");
-      if (!existing) {
-        const script = document.createElement("script");
-        script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-        script.async = true;
-        script.defer = true;
-        script.dataset.turnstile = "true";
-        script.onload = render;
-        document.head.appendChild(script);
-      } else {
-        existing.addEventListener("load", render, { once: true });
-      }
-    } else {
-      render();
-    }
-
-    return () => {
-      cancelled = true;
-      if (widgetIdRef.current && window.turnstile?.remove) {
-        window.turnstile.remove(widgetIdRef.current);
-      }
-      widgetIdRef.current = "";
-    };
-  }, [onReset, onToken, siteKey]);
-
-  if (!siteKey) {
-    return (
-      <div className="rounded-md border border-trust-review/40 bg-trust-review/10 px-3 py-2 text-xs text-ink-muted">
-        Turnstile site key is not configured in this build. If automatic submission is unavailable,
-        use the GitHub fallback link above.
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-md border border-border bg-background p-3">
-      <div className="eyebrow mb-2">Spam protection</div>
-      <div ref={containerRef} />
-      {token && <p className="mt-2 text-[11px] text-ink-subtle">Challenge complete.</p>}
     </div>
   );
 }
@@ -687,7 +612,7 @@ function FieldRender({
           required={field.required}
           className="h-10 w-full rounded-md border border-border bg-background px-3 text-sm text-ink focus:outline-none focus:ring-2 focus:ring-accent/40"
         >
-          <option value="">Select…</option>
+          <option value="">Select...</option>
           {field.options?.map((o) => (
             <option key={o} value={o}>
               {o}
@@ -737,7 +662,7 @@ function TextArea({
           {examples.map((e, i) => (
             <span key={i}>
               <em>{e}</em>
-              {i < examples.length - 1 && " · "}
+              {i < examples.length - 1 && ", "}
             </span>
           ))}
         </div>

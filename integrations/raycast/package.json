@@ -156,7 +156,7 @@
     {
       "name": "submit-content",
       "title": "Submit New Content",
-      "description": "Create a reviewed HeyClaude content submission with fields that map to the website and GitHub issue forms.",
+      "description": "Create a reviewed HeyClaude content submission with fields that map to the website and PR-first gate.",
       "mode": "view",
       "keywords": [
         "submit",

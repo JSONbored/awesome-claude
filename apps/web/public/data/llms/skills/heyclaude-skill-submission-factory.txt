@@ -16,7 +16,7 @@ Download: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Last verified: 2026-04-27
 - Robots: indexable
 ## Summary
-Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.
+Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
 ## Tags
 - heyclaude
 - skill-authoring
@@ -41,14 +41,14 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.
 4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.
 5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.
-6. Prepare HeyClaude issue fields from the canonical submission form instead of auto-publishing.
+6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.
 
 ## Capability Scope
 - Agent Skill package authoring
 - Compatibility metadata
 - Cursor `.mdc` adapter drafting
 - Package validation checklist
-- HeyClaude issue-first submission preparation
+- HeyClaude PR-first submission preparation
 
 ## Compatibility
 ### Native Agent Skills

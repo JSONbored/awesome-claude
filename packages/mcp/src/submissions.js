@@ -1,6 +1,5 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
-export const GITHUB_NEW_ISSUE_URL =
-  "https://github.com/JSONbored/awesome-claude/issues/new";
+export const GITHUB_PULLS_URL = "https://github.com/JSONbored/awesome-claude/pulls";
 
 const defaultLabels = ["content-submission", "needs-review"];
 
@@ -246,12 +245,8 @@ function modelFor(spec, category) {
   return spec?.categories?.[category] || null;
 }
 
-function templateFor(spec, category) {
-  return spec?.issueTemplates?.[category] || null;
-}
-
-function labelsFor(spec, category) {
-  return templateFor(spec, category)?.labels || defaultLabels;
+function labelsFor() {
+  return defaultLabels;
 }
 
 function requiredFields(model) {
@@ -412,7 +407,7 @@ function validateAgainstSpec(spec, fields = {}) {
   };
 }
 
-export function buildIssueDraftFromSpec(spec, fields = {}) {
+export function buildPrDraftFromSpec(spec, fields = {}) {
   const validation = validateAgainstSpec(spec, fields);
   const category = validation.category;
   const model = modelFor(spec, category);
@@ -445,7 +440,7 @@ export function buildIssueDraftFromSpec(spec, fields = {}) {
   return {
     title: `Submit ${label}: ${validation.normalized.name || "New directory entry"}`,
     body,
-    labels: labelsFor(spec, category),
+    labels: labelsFor(),
   };
 }
 
@@ -458,26 +453,21 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
   const fields = normalizeSubmissionFields(args.fields || {});
   const validation = validateAgainstSpec(spec, fields);
   const category = validation.category || fields.category || "";
-  const issueDraft = buildIssueDraftFromSpec(spec, fields);
-  const template = templateFor(spec, category)?.template || "submit-entry.md";
+  const prDraft = buildPrDraftFromSpec(spec, fields);
+  const publicPrDraft = {
+    ...prDraft,
+    title: prDraft.title.replace(/^Submit /, "Add "),
+  };
 
   const submitUrl = new URL(SUBMISSION_SITE_URL);
-  const issueUrl = new URL(GITHUB_NEW_ISSUE_URL);
-  issueUrl.searchParams.set("template", template);
 
   for (const [key, value] of Object.entries(fields)) {
     if (key === "source_url" && (fields.github_url || fields.docs_url))
       continue;
     setParam(submitUrl.searchParams, key, value);
-    if (key !== "source_url") setParam(issueUrl.searchParams, key, value);
   }
   if (category) {
     submitUrl.searchParams.set("category", category);
-    issueUrl.searchParams.set("category", category);
-  }
-  if (fields.name) {
-    issueUrl.searchParams.set("title", issueDraft.title);
-    issueUrl.searchParams.set("name", fields.name);
   }
 
   return {
@@ -486,17 +476,17 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
     category,
     slug: fields.slug || "",
     submitUrl: submitUrl.toString(),
-    githubIssueUrl: issueUrl.toString(),
-    issueDraft: args.includeIssueBody
-      ? issueDraft
-      : { title: issueDraft.title, labels: issueDraft.labels },
+    githubPullsUrl: GITHUB_PULLS_URL,
+    prDraft: args.includePrBody
+      ? publicPrDraft
+      : { title: publicPrDraft.title, labels: publicPrDraft.labels },
     validation: {
       errors: validation.errors,
       warnings: validation.warnings,
       missingRequiredFields: validation.missingRequiredFields || [],
     },
     reviewModel:
-      "Issue-first: source-backed submissions may be approved for a PR after gates pass; maintainers still review before merge.",
+      "PR-first: source-backed submissions are opened as single-entry PRs, reviewed by the private gate, and still require maintainer merge.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are review material only and are not published as HeyClaude-hosted downloads.",
   };
@@ -520,16 +510,14 @@ export function getSubmissionSchemaFromSpec(spec, args = {}) {
     categories: categoryKeys(spec),
     category: category || "",
     schema: category ? spec.categories[category] : spec.categories,
-    issueTemplate: category
-      ? spec.issueTemplates?.[category]
-      : spec.issueTemplates,
+    prIntake: spec.prIntake || null,
   };
 }
 
 export function validateSubmissionDraftFromSpec(spec, args = {}) {
   const validation = validateAgainstSpec(spec, args.fields || {});
-  const issueDraft = validation.category
-    ? buildIssueDraftFromSpec(spec, validation.normalized)
+  const prDraft = validation.category
+    ? buildPrDraftFromSpec(spec, validation.normalized)
     : null;
 
   return {
@@ -542,17 +530,17 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
     missingRequiredFields: validation.missingRequiredFields || [],
     errors: validation.errors,
     warnings: validation.warnings,
-    issuePreview: issueDraft
-      ? { title: issueDraft.title, labels: issueDraft.labels }
+    prPreview: prDraft
+      ? { title: prDraft.title.replace(/^Submit /, "Add "), labels: prDraft.labels }
       : null,
     nextSteps: validation.valid
       ? [
           "Check for duplicate registry entries.",
-          "Open the generated HeyClaude submit URL or GitHub issue URL.",
-          "Source-backed, non-artifact submissions may be approved for a PR after gates pass.",
+          "Open the generated HeyClaude submit URL and continue with GitHub.",
+          "Source-backed, non-artifact submissions are reviewed through the private PR gate.",
           "Maintainers still review before merge.",
         ]
-      : ["Fix validation errors before opening a public submission issue."],
+      : ["Fix validation errors before opening a public submission PR."],
     artifactPolicy:
       "Do not request HeyClaude /downloads hosting for community-submitted ZIP/MCPB artifacts.",
   };
@@ -676,13 +664,13 @@ function exampleForCategory(spec, category) {
   return {
     category,
     label: model?.label || category,
-    template: model?.template || templateFor(spec, category)?.template || "",
+    template: model?.template || "",
     requiredFields: requiredFields(model),
     minimalFields,
     completeFields: fields,
     notes: [
       "Use canonical source URLs and avoid affiliate/referral links.",
-      "The generated issue draft can become a reviewable PR after gates pass, but it is not automatic publication.",
+      "The generated PR draft can become a reviewable submission after gates pass, but it is not automatic publication.",
       "Community package archives are quarantine/review material, not public HeyClaude-hosted downloads.",
     ],
   };
@@ -712,12 +700,12 @@ export function getSubmissionExamplesFromSpec(spec, args = {}) {
 export function prepareSubmissionDraftFromSpec(spec, args = {}) {
   const fields = normalizeSubmissionFields(args.fields || {});
   const validation = validateAgainstSpec(spec, fields);
-  const issueDraft = validation.category
-    ? buildIssueDraftFromSpec(spec, validation.normalized)
+  const prDraft = validation.category
+    ? buildPrDraftFromSpec(spec, validation.normalized)
     : null;
   const urls = buildSubmissionUrlsFromSpec(spec, {
     fields: validation.normalized,
-    includeIssueBody: true,
+    includePrBody: true,
   });
 
   return {
@@ -730,11 +718,11 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
     missingRequiredFields: validation.missingRequiredFields || [],
     errors: validation.errors,
     warnings: validation.warnings,
-    issueDraft,
+    prDraft: prDraft ? { ...prDraft, title: prDraft.title.replace(/^Submit /, "Add ") } : null,
     submitUrl: urls.submitUrl,
-    githubIssueUrl: urls.githubIssueUrl,
+    githubPullsUrl: urls.githubPullsUrl,
     reviewChecklist: [
-      "Confirm category fit and required fields before opening the issue.",
+      "Confirm category fit and required fields before opening the PR.",
       "Check for existing registry entries with the same source, slug, or title.",
       "Verify source URLs, install commands, and copied content before maintainer approval.",
       "Add safety_notes/privacy_notes when a submission runs code, handles credentials, reads local data, writes externally, or uses background workers.",
@@ -742,7 +730,7 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
     ],
     submissionPolicy:
-      "This tool prepares a review issue only. Eligible issues need maintainer approval before import PRs open, and HeyClaude does not auto-merge or publish MCP-submitted content.",
+      "This tool prepares a PR-first submission draft only. Eligible PRs can be imported by a maintainer-owned PR, and HeyClaude does not auto-merge or publish MCP-submitted content.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are quarantine/review material only. Maintainer-built packages are the only HeyClaude-hosted downloads.",
   };
@@ -773,7 +761,7 @@ export function reviewSubmissionDraftFromSpec(spec, args = {}, entries = []) {
   const recommendedAction = validation.valid
     ? duplicates.count > 0
       ? "review_possible_duplicate"
-      : "open_review_issue"
+      : "open_review_pr"
     : "fix_required_fields";
 
   return {
@@ -795,10 +783,10 @@ export function reviewSubmissionDraftFromSpec(spec, args = {}, entries = []) {
     ],
     nextSteps: validation.valid
       ? [
-          "Open or update the canonical GitHub submission issue.",
-          "Apply maintainer review labels after source and duplicate checks so eligible issues can open an import PR.",
+          "Open or update the canonical single-entry GitHub submission PR.",
+          "Let the private gate apply review labels after source, duplicate, and safety checks.",
         ]
-      : ["Fix required fields and validation errors before opening an issue."],
+      : ["Fix required fields and validation errors before opening a PR."],
     artifactPolicy:
       "Community-submitted ZIP/MCPB packages must not be treated as trusted public downloads.",
   };
@@ -975,7 +963,7 @@ export function getCategorySubmissionGuidanceFromSpec(spec, args = {}) {
         category: key,
         label: model?.label || key,
         description: model?.description || "",
-        template: model?.template || templateFor(spec, key)?.template || "",
+        template: model?.template || "",
         requiredFields: requiredFields(model),
         optionalFields: (model?.fields || [])
           .filter((field) => !field.required)

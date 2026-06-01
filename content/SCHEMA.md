@@ -80,10 +80,10 @@ Use the three note-style fields for different jobs:
 
 ## Submission paths
 
-- Free Claude resources should start with `/submit` or the generated GitHub issue forms.
-- Pull requests are for advanced contributors who can add MDX directly and run the full gate.
-- Fully valid, source-backed, non-artifact issues may be approved for an import PR after gates pass. Maintainer review still gates merge.
-- Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content issue templates.
+- Free Claude resources should start with `/submit` or a focused single-entry PR.
+- The submit form runs public preflight, then opens a PR through the private submission gate.
+- Fully valid, source-backed, non-artifact PRs may be copied into a maintainer-owned import PR after gates pass. Maintainer review still gates merge.
+- Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content submissions.
 - Contributor links must be official source/docs/release URLs. Affiliate, referral, tracking, or local package-hosting requests are rejected.
 - Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads. Maintainer-built packages require package trust metadata.
 - Risk-bearing submissions may be blocked or sent back when execution, permission, credential, local-data, background-worker, external-write, or package behavior is not disclosed with `safetyNotes` / `privacyNotes`.
@@ -91,12 +91,11 @@ Use the three note-style fields for different jobs:
 ## Workflow
 
 1. Run `pnpm validate:content:strict`
-2. Run `pnpm validate:issue-templates`
-3. Run `pnpm validate:packages`
-4. Run `pnpm scan:packages`
-5. Run `pnpm audit:content`
-6. Run `pnpm validate:clean`
-7. Run `pnpm --filter web run prebuild` to regenerate registry artifacts
-8. Run `pnpm test:registry-artifacts`
-9. Fix missing fields and semantic audit issues
-10. Regenerate issue templates and README when category/content counts change
+2. Run `pnpm validate:packages`
+3. Run `pnpm scan:packages`
+4. Run `pnpm audit:content`
+5. Run `pnpm validate:clean`
+6. Run `pnpm --filter web run prebuild` to regenerate registry artifacts
+7. Run `pnpm test:registry-artifacts`
+8. Fix missing fields and semantic audit issues
+9. Regenerate README/OpenAPI when category/content counts change

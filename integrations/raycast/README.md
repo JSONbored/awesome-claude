@@ -14,7 +14,7 @@ HeyClaude is a curated, GitHub-native registry for Claude and AI workflow conten
 - Create Raycast Quicklinks for registry entries, category pages, jobs, feeds, and common HeyClaude pages.
 - Create Raycast Snippets from install commands and config snippets when an entry includes them.
 - Favorite useful entries and jobs, with local frecency sorting that keeps repeated workflows easier to reach.
-- Submit new content or suggest changes through HeyClaude and GitHub issue-first review flows.
+- Submit new content or suggest changes through HeyClaude and PR-first review flows.
 - Open project links for the website, registry, API docs, feeds, jobs, newsletter, and GitHub repository.
 
 ## Commands
@@ -38,13 +38,13 @@ HeyClaude is a curated, GitHub-native registry for Claude and AI workflow conten
 
 The extension is intentionally read-only.
 
-It does not request accounts, OAuth, GitHub tokens, API keys, local project-file access, or write access to your Claude/Cursor configuration. Contribution actions open browser URLs for reviewed HeyClaude or GitHub issue flows. They do not create pull requests, forks, branches, or registry entries from Raycast.
+It does not request accounts, OAuth, GitHub tokens, API keys, local project-file access, or write access to your Claude/Cursor configuration. Contribution actions open browser URLs for reviewed HeyClaude submission flows. They do not create pull requests, forks, branches, or registry entries from Raycast.
 
 The extension can create Raycast-native Quicklinks and Snippets only when you explicitly trigger those Raycast actions.
 
 ## Submission Safety
 
-Raycast submission actions remain source-first. They help draft reviewed issues with canonical source/docs URLs and do not upload, host, or publish community ZIP/MCPB artifacts. Eligible submissions may auto-open a GitHub PR after repository gates pass, but maintainers still review before merge.
+Raycast submission actions remain source-first. They help draft reviewed PR-first submissions with canonical source/docs URLs and do not upload, host, or publish community ZIP/MCPB artifacts. Eligible submissions can move through the private gate after repository checks pass, but maintainers still review before merge.
 
 ## Data and Privacy
 

@@ -471,20 +471,9 @@ export const newsletterWebhookBodySchema = z
   })
   .passthrough();
 
-export const submissionBodySchema = z.object({
-  fields: z.record(z.string(), z.unknown()).optional().default({}),
-  turnstileToken: z.string().max(4096).optional().default(""),
-  honeypot: z.string().max(256).optional().default(""),
-});
-
 export const submissionPreflightBodySchema = z.object({
   fields: z.record(z.string(), z.unknown()).optional().default({}),
   honeypot: z.string().max(256).optional().default(""),
-});
-
-export const submissionQueueQuerySchema = z.object({
-  number: z.coerce.number().int().positive().optional(),
-  limit: z.coerce.number().int().min(1).max(25).optional().default(25),
 });
 
 const submissionPreflightNoteSchema = z.object({
@@ -504,13 +493,14 @@ const submissionPreflightDuplicateSchema = z.object({
 const submissionPreflightSuccessResponseSchema = z.object({
   ok: z.literal(true),
   valid: z.boolean(),
-  routeSuggestion: z.enum(["github_issue", "fix_required", "tools_form"]),
+  routeSuggestion: z.enum(["submit_pr", "fix_required", "route_away", "manual_review"]),
   category: z.string(),
   slug: z.string(),
-  fallbackUrl: z.string().url(),
-  issuePreview: z.object({
+  prPreview: z.object({
     title: z.string().max(300),
-    labels: z.array(z.string().max(80)).max(12),
+    targetPath: z.string().max(240),
+    branchHint: z.string().max(200),
+    baseRef: z.string().max(120),
     body: z.string().max(32_000),
   }),
   schema: z.object({
@@ -551,50 +541,6 @@ export const submissionPreflightResponseSchema = z.union([
   submissionPreflightSuccessResponseSchema,
   submissionPreflightDiscardResponseSchema,
 ]);
-
-const submissionQueueStatusSchema = z.enum([
-  "queued",
-  "in_review",
-  "ready",
-  "approved",
-  "import_pr_open",
-  "needs_author_input",
-  "source_needs_verification",
-  "stale",
-  "imported",
-  "closed",
-]);
-
-const submissionQueueItemSchema = z.object({
-  number: z.number().int().positive(),
-  url: z.string().url(),
-  title: z.string().max(300),
-  author: z.string().max(120),
-  authorUrl: z.string().url().optional(),
-  category: z.string().max(80),
-  slug: z.string().max(160),
-  status: submissionQueueStatusSchema,
-  state: z.enum(["open", "closed"]),
-  labels: z.array(z.string().max(120)).max(32),
-  blockers: z.array(z.string().max(240)).max(12),
-  updatedAt: z.string(),
-  bodyFingerprint: z.string().max(40).optional(),
-  bodyUpdatedAt: z.string().optional(),
-  authorCommentedAfterReview: z.boolean().optional(),
-  authorCommentedWithoutBodyUpdate: z.boolean().optional(),
-  lastAuthorCommentAt: z.string().optional(),
-  createdAt: z.string(),
-  closedAt: z.string().nullable().optional(),
-  importPrUrl: z.string().url().optional(),
-});
-
-export const submissionQueueResponseSchema = z.object({
-  ok: z.literal(true),
-  generatedAt: z.string(),
-  repo: z.string(),
-  count: z.number().int().nonnegative(),
-  entries: z.array(submissionQueueItemSchema).max(25),
-});
 
 export const downloadQuerySchema = z.object({
   asset: z.string().trim().max(256),
@@ -850,7 +796,7 @@ export type ApiRouteDefinition = {
   responseSchemaName?: string;
   responseContentType?: string;
   staticSurface?: boolean;
-  auth?: "admin-token" | "resend-signature" | "turnstile";
+  auth?: "admin-token" | "resend-signature";
 };
 
 function route(definition: ApiRouteDefinition) {
@@ -1103,32 +1049,13 @@ export const apiRouteDefinitions = {
       binding: "API_DYNAMIC_RATE_LIMIT",
     },
   }),
-  "submissions.create": route({
-    id: "submissions.create",
-    method: "POST",
-    path: "/api/submissions",
-    summary: "Create a reviewable content submission issue",
-    description:
-      "Validates schema-aligned UGC fields, applies anti-abuse controls, and creates a GitHub issue for review. Eligible source-backed submissions may later be approved for a PR from GitHub automation, but this endpoint never writes content files, publishes registry entries, or hosts community ZIP/MCPB artifacts directly.",
-    tags: ["Submissions"],
-    originCheck: true,
-    bodySchema: submissionBodySchema,
-    bodyLimitBytes: 64 * 1024,
-    auth: "turnstile",
-    rateLimit: {
-      scope: "submissions",
-      limit: 8,
-      windowMs: 60_000,
-      binding: "API_STRICT_RATE_LIMIT",
-    },
-  }),
   "submissions.preflight": route({
     id: "submissions.preflight",
     method: "POST",
     path: "/api/submissions/preflight",
     summary: "Preflight a content submission draft",
     description:
-      "Runs read-only schema, duplicate, source, package, and safety/privacy checks before a contributor opens a public GitHub submission issue. This endpoint never creates issues, labels, branches, pull requests, registry content, or package artifacts.",
+      "Runs read-only schema, duplicate, source, package, and safety/privacy checks before a contributor opens a single-entry content PR through the private submission gate. This endpoint never creates issues, labels, branches, pull requests, registry content, or package artifacts.",
     tags: ["Submissions"],
     originCheck: true,
     bodySchema: submissionPreflightBodySchema,
@@ -1137,24 +1064,6 @@ export const apiRouteDefinitions = {
     rateLimit: {
       scope: "submissions-preflight",
       limit: 30,
-      windowMs: 60_000,
-      binding: "API_DYNAMIC_RATE_LIMIT",
-    },
-  }),
-  "submissions.queue": route({
-    id: "submissions.queue",
-    method: "GET",
-    path: "/api/submissions/queue",
-    summary: "List public content submission issue status",
-    description:
-      "Returns sanitized, read-only status for public content-submission issues. This endpoint reads GitHub issue metadata only; it cannot approve, reject, label, import, create branches, create PRs, or publish registry content.",
-    tags: ["Submissions"],
-    originCheck: true,
-    querySchema: submissionQueueQuerySchema,
-    responseSchema: submissionQueueResponseSchema,
-    rateLimit: {
-      scope: "submissions-queue",
-      limit: 60,
       windowMs: 60_000,
       binding: "API_DYNAMIC_RATE_LIMIT",
     },

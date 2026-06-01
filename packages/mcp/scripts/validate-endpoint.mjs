@@ -295,8 +295,8 @@ async function validateMcpTools(endpointUrl, options = {}) {
     );
     assert(schema.ok === true, "get_submission_schema did not return ok.");
     assert(
-      schema.issueTemplate?.template === "submit-mcp.yml",
-      "get_submission_schema did not return the MCP issue template.",
+      schema.prIntake?.mode === "github_app_user_fork_pr",
+      "get_submission_schema did not return PR-first intake metadata.",
     );
     if (options.requireSafetyMetadata) {
       const fieldIds = schema.schema?.fields?.map((field) => field.id) || [];
@@ -328,8 +328,8 @@ async function validateMcpTools(endpointUrl, options = {}) {
     );
     assert(urls.ok === true, "build_submission_urls did not return ok.");
     assert(
-      String(urls.githubIssueUrl || "").includes("template=submit-mcp.yml"),
-      "build_submission_urls did not return an MCP issue URL.",
+      String(urls.submitUrl || "").includes("/submit"),
+      "build_submission_urls did not return the submit URL.",
     );
 
     if (toolNames.includes("prepare_submission_draft")) {
@@ -350,8 +350,8 @@ async function validateMcpTools(endpointUrl, options = {}) {
         }),
       );
       assert(
-        prepared.issueDraft?.body,
-        "prepare_submission_draft did not return a canonical issue body.",
+        prepared.prDraft?.body,
+        "prepare_submission_draft did not return a canonical PR draft body.",
       );
       assert(
         String(prepared.submissionPolicy || "").includes("does not auto-merge"),

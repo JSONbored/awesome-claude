@@ -4,7 +4,7 @@ Use these examples to decide whether a submission belongs in the free
 HeyClaude content review flow.
 
 Start with the [Submit page](https://heyclau.de/submit) or the
-[GitHub issue forms](https://github.com/JSONbored/awesome-claude/issues/new/choose).
+[GitHub pull request list](https://github.com/JSONbored/awesome-claude/pulls).
 Use [SCHEMA.md](SCHEMA.md) for field requirements and
 [package-security-policy.md](../../docs/package-security-policy.md) for ZIP and
 MCPB handling.
@@ -24,12 +24,12 @@ MCPB handling.
 
 | Submission | Decision | Why |
 | --- | --- | --- |
-| A paid SaaS or affiliate listing submitted as an agent, with marketing copy and no reusable source. | Reject or reroute to the [tools/app listing flow](https://heyclau.de/tools/submit). | Free content issues are not paid placements, product promos, sponsorships, claims, or jobs. |
+| A paid SaaS or affiliate listing submitted as an agent, with marketing copy and no reusable source. | Reject or reroute to the [tools/app listing flow](https://heyclau.de/tools/submit). | Free content submissions are not paid placements, product promos, sponsorships, claims, or jobs. |
 | A request to publish `my-skill.zip` or `my-server.mcpb` at `/downloads/...`. | Reject the hosting request. | Community ZIP/MCPB archives are review material only; public downloads are maintainer-built after review. |
 | A skill or MCP submission that has only an uploaded artifact and no source repo, docs, install command, retrieval sources, or copyable content. | Reject until source-backed details are provided. | Maintainers need a verifiable source and build path before listing package-like resources. |
 | A PR that edits `README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`, or `apps/web/public/downloads/**` for a community entry. | Request removal of generated files. | Generated registry artifacts and public mirrors are owned by maintainer automation. |
 | A hook or MCP server that reads home directories, sends prompts to a third-party API, writes files, or runs background workers without notes. | Reject until safety and privacy notes are added. | Users need to know what the resource can access, change, send, log, or retain. |
-| A job, consulting service, hosted app, claim/update request, or commercial tool submitted through a category issue template. | Reroute to the relevant website lead form. | These are not free registry content submissions and use separate review flows. |
+| A job, consulting service, hosted app, claim/update request, or commercial tool submitted through a content PR. | Reroute to the relevant website lead form. | These are not free registry content submissions and use separate review flows. |
 | A collection containing unreleased or unreviewed resources that are not included as separate entries. | Reject or split into separate submissions. | Collection entries must reference existing reviewed content or companion entries that can be reviewed independently. |
 
 ## Quick Checks Before Submitting

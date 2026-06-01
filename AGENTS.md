@@ -15,15 +15,15 @@ The growth path is useful community submissions, not low-quality promotion. Free
 - Website/API behavior lives under `apps/web/src/`.
 - MCP package behavior lives under `packages/mcp/`.
 - `README.md` is generated from `scripts/generate-readme.mjs`.
-- Issue templates are generated from `scripts/generate-issue-templates.mjs`.
+- Public content submissions are PR-first. The website submit form hands drafts to the private submission gate instead of creating GitHub issues.
 - Public registry artifacts under `apps/web/public/data/**` and generated source under `apps/web/src/generated/**` are maintainer-owned outputs.
 
 Do not hand-edit generated artifacts unless the task is explicitly maintainer/internal generation work.
 
 ## Contribution And Content Policy
 
-- Prefer issue-first content submissions for community UGC.
-- Direct content PRs should be focused on source content only.
+- Prefer PR-first content submissions for community UGC.
+- Direct content PRs should be focused on exactly one source content entry only.
 - Preserve original submitter attribution when converting issues or PRs into real content.
 - Reject or route away thin promo, paid listing attempts, affiliate-style submissions, and unsupported categories.
 - Do not accept community-submitted ZIP/MCPB hosting requests.
@@ -43,9 +43,9 @@ Risk-bearing hooks, MCP servers, skills, commands, and statuslines should disclo
 
 ## Automation Boundaries
 
-- GitHub Actions may validate, label, comment, and open import PRs only through approved maintainer gates.
+- GitHub Actions may validate content PRs, but final gate decisions live in the private submission gate.
 - Automation must never auto-merge.
-- Public issue events must not trigger write-scoped import PR creation without maintainer approval labels.
+- Public issue events must not trigger write-scoped import PR creation.
 - Do not run, install, or execute untrusted submitted code in privileged workflows.
 - `pull_request_target` workflows must read fork PR files through GitHub APIs and must not checkout or execute fork code.
 
@@ -63,7 +63,6 @@ Common checks:
 
 ```sh
 pnpm validate:content:strict
-pnpm validate:issue-templates
 pnpm validate:packages
 pnpm scan:packages
 pnpm test:submission-intake
@@ -90,6 +89,7 @@ Submission/API changes:
 ```sh
 pnpm validate:openapi
 pnpm exec vitest run tests/submission-api.test.ts tests/api-contracts.test.ts tests/api-router-security.test.ts
+pnpm exec vitest run tests/submission-gate-worker.test.ts
 pnpm test:submission-intake
 pnpm build
 git diff --check

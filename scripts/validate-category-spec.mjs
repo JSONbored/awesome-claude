@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 import categorySpec from "@heyclaude/registry/category-spec";
-import { buildIssueTemplateSpec } from "@heyclaude/registry/submission-spec";
 
 const repoRoot = process.cwd();
 const templateRoot = path.join(repoRoot, ".github/ISSUE_TEMPLATE");
@@ -40,32 +39,15 @@ for (const category of categorySpec.categoryOrder) {
     continue;
   }
 
-  if (!spec.template) {
-    fail(`${category}: missing issue template name`);
-    continue;
+  if (spec.template) {
+    fail(`${category}: public issue template reference should be removed`);
   }
+}
 
-  const templatePath = path.join(templateRoot, spec.template);
-  if (!fs.existsSync(templatePath)) {
-    fail(`${category}: issue template not found: ${spec.template}`);
-    continue;
-  }
-
-  const template = fs.readFileSync(templatePath, "utf8");
-  if (!template.includes("content-submission")) {
-    fail(`${category}: issue template must include content-submission label`);
-  }
-
-  if (templatePath.endsWith(".yml") || templatePath.endsWith(".yaml")) {
-    const issueTemplateSpec = buildIssueTemplateSpec(category);
-    const requiredFields =
-      issueTemplateSpec?.fields
-        .filter((field) => field.required)
-        .map((field) => field.id) ?? [];
-    for (const field of requiredFields) {
-      if (!template.includes(`id: ${field}`)) {
-        fail(`${category}: issue template missing required field id ${field}`);
-      }
+if (fs.existsSync(templateRoot)) {
+  for (const fileName of fs.readdirSync(templateRoot)) {
+    if (/^submit-/.test(fileName)) {
+      fail(`content issue template should not exist: ${fileName}`);
     }
   }
 }
