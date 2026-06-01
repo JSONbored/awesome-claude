@@ -9,6 +9,7 @@ import {
 } from "./utils";
 
 export const FEED_URL = "https://heyclau.de/data/raycast-index.json";
+export const REGISTRY_SEARCH_URL = "https://heyclau.de/api/registry/search";
 export const SUBMIT_URL = "https://heyclau.de/submit";
 export const CACHE_KEY = "heyclaude-raycast-index";
 export const FEED_METADATA_CACHE_KEY = "heyclaude-raycast-feed-metadata";
@@ -94,6 +95,24 @@ export type ParsedFeed = {
   signature?: string;
   refreshStatus?: "updated" | "unchanged" | "stale";
   refreshWarning?: string;
+};
+
+export type ParsedRegistrySearch = {
+  entries: RaycastEntry[];
+  query: string;
+  category: string;
+  total: number;
+  limit: number;
+  offset: number;
+  nextOffset: number | null;
+};
+
+export type RegistrySearchUrlOptions = {
+  query: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+  searchUrl?: string;
 };
 
 export type FeedSnapshotMetadata = {
@@ -200,6 +219,19 @@ export function absoluteDataUrl(value: string, baseUrl = FEED_URL) {
 
 export function registryManifestUrl(feedUrl = FEED_URL) {
   return absoluteDataUrl(REGISTRY_MANIFEST_PATH, feedUrl);
+}
+
+export function registrySearchUrl(options: RegistrySearchUrlOptions) {
+  const url = new URL(options.searchUrl || REGISTRY_SEARCH_URL);
+  url.searchParams.set("q", options.query.trim());
+  if (options.category) url.searchParams.set("category", options.category);
+  if (options.limit !== undefined) {
+    url.searchParams.set("limit", String(options.limit));
+  }
+  if (options.offset !== undefined) {
+    url.searchParams.set("offset", String(options.offset));
+  }
+  return url.toString();
 }
 
 function setOptionalParam(
@@ -346,6 +378,120 @@ export function isValidRaycastEntry(value: unknown) {
   return normalizeRaycastEntry(value) !== null;
 }
 
+function buildSearchResultDetailMarkdown(entry: RaycastEntry) {
+  return [
+    `# ${entry.title}`,
+    "",
+    entry.description,
+    "",
+    "## Source",
+    entry.repoUrl || entry.documentationUrl || entry.webUrl,
+    "",
+    entry.tags.length ? "## Tags" : "",
+    entry.tags.length ? entry.tags.map((tag) => `- ${tag}`).join("\n") : "",
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+}
+
+function buildSearchResultCopyText(
+  entry: Pick<RaycastEntry, "title" | "description" | "webUrl">,
+) {
+  return `${entry.title}\n\n${entry.description}\n\n${entry.webUrl}`;
+}
+
+export function normalizeRegistrySearchEntry(
+  value: unknown,
+): RaycastEntry | null {
+  if (!isRecord(value)) return null;
+
+  const category = optionalString(value.category);
+  const slug = optionalString(value.slug);
+  const title = optionalString(value.title);
+  const description = optionalString(value.description);
+  const webUrl =
+    optionalString(value.canonicalUrl) ||
+    optionalString(value.url) ||
+    optionalString(value.webUrl);
+
+  if (!category || !slug || !title || !description || !webUrl) {
+    return null;
+  }
+
+  const entry: RaycastEntry = {
+    category,
+    slug,
+    title,
+    description,
+    tags: normalizeStringArray(value.tags),
+    author: optionalString(value.author) || undefined,
+    brandName: optionalString(value.brandName) || undefined,
+    brandDomain: optionalString(value.brandDomain) || undefined,
+    brandIconUrl: optionalString(value.brandIconUrl) || undefined,
+    brandLogoUrl: optionalString(value.brandLogoUrl) || undefined,
+    brandAssetSource: optionalString(value.brandAssetSource) || undefined,
+    brandVerifiedAt: optionalString(value.brandVerifiedAt) || undefined,
+    platformCompatibility: normalizeStringArray(value.platforms),
+    installCommand: "",
+    configSnippet: "",
+    copyText: "",
+    detailMarkdown: "",
+    detailUrl: `/data/raycast/${category}/${slug}.json`,
+    webUrl,
+    canonicalUrl: webUrl,
+    llmsUrl: optionalString(value.llmsUrl) || undefined,
+    apiUrl: optionalString(value.apiUrl) || undefined,
+    seoTitle: optionalString(value.seoTitle) || undefined,
+    seoDescription: optionalString(value.seoDescription) || undefined,
+    repoUrl: optionalString(value.repoUrl),
+    documentationUrl: optionalString(value.documentationUrl),
+    downloadTrust: normalizeDownloadTrust(value.downloadTrust),
+    verificationStatus: optionalString(value.verificationStatus),
+  };
+
+  entry.copyText = buildSearchResultCopyText(entry);
+  entry.copyTextLength = entry.copyText.length;
+  entry.copyTextTruncated = false;
+  entry.detailMarkdown = buildSearchResultDetailMarkdown(entry);
+  return entry;
+}
+
+function readRequiredNumber(value: unknown, field: string) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  throw new Error(`Registry search payload missing numeric ${field}`);
+}
+
+function readRequiredNextOffset(value: unknown) {
+  if (value === null) return null;
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  throw new Error("Registry search payload missing nextOffset");
+}
+
+export function parseRegistrySearch(value: string): ParsedRegistrySearch {
+  const parsed = JSON.parse(value) as unknown;
+  if (!isRecord(parsed) || !Array.isArray(parsed.results)) {
+    throw new Error("Registry search payload was malformed");
+  }
+
+  const normalizedEntries = parsed.results.map(normalizeRegistrySearchEntry);
+  const entries = normalizedEntries.filter(
+    (entry): entry is RaycastEntry => entry !== null,
+  );
+  if (entries.length !== normalizedEntries.length) {
+    throw new Error("Registry search payload contained malformed entries");
+  }
+
+  return {
+    entries,
+    query: optionalString(parsed.query),
+    category: optionalString(parsed.category) || "all",
+    total: readRequiredNumber(parsed.total, "total"),
+    limit: readRequiredNumber(parsed.limit, "limit"),
+    offset: readRequiredNumber(parsed.offset, "offset"),
+    nextOffset: readRequiredNextOffset(parsed.nextOffset),
+  };
+}
+
 export function parseFeed(value: string): ParsedFeed {
   const parsed = JSON.parse(value) as unknown;
   const envelope = parsed as {
@@ -479,6 +625,40 @@ export function filterEntriesByCategory(
   }
   if (category === "all") return entries;
   return entries.filter((entry) => entry.category === category);
+}
+
+export function filterEntriesBySearchText(
+  entries: RaycastEntry[],
+  searchText: string,
+) {
+  const query = searchText.trim().toLowerCase();
+  if (!query) return entries;
+  const tokens = query
+    .split(/[^a-z0-9+#.-]+/i)
+    .map((token) => token.trim().toLowerCase())
+    .filter(Boolean);
+  if (tokens.length === 0) return [];
+
+  return entries.filter((entry) => {
+    const haystack = [
+      entry.category,
+      categoryLabel(entry.category),
+      entry.title,
+      entry.description,
+      entry.author,
+      entry.brandName,
+      entry.brandDomain,
+      entry.verificationStatus,
+      entry.downloadTrust,
+      ...(entry.tags ?? []),
+      ...(entry.platformCompatibility ?? []),
+    ]
+      .filter(Boolean)
+      .join(" ")
+      .toLowerCase();
+
+    return tokens.every((token) => haystack.includes(token));
+  });
 }
 
 export function parseFavoriteKeys(raw: string | null | undefined) {

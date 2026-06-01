@@ -1,17 +1,12 @@
 import { execFileSync } from "node:child_process";
-import fs from "node:fs";
-import path from "node:path";
 
-import matter from "gray-matter";
+import {
+  enumerateContentVoteKeys,
+  findOrphanVoteKeys,
+} from "./lib/enumerate-content-vote-keys.mjs";
 
 const repoRoot = process.cwd();
-const contentRoot = path.join(repoRoot, "content");
 const d1Binding = process.env.SITE_D1_BINDING || "SITE_DB";
-const categories = fs
-  .readdirSync(contentRoot, { withFileTypes: true })
-  .filter((entry) => entry.isDirectory() && entry.name !== "data")
-  .map((entry) => entry.name)
-  .sort();
 
 const modeArg =
   process.argv.find((arg) => arg.startsWith("--mode=")) ?? "--mode=both";
@@ -21,23 +16,9 @@ if (!["local", "remote", "both"].includes(mode)) {
   process.exit(1);
 }
 
-const expected = new Set();
-for (const category of categories) {
-  const categoryDir = path.join(contentRoot, category);
-  const files = fs
-    .readdirSync(categoryDir)
-    .filter((fileName) => fileName.endsWith(".mdx"));
-  for (const fileName of files) {
-    const filePath = path.join(categoryDir, fileName);
-    const source = fs.readFileSync(filePath, "utf8");
-    const { data } = matter(source);
-    const slug = String(data.slug ?? fileName.replace(/\.mdx$/, ""));
-    const entryKey = `${category}:${slug}`;
-    expected.add(entryKey);
-  }
-}
+const expected = enumerateContentVoteKeys(repoRoot);
 
-function getRows(runMode) {
+function getRows(runMode, query) {
   const args = [
     "--filter",
     "web",
@@ -48,7 +29,7 @@ function getRows(runMode) {
     d1Binding,
     runMode === "remote" ? "--remote" : "--local",
     "--command",
-    "SELECT entry_key, upvote_count FROM votes_entries;",
+    query,
   ];
   const output = execFileSync("pnpm", args, {
     cwd: repoRoot,
@@ -63,10 +44,18 @@ function getRows(runMode) {
 }
 
 function verifyRunMode(runMode) {
-  const rows = getRows(runMode);
+  const rows = getRows(
+    runMode,
+    "SELECT entry_key, upvote_count FROM votes_entries;",
+  );
+  const clientRows = getRows(
+    runMode,
+    "SELECT DISTINCT entry_key FROM votes_by_client;",
+  );
   const actual = new Map(
     rows.map((row) => [String(row.entry_key), Number(row.upvote_count ?? 0)]),
   );
+  const clientKeys = clientRows.map((row) => String(row.entry_key));
 
   const missing = [];
   const negativeCounts = [];
@@ -81,12 +70,18 @@ function verifyRunMode(runMode) {
     }
   }
 
+  const orphans = findOrphanVoteKeys(actual.keys(), expected);
+  const clientOrphans = findOrphanVoteKeys(clientKeys, expected);
+
   return {
     runMode,
     totalExpected: expected.size,
     totalRows: rows.length,
+    totalClientRows: clientRows.length,
     missing,
     negativeCounts,
+    orphans,
+    clientOrphans,
   };
 }
 
@@ -99,18 +94,32 @@ for (const result of results) {
   if (
     result.missing.length > 0 ||
     result.negativeCounts.length > 0 ||
-    result.totalRows < result.totalExpected
+    result.totalRows < result.totalExpected ||
+    result.orphans.length > 0 ||
+    result.clientOrphans.length > 0
   ) {
     failed = true;
   }
 
   console.log(
-    `${result.runMode}: expected=${result.totalExpected} rows=${result.totalRows} missing=${result.missing.length} invalidCounts=${result.negativeCounts.length}`,
+    `${result.runMode}: expected=${result.totalExpected} rows=${result.totalRows} clientRows=${result.totalClientRows} missing=${result.missing.length} orphans=${result.orphans.length} clientOrphans=${result.clientOrphans.length} invalidCounts=${result.negativeCounts.length}`,
   );
 
   if (result.missing.length > 0) {
     console.log("First missing rows:");
     for (const entryKey of result.missing.slice(0, 20))
+      console.log(`- ${entryKey}`);
+  }
+
+  if (result.orphans.length > 0) {
+    console.log("First orphan rows:");
+    for (const entryKey of result.orphans.slice(0, 20))
+      console.log(`- ${entryKey}`);
+  }
+
+  if (result.clientOrphans.length > 0) {
+    console.log("First orphan client-vote rows:");
+    for (const entryKey of result.clientOrphans.slice(0, 20))
       console.log(`- ${entryKey}`);
   }
 

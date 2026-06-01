@@ -24,6 +24,7 @@ import {
   categoryLabel,
   entryKey,
   filterEntriesByCategory,
+  filterEntriesBySearchText,
   parseFavoriteKeys,
   serializeFavoriteKeys,
   sortedCategoryOptions,
@@ -31,6 +32,7 @@ import {
 } from "./feed";
 import {
   fetchFreshFeed,
+  fetchRegistrySearch,
   loadCachedFeed as loadCachedFeedFromRuntime,
   loadEntryDetail,
 } from "./runtime";
@@ -38,10 +40,22 @@ import { markdownLink, withRaycastUtm } from "./links";
 import { entryDetailMetadata, entrySnippetKeyword } from "./raycast-ui";
 
 const cache = new Cache();
+const SEARCH_PAGE_SIZE = 20;
 
 type RegistryCommandOptions = {
   fixedCategory?: string;
   searchPlaceholder?: string;
+};
+
+type ServerSearchState = {
+  status: "idle" | "loading" | "ready" | "failed";
+  query: string;
+  category: string;
+  entries: RaycastEntry[];
+  total: number;
+  nextOffset: number | null;
+  isLoading: boolean;
+  error?: string;
 };
 
 const categoryIcons: Record<string, Icon> = {
@@ -130,6 +144,23 @@ function filterRegistryEntries(
   return categoryEntries;
 }
 
+function serverSearchCategory(filter: string, fixedCategory?: string) {
+  if (fixedCategory) return fixedCategory;
+  return filter !== "all" && filter !== "favorites" ? filter : "";
+}
+
+function createEmptyServerSearchState(): ServerSearchState {
+  return {
+    status: "idle",
+    query: "",
+    category: "",
+    entries: [],
+    total: 0,
+    nextOffset: null,
+    isLoading: false,
+  };
+}
+
 export function createRegistryCommand(options: RegistryCommandOptions = {}) {
   return function RegistryCommand() {
     const configuredFeed = getConfiguredFeed();
@@ -139,6 +170,10 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
     const [isLoading, setIsLoading] = useState(entries.length === 0);
     const [filter, setFilter] = useState("all");
     const [favorites, setFavorites] = useState<Set<string>>(new Set());
+    const [searchText, setSearchText] = useState("");
+    const [serverSearch, setServerSearch] = useState<ServerSearchState>(
+      createEmptyServerSearchState,
+    );
     const entriesCountRef = useRef(entries.length);
 
     useEffect(() => {
@@ -210,14 +245,130 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
       };
     }, []);
 
+    const normalizedSearchText = searchText.trim();
+    const searchCategory = serverSearchCategory(filter, options.fixedCategory);
+    const canUseServerSearch =
+      normalizedSearchText.length > 0 && filter !== "favorites";
+
+    useEffect(() => {
+      if (!canUseServerSearch) {
+        setServerSearch(createEmptyServerSearchState());
+        return;
+      }
+
+      let cancelled = false;
+      const timeout = setTimeout(() => {
+        setServerSearch((previous) => ({
+          ...previous,
+          status: "loading",
+          query: normalizedSearchText,
+          category: searchCategory,
+          entries: [],
+          total: 0,
+          nextOffset: null,
+          isLoading: true,
+          error: undefined,
+        }));
+
+        fetchRegistrySearch({
+          query: normalizedSearchText,
+          category: searchCategory || undefined,
+          limit: SEARCH_PAGE_SIZE,
+        })
+          .then((result) => {
+            if (cancelled) return;
+            setServerSearch({
+              status: "ready",
+              query: normalizedSearchText,
+              category: searchCategory,
+              entries: result.entries,
+              total: result.total,
+              nextOffset: result.nextOffset,
+              isLoading: false,
+            });
+          })
+          .catch((error) => {
+            if (cancelled) return;
+            setServerSearch({
+              status: "failed",
+              query: normalizedSearchText,
+              category: searchCategory,
+              entries: [],
+              total: 0,
+              nextOffset: null,
+              isLoading: false,
+              error: error instanceof Error ? error.message : String(error),
+            });
+          });
+      }, 300);
+
+      return () => {
+        cancelled = true;
+        clearTimeout(timeout);
+      };
+    }, [canUseServerSearch, normalizedSearchText, searchCategory]);
+
+    async function loadMoreSearchResults() {
+      if (
+        !canUseServerSearch ||
+        serverSearch.isLoading ||
+        serverSearch.nextOffset === null
+      ) {
+        return;
+      }
+
+      const requestQuery = normalizedSearchText;
+      const requestCategory = searchCategory;
+      const requestOffset = serverSearch.nextOffset;
+      const isStaleResponse = (state: ServerSearchState) =>
+        state.query !== requestQuery || state.category !== requestCategory;
+
+      setServerSearch((previous) => ({
+        ...previous,
+        isLoading: true,
+        error: undefined,
+      }));
+      try {
+        const result = await fetchRegistrySearch({
+          query: requestQuery,
+          category: requestCategory || undefined,
+          limit: SEARCH_PAGE_SIZE,
+          offset: requestOffset,
+        });
+        setServerSearch((previous) =>
+          isStaleResponse(previous)
+            ? previous
+            : {
+                ...previous,
+                status: "ready",
+                entries: [...previous.entries, ...result.entries],
+                total: result.total,
+                nextOffset: result.nextOffset,
+                isLoading: false,
+              },
+        );
+      } catch (error) {
+        setServerSearch((previous) =>
+          isStaleResponse(previous)
+            ? previous
+            : {
+                ...previous,
+                status: previous.entries.length > 0 ? "ready" : "failed",
+                isLoading: false,
+                error: error instanceof Error ? error.message : String(error),
+              },
+        );
+      }
+    }
+
     const categoryOptions = useMemo(
       () =>
         options.fixedCategory
           ? fixedCategoryOptions(options.fixedCategory)
           : sortedCategoryOptions(entries),
-      [entries],
+      [entries, options.fixedCategory],
     );
-    const displayedEntries = useMemo(
+    const localEntries = useMemo(
       () =>
         filterRegistryEntries(
           entries,
@@ -225,8 +376,21 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
           favorites,
           options.fixedCategory,
         ),
-      [filter, entries, favorites],
+      [entries, favorites, filter, options.fixedCategory],
     );
+    const localSearchEntries = useMemo(
+      () => filterEntriesBySearchText(localEntries, searchText),
+      [localEntries, searchText],
+    );
+    const isCurrentServerSearch =
+      canUseServerSearch &&
+      serverSearch.query === normalizedSearchText &&
+      serverSearch.category === searchCategory &&
+      serverSearch.status === "ready" &&
+      !serverSearch.error;
+    const displayedEntries = isCurrentServerSearch
+      ? serverSearch.entries
+      : localSearchEntries;
     const {
       data: rankedEntries,
       visitItem,
@@ -235,6 +399,9 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
       namespace: `registry:${options.fixedCategory || "all"}`,
       key: entryKey,
     });
+    const visibleEntries = isCurrentServerSearch
+      ? displayedEntries
+      : rankedEntries;
 
     async function copyFullAsset(entry: RaycastEntry) {
       try {
@@ -302,18 +469,26 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
     const emptyTitle =
       filter === "favorites"
         ? "No favorites yet"
-        : options.fixedCategory
-          ? `No ${categoryLabel(options.fixedCategory).toLowerCase()} found`
-          : "No entries found";
+        : serverSearch.error && canUseServerSearch
+          ? "Showing cached matches"
+          : options.fixedCategory
+            ? `No ${categoryLabel(options.fixedCategory).toLowerCase()} found`
+            : "No entries found";
     const emptyDescription =
       filter === "favorites"
         ? "Add favorites from any category to keep them here."
-        : "Try another query or filter.";
+        : serverSearch.error && canUseServerSearch
+          ? serverSearch.error
+          : "Try another query or filter.";
 
     return (
       <List
-        isLoading={isLoading}
+        isLoading={isLoading || serverSearch.isLoading}
         isShowingDetail
+        filtering={!canUseServerSearch}
+        throttle
+        searchText={searchText}
+        onSearchTextChange={setSearchText}
         searchBarPlaceholder={
           options.searchPlaceholder ||
           "Search Claude agents, MCP servers, skills, hooks..."
@@ -334,7 +509,7 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
           </List.Dropdown>
         }
       >
-        {rankedEntries.map((entry) => {
+        {visibleEntries.map((entry) => {
           const isFavorite = favorites.has(entryKey(entry));
           const hasInstallCommand = Boolean(entry.installCommand.trim());
           const hasConfig = Boolean(entry.configSnippet.trim());
@@ -520,6 +695,14 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
                     />
                   </ActionPanel.Section>
                   <ActionPanel.Section title="Refresh">
+                    {isCurrentServerSearch &&
+                    serverSearch.nextOffset !== null ? (
+                      <Action
+                        title="Load More Search Results"
+                        icon={Icon.Plus}
+                        onAction={() => void loadMoreSearchResults()}
+                      />
+                    ) : null}
                     <Action
                       title="Refresh Feed"
                       icon={Icon.ArrowClockwise}
@@ -532,7 +715,9 @@ export function createRegistryCommand(options: RegistryCommandOptions = {}) {
             />
           );
         })}
-        {!isLoading && displayedEntries.length === 0 ? (
+        {!isLoading &&
+        !serverSearch.isLoading &&
+        displayedEntries.length === 0 ? (
           <List.EmptyView
             icon={Icon.MagnifyingGlass}
             title={emptyTitle}
