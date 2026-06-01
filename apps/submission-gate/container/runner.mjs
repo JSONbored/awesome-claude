@@ -4,8 +4,21 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
+import { pathToFileURL } from "node:url";
 
 const PORT = Number(process.env.PORT || 8080);
+const DEFAULT_VALIDATION_COMMANDS = [
+  "pnpm validate:content:strict",
+  "pnpm test:registry-artifacts",
+  "pnpm validate:openapi",
+  "pnpm build",
+  "git diff --check",
+];
+const ALLOWED_VALIDATION_COMMANDS = new Set(DEFAULT_VALIDATION_COMMANDS);
+const GITHUB_REPO_PATTERN =
+  /^[A-Za-z0-9][A-Za-z0-9_.-]{0,99}\/[A-Za-z0-9_.-]{1,100}$/;
+const GIT_REF_PATTERN =
+  /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,200}$/;
 
 function readBody(request) {
   return new Promise((resolve, reject) => {
@@ -45,6 +58,38 @@ function redactSensitiveOutput(value) {
   );
 }
 
+export function safeGitHubRepo(value) {
+  const repo = String(value || "").trim();
+  if (!GITHUB_REPO_PATTERN.test(repo)) {
+    throw new Error("Import job has an invalid GitHub repository.");
+  }
+  return repo;
+}
+
+export function safeGitRef(value, name) {
+  const ref = String(value || "").trim();
+  if (!GIT_REF_PATTERN.test(ref)) {
+    throw new Error(`Import job has an invalid ${name}.`);
+  }
+  return ref;
+}
+
+export function resolveValidationCommands(value) {
+  const requested =
+    Array.isArray(value) && value.length ? value : DEFAULT_VALIDATION_COMMANDS;
+  return requested.map((command) => {
+    const normalized = String(command || "")
+      .trim()
+      .replace(/\s+/g, " ");
+    if (!ALLOWED_VALIDATION_COMMANDS.has(normalized)) {
+      throw new Error(
+        `Unsupported validation command: ${normalized || "empty"}`,
+      );
+    }
+    return normalized;
+  });
+}
+
 function run(command, args, options = {}) {
   return new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -70,6 +115,23 @@ function run(command, args, options = {}) {
         );
     });
   });
+}
+
+async function runValidationCommand(command, cwd) {
+  switch (command) {
+    case "pnpm validate:content:strict":
+      return run("pnpm", ["validate:content:strict"], { cwd });
+    case "pnpm test:registry-artifacts":
+      return run("pnpm", ["test:registry-artifacts"], { cwd });
+    case "pnpm validate:openapi":
+      return run("pnpm", ["validate:openapi"], { cwd });
+    case "pnpm build":
+      return run("pnpm", ["build"], { cwd });
+    case "git diff --check":
+      return run("git", ["diff", "--check"], { cwd });
+    default:
+      throw new Error(`Unsupported validation command: ${command}`);
+  }
 }
 
 async function githubJson(url, token, init = {}) {
@@ -102,13 +164,7 @@ async function handleImport(job) {
     body,
     files,
     githubToken,
-    validationCommands = [
-      "pnpm validate:content:strict",
-      "pnpm test:registry-artifacts",
-      "pnpm validate:openapi",
-      "pnpm build",
-      "git diff --check",
-    ],
+    validationCommands,
   } = job;
 
   if (
@@ -123,19 +179,32 @@ async function handleImport(job) {
     );
   }
 
-  const [owner, name] = repo.split("/");
+  const safeRepo = safeGitHubRepo(repo);
+  const safeBaseRef = safeGitRef(baseRef, "baseRef");
+  const safeBranchName = safeGitRef(branchName, "branchName");
+  const safeValidationCommands = resolveValidationCommands(validationCommands);
+  const [owner, name] = safeRepo.split("/");
   const workdir = await mkdtemp(path.join(tmpdir(), "heyclaude-import-"));
   try {
-    const cloneUrl = `https://x-access-token:${githubToken}@github.com/${repo}.git`;
+    const cloneUrl = `https://x-access-token:${githubToken}@github.com/${safeRepo}.git`;
     await run(
       "git",
-      ["clone", "--depth", "1", "--branch", baseRef, cloneUrl, "repo"],
+      [
+        "clone",
+        "--depth",
+        "1",
+        "--branch",
+        safeBaseRef,
+        "--",
+        cloneUrl,
+        "repo",
+      ],
       {
         cwd: workdir,
       },
     );
     const repoDir = path.join(workdir, "repo");
-    await run("git", ["checkout", "-b", branchName], { cwd: repoDir });
+    await run("git", ["checkout", "-b", safeBranchName], { cwd: repoDir });
 
     for (const file of files) {
       if (!file.path || typeof file.content !== "string") {
@@ -151,9 +220,8 @@ async function handleImport(job) {
 
     await run("corepack", ["enable"], { cwd: repoDir });
     await run("pnpm", ["install", "--frozen-lockfile"], { cwd: repoDir });
-    for (const command of validationCommands) {
-      const [cmd, ...args] = command.split(/\s+/);
-      await run(cmd, args, { cwd: repoDir });
+    for (const command of safeValidationCommands) {
+      await runValidationCommand(command, repoDir);
     }
 
     await run("git", ["add", "."], { cwd: repoDir });
@@ -171,7 +239,7 @@ async function handleImport(job) {
         },
       },
     );
-    await run("git", ["push", "origin", branchName], { cwd: repoDir });
+    await run("git", ["push", "origin", safeBranchName], { cwd: repoDir });
 
     const pr = await githubJson(
       `https://api.github.com/repos/${owner}/${name}/pulls`,
@@ -182,8 +250,8 @@ async function handleImport(job) {
           title: title || "feat(content): import accepted submission",
           body:
             body || "Maintainer-owned import from the private submission gate.",
-          head: branchName,
-          base: baseRef,
+          head: safeBranchName,
+          base: safeBaseRef,
           maintainer_can_modify: true,
         }),
       },
@@ -198,39 +266,43 @@ async function handleImport(job) {
   }
 }
 
-const server = createServer(async (request, response) => {
-  try {
-    if (request.method === "GET" && request.url === "/health") {
+export function createImportServer() {
+  return createServer(async (request, response) => {
+    try {
+      if (request.method === "GET" && request.url === "/health") {
+        response.writeHead(200, { "content-type": "application/json" });
+        response.end(JSON.stringify({ ok: true }));
+        return;
+      }
+      if (request.method !== "POST" || request.url !== "/import") {
+        response.writeHead(404, { "content-type": "application/json" });
+        response.end(JSON.stringify({ ok: false, error: "not_found" }));
+        return;
+      }
+      const body = await readBody(request);
+      const secret = process.env.INTERNAL_SHARED_SECRET || "";
+      if (
+        secret &&
+        !verifySignature(
+          secret,
+          body,
+          request.headers["x-heyclaude-internal-signature"],
+        )
+      ) {
+        response.writeHead(401, { "content-type": "application/json" });
+        response.end(JSON.stringify({ ok: false, error: "invalid_signature" }));
+        return;
+      }
+      const result = await handleImport(JSON.parse(body));
       response.writeHead(200, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: true }));
-      return;
+      response.end(JSON.stringify(result));
+    } catch (error) {
+      response.writeHead(500, { "content-type": "application/json" });
+      response.end(JSON.stringify({ ok: false, error: error.message }));
     }
-    if (request.method !== "POST" || request.url !== "/import") {
-      response.writeHead(404, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: false, error: "not_found" }));
-      return;
-    }
-    const body = await readBody(request);
-    const secret = process.env.INTERNAL_SHARED_SECRET || "";
-    if (
-      secret &&
-      !verifySignature(
-        secret,
-        body,
-        request.headers["x-heyclaude-internal-signature"],
-      )
-    ) {
-      response.writeHead(401, { "content-type": "application/json" });
-      response.end(JSON.stringify({ ok: false, error: "invalid_signature" }));
-      return;
-    }
-    const result = await handleImport(JSON.parse(body));
-    response.writeHead(200, { "content-type": "application/json" });
-    response.end(JSON.stringify(result));
-  } catch (error) {
-    response.writeHead(500, { "content-type": "application/json" });
-    response.end(JSON.stringify({ ok: false, error: error.message }));
-  }
-});
+  });
+}
 
-server.listen(PORT, "0.0.0.0");
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
+  createImportServer().listen(PORT, "0.0.0.0");
+}
