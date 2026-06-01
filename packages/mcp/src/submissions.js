@@ -1,5 +1,6 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
-export const GITHUB_PULLS_URL = "https://github.com/JSONbored/awesome-claude/pulls";
+export const GITHUB_PULLS_URL =
+  "https://github.com/JSONbored/awesome-claude/pulls";
 
 const defaultLabels = ["content-submission", "needs-review"];
 
@@ -531,7 +532,10 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
     errors: validation.errors,
     warnings: validation.warnings,
     prPreview: prDraft
-      ? { title: prDraft.title.replace(/^Submit /, "Add "), labels: prDraft.labels }
+      ? {
+          title: prDraft.title.replace(/^Submit /, "Add "),
+          labels: prDraft.labels,
+        }
       : null,
     nextSteps: validation.valid
       ? [
@@ -718,7 +722,9 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
     missingRequiredFields: validation.missingRequiredFields || [],
     errors: validation.errors,
     warnings: validation.warnings,
-    prDraft: prDraft ? { ...prDraft, title: prDraft.title.replace(/^Submit /, "Add ") } : null,
+    prDraft: prDraft
+      ? { ...prDraft, title: prDraft.title.replace(/^Submit /, "Add ") }
+      : null,
     submitUrl: urls.submitUrl,
     githubPullsUrl: urls.githubPullsUrl,
     reviewChecklist: [

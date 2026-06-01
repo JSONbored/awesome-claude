@@ -62,7 +62,12 @@ function run(command, args, options = {}) {
     });
     child.on("close", (code) => {
       if (code === 0) resolve({ stdout, stderr });
-      else reject(new Error(`${command} failed: ${redactSensitiveOutput(stderr || stdout)}`));
+      else
+        reject(
+          new Error(
+            `${command} failed: ${redactSensitiveOutput(stderr || stdout)}`,
+          ),
+        );
     });
   });
 }
@@ -81,7 +86,9 @@ async function githubJson(url, token, init = {}) {
   const text = await response.text();
   const payload = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    throw new Error(`GitHub API ${response.status}: ${payload?.message || text}`);
+    throw new Error(
+      `GitHub API ${response.status}: ${payload?.message || text}`,
+    );
   }
   return payload;
 }
@@ -104,17 +111,29 @@ async function handleImport(job) {
     ],
   } = job;
 
-  if (!repo || !branchName || !githubToken || !Array.isArray(files) || !files.length) {
-    throw new Error("Import job requires repo, branchName, githubToken, and files.");
+  if (
+    !repo ||
+    !branchName ||
+    !githubToken ||
+    !Array.isArray(files) ||
+    !files.length
+  ) {
+    throw new Error(
+      "Import job requires repo, branchName, githubToken, and files.",
+    );
   }
 
   const [owner, name] = repo.split("/");
   const workdir = await mkdtemp(path.join(tmpdir(), "heyclaude-import-"));
   try {
     const cloneUrl = `https://x-access-token:${githubToken}@github.com/${repo}.git`;
-    await run("git", ["clone", "--depth", "1", "--branch", baseRef, cloneUrl, "repo"], {
-      cwd: workdir,
-    });
+    await run(
+      "git",
+      ["clone", "--depth", "1", "--branch", baseRef, cloneUrl, "repo"],
+      {
+        cwd: workdir,
+      },
+    );
     const repoDir = path.join(workdir, "repo");
     await run("git", ["checkout", "-b", branchName], { cwd: repoDir });
 
@@ -138,29 +157,42 @@ async function handleImport(job) {
     }
 
     await run("git", ["add", "."], { cwd: repoDir });
-    await run("git", ["commit", "-m", title || "feat(content): import accepted submission"], {
-      cwd: repoDir,
-      env: {
-        ...process.env,
-        GIT_AUTHOR_NAME: "HeyClaude Submission Gate",
-        GIT_AUTHOR_EMAIL: "actions@users.noreply.github.com",
-        GIT_COMMITTER_NAME: "HeyClaude Submission Gate",
-        GIT_COMMITTER_EMAIL: "actions@users.noreply.github.com",
+    await run(
+      "git",
+      ["commit", "-m", title || "feat(content): import accepted submission"],
+      {
+        cwd: repoDir,
+        env: {
+          ...process.env,
+          GIT_AUTHOR_NAME: "HeyClaude Submission Gate",
+          GIT_AUTHOR_EMAIL: "actions@users.noreply.github.com",
+          GIT_COMMITTER_NAME: "HeyClaude Submission Gate",
+          GIT_COMMITTER_EMAIL: "actions@users.noreply.github.com",
+        },
       },
-    });
+    );
     await run("git", ["push", "origin", branchName], { cwd: repoDir });
 
-    const pr = await githubJson(`https://api.github.com/repos/${owner}/${name}/pulls`, githubToken, {
-      method: "POST",
-      body: JSON.stringify({
-        title: title || "feat(content): import accepted submission",
-        body: body || "Maintainer-owned import from the private submission gate.",
-        head: branchName,
-        base: baseRef,
-        maintainer_can_modify: true,
-      }),
-    });
-    return { ok: true, pullRequestUrl: pr.html_url, pullRequestNumber: pr.number };
+    const pr = await githubJson(
+      `https://api.github.com/repos/${owner}/${name}/pulls`,
+      githubToken,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          title: title || "feat(content): import accepted submission",
+          body:
+            body || "Maintainer-owned import from the private submission gate.",
+          head: branchName,
+          base: baseRef,
+          maintainer_can_modify: true,
+        }),
+      },
+    );
+    return {
+      ok: true,
+      pullRequestUrl: pr.html_url,
+      pullRequestNumber: pr.number,
+    };
   } finally {
     await rm(workdir, { recursive: true, force: true });
   }
@@ -180,7 +212,14 @@ const server = createServer(async (request, response) => {
     }
     const body = await readBody(request);
     const secret = process.env.INTERNAL_SHARED_SECRET || "";
-    if (secret && !verifySignature(secret, body, request.headers["x-heyclaude-internal-signature"])) {
+    if (
+      secret &&
+      !verifySignature(
+        secret,
+        body,
+        request.headers["x-heyclaude-internal-signature"],
+      )
+    ) {
       response.writeHead(401, { "content-type": "application/json" });
       response.end(JSON.stringify({ ok: false, error: "invalid_signature" }));
       return;

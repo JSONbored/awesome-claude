@@ -1209,7 +1209,9 @@ description: Example description
 
   it("moves submission queue context into the private gate docs", () => {
     expect(
-      fs.existsSync(path.join(repoRoot, ".github/workflows/submission-queue.yml")),
+      fs.existsSync(
+        path.join(repoRoot, ".github/workflows/submission-queue.yml"),
+      ),
     ).toBe(false);
 
     const source = fs.readFileSync(
@@ -1226,7 +1228,9 @@ description: Example description
 
   it("removes stale issue automation from public workflows", () => {
     expect(
-      fs.existsSync(path.join(repoRoot, ".github/workflows/submission-stale.yml")),
+      fs.existsSync(
+        path.join(repoRoot, ".github/workflows/submission-stale.yml"),
+      ),
     ).toBe(false);
   });
 

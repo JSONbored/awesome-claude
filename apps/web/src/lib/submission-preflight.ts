@@ -259,15 +259,16 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
     warnings.push(warning("missing_privacy_notes", noteWarnings.privacy.summary));
   }
 
-  const routeSuggestion = validation.errors?.some(isToolsRouteError) || shouldRouteCommercial
-    ? "route_away"
-    : blockers.length
-      ? "fix_required"
-      : risk.policyDecision === "maintainer_review" ||
-          risk.riskTier === "high" ||
-          risk.riskTier === "critical"
-        ? "manual_review"
-        : "submit_pr";
+  const routeSuggestion =
+    validation.errors?.some(isToolsRouteError) || shouldRouteCommercial
+      ? "route_away"
+      : blockers.length
+        ? "fix_required"
+        : risk.policyDecision === "maintainer_review" ||
+            risk.riskTier === "high" ||
+            risk.riskTier === "critical"
+          ? "manual_review"
+          : "submit_pr";
 
   return {
     ok: true,

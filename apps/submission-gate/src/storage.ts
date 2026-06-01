@@ -18,7 +18,9 @@ function now() {
 
 export async function createDraft(db: D1Database, draft: DraftInsert) {
   const timestamp = now();
-  const authStateHash = draft.authState ? await sha256Hex(draft.authState) : null;
+  const authStateHash = draft.authState
+    ? await sha256Hex(draft.authState)
+    : null;
   await db
     .prepare(
       `INSERT INTO submission_drafts
@@ -55,13 +57,21 @@ export async function getDraft(db: D1Database, id: string) {
     .first<Record<string, unknown>>();
 }
 
-export async function verifyDraftState(db: D1Database, draftId: string, state: string) {
+export async function verifyDraftState(
+  db: D1Database,
+  draftId: string,
+  state: string,
+) {
   const draft = await getDraft(db, draftId);
   if (!draft?.authStateHash) return false;
   return draft.authStateHash === (await sha256Hex(state));
 }
 
-export async function updateDraftAuthState(db: D1Database, draftId: string, state: string) {
+export async function updateDraftAuthState(
+  db: D1Database,
+  draftId: string,
+  state: string,
+) {
   await db
     .prepare(
       `UPDATE submission_drafts
@@ -91,7 +101,13 @@ export async function storeDraftUserToken(
         consumed_at = NULL,
         updated_at = excluded.updated_at`,
     )
-    .bind(params.draftId, params.encryptedToken, expiresAt, timestamp, timestamp)
+    .bind(
+      params.draftId,
+      params.encryptedToken,
+      expiresAt,
+      timestamp,
+      timestamp,
+    )
     .run();
 }
 

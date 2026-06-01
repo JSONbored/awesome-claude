@@ -430,7 +430,10 @@ export function preflight(category: Category | "", data: Record<string, string>)
   return issues;
 }
 
-export function buildSubmissionPacket(category: Category | "", data: Record<string, string>): string {
+export function buildSubmissionPacket(
+  category: Category | "",
+  data: Record<string, string>,
+): string {
   const spec = category ? SUBMISSION_SPEC[category] : null;
   const fields = spec?.fields ?? COMMON;
   return fields

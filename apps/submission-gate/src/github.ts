@@ -80,7 +80,9 @@ export async function githubJson<T>(
   const text = await response.text();
   const payload = text ? JSON.parse(text) : null;
   if (!response.ok) {
-    throw new Error(`GitHub API ${response.status}: ${payload?.message || text}`);
+    throw new Error(
+      `GitHub API ${response.status}: ${payload?.message || text}`,
+    );
   }
   return payload as T;
 }
@@ -110,7 +112,9 @@ export async function exchangeGitHubUserCode(params: {
     error_description?: string;
   };
   if (!response.ok || !payload.access_token) {
-    throw new Error(payload.error_description || payload.error || "GitHub auth failed.");
+    throw new Error(
+      payload.error_description || payload.error || "GitHub auth failed.",
+    );
   }
   return payload.access_token;
 }
@@ -170,7 +174,9 @@ export async function upsertMarkerComment(params: {
       apiVersion: params.apiVersion,
     },
   );
-  const existing = comments.find((comment) => comment.body?.includes(params.marker));
+  const existing = comments.find((comment) =>
+    comment.body?.includes(params.marker),
+  );
   const endpoint = existing
     ? `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/comments/${existing.id}`
     : `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/comments`;
@@ -235,10 +241,13 @@ export async function createUserForkContentPr(params: {
   apiVersion?: string;
 }) {
   const upstream = parseRepo(params.publicRepo);
-  const user = await githubJson<{ login: string }>("https://api.github.com/user", {
-    token: params.userToken,
-    apiVersion: params.apiVersion,
-  });
+  const user = await githubJson<{ login: string }>(
+    "https://api.github.com/user",
+    {
+      token: params.userToken,
+      apiVersion: params.apiVersion,
+    },
+  );
 
   await githubJsonOrNull(
     `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/forks`,
@@ -331,7 +340,9 @@ export async function createUserForkContentPr(params: {
   );
 
   const head = `${user.login}:${params.branchName}`;
-  const existingPrs = await githubJson<Array<{ number: number; html_url: string }>>(
+  const existingPrs = await githubJson<
+    Array<{ number: number; html_url: string }>
+  >(
     `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/pulls?state=open&head=${encodeURIComponent(head)}&base=${encodeURIComponent(params.baseRef)}`,
     {
       token: params.userToken,

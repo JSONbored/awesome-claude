@@ -16,7 +16,12 @@ export const REVIEWABLE_PR_ACTIONS = new Set([
   "ready_for_review",
 ]);
 
-export const REVIEWABLE_ISSUE_ACTIONS = new Set(["opened", "edited", "reopened", "labeled"]);
+export const REVIEWABLE_ISSUE_ACTIONS = new Set([
+  "opened",
+  "edited",
+  "reopened",
+  "labeled",
+]);
 
 export const REVIEWABLE_COMMENT_ACTIONS = new Set(["created"]);
 

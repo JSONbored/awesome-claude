@@ -17,6 +17,15 @@ function text(value: unknown) {
   return String(value ?? "").trim();
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+export function draftFieldsFromBody(body: unknown): SubmissionDraftFields {
+  if (!isRecord(body)) return {};
+  return isRecord(body.fields) ? body.fields : body;
+}
+
 export function slugify(value: unknown) {
   return text(value)
     .toLowerCase()
@@ -31,7 +40,10 @@ export function normalizeCategory(value: unknown) {
   return SUPPORTED_CATEGORIES.has(category) ? category : "";
 }
 
-export function buildDraftTarget(fields: SubmissionDraftFields, baseRef: string) {
+export function buildDraftTarget(
+  fields: SubmissionDraftFields,
+  baseRef: string,
+) {
   const category = normalizeCategory(fields.category);
   const slug = slugify(fields.slug || fields.name || fields.title);
   if (!category || !slug) {
@@ -67,21 +79,30 @@ function lines(value: unknown) {
 
 function oneLine(value: unknown, fallback = "") {
   const normalized = text(value || fallback).replace(/\s+/g, " ");
-  return normalized.length <= 160 ? normalized : `${normalized.slice(0, 157).trimEnd()}...`;
+  return normalized.length <= 160
+    ? normalized
+    : `${normalized.slice(0, 157).trimEnd()}...`;
 }
 
-export function buildContributorMdx(fields: SubmissionDraftFields, githubLogin?: string) {
+export function buildContributorMdx(
+  fields: SubmissionDraftFields,
+  githubLogin?: string,
+) {
   const target = buildDraftTarget(fields, "main");
   const title = text(fields.name || fields.title);
   const description = text(fields.description || fields.card_description);
-  const submittedBy = githubLogin ? `@${githubLogin}` : text(fields.contact_email || "website");
+  const submittedBy = githubLogin
+    ? `@${githubLogin}`
+    : text(fields.contact_email || "website");
   const submittedByUrl = githubLogin ? `https://github.com/${githubLogin}` : "";
   const tags = text(fields.tags)
     .split(",")
     .map((tag) => tag.trim())
     .filter(Boolean)
     .slice(0, 8);
-  const sourceContent = text(fields.full_copyable_content || fields.guide_content);
+  const sourceContent = text(
+    fields.full_copyable_content || fields.guide_content,
+  );
   const safetyNotes = lines(fields.safety_notes);
   const privacyNotes = lines(fields.privacy_notes);
   const body = [
@@ -100,33 +121,69 @@ export function buildContributorMdx(fields: SubmissionDraftFields, githubLogin?:
     submittedByUrl ? `submittedByUrl: ${yamlScalar(submittedByUrl)}` : "",
     `submittedAt: ${yamlScalar(new Date().toISOString())}`,
     tags.length ? `tags: [${tags.map(yamlScalar).join(", ")}]` : "tags: []",
-    text(fields.brand_name) ? `brandName: ${yamlScalar(fields.brand_name)}` : "",
-    text(fields.brand_domain) ? `brandDomain: ${yamlScalar(fields.brand_domain)}` : "",
+    text(fields.brand_name)
+      ? `brandName: ${yamlScalar(fields.brand_name)}`
+      : "",
+    text(fields.brand_domain)
+      ? `brandDomain: ${yamlScalar(fields.brand_domain)}`
+      : "",
     text(fields.github_url) ? `repoUrl: ${yamlScalar(fields.github_url)}` : "",
-    text(fields.docs_url) ? `documentationUrl: ${yamlScalar(fields.docs_url)}` : "",
-    text(fields.website_url) ? `websiteUrl: ${yamlScalar(fields.website_url)}` : "",
-    text(fields.download_url) ? `downloadUrl: ${yamlScalar(fields.download_url)}` : "",
-    text(fields.install_command) ? `installCommand: ${yamlScalar(fields.install_command)}` : "",
-    text(fields.usage_snippet) ? `usageSnippet: ${yamlScalar(fields.usage_snippet)}` : "",
-    text(fields.config_snippet) ? `configSnippet: ${yamlScalar(fields.config_snippet)}` : "",
+    text(fields.docs_url)
+      ? `documentationUrl: ${yamlScalar(fields.docs_url)}`
+      : "",
+    text(fields.website_url)
+      ? `websiteUrl: ${yamlScalar(fields.website_url)}`
+      : "",
+    text(fields.download_url)
+      ? `downloadUrl: ${yamlScalar(fields.download_url)}`
+      : "",
+    text(fields.install_command)
+      ? `installCommand: ${yamlScalar(fields.install_command)}`
+      : "",
+    text(fields.usage_snippet)
+      ? `usageSnippet: ${yamlScalar(fields.usage_snippet)}`
+      : "",
+    text(fields.config_snippet)
+      ? `configSnippet: ${yamlScalar(fields.config_snippet)}`
+      : "",
     sourceContent ? `copySnippet: ${yamlScalar(sourceContent)}` : "",
-    text(fields.command_syntax) ? `commandSyntax: ${yamlScalar(fields.command_syntax)}` : "",
+    text(fields.command_syntax)
+      ? `commandSyntax: ${yamlScalar(fields.command_syntax)}`
+      : "",
     text(fields.trigger) ? `trigger: ${yamlScalar(fields.trigger)}` : "",
-    text(fields.script_language) ? `scriptLanguage: ${yamlScalar(fields.script_language)}` : "",
-    text(fields.prerequisites) ? `prerequisites: ${yamlArray(lines(fields.prerequisites))}` : "",
+    text(fields.script_language)
+      ? `scriptLanguage: ${yamlScalar(fields.script_language)}`
+      : "",
+    text(fields.prerequisites)
+      ? `prerequisites: ${yamlArray(lines(fields.prerequisites))}`
+      : "",
     safetyNotes.length ? `safetyNotes: ${yamlArray(safetyNotes)}` : "",
     privacyNotes.length ? `privacyNotes: ${yamlArray(privacyNotes)}` : "",
-    text(fields.retrieval_sources) ? `retrievalSources: ${yamlArray(lines(fields.retrieval_sources))}` : "",
-    text(fields.tested_platforms) ? `testedPlatforms: ${yamlArray(lines(fields.tested_platforms))}` : "",
-    text(fields.skill_type) ? `skillType: ${yamlScalar(fields.skill_type)}` : "",
-    text(fields.skill_level) ? `skillLevel: ${yamlScalar(fields.skill_level)}` : "",
+    text(fields.retrieval_sources)
+      ? `retrievalSources: ${yamlArray(lines(fields.retrieval_sources))}`
+      : "",
+    text(fields.tested_platforms)
+      ? `testedPlatforms: ${yamlArray(lines(fields.tested_platforms))}`
+      : "",
+    text(fields.skill_type)
+      ? `skillType: ${yamlScalar(fields.skill_type)}`
+      : "",
+    text(fields.skill_level)
+      ? `skillLevel: ${yamlScalar(fields.skill_level)}`
+      : "",
     text(fields.verification_status)
       ? `verificationStatus: ${yamlScalar(fields.verification_status)}`
       : "",
-    text(fields.verified_at) ? `verifiedAt: ${yamlScalar(fields.verified_at)}` : "",
+    text(fields.verified_at)
+      ? `verifiedAt: ${yamlScalar(fields.verified_at)}`
+      : "",
     text(fields.items) ? `items: ${yamlArray(lines(fields.items))}` : "",
-    text(fields.pricing_model) ? `pricingModel: ${yamlScalar(fields.pricing_model)}` : "",
-    text(fields.disclosure) ? `disclosure: ${yamlScalar(fields.disclosure)}` : "",
+    text(fields.pricing_model)
+      ? `pricingModel: ${yamlScalar(fields.pricing_model)}`
+      : "",
+    text(fields.disclosure)
+      ? `disclosure: ${yamlScalar(fields.disclosure)}`
+      : "",
     "---",
     "",
     description,

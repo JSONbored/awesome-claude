@@ -84,9 +84,7 @@ function findSkillEntrypoint(files: SkillPackageFile[]) {
 function resolveRelativeReference(entrypoint: string, reference: string) {
   const cleanReference = reference.split("#")[0]?.trim();
   if (!cleanReference) return "";
-  const base = entrypoint.includes("/")
-    ? entrypoint.split("/").slice(0, -1).join("/")
-    : "";
+  const base = entrypoint.includes("/") ? entrypoint.split("/").slice(0, -1).join("/") : "";
   return normalizePackagePath(`${base}/${cleanReference}`);
 }
 
@@ -96,11 +94,7 @@ function clampText(value: string, maxLength: number) {
   return `${normalized.slice(0, maxLength - 3).trimEnd()}...`;
 }
 
-function normalizedChoice(
-  value: string | undefined,
-  allowed: string[],
-  fallback: string,
-) {
+function normalizedChoice(value: string | undefined, allowed: string[], fallback: string) {
   const normalized = String(value || "")
     .trim()
     .toLowerCase();
@@ -168,11 +162,9 @@ function buildSkillSubmissionFields(params: {
     slug: params.slug || slugify(title),
     category: "skills",
     description,
-    card_description:
-      params.frontmatter.card_description || clampText(description, 140),
+    card_description: params.frontmatter.card_description || clampText(description, 140),
     author: params.frontmatter.author || "",
-    tags:
-      params.frontmatter.tags || "skills, agent-skill, claude, codex, cursor",
+    tags: params.frontmatter.tags || "skills, agent-skill, claude, codex, cursor",
     install_command:
       params.frontmatter.install_command ||
       "Install the zip package into your AI client skill directory.",
@@ -230,9 +222,7 @@ export function validateSkillPackageFiles(params: {
 
   const entrypoint = findSkillEntrypoint(normalizedFiles) || "";
   if (!entrypoint) {
-    errors.push(
-      "Package must include SKILL.md at the root or one folder deep.",
-    );
+    errors.push("Package must include SKILL.md at the root or one folder deep.");
   }
 
   const skillFile = normalizedFiles.find((file) => file.path === entrypoint);
@@ -257,9 +247,9 @@ export function validateSkillPackageFiles(params: {
     warnings.push("Add a visible Markdown heading after frontmatter.");
   }
 
-  const referencedResources = [
-    ...skillText.matchAll(TEXT_REFERENCE_PATTERN),
-  ].map((match) => match[1] || match[2]);
+  const referencedResources = [...skillText.matchAll(TEXT_REFERENCE_PATTERN)].map(
+    (match) => match[1] || match[2],
+  );
   for (const reference of referencedResources) {
     const resolved = resolveRelativeReference(entrypoint, reference);
     if (resolved && !pathSet.has(resolved)) {
@@ -268,12 +258,10 @@ export function validateSkillPackageFiles(params: {
   }
 
   const hasScripts = normalizedFiles.some(
-    (file) =>
-      file.path.includes("/scripts/") || file.path.startsWith("scripts/"),
+    (file) => file.path.includes("/scripts/") || file.path.startsWith("scripts/"),
   );
   const hasReferences = normalizedFiles.some(
-    (file) =>
-      file.path.includes("/references/") || file.path.startsWith("references/"),
+    (file) => file.path.includes("/references/") || file.path.startsWith("references/"),
   );
   const hasAssets = normalizedFiles.some(
     (file) => file.path.includes("/assets/") || file.path.startsWith("assets/"),

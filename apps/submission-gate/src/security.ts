@@ -24,7 +24,10 @@ function base64ToBytes(value: string) {
 export function base64UrlEncode(value: string | ArrayBuffer) {
   const bytes =
     typeof value === "string" ? encoder.encode(value) : new Uint8Array(value);
-  return bytesToBase64(bytes).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  return bytesToBase64(bytes)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 }
 
 export function base64UrlDecode(value: string) {
@@ -35,7 +38,9 @@ export function base64UrlDecode(value: string) {
 }
 
 export async function sha256Hex(value: string) {
-  return bytesToHex(await crypto.subtle.digest("SHA-256", encoder.encode(value)));
+  return bytesToHex(
+    await crypto.subtle.digest("SHA-256", encoder.encode(value)),
+  );
 }
 
 export async function hmacSha256Hex(secret: string, payload: string) {
@@ -46,7 +51,9 @@ export async function hmacSha256Hex(secret: string, payload: string) {
     false,
     ["sign"],
   );
-  return bytesToHex(await crypto.subtle.sign("HMAC", key, encoder.encode(payload)));
+  return bytesToHex(
+    await crypto.subtle.sign("HMAC", key, encoder.encode(payload)),
+  );
 }
 
 export function timingSafeEqual(left: string, right: string) {
@@ -63,7 +70,8 @@ export async function verifyGitHubWebhookSignature(params: {
   payload: string;
   signatureHeader: string | null;
 }) {
-  if (!params.secret || !params.signatureHeader?.startsWith("sha256=")) return false;
+  if (!params.secret || !params.signatureHeader?.startsWith("sha256="))
+    return false;
   const expected = `sha256=${await hmacSha256Hex(params.secret, params.payload)}`;
   return timingSafeEqual(expected, params.signatureHeader);
 }
@@ -77,7 +85,8 @@ export async function verifyInternalSignature(params: {
   payload: string;
   signatureHeader: string | null;
 }) {
-  if (!params.secret || !params.signatureHeader?.startsWith("sha256=")) return false;
+  if (!params.secret || !params.signatureHeader?.startsWith("sha256="))
+    return false;
   const expected = await signInternalPayload(params.secret, params.payload);
   return timingSafeEqual(expected, params.signatureHeader);
 }

@@ -97,8 +97,7 @@ function SubmitPage() {
     [category, data, preflightResult],
   );
   const prTitle =
-    preflightResult?.prPreview?.title ??
-    `Add ${category || "Entry"}: ${data.name || "(untitled)"}`;
+    preflightResult?.prPreview?.title ?? `Add ${category || "Entry"}: ${data.name || "(untitled)"}`;
   const prTarget = preflightResult?.prPreview?.targetPath || "content/<category>/<slug>.mdx";
 
   const set = (key: string, value: string) => {
@@ -162,16 +161,14 @@ function SubmitPage() {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ fields: { ...data, category } }),
       });
-      const payload = (await response.json().catch(() => null)) as
-        | {
-            ok?: boolean;
-            configured?: boolean;
-            authUrl?: string;
-            statusUrl?: string;
-            manualPr?: SubmitResult["manualPr"];
-            error?: string;
-          }
-        | null;
+      const payload = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        configured?: boolean;
+        authUrl?: string;
+        statusUrl?: string;
+        manualPr?: SubmitResult["manualPr"];
+        error?: string;
+      } | null;
       if (!response.ok || !payload?.ok) {
         throw new Error(payload?.error || "The private submission gate rejected the draft.");
       }
@@ -238,8 +235,8 @@ function SubmitPage() {
     step === 0 ? !!category && !unsupportedWebCategory : step === 3 ? blockers.length === 0 : true;
   const serverBlocked = Boolean(
     preflightResult &&
-      (!preflightResult.valid ||
-        ["fix_required", "route_away"].includes(preflightResult.routeSuggestion)),
+    (!preflightResult.valid ||
+      ["fix_required", "route_away"].includes(preflightResult.routeSuggestion)),
   );
   const finalDisabled =
     !canContinue || preflightBusy || submitBusy || !preflightResult || serverBlocked;
@@ -511,8 +508,8 @@ function ServerPreflightBlock({
     <div className="space-y-2">
       {result.valid && result.routeSuggestion === "submit_pr" ? (
         <div className="flex items-center gap-2 rounded-md border border-trust-trusted/40 bg-trust-trusted/10 px-3 py-2 text-sm text-ink">
-          <Check className="h-4 w-4 text-trust-trusted" /> Preflight passed. The next step opens
-          a single-entry PR through GitHub.
+          <Check className="h-4 w-4 text-trust-trusted" /> Preflight passed. The next step opens a
+          single-entry PR through GitHub.
         </div>
       ) : result.valid && result.routeSuggestion === "manual_review" ? (
         <div className="flex items-center gap-2 rounded-md border border-trust-review/40 bg-trust-review/10 px-3 py-2 text-sm text-ink">
@@ -538,7 +535,10 @@ function ServerPreflightBlock({
         />
       ))}
       {result.nextAction?.url && result.routeSuggestion !== "submit_pr" && (
-        <a href={result.nextAction.url} className="inline-flex text-sm font-medium text-ink underline">
+        <a
+          href={result.nextAction.url}
+          className="inline-flex text-sm font-medium text-ink underline"
+        >
           {result.nextAction.label}
         </a>
       )}

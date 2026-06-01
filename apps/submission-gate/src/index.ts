@@ -1,8 +1,17 @@
 import { Container } from "@cloudflare/containers";
 import { DurableObject } from "cloudflare:workers";
 
-import { DEFAULT_REVIEW_MARKER, LABELS, PILOT_LABEL, REVIEWABLE_PR_ACTIONS } from "./constants";
-import { buildContributorMdx, buildDraftTarget } from "./drafts";
+import {
+  DEFAULT_REVIEW_MARKER,
+  LABELS,
+  PILOT_LABEL,
+  REVIEWABLE_PR_ACTIONS,
+} from "./constants";
+import {
+  buildContributorMdx,
+  buildDraftTarget,
+  draftFieldsFromBody,
+} from "./drafts";
 import {
   addLabels,
   buildGitHubAppAuthorizeUrl,
@@ -13,7 +22,11 @@ import {
   parseRepo,
   upsertMarkerComment,
 } from "./github";
-import { defaultManualDecision, markerComment, type GateDecision } from "./review";
+import {
+  defaultManualDecision,
+  markerComment,
+  type GateDecision,
+} from "./review";
 import {
   decryptText,
   encryptText,
@@ -67,7 +80,10 @@ function json(payload: unknown, init: ResponseInit = {}) {
   headers.set("cache-control", "no-store");
   headers.set("access-control-allow-origin", "*");
   headers.set("access-control-allow-methods", "GET,POST,OPTIONS");
-  headers.set("access-control-allow-headers", "content-type,x-github-event,x-github-delivery,x-hub-signature-256,x-heyclaude-internal-signature");
+  headers.set(
+    "access-control-allow-headers",
+    "content-type,x-github-event,x-github-delivery,x-hub-signature-256,x-heyclaude-internal-signature",
+  );
   return Response.json(payload, { ...init, headers });
 }
 
@@ -95,10 +111,25 @@ async function putAuditObject(env: Env, key: string, payload: unknown) {
 }
 
 async function createDraftRoute(request: Request, env: Env) {
-  const body = (await request.json()) as { fields?: Record<string, unknown> };
-  const fields = body.fields || {};
+  const body = await request.json().catch(() => null);
+  const fields = draftFieldsFromBody(body);
   const baseRef = env.PILOT_BASE_REF || "submission-gate-pilot";
-  const target = buildDraftTarget(fields, baseRef);
+  let target: ReturnType<typeof buildDraftTarget>;
+  try {
+    target = buildDraftTarget(fields, baseRef);
+  } catch (error) {
+    return json(
+      {
+        ok: false,
+        error: "invalid_draft",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Draft requires a supported category and slug.",
+      },
+      { status: 400 },
+    );
+  }
   const id = `draft_${crypto.randomUUID()}`;
   const state = randomToken();
   await createDraft(env.SUBMISSION_GATE_DB, {
@@ -110,7 +141,9 @@ async function createDraftRoute(request: Request, env: Env) {
   });
   await putAuditObject(env, `drafts/${id}.json`, { id, target, fields });
 
-  const configured = Boolean(env.GITHUB_APP_CLIENT_ID && env.GITHUB_APP_CLIENT_SECRET);
+  const configured = Boolean(
+    env.GITHUB_APP_CLIENT_ID && env.GITHUB_APP_CLIENT_SECRET,
+  );
   const authUrl = configured
     ? buildGitHubAppAuthorizeUrl({
         clientId: env.GITHUB_APP_CLIENT_ID || "",
@@ -157,14 +190,24 @@ async function githubCallbackRoute(request: Request, env: Env) {
   const code = url.searchParams.get("code") || "";
   const state = url.searchParams.get("state") || "";
   const [draftId, stateToken] = state.split(".");
-  if (!draftId || !stateToken || !(await verifyDraftState(env.SUBMISSION_GATE_DB, draftId, stateToken))) {
-    return textResponse("Invalid or expired submission state.", { status: 400 });
+  if (
+    !draftId ||
+    !stateToken ||
+    !(await verifyDraftState(env.SUBMISSION_GATE_DB, draftId, stateToken))
+  ) {
+    return textResponse("Invalid or expired submission state.", {
+      status: 400,
+    });
   }
   if (!env.GITHUB_APP_CLIENT_ID || !env.GITHUB_APP_CLIENT_SECRET) {
-    return textResponse("GitHub App user auth is not configured.", { status: 503 });
+    return textResponse("GitHub App user auth is not configured.", {
+      status: 503,
+    });
   }
   if (!env.INTERNAL_SHARED_SECRET) {
-    return textResponse("Submission token handoff is not configured.", { status: 503 });
+    return textResponse("Submission token handoff is not configured.", {
+      status: 503,
+    });
   }
 
   const userToken = await exchangeGitHubUserCode({
@@ -204,11 +247,15 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
   return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
 }
 
-async function installationTokenForPayload(env: Env, payload: Record<string, unknown>) {
+async function installationTokenForPayload(
+  env: Env,
+  payload: Record<string, unknown>,
+) {
   const installationId = Number(
     (payload.installation as { id?: number } | undefined)?.id || 0,
   );
-  if (!installationId || !env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY) return "";
+  if (!installationId || !env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY)
+    return "";
   return getInstallationToken({
     appId: env.GITHUB_APP_ID,
     privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
@@ -245,7 +292,11 @@ async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
   });
 }
 
-async function githubWebhookRoute(request: Request, env: Env, ctx: ExecutionContext) {
+async function githubWebhookRoute(
+  request: Request,
+  env: Env,
+  ctx: ExecutionContext,
+) {
   const raw = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
   const valid = await verifyGitHubWebhookSignature({
@@ -253,12 +304,18 @@ async function githubWebhookRoute(request: Request, env: Env, ctx: ExecutionCont
     payload: raw,
     signatureHeader: signature,
   });
-  if (!valid) return json({ ok: false, error: "invalid_signature" }, { status: 401 });
+  if (!valid)
+    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
 
   const payload = JSON.parse(raw) as Record<string, unknown>;
   const eventName = request.headers.get("x-github-event") || "";
-  const deliveryId = request.headers.get("x-github-delivery") || crypto.randomUUID();
-  await putAuditObject(env, `webhooks/${eventName}/${deliveryId}.json`, payload);
+  const deliveryId =
+    request.headers.get("x-github-delivery") || crypto.randomUUID();
+  await putAuditObject(
+    env,
+    `webhooks/${eventName}/${deliveryId}.json`,
+    payload,
+  );
 
   if (eventName === "pull_request") {
     const action = String(payload.action || "");
@@ -269,10 +326,15 @@ async function githubWebhookRoute(request: Request, env: Env, ctx: ExecutionCont
           head?: { ref?: string; repo?: { full_name?: string } };
         }
       | undefined;
-    if (!REVIEWABLE_PR_ACTIONS.has(action) || !pull?.number || !pull.base?.repo?.full_name) {
+    if (
+      !REVIEWABLE_PR_ACTIONS.has(action) ||
+      !pull?.number ||
+      !pull.base?.repo?.full_name
+    ) {
       return json({ ok: true, ignored: true });
     }
-    if (!isPilotPr(payload, env)) return json({ ok: true, ignored: true, reason: "outside_pilot" });
+    if (!isPilotPr(payload, env))
+      return json({ ok: true, ignored: true, reason: "outside_pilot" });
     const targetKey = `${pull.base.repo.full_name}#${pull.number}`;
     ctx.waitUntil(applyUnderReview(env, payload));
     await upsertPrState(env.SUBMISSION_GATE_DB, {
@@ -310,12 +372,18 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
     body,
   });
   if (!response.ok) {
-    return defaultManualDecision(`Private corpus review returned ${response.status}.`);
+    return defaultManualDecision(
+      `Private corpus review returned ${response.status}.`,
+    );
   }
   return (await response.json()) as GateDecision;
 }
 
-async function withSubmissionLock(env: Env, targetKey: string, fn: () => Promise<void>) {
+async function withSubmissionLock(
+  env: Env,
+  targetKey: string,
+  fn: () => Promise<void>,
+) {
   const stub = env.SUBMISSION_LOCK.getByName(targetKey);
   const response = await stub.fetch("https://lock.local/acquire", {
     method: "POST",
@@ -329,14 +397,20 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
   await withSubmissionLock(env, message.targetKey, async () => {
     if (message.kind === "submit_draft") {
       const draftId = String(message.payload.draftId || "");
-      const encryptedToken = await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
+      const encryptedToken = await consumeDraftUserToken(
+        env.SUBMISSION_GATE_DB,
+        draftId,
+      );
       const userToken =
         encryptedToken && env.INTERNAL_SHARED_SECRET
           ? await decryptText(env.INTERNAL_SHARED_SECRET, encryptedToken)
           : "";
       const draft = await getDraft(env.SUBMISSION_GATE_DB, draftId);
       if (!draft || !userToken) return;
-      const fields = JSON.parse(String(draft.fieldsJson || "{}")) as Record<string, unknown>;
+      const fields = JSON.parse(String(draft.fieldsJson || "{}")) as Record<
+        string,
+        unknown
+      >;
       const title = `Add ${String(draft.category)}: ${String(fields.name || fields.title || draft.slug)}`;
       const content = buildContributorMdx(fields);
       const pr = await createUserForkContentPr({
@@ -377,7 +451,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
     if (message.kind === "review_pr") {
       const webhook = message.payload.webhook as Record<string, unknown>;
       const pull = webhook.pull_request as
-        | { number?: number; base?: { repo?: { full_name?: string }; ref?: string } }
+        | {
+            number?: number;
+            base?: { repo?: { full_name?: string }; ref?: string };
+          }
         | undefined;
       if (!pull?.number || !pull.base?.repo?.full_name) return;
       const token = await installationTokenForPayload(env, webhook);
@@ -405,7 +482,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         repo,
         issueNumber: pull.number,
         marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        body: markerComment(decision, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
+        body: markerComment(
+          decision,
+          env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+        ),
         apiVersion: env.GITHUB_API_VERSION,
       });
       if (decision.verdict === "close" && decision.close) {
@@ -429,7 +509,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               repo: pull.base.repo.full_name,
               number: pull.number,
               baseRef: pull.base.ref || env.PILOT_BASE_REF,
-              installationId: Number((webhook.installation as { id?: number } | undefined)?.id || 0),
+              installationId: Number(
+                (webhook.installation as { id?: number } | undefined)?.id || 0,
+              ),
             },
           },
         });
@@ -536,7 +618,8 @@ async function importCompleteRoute(request: Request, env: Env) {
     payload: body,
     signatureHeader: request.headers.get("x-heyclaude-internal-signature"),
   });
-  if (!valid) return json({ ok: false, error: "invalid_signature" }, { status: 401 });
+  if (!valid)
+    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
   const payload = JSON.parse(body) as {
     targetKey?: string;
     repo?: string;
@@ -557,7 +640,9 @@ async function importCompleteRoute(request: Request, env: Env) {
   }
   await insertAudit(env.SUBMISSION_GATE_DB, {
     id: crypto.randomUUID(),
-    targetKey: payload.targetKey || `${payload.repo || "unknown"}#${payload.number || 0}`,
+    targetKey:
+      payload.targetKey ||
+      `${payload.repo || "unknown"}#${payload.number || 0}`,
     eventType: "import_complete",
     decision: "import",
     summary: payload.summary || payload.importPrUrl || "Import completed.",
@@ -580,7 +665,9 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
   if (request.method === "GET" && url.pathname === "/auth/github/start") {
     const draftId = url.searchParams.get("draftId") || "";
     const state = randomToken();
-    const draft = draftId ? await getDraft(env.SUBMISSION_GATE_DB, draftId) : null;
+    const draft = draftId
+      ? await getDraft(env.SUBMISSION_GATE_DB, draftId)
+      : null;
     if (!draft) return json({ ok: false, error: "not_found" }, { status: 404 });
     await updateDraftAuthState(env.SUBMISSION_GATE_DB, draftId, state);
     return json({
@@ -601,7 +688,10 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
   if (request.method === "POST" && url.pathname === "/webhooks/github") {
     return githubWebhookRoute(request, env, ctx);
   }
-  if (request.method === "POST" && url.pathname === "/internal/import-complete") {
+  if (
+    request.method === "POST" &&
+    url.pathname === "/internal/import-complete"
+  ) {
     return importCompleteRoute(request, env);
   }
   return json({ ok: false, error: "not_found" }, { status: 404 });
@@ -616,7 +706,9 @@ export class SubmissionLock extends DurableObject {
     if (new URL(request.url).pathname !== "/acquire") {
       return json({ ok: false, error: "not_found" }, { status: 404 });
     }
-    const body = (await request.json().catch(() => ({}))) as { ttlSeconds?: number };
+    const body = (await request.json().catch(() => ({}))) as {
+      ttlSeconds?: number;
+    };
     const expiresAt = Number((await this.ctx.storage.get("expiresAt")) || 0);
     const nowMs = Date.now();
     if (expiresAt > nowMs) {

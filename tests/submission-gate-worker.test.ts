@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { buildDraftTarget, buildContributorMdx } from "../apps/submission-gate/src/drafts";
+import {
+  buildDraftTarget,
+  buildContributorMdx,
+  draftFieldsFromBody,
+} from "../apps/submission-gate/src/drafts";
 import { buildGitHubAppAuthorizeUrl } from "../apps/submission-gate/src/github";
 import {
   decryptText,
@@ -63,6 +67,18 @@ describe("Cloudflare submission gate helpers", () => {
       branchName: "heyclaude/submit-mcp-example-mcp-server",
       targetPath: "content/mcp/example-mcp-server.mdx",
     });
+  });
+
+  it("accepts nested or flat draft payloads from website tooling", () => {
+    expect(
+      draftFieldsFromBody({
+        fields: { category: "mcp", name: "Nested Draft" },
+      }),
+    ).toEqual({ category: "mcp", name: "Nested Draft" });
+    expect(
+      draftFieldsFromBody({ category: "skills", name: "Flat Draft" }),
+    ).toEqual({ category: "skills", name: "Flat Draft" });
+    expect(draftFieldsFromBody(null)).toEqual({});
   });
 
   it("generates contributor MDX without generated-artifact paths", () => {

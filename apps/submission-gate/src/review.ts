@@ -1,6 +1,11 @@
 import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
-export type GateVerdict = "import" | "request_changes" | "close" | "manual" | "ignore";
+export type GateVerdict =
+  | "import"
+  | "request_changes"
+  | "close"
+  | "manual"
+  | "ignore";
 
 export type GateDecision = {
   verdict: GateVerdict;
@@ -10,7 +15,10 @@ export type GateDecision = {
   importJob?: Record<string, unknown>;
 };
 
-export function markerComment(decision?: GateDecision, marker = DEFAULT_REVIEW_MARKER) {
+export function markerComment(
+  decision?: GateDecision,
+  marker = DEFAULT_REVIEW_MARKER,
+) {
   if (!decision) {
     return [
       marker,
@@ -34,11 +42,12 @@ export function markerComment(decision?: GateDecision, marker = DEFAULT_REVIEW_M
   return [marker, headline, "", decision.summary].join("\n");
 }
 
-export function defaultManualDecision(reason = "Private corpus review is not configured.") {
+export function defaultManualDecision(
+  reason = "Private corpus review is not configured.",
+) {
   return {
     verdict: "manual" as const,
-    summary:
-      `${reason} A maintainer needs to review category fit, source truth, duplicate history, safety/privacy notes, and provenance before import.`,
+    summary: `${reason} A maintainer needs to review category fit, source truth, duplicate history, safety/privacy notes, and provenance before import.`,
     labels: [LABELS.manual],
   };
 }

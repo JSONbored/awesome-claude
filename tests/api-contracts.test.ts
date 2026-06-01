@@ -137,7 +137,9 @@ describe("OpenAPI route coverage", () => {
         expect.objectContaining({ name: "limit", in: "query", example: "5" }),
       ]),
     });
-    expect(ENDPOINTS.find((endpoint) => endpoint.id === "submissions-preflight")).toMatchObject({
+    expect(
+      ENDPOINTS.find((endpoint) => endpoint.id === "submissions-preflight"),
+    ).toMatchObject({
       liveRequest: false,
     });
     expect(

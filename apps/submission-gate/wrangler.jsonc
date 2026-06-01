@@ -22,6 +22,12 @@
     "GITHUB_API_VERSION": "2022-11-28",
     "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
   },
+  "routes": [
+    {
+      "pattern": "submission-gate.heyclau.de",
+      "custom_domain": true,
+    },
+  ],
   "d1_databases": [
     {
       "binding": "SUBMISSION_GATE_DB",
@@ -103,11 +109,17 @@
         "GITHUB_API_VERSION": "2022-11-28",
         "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
       },
+      "routes": [
+        {
+          "pattern": "submission-gate-dev.heyclau.de",
+          "custom_domain": true,
+        },
+      ],
       "d1_databases": [
         {
           "binding": "SUBMISSION_GATE_DB",
           "database_name": "heyclaude-submission-gate-dev",
-          "database_id": "00000000-0000-0000-0000-000000000000",
+          "database_id": "74bf2511-fb69-47e3-8bb7-7fac3546eef2",
           "migrations_dir": "migrations",
         },
       ],
