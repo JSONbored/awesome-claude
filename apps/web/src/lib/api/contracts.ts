@@ -484,7 +484,7 @@ export const submissionPreflightBodySchema = z.object({
 
 export const submissionQueueQuerySchema = z.object({
   number: z.coerce.number().int().positive().optional(),
-  limit: z.coerce.number().int().min(1).max(100).optional().default(50),
+  limit: z.coerce.number().int().min(1).max(25).optional().default(25),
 });
 
 const submissionPreflightNoteSchema = z.object({
@@ -593,7 +593,7 @@ export const submissionQueueResponseSchema = z.object({
   generatedAt: z.string(),
   repo: z.string(),
   count: z.number().int().nonnegative(),
-  entries: z.array(submissionQueueItemSchema).max(100),
+  entries: z.array(submissionQueueItemSchema).max(25),
 });
 
 export const downloadQuerySchema = z.object({

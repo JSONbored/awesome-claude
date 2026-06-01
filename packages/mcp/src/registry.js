@@ -410,7 +410,8 @@ function entrySearchText(entry) {
     ...(entry.keywords || []),
   ]
     .map(normalizeText)
-    .join(" ");
+    .join(" ")
+    .toLowerCase();
 }
 
 function scoreSearchEntry(entry, query) {
@@ -976,7 +977,7 @@ export async function planWorkflowToolbox(args = {}, options = {}) {
   const query = normalizeText(goal);
   const category = normalizeText(args.category);
   const platform = normalizePlatform(args.platform);
-  const limit = normalizeLimit(args.limit, 6);
+  const limit = Math.min(10, normalizeLimit(args.limit, 6));
   const searchIndex = unwrapEntries(
     await readJsonArtifact("search-index.json", options),
   );

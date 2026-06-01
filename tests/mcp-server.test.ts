@@ -12,6 +12,7 @@ import {
   listRegistryPrompts,
   listRegistryResources,
   listRegistryResourceTemplates,
+  planWorkflowToolbox,
   READ_ONLY_TOOL_NAMES,
   readRegistryResource,
   TOOL_DEFINITIONS,
@@ -724,6 +725,81 @@ describe("HeyClaude read-only MCP helpers", () => {
       count: 0,
       entries: [],
     });
+  });
+
+  it("matches a lowercase planner goal against mixed-case entry text", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: [
+          {
+            category: "mcp",
+            slug: "kubernetes-cluster-helper",
+            title: "Kubernetes CLUSTER Deployment Helper",
+            description: "Manage ROLLOUTS across namespaces with guided steps.",
+            tags: ["DevOps"],
+            keywords: [],
+            platforms: ["Claude"],
+          },
+          {
+            category: "agents",
+            slug: "unrelated-entry",
+            title: "Totally Unrelated Thing",
+            description: "Has nothing to do with the goal.",
+            tags: [],
+            keywords: [],
+            platforms: [],
+          },
+        ],
+      };
+    };
+
+    const result = await callRegistryTool(
+      "plan_workflow_toolbox",
+      { goal: "kubernetes cluster rollouts", limit: 5 },
+      { readJsonArtifact },
+    );
+
+    expect(result).toMatchObject({ ok: true });
+    const slugs = result.entries.map((entry: any) => entry.slug);
+    // Lowercase goal tokens (kubernetes/cluster/rollouts) must match the
+    // mixed-case title ("CLUSTER") and description ("ROLLOUTS").
+    expect(slugs).toContain("kubernetes-cluster-helper");
+    expect(slugs).not.toContain("unrelated-entry");
+    const matched = result.entries.find(
+      (entry: any) => entry.slug === "kubernetes-cluster-helper",
+    );
+    expect(matched.searchScore).toBeGreaterThan(0);
+  });
+
+  it("clamps the planner runtime limit to 10 even when called directly", async () => {
+    // Direct runtime calls bypass the 1-10 input schema, so the tool must
+    // clamp internally. Categories are spread so diversity selection still
+    // fills up to the clamp instead of capping early at 2 per category.
+    const categories = ["mcp", "agents", "skills", "hooks", "commands"];
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: Array.from({ length: 15 }, (_, index) => ({
+          category: categories[index % categories.length],
+          slug: `automation-entry-${index}`,
+          title: `Automation Workflow Helper ${index}`,
+          description: "Automates the workflow with guided steps.",
+          tags: ["automation", "workflow"],
+          keywords: ["automation"],
+          platforms: ["Claude"],
+        })),
+      };
+    };
+
+    const result = await planWorkflowToolbox(
+      { goal: "automation workflow", limit: 20 },
+      { readJsonArtifact },
+    );
+
+    expect(result.ok).toBe(true);
+    expect(result.count).toBe(result.entries.length);
+    expect(result.entries.length).toBeLessThanOrEqual(10);
   });
 
   it("searches registry artifacts with trust filters", async () => {

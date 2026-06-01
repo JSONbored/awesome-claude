@@ -13,7 +13,7 @@ import {
   type InferApiBody,
   type InferApiQuery,
 } from "@/lib/api/router";
-import { isAdminAuthorized } from "@/lib/admin-auth";
+import { isLeadsAdminAuthorized } from "@/lib/admin-auth";
 import { logApiError, logApiInfo, logApiWarn } from "@/lib/api-logs";
 import { csvEscape } from "@/lib/csv";
 import { getSiteDb } from "@/lib/db";
@@ -53,7 +53,7 @@ function leadsToCsv(rows: Record<string, unknown>[]) {
 export const GET = createApiHandler(
   "adminListingLeads.list",
   async ({ request, query: parsedQuery, requestId }) => {
-    if (!isAdminAuthorized(request)) {
+    if (!isLeadsAdminAuthorized(request)) {
       logApiWarn(request, "admin.listing_leads.unauthorized");
       return apiError("unauthorized", 401, { requestId });
     }
@@ -130,7 +130,7 @@ export const GET = createApiHandler(
 export const PATCH = createApiHandler(
   "adminListingLeads.update",
   async ({ request, body, requestId }) => {
-    if (!isAdminAuthorized(request)) {
+    if (!isLeadsAdminAuthorized(request)) {
       logApiWarn(request, "admin.listing_leads.unauthorized");
       return apiError("unauthorized", 401, { requestId });
     }

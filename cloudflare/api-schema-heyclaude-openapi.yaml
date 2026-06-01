@@ -5613,8 +5613,8 @@ paths:
         - schema:
             type: integer
             minimum: 1
-            maximum: 100
-            default: 50
+            maximum: 25
+            default: 25
           required: false
           name: limit
           in: query
@@ -5728,7 +5728,7 @@ paths:
                         - blockers
                         - updatedAt
                         - createdAt
-                    maxItems: 100
+                    maxItems: 25
                 required:
                   - ok
                   - generatedAt

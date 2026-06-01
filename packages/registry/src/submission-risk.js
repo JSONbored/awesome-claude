@@ -10,6 +10,7 @@ import {
   SUBMISSION_RISK_LOW_LABEL,
   SUBMISSION_RISK_MEDIUM_LABEL,
 } from "./submission-labels.js";
+import matter from "gray-matter";
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
@@ -29,6 +30,17 @@ const RISK_LABEL_BY_TIER = {
   medium: SUBMISSION_RISK_MEDIUM_LABEL,
   high: SUBMISSION_RISK_HIGH_LABEL,
   critical: SUBMISSION_RISK_HIGH_LABEL,
+};
+
+const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
+  "Executable JavaScript frontmatter is not allowed in submission risk analysis";
+
+const SAFE_MATTER_OPTIONS = {
+  engines: {
+    javascript() {
+      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
+    },
+  },
 };
 
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
@@ -223,95 +235,11 @@ function stringList(value) {
         .filter(Boolean);
 }
 
-function parseFrontmatterScalar(value) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  if (text === "true") return true;
-  if (text === "false") return false;
-  if (text === "null" || text === "~") return null;
-  if (/^-?\d+(?:\.\d+)?$/.test(text)) return Number(text);
-  if (
-    (text.startsWith('"') && text.endsWith('"')) ||
-    (text.startsWith("'") && text.endsWith("'"))
-  ) {
-    return text.slice(1, -1);
-  }
-  if (text.startsWith("[") && text.endsWith("]")) {
-    return text
-      .slice(1, -1)
-      .split(",")
-      .map((item) => parseFrontmatterScalar(item))
-      .filter((item) => item !== "");
-  }
-  return text;
-}
-
-function parseSimpleFrontmatterData(source) {
-  const data = {};
-  const lines = String(source ?? "").split(/\r?\n/);
-  let index = 0;
-
-  while (index < lines.length) {
-    const line = lines[index];
-    const delimiter = line.indexOf(":");
-    if (delimiter <= 0) {
-      index += 1;
-      continue;
-    }
-
-    const key = line.slice(0, delimiter);
-    if (!/^[A-Za-z0-9_-]+$/.test(key)) {
-      index += 1;
-      continue;
-    }
-    const rawValue = line.slice(delimiter + 1).trimStart();
-    if (rawValue === "|" || rawValue === ">") {
-      const block = [];
-      index += 1;
-      while (index < lines.length && /^(?:\s{2,}|\t)/.test(lines[index])) {
-        block.push(lines[index].replace(/^(?:\s{2}|\t)/, ""));
-        index += 1;
-      }
-      data[key] = rawValue === ">" ? block.join(" ") : block.join("\n");
-      continue;
-    }
-
-    if (
-      !rawValue &&
-      index + 1 < lines.length &&
-      /^\s*-\s+/.test(lines[index + 1])
-    ) {
-      const items = [];
-      index += 1;
-      while (index < lines.length && /^\s*-\s+/.test(lines[index])) {
-        items.push(
-          parseFrontmatterScalar(lines[index].replace(/^\s*-\s+/, "")),
-        );
-        index += 1;
-      }
-      data[key] = items;
-      continue;
-    }
-
-    data[key] = parseFrontmatterScalar(rawValue);
-    index += 1;
-  }
-
-  return data;
-}
-
 function parseContentFrontmatter(value) {
   const content = String(value ?? "").replace(/^\uFEFF/, "");
-  const match = content.match(
-    /^---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/,
-  );
-  if (!match) return { data: {}, content };
-
   try {
-    return {
-      data: parseSimpleFrontmatterData(match[1]),
-      content: content.slice(match[0].length),
-    };
+    const parsed = matter(content, SAFE_MATTER_OPTIONS);
+    return { data: parsed.data || {}, content: parsed.content || "" };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new Error(message);

@@ -6,6 +6,7 @@ import { describe, it } from "node:test";
 import {
   CACHE_KEY,
   DETAIL_CACHE_PREFIX,
+  REGISTRY_SEARCH_URL,
   absoluteDataUrl,
   buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
@@ -20,6 +21,7 @@ import {
   fallbackDetail,
   feedCacheKey,
   feedMetadataCacheKey,
+  filterEntriesBySearchText,
   filterEntriesByCategory,
   formatPackageLabel,
   formatReviewLabel,
@@ -28,7 +30,9 @@ import {
   parseDetail,
   parseFavoriteKeys,
   parseFeed,
+  parseRegistrySearch,
   registryManifestUrl,
+  registrySearchUrl,
   resolveFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
@@ -37,6 +41,7 @@ import {
 } from "../src/feed";
 import {
   fetchFreshFeed,
+  fetchRegistrySearch,
   loadCachedFeed,
   loadEntryDetail,
   type RaycastTextCache,
@@ -242,6 +247,61 @@ describe("Raycast feed helpers", () => {
     });
   });
 
+  it("parses registry search responses into Raycast-compatible entries", () => {
+    const parsed = parseRegistrySearch(
+      JSON.stringify({
+        schemaVersion: 1,
+        query: "context",
+        category: "mcp",
+        total: 2,
+        limit: 1,
+        offset: 0,
+        nextOffset: 1,
+        results: [
+          {
+            category: sampleEntry.category,
+            slug: sampleEntry.slug,
+            title: sampleEntry.title,
+            description: sampleEntry.description,
+            tags: sampleEntry.tags,
+            author: sampleEntry.author,
+            brandName: sampleEntry.brandName,
+            brandDomain: sampleEntry.brandDomain,
+            brandIconUrl: sampleEntry.brandIconUrl,
+            canonicalUrl: sampleEntry.webUrl,
+            repoUrl: sampleEntry.repoUrl,
+            documentationUrl: sampleEntry.documentationUrl,
+            llmsUrl: sampleEntry.llmsUrl,
+            apiUrl: sampleEntry.apiUrl,
+            downloadTrust: sampleEntry.downloadTrust,
+            verificationStatus: sampleEntry.verificationStatus,
+            platforms: ["claude-code"],
+            searchScore: 137,
+            searchReasons: ["title phrase", "source-backed"],
+          },
+        ],
+      }),
+    );
+
+    assert.equal(parsed.query, "context");
+    assert.equal(parsed.category, "mcp");
+    assert.equal(parsed.total, 2);
+    assert.equal(parsed.nextOffset, 1);
+    assert.equal(parsed.entries[0].slug, sampleEntry.slug);
+    assert.equal(
+      parsed.entries[0].detailUrl,
+      "/data/raycast/mcp/context7.json",
+    );
+    assert.match(parsed.entries[0].copyText, /https:\/\/heyclau.de\/mcp/);
+    assert.match(parsed.entries[0].detailMarkdown, /## Source/);
+    assert.deepEqual(parsed.entries[0].platformCompatibility, ["claude-code"]);
+
+    assert.throws(
+      () => parseRegistrySearch(JSON.stringify({ results: [{ slug: "bad" }] })),
+      /malformed entries/,
+    );
+  });
+
   it("normalizes detail URLs relative to the public feed", () => {
     assert.equal(
       absoluteDataUrl("/data/raycast/mcp/context7.json"),
@@ -291,6 +351,33 @@ describe("Raycast feed helpers", () => {
       detailCacheKey(sampleEntry, devFeed),
       `${DETAIL_CACHE_PREFIX}:${entryKey(sampleEntry)}`,
     );
+  });
+
+  it("builds bounded server search URLs for Raycast queries", () => {
+    const url = new URL(
+      registrySearchUrl({
+        query: " context server ",
+        category: "mcp",
+        limit: 20,
+        offset: 40,
+      }),
+    );
+
+    assert.equal(url.origin + url.pathname, REGISTRY_SEARCH_URL);
+    assert.equal(url.searchParams.get("q"), "context server");
+    assert.equal(url.searchParams.get("category"), "mcp");
+    assert.equal(url.searchParams.get("limit"), "20");
+    assert.equal(url.searchParams.get("offset"), "40");
+
+    const explicitZero = new URL(
+      registrySearchUrl({ query: "context", limit: 0, offset: 0 }),
+    );
+    assert.equal(explicitZero.searchParams.get("limit"), "0");
+    assert.equal(explicitZero.searchParams.get("offset"), "0");
+
+    const omitted = new URL(registrySearchUrl({ query: "context" }));
+    assert.equal(omitted.searchParams.has("limit"), false);
+    assert.equal(omitted.searchParams.has("offset"), false);
   });
 
   it("resolves jobs feeds from the production HeyClaude host", () => {
@@ -464,7 +551,16 @@ describe("Raycast feed helpers", () => {
   });
 
   it("builds category filters and favorites without mutating ranking", () => {
-    const toolEntry = { ...sampleEntry, category: "tools", slug: "raycast" };
+    const toolEntry = {
+      ...sampleEntry,
+      category: "tools",
+      slug: "raycast",
+      title: "Raycast",
+      description: "Launcher for desktop workflows.",
+      tags: ["launcher"],
+      brandName: "Raycast",
+      brandDomain: "raycast.com",
+    };
     const entries = [sampleEntry, toolEntry];
     const favorites = new Set([entryKey(toolEntry)]);
 
@@ -481,6 +577,15 @@ describe("Raycast feed helpers", () => {
     assert.deepEqual(filterEntriesByCategory(entries, "mcp", favorites), [
       sampleEntry,
     ]);
+    assert.deepEqual(
+      filterEntriesBySearchText(entries, "upstash docs").map(entryKey),
+      [entryKey(sampleEntry)],
+    );
+    assert.deepEqual(filterEntriesBySearchText(entries, "missing"), []);
+    assert.deepEqual(filterEntriesBySearchText(entries, ""), entries);
+    assert.deepEqual(filterEntriesBySearchText(entries, "   "), entries);
+    assert.deepEqual(filterEntriesBySearchText(entries, "!!!"), []);
+    assert.deepEqual(filterEntriesBySearchText(entries, "@@@ ///"), []);
   });
 
   it("keeps the v1 extension read-only and non-mutating", () => {
@@ -731,6 +836,65 @@ describe("Raycast feed helpers", () => {
     assert.equal(
       JSON.parse(cache.get(feedMetadataCacheKey(devFeed)) || "{}").signature,
       "fixed-feed-signature",
+    );
+  });
+
+  it("fetches server-backed registry search pages with strict parsing", async () => {
+    let requestedUrl = "";
+    const search = await fetchRegistrySearch({
+      query: "context",
+      category: "mcp",
+      limit: 20,
+      fetchFn: async (input) => {
+        requestedUrl = String(input);
+        return response({
+          schemaVersion: 1,
+          query: "context",
+          category: "mcp",
+          count: 1,
+          total: 2,
+          limit: 20,
+          offset: 0,
+          nextOffset: 20,
+          results: [
+            {
+              category: sampleEntry.category,
+              slug: sampleEntry.slug,
+              title: sampleEntry.title,
+              description: sampleEntry.description,
+              tags: sampleEntry.tags,
+              canonicalUrl: sampleEntry.webUrl,
+              repoUrl: sampleEntry.repoUrl,
+              documentationUrl: sampleEntry.documentationUrl,
+              downloadTrust: sampleEntry.downloadTrust,
+              verificationStatus: sampleEntry.verificationStatus,
+            },
+          ],
+        });
+      },
+    });
+
+    assert.equal(
+      requestedUrl,
+      "https://heyclau.de/api/registry/search?q=context&category=mcp&limit=20",
+    );
+    assert.equal(search.entries.length, 1);
+    assert.equal(search.nextOffset, 20);
+
+    await assert.rejects(
+      fetchRegistrySearch({
+        query: "context",
+        fetchFn: async () => response({ results: [{ slug: "broken" }] }),
+      }),
+      /malformed entries/,
+    );
+
+    await assert.rejects(
+      fetchRegistrySearch({
+        query: "context",
+        fetchFn: async () => response({}, { status: 503 }),
+      }),
+      /Registry search responded with 503/,
     );
   });
 

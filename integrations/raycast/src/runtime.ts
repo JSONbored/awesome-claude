@@ -10,10 +10,13 @@ import {
   parseFeed,
   parseFeedSnapshotMetadata,
   parseRegistryManifestSnapshot,
+  parseRegistrySearch,
   registryManifestUrl,
+  registrySearchUrl,
   resolveFeedUrl,
   type FeedSnapshotMetadata,
   type ParsedFeed,
+  type ParsedRegistrySearch,
   type RaycastDetail,
   type RaycastEntry,
   type RegistryManifestSnapshot,
@@ -222,6 +225,31 @@ export async function fetchFreshFeed(options: {
     }
     throw error;
   }
+}
+
+export async function fetchRegistrySearch(options: {
+  query: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+  searchUrl?: string;
+  fetchFn?: FetchLike;
+}): Promise<ParsedRegistrySearch> {
+  const fetchFn = options.fetchFn ?? fetch;
+  const requestUrl = registrySearchUrl({
+    query: options.query,
+    category: options.category,
+    limit: options.limit,
+    offset: options.offset,
+    searchUrl: options.searchUrl,
+  });
+  const response = await fetchFn(requestUrl, {
+    headers: { accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`Registry search responded with ${response.status}`);
+  }
+  return parseRegistrySearch(await response.text());
 }
 
 export async function loadEntryDetail(options: {

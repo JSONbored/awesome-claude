@@ -33,6 +33,7 @@
     "indexnow:submit": "node scripts/submit-indexnow.mjs",
     "email:render": "tsx scripts/render-email-templates.ts",
     "validate:emails": "tsx scripts/render-email-templates.ts --check",
+    "brief:weekly": "node scripts/generate-weekly-brief.mjs",
     "resend:sync-templates": "tsx scripts/sync-resend-templates.ts",
     "mcp:start": "pnpm --filter @heyclaude/mcp start",
     "mcp:start:local": "pnpm --filter @heyclaude/mcp start:local",

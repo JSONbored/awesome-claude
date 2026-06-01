@@ -14,3 +14,4 @@ export * from "./submission-labels.js";
 export * from "./submission-risk.js";
 export * from "./submission-spec.js";
 export * from "./llms.js";
+export * from "./weekly-brief.js";

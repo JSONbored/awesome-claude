@@ -50,6 +50,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/llms.js"
     },
+    "./weekly-brief": {
+      "types": "./src/weekly-brief.d.ts",
+      "default": "./src/weekly-brief.js"
+    },
     "./artifacts": {
       "types": "./src/index.d.ts",
       "default": "./src/artifacts.js"
