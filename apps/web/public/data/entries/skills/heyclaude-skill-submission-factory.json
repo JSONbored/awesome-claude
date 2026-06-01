@@ -66,6 +66,14 @@
       "Official docs or source URLs",
       "Validation commands or acceptance criteria"
     ],
+    "safetyNotes": [
+      "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+      "Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself."
+    ],
+    "privacyNotes": [
+      "Skill drafting may include public source URLs, package metadata, and compatibility notes.",
+      "Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts."
+    ],
     "hasPrerequisites": true,
     "hasTroubleshooting": true,
     "hasBreakingChanges": false,

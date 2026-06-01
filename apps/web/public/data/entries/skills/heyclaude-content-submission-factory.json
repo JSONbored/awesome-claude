@@ -62,6 +62,14 @@
       "Category candidate or content type",
       "Short description of what the resource does"
     ],
+    "safetyNotes": [
+      "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+      "Review generated submission drafts before opening a PR; the skill does not publish content by itself."
+    ],
+    "privacyNotes": [
+      "Drafting may include public source URLs, brand metadata, and resource descriptions.",
+      "Do not include credentials, private repository details, customer data, or unpublished material in submission drafts."
+    ],
     "hasPrerequisites": true,
     "hasTroubleshooting": true,
     "hasBreakingChanges": false,

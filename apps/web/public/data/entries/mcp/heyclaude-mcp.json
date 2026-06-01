@@ -56,6 +56,14 @@
       "Network access to https://heyclau.de/api/mcp",
       "Optional local checkout if running the stdio package directly from the repo"
     ],
+    "safetyNotes": [
+      "Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.",
+      "Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub."
+    ],
+    "privacyNotes": [
+      "MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.",
+      "Do not include credentials, private repository details, customer data, or unpublished material in draft fields."
+    ],
     "hasPrerequisites": true,
     "hasTroubleshooting": true,
     "hasBreakingChanges": false,

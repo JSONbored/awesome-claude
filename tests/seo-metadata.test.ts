@@ -22,7 +22,6 @@ const bingReportedPaths = [
 const staticMetadataPages = [
   "browse",
   "submit",
-  "submissions",
   "advertise",
   "api-docs",
   "claim",

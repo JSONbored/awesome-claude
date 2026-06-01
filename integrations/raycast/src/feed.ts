@@ -234,9 +234,7 @@ export function buildContributeEntryUrl(
   return url.toString();
 }
 
-export function buildSubmitPrUrl(
-  categoryOrDraft?: string | SubmissionDraft,
-) {
+export function buildSubmitPrUrl(categoryOrDraft?: string | SubmissionDraft) {
   const draft: SubmissionDraft | undefined =
     typeof categoryOrDraft === "string"
       ? { category: categoryOrDraft }

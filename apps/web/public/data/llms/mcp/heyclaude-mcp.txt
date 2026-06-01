@@ -12,6 +12,8 @@ Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/
 - Brand: HeyClaude
 - Brand domain: heyclau.de
 - Brand asset source: manual
+- Safety notes: Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients., Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub.
+- Privacy notes: MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client., Do not include credentials, private repository details, customer data, or unpublished material in draft fields.
 - Author: HeyClaude Team
 - Last verified: 2026-04-30T02:43:14-06:00
 - Robots: indexable
@@ -26,6 +28,12 @@ Search the public HeyClaude registry, fetch entry details, inspect compatibility
 - submissions
 - compatibility
 - feeds
+## Safety Notes
+- Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.
+- Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub.
+## Privacy Notes
+- MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.
+- Do not include credentials, private repository details, customer data, or unpublished material in draft fields.
 ## Content
 ## Overview
 The official HeyClaude MCP server exposes the public HeyClaude registry to MCP

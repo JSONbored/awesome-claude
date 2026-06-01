@@ -11,6 +11,8 @@ Download: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Package SHA256: 1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f
+- Safety notes: The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory., Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
+- Privacy notes: Skill drafting may include public source URLs, package metadata, and compatibility notes., Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
 - Last verified: 2026-04-27
@@ -23,6 +25,12 @@ Create portable Agent Skills, generate platform adapters, validate package metad
 - agent-skills
 - registry
 - submissions
+## Safety Notes
+- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.
+- Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
+## Privacy Notes
+- Skill drafting may include public source URLs, package metadata, and compatibility notes.
+- Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 ## Content
 ## Knowledge Freshness
 This skill is pinned to Agent Skills and HeyClaude submission behavior verified on **2026-04-27**.

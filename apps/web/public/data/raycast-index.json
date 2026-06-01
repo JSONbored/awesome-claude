@@ -7597,10 +7597,18 @@
       "author": "JSONbored",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory",
       "configSnippet": "",
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated submission drafts before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Drafting may include public source URLs, brand metadata, and resource descriptions.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in submission drafts."
+      ],
       "copyText": "Install:\ncurl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory\n\nUsage:\nUse this skill when preparing a new HeyClaude content submission or improving an existing registry entry.\n\nAsset:\n# Trigger\n\"Prepare a complete HeyClaude content submission for this resource.\"\n\n# Required output\n1) Recommended category and category-fit rationale\n2) Review-ready HeyClaude submission fields\n3) MCP validation and duplicate-search notes when available\n4) Source and brand metadata\n5) SEO and citation notes\n6) HeyClaude PR-first submission URL",
       "copyTextLength": 699,
       "copyTextTruncated": false,
-      "detailMarkdown": "# HeyClaude Content Submission Factory\n\nPrepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory\n```\n\n## Usage\nUse this skill when preparing a new HeyClaude content submission or improving an existing registry entry.",
+      "detailMarkdown": "# HeyClaude Content Submission Factory\n\nPrepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Safety notes\n- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.\n- Review generated submission drafts before opening a PR; the skill does not publish content by itself.\n\n## Privacy notes\n- Drafting may include public source URLs, brand metadata, and resource descriptions.\n- Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory\n```\n\n## Usage\nUse this skill when preparing a new HeyClaude content submission or improving an existing registry entry.",
       "detailUrl": "/data/raycast/skills/heyclaude-content-submission-factory.json",
       "webUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
@@ -7674,10 +7682,18 @@
       "brandAssetSource": "manual",
       "installCommand": "npx -y mcp-remote https://heyclau.de/api/mcp",
       "configSnippet": "{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}",
+      "safetyNotes": [
+        "Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.",
+        "Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub."
+      ],
+      "privacyNotes": [
+        "MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in draft fields."
+      ],
       "copyText": "Install:\nnpx -y mcp-remote https://heyclau.de/api/mcp\n\nConfig:\n{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}\n\nUsage:\n{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}",
       "copyTextLength": 350,
       "copyTextTruncated": false,
-      "detailMarkdown": "# HeyClaude MCP Server\n\nSearch the public HeyClaude registry, fetch entry details, inspect compatibility, and build PR-first submission URLs through MCP.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Install\n```bash\nnpx -y mcp-remote https://heyclau.de/api/mcp\n```\n\n## Config\n```json\n{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}\n```\n\n## Usage\nnpx -y mcp-remote https://heyclau.de/api/mcp",
+      "detailMarkdown": "# HeyClaude MCP Server\n\nSearch the public HeyClaude registry, fetch entry details, inspect compatibility, and build PR-first submission URLs through MCP.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.\n- Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub.\n\n## Privacy notes\n- MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.\n- Do not include credentials, private repository details, customer data, or unpublished material in draft fields.\n\n## Install\n```bash\nnpx -y mcp-remote https://heyclau.de/api/mcp\n```\n\n## Config\n```json\n{\n  \"mcpServers\": {\n    \"heyclaude\": {\n      \"command\": \"npx\",\n      \"args\": [\"-y\", \"mcp-remote\", \"https://heyclau.de/api/mcp\"]\n    }\n  }\n}\n```\n\n## Usage\nnpx -y mcp-remote https://heyclau.de/api/mcp",
       "detailUrl": "/data/raycast/mcp/heyclaude-mcp.json",
       "webUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp",
       "canonicalUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp",
@@ -7715,10 +7731,18 @@
       "author": "JSONbored",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory",
       "configSnippet": "",
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Skill drafting may include public source URLs, package metadata, and compatibility notes.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts."
+      ],
       "copyText": "Install:\ncurl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory\n\nUsage:\nUse this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry.\n\nAsset:\n# Trigger\n\"Create a portable Agent Skill and prepare a HeyClaude PR-first submission.\"\n\n# Required output\n1) Valid SKILL.md package\n2) Platform compatibility table\n3) Cursor adapter draft when applicable\n4) HeyClaude submission PR fields",
       "copyTextLength": 582,
       "copyTextTruncated": false,
-      "detailMarkdown": "# HeyClaude Skill Submission Factory\n\nCreate portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory\n```\n\n## Usage\nUse this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry.",
+      "detailMarkdown": "# HeyClaude Skill Submission Factory\n\nCreate portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Safety notes\n- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.\n- Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.\n\n## Privacy notes\n- Skill drafting may include public source URLs, package metadata, and compatibility notes.\n- Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory\n```\n\n## Usage\nUse this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry.",
       "detailUrl": "/data/raycast/skills/heyclaude-skill-submission-factory.json",
       "webUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",

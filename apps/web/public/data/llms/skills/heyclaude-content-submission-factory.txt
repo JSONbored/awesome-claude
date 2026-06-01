@@ -11,6 +11,8 @@ Download: /downloads/skills/heyclaude-content-submission-factory.zip
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-content-submission-factory.zip
 - Package SHA256: 88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c
+- Safety notes: The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory., Review generated submission drafts before opening a PR; the skill does not publish content by itself.
+- Privacy notes: Drafting may include public source URLs, brand metadata, and resource descriptions., Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
 - Last verified: 2026-04-30
@@ -23,6 +25,12 @@ Prepare complete, source-backed HeyClaude content submissions for agents, MCP se
 - registry
 - content-workflow
 - seo
+## Safety Notes
+- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.
+- Review generated submission drafts before opening a PR; the skill does not publish content by itself.
+## Privacy Notes
+- Drafting may include public source URLs, brand metadata, and resource descriptions.
+- Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.
 ## Content
 ## Knowledge Freshness
 This skill is pinned to HeyClaude PR-first submission behavior verified on **2026-06-01**.

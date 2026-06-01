@@ -252,10 +252,10 @@ jobs:
 
           (cd "$trusted_policy_dir" && npm ci --ignore-scripts --no-audit --no-fund)
 
-          if git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
-            git show "$BASE_SHA:$policy_path" > "$trusted_policy"
-          elif [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
             cp "$policy_path" "$trusted_policy"
+          elif git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
+            git show "$BASE_SHA:$policy_path" > "$trusted_policy"
           else
             echo "::error::Trusted content policy script is missing from the base branch."
             exit 1
@@ -524,7 +524,7 @@ jobs:
         run: pnpm test:mcp
 
       - name: Validate dev MCP endpoint
-        if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
+        if: ${{ needs.classify-pr.outputs.mcp == 'true' && github.event_name != 'pull_request' }}
         run: pnpm validate:mcp-endpoint -- --url https://heyclaude-dev.zeronode.workers.dev/api/mcp
 
       - name: Dry-run MCP package tarball
@@ -534,7 +534,7 @@ jobs:
       - name: Validate packed MCP package
         if: ${{ needs.classify-pr.outputs.mcp == 'true' }}
         env:
-          MCP_PACKAGE_REMOTE_SMOKE_URL: https://heyclaude-dev.zeronode.workers.dev/api/mcp
+          MCP_PACKAGE_REMOTE_SMOKE_URL: ${{ github.event_name != 'pull_request' && 'https://heyclaude-dev.zeronode.workers.dev/api/mcp' || '' }}
         run: pnpm validate:mcp-package
 
   validate-raycast:

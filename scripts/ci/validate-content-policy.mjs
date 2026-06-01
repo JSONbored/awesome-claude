@@ -782,10 +782,19 @@ function tierFromFlags(flags) {
 function directContentRequestChangesReasons(report = {}) {
   if (report.subject?.type !== "pull_request") return [];
   const reasons = [];
+  const sourceType = report.sourceType || report.subject?.sourceType;
+  const isExternalDirect = sourceType === "external_direct";
   const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
   const warnings = new Set(
     (report.classificationWarnings || []).map((warning) => warning.id),
   );
+  const externalOnlyFlags = new Set(["community_local_download_request"]);
+  const externalOnlyWarnings = new Set([
+    "generated_readme_change",
+    "generated_registry_artifact_change",
+    "community_package_artifact_change",
+    "unsafe_package_verified_true",
+  ]);
 
   for (const finding of report.provenanceFindings || []) {
     if (finding.blocking) {
@@ -813,6 +822,7 @@ function directContentRequestChangesReasons(report = {}) {
       "Submission appears to include clearly unacceptable content.",
   };
   for (const [id, reason] of Object.entries(flagReasons)) {
+    if (!isExternalDirect && externalOnlyFlags.has(id)) continue;
     if (flags.has(id)) reasons.push(`${reason} (${id}).`);
   }
 
@@ -841,6 +851,7 @@ function directContentRequestChangesReasons(report = {}) {
       "Credential, local data, telemetry, or third-party data behavior needs privacyNotes disclosure.",
   };
   for (const [id, reason] of Object.entries(warningReasons)) {
+    if (!isExternalDirect && externalOnlyWarnings.has(id)) continue;
     if (warnings.has(id)) reasons.push(`${reason} (${id}).`);
   }
 

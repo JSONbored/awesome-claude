@@ -12554,6 +12554,14 @@
         "claude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated submission drafts before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Drafting may include public source URLs, brand metadata, and resource descriptions.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in submission drafts."
+      ],
       "dateAdded": "2026-04-30",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
@@ -12645,6 +12653,14 @@
         "submissions"
       ],
       "author": "HeyClaude Team",
+      "safetyNotes": [
+        "Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.",
+        "Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub."
+      ],
+      "privacyNotes": [
+        "MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in draft fields."
+      ],
       "brandName": "HeyClaude",
       "brandDomain": "heyclau.de",
       "brandIconUrl": "/favicon.svg",
@@ -12719,6 +12735,14 @@
         "heyclaude skill submission factory"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Skill drafting may include public source URLs, package metadata, and compatibility notes.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts."
+      ],
       "dateAdded": "2026-04-27",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",

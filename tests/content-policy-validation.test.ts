@@ -6,7 +6,11 @@ import { describe, expect, it } from "vitest";
 
 import { repoRoot } from "./helpers/registry-fixtures";
 
-function runContentPolicy(tmpDir: string, content: string) {
+function runContentPolicy(
+  tmpDir: string,
+  content: string,
+  sourceType = "same_repo_direct",
+) {
   const filesJson = path.join(tmpDir, "files.json");
   const outputJson = path.join(tmpDir, "policy-output.json");
   fs.writeFileSync(
@@ -30,7 +34,7 @@ function runContentPolicy(tmpDir: string, content: string) {
     "--output",
     outputJson,
     "--source-type",
-    "same_repo_direct",
+    sourceType,
   ];
 
   try {
@@ -104,6 +108,72 @@ Example body.
     expect(output.reviewFlags).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ id: "invalid_frontmatter" }),
+      ]),
+    );
+  });
+
+  it("allows maintainer-owned content to reference HeyClaude-hosted downloads when disclosures are present", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Tool
+category: tools
+description: Example maintainer-owned package fixture.
+downloadUrl: /downloads/skills/example-skill.zip
+submittedBy: JSONbored
+submittedByUrl: https://github.com/JSONbored
+safetyNotes:
+  - Downloads a maintainer-built archive into the current working directory.
+privacyNotes:
+  - Do not include private data in generated drafts.
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output).toMatchObject({
+      ok: true,
+      sourceType: "same_repo_direct",
+    });
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "community_local_download_request" }),
+      ]),
+    );
+  });
+
+  it("still blocks external content PRs that request HeyClaude-hosted downloads", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Tool
+category: tools
+description: Example external package fixture.
+downloadUrl: /downloads/skills/example-skill.zip
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Downloads a package archive into the current working directory.
+privacyNotes:
+  - Do not include private data in generated drafts.
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct");
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("community_local_download_request"),
       ]),
     );
   });

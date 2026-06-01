@@ -4,20 +4,20 @@
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2383657,
-      "sha256": "7e93b871f7a9f31ba4c05efc05e20aa03c1c0d85a08f9a8adcad06b596315eb4",
+      "bytes": 2385288,
+      "sha256": "38996ffb78b2fb94c432976d95894ffb9cb67b3f986fe940d7e598b379ed251d",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/search-index.json",
-      "bytes": 937295,
-      "sha256": "cb656b7b6871d803d7d300b40fcee2373310aff21cbab1e8ff8e22396405a6b4",
+      "bytes": 938926,
+      "sha256": "5e7fef0d702843f8d6b2c766e8055a8387cb6b41a8e04c1b6ce6052d23cf6bc4",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/raycast-index.json",
-      "bytes": 1235847,
-      "sha256": "b50e35d6b142262c2b9d7be316076392c4903a189973770f1ddacce9d7001e34",
+      "bytes": 1238941,
+      "sha256": "8dffbb63f395e892363257f41dae2a3eb60b1b64c43c29d81588746111ce2b27",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -41,13 +41,13 @@
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "7f29148cd9ee4d43b34dc2c0b61e7f7ffea41d7aa30a62c4105182a216876ee3",
+      "sha256": "4aecd437be7f8ddb1f58871ebf5ae7098d39328fcd1887f3783c736f4c462390",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/registry-trust-report.json",
-      "bytes": 309765,
-      "sha256": "605c500dc2be318c928e51a991114257a335713ec18b0389e0443eb51c1f78f5",
+      "bytes": 309759,
+      "sha256": "c282ff6b568645a0c4042352802bb85d75dc3de7b5104482a8f007f484525ea1",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -82,8 +82,8 @@
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3994111,
-      "sha256": "f6b65342def39cde8a3263cfd8e14935444c04f3e952681aa5f39a5b7c6c646e",
+      "bytes": 3996959,
+      "sha256": "8ad74a90056f569a045abb1d61956b9c50a8fc6fe63dbe93cb7e55c40d2162bd",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -94,8 +94,8 @@
     },
     {
       "path": "/data/feeds/categories/mcp.json",
-      "bytes": 226190,
-      "sha256": "d87c53e525e4a0358feb5b79db8adc249aaeb61681d3ede44a619c7245da09ac",
+      "bytes": 226722,
+      "sha256": "f6922a8b2523751f0756a62b02948108e0d01cc5d342ef0a53beb1a9c54d25bb",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -106,8 +106,8 @@
     },
     {
       "path": "/data/feeds/categories/skills.json",
-      "bytes": 458177,
-      "sha256": "a1e2d2dcfb75e21add732d8231c6fcb9c6ff3a9859b56d20c48010590b8f97be",
+      "bytes": 459276,
+      "sha256": "ebb67d444d51ac1c51d6163a5c07e139e0b0c42f12fe3b074819a8bbc306daa3",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
@@ -148,44 +148,44 @@
     },
     {
       "path": "/data/feeds/platforms/claude.json",
-      "bytes": 458205,
-      "sha256": "8e527aea4881a659e649a6c68a5971d14552dffada91226b3dd99b03274acd06",
+      "bytes": 459304,
+      "sha256": "02def98ca23f07b56dea534da5ecb1a2811b02dd7f6543cd2e7d2fa0ce015086",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
-      "bytes": 458203,
-      "sha256": "95918ab56139f5fc3ee74e54ec3584801355ea5b2d6b8e02b427e778a5755140",
+      "bytes": 459302,
+      "sha256": "f72b29cdf945774e06af389ec81333068fcd16832c424dad1c693adfccff229e",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
-      "bytes": 458209,
-      "sha256": "e0b6ed34b4c7d2757227ff290db76d9fc09d20edc70e6f427d75bc7efa23fcae",
+      "bytes": 459308,
+      "sha256": "db0c576a3f158e80d56ed316a0b918c138486c7905b59b6a184d3df1e14957b0",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
-      "bytes": 458205,
-      "sha256": "0c0195b8555b142736f697ab7e8c62926eae12a7f821c3df216d1dbf3312ca06",
+      "bytes": 459304,
+      "sha256": "c4d97e9041039f117dcf4f2d2057706eca5ecd980ffad21ebb10dc13a9b761e2",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
-      "bytes": 458205,
-      "sha256": "dd20cd3cb8856bc61eaf02cb8e254d8a41c09457a3457629f329843de04b8dea",
+      "bytes": 459304,
+      "sha256": "77c659b0506ed03b4e669a7f5e6ddfa142f4656ad4956b2e6a87e2af772afca4",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
-      "bytes": 458221,
-      "sha256": "c930d2f18310cc773643db0ff4091b2dfdead3c61be4754fb95c7fec496c1c0f",
+      "bytes": 459320,
+      "sha256": "eb82c808c85600772a688b2a73358fe3e9f2cb2666706f01369c05250633a321",
       "builtAt": "2026-05-26T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "5f2bd053c95a2495dc80f3a6378e1fa4163454e3d164bc21b232e0d35378efb4",
+      "sha256": "d6b73c9db5093c6b1515da65adc00b33a3d82d009763699401d70f61162b138f",
       "builtAt": "2026-05-26T00:00:00.000Z"
     }
   ],
@@ -11123,6 +11123,14 @@
         "Category candidate or content type",
         "Short description of what the resource does"
       ],
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated submission drafts before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Drafting may include public source URLs, brand metadata, and resource descriptions.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in submission drafts."
+      ],
       "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
       "downloadSha256": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
       "packageVerified": true,
@@ -11234,6 +11242,14 @@
         "Network access to https://heyclau.de/api/mcp",
         "Optional local checkout if running the stdio package directly from the repo"
       ],
+      "safetyNotes": [
+        "Runs the public HeyClaude MCP endpoint through mcp-remote when installed through stdio clients.",
+        "Exposes read-only registry and draft-validation tools; it does not publish content, open PRs, or mutate GitHub."
+      ],
+      "privacyNotes": [
+        "MCP queries and draft metadata are sent to the HeyClaude MCP endpoint when used through a remote client.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in draft fields."
+      ],
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
@@ -11293,6 +11309,14 @@
         "Skill topic and target user",
         "Official docs or source URLs",
         "Validation commands or acceptance criteria"
+      ],
+      "safetyNotes": [
+        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
+        "Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself."
+      ],
+      "privacyNotes": [
+        "Skill drafting may include public source URLs, package metadata, and compatibility notes.",
+        "Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts."
       ],
       "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",
       "downloadSha256": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
@@ -23373,7 +23397,7 @@
       "title": "HeyClaude Content Submission Factory",
       "dateAdded": "2026-04-30",
       "type": "added",
-      "artifactHash": "868edc80f8ee8a75eae784fbf028f343a00b82db2cd8ce9ce6f7356f987e4303"
+      "artifactHash": "0e679bdde4828fef36c37d48fa58158bd254e3028c6440f4e94ef6a1d2c83ff7"
     },
     {
       "category": "mcp",
