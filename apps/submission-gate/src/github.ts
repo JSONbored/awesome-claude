@@ -15,7 +15,8 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
   },
   "submission-manual-review": {
     color: "5319e7",
-    description: "Submission needs maintainer review before automation continues",
+    description:
+      "Submission needs maintainer review before automation continues",
   },
   "submission-closed-by-gate": {
     color: "b60205",

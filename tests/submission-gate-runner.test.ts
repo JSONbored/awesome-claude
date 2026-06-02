@@ -135,9 +135,7 @@ describe("submission gate import runner safety", () => {
   });
 
   it("sets a stable GitHub API user agent for import runner calls", () => {
-    expect(githubUserAgent()).toBe(
-      "heyclaude-submission-gate-import-runner",
-    );
+    expect(githubUserAgent()).toBe("heyclaude-submission-gate-import-runner");
   });
 
   it("redacts token-bearing git URLs from runner errors", () => {

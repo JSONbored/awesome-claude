@@ -88,8 +88,8 @@ describe("PR preview artifact validation flow", () => {
     );
     expect(sourceBlock).toContain("pnpm validate:content:strict");
     expect(sourceBlock).toContain("pnpm audit:content");
-    expect(sourceBlock).toContain("node \"$trusted_policy\"");
-    expect(sourceBlock).toContain("git diff --check \"$BASE_SHA\"...HEAD");
+    expect(sourceBlock).toContain('node "$trusted_policy"');
+    expect(sourceBlock).toContain('git diff --check "$BASE_SHA"...HEAD');
   });
 
   it("keeps generated artifact lanes off direct contributor submissions", () => {

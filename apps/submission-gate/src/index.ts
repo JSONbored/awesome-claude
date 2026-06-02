@@ -143,7 +143,7 @@ const DECISION_LABELS = [
   LABELS.close,
   LABELS.importOpen,
   LABELS.superseded,
-  ];
+];
 
 type ReviewTarget = {
   repoFullName: string;
@@ -612,9 +612,11 @@ async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
 }
 
 function isRecheckCommand(body: unknown) {
-  return String(body || "")
-    .trim()
-    .split(/\s+/)[0] === "/recheck";
+  return (
+    String(body || "")
+      .trim()
+      .split(/\s+/)[0] === "/recheck"
+  );
 }
 
 function hasPilotLabel(issue: { labels?: Array<{ name?: string }> }) {
@@ -642,9 +644,7 @@ async function targetFromIssueCommentRecheck(
   const installationId = installationIdFromPayload(payload);
   if (!isRecheckCommand(comment?.body)) return null;
   if (
-    !TRUSTED_RECHECK_ASSOCIATIONS.has(
-      String(comment?.author_association || ""),
-    )
+    !TRUSTED_RECHECK_ASSOCIATIONS.has(String(comment?.author_association || ""))
   ) {
     return null;
   }
@@ -1241,7 +1241,9 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
       const summary = [
         `Import runner failed: ${response.status}`,
         result.error ? `error=${result.error}` : "",
-        result.message ? `message=${String(result.message).slice(0, 1000)}` : "",
+        result.message
+          ? `message=${String(result.message).slice(0, 1000)}`
+          : "",
       ]
         .filter(Boolean)
         .join("; ");
