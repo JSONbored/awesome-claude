@@ -98,7 +98,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-content-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-content-submission-factory",
-      "artifactHash": "7689a8dc031dc2c7ebda72f3781296a708175b5a782d118c43037eabcd30076d"
+      "artifactHash": "c8db2b834586e19d2d5140a2deeee6be440ab5d1af99d8cbc590c4d06f7a2b93"
     },
     {
       "key": "mcp:zyntra-mail",
@@ -410,7 +410,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "llmsUrl": "https://heyclau.de/data/llms/skills/heyclaude-skill-submission-factory.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/heyclaude-skill-submission-factory",
-      "artifactHash": "f0c85a77632e031964e3f57c5820e9bd710033812fedce003b29beda1bc91097"
+      "artifactHash": "5783f343975370b369fc152f6687b91a50fd878cd2b85a81476cdf2a48b9bf46"
     },
     {
       "key": "tools:hyperbrowser",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "c8cc9063a9bb9efa03acf8a0e00e87519b45558bbb2484bcc41ab866370f616a"
+  "signature": "2859a4703571d4b33fdcee69fcbc457c77528fcfb71edc2f4da79b39d697dec4"
 }

@@ -24,6 +24,7 @@ const GITHUB_REPO_PATTERN =
 const GIT_REF_PATTERN =
   /^(?!-)(?!.*\.\.)(?!.*\/\/)(?!.*@\{)[A-Za-z0-9._/-]{1,200}$/;
 const UNSAFE_GIT_REF_CHARS = /[*[\]~^:\\]/;
+const DEFAULT_ALLOWED_IMPORT_REPOS = ["JSONbored/awesome-claude"];
 const DEFAULT_COMMAND_TIMEOUT_MS = 15 * 60 * 1000;
 const MAX_CAPTURE_CHARS = 1024 * 1024;
 
@@ -71,6 +72,24 @@ export function safeGitHubRepo(value) {
     /(^[._-]|[._-]$)/.test(name)
   ) {
     throw new Error("Import job has an invalid GitHub repository.");
+  }
+  return repo;
+}
+
+function allowedImportRepos() {
+  const configured = String(process.env.ALLOWED_IMPORT_REPOS || "")
+    .split(",")
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return new Set(configured.length ? configured : DEFAULT_ALLOWED_IMPORT_REPOS);
+}
+
+export function assertAllowedImportRepo(
+  repo,
+  allowedRepos = allowedImportRepos(),
+) {
+  if (!allowedRepos.has(repo)) {
+    throw new Error("Import job targets an unauthorized repository.");
   }
   return repo;
 }
@@ -186,6 +205,26 @@ async function runValidationCommand(command, cwd) {
   }
 }
 
+export function safeImportPath(repoDir, filePath) {
+  const relativePath = path.normalize(
+    String(filePath || "").replace(/\\+/g, "/"),
+  );
+  const parts = relativePath.split(path.sep).filter(Boolean);
+  if (
+    !parts.length ||
+    path.isAbsolute(relativePath) ||
+    parts.includes("..") ||
+    parts.includes(".git")
+  ) {
+    throw new Error("Invalid import path.");
+  }
+  const absolutePath = path.resolve(repoDir, relativePath);
+  if (!absolutePath.startsWith(`${repoDir}${path.sep}`)) {
+    throw new Error("Invalid import path.");
+  }
+  return absolutePath;
+}
+
 async function githubJson(url, token, init = {}) {
   const response = await fetch(url, {
     ...init,
@@ -247,7 +286,7 @@ async function handleImport(job) {
     );
   }
 
-  const safeRepo = safeGitHubRepo(repo);
+  const safeRepo = assertAllowedImportRepo(safeGitHubRepo(repo));
   const safeBaseRef = safeGitRef(baseRef, "baseRef");
   const safeBranchName = safeGitRef(branchName, "branchName");
   const safeValidationCommands = resolveValidationCommands(validationCommands);
@@ -286,10 +325,7 @@ async function handleImport(job) {
       if (!file.path || typeof file.content !== "string") {
         throw new Error("Import file is missing path or content.");
       }
-      const absolutePath = path.resolve(repoDir, file.path);
-      if (!absolutePath.startsWith(`${repoDir}${path.sep}`)) {
-        throw new Error("Invalid import path.");
-      }
+      const absolutePath = safeImportPath(repoDir, file.path);
       await mkdir(path.dirname(absolutePath), { recursive: true });
       await writeFile(absolutePath, file.content, "utf8");
     }
@@ -393,11 +429,18 @@ export function createImportServer() {
           : error instanceof SyntaxError
             ? 400
             : 500;
+      if (status === 500) {
+        console.error(
+          "submission import failed",
+          redactSensitiveOutput(message),
+        );
+      }
       response.writeHead(status, { "content-type": "application/json" });
       response.end(
         JSON.stringify({
           ok: false,
-          error: redactSensitiveOutput(message),
+          error:
+            status === 500 ? "import_failed" : redactSensitiveOutput(message),
         }),
       );
     }

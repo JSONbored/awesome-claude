@@ -4,8 +4,8 @@
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2388345,
-      "sha256": "94395231d6b4acc2a00edb6fdfff642ff0860e800658c2a67c9f94d771906962",
+      "bytes": 2388448,
+      "sha256": "5994786c3c24f76b3e18c132d4a8c38ce2e6b857d367b96bdc4b05c36a7ac00f",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
@@ -16,8 +16,8 @@
     },
     {
       "path": "/data/raycast-index.json",
-      "bytes": 1238941,
-      "sha256": "52b8ec80ef0e0e325ca966ac3b6b79e0786fef684f54050ebb0eaefd0230fb89",
+      "bytes": 1239044,
+      "sha256": "d06e1157740f8794da21ac77dffe4e8c41624aba51c19f1f9e49627d19288bf5",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
@@ -41,7 +41,7 @@
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "5ee53d470711e861cf7a49972321950acae1bb1e534eb2646d49be680977a14d",
+      "sha256": "f4c41675dd5a1912276468d23ed24e81d72694c5c278b953fe98800a9340ceb5",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
@@ -106,8 +106,8 @@
     },
     {
       "path": "/data/feeds/categories/skills.json",
-      "bytes": 462333,
-      "sha256": "8794daf822cb068ef9417477b15ab2c1086c1e5376319ff70d2c337718ea4887",
+      "bytes": 462436,
+      "sha256": "fef8ad565b49558d472208b6fe9b0593fa6470ed9ede979ccfb6a09e5c03fb28",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
@@ -148,44 +148,44 @@
     },
     {
       "path": "/data/feeds/platforms/claude.json",
-      "bytes": 462361,
-      "sha256": "09ee69704d4b6f14a567d931d350400f8b3110288e906c78222d0b79de84a059",
+      "bytes": 462464,
+      "sha256": "44fba24d192907efd693595023fd297c0f2c20d4eb7fceca6f41499cc221a25c",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
-      "bytes": 462359,
-      "sha256": "3981a36b650d7fb16ea2203bf79433bf80df6716b7b526746671c60c9e347884",
+      "bytes": 462462,
+      "sha256": "d67db9549f69987df1fc4b43930619fa0e552f17f2527bee18d75fc0db07ee19",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
-      "bytes": 462365,
-      "sha256": "28c68ca191532650df4c899e6590c380058fa8cb332b75bf393fcecc4cb9aaaf",
+      "bytes": 462468,
+      "sha256": "da0a92bf22ae1fcfe8ef1270c04e6b64c820fdd19fd0b0c64813222313fa7612",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
-      "bytes": 462361,
-      "sha256": "2ab2065e1ccfc269fed933c9dc2e7bf34fba11ccdd83d6f4511962d93da1933e",
+      "bytes": 462464,
+      "sha256": "3f5c2800c54c9bece56a19d3538c3b51ba7880a97a1e941e250261e04014e650",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
-      "bytes": 462361,
-      "sha256": "f122ee15196257c1a5fdf688fe551de760705b9c9563ece99173265ff065e9c6",
+      "bytes": 462464,
+      "sha256": "702de822a27e13c67252c443f1dfb323d47bbec9bfc504c9c676164383123629",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
-      "bytes": 462377,
-      "sha256": "d1747b4414b8371f0e5cf397d61080bec58ab4a9a1b9f885d9f97aaa975a75c4",
+      "bytes": 462480,
+      "sha256": "c97c5e43151834a21939b3159a58035244d09c86ba45986c56d8d2e11eedf028",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "1588f517bdca877e494560f825e2b4b2270a3ef61ffb0c465965732ced1d6537",
+      "sha256": "c17380d09321120ef6bba8f48b26cc72747b0c320de4b82ee7a763502690df45",
       "builtAt": "2026-06-01T00:00:00.000Z"
     }
   ],
@@ -23397,7 +23397,7 @@
       "title": "HeyClaude Content Submission Factory",
       "dateAdded": "2026-04-30",
       "type": "added",
-      "artifactHash": "7689a8dc031dc2c7ebda72f3781296a708175b5a782d118c43037eabcd30076d"
+      "artifactHash": "c8db2b834586e19d2d5140a2deeee6be440ab5d1af99d8cbc590c4d06f7a2b93"
     },
     {
       "category": "mcp",

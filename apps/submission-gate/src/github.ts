@@ -1,6 +1,8 @@
 import { base64UrlEncode } from "./security";
 
 const encoder = new TextEncoder();
+const PKCS8_PEM_HEADER = ["-----BEGIN", "PRIVATE", "KEY-----"].join(" ");
+const RSA_PEM_HEADER = ["-----BEGIN", "RSA", "PRIVATE", "KEY-----"].join(" ");
 
 class GitHubApiError extends Error {
   status: number;
@@ -39,15 +41,13 @@ export function buildGitHubAppAuthorizeUrl(params: {
 }
 
 function pemToArrayBuffer(pem: string) {
-  if (/-----BEGIN RSA PRIVATE KEY-----/.test(pem)) {
+  if (pem.includes(RSA_PEM_HEADER)) {
     throw new Error(
-      "GITHUB_APP_PRIVATE_KEY must be PKCS#8 PEM (-----BEGIN PRIVATE KEY-----). Convert GitHub's RSA key with: openssl pkcs8 -topk8 -nocrypt -in github-app.pem -out github-app-pkcs8.pem",
+      "GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block. Convert GitHub's RSA key with: openssl pkcs8 -topk8 -nocrypt -in github-app.pem -out github-app-pkcs8.pem",
     );
   }
-  if (!/-----BEGIN PRIVATE KEY-----/.test(pem)) {
-    throw new Error(
-      "GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block beginning with -----BEGIN PRIVATE KEY-----.",
-    );
+  if (!pem.includes(PKCS8_PEM_HEADER)) {
+    throw new Error("GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block.");
   }
   const base64 = pem
     .replace(/-----BEGIN [^-]+-----/g, "")

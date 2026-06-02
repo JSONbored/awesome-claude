@@ -142,19 +142,6 @@ export async function storeDraftUserToken(
     .run();
 }
 
-export async function getDraftUserToken(db: D1Database, draftId: string) {
-  const timestamp = now();
-  const row = await db
-    .prepare(
-      `SELECT encrypted_token AS encryptedToken
-       FROM submission_user_tokens
-       WHERE draft_id = ? AND consumed_at IS NULL AND expires_at > ?`,
-    )
-    .bind(draftId, timestamp)
-    .first<{ encryptedToken?: string }>();
-  return row?.encryptedToken || "";
-}
-
 export async function consumeDraftUserToken(db: D1Database, draftId: string) {
   const timestamp = now();
   const row = await db
@@ -162,11 +149,11 @@ export async function consumeDraftUserToken(db: D1Database, draftId: string) {
       `UPDATE submission_user_tokens
        SET consumed_at = ?, updated_at = ?
        WHERE draft_id = ? AND consumed_at IS NULL AND expires_at > ?
-       RETURNING draft_id AS draftId`,
+       RETURNING encrypted_token AS encryptedToken`,
     )
     .bind(timestamp, timestamp, draftId, timestamp)
-    .first<{ draftId?: string }>();
-  return Boolean(row?.draftId);
+    .first<{ encryptedToken?: string }>();
+  return row?.encryptedToken || "";
 }
 
 export async function updateDraftStatus(

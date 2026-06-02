@@ -17,6 +17,7 @@ import {
   slugify,
   type SpecField,
 } from "@/lib/submission-spec";
+import { logClientError } from "@/lib/client-logs";
 import { siteConfig } from "@/lib/site";
 import { CopyButton } from "@/components/copy-button";
 import { cn } from "@/lib/utils";
@@ -195,6 +196,9 @@ function SubmitPage() {
       setPreflightResult(safePayload);
       return safePayload;
     } catch (error) {
+      logClientError("submission.preflight.client_error", error, {
+        category,
+      });
       const message = error instanceof Error ? error.message : "Server preflight failed.";
       setPreflightError(message);
       return null;
@@ -253,6 +257,9 @@ function SubmitPage() {
       }
       setDone({ statusUrl, manualPr: payload.manualPr });
     } catch (error) {
+      logClientError("submission.submit.client_error", error, {
+        category,
+      });
       setSubmitError(error instanceof Error ? error.message : "Submission failed.");
     } finally {
       setSubmitBusy(false);

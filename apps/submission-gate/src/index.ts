@@ -40,7 +40,6 @@ import {
   consumeDraftUserToken,
   createDraft,
   getDraft,
-  getDraftUserToken,
   insertAudit,
   storeDraftUserToken,
   updateDraftAuthState,
@@ -52,6 +51,7 @@ import {
 type Env = {
   PUBLIC_SITE_URL: string;
   PUBLIC_REPO: string;
+  ALLOWED_IMPORT_REPOS?: string;
   PILOT_BASE_REF: string;
   GITHUB_API_VERSION: string;
   REVIEW_MARKER: string;
@@ -506,7 +506,16 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
   await withSubmissionLock(env, message.targetKey, async () => {
     if (message.kind === "submit_draft") {
       const draftId = String(message.payload.draftId || "");
-      const encryptedToken = await getDraftUserToken(
+      const draft = await getDraft(env.SUBMISSION_GATE_DB, draftId);
+      if (!draft) {
+        console.debug("submit_draft skipped", {
+          draftId,
+          hasDraft: false,
+        });
+        return;
+      }
+      if (draft.status === "pr_open" && draft.pullRequestUrl) return;
+      const encryptedToken = await consumeDraftUserToken(
         env.SUBMISSION_GATE_DB,
         draftId,
       );
@@ -514,16 +523,14 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         encryptedToken && env.INTERNAL_SHARED_SECRET
           ? await decryptText(env.INTERNAL_SHARED_SECRET, encryptedToken)
           : "";
-      const draft = await getDraft(env.SUBMISSION_GATE_DB, draftId);
-      if (!draft || !userToken) {
+      if (!userToken) {
         console.debug("submit_draft skipped", {
           draftId,
-          hasDraft: Boolean(draft),
-          hasToken: Boolean(userToken),
+          hasDraft: true,
+          hasToken: false,
         });
         return;
       }
-      if (draft.status === "pr_open" && draft.pullRequestUrl) return;
       const fields = parseStoredDraftFields(draftId, draft.fieldsJson, {
         category: draft.category,
         slug: draft.slug,
@@ -547,7 +554,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         apiVersion: env.GITHUB_API_VERSION,
       });
       await updateDraftStatus(env.SUBMISSION_GATE_DB, draftId, "pr_open", pr);
-      await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
         targetKey: message.targetKey,
@@ -885,9 +891,20 @@ export class SubmissionLock extends DurableObject {
   }
 }
 
-export class SubmissionImportRunner extends Container {
+export class SubmissionImportRunner extends Container<Env> {
   defaultPort = 8080;
   sleepAfter = "10m";
+
+  constructor(ctx: DurableObjectState, env: Env) {
+    super(ctx, env);
+    this.envVars = {
+      ALLOWED_IMPORT_REPOS:
+        env.ALLOWED_IMPORT_REPOS ||
+        env.PUBLIC_REPO ||
+        "JSONbored/awesome-claude",
+      INTERNAL_SHARED_SECRET: env.INTERNAL_SHARED_SECRET || "",
+    };
+  }
 }
 
 export default {

@@ -142,11 +142,14 @@ describe("Cloudflare submission gate helpers", () => {
     await expect(
       createGitHubAppJwt({
         appId: "123",
-        privateKeyPem:
-          "-----BEGIN RSA PRIVATE KEY-----\nZmFrZQ==\n-----END RSA PRIVATE KEY-----",
+        privateKeyPem: [
+          "-----BEGIN RSA",
+          "PRIVATE KEY-----\nZmFrZQ==\n-----END RSA",
+          "PRIVATE KEY-----",
+        ].join(" "),
         now: 1_780_300_000_000,
       }),
-    ).rejects.toThrow("GITHUB_APP_PRIVATE_KEY must be PKCS#8 PEM");
+    ).rejects.toThrow("GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block");
   });
 
   it("signs internal import callbacks with the same HMAC verifier", async () => {

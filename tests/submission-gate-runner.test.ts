@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  assertAllowedImportRepo,
   redactSensitiveOutput,
   resolveValidationCommands,
   safeGitHubRepo,
   safeGitRef,
+  safeImportPath,
 } from "../apps/submission-gate/container/runner.mjs";
 
 describe("submission gate import runner safety", () => {
@@ -25,6 +27,21 @@ describe("submission gate import runner safety", () => {
     expect(() => safeGitHubRepo("JSONbored/awesome-claude.git")).toThrow(
       "invalid GitHub repository",
     );
+  });
+
+  it("allows only configured import repositories", () => {
+    expect(
+      assertAllowedImportRepo(
+        "JSONbored/awesome-claude",
+        new Set(["JSONbored/awesome-claude"]),
+      ),
+    ).toBe("JSONbored/awesome-claude");
+    expect(() =>
+      assertAllowedImportRepo(
+        "attacker/awesome-claude",
+        new Set(["JSONbored/awesome-claude"]),
+      ),
+    ).toThrow("unauthorized repository");
   });
 
   it("rejects git refs that could be parsed as options or ref traversal", () => {
@@ -49,6 +66,22 @@ describe("submission gate import runner safety", () => {
     );
     expect(() => safeGitRef("feature:main", "baseRef")).toThrow(
       "invalid baseRef",
+    );
+  });
+
+  it("rejects writes to git metadata and path traversal targets", () => {
+    const repoDir = "/tmp/heyclaude-import/repo";
+    expect(safeImportPath(repoDir, "content/mcp/example.mdx")).toBe(
+      "/tmp/heyclaude-import/repo/content/mcp/example.mdx",
+    );
+    expect(() => safeImportPath(repoDir, ".git/config")).toThrow(
+      "Invalid import path",
+    );
+    expect(() => safeImportPath(repoDir, ".git\\hooks\\post-checkout")).toThrow(
+      "Invalid import path",
+    );
+    expect(() => safeImportPath(repoDir, "../outside.mdx")).toThrow(
+      "Invalid import path",
     );
   });
 
