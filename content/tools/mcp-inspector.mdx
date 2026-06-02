@@ -1,0 +1,53 @@
+---
+title: MCP Inspector
+slug: mcp-inspector
+category: tools
+description: Official visual testing and debugging tool for Model Context Protocol servers.
+cardDescription: Visual MCP server testing and debugging.
+seoTitle: MCP Inspector visual testing tool
+seoDescription: MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations.
+author: Model Context Protocol
+dateAdded: "2026-06-02"
+websiteUrl: "https://modelcontextprotocol.io/docs/tools"
+documentationUrl: "https://modelcontextprotocol.io/docs/tools"
+repoUrl: "https://github.com/modelcontextprotocol/inspector"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installable: true
+installCommand: "npx @modelcontextprotocol/inspector node build/index.js"
+usageSnippet: "npx @modelcontextprotocol/inspector node build/index.js"
+prerequisites:
+  - A local or remote MCP server to inspect.
+  - Node.js and npm/npx available in the development environment.
+safetyNotes:
+  - Starts a local inspector UI and proxy process for interactive MCP debugging.
+  - Only connect it to MCP servers and endpoints you trust during testing.
+privacyNotes:
+  - Requests and tool responses from the inspected server may be visible in the local inspector session.
+  - Avoid testing with production credentials or private user data unless the environment is isolated.
+tags:
+  - mcp
+  - debugging
+  - developer-tools
+  - testing
+keywords:
+  - mcp inspector
+  - model context protocol debugging
+  - mcp server testing
+---
+
+## Editorial notes
+
+MCP Inspector is the official developer tool for exercising Model Context Protocol servers before wiring them into Claude or another MCP client. It is useful when checking tool definitions, resource responses, server startup behavior, and transport configuration during MCP development.
+
+## Why it belongs
+
+- Maintained under the Model Context Protocol organization.
+- Supports interactive inspection of local MCP server implementations.
+- Provides a practical debugging path before adding a server to a real Claude configuration.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
