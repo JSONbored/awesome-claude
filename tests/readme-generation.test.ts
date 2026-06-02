@@ -1,3 +1,4 @@
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -60,8 +61,19 @@ const categoryReadmeLabels: Record<string, string> = {
   tools: "Tools",
 };
 
+function generateReadme() {
+  return execFileSync(
+    process.execPath,
+    [path.join(repoRoot, "scripts/generate-readme.mjs"), "--stdout"],
+    {
+      cwd: repoRoot,
+      encoding: "utf8",
+    },
+  );
+}
+
 describe("generated README catalog", () => {
-  const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
+  const readme = generateReadme();
   const entries = readContentEntries();
 
   it("includes every file-backed content entry with its canonical URL and description", () => {

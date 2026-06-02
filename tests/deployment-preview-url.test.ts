@@ -116,6 +116,9 @@ describe("PR preview artifact validation flow", () => {
     );
     expect(registryBlock).toContain("pnpm generate:readme");
     expect(registryBlock).toContain(
+      "README refresh is handled by the single automation/readme-refresh accumulator PR",
+    );
+    expect(registryBlock).toContain(
       "Verify source-only imports produce only build artifacts",
     );
     expect(registryBlock).toContain(

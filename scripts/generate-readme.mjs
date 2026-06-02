@@ -9,6 +9,7 @@ const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
 const readmePath = path.join(repoRoot, "README.md");
 const checkMode = process.argv.includes("--check");
+const stdoutMode = process.argv.includes("--stdout");
 
 const categoryOrder = categorySpec.categoryOrder;
 
@@ -355,7 +356,9 @@ function validateReadmeCatalog(readmeContent) {
 
 validateReadmeCatalog(formattedReadme);
 
-if (checkMode) {
+if (stdoutMode) {
+  process.stdout.write(formattedReadme);
+} else if (checkMode) {
   const current = fs.existsSync(readmePath)
     ? fs.readFileSync(readmePath, "utf8")
     : "";

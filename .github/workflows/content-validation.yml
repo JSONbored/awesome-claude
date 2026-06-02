@@ -486,7 +486,23 @@ jobs:
 
       - name: Validate generated README
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
-        run: pnpm validate:readme
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          EVENT_NAME: ${{ github.event_name }}
+          README_ONLY: ${{ needs.classify-pr.outputs.readme_only }}
+        run: |
+          set -euo pipefail
+          if [ "$README_ONLY" = "true" ]; then
+            pnpm validate:readme
+            exit 0
+          fi
+
+          if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ] && git diff --name-only "$BASE_SHA"...HEAD | grep -qx 'README.md'; then
+            pnpm validate:readme
+            exit 0
+          fi
+
+          echo "Skipping tracked README freshness check; README refresh is handled by the single automation/readme-refresh accumulator PR."
 
       - name: Verify generated registry artifacts remain build outputs
         if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only != 'true' && needs.classify-pr.outputs.readme_only != 'true' }}

@@ -13,7 +13,7 @@
 
 Configured in [`wrangler.jsonc`](./wrangler.jsonc):
 
-- `SITE_DB` (D1) for durable upvotes, reviewed jobs listings, listing leads, commercial placements, community signals, and future dynamic site state.
+- `SITE_DB` (D1) for durable upvotes, reviewed jobs listings, listing leads, commercial placements, community signals, source repository signals, and future dynamic site state.
 - Production uses the existing `heyclaude-votes` database for continuity.
 - Development uses the separate `heyclaude-dev-site-state` database so PR/dev
   testing does not mutate production votes, jobs, leads, or community signals.
@@ -37,7 +37,7 @@ pnpm --filter web exec wrangler d1 create heyclaude-site-state
 Production currently points at the historical `heyclaude-votes` database name
 for continuity. The binding is the source of truth; new environments should use
 a site-state name because the same D1 database now stores votes, jobs, leads,
-placements, intents, and community signals.
+placements, intents, community signals, and source repository signals.
 
 3. Apply migrations:
 
@@ -62,6 +62,7 @@ Current migrations include:
 - `0006_jobs_curation_and_claims.sql` for curated job source fields, claim leads, and stale job review states
 - `0007_jobs_admin_indexes.sql` for reviewed job admin queues, expiry checks, and paid placement windows
 - `0008_jobs_compensation_metadata.sql` for dedicated salary, equity, bonus, and benefits/perks job metadata
+- `0009_source_repo_signals.sql` for cached source repository stars, forks, upstream update timestamps, and refresh errors
 
 The jobs board renders active reviewed D1 rows only. Curated, employer-submitted,
 claimed, featured, and sponsored jobs all go through the same private D1-backed
