@@ -1,0 +1,54 @@
+---
+title: Dev Gate PR Smoke Submission Guide
+slug: dev-gate-pr-smoke-submission
+category: guides
+description: >-
+  Verify the HeyClaude PR-first submission gate with a single raw guide entry,
+  public validation, private review, and maintainer-owned import handling.
+cardDescription: >-
+  Verify the HeyClaude PR-first submission gate with a single raw guide entry
+  and private review.
+seoTitle: Dev Gate PR Smoke Submission Guide
+seoDescription: >-
+  Verify the HeyClaude PR-first submission gate with one source-backed guide
+  entry, public validation, private review, and maintainer-owned import.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-02"
+documentationUrl: "https://docs.anthropic.com/en/docs/claude-code/overview"
+installable: false
+usageSnippet: >-
+  Use this guide as a pilot-only smoke submission for the PR-first submission
+  gate and private review workflow.
+tags:
+  - submission-gate
+  - pr-first
+  - validation
+keywords:
+  - heyclaude submission gate
+  - pr first submissions
+  - private review workflow
+readingTime: 2
+difficultyScore: 10
+hasTroubleshooting: false
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+This pilot-only guide verifies that HeyClaude can accept a single raw content entry through the PR-first submission path. The expected workflow is public validation first, then private gate review, then maintainer-owned import handling without auto-merge.
+
+## Validation Scope
+
+The submission intentionally changes one source content file under `content/guides/`. It does not edit generated registry artifacts, README output, workflows, scripts, package metadata, or public data exports.
+
+## Expected Gate Behavior
+
+The submission gate should mark the PR as under review, wait for the required validation lane to pass, run the private Cloudflare-hosted reviewer, and route the result through the configured pilot behavior. Any import remains maintainer-owned and still requires normal checks and manual merge.
+
+## Source Reference
+
+The guide uses the public Claude Code documentation as a canonical source reference for the smoke submission metadata.
