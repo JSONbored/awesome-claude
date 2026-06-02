@@ -252,6 +252,15 @@ function draftStatusUrl(request: Request, id: string) {
   return `${url.origin}/drafts/${id}`;
 }
 
+function trimTrailingSlashes(value: unknown) {
+  const text = String(value || "");
+  let end = text.length;
+  while (end > 0 && text.charCodeAt(end - 1) === 47) {
+    end -= 1;
+  }
+  return text.slice(0, end);
+}
+
 async function putAuditObject(env: Env, key: string, payload: unknown) {
   await env.SUBMISSION_GATE_AUDIT.put(key, JSON.stringify(payload, null, 2), {
     httpMetadata: { contentType: "application/json" },
@@ -1387,10 +1396,7 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
     installationId: sourceInstallationId,
     apiVersion: env.GITHUB_API_VERSION,
   });
-  const callbackBaseUrl = String(env.SUBMISSION_GATE_URL || "").replace(
-    /\/+$/,
-    "",
-  );
+  const callbackBaseUrl = trimTrailingSlashes(env.SUBMISSION_GATE_URL);
   if (!callbackBaseUrl) {
     throw new Error("Submission gate callback URL is not configured.");
   }
