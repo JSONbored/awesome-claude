@@ -1,0 +1,75 @@
+---
+title: Claude Prompt Library Review Flow
+slug: claude-prompt-library-review-flow
+category: guides
+description: A practical checklist for reviewing Claude prompt libraries before adding them to a team workflow or internal registry.
+cardDescription: Review Claude prompt libraries before adoption.
+seoTitle: Claude Prompt Library Review Flow
+seoDescription: A practical checklist for reviewing Claude prompt libraries before adding them to a team workflow or internal registry.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-02"
+documentationUrl: "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview"
+installable: false
+usageSnippet: Use this checklist to evaluate whether a shared Claude prompt library has clear scope, source-backed examples, safety boundaries, and maintenance ownership before publishing it for broader reuse.
+tags:
+  - prompt-engineering
+  - claude
+  - review-checklist
+  - team-workflows
+  - content-governance
+keywords:
+  - claude prompt library review
+  - prompt library checklist
+  - claude prompt governance
+  - prompt engineering review
+readingTime: 4
+difficultyScore: 42
+hasTroubleshooting: false
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+safetyNotes:
+  - Review prompt examples for instructions that could expose secrets, bypass policy, or trigger destructive tool use before sharing them with a team.
+  - Keep production credentials, customer data, and private repository context out of reusable prompt snippets.
+privacyNotes:
+  - Prompt libraries can accidentally encode internal project names, customer details, or private workflow assumptions; scrub examples before publication.
+  - Prefer synthetic examples or public documentation references when demonstrating reusable Claude workflows.
+---
+
+## TL;DR
+
+Use this checklist when deciding whether a Claude prompt library is ready to publish, import, or recommend internally. A useful library should explain what each prompt is for, cite the source or context behind the pattern, and make the risk boundaries obvious before someone copies it into a real workflow.
+
+## Review Checklist
+
+### Scope Fit
+
+- Confirm the library targets a clear Claude workflow, such as coding review, writing, research synthesis, data extraction, or support triage.
+- Reject catch-all prompt dumps that mix unrelated use cases without explaining when each prompt should be used.
+- Prefer libraries with concrete examples, expected outputs, and notes about model or tool assumptions.
+
+### Source And Provenance
+
+- Check whether the patterns are grounded in public documentation, project experience, or clearly described evaluation results.
+- Verify that example prompts do not claim official support unless they link to the relevant maintainer or vendor source.
+- Keep attribution intact when prompts are adapted from another project, article, or internal team playbook.
+
+### Safety And Privacy
+
+- Look for prompts that ask Claude to reveal secrets, ignore policies, run destructive commands, or handle sensitive data without safeguards.
+- Remove any examples containing real tokens, customer names, private repository paths, internal incident details, or confidential business context.
+- Add warnings when a prompt assumes write access, external tools, browser automation, shell access, or production data.
+
+### Maintenance Quality
+
+- Make sure prompts are organized by job-to-be-done, not just by clever wording.
+- Prefer entries with version notes, owner information, or a clear update path when upstream Claude behavior changes.
+- Avoid accepting prompts that depend on brittle hidden context or unexplained system instructions.
+
+## Decision Guide
+
+Accept a prompt library when it is practical, source-backed, safe to reuse, and easy for another person to adapt without private context. Request changes when the idea is useful but missing provenance, risk notes, or examples. Route away thin promotional collections, paid lead magnets, and generic prompt lists that do not add durable operational value.
