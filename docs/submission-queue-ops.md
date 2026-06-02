@@ -82,6 +82,12 @@ toolchain.
 Feature branches must use the dev gate only. Production gate deploys wait until
 the frontend preview and pilot gate behavior are proven.
 
+The GitHub App needs read-only access to Checks and commit statuses so the gate
+can wait for the repo-owned `required-pr-gate` validation result before running
+private review. It should subscribe to `pull_request`, `check_run`,
+`check_suite`, and `status` events. Checks write access is not required unless
+the gate later creates its own formal GitHub check run.
+
 ## Automation
 
 - Website `/submit` runs public preflight, then posts a draft to the private
@@ -91,6 +97,10 @@ the frontend preview and pilot gate behavior are proven.
   or `main` after promotion.
 - The Worker applies `submission-under-review` immediately, enqueues one job per
   PR, and updates one stable marker comment.
+- The review job waits for configured required validation, currently
+  `required-pr-gate`. Pending validation keeps the PR in
+  `validation_pending`; failed validation gets one request-changes comment; green
+  validation is the only path into private corpus review.
 - `close` is for spam, promo/listing attempts, duplicates, unsupported
   categories, generated-artifact tampering, unsafe package/install patterns,
   missing source of truth, or non-content PRs.

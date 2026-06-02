@@ -18,13 +18,16 @@ import {
   closeIssueOrPullRequest,
   createUserForkContentPr,
   exchangeGitHubUserCode,
+  getCommitValidationState,
   getInstallationToken,
+  listPullRequestsForCommit,
   parseRepo,
   upsertMarkerComment,
 } from "./github";
 import {
   defaultManualDecision,
   markerComment,
+  validationFailedDecision,
   type GateDecision,
   type GateVerdict,
 } from "./review";
@@ -63,6 +66,8 @@ type Env = {
   GITHUB_WEBHOOK_SECRET?: string;
   INTERNAL_SHARED_SECRET?: string;
   PRIVATE_GATE_REVIEW_URL?: string;
+  REQUIRED_VALIDATION_CHECKS?: string;
+  REQUIRED_STATUS_CONTEXTS?: string;
   SUBMISSION_GATE_DB: D1Database;
   SUBMISSION_GATE_AUDIT: R2Bucket;
   SUBMISSION_REVIEW_QUEUE: Queue<Record<string, unknown>>;
@@ -112,6 +117,28 @@ const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "zip",
   "zip_code",
 ]);
+
+const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["required-pr-gate"];
+const VALIDATION_WEBHOOK_EVENTS = new Set([
+  "check_run",
+  "check_suite",
+  "status",
+]);
+const REVIEWABLE_CHECK_ACTIONS = new Set([
+  "completed",
+  "rerequested",
+  "requested",
+]);
+
+type ReviewTarget = {
+  repoFullName: string;
+  number: number;
+  baseRef: string;
+  headRepo?: string;
+  headRef?: string;
+  headSha?: string;
+  installationId?: number;
+};
 
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
@@ -391,13 +418,82 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
   return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
 }
 
-async function installationTokenForPayload(
-  env: Env,
-  payload: Record<string, unknown>,
-) {
-  const installationId = Number(
-    (payload.installation as { id?: number } | undefined)?.id || 0,
+function parseCsv(value: string | undefined, fallback: string[] = []) {
+  const parsed = (value || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+  return parsed.length ? parsed : fallback;
+}
+
+function requiredValidationChecks(env: Env) {
+  return parseCsv(
+    env.REQUIRED_VALIDATION_CHECKS,
+    DEFAULT_REQUIRED_VALIDATION_CHECKS,
   );
+}
+
+function requiredStatusContexts(env: Env) {
+  return parseCsv(env.REQUIRED_STATUS_CONTEXTS);
+}
+
+function installationIdFromPayload(payload: Record<string, unknown>) {
+  return Number((payload.installation as { id?: number } | undefined)?.id || 0);
+}
+
+function reviewTargetFromPullPayload(
+  payload: Record<string, unknown>,
+): ReviewTarget | null {
+  const pull = payload.pull_request as
+    | {
+        number?: number;
+        base?: { ref?: string; repo?: { full_name?: string } };
+        head?: {
+          sha?: string;
+          ref?: string;
+          repo?: { full_name?: string };
+        };
+      }
+    | undefined;
+  if (!pull?.number || !pull.base?.repo?.full_name) return null;
+  return {
+    repoFullName: pull.base.repo.full_name,
+    number: pull.number,
+    baseRef: pull.base.ref || "",
+    headRepo: pull.head?.repo?.full_name,
+    headRef: pull.head?.ref,
+    headSha: pull.head?.sha,
+    installationId: installationIdFromPayload(payload),
+  };
+}
+
+function reviewTargetFromMessage(message: QueueMessage): ReviewTarget | null {
+  if (isRecord(message.payload.target)) {
+    const target = message.payload.target as Record<string, unknown>;
+    const repoFullName = String(target.repoFullName || "");
+    const number = Number(target.number || 0);
+    if (!repoFullName || !number) return null;
+    return {
+      repoFullName,
+      number,
+      baseRef: String(target.baseRef || ""),
+      headRepo:
+        typeof target.headRepo === "string" ? target.headRepo : undefined,
+      headRef: typeof target.headRef === "string" ? target.headRef : undefined,
+      headSha: typeof target.headSha === "string" ? target.headSha : undefined,
+      installationId: Number(target.installationId || 0) || undefined,
+    };
+  }
+  const webhook = message.payload.webhook as
+    | Record<string, unknown>
+    | undefined;
+  return webhook ? reviewTargetFromPullPayload(webhook) : null;
+}
+
+async function installationTokenForInstallationId(
+  env: Env,
+  installationId: number,
+) {
   if (!installationId || !env.GITHUB_APP_ID || !env.GITHUB_APP_PRIVATE_KEY)
     return "";
   return getInstallationToken({
@@ -406,6 +502,16 @@ async function installationTokenForPayload(
     installationId,
     apiVersion: env.GITHUB_API_VERSION,
   });
+}
+
+async function installationTokenForPayload(
+  env: Env,
+  payload: Record<string, unknown>,
+) {
+  return installationTokenForInstallationId(
+    env,
+    installationIdFromPayload(payload),
+  );
 }
 
 async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
@@ -434,6 +540,134 @@ async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
     body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
     apiVersion: env.GITHUB_API_VERSION,
   });
+}
+
+function targetKeyForReview(target: ReviewTarget) {
+  return `${target.repoFullName}#${target.number}`;
+}
+
+async function enqueueReviewTarget(
+  env: Env,
+  target: ReviewTarget,
+  deliveryId: string,
+  eventName: string,
+  webhook?: Record<string, unknown>,
+  pilotScoped = false,
+) {
+  if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
+  const targetKey = targetKeyForReview(target);
+  await upsertPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+    headRepo: target.headRepo,
+    headRef: target.headRef,
+    baseRef: target.baseRef || env.PILOT_BASE_REF,
+    status: "queued",
+    deliveryId,
+  });
+  await env.SUBMISSION_REVIEW_QUEUE.send({
+    kind: "review_pr",
+    targetKey,
+    payload: { eventName, deliveryId, target, webhook },
+  });
+  return true;
+}
+
+function targetsFromWebhookPullRefs(
+  payload: Record<string, unknown>,
+  refs: Array<Record<string, unknown>>,
+  headSha: string,
+) {
+  const repository = payload.repository as { full_name?: string } | undefined;
+  const fallbackRepoFullName = repository?.full_name || "";
+  const installationId = installationIdFromPayload(payload);
+  return refs
+    .map((item): ReviewTarget | null => {
+      const number = Number(item.number || 0);
+      const base = item.base as
+        | { ref?: string; repo?: { full_name?: string } }
+        | undefined;
+      const head = item.head as
+        | { ref?: string; sha?: string; repo?: { full_name?: string } }
+        | undefined;
+      const repoFullName = base?.repo?.full_name || fallbackRepoFullName;
+      if (!number || !repoFullName) return null;
+      return {
+        repoFullName,
+        number,
+        baseRef: base?.ref || "",
+        headRepo: head?.repo?.full_name,
+        headRef: head?.ref,
+        headSha: head?.sha || headSha,
+        installationId,
+      };
+    })
+    .filter((target): target is ReviewTarget => Boolean(target));
+}
+
+async function targetsFromValidationWebhook(
+  env: Env,
+  eventName: string,
+  payload: Record<string, unknown>,
+) {
+  if (eventName === "check_run") {
+    const action = String(payload.action || "");
+    if (!REVIEWABLE_CHECK_ACTIONS.has(action)) return [];
+    const checkRun = payload.check_run as
+      | { head_sha?: string; pull_requests?: Array<Record<string, unknown>> }
+      | undefined;
+    return targetsFromWebhookPullRefs(
+      payload,
+      checkRun?.pull_requests || [],
+      checkRun?.head_sha || "",
+    );
+  }
+
+  if (eventName === "check_suite") {
+    const action = String(payload.action || "");
+    if (!REVIEWABLE_CHECK_ACTIONS.has(action)) return [];
+    const checkSuite = payload.check_suite as
+      | { head_sha?: string; pull_requests?: Array<Record<string, unknown>> }
+      | undefined;
+    return targetsFromWebhookPullRefs(
+      payload,
+      checkSuite?.pull_requests || [],
+      checkSuite?.head_sha || "",
+    );
+  }
+
+  if (eventName === "status") {
+    const repository = payload.repository as { full_name?: string } | undefined;
+    const repoFullName = repository?.full_name || "";
+    const sha = String(payload.sha || "");
+    const installationId = installationIdFromPayload(payload);
+    if (!repoFullName || !sha || !installationId) return [];
+    const token = await installationTokenForInstallationId(env, installationId);
+    if (!token) return [];
+    const repo = parseRepo(repoFullName);
+    const pulls = await listPullRequestsForCommit({
+      token,
+      repo,
+      sha,
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+    return pulls
+      .map((pull): ReviewTarget | null => {
+        if (!pull.number || !pull.base?.repo?.full_name) return null;
+        return {
+          repoFullName: pull.base.repo.full_name,
+          number: pull.number,
+          baseRef: pull.base.ref || "",
+          headRepo: pull.head?.repo?.full_name,
+          headRef: pull.head?.ref,
+          headSha: pull.head?.sha || sha,
+          installationId,
+        };
+      })
+      .filter((target): target is ReviewTarget => Boolean(target));
+  }
+
+  return [];
 }
 
 async function githubWebhookRoute(
@@ -475,39 +709,36 @@ async function githubWebhookRoute(
 
   if (eventName === "pull_request") {
     const action = String(payload.action || "");
-    const pull = payload.pull_request as
-      | {
-          number?: number;
-          base?: { ref?: string; repo?: { full_name?: string } };
-          head?: { ref?: string; repo?: { full_name?: string } };
-        }
-      | undefined;
-    if (
-      !REVIEWABLE_PR_ACTIONS.has(action) ||
-      !pull?.number ||
-      !pull.base?.repo?.full_name
-    ) {
+    const target = reviewTargetFromPullPayload(payload);
+    if (!REVIEWABLE_PR_ACTIONS.has(action) || !target) {
       return json({ ok: true, ignored: true });
     }
     if (!isPilotPr(payload, env))
       return json({ ok: true, ignored: true, reason: "outside_pilot" });
-    const targetKey = `${pull.base.repo.full_name}#${pull.number}`;
     ctx.waitUntil(applyUnderReview(env, payload));
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
-      repo: pull.base.repo.full_name,
-      number: pull.number,
-      headRepo: pull.head?.repo?.full_name,
-      headRef: pull.head?.ref,
-      baseRef: pull.base.ref || env.PILOT_BASE_REF,
-      status: "queued",
+    await enqueueReviewTarget(
+      env,
+      target,
       deliveryId,
-    });
-    await env.SUBMISSION_REVIEW_QUEUE.send({
-      kind: "review_pr",
-      targetKey,
-      payload: { eventName, deliveryId, webhook: payload },
-    });
+      eventName,
+      payload,
+      true,
+    );
+    const targetKey = targetKeyForReview(target);
     return json({ ok: true, queued: true, targetKey });
+  }
+
+  if (VALIDATION_WEBHOOK_EVENTS.has(eventName)) {
+    const targets = await targetsFromValidationWebhook(env, eventName, payload);
+    let queued = 0;
+    for (const target of targets) {
+      if (
+        await enqueueReviewTarget(env, target, deliveryId, eventName, payload)
+      ) {
+        queued += 1;
+      }
+    }
+    return json({ ok: true, queued, ignored: queued === 0 });
   }
 
   return json({ ok: true, ignored: true });
@@ -658,31 +889,70 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       return;
     }
 
-    const decision = await reviewWithPrivateGate(env, message);
-    await insertAudit(env.SUBMISSION_GATE_DB, {
-      id: crypto.randomUUID(),
-      targetKey: message.targetKey,
-      eventType: message.kind,
-      decision: decision.verdict,
-      summary: decision.summary,
-    });
-
     if (message.kind === "review_pr") {
-      const webhook = message.payload.webhook as Record<string, unknown>;
-      const pull = webhook.pull_request as
-        | {
-            number?: number;
-            base?: { repo?: { full_name?: string }; ref?: string };
-          }
-        | undefined;
-      if (!pull?.number || !pull.base?.repo?.full_name) return;
-      const token = await installationTokenForPayload(env, webhook);
+      const target = reviewTargetFromMessage(message);
+      if (!target) return;
+      const token = await installationTokenForInstallationId(
+        env,
+        Number(target.installationId || 0),
+      );
       if (!token) return;
-      const repo = parseRepo(pull.base.repo.full_name);
+      const repo = parseRepo(target.repoFullName);
+      let decision: GateDecision | null = null;
+      try {
+        const validation = await getCommitValidationState({
+          token,
+          repo,
+          ref: target.headSha || target.headRef || "",
+          requiredChecks: requiredValidationChecks(env),
+          requiredStatusContexts: requiredStatusContexts(env),
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        if (validation.state === "pending") {
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            baseRef: target.baseRef || env.PILOT_BASE_REF,
+            status: "validation_pending",
+            deliveryId: String(message.payload.deliveryId || ""),
+          });
+          await insertAudit(env.SUBMISSION_GATE_DB, {
+            id: crypto.randomUUID(),
+            targetKey: message.targetKey,
+            eventType: message.kind,
+            decision: "validation_pending",
+            summary: validation.summary,
+          });
+          return;
+        }
+        if (validation.state === "failed") {
+          decision = validationFailedDecision(validation.summary);
+        }
+      } catch {
+        decision = defaultManualDecision(
+          "Submission gate could not read public validation checks.",
+        );
+      }
+
+      if (!decision) {
+        decision = await reviewWithPrivateGate(env, message);
+      }
+
+      await insertAudit(env.SUBMISSION_GATE_DB, {
+        id: crypto.randomUUID(),
+        targetKey: message.targetKey,
+        eventType: message.kind,
+        decision: decision.verdict,
+        summary: decision.summary,
+      });
       await upsertPrState(env.SUBMISSION_GATE_DB, {
-        repo: pull.base.repo.full_name,
-        number: pull.number,
-        baseRef: pull.base.ref || env.PILOT_BASE_REF,
+        repo: target.repoFullName,
+        number: target.number,
+        headRepo: target.headRepo,
+        headRef: target.headRef,
+        baseRef: target.baseRef || env.PILOT_BASE_REF,
         status: decision.verdict,
         verdict: decision.verdict,
         verdictSummary: decision.summary,
@@ -691,7 +961,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         await addLabels({
           token,
           repo,
-          issueNumber: pull.number,
+          issueNumber: target.number,
           labels: decision.labels,
           apiVersion: env.GITHUB_API_VERSION,
         });
@@ -699,7 +969,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       await upsertMarkerComment({
         token,
         repo,
-        issueNumber: pull.number,
+        issueNumber: target.number,
         marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
         body: markerComment(
           decision,
@@ -711,7 +981,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         await closeIssueOrPullRequest({
           token,
           repo,
-          issueNumber: pull.number,
+          issueNumber: target.number,
           apiVersion: env.GITHUB_API_VERSION,
         });
       }
@@ -721,15 +991,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           targetKey: message.targetKey,
           payload: {
             ...decision.importJob,
-            repo: pull.base.repo.full_name,
-            baseRef: pull.base.ref || env.PILOT_BASE_REF,
+            repo: target.repoFullName,
+            baseRef: target.baseRef || env.PILOT_BASE_REF,
             source: {
-              repo: pull.base.repo.full_name,
-              number: pull.number,
-              baseRef: pull.base.ref || env.PILOT_BASE_REF,
-              installationId: Number(
-                (webhook.installation as { id?: number } | undefined)?.id || 0,
-              ),
+              repo: target.repoFullName,
+              number: target.number,
+              baseRef: target.baseRef || env.PILOT_BASE_REF,
+              installationId: Number(target.installationId || 0),
             },
           },
         });

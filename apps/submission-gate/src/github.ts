@@ -193,6 +193,204 @@ export async function getInstallationToken(params: {
   return payload.token;
 }
 
+type CheckRun = {
+  name?: string;
+  status?: string;
+  conclusion?: string | null;
+  html_url?: string;
+  details_url?: string;
+  started_at?: string | null;
+  completed_at?: string | null;
+};
+
+type CommitStatus = {
+  context?: string;
+  state?: string;
+  target_url?: string | null;
+  description?: string | null;
+  updated_at?: string | null;
+};
+
+export type CommitValidationState = {
+  state: "pending" | "passed" | "failed";
+  summary: string;
+  checks: Array<{
+    name: string;
+    status: "missing" | "pending" | "passed" | "failed";
+    details?: string;
+  }>;
+};
+
+function sortNewestFirst<
+  T extends {
+    completed_at?: string | null;
+    started_at?: string | null;
+    updated_at?: string | null;
+  },
+>(values: T[]) {
+  return [...values].sort((left, right) => {
+    const leftTime = Date.parse(
+      left.completed_at || left.updated_at || left.started_at || "",
+    );
+    const rightTime = Date.parse(
+      right.completed_at || right.updated_at || right.started_at || "",
+    );
+    return (
+      (Number.isFinite(rightTime) ? rightTime : 0) -
+      (Number.isFinite(leftTime) ? leftTime : 0)
+    );
+  });
+}
+
+function latestNamedCheckRun(checkRuns: CheckRun[], name: string) {
+  return sortNewestFirst(checkRuns.filter((run) => run.name === name))[0];
+}
+
+function latestStatusContext(statuses: CommitStatus[], context: string) {
+  return sortNewestFirst(
+    statuses.filter((status) => status.context === context),
+  )[0];
+}
+
+export async function getCommitValidationState(params: {
+  token: string;
+  repo: GitHubRepo;
+  ref: string;
+  requiredChecks: string[];
+  requiredStatusContexts?: string[];
+  apiVersion?: string;
+}): Promise<CommitValidationState> {
+  const requiredChecks = params.requiredChecks.filter(Boolean);
+  const requiredStatusContexts = (params.requiredStatusContexts || []).filter(
+    Boolean,
+  );
+  const checkResults: CommitValidationState["checks"] = [];
+
+  const checkRunsPayload = requiredChecks.length
+    ? await githubJson<{ check_runs?: CheckRun[] }>(
+        `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/commits/${encodeURIComponent(params.ref)}/check-runs?filter=latest&per_page=100`,
+        {
+          token: params.token,
+          apiVersion: params.apiVersion,
+        },
+      )
+    : { check_runs: [] };
+  const checkRuns = checkRunsPayload.check_runs || [];
+
+  for (const name of requiredChecks) {
+    const run = latestNamedCheckRun(checkRuns, name);
+    if (!run) {
+      checkResults.push({
+        name,
+        status: "missing",
+        details: "has not reported yet",
+      });
+      continue;
+    }
+    if (run.status !== "completed") {
+      checkResults.push({
+        name,
+        status: "pending",
+        details: `is ${run.status || "pending"}`,
+      });
+      continue;
+    }
+    if (run.conclusion !== "success") {
+      checkResults.push({
+        name,
+        status: "failed",
+        details: `concluded ${run.conclusion || "without success"}`,
+      });
+      continue;
+    }
+    checkResults.push({ name, status: "passed" });
+  }
+
+  if (requiredStatusContexts.length) {
+    const statusPayload = await githubJson<{ statuses?: CommitStatus[] }>(
+      `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/commits/${encodeURIComponent(params.ref)}/status`,
+      {
+        token: params.token,
+        apiVersion: params.apiVersion,
+      },
+    );
+    const statuses = statusPayload.statuses || [];
+    for (const context of requiredStatusContexts) {
+      const status = latestStatusContext(statuses, context);
+      if (!status) {
+        checkResults.push({
+          name: context,
+          status: "missing",
+          details: "has not reported yet",
+        });
+        continue;
+      }
+      if (status.state !== "success") {
+        checkResults.push({
+          name: context,
+          status: status.state === "pending" ? "pending" : "failed",
+          details: `is ${status.state || "unknown"}`,
+        });
+        continue;
+      }
+      checkResults.push({ name: context, status: "passed" });
+    }
+  }
+
+  const failed = checkResults.filter((check) => check.status === "failed");
+  if (failed.length) {
+    return {
+      state: "failed",
+      summary: `Required validation failed: ${failed
+        .map((check) => `${check.name} ${check.details || ""}`.trim())
+        .join("; ")}.`,
+      checks: checkResults,
+    };
+  }
+
+  const pending = checkResults.filter(
+    (check) => check.status === "missing" || check.status === "pending",
+  );
+  if (pending.length) {
+    return {
+      state: "pending",
+      summary: `Waiting for required validation: ${pending
+        .map((check) => `${check.name} ${check.details || ""}`.trim())
+        .join("; ")}.`,
+      checks: checkResults,
+    };
+  }
+
+  return {
+    state: "passed",
+    summary: `Required validation passed: ${checkResults
+      .map((check) => check.name)
+      .join(", ")}.`,
+    checks: checkResults,
+  };
+}
+
+export async function listPullRequestsForCommit(params: {
+  token: string;
+  repo: GitHubRepo;
+  sha: string;
+  apiVersion?: string;
+}) {
+  return githubJson<
+    Array<{
+      number?: number;
+      base?: { ref?: string; repo?: { full_name?: string } };
+      head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
+    }>
+  >(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/commits/${encodeURIComponent(params.sha)}/pulls`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+}
+
 export async function addLabels(params: {
   token: string;
   repo: GitHubRepo;

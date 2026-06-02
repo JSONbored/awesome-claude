@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS submission_prs (
   head_ref TEXT,
   base_ref TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'queued' CHECK (
-    status IN ('queued', 'import_pr_open', 'import', 'request_changes', 'close', 'manual', 'ignore')
+    status IN ('queued', 'validation_pending', 'import_pr_open', 'import', 'request_changes', 'close', 'manual', 'ignore')
   ),
   verdict TEXT CHECK (
     verdict IS NULL OR verdict IN ('import', 'request_changes', 'close', 'manual', 'ignore')

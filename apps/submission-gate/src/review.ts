@@ -30,9 +30,9 @@ export function markerComment(
   if (!decision) {
     return [
       marker,
-      "Thanks for the submission. The private submission gate is reviewing this now.",
+      "Thanks for the submission. The public validation lane is running now.",
       "",
-      "You should see a decision here shortly. The gate may close hard failures, request one round of changes, route ambiguous entries to manual review, or open a maintainer-owned import PR.",
+      "After the required validation checks are green, the private submission gate will review category fit, source of truth, duplicate history, safety/privacy, provenance, and generated-artifact scope.",
     ].join("\n");
   }
 
@@ -48,5 +48,13 @@ export function defaultManualDecision(
     verdict: "manual" as const,
     summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before import.`,
     labels: [LABELS.manual],
+  };
+}
+
+export function validationFailedDecision(summary: string): GateDecision {
+  return {
+    verdict: "request_changes" as const,
+    summary: `${summary} The private content review will run after the public validation lane is green.`,
+    labels: [LABELS.requestChanges],
   };
 }

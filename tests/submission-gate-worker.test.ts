@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -10,6 +10,7 @@ import {
 import {
   buildGitHubAppAuthorizeUrl,
   createGitHubAppJwt,
+  getCommitValidationState,
 } from "../apps/submission-gate/src/github";
 import {
   decryptText,
@@ -27,6 +28,11 @@ function readWorkerSource() {
     "utf8",
   );
 }
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("Cloudflare submission gate helpers", () => {
   it("verifies GitHub webhook HMAC signatures", async () => {
@@ -178,6 +184,55 @@ describe("Cloudflare submission gate helpers", () => {
         now: 1_780_300_000_000,
       }),
     ).rejects.toThrow("GITHUB_APP_PRIVATE_KEY must be a PKCS#8 PEM block");
+  });
+
+  it("classifies required check state before private review can run", async () => {
+    const fetchMock = vi.fn(async (url: string | URL | Request) => {
+      expect(String(url)).toContain(
+        "/repos/JSONbored/awesome-claude/commits/abc123/check-runs",
+      );
+      return Response.json({
+        check_runs: [
+          {
+            name: "required-pr-gate",
+            status: "completed",
+            conclusion: "success",
+            completed_at: "2026-06-02T00:00:00Z",
+          },
+        ],
+      });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      getCommitValidationState({
+        token: "ghs_test",
+        repo: { owner: "JSONbored", repo: "awesome-claude" },
+        ref: "abc123",
+        requiredChecks: ["required-pr-gate"],
+      }),
+    ).resolves.toMatchObject({
+      state: "passed",
+      checks: [{ name: "required-pr-gate", status: "passed" }],
+    });
+  });
+
+  it("keeps private review behind required PR validation", () => {
+    const source = readWorkerSource();
+    const validationIndex = source.indexOf("getCommitValidationState({");
+    const privateReviewIndex = source.indexOf(
+      "decision = await reviewWithPrivateGate(env, message)",
+    );
+
+    expect(source).toContain(
+      'const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["required-pr-gate"];',
+    );
+    expect(source).toContain('"check_run"');
+    expect(source).toContain('"check_suite"');
+    expect(source).toContain('"status"');
+    expect(source).toContain('status: "validation_pending"');
+    expect(validationIndex).toBeGreaterThan(0);
+    expect(privateReviewIndex).toBeGreaterThan(validationIndex);
   });
 
   it("signs internal import callbacks with the same HMAC verifier", async () => {
