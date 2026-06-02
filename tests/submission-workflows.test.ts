@@ -637,7 +637,7 @@ describe("submission automation workflows", () => {
     );
   });
 
-  it("routes hook-only content PRs through hook and public artifact validation", () => {
+  it("routes hook-only content PRs through focused direct submission validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`
 title: Retro Daily
@@ -649,10 +649,11 @@ description: Daily Claude Code retro dashboard hook.
 
     expect(lanes.content).toBe("true");
     expect(lanes.content_categories_json).toBe('["hooks"]');
-    expect(lanes.registry).toBe("true");
-    expect(lanes.web).toBe("true");
+    expect(lanes.direct_submission).toBe("true");
+    expect(lanes.registry).toBe("false");
+    expect(lanes.web).toBe("false");
     expect(lanes.mcp).toBe("false");
-    expect(lanes.raycast).toBe("true");
+    expect(lanes.raycast).toBe("false");
     expect(lanes.packages).toBe("false");
   });
 
@@ -1374,7 +1375,7 @@ description: Example description
     expect(source).toContain("content_categories_json");
   });
 
-  it("routes hook-only content PRs to hook content and public artifact validation", () => {
+  it("routes hook-only content PRs to hook content and direct submission validation", () => {
     const outputs = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": "---\ntitle: Retro Daily\n---\n",
     });
@@ -1383,11 +1384,12 @@ description: Example description
     expect(outputs.content_hooks).toBe("true");
     expect(outputs.content_mcp).toBe("false");
     expect(outputs.content_categories_json).toBe('["hooks"]');
-    expect(outputs.web).toBe("true");
+    expect(outputs.direct_submission).toBe("true");
+    expect(outputs.web).toBe("false");
     expect(outputs.mcp).toBe("false");
-    expect(outputs.raycast).toBe("true");
+    expect(outputs.raycast).toBe("false");
     expect(outputs.packages).toBe("false");
-    expect(outputs.registry).toBe("true");
+    expect(outputs.registry).toBe("false");
     expect(outputs.ci).toBe("false");
   });
 
