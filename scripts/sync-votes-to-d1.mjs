@@ -36,7 +36,9 @@ if (process.env.DEBUG_SYNC === "1") {
   console.log("sync preview", preview);
 }
 
-function wranglerArgs(runMode, command) {
+const voteTables = new Set(["votes_by_client", "votes_entries"]);
+
+function wranglerArgs(runMode, command, { json = false } = {}) {
   return [
     "d1",
     "execute",
@@ -44,6 +46,7 @@ function wranglerArgs(runMode, command) {
     runMode === "remote" ? "--remote" : "--local",
     "--command",
     command,
+    ...(json ? ["--json"] : []),
   ];
 }
 
@@ -60,11 +63,18 @@ function runWranglerQuery(args) {
     ["--filter", "web", "exec", "wrangler", ...args],
     { cwd: repoRoot, encoding: "utf8" },
   );
-  const jsonMatch = output.match(/(\[\s*\{[\s\S]*\])\s*$/);
-  if (!jsonMatch) {
+  const jsonText = output.trim();
+  if (!jsonText) {
     throw new Error("Could not parse wrangler prune output");
   }
-  return JSON.parse(jsonMatch[1])?.[0]?.results ?? [];
+  const payload = JSON.parse(jsonText);
+  if (Array.isArray(payload)) {
+    const statement = [...payload]
+      .reverse()
+      .find((result) => Array.isArray(result?.results));
+    return statement?.results ?? [];
+  }
+  return Array.isArray(payload?.results) ? payload.results : [];
 }
 
 function sqlString(value) {
@@ -75,7 +85,9 @@ function expectedKeyExclusionPredicate(keys) {
   const chunkSize = 200;
   const sortedKeys = [...keys].sort();
   if (sortedKeys.length === 0) {
-    return "1 = 1";
+    throw new Error(
+      "Refusing to build prune predicate for empty content key set",
+    );
   }
 
   const clauses = [];
@@ -90,13 +102,26 @@ function expectedKeyExclusionPredicate(keys) {
 }
 
 function pruneTableOrphans(runMode, tableName, whereClause) {
-  const rows = runWranglerQuery(
+  if (!voteTables.has(tableName)) {
+    throw new Error(`Refusing to prune unsupported vote table "${tableName}"`);
+  }
+
+  const countRows = runWranglerQuery(
     wranglerArgs(
       runMode,
-      `DELETE FROM ${tableName} WHERE ${whereClause}; SELECT changes() AS pruned;`,
+      `SELECT COUNT(*) AS pruned FROM ${tableName} WHERE ${whereClause};`,
+      { json: true },
     ),
   );
-  return Number(rows?.[0]?.pruned ?? 0);
+  const pruned = Number(countRows?.[0]?.pruned ?? 0);
+  if (pruned === 0) {
+    return 0;
+  }
+
+  runWrangler(
+    wranglerArgs(runMode, `DELETE FROM ${tableName} WHERE ${whereClause};`),
+  );
+  return pruned;
 }
 
 function applyMode(runMode) {
@@ -114,6 +139,13 @@ function applyMode(runMode) {
   }
 
   if (!prune) {
+    return;
+  }
+
+  if (expected.size === 0) {
+    console.warn(
+      `${runMode}: skipping prune because no expected vote keys were enumerated`,
+    );
     return;
   }
 
