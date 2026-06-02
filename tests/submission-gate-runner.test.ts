@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertAllowedImportRepo,
   redactSensitiveOutput,
-  resolveValidationCommands,
+  resolveValidationChecks,
   safeGitHubRepo,
   safeGitRef,
   safeImportPath,
@@ -85,18 +85,25 @@ describe("submission gate import runner safety", () => {
     );
   });
 
-  it("allows only fixed validation commands", () => {
-    expect(resolveValidationCommands()).toEqual([
-      "pnpm validate:content:strict",
-      "pnpm test:registry-artifacts",
-      "pnpm validate:openapi",
-      "pnpm build",
-      "git diff --check",
+  it("allows only fixed validation check keys", () => {
+    expect(resolveValidationChecks()).toEqual([
+      "strictContent",
+      "registryArtifacts",
+      "openapi",
+      "build",
+      "gitCheck",
+    ]);
+    expect(resolveValidationChecks(["strictContent", "gitCheck"])).toEqual([
+      "strictContent",
+      "gitCheck",
     ]);
 
     expect(() =>
-      resolveValidationCommands(["node scripts/import-from-job.js"]),
-    ).toThrow("Unsupported validation command");
+      resolveValidationChecks(["pnpm validate:content:strict"]),
+    ).toThrow("Unsupported validation check");
+    expect(() =>
+      resolveValidationChecks(["node scripts/import-from-job.js"]),
+    ).toThrow("Unsupported validation check");
   });
 
   it("redacts token-bearing git URLs from runner errors", () => {

@@ -11,14 +11,40 @@ import { spawn } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 const PORT = Number(process.env.PORT || 8080);
-const DEFAULT_VALIDATION_COMMANDS = [
-  "pnpm validate:content:strict",
-  "pnpm test:registry-artifacts",
-  "pnpm validate:openapi",
-  "pnpm build",
-  "git diff --check",
-];
-const ALLOWED_VALIDATION_COMMANDS = new Set(DEFAULT_VALIDATION_COMMANDS);
+const VALIDATION_CHECKS = Object.freeze({
+  strictContent: {
+    label: "pnpm validate:content:strict",
+    command: "pnpm",
+    args: ["validate:content:strict"],
+  },
+  registryArtifacts: {
+    label: "pnpm test:registry-artifacts",
+    command: "pnpm",
+    args: ["test:registry-artifacts"],
+  },
+  openapi: {
+    label: "pnpm validate:openapi",
+    command: "pnpm",
+    args: ["validate:openapi"],
+  },
+  build: {
+    label: "pnpm build",
+    command: "pnpm",
+    args: ["build"],
+  },
+  gitCheck: {
+    label: "git diff --check",
+    command: "git",
+    args: ["diff", "--check"],
+  },
+});
+const DEFAULT_VALIDATION_CHECKS = Object.freeze([
+  "strictContent",
+  "registryArtifacts",
+  "openapi",
+  "build",
+  "gitCheck",
+]);
 const GITHUB_REPO_PATTERN =
   /^[A-Za-z0-9][A-Za-z0-9-]{0,99}\/[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 const GIT_REF_PATTERN =
@@ -108,19 +134,15 @@ export function safeGitRef(value, name) {
   return ref;
 }
 
-export function resolveValidationCommands(value) {
+export function resolveValidationChecks(value) {
   const requested =
-    Array.isArray(value) && value.length ? value : DEFAULT_VALIDATION_COMMANDS;
-  return requested.map((command) => {
-    const normalized = String(command || "")
-      .trim()
-      .replace(/\s+/g, " ");
-    if (!ALLOWED_VALIDATION_COMMANDS.has(normalized)) {
-      throw new Error(
-        `Unsupported validation command: ${normalized || "empty"}`,
-      );
+    Array.isArray(value) && value.length ? value : DEFAULT_VALIDATION_CHECKS;
+  return requested.map((check) => {
+    const key = String(check || "").trim();
+    if (!Object.hasOwn(VALIDATION_CHECKS, key)) {
+      throw new Error(`Unsupported validation check: ${key || "empty"}`);
     }
-    return normalized;
+    return key;
   });
 }
 
@@ -188,21 +210,10 @@ function run(command, args, options = {}) {
   });
 }
 
-async function runValidationCommand(command, cwd) {
-  switch (command) {
-    case "pnpm validate:content:strict":
-      return run("pnpm", ["validate:content:strict"], { cwd });
-    case "pnpm test:registry-artifacts":
-      return run("pnpm", ["test:registry-artifacts"], { cwd });
-    case "pnpm validate:openapi":
-      return run("pnpm", ["validate:openapi"], { cwd });
-    case "pnpm build":
-      return run("pnpm", ["build"], { cwd });
-    case "git diff --check":
-      return run("git", ["diff", "--check"], { cwd });
-    default:
-      throw new Error(`Unsupported validation command: ${command}`);
-  }
+async function runValidationCheck(check, cwd) {
+  const validation = VALIDATION_CHECKS[check];
+  if (!validation) throw new Error(`Unsupported validation check: ${check}`);
+  return run(validation.command, validation.args, { cwd });
 }
 
 export function safeImportPath(repoDir, filePath) {
@@ -271,6 +282,7 @@ async function handleImport(job) {
     body,
     files,
     githubToken,
+    validationChecks,
     validationCommands,
   } = job;
 
@@ -289,7 +301,9 @@ async function handleImport(job) {
   const safeRepo = assertAllowedImportRepo(safeGitHubRepo(repo));
   const safeBaseRef = safeGitRef(baseRef, "baseRef");
   const safeBranchName = safeGitRef(branchName, "branchName");
-  const safeValidationCommands = resolveValidationCommands(validationCommands);
+  const safeValidationChecks = resolveValidationChecks(
+    validationChecks ?? validationCommands,
+  );
   const [owner, name] = safeRepo.split("/");
   const existingPr = await findExistingImportPr(
     owner,
@@ -333,8 +347,8 @@ async function handleImport(job) {
     await run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
       cwd: repoDir,
     });
-    for (const command of safeValidationCommands) {
-      await runValidationCommand(command, repoDir);
+    for (const check of safeValidationChecks) {
+      await runValidationCheck(check, repoDir);
     }
 
     await run("git", ["add", "."], { cwd: repoDir });

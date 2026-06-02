@@ -312,7 +312,8 @@ export async function createUserForkContentPr(params: {
     `${createdFork?.owner?.login || user.login}/${createdFork?.name || upstream.repo}`;
   let forkRepo = parseRepo(forkFullName);
   let forkReady = false;
-  for (let attempt = 0; attempt < 10; attempt += 1) {
+  const forkPollAttempts = 10;
+  for (let attempt = 0; attempt < forkPollAttempts; attempt += 1) {
     const fork = await githubJsonOrNull<ForkRepo>(
       `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}`,
       {
@@ -330,7 +331,9 @@ export async function createUserForkContentPr(params: {
     await sleep(3000);
   }
   if (!forkReady) {
-    throw new Error(`GitHub fork was not ready for ${forkFullName}.`);
+    throw new Error(
+      `GitHub fork was not ready for ${forkFullName} after ${forkPollAttempts} attempts.`,
+    );
   }
 
   const head = `${forkRepo.owner}:${params.branchName}`;

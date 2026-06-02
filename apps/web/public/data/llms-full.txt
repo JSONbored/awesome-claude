@@ -52013,11 +52013,9 @@ Download: /downloads/skills/heyclaude-content-submission-factory.zip
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-content-submission-factory.zip
 - Package SHA256: 88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c
-- Safety notes: The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory., Review generated submission drafts before opening a PR; the skill does not publish content by itself.
-- Privacy notes: Drafting may include public source URLs, brand metadata, and resource descriptions., Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
-- Last verified: 2026-06-01
+- Last verified: 2026-04-30
 - Robots: indexable
 ## Summary
 Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.
@@ -52027,19 +52025,14 @@ Prepare complete, source-backed HeyClaude content submissions for agents, MCP se
 - registry
 - content-workflow
 - seo
-## Safety Notes
-- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.
-- Review generated submission drafts before opening a PR; the skill does not publish content by itself.
-## Privacy Notes
-- Drafting may include public source URLs, brand metadata, and resource descriptions.
-- Do not include credentials, private repository details, customer data, or unpublished material in submission drafts.
 ## Content
 ## Knowledge Freshness
-This skill is pinned to HeyClaude PR-first submission behavior verified on **2026-06-01**.
+This skill is pinned to HeyClaude issue-first submission behavior verified on **2026-04-30**.
 
 ## Retrieval Sources
 - https://heyclau.de/submit
-- https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
+- https://heyclau.de/submissions
+- https://github.com/JSONbored/awesome-claude/issues/new/choose
 
 ## Core Workflow
 1. Identify the best HeyClaude category from the evidence, not from the submitter's guess.
@@ -52049,7 +52042,7 @@ This skill is pinned to HeyClaude PR-first submission behavior verified on **202
 5. Add brand metadata when safe: `brandName`, `brandDomain`, and official source links.
 6. Write a concise original description and card description.
 7. Draft SEO metadata from the resource title, category, tags, and source-backed value.
-8. Produce PR-first submission fields and a prefilled HeyClaude submission URL.
+8. Produce issue-first submission fields and a prefilled HeyClaude or GitHub submission URL.
 
 ## Category Scope
 - Agents
@@ -52071,13 +52064,13 @@ When an MCP client has the HeyClaude MCP server configured, use it as the source
 - `get_submission_schema` for required and optional fields by category.
 - `search_duplicate_entries` before drafting a new listing.
 - `validate_submission_draft` to catch malformed fields before handoff.
-- `build_submission_urls` to generate review URLs without creating GitHub issues or PRs directly.
+- `build_submission_urls` to generate review URLs without creating GitHub issues directly.
 
-If the MCP server is unavailable, continue with the PR-first draft packet and explicitly mark validation as manual.
+If the MCP server is unavailable, continue with the issue-first draft packet and explicitly mark validation as manual.
 
 ## Review Rules
 - Do not auto-publish registry content.
-- Do not create GitHub issues, write files, or mutate local project config. Only the reviewed website/GitHub App flow should open contributor PRs.
+- Do not create PRs, create GitHub issues, write files, or mutate local project config.
 - Do not include private repo names, credentials, tokens, internal URLs, or unpublished customer information.
 - Do not mirror full third-party pages. Use original summaries and canonical source links.
 - Do not claim platform compatibility, validation, package checksums, or first-party status unless source evidence supports it.
@@ -52105,7 +52098,7 @@ mcpValidation:
   schemaChecked: true
   duplicateSearch: "No likely duplicate found."
   submitUrl: https://heyclau.de/submit?...
-  contributionGuideUrl: https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
+  githubIssueUrl: https://github.com/JSONbored/awesome-claude/issues/new?...
 maintainerNotes: Why this belongs in HeyClaude and what still needs review.
 ```
 
@@ -52178,7 +52171,7 @@ for a human-reviewed PR-first workflow.
 - `get_submission_schema`: inspect category-specific submission fields.
 - `validate_submission_draft`: validate a content submission draft without making write calls.
 - `search_duplicate_entries`: check for likely duplicate registry entries before submitting.
-- `build_submission_urls`: build a prefilled HeyClaude submit URL.
+- `build_submission_urls`: build prefilled HeyClaude submit and review URLs.
 - `get_category_submission_guidance`: fetch category-specific contribution guidance and review expectations.
 
 ## Install
@@ -52282,26 +52275,18 @@ Download: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Package SHA256: 1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f
-- Safety notes: The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory., Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
-- Privacy notes: Skill drafting may include public source URLs, package metadata, and compatibility notes., Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
 - Last verified: 2026-04-27
 - Robots: indexable
 ## Summary
-Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
+Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.
 ## Tags
 - heyclaude
 - skill-authoring
 - agent-skills
 - registry
 - submissions
-## Safety Notes
-- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.
-- Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
-## Privacy Notes
-- Skill drafting may include public source URLs, package metadata, and compatibility notes.
-- Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 ## Content
 ## Knowledge Freshness
 This skill is pinned to Agent Skills and HeyClaude submission behavior verified on **2026-04-27**.
@@ -52320,14 +52305,14 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.
 4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.
 5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.
-6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.
+6. Prepare HeyClaude issue fields from the canonical submission form instead of auto-publishing.
 
 ## Capability Scope
 - Agent Skill package authoring
 - Compatibility metadata
 - Cursor `.mdc` adapter drafting
 - Package validation checklist
-- HeyClaude PR-first submission preparation
+- HeyClaude issue-first submission preparation
 
 ## Compatibility
 ### Native Agent Skills
@@ -52345,7 +52330,7 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 ## Production Rules
 - Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.
 - Do not include private repo names, secrets, credentials, or internal operating details in a public skill.
-- Do not auto-publish registry content; prepare a maintainer-reviewed PR submission.
+- Do not auto-publish registry content; prepare a maintainer-reviewed issue submission.
 - Keep package resources minimal and directly referenced from `SKILL.md`.
 
 ## Troubleshooting

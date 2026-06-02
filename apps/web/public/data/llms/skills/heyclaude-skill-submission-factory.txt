@@ -11,26 +11,18 @@ Download: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Source URLs: https://heyclau.de/submit, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx
 - Package URL: /downloads/skills/heyclaude-skill-submission-factory.zip
 - Package SHA256: 1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f
-- Safety notes: The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory., Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
-- Privacy notes: Skill drafting may include public source URLs, package metadata, and compatibility notes., Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 - Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
 - Author: JSONbored
 - Last verified: 2026-04-27
 - Robots: indexable
 ## Summary
-Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
+Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.
 ## Tags
 - heyclaude
 - skill-authoring
 - agent-skills
 - registry
 - submissions
-## Safety Notes
-- The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.
-- Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself.
-## Privacy Notes
-- Skill drafting may include public source URLs, package metadata, and compatibility notes.
-- Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts.
 ## Content
 ## Knowledge Freshness
 This skill is pinned to Agent Skills and HeyClaude submission behavior verified on **2026-04-27**.
@@ -49,14 +41,14 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 3. Keep `SKILL.md` concise, with required `name` and `description` frontmatter.
 4. Add only necessary optional resources under `scripts/`, `references/`, `assets/`, or `agents/openai.yaml`.
 5. Generate compatibility notes for native Agent Skills platforms and adapter-only platforms.
-6. Prepare HeyClaude PR fields from the canonical submission form instead of auto-publishing.
+6. Prepare HeyClaude issue fields from the canonical submission form instead of auto-publishing.
 
 ## Capability Scope
 - Agent Skill package authoring
 - Compatibility metadata
 - Cursor `.mdc` adapter drafting
 - Package validation checklist
-- HeyClaude PR-first submission preparation
+- HeyClaude issue-first submission preparation
 
 ## Compatibility
 ### Native Agent Skills
@@ -74,7 +66,7 @@ This skill is pinned to Agent Skills and HeyClaude submission behavior verified 
 ## Production Rules
 - Do not claim native support for a platform unless its current docs support `SKILL.md`-style skills.
 - Do not include private repo names, secrets, credentials, or internal operating details in a public skill.
-- Do not auto-publish registry content; prepare a maintainer-reviewed PR submission.
+- Do not auto-publish registry content; prepare a maintainer-reviewed issue submission.
 - Keep package resources minimal and directly referenced from `SKILL.md`.
 
 ## Troubleshooting

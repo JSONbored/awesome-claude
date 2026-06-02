@@ -166,7 +166,43 @@ async function putAuditObject(env: Env, key: string, payload: unknown) {
 }
 
 async function createDraftRoute(request: Request, env: Env) {
-  const body = await request.json().catch(() => null);
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return json(
+      {
+        ok: false,
+        error: "invalid_json",
+        message: "Draft request body must be valid JSON.",
+      },
+      { status: 400 },
+    );
+  }
+  if (!isRecord(body)) {
+    return json(
+      {
+        ok: false,
+        error: "invalid_draft",
+        message: "Draft request body must be a JSON object.",
+      },
+      { status: 400 },
+    );
+  }
+  if (
+    Object.hasOwn(body, "fields") &&
+    body.fields !== undefined &&
+    !isRecord(body.fields)
+  ) {
+    return json(
+      {
+        ok: false,
+        error: "invalid_draft",
+        message: "Draft fields must be a JSON object when provided.",
+      },
+      { status: 400 },
+    );
+  }
   const fields = draftFieldsFromBody(body);
   const baseRef = env.PILOT_BASE_REF || "submission-gate-pilot";
   let target: ReturnType<typeof buildDraftTarget>;

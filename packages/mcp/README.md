@@ -60,7 +60,7 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
 - `validate_submission_draft` - validate a content submission draft locally.
 - `search_duplicate_entries` - check generated registry artifacts for likely
   duplicates before opening a submission.
-- `build_submission_urls` - build a prefilled HeyClaude submit URL for human
+- `build_submission_urls` - build prefilled HeyClaude submit and review URLs for human
   review.
 - `get_category_submission_guidance` - fetch category-specific contribution
   guidance and required fields.

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-06-01T00:00:00.000Z",
+  "generatedAt": "2026-05-26T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -10433,7 +10433,7 @@
       "category": "skills",
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
       "url": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -10468,14 +10468,15 @@
         "packageTrust": "first-party",
         "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
         "checksumPresent": true,
-        "sourceUrlCount": 3,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://heyclau.de/submit",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
-          "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+          "https://heyclau.de/submissions",
+          "https://github.com/JSONbored/awesome-claude/issues/new/choose"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-06-01",
+        "lastVerifiedAt": "2026-04-30",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -10559,7 +10560,7 @@
       "category": "skills",
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed PRs.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
       "url": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -21640,5 +21641,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "90450006d90f312e19d5b3457ab39d235fea9b9c8dc23bf9a5de59e0d2ff685f"
+  "signature": "56bb52c9422e08c917e64ac279737761792a3d4740d30a8fce9cec50b8cba59d"
 }

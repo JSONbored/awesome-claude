@@ -170,7 +170,7 @@ export function buildContributorMdx(
   const safeDescription = mdxPlainText(description);
   const timestamp = new Date();
   const submittedAt = timestamp.toISOString();
-  const frontmatter = [
+  const frontmatter: Array<string | null> = [
     "---",
     `title: ${yamlScalar(title)}`,
     `slug: ${yamlScalar(target.slug)}`,
@@ -180,78 +180,80 @@ export function buildContributorMdx(
     `seoTitle: ${yamlScalar(fields.seo_title || `${title} for Claude`)}`,
     `seoDescription: ${yamlScalar(fields.seo_description || oneLine(description))}`,
     `author: ${yamlScalar(fields.author || submittedBy)}`,
-    submittedByUrl ? `authorProfileUrl: ${yamlScalar(submittedByUrl)}` : "",
+    submittedByUrl ? `authorProfileUrl: ${yamlScalar(submittedByUrl)}` : null,
     `dateAdded: ${yamlScalar(submittedAt.slice(0, 10))}`,
     `submittedBy: ${yamlScalar(submittedBy)}`,
-    submittedByUrl ? `submittedByUrl: ${yamlScalar(submittedByUrl)}` : "",
+    submittedByUrl ? `submittedByUrl: ${yamlScalar(submittedByUrl)}` : null,
     `submittedAt: ${yamlScalar(submittedAt)}`,
     tags.length ? `tags: [${tags.map(yamlScalar).join(", ")}]` : "tags: []",
     text(fields.brand_name)
       ? `brandName: ${yamlScalar(fields.brand_name)}`
-      : "",
+      : null,
     text(fields.brand_domain)
       ? `brandDomain: ${yamlScalar(fields.brand_domain)}`
-      : "",
-    text(fields.github_url) ? `repoUrl: ${yamlScalar(fields.github_url)}` : "",
+      : null,
+    text(fields.github_url)
+      ? `repoUrl: ${yamlScalar(fields.github_url)}`
+      : null,
     text(fields.docs_url)
       ? `documentationUrl: ${yamlScalar(fields.docs_url)}`
-      : "",
+      : null,
     text(fields.website_url)
       ? `websiteUrl: ${yamlScalar(fields.website_url)}`
-      : "",
+      : null,
     text(fields.download_url)
       ? `downloadUrl: ${yamlScalar(fields.download_url)}`
-      : "",
+      : null,
     text(fields.install_command)
       ? `installCommand: ${yamlScalar(fields.install_command)}`
-      : "",
+      : null,
     text(fields.usage_snippet)
       ? `usageSnippet: ${yamlScalar(fields.usage_snippet)}`
-      : "",
+      : null,
     text(fields.config_snippet)
       ? `configSnippet: ${yamlScalar(fields.config_snippet)}`
-      : "",
-    sourceContent ? `copySnippet: ${yamlScalar(sourceContent)}` : "",
+      : null,
+    sourceContent ? `copySnippet: ${yamlScalar(sourceContent)}` : null,
     text(fields.command_syntax)
       ? `commandSyntax: ${yamlScalar(fields.command_syntax)}`
-      : "",
-    text(fields.trigger) ? `trigger: ${yamlScalar(fields.trigger)}` : "",
+      : null,
+    text(fields.trigger) ? `trigger: ${yamlScalar(fields.trigger)}` : null,
     text(fields.script_language)
       ? `scriptLanguage: ${yamlScalar(fields.script_language)}`
-      : "",
+      : null,
     text(fields.prerequisites)
       ? `prerequisites: ${yamlArray(lines(fields.prerequisites))}`
-      : "",
-    safetyNotes.length ? `safetyNotes: ${yamlArray(safetyNotes)}` : "",
-    privacyNotes.length ? `privacyNotes: ${yamlArray(privacyNotes)}` : "",
+      : null,
+    safetyNotes.length ? `safetyNotes: ${yamlArray(safetyNotes)}` : null,
+    privacyNotes.length ? `privacyNotes: ${yamlArray(privacyNotes)}` : null,
     text(fields.retrieval_sources)
       ? `retrievalSources: ${yamlArray(lines(fields.retrieval_sources))}`
-      : "",
+      : null,
     text(fields.tested_platforms)
       ? `testedPlatforms: ${yamlArray(lines(fields.tested_platforms))}`
-      : "",
+      : null,
     text(fields.skill_type)
       ? `skillType: ${yamlScalar(fields.skill_type)}`
-      : "",
+      : null,
     text(fields.skill_level)
       ? `skillLevel: ${yamlScalar(fields.skill_level)}`
-      : "",
+      : null,
     text(fields.verification_status)
       ? `verificationStatus: ${yamlScalar(fields.verification_status)}`
-      : "",
+      : null,
     text(fields.verified_at)
       ? `verifiedAt: ${yamlScalar(fields.verified_at)}`
-      : "",
-    text(fields.items) ? `items: ${yamlArray(lines(fields.items))}` : "",
+      : null,
+    text(fields.items) ? `items: ${yamlArray(lines(fields.items))}` : null,
     text(fields.pricing_model)
       ? `pricingModel: ${yamlScalar(fields.pricing_model)}`
-      : "",
+      : null,
     text(fields.disclosure)
       ? `disclosure: ${yamlScalar(fields.disclosure)}`
-      : "",
+      : null,
     "---",
   ]
-    .filter(Boolean)
+    .filter((line): line is string => line !== null)
     .join("\n");
   const sourceLines = lines(sourceContent).map(mdxPlainText).slice(0, 200);
   const safetyBody =

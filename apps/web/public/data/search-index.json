@@ -12549,8 +12549,8 @@
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
       "seoTitle": "HeyClaude Content Submission Factory Skill",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
-      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready PR content.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
       "tags": [
         "heyclaude",
         "submissions",
@@ -12562,7 +12562,7 @@
         "submit content to heyclaude",
         "heyclaude registry submission",
         "ai directory content fields",
-        "github pr submission",
+        "github issue submission",
         "registry seo metadata",
         "heyclaude",
         "submissions",
@@ -12573,14 +12573,6 @@
         "claude"
       ],
       "author": "JSONbored",
-      "safetyNotes": [
-        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
-        "Review generated submission drafts before opening a PR; the skill does not publish content by itself."
-      ],
-      "privacyNotes": [
-        "Drafting may include public source URLs, brand metadata, and resource descriptions.",
-        "Do not include credentials, private repository details, customer data, or unpublished material in submission drafts."
-      ],
       "dateAdded": "2026-04-30",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
@@ -12614,14 +12606,15 @@
         "packageTrust": "first-party",
         "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
         "checksumPresent": true,
-        "sourceUrlCount": 3,
+        "sourceUrlCount": 4,
         "sourceUrls": [
           "https://heyclau.de/submit",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
-          "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+          "https://heyclau.de/submissions",
+          "https://github.com/JSONbored/awesome-claude/issues/new/choose"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-06-01",
+        "lastVerifiedAt": "2026-04-30",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -12731,8 +12724,8 @@
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
       "seoTitle": "HeyClaude Skill Submission Factory Skill",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed PRs.",
-      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
       "tags": [
         "heyclaude",
         "skill-authoring",
@@ -12755,14 +12748,6 @@
         "heyclaude skill submission factory"
       ],
       "author": "JSONbored",
-      "safetyNotes": [
-        "The install command downloads a HeyClaude-hosted skill archive and unzips it into the current working directory.",
-        "Review generated skill packages and submission fields before opening a PR; the skill does not publish content by itself."
-      ],
-      "privacyNotes": [
-        "Skill drafting may include public source URLs, package metadata, and compatibility notes.",
-        "Do not include credentials, private repository details, customer data, or unpublished material in generated skill packages or submission drafts."
-      ],
       "dateAdded": "2026-04-27",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",
