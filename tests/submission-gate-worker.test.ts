@@ -74,16 +74,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(url.searchParams.get("state")).toBe("draft_123.state");
   });
 
-  it("normalizes draft targets to one content file on the pilot branch", () => {
+  it("normalizes draft targets to one content file on the production branch", () => {
     const target = buildDraftTarget(
       { category: "mcp", name: "Example MCP Server" },
-      "submission-gate-pilot",
+      "main",
     );
 
     expect(target).toEqual({
       category: "mcp",
       slug: "example-mcp-server",
-      baseRef: "submission-gate-pilot",
+      baseRef: "main",
       branchName: "heyclaude/submit-mcp-example-mcp-server",
       targetPath: "content/mcp/example-mcp-server.mdx",
     });
@@ -92,7 +92,7 @@ describe("Cloudflare submission gate helpers", () => {
   it("caps generated branch names while keeping the full target slug", () => {
     const target = buildDraftTarget(
       { category: "skills", name: "A".repeat(240) },
-      "submission-gate-pilot",
+      "main",
     );
 
     expect(target.slug).toHaveLength(120);

@@ -21,7 +21,7 @@
     "PUBLIC_REPO": "JSONbored/awesome-claude",
     "ALLOWED_IMPORT_REPOS": "JSONbored/awesome-claude",
     "ALLOWED_CORS_ORIGINS": "https://heyclau.de",
-    "PILOT_BASE_REF": "submission-gate-pilot",
+    "PILOT_BASE_REF": "main",
     "GITHUB_API_VERSION": "2022-11-28",
     "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
     "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",
@@ -104,98 +104,4 @@
       "new_sqlite_classes": ["SubmissionLock", "SubmissionImportRunner"],
     },
   ],
-  "env": {
-    "dev": {
-      "name": "heyclaude-submission-gate-dev",
-      "vars": {
-        "PUBLIC_SITE_URL": "https://dev.heyclau.de",
-        "SUBMISSION_GATE_URL": "https://submission-gate-dev.heyclau.de",
-        "PUBLIC_REPO": "JSONbored/awesome-claude",
-        "ALLOWED_IMPORT_REPOS": "JSONbored/awesome-claude",
-        "ALLOWED_CORS_ORIGINS": "https://heyclaude-dev.zeronode.workers.dev,https://dev.heyclau.de,http://localhost:3000,http://localhost:5173",
-        "PILOT_BASE_REF": "submission-gate-pilot",
-        "GITHUB_API_VERSION": "2022-11-28",
-        "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
-        "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",
-        "REQUIRED_STATUS_CONTEXTS": "",
-      },
-      "routes": [
-        {
-          "pattern": "submission-gate-dev.heyclau.de",
-          "custom_domain": true,
-        },
-      ],
-      "d1_databases": [
-        {
-          "binding": "SUBMISSION_GATE_DB",
-          "database_name": "heyclaude-submission-gate-dev",
-          "database_id": "74bf2511-fb69-47e3-8bb7-7fac3546eef2",
-          "migrations_dir": "migrations",
-        },
-      ],
-      "r2_buckets": [
-        {
-          "binding": "SUBMISSION_GATE_AUDIT",
-          "bucket_name": "heyclaude-submission-gate-audit-dev",
-          "preview_bucket_name": "heyclaude-submission-gate-audit-dev-preview",
-        },
-      ],
-      "queues": {
-        "producers": [
-          {
-            "binding": "SUBMISSION_REVIEW_QUEUE",
-            "queue": "heyclaude-submission-review-dev",
-          },
-          {
-            "binding": "SUBMISSION_IMPORT_QUEUE",
-            "queue": "heyclaude-submission-import-dev",
-          },
-        ],
-        "consumers": [
-          {
-            "queue": "heyclaude-submission-review-dev",
-            "max_batch_size": 1,
-            "max_batch_timeout": 5,
-            "max_retries": 3,
-            "dead_letter_queue": "heyclaude-submission-review-dev-dlq",
-            "max_concurrency": 5,
-          },
-          {
-            "queue": "heyclaude-submission-import-dev",
-            "max_batch_size": 1,
-            "max_batch_timeout": 5,
-            "max_retries": 2,
-            "dead_letter_queue": "heyclaude-submission-import-dev-dlq",
-            "max_concurrency": 2,
-          },
-        ],
-      },
-      "durable_objects": {
-        "bindings": [
-          {
-            "name": "SUBMISSION_LOCK",
-            "class_name": "SubmissionLock",
-          },
-          {
-            "name": "SUBMISSION_IMPORT_RUNNER",
-            "class_name": "SubmissionImportRunner",
-          },
-        ],
-      },
-      "containers": [
-        {
-          "max_instances": 3,
-          "class_name": "SubmissionImportRunner",
-          "image": "./container/Dockerfile",
-          "instance_type": "standard-1",
-        },
-      ],
-      "migrations": [
-        {
-          "tag": "v1",
-          "new_sqlite_classes": ["SubmissionLock", "SubmissionImportRunner"],
-        },
-      ],
-    },
-  },
 }

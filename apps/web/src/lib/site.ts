@@ -54,9 +54,7 @@ export const siteConfig = {
     publicEnv("VITE_SUBMISSION_GATE_URL") || publicEnv("NEXT_PUBLIC_SUBMISSION_GATE_URL"),
   ),
   submissionBaseRef:
-    publicEnv("VITE_SUBMISSION_BASE_REF") ||
-    publicEnv("NEXT_PUBLIC_SUBMISSION_BASE_REF") ||
-    "submission-gate-pilot",
+    publicEnv("VITE_SUBMISSION_BASE_REF") || publicEnv("NEXT_PUBLIC_SUBMISSION_BASE_REF") || "main",
   polarFreeJobUrl: publicEnv("NEXT_PUBLIC_POLAR_FREE_JOB_URL") || "/jobs/post?tier=free",
   polarJobBoardUrl: publicEnv("NEXT_PUBLIC_POLAR_JOB_BOARD_URL") || "/advertise",
   polarFeaturedJobUrl: publicEnv("NEXT_PUBLIC_POLAR_FEATURED_JOB_URL") || "/advertise",

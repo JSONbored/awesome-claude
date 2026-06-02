@@ -17,8 +17,8 @@ content directly to `main`.
 
 ## Labels
 
-- `submission-gate-pilot`: opt-in scope for the pilot branch or pilot-labeled
-  PRs.
+- `submission-gate-pilot`: legacy manual escape hatch for explicitly
+  pilot-labeled PRs; normal submission-gate scope is now `main`.
 - `submission-under-review`: the private worker accepted the webhook and queued
   a serialized review job.
 - `submission-needs-changes`: fixable issues were found and the stable marker
@@ -55,8 +55,9 @@ thresholds stay outside the public repo.
 The private gate is hosted as a Cloudflare Worker with supporting bindings:
 
 - Production Worker: `heyclaude-submission-gate`.
-- Development Worker: `heyclaude-submission-gate-dev`, backed by separate dev
-  D1, R2, Queue, and dead-letter Queue resources.
+- Production domain: `submission-gate.heyclau.de`.
+- Production D1, R2, Queue, and dead-letter Queue resources are the only
+  supported submission-gate runtime moving forward.
 - Worker endpoints for GitHub App auth, draft creation, draft status, GitHub
   webhooks, and internal import callbacks.
 - D1 tables for drafts, PR state, verdict summaries, audit rows, and short-lived
@@ -68,19 +69,18 @@ The private gate is hosted as a Cloudflare Worker with supporting bindings:
 - Cloudflare Containers for trusted git, Node, pnpm, validation, generation,
   branch push, and maintainer-owned import PR creation.
 
-Provision queues before deploying the Worker. The dev environment needs
-`heyclaude-submission-review-dev`, `heyclaude-submission-review-dev-dlq`,
-`heyclaude-submission-import-dev`, and `heyclaude-submission-import-dev-dlq`.
-Production needs the same names without the `-dev` suffix. The review consumer
-retries three times before the DLQ; the import consumer retries twice before the
-DLQ.
+Provision queues before deploying the Worker. The production environment needs
+`heyclaude-submission-review`, `heyclaude-submission-review-dlq`,
+`heyclaude-submission-import`, and `heyclaude-submission-import-dlq`.
+The review consumer retries three times before the DLQ; the import consumer
+retries twice before the DLQ.
 
 The Worker can label and comment quickly. Import generation happens in the
 Container because it needs a filesystem, git, pnpm, and the repo validation
 toolchain.
 
-Feature branches must use the dev gate only. Production gate deploys wait until
-the frontend preview and pilot gate behavior are proven.
+Do not deploy the submission gate from unrelated feature branches. It owns the
+production custom domain.
 
 The GitHub App needs read-only access to Checks and commit statuses so the gate
 can wait for repo-owned source validation before running private review. It
@@ -93,8 +93,8 @@ the gate later creates its own formal GitHub check run.
 - Website `/submit` runs public preflight, then posts a draft to the private
   Worker. If the Worker is configured, the contributor continues through GitHub
   App user auth and the gate creates or updates a user-fork branch and PR.
-- Webhook review starts when a PR targets `submission-gate-pilot` during pilot,
-  or `main` after promotion.
+- Webhook review starts when a PR targets the configured base ref, currently
+  `main`, or carries the `submission-gate-pilot` label.
 - The Worker applies `submission-under-review` immediately, enqueues one job per
   PR, and updates one stable marker comment.
 - The review job waits for configured required validation, currently

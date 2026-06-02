@@ -187,8 +187,7 @@ longer a Next.js app.
 - `NEXT_PUBLIC_POLAR_JOB_BOARD_URL`
 - `VITE_SUBMISSION_GATE_URL` or `NEXT_PUBLIC_SUBMISSION_GATE_URL` set to the
   submission-gate Worker origin:
-  `https://submission-gate-dev.heyclau.de` for development and
-  `https://submission-gate.heyclau.de` for production.
+  `https://submission-gate.heyclau.de`.
 
 Content submission writes are routed through the private submission gate; the
 public website only runs preflight and hands the contributor to GitHub auth.

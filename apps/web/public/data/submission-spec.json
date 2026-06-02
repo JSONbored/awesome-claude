@@ -1186,6 +1186,6 @@
   "prIntake": {
     "mode": "github_app_user_fork_pr",
     "submitUrl": "https://heyclau.de/submit",
-    "pilotBaseRef": "submission-gate-pilot"
+    "pilotBaseRef": "main"
   }
 }

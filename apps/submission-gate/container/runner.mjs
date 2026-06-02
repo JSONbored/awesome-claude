@@ -136,9 +136,7 @@ export function safeCallbackUrl(value) {
   const url = new URL(String(value || ""));
   if (
     url.protocol !== "https:" ||
-    !["submission-gate.heyclau.de", "submission-gate-dev.heyclau.de"].includes(
-      url.hostname,
-    ) ||
+    url.hostname !== "submission-gate.heyclau.de" ||
     url.pathname !== "/internal/import-complete"
   ) {
     throw new Error("Import callback URL is not allowed.");

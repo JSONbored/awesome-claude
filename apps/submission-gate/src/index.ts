@@ -327,7 +327,7 @@ async function createDraftRoute(request: Request, env: Env) {
     );
   }
   const fields = draftFieldsFromBody(body);
-  const baseRef = env.PILOT_BASE_REF || "submission-gate-pilot";
+  const baseRef = env.PILOT_BASE_REF || "main";
   let target: ReturnType<typeof buildDraftTarget>;
   try {
     target = buildDraftTarget(fields, baseRef);

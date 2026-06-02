@@ -30,7 +30,6 @@ Development deploys may target the Cloudflare dev Worker only:
 
 ```bash
 pnpm --filter web run deploy:dev
-pnpm --filter @heyclaude/submission-gate run deploy:dev
 ```
 
 The current PR artifact check uses that shared `heyclaude-dev` Worker when the
@@ -40,9 +39,9 @@ environment URL, CI resolves and validates that URL instead.
 For same-repo deployable PRs, missing preview deployment credentials or a missing
 resolved preview URL must fail `validate-pr-preview`.
 
-The private submission gate has its own dev Worker,
-`heyclaude-submission-gate-dev`, and production should not point `/submit` at an
-untested gate.
+The private submission gate is production-only. The single live Worker is
+`heyclaude-submission-gate` at `submission-gate.heyclau.de`; dev and production
+website builds both call that same gate.
 
 Do not run production deploy commands from feature branches. Production updates
 must flow through the protected `main` branch.

@@ -139,7 +139,7 @@ describe("PR preview artifact validation flow", () => {
     expect(jobBlock).toContain("persist-credentials: false");
   });
 
-  it("guards submission-gate production deploys until prod D1 exists", () => {
+  it("routes submission-gate deployments through the production Worker only", () => {
     const packageJson = JSON.parse(
       fs.readFileSync(
         path.join(repoRoot, "apps/submission-gate/package.json"),
@@ -147,19 +147,24 @@ describe("PR preview artifact validation flow", () => {
       ),
     ) as { scripts: Record<string, string> };
 
+    expect(packageJson.scripts["deploy:dev"]).toBe("pnpm run deploy:prod");
     expect(packageJson.scripts["deploy:prod"]).toContain(
       "check-submission-gate-prod-config.mjs",
     );
+    expect(packageJson.scripts["deploy:dry-run:dev"]).toBe(
+      "pnpm run deploy:dry-run:prod",
+    );
     expect(packageJson.scripts["deploy:dry-run:prod"]).toContain(
-      "check-submission-gate-prod-config.mjs",
+      'wrangler deploy --config wrangler.jsonc --env "" --dry-run',
     );
 
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
       "utf8",
     );
-    expect(wranglerConfig).toContain(
-      "Production deploy scripts fail while this placeholder is present.",
-    );
+    expect(wranglerConfig).not.toContain('"env":');
+    expect(wranglerConfig).toContain('"pattern": "submission-gate.heyclau.de"');
+    expect(wranglerConfig).toContain('"PILOT_BASE_REF": "main"');
+    expect(wranglerConfig).toContain('"name": "heyclaude-submission-gate"');
   });
 });

@@ -149,11 +149,6 @@ describe("submission gate import runner safety", () => {
   it("allows only signed import completion callback URLs", () => {
     expect(
       safeCallbackUrl(
-        "https://submission-gate-dev.heyclau.de/internal/import-complete",
-      ),
-    ).toBe("https://submission-gate-dev.heyclau.de/internal/import-complete");
-    expect(
-      safeCallbackUrl(
         "https://submission-gate.heyclau.de/internal/import-complete",
       ),
     ).toBe("https://submission-gate.heyclau.de/internal/import-complete");
@@ -162,11 +157,16 @@ describe("submission gate import runner safety", () => {
       safeCallbackUrl("https://attacker.example/internal/import-complete"),
     ).toThrow("callback URL");
     expect(() =>
-      safeCallbackUrl("https://submission-gate-dev.heyclau.de/other"),
+      safeCallbackUrl(
+        "https://submission-gate-dev.heyclau.de/internal/import-complete",
+      ),
+    ).toThrow("callback URL");
+    expect(() =>
+      safeCallbackUrl("https://submission-gate.heyclau.de/other"),
     ).toThrow("callback URL");
     expect(() =>
       safeCallbackUrl(
-        "http://submission-gate-dev.heyclau.de/internal/import-complete",
+        "http://submission-gate.heyclau.de/internal/import-complete",
       ),
     ).toThrow("callback URL");
   });

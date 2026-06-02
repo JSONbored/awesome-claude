@@ -331,7 +331,7 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
       title: "Add MCP Server: Example MCP Server",
       targetPath: "content/mcp/example-mcp-server.mdx",
       branchHint: "heyclaude/submit-mcp-example-mcp-server",
-      baseRef: "submission-gate-pilot",
+      baseRef: "main",
       body: "### Name\n\nExample MCP Server",
     },
     blockers: [],
