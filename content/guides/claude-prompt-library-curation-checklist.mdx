@@ -1,0 +1,92 @@
+---
+title: Claude Prompt Library Curation Checklist
+slug: claude-prompt-library-curation-checklist
+category: guides
+description: >-
+  A lightweight checklist for organizing reusable Claude prompts into clear,
+  maintainable prompt libraries with consistent names, examples, and review
+  notes.
+cardDescription: Organize reusable Claude prompts into a maintainable library.
+seoTitle: Claude Prompt Library Curation Checklist
+seoDescription: >-
+  Use this checklist to curate reusable Claude prompts with consistent naming,
+  example inputs, expected outputs, and review notes.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+sourceUrl: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+dateAdded: "2026-06-02"
+installable: false
+usageSnippet: >-
+  Group reusable Claude prompts by task, add clear examples, note expected
+  outputs, and review the library regularly so old prompts stay useful.
+safetyNotes:
+  - This guide is informational and does not run tools, install packages, modify files, or change account settings.
+tags:
+  - prompts
+  - prompt-library
+  - claude
+  - workflow
+keywords:
+  - Claude prompt library
+  - prompt curation checklist
+  - reusable Claude prompts
+readingTime: 3
+difficultyScore: 18
+hasTroubleshooting: false
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+A useful prompt library is small enough to browse, clear enough to reuse, and
+maintained often enough that old examples do not drift away from current Claude
+behavior. Treat each prompt like a reusable template with a purpose, example
+input, expected output, and review note.
+
+## Start With The Task
+
+Name each prompt by the job it performs, not by a vague label. A maintainer
+should be able to scan the title and understand when to use it. Good names
+usually include the domain, the action, and the expected result.
+
+## Keep The Prompt Focused
+
+Each library entry should solve one repeatable task. If a prompt tries to cover
+planning, drafting, editing, summarizing, and scoring at the same time, split it
+into smaller entries. Focused prompts are easier to test, compare, and improve.
+
+## Add A Short Example
+
+Include one representative input and a short description of the expected output.
+The example does not need to be long. It only needs to show the shape of the
+request and the kind of answer the prompt is meant to produce.
+
+## Record Review Notes
+
+Add a small note for maintainers that explains when the prompt was last reviewed
+and what changed. This keeps the library from becoming a pile of old snippets
+with no ownership or freshness signal.
+
+## Use Consistent Tags
+
+Tags should help people find prompts by workflow, audience, and output type.
+Avoid creating a new tag for every prompt. A smaller controlled vocabulary makes
+the library easier to filter and keeps related prompts grouped together.
+
+## Retire Stale Prompts
+
+Remove prompts that duplicate better entries, produce inconsistent answers, or no
+longer match the workflow they describe. A smaller library with reliable entries
+is more useful than a large library full of unreviewed examples.
+
+## Review Checklist
+
+- The prompt has one clear job.
+- The title explains when to use it.
+- The entry includes a representative example.
+- Expected output is described in plain language.
+- Tags use the existing library vocabulary.
+- The review note explains freshness or known limits.
