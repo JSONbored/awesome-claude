@@ -1,7 +1,7 @@
 {
   "name": "heyclaude",
   "private": true,
-  "packageManager": "pnpm@11.4.0",
+  "packageManager": "pnpm@11.5.0",
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "8.5.0",
     "@heyclaude/registry": "workspace:*",
@@ -64,15 +64,15 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@commitlint/cli": "21.0.1",
-    "@commitlint/config-conventional": "21.0.1",
+    "@commitlint/cli": "21.0.2",
+    "@commitlint/config-conventional": "21.0.2",
     "husky": "9.1.7",
     "prettier": "3.8.3",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "react-email": "6.5.0",
     "safety-agent-cli": "0.1.6",
-    "tsx": "4.22.3",
+    "tsx": "4.22.4",
     "vitest": "4.1.7"
   }
 }
