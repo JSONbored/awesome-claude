@@ -307,6 +307,17 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('status: "import_pr_open"');
   });
 
+  it("ignores maintainer-owned import PR branches during gate review", () => {
+    const source = readWorkerSource();
+
+    expect(source).toContain(
+      'const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-"',
+    );
+    expect(source).toContain("function isMaintainerImportRef");
+    expect(source).toContain("isMaintainerImportRef(pull.head?.ref)");
+    expect(source).toContain("isMaintainerImportRef(target.headRef)");
+  });
+
   it("signs internal import callbacks with the same HMAC verifier", async () => {
     const payload = JSON.stringify({ kind: "import_pr", targetKey: "repo#1" });
     const signature = await signInternalPayload("internal-secret", payload);

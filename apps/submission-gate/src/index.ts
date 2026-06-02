@@ -136,13 +136,14 @@ const TRUSTED_RECHECK_ASSOCIATIONS = new Set([
   "MEMBER",
   "COLLABORATOR",
 ]);
+const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-";
 const DECISION_LABELS = [
   LABELS.requestChanges,
   LABELS.manual,
   LABELS.close,
   LABELS.importOpen,
   LABELS.superseded,
-];
+  ];
 
 type ReviewTarget = {
   repoFullName: string;
@@ -153,6 +154,10 @@ type ReviewTarget = {
   headSha?: string;
   installationId?: number;
 };
+
+function isMaintainerImportRef(ref: string | undefined) {
+  return String(ref || "").startsWith(MAINTAINER_IMPORT_BRANCH_PREFIX);
+}
 
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
@@ -424,10 +429,12 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
         number?: number;
         draft?: boolean;
         base?: { ref?: string; repo?: { full_name?: string } };
+        head?: { ref?: string };
         labels?: Array<{ name?: string }>;
       }
     | undefined;
   if (!pull || pull.draft) return false;
+  if (isMaintainerImportRef(pull.head?.ref)) return false;
   const labels = pull.labels?.map((label) => label.name) || [];
   return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
 }
@@ -656,6 +663,7 @@ async function targetFromIssueCommentRecheck(
   if (pull.draft) return null;
   const target = reviewTargetFromPullRecord(pull, installationId);
   if (!target) return null;
+  if (isMaintainerImportRef(target.headRef)) return null;
   if (target.baseRef !== env.PILOT_BASE_REF && !hasPilotLabel(issue)) {
     return null;
   }
@@ -674,6 +682,7 @@ async function enqueueReviewTarget(
   webhook?: Record<string, unknown>,
   pilotScoped = false,
 ) {
+  if (isMaintainerImportRef(target.headRef)) return false;
   if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
   const targetKey = targetKeyForReview(target);
   await upsertPrState(env.SUBMISSION_GATE_DB, {
