@@ -144,7 +144,9 @@ export async function encryptText(secret: string, plaintext: string) {
 }
 
 export async function decryptText(secret: string, encrypted: string) {
-  const [saltText, ivText, ciphertextText] = encrypted.split(".");
+  const parts = encrypted.split(".");
+  if (parts.length !== 3) throw new Error("Invalid encrypted payload.");
+  const [saltText, ivText, ciphertextText] = parts;
   if (!saltText || !ivText || !ciphertextText)
     throw new Error("Invalid encrypted payload.");
   try {

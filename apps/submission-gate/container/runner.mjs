@@ -294,7 +294,9 @@ async function handleImport(job) {
       await writeFile(absolutePath, file.content, "utf8");
     }
 
-    await run("pnpm", ["install", "--frozen-lockfile"], { cwd: repoDir });
+    await run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
+      cwd: repoDir,
+    });
     for (const command of safeValidationCommands) {
       await runValidationCommand(command, repoDir);
     }

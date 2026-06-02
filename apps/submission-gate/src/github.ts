@@ -333,6 +333,25 @@ export async function createUserForkContentPr(params: {
     throw new Error(`GitHub fork was not ready for ${forkFullName}.`);
   }
 
+  const head = `${forkRepo.owner}:${params.branchName}`;
+  const existingPrs = await githubJson<
+    Array<{ number: number; html_url: string }>
+  >(
+    `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/pulls?state=open&head=${encodeURIComponent(head)}&base=${encodeURIComponent(params.baseRef)}`,
+    {
+      token: params.userToken,
+      apiVersion: params.apiVersion,
+    },
+  );
+  if (existingPrs[0]) {
+    return {
+      githubLogin: user.login,
+      forkFullName,
+      pullRequestUrl: existingPrs[0].html_url,
+      pullRequestNumber: existingPrs[0].number,
+    };
+  }
+
   const baseRef = await githubJson<{ object: { sha: string } }>(
     `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/git/ref/heads/${params.baseRef}`,
     {
@@ -399,25 +418,6 @@ export async function createUserForkContentPr(params: {
       }),
     },
   );
-
-  const head = `${forkRepo.owner}:${params.branchName}`;
-  const existingPrs = await githubJson<
-    Array<{ number: number; html_url: string }>
-  >(
-    `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/pulls?state=open&head=${encodeURIComponent(head)}&base=${encodeURIComponent(params.baseRef)}`,
-    {
-      token: params.userToken,
-      apiVersion: params.apiVersion,
-    },
-  );
-  if (existingPrs[0]) {
-    return {
-      githubLogin: user.login,
-      forkFullName,
-      pullRequestUrl: existingPrs[0].html_url,
-      pullRequestNumber: existingPrs[0].number,
-    };
-  }
 
   const pr = await githubJson<{ number: number; html_url: string }>(
     `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/pulls`,

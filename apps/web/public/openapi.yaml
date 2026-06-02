@@ -4858,43 +4858,10 @@ paths:
                         type: boolean
                         enum:
                           - true
-                      valid:
-                        type: boolean
-                      routeSuggestion:
-                        type: string
-                        enum:
-                          - submit_pr
-                          - fix_required
-                          - route_away
-                          - manual_review
                       category:
                         type: string
                       slug:
                         type: string
-                      prPreview:
-                        type: object
-                        properties:
-                          title:
-                            type: string
-                            maxLength: 300
-                          targetPath:
-                            type: string
-                            maxLength: 240
-                          branchHint:
-                            type: string
-                            maxLength: 200
-                          baseRef:
-                            type: string
-                            maxLength: 120
-                          body:
-                            type: string
-                            maxLength: 32000
-                        required:
-                          - title
-                          - targetPath
-                          - branchHint
-                          - baseRef
-                          - body
                       schema:
                         type: object
                         properties:
@@ -5038,12 +5005,43 @@ paths:
                           url:
                             type: string
                             maxLength: 4096
+                            format: uri
                         required:
                           - label
+                      valid:
+                        type: boolean
+                        enum:
+                          - true
+                      routeSuggestion:
+                        type: string
+                        enum:
+                          - submit_pr
+                      prPreview:
+                        type: object
+                        properties:
+                          title:
+                            type: string
+                            maxLength: 300
+                          targetPath:
+                            type: string
+                            maxLength: 240
+                          branchHint:
+                            type: string
+                            maxLength: 200
+                          baseRef:
+                            type: string
+                            maxLength: 120
+                          body:
+                            type: string
+                            maxLength: 32000
+                        required:
+                          - title
+                          - targetPath
+                          - branchHint
+                          - baseRef
+                          - body
                     required:
                       - ok
-                      - valid
-                      - routeSuggestion
                       - category
                       - slug
                       - schema
@@ -5053,24 +5051,187 @@ paths:
                       - warnings
                       - duplicates
                       - nextAction
+                      - valid
+                      - routeSuggestion
+                      - prPreview
                   - type: object
                     properties:
                       ok:
                         type: boolean
                         enum:
                           - true
+                      category:
+                        type: string
+                      slug:
+                        type: string
+                      schema:
+                        type: object
+                        properties:
+                          ok:
+                            type: boolean
+                          skipped:
+                            type: boolean
+                          errors:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 32
+                          warnings:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 32
+                          fields:
+                            type: object
+                            additionalProperties: {}
+                        required:
+                          - ok
+                          - skipped
+                          - errors
+                          - warnings
+                          - fields
+                      risk:
+                        type: object
+                        properties:
+                          tier:
+                            type: string
+                          policyDecision:
+                            type: string
+                          policyMatrix:
+                            type: object
+                            additionalProperties: {}
+                          reviewFlags:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 120
+                            maxItems: 32
+                          classificationWarnings:
+                            type: array
+                            items: {}
+                            maxItems: 32
+                        required:
+                          - policyMatrix
+                          - reviewFlags
+                          - classificationWarnings
+                      expectedNotes:
+                        type: object
+                        properties:
+                          safety:
+                            type: boolean
+                          privacy:
+                            type: boolean
+                          reasons:
+                            type: array
+                            items:
+                              type: string
+                              maxLength: 500
+                            maxItems: 8
+                        required:
+                          - safety
+                          - privacy
+                          - reasons
+                      blockers:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              maxLength: 80
+                            message:
+                              type: string
+                              maxLength: 500
+                          required:
+                            - code
+                            - message
+                        maxItems: 24
+                      warnings:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            code:
+                              type: string
+                              maxLength: 80
+                            message:
+                              type: string
+                              maxLength: 500
+                          required:
+                            - code
+                            - message
+                        maxItems: 24
+                      duplicates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            key:
+                              type: string
+                              maxLength: 160
+                            category:
+                              type: string
+                              maxLength: 80
+                            slug:
+                              type: string
+                              maxLength: 160
+                            title:
+                              type: string
+                              maxLength: 240
+                            url:
+                              type: string
+                              maxLength: 2048
+                              format: uri
+                            reasons:
+                              type: array
+                              items:
+                                type: string
+                                maxLength: 80
+                              maxItems: 8
+                          required:
+                            - key
+                            - category
+                            - slug
+                            - title
+                            - url
+                            - reasons
+                        maxItems: 5
+                      nextAction:
+                        type: object
+                        properties:
+                          label:
+                            type: string
+                            maxLength: 160
+                          url:
+                            type: string
+                            maxLength: 4096
+                            format: uri
+                        required:
+                          - label
                       valid:
                         type: boolean
+                      routeSuggestion:
+                        type: string
                         enum:
-                          - false
-                      queued:
-                        type: boolean
-                        enum:
-                          - false
+                          - fix_required
+                          - route_away
+                          - manual_review
                     required:
                       - ok
+                      - category
+                      - slug
+                      - schema
+                      - risk
+                      - expectedNotes
+                      - blockers
+                      - warnings
+                      - duplicates
+                      - nextAction
                       - valid
-                      - queued
+                      - routeSuggestion
+                    additionalProperties: false
         "400":
           description: Invalid JSON, invalid query, invalid payload, or invalid status transition.
           content:

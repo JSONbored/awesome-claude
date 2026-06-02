@@ -355,9 +355,7 @@ describe("HeyClaude remote MCP route", () => {
     expect(result).toMatchObject({
       ok: true,
       valid: true,
-      githubPullsUrl: expect.stringContaining(
-        "https://github.com/JSONbored/awesome-claude/pulls",
-      ),
+      reviewUrl: expect.stringContaining("https://heyclau.de/submit"),
       reviewModel: expect.stringContaining("PR-first"),
     });
     expect(JSON.stringify(result)).not.toMatch(/token|secret|authorization/i);
@@ -393,9 +391,7 @@ describe("HeyClaude remote MCP route", () => {
     expect(result).toMatchObject({
       ok: true,
       valid: true,
-      githubPullsUrl: expect.stringContaining(
-        "https://github.com/JSONbored/awesome-claude/pulls",
-      ),
+      reviewUrl: expect.stringContaining("https://heyclau.de/submit"),
       prDraft: {
         body: expect.stringContaining("### Guide content"),
       },

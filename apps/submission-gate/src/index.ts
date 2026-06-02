@@ -542,12 +542,12 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         body: [
           "PR-first submission created by the HeyClaude website.",
           "",
-          "The private submission gate will review category fit, source truth, duplicate history, safety/privacy, provenance, and generated-artifact scope.",
+          "The private submission gate will review category fit, source of truth, duplicate history, safety/privacy, provenance, and generated-artifact scope.",
         ].join("\n"),
         apiVersion: env.GITHUB_API_VERSION,
       });
-      await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
       await updateDraftStatus(env.SUBMISSION_GATE_DB, draftId, "pr_open", pr);
+      await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
         targetKey: message.targetKey,

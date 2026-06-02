@@ -35,9 +35,7 @@ Use the helper in \`scripts/check.sh\` before submitting.
     expect(result.entrypoint).toBe("sample-skill/SKILL.md");
     expect(result.slug).toBe("sample-skill");
     expect(result.submissionUrl).toContain("https://heyclau.de/submit?");
-    expect(result.pullRequestUrl).toBe(
-      "https://github.com/JSONbored/awesome-claude/pulls",
-    );
+    expect(result.pullRequestUrl).toBe(result.submissionUrl);
     expect(result.submissionFields).toMatchObject({
       category: "skills",
       install_command:

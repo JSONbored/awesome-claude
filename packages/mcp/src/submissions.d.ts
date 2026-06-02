@@ -1,5 +1,4 @@
 export const SUBMISSION_SITE_URL: string;
-export const GITHUB_PULLS_URL: string;
 
 export function slugify(value: string): string;
 export function normalizeSubmissionFields(

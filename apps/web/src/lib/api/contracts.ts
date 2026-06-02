@@ -490,21 +490,18 @@ const submissionPreflightDuplicateSchema = z.object({
   reasons: z.array(z.string().max(80)).max(8),
 });
 
-const submissionPreflightSuccessResponseSchema = z.object({
+const submissionPreflightPrPreviewSchema = z.object({
+  title: z.string().max(300),
+  targetPath: z.string().max(240),
+  branchHint: z.string().max(200),
+  baseRef: z.string().max(120),
+  body: z.string().max(32_000),
+});
+
+const submissionPreflightBaseResponseSchema = z.object({
   ok: z.literal(true),
-  valid: z.boolean(),
-  routeSuggestion: z.enum(["submit_pr", "fix_required", "route_away", "manual_review"]),
   category: z.string(),
   slug: z.string(),
-  prPreview: z
-    .object({
-      title: z.string().max(300),
-      targetPath: z.string().max(240),
-      branchHint: z.string().max(200),
-      baseRef: z.string().max(120),
-      body: z.string().max(32_000),
-    })
-    .optional(),
   schema: z.object({
     ok: z.boolean(),
     skipped: z.boolean(),
@@ -529,19 +526,26 @@ const submissionPreflightSuccessResponseSchema = z.object({
   duplicates: z.array(submissionPreflightDuplicateSchema).max(5),
   nextAction: z.object({
     label: z.string().max(160),
-    url: z.string().max(4096).optional(),
+    url: z.string().url().max(4096).optional(),
   }),
 });
 
-const submissionPreflightDiscardResponseSchema = z.object({
-  ok: z.literal(true),
-  valid: z.literal(false),
-  queued: z.literal(false),
+const submissionPreflightPrReadyResponseSchema = submissionPreflightBaseResponseSchema.extend({
+  valid: z.literal(true),
+  routeSuggestion: z.literal("submit_pr"),
+  prPreview: submissionPreflightPrPreviewSchema,
 });
 
+const submissionPreflightNonPrResponseSchema = submissionPreflightBaseResponseSchema
+  .extend({
+    valid: z.boolean(),
+    routeSuggestion: z.enum(["fix_required", "route_away", "manual_review"]),
+  })
+  .strict();
+
 export const submissionPreflightResponseSchema = z.union([
-  submissionPreflightSuccessResponseSchema,
-  submissionPreflightDiscardResponseSchema,
+  submissionPreflightPrReadyResponseSchema,
+  submissionPreflightNonPrResponseSchema,
 ]);
 
 export const downloadQuerySchema = z.object({

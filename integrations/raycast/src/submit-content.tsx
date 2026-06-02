@@ -38,7 +38,7 @@ async function openSubmit(values: SubmissionFormValues) {
   await open(buildContributeEntryUrl(normalizeSubmissionDraft(values)));
 }
 
-async function openPrDraft(values: SubmissionFormValues) {
+async function openPrefilledSubmitForm(values: SubmissionFormValues) {
   await open(buildSubmitPrUrl(normalizeSubmissionDraft(values)));
 }
 
@@ -61,10 +61,10 @@ export default function Command() {
       const action = submissionAction.current;
 
       if (action === "pr") {
-        await openPrDraft(values);
+        await openPrefilledSubmitForm(values);
         await showToast({
           style: Toast.Style.Success,
-          title: "Opened PR draft",
+          title: "Opened prefilled submit form",
           message: values.title,
         });
         return;
@@ -111,7 +111,7 @@ export default function Command() {
             }}
           />
           <Action.SubmitForm
-            title="Open PR Draft"
+            title="Open Prefilled Submit Form"
             icon={Icon.Globe}
             onSubmit={(values: SubmissionFormValues) => {
               submissionAction.current = "pr";
@@ -133,8 +133,8 @@ export default function Command() {
               icon={Icon.Plus}
             />
             <Action.OpenInBrowser
-              title="Open GitHub Pull Requests"
-              url="https://github.com/JSONbored/awesome-claude/pulls"
+              title="Open HeyClaude Submit Form"
+              url={SUBMIT_URL}
               icon={Icon.Globe}
             />
           </ActionPanel.Section>

@@ -26,6 +26,17 @@ function publicEnv(name: string) {
   return "";
 }
 
+function publicHttpUrl(value: string) {
+  if (!value) return "";
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return "";
+  }
+}
+
 export const siteConfig = {
   name: "HeyClaude",
   shortName: "heyclaude",
@@ -39,8 +50,9 @@ export const siteConfig = {
   umamiScriptUrl: publicEnv("VITE_UMAMI_SCRIPT_URL") || "https://umami.heyclau.de/script.js",
   umamiWebsiteId: publicEnv("VITE_UMAMI_WEBSITE_ID") || "b734c138-2949-4527-9160-7fe5d0e81121",
   // Empty string intentionally disables the private gate and shows manual PR instructions.
-  submissionGateUrl:
+  submissionGateUrl: publicHttpUrl(
     publicEnv("VITE_SUBMISSION_GATE_URL") || publicEnv("NEXT_PUBLIC_SUBMISSION_GATE_URL"),
+  ),
   submissionBaseRef:
     publicEnv("VITE_SUBMISSION_BASE_REF") ||
     publicEnv("NEXT_PUBLIC_SUBMISSION_BASE_REF") ||

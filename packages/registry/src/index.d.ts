@@ -1279,7 +1279,10 @@ export function buildSubmissionFieldModel(category: string): {
   template?: string;
   fields: SubmissionFieldSpec[];
 } | null;
-export function buildSubmissionSpecs(): Record<string, unknown>;
+export function buildSubmissionSpecs(options?: {
+  siteUrl?: string;
+  origin?: string;
+}): Record<string, unknown>;
 export const CATEGORY_SCHEMAS: Record<
   string,
   { required: string[]; recommended: string[] }

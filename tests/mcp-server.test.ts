@@ -1320,9 +1320,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       ok: true,
       valid: true,
       submitUrl: expect.stringContaining("https://heyclau.de/submit"),
-      githubPullsUrl: expect.stringContaining(
-        "https://github.com/JSONbored/awesome-claude/pulls",
-      ),
+      reviewUrl: expect.stringContaining("https://heyclau.de/submit"),
       prDraft: {
         title: "Add Skill: Example Submission Skill",
       },
@@ -1394,9 +1392,7 @@ describe("HeyClaude read-only MCP helpers", () => {
         title: "Add MCP Server: Example Draft MCP",
         body: expect.stringContaining("### Install command"),
       },
-      githubPullsUrl: expect.stringContaining(
-        "https://github.com/JSONbored/awesome-claude/pulls",
-      ),
+      reviewUrl: expect.stringContaining("https://heyclau.de/submit"),
       submissionPolicy: expect.stringContaining("does not auto-merge"),
       artifactPolicy: expect.stringContaining("quarantine/review"),
     });

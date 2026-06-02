@@ -46,7 +46,7 @@ export function defaultManualDecision(
 ): GateDecision {
   return {
     verdict: "manual" as const,
-    summary: `${reason} A maintainer needs to review category fit, source truth, duplicate history, safety/privacy notes, and provenance before import.`,
+    summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before import.`,
     labels: [LABELS.manual],
   };
 }

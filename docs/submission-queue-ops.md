@@ -86,7 +86,7 @@ the frontend preview and pilot gate behavior are proven.
   PR, and updates one stable marker comment.
 - `close` is for spam, promo/listing attempts, duplicates, unsupported
   categories, generated-artifact tampering, unsafe package/install patterns,
-  missing source truth, or non-content PRs.
+  missing source of truth, or non-content PRs.
 - `request_changes` is for fixable missing fields, weak provenance, category
   mismatch, or content/frontmatter shape problems.
 - `manual` is for high-risk but potentially useful entries, credential-heavy

@@ -23,6 +23,7 @@ const SUPPORTED_CATEGORIES = new Set([
 ]);
 const MAX_BRANCH_NAME_LENGTH = 120;
 const MAX_SOURCE_CONTENT_CHARS = 20_000;
+const MAX_SLUG_INPUT_CHARS = 400;
 const SUBMISSION_BRANCH_PREFIX = "heyclaude/submit-";
 
 function text(value: unknown) {
@@ -53,6 +54,7 @@ export function draftFieldsFromBody(body: unknown): SubmissionDraftFields {
 
 export function slugify(value: unknown) {
   return text(value)
+    .slice(0, MAX_SLUG_INPUT_CHARS)
     .toLowerCase()
     .replace(/['"]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
@@ -150,9 +152,7 @@ export function buildContributorMdx(
   const description = text(fields.description || fields.card_description);
   const safeGitHubLogin =
     githubLogin && validGitHubLogin(githubLogin) ? githubLogin : "";
-  const submittedBy = safeGitHubLogin
-    ? `@${safeGitHubLogin}`
-    : text(fields.contact_email || "website");
+  const submittedBy = safeGitHubLogin ? `@${safeGitHubLogin}` : "website";
   const submittedByUrl = safeGitHubLogin
     ? `https://github.com/${safeGitHubLogin}`
     : "";

@@ -642,7 +642,7 @@ describe("D1 dynamic state helpers", () => {
     expect(normalizeJobLocation("Remote (EU)")).toBe("Remote (EU)");
   });
 
-  it("keeps active D1 rows out of public jobs when depth and source truth are too weak", async () => {
+  it("keeps active D1 rows out of public jobs when depth and source of truth are too weak", async () => {
     const db = new FakeD1();
     db.jobRows = [
       {

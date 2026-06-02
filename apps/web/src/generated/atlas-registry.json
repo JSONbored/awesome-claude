@@ -59,7 +59,7 @@
     {
       "path": "/data/submission-spec.json",
       "bytes": 38633,
-      "sha256": "89645f3a55781792bfe0dfc3a79436868713f53d004ec5f6809ba7ff957f6ef6",
+      "sha256": "1c21aab80ef2936ea4ed619c90465568f5997ffa869f89455a4c0961179a63ed",
       "builtAt": "2026-06-01T00:00:00.000Z"
     },
     {
@@ -185,7 +185,7 @@
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "281ce57e46c240802dc50525213f8c67de9662cd996701ffb64d30e4b293f8df",
+      "sha256": "1588f517bdca877e494560f825e2b4b2270a3ef61ffb0c465965732ced1d6537",
       "builtAt": "2026-06-01T00:00:00.000Z"
     }
   ],

@@ -1207,7 +1207,7 @@ export function buildRegistryArtifactSet(entries, params = {}) {
     {
       path: "submission-spec.json",
       type: "json",
-      value: buildSubmissionSpecs(),
+      value: buildSubmissionSpecs({ siteUrl }),
     },
     {
       path: "content-quality-report.json",

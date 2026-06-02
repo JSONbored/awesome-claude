@@ -1,8 +1,8 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "categories": {
     "agents": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "agents",
       "label": "Agents",
       "description": "Specialized Claude agents and expert roles.",
@@ -107,7 +107,7 @@
       ]
     },
     "rules": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "rules",
       "label": "Rules",
       "description": "Prompt guardrails, project rules, and operating constraints.",
@@ -212,7 +212,7 @@
       ]
     },
     "mcp": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "mcp",
       "label": "MCP Servers",
       "description": "Model Context Protocol servers and integrations.",
@@ -347,7 +347,7 @@
       ]
     },
     "skills": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "skills",
       "label": "Skills",
       "description": "Source-backed skill packs and reusable capabilities.",
@@ -537,7 +537,7 @@
       ]
     },
     "hooks": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "hooks",
       "label": "Hooks",
       "description": "Claude Code hook configs and automation helpers.",
@@ -688,7 +688,7 @@
       ]
     },
     "commands": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "commands",
       "label": "Commands",
       "description": "Slash commands and reusable command prompts.",
@@ -824,7 +824,7 @@
       ]
     },
     "statuslines": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "statuslines",
       "label": "Statuslines",
       "description": "Statusline scripts and workflow telemetry.",
@@ -974,7 +974,7 @@
       ]
     },
     "collections": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "collections",
       "label": "Collections",
       "description": "Curated bundles of related assets.",
@@ -1078,7 +1078,7 @@
       ]
     },
     "guides": {
-      "schemaVersion": 2,
+      "schemaVersion": 3,
       "category": "guides",
       "label": "Guides",
       "description": "Long-form guides and practical walkthroughs.",

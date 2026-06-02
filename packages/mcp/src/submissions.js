@@ -1,6 +1,4 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
-export const GITHUB_PULLS_URL =
-  "https://github.com/JSONbored/awesome-claude/pulls";
 
 const defaultLabels = ["content-submission", "needs-review"];
 
@@ -477,7 +475,7 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
     category,
     slug: fields.slug || "",
     submitUrl: submitUrl.toString(),
-    githubPullsUrl: GITHUB_PULLS_URL,
+    reviewUrl: submitUrl.toString(),
     prDraft: args.includePrBody
       ? publicPrDraft
       : { title: publicPrDraft.title, labels: publicPrDraft.labels },
@@ -726,7 +724,7 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       ? { ...prDraft, title: prDraft.title.replace(/^Submit /, "Add ") }
       : null,
     submitUrl: urls.submitUrl,
-    githubPullsUrl: urls.githubPullsUrl,
+    reviewUrl: urls.reviewUrl,
     reviewChecklist: [
       "Confirm category fit and required fields before opening the PR.",
       "Check for existing registry entries with the same source, slug, or title.",

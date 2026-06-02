@@ -4,7 +4,7 @@ import { analyzeIssueSubmissionRisk } from "@heyclaude/registry/submission-risk"
 import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
 
-const TOOL_LISTING_FORM_URL = "/tools/submit";
+const TOOL_LISTING_FORM_URL = "https://heyclau.de/tools/submit";
 
 type DuplicateCandidate = {
   key: string;
@@ -270,13 +270,12 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
           ? "manual_review"
           : "submit_pr";
 
-  return {
+  const response = {
     ok: true,
     valid: !validation.skipped && validation.ok && blockers.length === 0,
     routeSuggestion,
     category,
     slug,
-    prPreview: buildPrPreview(issue, category, slug),
     schema: {
       ok: validation.ok,
       skipped: validation.skipped,
@@ -317,4 +316,7 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
                 label: "Prepare a single-entry content PR",
               },
   };
+  return routeSuggestion === "submit_pr"
+    ? { ...response, prPreview: buildPrPreview(issue, category, slug) }
+    : response;
 }

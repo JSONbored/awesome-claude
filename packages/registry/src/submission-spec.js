@@ -1,6 +1,6 @@
 import categorySpec from "./category-spec.json" with { type: "json" };
 
-export const SUBMISSION_SPEC_SCHEMA_VERSION = 2;
+export const SUBMISSION_SPEC_SCHEMA_VERSION = 3;
 
 const RISK_BEARING_SUBMISSION_CATEGORIES = new Set([
   "mcp",
@@ -323,7 +323,18 @@ export function buildSubmissionFieldModel(category) {
   };
 }
 
-export function buildSubmissionSpecs() {
+function submitUrlForOrigin(origin) {
+  if (!origin) return "";
+  try {
+    const url = new URL("/submit", origin);
+    if (url.protocol !== "https:" && url.protocol !== "http:") return "";
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+export function buildSubmissionSpecs(options = {}) {
   const categories = Object.fromEntries(
     categorySpec.submissionOrder.map((category) => [
       category,
@@ -331,12 +342,13 @@ export function buildSubmissionSpecs() {
     ]),
   );
 
+  const submitUrl = submitUrlForOrigin(options.siteUrl || options.origin);
   return {
     schemaVersion: SUBMISSION_SPEC_SCHEMA_VERSION,
     categories,
     prIntake: {
       mode: "github_app_user_fork_pr",
-      submitUrl: "https://heyclau.de/submit",
+      ...(submitUrl ? { submitUrl } : {}),
       pilotBaseRef: "submission-gate-pilot",
     },
   };

@@ -81,6 +81,59 @@ function safeGitHubAuthUrl(value: string) {
   }
 }
 
+function originFor(value: string) {
+  try {
+    return new URL(value).origin;
+  } catch {
+    return "";
+  }
+}
+
+function safeUrlForOrigins(
+  value: string | undefined,
+  allowedOrigins: Set<string>,
+  baseUrl = siteConfig.url,
+) {
+  if (!value) return "";
+  try {
+    const url = new URL(value, baseUrl);
+    if (
+      (url.protocol !== "https:" && url.protocol !== "http:") ||
+      !allowedOrigins.has(url.origin)
+    ) {
+      return "";
+    }
+    if (value.startsWith("/") && url.origin === originFor(baseUrl)) {
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
+function safeGateStatusUrl(value: string | undefined) {
+  const gateOrigin = originFor(siteConfig.submissionGateUrl);
+  return safeUrlForOrigins(value, new Set(gateOrigin ? [gateOrigin] : []));
+}
+
+function sanitizePreflightResponse(payload: PreflightResponse) {
+  const siteOrigin = originFor(siteConfig.url);
+  if (!payload.nextAction?.url || !siteOrigin) return payload;
+  const safeNextUrl = safeUrlForOrigins(
+    payload.nextAction.url,
+    new Set([siteOrigin]),
+    siteConfig.url,
+  );
+  return {
+    ...payload,
+    nextAction: {
+      ...payload.nextAction,
+      ...(safeNextUrl ? { url: safeNextUrl } : { url: undefined }),
+    },
+  };
+}
+
 type SubmitResult = {
   statusUrl?: string;
   manualPr?: {
@@ -138,8 +191,9 @@ function SubmitPage() {
       if (!response.ok || !payload?.ok) {
         throw new Error("Server preflight failed. Retry before continuing to GitHub.");
       }
-      setPreflightResult(payload);
-      return payload;
+      const safePayload = sanitizePreflightResponse(payload);
+      setPreflightResult(safePayload);
+      return safePayload;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Server preflight failed.";
       setPreflightError(message);
@@ -193,7 +247,11 @@ function SubmitPage() {
         window.location.assign(authUrl);
         return;
       }
-      setDone({ statusUrl: payload.statusUrl, manualPr: payload.manualPr });
+      const statusUrl = safeGateStatusUrl(payload.statusUrl);
+      if (payload.statusUrl && !statusUrl) {
+        throw new Error("The submission gate returned an invalid status URL.");
+      }
+      setDone({ statusUrl, manualPr: payload.manualPr });
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Submission failed.");
     } finally {

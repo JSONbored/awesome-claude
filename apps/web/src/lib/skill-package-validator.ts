@@ -114,23 +114,9 @@ function buildSubmissionUrl(siteUrl: string, fields: Record<string, string>) {
   return `${siteUrl.replace(/\/$/, "")}/submit?${params.toString()}`;
 }
 
-function buildPrDraft(githubUrl: string, fields: Record<string, string>) {
+function buildPrDraft(fields: Record<string, string>) {
   const draft = buildSubmissionIssueDraft(fields);
-  let pullsUrl: URL;
-  try {
-    const repoUrl = new URL(githubUrl);
-    const [owner, repo] = repoUrl.pathname.split("/").filter(Boolean);
-    if (!owner || !repo) throw new Error("Missing GitHub owner/repo path.");
-    pullsUrl = new URL(`/${owner}/${repo.replace(/\.git$/, "")}/pulls`, repoUrl.origin);
-  } catch {
-    return {
-      pullRequestUrl: "",
-      prTitle: draft.title.replace(/^Submit /, "Add "),
-      prBody: draft.body,
-    };
-  }
   return {
-    pullRequestUrl: pullsUrl.toString(),
     prTitle: draft.title.replace(/^Submit /, "Add "),
     prBody: draft.body,
   };
@@ -284,7 +270,7 @@ export function validateSkillPackageFiles(params: {
     params.siteUrl || "https://heyclau.de",
     submissionFields,
   );
-  const prDraft = buildPrDraft(params.githubUrl, submissionFields);
+  const prDraft = buildPrDraft(submissionFields);
 
   return {
     ok: errors.length === 0,
@@ -306,6 +292,6 @@ export function validateSkillPackageFiles(params: {
     submissionUrl,
     prTitle: prDraft.prTitle,
     prBody: prDraft.prBody,
-    pullRequestUrl: prDraft.pullRequestUrl,
+    pullRequestUrl: submissionUrl,
   };
 }

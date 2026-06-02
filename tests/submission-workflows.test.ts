@@ -1219,7 +1219,7 @@ description: Example description
       "utf8",
     );
 
-    expect(source).toContain("source truth");
+    expect(source).toContain("source of truth");
     expect(source).toContain("safety");
     expect(source).toContain("provenance");
     expect(source).toContain("duplicates");

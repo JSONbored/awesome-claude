@@ -1,6 +1,8 @@
 PRAGMA foreign_keys = off;
 
-CREATE TABLE IF NOT EXISTS submission_user_tokens_next (
+DROP TABLE IF EXISTS submission_user_tokens_next;
+
+CREATE TABLE submission_user_tokens_next (
   draft_id TEXT PRIMARY KEY REFERENCES submission_drafts(id) ON DELETE CASCADE,
   encrypted_token TEXT NOT NULL,
   expires_at TEXT NOT NULL,
@@ -19,7 +21,9 @@ DROP TABLE submission_user_tokens;
 
 ALTER TABLE submission_user_tokens_next RENAME TO submission_user_tokens;
 
-CREATE TABLE IF NOT EXISTS idempotency_keys_next (
+DROP TABLE IF EXISTS idempotency_keys_next;
+
+CREATE TABLE idempotency_keys_next (
   target_key TEXT NOT NULL,
   key TEXT NOT NULL,
   created_at TEXT NOT NULL,
