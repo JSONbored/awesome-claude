@@ -1,0 +1,67 @@
+---
+title: Claude Code Hooks Permission Review
+slug: claude-code-hooks-permission-review
+category: guides
+description: >-
+  Review Claude Code hook permissions before enabling shell commands, network
+  access, or project automation in a shared workspace.
+cardDescription: Review Claude Code hook permissions before enabling automation.
+seoTitle: Claude Code Hooks Permission Review
+seoDescription: >-
+  A short source-backed checklist for reviewing Claude Code hook permissions,
+  command scope, and team workspace safety before enabling automation.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-02"
+submittedBy: "@JSONbored"
+submittedByUrl: "https://github.com/JSONbored"
+submittedAt: "2026-06-02T08:45:00.000Z"
+documentationUrl: "https://docs.anthropic.com/en/docs/claude-code/hooks"
+installable: false
+usageSnippet: >-
+  Use this checklist before enabling Claude Code hooks that run shell commands,
+  modify files, or notify external systems.
+tags:
+  - claude-code
+  - hooks
+  - permissions
+  - workflow-safety
+keywords:
+  - claude code hooks
+  - hook permissions
+  - claude automation safety
+readingTime: 2
+difficultyScore: 35
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+safetyNotes:
+  - Hooks can run local commands when configured, so review trigger scope before enabling them.
+  - Prefer read-only checks first and require maintainer approval for hooks that write files or call external services.
+privacyNotes:
+  - Hook commands may read project files, command output, and local environment details depending on how they are configured.
+  - Avoid sending repository contents, logs, or secrets to external endpoints from hook scripts.
+---
+
+Claude Code hooks are useful when a team wants predictable automation around tool use, session events, or file edits. They also deserve a permission review because a hook can run local commands when its trigger fires.
+
+Use this checklist before enabling a hook in a shared project:
+
+1. Confirm which event triggers the hook and whether it can run during normal editing, command execution, or session startup.
+2. Read the command or script exactly as configured instead of relying on the hook name.
+3. Start with read-only checks when possible, such as formatting validation, policy checks, or notifications that do not expose file contents.
+4. Require maintainer approval before enabling hooks that write files, install packages, change Git state, or call external services.
+5. Keep secrets out of hook scripts and logs. If a hook needs credentials, document the data path and storage location first.
+6. Re-run the hook manually in a controlled workspace before committing it for the rest of the team.
+
+The safest default is to treat hooks as project automation with real local access, not as passive metadata. A short review keeps useful automation available without hiding command execution behind an innocuous configuration file.
+
+## Safety
+
+Hooks can execute local commands depending on the configured trigger and command. Review command scope, file writes, package installation, network calls, and secret handling before enabling them.
+
+## Privacy
+
+Hook scripts may read repository files, local paths, logs, and environment-derived context. Do not send project data or secrets to third-party services unless the team has explicitly approved that data flow.

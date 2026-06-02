@@ -1,9 +1,21 @@
 {
   "schemaVersion": 2,
   "kind": "registry-changelog",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "count": 389,
   "entries": [
+    {
+      "key": "guides:claude-code-hooks-permission-review",
+      "type": "added",
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "dateAdded": "2026-06-02",
+      "canonicalUrl": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "llmsUrl": "https://heyclau.de/data/llms/guides/claude-code-hooks-permission-review.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/guides/claude-code-hooks-permission-review",
+      "artifactHash": "7257bb0d9d1c9ac2977e652889b7eb9e8e1a1e5bf20f1f4ccf02272b3926b012"
+    },
     {
       "key": "mcp:yield-intelligence-mcp",
       "type": "added",
@@ -4662,5 +4674,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "5d6592f1a85a423e4d4eb4c0c1c5e91eae57e911b1de55ed9f10f929edbb2a9d"
+  "signature": "c7b72e841ac67031a14f3cc9281bd673906bca9783f3261ed358c2ef131d3990"
 }

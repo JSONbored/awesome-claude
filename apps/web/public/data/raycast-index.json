@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "raycast-index",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "count": 389,
   "entries": [
     {
       "category": "commands",
@@ -2749,6 +2749,48 @@
       "seoDescription": "Docker statusline configuration for Claude Code CLI. Features real-time health monitoring, color-coded indicators, and container tracking. Production-ready.",
       "repoUrl": "",
       "documentationUrl": "https://docs.docker.com/reference/cli/docker/container/stats/",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platformCompatibility": []
+    },
+    {
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "description": "Review Claude Code hook permissions before enabling automation.",
+      "tags": [
+        "claude-code",
+        "hooks",
+        "permissions",
+        "workflow-safety"
+      ],
+      "author": "JSONbored",
+      "submittedBy": "@JSONbored",
+      "submittedByUrl": "https://github.com/JSONbored",
+      "submittedAt": "2026-06-02T08:45:00.000Z",
+      "installCommand": "",
+      "configSnippet": "",
+      "safetyNotes": [
+        "Hooks can run local commands when configured, so review trigger scope before enabling them.",
+        "Prefer read-only checks first and require maintainer approval for hooks that write files or call external services."
+      ],
+      "privacyNotes": [
+        "Hook commands may read project files, command output, and local environment details depending on how they are configured.",
+        "Avoid sending repository contents, logs, or secrets to external endpoints from hook scripts."
+      ],
+      "copyText": "Claude Code hooks are useful when a team wants predictable automation around tool use, session events, or file edits. They also deserve a permission review because a hook can run local commands when its trigger fires.\n\nUse this checklist before enabling a hook in a shared project:\n\n1. Confirm which event triggers the hook and whether it can run during normal editing, command execution, or session startup.\n2. Read the command or script exactly as configured instead of relying on the hook name.\n3. Start with read-only checks when possible, such as formatting validation, policy checks, or notifications that do not expose file contents.\n4. Require maintainer approval before enabling hooks that write files, install packages, change Git state, or call external services.\n5. Keep secrets out of...",
+      "copyTextLength": 1661,
+      "copyTextTruncated": true,
+      "detailMarkdown": "# Claude Code Hooks Permission Review\n\nReview Claude Code hook permissions before enabling shell commands, network access, or project automation in a shared workspace.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Hooks can run local commands when configured, so review trigger scope before enabling them.\n- Prefer read-only checks first and require maintainer approval for hooks that write files or call external services.\n\n## Privacy notes\n- Hook commands may read project files, command output, and local environment details depending on how they are configured.\n- Avoid sending repository contents, logs, or secrets to external endpoints from hook scripts.\n\n## Usage\nUse this checklist before enabling Claude Code hooks that run shell commands, modify files, or notify external systems.",
+      "detailUrl": "/data/raycast/guides/claude-code-hooks-permission-review.json",
+      "webUrl": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "canonicalUrl": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "llmsUrl": "https://heyclau.de/data/llms/guides/claude-code-hooks-permission-review.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/guides/claude-code-hooks-permission-review",
+      "seoTitle": "Claude Code Hooks Permission Review",
+      "seoDescription": "A short source-backed checklist for reviewing Claude Code hook permissions, command scope, and team workspace safety before enabling automation.",
+      "repoUrl": "",
+      "documentationUrl": "https://docs.anthropic.com/en/docs/claude-code/hooks",
       "downloadTrust": null,
       "verificationStatus": "",
       "platformCompatibility": []
