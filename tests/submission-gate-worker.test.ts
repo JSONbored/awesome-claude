@@ -567,7 +567,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
-    expect(terminalSetBlock).toContain('"merge"');
+    expect(terminalSetBlock).not.toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
@@ -577,6 +577,7 @@ describe("Cloudflare submission gate helpers", () => {
       'String(message.payload.eventName || "") === "issue_comment"',
     );
     expect(source).toContain('String(state.status || "") === "merged"');
+    expect(source).toContain('status: "merge_accepted"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
     );

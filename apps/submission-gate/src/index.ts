@@ -140,7 +140,7 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set(["merge", "close", "manual", "ignore"]);
+const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
   "agents",
   "collections",
