@@ -451,6 +451,45 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("fields: redactPublicDraftFields(fields)");
   });
 
+  it("guards public draft creation before persistent writes", () => {
+    const source = readWorkerSource();
+    const routeSource =
+      source.match(
+        /async function createDraftRoute[\s\S]*?\nasync function getDraftRoute/,
+      )?.[0] || "";
+    const originIndex = routeSource.indexOf(
+      "isAllowedRequestOrigin(request, env)",
+    );
+    const contentTypeIndex = routeSource.indexOf("isJsonContentType(request)");
+    const rateLimitIndex = routeSource.indexOf(
+      "enforceDraftRateLimit(request, env)",
+    );
+    const boundedReadIndex = routeSource.indexOf(
+      "readJsonBodyWithLimit(request)",
+    );
+    const writeIndex = routeSource.indexOf(
+      "createDraft(env.SUBMISSION_GATE_DB",
+    );
+
+    expect(originIndex).toBeGreaterThan(0);
+    expect(contentTypeIndex).toBeGreaterThan(originIndex);
+    expect(rateLimitIndex).toBeGreaterThan(contentTypeIndex);
+    expect(boundedReadIndex).toBeGreaterThan(rateLimitIndex);
+    expect(writeIndex).toBeGreaterThan(boundedReadIndex);
+    expect(routeSource).not.toContain("request.json()");
+    expect(source).toContain("const MAX_DRAFT_BODY_BYTES = 64 * 1024");
+  });
+
+  it("configures a durable Cloudflare rate limit for draft creation", () => {
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(wranglerConfig).toContain('"ratelimits"');
+    expect(wranglerConfig).toContain('"name": "SUBMISSION_DRAFT_RATE_LIMIT"');
+  });
+
   it("rejects cancelled GitHub authorization callbacks before token exchange", () => {
     const source = readWorkerSource();
     const callbackSource =

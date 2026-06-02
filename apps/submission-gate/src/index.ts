@@ -84,6 +84,11 @@ type Env = {
   SUBMISSION_LOCK: DurableObjectNamespace<SubmissionLock>;
   SUBMISSION_IMPORT_RUNNER: DurableObjectNamespace<SubmissionImportRunner>;
   ALLOWED_CORS_ORIGINS?: string;
+  SUBMISSION_DRAFT_RATE_LIMIT?: RateLimitBinding;
+};
+
+type RateLimitBinding = {
+  limit: (params: { key: string }) => Promise<{ success: boolean }>;
 };
 
 type QueueMessage = {
@@ -91,6 +96,13 @@ type QueueMessage = {
   targetKey: string;
   payload: Record<string, unknown>;
 };
+
+class DraftBodyTooLargeError extends Error {
+  constructor() {
+    super("Draft request body is too large.");
+    this.name = "DraftBodyTooLargeError";
+  }
+}
 
 class SubmissionLockBusyError extends Error {
   constructor(targetKey: string) {
@@ -115,6 +127,8 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "ignore",
 ]);
 const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
+
+const MAX_DRAFT_BODY_BYTES = 64 * 1024;
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -208,6 +222,77 @@ function allowedCorsOrigins(env: Env) {
   return configured.length ? configured : ["https://heyclau.de"];
 }
 
+function isAllowedRequestOrigin(request: Request, env: Env) {
+  const requestOrigin = request.headers.get("origin") || "";
+  return Boolean(
+    requestOrigin && allowedCorsOrigins(env).includes(requestOrigin),
+  );
+}
+
+function isJsonContentType(request: Request) {
+  const contentType = request.headers.get("content-type") || "";
+  const mediaType = contentType.split(";")[0]?.trim().toLowerCase();
+  return mediaType === "application/json" || mediaType.endsWith("+json");
+}
+
+function clientRateLimitKey(request: Request) {
+  const forwardedFor = request.headers.get("x-forwarded-for") || "";
+  const clientIp =
+    request.headers.get("cf-connecting-ip") ||
+    forwardedFor.split(",")[0]?.trim() ||
+    "unknown";
+  return `draft:${clientIp}`;
+}
+
+async function enforceDraftRateLimit(request: Request, env: Env) {
+  const binding = env.SUBMISSION_DRAFT_RATE_LIMIT;
+  if (!binding) return null;
+  const result = await binding.limit({ key: clientRateLimitKey(request) });
+  if (result.success === false) {
+    return json(
+      {
+        ok: false,
+        error: "rate_limited",
+        message: "Too many draft submissions. Please try again later.",
+      },
+      { status: 429 },
+    );
+  }
+  return null;
+}
+
+async function readJsonBodyWithLimit(request: Request) {
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > MAX_DRAFT_BODY_BYTES) {
+    throw new DraftBodyTooLargeError();
+  }
+
+  const reader = request.body?.getReader();
+  if (!reader) return JSON.parse("");
+
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > MAX_DRAFT_BODY_BYTES) {
+      await reader.cancel();
+      throw new DraftBodyTooLargeError();
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return JSON.parse(new TextDecoder().decode(body));
+}
+
 function withCors(response: Response, request: Request, env: Env) {
   const headers = new Headers(response.headers);
   const allowedOrigins = allowedCorsOrigins(env);
@@ -289,10 +374,44 @@ async function putAuditObject(env: Env, key: string, payload: unknown) {
 }
 
 async function createDraftRoute(request: Request, env: Env) {
+  if (!isAllowedRequestOrigin(request, env)) {
+    return json(
+      {
+        ok: false,
+        error: "origin_not_allowed",
+        message:
+          "Draft submissions must originate from an allowed HeyClaude site.",
+      },
+      { status: 403 },
+    );
+  }
+  if (!isJsonContentType(request)) {
+    return json(
+      {
+        ok: false,
+        error: "unsupported_media_type",
+        message: "Draft request body must use application/json.",
+      },
+      { status: 415 },
+    );
+  }
+  const rateLimitResponse = await enforceDraftRateLimit(request, env);
+  if (rateLimitResponse) return rateLimitResponse;
+
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = await readJsonBodyWithLimit(request);
+  } catch (error) {
+    if (error instanceof DraftBodyTooLargeError) {
+      return json(
+        {
+          ok: false,
+          error: "request_too_large",
+          message: "Draft request body must be 64 KiB or smaller.",
+        },
+        { status: 413 },
+      );
+    }
     return json(
       {
         ok: false,

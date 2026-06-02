@@ -27,6 +27,16 @@
     "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",
     "REQUIRED_STATUS_CONTEXTS": "",
   },
+  "ratelimits": [
+    {
+      "name": "SUBMISSION_DRAFT_RATE_LIMIT",
+      "namespace_id": "1003001",
+      "simple": {
+        "limit": 30,
+        "period": 60,
+      },
+    },
+  ],
   "routes": [
     {
       "pattern": "submission-gate.heyclau.de",
@@ -119,6 +129,16 @@
         "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",
         "REQUIRED_STATUS_CONTEXTS": "",
       },
+      "ratelimits": [
+        {
+          "name": "SUBMISSION_DRAFT_RATE_LIMIT",
+          "namespace_id": "1004001",
+          "simple": {
+            "limit": 60,
+            "period": 60,
+          },
+        },
+      ],
       "routes": [
         {
           "pattern": "submission-gate-dev.heyclau.de",
