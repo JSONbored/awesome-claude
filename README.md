@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>388+ file-backed entries</strong> stay useful as both an
+        <strong>389+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>388</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>389</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -100,7 +100,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#guides"><strong>📚 Guides</strong></a><br>
-          <code>19</code><br>
+          <code>20</code><br>
           <sub>Long-form guides and practical walkthroughs.</sub>
         </td>
 <td align="center" width="20%">
@@ -543,13 +543,14 @@ Get a free API key on https://app.zyntra.app/
 - **[Webpack Bundle Analyzer - Hooks](https://heyclau.de/entry/hooks/webpack-bundle-analyzer)** - Analyzes webpack bundle size when webpack config or entry files are modified.
 - **[Workflow Completion Report - Hooks](https://heyclau.de/entry/hooks/workflow-completion-report)** - Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.
 
-## 📚 Guides (19)
+## 📚 Guides (20)
 
 - **[Build Claude MCP Servers](https://heyclau.de/entry/guides/build-mcp-server)** - Master MCP server development from scratch. Create custom Claude Desktop integrations with TypeScript/Python in 60 minutes using production-ready patterns.
 - **[Claude Process Automation](https://heyclau.de/entry/guides/business-process-automation)** - Deploy Claude AI agents for enterprise business process automation. Master implementation strategies, integration patterns, and best practices for optimization.
 - **[ChatGPT to Claude Migration](https://heyclau.de/entry/guides/chatgpt-migration-guide)** - Switch from ChatGPT to Claude in 30 minutes. Complete migration tutorial covering API transitions, prompt engineering, and workflow optimization strategies.
 - **[Claude 4 Extended Thinking](https://heyclau.de/entry/guides/claude-4-extended-thinking-tutorial)** - Implement Claude 4 Extended Thinking API in 25 minutes. Master 500K token reasoning chains, thinking budget optimization, and industry-leading 74.5% accuracy.
 - **[Claude Agent Development](https://heyclau.de/entry/guides/claude-agent-development-framework)** - Build Claude autonomous agents with 90.2% better performance. Learn multi-agent orchestration, subagents implementation, and deployment achieving $0.045/task.
+- **[Claude Code Hooks Permission Review](https://heyclau.de/entry/guides/claude-code-hooks-permission-review)** - Review Claude Code hook permissions before enabling shell commands, network access, or project automation in a shared workspace.
 - **[Claude MCP Server Setup 2025](https://heyclau.de/entry/guides/claude-mcp-server-setup-guide)** - Master MCP server installation and configuration for Claude Desktop. Complete step-by-step setup guide with optimization tips and best practices for 2025.
 - **[Claude Rate Limits Fix: Complete Optimization Guide 2025](https://heyclau.de/entry/guides/claude-rate-limits-fix)** - Fix Claude 429 errors and usage limits with proven solutions reducing token consumption by 70%. Master rate limit optimization for 18.3M affected users.
 - **[Claude vs Amazon Q Developer vs Gemini Code AWS Guide 2025](https://heyclau.de/entry/guides/claude-vs-codewhisperer-gemini)** - Compare Claude vs Amazon Q Developer vs Gemini Code for AWS cloud development. Real benchmarks, pricing analysis, and production use cases for selection.

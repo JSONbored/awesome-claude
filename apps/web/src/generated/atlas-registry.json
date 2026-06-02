@@ -1,192 +1,192 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2383748,
-      "sha256": "bb0ed5cf2ae9e483032f69985432714afff87d87cbbe94f2658998bcdc8e04b1",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 2387397,
+      "sha256": "a707feb453772da552e1725af04fc88c0f72e902b9737fe71f8094f73f5d0aef",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/search-index.json",
-      "bytes": 937320,
-      "sha256": "711a2a585da31ba860a61e619559c47babd8eb4fa65cbeda59ce0e5d586d5abc",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 940203,
+      "sha256": "e426e8dbde4bd7bc97027c359677b5b6aca81f015878648c3d8667454660dd46",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/raycast-index.json",
-      "bytes": 1235881,
-      "sha256": "ccdc93f73c0a58b04ee3d42631fc84134404c0e32b957aad90374d1df09c4344",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 1239661,
+      "sha256": "4b841361ec68d36dfc1c1b5a41b90503a3e79cd4161bee813ba9d519cd1fd278",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/ecosystem-feed.json",
-      "bytes": 750690,
-      "sha256": "3aa1b198b766496a4a860ca0a669c5d2f62d68fba3c5a70e509cf1a78b74e8d5",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 752683,
+      "sha256": "edf15e8421a1e84f7c1d1220c3fcd3940f6bd9f1c15f8c1d1bdbb174dd93d66a",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/mcp-registry-feed.json",
       "bytes": 45050,
       "sha256": "8314f17f55a0a4ae9e9fac436c9c97ef888ae804d61e6ccff17d984366c5a34e",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/plugin-export-feed.json",
       "bytes": 255612,
       "sha256": "27a76533010cd4ecfe7bb75507f7235f9a38dd91b54f77969b71eb89f9e4726d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-changelog.json",
-      "bytes": 224712,
-      "sha256": "5ac9552aaec34f494b78b60a816b496aec7c02dcaeacbc433780d6b899990e76",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 225355,
+      "sha256": "90448cf18bf973524d62043fd0ac2a067f9b8dcb034f3a3ae7fea35eaface152",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-trust-report.json",
-      "bytes": 309765,
-      "sha256": "605c500dc2be318c928e51a991114257a335713ec18b0389e0443eb51c1f78f5",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 310569,
+      "sha256": "bad3e9301e0320b28fafd4c96a06ba0874a4ac1de6a4a9fe5ce6c5440ffe39ac",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/index.json",
       "bytes": 3139,
-      "sha256": "856105f5f0477024474388e409f9800bce6eade03b4bfa43bb740d679823abe6",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "2f3e0541a8fe8f8f75b091453223a02d4ea4586e04ea6ea20b14ccae24c87792",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/submission-spec.json",
       "bytes": 62374,
       "sha256": "169dd50f0fd59d0e658363ef26edeb05628d8c9c9d3d4b3fa30314027b196838",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-report.json",
-      "bytes": 342198,
-      "sha256": "649f82212f4d52e8c58e82a8060b543eb72b8f840f0294022dd6492b5d22b737",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 343128,
+      "sha256": "7e1fe62ad4a7b99a395432f27545101cedc8972b57e2e80c58b5e63e84c92c1a",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-prompts.json",
       "bytes": 15255,
-      "sha256": "4b4bf38caf0b9536f2965ae8a0834dc688384795eeb7d0eb9bb8ad5ebb8f585d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "e41ef51d09f781c7fb3cdbdda7f27bfa1bfbed0b4dc9cf33e57238bee5bbabf1",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/jsonld-snapshots.json",
-      "bytes": 1260912,
-      "sha256": "bb512671838e1a621cfb462433972f90e5478d4e79060d8ce4ea56e0c97703d3",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 1264204,
+      "sha256": "24dc60671b36080424cea1eba8afe1ebaf3f8397cd1fb6957cb37ac3a904b180",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3994185,
-      "sha256": "ff8226f431e9f654260c0a0f53ec74dfb5acad58ea7fae3c930509cae31d6782",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 3997880,
+      "sha256": "e519a7aa6f6cc712e03b90a9a984177a6aef113fd435c22f54fc1d8457981b44",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/agents.json",
       "bytes": 686078,
       "sha256": "aa66801947a758564187b38580dc49c8e15e02d84756b557a97afa553e086ced",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/mcp.json",
       "bytes": 226196,
       "sha256": "4678923979a3aafe5ab69fabe9e91d3ff1a3520c93bdce49633712da46c8728f",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/tools.json",
       "bytes": 153275,
       "sha256": "b179ca1607f6de5bc0b62d29b809a1c66fc7208d125ec2b5c8a899aa9a39f774",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/skills.json",
       "bytes": 458262,
       "sha256": "cc3e6d7dfaa25fef43d69617d13cbb537676caf379ee6f652771381804f4d26e",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/rules.json",
       "bytes": 319777,
       "sha256": "3e8b6bd11958c5086c841677274a042f2aee8e7b162309a3f20514e75b2574b9",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/commands.json",
       "bytes": 83627,
       "sha256": "ec81a9ef5b2df8e34ac4b487c937fb3ed8258a3b8ec7268e77772b6fae618fee",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/hooks.json",
       "bytes": 253282,
       "sha256": "13c5ffd760fb276aa21581b4a82d176603fd30f75cfd3c095e7e81885b5be5cc",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/guides.json",
-      "bytes": 59203,
-      "sha256": "0dc9916f90ec03f8cd765ae76738d5701ad6b1fa1d04aba0e082a70b0a41c807",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 62852,
+      "sha256": "1474a4aa09e5c3de3d6ca99b4585b8099adf8d6faf689d96bf9a64f06eb2d9fd",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/collections.json",
       "bytes": 39536,
       "sha256": "64b6d4599861ba1a611355b92ae66806f12e9427b0f93e2f64e5343754843f7b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/statuslines.json",
       "bytes": 105934,
       "sha256": "1f3654586fe6471cfea352ddb9ec0e5ee04f7c2272cfbcbf0d28ea93ea85c200",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/claude.json",
       "bytes": 458290,
       "sha256": "411ef4ca9f8943a3697c8f667447dafc5766acf0a6ce444532ac856b6a91559b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
       "bytes": 458288,
       "sha256": "72aeef81754347ea31d8ce562f7593500217ee4dd96cc4a2222cba40564c2fb1",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
       "bytes": 458294,
       "sha256": "56cf9370551248c4e4c8702018650496981a84f4b67fa9b2d162450a97082331",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
       "bytes": 458290,
       "sha256": "b28bd9bf9638c195f1005ee56697a030b36ff669a2210d491481927b4bbfc194",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
       "bytes": 458290,
       "sha256": "4e1598a0858348d60df7a46bcf373e16501261bb4588a058e2cb33ddcd44458d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
       "bytes": 458306,
       "sha256": "5426fdc42e8dd081755c081a6954b604b60330c69f64cd4f4b262cc5e80df294",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
-      "bytes": 445169,
-      "sha256": "040cd565d4474ab6fd93a87914694ae8951b1ece02231df867bc48cb62de1947",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 446384,
+      "sha256": "ee838e3a5c10f3bdb90f1110393c6d5a4adafb0da3098e5daa726b27268ae8c3",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     }
   ],
   "entries": [
@@ -4229,6 +4229,59 @@
       "difficultyScore": 2,
       "hasPrerequisites": false,
       "hasTroubleshooting": true,
+      "hasBreakingChanges": false
+    },
+    {
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "description": "Review Claude Code hook permissions before enabling shell commands, network access, or project automation in a shared workspace.",
+      "seoTitle": "Claude Code Hooks Permission Review",
+      "seoDescription": "A short source-backed checklist for reviewing Claude Code hook permissions, command scope, and team workspace safety before enabling automation.",
+      "author": "JSONbored",
+      "submittedBy": "@JSONbored",
+      "submittedByUrl": "https://github.com/JSONbored",
+      "submittedAt": "2026-06-02T08:45:00.000Z",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": ["claude-code", "hooks", "permissions", "workflow-safety"],
+      "keywords": [
+        "claude code hooks",
+        "hook permissions",
+        "claude automation safety",
+        "claude-code",
+        "hooks",
+        "permissions",
+        "workflow-safety",
+        "guides",
+        "claude",
+        "heyclaude",
+        "claude code hooks permission review"
+      ],
+      "cardDescription": "Review Claude Code hook permissions before enabling automation.",
+      "usageSnippet": "Use this checklist before enabling Claude Code hooks that run shell commands, modify files, or notify external systems.",
+      "documentationUrl": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-code-hooks-permission-review.mdx",
+      "repoUrl": null,
+      "safetyNotes": [
+        "Hooks can run local commands when configured, so review trigger scope before enabling them.",
+        "Prefer read-only checks first and require maintainer approval for hooks that write files or call external services."
+      ],
+      "privacyNotes": [
+        "Hook commands may read project files, command output, and local environment details depending on how they are configured.",
+        "Avoid sending repository contents, logs, or secrets to external endpoints from hook scripts."
+      ],
+      "downloadUrl": "",
+      "downloadSha256": null,
+      "downloadTrust": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "readingTime": 2,
+      "difficultyScore": 35,
+      "hasPrerequisites": true,
+      "hasTroubleshooting": false,
       "hasBreakingChanges": false
     },
     {
@@ -23313,6 +23366,14 @@
   ],
   "changelog": [
     {
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "7257bb0d9d1c9ac2977e652889b7eb9e8e1a1e5bf20f1f4ccf02272b3926b012"
+    },
+    {
       "category": "mcp",
       "slug": "yield-intelligence-mcp",
       "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
@@ -23503,14 +23564,6 @@
       "dateAdded": "2026-04-27",
       "type": "added",
       "artifactHash": "1e8b251b4c3022b836bb1c488aeb40f3ec3eb7049b73b5240985e5f49abd5c41"
-    },
-    {
-      "category": "tools",
-      "slug": "cursor",
-      "title": "Cursor",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "fa4c67a178f82ec9a033f50246c1c851dec1626fa9ecc81f3066e4984b5ad77c"
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "count": 389,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -3883,6 +3883,60 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "guides:claude-code-hooks-permission-review",
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "description": "Review Claude Code hook permissions before enabling automation.",
+      "url": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "submittedBy": "@JSONbored",
+      "submittedByUrl": "https://github.com/JSONbored",
+      "submittedAt": "2026-06-02T08:45:00.000Z",
+      "websiteUrl": "",
+      "documentationUrl": "https://docs.anthropic.com/en/docs/claude-code/hooks",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "claude-code",
+        "hooks",
+        "permissions",
+        "workflow-safety"
+      ],
+      "qualityScore": 78,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://docs.anthropic.com/en/docs/claude-code/hooks",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-code-hooks-permission-review.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://docs.anthropic.com/en/docs/claude-code/hooks"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://docs.anthropic.com/en/docs/claude-code/hooks",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-code-hooks-permission-review.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -21589,5 +21643,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "fb628ed10f8e910603fc382cc28ed85a753ab6e9f5d78ab35ccfd4883397eb32"
+  "signature": "b69f7c441f90bef5e0a5659b2c6dc457a24361e1fb0ac9fc72dfc0d37335d5cb"
 }

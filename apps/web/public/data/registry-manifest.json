@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "totalEntries": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "totalEntries": 389,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -45,7 +45,7 @@
       "label": "Hooks"
     },
     "guides": {
-      "count": 19,
+      "count": 20,
       "label": "Guides"
     },
     "collections": {
@@ -625,6 +625,14 @@
       "canonicalUrl": "https://heyclau.de/entry/statuslines/docker-health-statusline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/docker-health-statusline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/docker-health-statusline"
+    },
+    {
+      "key": "guides:claude-code-hooks-permission-review",
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "canonicalUrl": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "llmsUrl": "https://heyclau.de/data/llms/guides/claude-code-hooks-permission-review.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/guides/claude-code-hooks-permission-review"
     },
     {
       "key": "guides:multi-directory-setup",
@@ -3175,21 +3183,21 @@
     "brandedCount": 143,
     "brandedPercent": 37,
     "brandfetchCount": 141,
-    "sourceAvailableCount": 388,
+    "sourceAvailableCount": 389,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
     "checksumPresentCount": 109,
     "checksumPresentPercent": 28,
     "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 362,
+    "recentlyVerifiedCount": 363,
     "staleVerificationCount": 0,
-    "provenanceCount": 10,
+    "provenanceCount": 11,
     "provenancePercent": 3,
     "claimedOrReviewedCount": 6,
     "claimedOrReviewedPercent": 2,
-    "safetyNotesCount": 18,
+    "safetyNotesCount": 19,
     "safetyNotesPercent": 5,
-    "privacyNotesCount": 18,
+    "privacyNotesCount": 19,
     "privacyNotesPercent": 5,
     "firstPartyPackageCount": 109,
     "firstPartyPackagePercent": 28,
@@ -3222,22 +3230,22 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "d78768347f977d6ae12c7561bc9783533510124a557367f4f1821fcb7958613c"
+      "sha256": "5f227065021c81a04c05fe594ecd23150c9df0550b45be9ebe032409248d65af"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "095a2ba6d4ceded9abf4d369c5e26b555504cf4468e060e8edad27a7c57928e5"
+      "sha256": "6d5013500b9348af2111a2a0c708ccab23e803bf275125df4f06f4b5467649d0"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "df1cadb749ac338c3414f026787a224a82eb493d80ad9bb84cf06530b42bef89"
+      "sha256": "05dcfc06db32cf69e343d01f12eb3dcb74f1e2ff1ae7717408dbe9f0cabc7527"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "da0eb6e46613b923784ad6dc49ca6c87acfb7fc2a647b50c118ed177be656a05"
+      "sha256": "b9f9b5a9ac78337712341fe99e8fddabfe7176df494197c017a786c806e9c6c8"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
@@ -3252,17 +3260,17 @@
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "d950268b2ecb61e0ac2bebf889516b1b81af50b3ef43b3ec7265f51bd7f7d0e9"
+      "sha256": "71dded188282f68d30974837b2a1e7b6863a3085e9fd3cbf9b20b122791336dc"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "f8e719618003cae173a2b702756ee323225e6087fe326044927d1fd424d528e8"
+      "sha256": "90a7b213ce3c08acb2119795a8946aa27e4b1110f0438f10b1fa520a1b910859"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "44a7d5b10e4bab84605fe0b15022d8735b43454090e39b7a4458646481f74292"
+      "sha256": "2f274b19f4089bd8207626f37ce83676b308d9ac49ffab860aaec51131af32ef"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3272,22 +3280,22 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "8caa54965d9d0cc46f12c7c27657cbf5257e6ec818d939ccb8d9efa46d2935e9"
+      "sha256": "17dfeffb2693bb2fbfb1cdceb936d82e7f1baba6c8775077b935c1ba2888b1ff"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "0a0b38d282927349294eed74eeff17e8775d93ed6bd929cdb5ce32de77fc1d57"
+      "sha256": "524576aab6e2ae59ea9e199d154bfd3d417e4c648fc33cc69b84c3f8034b906c"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "664ebb205afe6434b4378d136c64ffa557a39fddae12992f5306e95ebfe0aa12"
+      "sha256": "0899c4c09adbc36afb1424ec600a6945ca5933a766ed10ff48afa402cd1ba570"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "03e7529b064b28beff4f90e05decb64bf254a18d2467ceff7228dfb7c9444c9d"
+      "sha256": "790183e6b0af5795b374118bb29ddc27bc54ca10ffb683f9ad9221df3b1b375d"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -4393,6 +4401,21 @@
       "path": "/data/raycast%2Fstatuslines%2Fdocker-health-statusline.json",
       "type": "json",
       "sha256": "52403f9528e9d487f2542aa53194c97dfd57ba1823e4470f8d876e3456551542"
+    },
+    "entries/guides/claude-code-hooks-permission-review.json": {
+      "path": "/data/entries%2Fguides%2Fclaude-code-hooks-permission-review.json",
+      "type": "json",
+      "sha256": "7257bb0d9d1c9ac2977e652889b7eb9e8e1a1e5bf20f1f4ccf02272b3926b012"
+    },
+    "llms/guides/claude-code-hooks-permission-review.txt": {
+      "path": "/data/llms%2Fguides%2Fclaude-code-hooks-permission-review.txt",
+      "type": "text",
+      "sha256": "88a28bffd8886fcae84cd420463b810f2c9ec03bd9a279345be4a5e43dcd927b"
+    },
+    "raycast/guides/claude-code-hooks-permission-review.json": {
+      "path": "/data/raycast%2Fguides%2Fclaude-code-hooks-permission-review.json",
+      "type": "json",
+      "sha256": "4955b30bceee2d240f50cecf36bf018466587b90c3463e0ee93975c3c9924e2b"
     },
     "entries/guides/multi-directory-setup.json": {
       "path": "/data/entries%2Fguides%2Fmulti-directory-setup.json",
@@ -9487,7 +9510,7 @@
     "feeds/categories/guides.json": {
       "path": "/data/feeds%2Fcategories%2Fguides.json",
       "type": "json",
-      "sha256": "ed924bef6517019480ab782637741c6989d586b6e220ad09ea9bbc25389a25f1"
+      "sha256": "6f823cf3c9df4c91be4b97ad480067c4428726d9f31e92749ae66e4604ca5ff1"
     },
     "feeds/categories/collections.json": {
       "path": "/data/feeds%2Fcategories%2Fcollections.json",

@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "content-quality-report",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "count": 389,
   "summary": {
     "averageScore": 81,
     "noExternalSourceCount": 101,
@@ -48,7 +48,7 @@
       "warningCount": 14
     },
     "guides": {
-      "count": 19,
+      "count": 20,
       "averageScore": 69,
       "warningCount": 19
     },
@@ -2149,6 +2149,35 @@
         ],
         "externalSourceUrls": [
           "https://docs.docker.com/reference/cli/docker/container/stats/"
+        ]
+      },
+      "warnings": []
+    },
+    {
+      "key": "guides:claude-code-hooks-permission-review",
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "title": "Claude Code Hooks Permission Review",
+      "scores": {
+        "total": 78,
+        "usefulness": 100,
+        "source": 40,
+        "copyability": 55,
+        "freshness": 100,
+        "seo": 100
+      },
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://docs.anthropic.com/en/docs/claude-code/hooks",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-code-hooks-permission-review.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://docs.anthropic.com/en/docs/claude-code/hooks"
         ]
       },
       "warnings": []

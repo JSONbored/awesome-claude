@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "count": 389,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -5500,6 +5500,81 @@
           "codeRepository": null,
           "programmingLanguage": "bash",
           "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "guides:claude-code-hooks-permission-review",
+      "category": "guides",
+      "slug": "claude-code-hooks-permission-review",
+      "url": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Guides",
+              "item": "https://heyclau.de/browse?category=guides"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Claude Code Hooks Permission Review",
+              "item": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review#webpage",
+          "name": "Claude Code Hooks Permission Review",
+          "description": "A short source-backed checklist for reviewing Claude Code hook permissions, command scope, and team workspace safety before enabling automation.",
+          "url": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "TechArticle",
+          "@id": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review#entry",
+          "name": "Claude Code Hooks Permission Review",
+          "headline": "Claude Code Hooks Permission Review",
+          "description": "A short source-backed checklist for reviewing Claude Code hook permissions, command scope, and team workspace safety before enabling automation.",
+          "url": "https://heyclau.de/entry/guides/claude-code-hooks-permission-review",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code hooks, hook permissions, claude automation safety, claude-code, hooks, permissions, workflow-safety, guides, claude, heyclaude, claude code hooks permission review",
+          "genre": "Guides",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://docs.anthropic.com/en/docs/claude-code/hooks"
+          ],
+          "isBasedOn": [
+            "https://docs.anthropic.com/en/docs/claude-code/hooks",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/claude-code-hooks-permission-review.mdx"
+          ]
         }
       ]
     },
