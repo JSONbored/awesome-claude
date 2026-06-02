@@ -526,6 +526,11 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("postDiscordDecisionNotification({");
     expect(source).toContain("markPrNotificationSent");
     expect(source).toContain('eventType: "discord_notification"');
+    expect(source).toContain("lastNotificationKey.startsWith(`${headSha}:`)");
+    expect(source).toContain("discord_notification_skipped");
+    expect(source).toContain(
+      "Skipped Discord notification because this PR head already has a terminal gate notification.",
+    );
     expect(source).toContain('if (params.decision.verdict === "ignore")');
     expect(ignoreBlock).not.toContain("notifyGateDecision");
   });
@@ -541,6 +546,7 @@ describe("Cloudflare submission gate helpers", () => {
       "await upsertPrState(env.SUBMISSION_GATE_DB",
       enqueueIndex,
     );
+    const enqueueBlock = source.slice(enqueueIndex, enqueueWriteIndex);
     const reviewIndex = source.indexOf('if (message.kind === "review_pr")');
     const reviewReadIndex = source.indexOf(
       "getPrState(env.SUBMISSION_GATE_DB",
@@ -550,6 +556,7 @@ describe("Cloudflare submission gate helpers", () => {
       "getCommitValidationState({",
       reviewIndex,
     );
+    const reviewBlock = source.slice(reviewIndex, validationIndex);
     const terminalSetIndex = source.indexOf("const TERMINAL_GATE_VERDICTS");
     const terminalSetEndIndex = source.indexOf("]);", terminalSetIndex);
     const terminalSetBlock = source.slice(
@@ -560,7 +567,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
-    expect(terminalSetBlock).not.toContain('"merge"');
+    expect(terminalSetBlock).toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
@@ -572,6 +579,17 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('String(state.status || "") === "merged"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
+    );
+    expect(source).toContain(
+      "Skipped trusted recheck because this submission already has a terminal gate decision.",
+    );
+    expect(enqueueBlock).toContain("if (hasTerminalGateDecision(existing))");
+    expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
+    expect(enqueueBlock).not.toContain(
+      "if (!forceRecheck && hasTerminalGateDecision(existing))",
+    );
+    expect(reviewBlock).not.toContain(
+      "if (!forceRecheck && hasTerminalGateDecision(existing))",
     );
     expect(enqueueReadIndex).toBeGreaterThan(enqueueIndex);
     expect(enqueueWriteIndex).toBeGreaterThan(enqueueReadIndex);

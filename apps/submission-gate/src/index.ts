@@ -140,7 +140,7 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
+const TERMINAL_GATE_VERDICTS = new Set(["merge", "close", "manual", "ignore"]);
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
   "agents",
   "collections",
@@ -1191,7 +1191,18 @@ async function notifyGateDecision(
       repo: params.target.repoFullName,
       number: params.target.number,
     });
-    if (String(state?.lastNotificationKey || "") === notificationKey) return;
+    const lastNotificationKey = String(state?.lastNotificationKey || "");
+    if (lastNotificationKey === notificationKey) return;
+    const headSha = params.target.headSha || "unknown";
+    if (headSha !== "unknown" && lastNotificationKey.startsWith(`${headSha}:`)) {
+      await insertNotificationAuditSafe(env, {
+        targetKey: params.targetKey,
+        decision: "discord_notification_skipped",
+        summary:
+          "Skipped Discord notification because this PR head already has a terminal gate notification.",
+      });
+      return;
+    }
 
     const result = await postDiscordDecisionNotification({
       webhookUrl: env.DISCORD_SUBMISSION_WEBHOOK_URL,
@@ -1543,7 +1554,7 @@ async function enqueueReviewTarget(
     repo: target.repoFullName,
     number: target.number,
   });
-  if (!forceRecheck && hasTerminalGateDecision(existing)) return false;
+  if (hasTerminalGateDecision(existing)) return false;
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
@@ -1942,14 +1953,16 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         repo: target.repoFullName,
         number: target.number,
       });
-      if (!forceRecheck && hasTerminalGateDecision(existing)) {
+      if (hasTerminalGateDecision(existing)) {
         await insertAudit(env.SUBMISSION_GATE_DB, {
           id: crypto.randomUUID(),
           targetKey: message.targetKey,
           eventType: message.kind,
           decision: "ignored",
           summary:
-            "Skipped because this submission already has a terminal gate decision.",
+            forceRecheck
+              ? "Skipped trusted recheck because this submission already has a terminal gate decision."
+              : "Skipped because this submission already has a terminal gate decision.",
         });
         return;
       }
