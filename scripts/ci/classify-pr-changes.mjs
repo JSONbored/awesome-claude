@@ -76,6 +76,11 @@ const sourceContentOnly =
   !all &&
   files.length > 0 &&
   files.every((file) => /^content\/[^/]+\/[^/]+\.mdx$/i.test(file));
+const readmeOnly =
+  eventName === "pull_request" &&
+  !all &&
+  files.length === 1 &&
+  files[0] === "README.md";
 const maintainerImport =
   sourceContentOnly && /^automation\/submission-pr-\d+-/i.test(headRef);
 const directSubmission =
@@ -111,6 +116,7 @@ const flags = {
   direct_submission: directSubmission,
   maintainer_import: maintainerImport,
   source_content_only: sourceContentOnly,
+  readme_only: readmeOnly,
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
   registry:
