@@ -37,8 +37,26 @@ describe("PR preview artifact validation flow", () => {
     );
     expect(workflow).toContain("Deploy same-repo PR preview to dev Worker");
     expect(workflow).toContain("Resolve PR preview URL");
+    expect(workflow).toContain("REQUIRE_PR_PREVIEW");
+    expect(workflow).toContain('[ "$REQUIRE_PR_PREVIEW" != "true" ]');
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
     expect(workflow).not.toContain("Require preview artifact base URL");
     expect(workflow).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
+  });
+
+  it("guards submission-gate production deploys until prod D1 exists", () => {
+    const packageJson = JSON.parse(
+      fs.readFileSync(
+        path.join(repoRoot, "apps/submission-gate/package.json"),
+        "utf8",
+      ),
+    ) as { scripts: Record<string, string> };
+
+    expect(packageJson.scripts["deploy:prod"]).toContain(
+      "check-submission-gate-prod-config.mjs",
+    );
+    expect(packageJson.scripts["deploy:dry-run:prod"]).toContain(
+      "check-submission-gate-prod-config.mjs",
+    );
   });
 });

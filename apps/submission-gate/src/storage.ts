@@ -156,6 +156,19 @@ export async function consumeDraftUserToken(db: D1Database, draftId: string) {
   return row?.encryptedToken || "";
 }
 
+export async function getDraftUserToken(db: D1Database, draftId: string) {
+  const timestamp = now();
+  const row = await db
+    .prepare(
+      `SELECT encrypted_token AS encryptedToken
+       FROM submission_user_tokens
+       WHERE draft_id = ? AND consumed_at IS NULL AND expires_at > ?`,
+    )
+    .bind(draftId, timestamp)
+    .first<{ encryptedToken?: string }>();
+  return row?.encryptedToken || "";
+}
+
 export async function updateDraftStatus(
   db: D1Database,
   id: string,
@@ -163,6 +176,7 @@ export async function updateDraftStatus(
   values: Record<string, unknown> = {},
 ) {
   const timestamp = now();
+  // Patch-style update: omitted or null values intentionally keep existing metadata.
   await db
     .prepare(
       `UPDATE submission_drafts

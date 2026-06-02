@@ -272,7 +272,7 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
 
   const response = {
     ok: true,
-    valid: !validation.skipped && validation.ok && blockers.length === 0,
+    valid: routeSuggestion === "submit_pr",
     routeSuggestion,
     category,
     slug,

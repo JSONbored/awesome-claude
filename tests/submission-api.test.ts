@@ -144,6 +144,33 @@ describe("website submission preflight API", () => {
     expect(body.routeSuggestion).toBe("route_away");
   });
 
+  it("routes risky but potentially valid submissions to manual review", async () => {
+    const { POST } = await import("@/routes/api/submissions/preflight");
+    const response = await POST(
+      preflightRequest({
+        fields: validFields({
+          name: "Wallet Attestation MCP",
+          slug: "wallet-attestation-mcp",
+          description:
+            "MCP server that uses OAuth and API keys to help users manage wallet attestations and on-chain identity workflows.",
+          usage_snippet:
+            "Set OAUTH_CLIENT_ID and API_KEY, then run claude mcp add wallet-attestation-mcp -- npx -y wallet-attestation-mcp",
+          safety_notes:
+            "Requires credential setup and should only be used with scoped test accounts.",
+          privacy_notes:
+            "Stores OAuth tokens locally and sends requests to the configured API provider.",
+        }),
+      }),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toMatchObject({
+      ok: true,
+      valid: false,
+      routeSuggestion: "manual_review",
+    });
+  });
+
   it("silently discards honeypot submissions without queueing anything", async () => {
     const { POST } = await import("@/routes/api/submissions/preflight");
     const response = await POST(

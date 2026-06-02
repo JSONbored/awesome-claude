@@ -706,6 +706,7 @@ jobs:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_DEV_WORKER_URL: ${{ vars.CLOUDFLARE_DEV_WORKER_URL || 'https://heyclaude-dev.zeronode.workers.dev' }}
+      REQUIRE_PR_PREVIEW: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'true' || 'false' }}
     concurrency:
       group: deployment-artifacts-pr-preview-${{ github.repository }}
       cancel-in-progress: false
@@ -715,6 +716,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup pnpm
         uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
@@ -740,7 +742,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
           PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url }}
-        run: node scripts/resolve-pr-preview-url.mjs --allow-missing
+        run: |
+          args=()
+          if [ "$REQUIRE_PR_PREVIEW" != "true" ]; then
+            args+=(--allow-missing)
+          fi
+          node scripts/resolve-pr-preview-url.mjs "${args[@]}"
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}

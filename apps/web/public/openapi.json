@@ -4446,7 +4446,7 @@
                           },
                           "required": ["label"]
                         },
-                        "valid": { "type": "boolean" },
+                        "valid": { "type": "boolean", "enum": [false] },
                         "routeSuggestion": {
                           "type": "string",
                           "enum": ["fix_required", "route_away", "manual_review"]

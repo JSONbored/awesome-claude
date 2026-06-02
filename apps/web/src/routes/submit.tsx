@@ -593,7 +593,7 @@ function ServerPreflightBlock({
           <Check className="h-4 w-4 text-trust-trusted" /> Preflight passed. The next step opens a
           single-entry PR through GitHub.
         </div>
-      ) : result.valid && result.routeSuggestion === "manual_review" ? (
+      ) : result.routeSuggestion === "manual_review" ? (
         <div className="flex items-center gap-2 rounded-md border border-trust-review/40 bg-trust-review/10 px-3 py-2 text-sm text-ink">
           <ShieldAlert className="h-4 w-4 text-trust-review" /> This can be submitted, but the
           private gate will route it to manual maintainer review.

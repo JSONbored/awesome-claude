@@ -9,11 +9,18 @@ export const LABELS = {
 
 export const PILOT_LABEL = "submission-gate-pilot";
 
-export const REVIEWABLE_PR_ACTIONS = new Set([
-  "opened",
-  "synchronize",
-  "reopened",
-  "ready_for_review",
-]);
+type ReviewablePrAction =
+  | "opened"
+  | "synchronize"
+  | "reopened"
+  | "ready_for_review";
+
+export const REVIEWABLE_PR_ACTIONS: ReadonlySet<string> =
+  new Set<ReviewablePrAction>([
+    "opened",
+    "synchronize",
+    "reopened",
+    "ready_for_review",
+  ]);
 
 export const DEFAULT_REVIEW_MARKER = "<!-- heyclaude-submission-gate -->";

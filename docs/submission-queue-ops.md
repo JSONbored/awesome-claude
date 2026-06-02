@@ -59,14 +59,21 @@ The private gate is hosted as a Cloudflare Worker with supporting bindings:
   D1, R2, Queue, and dead-letter Queue resources.
 - Worker endpoints for GitHub App auth, draft creation, draft status, GitHub
   webhooks, and internal import callbacks.
-- D1 tables for drafts, PR state, verdict summaries, audit rows, and
-  idempotency keys.
+- D1 tables for drafts, PR state, verdict summaries, audit rows, and short-lived
+  encrypted user-token handoff.
 - R2 for raw webhook payload snapshots, draft payloads, reports, and container
   logs.
 - Queues for review jobs and import jobs, with dead-letter queues.
 - Durable Objects for per-draft or per-PR locks.
 - Cloudflare Containers for trusted git, Node, pnpm, validation, generation,
   branch push, and maintainer-owned import PR creation.
+
+Provision queues before deploying the Worker. The dev environment needs
+`heyclaude-submission-review-dev`, `heyclaude-submission-review-dev-dlq`,
+`heyclaude-submission-import-dev`, and `heyclaude-submission-import-dev-dlq`.
+Production needs the same names without the `-dev` suffix. The review consumer
+retries three times before the DLQ; the import consumer retries twice before the
+DLQ.
 
 The Worker can label and comment quickly. Import generation happens in the
 Container because it needs a filesystem, git, pnpm, and the repo validation

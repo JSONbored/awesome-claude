@@ -52,7 +52,23 @@ const GIT_REF_PATTERN =
 const UNSAFE_GIT_REF_CHARS = /[*[\]~^:\\]/;
 const DEFAULT_ALLOWED_IMPORT_REPOS = ["JSONbored/awesome-claude"];
 const DEFAULT_COMMAND_TIMEOUT_MS = 15 * 60 * 1000;
+const DEFAULT_GITHUB_TIMEOUT_MS = 15_000;
 const MAX_CAPTURE_CHARS = 1024 * 1024;
+const ALLOWED_IMPORT_PATH_PREFIXES = ["content/"];
+const BLOCKED_IMPORT_PATHS = new Set([
+  ".npmrc",
+  ".yarnrc",
+  ".yarnrc.yml",
+  "bun.lock",
+  "bun.lockb",
+  "deno.lock",
+  "npm-shrinkwrap.json",
+  "package-lock.json",
+  "package.json",
+  "pnpm-lock.yaml",
+  "pnpm-workspace.yaml",
+  "yarn.lock",
+]);
 
 function readBody(request) {
   return new Promise((resolve, reject) => {
@@ -149,7 +165,9 @@ export function resolveValidationChecks(value) {
 function appendCappedOutput(current, chunk) {
   const next = current + String(chunk);
   if (next.length <= MAX_CAPTURE_CHARS) return next;
-  return `[output truncated to last ${MAX_CAPTURE_CHARS} chars]\n${next.slice(-MAX_CAPTURE_CHARS)}`;
+  const marker = `[output truncated to last ${MAX_CAPTURE_CHARS} chars]\n`;
+  const raw = next.startsWith(marker) ? next.slice(marker.length) : next;
+  return `${marker}${raw.slice(-MAX_CAPTURE_CHARS)}`;
 }
 
 function run(command, args, options = {}) {
@@ -236,9 +254,38 @@ export function safeImportPath(repoDir, filePath) {
   return absolutePath;
 }
 
+export function assertSafeImportWrite(filePath) {
+  const relativePath = path.normalize(
+    String(filePath || "").replace(/\\+/g, "/"),
+  );
+  const normalized = relativePath.split(path.sep).filter(Boolean).join("/");
+  const basename = path.posix.basename(normalized);
+  if (
+    !ALLOWED_IMPORT_PATH_PREFIXES.some((prefix) =>
+      normalized.startsWith(prefix),
+    )
+  ) {
+    throw new Error("Import job can only write source content files.");
+  }
+  if (
+    BLOCKED_IMPORT_PATHS.has(normalized) ||
+    BLOCKED_IMPORT_PATHS.has(basename)
+  ) {
+    throw new Error(
+      "Import job cannot modify package manager or workspace files.",
+    );
+  }
+  return filePath;
+}
+
+function gitAuthHeader(token) {
+  return `Authorization: Basic ${Buffer.from(`x-access-token:${token}`).toString("base64")}`;
+}
+
 async function githubJson(url, token, init = {}) {
   const response = await fetch(url, {
     ...init,
+    signal: init.signal || AbortSignal.timeout(DEFAULT_GITHUB_TIMEOUT_MS),
     headers: {
       accept: "application/vnd.github+json",
       authorization: `Bearer ${token}`,
@@ -248,11 +295,21 @@ async function githubJson(url, token, init = {}) {
     },
   });
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : null;
+  let payload = null;
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = null;
+    }
+  }
   if (!response.ok) {
     throw new Error(
       `GitHub API ${response.status}: ${payload?.message || text}`,
     );
+  }
+  if (text && !payload) {
+    throw new Error("GitHub API returned invalid JSON.");
   }
   return payload;
 }
@@ -315,7 +372,6 @@ async function handleImport(job) {
   if (existingPr) return existingPr;
   const workdir = await mkdtemp(path.join(tmpdir(), "heyclaude-import-"));
   try {
-    const cloneUrl = `https://x-access-token:${githubToken}@github.com/${safeRepo}.git`;
     await run(
       "git",
       [
@@ -325,7 +381,7 @@ async function handleImport(job) {
         "--branch",
         safeBaseRef,
         "--",
-        cloneUrl,
+        `https://github.com/${safeRepo}.git`,
         "repo",
       ],
       {
@@ -339,6 +395,7 @@ async function handleImport(job) {
       if (!file.path || typeof file.content !== "string") {
         throw new Error("Import file is missing path or content.");
       }
+      assertSafeImportWrite(file.path);
       const absolutePath = safeImportPath(repoDir, file.path);
       await mkdir(path.dirname(absolutePath), { recursive: true });
       await writeFile(absolutePath, file.content, "utf8");
@@ -367,9 +424,20 @@ async function handleImport(job) {
       },
     );
     // Imports are serialized per target by the Worker Durable Object lock; force updates keep the maintainer-owned branch idempotent across retries.
-    await run("git", ["push", "--force", "origin", safeBranchName], {
-      cwd: repoDir,
-    });
+    await run(
+      "git",
+      [
+        "-c",
+        `http.https://github.com/.extraheader=${gitAuthHeader(githubToken)}`,
+        "push",
+        "--force",
+        "origin",
+        safeBranchName,
+      ],
+      {
+        cwd: repoDir,
+      },
+    );
 
     const existingAfterPush = await findExistingImportPr(
       owner,
@@ -436,7 +504,8 @@ export function createImportServer() {
       response.writeHead(200, { "content-type": "application/json" });
       response.end(JSON.stringify(result));
     } catch (error) {
-      const message = error?.message || String(error);
+      const message =
+        error instanceof Error ? error.message : "unknown import error";
       const status =
         message === "payload too large"
           ? 413
@@ -454,7 +523,11 @@ export function createImportServer() {
         JSON.stringify({
           ok: false,
           error:
-            status === 500 ? "import_failed" : redactSensitiveOutput(message),
+            status === 413
+              ? "payload_too_large"
+              : status === 400
+                ? "invalid_json"
+                : "import_failed",
         }),
       );
     }

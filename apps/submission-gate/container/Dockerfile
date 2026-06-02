@@ -1,10 +1,8 @@
-FROM node:24-bookworm
+FROM node:24-bookworm@sha256:8530f76a96d88820d288761f022e318970dda93d01536919fbc16076b7983e63
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ca-certificates git openssh-client \
+  && apt-get install -y --no-install-recommends ca-certificates git \
   && rm -rf /var/lib/apt/lists/* \
-  && corepack enable \
-  && corepack prepare pnpm@11.4.0 --activate \
   && groupadd --system runner \
   && useradd --system --gid runner --home-dir /runner --shell /usr/sbin/nologin runner
 

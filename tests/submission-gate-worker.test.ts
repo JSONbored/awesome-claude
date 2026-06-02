@@ -120,6 +120,24 @@ describe("Cloudflare submission gate helpers", () => {
     );
   });
 
+  it("preserves multiline copy snippets as YAML block scalars", () => {
+    const mdx = buildContributorMdx({
+      category: "guides",
+      name: "Multiline Guide",
+      slug: "multiline-guide",
+      description: "Guide with source content.",
+      docs_url: "https://example.com/docs",
+      full_copyable_content: "Step one\nStep two\nStep three",
+      safety_notes: "Review before running.",
+      privacy_notes: "No data collection.",
+    });
+
+    expect(mdx).toContain(
+      "copySnippet: |\n  Step one\n  Step two\n  Step three",
+    );
+    expect(mdx).not.toContain("Step one\\nStep two\\nStep three");
+  });
+
   it("escapes contributor body text before writing MDX", () => {
     const mdx = buildContributorMdx({
       category: "guides",

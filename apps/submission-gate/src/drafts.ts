@@ -111,7 +111,13 @@ export function buildDraftTarget(
 }
 
 function yamlScalar(value: unknown) {
-  const normalized = text(value).replace(/\r\n/g, "\n").replace(/\n/g, "\\n");
+  const normalized = text(value).replace(/\r\n?/g, "\n");
+  if (normalized.includes("\n")) {
+    return `|\n${normalized
+      .split("\n")
+      .map((line) => `  ${line}`)
+      .join("\n")}`;
+  }
   return JSON.stringify(normalized);
 }
 

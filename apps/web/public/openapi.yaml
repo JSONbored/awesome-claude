@@ -5212,6 +5212,8 @@ paths:
                           - label
                       valid:
                         type: boolean
+                        enum:
+                          - false
                       routeSuggestion:
                         type: string
                         enum:

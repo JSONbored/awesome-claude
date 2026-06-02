@@ -538,7 +538,7 @@ const submissionPreflightPrReadyResponseSchema = submissionPreflightBaseResponse
 
 const submissionPreflightNonPrResponseSchema = submissionPreflightBaseResponseSchema
   .extend({
-    valid: z.boolean(),
+    valid: z.literal(false),
     routeSuggestion: z.enum(["fix_required", "route_away", "manual_review"]),
   })
   .strict();

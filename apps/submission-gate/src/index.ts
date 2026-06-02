@@ -39,6 +39,7 @@ import {
 import {
   consumeDraftUserToken,
   createDraft,
+  getDraftUserToken,
   getDraft,
   insertAudit,
   storeDraftUserToken,
@@ -68,6 +69,7 @@ type Env = {
   SUBMISSION_IMPORT_QUEUE: Queue<Record<string, unknown>>;
   SUBMISSION_LOCK: DurableObjectNamespace<SubmissionLock>;
   SUBMISSION_IMPORT_RUNNER: DurableObjectNamespace<SubmissionImportRunner>;
+  ALLOWED_CORS_ORIGINS?: string;
 };
 
 type QueueMessage = {
@@ -104,13 +106,41 @@ function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
   headers.set("content-type", "application/json; charset=utf-8");
   headers.set("cache-control", "no-store");
-  headers.set("access-control-allow-origin", "*");
   headers.set("access-control-allow-methods", "GET,POST,OPTIONS");
   headers.set(
     "access-control-allow-headers",
     "content-type,x-github-event,x-github-delivery,x-hub-signature-256,x-heyclaude-internal-signature",
   );
   return Response.json(payload, { ...init, headers });
+}
+
+function allowedCorsOrigins(env: Env) {
+  const configured = String(
+    env.ALLOWED_CORS_ORIGINS || env.PUBLIC_SITE_URL || "",
+  )
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  return configured.length ? configured : ["https://heyclau.de"];
+}
+
+function withCors(response: Response, request: Request, env: Env) {
+  const headers = new Headers(response.headers);
+  const allowedOrigins = allowedCorsOrigins(env);
+  const requestOrigin = request.headers.get("origin") || "";
+  const allowOrigin = allowedOrigins.includes(requestOrigin)
+    ? requestOrigin
+    : allowedOrigins[0];
+  headers.set("access-control-allow-origin", allowOrigin);
+  headers.set(
+    "vary",
+    headers.has("vary") ? `${headers.get("vary")}, Origin` : "Origin",
+  );
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -551,7 +581,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         return;
       }
       if (draft.status === "pr_open" && draft.pullRequestUrl) return;
-      const encryptedToken = await consumeDraftUserToken(
+      const encryptedToken = await getDraftUserToken(
         env.SUBMISSION_GATE_DB,
         draftId,
       );
@@ -590,6 +620,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         apiVersion: env.GITHUB_API_VERSION,
       });
       await updateDraftStatus(env.SUBMISSION_GATE_DB, draftId, "pr_open", pr);
+      await consumeDraftUserToken(env.SUBMISSION_GATE_DB, draftId);
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
         targetKey: message.targetKey,
@@ -715,7 +746,6 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      "x-heyclaude-idempotency-key": message.targetKey,
       "x-heyclaude-internal-signature": signature,
     },
     body,
@@ -745,41 +775,39 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
       verdictSummary: "Maintainer-owned import PR opened.",
       importPrUrl: result.pullRequestUrl,
     });
-    if (githubToken) {
-      const repo = parseRepo(sourceRepo);
-      await addLabels({
-        token: githubToken,
-        repo,
-        issueNumber: sourceNumber,
-        labels: [LABELS.importOpen, LABELS.superseded],
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      await upsertMarkerComment({
-        token: githubToken,
-        repo,
-        issueNumber: sourceNumber,
-        marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        body: markerComment(
-          {
-            verdict: "import",
-            summary: [
-              `Maintainer-owned import PR opened: ${result.pullRequestUrl}`,
-              "",
-              "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
-            ].join("\n"),
-            labels: [LABELS.importOpen, LABELS.superseded],
-          },
-          env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        ),
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      await closeIssueOrPullRequest({
-        token: githubToken,
-        repo,
-        issueNumber: sourceNumber,
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-    }
+    const repo = parseRepo(sourceRepo);
+    await addLabels({
+      token: githubToken,
+      repo,
+      issueNumber: sourceNumber,
+      labels: [LABELS.importOpen, LABELS.superseded],
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+    await upsertMarkerComment({
+      token: githubToken,
+      repo,
+      issueNumber: sourceNumber,
+      marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+      body: markerComment(
+        {
+          verdict: "import",
+          summary: [
+            `Maintainer-owned import PR opened: ${result.pullRequestUrl}`,
+            "",
+            "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
+          ].join("\n"),
+          labels: [LABELS.importOpen, LABELS.superseded],
+        },
+        env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+      ),
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+    await closeIssueOrPullRequest({
+      token: githubToken,
+      repo,
+      issueNumber: sourceNumber,
+      apiVersion: env.GITHUB_API_VERSION,
+    });
   }
 }
 
@@ -945,7 +973,7 @@ export class SubmissionImportRunner extends Container<Env> {
 
 export default {
   async fetch(request, env, ctx) {
-    return route(request, env, ctx);
+    return withCors(await route(request, env, ctx), request, env);
   },
   async queue(batch, env) {
     for (const message of batch.messages) {

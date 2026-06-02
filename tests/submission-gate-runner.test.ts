@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import {
+  assertSafeImportWrite,
   assertAllowedImportRepo,
   redactSensitiveOutput,
   resolveValidationChecks,
@@ -82,6 +83,24 @@ describe("submission gate import runner safety", () => {
     );
     expect(() => safeImportPath(repoDir, "../outside.mdx")).toThrow(
       "Invalid import path",
+    );
+  });
+
+  it("rejects import writes that could alter validation-time package behavior", () => {
+    expect(() =>
+      assertSafeImportWrite("content/mcp/example.mdx"),
+    ).not.toThrow();
+    expect(() =>
+      assertSafeImportWrite("scripts/build-content-index.mjs"),
+    ).toThrow("source content files");
+    expect(() => assertSafeImportWrite("package.json")).toThrow(
+      "source content files",
+    );
+    expect(() => assertSafeImportWrite("nested/pnpm-lock.yaml")).toThrow(
+      "source content files",
+    );
+    expect(() => assertSafeImportWrite("content/mcp/package.json")).toThrow(
+      "package manager or workspace files",
     );
   });
 

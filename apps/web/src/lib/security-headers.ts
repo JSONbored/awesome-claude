@@ -27,7 +27,7 @@ const connectSrc = Array.from(
       "https://umami.heyclau.de",
       "https://challenges.cloudflare.com",
       "https://submission-gate.heyclau.de",
-      "https://submission-gate-dev.heyclau.de",
+      process.env.NODE_ENV === "production" ? "" : "https://submission-gate-dev.heyclau.de",
       urlOrigin(siteConfig.submissionGateUrl),
     ].filter(Boolean),
   ),

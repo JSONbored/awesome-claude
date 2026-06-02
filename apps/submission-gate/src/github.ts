@@ -3,6 +3,7 @@ import { base64UrlEncode } from "./security";
 const encoder = new TextEncoder();
 const PKCS8_PEM_HEADER = ["-----BEGIN", "PRIVATE", "KEY-----"].join(" ");
 const RSA_PEM_HEADER = ["-----BEGIN", "RSA", "PRIVATE", "KEY-----"].join(" ");
+const DEFAULT_GITHUB_TIMEOUT_MS = 15_000;
 
 class GitHubApiError extends Error {
   status: number;
@@ -99,13 +100,30 @@ export async function githubJson<T>(
   headers.set("accept", "application/vnd.github+json");
   headers.set("x-github-api-version", init.apiVersion || "2022-11-28");
   if (init.token) headers.set("authorization", `Bearer ${init.token}`);
-  const response = await fetch(url, { ...init, headers });
+  const response = await fetch(url, {
+    ...init,
+    headers,
+    signal: init.signal || AbortSignal.timeout(DEFAULT_GITHUB_TIMEOUT_MS),
+  });
   const text = await response.text();
-  const payload = text ? JSON.parse(text) : null;
+  let payload: any = null;
+  if (text) {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = null;
+    }
+  }
   if (!response.ok) {
     throw new GitHubApiError(
       response.status,
       `GitHub API ${response.status}: ${payload?.message || text}`,
+    );
+  }
+  if (text && !payload) {
+    throw new GitHubApiError(
+      response.status,
+      "GitHub API returned invalid JSON.",
     );
   }
   return payload as T;
@@ -269,6 +287,81 @@ async function githubJsonOrNull<T>(
   }
 }
 
+async function gitBranchSha(params: {
+  repo: GitHubRepo;
+  branch: string;
+  token: string;
+  apiVersion?: string;
+}) {
+  const ref = await githubJsonOrNull<{ object?: { sha?: string } }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/git/ref/heads/${params.branch}`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+  return ref?.object?.sha || "";
+}
+
+async function syncForkBranch(params: {
+  repo: GitHubRepo;
+  branch: string;
+  token: string;
+  apiVersion?: string;
+}) {
+  await githubJsonOrNull(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/merge-upstream`,
+    {
+      method: "POST",
+      token: params.token,
+      apiVersion: params.apiVersion,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ branch: params.branch }),
+    },
+    [404, 409, 422],
+  );
+}
+
+async function resolveForkBaseSha(params: {
+  forkRepo: GitHubRepo;
+  baseRef: string;
+  fallbackBranch: string;
+  token: string;
+  apiVersion?: string;
+}) {
+  const forkBaseSha = await gitBranchSha({
+    repo: params.forkRepo,
+    branch: params.baseRef,
+    token: params.token,
+    apiVersion: params.apiVersion,
+  });
+  if (forkBaseSha) return forkBaseSha;
+
+  await syncForkBranch({
+    repo: params.forkRepo,
+    branch: params.baseRef,
+    token: params.token,
+    apiVersion: params.apiVersion,
+  });
+  const syncedBaseSha = await gitBranchSha({
+    repo: params.forkRepo,
+    branch: params.baseRef,
+    token: params.token,
+    apiVersion: params.apiVersion,
+  });
+  if (syncedBaseSha) return syncedBaseSha;
+
+  const fallbackSha = await gitBranchSha({
+    repo: params.forkRepo,
+    branch: params.fallbackBranch,
+    token: params.token,
+    apiVersion: params.apiVersion,
+  });
+  if (fallbackSha) return fallbackSha;
+
+  throw new Error("GitHub fork has no usable branch base for submission.");
+}
+
 export async function createUserForkContentPr(params: {
   userToken: string;
   publicRepo: string;
@@ -292,6 +385,7 @@ export async function createUserForkContentPr(params: {
   type ForkRepo = {
     full_name?: string;
     name?: string;
+    default_branch?: string;
     owner?: { login?: string };
   };
 
@@ -302,7 +396,7 @@ export async function createUserForkContentPr(params: {
       token: params.userToken,
       apiVersion: params.apiVersion,
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ default_branch_only: true }),
+      body: JSON.stringify({ default_branch_only: false }),
     },
     [404, 422],
   );
@@ -311,6 +405,7 @@ export async function createUserForkContentPr(params: {
     createdFork?.full_name ||
     `${createdFork?.owner?.login || user.login}/${createdFork?.name || upstream.repo}`;
   let forkRepo = parseRepo(forkFullName);
+  let forkDefaultBranch = createdFork?.default_branch || "main";
   let forkReady = false;
   const forkPollAttempts = 10;
   for (let attempt = 0; attempt < forkPollAttempts; attempt += 1) {
@@ -325,6 +420,7 @@ export async function createUserForkContentPr(params: {
       forkFullName =
         fork.full_name || `${forkRepo.owner}/${fork.name || forkRepo.repo}`;
       forkRepo = parseRepo(forkFullName);
+      forkDefaultBranch = fork.default_branch || forkDefaultBranch;
       forkReady = true;
       break;
     }
@@ -355,13 +451,13 @@ export async function createUserForkContentPr(params: {
     };
   }
 
-  const baseRef = await githubJson<{ object: { sha: string } }>(
-    `https://api.github.com/repos/${upstream.owner}/${upstream.repo}/git/ref/heads/${params.baseRef}`,
-    {
-      token: params.userToken,
-      apiVersion: params.apiVersion,
-    },
-  );
+  const forkBaseSha = await resolveForkBaseSha({
+    forkRepo,
+    baseRef: params.baseRef,
+    fallbackBranch: forkDefaultBranch,
+    token: params.userToken,
+    apiVersion: params.apiVersion,
+  });
   const encodedBranch = `heads/${params.branchName}`;
   const existingBranch = await githubJsonOrNull(
     `https://api.github.com/repos/${forkRepo.owner}/${forkRepo.repo}/git/ref/${encodedBranch}`,
@@ -379,7 +475,7 @@ export async function createUserForkContentPr(params: {
         token: params.userToken,
         apiVersion: params.apiVersion,
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ sha: baseRef.object.sha, force: true }),
+        body: JSON.stringify({ sha: forkBaseSha, force: true }),
       },
     );
   } else {
@@ -392,7 +488,7 @@ export async function createUserForkContentPr(params: {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
           ref: `refs/heads/${params.branchName}`,
-          sha: baseRef.object.sha,
+          sha: forkBaseSha,
         }),
       },
     );

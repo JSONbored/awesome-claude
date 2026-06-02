@@ -163,6 +163,8 @@ the shared `heyclaude-dev` Worker and validates that URL. If Cloudflare branch
 or PR previews publish GitHub Deployment statuses, CI validates the deployment
 `environment_url` instead. `DEPLOYMENT_ARTIFACT_BASE_URL` is only a local
 escape hatch for the validation script, not the pull-request merge gate.
+For same-repo web, registry, or MCP PRs, missing Cloudflare credentials or a
+missing preview URL is a failed check, not an allow-missing pass.
 
 ## Newsletter (Resend)
 

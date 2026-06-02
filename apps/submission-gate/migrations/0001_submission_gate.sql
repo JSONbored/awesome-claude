@@ -1,6 +1,8 @@
 CREATE TABLE IF NOT EXISTS submission_drafts (
   id TEXT PRIMARY KEY,
-  status TEXT NOT NULL DEFAULT 'draft',
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (
+    status IN ('draft', 'auth_required', 'queued', 'pr_open')
+  ),
   category TEXT NOT NULL,
   slug TEXT NOT NULL,
   target_path TEXT NOT NULL,
@@ -12,7 +14,9 @@ CREATE TABLE IF NOT EXISTS submission_drafts (
   fork_full_name TEXT,
   pull_request_url TEXT,
   pull_request_number INTEGER,
-  verdict TEXT,
+  verdict TEXT CHECK (
+    verdict IS NULL OR verdict IN ('import', 'request_changes', 'close', 'manual', 'ignore')
+  ),
   verdict_summary TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
@@ -30,8 +34,12 @@ CREATE TABLE IF NOT EXISTS submission_prs (
   head_repo TEXT,
   head_ref TEXT,
   base_ref TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'queued',
-  verdict TEXT,
+  status TEXT NOT NULL DEFAULT 'queued' CHECK (
+    status IN ('queued', 'import_pr_open', 'import', 'request_changes', 'close', 'manual', 'ignore')
+  ),
+  verdict TEXT CHECK (
+    verdict IS NULL OR verdict IN ('import', 'request_changes', 'close', 'manual', 'ignore')
+  ),
   verdict_summary TEXT,
   import_pr_url TEXT,
   last_delivery_id TEXT,
@@ -64,10 +72,3 @@ CREATE TABLE IF NOT EXISTS submission_user_tokens (
 
 CREATE INDEX IF NOT EXISTS idx_submission_user_tokens_expires
   ON submission_user_tokens (expires_at);
-
-CREATE TABLE IF NOT EXISTS idempotency_keys (
-  target_key TEXT NOT NULL,
-  key TEXT NOT NULL,
-  created_at TEXT NOT NULL,
-  PRIMARY KEY (target_key, key)
-);
