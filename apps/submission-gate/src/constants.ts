@@ -3,6 +3,7 @@ export const LABELS = {
   requestChanges: "submission-needs-changes",
   manual: "submission-manual-review",
   close: "submission-closed-by-gate",
+  merged: "submission-merged-by-gate",
   importOpen: "import-pr-open",
   superseded: "superseded-by-import-pr",
 } as const;

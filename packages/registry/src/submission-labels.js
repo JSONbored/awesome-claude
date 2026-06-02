@@ -43,7 +43,7 @@ export const SUBMISSION_VALIDATION_LABEL_DEFINITIONS = {
   [SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL]: {
     color: "0e8a16",
     description:
-      "Submission passed deterministic gates and awaits maintainer-approved import PR",
+      "Submission passed deterministic gates and may be eligible for direct PR merge",
   },
 };
 

@@ -666,7 +666,7 @@ npx unslop --help`);
     expect(queue.entries[0].reviewChecklist).toEqual(
       expect.arrayContaining([
         "Confirm the category, slug, and public-facing metadata.",
-        "Auto-import may open a PR after gates pass; maintainer review still gates merge.",
+        "Content-only PRs may merge automatically after content validation, Superagent, and private maintainer-agent review pass.",
       ]),
     );
     expect(queue.entries[0].autoImportEligible).toBe(true);

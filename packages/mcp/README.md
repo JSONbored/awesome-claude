@@ -177,11 +177,12 @@ checks the HTTP guards used by the remote route.
 - Remote endpoint requires JSON POST bodies, rejects payloads above 64 KiB, and
   uses the dedicated `API_MCP_RATE_LIMIT` Cloudflare binding at
   60 requests/minute/IP in production.
-- Submission tools prepare review drafts only; HeyClaude does not auto-merge or
-  publish MCP-submitted content.
-- Source-backed, non-artifact submissions may be approved for a review PR after
-  repository gates pass, but the MCP server does not perform that action and
-  maintainers still review before merge.
+- Submission tools prepare review drafts only; the MCP server does not perform
+  GitHub writes or publish submitted content.
+- Source-backed, content-only PRs may be merged automatically after content
+  validation, Superagent, and private maintainer-agent review pass. Platform,
+  workflow, package, and generated-artifact changes are never auto-merged by
+  this path.
 - Community ZIP/MCPB artifacts are review/quarantine material only. Public
   HeyClaude-hosted downloads are maintainer-built package artifacts.
 

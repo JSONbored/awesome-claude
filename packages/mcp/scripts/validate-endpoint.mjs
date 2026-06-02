@@ -374,7 +374,9 @@ async function validateMcpTools(endpointUrl, options = {}) {
         "prepare_submission_draft did not return a canonical PR draft body.",
       );
       assert(
-        String(prepared.submissionPolicy || "").includes("does not auto-merge"),
+        String(prepared.submissionPolicy || "").includes(
+          "may be merged automatically",
+        ),
         "prepare_submission_draft did not expose the maintainer-reviewed policy.",
       );
     }

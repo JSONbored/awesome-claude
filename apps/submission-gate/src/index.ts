@@ -15,6 +15,7 @@ import {
 } from "./drafts";
 import {
   addLabels,
+  approvePullRequest,
   buildGitHubAppAuthorizeUrl,
   closeIssueOrPullRequest,
   createUserForkContentPr,
@@ -25,6 +26,7 @@ import {
   getRepositoryFileContent,
   listPullRequestFiles,
   listPullRequestsForCommit,
+  mergePullRequest,
   parseRepo,
   removeLabels,
   upsertMarkerComment,
@@ -97,14 +99,27 @@ class SubmissionLockBusyError extends Error {
   }
 }
 
+class SubmissionMergePendingError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "SubmissionMergePendingError";
+  }
+}
+
 const GATE_VERDICTS = new Set<GateVerdict>([
+  "merge",
   "import",
   "request_changes",
   "close",
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
+const TERMINAL_GATE_VERDICTS = new Set([
+  "import",
+  "close",
+  "manual",
+  "ignore",
+]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -126,7 +141,10 @@ const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "zip_code",
 ]);
 
-const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["validate-content"];
+const DEFAULT_REQUIRED_VALIDATION_CHECKS = [
+  "validate-content",
+  "Superagent Security Scan",
+];
 const VALIDATION_WEBHOOK_EVENTS = new Set([
   "check_run",
   "check_suite",
@@ -147,6 +165,7 @@ const DECISION_LABELS = [
   LABELS.requestChanges,
   LABELS.manual,
   LABELS.close,
+  LABELS.merged,
   LABELS.importOpen,
   LABELS.superseded,
 ];
@@ -159,6 +178,13 @@ type ReviewTarget = {
   headRef?: string;
   headSha?: string;
   installationId?: number;
+};
+
+type DirectContentScope = {
+  filePath: string;
+  category: string;
+  slug: string;
+  status: string;
 };
 
 function isMaintainerImportRef(ref: string | undefined) {
@@ -700,6 +726,7 @@ function hasTerminalGateDecision(
     | undefined,
 ) {
   if (!state) return false;
+  if (String(state.status || "") === "merged") return true;
   if (String(state.status || "") === "import_pr_open") return true;
   if (String(state.verdict || "") === "import") {
     return (
@@ -709,6 +736,13 @@ function hasTerminalGateDecision(
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
 }
 
+function isRetryableMergeError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || "");
+  return /required status check|required approving review|not mergeable|merge conflict|base branch was modified|head branch was modified|sha does not match|review_required|status check/i.test(
+    message,
+  );
+}
+
 function importContentPathParts(filePath: string) {
   const match = /^content\/([^/]+)\/([^/]+)\.mdx$/i.exec(filePath);
   if (!match) return null;
@@ -716,6 +750,162 @@ function importContentPathParts(filePath: string) {
     category: match[1].toLowerCase(),
     slug: slugify(match[2]),
   };
+}
+
+async function directContentScopeForPr(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  number: number;
+  apiVersion?: string;
+}): Promise<DirectContentScope> {
+  const files = await listPullRequestFiles({
+    token: params.token,
+    repo: params.repo,
+    number: params.number,
+    apiVersion: params.apiVersion,
+  });
+  if (files.length !== 1) {
+    throw new Error(
+      "Direct content submissions must change exactly one source content file.",
+    );
+  }
+
+  const file = files[0];
+  const filePath = String(file.filename || "");
+  const pathParts = importContentPathParts(filePath);
+  if (!pathParts || !pathParts.slug) {
+    throw new Error(
+      "Direct content submissions must change one content/<category>/<slug>.mdx file.",
+    );
+  }
+  const status = String(file.status || "");
+  if (status === "removed") {
+    throw new Error("Direct content submissions cannot remove content files.");
+  }
+
+  return {
+    filePath,
+    category: pathParts.category,
+    slug: pathParts.slug,
+    status,
+  };
+}
+
+function scopeFailureDecision(error: unknown): GateDecision {
+  const message =
+    error instanceof Error
+      ? error.message
+      : "Direct content scope validation failed.";
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      `- ${message}`,
+      "",
+      "Required Shape:",
+      "- Submit exactly one raw `content/<category>/<slug>.mdx` file.",
+      "- Do not edit generated artifacts, README, registry data, workflows, scripts, packages, or multiple entries.",
+      "",
+      "Recommended Action:",
+      "- Close this PR and resubmit a focused single-entry content PR.",
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+function normalizeGateDecision(decision: GateDecision): GateDecision {
+  if (decision.verdict !== "import") return decision;
+  return {
+    ...decision,
+    verdict: "merge",
+    labels: decision.labels.filter(
+      (label) => label !== LABELS.importOpen && label !== LABELS.superseded,
+    ),
+    importJob: undefined,
+  };
+}
+
+function validationGateDecision(validation: {
+  summary: string;
+  checks: Array<{ name: string; status: string; details?: string }>;
+}): GateDecision {
+  const superagentFailures = validation.checks.filter(
+    (check) =>
+      check.status === "failed" &&
+      /superagent/i.test(`${check.name} ${check.details || ""}`),
+  );
+  if (superagentFailures.length) {
+    const inconclusive = superagentFailures.some((check) =>
+      /action_required|neutral|skipped|cancelled/i.test(check.details || ""),
+    );
+    if (inconclusive) {
+      return defaultManualDecision(
+        `${validation.summary} Superagent did not return a clear pass/fail result.`,
+      );
+    }
+    return {
+      verdict: "close" as const,
+      summary: [
+        "Summary:",
+        `- ${validation.summary}`,
+        "",
+        "Security Review:",
+        "- Superagent did not pass, so this content PR is not eligible for automated merge.",
+        "",
+        "Recommended Action:",
+        "- Close this PR and resubmit only after the flagged issue is resolved.",
+      ].join("\n"),
+      labels: [LABELS.close],
+      close: true,
+    };
+  }
+  return validationFailedDecision(validation.summary);
+}
+
+async function mergeAcceptedPullRequest(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  decision: GateDecision;
+  scope: DirectContentScope;
+}) {
+  const expectedHeadSha = params.target.headSha || "";
+  if (!expectedHeadSha) {
+    throw new Error("Direct merge requires the current PR head SHA.");
+  }
+  const reviewBody = [
+    "Automated review by HeyClaude Maintainer Agent.",
+    "",
+    "This content-only PR passed content validation, Superagent, duplicate/history review, source/provenance review, category-fit review, and safety/privacy review.",
+    "",
+    "The agent is approving and merging this PR directly. Generated artifacts are produced during build/deploy and are not committed by contributors.",
+  ].join("\n");
+  await approvePullRequest({
+    token: params.token,
+    repo: params.repo,
+    number: params.target.number,
+    body: reviewBody,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  const result = await mergePullRequest({
+    token: params.token,
+    repo: params.repo,
+    number: params.target.number,
+    expectedHeadSha,
+    commitTitle: `feat(content): add ${params.scope.category} ${params.scope.slug}`,
+    commitMessage: [
+      `Accepted by HeyClaude Maintainer Agent from PR #${params.target.number}.`,
+      "",
+      params.decision.summary.trim(),
+    ].join("\n"),
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (result.merged === false) {
+    throw new Error(result.message || "GitHub did not merge the pull request.");
+  }
+  return result;
 }
 
 async function fetchRawPullRequestFileContent(rawUrl: unknown) {
@@ -1063,7 +1253,7 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       "Private corpus review returned an unexpected payload.",
     );
   }
-  return {
+  return normalizeGateDecision({
     verdict: raw.verdict as GateVerdict,
     summary: typeof raw.summary === "string" ? raw.summary : "",
     labels: Array.isArray(raw.labels)
@@ -1071,7 +1261,7 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       : [],
     close: raw.close === true,
     importJob: isRecord(raw.importJob) ? raw.importJob : undefined,
-  };
+  });
 }
 
 async function withSubmissionLock(
@@ -1204,6 +1394,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       const repo = parseRepo(target.repoFullName);
       let decision: GateDecision | null = null;
       let validationForPrivateReview: unknown = null;
+      let contentScopeForPrivateReview: DirectContentScope | null = null;
       try {
         const validation = await getCommitValidationState({
           token,
@@ -1233,13 +1424,23 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           return;
         }
         if (validation.state === "failed") {
-          decision = validationFailedDecision(validation.summary);
+          decision = validationGateDecision(validation);
         } else {
           validationForPrivateReview = {
             state: validation.state,
             summary: validation.summary,
             checks: validation.checks,
           };
+          try {
+            contentScopeForPrivateReview = await directContentScopeForPr({
+              token,
+              repo,
+              number: target.number,
+              apiVersion: env.GITHUB_API_VERSION,
+            });
+          } catch (error) {
+            decision = scopeFailureDecision(error);
+          }
         }
       } catch {
         decision = defaultManualDecision(
@@ -1253,34 +1454,47 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           payload: {
             ...message.payload,
             validation: validationForPrivateReview,
+            contentScope: contentScopeForPrivateReview,
+            privateReviewRequirements: {
+              finalAction: "merge_or_close",
+              duplicateHistoryRequired: true,
+              duplicateSignals: [
+                "slug",
+                "title",
+                "source_url",
+                "github_url",
+                "docs_url",
+                "package_url",
+                "domain",
+                "aliases",
+                "normalized_description",
+                "accepted_history",
+                "rejected_history",
+              ],
+            },
           },
         });
       }
-      if (decision.verdict === "import" && !decision.importJob) {
+      decision = normalizeGateDecision(decision);
+      if (decision.verdict === "merge" && !contentScopeForPrivateReview) {
         try {
-          decision = {
-            ...decision,
-            importJob: await synthesizeImportJobFromSourcePr({
-              env,
-              token,
-              repo,
-              target,
-            }),
-          };
+          contentScopeForPrivateReview = await directContentScopeForPr({
+            token,
+            repo,
+            number: target.number,
+            apiVersion: env.GITHUB_API_VERSION,
+          });
         } catch (error) {
-          decision = defaultManualDecision(
-            `Private review accepted this source, but import synthesis failed: ${
-              error instanceof Error ? error.message : "unknown error"
-            }`,
-          );
+          decision = scopeFailureDecision(error);
         }
       }
       const status =
-        decision.verdict === "import" ? "queued" : decision.verdict;
+        decision.verdict === "merge" ? "merge_accepted" : decision.verdict;
       const labelsToApply =
-        decision.verdict === "import"
+        decision.verdict === "merge"
           ? decision.labels.filter(
               (label) =>
+                label !== LABELS.merged &&
                 label !== LABELS.importOpen && label !== LABELS.superseded,
             )
           : decision.labels;
@@ -1343,25 +1557,151 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           apiVersion: env.GITHUB_API_VERSION,
         });
       }
-      if (decision.verdict === "import" && decision.importJob) {
-        await env.SUBMISSION_IMPORT_QUEUE.send({
-          kind: "import_pr",
-          targetKey: message.targetKey,
-          payload: {
-            ...decision.importJob,
-            runnerKey: `${message.targetKey}:${String(
-              message.payload.deliveryId || crypto.randomUUID(),
-            )}`,
+      if (decision.verdict === "merge" && contentScopeForPrivateReview) {
+        try {
+          const mergeResult = await mergeAcceptedPullRequest({
+            env,
+            token,
+            repo,
+            target,
+            decision,
+            scope: contentScopeForPrivateReview,
+          });
+          const mergedSummary = [
+            decision.summary.trim(),
+            "",
+            "Merge Result:",
+            `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
+          ].join("\n");
+          const mergedDecision: GateDecision = {
+            ...decision,
+            summary: mergedSummary,
+            labels: [LABELS.merged],
+          };
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
             baseRef: target.baseRef || env.PILOT_BASE_REF,
-            source: {
+            status: "merged",
+            verdict: "merge",
+            verdictSummary: mergedSummary,
+          });
+          await removeLabels({
+            token,
+            repo,
+            issueNumber: target.number,
+            labels: DECISION_LABELS.filter(
+              (label) => label !== LABELS.merged,
+            ),
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await addLabels({
+            token,
+            repo,
+            issueNumber: target.number,
+            labels: [LABELS.merged],
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await upsertMarkerComment({
+            token,
+            repo,
+            issueNumber: target.number,
+            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            body: markerComment(
+              mergedDecision,
+              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            ),
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await insertAudit(env.SUBMISSION_GATE_DB, {
+            id: crypto.randomUUID(),
+            targetKey: message.targetKey,
+            eventType: message.kind,
+            decision: "merged",
+            summary: mergedSummary,
+          });
+        } catch (error) {
+          if (isRetryableMergeError(error)) {
+            const pendingSummary = [
+              decision.summary.trim(),
+              "",
+              "Merge Result:",
+              `- Accepted by private review, but GitHub is not merge-ready yet: ${
+                error instanceof Error ? error.message : "unknown merge state"
+              }`,
+              "- The gate will retry after branch protection and required review state settle.",
+            ].join("\n");
+            await upsertPrState(env.SUBMISSION_GATE_DB, {
               repo: target.repoFullName,
               number: target.number,
+              headRepo: target.headRepo,
+              headRef: target.headRef,
               baseRef: target.baseRef || env.PILOT_BASE_REF,
-              installationId: Number(target.installationId || 0),
-            },
-          },
-        });
+              status: "merge_accepted",
+              verdict: "merge",
+              verdictSummary: pendingSummary,
+            });
+            await insertAudit(env.SUBMISSION_GATE_DB, {
+              id: crypto.randomUUID(),
+              targetKey: message.targetKey,
+              eventType: message.kind,
+              decision: "merge_pending",
+              summary: pendingSummary,
+            });
+            throw new SubmissionMergePendingError(pendingSummary);
+          }
+          const manualDecision = defaultManualDecision(
+            `Private review accepted this PR, but direct merge failed: ${
+              error instanceof Error ? error.message : "unknown error"
+            }.`,
+          );
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            baseRef: target.baseRef || env.PILOT_BASE_REF,
+            status: "manual",
+            verdict: "manual",
+            verdictSummary: manualDecision.summary,
+          });
+          await removeLabels({
+            token,
+            repo,
+            issueNumber: target.number,
+            labels: DECISION_LABELS.filter(
+              (label) => label !== LABELS.manual,
+            ),
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await addLabels({
+            token,
+            repo,
+            issueNumber: target.number,
+            labels: manualDecision.labels,
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await upsertMarkerComment({
+            token,
+            repo,
+            issueNumber: target.number,
+            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            body: markerComment(
+              manualDecision,
+              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            ),
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          await insertAudit(env.SUBMISSION_GATE_DB, {
+            id: crypto.randomUUID(),
+            targetKey: message.targetKey,
+            eventType: message.kind,
+            decision: "merge_failed",
+            summary: manualDecision.summary,
+          });
+        }
       }
     }
   });
@@ -1773,6 +2113,11 @@ export default {
             targetKey: body.targetKey,
           });
           message.retry({ delaySeconds: 5 });
+        } else if (error instanceof SubmissionMergePendingError) {
+          console.debug("submission merge pending, retrying", {
+            targetKey: body.targetKey,
+          });
+          message.retry({ delaySeconds: 30 });
         } else {
           console.error("submission gate queue failure", error);
           message.retry();

@@ -1,6 +1,7 @@
 import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
 export type GateVerdict =
+  | "merge"
   | "import"
   | "request_changes"
   | "close"
@@ -16,7 +17,8 @@ export type GateDecision = {
 };
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
-  import: "Verdict: Accepted for import",
+  merge: "Verdict: Accepted and merged",
+  import: "Verdict: Accepted and merged",
   request_changes: "Verdict: Request changes",
   close: "Verdict: Close",
   manual: "Verdict: Manual review",
@@ -25,12 +27,12 @@ const VERDICT_HEADLINES: Record<GateVerdict, string> = {
 
 function singleShotFooter(verdict: GateVerdict) {
   if (verdict === "ignore") return "";
-  if (verdict === "import") {
+  if (verdict === "merge" || verdict === "import") {
     return [
       "---",
       "Automated review by HeyClaude Maintainer Agent.",
       "",
-      "This source PR passed the private review gate and was accepted for maintainer-owned import. Generated artifacts and full repository validation run on the import PR, which still requires normal checks and manual maintainer merge.",
+      "This content-only PR passed content validation, Superagent, and private review. HeyClaude merges accepted source PRs directly; generated artifacts are produced at build/deploy time.",
     ].join("\n");
   }
   return [
@@ -69,7 +71,7 @@ export function defaultManualDecision(
 ): GateDecision {
   return {
     verdict: "manual" as const,
-    summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before import.`,
+    summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before merge.`,
     labels: [LABELS.manual],
   };
 }

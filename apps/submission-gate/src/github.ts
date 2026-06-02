@@ -22,13 +22,17 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
     color: "b60205",
     description: "Private submission gate closed this pilot-scoped item",
   },
+  "submission-merged-by-gate": {
+    color: "0e8a16",
+    description: "Private submission gate merged this content PR",
+  },
   "import-pr-open": {
     color: "0e8a16",
-    description: "A maintainer-owned import PR exists for this submission",
+    description: "Legacy: a maintainer-owned import PR exists",
   },
   "superseded-by-import-pr": {
     color: "cfd3d7",
-    description: "Original submission was superseded by a maintainer import PR",
+    description: "Legacy: original submission was superseded by an import PR",
   },
 };
 
@@ -621,6 +625,54 @@ export async function closeIssueOrPullRequest(params: {
       apiVersion: params.apiVersion,
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ state: "closed" }),
+    },
+  );
+}
+
+export async function approvePullRequest(params: {
+  token: string;
+  repo: GitHubRepo;
+  number: number;
+  body: string;
+  apiVersion?: string;
+}) {
+  await githubJson(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/reviews`,
+    {
+      method: "POST",
+      token: params.token,
+      apiVersion: params.apiVersion,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        event: "APPROVE",
+        body: params.body,
+      }),
+    },
+  );
+}
+
+export async function mergePullRequest(params: {
+  token: string;
+  repo: GitHubRepo;
+  number: number;
+  expectedHeadSha: string;
+  commitTitle: string;
+  commitMessage: string;
+  apiVersion?: string;
+}) {
+  return githubJson<{ sha?: string; merged?: boolean; message?: string }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/merge`,
+    {
+      method: "PUT",
+      token: params.token,
+      apiVersion: params.apiVersion,
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        sha: params.expectedHeadSha,
+        merge_method: "squash",
+        commit_title: params.commitTitle,
+        commit_message: params.commitMessage,
+      }),
     },
   );
 }

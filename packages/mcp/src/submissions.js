@@ -485,7 +485,7 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
       missingRequiredFields: validation.missingRequiredFields || [],
     },
     reviewModel:
-      "PR-first: source-backed submissions are opened as single-entry PRs, reviewed by the private gate, and still require maintainer merge.",
+      "PR-first: source-backed submissions are opened as single-entry PRs. Content-only PRs may be merged automatically after content validation, Superagent, and private maintainer-agent review pass.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are review material only and are not published as HeyClaude-hosted downloads.",
   };
@@ -734,7 +734,7 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
       "Disclose paid, sponsored, affiliate, or commercial content separately from free community submissions.",
     ],
     submissionPolicy:
-      "This tool prepares a PR-first submission draft only. Eligible PRs can be imported by a maintainer-owned PR, and HeyClaude does not auto-merge or publish MCP-submitted content.",
+      "This tool prepares a PR-first submission draft only. Eligible content-only PRs may be merged automatically after content validation, Superagent, and private maintainer-agent review pass; platform, workflow, package, and generated-artifact changes are never auto-merged by this path.",
     artifactPolicy:
       "Community ZIP/MCPB artifacts are quarantine/review material only. Maintainer-built packages are the only HeyClaude-hosted downloads.",
   };

@@ -395,7 +395,7 @@ describe("HeyClaude remote MCP route", () => {
       prDraft: {
         body: expect.stringContaining("### Guide content"),
       },
-      submissionPolicy: expect.stringContaining("does not auto-merge"),
+      submissionPolicy: expect.stringContaining("may be merged automatically"),
       artifactPolicy: expect.stringContaining("quarantine/review"),
     });
     expect(JSON.stringify(result)).not.toMatch(

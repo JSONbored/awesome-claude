@@ -1393,7 +1393,7 @@ describe("HeyClaude read-only MCP helpers", () => {
         body: expect.stringContaining("### Install command"),
       },
       reviewUrl: expect.stringContaining("https://heyclau.de/submit"),
-      submissionPolicy: expect.stringContaining("does not auto-merge"),
+      submissionPolicy: expect.stringContaining("may be merged automatically"),
       artifactPolicy: expect.stringContaining("quarantine/review"),
     });
 

@@ -224,13 +224,15 @@ describe("Cloudflare submission gate helpers", () => {
     const privateReviewIndex = source.indexOf("reviewWithPrivateGate(env, {");
 
     expect(source).toContain(
-      'const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["validate-content"]',
+      'const DEFAULT_REQUIRED_VALIDATION_CHECKS = [\n  "validate-content",\n  "Superagent Security Scan",\n]',
     );
     expect(source).toContain('"check_run"');
     expect(source).toContain('"check_suite"');
     expect(source).toContain('"status"');
     expect(source).toContain('status: "validation_pending"');
     expect(source).toContain("validation: validationForPrivateReview");
+    expect(source).toContain("contentScope: contentScopeForPrivateReview");
+    expect(source).toContain("duplicateHistoryRequired: true");
     expect(validationIndex).toBeGreaterThan(0);
     expect(privateReviewIndex).toBeGreaterThan(validationIndex);
   });
@@ -280,18 +282,19 @@ describe("Cloudflare submission gate helpers", () => {
     expect(body).toContain("single-shot submission review");
   });
 
-  it("labels accepted submissions as import candidates without implying merge", () => {
+  it("renders accepted submissions as direct merge decisions", () => {
     const body = markerComment({
-      verdict: "import",
-      summary: "Summary:\n- Accepted for maintainer-owned import.",
-      labels: ["import-pr-open"],
+      verdict: "merge",
+      summary:
+        "Summary:\n- Accepted after duplicate/history and source review.",
+      labels: ["submission-merged-by-gate"],
     });
 
-    expect(body).toContain("Verdict: Accepted for import");
+    expect(body).toContain("Verdict: Accepted and merged");
     expect(body).toContain(
-      "Generated artifacts and full repository validation run on the import PR",
+      "passed content validation, Superagent, and private review",
     );
-    expect(body).toContain("manual maintainer merge");
+    expect(body).toContain("merges accepted source PRs directly");
   });
 
   it("reconciles old verdict labels before applying a new gate decision", () => {
@@ -305,16 +308,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(addIndex).toBeGreaterThan(removeIndex);
   });
 
-  it("does not mark import PR labels or state before import creation", () => {
+  it("does not apply the merged label before direct merge succeeds", () => {
     const source = readWorkerSource();
 
     expect(source).toContain(
-      'const status =\n        decision.verdict === "import" ? "queued" : decision.verdict',
+      'const status =\n        decision.verdict === "merge" ? "merge_accepted" : decision.verdict',
     );
+    expect(source).toContain("label !== LABELS.merged");
     expect(source).toContain("label !== LABELS.importOpen");
     expect(source).toContain("label !== LABELS.superseded");
-    expect(source).toContain('status: "import_running"');
-    expect(source).toContain('status: "import_pr_open"');
+    expect(source).toContain('status: "merged"');
+    expect(source).toContain("await mergeAcceptedPullRequest({");
+    expect(source).toContain("SubmissionMergePendingError");
+    expect(source).toContain('decision: "merge_pending"');
+    expect(source).toContain("message.retry({ delaySeconds: 30 })");
   });
 
   it("keeps one-shot gate verdicts from being overwritten by later check events", () => {
@@ -347,6 +354,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
+    expect(terminalSetBlock).not.toContain('"merge"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
       "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
@@ -354,6 +362,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       'String(message.payload.eventName || "") === "issue_comment"',
     );
+    expect(source).toContain('String(state.status || "") === "merged"');
     expect(source).toContain('String(state.status || "") === "import_pr_open"');
     expect(source).toContain('String(state.verdict || "") === "import"');
     expect(source).toContain('typeof state.importPrUrl === "string"');
@@ -366,18 +375,19 @@ describe("Cloudflare submission gate helpers", () => {
     expect(validationIndex).toBeGreaterThan(reviewReadIndex);
   });
 
-  it("synthesizes maintainer import jobs when accepted reviews omit import payloads", () => {
+  it("merges accepted direct content PRs instead of creating import PRs", () => {
     const source = readWorkerSource();
 
-    expect(source).toContain("async function synthesizeImportJobFromSourcePr");
+    expect(source).toContain("async function directContentScopeForPr");
+    expect(source).toContain("async function mergeAcceptedPullRequest");
+    expect(source).toContain("approvePullRequest({");
+    expect(source).toContain("mergePullRequest({");
     expect(source).toContain("listPullRequestFiles({");
-    expect(source).toContain("getRepositoryFileContent({");
-    expect(source).toContain("fetchRawPullRequestFileContent(file.raw_url)");
     expect(source).toContain(
-      "branchName: `automation/submission-pr-${params.target.number}-${pathParts.slug}`",
+      "Direct content submissions must change exactly one source content file.",
     );
-    expect(source).toContain("decision = {");
-    expect(source).toContain(
+    expect(source).toContain('finalAction: "merge_or_close"');
+    expect(source).not.toContain(
       "importJob: await synthesizeImportJobFromSourcePr",
     );
     expect(source).not.toContain(
@@ -390,7 +400,7 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(source).toContain("SUBMISSION_GATE_URL");
     expect(source).toContain("callbackUrl:");
-    expect(source).toContain("runnerKey:");
+    expect(source).toContain("const runnerKey");
     expect(source).toContain(
       "env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey)",
     );

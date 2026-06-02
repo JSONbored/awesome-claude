@@ -227,8 +227,8 @@ ${categoryGrid}
 ### Contributor Guardrails
 
 Free Claude resources use PR-first intake by default. Fully valid,
-source-backed, non-artifact submissions can be copied into a maintainer-owned
-import PR after policy gates pass. Maintainer review still gates merge. Tool,
+source-backed, content-only submissions may be merged automatically after
+content validation, Superagent, and private maintainer-agent review pass. Tool,
 app, service promotion, listing claims, and jobs use the website lead forms
 instead of GitHub content submissions.
 

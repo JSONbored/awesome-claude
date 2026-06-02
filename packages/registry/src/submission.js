@@ -1280,7 +1280,7 @@ function buildSubmissionReviewChecklist({
   if (status === "import_ready") {
     if (risk.policyDecision === "auto_import_eligible") {
       items.push(
-        "Auto-import may open a PR after gates pass; maintainer review still gates merge.",
+        "Content-only PRs may merge automatically after content validation, Superagent, and private maintainer-agent review pass.",
       );
     } else {
       items.push(
