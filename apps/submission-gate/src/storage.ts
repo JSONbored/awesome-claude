@@ -252,6 +252,23 @@ export async function upsertPrState(
     .run();
 }
 
+export async function getPrState(
+  db: D1Database,
+  params: { repo: string; number: number },
+) {
+  return db
+    .prepare(
+      `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
+        base_ref AS baseRef, status, verdict, verdict_summary AS verdictSummary,
+        import_pr_url AS importPrUrl, last_delivery_id AS lastDeliveryId,
+        created_at AS createdAt, updated_at AS updatedAt
+       FROM submission_prs
+       WHERE repo = ? AND number = ?`,
+    )
+    .bind(params.repo, params.number)
+    .first<Record<string, unknown>>();
+}
+
 export async function insertAudit(
   db: D1Database,
   params: {

@@ -245,6 +245,55 @@ export async function getPullRequest(params: {
   );
 }
 
+export async function listPullRequestFiles(params: {
+  token: string;
+  repo: GitHubRepo;
+  number: number;
+  apiVersion?: string;
+}) {
+  return githubJson<
+    Array<{
+      filename?: string;
+      status?: string;
+      raw_url?: string;
+      additions?: number;
+      deletions?: number;
+      changes?: number;
+    }>
+  >(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/files?per_page=100`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+}
+
+export async function getRepositoryFileContent(params: {
+  token: string;
+  repo: GitHubRepo;
+  path: string;
+  ref: string;
+  apiVersion?: string;
+}) {
+  const encodedPath = encodeContentPath(params.path);
+  const payload = await githubJson<{
+    type?: string;
+    encoding?: string;
+    content?: string;
+  }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/contents/${encodedPath}?ref=${encodeURIComponent(params.ref)}`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+  if (payload.type !== "file" || payload.encoding !== "base64") {
+    throw new Error("GitHub content API did not return a base64 file blob.");
+  }
+  return atob(String(payload.content || "").replace(/\s+/g, ""));
+}
+
 type CheckRun = {
   name?: string;
   status?: string;

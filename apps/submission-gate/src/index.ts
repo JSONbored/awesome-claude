@@ -11,6 +11,7 @@ import {
   buildContributorMdx,
   buildDraftTarget,
   draftFieldsFromBody,
+  slugify,
 } from "./drafts";
 import {
   addLabels,
@@ -21,6 +22,8 @@ import {
   getCommitValidationState,
   getInstallationToken,
   getPullRequest,
+  getRepositoryFileContent,
+  listPullRequestFiles,
   listPullRequestsForCommit,
   parseRepo,
   removeLabels,
@@ -46,6 +49,7 @@ import {
   createDraft,
   getDraftUserToken,
   getDraft,
+  getPrState,
   insertAudit,
   storeDraftUserToken,
   updateDraftAuthState,
@@ -99,6 +103,7 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "manual",
   "ignore",
 ]);
+const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -674,6 +679,118 @@ function targetKeyForReview(target: ReviewTarget) {
   return `${target.repoFullName}#${target.number}`;
 }
 
+function hasTerminalGateDecision(
+  state:
+    | {
+        status?: unknown;
+        verdict?: unknown;
+      }
+    | null
+    | undefined,
+) {
+  if (!state) return false;
+  if (String(state.status || "") === "import_pr_open") return true;
+  return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
+}
+
+function importContentPathParts(filePath: string) {
+  const match = /^content\/([^/]+)\/([^/]+)\.mdx$/i.exec(filePath);
+  if (!match) return null;
+  return {
+    category: match[1].toLowerCase(),
+    slug: slugify(match[2]),
+  };
+}
+
+async function fetchRawPullRequestFileContent(rawUrl: unknown) {
+  const url = new URL(String(rawUrl || ""));
+  if (
+    url.protocol !== "https:" ||
+    !["github.com", "raw.githubusercontent.com"].includes(url.hostname)
+  ) {
+    throw new Error("Import synthesis raw file URL is not a GitHub HTTPS URL.");
+  }
+  const response = await fetch(url.toString(), {
+    headers: { "user-agent": "heyclaude-submission-gate" },
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (!response.ok) {
+    throw new Error(`GitHub raw file fetch returned ${response.status}.`);
+  }
+  const content = await response.text();
+  if (content.length > 100_000) {
+    throw new Error("Import synthesis raw file is too large.");
+  }
+  return content;
+}
+
+async function synthesizeImportJobFromSourcePr(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+}) {
+  const files = await listPullRequestFiles({
+    token: params.token,
+    repo: params.repo,
+    number: params.target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (files.length !== 1) {
+    throw new Error("Import synthesis requires exactly one changed PR file.");
+  }
+
+  const file = files[0];
+  const filePath = String(file.filename || "");
+  const pathParts = importContentPathParts(filePath);
+  if (!pathParts || !pathParts.slug) {
+    throw new Error(
+      "Import synthesis requires one content/<category>/<slug>.mdx file.",
+    );
+  }
+  if (String(file.status || "") === "removed") {
+    throw new Error("Import synthesis cannot import removed content files.");
+  }
+
+  const headRepo = parseRepo(
+    params.target.headRepo || params.target.repoFullName,
+  );
+  const headRef = params.target.headSha || params.target.headRef || "";
+  if (!headRef) {
+    throw new Error("Import synthesis requires a PR head ref or SHA.");
+  }
+
+  let content: string;
+  try {
+    content = await getRepositoryFileContent({
+      token: params.token,
+      repo: headRepo,
+      path: filePath,
+      ref: headRef,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    });
+  } catch {
+    content = await fetchRawPullRequestFileContent(file.raw_url);
+  }
+
+  return {
+    branchName: `automation/submission-pr-${params.target.number}-${pathParts.slug}`,
+    title: `feat(content): import ${pathParts.category} ${pathParts.slug}`,
+    body: [
+      `Maintainer-owned import generated from source PR #${params.target.number}.`,
+      "",
+      "The private submission gate accepted the source PR after public validation and private review.",
+      "Generated artifacts are produced during validation/build and are not committed in this import PR.",
+    ].join("\n"),
+    files: [
+      {
+        path: filePath,
+        content,
+      },
+    ],
+  };
+}
+
 async function enqueueReviewTarget(
   env: Env,
   target: ReviewTarget,
@@ -681,10 +798,16 @@ async function enqueueReviewTarget(
   eventName: string,
   webhook?: Record<string, unknown>,
   pilotScoped = false,
+  forceRecheck = false,
 ) {
   if (isMaintainerImportRef(target.headRef)) return false;
   if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
   const targetKey = targetKeyForReview(target);
+  const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+  });
+  if (!forceRecheck && hasTerminalGateDecision(existing)) return false;
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
@@ -697,7 +820,7 @@ async function enqueueReviewTarget(
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
     targetKey,
-    payload: { eventName, deliveryId, target, webhook },
+    payload: { eventName, deliveryId, target, webhook, forceRecheck },
   });
   return true;
 }
@@ -851,6 +974,7 @@ async function githubWebhookRoute(
       deliveryId,
       eventName,
       payload,
+      true,
       true,
     );
     const targetKey = targetKeyForReview(target);
@@ -1037,6 +1161,24 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
     if (message.kind === "review_pr") {
       const target = reviewTargetFromMessage(message);
       if (!target) return;
+      const forceRecheck =
+        message.payload.forceRecheck === true ||
+        String(message.payload.eventName || "") === "issue_comment";
+      const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+        repo: target.repoFullName,
+        number: target.number,
+      });
+      if (!forceRecheck && hasTerminalGateDecision(existing)) {
+        await insertAudit(env.SUBMISSION_GATE_DB, {
+          id: crypto.randomUUID(),
+          targetKey: message.targetKey,
+          eventType: message.kind,
+          decision: "ignored",
+          summary:
+            "Skipped because this submission already has a terminal gate decision.",
+        });
+        return;
+      }
       const token = await installationTokenForInstallationId(
         env,
         Number(target.installationId || 0),
@@ -1098,9 +1240,23 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         });
       }
       if (decision.verdict === "import" && !decision.importJob) {
-        decision = defaultManualDecision(
-          "Private review accepted this source, but did not return an import job.",
-        );
+        try {
+          decision = {
+            ...decision,
+            importJob: await synthesizeImportJobFromSourcePr({
+              env,
+              token,
+              repo,
+              target,
+            }),
+          };
+        } catch (error) {
+          decision = defaultManualDecision(
+            `Private review accepted this source, but import synthesis failed: ${
+              error instanceof Error ? error.message : "unknown error"
+            }`,
+          );
+        }
       }
       const status =
         decision.verdict === "import" ? "queued" : decision.verdict;

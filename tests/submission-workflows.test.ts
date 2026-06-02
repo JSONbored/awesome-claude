@@ -61,6 +61,8 @@ describe("submission automation workflows", () => {
           FORCE_FULL_VALIDATION: "0",
           GITHUB_EVENT_NAME: "pull_request",
           GITHUB_OUTPUT: outputPath,
+          GITHUB_HEAD_REF: "contributor/source-entry",
+          HEAD_REF: "contributor/source-entry",
         },
       },
     );
