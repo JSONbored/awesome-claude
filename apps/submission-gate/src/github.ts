@@ -4,6 +4,32 @@ const encoder = new TextEncoder();
 const PKCS8_PEM_HEADER = ["-----BEGIN", "PRIVATE", "KEY-----"].join(" ");
 const RSA_PEM_HEADER = ["-----BEGIN", "RSA", "PRIVATE", "KEY-----"].join(" ");
 const DEFAULT_GITHUB_TIMEOUT_MS = 15_000;
+const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
+  "submission-under-review": {
+    color: "fbca04",
+    description: "Private submission gate is reviewing this item",
+  },
+  "submission-needs-changes": {
+    color: "d93f0b",
+    description: "Submission needs author edits before review can continue",
+  },
+  "submission-manual-review": {
+    color: "5319e7",
+    description: "Submission needs maintainer review before automation continues",
+  },
+  "submission-closed-by-gate": {
+    color: "b60205",
+    description: "Private submission gate closed this pilot-scoped item",
+  },
+  "import-pr-open": {
+    color: "0e8a16",
+    description: "A maintainer-owned import PR exists for this submission",
+  },
+  "superseded-by-import-pr": {
+    color: "cfd3d7",
+    description: "Original submission was superseded by a maintainer import PR",
+  },
+};
 
 class GitHubApiError extends Error {
   status: number;
@@ -98,6 +124,7 @@ export async function githubJson<T>(
 ) {
   const headers = new Headers(init.headers);
   headers.set("accept", "application/vnd.github+json");
+  headers.set("user-agent", "heyclaude-submission-gate");
   headers.set("x-github-api-version", init.apiVersion || "2022-11-28");
   if (init.token) headers.set("authorization", `Bearer ${init.token}`);
   const response = await fetch(url, {
@@ -191,6 +218,30 @@ export async function getInstallationToken(params: {
     },
   );
   return payload.token;
+}
+
+export async function getPullRequest(params: {
+  token: string;
+  repo: GitHubRepo;
+  number: number;
+  apiVersion?: string;
+}) {
+  return githubJson<{
+    number: number;
+    draft?: boolean;
+    base?: { ref?: string; repo?: { full_name?: string } };
+    head?: {
+      sha?: string;
+      ref?: string;
+      repo?: { full_name?: string };
+    };
+  }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
 }
 
 type CheckRun = {
@@ -398,6 +449,14 @@ export async function addLabels(params: {
   labels: string[];
   apiVersion?: string;
 }) {
+  for (const label of params.labels) {
+    await ensureManagedLabel({
+      token: params.token,
+      repo: params.repo,
+      label,
+      apiVersion: params.apiVersion,
+    });
+  }
   await githubJson(
     `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/labels`,
     {
@@ -408,6 +467,59 @@ export async function addLabels(params: {
       body: JSON.stringify({ labels: params.labels }),
     },
   );
+}
+
+export async function removeLabels(params: {
+  token: string;
+  repo: GitHubRepo;
+  issueNumber: number;
+  labels: string[];
+  apiVersion?: string;
+}) {
+  for (const label of params.labels) {
+    try {
+      await githubJson(
+        `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/labels/${encodeURIComponent(label)}`,
+        {
+          method: "DELETE",
+          token: params.token,
+          apiVersion: params.apiVersion,
+        },
+      );
+    } catch (error) {
+      if (error instanceof GitHubApiError && error.status === 404) continue;
+      throw error;
+    }
+  }
+}
+
+async function ensureManagedLabel(params: {
+  token: string;
+  repo: GitHubRepo;
+  label: string;
+  apiVersion?: string;
+}) {
+  const definition = MANAGED_LABELS[params.label];
+  if (!definition) return;
+  try {
+    await githubJson(
+      `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/labels`,
+      {
+        method: "POST",
+        token: params.token,
+        apiVersion: params.apiVersion,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: params.label,
+          color: definition.color,
+          description: definition.description,
+        }),
+      },
+    );
+  } catch (error) {
+    if (error instanceof GitHubApiError && error.status === 422) return;
+    throw error;
+  }
 }
 
 export async function upsertMarkerComment(params: {

@@ -23,7 +23,7 @@
     "PILOT_BASE_REF": "submission-gate-pilot",
     "GITHUB_API_VERSION": "2022-11-28",
     "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
-    "REQUIRED_VALIDATION_CHECKS": "required-pr-gate",
+    "REQUIRED_VALIDATION_CHECKS": "validate-content",
     "REQUIRED_STATUS_CONTEXTS": "",
   },
   "routes": [
@@ -116,7 +116,7 @@
         "PILOT_BASE_REF": "submission-gate-pilot",
         "GITHUB_API_VERSION": "2022-11-28",
         "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
-        "REQUIRED_VALIDATION_CHECKS": "required-pr-gate",
+        "REQUIRED_VALIDATION_CHECKS": "validate-content",
         "REQUIRED_STATUS_CONTEXTS": "",
       },
       "routes": [

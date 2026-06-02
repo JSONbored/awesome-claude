@@ -20,6 +20,7 @@ import {
   verifyGitHubWebhookSignature,
   verifyInternalSignature,
 } from "../apps/submission-gate/src/security";
+import { markerComment } from "../apps/submission-gate/src/review";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function readWorkerSource() {
@@ -194,7 +195,7 @@ describe("Cloudflare submission gate helpers", () => {
       return Response.json({
         check_runs: [
           {
-            name: "required-pr-gate",
+            name: "validate-content",
             status: "completed",
             conclusion: "success",
             completed_at: "2026-06-02T00:00:00Z",
@@ -209,30 +210,90 @@ describe("Cloudflare submission gate helpers", () => {
         token: "ghs_test",
         repo: { owner: "JSONbored", repo: "awesome-claude" },
         ref: "abc123",
-        requiredChecks: ["required-pr-gate"],
+        requiredChecks: ["validate-content"],
       }),
     ).resolves.toMatchObject({
       state: "passed",
-      checks: [{ name: "required-pr-gate", status: "passed" }],
+      checks: [{ name: "validate-content", status: "passed" }],
     });
   });
 
   it("keeps private review behind required PR validation", () => {
     const source = readWorkerSource();
     const validationIndex = source.indexOf("getCommitValidationState({");
-    const privateReviewIndex = source.indexOf(
-      "decision = await reviewWithPrivateGate(env, message)",
-    );
+    const privateReviewIndex = source.indexOf("reviewWithPrivateGate(env, {");
 
     expect(source).toContain(
-      'const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["required-pr-gate"];',
+      'const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["validate-content"]',
     );
     expect(source).toContain('"check_run"');
     expect(source).toContain('"check_suite"');
     expect(source).toContain('"status"');
     expect(source).toContain('status: "validation_pending"');
+    expect(source).toContain("validation: validationForPrivateReview");
     expect(validationIndex).toBeGreaterThan(0);
     expect(privateReviewIndex).toBeGreaterThan(validationIndex);
+  });
+
+  it("allows only trusted maintainer comments to trigger rechecks", () => {
+    const source = readWorkerSource();
+    expect(source).toContain('if (eventName === "issue_comment")');
+    expect(source).toContain('split(/\\s+/)[0] === "/recheck"');
+    expect(source).toContain("TRUSTED_RECHECK_ASSOCIATIONS");
+    expect(source).toContain('"OWNER"');
+    expect(source).toContain('"MEMBER"');
+    expect(source).toContain('"COLLABORATOR"');
+    expect(source).toContain("targetFromIssueCommentRecheck");
+  });
+
+  it("renders Taopedia-style verdict comments with stable sections", () => {
+    const body = markerComment({
+      verdict: "request_changes",
+      summary: [
+        "Summary:",
+        "- Reviewed `content/guides/example.mdx` as a single-entry guide submission.",
+        "",
+        "Source Review:",
+        "- Blocking source issue.",
+        "",
+        "Recommended Action:",
+        "- Close and resubmit a focused PR.",
+      ].join("\n"),
+      labels: ["submission-needs-changes"],
+      close: true,
+    });
+
+    expect(body).toContain(
+      "<!-- heyclaude-submission-gate -->\nVerdict: Request changes\n\nSummary:",
+    );
+    expect(body).toContain("Source Review:");
+    expect(body).toContain("Recommended Action:");
+    expect(body).toContain("single-shot submission review");
+  });
+
+  it("labels accepted submissions as import candidates without implying merge", () => {
+    const body = markerComment({
+      verdict: "import",
+      summary: "Summary:\n- Accepted for maintainer-owned import.",
+      labels: ["import-pr-open"],
+    });
+
+    expect(body).toContain("Verdict: Accepted for import");
+    expect(body).toContain(
+      "Generated artifacts and full repository validation run on the import PR",
+    );
+    expect(body).toContain("manual maintainer merge");
+  });
+
+  it("reconciles old verdict labels before applying a new gate decision", () => {
+    const source = readWorkerSource();
+    const removeIndex = source.indexOf("await removeLabels({");
+    const addIndex = source.indexOf("await addLabels({", removeIndex);
+
+    expect(source).toContain("const DECISION_LABELS = [");
+    expect(source).toContain("!decision.labels.includes(label)");
+    expect(removeIndex).toBeGreaterThan(0);
+    expect(addIndex).toBeGreaterThan(removeIndex);
   });
 
   it("signs internal import callbacks with the same HMAC verifier", async () => {

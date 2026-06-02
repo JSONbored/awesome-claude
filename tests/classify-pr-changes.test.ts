@@ -70,7 +70,7 @@ describe("PR change classifier", () => {
     }
   });
 
-  it("routes content entry changes through public artifact validation lanes", () => {
+  it("routes direct content entry PRs through the focused submission lane", () => {
     const { cwd, baseSha } = createFixtureRepo();
 
     const contentDir = path.join(cwd, "content", "agents");
@@ -86,6 +86,37 @@ describe("PR change classifier", () => {
     expect(outputs).toMatchObject({
       content: "true",
       content_agents: "true",
+      direct_submission: "true",
+      registry: "false",
+      raycast: "false",
+      web: "false",
+    });
+  });
+
+  it("routes maintainer content imports through artifact validation lanes", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    const contentDir = path.join(cwd, "content", "agents");
+    const artifactDir = path.join(cwd, "apps", "web", "public", "data");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.mkdirSync(artifactDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "example.mdx"),
+      "---\ntitle: Example\n---\n",
+    );
+    fs.writeFileSync(path.join(artifactDir, "registry.json"), "[]\n");
+    git(cwd, [
+      "add",
+      "content/agents/example.mdx",
+      "apps/web/public/data/registry.json",
+    ]);
+    git(cwd, ["commit", "-m", "import content entry"]);
+
+    const outputs = runClassifier(cwd, baseSha);
+    expect(outputs).toMatchObject({
+      content: "true",
+      content_agents: "true",
+      direct_submission: "false",
       registry: "true",
       raycast: "true",
       web: "true",

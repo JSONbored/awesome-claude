@@ -16,12 +16,30 @@ export type GateDecision = {
 };
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
-  import: "Accepted for maintainer import.",
-  request_changes: "Changes requested.",
-  close: "Closed by the submission gate.",
-  manual: "Routed to manual maintainer review.",
-  ignore: "No gate action needed.",
+  import: "Verdict: Accepted for import",
+  request_changes: "Verdict: Request changes",
+  close: "Verdict: Close",
+  manual: "Verdict: Manual review",
+  ignore: "Verdict: Ignore",
 };
+
+function singleShotFooter(verdict: GateVerdict) {
+  if (verdict === "ignore") return "";
+  if (verdict === "import") {
+    return [
+      "---",
+      "Automated review by HeyClaude Maintainer Agent.",
+      "",
+      "This source PR passed the private review gate and was accepted for maintainer-owned import. Generated artifacts and full repository validation run on the import PR, which still requires normal checks and manual maintainer merge.",
+    ].join("\n");
+  }
+  return [
+    "---",
+    "Automated review by HeyClaude Maintainer Agent.",
+    "",
+    "HeyClaude uses single-shot submission review for direct content PRs. Rejected PRs should be resubmitted as a new focused PR instead of iterated in place.",
+  ].join("\n");
+}
 
 export function markerComment(
   decision?: GateDecision,
@@ -37,8 +55,13 @@ export function markerComment(
   }
 
   const headline = VERDICT_HEADLINES[decision.verdict];
+  const footer = singleShotFooter(decision.verdict);
 
-  return [marker, headline, "", decision.summary].join("\n");
+  const parts = [marker, headline, "", decision.summary.trim()];
+  if (footer) {
+    parts.push("", footer);
+  }
+  return parts.join("\n");
 }
 
 export function defaultManualDecision(

@@ -8,11 +8,20 @@ RUN apt-get update \
   && corepack enable \
   && corepack prepare pnpm@11.4.0 --activate \
   && groupadd --system runner \
-  && useradd --system --gid runner --home-dir /runner --shell /usr/sbin/nologin runner
+  && useradd --system --gid runner --home-dir /runner --shell /usr/sbin/nologin runner \
+  && mkdir -p /runner \
+  && chown -R runner:runner /runner
 
 WORKDIR /runner
 COPY --chown=runner:runner runner.mjs /runner/runner.mjs
 
+ENV HOME=/tmp/heyclaude-runner
+ENV COREPACK_HOME=/tmp/heyclaude-corepack
+ENV PNPM_HOME=/tmp/heyclaude-pnpm
+ENV PNPM_STORE_PATH=/tmp/heyclaude-pnpm-store
+ENV XDG_CACHE_HOME=/tmp/heyclaude-cache
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV PATH=/tmp/heyclaude-pnpm:$PATH
 ENV PORT=8080
 EXPOSE 8080
 

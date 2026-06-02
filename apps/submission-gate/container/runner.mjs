@@ -45,6 +45,19 @@ const DEFAULT_VALIDATION_CHECKS = Object.freeze([
   "build",
   "gitCheck",
 ]);
+const GITHUB_USER_AGENT = "heyclaude-submission-gate-import-runner";
+const MAINTAINER_GENERATION_COMMANDS = Object.freeze([
+  {
+    label: "pnpm --filter web run prebuild",
+    command: "pnpm",
+    args: ["--filter", "web", "run", "prebuild"],
+  },
+  {
+    label: "pnpm generate:readme",
+    command: "pnpm",
+    args: ["generate:readme"],
+  },
+]);
 const GITHUB_REPO_PATTERN =
   /^[A-Za-z0-9][A-Za-z0-9-]{0,99}\/[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/;
 const GIT_REF_PATTERN =
@@ -54,6 +67,15 @@ const DEFAULT_ALLOWED_IMPORT_REPOS = ["JSONbored/awesome-claude"];
 const DEFAULT_COMMAND_TIMEOUT_MS = 15 * 60 * 1000;
 const DEFAULT_GITHUB_TIMEOUT_MS = 15_000;
 const MAX_CAPTURE_CHARS = 1024 * 1024;
+const RUNTIME_DIRS = Object.freeze(
+  [
+    process.env.HOME,
+    process.env.COREPACK_HOME,
+    process.env.PNPM_HOME,
+    process.env.PNPM_STORE_PATH,
+    process.env.XDG_CACHE_HOME,
+  ].filter(Boolean),
+);
 const ALLOWED_IMPORT_PATH_PREFIXES = ["content/"];
 const BLOCKED_IMPORT_PATHS = new Set([
   ".npmrc",
@@ -114,6 +136,14 @@ export function redactSensitiveOutput(value) {
     /x-access-token:[^@\s]+@/g,
     "x-access-token:<redacted>@",
   );
+}
+
+export function maintainerGenerationCommandLabels() {
+  return MAINTAINER_GENERATION_COMMANDS.map((step) => step.label);
+}
+
+export function githubUserAgent() {
+  return GITHUB_USER_AGENT;
 }
 
 export function safeGitHubRepo(value) {
@@ -245,6 +275,18 @@ async function runValidationCheck(check, cwd) {
   return run(validation.command, validation.args, { cwd });
 }
 
+async function ensureRuntimeDirs() {
+  for (const dir of RUNTIME_DIRS) {
+    await mkdir(dir, { recursive: true });
+  }
+}
+
+async function runMaintainerGeneration(cwd) {
+  for (const step of MAINTAINER_GENERATION_COMMANDS) {
+    await run(step.command, step.args, { cwd });
+  }
+}
+
 export function safeImportPath(repoDir, filePath) {
   const relativePath = path.normalize(
     String(filePath || "").replace(/\\+/g, "/"),
@@ -301,6 +343,7 @@ async function githubJson(url, token, init = {}) {
       accept: "application/vnd.github+json",
       authorization: `Bearer ${token}`,
       "content-type": "application/json",
+      "user-agent": GITHUB_USER_AGENT,
       "x-github-api-version": "2022-11-28",
       ...init.headers,
     },
@@ -342,6 +385,8 @@ async function findExistingImportPr(owner, name, branchName, baseRef, token) {
 }
 
 async function handleImport(job) {
+  await ensureRuntimeDirs();
+
   const {
     repo,
     baseRef = "main",
@@ -415,6 +460,7 @@ async function handleImport(job) {
     await run("pnpm", ["install", "--frozen-lockfile", "--ignore-scripts"], {
       cwd: repoDir,
     });
+    await runMaintainerGeneration(repoDir);
     for (const check of safeValidationChecks) {
       await runValidationCheck(check, repoDir);
     }
@@ -540,6 +586,7 @@ export function createImportServer() {
               : status === 400
                 ? "invalid_json"
                 : "import_failed",
+          message: redactSensitiveOutput(message).slice(0, 4000),
         }),
       );
     }

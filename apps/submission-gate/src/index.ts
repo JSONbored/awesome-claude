@@ -20,8 +20,10 @@ import {
   exchangeGitHubUserCode,
   getCommitValidationState,
   getInstallationToken,
+  getPullRequest,
   listPullRequestsForCommit,
   parseRepo,
+  removeLabels,
   upsertMarkerComment,
 } from "./github";
 import {
@@ -118,7 +120,7 @@ const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "zip_code",
 ]);
 
-const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["required-pr-gate"];
+const DEFAULT_REQUIRED_VALIDATION_CHECKS = ["validate-content"];
 const VALIDATION_WEBHOOK_EVENTS = new Set([
   "check_run",
   "check_suite",
@@ -129,6 +131,18 @@ const REVIEWABLE_CHECK_ACTIONS = new Set([
   "rerequested",
   "requested",
 ]);
+const TRUSTED_RECHECK_ASSOCIATIONS = new Set([
+  "OWNER",
+  "MEMBER",
+  "COLLABORATOR",
+]);
+const DECISION_LABELS = [
+  LABELS.requestChanges,
+  LABELS.manual,
+  LABELS.close,
+  LABELS.importOpen,
+  LABELS.superseded,
+];
 
 type ReviewTarget = {
   repoFullName: string;
@@ -467,6 +481,30 @@ function reviewTargetFromPullPayload(
   };
 }
 
+function reviewTargetFromPullRecord(
+  pull: {
+    number?: number;
+    base?: { ref?: string; repo?: { full_name?: string } };
+    head?: {
+      sha?: string;
+      ref?: string;
+      repo?: { full_name?: string };
+    };
+  },
+  installationId?: number,
+): ReviewTarget | null {
+  if (!pull?.number || !pull.base?.repo?.full_name) return null;
+  return {
+    repoFullName: pull.base.repo.full_name,
+    number: pull.number,
+    baseRef: pull.base.ref || "",
+    headRepo: pull.head?.repo?.full_name,
+    headRef: pull.head?.ref,
+    headSha: pull.head?.sha,
+    installationId,
+  };
+}
+
 function reviewTargetFromMessage(message: QueueMessage): ReviewTarget | null {
   if (isRecord(message.payload.target)) {
     const target = message.payload.target as Record<string, unknown>;
@@ -540,6 +578,88 @@ async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
     body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
     apiVersion: env.GITHUB_API_VERSION,
   });
+}
+
+async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
+  const token = await installationTokenForInstallationId(
+    env,
+    Number(target.installationId || 0),
+  );
+  if (!token) return;
+  const repo = parseRepo(target.repoFullName);
+  await addLabels({
+    token,
+    repo,
+    issueNumber: target.number,
+    labels: [LABELS.underReview],
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+  await upsertMarkerComment({
+    token,
+    repo,
+    issueNumber: target.number,
+    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+}
+
+function isRecheckCommand(body: unknown) {
+  return String(body || "")
+    .trim()
+    .split(/\s+/)[0] === "/recheck";
+}
+
+function hasPilotLabel(issue: { labels?: Array<{ name?: string }> }) {
+  return Boolean(
+    issue.labels?.some((label) => String(label.name || "") === PILOT_LABEL),
+  );
+}
+
+async function targetFromIssueCommentRecheck(
+  env: Env,
+  payload: Record<string, unknown>,
+) {
+  if (String(payload.action || "") !== "created") return null;
+  const comment = payload.comment as
+    | { body?: string; author_association?: string }
+    | undefined;
+  const issue = payload.issue as
+    | {
+        number?: number;
+        pull_request?: Record<string, unknown>;
+        labels?: Array<{ name?: string }>;
+      }
+    | undefined;
+  const repository = payload.repository as { full_name?: string } | undefined;
+  const installationId = installationIdFromPayload(payload);
+  if (!isRecheckCommand(comment?.body)) return null;
+  if (
+    !TRUSTED_RECHECK_ASSOCIATIONS.has(
+      String(comment?.author_association || ""),
+    )
+  ) {
+    return null;
+  }
+  if (!issue?.number || !issue.pull_request || !repository?.full_name) {
+    return null;
+  }
+  const token = await installationTokenForInstallationId(env, installationId);
+  if (!token) return null;
+  const repo = parseRepo(repository.full_name);
+  const pull = await getPullRequest({
+    token,
+    repo,
+    number: issue.number,
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+  if (pull.draft) return null;
+  const target = reviewTargetFromPullRecord(pull, installationId);
+  if (!target) return null;
+  if (target.baseRef !== env.PILOT_BASE_REF && !hasPilotLabel(issue)) {
+    return null;
+  }
+  return target;
 }
 
 function targetKeyForReview(target: ReviewTarget) {
@@ -728,6 +848,22 @@ async function githubWebhookRoute(
     return json({ ok: true, queued: true, targetKey });
   }
 
+  if (eventName === "issue_comment") {
+    const target = await targetFromIssueCommentRecheck(env, payload);
+    if (!target) return json({ ok: true, ignored: true });
+    await applyUnderReviewToTarget(env, target);
+    await enqueueReviewTarget(
+      env,
+      target,
+      deliveryId,
+      eventName,
+      payload,
+      true,
+    );
+    const targetKey = targetKeyForReview(target);
+    return json({ ok: true, queued: true, targetKey });
+  }
+
   if (VALIDATION_WEBHOOK_EVENTS.has(eventName)) {
     const targets = await targetsFromValidationWebhook(env, eventName, payload);
     let queued = 0;
@@ -759,7 +895,7 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
         "x-heyclaude-internal-signature": signature,
       },
       body,
-      signal: AbortSignal.timeout(15_000),
+      signal: AbortSignal.timeout(90_000),
     });
   } catch {
     return defaultManualDecision("Private corpus review request failed.");
@@ -899,6 +1035,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       if (!token) return;
       const repo = parseRepo(target.repoFullName);
       let decision: GateDecision | null = null;
+      let validationForPrivateReview: unknown = null;
       try {
         const validation = await getCommitValidationState({
           token,
@@ -929,6 +1066,12 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         }
         if (validation.state === "failed") {
           decision = validationFailedDecision(validation.summary);
+        } else {
+          validationForPrivateReview = {
+            state: validation.state,
+            summary: validation.summary,
+            checks: validation.checks,
+          };
         }
       } catch {
         decision = defaultManualDecision(
@@ -937,7 +1080,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       }
 
       if (!decision) {
-        decision = await reviewWithPrivateGate(env, message);
+        decision = await reviewWithPrivateGate(env, {
+          ...message,
+          payload: {
+            ...message.payload,
+            validation: validationForPrivateReview,
+          },
+        });
       }
 
       await insertAudit(env.SUBMISSION_GATE_DB, {
@@ -956,6 +1105,15 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         status: decision.verdict,
         verdict: decision.verdict,
         verdictSummary: decision.summary,
+      });
+      await removeLabels({
+        token,
+        repo,
+        issueNumber: target.number,
+        labels: DECISION_LABELS.filter(
+          (label) => !decision.labels.includes(label),
+        ),
+        apiVersion: env.GITHUB_API_VERSION,
       });
       if (decision.labels.length) {
         await addLabels({
@@ -977,7 +1135,11 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         ),
         apiVersion: env.GITHUB_API_VERSION,
       });
-      if (decision.verdict === "close" && decision.close) {
+      if (
+        (decision.verdict === "close" ||
+          decision.verdict === "request_changes") &&
+        decision.close
+      ) {
         await closeIssueOrPullRequest({
           token,
           repo,
@@ -1046,12 +1208,28 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
     body,
   });
   const result = (await response.json().catch(() => ({}))) as {
+    error?: string;
+    message?: string;
     pullRequestUrl?: string;
     pullRequestNumber?: number;
   };
   if (!response.ok) {
     if (!result.pullRequestUrl) {
-      throw new Error(`Import runner failed: ${response.status}`);
+      const summary = [
+        `Import runner failed: ${response.status}`,
+        result.error ? `error=${result.error}` : "",
+        result.message ? `message=${String(result.message).slice(0, 1000)}` : "",
+      ]
+        .filter(Boolean)
+        .join("; ");
+      await insertAudit(env.SUBMISSION_GATE_DB, {
+        id: crypto.randomUUID(),
+        targetKey: message.targetKey,
+        eventType: "import_pr",
+        decision: "import_failed",
+        summary,
+      });
+      throw new Error(summary);
     }
     console.warn("import runner returned existing PR with non-OK response", {
       status: response.status,

@@ -74,6 +74,32 @@ describe("PR preview artifact validation flow", () => {
     expect(policyBlock).not.toContain('cat "$policy_path" > "$trusted_policy"');
   });
 
+  it("runs a focused source lane for one-file direct content submissions", () => {
+    const workflow = readContentValidationWorkflow();
+    const sourceBlock =
+      workflow.match(
+        /\n  validate-submission-source:[\s\S]*?\n  validate-content-config:/,
+      )?.[0] || "";
+
+    expect(workflow).toContain("direct_submission:");
+    expect(sourceBlock).toContain("name: validate-submission-source");
+    expect(sourceBlock).toContain(
+      "needs.classify-pr.outputs.direct_submission == 'true'",
+    );
+    expect(sourceBlock).toContain("pnpm validate:content:strict");
+    expect(sourceBlock).toContain("pnpm audit:content");
+    expect(sourceBlock).toContain("node \"$trusted_policy\"");
+    expect(sourceBlock).toContain("git diff --check \"$BASE_SHA\"...HEAD");
+  });
+
+  it("keeps generated artifact lanes off direct contributor submissions", () => {
+    const workflow = readContentValidationWorkflow();
+    expect(workflow).toContain(
+      "needs.classify-pr.outputs.direct_submission != 'true'",
+    );
+    expect(workflow).toContain("- validate-submission-source");
+  });
+
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {
     const workflow = readContentValidationWorkflow();
     const jobBlock =

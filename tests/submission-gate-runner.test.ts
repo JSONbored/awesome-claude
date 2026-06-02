@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   assertSafeImportWrite,
   assertAllowedImportRepo,
+  githubUserAgent,
+  maintainerGenerationCommandLabels,
   redactSensitiveOutput,
   resolveValidationChecks,
   safeGitHubRepo,
@@ -123,6 +125,19 @@ describe("submission gate import runner safety", () => {
     expect(() =>
       resolveValidationChecks(["node scripts/import-from-job.js"]),
     ).toThrow("Unsupported validation check");
+  });
+
+  it("runs maintainer artifact generation before import validation", () => {
+    expect(maintainerGenerationCommandLabels()).toEqual([
+      "pnpm --filter web run prebuild",
+      "pnpm generate:readme",
+    ]);
+  });
+
+  it("sets a stable GitHub API user agent for import runner calls", () => {
+    expect(githubUserAgent()).toBe(
+      "heyclaude-submission-gate-import-runner",
+    );
   });
 
   it("redacts token-bearing git URLs from runner errors", () => {

@@ -16,6 +16,7 @@ jobs:
     name: classify-pr
     runs-on: ubuntu-latest
     outputs:
+      direct_submission: ${{ steps.classify.outputs.direct_submission }}
       content: ${{ steps.classify.outputs.content }}
       content_config: ${{ steps.classify.outputs.content_config }}
       content_categories_json: ${{ steps.classify.outputs.content_categories_json }}
@@ -57,6 +58,9 @@ jobs:
             node "$classifier_path"
           fi
 
+          if ! grep -q '^direct_submission=' "$GITHUB_OUTPUT"; then
+            echo "direct_submission=false" >> "$GITHUB_OUTPUT"
+          fi
           if ! grep -q '^content_config=' "$GITHUB_OUTPUT"; then
             echo "content_config=false" >> "$GITHUB_OUTPUT"
           fi
@@ -167,7 +171,7 @@ jobs:
   validate-content-category:
     name: validate-content-${{ matrix.category }}
     needs: classify-pr
-    if: ${{ needs.classify-pr.outputs.content_categories_json != '[]' }}
+    if: ${{ needs.classify-pr.outputs.content_categories_json != '[]' && needs.classify-pr.outputs.direct_submission != 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -204,7 +208,7 @@ jobs:
   validate-content-policy:
     name: validate-content-policy
     needs: classify-pr
-    if: ${{ github.event_name == 'pull_request' && (needs.classify-pr.outputs.content == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.packages == 'true') }}
+    if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission != 'true' && (needs.classify-pr.outputs.content == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.packages == 'true') }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-content-policy-${{ github.ref }}
@@ -263,6 +267,89 @@ jobs:
 
           node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE"
 
+  validate-submission-source:
+    name: validate-submission-source
+    needs: classify-pr
+    if: ${{ github.event_name == 'pull_request' && needs.classify-pr.outputs.direct_submission == 'true' }}
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pr-validate-submission-source-${{ github.ref }}
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.16.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate submitted source content
+        env:
+          CONTENT_CATEGORIES_JSON: ${{ needs.classify-pr.outputs.content_categories_json }}
+        run: |
+          set -euo pipefail
+          category="$(node -e 'const categories = JSON.parse(process.env.CONTENT_CATEGORIES_JSON || "[]"); if (categories.length !== 1) process.exit(1); process.stdout.write(categories[0]);')"
+          pnpm validate:content:strict -- --category "$category"
+          pnpm audit:content -- --category "$category"
+
+      - name: Validate submitted source policy
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          set -euo pipefail
+          policy_path="scripts/ci/validate-content-policy.mjs"
+          runtime_manifest_path="scripts/ci/content-policy-runtime/package.json"
+          runtime_lock_path="scripts/ci/content-policy-runtime/package-lock.json"
+          trusted_policy_dir="${RUNNER_TEMP:-.}/trusted-content-policy"
+          trusted_policy="$trusted_policy_dir/validate-content-policy.mjs"
+          rm -rf "$trusted_policy_dir"
+          mkdir -p "$trusted_policy_dir"
+
+          if git cat-file -e "$BASE_SHA:$runtime_manifest_path" 2>/dev/null && git cat-file -e "$BASE_SHA:$runtime_lock_path" 2>/dev/null; then
+            git show "$BASE_SHA:$runtime_manifest_path" > "$trusted_policy_dir/package.json"
+            git show "$BASE_SHA:$runtime_lock_path" > "$trusted_policy_dir/package-lock.json"
+          else
+            echo "::error::Trusted content policy runtime lockfile is missing from the base branch."
+            exit 1
+          fi
+
+          (cd "$trusted_policy_dir" && npm ci --ignore-scripts --no-audit --no-fund)
+
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            cp "$policy_path" "$trusted_policy"
+          elif git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
+            git show "$BASE_SHA:$policy_path" > "$trusted_policy"
+          else
+            echo "::error::Trusted content policy script is missing from the base branch."
+            exit 1
+          fi
+
+          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE"
+
+      - name: Check submitted source whitespace
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: git diff --check "$BASE_SHA"...HEAD
+
   validate-content-config:
     name: validate-content-config
     needs: classify-pr
@@ -305,6 +392,7 @@ jobs:
       - classify-pr
       - validate-content-category
       - validate-content-policy
+      - validate-submission-source
       - validate-content-config
     if: ${{ always() }}
     runs-on: ubuntu-latest
@@ -769,6 +857,7 @@ jobs:
       - validate-ci
       - validate-content
       - validate-content-policy
+      - validate-submission-source
       - validate-registry
       - validate-web
       - validate-mcp

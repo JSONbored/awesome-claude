@@ -70,6 +70,12 @@ function contentCategoriesFromFiles() {
 
 const contentCategories = contentCategoriesFromFiles();
 const contentCategoryTouched = contentCategories.length > 0;
+const directSubmission =
+  eventName === "pull_request" &&
+  !all &&
+  files.length === 1 &&
+  contentCategories.length === 1 &&
+  /^content\/[^/]+\/[^/]+\.mdx$/i.test(files[0]);
 const contentValidationInfra = touches(
   /^examples\/content\//,
   /^\.github\/ISSUE_TEMPLATE\//,
@@ -93,25 +99,28 @@ const submissionGateInfra = touches(
 );
 
 const flags = {
+  direct_submission: directSubmission,
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
   registry:
-    contentCategoryTouched ||
-    generatedArtifactInfra ||
-    submissionAutomationInfra,
+    !directSubmission &&
+    (contentCategoryTouched ||
+      generatedArtifactInfra ||
+      submissionAutomationInfra),
   web:
-    contentCategoryTouched ||
-    submissionAutomationInfra ||
-    touches(
-      /^apps\/web\//,
-      /^emails\//,
-      /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
-      /^scripts\/(generate-openapi|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
-      /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
-      "vitest.config.ts",
-      "package.json",
-      "pnpm-lock.yaml",
-    ),
+    !directSubmission &&
+    (contentCategoryTouched ||
+      submissionAutomationInfra ||
+      touches(
+        /^apps\/web\//,
+        /^emails\//,
+        /^cloudflare\/api-schema-heyclaude-openapi\.yaml$/,
+        /^scripts\/(generate-openapi|validate-d1-jobs|validate-deployment-artifacts)\.(mjs|ts)$/,
+        /^tests\/(api-|commercial-intake|discovery-surfaces|seo-jsonld|submission-api|submission-workflows|votes-api).*\.test\.ts$/,
+        "vitest.config.ts",
+        "package.json",
+        "pnpm-lock.yaml",
+      )),
   mcp: touches(
     /^packages\/mcp\//,
     /^apps\/web\/src\/routes\/api\/mcp\.ts$/,
@@ -121,15 +130,16 @@ const flags = {
     "pnpm-lock.yaml",
   ),
   raycast:
-    contentCategoryTouched ||
-    touches(
-      /^integrations\/raycast\//,
-      /^apps\/web\/public\/data\/raycast/,
-      /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
-      /^tests\/registry-artifacts\.test\.ts$/,
-      "package.json",
-      "pnpm-lock.yaml",
-    ),
+    !directSubmission &&
+    (contentCategoryTouched ||
+      touches(
+        /^integrations\/raycast\//,
+        /^apps\/web\/public\/data\/raycast/,
+        /^scripts\/(build-content-index|validate-raycast-feed)\.mjs$/,
+        /^tests\/registry-artifacts\.test\.ts$/,
+        "package.json",
+        "pnpm-lock.yaml",
+      )),
   packages: touches(
     /^apps\/web\/public\/downloads\//,
     /^content\/skills\/.*\.zip$/,
