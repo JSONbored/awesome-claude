@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       direct_submission: ${{ steps.classify.outputs.direct_submission }}
+      maintainer_import: ${{ steps.classify.outputs.maintainer_import }}
+      source_content_only: ${{ steps.classify.outputs.source_content_only }}
       content: ${{ steps.classify.outputs.content }}
       content_config: ${{ steps.classify.outputs.content_config }}
       content_categories_json: ${{ steps.classify.outputs.content_categories_json }}
@@ -46,6 +48,7 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
           FORCE_FULL_VALIDATION: ${{ github.event_name != 'pull_request' && '1' || '0' }}
           EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref || '' }}
         run: |
           set -euo pipefail
           classifier_path="scripts/ci/classify-pr-changes.mjs"
@@ -60,6 +63,12 @@ jobs:
 
           if ! grep -q '^direct_submission=' "$GITHUB_OUTPUT"; then
             echo "direct_submission=false" >> "$GITHUB_OUTPUT"
+          fi
+          if ! grep -q '^maintainer_import=' "$GITHUB_OUTPUT"; then
+            echo "maintainer_import=false" >> "$GITHUB_OUTPUT"
+          fi
+          if ! grep -q '^source_content_only=' "$GITHUB_OUTPUT"; then
+            echo "source_content_only=false" >> "$GITHUB_OUTPUT"
           fi
           if ! grep -q '^content_config=' "$GITHUB_OUTPUT"; then
             echo "content_config=false" >> "$GITHUB_OUTPUT"
@@ -471,13 +480,39 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm test:registry-artifacts
 
+      - name: Generate README for source-only import validation
+        if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only == 'true' }}
+        run: pnpm generate:readme
+
       - name: Validate generated README
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm validate:readme
 
       - name: Verify generated registry artifacts are current
-        if: ${{ needs.classify-pr.outputs.registry == 'true' }}
+        if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only != 'true' }}
         run: git diff --exit-code apps/web/public/data apps/web/src/generated README.md
+
+      - name: Verify source-only imports produce only build artifacts
+        if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only == 'true' }}
+        run: |
+          set -euo pipefail
+          dirty_files="$(git diff --name-only)"
+          if [ -z "$dirty_files" ]; then
+            echo "Generated registry artifacts are already current."
+            exit 0
+          fi
+
+          disallowed="$(
+            printf '%s\n' "$dirty_files" | grep -Ev '^(README\.md|apps/web/public/data/.*|apps/web/src/generated/.*|apps/web/src/routeTree\.gen\.ts)$' || true
+          )"
+          if [ -n "$disallowed" ]; then
+            echo "::error::Content import generation changed non-generated files:"
+            printf '%s\n' "$disallowed"
+            exit 1
+          fi
+
+          echo "Generated artifact changes are build-time outputs for this source-only content import:"
+          printf '%s\n' "$dirty_files"
 
   validate-web:
     name: validate-web
@@ -524,6 +559,10 @@ jobs:
       - name: Build registry artifacts
         if: ${{ needs.classify-pr.outputs.web == 'true' }}
         run: pnpm --filter web run prebuild
+
+      - name: Generate README for source-only import validation
+        if: ${{ needs.classify-pr.outputs.web == 'true' && needs.classify-pr.outputs.source_content_only == 'true' }}
+        run: pnpm generate:readme
 
       - name: Apply local D1 migrations
         if: ${{ needs.classify-pr.outputs.web == 'true' }}

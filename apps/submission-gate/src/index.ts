@@ -46,6 +46,7 @@ import {
   createDraft,
   getDraftUserToken,
   getDraft,
+  getPrState,
   insertAudit,
   storeDraftUserToken,
   updateDraftAuthState,
@@ -99,6 +100,7 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "manual",
   "ignore",
 ]);
+const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -674,6 +676,20 @@ function targetKeyForReview(target: ReviewTarget) {
   return `${target.repoFullName}#${target.number}`;
 }
 
+function hasTerminalGateDecision(
+  state:
+    | {
+        status?: unknown;
+        verdict?: unknown;
+      }
+    | null
+    | undefined,
+) {
+  if (!state) return false;
+  if (String(state.status || "") === "import_pr_open") return true;
+  return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
+}
+
 async function enqueueReviewTarget(
   env: Env,
   target: ReviewTarget,
@@ -681,10 +697,16 @@ async function enqueueReviewTarget(
   eventName: string,
   webhook?: Record<string, unknown>,
   pilotScoped = false,
+  forceRecheck = false,
 ) {
   if (isMaintainerImportRef(target.headRef)) return false;
   if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
   const targetKey = targetKeyForReview(target);
+  const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+  });
+  if (!forceRecheck && hasTerminalGateDecision(existing)) return false;
   await upsertPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
@@ -697,7 +719,7 @@ async function enqueueReviewTarget(
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
     targetKey,
-    payload: { eventName, deliveryId, target, webhook },
+    payload: { eventName, deliveryId, target, webhook, forceRecheck },
   });
   return true;
 }
@@ -851,6 +873,7 @@ async function githubWebhookRoute(
       deliveryId,
       eventName,
       payload,
+      true,
       true,
     );
     const targetKey = targetKeyForReview(target);
@@ -1037,6 +1060,24 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
     if (message.kind === "review_pr") {
       const target = reviewTargetFromMessage(message);
       if (!target) return;
+      const forceRecheck =
+        message.payload.forceRecheck === true ||
+        String(message.payload.eventName || "") === "issue_comment";
+      const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+        repo: target.repoFullName,
+        number: target.number,
+      });
+      if (!forceRecheck && hasTerminalGateDecision(existing)) {
+        await insertAudit(env.SUBMISSION_GATE_DB, {
+          id: crypto.randomUUID(),
+          targetKey: message.targetKey,
+          eventType: message.kind,
+          decision: "ignored",
+          summary:
+            "Skipped because this submission already has a terminal gate decision.",
+        });
+        return;
+      }
       const token = await installationTokenForInstallationId(
         env,
         Number(target.installationId || 0),
