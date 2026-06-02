@@ -73,15 +73,12 @@
     "filePath": "content/tools/langfuse.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/langfuse.mdx",
     "repoUrl": "https://github.com/langfuse/langfuse",
-    "githubStars": 27479,
-    "githubForks": 2805,
-    "repoUpdatedAt": "2026-05-19T11:21:59Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "langfuse/langfuse",
       "url": "https://github.com/langfuse/langfuse",
-      "stars": 27479,
-      "forks": 2805,
-      "updatedAt": "2026-05-19T11:21:59Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

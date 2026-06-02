@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "feiskyer/mcp-kubernetes-server",
     "url": "https://github.com/feiskyer/mcp-kubernetes-server",
-    "stars": 18,
-    "forks": 9,
-    "updatedAt": "2026-05-13T09:23:32Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

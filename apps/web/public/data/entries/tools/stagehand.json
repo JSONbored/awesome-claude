@@ -73,15 +73,12 @@
     "filePath": "content/tools/stagehand.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/stagehand.mdx",
     "repoUrl": "https://github.com/browserbase/stagehand",
-    "githubStars": 22712,
-    "githubForks": 1523,
-    "repoUpdatedAt": "2026-05-19T11:40:46Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "browserbase/stagehand",
       "url": "https://github.com/browserbase/stagehand",
-      "stars": 22712,
-      "forks": 1523,
-      "updatedAt": "2026-05-19T11:40:46Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 2,
+  "key": "tools:mcp-inspector",
+  "category": "tools",
+  "slug": "mcp-inspector",
+  "title": "MCP Inspector",
+  "author": "Model Context Protocol",
+  "brandName": "MCP Inspector",
+  "brandDomain": "modelcontextprotocol.io",
+  "brandIconUrl": "/api/brand-assets/icon/modelcontextprotocol.io",
+  "brandAssetSource": "brandfetch",
+  "copyText": "npx @modelcontextprotocol/inspector node build/index.js",
+  "detailMarkdown": "# MCP Inspector\n\nOfficial visual testing and debugging tool for Model Context Protocol servers.\n\n## Trust\n- Source: source-backed\n- Package: no package download\n- Review: unclaimed\n\n## Safety notes\n- Starts a local inspector UI and proxy process for interactive MCP debugging.\n- Only connect it to MCP servers and endpoints you trust during testing.\n\n## Privacy notes\n- Requests and tool responses from the inspected server may be visible in the local inspector session.\n- Avoid testing with production credentials or private user data unless the environment is isolated.\n\n## Install\n```bash\nnpx @modelcontextprotocol/inspector node build/index.js\n```\n\n## Usage\nnpx @modelcontextprotocol/inspector node build/index.js",
+  "webUrl": "https://heyclau.de/entry/tools/mcp-inspector",
+  "canonicalUrl": "https://heyclau.de/entry/tools/mcp-inspector",
+  "llmsUrl": "https://heyclau.de/data/llms/tools/mcp-inspector.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/tools/mcp-inspector",
+  "seoTitle": "MCP Inspector visual testing tool",
+  "seoDescription": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+  "safetyNotes": [
+    "Starts a local inspector UI and proxy process for interactive MCP debugging.",
+    "Only connect it to MCP servers and endpoints you trust during testing."
+  ],
+  "privacyNotes": [
+    "Requests and tool responses from the inspected server may be visible in the local inspector session.",
+    "Avoid testing with production credentials or private user data unless the environment is isolated."
+  ],
+  "repoUrl": "https://github.com/modelcontextprotocol/inspector",
+  "repoStats": {
+    "repository": "modelcontextprotocol/inspector",
+    "url": "https://github.com/modelcontextprotocol/inspector",
+    "appliesTo": "listing_source_repo",
+    "label": "Source repo"
+  },
+  "documentationUrl": "https://modelcontextprotocol.io/docs/tools",
+  "downloadTrust": null,
+  "verificationStatus": "",
+  "packageVerified": false
+}

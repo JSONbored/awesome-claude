@@ -1,0 +1,93 @@
+# Claude Code Source Fact Verification Capability Pack Skill
+URL: https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack
+Category: skills
+Author: JSONbored
+Date added: 2026-06-02
+Documentation: https://code.claude.com/docs/en/best-practices
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx
+Download: /downloads/skills/claude-code-source-fact-verification-capability-pack.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack
+- Source URLs: https://code.claude.com/docs/en/best-practices, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx
+- Package URL: /downloads/skills/claude-code-source-fact-verification-capability-pack.zip
+- Package SHA256: 19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e
+- Safety notes: Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks., Do not convert unverified assumptions into code changes, migrations, security claims, or README statements., If sources conflict, stop and report the contradiction instead of forcing a synthesized answer.
+- Privacy notes: Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context., Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools., Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports.
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: JSONbored
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Expert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.
+## Tags
+- claude-code
+- source-verification
+- documentation
+- research-workflow
+- capability-pack
+## Safety Notes
+- Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.
+- Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.
+- If sources conflict, stop and report the contradiction instead of forcing a synthesized answer.
+## Privacy Notes
+- Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.
+- Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.
+- Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports.
+## Content
+## Knowledge Freshness
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Refresh official docs, changelogs, source repos, and package metadata whenever facts are version-sensitive or operationally risky.
+
+## Retrieval Sources
+- https://code.claude.com/docs/en/best-practices
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/skills
+
+Prefer primary sources: official docs, source repositories, release notes, lockfiles, generated API schemas, and maintainer-owned issue context.
+
+## Core Workflow
+1. Extract claims that affect code, commands, compatibility, security, privacy, or user-facing documentation.
+2. Rank sources by authority: local source of truth, official docs, maintained source repo, release notes, then secondary references.
+3. Verify each claim against at least one primary source or mark it unsupported.
+4. Cross-check repository evidence with `rg`, manifests, lockfiles, tests, generated files, and history when relevant.
+5. Produce a concise evidence table before implementation.
+
+## Capability Scope
+- API and library behavior verification
+- Documentation and README claim validation
+- Security/privacy note grounding
+- Migration guide and changelog reconciliation
+- Issue-to-implementation evidence mapping
+
+## Compatibility
+### Native
+
+- **Claude Code CLI**: use for repo-aware source checks before edits.
+- **Claude Code Web**: use for GitHub issue and PR evidence review.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, Codex, and other agent clients**: use the workflow as a claim/evidence checklist.
+
+## Production Rules
+- Treat dates, versions, pricing, APIs, security guidance, and package behavior as unstable unless verified.
+- Separate exact source evidence from inference.
+- Do not cite generated artifacts as source of truth when source files exist.
+- Keep unsupported claims out of final content and code comments.
+
+## Troubleshooting
+**Issue:** Official docs and repo behavior disagree
+**Fix:** report both, prefer the code path actually installed in the project, and ask for maintainer decision if the change is risky.
+
+**Issue:** Source is current but vague
+**Fix:** turn vague guidance into explicit constraints and label remaining assumptions.
+
+**Issue:** Verification takes too long
+**Fix:** narrow to claims that affect executable behavior, security, privacy, install steps, or user-visible docs.
+
+## Output Contract
+1. Claim/evidence table with source URL or local file path.
+2. Unsupported or conflicting claims list.
+3. Implementation constraints derived from verified facts.
+4. Explicit confidence and remaining caveats.
+5. Recommended next validation command or manual check.

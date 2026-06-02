@@ -1,0 +1,14 @@
+---
+description: "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes."
+globs:
+alwaysApply: false
+---
+# Claude Code Repo Migration Debugging Capability Pack Skill
+Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation.
+Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.
+## Install
+```bash
+curl -L https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip -o claude-code-repo-migration-debugging-capability-pack.zip && unzip -o claude-code-repo-migration-debugging-capability-pack.zip -d ./claude-code-repo-migration-debugging-capability-pack
+```
+## Source
+https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip

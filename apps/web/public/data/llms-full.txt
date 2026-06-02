@@ -2,7 +2,7 @@
 The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.
 
 Base URL: https://heyclau.de
-Total entries: 388
+Total entries: 394
 
 ## Entry Index
 - [/cursor-rules - Cursor Rules Generator for Claude Code](https://heyclau.de/entry/commands/cursor-rules) (commands)
@@ -69,6 +69,7 @@ Total entries: 388
 - [Cache Efficiency Monitor - Statuslines](https://heyclau.de/entry/statuslines/cache-efficiency-monitor) (statuslines)
 - [Canva MCP Server for Claude](https://heyclau.de/entry/mcp/canva-mcp-server) (mcp)
 - [Catppuccin Mocha Theme - Statuslines](https://heyclau.de/entry/statuslines/catppuccin-mocha-theme) (statuslines)
+- [ccusage](https://heyclau.de/entry/tools/ccusage) (tools)
 - [ChatGPT to Claude Migration](https://heyclau.de/entry/guides/chatgpt-migration-guide) (guides)
 - [Checkpoint Manager for Claude Code](https://heyclau.de/entry/commands/checkpoint-manager) (commands)
 - [Claude 4 Extended Thinking](https://heyclau.de/entry/guides/claude-4-extended-thinking-tutorial) (guides)
@@ -76,7 +77,10 @@ Total entries: 388
 - [Claude AI Healthcare HIPAA-Compliant Documentation Guide 2025](https://heyclau.de/entry/guides/healthcare-hipaa-guide) (guides)
 - [Claude Code](https://heyclau.de/entry/tools/claude-code) (tools)
 - [Claude Code Docker Statusline - Container Health Monitoring](https://heyclau.de/entry/statuslines/docker-health-statusline) (statuslines)
+- [Claude Code MCP Production Readiness Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack) (skills)
 - [Claude Code Multi-Directory Setup Enterprise Workflow 2025](https://heyclau.de/entry/guides/multi-directory-setup) (guides)
+- [Claude Code Repo Migration Debugging Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack) (skills)
+- [Claude Code Source Fact Verification Capability Pack Skill](https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack) (skills)
 - [Claude Code vs Cursor vs Codeium Complete Comparison 2025](https://heyclau.de/entry/guides/claude-vs-cursor-codeium) (guides)
 - [Claude Code WSL Setup 2025](https://heyclau.de/entry/guides/wsl-setup-guide) (guides)
 - [Claude Desktop MCP Setup](https://heyclau.de/entry/mcp/desktop-mcp-setup) (mcp)
@@ -103,6 +107,7 @@ Total entries: 388
 - [Code Complexity Alert Monitor - Hooks](https://heyclau.de/entry/hooks/code-complexity-alert-monitor) (hooks)
 - [Code Quality & Review](https://heyclau.de/entry/collections/code-quality-toolkit) (collections)
 - [Code Review Automation Capability Pack Skill](https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack) (skills)
+- [Code Review Escalation Rules for High-Risk Changes](https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes) (rules)
 - [Code Review Expert for Claude](https://heyclau.de/entry/rules/code-review-expert) (rules)
 - [Code Reviewer Agent - Agents](https://heyclau.de/entry/agents/code-reviewer-agent) (agents)
 - [Code Test Runner Hook - Hooks](https://heyclau.de/entry/hooks/code-test-runner-hook) (hooks)
@@ -229,6 +234,7 @@ Total entries: 388
 - [Markdown Knowledge Base Composer Skill](https://heyclau.de/entry/skills/markdown-knowledge-base-composer) (skills)
 - [Markdown Link Checker - Hooks](https://heyclau.de/entry/hooks/markdown-link-checker) (hooks)
 - [Mastra](https://heyclau.de/entry/tools/mastra) (tools)
+- [MCP Inspector](https://heyclau.de/entry/tools/mcp-inspector) (tools)
 - [MCP Server Authoring Security Capability Pack Skill](https://heyclau.de/entry/skills/mcp-server-authoring-security-capability-pack) (skills)
 - [MCP Server Security Hardening Skill](https://heyclau.de/entry/skills/mcp-server-security-hardening) (skills)
 - [MCP Server Setup for Claude Code](https://heyclau.de/entry/commands/mcp-setup) (commands)
@@ -20429,6 +20435,48 @@ Check token field exists: echo '$input' | jq '.session.totalTokens, .cost.total_
 Verify echo -e flag is used for escape sequence interpretation. Check terminal supports ANSI colors: echo -e '\033[38;5;183mLAVENDER\033[0m'. Some terminals require explicit color support enabled. Check TERM environment variable: echo $TERM (should include 'xterm' or '256color'). Verify terminal emulator settings for color support.
 ---
 
+# ccusage
+URL: https://heyclau.de/entry/tools/ccusage
+Category: tools
+Author: ryoppippi
+Date added: 2026-06-02
+Documentation: https://ccusage.com/guide/getting-started
+Repository: https://github.com/ryoppippi/ccusage
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/tools/ccusage
+- Source URLs: https://ccusage.com/guide/getting-started, https://github.com/ryoppippi/ccusage, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx, https://ccusage.com
+- Brand: ccusage
+- Brand domain: ccusage.com
+- Brand asset source: brandfetch
+- Safety notes: Run from a trusted package source and review repository/package provenance before using in sensitive workspaces., Cost estimates depend on local usage data and pricing metadata; treat them as operational estimates, not billing authority.
+- Privacy notes: Reads local coding-agent usage files from the developer machine to calculate token and cost reports., JSON export can include project or session metadata, so review output before sharing logs or reports publicly.
+- Author: ryoppippi
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Local CLI for analyzing Claude Code and other coding-agent token usage, costs, sessions, and billing-window activity from local usage data.
+## Tags
+- usage-analytics
+- claude-code
+- cli
+- cost-tracking
+## Safety Notes
+- Run from a trusted package source and review repository/package provenance before using in sensitive workspaces.
+- Cost estimates depend on local usage data and pricing metadata; treat them as operational estimates, not billing authority.
+## Privacy Notes
+- Reads local coding-agent usage files from the developer machine to calculate token and cost reports.
+- JSON export can include project or session metadata, so review output before sharing logs or reports publicly.
+## Content
+## Editorial notes
+ccusage is useful for developers who need local visibility into Claude Code and other coding-agent usage without building custom log parsers. It can summarize daily, weekly, monthly, and per-session usage, show Claude Code five-hour billing windows, export JSON, and provide a compact statusline-oriented view.
+
+The fit for HeyClaude is strongest for teams that already use Claude Code heavily and want a fast way to understand token volume, cost trends, session shape, and project-level usage from local data.
+
+## Disclosure
+Editorial listing. No paid placement or affiliate link is used.
+---
+
 # ChatGPT to Claude Migration
 URL: https://heyclau.de/entry/guides/chatgpt-migration-guide
 Category: guides
@@ -21695,6 +21743,101 @@ Verify Docker daemon is running: systemctl status docker (Linux) or check Docker
 Verify docker ps commands are working: docker ps -q | wc -l. Check for stopped containers: docker ps -a -q | wc -l. Ensure script is using correct flags: -q for quiet mode, -a for all containers. Verify wc and tr commands are available: which wc tr. Check for hidden characters in output: docker ps -q | od -c.
 ---
 
+# Claude Code MCP Production Readiness Capability Pack Skill
+URL: https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack
+Category: skills
+Author: JSONbored
+Date added: 2026-06-02
+Documentation: https://code.claude.com/docs/en/mcp
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx
+Download: /downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack
+- Source URLs: https://code.claude.com/docs/en/mcp, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx
+- Package URL: /downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip
+- Package SHA256: 60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02
+- Safety notes: MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use., Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps., Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first.
+- Privacy notes: MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval., OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts., Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout.
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: JSONbored
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Expert Claude Code skill capability pack for taking MCP integrations from local proof-of-concept to production-ready, permissioned, observable workflows.
+## Tags
+- claude-code
+- mcp
+- production-readiness
+- security
+- capability-pack
+## Safety Notes
+- MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use.
+- Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps.
+- Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first.
+## Privacy Notes
+- MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval.
+- OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts.
+- Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout.
+## Content
+## Knowledge Freshness
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Re-check Claude Code MCP, settings, and current MCP specification docs before changing production server configuration.
+
+## Retrieval Sources
+- https://code.claude.com/docs/en/mcp
+- https://code.claude.com/docs/en/settings
+- https://modelcontextprotocol.io/specification/2025-06-18
+
+Use official Claude Code and MCP references for command syntax, server scopes, transport behavior, OAuth handling, and protocol constraints.
+
+## Core Workflow
+1. Inventory every MCP server by name, scope, transport, command/URL, environment variables, and expected tools/resources.
+2. Classify trust boundaries for local processes, project-shared configuration, remote endpoints, OAuth providers, and data stores.
+3. Validate tool, prompt, and resource contracts with representative calls before approving broad access.
+4. Reduce permissions to the minimum safe allowlist and record why each tool or server is approved.
+5. Produce rollout, monitoring, incident response, and rollback instructions that a teammate can execute.
+
+## Capability Scope
+- Claude Code MCP server scope selection and conflict review
+- Project `.mcp.json` readiness checks
+- OAuth and secret-handling review
+- MCP tool/resource/prompt contract validation
+- Production rollout and rollback planning
+
+## Compatibility
+### Native
+
+- **Claude Code CLI**: use as a project or personal `SKILL.md` workflow.
+- **Claude Code IDE surfaces**: use when reviewing project MCP configuration from VS Code or JetBrains.
+
+### Manual Adaptation
+
+- **Other Agent Skills-compatible clients**: use the same `SKILL.md` content as a scoped MCP readiness checklist.
+
+## Production Rules
+- Never approve an MCP server only because it starts successfully.
+- Treat network-capable MCP servers as data-exfiltration paths until reviewed.
+- Keep secrets in local environment or approved secret stores, not committed project files.
+- Require a rollback path for every server, OAuth grant, and project-scoped config change.
+
+## Troubleshooting
+**Issue:** MCP tools are available but unsafe for shared use
+**Fix:** move the server to local/user scope or deny risky tools until permissions are reviewed.
+
+**Issue:** OAuth succeeds but tool calls fail
+**Fix:** verify provider scopes, token storage, server logs, and Claude Code `/mcp` status before widening access.
+
+**Issue:** Teammates see different MCP behavior
+**Fix:** compare local, project, and user scopes, then document precedence and reset project approvals when needed.
+
+## Output Contract
+1. MCP readiness report with evidence and blocked items.
+2. Exact config or command changes, with secrets redacted.
+3. Permission and OAuth review table.
+4. Validation commands or manual checks.
+5. Rollback and incident-response plan.
+---
+
 # Claude Code Multi-Directory Setup Enterprise Workflow 2025
 URL: https://heyclau.de/entry/guides/multi-directory-setup
 Category: guides
@@ -21863,6 +22006,197 @@ Persistent context across sessions eliminates repeated explanations. Project und
 > **Need Expert Guidance?** Join our [community](/community) for implementation support or explore our [consulting services](/services) for customized deployment assistance.
 
 _Last updated: September 2025 | Comprehensive workflow for enterprise development teams | Explore more [business workflows](/guides/workflows)._
+---
+
+# Claude Code Repo Migration Debugging Capability Pack Skill
+URL: https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack
+Category: skills
+Author: JSONbored
+Date added: 2026-06-02
+Documentation: https://code.claude.com/docs/en/common-workflows
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx
+Download: /downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack
+- Source URLs: https://code.claude.com/docs/en/common-workflows, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx
+- Package URL: /downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip
+- Package SHA256: 6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b
+- Safety notes: Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code., Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them., Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors.
+- Privacy notes: Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials., Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports., External package registries and documentation lookups may reveal package names and version constraints.
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: JSONbored
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation.
+## Tags
+- claude-code
+- migration
+- debugging
+- dependency-upgrades
+- capability-pack
+## Safety Notes
+- Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code.
+- Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them.
+- Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors.
+## Privacy Notes
+- Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials.
+- Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports.
+- External package registries and documentation lookups may reveal package names and version constraints.
+## Content
+## Knowledge Freshness
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Refresh runtime, framework, package-manager, and migration-guide docs before changing version-sensitive code.
+
+## Retrieval Sources
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/troubleshooting
+- https://code.claude.com/docs/en/skills
+
+Use local repository evidence first, then official migration guides, changelogs, and installed package metadata.
+
+## Core Workflow
+1. Establish a baseline: git status, runtime versions, failing command, shortest reproduction, and known-good reference if available.
+2. Map affected files, packages, configs, generated outputs, and tests before editing.
+3. Identify the smallest change that explains the failure and defer unrelated cleanup.
+4. Apply fixes in rollback-safe increments with validation after each risky boundary.
+5. End with a validation ladder from narrow reproduction to broader build/test checks.
+
+## Capability Scope
+- Dependency and runtime migrations
+- Build, type-check, lint, and test failure diagnosis
+- Monorepo package boundary debugging
+- Partially applied refactor recovery
+- Rollback-safe validation planning
+
+## Compatibility
+### Native
+
+- **Claude Code CLI**: use for terminal-first repo diagnostics and patching.
+- **Claude Code IDE surfaces**: use when editor diagnostics and selected context are useful.
+- **Claude Code Web**: use for GitHub issue-driven migration tasks.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Gemini, and similar agents**: use the workflow as a repo migration/debugging checklist.
+
+## Production Rules
+- Reproduce before changing unless reproduction is impossible; if impossible, state why.
+- Prefer narrow, causal fixes over broad rewrites.
+- Keep lockfile and generated artifact changes intentional.
+- Validate the exact failing path before claiming the migration is complete.
+
+## Troubleshooting
+**Issue:** The failure changes after the first fix
+**Fix:** record the original failure, new failure, and boundary crossed; do not conflate them.
+
+**Issue:** A migration guide suggests many changes
+**Fix:** split required compatibility changes from optional modernization and implement only what the issue requires.
+
+**Issue:** Tests are unavailable or too expensive
+**Fix:** run syntax/type/build checks where possible and provide a precise manual verification path.
+
+## Output Contract
+1. Reproduction summary and root-cause hypothesis.
+2. Minimal patch plan with rollback points.
+3. Applied changes grouped by cause.
+4. Validation ladder with commands and results.
+5. Remaining risks, skipped checks, and follow-up work.
+---
+
+# Claude Code Source Fact Verification Capability Pack Skill
+URL: https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack
+Category: skills
+Author: JSONbored
+Date added: 2026-06-02
+Documentation: https://code.claude.com/docs/en/best-practices
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx
+Download: /downloads/skills/claude-code-source-fact-verification-capability-pack.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack
+- Source URLs: https://code.claude.com/docs/en/best-practices, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx
+- Package URL: /downloads/skills/claude-code-source-fact-verification-capability-pack.zip
+- Package SHA256: 19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e
+- Safety notes: Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks., Do not convert unverified assumptions into code changes, migrations, security claims, or README statements., If sources conflict, stop and report the contradiction instead of forcing a synthesized answer.
+- Privacy notes: Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context., Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools., Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports.
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: JSONbored
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Expert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.
+## Tags
+- claude-code
+- source-verification
+- documentation
+- research-workflow
+- capability-pack
+## Safety Notes
+- Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.
+- Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.
+- If sources conflict, stop and report the contradiction instead of forcing a synthesized answer.
+## Privacy Notes
+- Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.
+- Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.
+- Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports.
+## Content
+## Knowledge Freshness
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Refresh official docs, changelogs, source repos, and package metadata whenever facts are version-sensitive or operationally risky.
+
+## Retrieval Sources
+- https://code.claude.com/docs/en/best-practices
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/skills
+
+Prefer primary sources: official docs, source repositories, release notes, lockfiles, generated API schemas, and maintainer-owned issue context.
+
+## Core Workflow
+1. Extract claims that affect code, commands, compatibility, security, privacy, or user-facing documentation.
+2. Rank sources by authority: local source of truth, official docs, maintained source repo, release notes, then secondary references.
+3. Verify each claim against at least one primary source or mark it unsupported.
+4. Cross-check repository evidence with `rg`, manifests, lockfiles, tests, generated files, and history when relevant.
+5. Produce a concise evidence table before implementation.
+
+## Capability Scope
+- API and library behavior verification
+- Documentation and README claim validation
+- Security/privacy note grounding
+- Migration guide and changelog reconciliation
+- Issue-to-implementation evidence mapping
+
+## Compatibility
+### Native
+
+- **Claude Code CLI**: use for repo-aware source checks before edits.
+- **Claude Code Web**: use for GitHub issue and PR evidence review.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, Codex, and other agent clients**: use the workflow as a claim/evidence checklist.
+
+## Production Rules
+- Treat dates, versions, pricing, APIs, security guidance, and package behavior as unstable unless verified.
+- Separate exact source evidence from inference.
+- Do not cite generated artifacts as source of truth when source files exist.
+- Keep unsupported claims out of final content and code comments.
+
+## Troubleshooting
+**Issue:** Official docs and repo behavior disagree
+**Fix:** report both, prefer the code path actually installed in the project, and ask for maintainer decision if the change is risky.
+
+**Issue:** Source is current but vague
+**Fix:** turn vague guidance into explicit constraints and label remaining assumptions.
+
+**Issue:** Verification takes too long
+**Fix:** narrow to claims that affect executable behavior, security, privacy, install steps, or user-visible docs.
+
+## Output Contract
+1. Claim/evidence table with source URL or local file path.
+2. Unsupported or conflicting claims list.
+3. Implementation constraints derived from verified facts.
+4. Explicit confidence and remaining caveats.
+5. Recommended next validation command or manual check.
 ---
 
 # Claude Code vs Cursor vs Codeium Complete Comparison 2025
@@ -27805,6 +28139,124 @@ This skill teaches agents to perform fast, low-noise code reviews that mimic sen
 - Run test/lint/typecheck after patch.
 - Re-check auth, input validation, and data handling paths.
 - Verify no new critical findings introduced by fixes.
+---
+
+# Code Review Escalation Rules for High-Risk Changes
+URL: https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes
+Category: rules
+Author: JSONbored
+Date added: 2026-06-03
+Documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes
+- Source URLs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners, https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx
+- Safety notes: These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present., Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked., The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.
+- Privacy notes: Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context., Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation., Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.
+- Author: JSONbored
+- Last verified: 2026-06-03
+- Robots: indexable
+## Summary
+Portable CLAUDE.md rules for escalating high-risk pull requests to the right reviewers, checks, and approval gates before merge.
+## Tags
+- code-review
+- escalation
+- security
+- branch-protection
+- rules
+## Safety Notes
+- These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.
+- Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.
+- The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.
+## Privacy Notes
+- Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.
+- Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.
+- Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.
+## Content
+## Overview
+You are enforcing code review escalation rules for high-risk changes. Before approving, merging, or recommending merge of any pull request, classify its risk and require the matching reviewers, checks, and evidence.
+
+## Source Basis
+- GitHub CODEOWNERS documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+- GitHub protected branch documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
+- GitHub pull request review documentation: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews
+- OWASP Secure Code Review Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html
+- OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/
+
+GitHub documents CODEOWNERS as a way to request responsible reviewers and, with protected branches or rulesets, require code owner approval before merge. GitHub also documents required reviews, stale review dismissal, most-recent-push approval, and required status checks as branch protection controls. OWASP secure review guidance supports risk-based review depth, especially for high-risk components where automated checks alone are not enough.
+
+## Prerequisites
+- Repository review policy, branch protection, or ruleset configuration.
+- CODEOWNERS or equivalent domain-owner mapping for critical paths.
+- Required status checks for tests, security scans, and build validation.
+- Clear ownership for security, data, platform, and product risk decisions.
+
+## High-Risk Change Triggers
+Escalate the review when a change touches any of these areas:
+
+- Authentication, authorization, sessions, tokens, secrets, encryption, or identity provider configuration.
+- Payment flows, billing, financial calculations, audit logs, compliance controls, or legal retention behavior.
+- Database schema migrations, destructive data operations, permission changes, backfills, or irreversible state transitions.
+- Infrastructure as code, CI/CD workflows, deployment gates, production routing, DNS, TLS, observability, or incident-response automation.
+- Dependency upgrades, package manager lockfiles, generated artifacts, build toolchains, or supply-chain metadata.
+- Public APIs, webhooks, event schemas, serialization formats, or backward compatibility contracts.
+- Privacy-sensitive data paths, telemetry, logging, analytics, exports, customer data, or third-party data sharing.
+
+## Escalation Requirements
+For high-risk changes, do not rely on a single general approval. Require:
+
+- A code owner or domain owner review for every affected critical path.
+- A security review for auth, secrets, crypto, dependency, CI/CD, or externally reachable behavior.
+- A data owner review for migrations, deletion, retention, analytics, telemetry, exports, or privacy-sensitive flows.
+- A platform or operations review for infrastructure, deployment, monitoring, incident response, and production reliability changes.
+- Fresh status checks after the last reviewable push, including tests that exercise the affected risk boundary.
+
+## Approval Rules
+- Treat CODEOWNERS as routing, not complete risk approval. If one CODEOWNER approval satisfies branch protection but the change crosses multiple domains, request every relevant domain owner.
+- Do not approve high-risk changes from the author, pair partner, or automated agent alone. Require independent human review with the right ownership.
+- Dismiss or re-request approval when new commits modify the reviewed risk boundary, generated artifacts, lockfiles, migrations, or deployment behavior.
+- Block merge if required checks are skipped, stale, flaky without triage, or unrelated to the changed risk surface.
+- Require an explicit rollback plan for migrations, infrastructure changes, release gates, auth changes, and production data behavior.
+
+## Review Evidence Checklist
+Before marking review complete, record:
+
+- Why the change is low, medium, or high risk.
+- Which files, services, data stores, and external systems are affected.
+- Which owners reviewed each risk area.
+- Which checks ran after the latest relevant commit.
+- Which secrets, data classes, permissions, or user-visible behaviors changed.
+- What rollback, monitoring, and incident follow-up exists if the change fails in production.
+
+## Safety Notes
+- These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.
+- Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.
+- The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.
+
+## Privacy Notes
+- Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.
+- Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.
+- Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.
+
+## Troubleshooting
+**Issue:** CODEOWNERS approval passes but the change affects multiple high-risk domains
+**Fix:** request each relevant domain owner and document which risk area each approval covers.
+
+**Issue:** A new commit lands after approval
+**Fix:** re-check the changed risk boundary, ensure status checks rerun, and request fresh approval when the latest push changes reviewed behavior.
+
+**Issue:** The author says the change is small
+**Fix:** classify by blast radius, affected system, and reversibility, not by line count.
+
+## Merge Blockers
+Block merge and request escalation when:
+
+- The risk category is unclear.
+- Ownership is missing or stale.
+- The PR changes protected review policy, CODEOWNERS, branch rules, CI workflows, or release automation without owner review.
+- The PR includes generated files or lockfiles that are not explained.
+- The PR touches secrets, credentials, personal data, or production configuration without explicit safety and privacy notes.
+- The author cannot explain test coverage, rollback, or blast radius.
 ---
 
 # Code Review Expert for Claude
@@ -60166,6 +60618,51 @@ TypeScript agent framework for building AI agents, workflows, memory, tool calli
 ## Content
 ## Editorial notes
 Mastra is useful for JavaScript and TypeScript teams building agent products with workflow, memory, and tool abstractions.
+
+## Disclosure
+Editorial listing. No paid placement or affiliate link is used.
+---
+
+# MCP Inspector
+URL: https://heyclau.de/entry/tools/mcp-inspector
+Category: tools
+Author: Model Context Protocol
+Date added: 2026-06-02
+Documentation: https://modelcontextprotocol.io/docs/tools
+Repository: https://github.com/modelcontextprotocol/inspector
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/tools/mcp-inspector
+- Source URLs: https://modelcontextprotocol.io/docs/tools, https://github.com/modelcontextprotocol/inspector, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx
+- Brand: MCP Inspector
+- Brand domain: modelcontextprotocol.io
+- Brand asset source: brandfetch
+- Safety notes: Starts a local inspector UI and proxy process for interactive MCP debugging., Only connect it to MCP servers and endpoints you trust during testing.
+- Privacy notes: Requests and tool responses from the inspected server may be visible in the local inspector session., Avoid testing with production credentials or private user data unless the environment is isolated.
+- Author: Model Context Protocol
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Official visual testing and debugging tool for Model Context Protocol servers.
+## Tags
+- mcp
+- debugging
+- developer-tools
+- testing
+## Safety Notes
+- Starts a local inspector UI and proxy process for interactive MCP debugging.
+- Only connect it to MCP servers and endpoints you trust during testing.
+## Privacy Notes
+- Requests and tool responses from the inspected server may be visible in the local inspector session.
+- Avoid testing with production credentials or private user data unless the environment is isolated.
+## Content
+## Editorial notes
+MCP Inspector is the official developer tool for exercising Model Context Protocol servers before wiring them into Claude or another MCP client. It is useful when checking tool definitions, resource responses, server startup behavior, and transport configuration during MCP development.
+
+## Why it belongs
+- Maintained under the Model Context Protocol organization.
+- Supports interactive inspection of local MCP server implementations.
+- Provides a practical debugging path before adding a server to a real Claude configuration.
 
 ## Disclosure
 Editorial listing. No paid placement or affiliate link is used.

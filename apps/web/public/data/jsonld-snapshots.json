@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "count": 394,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -4986,6 +4986,84 @@
       ]
     },
     {
+      "key": "tools:ccusage",
+      "category": "tools",
+      "slug": "ccusage",
+      "url": "https://heyclau.de/entry/tools/ccusage",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/tools/ccusage#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Tools",
+              "item": "https://heyclau.de/browse?category=tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "ccusage",
+              "item": "https://heyclau.de/entry/tools/ccusage"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/tools/ccusage#webpage",
+          "name": "ccusage",
+          "description": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+          "url": "https://heyclau.de/entry/tools/ccusage",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/tools/ccusage#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/tools/ccusage#entry",
+          "name": "ccusage",
+          "headline": "ccusage",
+          "description": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+          "url": "https://heyclau.de/entry/tools/ccusage",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code usage, coding agent cost tracking, token usage cli, agent usage analytics, usage-analytics, claude-code, cli, cost-tracking, tools, claude, heyclaude, ccusage",
+          "genre": "Tools",
+          "author": {
+            "@type": "Person",
+            "name": "ryoppippi",
+            "url": "https://github.com/ryoppippi"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://ccusage.com/guide/getting-started",
+            "https://github.com/ryoppippi/ccusage"
+          ],
+          "isBasedOn": [
+            "https://ccusage.com/guide/getting-started",
+            "https://github.com/ryoppippi/ccusage",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+            "https://ccusage.com"
+          ]
+        }
+      ]
+    },
+    {
       "key": "guides:chatgpt-migration-guide",
       "category": "guides",
       "slug": "chatgpt-migration-guide",
@@ -5504,6 +5582,93 @@
       ]
     },
     {
+      "key": "skills:claude-code-mcp-production-readiness-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "url": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Skills",
+              "item": "https://heyclau.de/browse?category=skills"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Claude Code MCP Production Readiness Capability Pack Skill",
+              "item": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack#webpage",
+          "name": "Claude Code MCP Production Readiness Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for production MCP readiness with scoped server configuration, permission review, OAuth checks, and operational validation.",
+          "url": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack#entry",
+          "name": "Claude Code MCP Production Readiness Capability Pack Skill",
+          "headline": "Claude Code MCP Production Readiness Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for production MCP readiness with scoped server configuration, permission review, OAuth checks, and operational validation.",
+          "url": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code mcp production, mcp server readiness, claude code permissions, mcp oauth validation, claude-code, mcp, production-readiness, security, capability-pack, skills, claude, heyclaude",
+          "genre": "Skills",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://code.claude.com/docs/en/mcp"
+          ],
+          "isBasedOn": [
+            "https://code.claude.com/docs/en/mcp",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx"
+          ],
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Package SHA256",
+              "value": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "Platform compatibility",
+              "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "key": "guides:multi-directory-setup",
       "category": "guides",
       "slug": "multi-directory-setup",
@@ -5571,6 +5736,180 @@
           "sameAs": [],
           "isBasedOn": [
             "https://github.com/JSONbored/awesome-claude/blob/main/content/guides/multi-directory-setup.mdx"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "skills:claude-code-repo-migration-debugging-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "url": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Skills",
+              "item": "https://heyclau.de/browse?category=skills"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Claude Code Repo Migration Debugging Capability Pack Skill",
+              "item": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack#webpage",
+          "name": "Claude Code Repo Migration Debugging Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for repository migrations, dependency upgrades, build failure debugging, validation plans, and rollback-safe fixes.",
+          "url": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack#entry",
+          "name": "Claude Code Repo Migration Debugging Capability Pack Skill",
+          "headline": "Claude Code Repo Migration Debugging Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for repository migrations, dependency upgrades, build failure debugging, validation plans, and rollback-safe fixes.",
+          "url": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code repo migration, dependency upgrade debugging, build failure diagnosis, migration validation workflow, claude-code, migration, debugging, dependency-upgrades, capability-pack, skills, claude, heyclaude",
+          "genre": "Skills",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://code.claude.com/docs/en/common-workflows"
+          ],
+          "isBasedOn": [
+            "https://code.claude.com/docs/en/common-workflows",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx"
+          ],
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Package SHA256",
+              "value": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "Platform compatibility",
+              "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "skills:claude-code-source-fact-verification-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "url": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Skills",
+              "item": "https://heyclau.de/browse?category=skills"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Claude Code Source Fact Verification Capability Pack Skill",
+              "item": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack#webpage",
+          "name": "Claude Code Source Fact Verification Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for source-fact verification using official docs, repository evidence, changelogs, and auditable claim tables.",
+          "url": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack#entry",
+          "name": "Claude Code Source Fact Verification Capability Pack Skill",
+          "headline": "Claude Code Source Fact Verification Capability Pack Skill",
+          "description": "Expert Claude Code skill pack for source-fact verification using official docs, repository evidence, changelogs, and auditable claim tables.",
+          "url": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code fact checking, source grounded coding, agent verification workflow, primary source evidence, claude-code, source-verification, documentation, research-workflow, capability-pack, skills, claude, heyclaude",
+          "genre": "Skills",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://code.claude.com/docs/en/best-practices"
+          ],
+          "isBasedOn": [
+            "https://code.claude.com/docs/en/best-practices",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx"
+          ],
+          "additionalProperty": [
+            {
+              "@type": "PropertyValue",
+              "name": "Package SHA256",
+              "value": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e"
+            },
+            {
+              "@type": "PropertyValue",
+              "name": "Platform compatibility",
+              "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
+            }
           ]
         }
       ]
@@ -7575,6 +7914,81 @@
               "name": "Platform compatibility",
               "value": "Claude: native-skill, Codex: native-skill, Windsurf: native-skill, Gemini: native-skill, Cursor: adapter, Generic AGENTS: manual-context"
             }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "rules:code-review-escalation-high-risk-changes",
+      "category": "rules",
+      "slug": "code-review-escalation-high-risk-changes",
+      "url": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Rules",
+              "item": "https://heyclau.de/browse?category=rules"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Code Review Escalation Rules for High-Risk Changes",
+              "item": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes#webpage",
+          "name": "Code Review Escalation Rules for High-Risk Changes",
+          "description": "Source-backed Claude rules for escalating high-risk code changes with CODEOWNERS, branch protection, required reviews, status checks, and secure review evide...",
+          "url": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes#entry",
+          "name": "Code Review Escalation Rules for High-Risk Changes",
+          "headline": "Code Review Escalation Rules for High-Risk Changes",
+          "description": "Source-backed Claude rules for escalating high-risk code changes with CODEOWNERS, branch protection, required reviews, status checks, and secure review evide...",
+          "url": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes",
+          "datePublished": "2026-06-03",
+          "dateModified": "2026-06-03",
+          "keywords": "high risk code review, review escalation rules, code owner review, branch protection, secure code review, code-review, escalation, security, rules, claude, heyclaude, code review escalation rules for high-risk changes, branch-protection",
+          "genre": "Rules",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+          ],
+          "isBasedOn": [
+            "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx"
           ]
         }
       ]
@@ -17448,6 +17862,82 @@
             "https://github.com/mastra-ai/mastra",
             "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mastra.mdx",
             "https://mastra.ai"
+          ]
+        }
+      ]
+    },
+    {
+      "key": "tools:mcp-inspector",
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "url": "https://heyclau.de/entry/tools/mcp-inspector",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Tools",
+              "item": "https://heyclau.de/browse?category=tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "MCP Inspector",
+              "item": "https://heyclau.de/entry/tools/mcp-inspector"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#webpage",
+          "name": "MCP Inspector",
+          "description": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+          "url": "https://heyclau.de/entry/tools/mcp-inspector",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/tools/mcp-inspector#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#entry",
+          "name": "MCP Inspector",
+          "headline": "MCP Inspector",
+          "description": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+          "url": "https://heyclau.de/entry/tools/mcp-inspector",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "mcp inspector, model context protocol debugging, mcp server testing, mcp, debugging, developer-tools, testing, tools, claude, heyclaude",
+          "genre": "Tools",
+          "author": {
+            "@type": "Person",
+            "name": "Model Context Protocol"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://modelcontextprotocol.io/docs/tools",
+            "https://github.com/modelcontextprotocol/inspector"
+          ],
+          "isBasedOn": [
+            "https://modelcontextprotocol.io/docs/tools",
+            "https://github.com/modelcontextprotocol/inspector",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx"
           ]
         }
       ]

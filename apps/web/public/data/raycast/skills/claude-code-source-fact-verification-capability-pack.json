@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "key": "skills:claude-code-source-fact-verification-capability-pack",
+  "category": "skills",
+  "slug": "claude-code-source-fact-verification-capability-pack",
+  "title": "Claude Code Source Fact Verification Capability Pack Skill",
+  "author": "JSONbored",
+  "copyText": "Install:\ncurl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack\n\nUsage:\nUse this skill when a Claude Code task depends on current APIs, product behavior, security rules, migration guides, changelogs, or claims that must be traceable.\n\nAsset:\n# Trigger\n\"Apply the Claude Code source fact verification capability pack before making changes.\"\n\n# Required output\n1) Claim inventory with source priority\n2) Primary-source evidence table\n3) Repo evidence and contradiction checks\n4) Final confidence, caveats, and change constraints",
+  "detailMarkdown": "# Claude Code Source Fact Verification Capability Pack Skill\n\nExpert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Safety notes\n- Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.\n- Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.\n- If sources conflict, stop and report the contradiction instead of forcing a synthesized answer.\n\n## Privacy notes\n- Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.\n- Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.\n- Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports.\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack\n```\n\n## Usage\nUse this skill when a Claude Code task depends on current APIs, product behavior, security rules, migration guides, changelogs, or claims that must be traceable.",
+  "webUrl": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+  "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+  "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-source-fact-verification-capability-pack.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-source-fact-verification-capability-pack",
+  "seoTitle": "Claude Code Source Fact Verification Capability Pack Skill",
+  "seoDescription": "Expert Claude Code skill pack for source-fact verification using official docs, repository evidence, changelogs, and auditable claim tables.",
+  "safetyNotes": [
+    "Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.",
+    "Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.",
+    "If sources conflict, stop and report the contradiction instead of forcing a synthesized answer."
+  ],
+  "privacyNotes": [
+    "Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.",
+    "Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.",
+    "Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports."
+  ],
+  "repoUrl": "",
+  "documentationUrl": "https://code.claude.com/docs/en/best-practices",
+  "downloadTrust": "first-party",
+  "verificationStatus": "validated",
+  "packageVerified": true
+}

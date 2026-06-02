@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "browser-use/browser-use",
     "url": "https://github.com/browser-use/browser-use",
-    "stars": 94603,
-    "forks": 10672,
-    "updatedAt": "2026-05-19T11:41:57Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

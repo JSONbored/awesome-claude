@@ -73,15 +73,12 @@
     "filePath": "content/tools/crewai.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/crewai.mdx",
     "repoUrl": "https://github.com/crewAIInc/crewAI",
-    "githubStars": 51712,
-    "githubForks": 7160,
-    "repoUpdatedAt": "2026-05-19T11:43:25Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "crewAIInc/crewAI",
       "url": "https://github.com/crewAIInc/crewAI",
-      "stars": 51712,
-      "forks": 7160,
-      "updatedAt": "2026-05-19T11:43:25Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

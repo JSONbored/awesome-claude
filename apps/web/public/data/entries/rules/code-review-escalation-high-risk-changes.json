@@ -1,0 +1,213 @@
+{
+  "schemaVersion": 1,
+  "key": "rules:code-review-escalation-high-risk-changes",
+  "entry": {
+    "category": "rules",
+    "slug": "code-review-escalation-high-risk-changes",
+    "title": "Code Review Escalation Rules for High-Risk Changes",
+    "description": "Portable CLAUDE.md rules for escalating high-risk pull requests to the right reviewers, checks, and approval gates before merge.",
+    "seoTitle": "Code Review Escalation Rules for High-Risk Changes",
+    "seoDescription": "Source-backed Claude rules for escalating high-risk code changes with CODEOWNERS, branch protection, required reviews, status checks, and secure review evide...",
+    "author": "JSONbored",
+    "authorProfileUrl": "https://github.com/JSONbored",
+    "dateAdded": "2026-06-03",
+    "contentUpdatedAt": "2026-06-03",
+    "tags": [
+      "code-review",
+      "escalation",
+      "security",
+      "branch-protection",
+      "rules"
+    ],
+    "keywords": [
+      "high risk code review",
+      "review escalation rules",
+      "code owner review",
+      "branch protection",
+      "secure code review",
+      "code-review",
+      "escalation",
+      "security",
+      "rules",
+      "claude",
+      "heyclaude",
+      "code review escalation rules for high-risk changes"
+    ],
+    "readingTime": 5,
+    "difficultyScore": 7,
+    "documentationUrl": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+    "cardDescription": "Escalation guardrails for security, data, infrastructure, dependency, and production-impacting changes that need stronger review before merge.",
+    "installable": false,
+    "usageSnippet": "Add these rules to CLAUDE.md when AI-assisted code review must identify high-risk changes and require explicit escalation before merge.",
+    "copySnippet": "You are enforcing code review escalation rules for high-risk changes. Before approving, merging, or recommending merge of any pull request, classify its risk and require the matching reviewers, checks, and evidence.\n\n## Source Basis\n\n- GitHub CODEOWNERS documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners\n- GitHub protected branch documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches\n- GitHub pull request review documentation: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews\n- OWASP Secure Code Review Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html\n- OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/\n\nGitHub documents CODEOWNERS as a way to request responsible reviewers and, with protected branches or rulesets, require code owner approval before merge. GitHub also documents required reviews, stale review dismissal, most-recent-push approval, and required status checks as branch protection controls. OWASP secure review guidance supports risk-based review depth, especially for high-risk components where automated checks alone are not enough.\n\n## Prerequisites\n\n- Repository review policy, branch protection, or ruleset configuration.\n- CODEOWNERS or equivalent domain-owner mapping for critical paths.\n- Required status checks for tests, security scans, and build validation.\n- Clear ownership for security, data, platform, and product risk decisions.\n\n## High-Risk Change Triggers\n\nEscalate the review when a change touches any of these areas:\n\n- Authentication, authorization, sessions, tokens, secrets, encryption, or identity provider configuration.\n- Payment flows, billing, financial calculations, audit logs, compliance controls, or legal retention behavior.\n- Database schema migrations, destructive data operations, permission changes, backfills, or irreversible state transitions.\n- Infrastructure as code, CI/CD workflows, deployment gates, production routing, DNS, TLS, observability, or incident-response automation.\n- Dependency upgrades, package manager lockfiles, generated artifacts, build toolchains, or supply-chain metadata.\n- Public APIs, webhooks, event schemas, serialization formats, or backward compatibility contracts.\n- Privacy-sensitive data paths, telemetry, logging, analytics, exports, customer data, or third-party data sharing.\n\n## Escalation Requirements\n\nFor high-risk changes, do not rely on a single general approval. Require:\n\n- A code owner or domain owner review for every affected critical path.\n- A security review for auth, secrets, crypto, dependency, CI/CD, or externally reachable behavior.\n- A data owner review for migrations, deletion, retention, analytics, telemetry, exports, or privacy-sensitive flows.\n- A platform or operations review for infrastructure, deployment, monitoring, incident response, and production reliability changes.\n- Fresh status checks after the last reviewable push, including tests that exercise the affected risk boundary.\n\n## Approval Rules\n\n- Treat CODEOWNERS as routing, not complete risk approval. If one CODEOWNER approval satisfies branch protection but the change crosses multiple domains, request every relevant domain owner.\n- Do not approve high-risk changes from the author, pair partner, or automated agent alone. Require independent human review with the right ownership.\n- Dismiss or re-request approval when new commits modify the reviewed risk boundary, generated artifacts, lockfiles, migrations, or deployment behavior.\n- Block merge if required checks are skipped, stale, flaky without triage, or unrelated to the changed risk surface.\n- Require an explicit rollback plan for migrations, infrastructure changes, release gates, auth changes, and production data behavior.\n\n## Review Evidence Checklist\n\nBefore marking review complete, record:\n\n- Why the change is low, medium, or high risk.\n- Which files, services, data stores, and external systems are affected.\n- Which owners reviewed each risk area.\n- Which checks ran after the latest relevant commit.\n- Which secrets, data classes, permissions, or user-visible behaviors changed.\n- What rollback, monitoring, and incident follow-up exists if the change fails in production.\n\n## Safety Notes\n\n- These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.\n- Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.\n- The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.\n\n## Privacy Notes\n\n- Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.\n- Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.\n- Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.\n\n## Troubleshooting\n\n**Issue:** CODEOWNERS approval passes but the change affects multiple high-risk domains  \n**Fix:** request each relevant domain owner and document which risk area each approval covers.\n\n**Issue:** A new commit lands after approval  \n**Fix:** re-check the changed risk boundary, ensure status checks rerun, and request fresh approval when the latest push changes reviewed behavior.\n\n**Issue:** The author says the change is small  \n**Fix:** classify by blast radius, affected system, and reversibility, not by line count.\n\n## Merge Blockers\n\nBlock merge and request escalation when:\n\n- The risk category is unclear.\n- Ownership is missing or stale.\n- The PR changes protected review policy, CODEOWNERS, branch rules, CI workflows, or release automation without owner review.\n- The PR includes generated files or lockfiles that are not explained.\n- The PR touches secrets, credentials, personal data, or production configuration without explicit safety and privacy notes.\n- The author cannot explain test coverage, rollback, or blast radius.",
+    "prerequisites": [
+      "Repository review policy, branch protection, or ruleset configuration.",
+      "CODEOWNERS or equivalent domain-owner mapping for critical paths.",
+      "Required status checks for tests, security scans, and build validation.",
+      "Clear ownership for security, data, platform, and product risk decisions."
+    ],
+    "safetyNotes": [
+      "These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.",
+      "Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.",
+      "The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks."
+    ],
+    "privacyNotes": [
+      "Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.",
+      "Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.",
+      "Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval."
+    ],
+    "hasPrerequisites": true,
+    "hasTroubleshooting": true,
+    "hasBreakingChanges": false,
+    "robotsIndex": true,
+    "robotsFollow": true,
+    "downloadUrl": "",
+    "downloadTrust": null,
+    "downloadSha256": null,
+    "body": "You are enforcing code review escalation rules for high-risk changes. Before approving, merging, or recommending merge of any pull request, classify its risk and require the matching reviewers, checks, and evidence.\n\n## Source Basis\n\n- GitHub CODEOWNERS documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners\n- GitHub protected branch documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches\n- GitHub pull request review documentation: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews\n- OWASP Secure Code Review Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html\n- OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/\n\nGitHub documents CODEOWNERS as a way to request responsible reviewers and, with protected branches or rulesets, require code owner approval before merge. GitHub also documents required reviews, stale review dismissal, most-recent-push approval, and required status checks as branch protection controls. OWASP secure review guidance supports risk-based review depth, especially for high-risk components where automated checks alone are not enough.\n\n## Prerequisites\n\n- Repository review policy, branch protection, or ruleset configuration.\n- CODEOWNERS or equivalent domain-owner mapping for critical paths.\n- Required status checks for tests, security scans, and build validation.\n- Clear ownership for security, data, platform, and product risk decisions.\n\n## High-Risk Change Triggers\n\nEscalate the review when a change touches any of these areas:\n\n- Authentication, authorization, sessions, tokens, secrets, encryption, or identity provider configuration.\n- Payment flows, billing, financial calculations, audit logs, compliance controls, or legal retention behavior.\n- Database schema migrations, destructive data operations, permission changes, backfills, or irreversible state transitions.\n- Infrastructure as code, CI/CD workflows, deployment gates, production routing, DNS, TLS, observability, or incident-response automation.\n- Dependency upgrades, package manager lockfiles, generated artifacts, build toolchains, or supply-chain metadata.\n- Public APIs, webhooks, event schemas, serialization formats, or backward compatibility contracts.\n- Privacy-sensitive data paths, telemetry, logging, analytics, exports, customer data, or third-party data sharing.\n\n## Escalation Requirements\n\nFor high-risk changes, do not rely on a single general approval. Require:\n\n- A code owner or domain owner review for every affected critical path.\n- A security review for auth, secrets, crypto, dependency, CI/CD, or externally reachable behavior.\n- A data owner review for migrations, deletion, retention, analytics, telemetry, exports, or privacy-sensitive flows.\n- A platform or operations review for infrastructure, deployment, monitoring, incident response, and production reliability changes.\n- Fresh status checks after the last reviewable push, including tests that exercise the affected risk boundary.\n\n## Approval Rules\n\n- Treat CODEOWNERS as routing, not complete risk approval. If one CODEOWNER approval satisfies branch protection but the change crosses multiple domains, request every relevant domain owner.\n- Do not approve high-risk changes from the author, pair partner, or automated agent alone. Require independent human review with the right ownership.\n- Dismiss or re-request approval when new commits modify the reviewed risk boundary, generated artifacts, lockfiles, migrations, or deployment behavior.\n- Block merge if required checks are skipped, stale, flaky without triage, or unrelated to the changed risk surface.\n- Require an explicit rollback plan for migrations, infrastructure changes, release gates, auth changes, and production data behavior.\n\n## Review Evidence Checklist\n\nBefore marking review complete, record:\n\n- Why the change is low, medium, or high risk.\n- Which files, services, data stores, and external systems are affected.\n- Which owners reviewed each risk area.\n- Which checks ran after the latest relevant commit.\n- Which secrets, data classes, permissions, or user-visible behaviors changed.\n- What rollback, monitoring, and incident follow-up exists if the change fails in production.\n\n## Safety Notes\n\n- These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.\n- Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.\n- The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.\n\n## Privacy Notes\n\n- Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.\n- Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.\n- Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.\n\n## Troubleshooting\n\n**Issue:** CODEOWNERS approval passes but the change affects multiple high-risk domains  \n**Fix:** request each relevant domain owner and document which risk area each approval covers.\n\n**Issue:** A new commit lands after approval  \n**Fix:** re-check the changed risk boundary, ensure status checks rerun, and request fresh approval when the latest push changes reviewed behavior.\n\n**Issue:** The author says the change is small  \n**Fix:** classify by blast radius, affected system, and reversibility, not by line count.\n\n## Merge Blockers\n\nBlock merge and request escalation when:\n\n- The risk category is unclear.\n- Ownership is missing or stale.\n- The PR changes protected review policy, CODEOWNERS, branch rules, CI workflows, or release automation without owner review.\n- The PR includes generated files or lockfiles that are not explained.\n- The PR touches secrets, credentials, personal data, or production configuration without explicit safety and privacy notes.\n- The author cannot explain test coverage, rollback, or blast radius.",
+    "sections": [
+      {
+        "title": "Overview",
+        "id": "overview",
+        "markdown": "You are enforcing code review escalation rules for high-risk changes. Before approving, merging, or recommending merge of any pull request, classify its risk and require the matching reviewers, checks, and evidence.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Source Basis",
+        "id": "source-basis",
+        "markdown": "- GitHub CODEOWNERS documentation: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners\n- GitHub protected branch documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches\n- GitHub pull request review documentation: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews\n- OWASP Secure Code Review Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Secure_Code_Review_Cheat_Sheet.html\n- OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/\n\nGitHub documents CODEOWNERS as a way to request responsible reviewers and, with protected branches or rulesets, require code owner approval before merge. GitHub also documents required reviews, stale review dismissal, most-recent-push approval, and required status checks as branch protection controls. OWASP secure review guidance supports risk-based review depth, especially for high-risk components where automated checks alone are not enough.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Prerequisites",
+        "id": "prerequisites",
+        "markdown": "- Repository review policy, branch protection, or ruleset configuration.\n- CODEOWNERS or equivalent domain-owner mapping for critical paths.\n- Required status checks for tests, security scans, and build validation.\n- Clear ownership for security, data, platform, and product risk decisions.",
+        "codeBlocks": []
+      },
+      {
+        "title": "High-Risk Change Triggers",
+        "id": "high-risk-change-triggers",
+        "markdown": "Escalate the review when a change touches any of these areas:\n\n- Authentication, authorization, sessions, tokens, secrets, encryption, or identity provider configuration.\n- Payment flows, billing, financial calculations, audit logs, compliance controls, or legal retention behavior.\n- Database schema migrations, destructive data operations, permission changes, backfills, or irreversible state transitions.\n- Infrastructure as code, CI/CD workflows, deployment gates, production routing, DNS, TLS, observability, or incident-response automation.\n- Dependency upgrades, package manager lockfiles, generated artifacts, build toolchains, or supply-chain metadata.\n- Public APIs, webhooks, event schemas, serialization formats, or backward compatibility contracts.\n- Privacy-sensitive data paths, telemetry, logging, analytics, exports, customer data, or third-party data sharing.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Escalation Requirements",
+        "id": "escalation-requirements",
+        "markdown": "For high-risk changes, do not rely on a single general approval. Require:\n\n- A code owner or domain owner review for every affected critical path.\n- A security review for auth, secrets, crypto, dependency, CI/CD, or externally reachable behavior.\n- A data owner review for migrations, deletion, retention, analytics, telemetry, exports, or privacy-sensitive flows.\n- A platform or operations review for infrastructure, deployment, monitoring, incident response, and production reliability changes.\n- Fresh status checks after the last reviewable push, including tests that exercise the affected risk boundary.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Approval Rules",
+        "id": "approval-rules",
+        "markdown": "- Treat CODEOWNERS as routing, not complete risk approval. If one CODEOWNER approval satisfies branch protection but the change crosses multiple domains, request every relevant domain owner.\n- Do not approve high-risk changes from the author, pair partner, or automated agent alone. Require independent human review with the right ownership.\n- Dismiss or re-request approval when new commits modify the reviewed risk boundary, generated artifacts, lockfiles, migrations, or deployment behavior.\n- Block merge if required checks are skipped, stale, flaky without triage, or unrelated to the changed risk surface.\n- Require an explicit rollback plan for migrations, infrastructure changes, release gates, auth changes, and production data behavior.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Review Evidence Checklist",
+        "id": "review-evidence-checklist",
+        "markdown": "Before marking review complete, record:\n\n- Why the change is low, medium, or high risk.\n- Which files, services, data stores, and external systems are affected.\n- Which owners reviewed each risk area.\n- Which checks ran after the latest relevant commit.\n- Which secrets, data classes, permissions, or user-visible behaviors changed.\n- What rollback, monitoring, and incident follow-up exists if the change fails in production.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Safety Notes",
+        "id": "safety-notes",
+        "markdown": "- These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.\n- Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.\n- The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Privacy Notes",
+        "id": "privacy-notes",
+        "markdown": "- Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.\n- Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.\n- Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Troubleshooting",
+        "id": "troubleshooting",
+        "markdown": "**Issue:** CODEOWNERS approval passes but the change affects multiple high-risk domains  \n**Fix:** request each relevant domain owner and document which risk area each approval covers.\n\n**Issue:** A new commit lands after approval  \n**Fix:** re-check the changed risk boundary, ensure status checks rerun, and request fresh approval when the latest push changes reviewed behavior.\n\n**Issue:** The author says the change is small  \n**Fix:** classify by blast radius, affected system, and reversibility, not by line count.",
+        "codeBlocks": []
+      },
+      {
+        "title": "Merge Blockers",
+        "id": "merge-blockers",
+        "markdown": "Block merge and request escalation when:\n\n- The risk category is unclear.\n- Ownership is missing or stale.\n- The PR changes protected review policy, CODEOWNERS, branch rules, CI workflows, or release automation without owner review.\n- The PR includes generated files or lockfiles that are not explained.\n- The PR touches secrets, credentials, personal data, or production configuration without explicit safety and privacy notes.\n- The author cannot explain test coverage, rollback, or blast radius.",
+        "codeBlocks": []
+      }
+    ],
+    "headings": [
+      {
+        "depth": 2,
+        "text": "Source Basis",
+        "id": "source-basis"
+      },
+      {
+        "depth": 2,
+        "text": "Prerequisites",
+        "id": "prerequisites"
+      },
+      {
+        "depth": 2,
+        "text": "High-Risk Change Triggers",
+        "id": "high-risk-change-triggers"
+      },
+      {
+        "depth": 2,
+        "text": "Escalation Requirements",
+        "id": "escalation-requirements"
+      },
+      {
+        "depth": 2,
+        "text": "Approval Rules",
+        "id": "approval-rules"
+      },
+      {
+        "depth": 2,
+        "text": "Review Evidence Checklist",
+        "id": "review-evidence-checklist"
+      },
+      {
+        "depth": 2,
+        "text": "Safety Notes",
+        "id": "safety-notes"
+      },
+      {
+        "depth": 2,
+        "text": "Privacy Notes",
+        "id": "privacy-notes"
+      },
+      {
+        "depth": 2,
+        "text": "Troubleshooting",
+        "id": "troubleshooting"
+      },
+      {
+        "depth": 2,
+        "text": "Merge Blockers",
+        "id": "merge-blockers"
+      }
+    ],
+    "codeBlocks": [],
+    "filePath": "content/rules/code-review-escalation-high-risk-changes.mdx",
+    "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx",
+    "repoUrl": null,
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null
+  },
+  "trustSignals": {
+    "firstPartyEditorial": false,
+    "packageVerified": false,
+    "packageTrust": null,
+    "packageChecksum": "",
+    "checksumPresent": false,
+    "sourceUrlCount": 2,
+    "sourceUrls": [
+      "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx"
+    ],
+    "sourceStatus": "available",
+    "lastVerifiedAt": "2026-06-03",
+    "adapterGenerated": false,
+    "platforms": [],
+    "supportLevels": []
+  }
+}

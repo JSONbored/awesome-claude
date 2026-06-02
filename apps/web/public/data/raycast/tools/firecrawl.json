@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "mendableai/firecrawl",
     "url": "https://github.com/mendableai/firecrawl",
-    "stars": 121680,
-    "forks": 7410,
-    "updatedAt": "2026-05-19T11:41:31Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

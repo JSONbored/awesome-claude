@@ -73,15 +73,12 @@
     "filePath": "content/tools/roo-code.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/roo-code.mdx",
     "repoUrl": "https://github.com/RooCodeInc/Roo-Code",
-    "githubStars": 24101,
-    "githubForks": 3278,
-    "repoUpdatedAt": "2026-05-19T11:16:25Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "RooCodeInc/Roo-Code",
       "url": "https://github.com/RooCodeInc/Roo-Code",
-      "stars": 24101,
-      "forks": 3278,
-      "updatedAt": "2026-05-19T11:16:25Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

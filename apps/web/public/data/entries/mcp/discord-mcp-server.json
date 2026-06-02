@@ -307,15 +307,12 @@
     "filePath": "content/mcp/discord-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/discord-mcp-server.mdx",
     "repoUrl": "https://github.com/saseq/discord-mcp",
-    "githubStars": 311,
-    "githubForks": 72,
-    "repoUpdatedAt": "2026-05-18T02:46:12Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "saseq/discord-mcp",
       "url": "https://github.com/saseq/discord-mcp",
-      "stars": 311,
-      "forks": 72,
-      "updatedAt": "2026-05-18T02:46:12Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

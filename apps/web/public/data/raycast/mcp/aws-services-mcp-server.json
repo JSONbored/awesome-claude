@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "awslabs/mcp",
     "url": "https://github.com/awslabs/mcp",
-    "stars": 9085,
-    "forks": 1532,
-    "updatedAt": "2026-05-19T08:34:58Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "langchain-ai/langgraph",
     "url": "https://github.com/langchain-ai/langgraph",
-    "stars": 32402,
-    "forks": 5495,
-    "updatedAt": "2026-05-19T11:43:29Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

@@ -1,0 +1,137 @@
+---
+title: Claude Code Repo Migration Debugging Capability Pack Skill
+slug: claude-code-repo-migration-debugging-capability-pack
+category: skills
+description: "Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation."
+cardDescription: "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes."
+seoTitle: Claude Code Repo Migration Debugging Capability Pack Skill
+seoDescription: "Expert Claude Code skill pack for repository migrations, dependency upgrades, build failure debugging, validation plans, and rollback-safe fixes."
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-02"
+documentationUrl: "https://code.claude.com/docs/en/common-workflows"
+downloadUrl: /downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip
+installable: true
+installCommand: "curl -L https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip -o claude-code-repo-migration-debugging-capability-pack.zip && unzip -o claude-code-repo-migration-debugging-capability-pack.zip -d ./claude-code-repo-migration-debugging-capability-pack"
+usageSnippet: "Use this skill when Claude Code must migrate a repo, upgrade dependencies, debug failing tests/builds, or recover from a partially applied refactor."
+copySnippet: |-
+  # Trigger
+  "Apply the Claude Code repo migration debugging capability pack to this failure."
+
+  # Required output
+  1) Failure reproduction and scope map
+  2) Dependency/config/change-impact graph
+  3) Minimal fix plan with rollback points
+  4) Targeted validation ladder and final risk report
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-02"
+retrievalSources:
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/troubleshooting"
+  - "https://code.claude.com/docs/en/skills"
+testedPlatforms:
+  - Claude Code CLI on git repositories with package-manager builds and tests
+  - Claude Code VS Code extension with workspace diagnostics
+  - Claude Code Web on GitHub issues and repository tasks
+prerequisites:
+  - Clean git status or explicit permission to work on existing changes
+  - Reproduction command, failing CI log, stack trace, or migration target
+  - Package manager and runtime versions for the project
+  - Permission to run targeted tests, builds, and read-only discovery commands
+safetyNotes:
+  - Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code.
+  - Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them.
+  - Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors.
+privacyNotes:
+  - Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials.
+  - Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports.
+  - External package registries and documentation lookups may reveal package names and version constraints.
+tags:
+  - claude-code
+  - migration
+  - debugging
+  - dependency-upgrades
+  - capability-pack
+keywords:
+  - claude code repo migration
+  - dependency upgrade debugging
+  - build failure diagnosis
+  - migration validation workflow
+readingTime: 9
+packageVerified: true
+difficultyScore: 90
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Refresh runtime, framework, package-manager, and migration-guide docs before changing version-sensitive code.
+
+## Retrieval Sources
+
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/troubleshooting
+- https://code.claude.com/docs/en/skills
+
+Use local repository evidence first, then official migration guides, changelogs, and installed package metadata.
+
+## Core Workflow
+
+1. Establish a baseline: git status, runtime versions, failing command, shortest reproduction, and known-good reference if available.
+2. Map affected files, packages, configs, generated outputs, and tests before editing.
+3. Identify the smallest change that explains the failure and defer unrelated cleanup.
+4. Apply fixes in rollback-safe increments with validation after each risky boundary.
+5. End with a validation ladder from narrow reproduction to broader build/test checks.
+
+## Capability Scope
+
+- Dependency and runtime migrations
+- Build, type-check, lint, and test failure diagnosis
+- Monorepo package boundary debugging
+- Partially applied refactor recovery
+- Rollback-safe validation planning
+
+## Compatibility
+
+### Native
+
+- **Claude Code CLI**: use for terminal-first repo diagnostics and patching.
+- **Claude Code IDE surfaces**: use when editor diagnostics and selected context are useful.
+- **Claude Code Web**: use for GitHub issue-driven migration tasks.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Gemini, and similar agents**: use the workflow as a repo migration/debugging checklist.
+
+## Production Rules
+
+- Reproduce before changing unless reproduction is impossible; if impossible, state why.
+- Prefer narrow, causal fixes over broad rewrites.
+- Keep lockfile and generated artifact changes intentional.
+- Validate the exact failing path before claiming the migration is complete.
+
+## Troubleshooting
+
+**Issue:** The failure changes after the first fix  
+**Fix:** record the original failure, new failure, and boundary crossed; do not conflate them.
+
+**Issue:** A migration guide suggests many changes  
+**Fix:** split required compatibility changes from optional modernization and implement only what the issue requires.
+
+**Issue:** Tests are unavailable or too expensive  
+**Fix:** run syntax/type/build checks where possible and provide a precise manual verification path.
+
+## Output Contract
+
+1. Reproduction summary and root-cause hypothesis.
+2. Minimal patch plan with rollback points.
+3. Applied changes grouped by cause.
+4. Validation ladder with commands and results.
+5. Remaining risks, skipped checks, and follow-up work.

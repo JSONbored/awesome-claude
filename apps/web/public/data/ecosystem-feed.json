@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "count": 394,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -1454,7 +1454,7 @@
         "crud",
         "tables"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -2043,7 +2043,7 @@
         "whisper",
         "ffmpeg"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -2545,7 +2545,7 @@
         "deployment",
         "monitoring"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -3498,7 +3498,7 @@
         "powerline",
         "aesthetics"
       ],
-      "qualityScore": 88,
+      "qualityScore": 87,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -3528,6 +3528,67 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "tools:ccusage",
+      "category": "tools",
+      "slug": "ccusage",
+      "title": "ccusage",
+      "description": "Local CLI for coding-agent token usage and cost reports.",
+      "url": "https://heyclau.de/entry/tools/ccusage",
+      "brandName": "ccusage",
+      "brandDomain": "ccusage.com",
+      "brandIconUrl": "/api/brand-assets/icon/ccusage.com",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "https://ccusage.com",
+      "documentationUrl": "https://ccusage.com/guide/getting-started",
+      "repoUrl": "https://github.com/ryoppippi/ccusage",
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "tags": [
+        "usage-analytics",
+        "claude-code",
+        "cli",
+        "cost-tracking"
+      ],
+      "qualityScore": 80,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+          "https://ccusage.com"
+        ],
+        "externalSourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://ccusage.com"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+          "https://ccusage.com"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -3891,6 +3952,74 @@
       }
     },
     {
+      "key": "skills:claude-code-mcp-production-readiness-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "description": "Production readiness workflow for Claude Code MCP servers, scopes, permissions, OAuth, resources, and operational validation.",
+      "url": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+      "websiteUrl": "",
+      "documentationUrl": "https://code.claude.com/docs/en/mcp",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "claude-code",
+        "mcp",
+        "production-readiness",
+        "security",
+        "capability-pack"
+      ],
+      "qualityScore": 90,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": true,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://code.claude.com/docs/en/mcp"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx",
+          "https://code.claude.com/docs/en/settings",
+          "https://modelcontextprotocol.io/specification/2025-06-18"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
       "key": "guides:multi-directory-setup",
       "category": "guides",
       "slug": "multi-directory-setup",
@@ -3935,6 +4064,142 @@
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
+      }
+    },
+    {
+      "key": "skills:claude-code-repo-migration-debugging-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "title": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "description": "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes.",
+      "url": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+      "websiteUrl": "",
+      "documentationUrl": "https://code.claude.com/docs/en/common-workflows",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "claude-code",
+        "migration",
+        "debugging",
+        "dependency-upgrades",
+        "capability-pack"
+      ],
+      "qualityScore": 90,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": true,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/common-workflows",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://code.claude.com/docs/en/common-workflows"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/common-workflows",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx",
+          "https://code.claude.com/docs/en/troubleshooting",
+          "https://code.claude.com/docs/en/skills"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
+      "key": "skills:claude-code-source-fact-verification-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "title": "Claude Code Source Fact Verification Capability Pack Skill",
+      "description": "A Claude Code verification workflow that forces claims through primary sources, repo evidence, changelogs, and explicit uncertainty tracking.",
+      "url": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+      "websiteUrl": "",
+      "documentationUrl": "https://code.claude.com/docs/en/best-practices",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "claude-code",
+        "source-verification",
+        "documentation",
+        "research-workflow",
+        "capability-pack"
+      ],
+      "qualityScore": 90,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": true,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/best-practices",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://code.claude.com/docs/en/best-practices"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/best-practices",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx",
+          "https://code.claude.com/docs/en/common-workflows",
+          "https://code.claude.com/docs/en/skills"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
       }
     },
     {
@@ -4677,7 +4942,7 @@
         "productivity",
         "team-collaboration"
       ],
-      "qualityScore": 96,
+      "qualityScore": 94,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -5354,6 +5619,58 @@
           "adapter",
           "manual-context"
         ]
+      }
+    },
+    {
+      "key": "rules:code-review-escalation-high-risk-changes",
+      "category": "rules",
+      "slug": "code-review-escalation-high-risk-changes",
+      "title": "Code Review Escalation Rules for High-Risk Changes",
+      "description": "Escalation guardrails for security, data, infrastructure, dependency, and production-impacting changes that need stronger review before merge.",
+      "url": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes",
+      "websiteUrl": "",
+      "documentationUrl": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "code-review",
+        "escalation",
+        "security",
+        "branch-protection",
+        "rules"
+      ],
+      "qualityScore": 78,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-03",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
       }
     },
     {
@@ -6947,7 +7264,7 @@
         "refactoring",
         "automation"
       ],
-      "qualityScore": 93,
+      "qualityScore": 91,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -7422,7 +7739,7 @@
         "moderation",
         "social"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -10522,7 +10839,7 @@
         "compatibility",
         "feeds"
       ],
-      "qualityScore": 93,
+      "qualityScore": 91,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": false,
@@ -11612,7 +11929,7 @@
         "orchestration",
         "devops"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12051,7 +12368,7 @@
         "ripgrep",
         "bash"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12230,7 +12547,7 @@
         "remark",
         "node"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12381,6 +12698,66 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "tools:mcp-inspector",
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "title": "MCP Inspector",
+      "description": "Visual MCP server testing and debugging.",
+      "url": "https://heyclau.de/entry/tools/mcp-inspector",
+      "brandName": "MCP Inspector",
+      "brandDomain": "modelcontextprotocol.io",
+      "brandIconUrl": "/api/brand-assets/icon/modelcontextprotocol.io",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "https://modelcontextprotocol.io/docs/tools",
+      "documentationUrl": "https://modelcontextprotocol.io/docs/tools",
+      "repoUrl": "https://github.com/modelcontextprotocol/inspector",
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "tags": [
+        "mcp",
+        "debugging",
+        "developer-tools",
+        "testing"
+      ],
+      "qualityScore": 85,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx",
+          "https://modelcontextprotocol.io/docs/tools"
+        ],
+        "externalSourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://modelcontextprotocol.io/docs/tools"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -12878,7 +13255,7 @@
         "bash",
         "lightweight"
       ],
-      "qualityScore": 88,
+      "qualityScore": 87,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -16951,7 +17328,7 @@
         "analytics",
         "community"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -17061,7 +17438,7 @@
         "nosql",
         "official"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -18296,7 +18673,7 @@
         "npm",
         "supply-chain"
       ],
-      "qualityScore": 96,
+      "qualityScore": 94,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -20700,7 +21077,7 @@
         "summarization",
         "readability"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -21641,5 +22018,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "bdb5f7db9d849f22b33c1ee71b372f5094e6c4342cbfa15849c83acf1953d5fc"
+  "signature": "b673031d820291f3db353c43be28b6da47ecfffcf3d4e7fe9dc236b7fa27c0c1"
 }

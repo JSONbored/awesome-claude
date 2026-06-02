@@ -1,0 +1,43 @@
+# MCP Inspector
+URL: https://heyclau.de/entry/tools/mcp-inspector
+Category: tools
+Author: Model Context Protocol
+Date added: 2026-06-02
+Documentation: https://modelcontextprotocol.io/docs/tools
+Repository: https://github.com/modelcontextprotocol/inspector
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/tools/mcp-inspector
+- Source URLs: https://modelcontextprotocol.io/docs/tools, https://github.com/modelcontextprotocol/inspector, https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx
+- Brand: MCP Inspector
+- Brand domain: modelcontextprotocol.io
+- Brand asset source: brandfetch
+- Safety notes: Starts a local inspector UI and proxy process for interactive MCP debugging., Only connect it to MCP servers and endpoints you trust during testing.
+- Privacy notes: Requests and tool responses from the inspected server may be visible in the local inspector session., Avoid testing with production credentials or private user data unless the environment is isolated.
+- Author: Model Context Protocol
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Official visual testing and debugging tool for Model Context Protocol servers.
+## Tags
+- mcp
+- debugging
+- developer-tools
+- testing
+## Safety Notes
+- Starts a local inspector UI and proxy process for interactive MCP debugging.
+- Only connect it to MCP servers and endpoints you trust during testing.
+## Privacy Notes
+- Requests and tool responses from the inspected server may be visible in the local inspector session.
+- Avoid testing with production credentials or private user data unless the environment is isolated.
+## Content
+## Editorial notes
+MCP Inspector is the official developer tool for exercising Model Context Protocol servers before wiring them into Claude or another MCP client. It is useful when checking tool definitions, resource responses, server startup behavior, and transport configuration during MCP development.
+
+## Why it belongs
+- Maintained under the Model Context Protocol organization.
+- Supports interactive inspection of local MCP server implementations.
+- Provides a practical debugging path before adding a server to a real Claude configuration.
+
+## Disclosure
+Editorial listing. No paid placement or affiliate link is used.

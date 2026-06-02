@@ -302,15 +302,12 @@
     "filePath": "content/mcp/clickup-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/clickup-mcp-server.mdx",
     "repoUrl": "https://github.com/hauptsacheNet/clickup-mcp",
-    "githubStars": 44,
-    "githubForks": 17,
-    "repoUpdatedAt": "2026-05-03T13:43:35Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "hauptsacheNet/clickup-mcp",
       "url": "https://github.com/hauptsacheNet/clickup-mcp",
-      "stars": 44,
-      "forks": 17,
-      "updatedAt": "2026-05-03T13:43:35Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

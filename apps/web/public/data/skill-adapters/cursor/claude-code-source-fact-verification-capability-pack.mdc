@@ -1,0 +1,14 @@
+---
+description: "A Claude Code verification workflow that forces claims through primary sources, repo evidence, changelogs, and explicit uncertainty tracking."
+globs:
+alwaysApply: false
+---
+# Claude Code Source Fact Verification Capability Pack Skill
+Expert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.
+Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.
+## Install
+```bash
+curl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack
+```
+## Source
+https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip

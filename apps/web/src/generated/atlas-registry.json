@@ -1,192 +1,192 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "generatedAt": "2026-06-03T00:00:00.000Z",
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2388595,
-      "sha256": "a8c5d8dae7734194dfb1f86ce285af0359d0756969428c4783560eb61dc96c18",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 2426675,
+      "sha256": "c63a56965add1735c1c82d45c609df2eee2afea8b8a95ba8a9b6cdd171951269",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/search-index.json",
-      "bytes": 942086,
-      "sha256": "441052f9676725d0ad1cc5324f2fe7e40a09f1e958db223453ad32209514a160",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 959867,
+      "sha256": "76c5c2d49e196a23991c444e1c49e1f00c1d8c74167d2751b262b39ebc55fa75",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/raycast-index.json",
-      "bytes": 1239188,
-      "sha256": "33f1be6c140da0af61ab0fa4674543942f7236b510b176f5e541470f65a89233",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 1265435,
+      "sha256": "57e488a28f7a6c766666be923d464e9480068f6b403f06b84e4b79174284de5b",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/ecosystem-feed.json",
-      "bytes": 753766,
-      "sha256": "4672f3a26459eca5d92ddbac5ef97c17135695fb787ead7870e82e32e24ee996",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 768008,
+      "sha256": "17ac2f68c1a074816322f865422228cc3516f4b3468cb22fd58c0690cc963184",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/mcp-registry-feed.json",
       "bytes": 45047,
       "sha256": "8502e3c73b63c720311d21b02d2ad4fc7db7ce95314698cd7864a5e45718ab2b",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/plugin-export-feed.json",
-      "bytes": 255613,
-      "sha256": "d50c4f407a38e9c3fe090013469f497028f9d647aad7486e911e6d2fd3e67d7e",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 262288,
+      "sha256": "6b6a64785d376ea3255b8f39a4d4048916ebcdcc5db6fb0460b916a47a97d9bf",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/registry-changelog.json",
-      "bytes": 224712,
-      "sha256": "b11b4e5c2f42feed2598a09448dbc318de5d2d6216225dc841f82a244b46259d",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 228619,
+      "sha256": "80627e32700854017057f557f9d213b2f0172f143aa4c83f203fb78b121dd655",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/registry-trust-report.json",
-      "bytes": 309758,
-      "sha256": "de8e856e10d64a40ef23cf5ff62cd09c7bfc0509e040a2e75a8ea35fadd5a0f3",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 314654,
+      "sha256": "c317fa1a3ef74a6d4e6413a7533954d0616e5b05a99749ce7a074501b3a3ba11",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/index.json",
       "bytes": 3139,
-      "sha256": "d679fe12a622fc4c39a8d04927d2dfb017201034a45977e390e5ce64d4a3235f",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "sha256": "ce8b5d5edbbc22ccc03b6f45fc4d884de38330175be45a5c63b629f08b16c937",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/submission-spec.json",
       "bytes": 38616,
       "sha256": "73551ceabc94ae60c2f4325dc77aa4290130f2c238be5af50848a74a6a3bd9ae",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-report.json",
-      "bytes": 342198,
-      "sha256": "649f82212f4d52e8c58e82a8060b543eb72b8f840f0294022dd6492b5d22b737",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 348334,
+      "sha256": "a8475dfa8ad07f3ffe9e9b6ff56f04981c77473cf1f15898065887e085b1fb4b",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-prompts.json",
       "bytes": 15255,
-      "sha256": "4b4bf38caf0b9536f2965ae8a0834dc688384795eeb7d0eb9bb8ad5ebb8f585d",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "sha256": "175a65591472a2becea19afed8c32edd4bde18ec89bda5f420b82591010f64fd",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/jsonld-snapshots.json",
-      "bytes": 1260891,
-      "sha256": "25b74af224af7b962353332997f22727a6a3d52aba45e44da5d686eecc848278",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 1282819,
+      "sha256": "1c28a9bf057e5303936ecdcc6fe6d0cc6b506345c0ef7b9c59e6f5f004a91998",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3997227,
-      "sha256": "fc8a862c0360ebcd347f8a54c9509d9c8c477fb0401c22e3bed9ef13f66a0811",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 4029560,
+      "sha256": "bef0b8925d8b3c6598d61d456dc91791aab47d3ebdedaf3a0335863e1e2cbfed",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/agents.json",
       "bytes": 686078,
       "sha256": "54592b52ff7377f0da93c05aa0c2d3e0b3d694f317b7d4289b52b489a4e7623c",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/mcp.json",
-      "bytes": 226722,
-      "sha256": "f6922a8b2523751f0756a62b02948108e0d01cc5d342ef0a53beb1a9c54d25bb",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 225401,
+      "sha256": "9d1a65b2b2b7cdaa365066cabfc0fb5ae0cb3285066314a5b0b97ee52fc35590",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/tools.json",
-      "bytes": 153275,
-      "sha256": "b179ca1607f6de5bc0b62d29b809a1c66fc7208d125ec2b5c8a899aa9a39f774",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 158378,
+      "sha256": "aa7446b22c683655b7a1003497aabbfdad32ef0d2f9f01b1d64f813f4f6e282e",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/skills.json",
-      "bytes": 462583,
-      "sha256": "e0fef61cbe3eabc090b5dbd76ae418d4e3f100ca45223c2fc1123688109c9416",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486030,
+      "sha256": "ecbf00575dbe170a633111cd871b416cbcafeb6e19b57b222443d7a8c41f8805",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/rules.json",
-      "bytes": 319777,
-      "sha256": "78fe11e2d58008f716c964e79b5eda3141d53e175a9cb1657aa8d34f4ca9986d",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 330953,
+      "sha256": "b8064e9e0a98c0792f863c067bb939622dbbf953723e2e87a3eada829a6c66fd",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/commands.json",
       "bytes": 83627,
       "sha256": "93cbebe1048e147f0021e826fecc19cdc9999b7997126be6e161e81ba407afe9",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/hooks.json",
-      "bytes": 253282,
-      "sha256": "13c5ffd760fb276aa21581b4a82d176603fd30f75cfd3c095e7e81885b5be5cc",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 253177,
+      "sha256": "a07695d4a90f3ef7eeb519ed4a2d1775a0e59e27bbfc6b128bf6deba79b0abad",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/guides.json",
       "bytes": 59203,
       "sha256": "aa0b6a6e775c9a21e25b3abc9b583cd9aecebeaf68bf9f171784239138ed930a",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/collections.json",
       "bytes": 39536,
       "sha256": "bac2d3a60172796ca54ad060b6a4b113eb4c036ccd5ccfe3eadbea8f6fb80cff",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/statuslines.json",
-      "bytes": 105934,
-      "sha256": "3e46ad93d5d5d0832f513210e7c39664cba997559204c9344671a79392e5f09e",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 105714,
+      "sha256": "2dccbc86c8ab9f3220cbabe03b6cacf3927f6fd1c14b73d39472b1a015838382",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/claude.json",
-      "bytes": 462611,
-      "sha256": "b614f4f4275ed7a37036aaa01ea09ff25f3aa4b6ffe61baa71189dc952e1ea3a",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486058,
+      "sha256": "9b1bb78d52b21fdf54e3e00652f303a03ad2842ac67d34e2cf2eb00b2b4ef883",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
-      "bytes": 462609,
-      "sha256": "6f7b8dc8a4bf306a764edf9bfcb08ad7814a6c712f4657e1cc514ce20ddf3383",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486056,
+      "sha256": "9dacccaf41e3e7d3126af343983c9d9d001841f182bbadb2705ccb6f55632087",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
-      "bytes": 462615,
-      "sha256": "f924d794b57673e4a1cb5bad5b1e93761f3a346b8b586de73239520fe786d271",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486062,
+      "sha256": "1ec19229bd44afa935c67d13fcbc36250dd65dd6cbbd60ebbb51beabf957702c",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
-      "bytes": 462611,
-      "sha256": "9aa242215ebd5abe34162edfa68bedfdef92c1e889c1bcdd0957e0de3b072573",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486058,
+      "sha256": "c0605992c4b14725ac31fc078f59f2b4403a25e77d903e3dca02527916e6761b",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
-      "bytes": 462611,
-      "sha256": "acb39caa1b3813af8a863a025e5b53439ed4002bc64e7ad04a86d92c056fcf70",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486058,
+      "sha256": "b82e0c1e62fb10e312212e6a4175aa893c8598eaa385c7322da3b673db6d0af3",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
-      "bytes": 462627,
-      "sha256": "1c9d163360cb9b0e9705fb5ed0ae3538791d6e46c9595abfc3eea8df54eed15e",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 486074,
+      "sha256": "ac86d46d74d516dad6a2cbff1858c283cf413320cf1d50921dbad088d2ee4589",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
-      "bytes": 445169,
-      "sha256": "dbdbdcae7f64dd6e97530e41dc02d3853c1b85b1389f95ab13d7c4ce1ce4afd6",
-      "builtAt": "2026-06-02T00:00:00.000Z"
+      "bytes": 453410,
+      "sha256": "4e70e7ac237a0ece126998faa0f1d3045d5e5153281582e00ad10eafcc538b0e",
+      "builtAt": "2026-06-03T00:00:00.000Z"
     }
   ],
   "entries": [
@@ -1683,15 +1683,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 45006,
-      "githubForks": 4443,
-      "repoUpdatedAt": "2026-05-19T11:28:44Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Aider-AI/aider",
         "url": "https://github.com/Aider-AI/aider",
-        "stars": 45006,
-        "forks": 4443,
-        "updatedAt": "2026-05-19T11:28:44Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1753,15 +1753,15 @@
       "downloadSha256": "de3543063d919647fdf25c518ccd6679e32c5e9ae49d94150344fee4dabc3856",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 444,
-      "githubForks": 131,
-      "repoUpdatedAt": "2026-05-11T01:11:21Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "domdomegg/airtable-mcp-server",
         "url": "https://github.com/domdomegg/airtable-mcp-server",
-        "stars": 444,
-        "forks": 131,
-        "updatedAt": "2026-05-11T01:11:21Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2191,15 +2191,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 9739,
-      "githubForks": 879,
-      "repoUpdatedAt": "2026-05-19T11:06:07Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Arize-ai/phoenix",
         "url": "https://github.com/Arize-ai/phoenix",
-        "stars": 9739,
-        "forks": 879,
-        "updatedAt": "2026-05-19T11:06:07Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2316,15 +2316,15 @@
       "downloadSha256": "227f513fd69287b909f5b20d191418d4bc515aa4593508058a42e6d3bdf1ba4c",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 99754,
-      "githubForks": 12214,
-      "repoUpdatedAt": "2026-05-19T11:32:31Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openai/whisper",
         "url": "https://github.com/openai/whisper",
-        "stars": 99754,
-        "forks": 12214,
-        "updatedAt": "2026-05-19T11:32:31Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2870,15 +2870,15 @@
       "downloadSha256": "36c5b42a87926bb71ca8bf7a878e163cc8b6f8f28fe4fd6c55394f32659ae580",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 9085,
-      "githubForks": 1532,
-      "repoUpdatedAt": "2026-05-19T08:34:58Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "awslabs/mcp",
         "url": "https://github.com/awslabs/mcp",
-        "stars": 9085,
-        "forks": 1532,
-        "updatedAt": "2026-05-19T08:34:58Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3479,15 +3479,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 94603,
-      "githubForks": 10672,
-      "repoUpdatedAt": "2026-05-19T11:41:57Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "browser-use/browser-use",
         "url": "https://github.com/browser-use/browser-use",
-        "stars": 94603,
-        "forks": 10672,
-        "updatedAt": "2026-05-19T11:41:57Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3903,15 +3903,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 19184,
-      "githubForks": 352,
-      "repoUpdatedAt": "2026-05-19T11:04:59Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "catppuccin/catppuccin",
         "url": "https://github.com/catppuccin/catppuccin",
-        "stars": 19184,
-        "forks": 352,
-        "updatedAt": "2026-05-19T11:04:59Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3921,6 +3921,71 @@
       "hasPrerequisites": false,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false
+    },
+    {
+      "category": "tools",
+      "slug": "ccusage",
+      "title": "ccusage",
+      "description": "Local CLI for analyzing Claude Code and other coding-agent token usage, costs, sessions, and billing-window activity from local usage data.",
+      "seoTitle": "ccusage coding-agent usage and cost CLI",
+      "seoDescription": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+      "author": "ryoppippi",
+      "authorProfileUrl": "https://github.com/ryoppippi",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": ["usage-analytics", "claude-code", "cli", "cost-tracking"],
+      "keywords": [
+        "claude code usage",
+        "coding agent cost tracking",
+        "token usage cli",
+        "agent usage analytics",
+        "usage-analytics",
+        "claude-code",
+        "cli",
+        "cost-tracking",
+        "tools",
+        "claude",
+        "heyclaude",
+        "ccusage"
+      ],
+      "cardDescription": "Local CLI for coding-agent token usage and cost reports.",
+      "installCommand": "bunx ccusage",
+      "usageSnippet": "bunx ccusage",
+      "documentationUrl": "https://ccusage.com/guide/getting-started",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+      "repoUrl": "https://github.com/ryoppippi/ccusage",
+      "brandName": "ccusage",
+      "brandDomain": "ccusage.com",
+      "brandIconUrl": "/api/brand-assets/icon/ccusage.com",
+      "safetyNotes": [
+        "Run from a trusted package source and review repository/package provenance before using in sensitive workspaces.",
+        "Cost estimates depend on local usage data and pricing metadata; treat them as operational estimates, not billing authority."
+      ],
+      "privacyNotes": [
+        "Reads local coding-agent usage files from the developer machine to calculate token and cost reports.",
+        "JSON export can include project or session metadata, so review output before sharing logs or reports publicly."
+      ],
+      "downloadUrl": "",
+      "downloadSha256": null,
+      "downloadTrust": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "repoStats": {
+        "repository": "ryoppippi/ccusage",
+        "url": "https://github.com/ryoppippi/ccusage",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Windows, Linux",
+      "hasPrerequisites": false,
+      "hasTroubleshooting": false
     },
     {
       "category": "guides",
@@ -4232,6 +4297,120 @@
       "hasBreakingChanges": false
     },
     {
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for taking MCP integrations from local proof-of-concept to production-ready, permissioned, observable workflows.",
+      "seoTitle": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for production MCP readiness with scoped server configuration, permission review, OAuth checks, and operational validation.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": ["claude-code", "mcp", "production-readiness", "security", "capability-pack"],
+      "keywords": [
+        "claude code mcp production",
+        "mcp server readiness",
+        "claude code permissions",
+        "mcp oauth validation",
+        "claude-code",
+        "mcp",
+        "production-readiness",
+        "security",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "cardDescription": "Production readiness workflow for Claude Code MCP servers, scopes, permissions, OAuth, resources, and operational validation.",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack",
+      "usageSnippet": "Use this skill before shipping Claude Code MCP servers or shared .mcp.json configuration to a team, CI workflow, or production operator environment.",
+      "documentationUrl": "https://code.claude.com/docs/en/mcp",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx",
+      "repoUrl": null,
+      "prerequisites": [
+        "Claude Code installed and authenticated",
+        "MCP server source or vendor documentation",
+        "Intended server scope, transport, secrets, and consumer list",
+        "Test workspace with representative resources and tool calls"
+      ],
+      "safetyNotes": [
+        "MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use.",
+        "Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps.",
+        "Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first."
+      ],
+      "privacyNotes": [
+        "MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval.",
+        "OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts.",
+        "Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout."
+      ],
+      "downloadUrl": "/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip",
+      "downloadSha256": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02",
+      "packageVerified": true,
+      "downloadTrust": "first-party",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-mcp-production-readiness-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/mcp",
+        "https://code.claude.com/docs/en/settings",
+        "https://modelcontextprotocol.io/specification/2025-06-18"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI on macOS/Linux/WSL with project and user MCP scopes",
+        "Claude Code VS Code extension with project workspace trust",
+        "Claude Code SDK with .mcp.json configuration"
+      ],
+      "readingTime": 9,
+      "difficultyScore": 91,
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false
+    },
+    {
       "category": "guides",
       "slug": "multi-directory-setup",
       "title": "Claude Code Multi-Directory Setup Enterprise Workflow 2025",
@@ -4270,6 +4449,240 @@
       "readingTime": 5,
       "difficultyScore": 87,
       "hasPrerequisites": false,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "title": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation.",
+      "seoTitle": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for repository migrations, dependency upgrades, build failure debugging, validation plans, and rollback-safe fixes.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": ["claude-code", "migration", "debugging", "dependency-upgrades", "capability-pack"],
+      "keywords": [
+        "claude code repo migration",
+        "dependency upgrade debugging",
+        "build failure diagnosis",
+        "migration validation workflow",
+        "claude-code",
+        "migration",
+        "debugging",
+        "dependency-upgrades",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "cardDescription": "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes.",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip -o claude-code-repo-migration-debugging-capability-pack.zip && unzip -o claude-code-repo-migration-debugging-capability-pack.zip -d ./claude-code-repo-migration-debugging-capability-pack",
+      "usageSnippet": "Use this skill when Claude Code must migrate a repo, upgrade dependencies, debug failing tests/builds, or recover from a partially applied refactor.",
+      "documentationUrl": "https://code.claude.com/docs/en/common-workflows",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx",
+      "repoUrl": null,
+      "prerequisites": [
+        "Clean git status or explicit permission to work on existing changes",
+        "Reproduction command, failing CI log, stack trace, or migration target",
+        "Package manager and runtime versions for the project",
+        "Permission to run targeted tests, builds, and read-only discovery commands"
+      ],
+      "safetyNotes": [
+        "Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code.",
+        "Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them.",
+        "Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors."
+      ],
+      "privacyNotes": [
+        "Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials.",
+        "Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports.",
+        "External package registries and documentation lookups may reveal package names and version constraints."
+      ],
+      "downloadUrl": "/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip",
+      "downloadSha256": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b",
+      "packageVerified": true,
+      "downloadTrust": "first-party",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-repo-migration-debugging-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/common-workflows",
+        "https://code.claude.com/docs/en/troubleshooting",
+        "https://code.claude.com/docs/en/skills"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI on git repositories with package-manager builds and tests",
+        "Claude Code VS Code extension with workspace diagnostics",
+        "Claude Code Web on GitHub issues and repository tasks"
+      ],
+      "readingTime": 9,
+      "difficultyScore": 90,
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": true
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "title": "Claude Code Source Fact Verification Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.",
+      "seoTitle": "Claude Code Source Fact Verification Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for source-fact verification using official docs, repository evidence, changelogs, and auditable claim tables.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": [
+        "claude-code",
+        "source-verification",
+        "documentation",
+        "research-workflow",
+        "capability-pack"
+      ],
+      "keywords": [
+        "claude code fact checking",
+        "source grounded coding",
+        "agent verification workflow",
+        "primary source evidence",
+        "claude-code",
+        "source-verification",
+        "documentation",
+        "research-workflow",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "cardDescription": "A Claude Code verification workflow that forces claims through primary sources, repo evidence, changelogs, and explicit uncertainty tracking.",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack",
+      "usageSnippet": "Use this skill when a Claude Code task depends on current APIs, product behavior, security rules, migration guides, changelogs, or claims that must be traceable.",
+      "documentationUrl": "https://code.claude.com/docs/en/best-practices",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx",
+      "repoUrl": null,
+      "prerequisites": [
+        "Concrete claims, requirements, or change request to verify",
+        "Access to repository files, issue context, or design docs",
+        "Network access for official docs or maintained source references when facts may have changed",
+        "Permission to inspect relevant logs, package manifests, lockfiles, and generated artifacts"
+      ],
+      "safetyNotes": [
+        "Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.",
+        "Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.",
+        "If sources conflict, stop and report the contradiction instead of forcing a synthesized answer."
+      ],
+      "privacyNotes": [
+        "Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.",
+        "Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.",
+        "Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports."
+      ],
+      "downloadUrl": "/downloads/skills/claude-code-source-fact-verification-capability-pack.zip",
+      "downloadSha256": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e",
+      "packageVerified": true,
+      "downloadTrust": "first-party",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-source-fact-verification-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/best-practices",
+        "https://code.claude.com/docs/en/common-workflows",
+        "https://code.claude.com/docs/en/skills"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI with web/source retrieval plus local repository inspection",
+        "Claude Code Web on GitHub-backed repositories",
+        "Claude Code IDE extension with selected workspace context"
+      ],
+      "readingTime": 8,
+      "difficultyScore": 88,
+      "hasPrerequisites": true,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false
     },
@@ -5033,15 +5446,15 @@
       "downloadSha256": "f790c531d131631b690c489a7219a986c27295cdddc53fa73f732584bfe5611f",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 44,
-      "githubForks": 17,
-      "repoUpdatedAt": "2026-05-03T13:43:35Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "hauptsacheNet/clickup-mcp",
         "url": "https://github.com/hauptsacheNet/clickup-mcp",
-        "stars": 44,
-        "forks": 17,
-        "updatedAt": "2026-05-03T13:43:35Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5084,15 +5497,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 62015,
-      "githubForks": 6468,
-      "repoUpdatedAt": "2026-05-19T11:36:25Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "cline/cline",
         "url": "https://github.com/cline/cline",
-        "stars": 62015,
-        "forks": 6468,
-        "updatedAt": "2026-05-19T11:36:25Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5239,15 +5652,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 4931,
-      "githubForks": 552,
-      "repoUpdatedAt": "2026-05-19T11:37:01Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "cloudflare/agents",
         "url": "https://github.com/cloudflare/agents",
-        "stars": 4931,
-        "forks": 552,
-        "updatedAt": "2026-05-19T11:37:01Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5797,6 +6210,65 @@
     },
     {
       "category": "rules",
+      "slug": "code-review-escalation-high-risk-changes",
+      "title": "Code Review Escalation Rules for High-Risk Changes",
+      "description": "Portable CLAUDE.md rules for escalating high-risk pull requests to the right reviewers, checks, and approval gates before merge.",
+      "seoTitle": "Code Review Escalation Rules for High-Risk Changes",
+      "seoDescription": "Source-backed Claude rules for escalating high-risk code changes with CODEOWNERS, branch protection, required reviews, status checks, and secure review evide...",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-03",
+      "contentUpdatedAt": "2026-06-03",
+      "tags": ["code-review", "escalation", "security", "branch-protection", "rules"],
+      "keywords": [
+        "high risk code review",
+        "review escalation rules",
+        "code owner review",
+        "branch protection",
+        "secure code review",
+        "code-review",
+        "escalation",
+        "security",
+        "rules",
+        "claude",
+        "heyclaude",
+        "code review escalation rules for high-risk changes"
+      ],
+      "cardDescription": "Escalation guardrails for security, data, infrastructure, dependency, and production-impacting changes that need stronger review before merge.",
+      "usageSnippet": "Add these rules to CLAUDE.md when AI-assisted code review must identify high-risk changes and require explicit escalation before merge.",
+      "documentationUrl": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/rules/code-review-escalation-high-risk-changes.mdx",
+      "repoUrl": null,
+      "prerequisites": [
+        "Repository review policy, branch protection, or ruleset configuration.",
+        "CODEOWNERS or equivalent domain-owner mapping for critical paths.",
+        "Required status checks for tests, security scans, and build validation.",
+        "Clear ownership for security, data, platform, and product risk decisions."
+      ],
+      "safetyNotes": [
+        "These rules deliberately block or delay merge for unclear high-risk changes until the correct owners and checks are present.",
+        "Escalation decisions should be documented in the pull request so reviewers can audit why a change was allowed or blocked.",
+        "The rule is guidance for review workflow; it does not replace enforced branch protection, rulesets, CODEOWNERS, or required status checks."
+      ],
+      "privacyNotes": [
+        "Review notes may reference sensitive files, data classes, logs, telemetry, customer-impacting behavior, or incident context.",
+        "Do not paste secrets, customer records, private incident details, or raw production logs into public PR comments while documenting escalation.",
+        "Privacy-impacting changes should identify data categories, retention behavior, third-party sharing, and rollback limits before approval."
+      ],
+      "downloadUrl": "",
+      "downloadSha256": null,
+      "downloadTrust": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "readingTime": 5,
+      "difficultyScore": 7,
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false
+    },
+    {
+      "category": "rules",
       "slug": "code-review-expert",
       "title": "Code Review Expert for Claude",
       "description": "Comprehensive code review rules for thorough analysis and constructive feedback",
@@ -6063,15 +6535,15 @@
       "downloadSha256": "7e3ee39f61507d249f0b0b5ec49c35c6fc076b5ca2d6f85174eec8664de00867",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 83749,
-      "githubForks": 12151,
-      "repoUpdatedAt": "2026-05-19T11:39:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6171,15 +6643,15 @@
       "downloadSha256": "7ea59a73540f97320dc9819720d4dc25f6d117f44096d7aa6011a4857cced8f0",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 83749,
-      "githubForks": 12151,
-      "repoUpdatedAt": "2026-05-19T11:39:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6313,15 +6785,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 28340,
-      "githubForks": 4571,
-      "repoUpdatedAt": "2026-05-19T11:38:54Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "ComposioHQ/composio",
         "url": "https://github.com/ComposioHQ/composio",
-        "stars": 28340,
-        "forks": 4571,
-        "updatedAt": "2026-05-19T11:38:54Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6543,15 +7015,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 33266,
-      "githubForks": 4532,
-      "repoUpdatedAt": "2026-05-19T11:16:17Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "continuedev/continue",
         "url": "https://github.com/continuedev/continue",
-        "stars": 33266,
-        "forks": 4532,
-        "updatedAt": "2026-05-19T11:16:17Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6624,15 +7096,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 25,
-      "githubForks": 3,
-      "repoUpdatedAt": "2026-05-18T16:57:58Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "UPinar/contrastapi",
         "url": "https://github.com/UPinar/contrastapi",
-        "stars": 25,
-        "forks": 3,
-        "updatedAt": "2026-05-18T16:57:58Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6670,15 +7142,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 51712,
-      "githubForks": 7160,
-      "repoUpdatedAt": "2026-05-19T11:43:25Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "crewAIInc/crewAI",
         "url": "https://github.com/crewAIInc/crewAI",
-        "stars": 51712,
-        "forks": 7160,
-        "updatedAt": "2026-05-19T11:43:25Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7503,15 +7975,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 2067,
-      "githubForks": 68,
-      "repoUpdatedAt": "2026-04-13T08:47:15Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "nadeesha/ts-prune",
         "url": "https://github.com/nadeesha/ts-prune",
-        "stars": 2067,
-        "forks": 68,
-        "updatedAt": "2026-04-13T08:47:15Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7967,15 +8439,15 @@
       "downloadSha256": "c533512b60c880469d414d1eb89751df1f7d9db580d53b73f22b5cbb0b696275",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 311,
-      "githubForks": 72,
-      "repoUpdatedAt": "2026-05-18T02:46:12Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "saseq/discord-mcp",
         "url": "https://github.com/saseq/discord-mcp",
-        "stars": 311,
-        "forks": 72,
-        "updatedAt": "2026-05-18T02:46:12Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9315,15 +9787,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 121680,
-      "githubForks": 7410,
-      "repoUpdatedAt": "2026-05-19T11:41:31Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "mendableai/firecrawl",
         "url": "https://github.com/mendableai/firecrawl",
-        "stars": 121680,
-        "forks": 7410,
-        "updatedAt": "2026-05-19T11:41:31Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9749,15 +10221,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 7848,
-      "githubForks": 949,
-      "repoUpdatedAt": "2026-05-19T10:43:48Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "NVIDIA/garak",
         "url": "https://github.com/NVIDIA/garak",
-        "stars": 7848,
-        "forks": 949,
-        "updatedAt": "2026-05-19T10:43:48Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9844,15 +10316,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 5358,
-      "githubForks": 457,
-      "repoUpdatedAt": "2026-05-19T08:02:52Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Giskard-AI/giskard",
         "url": "https://github.com/Giskard-AI/giskard",
-        "stars": 5358,
-        "forks": 457,
-        "updatedAt": "2026-05-19T08:02:52Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -11067,15 +11539,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 5692,
-      "githubForks": 579,
-      "repoUpdatedAt": "2026-05-19T11:11:23Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Helicone/helicone",
         "url": "https://github.com/Helicone/helicone",
-        "stars": 5692,
-        "forks": 579,
-        "updatedAt": "2026-05-19T11:11:23Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -11254,15 +11726,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 218,
-      "githubForks": 29,
-      "repoUpdatedAt": "2026-05-17T08:04:08Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "JSONbored/awesome-claude",
         "url": "https://github.com/JSONbored/awesome-claude",
-        "stars": 218,
-        "forks": 29,
-        "updatedAt": "2026-05-17T08:04:08Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12516,15 +12988,15 @@
       "downloadSha256": "5a0d7f95e5cc33b35b4d5e3a2f6d4d02c2e6d8bbe50ea6601ac7cb1f95ea1b94",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 18,
-      "githubForks": 9,
-      "repoUpdatedAt": "2026-05-13T09:23:32Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "feiskyer/mcp-kubernetes-server",
         "url": "https://github.com/feiskyer/mcp-kubernetes-server",
-        "stars": 18,
-        "forks": 9,
-        "updatedAt": "2026-05-13T09:23:32Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12608,15 +13080,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 27479,
-      "githubForks": 2805,
-      "repoUpdatedAt": "2026-05-19T11:21:59Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "langfuse/langfuse",
         "url": "https://github.com/langfuse/langfuse",
-        "stars": 27479,
-        "forks": 2805,
-        "updatedAt": "2026-05-19T11:21:59Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12658,15 +13130,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 32402,
-      "githubForks": 5495,
-      "repoUpdatedAt": "2026-05-19T11:43:29Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "langchain-ai/langgraph",
         "url": "https://github.com/langchain-ai/langgraph",
-        "stars": 32402,
-        "forks": 5495,
-        "updatedAt": "2026-05-19T11:43:29Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12925,15 +13397,15 @@
       "downloadSha256": "ca52e864c9ea2178c5c2a5bdc80c951cdfc99a2ee86d75242ba3ec2ba5f3eed7",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 63927,
-      "githubForks": 2568,
-      "repoUpdatedAt": "2026-05-19T11:22:40Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "BurntSushi/ripgrep",
         "url": "https://github.com/BurntSushi/ripgrep",
-        "stars": 63927,
-        "forks": 2568,
-        "updatedAt": "2026-05-19T11:22:40Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13114,15 +13586,15 @@
       "downloadSha256": "1a7c976ec10973f41970cd3328f73888927501684a89edc34ffe23e53d58567a",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 8880,
-      "githubForks": 374,
-      "repoUpdatedAt": "2026-05-18T12:37:10Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "remarkjs/remark",
         "url": "https://github.com/remarkjs/remark",
-        "stars": 8880,
-        "forks": 374,
-        "updatedAt": "2026-05-18T12:37:10Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13254,15 +13726,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 24031,
-      "githubForks": 2092,
-      "repoUpdatedAt": "2026-05-19T11:18:03Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "mastra-ai/mastra",
         "url": "https://github.com/mastra-ai/mastra",
-        "stars": 24031,
-        "forks": 2092,
-        "updatedAt": "2026-05-19T11:18:03Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13271,6 +13743,72 @@
       "applicationCategory": "DeveloperApplication",
       "operatingSystem": "macOS, Windows, Linux, Web",
       "hasPrerequisites": false,
+      "hasTroubleshooting": false
+    },
+    {
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "title": "MCP Inspector",
+      "description": "Official visual testing and debugging tool for Model Context Protocol servers.",
+      "seoTitle": "MCP Inspector visual testing tool",
+      "seoDescription": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+      "author": "Model Context Protocol",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": ["mcp", "debugging", "developer-tools", "testing"],
+      "keywords": [
+        "mcp inspector",
+        "model context protocol debugging",
+        "mcp server testing",
+        "mcp",
+        "debugging",
+        "developer-tools",
+        "testing",
+        "tools",
+        "claude",
+        "heyclaude"
+      ],
+      "cardDescription": "Visual MCP server testing and debugging.",
+      "installCommand": "npx @modelcontextprotocol/inspector node build/index.js",
+      "usageSnippet": "npx @modelcontextprotocol/inspector node build/index.js",
+      "documentationUrl": "https://modelcontextprotocol.io/docs/tools",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx",
+      "repoUrl": "https://github.com/modelcontextprotocol/inspector",
+      "brandName": "MCP Inspector",
+      "brandDomain": "modelcontextprotocol.io",
+      "brandIconUrl": "/api/brand-assets/icon/modelcontextprotocol.io",
+      "prerequisites": [
+        "A local or remote MCP server to inspect.",
+        "Node.js and npm/npx available in the development environment."
+      ],
+      "safetyNotes": [
+        "Starts a local inspector UI and proxy process for interactive MCP debugging.",
+        "Only connect it to MCP servers and endpoints you trust during testing."
+      ],
+      "privacyNotes": [
+        "Requests and tool responses from the inspected server may be visible in the local inspector session.",
+        "Avoid testing with production credentials or private user data unless the environment is isolated."
+      ],
+      "downloadUrl": "",
+      "downloadSha256": null,
+      "downloadTrust": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "repoStats": {
+        "repository": "modelcontextprotocol/inspector",
+        "url": "https://github.com/modelcontextprotocol/inspector",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "macOS, Windows, Linux",
+      "hasPrerequisites": true,
       "hasTroubleshooting": false
     },
     {
@@ -13786,15 +14324,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 58173,
-      "githubForks": 8786,
-      "repoUpdatedAt": "2026-05-19T11:43:25Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "microsoft/autogen",
         "url": "https://github.com/microsoft/autogen",
-        "stars": 58173,
-        "forks": 8786,
-        "updatedAt": "2026-05-19T11:43:25Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13847,15 +14385,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 14752,
-      "githubForks": 1001,
-      "repoUpdatedAt": "2026-05-19T10:46:19Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "powerline/powerline",
         "url": "https://github.com/powerline/powerline",
-        "stars": 14752,
-        "forks": 1001,
-        "updatedAt": "2026-05-19T10:46:19Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14601,15 +15139,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 188659,
-      "githubForks": 57807,
-      "repoUpdatedAt": "2026-05-19T11:37:32Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "n8n-io/n8n",
         "url": "https://github.com/n8n-io/n8n",
-        "stars": 188659,
-        "forks": 57807,
-        "updatedAt": "2026-05-19T11:37:32Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15226,15 +15764,15 @@
       "downloadSha256": "a2287d07c870f3070dc22382f0e2a409b098c5115c844429796bfa4424baf21d",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15330,15 +15868,15 @@
       "downloadSha256": "d67f69f050a67f21b64fd103dc9a901b46624621d7aaae84606ba3f657c12749",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15438,15 +15976,15 @@
       "downloadSha256": "cf3ec648f0dd4808a709afca8306947b6be5c9bc18e2b481cdf0436e846fe9e3",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15536,15 +16074,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 162457,
-      "githubForks": 19131,
-      "repoUpdatedAt": "2026-05-19T11:42:52Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "sst/opencode",
         "url": "https://github.com/sst/opencode",
-        "stars": 162457,
-        "forks": 19131,
-        "updatedAt": "2026-05-19T11:42:52Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15747,15 +16285,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 0,
-      "githubForks": 1,
-      "repoUpdatedAt": "2026-05-19T11:41:33Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Packrift/packrift-mcp",
         "url": "https://github.com/Packrift/packrift-mcp",
-        "stars": 0,
-        "forks": 1,
-        "updatedAt": "2026-05-19T11:41:33Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17300,15 +17838,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 6,
-      "githubForks": 0,
-      "repoUpdatedAt": "2026-05-19T10:08:35Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "MohamedAbdallah-14/prompt-to-asset",
         "url": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-        "stars": 6,
-        "forks": 0,
-        "updatedAt": "2026-05-19T10:08:35Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17345,15 +17883,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 21394,
-      "githubForks": 1867,
-      "repoUpdatedAt": "2026-05-19T11:24:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "promptfoo/promptfoo",
         "url": "https://github.com/promptfoo/promptfoo",
-        "stars": 21394,
-        "forks": 1867,
-        "updatedAt": "2026-05-19T11:24:05Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -18361,15 +18899,15 @@
       "downloadSha256": "4789d95508464215c52e523a39bd41dd04909b297e06af2e37e4ce8ea6320a30",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 652,
-      "githubForks": 82,
-      "repoUpdatedAt": "2026-05-19T03:36:39Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "karanb192/reddit-mcp-buddy",
         "url": "https://github.com/karanb192/reddit-mcp-buddy",
-        "stars": 652,
-        "forks": 82,
-        "updatedAt": "2026-05-19T03:36:39Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -18482,15 +19020,15 @@
       "downloadSha256": "53ca24ed61d13c6d40277f385286fcc089c13b173c7829913b02ddb4d669c68a",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 512,
-      "githubForks": 96,
-      "repoUpdatedAt": "2026-05-19T09:13:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "redis/mcp-redis",
         "url": "https://github.com/redis/mcp-redis",
-        "stars": 512,
-        "forks": 96,
-        "updatedAt": "2026-05-19T09:13:05Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -18750,15 +19288,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 24101,
-      "githubForks": 3278,
-      "repoUpdatedAt": "2026-05-19T11:16:25Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "RooCodeInc/Roo-Code",
         "url": "https://github.com/RooCodeInc/Roo-Code",
-        "stars": 24101,
-        "forks": 3278,
-        "updatedAt": "2026-05-19T11:16:25Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -19769,15 +20307,15 @@
       "downloadSha256": "d2e6263bc6e0ec724a61ac9a348aa5f0fd9c28f7ec07fcd66ca36f4a1185151a",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 107,
-      "githubForks": 19,
-      "repoUpdatedAt": "2026-05-19T04:13:47Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "SocketDev/socket-mcp",
         "url": "https://github.com/SocketDev/socket-mcp",
-        "stars": 107,
-        "forks": 19,
-        "updatedAt": "2026-05-19T04:13:47Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -19973,15 +20511,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 22712,
-      "githubForks": 1523,
-      "repoUpdatedAt": "2026-05-19T11:40:46Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "browserbase/stagehand",
         "url": "https://github.com/browserbase/stagehand",
-        "stars": 22712,
-        "forks": 1523,
-        "updatedAt": "2026-05-19T11:40:46Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -21020,15 +21558,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 14969,
-      "githubForks": 1227,
-      "repoUpdatedAt": "2026-05-19T09:26:29Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "triggerdotdev/trigger.dev",
         "url": "https://github.com/triggerdotdev/trigger.dev",
-        "stars": 14969,
-        "forks": 1227,
-        "updatedAt": "2026-05-19T09:26:29Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -21778,15 +22316,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 24333,
-      "githubForks": 4432,
-      "repoUpdatedAt": "2026-05-19T11:09:31Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "vercel/ai",
         "url": "https://github.com/vercel/ai",
-        "stars": 24333,
-        "forks": 4432,
-        "updatedAt": "2026-05-19T11:09:31Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -22324,15 +22862,15 @@
       "downloadSha256": "b9a4470d1a5231d0b35ddf03c620b7450b06dd6c394ca5b2aaee0dc956053792",
       "packageVerified": true,
       "downloadTrust": "first-party",
-      "githubStars": 11200,
-      "githubForks": 712,
-      "repoUpdatedAt": "2026-05-19T04:59:43Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "mozilla/readability",
         "url": "https://github.com/mozilla/readability",
-        "stars": 11200,
-        "forks": 712,
-        "updatedAt": "2026-05-19T04:59:43Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -22838,15 +23376,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 87,
-      "githubForks": 8,
-      "repoUpdatedAt": "2026-05-18T21:56:17Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "Xquik-dev/x-twitter-scraper",
         "url": "https://github.com/Xquik-dev/x-twitter-scraper",
-        "stars": 87,
-        "forks": 8,
-        "updatedAt": "2026-05-18T21:56:17Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -23071,15 +23609,15 @@
       "downloadUrl": "",
       "downloadSha256": null,
       "downloadTrust": null,
-      "githubStars": 83231,
-      "githubForks": 8570,
-      "repoUpdatedAt": "2026-05-19T11:31:57Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "repoStats": {
         "repository": "zed-industries/zed",
         "url": "https://github.com/zed-industries/zed",
-        "stars": 83231,
-        "forks": 8570,
-        "updatedAt": "2026-05-19T11:31:57Z",
+        "stars": null,
+        "forks": null,
+        "updatedAt": null,
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -23337,6 +23875,54 @@
   ],
   "changelog": [
     {
+      "category": "rules",
+      "slug": "code-review-escalation-high-risk-changes",
+      "title": "Code Review Escalation Rules for High-Risk Changes",
+      "dateAdded": "2026-06-03",
+      "type": "added",
+      "artifactHash": "e03b8ac82f754f1729958892c50c36b01de84701a54f9d4b8956a9b62e1eb16c"
+    },
+    {
+      "category": "tools",
+      "slug": "ccusage",
+      "title": "ccusage",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "50ec099e59827189df01cb05884d0a0e3182576d3e332e0e8ae74dadab39ed55"
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "301b96d1aee7fa4548fb5023a4c5100e37149938bb9a8e51cab7fb1e2f4073ef"
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "title": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "52fe7b161a0bf90c9f4eeca7e1054d600ebcaee48e144e38830725e23f13d909"
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "title": "Claude Code Source Fact Verification Capability Pack Skill",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "d741541ad119245615dc81589f1874b3ff3cdcaaeb6e1a9df0b8efff3912c4ba"
+    },
+    {
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "title": "MCP Inspector",
+      "dateAdded": "2026-06-02",
+      "type": "added",
+      "artifactHash": "063918fdb6e15e358b1ed1daa0e60b97d598d464a91721a8c479d53640687e7d"
+    },
+    {
       "category": "mcp",
       "slug": "yield-intelligence-mcp",
       "title": "YIELD INTELLIGENCE MCP — Passive Income Analysis",
@@ -23366,7 +23952,7 @@
       "title": "Packrift MCP Server",
       "dateAdded": "2026-05-10",
       "type": "added",
-      "artifactHash": "2cc60246ae62fba109bc9f451430e073aad01f7b1b8497710bd8419f04c81c3d"
+      "artifactHash": "c1c9deab507a9be52254a124700e4eefa570d63dc86dbd6c70000a611e2b5cb1"
     },
     {
       "category": "mcp",
@@ -23374,7 +23960,7 @@
       "title": "Xquik MCP Server",
       "dateAdded": "2026-05-09",
       "type": "added",
-      "artifactHash": "b30cb78ce694f92e1a745e2b55143705d451cb884d16eb370660a4743b665dbe"
+      "artifactHash": "5587d3a80421c5698ad36671c7937eb7299b6f79bed46fdecfa85d5b9a21adcf"
     },
     {
       "category": "mcp",
@@ -23414,7 +24000,7 @@
       "title": "Aider",
       "dateAdded": "2026-04-27",
       "type": "added",
-      "artifactHash": "cc3bf2a264bcafe4023c6f20c67e4d33033a7ae119dce4987a9504e09b23fde1"
+      "artifactHash": "7b06a7854b4a88fad040f92153e1c8f64310fc733538f0d4975cfce194788874"
     },
     {
       "category": "tools",
@@ -23438,7 +24024,7 @@
       "title": "Arize Phoenix",
       "dateAdded": "2026-04-27",
       "type": "added",
-      "artifactHash": "93709d38e8614aa5acd7024fbb13b6938ce8047e81acc342f9f58b118943dde2"
+      "artifactHash": "71d0bf2b0e8fa94fc5a9bd81fb9e5a4eba92ea46524eb13a7e8ca71b43219433"
     },
     {
       "category": "tools",
@@ -23462,7 +24048,7 @@
       "title": "Browser Use",
       "dateAdded": "2026-04-27",
       "type": "added",
-      "artifactHash": "37ac4abda5c1ed6f79c28e57eab1e1f87d008187d12483790c9a9b33ccebef8f"
+      "artifactHash": "9e3ee370ce5be24d96ec809e4842294bc1727b1f8abc67d95617ed4dcf944740"
     },
     {
       "category": "tools",
@@ -23486,55 +24072,7 @@
       "title": "Cline",
       "dateAdded": "2026-04-27",
       "type": "added",
-      "artifactHash": "135842c7b2d589babb2e26f465a89703974e5ff10f2086dc3a249abcf9fbcac3"
-    },
-    {
-      "category": "tools",
-      "slug": "cloudflare-agents-sdk",
-      "title": "Cloudflare Agents SDK",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "d659637bf6e6216180a96957e9ed9f6d810acb260afd7eca302b5de8ad09aa68"
-    },
-    {
-      "category": "tools",
-      "slug": "coderabbit",
-      "title": "CodeRabbit",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "f554d9e5f74a89ebf7db3b2b10de179b23938e8065872d35c0bb2b017c936ca4"
-    },
-    {
-      "category": "tools",
-      "slug": "composio",
-      "title": "Composio",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "e316d98b6dd82ae397787b7b98510b8b820cebae2f7107b360d6657e87df6ee6"
-    },
-    {
-      "category": "tools",
-      "slug": "continue",
-      "title": "Continue",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "7c4416cb0ec4794eab7f04ddcd9c7b7f28460dd664666085e0f472bc0525a27f"
-    },
-    {
-      "category": "tools",
-      "slug": "crewai",
-      "title": "CrewAI",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "1e8b251b4c3022b836bb1c488aeb40f3ec3eb7049b73b5240985e5f49abd5c41"
-    },
-    {
-      "category": "tools",
-      "slug": "cursor",
-      "title": "Cursor",
-      "dateAdded": "2026-04-27",
-      "type": "added",
-      "artifactHash": "fa4c67a178f82ec9a033f50246c1c851dec1626fa9ecc81f3066e4984b5ad77c"
+      "artifactHash": "2ebde82d8a1c904ab8353ad20846b3b727856edbaed2a76a65e27707f0d208c0"
     }
   ]
 }

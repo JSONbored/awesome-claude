@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 2,
+  "key": "skills:claude-code-mcp-production-readiness-capability-pack",
+  "category": "skills",
+  "slug": "claude-code-mcp-production-readiness-capability-pack",
+  "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+  "author": "JSONbored",
+  "copyText": "Install:\ncurl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack\n\nUsage:\nUse this skill before shipping Claude Code MCP servers or shared .mcp.json configuration to a team, CI workflow, or production operator environment.\n\nAsset:\n# Trigger\n\"Apply the Claude Code MCP production readiness capability pack to this MCP setup.\"\n\n# Required output\n1) MCP server inventory with scope, transport, and trust boundary\n2) Permission/OAuth review with least-privilege recommendations\n3) Resource, prompt, and tool contract validation checklist\n4) Production rollout, rollback, and monitoring plan",
+  "detailMarkdown": "# Claude Code MCP Production Readiness Capability Pack Skill\n\nExpert Claude Code skill capability pack for taking MCP integrations from local proof-of-concept to production-ready, permissioned, observable workflows.\n\n## Trust\n- Source: source-backed\n- Package: maintainer-built/verified package\n- Review: unclaimed\n\n## Safety notes\n- MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use.\n- Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps.\n- Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first.\n\n## Privacy notes\n- MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval.\n- OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts.\n- Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout.\n\n## Install\n```bash\ncurl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack\n```\n\n## Usage\nUse this skill before shipping Claude Code MCP servers or shared .mcp.json configuration to a team, CI workflow, or production operator environment.",
+  "webUrl": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+  "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+  "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-mcp-production-readiness-capability-pack.txt",
+  "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-mcp-production-readiness-capability-pack",
+  "seoTitle": "Claude Code MCP Production Readiness Capability Pack Skill",
+  "seoDescription": "Expert Claude Code skill pack for production MCP readiness with scoped server configuration, permission review, OAuth checks, and operational validation.",
+  "safetyNotes": [
+    "MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use.",
+    "Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps.",
+    "Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first."
+  ],
+  "privacyNotes": [
+    "MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval.",
+    "OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts.",
+    "Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout."
+  ],
+  "repoUrl": "",
+  "documentationUrl": "https://code.claude.com/docs/en/mcp",
+  "downloadTrust": "first-party",
+  "verificationStatus": "validated",
+  "packageVerified": true
+}

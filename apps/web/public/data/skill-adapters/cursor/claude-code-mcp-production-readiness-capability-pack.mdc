@@ -1,0 +1,14 @@
+---
+description: "Production readiness workflow for Claude Code MCP servers, scopes, permissions, OAuth, resources, and operational validation."
+globs:
+alwaysApply: false
+---
+# Claude Code MCP Production Readiness Capability Pack Skill
+Expert Claude Code skill capability pack for taking MCP integrations from local proof-of-concept to production-ready, permissioned, observable workflows.
+Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.
+## Install
+```bash
+curl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack
+```
+## Source
+https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip

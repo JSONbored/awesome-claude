@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "registry-manifest",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
-  "totalEntries": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "totalEntries": 394,
   "categoryOrder": [
     "agents",
     "mcp",
@@ -25,15 +25,15 @@
       "label": "MCP Servers"
     },
     "tools": {
-      "count": 53,
+      "count": 55,
       "label": "Tools"
     },
     "skills": {
-      "count": 68,
+      "count": 71,
       "label": "Skills"
     },
     "rules": {
-      "count": 29,
+      "count": 30,
       "label": "Rules"
     },
     "commands": {
@@ -571,6 +571,14 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/catppuccin-mocha-theme"
     },
     {
+      "key": "tools:ccusage",
+      "category": "tools",
+      "slug": "ccusage",
+      "canonicalUrl": "https://heyclau.de/entry/tools/ccusage",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/ccusage.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/ccusage"
+    },
+    {
       "key": "guides:chatgpt-migration-guide",
       "category": "guides",
       "slug": "chatgpt-migration-guide",
@@ -627,12 +635,36 @@
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/docker-health-statusline"
     },
     {
+      "key": "skills:claude-code-mcp-production-readiness-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-mcp-production-readiness-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-mcp-production-readiness-capability-pack"
+    },
+    {
       "key": "guides:multi-directory-setup",
       "category": "guides",
       "slug": "multi-directory-setup",
       "canonicalUrl": "https://heyclau.de/entry/guides/multi-directory-setup",
       "llmsUrl": "https://heyclau.de/data/llms/guides/multi-directory-setup.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/guides/multi-directory-setup"
+    },
+    {
+      "key": "skills:claude-code-repo-migration-debugging-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-repo-migration-debugging-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-repo-migration-debugging-capability-pack"
+    },
+    {
+      "key": "skills:claude-code-source-fact-verification-capability-pack",
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-source-fact-verification-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-source-fact-verification-capability-pack"
     },
     {
       "key": "guides:claude-vs-cursor-codeium",
@@ -841,6 +873,14 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/coderabbit-lite-pr-review-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/coderabbit-lite-pr-review-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/coderabbit-lite-pr-review-capability-pack"
+    },
+    {
+      "key": "rules:code-review-escalation-high-risk-changes",
+      "category": "rules",
+      "slug": "code-review-escalation-high-risk-changes",
+      "canonicalUrl": "https://heyclau.de/entry/rules/code-review-escalation-high-risk-changes",
+      "llmsUrl": "https://heyclau.de/data/llms/rules/code-review-escalation-high-risk-changes.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/rules/code-review-escalation-high-risk-changes"
     },
     {
       "key": "rules:code-review-expert",
@@ -1849,6 +1889,14 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/mastra",
       "llmsUrl": "https://heyclau.de/data/llms/tools/mastra.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/mastra"
+    },
+    {
+      "key": "tools:mcp-inspector",
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "canonicalUrl": "https://heyclau.de/entry/tools/mcp-inspector",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/mcp-inspector.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/mcp-inspector"
     },
     {
       "key": "skills:mcp-server-authoring-security-capability-pack",
@@ -3172,26 +3220,26 @@
     "duplicateBodyGroupCount": 0
   },
   "trustSummary": {
-    "brandedCount": 143,
+    "brandedCount": 145,
     "brandedPercent": 37,
-    "brandfetchCount": 141,
-    "sourceAvailableCount": 388,
+    "brandfetchCount": 143,
+    "sourceAvailableCount": 394,
     "sourceAvailablePercent": 100,
     "missingSourceCount": 0,
-    "checksumPresentCount": 109,
+    "checksumPresentCount": 112,
     "checksumPresentPercent": 28,
-    "adapterGeneratedCount": 68,
-    "recentlyVerifiedCount": 362,
+    "adapterGeneratedCount": 71,
+    "recentlyVerifiedCount": 368,
     "staleVerificationCount": 0,
     "provenanceCount": 10,
     "provenancePercent": 3,
     "claimedOrReviewedCount": 6,
     "claimedOrReviewedPercent": 2,
-    "safetyNotesCount": 21,
-    "safetyNotesPercent": 5,
-    "privacyNotesCount": 21,
-    "privacyNotesPercent": 5,
-    "firstPartyPackageCount": 109,
+    "safetyNotesCount": 27,
+    "safetyNotesPercent": 7,
+    "privacyNotesCount": 27,
+    "privacyNotesPercent": 7,
+    "firstPartyPackageCount": 112,
     "firstPartyPackagePercent": 28,
     "recommendedFixCount": 2,
     "entriesNeedingAttention": 2
@@ -3222,22 +3270,22 @@
     "directory-index.json": {
       "path": "/data/directory-index.json",
       "type": "json",
-      "sha256": "497056a138ce2647c8dda8f98b38041e0e7f2fb4d593e7c8378f54cff41de2e3"
+      "sha256": "385ee99f55e8d95b32a9970835266623d6178a89b9250f4c25b7a927275f59dc"
     },
     "search-index.json": {
       "path": "/data/search-index.json",
       "type": "json",
-      "sha256": "9791409bcc5a4ce7e81223bc5ead79f3822e1cad0b10bec7faf591340288c2a1"
+      "sha256": "9135dd59a519669fa96e08733051a47552b6dc6be494d6e6bc7cfb255aaa7b75"
     },
     "raycast-index.json": {
       "path": "/data/raycast-index.json",
       "type": "json",
-      "sha256": "e8cf7582d3956663fdf72414a7d2ef463f796b20d1bdc67af4b0ab93f2de1ec0"
+      "sha256": "6e1bc52c614cb784505a2a58a12e09f400038fe4a6973f6f9c218edb6a4ac367"
     },
     "ecosystem-feed.json": {
       "path": "/data/ecosystem-feed.json",
       "type": "json",
-      "sha256": "e8c39c23bc14a934b268c6e3bac5771338712db0ca6a1f12dee5438a7f9bb9db"
+      "sha256": "c2ed9bf02f2c2ba8f04b703b6a4091383b3408bc364ef48246fbeb3f4bd66aa9"
     },
     "mcp-registry-feed.json": {
       "path": "/data/mcp-registry-feed.json",
@@ -3247,22 +3295,22 @@
     "plugin-export-feed.json": {
       "path": "/data/plugin-export-feed.json",
       "type": "json",
-      "sha256": "017594917ded0ac7193f207a675d6a06fd50f97f43037fec350bffddfeca3d62"
+      "sha256": "89854a07bd6a14e165640cd79a71cd38dbee883fa1c4c7ff1a045be8b6749ce1"
     },
     "registry-changelog.json": {
       "path": "/data/registry-changelog.json",
       "type": "json",
-      "sha256": "c3a44c43d4a403bc88072a56ee014953de7912f8e17753c3aaaca97511588e25"
+      "sha256": "f7693744b9a34de9568020b79180174f14aab88c9de512646399bf38cf2ef925"
     },
     "registry-trust-report.json": {
       "path": "/data/registry-trust-report.json",
       "type": "json",
-      "sha256": "9372fd7df739c6cb95a45d13aa62960e8f04c864205720b9f7338349f50c762a"
+      "sha256": "4b618ce9dbb6a0f9992660b91911935beb6f8308f8635dc4cfc0061a0cbf78c7"
     },
     "feeds/index.json": {
       "path": "/data/feeds%2Findex.json",
       "type": "json",
-      "sha256": "025b31a4e803995773ca5f42945b9158aab1434d35fb66038d6eeb7e703e879f"
+      "sha256": "7cf8648636e6d7c7551ab8b7a1b85c2f552099c17836ef837a5440eacf7f166c"
     },
     "submission-spec.json": {
       "path": "/data/submission-spec.json",
@@ -3272,22 +3320,22 @@
     "content-quality-report.json": {
       "path": "/data/content-quality-report.json",
       "type": "json",
-      "sha256": "8caa54965d9d0cc46f12c7c27657cbf5257e6ec818d939ccb8d9efa46d2935e9"
+      "sha256": "c5003358cdbd8fc5478da834d237f165f2ffbf12365b8fb06ef1426673433ba9"
     },
     "content-quality-prompts.json": {
       "path": "/data/content-quality-prompts.json",
       "type": "json",
-      "sha256": "0a0b38d282927349294eed74eeff17e8775d93ed6bd929cdb5ce32de77fc1d57"
+      "sha256": "71174492429b651fd3165fc935a58402a89c6c9baa31dfbeff2af54c24a2bda2"
     },
     "jsonld-snapshots.json": {
       "path": "/data/jsonld-snapshots.json",
       "type": "json",
-      "sha256": "b12aac0c145ec51cb13148c34643c279d2b98d11323c948e76ef410a2617361e"
+      "sha256": "862d5dfb6643af85bd6ae3e5f47065d888f94e0af44f69b50877d3a9e2dfcd46"
     },
     "llms-full.txt": {
       "path": "/data/llms-full.txt",
       "type": "text",
-      "sha256": "026048fa8f56f1eb09b276dc65bfde4b4cfdbf6d6017e53a82b02aaaca2c8dc4"
+      "sha256": "2ca2e8a9390fb8e4ae72a113bdf867427a0c9c16be556fa6dd939409ed870e12"
     },
     "entries/commands/cursor-rules.json": {
       "path": "/data/entries%2Fcommands%2Fcursor-rules.json",
@@ -3687,7 +3735,7 @@
     "entries/tools/aider.json": {
       "path": "/data/entries%2Ftools%2Faider.json",
       "type": "json",
-      "sha256": "cc3bf2a264bcafe4023c6f20c67e4d33033a7ae119dce4987a9504e09b23fde1"
+      "sha256": "7b06a7854b4a88fad040f92153e1c8f64310fc733538f0d4975cfce194788874"
     },
     "llms/tools/aider.txt": {
       "path": "/data/llms%2Ftools%2Faider.txt",
@@ -3697,12 +3745,12 @@
     "raycast/tools/aider.json": {
       "path": "/data/raycast%2Ftools%2Faider.json",
       "type": "json",
-      "sha256": "ee15dc285db25c6595e6ffe641bc37b4d445a3858250e62d14110827c381edea"
+      "sha256": "d69d46ea86a86da1b7cf3dc844f45f2f850a271e89a4620001bb1bc9f5b4bcce"
     },
     "entries/mcp/airtable-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fairtable-mcp-server.json",
       "type": "json",
-      "sha256": "fdf889ea434cfc75bf8453f66e5310dbe5f21118b0c945f7400d8ee4b7067bc4"
+      "sha256": "129e1e0e6e4952550a07247dad87a5d4928a18aea7b7fe6be8cfe902a06f67a5"
     },
     "llms/mcp/airtable-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fairtable-mcp-server.txt",
@@ -3712,7 +3760,7 @@
     "raycast/mcp/airtable-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fairtable-mcp-server.json",
       "type": "json",
-      "sha256": "b3c4b3ab060345ba8f3983cda900a41eea9e508bb7917ed3cdcdf4f3cd30c9ed"
+      "sha256": "debab2517021033542a978d472f0057d542fb0134fc44772ed37165a23bbc278"
     },
     "entries/agents/api-builder-agent.json": {
       "path": "/data/entries%2Fagents%2Fapi-builder-agent.json",
@@ -3837,7 +3885,7 @@
     "entries/tools/arize-phoenix.json": {
       "path": "/data/entries%2Ftools%2Farize-phoenix.json",
       "type": "json",
-      "sha256": "93709d38e8614aa5acd7024fbb13b6938ce8047e81acc342f9f58b118943dde2"
+      "sha256": "71d0bf2b0e8fa94fc5a9bd81fb9e5a4eba92ea46524eb13a7e8ca71b43219433"
     },
     "llms/tools/arize-phoenix.txt": {
       "path": "/data/llms%2Ftools%2Farize-phoenix.txt",
@@ -3847,7 +3895,7 @@
     "raycast/tools/arize-phoenix.json": {
       "path": "/data/raycast%2Ftools%2Farize-phoenix.json",
       "type": "json",
-      "sha256": "d3c0bb32d83d0c8f002840a8729aa4f35b2317fac9592c45769728a330f9c2fe"
+      "sha256": "9a66ec6767476eb72f7b1eefaae25f60a24d0b5b1094884e5caf7911ee643f6f"
     },
     "entries/mcp/asana-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fasana-mcp-server.json",
@@ -3867,7 +3915,7 @@
     "entries/skills/audio-transcription-summarization.json": {
       "path": "/data/entries%2Fskills%2Faudio-transcription-summarization.json",
       "type": "json",
-      "sha256": "d034e573bfa71de99415d19eaddc879d563ca43f958fd949fb740d132074b311"
+      "sha256": "2ff7e78dcdf5a9dbd722934424fba62b53d5f090b4c1c97ad6b0b036e3282770"
     },
     "llms/skills/audio-transcription-summarization.txt": {
       "path": "/data/llms%2Fskills%2Faudio-transcription-summarization.txt",
@@ -3877,7 +3925,7 @@
     "raycast/skills/audio-transcription-summarization.json": {
       "path": "/data/raycast%2Fskills%2Faudio-transcription-summarization.json",
       "type": "json",
-      "sha256": "7b64590028ccd7d3189d19e13d4d56351a3b8da0db8eb3bbb3b18f67fee809f3"
+      "sha256": "34f8b0bd3beea31e6aeeef45864868889f2a72e9e7c6a43eb787dd06180d74d3"
     },
     "skill-adapters/cursor/audio-transcription-summarization.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Faudio-transcription-summarization.mdc",
@@ -4007,7 +4055,7 @@
     "entries/mcp/aws-services-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Faws-services-mcp-server.json",
       "type": "json",
-      "sha256": "4f1129a94d3aa9ec5ff33c26a1d6098d6488b8a38d8e931ec6f383ca52c35a9d"
+      "sha256": "da44650d1400d576d347a913c31dd0d272881270adfa88764fe545bd66d9d0ed"
     },
     "llms/mcp/aws-services-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Faws-services-mcp-server.txt",
@@ -4017,7 +4065,7 @@
     "raycast/mcp/aws-services-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Faws-services-mcp-server.json",
       "type": "json",
-      "sha256": "1cb3a1d4095610ed0a12ed220faef8063a6b9d7d514bbf6724adee729401ccf1"
+      "sha256": "f1987cd6981cccce1bb321c8f2130064d6e815eb816039677b54d2e7e911eb96"
     },
     "entries/agents/backend-architect-agent.json": {
       "path": "/data/entries%2Fagents%2Fbackend-architect-agent.json",
@@ -4167,7 +4215,7 @@
     "entries/tools/browser-use.json": {
       "path": "/data/entries%2Ftools%2Fbrowser-use.json",
       "type": "json",
-      "sha256": "37ac4abda5c1ed6f79c28e57eab1e1f87d008187d12483790c9a9b33ccebef8f"
+      "sha256": "9e3ee370ce5be24d96ec809e4842294bc1727b1f8abc67d95617ed4dcf944740"
     },
     "llms/tools/browser-use.txt": {
       "path": "/data/llms%2Ftools%2Fbrowser-use.txt",
@@ -4177,7 +4225,7 @@
     "raycast/tools/browser-use.json": {
       "path": "/data/raycast%2Ftools%2Fbrowser-use.json",
       "type": "json",
-      "sha256": "67fa0e74dbdb2954ba4680cd4644b54c589b7bcea70550a58d6cf02f788bed66"
+      "sha256": "fd78dda5a8aff1b28a6fbc09ef91b8ce5f07e362c5333c749672f4e102905919"
     },
     "entries/tools/browserbase.json": {
       "path": "/data/entries%2Ftools%2Fbrowserbase.json",
@@ -4277,7 +4325,7 @@
     "entries/statuslines/catppuccin-mocha-theme.json": {
       "path": "/data/entries%2Fstatuslines%2Fcatppuccin-mocha-theme.json",
       "type": "json",
-      "sha256": "a395d442612f34d1cc089bfd52d3227e1523fa44098cc6419e1e4d77b7513a5b"
+      "sha256": "690175222cc403f4c617fa18cf762f128078da059772988b400b4b4fea1dedd5"
     },
     "llms/statuslines/catppuccin-mocha-theme.txt": {
       "path": "/data/llms%2Fstatuslines%2Fcatppuccin-mocha-theme.txt",
@@ -4287,7 +4335,22 @@
     "raycast/statuslines/catppuccin-mocha-theme.json": {
       "path": "/data/raycast%2Fstatuslines%2Fcatppuccin-mocha-theme.json",
       "type": "json",
-      "sha256": "5626abaa2dbf33c142135cd6cbc05e0c6cc84a5ec61c08184416a0bde945771b"
+      "sha256": "8d70f881ce4749747a36660c168567f0115daaf4b1eeb898feb400e6c553bef4"
+    },
+    "entries/tools/ccusage.json": {
+      "path": "/data/entries%2Ftools%2Fccusage.json",
+      "type": "json",
+      "sha256": "50ec099e59827189df01cb05884d0a0e3182576d3e332e0e8ae74dadab39ed55"
+    },
+    "llms/tools/ccusage.txt": {
+      "path": "/data/llms%2Ftools%2Fccusage.txt",
+      "type": "text",
+      "sha256": "aac0ffccd86f155aef43e75f78beb93d8202f5fd3ab656807bbe193256069017"
+    },
+    "raycast/tools/ccusage.json": {
+      "path": "/data/raycast%2Ftools%2Fccusage.json",
+      "type": "json",
+      "sha256": "6c01c878d6ea68cb0ad516898c5ce2b779bfb05f90d708e5e27bdf8e1e47b5ed"
     },
     "entries/guides/chatgpt-migration-guide.json": {
       "path": "/data/entries%2Fguides%2Fchatgpt-migration-guide.json",
@@ -4394,6 +4457,26 @@
       "type": "json",
       "sha256": "52403f9528e9d487f2542aa53194c97dfd57ba1823e4470f8d876e3456551542"
     },
+    "entries/skills/claude-code-mcp-production-readiness-capability-pack.json": {
+      "path": "/data/entries%2Fskills%2Fclaude-code-mcp-production-readiness-capability-pack.json",
+      "type": "json",
+      "sha256": "301b96d1aee7fa4548fb5023a4c5100e37149938bb9a8e51cab7fb1e2f4073ef"
+    },
+    "llms/skills/claude-code-mcp-production-readiness-capability-pack.txt": {
+      "path": "/data/llms%2Fskills%2Fclaude-code-mcp-production-readiness-capability-pack.txt",
+      "type": "text",
+      "sha256": "8f453de0ecd4cd15cbdf64b4cb6d52772a7dbce4ad82be69b092e2af542331e0"
+    },
+    "raycast/skills/claude-code-mcp-production-readiness-capability-pack.json": {
+      "path": "/data/raycast%2Fskills%2Fclaude-code-mcp-production-readiness-capability-pack.json",
+      "type": "json",
+      "sha256": "c1bfa3f66246a4f9637fd2b5b2e1ab6034d2f1ea22c2ad8bde1b83bb50250c6f"
+    },
+    "skill-adapters/cursor/claude-code-mcp-production-readiness-capability-pack.mdc": {
+      "path": "/data/skill-adapters%2Fcursor%2Fclaude-code-mcp-production-readiness-capability-pack.mdc",
+      "type": "text",
+      "sha256": "b905c94f58ceb42350ce7985bf47efdb543467dc718704e8931126caf26e296f"
+    },
     "entries/guides/multi-directory-setup.json": {
       "path": "/data/entries%2Fguides%2Fmulti-directory-setup.json",
       "type": "json",
@@ -4408,6 +4491,46 @@
       "path": "/data/raycast%2Fguides%2Fmulti-directory-setup.json",
       "type": "json",
       "sha256": "992a144e70637af7d5598b3b0b9605dcd2e209d58d6407eb66658f88bab6ad5e"
+    },
+    "entries/skills/claude-code-repo-migration-debugging-capability-pack.json": {
+      "path": "/data/entries%2Fskills%2Fclaude-code-repo-migration-debugging-capability-pack.json",
+      "type": "json",
+      "sha256": "52fe7b161a0bf90c9f4eeca7e1054d600ebcaee48e144e38830725e23f13d909"
+    },
+    "llms/skills/claude-code-repo-migration-debugging-capability-pack.txt": {
+      "path": "/data/llms%2Fskills%2Fclaude-code-repo-migration-debugging-capability-pack.txt",
+      "type": "text",
+      "sha256": "0e99184e042550dd5458d35d1ce980194e5694d9bdae3912a97b0505831b4431"
+    },
+    "raycast/skills/claude-code-repo-migration-debugging-capability-pack.json": {
+      "path": "/data/raycast%2Fskills%2Fclaude-code-repo-migration-debugging-capability-pack.json",
+      "type": "json",
+      "sha256": "77ddf779e5d75e1329a5ea41fc5e2836a252d14e1eb71053a93b036167a1fb6d"
+    },
+    "skill-adapters/cursor/claude-code-repo-migration-debugging-capability-pack.mdc": {
+      "path": "/data/skill-adapters%2Fcursor%2Fclaude-code-repo-migration-debugging-capability-pack.mdc",
+      "type": "text",
+      "sha256": "cb2037c5aa27573222fd850ec4350c24ee8b65fddcb7b5a84f317c3410661e6f"
+    },
+    "entries/skills/claude-code-source-fact-verification-capability-pack.json": {
+      "path": "/data/entries%2Fskills%2Fclaude-code-source-fact-verification-capability-pack.json",
+      "type": "json",
+      "sha256": "d741541ad119245615dc81589f1874b3ff3cdcaaeb6e1a9df0b8efff3912c4ba"
+    },
+    "llms/skills/claude-code-source-fact-verification-capability-pack.txt": {
+      "path": "/data/llms%2Fskills%2Fclaude-code-source-fact-verification-capability-pack.txt",
+      "type": "text",
+      "sha256": "dacb63f8c4a901820d61f5204cd15c5ec95523997652c0af798b4854278437f0"
+    },
+    "raycast/skills/claude-code-source-fact-verification-capability-pack.json": {
+      "path": "/data/raycast%2Fskills%2Fclaude-code-source-fact-verification-capability-pack.json",
+      "type": "json",
+      "sha256": "529e87fd4fcae6aca9c05e7e34e1546cac317e314d72c28741bc0cb3b397ef40"
+    },
+    "skill-adapters/cursor/claude-code-source-fact-verification-capability-pack.mdc": {
+      "path": "/data/skill-adapters%2Fcursor%2Fclaude-code-source-fact-verification-capability-pack.mdc",
+      "type": "text",
+      "sha256": "67cb0e4c54ebe2ece9dc194ec96f454fb3996134c0c257b9576dfaf3af70d3be"
     },
     "entries/guides/claude-vs-cursor-codeium.json": {
       "path": "/data/entries%2Fguides%2Fclaude-vs-cursor-codeium.json",
@@ -4627,7 +4750,7 @@
     "entries/mcp/clickup-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fclickup-mcp-server.json",
       "type": "json",
-      "sha256": "115937e070eb5e1f9ba881c0c8c93f81f8e41d2144baee3e40613c15fa4d100f"
+      "sha256": "b05a8dfd64e3ae9add4560d3c22430f7af99c307eef99860c2ec22f901aa3b0e"
     },
     "llms/mcp/clickup-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fclickup-mcp-server.txt",
@@ -4637,12 +4760,12 @@
     "raycast/mcp/clickup-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fclickup-mcp-server.json",
       "type": "json",
-      "sha256": "f485900037f22cb26a7169699eb77d025584c1bfe9c832a04a93f6ce132d42e9"
+      "sha256": "c0ff509b44aebdafaeee161f791d5aa3d556d041d2b2f014aeef675fdc4cf97c"
     },
     "entries/tools/cline.json": {
       "path": "/data/entries%2Ftools%2Fcline.json",
       "type": "json",
-      "sha256": "135842c7b2d589babb2e26f465a89703974e5ff10f2086dc3a249abcf9fbcac3"
+      "sha256": "2ebde82d8a1c904ab8353ad20846b3b727856edbaed2a76a65e27707f0d208c0"
     },
     "llms/tools/cline.txt": {
       "path": "/data/llms%2Ftools%2Fcline.txt",
@@ -4652,7 +4775,7 @@
     "raycast/tools/cline.json": {
       "path": "/data/raycast%2Ftools%2Fcline.json",
       "type": "json",
-      "sha256": "0ace47dd13108c76d76f9ddb604edb262644ec1cb82861b437e2e66b1dfab4aa"
+      "sha256": "7671f6173398dff907e3171f0dd9db6d02080d409354ba3bc82a7e2c639a152f"
     },
     "entries/hooks/cloud-backup-on-session-stop.json": {
       "path": "/data/entries%2Fhooks%2Fcloud-backup-on-session-stop.json",
@@ -4687,7 +4810,7 @@
     "entries/tools/cloudflare-agents-sdk.json": {
       "path": "/data/entries%2Ftools%2Fcloudflare-agents-sdk.json",
       "type": "json",
-      "sha256": "d659637bf6e6216180a96957e9ed9f6d810acb260afd7eca302b5de8ad09aa68"
+      "sha256": "c10bb6c682b8d80e9d67ae39497cb41927350630f3a7d6440b88ea4e0b757313"
     },
     "llms/tools/cloudflare-agents-sdk.txt": {
       "path": "/data/llms%2Ftools%2Fcloudflare-agents-sdk.txt",
@@ -4697,7 +4820,7 @@
     "raycast/tools/cloudflare-agents-sdk.json": {
       "path": "/data/raycast%2Ftools%2Fcloudflare-agents-sdk.json",
       "type": "json",
-      "sha256": "4b836a52979567cfbbdb8d4a78071980f398f330d3dc8a91671667362f6923a9"
+      "sha256": "9e636f77b8053dc756b5ed9036c891b0495a97974e5d1d9cf1677d4ac284d115"
     },
     "entries/mcp/cloudflare-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcloudflare-mcp-server.json",
@@ -4819,6 +4942,21 @@
       "type": "text",
       "sha256": "b3c3200ba594060a0eb761d2f047c74d7395d7efa52ecbe0539763420adb954a"
     },
+    "entries/rules/code-review-escalation-high-risk-changes.json": {
+      "path": "/data/entries%2Frules%2Fcode-review-escalation-high-risk-changes.json",
+      "type": "json",
+      "sha256": "e03b8ac82f754f1729958892c50c36b01de84701a54f9d4b8956a9b62e1eb16c"
+    },
+    "llms/rules/code-review-escalation-high-risk-changes.txt": {
+      "path": "/data/llms%2Frules%2Fcode-review-escalation-high-risk-changes.txt",
+      "type": "text",
+      "sha256": "c5a00324f0dacfdc86b3a33d353bcb340d4cab953a82867aded55ed604feb38c"
+    },
+    "raycast/rules/code-review-escalation-high-risk-changes.json": {
+      "path": "/data/raycast%2Frules%2Fcode-review-escalation-high-risk-changes.json",
+      "type": "json",
+      "sha256": "962499a489d80999a40f5c0ce699297830a76641d496a8a8efd9ed90fa48b550"
+    },
     "entries/rules/code-review-expert.json": {
       "path": "/data/entries%2Frules%2Fcode-review-expert.json",
       "type": "json",
@@ -4897,7 +5035,7 @@
     "entries/skills/codex-automations-orchestrator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcodex-automations-orchestrator-capability-pack.json",
       "type": "json",
-      "sha256": "0fee9607ead070dac313c1d95d5d83f8be5c74dc039b7593ee2025d4487635d3"
+      "sha256": "a5529bfdb98169f5f5b4dd2dd4b0166e2b8acd5f567c46a9158b6b3be103269d"
     },
     "llms/skills/codex-automations-orchestrator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcodex-automations-orchestrator-capability-pack.txt",
@@ -4907,7 +5045,7 @@
     "raycast/skills/codex-automations-orchestrator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcodex-automations-orchestrator-capability-pack.json",
       "type": "json",
-      "sha256": "14b05b077741dc5516b490603e720cb54d8eb8bbdda06cf55350bfb7d01abefc"
+      "sha256": "036496047a56a6db8a07c86e9d328670f455e1245a52b52d0ea893e84fe24b36"
     },
     "skill-adapters/cursor/codex-automations-orchestrator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcodex-automations-orchestrator-capability-pack.mdc",
@@ -4917,7 +5055,7 @@
     "entries/skills/codex-plugin-creator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fcodex-plugin-creator-capability-pack.json",
       "type": "json",
-      "sha256": "19979e31f2693dedeb406e7ac028b2627481b523048e14410441e5897bffdf1c"
+      "sha256": "cc085737e412553177371266d7ccebf5b005e0aaed8e26aa038559d1e9dcc32a"
     },
     "llms/skills/codex-plugin-creator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fcodex-plugin-creator-capability-pack.txt",
@@ -4927,7 +5065,7 @@
     "raycast/skills/codex-plugin-creator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fcodex-plugin-creator-capability-pack.json",
       "type": "json",
-      "sha256": "d32050acddf744d007ad193c1c008010c439709b634774de7b25eaf8ee24f8e2"
+      "sha256": "e14701dceabf9960e753769ae0ae1608d773e137a1e4974b96446b57f8f95487"
     },
     "skill-adapters/cursor/codex-plugin-creator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fcodex-plugin-creator-capability-pack.mdc",
@@ -4952,7 +5090,7 @@
     "entries/tools/composio.json": {
       "path": "/data/entries%2Ftools%2Fcomposio.json",
       "type": "json",
-      "sha256": "e316d98b6dd82ae397787b7b98510b8b820cebae2f7107b360d6657e87df6ee6"
+      "sha256": "c1ee4625f939a4d4fc2bdf88ccd6e0d4fc915c752f58a4da10cb4501bb0d5683"
     },
     "llms/tools/composio.txt": {
       "path": "/data/llms%2Ftools%2Fcomposio.txt",
@@ -4962,7 +5100,7 @@
     "raycast/tools/composio.json": {
       "path": "/data/raycast%2Ftools%2Fcomposio.json",
       "type": "json",
-      "sha256": "d9ec22aac6e01decf60e8b8344edd6b1ccc1b13790ae16d096db0e782787606f"
+      "sha256": "3a92ccb21045aa3394da2d3dcf820437874736f277b105f989ad9e051d20a6c5"
     },
     "entries/collections/content-creation-workflow.json": {
       "path": "/data/entries%2Fcollections%2Fcontent-creation-workflow.json",
@@ -5012,7 +5150,7 @@
     "entries/tools/continue.json": {
       "path": "/data/entries%2Ftools%2Fcontinue.json",
       "type": "json",
-      "sha256": "7c4416cb0ec4794eab7f04ddcd9c7b7f28460dd664666085e0f472bc0525a27f"
+      "sha256": "83c24e65c0193299164f91a0779462dc84258436b844d5e4fd253ed52a893d70"
     },
     "llms/tools/continue.txt": {
       "path": "/data/llms%2Ftools%2Fcontinue.txt",
@@ -5022,12 +5160,12 @@
     "raycast/tools/continue.json": {
       "path": "/data/raycast%2Ftools%2Fcontinue.json",
       "type": "json",
-      "sha256": "760c28b2783c66bc73558ecfa940cafe2cd359c021f36ae0eabe5d099e684e53"
+      "sha256": "0fb821f4b8d38e5d681743f9da6dd93b1f0a2547692537ae496500d7bbc78578"
     },
     "entries/mcp/contrastapi-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "fa14d9bbdb00f31f93171ca99f229699a31572d88e81a3ce03bf3c809e8dd1f8"
+      "sha256": "e60c945ed8d9698db5317bf2d2f4b0e6acda2493e7b42341795214c81542be34"
     },
     "llms/mcp/contrastapi-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fcontrastapi-mcp-server.txt",
@@ -5037,12 +5175,12 @@
     "raycast/mcp/contrastapi-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fcontrastapi-mcp-server.json",
       "type": "json",
-      "sha256": "dd2259cfb14ff1e370ef696156a2040025e92cadfb0f9bade0d73174911bc377"
+      "sha256": "14d92c5c10e0b1856476a5e3440aa272d8deba3ffb82189fa9a6fb022b314e7c"
     },
     "entries/tools/crewai.json": {
       "path": "/data/entries%2Ftools%2Fcrewai.json",
       "type": "json",
-      "sha256": "1e8b251b4c3022b836bb1c488aeb40f3ec3eb7049b73b5240985e5f49abd5c41"
+      "sha256": "e2836f190529db4735ecca3bbf3c6079438895e050cd29890fa0a3bb804dda03"
     },
     "llms/tools/crewai.txt": {
       "path": "/data/llms%2Ftools%2Fcrewai.txt",
@@ -5052,7 +5190,7 @@
     "raycast/tools/crewai.json": {
       "path": "/data/raycast%2Ftools%2Fcrewai.json",
       "type": "json",
-      "sha256": "a484c73914f74a764af971d9c8b4edc7bc322657bbd8249ca6303561153be0fe"
+      "sha256": "d2d139861e85316c70145186ce58abddf7f9099a5277d82ba08cb2c0de851515"
     },
     "entries/hooks/css-unused-selector-detector.json": {
       "path": "/data/entries%2Fhooks%2Fcss-unused-selector-detector.json",
@@ -5262,7 +5400,7 @@
     "entries/hooks/dead-code-eliminator.json": {
       "path": "/data/entries%2Fhooks%2Fdead-code-eliminator.json",
       "type": "json",
-      "sha256": "bd73c7bccaf5f5c53bb2e4726e9c9c2856620c3c6daff4bae56935f5bb2ba74d"
+      "sha256": "12bc24a859bf9d54c72927ea635e9adf11bbe8ae28b1e7103c25b150f1248e1f"
     },
     "llms/hooks/dead-code-eliminator.txt": {
       "path": "/data/llms%2Fhooks%2Fdead-code-eliminator.txt",
@@ -5272,7 +5410,7 @@
     "raycast/hooks/dead-code-eliminator.json": {
       "path": "/data/raycast%2Fhooks%2Fdead-code-eliminator.json",
       "type": "json",
-      "sha256": "8762616bb978a34dc7c6f30a156789a5c411d69ef512648156dc9159eb088d5b"
+      "sha256": "063be02cafc9d4668df045ef5bdb0f10a42fcbf4d3473fd24e5e14e8d93b0755"
     },
     "entries/collections/debugging-troubleshooting-system.json": {
       "path": "/data/entries%2Fcollections%2Fdebugging-troubleshooting-system.json",
@@ -5397,7 +5535,7 @@
     "entries/mcp/discord-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fdiscord-mcp-server.json",
       "type": "json",
-      "sha256": "658b665988727b57bff5f6b758c6dc02e5d7ee520d16fb4d4b32f9136a138abb"
+      "sha256": "7bd0d8a217d09df44ad63735b29b10d28d2f9ee540135505235cea4b2f5ed6a8"
     },
     "llms/mcp/discord-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fdiscord-mcp-server.txt",
@@ -5407,7 +5545,7 @@
     "raycast/mcp/discord-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fdiscord-mcp-server.json",
       "type": "json",
-      "sha256": "7c7ff048c5afad185bcc6a3b9c174decaf404dd39dad259efe5c005356e5a78d"
+      "sha256": "9666e3394d195fa7fd993f7ac8e93b0535566ba790aa4cf95b40aa5ef4c8c201"
     },
     "entries/hooks/documentation-auto-generator-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fdocumentation-auto-generator-on-stop.json",
@@ -5752,7 +5890,7 @@
     "entries/tools/firecrawl.json": {
       "path": "/data/entries%2Ftools%2Ffirecrawl.json",
       "type": "json",
-      "sha256": "f125083fb9ab5436651d10e5e8fe60bbcf1750461cb88f88c87a0e8b5f66db17"
+      "sha256": "1bbcf7f705f6fba9836cf5db5a40ca8b8f625330123d0d244c8c35a135fbb5b0"
     },
     "llms/tools/firecrawl.txt": {
       "path": "/data/llms%2Ftools%2Ffirecrawl.txt",
@@ -5762,7 +5900,7 @@
     "raycast/tools/firecrawl.json": {
       "path": "/data/raycast%2Ftools%2Ffirecrawl.json",
       "type": "json",
-      "sha256": "51edd5bc70adf7d24592acb2b87838409c4e63406207e74710ae8ec43aa9f040"
+      "sha256": "489b71a501b77aab19245207e8b5c63151bfcb8b2dfe6854370d97030758b65e"
     },
     "entries/mcp/fireflies-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Ffireflies-mcp-server.json",
@@ -5887,7 +6025,7 @@
     "entries/tools/garak.json": {
       "path": "/data/entries%2Ftools%2Fgarak.json",
       "type": "json",
-      "sha256": "b94abf9d7024b20a6e3673d282dbc36ca1f0e0f2b14f9e1b384998ad1ae96742"
+      "sha256": "f0d4bf5a6757b4b0f93244770e77eb827bb983de6715d1cb863202dc8f005c93"
     },
     "llms/tools/garak.txt": {
       "path": "/data/llms%2Ftools%2Fgarak.txt",
@@ -5897,7 +6035,7 @@
     "raycast/tools/garak.json": {
       "path": "/data/raycast%2Ftools%2Fgarak.json",
       "type": "json",
-      "sha256": "94b52b31d1c383ba7a44b15d9c38f5e3d13756f2bb966cbca4ccebc71f2e99f3"
+      "sha256": "d8248f4a4287af4b8ab35362f265862ccce2bddc1498c68897adfef1c2bba464"
     },
     "entries/commands/generate-tests.json": {
       "path": "/data/entries%2Fcommands%2Fgenerate-tests.json",
@@ -5917,7 +6055,7 @@
     "entries/tools/giskard.json": {
       "path": "/data/entries%2Ftools%2Fgiskard.json",
       "type": "json",
-      "sha256": "9474f8acffcce7549bf3a5e08b9feba022ef2e7304f8c77bc879e0f003a716a7"
+      "sha256": "9e45ba2df736e113d04060d96c40728a398de1c1af61227e065b3a588948870b"
     },
     "llms/tools/giskard.txt": {
       "path": "/data/llms%2Ftools%2Fgiskard.txt",
@@ -5927,7 +6065,7 @@
     "raycast/tools/giskard.json": {
       "path": "/data/raycast%2Ftools%2Fgiskard.json",
       "type": "json",
-      "sha256": "01785b11c8c64a49aee29ca36b178ded7e4038d3c9f27ca53fc137e0f6120051"
+      "sha256": "32e1bfcc23aaab63ac069153943e47a2c6982eac18bac2bc225ff091135c8134"
     },
     "entries/hooks/git-auto-commit-on-stop.json": {
       "path": "/data/entries%2Fhooks%2Fgit-auto-commit-on-stop.json",
@@ -6252,7 +6390,7 @@
     "entries/tools/helicone.json": {
       "path": "/data/entries%2Ftools%2Fhelicone.json",
       "type": "json",
-      "sha256": "f0653f81e6fbe817dad9df22f1f6e06c0ab1a30c95ab5542458a8c02d30a5d99"
+      "sha256": "46f3ff7b04926bb39c6763e19b2aa84aac43041978b95f01228eb1a6fb94f568"
     },
     "llms/tools/helicone.txt": {
       "path": "/data/llms%2Ftools%2Fhelicone.txt",
@@ -6262,7 +6400,7 @@
     "raycast/tools/helicone.json": {
       "path": "/data/raycast%2Ftools%2Fhelicone.json",
       "type": "json",
-      "sha256": "c024e5e81e6f678242b2e2e6265bd979ba69c5ef9a946441c97565b98d77ac57"
+      "sha256": "bfdba55b3ebef3c9339c04656fcbb2d185a48dae759689be726fcf37a9f5bdd3"
     },
     "entries/skills/heyclaude-content-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-content-submission-factory.json",
@@ -6287,7 +6425,7 @@
     "entries/mcp/heyclaude-mcp.json": {
       "path": "/data/entries%2Fmcp%2Fheyclaude-mcp.json",
       "type": "json",
-      "sha256": "729e0709752e50e0b255a45db85cf657e97196667c0b46601ced529a0cb1d494"
+      "sha256": "bac9193a802b784fb2de30eca08db4c1a7dbabfc0c069f69e111e5e1db34b1fa"
     },
     "llms/mcp/heyclaude-mcp.txt": {
       "path": "/data/llms%2Fmcp%2Fheyclaude-mcp.txt",
@@ -6297,7 +6435,7 @@
     "raycast/mcp/heyclaude-mcp.json": {
       "path": "/data/raycast%2Fmcp%2Fheyclaude-mcp.json",
       "type": "json",
-      "sha256": "2f222264ac7d16b1769c93e3a5366ecbc73a45699a3a50d1e1b6060929a87b1d"
+      "sha256": "208c9a2017259d593514263c8a9682fb76a6afde95986e2b0f49af469475ce6e"
     },
     "entries/skills/heyclaude-skill-submission-factory.json": {
       "path": "/data/entries%2Fskills%2Fheyclaude-skill-submission-factory.json",
@@ -6597,7 +6735,7 @@
     "entries/mcp/kubernetes-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fkubernetes-mcp-server.json",
       "type": "json",
-      "sha256": "ffdfe6a6f054d0636e18612938be1c936ccc03ec78d5b89b0095384dc6ea7804"
+      "sha256": "c2247125ab8be9a9e23abdef8e6e4b53495111ebe73f32f409d7d11b74cb94a0"
     },
     "llms/mcp/kubernetes-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fkubernetes-mcp-server.txt",
@@ -6607,7 +6745,7 @@
     "raycast/mcp/kubernetes-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fkubernetes-mcp-server.json",
       "type": "json",
-      "sha256": "66f9746cd520ca433aea5e0c73c89f059b659b575a6654be7d821793a05941f7"
+      "sha256": "481ce355893c124d4ab652c81faf6f673bc6fbe98292bfb44a38b880ed25f413"
     },
     "entries/tools/lakera-guard.json": {
       "path": "/data/entries%2Ftools%2Flakera-guard.json",
@@ -6627,7 +6765,7 @@
     "entries/tools/langfuse.json": {
       "path": "/data/entries%2Ftools%2Flangfuse.json",
       "type": "json",
-      "sha256": "05b9e4859bc386b85da3f0a56509185504a2c0debcb77ab1baf417ab055804cc"
+      "sha256": "51a4c1867967d3dfad0d758daac5b27a3c7cfa74d1f8951e700721dbc6d2a88e"
     },
     "llms/tools/langfuse.txt": {
       "path": "/data/llms%2Ftools%2Flangfuse.txt",
@@ -6637,12 +6775,12 @@
     "raycast/tools/langfuse.json": {
       "path": "/data/raycast%2Ftools%2Flangfuse.json",
       "type": "json",
-      "sha256": "9616c0e34ff264910e45e1755ae0e997997e2d544c3994f0e10558ffba2e9fa1"
+      "sha256": "944b92507df606726de528c210316cdf4005ddb5f3082be8535d1cdba170a85d"
     },
     "entries/tools/langgraph.json": {
       "path": "/data/entries%2Ftools%2Flanggraph.json",
       "type": "json",
-      "sha256": "7fa3056f7b915d0c8bbaf4114a97f8d816fabd607121538b1261ccfaa79c4d6b"
+      "sha256": "2528dd52e4f9c9a2f333aa6791a2bb8d514548462e8fa2feb4f823fb60f919c6"
     },
     "llms/tools/langgraph.txt": {
       "path": "/data/llms%2Ftools%2Flanggraph.txt",
@@ -6652,7 +6790,7 @@
     "raycast/tools/langgraph.json": {
       "path": "/data/raycast%2Ftools%2Flanggraph.json",
       "type": "json",
-      "sha256": "593c80f43357ecfff6322e66c112f88f9a0ea6c7d9d0ebd2a1eb7dc8b4620f62"
+      "sha256": "3dca1aec82e95ca7e9e1096b991eeda93c472415c56f6afea19e0b6657be2dcb"
     },
     "entries/tools/langsmith.json": {
       "path": "/data/entries%2Ftools%2Flangsmith.json",
@@ -6717,7 +6855,7 @@
     "entries/skills/log-parsing-incident-timeline.json": {
       "path": "/data/entries%2Fskills%2Flog-parsing-incident-timeline.json",
       "type": "json",
-      "sha256": "7deacd58f5de9c85e019c0324d74b2a0437d059024689d9435a7795055d189ed"
+      "sha256": "be1e3084249e89202350f6f217cec977a072ef3fc6037543a1cd6f846a5e7abe"
     },
     "llms/skills/log-parsing-incident-timeline.txt": {
       "path": "/data/llms%2Fskills%2Flog-parsing-incident-timeline.txt",
@@ -6727,7 +6865,7 @@
     "raycast/skills/log-parsing-incident-timeline.json": {
       "path": "/data/raycast%2Fskills%2Flog-parsing-incident-timeline.json",
       "type": "json",
-      "sha256": "204b030b9df0db7a151b543ec19be52ce751551ae8b31e5a5f4661796c34b586"
+      "sha256": "bc3e29355a87d64bd7978e151b4a141d70e5683b4a87c73e888ded77d288940b"
     },
     "skill-adapters/cursor/log-parsing-incident-timeline.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Flog-parsing-incident-timeline.mdc",
@@ -6767,7 +6905,7 @@
     "entries/skills/markdown-knowledge-base-composer.json": {
       "path": "/data/entries%2Fskills%2Fmarkdown-knowledge-base-composer.json",
       "type": "json",
-      "sha256": "e5f7599dd05154c084985dcec1074d9071c78bb2ef5e0a6a14e12c056d85b788"
+      "sha256": "7565ef4a1b821e5c185c91589eec77b8aad3876ea94aae294b67c161c595f462"
     },
     "llms/skills/markdown-knowledge-base-composer.txt": {
       "path": "/data/llms%2Fskills%2Fmarkdown-knowledge-base-composer.txt",
@@ -6777,7 +6915,7 @@
     "raycast/skills/markdown-knowledge-base-composer.json": {
       "path": "/data/raycast%2Fskills%2Fmarkdown-knowledge-base-composer.json",
       "type": "json",
-      "sha256": "ebaacc7c3cc00350850cbef62ee758f89c5609bff1513f2d25292deaff852352"
+      "sha256": "a98435d0fd1743ba12ebb08be697751d1402d0e6405171be3cf6d92741f44859"
     },
     "skill-adapters/cursor/markdown-knowledge-base-composer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fmarkdown-knowledge-base-composer.mdc",
@@ -6802,7 +6940,7 @@
     "entries/tools/mastra.json": {
       "path": "/data/entries%2Ftools%2Fmastra.json",
       "type": "json",
-      "sha256": "af1309b5509e40abc68eeae4d45a37a65facabe02fe36b94bc77af119727eb42"
+      "sha256": "71f829093b9b53578f4a59c662621481212ca61cf9a97a0795d03abde070a600"
     },
     "llms/tools/mastra.txt": {
       "path": "/data/llms%2Ftools%2Fmastra.txt",
@@ -6812,7 +6950,22 @@
     "raycast/tools/mastra.json": {
       "path": "/data/raycast%2Ftools%2Fmastra.json",
       "type": "json",
-      "sha256": "b9e716d58d04dfa522513f825abb8312e4f9e648f7d45087f8120fadeb664452"
+      "sha256": "a95178257ae5387add11fbe0cb8edac8166f3b02be2649ff9cbf83e6b8b97c39"
+    },
+    "entries/tools/mcp-inspector.json": {
+      "path": "/data/entries%2Ftools%2Fmcp-inspector.json",
+      "type": "json",
+      "sha256": "063918fdb6e15e358b1ed1daa0e60b97d598d464a91721a8c479d53640687e7d"
+    },
+    "llms/tools/mcp-inspector.txt": {
+      "path": "/data/llms%2Ftools%2Fmcp-inspector.txt",
+      "type": "text",
+      "sha256": "588b9b70f14c56e1a13d394b2a73f81559f95b07add1505ced6cce359096259e"
+    },
+    "raycast/tools/mcp-inspector.json": {
+      "path": "/data/raycast%2Ftools%2Fmcp-inspector.json",
+      "type": "json",
+      "sha256": "ab2ebdb16158a07157425254d3c656a9aef24e7ecc13f15ba20479401aebaf1b"
     },
     "entries/skills/mcp-server-authoring-security-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fmcp-server-authoring-security-capability-pack.json",
@@ -6937,7 +7090,7 @@
     "entries/tools/microsoft-autogen.json": {
       "path": "/data/entries%2Ftools%2Fmicrosoft-autogen.json",
       "type": "json",
-      "sha256": "84988c70c72a8deb7241a98ad854558c9159c2b75030a827ba68fb2767a8517d"
+      "sha256": "59649a53c9d1fe39c42f02b603ae128dbd080eadbcfa4aba3f555078c3c80abe"
     },
     "llms/tools/microsoft-autogen.txt": {
       "path": "/data/llms%2Ftools%2Fmicrosoft-autogen.txt",
@@ -6947,12 +7100,12 @@
     "raycast/tools/microsoft-autogen.json": {
       "path": "/data/raycast%2Ftools%2Fmicrosoft-autogen.json",
       "type": "json",
-      "sha256": "5634f03439bcbe04d14a88bca7f3bf2dbc6854c30b9679c6c460f68e7ab9df2a"
+      "sha256": "3ca32f4cdb070dc18f37da46e7a60f011d7a8607335440b65f6f209fd7ea3c58"
     },
     "entries/statuslines/minimal-powerline.json": {
       "path": "/data/entries%2Fstatuslines%2Fminimal-powerline.json",
       "type": "json",
-      "sha256": "ad6059486d54b199297d9d9e872557f0bfae85b642b466705bcdbc10c0e62329"
+      "sha256": "af7b1c08a30917aee38abd3e411a25ce2d5354d03e4ecbde777e4cf394bcc11a"
     },
     "llms/statuslines/minimal-powerline.txt": {
       "path": "/data/llms%2Fstatuslines%2Fminimal-powerline.txt",
@@ -6962,7 +7115,7 @@
     "raycast/statuslines/minimal-powerline.json": {
       "path": "/data/raycast%2Fstatuslines%2Fminimal-powerline.json",
       "type": "json",
-      "sha256": "a6a76df435f76d3766da585ad76de39f73f8c02cc64c98ac0c9b5936ced799fa"
+      "sha256": "246650c8de40a36d5fd1313c414c0f4d624b2065856234c508e5b0d0e8e4e9e3"
     },
     "entries/skills/mintlify-documentation-automation.json": {
       "path": "/data/entries%2Fskills%2Fmintlify-documentation-automation.json",
@@ -7157,7 +7310,7 @@
     "entries/tools/n8n.json": {
       "path": "/data/entries%2Ftools%2Fn8n.json",
       "type": "json",
-      "sha256": "c5642f184106066ec13a0165e8a5e6e48f1e914486745efe25433b6c03b0477b"
+      "sha256": "e591132a5a843c6ae1d57801c38f25116bf36eb443ea9b138c69764859777354"
     },
     "llms/tools/n8n.txt": {
       "path": "/data/llms%2Ftools%2Fn8n.txt",
@@ -7167,7 +7320,7 @@
     "raycast/tools/n8n.json": {
       "path": "/data/raycast%2Ftools%2Fn8n.json",
       "type": "json",
-      "sha256": "3395e942237d50184bd7f43f99644f3c85448b324c93bcd87cbc06fdd1a86e19"
+      "sha256": "4eb19e5cf0acfbd5e7f0ee730e4d8f2e0a95db53f2407a1986f6a1b31ebde9de"
     },
     "entries/skills/n8n-ai-agent-workflow-architect.json": {
       "path": "/data/entries%2Fskills%2Fn8n-ai-agent-workflow-architect.json",
@@ -7307,7 +7460,7 @@
     "entries/skills/openclaw-agent-ops-hardening.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-agent-ops-hardening.json",
       "type": "json",
-      "sha256": "a53d721daa733940bc7be80f24cb662c11b1cd8108c384287fc32d9e36066741"
+      "sha256": "f740b252a0019e273f8c245ec24d90d4b891d1834906c78799556c7ccf64e224"
     },
     "llms/skills/openclaw-agent-ops-hardening.txt": {
       "path": "/data/llms%2Fskills%2Fopenclaw-agent-ops-hardening.txt",
@@ -7317,7 +7470,7 @@
     "raycast/skills/openclaw-agent-ops-hardening.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-agent-ops-hardening.json",
       "type": "json",
-      "sha256": "886d4c75af95fcbe3e343387aa3928643f786e019fcc9f35f669565f25d8202c"
+      "sha256": "8a7e32a434aa6a60611aa3382da5a9083963487afb6ff08e7285adc447aaf59e"
     },
     "skill-adapters/cursor/openclaw-agent-ops-hardening.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-agent-ops-hardening.mdc",
@@ -7327,7 +7480,7 @@
     "entries/skills/openclaw-operator-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-operator-capability-pack.json",
       "type": "json",
-      "sha256": "3290a9aa29c607da3ba570c3d82455e56ce962718993c5e470e53e64fa7e4bd1"
+      "sha256": "f2fad6845303f22df146e835daf16697bf5cf995c339bfe86da13f924f04ca2d"
     },
     "llms/skills/openclaw-operator-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fopenclaw-operator-capability-pack.txt",
@@ -7337,7 +7490,7 @@
     "raycast/skills/openclaw-operator-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-operator-capability-pack.json",
       "type": "json",
-      "sha256": "cd54be625bd43d164a48c4cf1c7b64e941704897b5f2561d1aa8e9a7f218128b"
+      "sha256": "72c0534db8b39d6d9047ee4323f71672ec2fb46c55ca7f7b29c0ed33898fa991"
     },
     "skill-adapters/cursor/openclaw-operator-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-operator-capability-pack.mdc",
@@ -7347,7 +7500,7 @@
     "entries/skills/openclaw-skill-authoring-factory-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.json",
       "type": "json",
-      "sha256": "5a44b6c646ae1a97daff8b3503c3a0a4a039959e54bf33e46d956fe895d9f400"
+      "sha256": "3a45caaea40f421ef855e2109988ba437e3c6671fd84ae352f2021ce67b332c4"
     },
     "llms/skills/openclaw-skill-authoring-factory-capability-pack.txt": {
       "path": "/data/llms%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.txt",
@@ -7357,7 +7510,7 @@
     "raycast/skills/openclaw-skill-authoring-factory-capability-pack.json": {
       "path": "/data/raycast%2Fskills%2Fopenclaw-skill-authoring-factory-capability-pack.json",
       "type": "json",
-      "sha256": "0a540a00633db961348e14e4f9d19eefc166f14d60ec7f93b2dfe205758371d8"
+      "sha256": "5af42557cde20308f5794ebd912f763d3e6e9e54ad7a1a3e8e361fb3ad343703"
     },
     "skill-adapters/cursor/openclaw-skill-authoring-factory-capability-pack.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fopenclaw-skill-authoring-factory-capability-pack.mdc",
@@ -7367,7 +7520,7 @@
     "entries/tools/opencode.json": {
       "path": "/data/entries%2Ftools%2Fopencode.json",
       "type": "json",
-      "sha256": "20ce1b1c7c09a3531239879097e996ad0fc2c59d6af3dd4bbe6df469b44a3cf6"
+      "sha256": "bac5aa3ac35653ef78deb82403bdaf65a9d1387611ab1b5149216e654ae08377"
     },
     "llms/tools/opencode.txt": {
       "path": "/data/llms%2Ftools%2Fopencode.txt",
@@ -7377,7 +7530,7 @@
     "raycast/tools/opencode.json": {
       "path": "/data/raycast%2Ftools%2Fopencode.json",
       "type": "json",
-      "sha256": "d78b648c53059a31035be6ff2f7909b2b29557625269302882b2572232aa3ec1"
+      "sha256": "6c5e66534be81b2af36853556391934732f37e6f7072c8353fcc570e555eb38a"
     },
     "entries/skills/opennext-cloudflare-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fopennext-cloudflare-capability-pack.json",
@@ -7417,7 +7570,7 @@
     "entries/mcp/packrift-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fpackrift-mcp-server.json",
       "type": "json",
-      "sha256": "2cc60246ae62fba109bc9f451430e073aad01f7b1b8497710bd8419f04c81c3d"
+      "sha256": "c1c9deab507a9be52254a124700e4eefa570d63dc86dbd6c70000a611e2b5cb1"
     },
     "llms/mcp/packrift-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fpackrift-mcp-server.txt",
@@ -7427,7 +7580,7 @@
     "raycast/mcp/packrift-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fpackrift-mcp-server.json",
       "type": "json",
-      "sha256": "c70b998f87c61294cd86be08bb93c953e1fdf74913777ce276420d2c56a19e11"
+      "sha256": "9e74782873c2c9b58cf40d01d17e87e3a56a8ea74d148c5e93dab6e2c145df98"
     },
     "entries/skills/pagespeed-insights-optimizer.json": {
       "path": "/data/entries%2Fskills%2Fpagespeed-insights-optimizer.json",
@@ -7817,7 +7970,7 @@
     "entries/mcp/prompt-to-asset.json": {
       "path": "/data/entries%2Fmcp%2Fprompt-to-asset.json",
       "type": "json",
-      "sha256": "5f4b48503572ea2b358ef4372e4c8261ec13076d54d3fb51a0401aca5be00c81"
+      "sha256": "be0a1f4f8ebea4761fef7d0d209c91eea19f8bc4e14adf730b134ee0ebb0668b"
     },
     "llms/mcp/prompt-to-asset.txt": {
       "path": "/data/llms%2Fmcp%2Fprompt-to-asset.txt",
@@ -7827,12 +7980,12 @@
     "raycast/mcp/prompt-to-asset.json": {
       "path": "/data/raycast%2Fmcp%2Fprompt-to-asset.json",
       "type": "json",
-      "sha256": "861709949e796488a9024a260cda76d9d9083ace64092f0c3107e3aab4227f16"
+      "sha256": "1fe672befe979e774e64248334ad7cd50a4df0c555a51d34789c11af3cdc02f5"
     },
     "entries/tools/promptfoo.json": {
       "path": "/data/entries%2Ftools%2Fpromptfoo.json",
       "type": "json",
-      "sha256": "bf0a454b12430f825b21235f451f464a946bf0826599849267ed5eb5adbddea2"
+      "sha256": "e12b45da7fa4c7756948212456c62cfb8e6bc6214b8a487bb8d9523ce5eec289"
     },
     "llms/tools/promptfoo.txt": {
       "path": "/data/llms%2Ftools%2Fpromptfoo.txt",
@@ -7842,7 +7995,7 @@
     "raycast/tools/promptfoo.json": {
       "path": "/data/raycast%2Ftools%2Fpromptfoo.json",
       "type": "json",
-      "sha256": "d81b5fe345769e812840b2bfe4a96afd0a0a58800685fb011ae2476d1da7157e"
+      "sha256": "aae73c3418cbbc0ecfcd82e8dd486054c9f1519b03038c7131000c940a924851"
     },
     "entries/tools/protect-ai.json": {
       "path": "/data/entries%2Ftools%2Fprotect-ai.json",
@@ -8117,7 +8270,7 @@
     "entries/mcp/reddit-mcp-buddy.json": {
       "path": "/data/entries%2Fmcp%2Freddit-mcp-buddy.json",
       "type": "json",
-      "sha256": "bbcec26456fcfa4dc86901aba6c0d479a4f9b1f865809b86ec4ee767c61353ea"
+      "sha256": "612e7b036c92d376641173a3b5d9e9a188570134af267395307b8eb042f1a462"
     },
     "llms/mcp/reddit-mcp-buddy.txt": {
       "path": "/data/llms%2Fmcp%2Freddit-mcp-buddy.txt",
@@ -8127,7 +8280,7 @@
     "raycast/mcp/reddit-mcp-buddy.json": {
       "path": "/data/raycast%2Fmcp%2Freddit-mcp-buddy.json",
       "type": "json",
-      "sha256": "7f7b4c496737f6caa4a17f17de1eef8fcab480252193ffb3afeb2df476c6f05b"
+      "sha256": "3bf27611499f5fa7dfc808522caddc8c11700bd4ec1c19869ab4939237233260"
     },
     "entries/hooks/redis-cache-invalidator.json": {
       "path": "/data/entries%2Fhooks%2Fredis-cache-invalidator.json",
@@ -8147,7 +8300,7 @@
     "entries/mcp/redis-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fredis-mcp-server.json",
       "type": "json",
-      "sha256": "9574bb9e401aa5a0240421f84ea96a6e2e99dc58405cdadcd34ac0b4ab3b4cc2"
+      "sha256": "4e922db6ad4fc97049f8136dd7659f738d479a4a1c115ed149ac685a72ccf742"
     },
     "llms/mcp/redis-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fredis-mcp-server.txt",
@@ -8157,7 +8310,7 @@
     "raycast/mcp/redis-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fredis-mcp-server.json",
       "type": "json",
-      "sha256": "591eb7ef3233ae68e202192bee62f1e40ced2e539b330987c632df36870b24fb"
+      "sha256": "8d9b98b5a6245ce6ccab2965ec85ba1b3af504b1edf50e793fa84e04da707af9"
     },
     "entries/tools/replit-agent.json": {
       "path": "/data/entries%2Ftools%2Freplit-agent.json",
@@ -8212,7 +8365,7 @@
     "entries/tools/roo-code.json": {
       "path": "/data/entries%2Ftools%2Froo-code.json",
       "type": "json",
-      "sha256": "9287e58fee5b37221d8c56548ba8e565e69cbdaae9c08dbef895bf6477fbf2a4"
+      "sha256": "4fd1d6a503961eea1a27b06e08bbb5b1d976fa463d67bbcab700cf4a5694ea35"
     },
     "llms/tools/roo-code.txt": {
       "path": "/data/llms%2Ftools%2Froo-code.txt",
@@ -8222,7 +8375,7 @@
     "raycast/tools/roo-code.json": {
       "path": "/data/raycast%2Ftools%2Froo-code.json",
       "type": "json",
-      "sha256": "6d3be16c563e8a1d197fc2455b302e4bd66bd09649ae082b8e1a6f6202d3d7ea"
+      "sha256": "a4d1307a32b57f6e17ae47b36c0181219a58b10682d6b005b70cf120e1da0e1e"
     },
     "entries/hooks/rust-cargo-check.json": {
       "path": "/data/entries%2Fhooks%2Frust-cargo-check.json",
@@ -8502,7 +8655,7 @@
     "entries/mcp/socket-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fsocket-mcp-server.json",
       "type": "json",
-      "sha256": "4f3f685aea565f5f44e0db5f6ea1ce59e9ff865f490cd9ce0bb0e1df93918788"
+      "sha256": "9f0b11b77b7d9e0f8b1dc66fc5afb96cb655173e770244261ad816cb01b538d1"
     },
     "llms/mcp/socket-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fsocket-mcp-server.txt",
@@ -8512,7 +8665,7 @@
     "raycast/mcp/socket-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fsocket-mcp-server.json",
       "type": "json",
-      "sha256": "48b5a25d6fa59fd1df4c8e747854d54628209ad858e4504347114bd19ba5d817"
+      "sha256": "52e57bf54dfe1b9da108fec1990c5afe84491a0411623735d3d6251c4798baaf"
     },
     "entries/tools/sourcegraph-cody.json": {
       "path": "/data/entries%2Ftools%2Fsourcegraph-cody.json",
@@ -8562,7 +8715,7 @@
     "entries/tools/stagehand.json": {
       "path": "/data/entries%2Ftools%2Fstagehand.json",
       "type": "json",
-      "sha256": "df60c36e4dc3aa71a141a3a0209418688a254ca5c70eb01fb2fc33f975c7c6b7"
+      "sha256": "2af7a53035b553a5c92d446228cff32cf0a4554ca7f1af1667a740aae7c57a25"
     },
     "llms/tools/stagehand.txt": {
       "path": "/data/llms%2Ftools%2Fstagehand.txt",
@@ -8572,7 +8725,7 @@
     "raycast/tools/stagehand.json": {
       "path": "/data/raycast%2Ftools%2Fstagehand.json",
       "type": "json",
-      "sha256": "504f918c3eb531d0cf183d32197527ac6abaebbdce0bf8c2a43102cac60531ed"
+      "sha256": "08e91c7fea78d61ffba817324687472691ac96e3a2c4586706ce8dab0f67ac17"
     },
     "entries/statuslines/starship-powerline-theme.json": {
       "path": "/data/entries%2Fstatuslines%2Fstarship-powerline-theme.json",
@@ -8857,7 +9010,7 @@
     "entries/tools/trigger-dev.json": {
       "path": "/data/entries%2Ftools%2Ftrigger-dev.json",
       "type": "json",
-      "sha256": "76cfd4107c04914ba8164594d37f6c3a2ea6e84c1d5b2d57562935645ad9e851"
+      "sha256": "c3f018b07490b5bb5b4c915f5f162812353c70db702f932c38e02a937a44dc3d"
     },
     "llms/tools/trigger-dev.txt": {
       "path": "/data/llms%2Ftools%2Ftrigger-dev.txt",
@@ -8867,7 +9020,7 @@
     "raycast/tools/trigger-dev.json": {
       "path": "/data/raycast%2Ftools%2Ftrigger-dev.json",
       "type": "json",
-      "sha256": "a0eef036096d9682e006d4b1a74617ffd15d39fdf7ddb80ac61bb25fe25de82f"
+      "sha256": "444201e1368079557f31e1d630b7bef206e924be5f84e4c34f3dfc4443bc8554"
     },
     "entries/skills/trpc-type-safe-api.json": {
       "path": "/data/entries%2Fskills%2Ftrpc-type-safe-api.json",
@@ -9047,7 +9200,7 @@
     "entries/tools/vercel-ai-sdk.json": {
       "path": "/data/entries%2Ftools%2Fvercel-ai-sdk.json",
       "type": "json",
-      "sha256": "4d75e62b184c819c93ffdbbf543b7c835aed0360c6a8aa19b72eb561559eb796"
+      "sha256": "003fec9e89907a67876f4849ef84a3bc2826674eef10ea6860fda4ac2f7d6e21"
     },
     "llms/tools/vercel-ai-sdk.txt": {
       "path": "/data/llms%2Ftools%2Fvercel-ai-sdk.txt",
@@ -9057,7 +9210,7 @@
     "raycast/tools/vercel-ai-sdk.json": {
       "path": "/data/raycast%2Ftools%2Fvercel-ai-sdk.json",
       "type": "json",
-      "sha256": "e77b4407c75ea0ebfbf23587b289d6858633404aee60fc321957ad6b7e0a16a5"
+      "sha256": "e9c0d7d8a752284b784f9e410e66b50860ad452ecd043963186d829e297772a7"
     },
     "entries/mcp/vercel-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fvercel-mcp-server.json",
@@ -9192,7 +9345,7 @@
     "entries/skills/website-crawler-summarizer.json": {
       "path": "/data/entries%2Fskills%2Fwebsite-crawler-summarizer.json",
       "type": "json",
-      "sha256": "cf7ec75cdba8fb847b834c3effa3605eada200d40e4d7a1cd5ea94ae0770031e"
+      "sha256": "b0cbc5fc6d55e38be7c71652e47fbe42d1c2c72464455e6360ea959bbf369446"
     },
     "llms/skills/website-crawler-summarizer.txt": {
       "path": "/data/llms%2Fskills%2Fwebsite-crawler-summarizer.txt",
@@ -9202,7 +9355,7 @@
     "raycast/skills/website-crawler-summarizer.json": {
       "path": "/data/raycast%2Fskills%2Fwebsite-crawler-summarizer.json",
       "type": "json",
-      "sha256": "a5fc65f8495abb2380bf7980d937de56ea22f1badcf52046f6258aaa25fe1c94"
+      "sha256": "848d59407242abb9566980fc91e95342d2ba1d66936e1f736a5b3ec6d7b6f8b1"
     },
     "skill-adapters/cursor/website-crawler-summarizer.mdc": {
       "path": "/data/skill-adapters%2Fcursor%2Fwebsite-crawler-summarizer.mdc",
@@ -9322,7 +9475,7 @@
     "entries/mcp/xquik-mcp-server.json": {
       "path": "/data/entries%2Fmcp%2Fxquik-mcp-server.json",
       "type": "json",
-      "sha256": "b30cb78ce694f92e1a745e2b55143705d451cb884d16eb370660a4743b665dbe"
+      "sha256": "5587d3a80421c5698ad36671c7937eb7299b6f79bed46fdecfa85d5b9a21adcf"
     },
     "llms/mcp/xquik-mcp-server.txt": {
       "path": "/data/llms%2Fmcp%2Fxquik-mcp-server.txt",
@@ -9332,7 +9485,7 @@
     "raycast/mcp/xquik-mcp-server.json": {
       "path": "/data/raycast%2Fmcp%2Fxquik-mcp-server.json",
       "type": "json",
-      "sha256": "d58added2cdcc80ecc48afac48d61cd74aa1667387071bbede904fa7159c4029"
+      "sha256": "7051ba12adfc155b1cdec19b33458451704727532a2fa996a02f8eaabc0b37e1"
     },
     "entries/mcp/yield-intelligence-mcp.json": {
       "path": "/data/entries%2Fmcp%2Fyield-intelligence-mcp.json",
@@ -9382,7 +9535,7 @@
     "entries/tools/zed.json": {
       "path": "/data/entries%2Ftools%2Fzed.json",
       "type": "json",
-      "sha256": "2ac88bfdc1aca6211f851a34508f8c9290f34c6995f515e762ae94ca2b4b31d4"
+      "sha256": "17313e48476d079f0cd928c36fb11f3b02da367c5614ddaf31362a601a0eb585"
     },
     "llms/tools/zed.txt": {
       "path": "/data/llms%2Ftools%2Fzed.txt",
@@ -9392,7 +9545,7 @@
     "raycast/tools/zed.json": {
       "path": "/data/raycast%2Ftools%2Fzed.json",
       "type": "json",
-      "sha256": "57e7e9c2ec7d34695ed3707513850ac11cf243b8b9bc74ffbca94ad3d407eb5b"
+      "sha256": "15a90387739e31545e1a9c9b846f517c740c46e3a8b03ba682481b69c664adf6"
     },
     "entries/skills/zero-budget-saas-launch-capability-pack.json": {
       "path": "/data/entries%2Fskills%2Fzero-budget-saas-launch-capability-pack.json",
@@ -9457,22 +9610,22 @@
     "feeds/categories/mcp.json": {
       "path": "/data/feeds%2Fcategories%2Fmcp.json",
       "type": "json",
-      "sha256": "ddc255aa8d03d5ed8a1a037e5f1d2d68e74151566fb3d7e3da3aa1dc720c1cd7"
+      "sha256": "3fdd267aa0aa97fceab9bdaa455c8f94ff7276c63c04259964e596a45c981e9b"
     },
     "feeds/categories/tools.json": {
       "path": "/data/feeds%2Fcategories%2Ftools.json",
       "type": "json",
-      "sha256": "bd31981d9915ac0da8fc26aa33358975cbd959116e4a84789833d6d8d5a58dcf"
+      "sha256": "540fc9209e698d3c394eeac2fb15178e85f27996dd9298a9a36912a73ea83136"
     },
     "feeds/categories/skills.json": {
       "path": "/data/feeds%2Fcategories%2Fskills.json",
       "type": "json",
-      "sha256": "ce8b4b5b84c6c8ad658c30e0f90878e7030cdd802c4ef610ec806f95c4d2f70d"
+      "sha256": "c4a33fdcc010c573f2d17868ddc4e838a80a6574923300b62a85cd9a1b0f2929"
     },
     "feeds/categories/rules.json": {
       "path": "/data/feeds%2Fcategories%2Frules.json",
       "type": "json",
-      "sha256": "0241ed30bb07a078b1a2a83566a6c09e52d263c44e0b8fcaab49810a2affe6cd"
+      "sha256": "577aedfc66200aa0298c0498f55856823be8b29db350587b0e87102a4d4102ff"
     },
     "feeds/categories/commands.json": {
       "path": "/data/feeds%2Fcategories%2Fcommands.json",
@@ -9482,7 +9635,7 @@
     "feeds/categories/hooks.json": {
       "path": "/data/feeds%2Fcategories%2Fhooks.json",
       "type": "json",
-      "sha256": "600c9a039b216f04a063b209065c95d7d77f1c483723cc4a630880ebc149c8aa"
+      "sha256": "6cd06e65a89577453b4e57525f9990eef6ace313888c03f1cd363bb16871a7fd"
     },
     "feeds/categories/guides.json": {
       "path": "/data/feeds%2Fcategories%2Fguides.json",
@@ -9497,37 +9650,37 @@
     "feeds/categories/statuslines.json": {
       "path": "/data/feeds%2Fcategories%2Fstatuslines.json",
       "type": "json",
-      "sha256": "6210f555377b362776535b4b7c594cbe007d268b98e1a59a488930f4c6da8a15"
+      "sha256": "8b794e6389b09ccf3dff650c24503aebd26d2c20345c98fee2b874bbe95d424e"
     },
     "feeds/platforms/claude.json": {
       "path": "/data/feeds%2Fplatforms%2Fclaude.json",
       "type": "json",
-      "sha256": "4b0119004b066fea091d3ebf5b12c73609658a2e54583297eb05212ac0726459"
+      "sha256": "513ab44713143ab8f159adac2271b8cc53e6e184e3a6e8f68768ee1f9efe7bae"
     },
     "feeds/platforms/codex.json": {
       "path": "/data/feeds%2Fplatforms%2Fcodex.json",
       "type": "json",
-      "sha256": "872856e158701a3532cae44c5676e074535e933c9c7d88b7e2cd7278f7ddc397"
+      "sha256": "18d9eab10b10f107c1ecfbe7c04fa82bc1859cda98f90340c670b3d76cee5094"
     },
     "feeds/platforms/windsurf.json": {
       "path": "/data/feeds%2Fplatforms%2Fwindsurf.json",
       "type": "json",
-      "sha256": "5ce7c5ff25a863b3639c4a17738fffcde19c72fc7a561646f56b8ae9d024518d"
+      "sha256": "523048b56534d01278c2444d59ee213f220055b5c5cc90e614488b349f7a1863"
     },
     "feeds/platforms/gemini.json": {
       "path": "/data/feeds%2Fplatforms%2Fgemini.json",
       "type": "json",
-      "sha256": "0640bb39c1772eafcddab8ae0f717d6d3d461a71019cb59af977f8985fbba5a9"
+      "sha256": "eda28f303dbe28d6f0e65dab081c03b452c13eab2810298b26403c444584a85e"
     },
     "feeds/platforms/cursor.json": {
       "path": "/data/feeds%2Fplatforms%2Fcursor.json",
       "type": "json",
-      "sha256": "d287da55c3a4fe488413160fcca06d6ab36a6355ffc83c41f1ae5aef882052d4"
+      "sha256": "5a1a9c35c2621c5eff8572b16844e2d419219959b9cc59ca7efc1612c48be648"
     },
     "feeds/platforms/generic-agents.json": {
       "path": "/data/feeds%2Fplatforms%2Fgeneric-agents.json",
       "type": "json",
-      "sha256": "c1acba4e9e992cd8b7bb51430317aac650cbfdc1fc42a4f9a3a24ef45a5bf687"
+      "sha256": "766615de5400072a780a2edc5c8bcc3bf27d0b402b9f58f78edabf19d52f414c"
     }
   }
 }

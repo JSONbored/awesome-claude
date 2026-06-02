@@ -2,7 +2,7 @@
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
   "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 251,
+  "count": 254,
   "plugins": [
     {
       "name": "cursor-rules",
@@ -729,6 +729,150 @@
       "installCommand": "/checkpoint-manager [action] [options]",
       "platformCompatibility": [],
       "heyclaudeUrl": "https://heyclau.de/entry/commands/checkpoint-manager"
+    },
+    {
+      "name": "claude-code-mcp-production-readiness-capability-pack",
+      "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "description": "Production readiness workflow for Claude Code MCP servers, scopes, permissions, OAuth, resources, and operational validation.",
+      "category": "skills",
+      "sourceUrl": "https://code.claude.com/docs/en/mcp",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack",
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-mcp-production-readiness-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack"
+    },
+    {
+      "name": "claude-code-repo-migration-debugging-capability-pack",
+      "title": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "description": "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes.",
+      "category": "skills",
+      "sourceUrl": "https://code.claude.com/docs/en/common-workflows",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip -o claude-code-repo-migration-debugging-capability-pack.zip && unzip -o claude-code-repo-migration-debugging-capability-pack.zip -d ./claude-code-repo-migration-debugging-capability-pack",
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-repo-migration-debugging-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack"
+    },
+    {
+      "name": "claude-code-source-fact-verification-capability-pack",
+      "title": "Claude Code Source Fact Verification Capability Pack Skill",
+      "description": "A Claude Code verification workflow that forces claims through primary sources, repo evidence, changelogs, and explicit uncertainty tracking.",
+      "category": "skills",
+      "sourceUrl": "https://code.claude.com/docs/en/best-practices",
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack",
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-source-fact-verification-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "heyclaudeUrl": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack"
     },
     {
       "name": "desktop-mcp-setup",

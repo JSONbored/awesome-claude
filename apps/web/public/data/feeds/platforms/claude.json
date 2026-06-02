@@ -4,7 +4,7 @@
   "platform": "Claude",
   "platformSlug": "claude",
   "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 68,
+  "count": 71,
   "entries": [
     {
       "category": "skills",
@@ -749,18 +749,15 @@
       "filePath": "content/skills/audio-transcription-summarization.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/audio-transcription-summarization.mdx",
       "repoUrl": "https://github.com/openai/whisper",
-      "githubStars": 99754,
-      "githubForks": 12214,
-      "repoUpdatedAt": "2026-05-19T11:32:31Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/audio-transcription-summarization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/audio-transcription-summarization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/audio-transcription-summarization",
       "repoStats": {
         "repository": "openai/whisper",
         "url": "https://github.com/openai/whisper",
-        "stars": 99754,
-        "forks": 12214,
-        "updatedAt": "2026-05-19T11:32:31Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1245,6 +1242,507 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2025-10-23",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-mcp-production-readiness-capability-pack",
+      "title": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for taking MCP integrations from local proof-of-concept to production-ready, permissioned, observable workflows.",
+      "seoTitle": "Claude Code MCP Production Readiness Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for production MCP readiness with scoped server configuration, permission review, OAuth checks, and operational validation.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": [
+        "claude-code",
+        "mcp",
+        "production-readiness",
+        "security",
+        "capability-pack"
+      ],
+      "keywords": [
+        "claude code mcp production",
+        "mcp server readiness",
+        "claude code permissions",
+        "mcp oauth validation",
+        "claude-code",
+        "mcp",
+        "production-readiness",
+        "security",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "readingTime": 9,
+      "difficultyScore": 91,
+      "documentationUrl": "https://code.claude.com/docs/en/mcp",
+      "cardDescription": "Production readiness workflow for Claude Code MCP servers, scopes, permissions, OAuth, resources, and operational validation.",
+      "installable": true,
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip -o claude-code-mcp-production-readiness-capability-pack.zip && unzip -o claude-code-mcp-production-readiness-capability-pack.zip -d ./claude-code-mcp-production-readiness-capability-pack",
+      "usageSnippet": "Use this skill before shipping Claude Code MCP servers or shared .mcp.json configuration to a team, CI workflow, or production operator environment.",
+      "copySnippet": "# Trigger\n\"Apply the Claude Code MCP production readiness capability pack to this MCP setup.\"\n\n# Required output\n1) MCP server inventory with scope, transport, and trust boundary\n2) Permission/OAuth review with least-privilege recommendations\n3) Resource, prompt, and tool contract validation checklist\n4) Production rollout, rollback, and monitoring plan",
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/mcp",
+        "https://code.claude.com/docs/en/settings",
+        "https://modelcontextprotocol.io/specification/2025-06-18"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI on macOS/Linux/WSL with project and user MCP scopes",
+        "Claude Code VS Code extension with project workspace trust",
+        "Claude Code SDK with .mcp.json configuration"
+      ],
+      "prerequisites": [
+        "Claude Code installed and authenticated",
+        "MCP server source or vendor documentation",
+        "Intended server scope, transport, secrets, and consumer list",
+        "Test workspace with representative resources and tool calls"
+      ],
+      "safetyNotes": [
+        "MCP servers can execute tools, read resources, and expose prompts; approve only trusted servers and review each tool boundary before use.",
+        "Project-scoped .mcp.json changes affect collaborators after trust approval, so document server purpose, transport, and rollback steps.",
+        "Remote MCP servers and OAuth flows can change account data depending on granted scopes; test with least-privilege credentials first."
+      ],
+      "privacyNotes": [
+        "MCP resources may expose local files, database metadata, ticket content, or third-party service data to Claude Code during retrieval.",
+        "OAuth tokens and API keys must stay out of committed .mcp.json files, logs, screenshots, and shared transcripts.",
+        "Server logs may retain prompts, tool inputs, resource identifiers, and error payloads; define retention and redaction before rollout."
+      ],
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false,
+      "robotsIndex": true,
+      "robotsFollow": true,
+      "packageVerified": true,
+      "downloadUrl": "/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip",
+      "skillPackage": {
+        "format": "agent-skill",
+        "entrypoint": "SKILL.md",
+        "downloadUrl": "/downloads/skills/claude-code-mcp-production-readiness-capability-pack.zip",
+        "sha256": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02"
+      },
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-mcp-production-readiness-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "downloadTrust": "first-party",
+      "downloadSha256": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02",
+      "filePath": "content/skills/claude-code-mcp-production-readiness-capability-pack.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx",
+      "repoUrl": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-mcp-production-readiness-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-mcp-production-readiness-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-mcp-production-readiness-capability-pack",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "60d367742234344f0b5913a6bb36bf63fc9f068064c619882a00bdb912a6bc02",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/mcp",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-mcp-production-readiness-capability-pack.mdx",
+          "https://code.claude.com/docs/en/settings",
+          "https://modelcontextprotocol.io/specification/2025-06-18"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-repo-migration-debugging-capability-pack",
+      "title": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation.",
+      "seoTitle": "Claude Code Repo Migration Debugging Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for repository migrations, dependency upgrades, build failure debugging, validation plans, and rollback-safe fixes.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": [
+        "claude-code",
+        "migration",
+        "debugging",
+        "dependency-upgrades",
+        "capability-pack"
+      ],
+      "keywords": [
+        "claude code repo migration",
+        "dependency upgrade debugging",
+        "build failure diagnosis",
+        "migration validation workflow",
+        "claude-code",
+        "migration",
+        "debugging",
+        "dependency-upgrades",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "readingTime": 9,
+      "difficultyScore": 90,
+      "documentationUrl": "https://code.claude.com/docs/en/common-workflows",
+      "cardDescription": "A repo migration and debugging workflow for Claude Code that isolates failures, maps dependencies, applies minimal fixes, and verifies rollback-safe changes.",
+      "installable": true,
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip -o claude-code-repo-migration-debugging-capability-pack.zip && unzip -o claude-code-repo-migration-debugging-capability-pack.zip -d ./claude-code-repo-migration-debugging-capability-pack",
+      "usageSnippet": "Use this skill when Claude Code must migrate a repo, upgrade dependencies, debug failing tests/builds, or recover from a partially applied refactor.",
+      "copySnippet": "# Trigger\n\"Apply the Claude Code repo migration debugging capability pack to this failure.\"\n\n# Required output\n1) Failure reproduction and scope map\n2) Dependency/config/change-impact graph\n3) Minimal fix plan with rollback points\n4) Targeted validation ladder and final risk report",
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/common-workflows",
+        "https://code.claude.com/docs/en/troubleshooting",
+        "https://code.claude.com/docs/en/skills"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI on git repositories with package-manager builds and tests",
+        "Claude Code VS Code extension with workspace diagnostics",
+        "Claude Code Web on GitHub issues and repository tasks"
+      ],
+      "prerequisites": [
+        "Clean git status or explicit permission to work on existing changes",
+        "Reproduction command, failing CI log, stack trace, or migration target",
+        "Package manager and runtime versions for the project",
+        "Permission to run targeted tests, builds, and read-only discovery commands"
+      ],
+      "safetyNotes": [
+        "Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code.",
+        "Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them.",
+        "Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors."
+      ],
+      "privacyNotes": [
+        "Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials.",
+        "Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports.",
+        "External package registries and documentation lookups may reveal package names and version constraints."
+      ],
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": true,
+      "robotsIndex": true,
+      "robotsFollow": true,
+      "packageVerified": true,
+      "downloadUrl": "/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip",
+      "skillPackage": {
+        "format": "agent-skill",
+        "entrypoint": "SKILL.md",
+        "downloadUrl": "/downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip",
+        "sha256": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b"
+      },
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-repo-migration-debugging-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "downloadTrust": "first-party",
+      "downloadSha256": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b",
+      "filePath": "content/skills/claude-code-repo-migration-debugging-capability-pack.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx",
+      "repoUrl": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-repo-migration-debugging-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-repo-migration-debugging-capability-pack",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/common-workflows",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx",
+          "https://code.claude.com/docs/en/troubleshooting",
+          "https://code.claude.com/docs/en/skills"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
+        "adapterGenerated": true,
+        "platforms": [
+          "Claude",
+          "Codex",
+          "Windsurf",
+          "Gemini",
+          "Cursor",
+          "Generic AGENTS"
+        ],
+        "supportLevels": [
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "native-skill",
+          "adapter",
+          "manual-context"
+        ]
+      }
+    },
+    {
+      "category": "skills",
+      "slug": "claude-code-source-fact-verification-capability-pack",
+      "title": "Claude Code Source Fact Verification Capability Pack Skill",
+      "description": "Expert Claude Code skill capability pack for source-grounded fact verification before agents edit code, documentation, prompts, or operational instructions.",
+      "seoTitle": "Claude Code Source Fact Verification Capability Pack Skill",
+      "seoDescription": "Expert Claude Code skill pack for source-fact verification using official docs, repository evidence, changelogs, and auditable claim tables.",
+      "author": "JSONbored",
+      "authorProfileUrl": "https://github.com/JSONbored",
+      "dateAdded": "2026-06-02",
+      "contentUpdatedAt": "2026-06-02",
+      "tags": [
+        "claude-code",
+        "source-verification",
+        "documentation",
+        "research-workflow",
+        "capability-pack"
+      ],
+      "keywords": [
+        "claude code fact checking",
+        "source grounded coding",
+        "agent verification workflow",
+        "primary source evidence",
+        "claude-code",
+        "source-verification",
+        "documentation",
+        "research-workflow",
+        "capability-pack",
+        "skills",
+        "claude",
+        "heyclaude"
+      ],
+      "readingTime": 8,
+      "difficultyScore": 88,
+      "documentationUrl": "https://code.claude.com/docs/en/best-practices",
+      "cardDescription": "A Claude Code verification workflow that forces claims through primary sources, repo evidence, changelogs, and explicit uncertainty tracking.",
+      "installable": true,
+      "installCommand": "curl -L https://heyclau.de/downloads/skills/claude-code-source-fact-verification-capability-pack.zip -o claude-code-source-fact-verification-capability-pack.zip && unzip -o claude-code-source-fact-verification-capability-pack.zip -d ./claude-code-source-fact-verification-capability-pack",
+      "usageSnippet": "Use this skill when a Claude Code task depends on current APIs, product behavior, security rules, migration guides, changelogs, or claims that must be traceable.",
+      "copySnippet": "# Trigger\n\"Apply the Claude Code source fact verification capability pack before making changes.\"\n\n# Required output\n1) Claim inventory with source priority\n2) Primary-source evidence table\n3) Repo evidence and contradiction checks\n4) Final confidence, caveats, and change constraints",
+      "skillType": "capability-pack",
+      "skillLevel": "expert",
+      "verificationStatus": "validated",
+      "verifiedAt": "2026-06-02",
+      "retrievalSources": [
+        "https://code.claude.com/docs/en/best-practices",
+        "https://code.claude.com/docs/en/common-workflows",
+        "https://code.claude.com/docs/en/skills"
+      ],
+      "testedPlatforms": [
+        "Claude Code CLI with web/source retrieval plus local repository inspection",
+        "Claude Code Web on GitHub-backed repositories",
+        "Claude Code IDE extension with selected workspace context"
+      ],
+      "prerequisites": [
+        "Concrete claims, requirements, or change request to verify",
+        "Access to repository files, issue context, or design docs",
+        "Network access for official docs or maintained source references when facts may have changed",
+        "Permission to inspect relevant logs, package manifests, lockfiles, and generated artifacts"
+      ],
+      "safetyNotes": [
+        "Verification may run read-only shell commands such as git, package-manager metadata, test discovery, or file searches; confirm before running expensive or networked checks.",
+        "Do not convert unverified assumptions into code changes, migrations, security claims, or README statements.",
+        "If sources conflict, stop and report the contradiction instead of forcing a synthesized answer."
+      ],
+      "privacyNotes": [
+        "Repository source, issues, logs, package manifests, and documentation snippets may be used as evidence in the agent context.",
+        "Avoid pasting secrets, customer data, private incident details, or proprietary logs into external search or third-party documentation tools.",
+        "Record source URLs and local file paths, but redact tokens, credentials, and sensitive identifiers from final reports."
+      ],
+      "hasPrerequisites": true,
+      "hasTroubleshooting": true,
+      "hasBreakingChanges": false,
+      "robotsIndex": true,
+      "robotsFollow": true,
+      "packageVerified": true,
+      "downloadUrl": "/downloads/skills/claude-code-source-fact-verification-capability-pack.zip",
+      "skillPackage": {
+        "format": "agent-skill",
+        "entrypoint": "SKILL.md",
+        "downloadUrl": "/downloads/skills/claude-code-source-fact-verification-capability-pack.zip",
+        "sha256": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e"
+      },
+      "platformCompatibility": [
+        {
+          "platform": "Claude",
+          "supportLevel": "native-skill",
+          "installPath": ".claude/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Codex",
+          "supportLevel": "native-skill",
+          "installPath": ".agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Windsurf",
+          "supportLevel": "native-skill",
+          "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Gemini",
+          "supportLevel": "native-skill",
+          "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Cursor",
+          "supportLevel": "adapter",
+          "installPath": ".cursor/rules/<skill-name>.mdc",
+          "adapterPath": "/data/skill-adapters/cursor/claude-code-source-fact-verification-capability-pack.mdc",
+          "verifiedAt": "2026-06-02"
+        },
+        {
+          "platform": "Generic AGENTS",
+          "supportLevel": "manual-context",
+          "installPath": "AGENTS.md or tool-specific context file",
+          "verifiedAt": "2026-06-02"
+        }
+      ],
+      "downloadTrust": "first-party",
+      "downloadSha256": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e",
+      "filePath": "content/skills/claude-code-source-fact-verification-capability-pack.mdx",
+      "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx",
+      "repoUrl": null,
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
+      "canonicalUrl": "https://heyclau.de/entry/skills/claude-code-source-fact-verification-capability-pack",
+      "llmsUrl": "https://heyclau.de/data/llms/skills/claude-code-source-fact-verification-capability-pack.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/skills/claude-code-source-fact-verification-capability-pack",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": true,
+        "packageTrust": "first-party",
+        "packageChecksum": "19d2a84e087cb54bad7c1fbc102108df985a78d5b21fdff0a2fd79c8ac87170e",
+        "checksumPresent": true,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/best-practices",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-source-fact-verification-capability-pack.mdx",
+          "https://code.claude.com/docs/en/common-workflows",
+          "https://code.claude.com/docs/en/skills"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -2029,18 +2527,15 @@
       "filePath": "content/skills/codex-automations-orchestrator-capability-pack.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-automations-orchestrator-capability-pack.mdx",
       "repoUrl": "https://github.com/openai/codex",
-      "githubStars": 83749,
-      "githubForks": 12151,
-      "repoUpdatedAt": "2026-05-19T11:39:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-automations-orchestrator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-automations-orchestrator-capability-pack",
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2197,18 +2692,15 @@
       "filePath": "content/skills/codex-plugin-creator-capability-pack.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/codex-plugin-creator-capability-pack.mdx",
       "repoUrl": "https://github.com/openai/codex",
-      "githubStars": 83749,
-      "githubForks": 12151,
-      "repoUpdatedAt": "2026-05-19T11:39:05Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-plugin-creator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-plugin-creator-capability-pack",
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5093,18 +5585,15 @@
       "filePath": "content/skills/log-parsing-incident-timeline.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/log-parsing-incident-timeline.mdx",
       "repoUrl": "https://github.com/BurntSushi/ripgrep",
-      "githubStars": 63927,
-      "githubForks": 2568,
-      "repoUpdatedAt": "2026-05-19T11:22:40Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/log-parsing-incident-timeline",
       "llmsUrl": "https://heyclau.de/data/llms/skills/log-parsing-incident-timeline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/log-parsing-incident-timeline",
       "repoStats": {
         "repository": "BurntSushi/ripgrep",
         "url": "https://github.com/BurntSushi/ripgrep",
-        "stars": 63927,
-        "forks": 2568,
-        "updatedAt": "2026-05-19T11:22:40Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5259,18 +5748,15 @@
       "filePath": "content/skills/markdown-knowledge-base-composer.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/markdown-knowledge-base-composer.mdx",
       "repoUrl": "https://github.com/remarkjs/remark",
-      "githubStars": 8880,
-      "githubForks": 374,
-      "repoUpdatedAt": "2026-05-18T12:37:10Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/markdown-knowledge-base-composer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/markdown-knowledge-base-composer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/markdown-knowledge-base-composer",
       "repoStats": {
         "repository": "remarkjs/remark",
         "url": "https://github.com/remarkjs/remark",
-        "stars": 8880,
-        "forks": 374,
-        "updatedAt": "2026-05-18T12:37:10Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6693,18 +7179,15 @@
       "filePath": "content/skills/openclaw-agent-ops-hardening.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-agent-ops-hardening.mdx",
       "repoUrl": "https://github.com/openclaw/openclaw",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-agent-ops-hardening",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-agent-ops-hardening.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-agent-ops-hardening",
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6859,18 +7342,15 @@
       "filePath": "content/skills/openclaw-operator-capability-pack.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-operator-capability-pack.mdx",
       "repoUrl": "https://github.com/openclaw/openclaw",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-operator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-operator-capability-pack",
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7027,18 +7507,15 @@
       "filePath": "content/skills/openclaw-skill-authoring-factory-capability-pack.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/openclaw-skill-authoring-factory-capability-pack.mdx",
       "repoUrl": "https://github.com/openclaw/openclaw",
-      "githubStars": 373140,
-      "githubForks": 77409,
-      "repoUpdatedAt": "2026-05-19T11:43:27Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-skill-authoring-factory-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-skill-authoring-factory-capability-pack",
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10363,18 +10840,15 @@
       "filePath": "content/skills/website-crawler-summarizer.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/website-crawler-summarizer.mdx",
       "repoUrl": "https://github.com/mozilla/readability",
-      "githubStars": 11200,
-      "githubForks": 712,
-      "repoUpdatedAt": "2026-05-19T04:59:43Z",
+      "githubStars": null,
+      "githubForks": null,
+      "repoUpdatedAt": null,
       "canonicalUrl": "https://heyclau.de/entry/skills/website-crawler-summarizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/website-crawler-summarizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/website-crawler-summarizer",
       "repoStats": {
         "repository": "mozilla/readability",
         "url": "https://github.com/mozilla/readability",
-        "stars": 11200,
-        "forks": 712,
-        "updatedAt": "2026-05-19T04:59:43Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },

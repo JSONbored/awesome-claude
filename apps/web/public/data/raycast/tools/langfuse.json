@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "langfuse/langfuse",
     "url": "https://github.com/langfuse/langfuse",
-    "stars": 27479,
-    "forks": 2805,
-    "updatedAt": "2026-05-19T11:21:59Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

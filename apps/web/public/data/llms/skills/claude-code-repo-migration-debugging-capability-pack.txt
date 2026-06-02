@@ -1,0 +1,94 @@
+# Claude Code Repo Migration Debugging Capability Pack Skill
+URL: https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack
+Category: skills
+Author: JSONbored
+Date added: 2026-06-02
+Documentation: https://code.claude.com/docs/en/common-workflows
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx
+Download: /downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/skills/claude-code-repo-migration-debugging-capability-pack
+- Source URLs: https://code.claude.com/docs/en/common-workflows, https://github.com/JSONbored/awesome-claude/blob/main/content/skills/claude-code-repo-migration-debugging-capability-pack.mdx
+- Package URL: /downloads/skills/claude-code-repo-migration-debugging-capability-pack.zip
+- Package SHA256: 6b4fad8dc7b1ca0abd275ec6b5b8a949e1b50a264f2d22fe272cf8fe1f8f179b
+- Safety notes: Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code., Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them., Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors.
+- Privacy notes: Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials., Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports., External package registries and documentation lookups may reveal package names and version constraints.
+- Platform compatibility: Claude (native-skill), Codex (native-skill), Windsurf (native-skill), Gemini (native-skill), Cursor (adapter), Generic AGENTS (manual-context)
+- Author: JSONbored
+- Last verified: 2026-06-02
+- Robots: indexable
+## Summary
+Expert Claude Code skill capability pack for diagnosing repository migrations, dependency upgrades, build failures, and cross-file debugging with controlled validation.
+## Tags
+- claude-code
+- migration
+- debugging
+- dependency-upgrades
+- capability-pack
+## Safety Notes
+- Migration debugging may run package manager scripts, tests, builds, generators, and git commands; review scripts before executing unfamiliar project code.
+- Avoid broad dependency upgrades, generated artifact churn, or formatting sweeps unless the migration explicitly requires them.
+- Create rollback points before destructive commands, data migrations, lockfile rewrites, or cross-package refactors.
+## Privacy Notes
+- Build logs, stack traces, test fixtures, environment names, and repository paths may expose proprietary architecture or credentials.
+- Do not include secrets from .env files, CI logs, npm configs, or cloud credentials in prompts, commits, or final reports.
+- External package registries and documentation lookups may reveal package names and version constraints.
+## Content
+## Knowledge Freshness
+This capability pack is pinned to documentation verified on **2026-06-02**.
+Refresh runtime, framework, package-manager, and migration-guide docs before changing version-sensitive code.
+
+## Retrieval Sources
+- https://code.claude.com/docs/en/common-workflows
+- https://code.claude.com/docs/en/troubleshooting
+- https://code.claude.com/docs/en/skills
+
+Use local repository evidence first, then official migration guides, changelogs, and installed package metadata.
+
+## Core Workflow
+1. Establish a baseline: git status, runtime versions, failing command, shortest reproduction, and known-good reference if available.
+2. Map affected files, packages, configs, generated outputs, and tests before editing.
+3. Identify the smallest change that explains the failure and defer unrelated cleanup.
+4. Apply fixes in rollback-safe increments with validation after each risky boundary.
+5. End with a validation ladder from narrow reproduction to broader build/test checks.
+
+## Capability Scope
+- Dependency and runtime migrations
+- Build, type-check, lint, and test failure diagnosis
+- Monorepo package boundary debugging
+- Partially applied refactor recovery
+- Rollback-safe validation planning
+
+## Compatibility
+### Native
+
+- **Claude Code CLI**: use for terminal-first repo diagnostics and patching.
+- **Claude Code IDE surfaces**: use when editor diagnostics and selected context are useful.
+- **Claude Code Web**: use for GitHub issue-driven migration tasks.
+
+### Manual Adaptation
+
+- **Codex, Cursor, Windsurf, Gemini, and similar agents**: use the workflow as a repo migration/debugging checklist.
+
+## Production Rules
+- Reproduce before changing unless reproduction is impossible; if impossible, state why.
+- Prefer narrow, causal fixes over broad rewrites.
+- Keep lockfile and generated artifact changes intentional.
+- Validate the exact failing path before claiming the migration is complete.
+
+## Troubleshooting
+**Issue:** The failure changes after the first fix
+**Fix:** record the original failure, new failure, and boundary crossed; do not conflate them.
+
+**Issue:** A migration guide suggests many changes
+**Fix:** split required compatibility changes from optional modernization and implement only what the issue requires.
+
+**Issue:** Tests are unavailable or too expensive
+**Fix:** run syntax/type/build checks where possible and provide a precise manual verification path.
+
+## Output Contract
+1. Reproduction summary and root-cause hypothesis.
+2. Minimal patch plan with rollback points.
+3. Applied changes grouped by cause.
+4. Validation ladder with commands and results.
+5. Remaining risks, skipped checks, and follow-up work.
