@@ -9,6 +9,7 @@ export const LABELS = {
 } as const;
 
 export const PILOT_LABEL = "submission-gate-pilot";
+export const CONTENT_CATEGORY_LABEL_PREFIX = "category:";
 
 type ReviewablePrAction =
   | "opened"

@@ -303,9 +303,55 @@ describe("Cloudflare submission gate helpers", () => {
     const addIndex = source.indexOf("await addLabels({", removeIndex);
 
     expect(source).toContain("const DECISION_LABELS = [");
+    expect(source).toContain("const RECONCILED_GATE_LABELS = [");
+    expect(source).toContain("LABELS.underReview");
+    expect(source).toContain("const CONTENT_CATEGORY_LABELS = [");
+    expect(source).toContain("categoryLabel");
     expect(source).toContain("!labelsToApply.includes(label)");
     expect(removeIndex).toBeGreaterThan(0);
     expect(addIndex).toBeGreaterThan(removeIndex);
+  });
+
+  it("ignores non-content PRs before adding submission labels or comments", () => {
+    const source = readWorkerSource();
+    const pullRequestIndex = source.indexOf(
+      'if (eventName === "pull_request")',
+    );
+    const pullRequestBlock = source.slice(
+      pullRequestIndex,
+      source.indexOf('if (eventName === "issue_comment")', pullRequestIndex),
+    );
+    const classifyIndex = pullRequestBlock.indexOf(
+      "directContentReviewabilityForTarget(",
+    );
+    const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
+
+    expect(source).toContain('reason: "No source content entry file changed."');
+    expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
+    expect(classifyIndex).toBeGreaterThan(0);
+    expect(applyIndex).toBeGreaterThan(classifyIndex);
+  });
+
+  it("distinguishes generated-artifact tampering from ordinary non-content PRs", () => {
+    const source = readWorkerSource();
+    const classifierIndex = source.indexOf(
+      "function classifyPullRequestFilesForContentReview",
+    );
+    const classifierBlock = source.slice(
+      classifierIndex,
+      source.indexOf(
+        "async function directContentReviewabilityForPr",
+        classifierIndex,
+      ),
+    );
+
+    expect(classifierBlock).toContain("entryFiles.length === 0");
+    expect(classifierBlock).toContain('kind: "ignore"');
+    expect(classifierBlock).toContain("files.length !== 1");
+    expect(classifierBlock).toContain('kind: "scope_failure"');
+    expect(classifierBlock).toContain(
+      "no generated artifacts, README, workflows, scripts, packages, or additional entries",
+    );
   });
 
   it("does not apply the merged label before direct merge succeeds", () => {
@@ -317,6 +363,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("label !== LABELS.merged");
     expect(source).toContain("label !== LABELS.importOpen");
     expect(source).toContain("label !== LABELS.superseded");
+    expect(source).toContain(
+      "label !== LABELS.merged && !categoryLabels.includes(label)",
+    );
+    expect(source).toContain("labels: [LABELS.merged, ...categoryLabels]");
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
     expect(source).toContain("SubmissionMergePendingError");
@@ -384,7 +434,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("mergePullRequest({");
     expect(source).toContain("listPullRequestFiles({");
     expect(source).toContain(
-      "Direct content submissions must change exactly one source content file.",
+      "Direct content submissions must change exactly one source content file and no generated artifacts",
     );
     expect(source).toContain('finalAction: "merge_or_close"');
     expect(source).not.toContain(
