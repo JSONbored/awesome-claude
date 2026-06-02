@@ -149,5 +149,5 @@ export function toolListingRoutingMessage() {
 }
 
 export function toolListingApprovalMessage() {
-  return `Tools, apps, services, and products are not imported from the free resource queue without maintainer approval. Use ${TOOLS_LISTING_FLOW_URL} or have a maintainer apply accepted/import-approved after review.`;
+  return `Tools, apps, services, and products are not merged from the free resource queue without maintainer approval. Use ${TOOLS_LISTING_FLOW_URL} or have a maintainer apply accepted after review.`;
 }

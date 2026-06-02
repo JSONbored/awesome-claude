@@ -19,7 +19,6 @@
     "PUBLIC_SITE_URL": "https://heyclau.de",
     "SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",
     "PUBLIC_REPO": "JSONbored/awesome-claude",
-    "ALLOWED_IMPORT_REPOS": "JSONbored/awesome-claude",
     "ALLOWED_CORS_ORIGINS": "https://heyclau.de",
     "PILOT_BASE_REF": "main",
     "GITHUB_API_VERSION": "2022-11-28",
@@ -54,10 +53,6 @@
         "binding": "SUBMISSION_REVIEW_QUEUE",
         "queue": "heyclaude-submission-review",
       },
-      {
-        "binding": "SUBMISSION_IMPORT_QUEUE",
-        "queue": "heyclaude-submission-import",
-      },
     ],
     "consumers": [
       {
@@ -68,14 +63,6 @@
         "dead_letter_queue": "heyclaude-submission-review-dlq",
         "max_concurrency": 5,
       },
-      {
-        "queue": "heyclaude-submission-import",
-        "max_batch_size": 1,
-        "max_batch_timeout": 5,
-        "max_retries": 2,
-        "dead_letter_queue": "heyclaude-submission-import-dlq",
-        "max_concurrency": 2,
-      },
     ],
   },
   "durable_objects": {
@@ -84,24 +71,16 @@
         "name": "SUBMISSION_LOCK",
         "class_name": "SubmissionLock",
       },
-      {
-        "name": "SUBMISSION_IMPORT_RUNNER",
-        "class_name": "SubmissionImportRunner",
-      },
     ],
   },
-  "containers": [
-    {
-      "max_instances": 3,
-      "class_name": "SubmissionImportRunner",
-      "image": "./container/Dockerfile",
-      "instance_type": "standard-1",
-    },
-  ],
   "migrations": [
     {
       "tag": "v1",
       "new_sqlite_classes": ["SubmissionLock", "SubmissionImportRunner"],
+    },
+    {
+      "tag": "v2",
+      "deleted_classes": ["SubmissionImportRunner"],
     },
   ],
 }

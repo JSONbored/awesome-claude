@@ -3,15 +3,11 @@ export const SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL = "needs-author-input";
 export const SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL =
   "source-needs-verification";
 export const SUBMISSION_STALE_LABEL = "stale-submission";
-export const SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL = "auto-import-eligible";
+export const SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL = "auto-merge-eligible";
 export const SUBMISSION_RISK_LOW_LABEL = "risk-low";
 export const SUBMISSION_RISK_MEDIUM_LABEL = "risk-medium";
 export const SUBMISSION_RISK_HIGH_LABEL = "risk-high";
-export const SUBMISSION_PROTECTED_REVIEW_LABELS = [
-  "accepted",
-  "import-approved",
-  "import-pr-open",
-];
+export const SUBMISSION_PROTECTED_REVIEW_LABELS = ["accepted"];
 export const SUBMISSION_MANAGED_VALIDATION_LABELS = [
   SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL,
   SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL,
@@ -43,7 +39,7 @@ export const SUBMISSION_VALIDATION_LABEL_DEFINITIONS = {
   [SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL]: {
     color: "0e8a16",
     description:
-      "Submission passed deterministic gates and may be eligible for direct PR merge",
+      "Submission passed deterministic gates and may be eligible for direct content PR merge",
   },
 };
 

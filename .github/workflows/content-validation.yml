@@ -17,7 +17,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       direct_submission: ${{ steps.classify.outputs.direct_submission }}
-      maintainer_import: ${{ steps.classify.outputs.maintainer_import }}
       source_content_only: ${{ steps.classify.outputs.source_content_only }}
       readme_only: ${{ steps.classify.outputs.readme_only }}
       content: ${{ steps.classify.outputs.content }}
@@ -64,9 +63,6 @@ jobs:
 
           if ! grep -q '^direct_submission=' "$GITHUB_OUTPUT"; then
             echo "direct_submission=false" >> "$GITHUB_OUTPUT"
-          fi
-          if ! grep -q '^maintainer_import=' "$GITHUB_OUTPUT"; then
-            echo "maintainer_import=false" >> "$GITHUB_OUTPUT"
           fi
           if ! grep -q '^source_content_only=' "$GITHUB_OUTPUT"; then
             echo "source_content_only=false" >> "$GITHUB_OUTPUT"
@@ -492,9 +488,32 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' }}
         run: pnpm validate:readme
 
-      - name: Verify generated registry artifacts are current
+      - name: Verify generated registry artifacts remain build outputs
         if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only != 'true' && needs.classify-pr.outputs.readme_only != 'true' }}
-        run: git diff --exit-code apps/web/public/data apps/web/src/generated README.md
+        run: |
+          set -euo pipefail
+          # Registry/code changes can affect generated projections. They are
+          # built and contract-tested above, but normal PRs should not commit
+          # generated data churn unless they are explicit maintainer sync PRs.
+          git checkout -- pnpm-lock.yaml
+
+          dirty_files="$(git diff --name-only)"
+          if [ -z "$dirty_files" ]; then
+            echo "Generated registry artifacts are already current."
+            exit 0
+          fi
+
+          disallowed="$(
+            printf '%s\n' "$dirty_files" | grep -Ev '^(apps/web/public/data/.*|apps/web/src/generated/.*|apps/web/src/routeTree\.gen\.ts)$' || true
+          )"
+          if [ -n "$disallowed" ]; then
+            echo "::error::Registry generation changed non-generated files:"
+            printf '%s\n' "$disallowed"
+            exit 1
+          fi
+
+          echo "Generated artifact changes are build-time outputs for this registry change:"
+          printf '%s\n' "$dirty_files"
 
       - name: Verify README-only refresh leaves generated artifacts as build outputs
         if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.readme_only == 'true' }}

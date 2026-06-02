@@ -100,13 +100,12 @@ describe("PR preview artifact validation flow", () => {
     expect(workflow).toContain("- validate-submission-source");
   });
 
-  it("validates source-only maintainer imports without requiring committed generated artifacts", () => {
+  it("validates source-only content changes without requiring committed generated artifacts", () => {
     const workflow = readContentValidationWorkflow();
     const registryBlock =
       workflow.match(/\n  validate-registry:[\s\S]*?\n  validate-web:/)?.[0] ||
       "";
 
-    expect(workflow).toContain("maintainer_import:");
     expect(workflow).toContain("source_content_only:");
     expect(workflow).toContain("readme_only:");
     expect(registryBlock).toContain(

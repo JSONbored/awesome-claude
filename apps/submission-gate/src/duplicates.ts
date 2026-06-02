@@ -1,0 +1,292 @@
+export type ContentDuplicateSignals = {
+  filePath: string;
+  category: string;
+  slug: string;
+  title: string;
+  normalizedTitle: string;
+  normalizedDescription: string;
+  urls: string[];
+  domains: string[];
+  label?: string;
+  url?: string;
+};
+
+export type ContentDuplicateMatch = {
+  existing: ContentDuplicateSignals;
+  reasons: string[];
+};
+
+const PROTECTED_FRONTMATTER_FIELDS = new Set([
+  "affiliateUrl",
+  "author",
+  "authorProfileUrl",
+  "category",
+  "claimStatus",
+  "claimUrl",
+  "dateAdded",
+  "disclosure",
+  "documentationUrl",
+  "docsUrl",
+  "downloadUrl",
+  "githubUrl",
+  "importPrNumber",
+  "importPrUrl",
+  "packageUrl",
+  "packageVerified",
+  "pricingModel",
+  "repoUrl",
+  "repositoryUrl",
+  "reviewedAt",
+  "reviewedBy",
+  "reviewedPrNumber",
+  "slug",
+  "sourceUrl",
+  "submittedAt",
+  "submittedBy",
+  "submittedByUrl",
+  "submissionIssueNumber",
+  "submissionIssueUrl",
+  "websiteUrl",
+]);
+
+const URL_FIELDS = new Set([
+  "documentationUrl",
+  "docsUrl",
+  "downloadUrl",
+  "githubUrl",
+  "packageUrl",
+  "repoUrl",
+  "repositoryUrl",
+  "sourceUrl",
+  "websiteUrl",
+  "docs_url",
+  "download_url",
+  "github_url",
+  "package_url",
+  "repo_url",
+  "repository_url",
+  "source_url",
+  "website_url",
+]);
+const DOMAIN_ONLY_EXCLUSIONS = new Set([
+  "github.com",
+  "npmjs.com",
+  "pypi.org",
+  "raw.githubusercontent.com",
+  "registry.npmjs.org",
+]);
+
+function unquoteYamlScalar(value: string) {
+  const trimmed = value.trim();
+  if (
+    (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+    (trimmed.startsWith("'") && trimmed.endsWith("'"))
+  ) {
+    return trimmed.slice(1, -1).trim();
+  }
+  return trimmed.replace(/\s+#.*$/, "").trim();
+}
+
+export function parseSimpleFrontmatter(source: string) {
+  const match = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(
+    String(source || ""),
+  );
+  const fields: Record<string, string> = {};
+  if (!match) return fields;
+
+  for (const line of match[1].split(/\r?\n/)) {
+    const scalar = /^([A-Za-z][A-Za-z0-9_]*):\s*(.*?)\s*$/.exec(line);
+    if (!scalar) continue;
+    const [, key, value] = scalar;
+    if (!value || value === "|" || value === ">") continue;
+    fields[key] = unquoteYamlScalar(value);
+  }
+  return fields;
+}
+
+export function protectedFrontmatterChanges(
+  beforeSource: string,
+  afterSource: string,
+) {
+  const before = parseSimpleFrontmatter(beforeSource);
+  const after = parseSimpleFrontmatter(afterSource);
+  return [...PROTECTED_FRONTMATTER_FIELDS]
+    .filter((field) => (before[field] || "") !== (after[field] || ""))
+    .sort();
+}
+
+function normalizeText(value: unknown) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function normalizeHostname(hostname: string) {
+  return hostname.toLowerCase().replace(/^www\./, "");
+}
+
+function normalizeUrl(value: unknown) {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  try {
+    const parsed = new URL(raw);
+    if (!["http:", "https:"].includes(parsed.protocol)) return "";
+    parsed.protocol = "https:";
+    parsed.hostname = normalizeHostname(parsed.hostname);
+    parsed.hash = "";
+    for (const key of [...parsed.searchParams.keys()]) {
+      const normalizedKey = key.toLowerCase();
+      if (
+        normalizedKey.startsWith("utm_") ||
+        [
+          "affiliate",
+          "affiliate_id",
+          "campaign",
+          "ref",
+          "referral",
+          "referral_code",
+          "source",
+          "via",
+        ].includes(normalizedKey)
+      ) {
+        parsed.searchParams.delete(key);
+      }
+    }
+
+    if (parsed.hostname === "github.com") {
+      const [owner, repo] = parsed.pathname.split("/").filter(Boolean);
+      if (owner && repo) {
+        return `https://github.com/${owner.toLowerCase()}/${repo
+          .replace(/\.git$/i, "")
+          .toLowerCase()}`;
+      }
+    }
+
+    parsed.pathname = parsed.pathname.replace(/\/+$/, "") || "/";
+    return parsed.toString().replace(/\/$/, "");
+  } catch {
+    return "";
+  }
+}
+
+function domainFromUrl(value: string) {
+  try {
+    return normalizeHostname(new URL(value).hostname);
+  } catch {
+    return "";
+  }
+}
+
+function pathParts(filePath: string) {
+  const match = /^content\/([^/]+)\/([^/]+)\.mdx$/i.exec(filePath);
+  return {
+    category: match?.[1]?.toLowerCase() || "",
+    slug: match?.[2]?.toLowerCase() || "",
+  };
+}
+
+export function extractContentDuplicateSignals(params: {
+  filePath: string;
+  content: string;
+  label?: string;
+  url?: string;
+}): ContentDuplicateSignals {
+  const fields = parseSimpleFrontmatter(params.content);
+  const parts = pathParts(params.filePath);
+  const urls = [
+    ...new Set(
+      Object.entries(fields)
+        .filter(([key]) => URL_FIELDS.has(key))
+        .map(([, value]) => normalizeUrl(value))
+        .filter(Boolean),
+    ),
+  ];
+
+  return {
+    filePath: params.filePath,
+    category: normalizeText(fields.category) || parts.category,
+    slug: normalizeText(fields.slug).replace(/\s+/g, "-") || parts.slug,
+    title: fields.title || "",
+    normalizedTitle: normalizeText(fields.title),
+    normalizedDescription: normalizeText(fields.description),
+    urls,
+    domains: [...new Set(urls.map(domainFromUrl).filter(Boolean))],
+    label: params.label,
+    url: params.url,
+  };
+}
+
+function intersection(left: string[], right: string[]) {
+  const rightSet = new Set(right);
+  return left.filter((value) => rightSet.has(value));
+}
+
+export function findContentDuplicateMatch(
+  candidate: ContentDuplicateSignals,
+  existingItems: ContentDuplicateSignals[],
+): ContentDuplicateMatch | null {
+  for (const existing of existingItems) {
+    const reasons: string[] = [];
+    if (candidate.filePath === existing.filePath) {
+      reasons.push(`same content path \`${existing.filePath}\``);
+    }
+    if (
+      candidate.category &&
+      candidate.slug &&
+      candidate.category === existing.category &&
+      candidate.slug === existing.slug
+    ) {
+      reasons.push(`same ${candidate.category} slug \`${candidate.slug}\``);
+    }
+
+    const sharedUrls = intersection(candidate.urls, existing.urls);
+    if (sharedUrls.length) {
+      reasons.push(`same canonical source URL ${sharedUrls[0]}`);
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedTitle &&
+      candidate.category === existing.category &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(`same normalized title in ${candidate.category}`);
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedDescription &&
+      candidate.category === existing.category &&
+      candidate.normalizedDescription === existing.normalizedDescription
+    ) {
+      reasons.push(`same normalized description in ${candidate.category}`);
+    }
+
+    const sharedDomains = intersection(candidate.domains, existing.domains);
+    if (
+      sharedDomains.length &&
+      candidate.normalizedTitle &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(`same source domain ${sharedDomains[0]} and title`);
+    }
+    const aggressiveDomainMatch = sharedDomains.find(
+      (domain) => !DOMAIN_ONLY_EXCLUSIONS.has(domain),
+    );
+    if (
+      aggressiveDomainMatch &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
+      reasons.push(
+        `same non-generic source domain ${aggressiveDomainMatch} in ${candidate.category}`,
+      );
+    }
+
+    if (reasons.length) return { existing, reasons };
+  }
+  return null;
+}

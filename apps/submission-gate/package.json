@@ -13,9 +13,6 @@
     "deploy:dry-run:prod": "node ../../scripts/check-submission-gate-prod-config.mjs && wrangler deploy --config wrangler.jsonc --env \"\" --dry-run",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv worker-configuration.d.ts"
   },
-  "dependencies": {
-    "@cloudflare/containers": "0.3.5"
-  },
   "devDependencies": {
     "@cloudflare/workers-types": "4.20260601.1",
     "wrangler": "4.95.0"

@@ -1,10 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { validateSubmission } from "@heyclaude/registry/submission";
 import {
   analyzeDirectContentRisk,
-  analyzeIssueSubmissionRisk,
   formatSubmissionRiskMarkdown,
 } from "@heyclaude/registry/submission-risk";
 
@@ -40,33 +38,20 @@ function writeFile(filePath, contents) {
   fs.writeFileSync(filePath, contents, "utf8");
 }
 
-const issuePath = argValue("--issue-json");
-const validationPath = argValue("--validation-json");
-const contributorPath = argValue("--contributor-json");
 const prPath = argValue("--pr-json");
 const outputPath = argValue("--output");
 const markdownOutputPath = argValue("--markdown-output");
 
-if ((!issuePath && !prPath) || (issuePath && prPath) || !outputPath) {
+if (!prPath || !outputPath) {
   console.error(
-    "Usage: node scripts/analyze-submission-risk.mjs (--issue-json <path> [--validation-json <path>] [--contributor-json <path>] | --pr-json <path>) --output <path> [--markdown-output <path>]. --issue-json and --pr-json are mutually exclusive.",
+    "Usage: node scripts/analyze-submission-risk.mjs --pr-json <path> --output <path> [--markdown-output <path>].",
   );
   process.exit(1);
 }
 
 let report;
 try {
-  if (issuePath) {
-    const issue = readJson(issuePath, { required: true });
-    const validationReport =
-      readJson(validationPath) || validateSubmission(issue);
-    const contributor = readJson(contributorPath, { fallback: {} });
-    report = analyzeIssueSubmissionRisk(issue, validationReport, {
-      contributor,
-    });
-  } else {
-    report = analyzeDirectContentRisk(readJson(prPath, { required: true }));
-  }
+  report = analyzeDirectContentRisk(readJson(prPath, { required: true }));
 
   writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`);
   writeFile(markdownOutputPath, formatSubmissionRiskMarkdown(report));

@@ -16,10 +16,13 @@ import {
   decryptText,
   encryptText,
   hmacSha256Hex,
-  signInternalPayload,
   verifyGitHubWebhookSignature,
-  verifyInternalSignature,
 } from "../apps/submission-gate/src/security";
+import {
+  extractContentDuplicateSignals,
+  findContentDuplicateMatch,
+  protectedFrontmatterChanges,
+} from "../apps/submission-gate/src/duplicates";
 import { markerComment } from "../apps/submission-gate/src/review";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -361,8 +364,6 @@ describe("Cloudflare submission gate helpers", () => {
       'const status =\n        decision.verdict === "merge" ? "merge_accepted" : decision.verdict',
     );
     expect(source).toContain("label !== LABELS.merged");
-    expect(source).toContain("label !== LABELS.importOpen");
-    expect(source).toContain("label !== LABELS.superseded");
     expect(source).toContain(
       "label !== LABELS.merged && !categoryLabels.includes(label)",
     );
@@ -405,6 +406,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
     expect(terminalSetBlock).not.toContain('"merge"');
+    expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
       "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
@@ -413,9 +415,6 @@ describe("Cloudflare submission gate helpers", () => {
       'String(message.payload.eventName || "") === "issue_comment"',
     );
     expect(source).toContain('String(state.status || "") === "merged"');
-    expect(source).toContain('String(state.status || "") === "import_pr_open"');
-    expect(source).toContain('String(state.verdict || "") === "import"');
-    expect(source).toContain('typeof state.importPrUrl === "string"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
     );
@@ -440,50 +439,23 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).not.toContain(
       "importJob: await synthesizeImportJobFromSourcePr",
     );
+    expect(source).not.toContain("synthesizeImportJobFromSourcePr");
     expect(source).not.toContain(
       "Private review accepted this source, but did not return an import job.",
     );
   });
 
-  it("runs container imports asynchronously and completes them by signed callback", () => {
+  it("does not expose the old maintainer-owned import runner path", () => {
     const source = readWorkerSource();
 
-    expect(source).toContain("SUBMISSION_GATE_URL");
-    expect(source).toContain("callbackUrl:");
-    expect(source).toContain("const runnerKey");
-    expect(source).toContain(
-      "env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey)",
-    );
-    expect(source).toContain("response.status === 202 || result.accepted");
-    expect(source).toContain('decision: "import_queued"');
-    expect(source).toContain("async function completeImportPr");
-    expect(source).toContain("async function importCompleteRoute");
-    expect(source).toContain('error: "missing_import_source"');
-    expect(source).toContain('decision: "import_failed"');
-  });
-
-  it("ignores maintainer-owned import PR branches during gate review", () => {
-    const source = readWorkerSource();
-
-    expect(source).toContain(
-      'const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-"',
-    );
-    expect(source).toContain("function isMaintainerImportRef");
-    expect(source).toContain("isMaintainerImportRef(pull.head?.ref)");
-    expect(source).toContain("isMaintainerImportRef(target.headRef)");
-  });
-
-  it("signs internal import callbacks with the same HMAC verifier", async () => {
-    const payload = JSON.stringify({ kind: "import_pr", targetKey: "repo#1" });
-    const signature = await signInternalPayload("internal-secret", payload);
-
-    await expect(
-      verifyInternalSignature({
-        secret: "internal-secret",
-        payload,
-        signatureHeader: signature,
-      }),
-    ).resolves.toBe(true);
+    expect(source).not.toContain("SUBMISSION_IMPORT_QUEUE");
+    expect(source).not.toContain("SUBMISSION_IMPORT_RUNNER");
+    expect(source).not.toContain("SubmissionImportRunner");
+    expect(source).not.toContain("handleImportMessage");
+    expect(source).not.toContain("completeImportPr");
+    expect(source).not.toContain("importCompleteRoute");
+    expect(source).not.toContain("/internal/import-complete");
+    expect(source).not.toContain('body.kind === "import_pr"');
   });
 
   it("encrypts short-lived GitHub user token handoffs", async () => {
@@ -523,5 +495,131 @@ describe("Cloudflare submission gate helpers", () => {
     expect(verifyIndex).toBeGreaterThan(guardIndex);
     expect(source).toContain('error: "webhook_secret_not_configured"');
     expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
+  });
+
+  it("detects neutral duplicate submissions from canonical source URLs", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/ccusage.mdx",
+      content: `---
+title: ccusage
+slug: ccusage
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+websiteUrl: "https://ccusage.com"
+repoUrl: "https://github.com/ryoppippi/ccusage"
+---
+`,
+      label: "accepted entry content/tools/ccusage.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/usage-meter.mdx",
+      content: `---
+title: Claude Usage Meter
+slug: usage-meter
+category: tools
+description: Command-line reports for coding-agent usage and cost tracking.
+websiteUrl: "https://ccusage.com/?utm_source=submission"
+repoUrl: "https://github.com/ryoppippi/ccusage#readme"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
+  });
+
+  it("fails aggressively on same non-generic source domains in one category", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/example.mdx",
+      content: `---
+title: Example Agent Tool
+slug: example-agent-tool
+category: tools
+description: Source-backed tool listing.
+websiteUrl: "https://example-agent-tool.dev"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/example-agent-workbench.mdx",
+      content: `---
+title: Example Agent Workbench
+slug: example-agent-workbench
+category: tools
+description: Different wording for a related submission.
+websiteUrl: "https://example-agent-tool.dev/pricing"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same non-generic source domain"),
+      ]),
+    });
+  });
+
+  it("blocks content edits that change protected provenance fields", () => {
+    const before = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+author: Original Author
+submittedBy: contributor
+repoUrl: "https://github.com/example/existing-tool"
+disclosure: editorial
+---
+`;
+    const after = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+author: New Author
+submittedBy: different-user
+repoUrl: "https://github.com/example/other-tool"
+disclosure: affiliate
+---
+`;
+
+    expect(protectedFrontmatterChanges(before, after)).toEqual([
+      "author",
+      "disclosure",
+      "repoUrl",
+      "submittedBy",
+    ]);
+  });
+
+  it("detects duplicate collisions introduced by otherwise safe content edits", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/guides/claude-code-setup.mdx",
+      content: `---
+title: Claude Code Setup Guide
+slug: claude-code-setup
+category: guides
+description: Practical setup guide for Claude Code projects.
+sourceUrl: "https://example.com/claude-code-setup"
+---
+`,
+    });
+    const edited = extractContentDuplicateSignals({
+      filePath: "content/guides/agent-workflow-setup.mdx",
+      content: `---
+title: Agent Workflow Setup
+slug: agent-workflow-setup
+category: guides
+description: Practical setup guide for Claude Code projects.
+sourceUrl: "https://example.com/agent-workflow-setup"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(edited, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same normalized description"),
+      ]),
+    });
   });
 });

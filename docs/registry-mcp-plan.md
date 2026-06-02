@@ -81,5 +81,5 @@ when Cloudflare's binding is unavailable.
 - No account, token, or GitHub OAuth handling.
 
 Submissions are PR-first through the website GitHub App flow. Source-backed
-submissions may be copied into maintainer-owned import PRs after private gates
-pass, but maintainers still review before merge.
+single-entry content PRs may be merged directly by the private maintainer gate
+after content validation, Superagent, and private review pass.

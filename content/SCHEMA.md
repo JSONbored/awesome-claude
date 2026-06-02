@@ -82,7 +82,7 @@ Use the three note-style fields for different jobs:
 
 - Free Claude resources should start with `/submit` or a focused single-entry PR.
 - The submit form runs public preflight, then opens a PR through the private submission gate.
-- Fully valid, source-backed, non-artifact PRs may be copied into a maintainer-owned import PR after gates pass. Maintainer review still gates merge.
+- Fully valid, source-backed, non-artifact PRs may be merged directly by the private maintainer gate after content validation, Superagent, and private review pass.
 - Tools, apps, services, sponsorships, claims, and jobs use the website lead forms, not content submissions.
 - Contributor links must be official source/docs/release URLs. Affiliate, referral, tracking, or local package-hosting requests are rejected.
 - Community ZIP/MCPB artifacts are not published as HeyClaude-hosted downloads. Maintainer-built packages require package trust metadata.

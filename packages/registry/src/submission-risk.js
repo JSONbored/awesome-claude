@@ -822,7 +822,7 @@ function addContentRiskSignals(report, fields, text) {
       report,
       "medium",
       "community_archive_download",
-      "Submitted package archive URLs require maintainer package review and are not auto-import eligible",
+      "Submitted package archive URLs require maintainer package review before direct merge",
       downloadUrl,
     );
   }
@@ -1019,7 +1019,7 @@ function addDisclosureNoteSignals(report, fields) {
     addClassificationWarning(
       report,
       "missing_safety_notes",
-      "Sensitive execution, install, package, background, or write behavior needs safetyNotes/safety_notes disclosure before auto-import",
+      "Sensitive execution, install, package, background, or write behavior needs safetyNotes/safety_notes disclosure before direct merge",
       safetyRequired.join(", "),
     );
   }
@@ -1028,7 +1028,7 @@ function addDisclosureNoteSignals(report, fields) {
     addClassificationWarning(
       report,
       "missing_privacy_notes",
-      "Credential, local data, telemetry, or third-party data behavior needs privacyNotes/privacy_notes disclosure before auto-import",
+      "Credential, local data, telemetry, or third-party data behavior needs privacyNotes/privacy_notes disclosure before direct merge",
       privacyRequired.join(", "),
     );
   }

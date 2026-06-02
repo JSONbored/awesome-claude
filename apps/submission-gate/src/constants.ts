@@ -4,8 +4,6 @@ export const LABELS = {
   manual: "submission-manual-review",
   close: "submission-closed-by-gate",
   merged: "submission-merged-by-gate",
-  importOpen: "import-pr-open",
-  superseded: "superseded-by-import-pr",
 } as const;
 
 export const PILOT_LABEL = "submission-gate-pilot";

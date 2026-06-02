@@ -1,4 +1,3 @@
-import { Container } from "@cloudflare/containers";
 import { DurableObject } from "cloudflare:workers";
 
 import {
@@ -15,6 +14,12 @@ import {
   slugify,
 } from "./drafts";
 import {
+  extractContentDuplicateSignals,
+  findContentDuplicateMatch,
+  protectedFrontmatterChanges,
+  type ContentDuplicateSignals,
+} from "./duplicates";
+import {
   addLabels,
   approvePullRequest,
   buildGitHubAppAuthorizeUrl,
@@ -24,7 +29,10 @@ import {
   getCommitValidationState,
   getInstallationToken,
   getPullRequest,
+  getRepositoryBlobText,
   getRepositoryFileContent,
+  getRepositoryTree,
+  listOpenPullRequests,
   listPullRequestFiles,
   listPullRequestsForCommit,
   mergePullRequest,
@@ -45,7 +53,6 @@ import {
   randomToken,
   signInternalPayload,
   verifyGitHubWebhookSignature,
-  verifyInternalSignature,
 } from "./security";
 import {
   consumeDraftUserToken,
@@ -81,14 +88,12 @@ type Env = {
   SUBMISSION_GATE_DB: D1Database;
   SUBMISSION_GATE_AUDIT: R2Bucket;
   SUBMISSION_REVIEW_QUEUE: Queue<Record<string, unknown>>;
-  SUBMISSION_IMPORT_QUEUE: Queue<Record<string, unknown>>;
   SUBMISSION_LOCK: DurableObjectNamespace<SubmissionLock>;
-  SUBMISSION_IMPORT_RUNNER: DurableObjectNamespace<SubmissionImportRunner>;
   ALLOWED_CORS_ORIGINS?: string;
 };
 
 type QueueMessage = {
-  kind: "review_pr" | "submit_draft" | "import_pr";
+  kind: "review_pr" | "submit_draft";
   targetKey: string;
   payload: Record<string, unknown>;
 };
@@ -109,13 +114,24 @@ class SubmissionMergePendingError extends Error {
 
 const GATE_VERDICTS = new Set<GateVerdict>([
   "merge",
-  "import",
   "request_changes",
   "close",
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
+const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
+const SUPPORTED_CONTENT_CATEGORIES = new Set([
+  "agents",
+  "collections",
+  "commands",
+  "guides",
+  "hooks",
+  "mcp",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -156,15 +172,12 @@ const TRUSTED_RECHECK_ASSOCIATIONS = new Set([
   "MEMBER",
   "COLLABORATOR",
 ]);
-const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-";
 const DECISION_LABELS = [
   LABELS.underReview,
   LABELS.requestChanges,
   LABELS.manual,
   LABELS.close,
   LABELS.merged,
-  LABELS.importOpen,
-  LABELS.superseded,
 ];
 const CONTENT_CATEGORY_LABELS = [
   "agents",
@@ -195,16 +208,13 @@ type DirectContentScope = {
   category: string;
   slug: string;
   status: string;
+  rawUrl?: string;
 };
 
 type DirectContentReviewability =
   | { kind: "review"; scope: DirectContentScope }
   | { kind: "scope_failure"; decision: GateDecision; category?: string }
   | { kind: "ignore"; reason: string };
-
-function isMaintainerImportRef(ref: string | undefined) {
-  return String(ref || "").startsWith(MAINTAINER_IMPORT_BRANCH_PREFIX);
-}
 
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
@@ -291,15 +301,6 @@ function callbackUrl(request: Request) {
 function draftStatusUrl(request: Request, id: string) {
   const url = new URL(request.url);
   return `${url.origin}/drafts/${id}`;
-}
-
-function trimTrailingSlashes(value: unknown) {
-  const text = String(value || "");
-  let end = text.length;
-  while (end > 0 && text.charCodeAt(end - 1) === 47) {
-    end -= 1;
-  }
-  return text.slice(0, end);
 }
 
 async function putAuditObject(env: Env, key: string, payload: unknown) {
@@ -485,12 +486,10 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
         number?: number;
         draft?: boolean;
         base?: { ref?: string; repo?: { full_name?: string } };
-        head?: { ref?: string };
         labels?: Array<{ name?: string }>;
       }
     | undefined;
   if (!pull || pull.draft) return false;
-  if (isMaintainerImportRef(pull.head?.ref)) return false;
   const labels = pull.labels?.map((label) => label.name) || [];
   return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
 }
@@ -708,7 +707,6 @@ async function targetFromIssueCommentRecheck(
   if (pull.draft) return null;
   const target = reviewTargetFromPullRecord(pull, installationId);
   if (!target) return null;
-  if (isMaintainerImportRef(target.headRef)) return null;
   if (target.baseRef !== env.PILOT_BASE_REF && !hasPilotLabel(issue)) {
     return null;
   }
@@ -724,19 +722,12 @@ function hasTerminalGateDecision(
     | {
         status?: unknown;
         verdict?: unknown;
-        importPrUrl?: unknown;
       }
     | null
     | undefined,
 ) {
   if (!state) return false;
   if (String(state.status || "") === "merged") return true;
-  if (String(state.status || "") === "import_pr_open") return true;
-  if (String(state.verdict || "") === "import") {
-    return (
-      typeof state.importPrUrl === "string" && state.importPrUrl.length > 0
-    );
-  }
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
 }
 
@@ -793,13 +784,27 @@ function classifyPullRequestFilesForContentReview(
   }
 
   const entry = entryFiles[0];
-  const status = String(entry.file.status || "");
-  if (status === "removed") {
+  if (!SUPPORTED_CONTENT_CATEGORIES.has(entry.pathParts!.category)) {
     return {
       kind: "scope_failure",
       category: entry.pathParts?.category,
       decision: scopeFailureDecision(
-        "Direct content submissions cannot remove content files.",
+        `Unsupported content category \`${entry.pathParts!.category}\`. Supported categories are ${[
+          ...SUPPORTED_CONTENT_CATEGORIES,
+        ]
+          .sort()
+          .join(", ")}.`,
+      ),
+    };
+  }
+
+  const status = String(entry.file.status || "");
+  if (!["added", "modified"].includes(status)) {
+    return {
+      kind: "scope_failure",
+      category: entry.pathParts?.category,
+      decision: scopeFailureDecision(
+        "Direct content submissions can only add a new content file or edit one existing content file. Deletes, renames, and generated-artifact updates are not accepted in this path.",
       ),
     };
   }
@@ -811,6 +816,7 @@ function classifyPullRequestFilesForContentReview(
       category: entry.pathParts!.category,
       slug: entry.pathParts!.slug,
       status,
+      rawUrl: String(entry.file.raw_url || ""),
     },
   };
 }
@@ -866,18 +872,6 @@ function scopeFailureDecision(error: unknown): GateDecision {
     ].join("\n"),
     labels: [LABELS.close],
     close: true,
-  };
-}
-
-function normalizeGateDecision(decision: GateDecision): GateDecision {
-  if (decision.verdict !== "import") return decision;
-  return {
-    ...decision,
-    verdict: "merge",
-    labels: decision.labels.filter(
-      (label) => label !== LABELS.importOpen && label !== LABELS.superseded,
-    ),
-    importJob: undefined,
   };
 }
 
@@ -949,7 +943,9 @@ async function mergeAcceptedPullRequest(params: {
     repo: params.repo,
     number: params.target.number,
     expectedHeadSha,
-    commitTitle: `feat(content): add ${params.scope.category} ${params.scope.slug}`,
+    commitTitle: `feat(content): ${
+      params.scope.status === "modified" ? "update" : "add"
+    } ${params.scope.category} ${params.scope.slug}`,
     commitMessage: [
       `Accepted by HeyClaude Maintainer Agent from PR #${params.target.number}.`,
       "",
@@ -969,7 +965,7 @@ async function fetchRawPullRequestFileContent(rawUrl: unknown) {
     url.protocol !== "https:" ||
     !["github.com", "raw.githubusercontent.com"].includes(url.hostname)
   ) {
-    throw new Error("Import synthesis raw file URL is not a GitHub HTTPS URL.");
+    throw new Error("Direct content raw file URL is not a GitHub HTTPS URL.");
   }
   const response = await fetch(url.toString(), {
     headers: { "user-agent": "heyclaude-submission-gate" },
@@ -980,75 +976,224 @@ async function fetchRawPullRequestFileContent(rawUrl: unknown) {
   }
   const content = await response.text();
   if (content.length > 100_000) {
-    throw new Error("Import synthesis raw file is too large.");
+    throw new Error("Direct content raw file is too large.");
   }
   return content;
 }
 
-async function synthesizeImportJobFromSourcePr(params: {
+async function fetchDirectContentScopeContent(scope: DirectContentScope) {
+  if (!scope.rawUrl) {
+    throw new Error("Direct content PR file did not include a raw GitHub URL.");
+  }
+  return fetchRawPullRequestFileContent(scope.rawUrl);
+}
+
+function duplicateCloseDecision(
+  match: ReturnType<typeof findContentDuplicateMatch>,
+  candidate: ContentDuplicateSignals,
+): GateDecision | null {
+  if (!match) return null;
+  const existing = match.existing;
+  const existingTarget = existing.url
+    ? `${existing.label || existing.filePath}: ${existing.url}`
+    : existing.label || existing.filePath;
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      `- This submission overlaps an existing or earlier pending content item: ${existingTarget}.`,
+      "- HeyClaude closes duplicate or ambiguous same-source submissions in one shot so the directory does not accumulate redundant listings.",
+      "",
+      "Duplicate / History Review:",
+      ...match.reasons.map((reason) => `- ${reason}.`),
+      "",
+      "Recommended Action:",
+      "- Close this PR. If this is genuinely a distinct resource, resubmit with a clearly different canonical source, title, scope, and value proposition.",
+      "",
+      `Changed file: \`${candidate.filePath}\``,
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+function protectedEditCloseDecision(changedFields: string[]): GateDecision {
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      "- This PR edits protected content identity, provenance, review, disclosure, source, or verification metadata.",
+      "- HeyClaude allows one-file content edits through this gate only when they avoid protected fields and keep the entry identity intact.",
+      "",
+      "Protected fields changed:",
+      ...changedFields.map((field) => `- \`${field}\``),
+      "",
+      "Recommended Action:",
+      "- Close this PR. Resubmit as a focused content edit that only changes safe descriptive copy, safety notes, privacy notes, usage text, tags, or factual body content.",
+      "- For source, attribution, disclosure, or verification changes, open a maintainer-reviewed issue or PR with explicit rationale.",
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+async function acceptedContentSignals(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  baseRef: string;
+  currentFilePath: string;
+  apiVersion?: string;
+}) {
+  const tree = await getRepositoryTree({
+    token: params.token,
+    repo: params.repo,
+    ref: params.baseRef,
+    recursive: true,
+    apiVersion: params.apiVersion,
+  });
+  if (tree.truncated) {
+    throw new Error("GitHub content tree was truncated during duplicate scan.");
+  }
+  const contentFiles = (tree.tree || []).filter(
+    (item) =>
+      item.type === "blob" &&
+      item.sha &&
+      /^content\/[^/]+\/[^/]+\.mdx$/i.test(String(item.path || "")),
+  );
+  const signals: ContentDuplicateSignals[] = [];
+  for (const item of contentFiles) {
+    const filePath = String(item.path || "");
+    if (filePath === params.currentFilePath) continue;
+    const content = await getRepositoryBlobText({
+      token: params.token,
+      repo: params.repo,
+      sha: String(item.sha),
+      apiVersion: params.apiVersion,
+    });
+    signals.push(
+      extractContentDuplicateSignals({
+        filePath,
+        content,
+        label: `accepted entry ${filePath}`,
+        url: `https://github.com/${params.repo.owner}/${params.repo.repo}/blob/${params.baseRef}/${filePath}`,
+      }),
+    );
+  }
+  return signals;
+}
+
+function isEarlierPullRequest(
+  pull: { number?: number; created_at?: string },
+  target: ReviewTarget,
+) {
+  const pullNumber = Number(pull.number || 0);
+  if (!pullNumber || pullNumber === target.number) return false;
+  return pullNumber < target.number;
+}
+
+async function earlierOpenContentPrSignals(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  baseRef: string;
+  apiVersion?: string;
+}) {
+  const pulls = await listOpenPullRequests({
+    token: params.token,
+    repo: params.repo,
+    baseRef: params.baseRef,
+    apiVersion: params.apiVersion,
+  });
+  const signals: ContentDuplicateSignals[] = [];
+  for (const pull of pulls) {
+    if (!isEarlierPullRequest(pull, params.target) || pull.draft) continue;
+    const number = Number(pull.number || 0);
+    const files = await listPullRequestFiles({
+      token: params.token,
+      repo: params.repo,
+      number,
+      apiVersion: params.apiVersion,
+    });
+    const reviewability = classifyPullRequestFilesForContentReview(files);
+    if (reviewability.kind !== "review") continue;
+    let content = "";
+    try {
+      content = await fetchDirectContentScopeContent(reviewability.scope);
+    } catch {
+      continue;
+    }
+    signals.push(
+      extractContentDuplicateSignals({
+        filePath: reviewability.scope.filePath,
+        content,
+        label: `earlier open PR #${number}`,
+        url:
+          pull.html_url ||
+          `https://github.com/${params.repo.owner}/${params.repo.repo}/pull/${number}`,
+      }),
+    );
+  }
+  return signals;
+}
+
+async function deterministicContentPrecheck(params: {
   env: Env;
   token: string;
   repo: ReturnType<typeof parseRepo>;
   target: ReviewTarget;
+  scope: DirectContentScope;
 }) {
-  const files = await listPullRequestFiles({
-    token: params.token,
-    repo: params.repo,
-    number: params.target.number,
-    apiVersion: params.env.GITHUB_API_VERSION,
-  });
-  if (files.length !== 1) {
-    throw new Error("Import synthesis requires exactly one changed PR file.");
-  }
+  const baseRef = params.target.baseRef || params.env.PILOT_BASE_REF;
+  const candidateContent = await fetchDirectContentScopeContent(params.scope);
 
-  const file = files[0];
-  const filePath = String(file.filename || "");
-  const pathParts = importContentPathParts(filePath);
-  if (!pathParts || !pathParts.slug) {
-    throw new Error(
-      "Import synthesis requires one content/<category>/<slug>.mdx file.",
-    );
-  }
-  if (String(file.status || "") === "removed") {
-    throw new Error("Import synthesis cannot import removed content files.");
-  }
-
-  const headRepo = parseRepo(
-    params.target.headRepo || params.target.repoFullName,
-  );
-  const headRef = params.target.headSha || params.target.headRef || "";
-  if (!headRef) {
-    throw new Error("Import synthesis requires a PR head ref or SHA.");
-  }
-
-  let content: string;
-  try {
-    content = await getRepositoryFileContent({
+  if (params.scope.status === "modified") {
+    const baseContent = await getRepositoryFileContent({
       token: params.token,
-      repo: headRepo,
-      path: filePath,
-      ref: headRef,
+      repo: params.repo,
+      path: params.scope.filePath,
+      ref: baseRef,
       apiVersion: params.env.GITHUB_API_VERSION,
     });
-  } catch {
-    content = await fetchRawPullRequestFileContent(file.raw_url);
+    const protectedChanges = protectedFrontmatterChanges(
+      baseContent,
+      candidateContent,
+    );
+    if (protectedChanges.length) {
+      return {
+        content: candidateContent,
+        decision: protectedEditCloseDecision(protectedChanges),
+      };
+    }
   }
 
+  const candidate = extractContentDuplicateSignals({
+    filePath: params.scope.filePath,
+    content: candidateContent,
+    label: `PR #${params.target.number}`,
+    url: `https://github.com/${params.target.repoFullName}/pull/${params.target.number}`,
+  });
+  const existing = [
+    ...(await acceptedContentSignals({
+      token: params.token,
+      repo: params.repo,
+      baseRef,
+      currentFilePath: params.scope.filePath,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    })),
+    ...(await earlierOpenContentPrSignals({
+      token: params.token,
+      repo: params.repo,
+      target: params.target,
+      baseRef,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    })),
+  ];
   return {
-    branchName: `automation/submission-pr-${params.target.number}-${pathParts.slug}`,
-    title: `feat(content): import ${pathParts.category} ${pathParts.slug}`,
-    body: [
-      `Maintainer-owned import generated from source PR #${params.target.number}.`,
-      "",
-      "The private submission gate accepted the source PR after public validation and private review.",
-      "Generated artifacts are produced during validation/build and are not committed in this import PR.",
-    ].join("\n"),
-    files: [
-      {
-        path: filePath,
-        content,
-      },
-    ],
+    content: candidateContent,
+    decision: duplicateCloseDecision(
+      findContentDuplicateMatch(candidate, existing),
+      candidate,
+    ),
   };
 }
 
@@ -1061,7 +1206,6 @@ async function enqueueReviewTarget(
   pilotScoped = false,
   forceRecheck = false,
 ) {
-  if (isMaintainerImportRef(target.headRef)) return false;
   if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
   const targetKey = targetKeyForReview(target);
   const existing = await getPrState(env.SUBMISSION_GATE_DB, {
@@ -1331,15 +1475,14 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       "Private corpus review returned an unexpected payload.",
     );
   }
-  return normalizeGateDecision({
+  return {
     verdict: raw.verdict as GateVerdict,
     summary: typeof raw.summary === "string" ? raw.summary : "",
     labels: Array.isArray(raw.labels)
       ? raw.labels.filter((label): label is string => typeof label === "string")
       : [],
     close: raw.close === true,
-    importJob: isRecord(raw.importJob) ? raw.importJob : undefined,
-  });
+  };
 }
 
 async function withSubmissionLock(
@@ -1553,6 +1696,37 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         );
       }
 
+      if (!decision && contentScopeForPrivateReview) {
+        try {
+          const precheck = await deterministicContentPrecheck({
+            env,
+            token,
+            repo,
+            target,
+            scope: contentScopeForPrivateReview,
+          });
+          if (precheck.decision) {
+            decision = precheck.decision;
+          } else {
+            validationForPrivateReview = {
+              ...(isRecord(validationForPrivateReview)
+                ? validationForPrivateReview
+                : {}),
+              deterministicPrecheck: {
+                status: "passed",
+                contentStatus: contentScopeForPrivateReview.status,
+              },
+            };
+          }
+        } catch (error) {
+          decision = defaultManualDecision(
+            `Submission gate could not complete deterministic duplicate/edit review: ${
+              error instanceof Error ? error.message : "unknown error"
+            }.`,
+          );
+        }
+      }
+
       if (!decision) {
         decision = await reviewWithPrivateGate(env, {
           ...message,
@@ -1580,7 +1754,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           },
         });
       }
-      decision = normalizeGateDecision(decision);
       if (decision.verdict === "merge" && !contentScopeForPrivateReview) {
         try {
           contentScopeForPrivateReview = await directContentScopeForPr({
@@ -1603,12 +1776,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       );
       const decisionLabelsToApply =
         decision.verdict === "merge"
-          ? decision.labels.filter(
-              (label) =>
-                label !== LABELS.merged &&
-                label !== LABELS.importOpen &&
-                label !== LABELS.superseded,
-            )
+          ? decision.labels.filter((label) => label !== LABELS.merged)
           : decision.labels;
       const labelsToApply = [
         ...new Set([...decisionLabelsToApply, ...categoryLabels]),
@@ -1824,280 +1992,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
   });
 }
 
-async function handleImportMessage(env: Env, message: QueueMessage) {
-  const payload = message.payload as {
-    repo?: string;
-    number?: number;
-    source?: {
-      repo?: string;
-      number?: number;
-      baseRef?: string;
-      installationId?: number;
-    };
-    runnerKey?: string;
-  };
-  const sourceInstallationId = Number(payload.source?.installationId || 0);
-  if (
-    !sourceInstallationId ||
-    !env.GITHUB_APP_ID ||
-    !env.GITHUB_APP_PRIVATE_KEY
-  ) {
-    throw new Error("Import job is missing GitHub App installation context.");
-  }
-  if (!env.INTERNAL_SHARED_SECRET) {
-    throw new Error("Import runner shared secret is not configured.");
-  }
-  const githubToken = await getInstallationToken({
-    appId: env.GITHUB_APP_ID,
-    privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
-    installationId: sourceInstallationId,
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  const callbackBaseUrl = trimTrailingSlashes(env.SUBMISSION_GATE_URL);
-  if (!callbackBaseUrl) {
-    throw new Error("Submission gate callback URL is not configured.");
-  }
-  const body = JSON.stringify({
-    ...payload,
-    targetKey: message.targetKey,
-    githubToken,
-    callbackUrl: `${callbackBaseUrl}/internal/import-complete`,
-  });
-  const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  const runnerKey = String(payload.runnerKey || message.targetKey);
-  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey);
-  const response = await stub.fetch("https://container.local/import", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-heyclaude-internal-signature": signature,
-    },
-    body,
-  });
-  const result = (await response.json().catch(() => ({}))) as {
-    error?: string;
-    message?: string;
-    accepted?: boolean;
-    pullRequestUrl?: string;
-    pullRequestNumber?: number;
-  };
-  if (response.status === 202 || result.accepted) {
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
-      repo: payload.source?.repo || payload.repo || "",
-      number: Number(payload.source?.number || payload.number || 0),
-      baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
-      status: "import_running",
-      verdict: "import",
-      verdictSummary:
-        result.message || "Maintainer-owned import job accepted by runner.",
-    });
-    await insertAudit(env.SUBMISSION_GATE_DB, {
-      id: crypto.randomUUID(),
-      targetKey: message.targetKey,
-      eventType: "import_pr",
-      decision: "import_queued",
-      summary:
-        result.message || "Maintainer-owned import job accepted by runner.",
-    });
-    return;
-  }
-  if (!response.ok) {
-    if (!result.pullRequestUrl) {
-      const summary = [
-        `Import runner failed: ${response.status}`,
-        result.error ? `error=${result.error}` : "",
-        result.message
-          ? `message=${String(result.message).slice(0, 1000)}`
-          : "",
-      ]
-        .filter(Boolean)
-        .join("; ");
-      await insertAudit(env.SUBMISSION_GATE_DB, {
-        id: crypto.randomUUID(),
-        targetKey: message.targetKey,
-        eventType: "import_pr",
-        decision: "import_failed",
-        summary,
-      });
-      throw new Error(summary);
-    }
-    console.warn("import runner returned existing PR with non-OK response", {
-      status: response.status,
-      pullRequestUrl: result.pullRequestUrl,
-    });
-  }
-  const sourceRepo = payload.source?.repo || payload.repo || "";
-  const sourceNumber = Number(payload.source?.number || payload.number || 0);
-  if (sourceRepo && sourceNumber && result.pullRequestUrl) {
-    await completeImportPr(env, {
-      targetKey: message.targetKey,
-      repo: sourceRepo,
-      number: sourceNumber,
-      baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
-      installationId: sourceInstallationId,
-      importPrUrl: result.pullRequestUrl,
-      githubToken,
-    });
-  }
-}
-
-async function completeImportPr(
-  env: Env,
-  params: {
-    targetKey?: string;
-    repo: string;
-    number: number;
-    baseRef?: string;
-    installationId?: number;
-    importPrUrl: string;
-    summary?: string;
-    githubToken?: string;
-  },
-) {
-  const summary =
-    params.summary ||
-    `Maintainer-owned import PR opened: ${params.importPrUrl}`;
-  await upsertPrState(env.SUBMISSION_GATE_DB, {
-    repo: params.repo,
-    number: params.number,
-    baseRef: params.baseRef || env.PILOT_BASE_REF,
-    status: "import_pr_open",
-    verdict: "import",
-    verdictSummary: summary,
-    importPrUrl: params.importPrUrl,
-  });
-
-  const token =
-    params.githubToken ||
-    (params.installationId
-      ? await getInstallationToken({
-          appId: env.GITHUB_APP_ID || "",
-          privateKeyPem: env.GITHUB_APP_PRIVATE_KEY || "",
-          installationId: params.installationId,
-          apiVersion: env.GITHUB_API_VERSION,
-        })
-      : "");
-  if (!token) return;
-
-  const repo = parseRepo(params.repo);
-  await addLabels({
-    token,
-    repo,
-    issueNumber: params.number,
-    labels: [LABELS.importOpen, LABELS.superseded],
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await upsertMarkerComment({
-    token,
-    repo,
-    issueNumber: params.number,
-    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    body: markerComment(
-      {
-        verdict: "import",
-        summary: [
-          summary,
-          "",
-          "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
-        ].join("\n"),
-        labels: [LABELS.importOpen, LABELS.superseded],
-      },
-      env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    ),
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await closeIssueOrPullRequest({
-    token,
-    repo,
-    issueNumber: params.number,
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-}
-
-async function importCompleteRoute(request: Request, env: Env) {
-  const body = await request.text();
-  if (!env.INTERNAL_SHARED_SECRET) {
-    return json({ ok: false, error: "not_configured" }, { status: 503 });
-  }
-  const valid = await verifyInternalSignature({
-    secret: env.INTERNAL_SHARED_SECRET,
-    payload: body,
-    signatureHeader: request.headers.get("x-heyclaude-internal-signature"),
-  });
-  if (!valid)
-    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
-  type ImportCompletePayload = {
-    targetKey?: string;
-    repo?: string;
-    number?: number;
-    baseRef?: string;
-    installationId?: number;
-    importPrUrl?: string;
-    summary?: string;
-    ok?: boolean;
-    error?: string;
-    message?: string;
-  };
-  let payload: ImportCompletePayload;
-  try {
-    payload = JSON.parse(body) as ImportCompletePayload;
-  } catch {
-    return json({ ok: false, error: "invalid_payload" }, { status: 400 });
-  }
-  if (payload.ok === false || !payload.importPrUrl) {
-    const summary = [
-      "Import runner failed.",
-      payload.error ? `error=${payload.error}` : "",
-      payload.message ? `message=${payload.message}` : "",
-    ]
-      .filter(Boolean)
-      .join(" ");
-    if (payload.repo && payload.number) {
-      await upsertPrState(env.SUBMISSION_GATE_DB, {
-        repo: payload.repo,
-        number: payload.number,
-        baseRef: payload.baseRef || env.PILOT_BASE_REF,
-        status: "import_failed",
-        verdict: "import",
-        verdictSummary: summary,
-      });
-    }
-    await insertAudit(env.SUBMISSION_GATE_DB, {
-      id: crypto.randomUUID(),
-      targetKey:
-        payload.targetKey ||
-        `${payload.repo || "unknown"}#${payload.number || 0}`,
-      eventType: "import_complete",
-      decision: "import_failed",
-      summary,
-    });
-    return json({ ok: true });
-  }
-
-  if (!payload.repo || !payload.number) {
-    return json({ ok: false, error: "missing_import_source" }, { status: 400 });
-  }
-  await completeImportPr(env, {
-    targetKey: payload.targetKey,
-    repo: payload.repo,
-    number: payload.number,
-    baseRef: payload.baseRef || env.PILOT_BASE_REF,
-    installationId: payload.installationId,
-    importPrUrl: payload.importPrUrl,
-    summary: payload.summary || "Maintainer-owned import PR opened.",
-  });
-  await insertAudit(env.SUBMISSION_GATE_DB, {
-    id: crypto.randomUUID(),
-    targetKey:
-      payload.targetKey ||
-      `${payload.repo || "unknown"}#${payload.number || 0}`,
-    eventType: "import_complete",
-    decision: "import",
-    summary: payload.summary || payload.importPrUrl || "Import completed.",
-  });
-  return json({ ok: true });
-}
-
 async function route(request: Request, env: Env, ctx: ExecutionContext) {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return json({ ok: true });
@@ -2139,12 +2033,6 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
   }
   if (request.method === "POST" && url.pathname === "/webhooks/github") {
     return githubWebhookRoute(request, env, ctx);
-  }
-  if (
-    request.method === "POST" &&
-    url.pathname === "/internal/import-complete"
-  ) {
-    return importCompleteRoute(request, env);
   }
   return json({ ok: false, error: "not_found" }, { status: 404 });
 }
@@ -2194,22 +2082,6 @@ export class SubmissionLock extends DurableObject {
   }
 }
 
-export class SubmissionImportRunner extends Container<Env> {
-  defaultPort = 8080;
-  sleepAfter = "10m";
-
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
-    this.envVars = {
-      ALLOWED_IMPORT_REPOS:
-        env.ALLOWED_IMPORT_REPOS ||
-        env.PUBLIC_REPO ||
-        "JSONbored/awesome-claude",
-      INTERNAL_SHARED_SECRET: env.INTERNAL_SHARED_SECRET || "",
-    };
-  }
-}
-
 export default {
   async fetch(request, env, ctx) {
     return withCors(await route(request, env, ctx), request, env);
@@ -2218,11 +2090,7 @@ export default {
     for (const message of batch.messages) {
       const body = message.body as QueueMessage;
       try {
-        if (body.kind === "import_pr") {
-          await handleImportMessage(env, body);
-        } else {
-          await handleReviewMessage(env, body);
-        }
+        await handleReviewMessage(env, body);
         message.ack();
       } catch (error) {
         if (error instanceof SubmissionLockBusyError) {

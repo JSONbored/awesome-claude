@@ -6,14 +6,16 @@ or by opening a direct single-entry PR. They should not edit README, generated
 registry artifacts, public data, workflows, scripts, package metadata, or
 multiple entries.
 
-Public GitHub issue creation is disabled for content intake. Existing legacy
-submission issues can still be drained with the private operator kit, but new
-website submissions must go through the private submission gate and GitHub PRs.
+Public GitHub issue creation is disabled for content intake. The old public
+issue queue/import/stale-management scripts are not part of the supported
+submission path; website submissions must go through the private submission gate
+and GitHub PRs.
 
 The private maintainer gate owns final submission decisions: label immediately,
-review, post one stable marker comment, then `close`, `request_changes`,
-`manual`, `import`, or `ignore`. Automation never auto-merges or publishes
-content directly to `main`.
+review, post one stable marker comment, then `merge`, `close`,
+`request_changes`, `manual`, or `ignore`. For single-file content PRs, the gate
+is intentionally one-shot and slightly aggressive: ambiguity usually closes the
+PR with a public reason so the contributor can resubmit cleanly.
 
 ## Labels
 
@@ -25,11 +27,10 @@ content directly to `main`.
   comment explains the public reason.
 - `submission-manual-review`: potentially useful, but source, provenance,
   package, credentials, safety, or category-fit risk needs maintainer judgment.
-- `submission-closed-by-gate`: the worker closed a pilot-scoped hard failure or
+- `submission-closed-by-gate`: the worker closed a hard failure or
   route-away submission.
-- `import-pr-open`: a maintainer-owned import PR exists.
-- `superseded-by-import-pr`: the contributor PR was copied into a trusted import
-  PR and should not be merged directly.
+- `submission-merged-by-gate`: the worker approved and merged a passing
+  one-file content PR after public checks and private review.
 
 ## Policy Matrix
 
@@ -59,25 +60,16 @@ The private gate is hosted as a Cloudflare Worker with supporting bindings:
 - Production D1, R2, Queue, and dead-letter Queue resources are the only
   supported submission-gate runtime moving forward.
 - Worker endpoints for GitHub App auth, draft creation, draft status, GitHub
-  webhooks, and internal import callbacks.
+  webhooks, and review processing.
 - D1 tables for drafts, PR state, verdict summaries, audit rows, and short-lived
   encrypted user-token handoff.
-- R2 for raw webhook payload snapshots, draft payloads, reports, and container
-  logs.
-- Queues for review jobs and import jobs, with dead-letter queues.
+- R2 for raw webhook payload snapshots, draft payloads, and review reports.
+- Queues for review jobs, with dead-letter queues.
 - Durable Objects for per-draft or per-PR locks.
-- Cloudflare Containers for trusted git, Node, pnpm, validation, generation,
-  branch push, and maintainer-owned import PR creation.
 
 Provision queues before deploying the Worker. The production environment needs
-`heyclaude-submission-review`, `heyclaude-submission-review-dlq`,
-`heyclaude-submission-import`, and `heyclaude-submission-import-dlq`.
-The review consumer retries three times before the DLQ; the import consumer
-retries twice before the DLQ.
-
-The Worker can label and comment quickly. Import generation happens in the
-Container because it needs a filesystem, git, pnpm, and the repo validation
-toolchain.
+`heyclaude-submission-review` and `heyclaude-submission-review-dlq`.
+The review consumer retries three times before the DLQ.
 
 Do not deploy the submission gate from unrelated feature branches. It owns the
 production custom domain.
@@ -98,39 +90,33 @@ the gate later creates its own formal GitHub check run.
 - The Worker applies `submission-under-review` immediately, enqueues one job per
   PR, and updates one stable marker comment.
 - The review job waits for configured required validation, currently
-  `validate-content` and `validate-content-policy`. Pending validation keeps the
-  PR in `validation_pending`; failed validation gets one request-changes
-  comment; green source validation is the only path into private corpus review.
-  Generated artifacts are validated on the maintainer-owned import PR, not on
-  the contributor's raw single-entry PR.
+  `validate-content` and Superagent. Pending validation keeps the PR in
+  `validation_pending`; failed validation gets one terminal comment and closes
+  or requests changes depending on the failure class. Green source validation
+  is the only path into private corpus review.
+- Accepted one-file content PRs are merged directly. Generated artifacts are
+  build-time outputs and are not committed in contributor PRs.
 - `close` is for spam, promo/listing attempts, duplicates, unsupported
   categories, generated-artifact tampering, unsafe package/install patterns,
-  missing source of truth, or non-content PRs.
-- `request_changes` is for fixable missing fields, weak provenance, category
-  mismatch, or content/frontmatter shape problems.
-- `manual` is for high-risk but potentially useful entries, credential-heavy
-  tools, ambiguous package provenance, or commercial edge cases.
-- `import` is limited to deterministic low-risk passes. The Container creates a
-  maintainer-owned import PR from a trusted checkout, and the contributor PR is
-  closed as superseded after that import PR exists.
+  missing source of truth, protected-field edits, or non-content PRs.
+- `request_changes` is for clearly fixable missing fields or shape problems
+  where preserving the current PR is better than resubmission.
+- `manual` is rare and reserved for Superagent/private-review outages, merge
+  failures after retries, or genuinely close high-risk calls.
 
-## Backlog Drain
+## Legacy Issue Intake
 
-Existing content-submission issues should be handled before deleting the private
-legacy scripts:
-
-1. Run the private operator kit in report-only mode against the open queue.
-2. Close deterministic stale, promo, duplicate, unsupported, and invalid issues.
-3. Request changes only where the author can realistically fix the submission.
-4. Route high-risk but possibly useful entries to manual review.
-5. Import accepted entries through a maintainer-owned branch.
-6. Rerun the queue after each batch and verify counts dropped.
+Issue-based content intake is retired. If an old submission issue is still open,
+close it with the PR-first resubmission route or convert it manually into a
+normal one-file content PR. Do not reintroduce public issue import, stale issue
+management, or queue mutation workflows.
 
 ## Promotion Criteria
 
 - Zero actions outside pilot scope.
 - No false auto-closes in regression fixtures or live pilot batches.
 - Stable marker comments, labels, branches, and PRs across repeated events.
-- Successful maintainer-owned import PR creation.
-- Clean validation before import PR creation.
-- `main` remains protected and manual-merge only.
+- Successful direct merge for accepted one-file content PRs.
+- Clean validation before private review and merge.
+- `main` remains protected; only passing single-file content PRs can be merged by
+  the maintainer gate.

@@ -96,7 +96,6 @@ describe("PR change classifier", () => {
       direct_submission: "true",
       source_content_only: "true",
       readme_only: "false",
-      maintainer_import: "false",
       registry: "false",
       raycast: "false",
       web: "false",
@@ -125,42 +124,15 @@ describe("PR change classifier", () => {
     });
   });
 
-  it("routes maintainer content imports through artifact validation lanes without generated files", () => {
-    const { cwd, baseSha } = createFixtureRepo();
-
-    const contentDir = path.join(cwd, "content", "agents");
-    fs.mkdirSync(contentDir, { recursive: true });
-    fs.writeFileSync(
-      path.join(contentDir, "example.mdx"),
-      "---\ntitle: Example\n---\n",
-    );
-    git(cwd, ["add", "content/agents/example.mdx"]);
-    git(cwd, ["commit", "-m", "import content entry"]);
-
-    const outputs = runClassifier(cwd, baseSha, {
-      GITHUB_HEAD_REF: "automation/submission-pr-624-example",
-    });
-    expect(outputs).toMatchObject({
-      content: "true",
-      content_agents: "true",
-      direct_submission: "false",
-      maintainer_import: "true",
-      source_content_only: "true",
-      registry: "true",
-      raycast: "true",
-      web: "true",
-    });
-  });
-
-  it("routes submission automation changes through full owned validation lanes", () => {
+  it("routes direct PR submission automation changes through full owned validation lanes", () => {
     const { cwd, baseSha } = createFixtureRepo();
     const scriptDir = path.join(cwd, "scripts");
     fs.mkdirSync(scriptDir, { recursive: true });
     fs.writeFileSync(
-      path.join(scriptDir, "import-submission-issue.mjs"),
+      path.join(scriptDir, "analyze-submission-risk.mjs"),
       "console.log('changed');\n",
     );
-    git(cwd, ["add", "scripts/import-submission-issue.mjs"]);
+    git(cwd, ["add", "scripts/analyze-submission-risk.mjs"]);
     git(cwd, ["commit", "-m", "update submission automation"]);
 
     const outputs = runClassifier(cwd, baseSha);

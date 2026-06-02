@@ -258,14 +258,15 @@ export async function resolveReadmeEntryChange(change, options = {}) {
 }
 
 export function buildReadmeRefreshBody(resolvedChanges) {
+  const count = resolvedChanges.length;
   const contentLines = resolvedChanges.length
     ? resolvedChanges.map((change) => `- ${change.summary}`).join("\n")
     : "- No individual catalog entries were detected from the README diff.";
 
   return `## Summary
-Automated README refresh after content or generator changes on \`main\`.
+Automated README refresh after content or generator changes on \`main\`. This PR intentionally reuses the \`automation/readme-refresh\` branch, so pending README changes accumulate in one reviewable PR instead of creating one PR per accepted content item.
 
-## Content included
+## Pending content included (${count})
 ${contentLines}
 
 ## What changed

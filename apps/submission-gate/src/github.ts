@@ -66,14 +66,6 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
     color: "1d76db",
     description: "Submission category: tools",
   },
-  "import-pr-open": {
-    color: "0e8a16",
-    description: "Legacy: a maintainer-owned import PR exists",
-  },
-  "superseded-by-import-pr": {
-    color: "cfd3d7",
-    description: "Legacy: original submission was superseded by an import PR",
-  },
 };
 
 class GitHubApiError extends Error {
@@ -338,6 +330,45 @@ export async function getRepositoryFileContent(params: {
   return atob(String(payload.content || "").replace(/\s+/g, ""));
 }
 
+export async function getRepositoryTree(params: {
+  token: string;
+  repo: GitHubRepo;
+  ref: string;
+  recursive?: boolean;
+  apiVersion?: string;
+}) {
+  const suffix = params.recursive ? "?recursive=1" : "";
+  return githubJson<{
+    tree?: Array<{ path?: string; type?: string; sha?: string }>;
+    truncated?: boolean;
+  }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/git/trees/${encodeURIComponent(params.ref)}${suffix}`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+}
+
+export async function getRepositoryBlobText(params: {
+  token: string;
+  repo: GitHubRepo;
+  sha: string;
+  apiVersion?: string;
+}) {
+  const payload = await githubJson<{ encoding?: string; content?: string }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/git/blobs/${encodeURIComponent(params.sha)}`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+  if (payload.encoding !== "base64") {
+    throw new Error("GitHub blob API did not return base64 content.");
+  }
+  return atob(String(payload.content || "").replace(/\s+/g, ""));
+}
+
 type CheckRun = {
   name?: string;
   status?: string;
@@ -529,6 +560,31 @@ export async function listPullRequestsForCommit(params: {
     }>
   >(
     `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/commits/${encodeURIComponent(params.sha)}/pulls`,
+    {
+      token: params.token,
+      apiVersion: params.apiVersion,
+    },
+  );
+}
+
+export async function listOpenPullRequests(params: {
+  token: string;
+  repo: GitHubRepo;
+  baseRef: string;
+  apiVersion?: string;
+}) {
+  return githubJson<
+    Array<{
+      number?: number;
+      title?: string;
+      html_url?: string;
+      created_at?: string;
+      draft?: boolean;
+      base?: { ref?: string; repo?: { full_name?: string } };
+      head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
+    }>
+  >(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls?state=open&base=${encodeURIComponent(params.baseRef)}&sort=created&direction=asc&per_page=100`,
     {
       token: params.token,
       apiVersion: params.apiVersion,
