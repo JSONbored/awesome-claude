@@ -1,0 +1,46 @@
+---
+title: Protocol Debug Workbench
+slug: protocol-debug-workbench
+category: tools
+description: Visual workbench for inspecting MCP server tools, resources, prompts, and local transport behavior.
+cardDescription: Visual workbench for MCP server debugging.
+seoTitle: Protocol debug workbench for MCP servers
+seoDescription: Protocol Debug Workbench helps developers inspect MCP server tools, resources, prompts, and local transport behavior.
+author: Model Context Protocol
+dateAdded: "2026-06-02"
+websiteUrl: "https://modelcontextprotocol.io/docs/tools"
+documentationUrl: "https://modelcontextprotocol.io/docs/tools"
+repoUrl: "https://github.com/modelcontextprotocol/inspector"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installable: true
+installCommand: "npx @modelcontextprotocol/inspector node build/index.js"
+usageSnippet: "npx @modelcontextprotocol/inspector node build/index.js"
+prerequisites:
+  - A local or remote MCP server implementation to inspect.
+  - Node.js and npm/npx available in the development environment.
+safetyNotes:
+  - Starts a local browser UI and proxy process for MCP debugging.
+  - Only connect it to trusted MCP servers during development.
+privacyNotes:
+  - MCP requests, responses, and tool payloads may be visible in the local inspector session.
+  - Avoid production credentials and private user data unless the test environment is isolated.
+tags:
+  - mcp
+  - debugging
+  - testing
+keywords:
+  - protocol debug workbench
+  - mcp server inspection
+  - model context protocol testing
+---
+
+## Editorial notes
+
+Protocol Debug Workbench gives developers an interactive way to check MCP server behavior before adding a server to a real client configuration. It is useful for inspecting exposed tools, resource responses, prompt surfaces, and startup behavior.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
