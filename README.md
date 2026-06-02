@@ -1,4 +1,5 @@
 <table>
+  <!-- non-content gate ignore validation note -->
   <tr>
     <td width="58%" valign="top">
       <picture>
