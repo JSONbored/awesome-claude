@@ -1088,6 +1088,20 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           },
         });
       }
+      if (decision.verdict === "import" && !decision.importJob) {
+        decision = defaultManualDecision(
+          "Private review accepted this source, but did not return an import job.",
+        );
+      }
+      const status =
+        decision.verdict === "import" ? "queued" : decision.verdict;
+      const labelsToApply =
+        decision.verdict === "import"
+          ? decision.labels.filter(
+              (label) =>
+                label !== LABELS.importOpen && label !== LABELS.superseded,
+            )
+          : decision.labels;
 
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
@@ -1102,7 +1116,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         headRepo: target.headRepo,
         headRef: target.headRef,
         baseRef: target.baseRef || env.PILOT_BASE_REF,
-        status: decision.verdict,
+        status,
         verdict: decision.verdict,
         verdictSummary: decision.summary,
       });
@@ -1111,16 +1125,16 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         repo,
         issueNumber: target.number,
         labels: DECISION_LABELS.filter(
-          (label) => !decision.labels.includes(label),
+          (label) => !labelsToApply.includes(label),
         ),
         apiVersion: env.GITHUB_API_VERSION,
       });
-      if (decision.labels.length) {
+      if (labelsToApply.length) {
         await addLabels({
           token,
           repo,
           issueNumber: target.number,
-          labels: decision.labels,
+          labels: labelsToApply,
           apiVersion: env.GITHUB_API_VERSION,
         });
       }

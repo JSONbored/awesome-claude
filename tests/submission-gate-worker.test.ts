@@ -291,9 +291,20 @@ describe("Cloudflare submission gate helpers", () => {
     const addIndex = source.indexOf("await addLabels({", removeIndex);
 
     expect(source).toContain("const DECISION_LABELS = [");
-    expect(source).toContain("!decision.labels.includes(label)");
+    expect(source).toContain("!labelsToApply.includes(label)");
     expect(removeIndex).toBeGreaterThan(0);
     expect(addIndex).toBeGreaterThan(removeIndex);
+  });
+
+  it("does not mark import PR labels or state before import creation", () => {
+    const source = readWorkerSource();
+
+    expect(source).toContain(
+      'const status =\n        decision.verdict === "import" ? "queued" : decision.verdict',
+    );
+    expect(source).toContain("label !== LABELS.importOpen");
+    expect(source).toContain("label !== LABELS.superseded");
+    expect(source).toContain('status: "import_pr_open"');
   });
 
   it("signs internal import callbacks with the same HMAC verifier", async () => {
