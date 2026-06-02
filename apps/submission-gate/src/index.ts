@@ -94,12 +94,23 @@ const GATE_VERDICTS = new Set<GateVerdict>([
 ]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
+  "address",
+  "address_1",
+  "address_2",
+  "address_line_1",
+  "address_line_2",
+  "city",
   "contact_email",
   "contact_phone",
   "email",
   "phone",
+  "postal_code",
+  "state",
+  "street_address",
   "full_name",
   "name_full",
+  "zip",
+  "zip_code",
 ]);
 
 function json(payload: unknown, init: ResponseInit = {}) {
@@ -260,7 +271,11 @@ async function createDraftRoute(request: Request, env: Env) {
     fields,
     authState: state,
   });
-  await putAuditObject(env, `drafts/${id}.json`, { id, target, fields });
+  await putAuditObject(env, `drafts/${id}.json`, {
+    id,
+    target,
+    fields: redactPublicDraftFields(fields),
+  });
 
   const configured = Boolean(
     env.GITHUB_APP_CLIENT_ID && env.GITHUB_APP_CLIENT_SECRET,
@@ -311,6 +326,7 @@ async function getDraftRoute(env: Env, id: string) {
 async function githubCallbackRoute(request: Request, env: Env) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code") || "";
+  const providerError = url.searchParams.get("error") || "";
   const state = url.searchParams.get("state") || "";
   const [draftId, stateToken] = state.split(".");
   if (
@@ -319,6 +335,11 @@ async function githubCallbackRoute(request: Request, env: Env) {
     !(await verifyDraftState(env.SUBMISSION_GATE_DB, draftId, stateToken))
   ) {
     return textResponse("Invalid or expired submission state.", {
+      status: 400,
+    });
+  }
+  if (providerError || !code) {
+    return textResponse("GitHub authorization was not completed.", {
       status: 400,
     });
   }
@@ -424,8 +445,14 @@ async function githubWebhookRoute(
   const signature = request.headers.get("x-hub-signature-256");
   const deliveryId =
     request.headers.get("x-github-delivery") || crypto.randomUUID();
+  if (!env.GITHUB_WEBHOOK_SECRET) {
+    return json(
+      { ok: false, error: "webhook_secret_not_configured" },
+      { status: 503 },
+    );
+  }
   const valid = await verifyGitHubWebhookSignature({
-    secret: env.GITHUB_WEBHOOK_SECRET || "",
+    secret: env.GITHUB_WEBHOOK_SECRET,
     payload: raw,
     signatureHeader: signature,
   });

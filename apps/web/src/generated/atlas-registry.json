@@ -1,192 +1,192 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "artifactContracts": [
     {
       "path": "/data/directory-index.json",
-      "bytes": 2387347,
-      "sha256": "6fdde0f3af76f88c850553d3a46aa6c94f315cf2d12248c3ad83e9275021875a",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 2388595,
+      "sha256": "a8c5d8dae7734194dfb1f86ce285af0359d0756969428c4783560eb61dc96c18",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/search-index.json",
-      "bytes": 940922,
-      "sha256": "e2fd8ee4129318362a3391a25ec7edba64441803d956d83d288a580fde1c75bb",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 942086,
+      "sha256": "441052f9676725d0ad1cc5324f2fe7e40a09f1e958db223453ad32209514a160",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/raycast-index.json",
-      "bytes": 1236883,
-      "sha256": "2993cf91cab322631dc5cb08d7209203a5418278dbd66d10acb0dce592200527",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 1239188,
+      "sha256": "33f1be6c140da0af61ab0fa4674543942f7236b510b176f5e541470f65a89233",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/ecosystem-feed.json",
-      "bytes": 753763,
-      "sha256": "04df56940867a4c097db494a3f22e9bfa81ee33be1685ac2d5279956dd038b2a",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 753766,
+      "sha256": "4672f3a26459eca5d92ddbac5ef97c17135695fb787ead7870e82e32e24ee996",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/mcp-registry-feed.json",
       "bytes": 45047,
       "sha256": "8502e3c73b63c720311d21b02d2ad4fc7db7ce95314698cd7864a5e45718ab2b",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/plugin-export-feed.json",
-      "bytes": 255612,
-      "sha256": "27a76533010cd4ecfe7bb75507f7235f9a38dd91b54f77969b71eb89f9e4726d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 255613,
+      "sha256": "d50c4f407a38e9c3fe090013469f497028f9d647aad7486e911e6d2fd3e67d7e",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-changelog.json",
       "bytes": 224712,
-      "sha256": "b3b49db6cad03fb184aeea1ffad3742f9bb028fdf9fc4e95d54bdca06e118495",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "b11b4e5c2f42feed2598a09448dbc318de5d2d6216225dc841f82a244b46259d",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-trust-report.json",
-      "bytes": 309763,
-      "sha256": "a5441104338f0449554742cd3e1a3e02e4cab2a8360377c8b9d4cfc5b90123b6",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 309758,
+      "sha256": "de8e856e10d64a40ef23cf5ff62cd09c7bfc0509e040a2e75a8ea35fadd5a0f3",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/index.json",
       "bytes": 3139,
-      "sha256": "856105f5f0477024474388e409f9800bce6eade03b4bfa43bb740d679823abe6",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "d679fe12a622fc4c39a8d04927d2dfb017201034a45977e390e5ce64d4a3235f",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/submission-spec.json",
       "bytes": 38633,
       "sha256": "1c21aab80ef2936ea4ed619c90465568f5997ffa869f89455a4c0961179a63ed",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-report.json",
       "bytes": 342198,
       "sha256": "649f82212f4d52e8c58e82a8060b543eb72b8f840f0294022dd6492b5d22b737",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/content-quality-prompts.json",
       "bytes": 15255,
       "sha256": "4b4bf38caf0b9536f2965ae8a0834dc688384795eeb7d0eb9bb8ad5ebb8f585d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/jsonld-snapshots.json",
-      "bytes": 1260906,
-      "sha256": "579e61d5fca0f74b239817963a5fd22ee03d5d772a7d3e58214fd5e29d532ab0",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 1260891,
+      "sha256": "25b74af224af7b962353332997f22727a6a3d52aba45e44da5d686eecc848278",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/llms-full.txt",
-      "bytes": 3995063,
-      "sha256": "dee5869ff144539563ab22f6272ac81c73303fa3f8c00c00191d534d89d800ab",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 3997227,
+      "sha256": "fc8a862c0360ebcd347f8a54c9509d9c8c477fb0401c22e3bed9ef13f66a0811",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/agents.json",
       "bytes": 686078,
       "sha256": "54592b52ff7377f0da93c05aa0c2d3e0b3d694f317b7d4289b52b489a4e7623c",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/mcp.json",
       "bytes": 226722,
       "sha256": "f6922a8b2523751f0756a62b02948108e0d01cc5d342ef0a53beb1a9c54d25bb",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/tools.json",
       "bytes": 153275,
       "sha256": "b179ca1607f6de5bc0b62d29b809a1c66fc7208d125ec2b5c8a899aa9a39f774",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/skills.json",
-      "bytes": 461335,
-      "sha256": "3c9371802102f5bf07269b7ec45a8f7fa0697088b224d37e36bedf4e9ad91642",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462583,
+      "sha256": "e0fef61cbe3eabc090b5dbd76ae418d4e3f100ca45223c2fc1123688109c9416",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/rules.json",
       "bytes": 319777,
       "sha256": "78fe11e2d58008f716c964e79b5eda3141d53e175a9cb1657aa8d34f4ca9986d",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/commands.json",
       "bytes": 83627,
       "sha256": "93cbebe1048e147f0021e826fecc19cdc9999b7997126be6e161e81ba407afe9",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/hooks.json",
       "bytes": 253282,
       "sha256": "13c5ffd760fb276aa21581b4a82d176603fd30f75cfd3c095e7e81885b5be5cc",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/guides.json",
       "bytes": 59203,
       "sha256": "aa0b6a6e775c9a21e25b3abc9b583cd9aecebeaf68bf9f171784239138ed930a",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/collections.json",
       "bytes": 39536,
       "sha256": "bac2d3a60172796ca54ad060b6a4b113eb4c036ccd5ccfe3eadbea8f6fb80cff",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/categories/statuslines.json",
       "bytes": 105934,
       "sha256": "3e46ad93d5d5d0832f513210e7c39664cba997559204c9344671a79392e5f09e",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/claude.json",
-      "bytes": 461363,
-      "sha256": "ff932e17988be12310a53dc6de7b0e9ed016d316afc465e6500092658edd4155",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462611,
+      "sha256": "b614f4f4275ed7a37036aaa01ea09ff25f3aa4b6ffe61baa71189dc952e1ea3a",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/codex.json",
-      "bytes": 461361,
-      "sha256": "456404efafea7a9b59a8097cc7b550fea61eae2a887376cc5c50e1915ba4f308",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462609,
+      "sha256": "6f7b8dc8a4bf306a764edf9bfcb08ad7814a6c712f4657e1cc514ce20ddf3383",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/windsurf.json",
-      "bytes": 461367,
-      "sha256": "17d2e655b4d74589dedc2621134574b0ec445e4548aad71058d1d687f0226d76",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462615,
+      "sha256": "f924d794b57673e4a1cb5bad5b1e93761f3a346b8b586de73239520fe786d271",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/gemini.json",
-      "bytes": 461363,
-      "sha256": "90cba5aa5e9fdac2f31f5ea7184d65acd08999a6083eb5fed51f87af4c877fa0",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462611,
+      "sha256": "9aa242215ebd5abe34162edfa68bedfdef92c1e889c1bcdd0957e0de3b072573",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/cursor.json",
-      "bytes": 461363,
-      "sha256": "6dc2f9b5806f64cfc9f69a23641700d308aa20eae7c6a5f1ca6c9798dd73a4f2",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462611,
+      "sha256": "acb39caa1b3813af8a863a025e5b53439ed4002bc64e7ad04a86d92c056fcf70",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/feeds/platforms/generic-agents.json",
-      "bytes": 461379,
-      "sha256": "1b480537380ef3287d374c8ee36f091bcdd926e077c6a01014d271ab4237c25a",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "bytes": 462627,
+      "sha256": "1c9d163360cb9b0e9705fb5ed0ae3538791d6e46c9595abfc3eea8df54eed15e",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     },
     {
       "path": "/data/registry-manifest.json",
       "bytes": 445169,
-      "sha256": "2961125febe0b41da9368278bc0db8deb830fe90cb0ec288241e4025001b2b8f",
-      "builtAt": "2026-05-26T00:00:00.000Z"
+      "sha256": "5851c67355572e35789f4e86056f85763c6c74efd9feacbce56bf76e239ee331",
+      "builtAt": "2026-06-02T00:00:00.000Z"
     }
   ],
   "entries": [
@@ -11092,17 +11092,17 @@
       "title": "HeyClaude Content Submission Factory",
       "description": "Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.",
       "seoTitle": "HeyClaude Content Submission Factory Skill",
-      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
+      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and PR-first review content.",
       "author": "JSONbored",
       "authorProfileUrl": "https://github.com/JSONbored",
       "dateAdded": "2026-04-30",
-      "contentUpdatedAt": "2026-04-30T03:53:43-06:00",
+      "contentUpdatedAt": "2026-06-02T00:00:00-07:00",
       "tags": ["heyclaude", "submissions", "registry", "content-workflow", "seo"],
       "keywords": [
         "submit content to heyclaude",
         "heyclaude registry submission",
         "ai directory content fields",
-        "github issue submission",
+        "github pr submission",
         "registry seo metadata",
         "heyclaude",
         "submissions",
@@ -11112,7 +11112,7 @@
         "skills",
         "claude"
       ],
-      "cardDescription": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "cardDescription": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory",
       "usageSnippet": "Use this skill when preparing a new HeyClaude content submission or improving an existing registry entry.",
       "documentationUrl": "https://heyclau.de/submit",
@@ -11123,8 +11123,16 @@
         "Category candidate or content type",
         "Short description of what the resource does"
       ],
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Review generated submission text before opening a PR; this skill prepares drafts and should not auto-publish content."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public submission facts, source URLs, and non-secret metadata.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated submission packets."
+      ],
       "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
-      "downloadSha256": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
+      "downloadSha256": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008",
       "packageVerified": true,
       "downloadTrust": "first-party",
       "githubStars": null,
@@ -11135,48 +11143,48 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-content-submission-factory.mdc",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "skillType": "general",
       "skillLevel": "advanced",
       "verificationStatus": "validated",
-      "verifiedAt": "2026-04-30",
+      "verifiedAt": "2026-06-02",
       "retrievalSources": [
         "https://heyclau.de/submit",
         "https://heyclau.de/submissions",
-        "https://github.com/JSONbored/awesome-claude/issues/new/choose"
+        "https://github.com/JSONbored/awesome-claude/blob/main/AGENTS.md"
       ],
       "testedPlatforms": ["Claude", "Codex", "Windsurf", "Gemini", "Cursor", "Generic AGENTS"],
       "readingTime": 6,
@@ -11270,13 +11278,13 @@
       "category": "skills",
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.",
+      "description": "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.",
       "seoTitle": "HeyClaude Skill Submission Factory Skill",
-      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
+      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
       "author": "JSONbored",
       "authorProfileUrl": "https://github.com/JSONbored",
       "dateAdded": "2026-04-27",
-      "contentUpdatedAt": "2026-04-29T22:22:06-06:00",
+      "contentUpdatedAt": "2026-06-02T00:00:00-07:00",
       "tags": ["heyclaude", "skill-authoring", "agent-skills", "registry", "submissions"],
       "keywords": [
         "create agent skill",
@@ -11292,7 +11300,7 @@
         "claude",
         "heyclaude skill submission factory"
       ],
-      "cardDescription": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "cardDescription": "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate.",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory",
       "usageSnippet": "Use this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry.",
       "documentationUrl": "https://heyclau.de/submit",
@@ -11303,8 +11311,16 @@
         "Official docs or source URLs",
         "Validation commands or acceptance criteria"
       ],
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Produces public skill package and submission drafts; review generated files before opening a PR or sharing them."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public skill requirements, source URLs, and validation notes.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated skill packages."
+      ],
       "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",
-      "downloadSha256": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
+      "downloadSha256": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4",
       "packageVerified": true,
       "downloadTrust": "first-party",
       "githubStars": null,
@@ -11315,44 +11331,44 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-skill-submission-factory.mdc",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "skillType": "general",
       "skillLevel": "advanced",
       "verificationStatus": "validated",
-      "verifiedAt": "2026-04-27",
+      "verifiedAt": "2026-06-02",
       "retrievalSources": [
         "https://heyclau.de/submit",
         "https://developers.openai.com/codex/skills",
@@ -23382,7 +23398,7 @@
       "title": "HeyClaude Content Submission Factory",
       "dateAdded": "2026-04-30",
       "type": "added",
-      "artifactHash": "0b86d6eef500b85074368fdf566999c2dbf418b37a748583a65229e9287f43d8"
+      "artifactHash": "86da0d9e317038dbbb7dad0506e3b860029b24e18a7053454dfe573d99f5a237"
     },
     {
       "category": "mcp",

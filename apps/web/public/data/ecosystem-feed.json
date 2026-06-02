@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -10433,7 +10433,7 @@
       "category": "skills",
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
       "url": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -10466,17 +10466,17 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
+        "packageChecksum": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008",
         "checksumPresent": true,
         "sourceUrlCount": 4,
         "sourceUrls": [
           "https://heyclau.de/submit",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
           "https://heyclau.de/submissions",
-          "https://github.com/JSONbored/awesome-claude/issues/new/choose"
+          "https://github.com/JSONbored/awesome-claude/blob/main/AGENTS.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-30",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -10560,7 +10560,7 @@
       "category": "skills",
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate.",
       "url": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
       "websiteUrl": "",
       "documentationUrl": "https://heyclau.de/submit",
@@ -10593,7 +10593,7 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
+        "packageChecksum": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4",
         "checksumPresent": true,
         "sourceUrlCount": 7,
         "sourceUrls": [
@@ -10606,7 +10606,7 @@
           "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-27",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -21641,5 +21641,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "56bb52c9422e08c917e64ac279737761792a3d4740d30a8fce9cec50b8cba59d"
+  "signature": "bdb5f7db9d849f22b33c1ee71b372f5094e6c4342cbfa15849c83acf1953d5fc"
 }

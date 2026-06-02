@@ -71,7 +71,7 @@ export function timingSafeEqual(left: string, right: string) {
   const maxLength = Math.max(leftBytes.length, rightBytes.length);
   let diff = leftBytes.length === rightBytes.length ? 0 : 1;
   for (let index = 0; index < maxLength; index += 1) {
-    diff |= (leftBytes[index] || 0) ^ (rightBytes[index] || 0);
+    diff |= (leftBytes[index] ?? 0) ^ (rightBytes[index] ?? 0);
   }
   return diff === 0;
 }

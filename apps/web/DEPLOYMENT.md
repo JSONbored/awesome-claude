@@ -157,14 +157,12 @@ PR previews must pass artifact validation before merge:
 pnpm validate:deployment-artifacts -- --base-url https://<preview-host>
 ```
 
-CI resolves the preview URL automatically. For same-repo PRs with Cloudflare
-credentials, `.github/workflows/content-validation.yml` deploys the PR SHA to
-the shared `heyclaude-dev` Worker and validates that URL. If Cloudflare branch
-or PR previews publish GitHub Deployment statuses, CI validates the deployment
-`environment_url` instead. `DEPLOYMENT_ARTIFACT_BASE_URL` is only a local
-escape hatch for the validation script, not the pull-request merge gate.
-For same-repo web, registry, or MCP PRs, missing Cloudflare credentials or a
-missing preview URL is a failed check, not an allow-missing pass.
+CI resolves the preview URL automatically from the Cloudflare GitHub integration.
+GitHub Actions does not deploy the Worker and does not need Cloudflare write
+tokens. For same-repo web, registry, or MCP PRs, missing GitHub Deployment or
+status URL evidence is a failed check, not an allow-missing pass.
+`DEPLOYMENT_ARTIFACT_BASE_URL` is only a local escape hatch for the validation
+script, not the pull-request merge gate.
 
 ## Newsletter (Resend)
 

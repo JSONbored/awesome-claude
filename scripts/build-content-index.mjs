@@ -511,7 +511,8 @@ async function main() {
       const existingUpdatedAt = existingContentUpdatedAt.get(
         `${entry.category}:${entry.slug}`,
       );
-      entry.contentUpdatedAt = existingUpdatedAt || entry.dateAdded;
+      entry.contentUpdatedAt =
+        entry.contentUpdatedAt || existingUpdatedAt || entry.dateAdded;
       const githubRepo = parseGitHubRepo(entry.repoUrl);
 
       if (githubRepo) {

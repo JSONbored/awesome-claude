@@ -153,7 +153,7 @@ export async function consumeDraftUserToken(db: D1Database, draftId: string) {
     )
     .bind(timestamp, timestamp, draftId, timestamp)
     .first<{ encryptedToken?: string }>();
-  return row?.encryptedToken || "";
+  return row?.encryptedToken ?? null;
 }
 
 export async function getDraftUserToken(db: D1Database, draftId: string) {
@@ -166,7 +166,7 @@ export async function getDraftUserToken(db: D1Database, draftId: string) {
     )
     .bind(draftId, timestamp)
     .first<{ encryptedToken?: string }>();
-  return row?.encryptedToken || "";
+  return row?.encryptedToken ?? null;
 }
 
 export async function updateDraftStatus(

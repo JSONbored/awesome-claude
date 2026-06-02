@@ -1,10 +1,10 @@
 ---
-description: "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues."
+description: "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate."
 globs:
 alwaysApply: false
 ---
 # HeyClaude Skill Submission Factory
-Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.
+Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.
 Use this rule when the user asks for this reusable skill workflow in Cursor. Cursor does not natively install Agent Skills from this package, so follow the SKILL.md instructions as a scoped workflow adapter.
 ## Install
 ```bash

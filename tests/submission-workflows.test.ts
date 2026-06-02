@@ -209,12 +209,12 @@ describe("submission automation workflows", () => {
     expect(source).toContain("pnpm build");
     expect(source).not.toContain("pnpm test:e2e");
     expect(source).not.toContain("playwright install");
-    expect(source).toContain(
-      "PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url }}",
-    );
-    expect(source).not.toContain(
-      "steps.deploy-preview.outputs.base-url || env.CLOUDFLARE_DEV_WORKER_URL",
-    );
+    expect(source).toContain("Resolve PR preview URL");
+    expect(source).toContain("--wait-seconds 600");
+    expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
+    expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
+    expect(source).not.toContain("pnpm --filter web run deploy:dev");
+    expect(source).not.toContain("PREVIEW_DEPLOYMENT_URL:");
   });
 
   it("removes public issue intake workflows from GitHub Actions", () => {
@@ -591,9 +591,12 @@ describe("submission automation workflows", () => {
     expect(source).toContain("trunk check --ci --all");
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
-    expect(source).toContain("Deploy same-repo PR preview to dev Worker");
     expect(source).toContain("Resolve PR preview URL");
+    expect(source).toContain("--wait-seconds 600");
     expect(source).toContain("pnpm validate:deployment-artifacts");
+    expect(source).toContain("pnpm validate:mcp-endpoint");
+    expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");
+    expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
     expect(source).toContain("Dry-run Resend template sync");
     expect(source).toContain("pnpm resend:sync-templates -- --dry-run");

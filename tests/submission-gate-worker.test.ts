@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import path from "node:path";
 
 import {
   buildDraftTarget,
@@ -17,6 +19,14 @@ import {
   verifyGitHubWebhookSignature,
   verifyInternalSignature,
 } from "../apps/submission-gate/src/security";
+import { repoRoot } from "./helpers/registry-fixtures";
+
+function readWorkerSource() {
+  return fs.readFileSync(
+    path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+    "utf8",
+  );
+}
 
 describe("Cloudflare submission gate helpers", () => {
   it("verifies GitHub webhook HMAC signatures", async () => {
@@ -191,5 +201,34 @@ describe("Cloudflare submission gate helpers", () => {
     await expect(decryptText("handoff-secret", encrypted)).resolves.toBe(
       "ghu_example",
     );
+  });
+
+  it("redacts draft PII before writing long-lived R2 audit objects", () => {
+    const source = readWorkerSource();
+    expect(source).toContain("fields: redactPublicDraftFields(fields)");
+  });
+
+  it("rejects cancelled GitHub authorization callbacks before token exchange", () => {
+    const source = readWorkerSource();
+    const callbackSource =
+      source.match(
+        /async function githubCallbackRoute[\s\S]*?\nfunction isPilotPr/,
+      )?.[0] || "";
+    const guardIndex = callbackSource.indexOf("if (providerError || !code)");
+    const exchangeIndex = callbackSource.indexOf("exchangeGitHubUserCode");
+
+    expect(guardIndex).toBeGreaterThan(0);
+    expect(exchangeIndex).toBeGreaterThan(guardIndex);
+  });
+
+  it("fails closed when webhook signing is not configured", () => {
+    const source = readWorkerSource();
+    const guardIndex = source.indexOf("if (!env.GITHUB_WEBHOOK_SECRET)");
+    const verifyIndex = source.indexOf("verifyGitHubWebhookSignature({");
+
+    expect(guardIndex).toBeGreaterThan(0);
+    expect(verifyIndex).toBeGreaterThan(guardIndex);
+    expect(source).toContain('error: "webhook_secret_not_configured"');
+    expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
   });
 });

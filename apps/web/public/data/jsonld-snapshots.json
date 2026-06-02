@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -14766,7 +14766,7 @@
           "@type": "WebPage",
           "@id": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory#webpage",
           "name": "HeyClaude Content Submission Factory",
-          "description": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
+          "description": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and PR-first review content.",
           "url": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
           "isPartOf": {
             "@id": "https://heyclau.de/#website"
@@ -14781,11 +14781,11 @@
           "@id": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory#entry",
           "name": "HeyClaude Content Submission Factory",
           "headline": "HeyClaude Content Submission Factory",
-          "description": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
+          "description": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and PR-first review content.",
           "url": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory",
           "datePublished": "2026-04-30",
-          "dateModified": "2026-04-30T03:53:43-06:00",
-          "keywords": "submit content to heyclaude, heyclaude registry submission, ai directory content fields, github issue submission, registry seo metadata, heyclaude, submissions, registry, content-workflow, seo, skills, claude",
+          "dateModified": "2026-06-02T00:00:00-07:00",
+          "keywords": "submit content to heyclaude, heyclaude registry submission, ai directory content fields, github pr submission, registry seo metadata, heyclaude, submissions, registry, content-workflow, seo, skills, claude",
           "genre": "Skills",
           "author": {
             "@type": "Person",
@@ -14806,7 +14806,7 @@
             {
               "@type": "PropertyValue",
               "name": "Package SHA256",
-              "value": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c"
+              "value": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008"
             },
             {
               "@type": "PropertyValue",
@@ -14932,7 +14932,7 @@
           "@type": "WebPage",
           "@id": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory#webpage",
           "name": "HeyClaude Skill Submission Factory",
-          "description": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
+          "description": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
           "url": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
           "isPartOf": {
             "@id": "https://heyclau.de/#website"
@@ -14947,10 +14947,10 @@
           "@id": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory#entry",
           "name": "HeyClaude Skill Submission Factory",
           "headline": "HeyClaude Skill Submission Factory",
-          "description": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
+          "description": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
           "url": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory",
           "datePublished": "2026-04-27",
-          "dateModified": "2026-04-29T22:22:06-06:00",
+          "dateModified": "2026-06-02T00:00:00-07:00",
           "keywords": "create agent skill, submit skill to heyclaude, cursor rule adapter, skill md package validation, heyclaude, skill-authoring, agent-skills, registry, submissions, skills, claude, heyclaude skill submission factory",
           "genre": "Skills",
           "author": {
@@ -14972,7 +14972,7 @@
             {
               "@type": "PropertyValue",
               "name": "Package SHA256",
-              "value": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f"
+              "value": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4"
             },
             {
               "@type": "PropertyValue",

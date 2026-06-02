@@ -12549,8 +12549,8 @@
       "slug": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
       "seoTitle": "HeyClaude Content Submission Factory Skill",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
-      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
+      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and PR-first review content.",
       "tags": [
         "heyclaude",
         "submissions",
@@ -12562,7 +12562,7 @@
         "submit content to heyclaude",
         "heyclaude registry submission",
         "ai directory content fields",
-        "github issue submission",
+        "github pr submission",
         "registry seo metadata",
         "heyclaude",
         "submissions",
@@ -12573,6 +12573,14 @@
         "claude"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Review generated submission text before opening a PR; this skill prepares drafts and should not auto-publish content."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public submission facts, source URLs, and non-secret metadata.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated submission packets."
+      ],
       "dateAdded": "2026-04-30",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
@@ -12604,17 +12612,17 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
+        "packageChecksum": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008",
         "checksumPresent": true,
         "sourceUrlCount": 4,
         "sourceUrls": [
           "https://heyclau.de/submit",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
           "https://heyclau.de/submissions",
-          "https://github.com/JSONbored/awesome-claude/issues/new/choose"
+          "https://github.com/JSONbored/awesome-claude/blob/main/AGENTS.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-30",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -12724,8 +12732,8 @@
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
       "seoTitle": "HeyClaude Skill Submission Factory Skill",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
-      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate.",
+      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
       "tags": [
         "heyclaude",
         "skill-authoring",
@@ -12748,6 +12756,14 @@
         "heyclaude skill submission factory"
       ],
       "author": "JSONbored",
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Produces public skill package and submission drafts; review generated files before opening a PR or sharing them."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public skill requirements, source URLs, and validation notes.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated skill packages."
+      ],
       "dateAdded": "2026-04-27",
       "installable": true,
       "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",
@@ -12779,7 +12795,7 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
+        "packageChecksum": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4",
         "checksumPresent": true,
         "sourceUrlCount": 7,
         "sourceUrls": [
@@ -12792,7 +12808,7 @@
           "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-27",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",

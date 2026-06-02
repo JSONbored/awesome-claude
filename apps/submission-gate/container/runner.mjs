@@ -70,16 +70,27 @@ const BLOCKED_IMPORT_PATHS = new Set([
   "yarn.lock",
 ]);
 
+class PayloadTooLargeError extends Error {
+  constructor() {
+    super("Payload too large.");
+    this.name = "PayloadTooLargeError";
+    this.code = "PAYLOAD_TOO_LARGE";
+  }
+}
+
 function readBody(request) {
   return new Promise((resolve, reject) => {
     let body = "";
+    let bytesReceived = 0;
     request.setEncoding("utf8");
     request.on("data", (chunk) => {
-      body += chunk;
-      if (body.length > 1024 * 1024) {
-        reject(new Error("payload too large"));
+      bytesReceived += Buffer.byteLength(chunk, "utf8");
+      if (bytesReceived > 1024 * 1024) {
+        reject(new PayloadTooLargeError());
         request.destroy();
+        return;
       }
+      body += chunk;
     });
     request.on("end", () => resolve(body));
     request.on("error", reject);
@@ -507,7 +518,8 @@ export function createImportServer() {
       const message =
         error instanceof Error ? error.message : "unknown import error";
       const status =
-        message === "payload too large"
+        error instanceof PayloadTooLargeError ||
+        error?.code === "PAYLOAD_TOO_LARGE"
           ? 413
           : error instanceof SyntaxError
             ? 400

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "plugin-export-feed",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "count": 251,
   "plugins": [
     {
@@ -2298,7 +2298,7 @@
     {
       "name": "heyclaude-content-submission-factory",
       "title": "HeyClaude Content Submission Factory",
-      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "description": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
       "category": "skills",
       "sourceUrl": "https://heyclau.de/submit",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory",
@@ -2307,38 +2307,38 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-content-submission-factory.mdc",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "heyclaudeUrl": "https://heyclau.de/entry/skills/heyclaude-content-submission-factory"
@@ -2360,7 +2360,7 @@
     {
       "name": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "description": "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate.",
       "category": "skills",
       "sourceUrl": "https://heyclau.de/submit",
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory",
@@ -2369,38 +2369,38 @@
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-skill-submission-factory.mdc",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "heyclaudeUrl": "https://heyclau.de/entry/skills/heyclaude-skill-submission-factory"

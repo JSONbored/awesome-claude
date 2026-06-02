@@ -274,7 +274,10 @@ export function buildContentEntryFromMdx(params) {
       ? String(data.authorProfileUrl)
       : undefined,
     dateAdded: normalizeDateAdded(data.dateAdded),
-    contentUpdatedAt: contentUpdatedAt ? String(contentUpdatedAt) : undefined,
+    contentUpdatedAt:
+      data.contentUpdatedAt || contentUpdatedAt
+        ? String(data.contentUpdatedAt || contentUpdatedAt)
+        : undefined,
     ...buildProvenanceFields(data),
     tags,
     keywords: seo.keywords,

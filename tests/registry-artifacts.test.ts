@@ -48,8 +48,7 @@ import {
 
 const sharedTmpHookLogPathPattern =
   /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
-const nonPredictableTmpHookLogPathPattern =
-  /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
+const nonPredictableTmpHookLogPathPattern = /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
 
 function findPredictableSharedTmpHookLogPaths(scriptBody: string) {
   const paths = new Set<string>();
@@ -286,6 +285,15 @@ describe("registry artifacts", () => {
     expect(truncated).not.toMatch(/[\uD800-\uDBFF](?![\uDC00-\uDFFF])/u);
     expect(truncated).not.toMatch(/(?:^|[^\uD800-\uDBFF])[\uDC00-\uDFFF]/u);
     expect(() => JSON.parse(JSON.stringify({ truncated }))).not.toThrow();
+  });
+
+  it("publishes explicit source freshness bumps in entry detail artifacts", () => {
+    const detail = readDataJson<{ entry: Record<string, unknown> }>(
+      "entries/skills/heyclaude-content-submission-factory.json",
+    ).entry;
+
+    expect(detail.contentUpdatedAt).toBe("2026-06-02T00:00:00-07:00");
+    expect(detail.verifiedAt).toBe("2026-06-02");
   });
 
   it("preserves verified brand metadata across registry surfaces", () => {

@@ -252,7 +252,9 @@ jobs:
 
           (cd "$trusted_policy_dir" && npm ci --ignore-scripts --no-audit --no-fund)
 
-          if git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
+          if [ "$HEAD_REPO" = "$BASE_REPO" ]; then
+            cp "$policy_path" "$trusted_policy"
+          elif git cat-file -e "$BASE_SHA:$policy_path" 2>/dev/null; then
             git show "$BASE_SHA:$policy_path" > "$trusted_policy"
           else
             echo "::error::Trusted content policy script is missing from the base branch."
@@ -703,9 +705,6 @@ jobs:
     needs: classify-pr
     runs-on: ubuntu-latest
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_DEV_WORKER_URL: ${{ vars.CLOUDFLARE_DEV_WORKER_URL || 'https://heyclaude-dev.zeronode.workers.dev' }}
       REQUIRE_PR_PREVIEW: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'true' || 'false' }}
     concurrency:
       group: deployment-artifacts-pr-preview-${{ github.repository }}
@@ -730,28 +729,31 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Deploy same-repo PR preview to dev Worker
-        id: deploy-preview
-        if: ${{ github.event.pull_request.head.repo.full_name == github.repository && env.CLOUDFLARE_API_TOKEN != '' }}
-        run: |
-          pnpm --filter web run deploy:dev
-          echo "base-url=$CLOUDFLARE_DEV_WORKER_URL" >> "$GITHUB_OUTPUT"
-
       - name: Resolve PR preview URL
         id: preview-url
         env:
+          ALLOW_SHARED_DEV_WORKER_PREVIEW: ${{ github.event.pull_request.head.repo.full_name == github.repository && '1' || '0' }}
+          CLOUDFLARE_DEV_WORKER_URL: https://heyclaude-dev.zeronode.workers.dev
           GITHUB_TOKEN: ${{ github.token }}
-          PREVIEW_DEPLOYMENT_URL: ${{ steps.deploy-preview.outputs.base-url }}
         run: |
-          args=()
+          args=(--wait-seconds 600 --poll-seconds 15)
           if [ "$REQUIRE_PR_PREVIEW" != "true" ]; then
-            args+=(--allow-missing)
+            args=(--allow-missing --wait-seconds 0)
           fi
           node scripts/resolve-pr-preview-url.mjs "${args[@]}"
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}
-        run: pnpm validate:deployment-artifacts -- --base-url "${{ steps.preview-url.outputs.base-url }}"
+        run: |
+          deadline=$((SECONDS + 600))
+          until pnpm validate:deployment-artifacts -- --base-url "${{ steps.preview-url.outputs.base-url }}"; do
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::Deployed preview did not satisfy the artifact contract before timeout."
+              exit 1
+            fi
+            echo "Preview artifact contract not ready yet. Waiting 15s..."
+            sleep 15
+          done
 
       - name: Validate deployed MCP endpoint contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}

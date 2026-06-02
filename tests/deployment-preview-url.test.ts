@@ -39,11 +39,19 @@ describe("PR preview artifact validation flow", () => {
 
   it("uses resolved PR preview URLs instead of a manual merge-gate variable", () => {
     const workflow = readContentValidationWorkflow();
-    expect(workflow).toContain("Deploy same-repo PR preview to dev Worker");
     expect(workflow).toContain("Resolve PR preview URL");
     expect(workflow).toContain("REQUIRE_PR_PREVIEW");
+    expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
+    expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
     expect(workflow).toContain('[ "$REQUIRE_PR_PREVIEW" != "true" ]');
+    expect(workflow).toContain("--wait-seconds 600");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
+    expect(workflow).toContain(
+      "Deployed preview did not satisfy the artifact contract before timeout.",
+    );
+    expect(workflow).not.toContain("CLOUDFLARE_API_TOKEN");
+    expect(workflow).not.toContain("CLOUDFLARE_ACCOUNT_ID");
+    expect(workflow).not.toContain("pnpm --filter web run deploy:dev");
     expect(workflow).not.toContain("Require preview artifact base URL");
     expect(workflow).not.toContain("vars.DEPLOYMENT_ARTIFACT_BASE_URL");
   });
@@ -58,10 +66,11 @@ describe("PR preview artifact validation flow", () => {
     expect(policyBlock).toContain(
       'git show "$BASE_SHA:$policy_path" > "$trusted_policy"',
     );
+    expect(policyBlock).toContain('if [ "$HEAD_REPO" = "$BASE_REPO" ]; then');
+    expect(policyBlock).toContain('cp "$policy_path" "$trusted_policy"');
     expect(policyBlock).toContain(
       "Trusted content policy script is missing from the base branch.",
     );
-    expect(policyBlock).not.toContain('cp "$policy_path" "$trusted_policy"');
     expect(policyBlock).not.toContain('cat "$policy_path" > "$trusted_policy"');
   });
 

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "directory-index",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
+  "generatedAt": "2026-06-02T00:00:00.000Z",
   "count": 388,
   "entries": [
     {
@@ -17313,11 +17313,11 @@
       "title": "HeyClaude Content Submission Factory",
       "description": "Prepare complete, source-backed HeyClaude content submissions for agents, MCP servers, tools, skills, rules, commands, hooks, guides, collections, and statuslines.",
       "seoTitle": "HeyClaude Content Submission Factory Skill",
-      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and review-ready issue content.",
+      "seoDescription": "Reusable skill for preparing high-quality HeyClaude registry submissions with MCP schema checks, brand metadata, sources, SEO, and PR-first review content.",
       "author": "JSONbored",
       "authorProfileUrl": "https://github.com/JSONbored",
       "dateAdded": "2026-04-30",
-      "contentUpdatedAt": "2026-04-30T03:53:43-06:00",
+      "contentUpdatedAt": "2026-06-02T00:00:00-07:00",
       "tags": [
         "heyclaude",
         "submissions",
@@ -17329,7 +17329,7 @@
         "submit content to heyclaude",
         "heyclaude registry submission",
         "ai directory content fields",
-        "github issue submission",
+        "github pr submission",
         "registry seo metadata",
         "heyclaude",
         "submissions",
@@ -17342,19 +17342,19 @@
       "readingTime": 6,
       "difficultyScore": 52,
       "documentationUrl": "https://heyclau.de/submit",
-      "cardDescription": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and issue-first review notes.",
+      "cardDescription": "Create validated HeyClaude submission drafts with MCP-assisted schema checks, brand metadata, source URLs, SEO fields, and PR-first review notes.",
       "installable": true,
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-content-submission-factory.zip -o heyclaude-content-submission-factory.zip && unzip -o heyclaude-content-submission-factory.zip -d ./heyclaude-content-submission-factory",
       "usageSnippet": "Use this skill when preparing a new HeyClaude content submission or improving an existing registry entry.",
-      "copySnippet": "# Trigger\n\"Prepare a complete HeyClaude content submission for this resource.\"\n\n# Required output\n1) Recommended category and category-fit rationale\n2) Review-ready HeyClaude submission fields\n3) MCP validation and duplicate-search notes when available\n4) Source and brand metadata\n5) SEO and citation notes\n6) GitHub issue-first submission URL",
+      "copySnippet": "# Trigger\n\"Prepare a complete HeyClaude content submission for this resource.\"\n\n# Required output\n1) Recommended category and category-fit rationale\n2) Review-ready HeyClaude submission fields\n3) MCP validation and duplicate-search notes when available\n4) Source and brand metadata\n5) SEO and citation notes\n6) PR-first HeyClaude submit URL and single-entry PR packet",
       "skillType": "general",
       "skillLevel": "advanced",
       "verificationStatus": "validated",
-      "verifiedAt": "2026-04-30",
+      "verifiedAt": "2026-06-02",
       "retrievalSources": [
         "https://heyclau.de/submit",
         "https://heyclau.de/submissions",
-        "https://github.com/JSONbored/awesome-claude/issues/new/choose"
+        "https://github.com/JSONbored/awesome-claude/blob/main/AGENTS.md"
       ],
       "testedPlatforms": [
         "Claude",
@@ -17369,6 +17369,14 @@
         "Category candidate or content type",
         "Short description of what the resource does"
       ],
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Review generated submission text before opening a PR; this skill prepares drafts and should not auto-publish content."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public submission facts, source URLs, and non-secret metadata.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated submission packets."
+      ],
       "hasPrerequisites": true,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false,
@@ -17380,49 +17388,49 @@
         "format": "agent-skill",
         "entrypoint": "SKILL.md",
         "downloadUrl": "/downloads/skills/heyclaude-content-submission-factory.zip",
-        "sha256": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c"
+        "sha256": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008"
       },
       "platformCompatibility": [
         {
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-content-submission-factory.mdc",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-30"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "downloadTrust": "first-party",
-      "downloadSha256": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
+      "downloadSha256": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008",
       "filePath": "content/skills/heyclaude-content-submission-factory.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
       "repoUrl": null,
@@ -17436,17 +17444,17 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "88d6c896b5b0ddee6e77f15448c0d9a42e91541f1915f31d4c7327303fd50b6c",
+        "packageChecksum": "0a2c227d5f1547ef8dca05a830301c745facbd3fbd5792f6ed50e6fe43c5b008",
         "checksumPresent": true,
         "sourceUrlCount": 4,
         "sourceUrls": [
           "https://heyclau.de/submit",
           "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-content-submission-factory.mdx",
           "https://heyclau.de/submissions",
-          "https://github.com/JSONbored/awesome-claude/issues/new/choose"
+          "https://github.com/JSONbored/awesome-claude/blob/main/AGENTS.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-30",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",
@@ -17578,13 +17586,13 @@
       "category": "skills",
       "slug": "heyclaude-skill-submission-factory",
       "title": "HeyClaude Skill Submission Factory",
-      "description": "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare issue-first HeyClaude submissions.",
+      "description": "Create portable Agent Skills, generate platform adapters, validate package metadata, and prepare PR-first HeyClaude submissions.",
       "seoTitle": "HeyClaude Skill Submission Factory Skill",
-      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and issue-first HeyClaude registry submissions.",
+      "seoDescription": "Reusable skill for creating Agent Skills, Cursor adapters, compatibility metadata, and PR-first HeyClaude registry submissions.",
       "author": "JSONbored",
       "authorProfileUrl": "https://github.com/JSONbored",
       "dateAdded": "2026-04-27",
-      "contentUpdatedAt": "2026-04-29T22:22:06-06:00",
+      "contentUpdatedAt": "2026-06-02T00:00:00-07:00",
       "tags": [
         "heyclaude",
         "skill-authoring",
@@ -17609,15 +17617,15 @@
       "readingTime": 6,
       "difficultyScore": 68,
       "documentationUrl": "https://heyclau.de/submit",
-      "cardDescription": "Build valid Agent Skills and submit them to HeyClaude through maintainer-reviewed GitHub issues.",
+      "cardDescription": "Build valid Agent Skills and submit them to HeyClaude through the maintainer-reviewed PR-first gate.",
       "installable": true,
       "installCommand": "curl -L https://heyclau.de/downloads/skills/heyclaude-skill-submission-factory.zip -o heyclaude-skill-submission-factory.zip && unzip -o heyclaude-skill-submission-factory.zip -d ./heyclaude-skill-submission-factory",
       "usageSnippet": "Use this skill when creating a portable Agent Skill and submitting it to the HeyClaude skills registry.",
-      "copySnippet": "# Trigger\n\"Create a portable Agent Skill and prepare a HeyClaude issue-first submission.\"\n\n# Required output\n1) Valid SKILL.md package\n2) Platform compatibility table\n3) Cursor adapter draft when applicable\n4) HeyClaude submission issue fields",
+      "copySnippet": "# Trigger\n\"Create a portable Agent Skill and prepare a HeyClaude PR-first submission.\"\n\n# Required output\n1) Valid SKILL.md package\n2) Platform compatibility table\n3) Cursor adapter draft when applicable\n4) Single-entry HeyClaude PR fields\n5) Gate notes for promo, paid, duplicate, or unsupported content",
       "skillType": "general",
       "skillLevel": "advanced",
       "verificationStatus": "validated",
-      "verifiedAt": "2026-04-27",
+      "verifiedAt": "2026-06-02",
       "retrievalSources": [
         "https://heyclau.de/submit",
         "https://developers.openai.com/codex/skills",
@@ -17639,6 +17647,14 @@
         "Official docs or source URLs",
         "Validation commands or acceptance criteria"
       ],
+      "safetyNotes": [
+        "Downloads and unzips a HeyClaude-maintainer-packaged skill archive into a local folder when using the install command.",
+        "Produces public skill package and submission drafts; review generated files before opening a PR or sharing them."
+      ],
+      "privacyNotes": [
+        "Does not require credentials and should only process public skill requirements, source URLs, and validation notes.",
+        "Do not include private repository names, customer data, tokens, or unpublished operating details in generated skill packages."
+      ],
       "hasPrerequisites": true,
       "hasTroubleshooting": true,
       "hasBreakingChanges": false,
@@ -17650,49 +17666,49 @@
         "format": "agent-skill",
         "entrypoint": "SKILL.md",
         "downloadUrl": "/downloads/skills/heyclaude-skill-submission-factory.zip",
-        "sha256": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f"
+        "sha256": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4"
       },
       "platformCompatibility": [
         {
           "platform": "Claude",
           "supportLevel": "native-skill",
           "installPath": ".claude/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Codex",
           "supportLevel": "native-skill",
           "installPath": ".agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Windsurf",
           "supportLevel": "native-skill",
           "installPath": ".windsurf/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Gemini",
           "supportLevel": "native-skill",
           "installPath": ".gemini/skills/<skill-name>/SKILL.md or .agents/skills/<skill-name>/SKILL.md",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Cursor",
           "supportLevel": "adapter",
           "installPath": ".cursor/rules/<skill-name>.mdc",
           "adapterPath": "/data/skill-adapters/cursor/heyclaude-skill-submission-factory.mdc",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         },
         {
           "platform": "Generic AGENTS",
           "supportLevel": "manual-context",
           "installPath": "AGENTS.md or tool-specific context file",
-          "verifiedAt": "2026-04-27"
+          "verifiedAt": "2026-06-02"
         }
       ],
       "downloadTrust": "first-party",
-      "downloadSha256": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
+      "downloadSha256": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4",
       "filePath": "content/skills/heyclaude-skill-submission-factory.mdx",
       "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/skills/heyclaude-skill-submission-factory.mdx",
       "repoUrl": null,
@@ -17706,7 +17722,7 @@
         "firstPartyEditorial": false,
         "packageVerified": true,
         "packageTrust": "first-party",
-        "packageChecksum": "1f3d7c549807e8381d01b97ef34a13d570342d402fb0a16e5637d59093c3751f",
+        "packageChecksum": "962d4f06d31e7145603a70a94878853e313e15cd9f9ef70256a9a6c1337f24c4",
         "checksumPresent": true,
         "sourceUrlCount": 7,
         "sourceUrls": [
@@ -17719,7 +17735,7 @@
           "https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/custom-commands.md"
         ],
         "sourceStatus": "available",
-        "lastVerifiedAt": "2026-04-27",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": true,
         "platforms": [
           "Claude",

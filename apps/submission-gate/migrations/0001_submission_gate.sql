@@ -26,7 +26,8 @@ CREATE INDEX IF NOT EXISTS idx_submission_drafts_status
   ON submission_drafts (status, updated_at);
 
 CREATE INDEX IF NOT EXISTS idx_submission_drafts_pr
-  ON submission_drafts (pull_request_number);
+  ON submission_drafts (pull_request_number)
+  WHERE pull_request_number IS NOT NULL;
 
 CREATE TABLE IF NOT EXISTS submission_prs (
   repo TEXT NOT NULL,

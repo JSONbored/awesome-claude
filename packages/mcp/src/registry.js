@@ -221,7 +221,7 @@ export const TOOL_DEFINITIONS = [
   {
     name: "build_submission_urls",
     description:
-      "Build a prefilled HeyClaude submit URL for a validated PR-first submission draft without making write calls.",
+      "Build prefilled HeyClaude submit and review URLs for a validated PR-first submission draft without making write calls.",
     inputSchema: jsonSchemaForTool("build_submission_urls"),
   },
   {

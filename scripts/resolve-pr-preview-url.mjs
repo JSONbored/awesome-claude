@@ -68,6 +68,12 @@ function previewCandidatesFromEnv(env = process.env) {
   return candidates;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
 async function githubJson(pathname, env = process.env) {
   const token = env.GITHUB_TOKEN;
   const repository = env.GITHUB_REPOSITORY;
@@ -97,6 +103,11 @@ function deploymentQueries(event, env = process.env) {
     env.GITHUB_REF_NAME ? { ref: env.GITHUB_REF_NAME } : null,
     env.GITHUB_SHA ? { sha: env.GITHUB_SHA } : null,
   ].filter(Boolean);
+}
+
+function headSha(event, env = process.env) {
+  const pullRequest = event.pull_request || {};
+  return pullRequest.head?.sha || env.GITHUB_SHA || "";
 }
 
 export async function resolveFromGithubDeployments(event, env = process.env) {
@@ -134,14 +145,54 @@ export async function resolveFromGithubDeployments(event, env = process.env) {
   return null;
 }
 
-function writeOutput(file, values) {
-  const body = Object.entries(values)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("\n");
-  fs.appendFileSync(file, `${body}\n`);
+export async function resolveFromGithubStatuses(event, env = process.env) {
+  const sha = headSha(event, env);
+  if (!sha) return null;
+
+  const combined = await githubJson(`/commits/${sha}/status`, env);
+  const statusCandidates = Array.isArray(combined?.statuses)
+    ? combined.statuses
+        .filter((status) => status.state === "success")
+        .flatMap((status) => [
+          {
+            url: status.environment_url,
+            source: `github-status:${status.context || "status"}`,
+          },
+          {
+            url: status.target_url,
+            source: `github-status:${status.context || "status"}`,
+          },
+        ])
+    : [];
+  const selectedStatus = selectPreviewUrl(statusCandidates);
+  if (selectedStatus) return selectedStatus;
+
+  const checkRuns = await githubJson(
+    `/commits/${sha}/check-runs?per_page=100`,
+    env,
+  );
+  const checkCandidates = Array.isArray(checkRuns?.check_runs)
+    ? checkRuns.check_runs
+        .filter(
+          (checkRun) =>
+            checkRun.status === "completed" &&
+            checkRun.conclusion === "success",
+        )
+        .flatMap((checkRun) => [
+          {
+            url: checkRun.details_url,
+            source: `github-check:${checkRun.name || "check-run"}`,
+          },
+          {
+            url: checkRun.output?.summary,
+            source: `github-check:${checkRun.name || "check-run"}`,
+          },
+        ])
+    : [];
+  return selectPreviewUrl(checkCandidates);
 }
 
-export async function resolvePreviewUrl(args, env = process.env) {
+async function resolvePreviewUrlOnce(args, env = process.env) {
   const explicit = selectPreviewUrl([
     { url: args["base-url"], source: "cli" },
     ...previewCandidatesFromEnv(env),
@@ -152,7 +203,34 @@ export async function resolvePreviewUrl(args, env = process.env) {
   const fromDeployments = await resolveFromGithubDeployments(event, env);
   if (fromDeployments) return fromDeployments;
 
-  return null;
+  return resolveFromGithubStatuses(event, env);
+}
+
+function writeOutput(file, values) {
+  const body = Object.entries(values)
+    .map(([key, value]) => `${key}=${value}`)
+    .join("\n");
+  fs.appendFileSync(file, `${body}\n`);
+}
+
+export async function resolvePreviewUrl(args, env = process.env) {
+  const waitSeconds = Math.max(
+    0,
+    Number(args["wait-seconds"] || env.PR_PREVIEW_WAIT_SECONDS || 0),
+  );
+  const pollSeconds = Math.max(
+    1,
+    Number(args["poll-seconds"] || env.PR_PREVIEW_POLL_SECONDS || 15),
+  );
+  const deadline = Date.now() + waitSeconds * 1000;
+
+  while (true) {
+    const selected = await resolvePreviewUrlOnce(args, env);
+    if (selected) return selected;
+    if (Date.now() >= deadline) return null;
+    console.log(`No PR preview URL resolved yet. Waiting ${pollSeconds}s...`);
+    await sleep(pollSeconds * 1000);
+  }
 }
 
 export async function main(argv = process.argv.slice(2), env = process.env) {

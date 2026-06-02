@@ -24,6 +24,7 @@ const SUPPORTED_CATEGORIES = new Set([
 const MAX_BRANCH_NAME_LENGTH = 120;
 const MAX_SOURCE_CONTENT_CHARS = 20_000;
 const MAX_SLUG_INPUT_CHARS = 400;
+const MIN_BRANCH_SLUG_CHARS = 16;
 const SUBMISSION_BRANCH_PREFIX = "heyclaude/submit-";
 
 function text(value: unknown) {
@@ -53,6 +54,7 @@ export function draftFieldsFromBody(body: unknown): SubmissionDraftFields {
 }
 
 export function slugify(value: unknown) {
+  // Bound regex work before normalization; the final slice controls output length.
   return text(value)
     .slice(0, MAX_SLUG_INPUT_CHARS)
     .toLowerCase()
@@ -82,7 +84,7 @@ function submissionBranchName(category: string, slug: string) {
   if (full.length <= MAX_BRANCH_NAME_LENGTH) return full;
   const suffix = `-${shortHash(slug)}`;
   const available = MAX_BRANCH_NAME_LENGTH - prefix.length - suffix.length;
-  if (available < 16) {
+  if (available < MIN_BRANCH_SLUG_CHARS) {
     throw new Error(
       "Draft category leaves too little room for a safe branch name.",
     );
@@ -122,7 +124,18 @@ function yamlScalar(value: unknown) {
 }
 
 function yamlArray(values: unknown[]) {
-  const normalized = values.map(text).filter(Boolean);
+  // Flow sequences cannot contain block scalars, so collapse multiline items.
+  const normalized = values
+    .map((value) =>
+      text(value)
+        .replaceAll("\r\n", "\n")
+        .replaceAll("\r", "\n")
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .join(" "),
+    )
+    .filter(Boolean);
   return `[${normalized.map(yamlScalar).join(", ")}]`;
 }
 

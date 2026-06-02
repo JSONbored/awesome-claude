@@ -147,12 +147,23 @@ export async function exchangeGitHubUserCode(params: {
       code: params.code,
       redirect_uri: params.callbackUrl,
     }),
+    signal: AbortSignal.timeout(DEFAULT_GITHUB_TIMEOUT_MS),
   });
-  const payload = (await response.json()) as {
+  const text = await response.text();
+  let payload: {
     access_token?: string;
     error?: string;
     error_description?: string;
-  };
+  } = {};
+  if (text) {
+    try {
+      payload = JSON.parse(text) as typeof payload;
+    } catch {
+      payload = {
+        error_description: text.slice(0, 500),
+      };
+    }
+  }
   if (!response.ok || !payload.access_token) {
     throw new Error(
       payload.error_description || payload.error || "GitHub auth failed.",
@@ -357,6 +368,8 @@ async function resolveForkBaseSha(params: {
     token: params.token,
     apiVersion: params.apiVersion,
   });
+  // If the fork lacks baseRef and merge-upstream cannot create it, this keeps
+  // the PR flow moving but may produce broader diffs against the upstream base.
   if (fallbackSha) return fallbackSha;
 
   throw new Error("GitHub fork has no usable branch base for submission.");

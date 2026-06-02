@@ -5,6 +5,8 @@ RUN apt-get update \
     ca-certificates=20230311+deb12u1 \
     git=1:2.39.5-0+deb12u3 \
   && rm -rf /var/lib/apt/lists/* \
+  && corepack enable \
+  && corepack prepare pnpm@11.4.0 --activate \
   && groupadd --system runner \
   && useradd --system --gid runner --home-dir /runner --shell /usr/sbin/nologin runner
 
