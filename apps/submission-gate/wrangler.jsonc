@@ -34,6 +34,8 @@
     {
       "binding": "SUBMISSION_GATE_DB",
       "database_name": "heyclaude-submission-gate",
+      // Production deploy scripts fail while this placeholder is present.
+      // Replace it only after the production D1 resource exists and migrations are applied.
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "migrations",
     },
