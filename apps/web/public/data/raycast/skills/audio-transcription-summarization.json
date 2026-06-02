@@ -17,9 +17,9 @@
   "repoStats": {
     "repository": "openai/whisper",
     "url": "https://github.com/openai/whisper",
-    "stars": 99754,
-    "forks": 12214,
-    "updatedAt": "2026-05-19T11:32:31Z",
+    "stars": 101225,
+    "forks": 12384,
+    "updatedAt": "2026-06-02T12:26:08Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

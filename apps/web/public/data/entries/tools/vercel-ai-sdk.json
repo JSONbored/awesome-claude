@@ -72,15 +72,15 @@
     "filePath": "content/tools/vercel-ai-sdk.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/vercel-ai-sdk.mdx",
     "repoUrl": "https://github.com/vercel/ai",
-    "githubStars": 24333,
-    "githubForks": 4432,
-    "repoUpdatedAt": "2026-05-19T11:09:31Z",
+    "githubStars": 24611,
+    "githubForks": 4513,
+    "repoUpdatedAt": "2026-06-02T12:07:32Z",
     "repoStats": {
       "repository": "vercel/ai",
       "url": "https://github.com/vercel/ai",
-      "stars": 24333,
-      "forks": 4432,
-      "updatedAt": "2026-05-19T11:09:31Z",
+      "stars": 24611,
+      "forks": 4513,
+      "updatedAt": "2026-06-02T12:07:32Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

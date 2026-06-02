@@ -1009,9 +1009,9 @@
       "repoStats": {
         "repository": "Aider-AI/aider",
         "url": "https://github.com/Aider-AI/aider",
-        "stars": 45006,
-        "forks": 4443,
-        "updatedAt": "2026-05-19T11:28:44Z",
+        "stars": 45678,
+        "forks": 4531,
+        "updatedAt": "2026-06-02T11:56:19Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1054,9 +1054,9 @@
       "repoStats": {
         "repository": "domdomegg/airtable-mcp-server",
         "url": "https://github.com/domdomegg/airtable-mcp-server",
-        "stars": 444,
-        "forks": 131,
-        "updatedAt": "2026-05-11T01:11:21Z",
+        "stars": 443,
+        "forks": 135,
+        "updatedAt": "2026-06-01T23:40:01Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1359,9 +1359,9 @@
       "repoStats": {
         "repository": "Arize-ai/phoenix",
         "url": "https://github.com/Arize-ai/phoenix",
-        "stars": 9739,
-        "forks": 879,
-        "updatedAt": "2026-05-19T11:06:07Z",
+        "stars": 9961,
+        "forks": 906,
+        "updatedAt": "2026-06-02T11:45:49Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1435,9 +1435,9 @@
       "repoStats": {
         "repository": "openai/whisper",
         "url": "https://github.com/openai/whisper",
-        "stars": 99754,
-        "forks": 12214,
-        "updatedAt": "2026-05-19T11:32:31Z",
+        "stars": 101225,
+        "forks": 12384,
+        "updatedAt": "2026-06-02T12:26:08Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1532,6 +1532,9 @@
       "repoStats": {
         "repository": "agentrhq/authsome",
         "url": "https://github.com/agentrhq/authsome",
+        "stars": 42,
+        "forks": 7,
+        "updatedAt": "2026-06-02T11:37:15Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1814,9 +1817,9 @@
       "repoStats": {
         "repository": "awslabs/mcp",
         "url": "https://github.com/awslabs/mcp",
-        "stars": 9085,
-        "forks": 1532,
-        "updatedAt": "2026-05-19T08:34:58Z",
+        "stars": 9179,
+        "forks": 1554,
+        "updatedAt": "2026-06-02T11:09:54Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2234,9 +2237,9 @@
       "repoStats": {
         "repository": "browser-use/browser-use",
         "url": "https://github.com/browser-use/browser-use",
-        "stars": 94603,
-        "forks": 10672,
-        "updatedAt": "2026-05-19T11:41:57Z",
+        "stars": 96676,
+        "forks": 10826,
+        "updatedAt": "2026-06-02T12:14:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2512,9 +2515,9 @@
       "repoStats": {
         "repository": "catppuccin/catppuccin",
         "url": "https://github.com/catppuccin/catppuccin",
-        "stars": 19184,
+        "stars": 19247,
         "forks": 352,
-        "updatedAt": "2026-05-19T11:04:59Z",
+        "updatedAt": "2026-06-02T09:15:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3316,7 +3319,7 @@
         "repository": "hauptsacheNet/clickup-mcp",
         "url": "https://github.com/hauptsacheNet/clickup-mcp",
         "stars": 44,
-        "forks": 17,
+        "forks": 18,
         "updatedAt": "2026-05-03T13:43:35Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
@@ -3357,9 +3360,9 @@
       "repoStats": {
         "repository": "cline/cline",
         "url": "https://github.com/cline/cline",
-        "stars": 62015,
-        "forks": 6468,
-        "updatedAt": "2026-05-19T11:36:25Z",
+        "stars": 62637,
+        "forks": 6589,
+        "updatedAt": "2026-06-02T12:28:02Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3482,9 +3485,9 @@
       "repoStats": {
         "repository": "cloudflare/agents",
         "url": "https://github.com/cloudflare/agents",
-        "stars": 4931,
-        "forks": 552,
-        "updatedAt": "2026-05-19T11:37:01Z",
+        "stars": 5016,
+        "forks": 569,
+        "updatedAt": "2026-06-02T11:57:01Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4042,9 +4045,9 @@
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
+        "stars": 87891,
+        "forks": 12904,
+        "updatedAt": "2026-06-02T12:28:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4121,9 +4124,9 @@
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
+        "stars": 87891,
+        "forks": 12904,
+        "updatedAt": "2026-06-02T12:28:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4236,9 +4239,9 @@
       "repoStats": {
         "repository": "ComposioHQ/composio",
         "url": "https://github.com/ComposioHQ/composio",
-        "stars": 28340,
-        "forks": 4571,
-        "updatedAt": "2026-05-19T11:38:54Z",
+        "stars": 28582,
+        "forks": 4598,
+        "updatedAt": "2026-06-02T12:27:03Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4377,9 +4380,9 @@
       "repoStats": {
         "repository": "continuedev/continue",
         "url": "https://github.com/continuedev/continue",
-        "stars": 33266,
-        "forks": 4532,
-        "updatedAt": "2026-05-19T11:16:17Z",
+        "stars": 33491,
+        "forks": 4594,
+        "updatedAt": "2026-06-02T10:31:39Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4441,9 +4444,9 @@
       "repoStats": {
         "repository": "UPinar/contrastapi",
         "url": "https://github.com/UPinar/contrastapi",
-        "stars": 25,
-        "forks": 3,
-        "updatedAt": "2026-05-18T16:57:58Z",
+        "stars": 28,
+        "forks": 4,
+        "updatedAt": "2026-06-01T15:32:24Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4483,9 +4486,9 @@
       "repoStats": {
         "repository": "crewAIInc/crewAI",
         "url": "https://github.com/crewAIInc/crewAI",
-        "stars": 51712,
-        "forks": 7160,
-        "updatedAt": "2026-05-19T11:43:25Z",
+        "stars": 52662,
+        "forks": 7341,
+        "updatedAt": "2026-06-02T12:12:07Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5051,7 +5054,7 @@
         "url": "https://github.com/nadeesha/ts-prune",
         "stars": 2067,
         "forks": 68,
-        "updatedAt": "2026-04-13T08:47:15Z",
+        "updatedAt": "2026-06-02T05:37:40Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5370,9 +5373,9 @@
       "repoStats": {
         "repository": "saseq/discord-mcp",
         "url": "https://github.com/saseq/discord-mcp",
-        "stars": 311,
-        "forks": 72,
-        "updatedAt": "2026-05-18T02:46:12Z",
+        "stars": 337,
+        "forks": 77,
+        "updatedAt": "2026-06-02T10:07:42Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6316,9 +6319,9 @@
       "repoStats": {
         "repository": "mendableai/firecrawl",
         "url": "https://github.com/mendableai/firecrawl",
-        "stars": 121680,
-        "forks": 7410,
-        "updatedAt": "2026-05-19T11:41:31Z",
+        "stars": 127518,
+        "forks": 7607,
+        "updatedAt": "2026-06-02T12:25:53Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6619,9 +6622,9 @@
       "repoStats": {
         "repository": "NVIDIA/garak",
         "url": "https://github.com/NVIDIA/garak",
-        "stars": 7848,
-        "forks": 949,
-        "updatedAt": "2026-05-19T10:43:48Z",
+        "stars": 7996,
+        "forks": 987,
+        "updatedAt": "2026-06-02T10:03:11Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6693,9 +6696,9 @@
       "repoStats": {
         "repository": "Giskard-AI/giskard",
         "url": "https://github.com/Giskard-AI/giskard",
-        "stars": 5358,
-        "forks": 457,
-        "updatedAt": "2026-05-19T08:02:52Z",
+        "stars": 5415,
+        "forks": 467,
+        "updatedAt": "2026-06-02T10:19:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7571,9 +7574,9 @@
       "repoStats": {
         "repository": "Helicone/helicone",
         "url": "https://github.com/Helicone/helicone",
-        "stars": 5692,
-        "forks": 579,
-        "updatedAt": "2026-05-19T11:11:23Z",
+        "stars": 5768,
+        "forks": 593,
+        "updatedAt": "2026-06-02T05:33:11Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7689,9 +7692,9 @@
       "repoStats": {
         "repository": "JSONbored/awesome-claude",
         "url": "https://github.com/JSONbored/awesome-claude",
-        "stars": 218,
-        "forks": 29,
-        "updatedAt": "2026-05-17T08:04:08Z",
+        "stars": 255,
+        "forks": 57,
+        "updatedAt": "2026-06-02T11:40:58Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8534,9 +8537,9 @@
       "repoStats": {
         "repository": "feiskyer/mcp-kubernetes-server",
         "url": "https://github.com/feiskyer/mcp-kubernetes-server",
-        "stars": 18,
+        "stars": 19,
         "forks": 9,
-        "updatedAt": "2026-05-13T09:23:32Z",
+        "updatedAt": "2026-05-25T13:02:01Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8609,9 +8612,9 @@
       "repoStats": {
         "repository": "langfuse/langfuse",
         "url": "https://github.com/langfuse/langfuse",
-        "stars": 27479,
-        "forks": 2805,
-        "updatedAt": "2026-05-19T11:21:59Z",
+        "stars": 28367,
+        "forks": 2929,
+        "updatedAt": "2026-06-02T12:17:08Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8651,9 +8654,9 @@
       "repoStats": {
         "repository": "langchain-ai/langgraph",
         "url": "https://github.com/langchain-ai/langgraph",
-        "stars": 32402,
-        "forks": 5495,
-        "updatedAt": "2026-05-19T11:43:29Z",
+        "stars": 33640,
+        "forks": 5667,
+        "updatedAt": "2026-06-02T11:58:11Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8824,9 +8827,9 @@
       "repoStats": {
         "repository": "BurntSushi/ripgrep",
         "url": "https://github.com/BurntSushi/ripgrep",
-        "stars": 63927,
-        "forks": 2568,
-        "updatedAt": "2026-05-19T11:22:40Z",
+        "stars": 64531,
+        "forks": 2588,
+        "updatedAt": "2026-06-02T11:56:18Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8968,9 +8971,9 @@
       "repoStats": {
         "repository": "remarkjs/remark",
         "url": "https://github.com/remarkjs/remark",
-        "stars": 8880,
+        "stars": 8897,
         "forks": 374,
-        "updatedAt": "2026-05-18T12:37:10Z",
+        "updatedAt": "2026-06-02T04:03:45Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9080,9 +9083,9 @@
       "repoStats": {
         "repository": "mastra-ai/mastra",
         "url": "https://github.com/mastra-ai/mastra",
-        "stars": 24031,
-        "forks": 2092,
-        "updatedAt": "2026-05-19T11:18:03Z",
+        "stars": 24664,
+        "forks": 2183,
+        "updatedAt": "2026-06-02T11:55:02Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9475,9 +9478,9 @@
       "repoStats": {
         "repository": "microsoft/autogen",
         "url": "https://github.com/microsoft/autogen",
-        "stars": 58173,
-        "forks": 8786,
-        "updatedAt": "2026-05-19T11:43:25Z",
+        "stars": 58637,
+        "forks": 8857,
+        "updatedAt": "2026-06-02T11:22:42Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -9516,9 +9519,9 @@
       "repoStats": {
         "repository": "powerline/powerline",
         "url": "https://github.com/powerline/powerline",
-        "stars": 14752,
+        "stars": 14763,
         "forks": 1001,
-        "updatedAt": "2026-05-19T10:46:19Z",
+        "updatedAt": "2026-06-02T01:09:35Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10032,9 +10035,9 @@
       "repoStats": {
         "repository": "n8n-io/n8n",
         "url": "https://github.com/n8n-io/n8n",
-        "stars": 188659,
-        "forks": 57807,
-        "updatedAt": "2026-05-19T11:37:32Z",
+        "stars": 190725,
+        "forks": 58217,
+        "updatedAt": "2026-06-02T12:25:58Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10467,9 +10470,9 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": 376189,
+        "forks": 78587,
+        "updatedAt": "2026-06-02T12:28:28Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10546,9 +10549,9 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": 376189,
+        "forks": 78587,
+        "updatedAt": "2026-06-02T12:28:28Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10625,9 +10628,9 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
+        "stars": 376189,
+        "forks": 78587,
+        "updatedAt": "2026-06-02T12:28:28Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10705,9 +10708,9 @@
       "repoStats": {
         "repository": "sst/opencode",
         "url": "https://github.com/sst/opencode",
-        "stars": 162457,
-        "forks": 19131,
-        "updatedAt": "2026-05-19T11:42:52Z",
+        "stars": 168677,
+        "forks": 20159,
+        "updatedAt": "2026-06-02T12:27:50Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10866,9 +10869,9 @@
       "repoStats": {
         "repository": "Packrift/packrift-mcp",
         "url": "https://github.com/Packrift/packrift-mcp",
-        "stars": 0,
+        "stars": 1,
         "forks": 1,
-        "updatedAt": "2026-05-19T11:41:33Z",
+        "updatedAt": "2026-05-31T12:14:03Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -11897,9 +11900,9 @@
       "repoStats": {
         "repository": "MohamedAbdallah-14/prompt-to-asset",
         "url": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-        "stars": 6,
+        "stars": 7,
         "forks": 0,
-        "updatedAt": "2026-05-19T10:08:35Z",
+        "updatedAt": "2026-06-01T14:29:19Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -11939,9 +11942,9 @@
       "repoStats": {
         "repository": "promptfoo/promptfoo",
         "url": "https://github.com/promptfoo/promptfoo",
-        "stars": 21394,
-        "forks": 1867,
-        "updatedAt": "2026-05-19T11:24:05Z",
+        "stars": 21801,
+        "forks": 1924,
+        "updatedAt": "2026-06-02T12:23:49Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12669,9 +12672,9 @@
       "repoStats": {
         "repository": "karanb192/reddit-mcp-buddy",
         "url": "https://github.com/karanb192/reddit-mcp-buddy",
-        "stars": 652,
-        "forks": 82,
-        "updatedAt": "2026-05-19T03:36:39Z",
+        "stars": 691,
+        "forks": 85,
+        "updatedAt": "2026-05-31T09:12:18Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12750,9 +12753,9 @@
       "repoStats": {
         "repository": "redis/mcp-redis",
         "url": "https://github.com/redis/mcp-redis",
-        "stars": 512,
-        "forks": 96,
-        "updatedAt": "2026-05-19T09:13:05Z",
+        "stars": 521,
+        "forks": 97,
+        "updatedAt": "2026-06-02T03:49:55Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12910,6 +12913,9 @@
       "repoStats": {
         "repository": "gyanesh-m/retro-daily",
         "url": "https://github.com/gyanesh-m/retro-daily",
+        "stars": 0,
+        "forks": 0,
+        "updatedAt": "2026-05-19T19:26:40Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12949,9 +12955,9 @@
       "repoStats": {
         "repository": "RooCodeInc/Roo-Code",
         "url": "https://github.com/RooCodeInc/Roo-Code",
-        "stars": 24101,
-        "forks": 3278,
-        "updatedAt": "2026-05-19T11:16:25Z",
+        "stars": 24192,
+        "forks": 3284,
+        "updatedAt": "2026-06-02T12:16:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13656,9 +13662,9 @@
       "repoStats": {
         "repository": "SocketDev/socket-mcp",
         "url": "https://github.com/SocketDev/socket-mcp",
-        "stars": 107,
-        "forks": 19,
-        "updatedAt": "2026-05-19T04:13:47Z",
+        "stars": 113,
+        "forks": 20,
+        "updatedAt": "2026-06-02T01:34:16Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -13814,9 +13820,9 @@
       "repoStats": {
         "repository": "browserbase/stagehand",
         "url": "https://github.com/browserbase/stagehand",
-        "stars": 22712,
-        "forks": 1523,
-        "updatedAt": "2026-05-19T11:40:46Z",
+        "stars": 22902,
+        "forks": 1547,
+        "updatedAt": "2026-06-02T12:18:10Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14552,9 +14558,9 @@
       "repoStats": {
         "repository": "triggerdotdev/trigger.dev",
         "url": "https://github.com/triggerdotdev/trigger.dev",
-        "stars": 14969,
-        "forks": 1227,
-        "updatedAt": "2026-05-19T09:26:29Z",
+        "stars": 15182,
+        "forks": 1283,
+        "updatedAt": "2026-06-02T11:45:06Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15109,9 +15115,9 @@
       "repoStats": {
         "repository": "vercel/ai",
         "url": "https://github.com/vercel/ai",
-        "stars": 24333,
-        "forks": 4432,
-        "updatedAt": "2026-05-19T11:09:31Z",
+        "stars": 24611,
+        "forks": 4513,
+        "updatedAt": "2026-06-02T12:07:32Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15486,9 +15492,9 @@
       "repoStats": {
         "repository": "mozilla/readability",
         "url": "https://github.com/mozilla/readability",
-        "stars": 11200,
-        "forks": 712,
-        "updatedAt": "2026-05-19T04:59:43Z",
+        "stars": 11238,
+        "forks": 719,
+        "updatedAt": "2026-06-02T10:01:43Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15851,9 +15857,9 @@
       "repoStats": {
         "repository": "Xquik-dev/x-twitter-scraper",
         "url": "https://github.com/Xquik-dev/x-twitter-scraper",
-        "stars": 87,
-        "forks": 8,
-        "updatedAt": "2026-05-18T21:56:17Z",
+        "stars": 105,
+        "forks": 9,
+        "updatedAt": "2026-06-02T04:47:36Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15904,6 +15910,9 @@
       "repoStats": {
         "repository": "thebrierfox/intuitek-ace",
         "url": "https://github.com/thebrierfox/intuitek-ace",
+        "stars": 0,
+        "forks": 0,
+        "updatedAt": "2026-05-28T17:58:36Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -16012,9 +16021,9 @@
       "repoStats": {
         "repository": "zed-industries/zed",
         "url": "https://github.com/zed-industries/zed",
-        "stars": 83231,
-        "forks": 8570,
-        "updatedAt": "2026-05-19T11:31:57Z",
+        "stars": 84288,
+        "forks": 8845,
+        "updatedAt": "2026-06-02T12:16:00Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },

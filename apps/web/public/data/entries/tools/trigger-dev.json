@@ -73,15 +73,15 @@
     "filePath": "content/tools/trigger-dev.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/trigger-dev.mdx",
     "repoUrl": "https://github.com/triggerdotdev/trigger.dev",
-    "githubStars": 14969,
-    "githubForks": 1227,
-    "repoUpdatedAt": "2026-05-19T09:26:29Z",
+    "githubStars": 15182,
+    "githubForks": 1283,
+    "repoUpdatedAt": "2026-06-02T11:45:06Z",
     "repoStats": {
       "repository": "triggerdotdev/trigger.dev",
       "url": "https://github.com/triggerdotdev/trigger.dev",
-      "stars": 14969,
-      "forks": 1227,
-      "updatedAt": "2026-05-19T09:26:29Z",
+      "stars": 15182,
+      "forks": 1283,
+      "updatedAt": "2026-06-02T11:45:06Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

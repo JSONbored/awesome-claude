@@ -73,15 +73,15 @@
     "filePath": "content/tools/browser-use.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/browser-use.mdx",
     "repoUrl": "https://github.com/browser-use/browser-use",
-    "githubStars": 94603,
-    "githubForks": 10672,
-    "repoUpdatedAt": "2026-05-19T11:41:57Z",
+    "githubStars": 96676,
+    "githubForks": 10826,
+    "repoUpdatedAt": "2026-06-02T12:14:27Z",
     "repoStats": {
       "repository": "browser-use/browser-use",
       "url": "https://github.com/browser-use/browser-use",
-      "stars": 94603,
-      "forks": 10672,
-      "updatedAt": "2026-05-19T11:41:57Z",
+      "stars": 96676,
+      "forks": 10826,
+      "updatedAt": "2026-06-02T12:14:27Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

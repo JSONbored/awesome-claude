@@ -33,6 +33,9 @@
   "repoStats": {
     "repository": "gyanesh-m/retro-daily",
     "url": "https://github.com/gyanesh-m/retro-daily",
+    "stars": 0,
+    "forks": 0,
+    "updatedAt": "2026-05-19T19:26:40Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

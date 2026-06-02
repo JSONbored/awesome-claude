@@ -307,15 +307,15 @@
     "filePath": "content/mcp/kubernetes-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/kubernetes-mcp-server.mdx",
     "repoUrl": "https://github.com/feiskyer/mcp-kubernetes-server",
-    "githubStars": 18,
+    "githubStars": 19,
     "githubForks": 9,
-    "repoUpdatedAt": "2026-05-13T09:23:32Z",
+    "repoUpdatedAt": "2026-05-25T13:02:01Z",
     "repoStats": {
       "repository": "feiskyer/mcp-kubernetes-server",
       "url": "https://github.com/feiskyer/mcp-kubernetes-server",
-      "stars": 18,
+      "stars": 19,
       "forks": 9,
-      "updatedAt": "2026-05-13T09:23:32Z",
+      "updatedAt": "2026-05-25T13:02:01Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

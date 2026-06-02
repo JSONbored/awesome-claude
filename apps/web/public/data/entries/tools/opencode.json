@@ -73,15 +73,15 @@
     "filePath": "content/tools/opencode.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/opencode.mdx",
     "repoUrl": "https://github.com/sst/opencode",
-    "githubStars": 162457,
-    "githubForks": 19131,
-    "repoUpdatedAt": "2026-05-19T11:42:52Z",
+    "githubStars": 168677,
+    "githubForks": 20159,
+    "repoUpdatedAt": "2026-06-02T12:27:50Z",
     "repoStats": {
       "repository": "sst/opencode",
       "url": "https://github.com/sst/opencode",
-      "stars": 162457,
-      "forks": 19131,
-      "updatedAt": "2026-05-19T11:42:52Z",
+      "stars": 168677,
+      "forks": 20159,
+      "updatedAt": "2026-06-02T12:27:50Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

@@ -14,7 +14,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/yield-intelligence-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/yield-intelligence-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/yield-intelligence-mcp",
-      "artifactHash": "6452c547975f95b316deb902d1b262d70376776c9995db490f28a0dfe27743fd"
+      "artifactHash": "3a5eb020c8244cd18567361fe5c592c902d331e55ddf1625bdac42dac938b5f5"
     },
     {
       "key": "tools:authsome",
@@ -26,7 +26,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/authsome",
       "llmsUrl": "https://heyclau.de/data/llms/tools/authsome.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/authsome",
-      "artifactHash": "269bf7ca8e35b5d193b79f8f07960768d5fae825e1a6cddbd500eed80cdd404c"
+      "artifactHash": "63c8fd02d2c50c1c0d8dc9f4ca49f3943bbcda0751d697b8b698e29200122de4"
     },
     {
       "key": "hooks:retro-daily",
@@ -38,7 +38,7 @@
       "canonicalUrl": "https://heyclau.de/entry/hooks/retro-daily",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/retro-daily.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/retro-daily",
-      "artifactHash": "273522cd4a9d9082adce3e3089cd08208fc9aa7aa9529020d98bdf5d675eb2d6"
+      "artifactHash": "0fe9fda07cf51a5ba6735441f2ee2ac9d3ff64003322ca75eebbcbba4c902a5c"
     },
     {
       "key": "mcp:packrift-mcp-server",
@@ -50,7 +50,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/packrift-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/packrift-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/packrift-mcp-server",
-      "artifactHash": "2cc60246ae62fba109bc9f451430e073aad01f7b1b8497710bd8419f04c81c3d"
+      "artifactHash": "20c016eab7aaadf318cfbbe70cf726da1d2b5e4041f6dad91e956e49f6766e24"
     },
     {
       "key": "mcp:xquik-mcp-server",
@@ -62,7 +62,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/xquik-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/xquik-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/xquik-mcp-server",
-      "artifactHash": "b30cb78ce694f92e1a745e2b55143705d451cb884d16eb370660a4743b665dbe"
+      "artifactHash": "8b6a961d18581558b6b6472fca124ccaf9d534c3ac121ea44e7f280ab8ca2d8e"
     },
     {
       "key": "mcp:memesio-mcp-server",
@@ -122,7 +122,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/aider",
       "llmsUrl": "https://heyclau.de/data/llms/tools/aider.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/aider",
-      "artifactHash": "cc3bf2a264bcafe4023c6f20c67e4d33033a7ae119dce4987a9504e09b23fde1"
+      "artifactHash": "76176566567fa805f06ed3d406f6f96d40ec2574abcb8f7994a74f2167f40f9e"
     },
     {
       "key": "tools:apify",
@@ -158,7 +158,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/arize-phoenix",
       "llmsUrl": "https://heyclau.de/data/llms/tools/arize-phoenix.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/arize-phoenix",
-      "artifactHash": "93709d38e8614aa5acd7024fbb13b6938ce8047e81acc342f9f58b118943dde2"
+      "artifactHash": "e2c9f1ab5cf41c78834a2acd9b524a657927852b821873582e8fac41aee4668c"
     },
     {
       "key": "tools:bolt-new",
@@ -194,7 +194,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/browser-use",
       "llmsUrl": "https://heyclau.de/data/llms/tools/browser-use.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/browser-use",
-      "artifactHash": "37ac4abda5c1ed6f79c28e57eab1e1f87d008187d12483790c9a9b33ccebef8f"
+      "artifactHash": "51b1fa87ff5a6bae0072f6c53096133fd9c83303cbd670ba7a64153aacbeca3b"
     },
     {
       "key": "tools:browserbase",
@@ -230,7 +230,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/cline",
       "llmsUrl": "https://heyclau.de/data/llms/tools/cline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/cline",
-      "artifactHash": "135842c7b2d589babb2e26f465a89703974e5ff10f2086dc3a249abcf9fbcac3"
+      "artifactHash": "17fe12b27e1e51d59f90b262e5fd5bd44aa8b2ebe4d8d72374eb23e3689c5532"
     },
     {
       "key": "tools:cloudflare-agents-sdk",
@@ -242,7 +242,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/cloudflare-agents-sdk",
       "llmsUrl": "https://heyclau.de/data/llms/tools/cloudflare-agents-sdk.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/cloudflare-agents-sdk",
-      "artifactHash": "d659637bf6e6216180a96957e9ed9f6d810acb260afd7eca302b5de8ad09aa68"
+      "artifactHash": "9801e03b709ff56c2fe27304b89ad720d3cf19a0ffce82ae0e48b914b429b477"
     },
     {
       "key": "tools:coderabbit",
@@ -266,7 +266,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/composio",
       "llmsUrl": "https://heyclau.de/data/llms/tools/composio.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/composio",
-      "artifactHash": "e316d98b6dd82ae397787b7b98510b8b820cebae2f7107b360d6657e87df6ee6"
+      "artifactHash": "81cdad50f7c09a8d9314d5eed5ad21d5f817b67e452641d584a7222a14c01b84"
     },
     {
       "key": "tools:continue",
@@ -278,7 +278,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/continue",
       "llmsUrl": "https://heyclau.de/data/llms/tools/continue.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/continue",
-      "artifactHash": "7c4416cb0ec4794eab7f04ddcd9c7b7f28460dd664666085e0f472bc0525a27f"
+      "artifactHash": "dfcccf635ed1647f7dd09af499631a21f6d0a6a1b9090bf2dbf8490350be494e"
     },
     {
       "key": "tools:crewai",
@@ -290,7 +290,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/crewai",
       "llmsUrl": "https://heyclau.de/data/llms/tools/crewai.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/crewai",
-      "artifactHash": "1e8b251b4c3022b836bb1c488aeb40f3ec3eb7049b73b5240985e5f49abd5c41"
+      "artifactHash": "27df1fe19cf36df50e901dfe2fc15fea7d957d8cad2146d97fe35693ff1a5ea2"
     },
     {
       "key": "tools:cursor",
@@ -338,7 +338,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/firecrawl",
       "llmsUrl": "https://heyclau.de/data/llms/tools/firecrawl.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/firecrawl",
-      "artifactHash": "f125083fb9ab5436651d10e5e8fe60bbcf1750461cb88f88c87a0e8b5f66db17"
+      "artifactHash": "37e92dd18b4e6d4d8f1a70e27e1a14c2d4c9f39d369866bc3f9dd5779eb6b578"
     },
     {
       "key": "tools:garak",
@@ -350,7 +350,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/garak",
       "llmsUrl": "https://heyclau.de/data/llms/tools/garak.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/garak",
-      "artifactHash": "b94abf9d7024b20a6e3673d282dbc36ca1f0e0f2b14f9e1b384998ad1ae96742"
+      "artifactHash": "5e5e0d0b513173d466f0209db029942f72f4684d19e5ee19a17a3ea54f3e3fcd"
     },
     {
       "key": "tools:giskard",
@@ -362,7 +362,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/giskard",
       "llmsUrl": "https://heyclau.de/data/llms/tools/giskard.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/giskard",
-      "artifactHash": "9474f8acffcce7549bf3a5e08b9feba022ef2e7304f8c77bc879e0f003a716a7"
+      "artifactHash": "f064eecaef6c7006436c37050ff5b087719bd8c70e6bf44b655f85e807871402"
     },
     {
       "key": "tools:github-copilot",
@@ -398,7 +398,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/helicone",
       "llmsUrl": "https://heyclau.de/data/llms/tools/helicone.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/helicone",
-      "artifactHash": "f0653f81e6fbe817dad9df22f1f6e06c0ab1a30c95ab5542458a8c02d30a5d99"
+      "artifactHash": "8e7f1c52b9e8613a70a55d08e2b154d9f080ea5be1eb6a578555e37dcff76d7c"
     },
     {
       "key": "skills:heyclaude-skill-submission-factory",
@@ -446,7 +446,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/langfuse",
       "llmsUrl": "https://heyclau.de/data/llms/tools/langfuse.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/langfuse",
-      "artifactHash": "05b9e4859bc386b85da3f0a56509185504a2c0debcb77ab1baf417ab055804cc"
+      "artifactHash": "90229243a4167f436ab52a985842b8ac8d2cf8f1ce54ae48714b3d7bee156cae"
     },
     {
       "key": "tools:langgraph",
@@ -458,7 +458,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/langgraph",
       "llmsUrl": "https://heyclau.de/data/llms/tools/langgraph.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/langgraph",
-      "artifactHash": "7fa3056f7b915d0c8bbaf4114a97f8d816fabd607121538b1261ccfaa79c4d6b"
+      "artifactHash": "9f166eb322e9d5ca8c5efea730e6c750612dbbef359886876cc4a92ecbb7bff7"
     },
     {
       "key": "tools:langsmith",
@@ -506,7 +506,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/mastra",
       "llmsUrl": "https://heyclau.de/data/llms/tools/mastra.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/mastra",
-      "artifactHash": "af1309b5509e40abc68eeae4d45a37a65facabe02fe36b94bc77af119727eb42"
+      "artifactHash": "cd8bba6bc78b8e901a63957d5c9dce85a4be1554a690cf311bf9086e10dcace9"
     },
     {
       "key": "tools:microsoft-autogen",
@@ -518,7 +518,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/microsoft-autogen",
       "llmsUrl": "https://heyclau.de/data/llms/tools/microsoft-autogen.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/microsoft-autogen",
-      "artifactHash": "84988c70c72a8deb7241a98ad854558c9159c2b75030a827ba68fb2767a8517d"
+      "artifactHash": "29b0e089b223272af7073d1a6e10ec661b81934a3d04e9c9f6533fbf2623ae2c"
     },
     {
       "key": "tools:n8n",
@@ -530,7 +530,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/n8n",
       "llmsUrl": "https://heyclau.de/data/llms/tools/n8n.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/n8n",
-      "artifactHash": "c5642f184106066ec13a0165e8a5e6e48f1e914486745efe25433b6c03b0477b"
+      "artifactHash": "399282ad6683c969939a1f66372a1c21465dd374db9d61710c8f62b183f626de"
     },
     {
       "key": "tools:opencode",
@@ -542,7 +542,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/opencode",
       "llmsUrl": "https://heyclau.de/data/llms/tools/opencode.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/opencode",
-      "artifactHash": "20ce1b1c7c09a3531239879097e996ad0fc2c59d6af3dd4bbe6df469b44a3cf6"
+      "artifactHash": "6afef1f1629779cf51c160d62b1c52a2e3fb646f9fb73e9d7f8118bd6e18af34"
     },
     {
       "key": "tools:pipedream",
@@ -566,7 +566,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/promptfoo",
       "llmsUrl": "https://heyclau.de/data/llms/tools/promptfoo.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/promptfoo",
-      "artifactHash": "bf0a454b12430f825b21235f451f464a946bf0826599849267ed5eb5adbddea2"
+      "artifactHash": "fc6988e9e42e6ea7315af9d624be3d1929e41077685847da763951053181f1e8"
     },
     {
       "key": "tools:protect-ai",
@@ -614,7 +614,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/roo-code",
       "llmsUrl": "https://heyclau.de/data/llms/tools/roo-code.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/roo-code",
-      "artifactHash": "9287e58fee5b37221d8c56548ba8e565e69cbdaae9c08dbef895bf6477fbf2a4"
+      "artifactHash": "2a86d9d90306af54ab817fd4520561bf120737376bb715f03aa0a59705d918d3"
     },
     {
       "key": "tools:smithery",
@@ -650,7 +650,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/stagehand",
       "llmsUrl": "https://heyclau.de/data/llms/tools/stagehand.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/stagehand",
-      "artifactHash": "df60c36e4dc3aa71a141a3a0209418688a254ca5c70eb01fb2fc33f975c7c6b7"
+      "artifactHash": "a418ab8b315d3e6aaf64ebe2faa4a7e8797c4d994a3a983730e89a3beb9aedbd"
     },
     {
       "key": "tools:trigger-dev",
@@ -662,7 +662,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/trigger-dev",
       "llmsUrl": "https://heyclau.de/data/llms/tools/trigger-dev.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/trigger-dev",
-      "artifactHash": "76cfd4107c04914ba8164594d37f6c3a2ea6e84c1d5b2d57562935645ad9e851"
+      "artifactHash": "343299e6a4dec4ec79e7d757d3da73a164d4b06f8be5d90ef9abadf564542f76"
     },
     {
       "key": "tools:vercel-v0",
@@ -686,7 +686,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/vercel-ai-sdk",
       "llmsUrl": "https://heyclau.de/data/llms/tools/vercel-ai-sdk.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/vercel-ai-sdk",
-      "artifactHash": "4d75e62b184c819c93ffdbbf543b7c835aed0360c6a8aa19b72eb561559eb796"
+      "artifactHash": "4697babf2146222232763837dceea7ab3433d633b7c99cfb8c2d718e110893bd"
     },
     {
       "key": "tools:weave",
@@ -746,7 +746,7 @@
       "canonicalUrl": "https://heyclau.de/entry/tools/zed",
       "llmsUrl": "https://heyclau.de/data/llms/tools/zed.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/tools/zed",
-      "artifactHash": "2ac88bfdc1aca6211f851a34508f8c9290f34c6995f515e762ae94ca2b4b31d4"
+      "artifactHash": "87ab3eac961b31a4fd72e186b6bfadc4c39c0c1efc560b294f3cdfac06d60ce2"
     },
     {
       "key": "mcp:prompt-to-asset",
@@ -758,7 +758,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/prompt-to-asset",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/prompt-to-asset.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/prompt-to-asset",
-      "artifactHash": "5f4b48503572ea2b358ef4372e4c8261ec13076d54d3fb51a0401aca5be00c81"
+      "artifactHash": "2a56e12ebe0d4a8394110b08e4aef4074b7fa226f1c5d9fd6b5b97bc3cd24645"
     },
     {
       "key": "mcp:contrastapi-mcp-server",
@@ -770,7 +770,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/contrastapi-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/contrastapi-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/contrastapi-mcp-server",
-      "artifactHash": "fa14d9bbdb00f31f93171ca99f229699a31572d88e81a3ce03bf3c809e8dd1f8"
+      "artifactHash": "9a1eba0810af2480f105214be8fcf9dfe82de64d614876aa69c5017deca2d403"
     },
     {
       "key": "collections:agent-operator-growth-master-pack",
@@ -818,7 +818,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-automations-orchestrator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-automations-orchestrator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-automations-orchestrator-capability-pack",
-      "artifactHash": "58cae3ad5bf5e6fa80808f6650c2612b51d225e522ee06fc8a5f0613adfb7774"
+      "artifactHash": "ac49064f2bb779a365245190a4133c39bdd20e5523aa05ca4d81e8b58f1fd676"
     },
     {
       "key": "skills:codex-plugin-creator-capability-pack",
@@ -830,7 +830,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/codex-plugin-creator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/codex-plugin-creator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/codex-plugin-creator-capability-pack",
-      "artifactHash": "5f77db8e2f55d19f06f7d9eabaaea84a85b3df7da4f65bfffb0ba3b6d6cbcc09"
+      "artifactHash": "57f49ccea388d843a6d3ca75f87769c72b15ec63d230968fdf77251c6b8ab9a1"
     },
     {
       "key": "skills:git-cliff-release-changelog-capability-pack",
@@ -878,7 +878,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-skill-authoring-factory-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-skill-authoring-factory-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-skill-authoring-factory-capability-pack",
-      "artifactHash": "f951eaa03d75656e4dd7414d7444a446ddfe3bc0c0954257c7b73674da61fdb8"
+      "artifactHash": "699619abe40d22cd990d11cab3f6df4fb2e18f88bdb653c6092b7fd1afe1b2b9"
     },
     {
       "key": "skills:unraid-ca-template-authoring-capability-pack",
@@ -1130,7 +1130,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-agent-ops-hardening",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-agent-ops-hardening.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-agent-ops-hardening",
-      "artifactHash": "a53d721daa733940bc7be80f24cb662c11b1cd8108c384287fc32d9e36066741"
+      "artifactHash": "a5758fdc4370f8ea6ca25fdbbfef2d2c58f3406ded3d4e1af51a68810cf92302"
     },
     {
       "key": "skills:openclaw-operator-capability-pack",
@@ -1142,7 +1142,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/openclaw-operator-capability-pack",
       "llmsUrl": "https://heyclau.de/data/llms/skills/openclaw-operator-capability-pack.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/openclaw-operator-capability-pack",
-      "artifactHash": "aefa1704370fd57c1178f5716173746df50885be10a8d78a3a73dcff3b0e49bc"
+      "artifactHash": "b02066f059d4847d630e31914102c8e1f34c63d38a4c69a3b10e16ac84d14be7"
     },
     {
       "key": "skills:opennext-cloudflare-capability-pack",
@@ -1274,7 +1274,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/heyclaude-mcp",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/heyclaude-mcp.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/heyclaude-mcp",
-      "artifactHash": "9a7366cd04badaad501b5eeb001d30d29771f3a2b4da1a0052bbb6c76bcba6e8"
+      "artifactHash": "57faf46c3888b5267fa6468cb596cda129a7d7da3e248ac654ad4b7af94fdd71"
     },
     {
       "key": "guides:build-mcp-server",
@@ -1982,7 +1982,7 @@
       "canonicalUrl": "https://heyclau.de/entry/statuslines/catppuccin-mocha-theme",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/catppuccin-mocha-theme.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/catppuccin-mocha-theme",
-      "artifactHash": "a395d442612f34d1cc089bfd52d3227e1523fa44098cc6419e1e4d77b7513a5b"
+      "artifactHash": "70710e41ba73b1bff1e6266e49ac295b60ec2fbb6b1f17348c9ef29bdb776f2b"
     },
     {
       "key": "agents:claude-haiku-45-speed-optimizer-agent",
@@ -2174,7 +2174,7 @@
       "canonicalUrl": "https://heyclau.de/entry/hooks/dead-code-eliminator",
       "llmsUrl": "https://heyclau.de/data/llms/hooks/dead-code-eliminator.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/hooks/dead-code-eliminator",
-      "artifactHash": "bd73c7bccaf5f5c53bb2e4726e9c9c2856620c3c6daff4bae56935f5bb2ba74d"
+      "artifactHash": "e7952a7b1e64c47139cb4a3027f174a9f68373153b2701034923199a2cf4ff36"
     },
     {
       "key": "hooks:dependency-security-scanner",
@@ -2702,7 +2702,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/audio-transcription-summarization",
       "llmsUrl": "https://heyclau.de/data/llms/skills/audio-transcription-summarization.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/audio-transcription-summarization",
-      "artifactHash": "d034e573bfa71de99415d19eaddc879d563ca43f958fd949fb740d132074b311"
+      "artifactHash": "85b9428cbe4dd4d7c4a73a2da34c8eabc87372aeaf8e65c59f137bd27156ed5a"
     },
     {
       "key": "skills:cli-data-viz-quickstart",
@@ -2774,7 +2774,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/log-parsing-incident-timeline",
       "llmsUrl": "https://heyclau.de/data/llms/skills/log-parsing-incident-timeline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/log-parsing-incident-timeline",
-      "artifactHash": "7deacd58f5de9c85e019c0324d74b2a0437d059024689d9435a7795055d189ed"
+      "artifactHash": "583f685ec3daf231bf3d9744eced5b54ac573c38f2310c0f3f1d2fe0bbb3313f"
     },
     {
       "key": "skills:markdown-knowledge-base-composer",
@@ -2786,7 +2786,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/markdown-knowledge-base-composer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/markdown-knowledge-base-composer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/markdown-knowledge-base-composer",
-      "artifactHash": "e5f7599dd05154c084985dcec1074d9071c78bb2ef5e0a6a14e12c056d85b788"
+      "artifactHash": "cf98fef2a57ab70ebdd170ab1307e1fd62f75f23bd5518eea3275a3d0669d44e"
     },
     {
       "key": "skills:rest-api-client-harness",
@@ -2810,7 +2810,7 @@
       "canonicalUrl": "https://heyclau.de/entry/skills/website-crawler-summarizer",
       "llmsUrl": "https://heyclau.de/data/llms/skills/website-crawler-summarizer.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/skills/website-crawler-summarizer",
-      "artifactHash": "cf7ec75cdba8fb847b834c3effa3605eada200d40e4d7a1cd5ea94ae0770031e"
+      "artifactHash": "5887d20c68854ec950ff2820d25c104c1f81c01cfc432ae0af83de654a4d9eee"
     },
     {
       "key": "collections:api-development-starter-kit",
@@ -2942,7 +2942,7 @@
       "canonicalUrl": "https://heyclau.de/entry/statuslines/minimal-powerline",
       "llmsUrl": "https://heyclau.de/data/llms/statuslines/minimal-powerline.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/minimal-powerline",
-      "artifactHash": "ad6059486d54b199297d9d9e872557f0bfae85b642b466705bcdbc10c0e62329"
+      "artifactHash": "17085bd5872f3d3cbd56c640b8e3f1e2220f5e6fe2ed11f4c32ba13fc13aca72"
     },
     {
       "key": "statuslines:multi-line-statusline",
@@ -3002,7 +3002,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/reddit-mcp-buddy",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/reddit-mcp-buddy.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/reddit-mcp-buddy",
-      "artifactHash": "bbcec26456fcfa4dc86901aba6c0d479a4f9b1f865809b86ec4ee767c61353ea"
+      "artifactHash": "b6cdf034f30d1ae3dd96bfe97143097127198e662c5deb22a6058a34dd45ad88"
     },
     {
       "key": "commands:zod-audit",
@@ -3038,7 +3038,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/discord-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/discord-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/discord-mcp-server",
-      "artifactHash": "658b665988727b57bff5f6b758c6dc02e5d7ee520d16fb4d4b32f9136a138abb"
+      "artifactHash": "a128b8a9eb03226fd736ac5d8f4f69618ddcc0a11d88b06b2432d89826297871"
     },
     {
       "key": "mcp:kubernetes-mcp-server",
@@ -3050,7 +3050,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/kubernetes-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/kubernetes-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/kubernetes-mcp-server",
-      "artifactHash": "ffdfe6a6f054d0636e18612938be1c936ccc03ec78d5b89b0095384dc6ea7804"
+      "artifactHash": "dfb6053456299c85775b3b42c22e974a5b857f7fb010be2b912a942a37dd49a2"
     },
     {
       "key": "mcp:redis-mcp-server",
@@ -3062,7 +3062,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/redis-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/redis-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/redis-mcp-server",
-      "artifactHash": "9574bb9e401aa5a0240421f84ea96a6e2e99dc58405cdadcd34ac0b4ab3b4cc2"
+      "artifactHash": "cb38803bd77024aab811bdeb18d7111aa678fb183dcacee3b57e1f2032a3846f"
     },
     {
       "key": "hooks:accessibility-checker",
@@ -3698,7 +3698,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/airtable-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/airtable-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/airtable-mcp-server",
-      "artifactHash": "fdf889ea434cfc75bf8453f66e5310dbe5f21118b0c945f7400d8ee4b7067bc4"
+      "artifactHash": "31600845ed29252ca2b9185b71e5118240a67fa9fb1cffefb58918750ad0217c"
     },
     {
       "key": "mcp:asana-mcp-server",
@@ -3746,7 +3746,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/clickup-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/clickup-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/clickup-mcp-server",
-      "artifactHash": "115937e070eb5e1f9ba881c0c8c93f81f8e41d2144baee3e40613c15fa4d100f"
+      "artifactHash": "4c31e2175161ca38a400c2d1ca55e0ab94039f8ea59d265681d0a2af5074290d"
     },
     {
       "key": "mcp:cloudflare-mcp-server",
@@ -3986,7 +3986,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/socket-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/socket-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/socket-mcp-server",
-      "artifactHash": "4f3f685aea565f5f44e0db5f6ea1ce59e9ff865f490cd9ce0bb0e1df93918788"
+      "artifactHash": "dca5b44e5b9579d0275dc062fc264febf66013ec9603a677aa14b1e5694b2fea"
     },
     {
       "key": "mcp:square-mcp-server",
@@ -4214,7 +4214,7 @@
       "canonicalUrl": "https://heyclau.de/entry/mcp/aws-services-mcp-server",
       "llmsUrl": "https://heyclau.de/data/llms/mcp/aws-services-mcp-server.txt",
       "apiUrl": "https://heyclau.de/api/registry/entries/mcp/aws-services-mcp-server",
-      "artifactHash": "4f1129a94d3aa9ec5ff33c26a1d6098d6488b8a38d8e931ec6f383ca52c35a9d"
+      "artifactHash": "7f00a502a8f9a9c73caa645f654ddda864502fcbdab97d84597e260e881adeb8"
     },
     {
       "key": "agents:backend-architect-agent",
@@ -4662,5 +4662,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "5d6592f1a85a423e4d4eb4c0c1c5e91eae57e911b1de55ed9f10f929edbb2a9d"
+  "signature": "62db822c02a25b404ca2f77cf3961dc21a5a43b3400794fe8b0589b846f86c38"
 }

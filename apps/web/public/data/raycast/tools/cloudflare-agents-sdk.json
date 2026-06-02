@@ -21,9 +21,9 @@
   "repoStats": {
     "repository": "cloudflare/agents",
     "url": "https://github.com/cloudflare/agents",
-    "stars": 4931,
-    "forks": 552,
-    "updatedAt": "2026-05-19T11:37:01Z",
+    "stars": 5016,
+    "forks": 569,
+    "updatedAt": "2026-06-02T11:57:01Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

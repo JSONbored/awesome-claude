@@ -27,6 +27,9 @@
   "repoStats": {
     "repository": "thebrierfox/intuitek-ace",
     "url": "https://github.com/thebrierfox/intuitek-ace",
+    "stars": 0,
+    "forks": 0,
+    "updatedAt": "2026-05-28T17:58:36Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

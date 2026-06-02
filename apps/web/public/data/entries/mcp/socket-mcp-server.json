@@ -302,15 +302,15 @@
     "filePath": "content/mcp/socket-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/socket-mcp-server.mdx",
     "repoUrl": "https://github.com/SocketDev/socket-mcp",
-    "githubStars": 107,
-    "githubForks": 19,
-    "repoUpdatedAt": "2026-05-19T04:13:47Z",
+    "githubStars": 113,
+    "githubForks": 20,
+    "repoUpdatedAt": "2026-06-02T01:34:16Z",
     "repoStats": {
       "repository": "SocketDev/socket-mcp",
       "url": "https://github.com/SocketDev/socket-mcp",
-      "stars": 107,
-      "forks": 19,
-      "updatedAt": "2026-05-19T04:13:47Z",
+      "stars": 113,
+      "forks": 20,
+      "updatedAt": "2026-06-02T01:34:16Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

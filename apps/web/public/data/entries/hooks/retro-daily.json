@@ -222,12 +222,15 @@
     "filePath": "content/hooks/retro-daily.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/retro-daily.mdx",
     "repoUrl": "https://github.com/gyanesh-m/retro-daily",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null,
+    "githubStars": 0,
+    "githubForks": 0,
+    "repoUpdatedAt": "2026-05-19T19:26:40Z",
     "repoStats": {
       "repository": "gyanesh-m/retro-daily",
       "url": "https://github.com/gyanesh-m/retro-daily",
+      "stars": 0,
+      "forks": 0,
+      "updatedAt": "2026-05-19T19:26:40Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

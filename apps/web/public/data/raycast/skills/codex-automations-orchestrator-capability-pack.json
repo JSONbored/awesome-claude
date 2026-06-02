@@ -17,9 +17,9 @@
   "repoStats": {
     "repository": "openai/codex",
     "url": "https://github.com/openai/codex",
-    "stars": 83749,
-    "forks": 12151,
-    "updatedAt": "2026-05-19T11:39:05Z",
+    "stars": 87891,
+    "forks": 12904,
+    "updatedAt": "2026-06-02T12:28:25Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

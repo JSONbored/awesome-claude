@@ -251,12 +251,15 @@
     "filePath": "content/mcp/yield-intelligence-mcp.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/yield-intelligence-mcp.mdx",
     "repoUrl": "https://github.com/thebrierfox/intuitek-ace",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null,
+    "githubStars": 0,
+    "githubForks": 0,
+    "repoUpdatedAt": "2026-05-28T17:58:36Z",
     "repoStats": {
       "repository": "thebrierfox/intuitek-ace",
       "url": "https://github.com/thebrierfox/intuitek-ace",
+      "stars": 0,
+      "forks": 0,
+      "updatedAt": "2026-05-28T17:58:36Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

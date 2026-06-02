@@ -73,15 +73,15 @@
     "filePath": "content/tools/firecrawl.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/firecrawl.mdx",
     "repoUrl": "https://github.com/mendableai/firecrawl",
-    "githubStars": 121680,
-    "githubForks": 7410,
-    "repoUpdatedAt": "2026-05-19T11:41:31Z",
+    "githubStars": 127518,
+    "githubForks": 7607,
+    "repoUpdatedAt": "2026-06-02T12:25:53Z",
     "repoStats": {
       "repository": "mendableai/firecrawl",
       "url": "https://github.com/mendableai/firecrawl",
-      "stars": 121680,
-      "forks": 7410,
-      "updatedAt": "2026-05-19T11:41:31Z",
+      "stars": 127518,
+      "forks": 7607,
+      "updatedAt": "2026-06-02T12:25:53Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

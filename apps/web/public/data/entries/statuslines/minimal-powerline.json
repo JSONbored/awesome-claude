@@ -223,15 +223,15 @@
     "filePath": "content/statuslines/minimal-powerline.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/minimal-powerline.mdx",
     "repoUrl": "https://github.com/powerline/powerline",
-    "githubStars": 14752,
+    "githubStars": 14763,
     "githubForks": 1001,
-    "repoUpdatedAt": "2026-05-19T10:46:19Z",
+    "repoUpdatedAt": "2026-06-02T01:09:35Z",
     "repoStats": {
       "repository": "powerline/powerline",
       "url": "https://github.com/powerline/powerline",
-      "stars": 14752,
+      "stars": 14763,
       "forks": 1001,
-      "updatedAt": "2026-05-19T10:46:19Z",
+      "updatedAt": "2026-06-02T01:09:35Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

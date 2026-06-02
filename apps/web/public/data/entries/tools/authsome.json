@@ -104,12 +104,15 @@
     "filePath": "content/tools/authsome.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/authsome.mdx",
     "repoUrl": "https://github.com/agentrhq/authsome",
-    "githubStars": null,
-    "githubForks": null,
-    "repoUpdatedAt": null,
+    "githubStars": 42,
+    "githubForks": 7,
+    "repoUpdatedAt": "2026-06-02T11:37:15Z",
     "repoStats": {
       "repository": "agentrhq/authsome",
       "url": "https://github.com/agentrhq/authsome",
+      "stars": 42,
+      "forks": 7,
+      "updatedAt": "2026-06-02T11:37:15Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

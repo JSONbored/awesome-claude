@@ -37,6 +37,9 @@
   "repoStats": {
     "repository": "agentrhq/authsome",
     "url": "https://github.com/agentrhq/authsome",
+    "stars": 42,
+    "forks": 7,
+    "updatedAt": "2026-06-02T11:37:15Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

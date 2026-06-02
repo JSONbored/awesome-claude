@@ -99,15 +99,15 @@
     "filePath": "content/mcp/packrift-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/packrift-mcp-server.mdx",
     "repoUrl": "https://github.com/Packrift/packrift-mcp",
-    "githubStars": 0,
+    "githubStars": 1,
     "githubForks": 1,
-    "repoUpdatedAt": "2026-05-19T11:41:33Z",
+    "repoUpdatedAt": "2026-05-31T12:14:03Z",
     "repoStats": {
       "repository": "Packrift/packrift-mcp",
       "url": "https://github.com/Packrift/packrift-mcp",
-      "stars": 0,
+      "stars": 1,
       "forks": 1,
-      "updatedAt": "2026-05-19T11:41:33Z",
+      "updatedAt": "2026-05-31T12:14:03Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

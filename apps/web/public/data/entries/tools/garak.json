@@ -73,15 +73,15 @@
     "filePath": "content/tools/garak.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/garak.mdx",
     "repoUrl": "https://github.com/NVIDIA/garak",
-    "githubStars": 7848,
-    "githubForks": 949,
-    "repoUpdatedAt": "2026-05-19T10:43:48Z",
+    "githubStars": 7996,
+    "githubForks": 987,
+    "repoUpdatedAt": "2026-06-02T10:03:11Z",
     "repoStats": {
       "repository": "NVIDIA/garak",
       "url": "https://github.com/NVIDIA/garak",
-      "stars": 7848,
-      "forks": 949,
-      "updatedAt": "2026-05-19T10:43:48Z",
+      "stars": 7996,
+      "forks": 987,
+      "updatedAt": "2026-06-02T10:03:11Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }
