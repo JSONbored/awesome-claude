@@ -1,0 +1,68 @@
+---
+title: Claude Code Subagent Handoff Checklist
+slug: claude-code-subagent-handoff-checklist
+category: guides
+description: >-
+  A practical checklist for handing focused work to Claude Code subagents while
+  keeping scope, context, validation, and final review clear.
+cardDescription: Keep Claude Code subagent handoffs scoped and reviewable.
+seoTitle: Claude Code Subagent Handoff Checklist
+seoDescription: >-
+  Use this checklist to delegate scoped Claude Code subagent work with clear
+  context, validation commands, and maintainer review expectations.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-02"
+submittedBy: "@JSONbored"
+submittedByUrl: "https://github.com/JSONbored"
+submittedAt: "2026-06-02T10:05:00.000Z"
+documentationUrl: "https://docs.anthropic.com/en/docs/claude-code/sub-agents"
+installable: false
+usageSnippet: >-
+  Use this before delegating a Claude Code subagent task: define the exact goal,
+  include only the relevant files and commands, require a concise result, and
+  review the final diff yourself before merging.
+tags:
+  - claude-code
+  - subagents
+  - delegation
+  - code-review
+keywords:
+  - claude code subagents
+  - claude code delegation
+  - subagent handoff checklist
+  - agent workflow review
+readingTime: 2
+difficultyScore: 25
+hasTroubleshooting: false
+hasPrerequisites: false
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code subagents work best when the handoff is narrow, evidence-backed, and reviewable. Give the subagent one job, the files or commands it should inspect, the output format you need, and the validation bar it must report back against.
+
+## Handoff Checklist
+
+- Name the exact outcome: bug diagnosis, focused implementation, test repair, documentation pass, or review.
+- Include the relevant paths, issue or PR links, and commands instead of asking the subagent to rediscover the whole repo.
+- State what is out of scope, especially unrelated refactors, generated artifacts, secrets, production deploys, and broad dependency changes.
+- Ask for evidence in the response: changed files, tests run, failures, uncertainty, and any manual follow-up needed.
+- Keep final authority with the maintainer. Review the resulting diff, CI state, and any generated files before merging.
+
+## Good Handoff Shape
+
+```text
+Goal: Investigate why validate-content fails for this one guide.
+Context: content/guides/example.mdx and scripts/validate-content.mjs.
+Out of scope: README, generated registry artifacts, package changes, deploys.
+Validation: run pnpm validate:content:strict and report the exact failure.
+Output: summarize cause, fix, and residual risk in five bullets or less.
+```
+
+## Review Notes
+
+Subagents are useful for parallel investigation, but they should not replace maintainer judgment. Treat their output as a proposed patch or analysis, then verify it against source docs, repository policy, and CI before accepting it.
