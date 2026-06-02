@@ -451,6 +451,50 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("fields: redactPublicDraftFields(fields)");
   });
 
+  it("limits and rate-limits public submission gate request bodies before parsing", () => {
+    const source = readWorkerSource();
+    const draftIndex = source.indexOf("async function createDraftRoute");
+    const draftReadIndex = source.indexOf("readJsonWithLimit", draftIndex);
+    const draftPersistIndex = source.indexOf("await createDraft", draftIndex);
+    const webhookIndex = source.indexOf("async function githubWebhookRoute");
+    const webhookReadIndex = source.indexOf(
+      "readRequestTextWithLimit",
+      webhookIndex,
+    );
+    const webhookVerifyIndex = source.indexOf(
+      "verifyGitHubWebhookSignature",
+      webhookIndex,
+    );
+    const importIndex = source.indexOf("async function importCompleteRoute");
+    const importReadIndex = source.indexOf(
+      "readRequestTextWithLimit",
+      importIndex,
+    );
+    const importVerifyIndex = source.indexOf(
+      "verifyInternalSignature",
+      importIndex,
+    );
+    const routeIndex = source.indexOf("async function route");
+    const rateLimitIndex = source.indexOf("enforceRouteRateLimit", routeIndex);
+
+    expect(source).toContain("DRAFT_BODY_LIMIT_BYTES");
+    expect(source).toContain("GITHUB_WEBHOOK_BODY_LIMIT_BYTES");
+    expect(source).toContain("INTERNAL_BODY_LIMIT_BYTES");
+    expect(source).toContain("class BodyTooLargeError extends Error");
+    expect(source).toContain('error: "body_too_large"');
+    expect(source).toContain('error: "rate_limited"');
+    expect(source).not.toContain("body = await request.json();");
+    expect(source).not.toContain("const raw = await request.text();");
+    expect(source).not.toContain("const body = await request.text();");
+    expect(draftReadIndex).toBeGreaterThan(draftIndex);
+    expect(draftPersistIndex).toBeGreaterThan(draftReadIndex);
+    expect(webhookReadIndex).toBeGreaterThan(webhookIndex);
+    expect(webhookVerifyIndex).toBeGreaterThan(webhookReadIndex);
+    expect(importReadIndex).toBeGreaterThan(importIndex);
+    expect(importVerifyIndex).toBeGreaterThan(importReadIndex);
+    expect(rateLimitIndex).toBeGreaterThan(routeIndex);
+  });
+
   it("rejects cancelled GitHub authorization callbacks before token exchange", () => {
     const source = readWorkerSource();
     const callbackSource =

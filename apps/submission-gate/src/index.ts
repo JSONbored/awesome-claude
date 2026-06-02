@@ -165,6 +165,27 @@ const DECISION_LABELS = [
   LABELS.superseded,
 ];
 
+const DRAFT_BODY_LIMIT_BYTES = 64 * 1024;
+const INTERNAL_BODY_LIMIT_BYTES = 64 * 1024;
+const GITHUB_WEBHOOK_BODY_LIMIT_BYTES = 1024 * 1024;
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const DRAFT_RATE_LIMIT = 20;
+const SIGNED_CALLBACK_RATE_LIMIT = 120;
+
+type RateLimitBucket = {
+  windowStartedAt: number;
+  count: number;
+};
+
+const routeRateLimits = new Map<string, RateLimitBucket>();
+
+class BodyTooLargeError extends Error {
+  constructor(limitBytes: number) {
+    super(`Request body exceeds ${limitBytes} bytes.`);
+    this.name = "BodyTooLargeError";
+  }
+}
+
 type ReviewTarget = {
   repoFullName: string;
   number: number;
@@ -282,6 +303,115 @@ function trimTrailingSlashes(value: unknown) {
   return text.slice(0, end);
 }
 
+function requestBodyTooLarge(limitBytes: number) {
+  return json(
+    {
+      ok: false,
+      error: "body_too_large",
+      message: `Request body must be ${limitBytes} bytes or smaller.`,
+    },
+    { status: 413 },
+  );
+}
+
+function rejectUnsupportedMediaType(message: string) {
+  return json(
+    {
+      ok: false,
+      error: "unsupported_media_type",
+      message,
+    },
+    { status: 415 },
+  );
+}
+
+function contentTypeIncludes(request: Request, mediaType: string) {
+  return (
+    request.headers.get("content-type")?.toLowerCase().split(";")[0].trim() ===
+    mediaType
+  );
+}
+
+function enforceContentLengthLimit(request: Request, limitBytes: number) {
+  const contentLength = request.headers.get("content-length");
+  if (contentLength === null) return;
+  const parsedLength = Number(contentLength);
+  if (!Number.isFinite(parsedLength) || parsedLength < 0) {
+    throw new BodyTooLargeError(limitBytes);
+  }
+  if (parsedLength > limitBytes) {
+    throw new BodyTooLargeError(limitBytes);
+  }
+}
+
+async function readRequestTextWithLimit(request: Request, limitBytes: number) {
+  enforceContentLengthLimit(request, limitBytes);
+  if (!request.body) return "";
+
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder();
+  let bytesRead = 0;
+  let text = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytesRead += value.byteLength;
+      if (bytesRead > limitBytes) {
+        throw new BodyTooLargeError(limitBytes);
+      }
+      text += decoder.decode(value, { stream: true });
+    }
+    text += decoder.decode();
+    return text;
+  } finally {
+    reader.releaseLock();
+  }
+}
+
+async function readJsonWithLimit(request: Request, limitBytes: number) {
+  const text = await readRequestTextWithLimit(request, limitBytes);
+  return JSON.parse(text) as unknown;
+}
+
+function rateLimitKey(request: Request, pathname: string) {
+  const forwardedFor = request.headers.get("x-forwarded-for") || "";
+  const clientId =
+    request.headers.get("cf-connecting-ip") ||
+    forwardedFor.split(",")[0]?.trim() ||
+    "unknown";
+  return `${pathname}:${clientId}`;
+}
+
+function enforceRouteRateLimit(
+  request: Request,
+  pathname: string,
+  maxRequests: number,
+) {
+  const now = Date.now();
+  const key = rateLimitKey(request, pathname);
+  const current = routeRateLimits.get(key);
+  if (!current || now - current.windowStartedAt >= RATE_LIMIT_WINDOW_MS) {
+    routeRateLimits.set(key, { windowStartedAt: now, count: 1 });
+    return null;
+  }
+  if (current.count >= maxRequests) {
+    return json(
+      {
+        ok: false,
+        error: "rate_limited",
+        message: "Too many requests. Please retry shortly.",
+      },
+      {
+        status: 429,
+        headers: { "retry-after": String(RATE_LIMIT_WINDOW_MS / 1000) },
+      },
+    );
+  }
+  current.count += 1;
+  return null;
+}
+
 async function putAuditObject(env: Env, key: string, payload: unknown) {
   await env.SUBMISSION_GATE_AUDIT.put(key, JSON.stringify(payload, null, 2), {
     httpMetadata: { contentType: "application/json" },
@@ -289,10 +419,18 @@ async function putAuditObject(env: Env, key: string, payload: unknown) {
 }
 
 async function createDraftRoute(request: Request, env: Env) {
+  if (!contentTypeIncludes(request, "application/json")) {
+    return rejectUnsupportedMediaType(
+      "Draft requests must use application/json.",
+    );
+  }
   let body: unknown;
   try {
-    body = await request.json();
-  } catch {
+    body = await readJsonWithLimit(request, DRAFT_BODY_LIMIT_BYTES);
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return requestBodyTooLarge(DRAFT_BODY_LIMIT_BYTES);
+    }
     return json(
       {
         ok: false,
@@ -1128,7 +1266,6 @@ async function githubWebhookRoute(
   env: Env,
   ctx: ExecutionContext,
 ) {
-  const raw = await request.text();
   const signature = request.headers.get("x-hub-signature-256");
   const deliveryId =
     request.headers.get("x-github-delivery") || crypto.randomUUID();
@@ -1137,6 +1274,22 @@ async function githubWebhookRoute(
       { ok: false, error: "webhook_secret_not_configured" },
       { status: 503 },
     );
+  }
+  if (!signature) {
+    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
+  }
+
+  let raw: string;
+  try {
+    raw = await readRequestTextWithLimit(
+      request,
+      GITHUB_WEBHOOK_BODY_LIMIT_BYTES,
+    );
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return requestBodyTooLarge(GITHUB_WEBHOOK_BODY_LIMIT_BYTES);
+    }
+    throw error;
   }
   const valid = await verifyGitHubWebhookSignature({
     secret: env.GITHUB_WEBHOOK_SECRET,
@@ -1890,14 +2043,27 @@ async function completeImportPr(
 }
 
 async function importCompleteRoute(request: Request, env: Env) {
-  const body = await request.text();
+  const signature = request.headers.get("x-heyclaude-internal-signature");
   if (!env.INTERNAL_SHARED_SECRET) {
     return json({ ok: false, error: "not_configured" }, { status: 503 });
+  }
+  if (!signature) {
+    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
+  }
+
+  let body: string;
+  try {
+    body = await readRequestTextWithLimit(request, INTERNAL_BODY_LIMIT_BYTES);
+  } catch (error) {
+    if (error instanceof BodyTooLargeError) {
+      return requestBodyTooLarge(INTERNAL_BODY_LIMIT_BYTES);
+    }
+    throw error;
   }
   const valid = await verifyInternalSignature({
     secret: env.INTERNAL_SHARED_SECRET,
     payload: body,
-    signatureHeader: request.headers.get("x-heyclaude-internal-signature"),
+    signatureHeader: signature,
   });
   if (!valid)
     return json({ ok: false, error: "invalid_signature" }, { status: 401 });
@@ -1980,6 +2146,12 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return json({ ok: true, service: "heyclaude-submission-gate" });
   }
   if (request.method === "POST" && url.pathname === "/drafts") {
+    const rateLimited = enforceRouteRateLimit(
+      request,
+      url.pathname,
+      DRAFT_RATE_LIMIT,
+    );
+    if (rateLimited) return rateLimited;
     return createDraftRoute(request, env);
   }
   if (request.method === "GET" && url.pathname.startsWith("/drafts/")) {
@@ -2013,12 +2185,24 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return githubCallbackRoute(request, env);
   }
   if (request.method === "POST" && url.pathname === "/webhooks/github") {
+    const rateLimited = enforceRouteRateLimit(
+      request,
+      url.pathname,
+      SIGNED_CALLBACK_RATE_LIMIT,
+    );
+    if (rateLimited) return rateLimited;
     return githubWebhookRoute(request, env, ctx);
   }
   if (
     request.method === "POST" &&
     url.pathname === "/internal/import-complete"
   ) {
+    const rateLimited = enforceRouteRateLimit(
+      request,
+      url.pathname,
+      SIGNED_CALLBACK_RATE_LIMIT,
+    );
+    if (rateLimited) return rateLimited;
     return importCompleteRoute(request, env);
   }
   return json({ ok: false, error: "not_found" }, { status: 404 });
