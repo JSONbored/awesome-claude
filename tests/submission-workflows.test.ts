@@ -639,6 +639,24 @@ describe("submission automation workflows", () => {
     );
   });
 
+  it("keeps source-only import diffs focused on content and build artifacts", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/content-validation.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain(
+      "Verify source-only imports produce only build artifacts",
+    );
+    expect(source).toContain("git checkout -- pnpm-lock.yaml");
+    expect(source).toContain(
+      "grep -Ev '^(README\\.md|apps/web/public/data/.*|apps/web/src/generated/.*|apps/web/src/routeTree\\.gen\\.ts)$'",
+    );
+    expect(source).toContain(
+      "Content import generation changed non-generated files",
+    );
+  });
+
   it("routes hook-only content PRs through focused direct submission validation", () => {
     const lanes = runClassifierForChangedFiles({
       "content/hooks/retro-daily.mdx": contentFixture(`

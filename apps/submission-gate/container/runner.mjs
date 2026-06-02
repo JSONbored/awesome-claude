@@ -91,6 +91,7 @@ const BLOCKED_IMPORT_PATHS = new Set([
   "pnpm-workspace.yaml",
   "yarn.lock",
 ]);
+const activeImportJobs = new Set();
 
 class PayloadTooLargeError extends Error {
   constructor() {
@@ -129,6 +130,20 @@ function verifySignature(secret, payload, signature) {
   if (!secret || !signature?.startsWith("sha256=")) return false;
   const expected = `sha256=${createHmac("sha256", secret).update(payload).digest("hex")}`;
   return timingSafeEqual(expected, signature);
+}
+
+export function safeCallbackUrl(value) {
+  const url = new URL(String(value || ""));
+  if (
+    url.protocol !== "https:" ||
+    !["submission-gate.heyclau.de", "submission-gate-dev.heyclau.de"].includes(
+      url.hostname,
+    ) ||
+    url.pathname !== "/internal/import-complete"
+  ) {
+    throw new Error("Import callback URL is not allowed.");
+  }
+  return url.toString();
 }
 
 export function redactSensitiveOutput(value) {
@@ -543,6 +558,90 @@ async function handleImport(job) {
   }
 }
 
+async function postImportCallback(job, result) {
+  if (!job.callbackUrl) return;
+  const secret = process.env.INTERNAL_SHARED_SECRET || "";
+  if (!secret) throw new Error("Import callback secret is not configured.");
+  const callbackUrl = safeCallbackUrl(job.callbackUrl);
+  const source = job.source || {};
+  const ok = result?.ok !== false && Boolean(result?.pullRequestUrl);
+  const body = JSON.stringify({
+    ok,
+    targetKey: job.targetKey,
+    repo: source.repo || job.repo,
+    number: source.number || job.number,
+    baseRef: source.baseRef || job.baseRef,
+    installationId: source.installationId,
+    importPrUrl: result?.pullRequestUrl,
+    summary: ok
+      ? `Maintainer-owned import PR opened: ${result.pullRequestUrl}`
+      : undefined,
+    error: ok ? undefined : result?.error || "import_failed",
+    message: ok ? undefined : redactSensitiveOutput(result?.message || ""),
+  });
+  const signature = `sha256=${createHmac("sha256", secret).update(body).digest("hex")}`;
+  const response = await fetch(callbackUrl, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-heyclaude-internal-signature": signature,
+    },
+    body,
+  });
+  if (!response.ok) {
+    throw new Error(`Import callback returned ${response.status}.`);
+  }
+}
+
+function importJobKey(job) {
+  return `${job.repo || ""}:${job.branchName || ""}`;
+}
+
+function startAsyncImport(job) {
+  const key = importJobKey(job);
+  if (activeImportJobs.has(key)) {
+    return {
+      ok: true,
+      accepted: true,
+      alreadyRunning: true,
+      message: "Import job is already running.",
+    };
+  }
+  activeImportJobs.add(key);
+  void (async () => {
+    try {
+      const result = await handleImport(job);
+      await postImportCallback(job, result);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "unknown import error";
+      console.error(
+        "submission async import failed",
+        redactSensitiveOutput(message),
+      );
+      await postImportCallback(job, {
+        ok: false,
+        error: "import_failed",
+        message: redactSensitiveOutput(message).slice(0, 4000),
+      }).catch((callbackError) => {
+        console.error(
+          "submission import callback failed",
+          redactSensitiveOutput(
+            callbackError?.message || String(callbackError),
+          ),
+        );
+      });
+    } finally {
+      activeImportJobs.delete(key);
+    }
+  })();
+  return {
+    ok: true,
+    accepted: true,
+    message: "Import job accepted by runner.",
+  };
+}
+
 export function createImportServer() {
   return createServer(async (request, response) => {
     try {
@@ -570,8 +669,13 @@ export function createImportServer() {
         response.end(JSON.stringify({ ok: false, error: "invalid_signature" }));
         return;
       }
-      const result = await handleImport(JSON.parse(body));
-      response.writeHead(200, { "content-type": "application/json" });
+      const job = JSON.parse(body);
+      const result = job.callbackUrl
+        ? startAsyncImport(job)
+        : await handleImport(job);
+      response.writeHead(job.callbackUrl ? 202 : 200, {
+        "content-type": "application/json",
+      });
       response.end(JSON.stringify(result));
     } catch (error) {
       const message =

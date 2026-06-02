@@ -496,6 +496,10 @@ jobs:
         if: ${{ needs.classify-pr.outputs.registry == 'true' && needs.classify-pr.outputs.source_content_only == 'true' }}
         run: |
           set -euo pipefail
+          # Hosted pnpm installs can normalize lockfile metadata. Source-only
+          # import validation cares about generator side effects after install.
+          git checkout -- pnpm-lock.yaml
+
           dirty_files="$(git diff --name-only)"
           if [ -z "$dirty_files" ]; then
             echo "Generated registry artifacts are already current."

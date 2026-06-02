@@ -8,6 +8,7 @@ import {
   maintainerGenerationCommandLabels,
   redactSensitiveOutput,
   resolveValidationChecks,
+  safeCallbackUrl,
   safeGitHubRepo,
   safeGitRef,
   safeImportPath,
@@ -143,6 +144,31 @@ describe("submission gate import runner safety", () => {
     expect(() =>
       resolveValidationChecks(["node scripts/import-from-job.js"]),
     ).toThrow("Unsupported validation check");
+  });
+
+  it("allows only signed import completion callback URLs", () => {
+    expect(
+      safeCallbackUrl(
+        "https://submission-gate-dev.heyclau.de/internal/import-complete",
+      ),
+    ).toBe("https://submission-gate-dev.heyclau.de/internal/import-complete");
+    expect(
+      safeCallbackUrl(
+        "https://submission-gate.heyclau.de/internal/import-complete",
+      ),
+    ).toBe("https://submission-gate.heyclau.de/internal/import-complete");
+
+    expect(() =>
+      safeCallbackUrl("https://attacker.example/internal/import-complete"),
+    ).toThrow("callback URL");
+    expect(() =>
+      safeCallbackUrl("https://submission-gate-dev.heyclau.de/other"),
+    ).toThrow("callback URL");
+    expect(() =>
+      safeCallbackUrl(
+        "http://submission-gate-dev.heyclau.de/internal/import-complete",
+      ),
+    ).toThrow("callback URL");
   });
 
   it("runs maintainer artifact generation before import validation", () => {

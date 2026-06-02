@@ -17,6 +17,7 @@
   },
   "vars": {
     "PUBLIC_SITE_URL": "https://heyclau.de",
+    "SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",
     "PUBLIC_REPO": "JSONbored/awesome-claude",
     "ALLOWED_IMPORT_REPOS": "JSONbored/awesome-claude",
     "ALLOWED_CORS_ORIGINS": "https://heyclau.de",
@@ -110,6 +111,7 @@
       "name": "heyclaude-submission-gate-dev",
       "vars": {
         "PUBLIC_SITE_URL": "https://dev.heyclau.de",
+        "SUBMISSION_GATE_URL": "https://submission-gate-dev.heyclau.de",
         "PUBLIC_REPO": "JSONbored/awesome-claude",
         "ALLOWED_IMPORT_REPOS": "JSONbored/awesome-claude",
         "ALLOWED_CORS_ORIGINS": "https://heyclaude-dev.zeronode.workers.dev,https://dev.heyclau.de,http://localhost:3000,http://localhost:5173",

@@ -60,6 +60,7 @@ import {
 
 type Env = {
   PUBLIC_SITE_URL: string;
+  SUBMISSION_GATE_URL?: string;
   PUBLIC_REPO: string;
   ALLOWED_IMPORT_REPOS?: string;
   PILOT_BASE_REF: string;
@@ -684,12 +685,18 @@ function hasTerminalGateDecision(
     | {
         status?: unknown;
         verdict?: unknown;
+        importPrUrl?: unknown;
       }
     | null
     | undefined,
 ) {
   if (!state) return false;
   if (String(state.status || "") === "import_pr_open") return true;
+  if (String(state.verdict || "") === "import") {
+    return (
+      typeof state.importPrUrl === "string" && state.importPrUrl.length > 0
+    );
+  }
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
 }
 
@@ -991,6 +998,7 @@ async function githubWebhookRoute(
       deliveryId,
       eventName,
       payload,
+      true,
       true,
     );
     const targetKey = targetKeyForReview(target);
@@ -1332,6 +1340,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           targetKey: message.targetKey,
           payload: {
             ...decision.importJob,
+            runnerKey: `${message.targetKey}:${String(
+              message.payload.deliveryId || crypto.randomUUID(),
+            )}`,
             repo: target.repoFullName,
             baseRef: target.baseRef || env.PILOT_BASE_REF,
             source: {
@@ -1357,6 +1368,7 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
       baseRef?: string;
       installationId?: number;
     };
+    runnerKey?: string;
   };
   const sourceInstallationId = Number(payload.source?.installationId || 0);
   if (
@@ -1375,9 +1387,22 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
     installationId: sourceInstallationId,
     apiVersion: env.GITHUB_API_VERSION,
   });
-  const body = JSON.stringify({ ...payload, githubToken });
+  const callbackBaseUrl = String(env.SUBMISSION_GATE_URL || "").replace(
+    /\/+$/,
+    "",
+  );
+  if (!callbackBaseUrl) {
+    throw new Error("Submission gate callback URL is not configured.");
+  }
+  const body = JSON.stringify({
+    ...payload,
+    targetKey: message.targetKey,
+    githubToken,
+    callbackUrl: `${callbackBaseUrl}/internal/import-complete`,
+  });
   const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(message.targetKey);
+  const runnerKey = String(payload.runnerKey || message.targetKey);
+  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey);
   const response = await stub.fetch("https://container.local/import", {
     method: "POST",
     headers: {
@@ -1389,9 +1414,30 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
   const result = (await response.json().catch(() => ({}))) as {
     error?: string;
     message?: string;
+    accepted?: boolean;
     pullRequestUrl?: string;
     pullRequestNumber?: number;
   };
+  if (response.status === 202 || result.accepted) {
+    await upsertPrState(env.SUBMISSION_GATE_DB, {
+      repo: payload.source?.repo || payload.repo || "",
+      number: Number(payload.source?.number || payload.number || 0),
+      baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
+      status: "import_running",
+      verdict: "import",
+      verdictSummary:
+        result.message || "Maintainer-owned import job accepted by runner.",
+    });
+    await insertAudit(env.SUBMISSION_GATE_DB, {
+      id: crypto.randomUUID(),
+      targetKey: message.targetKey,
+      eventType: "import_pr",
+      decision: "import_queued",
+      summary:
+        result.message || "Maintainer-owned import job accepted by runner.",
+    });
+    return;
+  }
   if (!response.ok) {
     if (!result.pullRequestUrl) {
       const summary = [
@@ -1420,49 +1466,89 @@ async function handleImportMessage(env: Env, message: QueueMessage) {
   const sourceRepo = payload.source?.repo || payload.repo || "";
   const sourceNumber = Number(payload.source?.number || payload.number || 0);
   if (sourceRepo && sourceNumber && result.pullRequestUrl) {
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
+    await completeImportPr(env, {
+      targetKey: message.targetKey,
       repo: sourceRepo,
       number: sourceNumber,
       baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
-      status: "import_pr_open",
-      verdict: "import",
-      verdictSummary: "Maintainer-owned import PR opened.",
+      installationId: sourceInstallationId,
       importPrUrl: result.pullRequestUrl,
-    });
-    const repo = parseRepo(sourceRepo);
-    await addLabels({
-      token: githubToken,
-      repo,
-      issueNumber: sourceNumber,
-      labels: [LABELS.importOpen, LABELS.superseded],
-      apiVersion: env.GITHUB_API_VERSION,
-    });
-    await upsertMarkerComment({
-      token: githubToken,
-      repo,
-      issueNumber: sourceNumber,
-      marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-      body: markerComment(
-        {
-          verdict: "import",
-          summary: [
-            `Maintainer-owned import PR opened: ${result.pullRequestUrl}`,
-            "",
-            "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
-          ].join("\n"),
-          labels: [LABELS.importOpen, LABELS.superseded],
-        },
-        env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-      ),
-      apiVersion: env.GITHUB_API_VERSION,
-    });
-    await closeIssueOrPullRequest({
-      token: githubToken,
-      repo,
-      issueNumber: sourceNumber,
-      apiVersion: env.GITHUB_API_VERSION,
+      githubToken,
     });
   }
+}
+
+async function completeImportPr(
+  env: Env,
+  params: {
+    targetKey?: string;
+    repo: string;
+    number: number;
+    baseRef?: string;
+    installationId?: number;
+    importPrUrl: string;
+    summary?: string;
+    githubToken?: string;
+  },
+) {
+  const summary =
+    params.summary ||
+    `Maintainer-owned import PR opened: ${params.importPrUrl}`;
+  await upsertPrState(env.SUBMISSION_GATE_DB, {
+    repo: params.repo,
+    number: params.number,
+    baseRef: params.baseRef || env.PILOT_BASE_REF,
+    status: "import_pr_open",
+    verdict: "import",
+    verdictSummary: summary,
+    importPrUrl: params.importPrUrl,
+  });
+
+  const token =
+    params.githubToken ||
+    (params.installationId
+      ? await getInstallationToken({
+          appId: env.GITHUB_APP_ID || "",
+          privateKeyPem: env.GITHUB_APP_PRIVATE_KEY || "",
+          installationId: params.installationId,
+          apiVersion: env.GITHUB_API_VERSION,
+        })
+      : "");
+  if (!token) return;
+
+  const repo = parseRepo(params.repo);
+  await addLabels({
+    token,
+    repo,
+    issueNumber: params.number,
+    labels: [LABELS.importOpen, LABELS.superseded],
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+  await upsertMarkerComment({
+    token,
+    repo,
+    issueNumber: params.number,
+    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    body: markerComment(
+      {
+        verdict: "import",
+        summary: [
+          summary,
+          "",
+          "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
+        ].join("\n"),
+        labels: [LABELS.importOpen, LABELS.superseded],
+      },
+      env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    ),
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+  await closeIssueOrPullRequest({
+    token,
+    repo,
+    issueNumber: params.number,
+    apiVersion: env.GITHUB_API_VERSION,
+  });
 }
 
 async function importCompleteRoute(request: Request, env: Env) {
@@ -1481,8 +1567,13 @@ async function importCompleteRoute(request: Request, env: Env) {
     targetKey?: string;
     repo?: string;
     number?: number;
+    baseRef?: string;
+    installationId?: number;
     importPrUrl?: string;
     summary?: string;
+    ok?: boolean;
+    error?: string;
+    message?: string;
   };
   let payload: ImportCompletePayload;
   try {
@@ -1490,17 +1581,48 @@ async function importCompleteRoute(request: Request, env: Env) {
   } catch {
     return json({ ok: false, error: "invalid_payload" }, { status: 400 });
   }
-  if (payload.repo && payload.number) {
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
-      repo: payload.repo,
-      number: payload.number,
-      baseRef: env.PILOT_BASE_REF,
-      status: "import_pr_open",
-      verdict: "import",
-      verdictSummary: payload.summary || "Maintainer-owned import PR opened.",
-      importPrUrl: payload.importPrUrl,
+  if (payload.ok === false || !payload.importPrUrl) {
+    const summary = [
+      "Import runner failed.",
+      payload.error ? `error=${payload.error}` : "",
+      payload.message ? `message=${payload.message}` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+    if (payload.repo && payload.number) {
+      await upsertPrState(env.SUBMISSION_GATE_DB, {
+        repo: payload.repo,
+        number: payload.number,
+        baseRef: payload.baseRef || env.PILOT_BASE_REF,
+        status: "import_failed",
+        verdict: "import",
+        verdictSummary: summary,
+      });
+    }
+    await insertAudit(env.SUBMISSION_GATE_DB, {
+      id: crypto.randomUUID(),
+      targetKey:
+        payload.targetKey ||
+        `${payload.repo || "unknown"}#${payload.number || 0}`,
+      eventType: "import_complete",
+      decision: "import_failed",
+      summary,
     });
+    return json({ ok: true });
   }
+
+  if (!payload.repo || !payload.number) {
+    return json({ ok: false, error: "missing_import_source" }, { status: 400 });
+  }
+  await completeImportPr(env, {
+    targetKey: payload.targetKey,
+    repo: payload.repo,
+    number: payload.number,
+    baseRef: payload.baseRef || env.PILOT_BASE_REF,
+    installationId: payload.installationId,
+    importPrUrl: payload.importPrUrl,
+    summary: payload.summary || "Maintainer-owned import PR opened.",
+  });
   await insertAudit(env.SUBMISSION_GATE_DB, {
     id: crypto.randomUUID(),
     targetKey:

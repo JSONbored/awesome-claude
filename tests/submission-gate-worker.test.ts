@@ -237,6 +237,14 @@ describe("Cloudflare submission gate helpers", () => {
 
   it("allows only trusted maintainer comments to trigger rechecks", () => {
     const source = readWorkerSource();
+    const issueCommentIndex = source.indexOf(
+      'if (eventName === "issue_comment")',
+    );
+    const issueCommentBlock = source.slice(
+      issueCommentIndex,
+      source.indexOf("if (VALIDATION_WEBHOOK_EVENTS", issueCommentIndex),
+    );
+
     expect(source).toContain('if (eventName === "issue_comment")');
     expect(source).toContain('split(/\\s+/)[0] === "/recheck"');
     expect(source).toContain("TRUSTED_RECHECK_ASSOCIATIONS");
@@ -244,6 +252,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
+    expect(issueCommentBlock).toContain("true,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -304,6 +313,7 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(source).toContain("label !== LABELS.importOpen");
     expect(source).toContain("label !== LABELS.superseded");
+    expect(source).toContain('status: "import_running"');
     expect(source).toContain('status: "import_pr_open"');
   });
 
@@ -345,6 +355,8 @@ describe("Cloudflare submission gate helpers", () => {
       'String(message.payload.eventName || "") === "issue_comment"',
     );
     expect(source).toContain('String(state.status || "") === "import_pr_open"');
+    expect(source).toContain('String(state.verdict || "") === "import"');
+    expect(source).toContain('typeof state.importPrUrl === "string"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
     );
@@ -371,6 +383,23 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).not.toContain(
       "Private review accepted this source, but did not return an import job.",
     );
+  });
+
+  it("runs container imports asynchronously and completes them by signed callback", () => {
+    const source = readWorkerSource();
+
+    expect(source).toContain("SUBMISSION_GATE_URL");
+    expect(source).toContain("callbackUrl:");
+    expect(source).toContain("runnerKey:");
+    expect(source).toContain(
+      "env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey)",
+    );
+    expect(source).toContain("response.status === 202 || result.accepted");
+    expect(source).toContain('decision: "import_queued"');
+    expect(source).toContain("async function completeImportPr");
+    expect(source).toContain("async function importCompleteRoute");
+    expect(source).toContain('error: "missing_import_source"');
+    expect(source).toContain('decision: "import_failed"');
   });
 
   it("ignores maintainer-owned import PR branches during gate review", () => {
