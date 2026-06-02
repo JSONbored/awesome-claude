@@ -20,6 +20,9 @@
   "placement": {
     "mode": "smart",
   },
+  "triggers": {
+    "crons": ["17 */6 * * *"],
+  },
   "assets": {
     "directory": "dist/client",
     "binding": "ASSETS",

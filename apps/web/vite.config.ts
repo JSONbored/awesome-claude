@@ -96,9 +96,16 @@ function serverOnlyClientStubs(): Plugin {
   };
 }
 
+// @lovable.dev/vite-tanstack-config keeps the public nitro option type narrow,
+// but it forwards unknown Nitro options at runtime. This registers the Cloudflare
+// scheduled Worker plugin without changing the wrapper package.
+const nitroOptions = {
+  plugins: ["./plugins/source-repo-signals-scheduled.ts"],
+} as unknown as true;
+
 export default defineConfig({
   plugins: [serverOnlyClientStubs()],
-  nitro: true,
+  nitro: nitroOptions,
   tanstackStart: {
     autoCodeSplitting: true,
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).

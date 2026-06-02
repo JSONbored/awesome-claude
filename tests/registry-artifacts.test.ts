@@ -256,25 +256,36 @@ describe("registry artifacts", () => {
     }
   });
 
-  it("attributes GitHub stars as source repository stats instead of listing popularity", () => {
-    const sourceStatEntry = directoryEntries.find(
-      (entry) => typeof entry.githubStars === "number",
-    );
+  it("keeps GitHub stars as optional source repository stats instead of listing popularity", () => {
+    const sourceStatEntry = directoryEntries.find((entry) => entry.repoUrl);
     expect(sourceStatEntry).toBeTruthy();
-    expect(sourceStatEntry?.repoStats).toMatchObject({
-      appliesTo: "listing_source_repo",
-      label: "Source repo",
-      stars: sourceStatEntry?.githubStars,
-    });
+    expect(sourceStatEntry).not.toHaveProperty("stars");
+
+    if (typeof sourceStatEntry?.githubStars === "number") {
+      expect(sourceStatEntry.repoStats).toMatchObject({
+        appliesTo: "listing_source_repo",
+        label: "Source repo",
+        stars: sourceStatEntry.githubStars,
+      });
+    } else {
+      expect(sourceStatEntry?.repoStats?.stars).toBeUndefined();
+    }
 
     const detail = readDataJson<{ entry: Record<string, unknown> }>(
       `entries/${sourceStatEntry!.category}/${sourceStatEntry!.slug}.json`,
     ).entry;
-    expect(detail.repoStats).toMatchObject({
-      appliesTo: "listing_source_repo",
-      label: "Source repo",
-      stars: sourceStatEntry?.githubStars,
-    });
+    expect(detail).not.toHaveProperty("stars");
+    if (typeof sourceStatEntry?.githubStars === "number") {
+      expect(detail.repoStats).toMatchObject({
+        appliesTo: "listing_source_repo",
+        label: "Source repo",
+        stars: sourceStatEntry.githubStars,
+      });
+    } else {
+      expect(
+        (detail.repoStats as { stars?: unknown } | undefined)?.stars,
+      ).toBeUndefined();
+    }
   });
 
   it("does not split surrogate pairs when truncating JSON-backed text", () => {

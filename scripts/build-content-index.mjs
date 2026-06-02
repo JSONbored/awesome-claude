@@ -478,8 +478,12 @@ async function main() {
   const reposToFetch = new Map();
   const directoryRepo = parseGitHubRepo(DEFAULT_DIRECTORY_REPO_URL);
   const existingContentUpdatedAt = loadExistingContentUpdatedAt();
-  const existingEntryRepoStats = loadExistingEntryRepoStats();
-  const existingSiteStats = loadExistingSiteStats();
+  const existingEntryRepoStats = ENABLE_GITHUB_REPO_STATS
+    ? loadExistingEntryRepoStats()
+    : new Map();
+  const existingSiteStats = ENABLE_GITHUB_REPO_STATS
+    ? loadExistingSiteStats()
+    : null;
 
   if (directoryRepo) {
     reposToFetch.set(directoryRepo.key, directoryRepo);

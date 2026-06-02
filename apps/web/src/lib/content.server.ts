@@ -14,6 +14,10 @@ import type {
 
 import { getCloudflareBinding } from "@/lib/cloudflare-env.server";
 import { categoryDescriptions, categoryLabels, siteConfig } from "@/lib/site";
+import {
+  applySourceRepoSignalToEntry,
+  applySourceRepoSignals,
+} from "@/lib/source-repo-signals.server";
 
 export type { CategorySummary, ContentEntry, DirectoryEntry };
 
@@ -107,6 +111,12 @@ const loadDirectoryIndex = cache(async (): Promise<DirectoryEntry[]> => {
   return directoryIndexPromise;
 });
 
+const loadSearchIndex = cache(async () => {
+  return loadJsonDataFile<RegistryEnvelope<SearchDocument>>("search-index.json").then(
+    normalizeRegistryEntries,
+  );
+});
+
 export function isSafeContentPathPart(value: string) {
   return /^[a-z0-9-]+$/.test(value);
 }
@@ -142,21 +152,21 @@ async function loadEntryDetail(category: string, slug: string) {
   return promise;
 }
 
-export const getAllEntries = cache(async (): Promise<ContentEntry[]> => {
-  const directoryEntries = await getDirectoryEntries();
+export async function getAllEntries(): Promise<ContentEntry[]> {
+  const directoryEntries = await loadDirectoryIndex();
   const details = await Promise.all(
-    directoryEntries.map((entry) => getEntry(entry.category, entry.slug)),
+    directoryEntries.map((entry) => loadEntryDetail(entry.category, entry.slug)),
   );
-  return details.filter((entry): entry is ContentEntry => Boolean(entry));
-});
+  return applySourceRepoSignals(details.filter((entry): entry is ContentEntry => Boolean(entry)));
+}
 
-export const getDirectoryEntries = cache(async (): Promise<DirectoryEntry[]> => {
-  return loadDirectoryIndex();
-});
+export async function getDirectoryEntries(): Promise<DirectoryEntry[]> {
+  return applySourceRepoSignals(await loadDirectoryIndex());
+}
 
-export const getEntry = cache(async (category: string, slug: string) => {
-  return loadEntryDetail(category, slug);
-});
+export async function getEntry(category: string, slug: string) {
+  return applySourceRepoSignalToEntry(await loadEntryDetail(category, slug));
+}
 
 export const getEntryLlmsText = cache(async (category: string, slug: string) => {
   if (!isSafeContentPathPart(category) || !isSafeContentPathPart(slug)) {
@@ -227,25 +237,23 @@ export const getRegistryTrustReport = cache(async () => {
   return loadJsonDataFile<RegistryTrustReport>("registry-trust-report.json");
 });
 
-export const getSearchIndex = cache(async () => {
-  return loadJsonDataFile<RegistryEnvelope<SearchDocument>>("search-index.json").then(
-    normalizeRegistryEntries,
-  );
-});
+export async function getSearchIndex() {
+  return applySourceRepoSignals(await loadSearchIndex());
+}
 
-export const getEntriesByCategory = cache(async (category: string) => {
-  const entries = await getDirectoryEntriesByCategory(category);
+export async function getEntriesByCategory(category: string) {
+  const entries = (await loadDirectoryIndex()).filter((entry) => entry.category === category);
   const details = await Promise.all(entries.map((entry) => getEntry(entry.category, entry.slug)));
   return details.filter((entry): entry is ContentEntry => Boolean(entry));
-});
+}
 
-export const getDirectoryEntriesByCategory = cache(async (category: string) => {
+export async function getDirectoryEntriesByCategory(category: string) {
   const entries = await getDirectoryEntries();
   return entries.filter((entry) => entry.category === category);
-});
+}
 
 export const getCategorySummaries = cache(async (): Promise<CategorySummary[]> => {
-  const entries = await getDirectoryEntries();
+  const entries = await loadDirectoryIndex();
   return siteConfig.categoryOrder
     .map((category) => {
       const count = entries.filter((entry) => entry.category === category).length;
@@ -259,10 +267,10 @@ export const getCategorySummaries = cache(async (): Promise<CategorySummary[]> =
     .filter((entry) => entry.count > 0);
 });
 
-export const getRecentEntries = cache(async () => {
+export async function getRecentEntries() {
   const entries = await getDirectoryEntries();
   return [...entries]
     .filter((entry) => entry.dateAdded)
     .sort((left, right) => String(right.dateAdded).localeCompare(String(left.dateAdded)))
     .slice(0, 12);
-});
+}

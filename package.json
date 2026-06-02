@@ -48,7 +48,7 @@
     "test": "vitest run",
     "test:seo-jsonld": "vitest run tests/seo-jsonld.test.ts",
     "test:commercial-intake": "vitest run tests/commercial-intake.test.ts",
-    "test:registry-artifacts": "vitest run tests/registry-artifacts.test.ts",
+    "test:registry-artifacts": "pnpm --filter web run prebuild && vitest run tests/registry-artifacts.test.ts",
     "test:submission-intake": "vitest run tests/submission-intake.test.ts",
     "refresh:github-stats": "ENABLE_GITHUB_REPO_STATS=1 node scripts/build-content-index.mjs",
     "changelog:preview": "git cliff --unreleased --config .git-cliff.toml",
