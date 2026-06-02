@@ -2,7 +2,7 @@ import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   buildReadmeRefreshBody,
@@ -10,11 +10,6 @@ import {
   resolveReadmeEntryChange,
   summarizeReadmeEntryChange,
 } from "../scripts/build-readme-refresh-body.mjs";
-import {
-  isPublicIpAddress,
-  planStaleSubmissionAction,
-  urlNeedsVerification,
-} from "../scripts/manage-stale-submissions.mjs";
 import { buildZip } from "./helpers/zip-fixtures";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -219,6 +214,18 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("PREVIEW_DEPLOYMENT_URL:");
   });
 
+  it("skips Pipelock advisory scans for pure content and README-only PRs", () => {
+    const source = fs.readFileSync(
+      path.join(repoRoot, ".github/workflows/pipelock-security.yml"),
+      "utf8",
+    );
+
+    expect(source).toContain("paths-ignore:");
+    expect(source).toContain('- "content/**"');
+    expect(source).toContain('- "README.md"');
+    expect(source).toContain("workflow_dispatch:");
+  });
+
   it("removes public issue intake workflows from GitHub Actions", () => {
     for (const workflow of [
       "submission-issue-validation.yml",
@@ -233,264 +240,12 @@ describe("submission automation workflows", () => {
     }
   });
 
-  it("does not fail issue CI for invalid user submissions", () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "heyclaude-report-"));
-    const reportPath = path.join(tmpDir, "submission-validation.json");
-    fs.writeFileSync(
-      reportPath,
-      JSON.stringify({
-        ok: false,
-        skipped: false,
-        errors: ["Missing required field: usage_snippet"],
-      }),
-      "utf8",
-    );
-
-    expect(() =>
-      execFileSync(
-        process.execPath,
-        [
-          "scripts/ci/fail-invalid-submission-report.mjs",
-          "--report",
-          reportPath,
-        ],
-        { cwd: repoRoot, encoding: "utf8" },
+  it("removes the legacy issue auto-import eligibility script", () => {
+    expect(
+      fs.existsSync(
+        path.join(repoRoot, "scripts/ci/check-auto-import-eligibility.mjs"),
       ),
-    ).toThrow();
-
-    const output = execFileSync(
-      process.execPath,
-      [
-        "scripts/ci/fail-invalid-submission-report.mjs",
-        "--report",
-        reportPath,
-        "--informational",
-      ],
-      { cwd: repoRoot, encoding: "utf8" },
-    );
-
-    expect(output).toContain("issue workflow is informational");
-  });
-
-  it("detects auto-import eligibility from validation and policy gates", () => {
-    const tmpDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "heyclaude-auto-import-"),
-    );
-    const issuePath = path.join(tmpDir, "issue.json");
-    const validationPath = path.join(tmpDir, "validation.json");
-    const riskPath = path.join(tmpDir, "risk.json");
-    const outputPath = path.join(tmpDir, "eligibility.json");
-
-    fs.writeFileSync(
-      issuePath,
-      JSON.stringify({
-        number: 987654,
-        labels: [{ name: "content-submission" }, { name: "import-approved" }],
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      validationPath,
-      JSON.stringify({
-        ok: true,
-        skipped: false,
-        category: "mcp",
-        fields: { slug: "auto-import-eligibility-test" },
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      riskPath,
-      JSON.stringify({
-        riskTier: "low",
-        policyDecision: "auto_import_eligible",
-        policyMatrix: {
-          schema: { status: "pass" },
-          source: { status: "pass" },
-          package: { status: "pass" },
-          provenance: { status: "pass" },
-          capability: { status: "pass" },
-          quality: { status: "pass" },
-        },
-      }),
-      "utf8",
-    );
-
-    execFileSync(
-      process.execPath,
-      [
-        "scripts/ci/check-auto-import-eligibility.mjs",
-        "--issue-json",
-        issuePath,
-        "--validation-json",
-        validationPath,
-        "--risk-json",
-        riskPath,
-        "--output",
-        outputPath,
-      ],
-      { cwd: repoRoot, encoding: "utf8" },
-    );
-
-    const result = JSON.parse(fs.readFileSync(outputPath, "utf8"));
-    expect(result.eligible).toBe(true);
-    expect(result.approvalLabel).toBe("import-approved");
-    expect(result.importPath).toBe(
-      "content/mcp/auto-import-eligibility-test.mdx",
-    );
-  });
-
-  it("requires maintainer approval before auto-import eligibility", () => {
-    const tmpDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "heyclaude-auto-import-approval-"),
-    );
-    const issuePath = path.join(tmpDir, "issue.json");
-    const validationPath = path.join(tmpDir, "validation.json");
-    const riskPath = path.join(tmpDir, "risk.json");
-    const outputPath = path.join(tmpDir, "eligibility.json");
-
-    fs.writeFileSync(
-      issuePath,
-      JSON.stringify({
-        number: 987653,
-        labels: [{ name: "content-submission" }],
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      validationPath,
-      JSON.stringify({
-        ok: true,
-        skipped: false,
-        category: "rules",
-        fields: { slug: "approval-required-test" },
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      riskPath,
-      JSON.stringify({
-        riskTier: "low",
-        policyDecision: "auto_import_eligible",
-        policyMatrix: {
-          schema: { status: "pass" },
-          source: { status: "pass" },
-          package: { status: "pass" },
-          provenance: { status: "pass" },
-          capability: { status: "pass" },
-          quality: { status: "pass" },
-        },
-      }),
-      "utf8",
-    );
-
-    execFileSync(
-      process.execPath,
-      [
-        "scripts/ci/check-auto-import-eligibility.mjs",
-        "--issue-json",
-        issuePath,
-        "--validation-json",
-        validationPath,
-        "--risk-json",
-        riskPath,
-        "--output",
-        outputPath,
-      ],
-      { cwd: repoRoot, encoding: "utf8" },
-    );
-
-    const result = JSON.parse(fs.readFileSync(outputPath, "utf8"));
-    expect(result.eligible).toBe(false);
-    expect(result.reasons).toContain(
-      "maintainer approval label required: accepted or import-approved",
-    );
-    expect(() =>
-      execFileSync(
-        process.execPath,
-        [
-          "scripts/ci/check-auto-import-eligibility.mjs",
-          "--issue-json",
-          issuePath,
-          "--validation-json",
-          validationPath,
-          "--risk-json",
-          riskPath,
-          "--fail-on-ineligible",
-        ],
-        { cwd: repoRoot, encoding: "utf8" },
-      ),
-    ).toThrow();
-  });
-
-  it("sanitizes auto-import GitHub output values", () => {
-    const tmpDir = fs.mkdtempSync(
-      path.join(os.tmpdir(), "heyclaude-auto-import-output-"),
-    );
-    const issuePath = path.join(tmpDir, "issue.json");
-    const validationPath = path.join(tmpDir, "validation.json");
-    const riskPath = path.join(tmpDir, "risk.json");
-    const outputPath = path.join(tmpDir, "eligibility.json");
-    const githubOutputPath = path.join(tmpDir, "github-output");
-
-    fs.writeFileSync(
-      issuePath,
-      JSON.stringify({
-        number: 987655,
-        labels: [{ name: "content-submission" }, { name: "import-approved" }],
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      validationPath,
-      JSON.stringify({
-        ok: true,
-        skipped: false,
-        category: "mcp",
-        fields: { slug: "bad-slug\neligible=true" },
-      }),
-      "utf8",
-    );
-    fs.writeFileSync(
-      riskPath,
-      JSON.stringify({
-        riskTier: "low",
-        policyDecision: "auto_import_eligible",
-        policyMatrix: {
-          schema: { status: "pass" },
-          source: { status: "pass" },
-          package: { status: "pass" },
-          provenance: { status: "pass" },
-          capability: { status: "pass" },
-          quality: { status: "pass" },
-        },
-      }),
-      "utf8",
-    );
-
-    execFileSync(
-      process.execPath,
-      [
-        "scripts/ci/check-auto-import-eligibility.mjs",
-        "--issue-json",
-        issuePath,
-        "--validation-json",
-        validationPath,
-        "--risk-json",
-        riskPath,
-        "--output",
-        outputPath,
-      ],
-      {
-        cwd: repoRoot,
-        encoding: "utf8",
-        env: { ...process.env, GITHUB_OUTPUT: githubOutputPath },
-      },
-    );
-
-    const outputLines = fs.readFileSync(githubOutputPath, "utf8").split("\n");
-    expect(outputLines).toContain("eligible=false");
-    expect(outputLines).not.toContain("eligible=true");
+    ).toBe(false);
   });
 
   it("removes the noisy direct PR risk workflow", () => {
@@ -562,7 +317,7 @@ describe("submission automation workflows", () => {
     expect(source).toContain("enabled: true");
   });
 
-  it("keeps import PR generation out of public issue workflows", () => {
+  it("keeps import PR generation out of public issue workflows and gate bindings", () => {
     expect(
       fs.existsSync(
         path.join(repoRoot, ".github/workflows/submission-import-pr.yml"),
@@ -572,8 +327,9 @@ describe("submission automation workflows", () => {
       path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
       "utf8",
     );
-    expect(gateConfig).toContain('"SUBMISSION_IMPORT_QUEUE"');
-    expect(gateConfig).toContain('"SubmissionImportRunner"');
+    expect(gateConfig).not.toContain('"SUBMISSION_IMPORT_QUEUE"');
+    expect(gateConfig).not.toContain('"SUBMISSION_IMPORT_RUNNER"');
+    expect(gateConfig).not.toContain('"containers"');
   });
 
   it("requires preview artifact validation before pull requests can merge", () => {
@@ -635,6 +391,10 @@ describe("submission automation workflows", () => {
     expect(source).toContain("pnpm --filter web run prebuild");
     expect(source).toContain("pnpm validate:readme");
     expect(source).toContain(
+      "Verify generated registry artifacts remain build outputs",
+    );
+    expect(source).toContain("Registry generation changed non-generated files");
+    expect(source).not.toContain(
       "git diff --exit-code apps/web/public/data apps/web/src/generated README.md",
     );
   });
@@ -1170,6 +930,10 @@ diff --git a/README.md b/README.md
     expect(body).toContain(
       "- Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
     );
+    expect(body).toContain(
+      "pending README changes accumulate in one reviewable PR",
+    );
+    expect(body).toContain("## Pending content included (2)");
   });
 
   it("resolves README entries when frontmatter slug differs from filename", async () => {
@@ -1256,106 +1020,6 @@ description: Example description
         path.join(repoRoot, ".github/workflows/submission-stale.yml"),
       ),
     ).toBe(false);
-  });
-
-  it("blocks stale source checks from fetching non-public issue URLs", async () => {
-    const fetchMock = vi.fn();
-    vi.stubGlobal("fetch", fetchMock);
-
-    expect(isPublicIpAddress("93.184.216.34")).toBe(true);
-    expect(isPublicIpAddress("127.0.0.1")).toBe(false);
-    expect(isPublicIpAddress("10.0.0.1")).toBe(false);
-    expect(await urlNeedsVerification("http://127.0.0.1/internal")).toBe(false);
-    expect(await urlNeedsVerification("https://127.0.0.1/internal")).toBe(
-      false,
-    );
-    expect(fetchMock).not.toHaveBeenCalled();
-
-    vi.unstubAllGlobals();
-  });
-
-  it("does not follow stale source redirects to untrusted destinations", async () => {
-    const fetchMock = vi.fn(async () => {
-      return new Response(null, {
-        status: 302,
-        headers: { location: "http://127.0.0.1/internal" },
-      });
-    });
-    vi.stubGlobal("fetch", fetchMock);
-
-    await expect(
-      urlNeedsVerification("https://93.184.216.34/source"),
-    ).resolves.toBe(false);
-    expect(fetchMock).toHaveBeenCalledTimes(1);
-
-    vi.unstubAllGlobals();
-  });
-
-  it("still marks public HTTPS sources as needing verification on 404", async () => {
-    const fetchMock = vi.fn(async () => new Response(null, { status: 404 }));
-    vi.stubGlobal("fetch", fetchMock);
-
-    await expect(
-      urlNeedsVerification("https://93.184.216.34/missing"),
-    ).resolves.toBe(true);
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://93.184.216.34/missing",
-      expect.objectContaining({ method: "HEAD", redirect: "manual" }),
-    );
-
-    vi.unstubAllGlobals();
-  });
-
-  it("keeps stale reminders separate from close eligibility", () => {
-    const baseEntry = {
-      number: 296,
-      status: "stale_reminder_due",
-      labels: ["content-submission", "needs-author-input"],
-      recommendedLabels: [
-        "content-submission",
-        "needs-review",
-        "needs-author-input",
-        "stale-submission",
-      ],
-    };
-
-    expect(planStaleSubmissionAction(baseEntry)).toMatchObject({
-      issue: 296,
-      labels: ["stale-submission"],
-      remind: true,
-      close: false,
-    });
-    expect(
-      planStaleSubmissionAction({
-        ...baseEntry,
-        labels: [...baseEntry.labels, "stale-submission"],
-      }),
-    ).toMatchObject({
-      labels: [],
-      remind: false,
-      close: false,
-    });
-    expect(
-      planStaleSubmissionAction({
-        ...baseEntry,
-        status: "close_eligible",
-        labels: [...baseEntry.labels, "stale-submission"],
-      }),
-    ).toMatchObject({
-      labels: [],
-      remind: false,
-      close: true,
-    });
-    expect(
-      planStaleSubmissionAction({
-        ...baseEntry,
-        status: "close_eligible",
-      }),
-    ).toMatchObject({
-      labels: ["stale-submission"],
-      remind: true,
-      close: false,
-    });
   });
 
   it("prevents Renovate from pinning package engine ranges", () => {

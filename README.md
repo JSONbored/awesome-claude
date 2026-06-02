@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>388+ file-backed entries</strong> stay useful as both an
+        <strong>389+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>388</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>389</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>53</code><br>
+          <code>54</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -283,7 +283,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (53)
+## 🧰 Tools (54)
 
 - **[Aider](https://heyclau.de/entry/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
 - **[Apify](https://heyclau.de/entry/tools/apify)** - Web automation and scraping platform with actors, datasets, APIs, and integrations for data extraction workflows.
@@ -294,6 +294,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Braintrust](https://heyclau.de/entry/tools/braintrust)** - Evaluation, prompt experimentation, logging, and data platform for production AI application development.
 - **[Browser Use](https://heyclau.de/entry/tools/browser-use)** - Open-source browser automation library for building AI agents that can navigate, click, type, and inspect websites.
 - **[Browserbase](https://heyclau.de/entry/tools/browserbase)** - Cloud browser infrastructure for browser automation, AI agents, scraping workflows, and web interaction at scale.
+- **[ccusage](https://heyclau.de/entry/tools/ccusage)** - Local CLI for analyzing Claude Code and other coding-agent token usage, costs, sessions, and billing-window activity from local usage data.
 - **[Claude Code](https://heyclau.de/entry/tools/claude-code)** - Anthropic command-line coding agent for codebase questions, edits, tests, and terminal-centered development tasks.
 - **[Cline](https://heyclau.de/entry/tools/cline)** - Open-source autonomous coding agent extension for planning, editing, running commands, and using tools from VS Code.
 - **[Cloudflare Agents SDK](https://heyclau.de/entry/tools/cloudflare-agents-sdk)** - Cloudflare framework for building, deploying, and running AI agents on Workers with durable platform primitives.

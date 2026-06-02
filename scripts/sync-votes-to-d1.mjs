@@ -36,6 +36,20 @@ if (process.env.DEBUG_SYNC === "1") {
   console.log("sync preview", preview);
 }
 
+const voteTables = new Set(["votes_by_client", "votes_entries"]);
+
+function wranglerArgs(runMode, command, { json = false } = {}) {
+  return [
+    "d1",
+    "execute",
+    d1Binding,
+    runMode === "remote" ? "--remote" : "--local",
+    "--command",
+    command,
+    ...(json ? ["--json"] : []),
+  ];
+}
+
 function runWrangler(args) {
   execFileSync("pnpm", ["--filter", "web", "exec", "wrangler", ...args], {
     cwd: repoRoot,
@@ -43,29 +57,71 @@ function runWrangler(args) {
   });
 }
 
-function getVoteEntryKeys(runMode, tableName) {
+function runWranglerQuery(args) {
   const output = execFileSync(
     "pnpm",
-    [
-      "--filter",
-      "web",
-      "exec",
-      "wrangler",
-      "d1",
-      "execute",
-      d1Binding,
-      runMode === "remote" ? "--remote" : "--local",
-      "--command",
-      `SELECT entry_key FROM ${tableName};`,
-    ],
+    ["--filter", "web", "exec", "wrangler", ...args],
     { cwd: repoRoot, encoding: "utf8" },
   );
-  const jsonMatch = output.match(/(\[\s*\{[\s\S]*\])\s*$/);
-  if (!jsonMatch) {
-    throw new Error(`Could not parse wrangler output for ${runMode}`);
+  const jsonText = output.trim();
+  if (!jsonText) {
+    throw new Error("Could not parse wrangler prune output");
   }
-  const payload = JSON.parse(jsonMatch[1]);
-  return (payload?.[0]?.results ?? []).map((row) => String(row.entry_key));
+  const payload = JSON.parse(jsonText);
+  if (Array.isArray(payload)) {
+    const statement = [...payload]
+      .reverse()
+      .find((result) => Array.isArray(result?.results));
+    return statement?.results ?? [];
+  }
+  return Array.isArray(payload?.results) ? payload.results : [];
+}
+
+function sqlString(value) {
+  return `'${value.replaceAll("'", "''")}'`;
+}
+
+function expectedKeyExclusionPredicate(keys) {
+  const chunkSize = 200;
+  const sortedKeys = [...keys].sort();
+  if (sortedKeys.length === 0) {
+    throw new Error(
+      "Refusing to build prune predicate for empty content key set",
+    );
+  }
+
+  const clauses = [];
+  for (let index = 0; index < sortedKeys.length; index += chunkSize) {
+    const inList = sortedKeys
+      .slice(index, index + chunkSize)
+      .map(sqlString)
+      .join(", ");
+    clauses.push(`entry_key NOT IN (${inList})`);
+  }
+  return clauses.join(" AND ");
+}
+
+function pruneTableOrphans(runMode, tableName, whereClause) {
+  if (!voteTables.has(tableName)) {
+    throw new Error(`Refusing to prune unsupported vote table "${tableName}"`);
+  }
+
+  const countRows = runWranglerQuery(
+    wranglerArgs(
+      runMode,
+      `SELECT COUNT(*) AS pruned FROM ${tableName} WHERE ${whereClause};`,
+      { json: true },
+    ),
+  );
+  const pruned = Number(countRows?.[0]?.pruned ?? 0);
+  if (pruned === 0) {
+    return 0;
+  }
+
+  runWrangler(
+    wranglerArgs(runMode, `DELETE FROM ${tableName} WHERE ${whereClause};`),
+  );
+  return pruned;
 }
 
 function applyMode(runMode) {
@@ -86,48 +142,40 @@ function applyMode(runMode) {
     return;
   }
 
-  const actualEntryKeys = getVoteEntryKeys(runMode, "votes_entries");
-  const actualClientKeys = getVoteEntryKeys(runMode, "votes_by_client");
-  const entryOrphans = actualEntryKeys.filter((key) => !expected.has(key));
-  const clientOrphans = actualClientKeys.filter((key) => !expected.has(key));
+  if (expected.size === 0) {
+    console.warn(
+      `${runMode}: skipping prune because no expected vote keys were enumerated`,
+    );
+    return;
+  }
 
-  const pruneTableKeys = (tableName, keys) => {
-    for (let index = 0; index < keys.length; index += chunkSize) {
-      const chunk = keys.slice(index, index + chunkSize);
-      const inList = chunk
-        .map((key) => `'${key.replaceAll("'", "''")}'`)
-        .join(", ");
-      runWrangler([
-        "d1",
-        "execute",
-        d1Binding,
-        runMode === "remote" ? "--remote" : "--local",
-        "--command",
-        `DELETE FROM ${tableName} WHERE entry_key IN (${inList});`,
-      ]);
-    }
-  };
+  const orphanPredicate = expectedKeyExclusionPredicate(expected);
+  const clientPruned = pruneTableOrphans(
+    runMode,
+    "votes_by_client",
+    orphanPredicate,
+  );
+  const entryPruned = pruneTableOrphans(
+    runMode,
+    "votes_entries",
+    orphanPredicate,
+  );
 
-  if (entryOrphans.length === 0 && clientOrphans.length === 0) {
+  // Defensive reconciliation in case a stale client vote points to a missing entry key.
+  runWrangler(
+    wranglerArgs(
+      runMode,
+      "DELETE FROM votes_by_client WHERE entry_key NOT IN (SELECT entry_key FROM votes_entries);",
+    ),
+  );
+
+  if (entryPruned === 0 && clientPruned === 0) {
     console.log(`${runMode}: no orphan vote rows to prune`);
     return;
   }
 
-  pruneTableKeys("votes_entries", entryOrphans);
-  pruneTableKeys("votes_by_client", clientOrphans);
-
-  // Defensive reconciliation in case a stale client vote points to a missing entry key.
-  runWrangler([
-    "d1",
-    "execute",
-    d1Binding,
-    runMode === "remote" ? "--remote" : "--local",
-    "--command",
-    "DELETE FROM votes_by_client WHERE entry_key NOT IN (SELECT entry_key FROM votes_entries);",
-  ]);
-
   console.log(
-    `${runMode}: pruned ${entryOrphans.length} orphan votes_entries row(s) and ${clientOrphans.length} orphan votes_by_client row(s)`,
+    `${runMode}: pruned ${entryPruned} orphan votes_entries row(s) and ${clientPruned} orphan votes_by_client row(s)`,
   );
 }
 

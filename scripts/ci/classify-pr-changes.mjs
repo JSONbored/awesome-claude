@@ -16,7 +16,6 @@ const CONTENT_CATEGORIES = [
   "guides",
   "hooks",
   "mcp",
-  "prompts",
   "rules",
   "skills",
   "statuslines",
@@ -45,7 +44,6 @@ function changedFiles() {
 
 const files = changedFiles();
 const all = forceFull;
-const headRef = process.env.GITHUB_HEAD_REF || process.env.HEAD_REF || "";
 
 function touches(...patterns) {
   if (all) return true;
@@ -76,15 +74,17 @@ const sourceContentOnly =
   !all &&
   files.length > 0 &&
   files.every((file) => /^content\/[^/]+\/[^/]+\.mdx$/i.test(file));
-const maintainerImport =
-  sourceContentOnly && /^automation\/submission-pr-\d+-/i.test(headRef);
+const readmeOnly =
+  eventName === "pull_request" &&
+  !all &&
+  files.length === 1 &&
+  files[0] === "README.md";
 const directSubmission =
   eventName === "pull_request" &&
   !all &&
   files.length === 1 &&
   contentCategories.length === 1 &&
-  /^content\/[^/]+\/[^/]+\.mdx$/i.test(files[0]) &&
-  !maintainerImport;
+  /^content\/[^/]+\/[^/]+\.mdx$/i.test(files[0]);
 const contentValidationInfra = touches(
   /^examples\/content\//,
   /^\.github\/ISSUE_TEMPLATE\//,
@@ -100,7 +100,7 @@ const generatedArtifactInfra = touches(
   "README.md",
 );
 const submissionAutomationInfra = touches(
-  /^scripts\/(analyze-submission-risk|import-submission-issue|validate-submission-issue)\.mjs$/,
+  /^scripts\/analyze-submission-risk\.mjs$/,
 );
 const submissionGateInfra = touches(
   /^apps\/submission-gate\//,
@@ -109,8 +109,8 @@ const submissionGateInfra = touches(
 
 const flags = {
   direct_submission: directSubmission,
-  maintainer_import: maintainerImport,
   source_content_only: sourceContentOnly,
+  readme_only: readmeOnly,
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
   registry:

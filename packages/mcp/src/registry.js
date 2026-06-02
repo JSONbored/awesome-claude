@@ -2249,8 +2249,13 @@ export async function getSubmissionPolicy() {
     reviewModel: {
       prFirst: true,
       maintainerReviewRequired: true,
-      autoMerge: false,
-      importPrRequiresApprovalLabel: ["accepted", "import-approved"],
+      autoMerge: "content_only_private_gate",
+      autoMergeRequires: [
+        "single content file only",
+        "validate-content",
+        "Superagent Security Scan",
+        "private maintainer-agent review",
+      ],
       mutatingAutomationOwner: "private submission gate",
     },
     artifactPolicy: {

@@ -1085,8 +1085,7 @@ function submissionQueueNextAction(
   activity = submissionActivityState(issue),
 ) {
   const labels = new Set(issueLabels(issue));
-  if (labels.has("import-pr-open")) return "skip";
-  if (labels.has("accepted") || labels.has("import-approved")) return "import";
+  if (labels.has("accepted")) return "import";
   if (status === "skipped") return "skip";
   if (status === "close_eligible") return "close_stale";
   if (status === "stale_reminder_due") return "send_stale_reminder";
@@ -1283,9 +1282,7 @@ function buildSubmissionReviewChecklist({
         "Content-only PRs may merge automatically after content validation, Superagent, and private maintainer-agent review pass.",
       );
     } else {
-      items.push(
-        "Apply import-approved only after source and category review.",
-      );
+      items.push("Apply accepted only after source and category review.");
     }
   }
   return items.slice(0, 7);

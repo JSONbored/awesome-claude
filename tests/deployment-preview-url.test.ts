@@ -100,14 +100,14 @@ describe("PR preview artifact validation flow", () => {
     expect(workflow).toContain("- validate-submission-source");
   });
 
-  it("validates source-only maintainer imports without requiring committed generated artifacts", () => {
+  it("validates source-only content changes without requiring committed generated artifacts", () => {
     const workflow = readContentValidationWorkflow();
     const registryBlock =
       workflow.match(/\n  validate-registry:[\s\S]*?\n  validate-web:/)?.[0] ||
       "";
 
-    expect(workflow).toContain("maintainer_import:");
     expect(workflow).toContain("source_content_only:");
+    expect(workflow).toContain("readme_only:");
     expect(registryBlock).toContain(
       "needs.classify-pr.outputs.source_content_only != 'true'",
     );
@@ -125,6 +125,23 @@ describe("PR preview artifact validation flow", () => {
     expect(registryBlock).toContain("apps/web/src/generated/.*");
   });
 
+  it("lets README-only refresh PRs validate generated outputs without committing them", () => {
+    const workflow = readContentValidationWorkflow();
+    const registryBlock =
+      workflow.match(/\n  validate-registry:[\s\S]*?\n  validate-web:/)?.[0] ||
+      "";
+
+    expect(registryBlock).toContain(
+      "needs.classify-pr.outputs.readme_only != 'true'",
+    );
+    expect(registryBlock).toContain(
+      "Verify README-only refresh leaves generated artifacts as build outputs",
+    );
+    expect(registryBlock).toContain(
+      "Generated artifact changes are build-time outputs for this README refresh",
+    );
+  });
+
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {
     const workflow = readContentValidationWorkflow();
     const jobBlock =
@@ -139,7 +156,7 @@ describe("PR preview artifact validation flow", () => {
     expect(jobBlock).toContain("persist-credentials: false");
   });
 
-  it("guards submission-gate production deploys until prod D1 exists", () => {
+  it("routes submission-gate deployments through the production Worker only", () => {
     const packageJson = JSON.parse(
       fs.readFileSync(
         path.join(repoRoot, "apps/submission-gate/package.json"),
@@ -147,19 +164,24 @@ describe("PR preview artifact validation flow", () => {
       ),
     ) as { scripts: Record<string, string> };
 
+    expect(packageJson.scripts["deploy:dev"]).toBe("pnpm run deploy:prod");
     expect(packageJson.scripts["deploy:prod"]).toContain(
       "check-submission-gate-prod-config.mjs",
     );
+    expect(packageJson.scripts["deploy:dry-run:dev"]).toBe(
+      "pnpm run deploy:dry-run:prod",
+    );
     expect(packageJson.scripts["deploy:dry-run:prod"]).toContain(
-      "check-submission-gate-prod-config.mjs",
+      'wrangler deploy --config wrangler.jsonc --env "" --dry-run',
     );
 
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
       "utf8",
     );
-    expect(wranglerConfig).toContain(
-      "Production deploy scripts fail while this placeholder is present.",
-    );
+    expect(wranglerConfig).not.toContain('"env":');
+    expect(wranglerConfig).toContain('"pattern": "submission-gate.heyclau.de"');
+    expect(wranglerConfig).toContain('"PILOT_BASE_REF": "main"');
+    expect(wranglerConfig).toContain('"name": "heyclaude-submission-gate"');
   });
 });

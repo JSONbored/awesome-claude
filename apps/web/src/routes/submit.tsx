@@ -219,7 +219,7 @@ function SubmitPage() {
             branchName:
               preflightResult?.prPreview?.branchHint ||
               `heyclaude/submit-${category}-${data.slug || slugify(data.name || "")}`,
-            baseRef: preflightResult?.prPreview?.baseRef || "submission-gate-pilot",
+            baseRef: preflightResult?.prPreview?.baseRef || "main",
             body: prPacket,
           },
         });
