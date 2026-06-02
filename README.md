@@ -1,4 +1,5 @@
 <table>
+  <!-- submission gate live validation note -->
   <tr>
     <td width="58%" valign="top">
       <picture>
