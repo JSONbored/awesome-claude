@@ -68,7 +68,7 @@ describe("website submission preflight API", () => {
         title: "Add MCP Server: Direct Submit API Asset",
         targetPath: "content/mcp/direct-submit-api-asset.mdx",
         branchHint: "heyclaude/submit-mcp-direct-submit-api-asset",
-        baseRef: "submission-gate-pilot",
+        baseRef: "main",
       },
     });
   });

@@ -214,7 +214,6 @@ export async function upsertPrState(
     status: string;
     verdict?: string;
     verdictSummary?: string;
-    importPrUrl?: string;
     deliveryId?: string;
   },
 ) {
@@ -222,8 +221,8 @@ export async function upsertPrState(
   await db
     .prepare(
       `INSERT INTO submission_prs
-        (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, import_pr_url, last_delivery_id, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, last_delivery_id, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
         head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
         head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
@@ -231,7 +230,6 @@ export async function upsertPrState(
         status = excluded.status,
         verdict = COALESCE(excluded.verdict, submission_prs.verdict),
         verdict_summary = COALESCE(excluded.verdict_summary, submission_prs.verdict_summary),
-        import_pr_url = COALESCE(excluded.import_pr_url, submission_prs.import_pr_url),
         last_delivery_id = COALESCE(excluded.last_delivery_id, submission_prs.last_delivery_id),
         updated_at = excluded.updated_at`,
     )
@@ -244,7 +242,6 @@ export async function upsertPrState(
       params.status,
       params.verdict ?? null,
       params.verdictSummary ?? null,
-      params.importPrUrl ?? null,
       params.deliveryId ?? null,
       timestamp,
       timestamp,
@@ -260,7 +257,7 @@ export async function getPrState(
     .prepare(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         base_ref AS baseRef, status, verdict, verdict_summary AS verdictSummary,
-        import_pr_url AS importPrUrl, last_delivery_id AS lastDeliveryId,
+        last_delivery_id AS lastDeliveryId,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE repo = ? AND number = ?`,

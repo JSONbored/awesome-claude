@@ -69,10 +69,6 @@ importers:
         version: 4.1.7(@types/node@25.9.1)(vite@8.0.14(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.3)(yaml@2.9.0))
 
   apps/submission-gate:
-    dependencies:
-      '@cloudflare/containers':
-        specifier: 0.3.5
-        version: 0.3.5
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 4.20260601.1
@@ -582,9 +578,6 @@ packages:
   '@babel/types@7.29.7':
     resolution: {integrity: sha512-4zBIxpPzowiZpusoFkyGVwakdRJUyuH5PxQ/PrqghfdFWWasvnCdPfQXHrenDai+gyLARulZjZowCOj6fjT4pA==}
     engines: {node: '>=6.9.0'}
-
-  '@cloudflare/containers@0.3.5':
-    resolution: {integrity: sha512-P6jYEDkw1Q9qWRr9iFBxe1fozI5HfGMY6XrNg/jROPGZykcYrrzOluUqXv+q4N8gIoRXPCqJJ1FGALbTqnYTkg==}
 
   '@cloudflare/kv-asset-handler@0.5.0':
     resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
@@ -5879,8 +5872,6 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.29.7
       '@babel/helper-validator-identifier': 7.29.7
-
-  '@cloudflare/containers@0.3.5': {}
 
   '@cloudflare/kv-asset-handler@0.5.0': {}
 

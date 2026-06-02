@@ -253,6 +253,44 @@ function hostname(value) {
   }
 }
 
+function isLikelyAffiliateUrl(value) {
+  const raw = normalizeText(value);
+  if (!raw) return false;
+
+  try {
+    const url = new URL(raw);
+    const affiliateParams = new Set([
+      "aff",
+      "affiliate",
+      "affiliate_id",
+      "irclickid",
+      "partner",
+      "partner_id",
+      "ref",
+      "referral",
+      "referral_code",
+      "tag",
+      "via",
+    ]);
+
+    for (const key of url.searchParams.keys()) {
+      const normalizedKey = key.toLowerCase();
+      if (
+        affiliateParams.has(normalizedKey) ||
+        normalizedKey.startsWith("utm_aff")
+      ) {
+        return true;
+      }
+    }
+
+    return /\/(ref|refer|referral|affiliate|partners?)(?:\/|$)/i.test(
+      url.pathname,
+    );
+  } catch {
+    return /\b(affiliate|referral|ref=|via=)\b/i.test(raw);
+  }
+}
+
 function isArchivePackageUrl(value) {
   const pathname = urlPathname(value).toLowerCase();
   return [...ARCHIVE_PACKAGE_EXTENSIONS].some((extension) =>
@@ -321,9 +359,11 @@ function frontmatterFields(data = {}, category = "") {
     category: normalizeText(data.category || category),
     slug: normalizeText(data.slug),
     github_url: normalizeText(data.repoUrl),
+    source_url: normalizeText(data.sourceUrl),
     website_url: normalizeText(data.websiteUrl),
     docs_url: normalizeText(data.documentationUrl || data.projectUrl),
     download_url: normalizeText(data.downloadUrl),
+    affiliate_url: normalizeText(data.affiliateUrl),
     install_command: normalizeText(data.installCommand),
     usage_snippet: normalizeText(data.usageSnippet),
     full_copyable_content: normalizeText(data.copySnippet),
@@ -473,9 +513,11 @@ function addGeneratedArtifactSignals(report, files, sourceType) {
 function addContentRiskSignals(report, fields, content) {
   const text = [
     fields.github_url,
+    fields.source_url,
     fields.website_url,
     fields.docs_url,
     fields.download_url,
+    fields.affiliate_url,
     fields.install_command,
     fields.usage_snippet,
     fields.full_copyable_content,
@@ -488,6 +530,24 @@ function addContentRiskSignals(report, fields, content) {
     content,
   ].join("\n");
   const executableSourceUrls = collectUrls(installText);
+  const submittedSourceUrls = [
+    fields.github_url,
+    fields.source_url,
+    fields.website_url,
+    fields.docs_url,
+    fields.download_url,
+    fields.affiliate_url,
+  ].filter(Boolean);
+
+  if (submittedSourceUrls.some(isLikelyAffiliateUrl)) {
+    addFlag(
+      report,
+      "high",
+      "affiliate_referral_url",
+      "Contributor content contains affiliate or referral URL parameters",
+      submittedSourceUrls.filter(isLikelyAffiliateUrl).join(", "),
+    );
+  }
 
   if (
     /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
@@ -530,7 +590,7 @@ function addContentRiskSignals(report, fields, content) {
       report,
       "medium",
       "community_archive_download",
-      "Submitted package archive URLs require maintainer package review and are not auto-import eligible",
+      "Submitted package archive URLs require maintainer package review before direct merge",
       downloadUrl,
     );
   }
@@ -810,6 +870,8 @@ function directContentRequestChangesReasons(report = {}) {
       "Content file could not be read through the GitHub API.",
     community_local_download_request:
       "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    affiliate_referral_url:
+      "Contributor content cannot include affiliate or referral URL parameters.",
     non_https_executable_source:
       "Install or usage instructions fetch executable content from a non-HTTPS URL.",
     unsafe_install_pipeline:

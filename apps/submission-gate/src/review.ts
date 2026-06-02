@@ -2,7 +2,6 @@ import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
 export type GateVerdict =
   | "merge"
-  | "import"
   | "request_changes"
   | "close"
   | "manual"
@@ -13,12 +12,10 @@ export type GateDecision = {
   summary: string;
   labels: string[];
   close?: boolean;
-  importJob?: Record<string, unknown>;
 };
 
 const VERDICT_HEADLINES: Record<GateVerdict, string> = {
   merge: "Verdict: Accepted and merged",
-  import: "Verdict: Accepted and merged",
   request_changes: "Verdict: Request changes",
   close: "Verdict: Close",
   manual: "Verdict: Manual review",
@@ -27,7 +24,7 @@ const VERDICT_HEADLINES: Record<GateVerdict, string> = {
 
 function singleShotFooter(verdict: GateVerdict) {
   if (verdict === "ignore") return "";
-  if (verdict === "merge" || verdict === "import") {
+  if (verdict === "merge") {
     return [
       "---",
       "Automated review by HeyClaude Maintainer Agent.",

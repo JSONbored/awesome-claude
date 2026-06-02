@@ -2,6 +2,9 @@ name: Pipelock Advisory Scan
 
 on:
   pull_request:
+    paths-ignore:
+      - "content/**"
+      - "README.md"
   workflow_dispatch:
 
 permissions:

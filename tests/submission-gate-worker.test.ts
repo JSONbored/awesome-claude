@@ -16,10 +16,13 @@ import {
   decryptText,
   encryptText,
   hmacSha256Hex,
-  signInternalPayload,
   verifyGitHubWebhookSignature,
-  verifyInternalSignature,
 } from "../apps/submission-gate/src/security";
+import {
+  extractContentDuplicateSignals,
+  findContentDuplicateMatch,
+  protectedFrontmatterChanges,
+} from "../apps/submission-gate/src/duplicates";
 import { markerComment } from "../apps/submission-gate/src/review";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -74,16 +77,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(url.searchParams.get("state")).toBe("draft_123.state");
   });
 
-  it("normalizes draft targets to one content file on the pilot branch", () => {
+  it("normalizes draft targets to one content file on the production branch", () => {
     const target = buildDraftTarget(
       { category: "mcp", name: "Example MCP Server" },
-      "submission-gate-pilot",
+      "main",
     );
 
     expect(target).toEqual({
       category: "mcp",
       slug: "example-mcp-server",
-      baseRef: "submission-gate-pilot",
+      baseRef: "main",
       branchName: "heyclaude/submit-mcp-example-mcp-server",
       targetPath: "content/mcp/example-mcp-server.mdx",
     });
@@ -92,7 +95,7 @@ describe("Cloudflare submission gate helpers", () => {
   it("caps generated branch names while keeping the full target slug", () => {
     const target = buildDraftTarget(
       { category: "skills", name: "A".repeat(240) },
-      "submission-gate-pilot",
+      "main",
     );
 
     expect(target.slug).toHaveLength(120);
@@ -303,9 +306,55 @@ describe("Cloudflare submission gate helpers", () => {
     const addIndex = source.indexOf("await addLabels({", removeIndex);
 
     expect(source).toContain("const DECISION_LABELS = [");
+    expect(source).toContain("const RECONCILED_GATE_LABELS = [");
+    expect(source).toContain("LABELS.underReview");
+    expect(source).toContain("const CONTENT_CATEGORY_LABELS = [");
+    expect(source).toContain("categoryLabel");
     expect(source).toContain("!labelsToApply.includes(label)");
     expect(removeIndex).toBeGreaterThan(0);
     expect(addIndex).toBeGreaterThan(removeIndex);
+  });
+
+  it("ignores non-content PRs before adding submission labels or comments", () => {
+    const source = readWorkerSource();
+    const pullRequestIndex = source.indexOf(
+      'if (eventName === "pull_request")',
+    );
+    const pullRequestBlock = source.slice(
+      pullRequestIndex,
+      source.indexOf('if (eventName === "issue_comment")', pullRequestIndex),
+    );
+    const classifyIndex = pullRequestBlock.indexOf(
+      "directContentReviewabilityForTarget(",
+    );
+    const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
+
+    expect(source).toContain('reason: "No source content entry file changed."');
+    expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
+    expect(classifyIndex).toBeGreaterThan(0);
+    expect(applyIndex).toBeGreaterThan(classifyIndex);
+  });
+
+  it("distinguishes generated-artifact tampering from ordinary non-content PRs", () => {
+    const source = readWorkerSource();
+    const classifierIndex = source.indexOf(
+      "function classifyPullRequestFilesForContentReview",
+    );
+    const classifierBlock = source.slice(
+      classifierIndex,
+      source.indexOf(
+        "async function directContentReviewabilityForPr",
+        classifierIndex,
+      ),
+    );
+
+    expect(classifierBlock).toContain("entryFiles.length === 0");
+    expect(classifierBlock).toContain('kind: "ignore"');
+    expect(classifierBlock).toContain("files.length !== 1");
+    expect(classifierBlock).toContain('kind: "scope_failure"');
+    expect(classifierBlock).toContain(
+      "no generated artifacts, README, workflows, scripts, packages, or additional entries",
+    );
   });
 
   it("does not apply the merged label before direct merge succeeds", () => {
@@ -315,8 +364,10 @@ describe("Cloudflare submission gate helpers", () => {
       'const status =\n        decision.verdict === "merge" ? "merge_accepted" : decision.verdict',
     );
     expect(source).toContain("label !== LABELS.merged");
-    expect(source).toContain("label !== LABELS.importOpen");
-    expect(source).toContain("label !== LABELS.superseded");
+    expect(source).toContain(
+      "label !== LABELS.merged && !categoryLabels.includes(label)",
+    );
+    expect(source).toContain("labels: [LABELS.merged, ...categoryLabels]");
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
     expect(source).toContain("SubmissionMergePendingError");
@@ -355,6 +406,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
     expect(terminalSetBlock).not.toContain('"merge"');
+    expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
       "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
@@ -363,9 +415,6 @@ describe("Cloudflare submission gate helpers", () => {
       'String(message.payload.eventName || "") === "issue_comment"',
     );
     expect(source).toContain('String(state.status || "") === "merged"');
-    expect(source).toContain('String(state.status || "") === "import_pr_open"');
-    expect(source).toContain('String(state.verdict || "") === "import"');
-    expect(source).toContain('typeof state.importPrUrl === "string"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
     );
@@ -384,56 +433,29 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("mergePullRequest({");
     expect(source).toContain("listPullRequestFiles({");
     expect(source).toContain(
-      "Direct content submissions must change exactly one source content file.",
+      "Direct content submissions must change exactly one source content file and no generated artifacts",
     );
     expect(source).toContain('finalAction: "merge_or_close"');
     expect(source).not.toContain(
       "importJob: await synthesizeImportJobFromSourcePr",
     );
+    expect(source).not.toContain("synthesizeImportJobFromSourcePr");
     expect(source).not.toContain(
       "Private review accepted this source, but did not return an import job.",
     );
   });
 
-  it("runs container imports asynchronously and completes them by signed callback", () => {
+  it("does not expose the old maintainer-owned import runner path", () => {
     const source = readWorkerSource();
 
-    expect(source).toContain("SUBMISSION_GATE_URL");
-    expect(source).toContain("callbackUrl:");
-    expect(source).toContain("const runnerKey");
-    expect(source).toContain(
-      "env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey)",
-    );
-    expect(source).toContain("response.status === 202 || result.accepted");
-    expect(source).toContain('decision: "import_queued"');
-    expect(source).toContain("async function completeImportPr");
-    expect(source).toContain("async function importCompleteRoute");
-    expect(source).toContain('error: "missing_import_source"');
-    expect(source).toContain('decision: "import_failed"');
-  });
-
-  it("ignores maintainer-owned import PR branches during gate review", () => {
-    const source = readWorkerSource();
-
-    expect(source).toContain(
-      'const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-"',
-    );
-    expect(source).toContain("function isMaintainerImportRef");
-    expect(source).toContain("isMaintainerImportRef(pull.head?.ref)");
-    expect(source).toContain("isMaintainerImportRef(target.headRef)");
-  });
-
-  it("signs internal import callbacks with the same HMAC verifier", async () => {
-    const payload = JSON.stringify({ kind: "import_pr", targetKey: "repo#1" });
-    const signature = await signInternalPayload("internal-secret", payload);
-
-    await expect(
-      verifyInternalSignature({
-        secret: "internal-secret",
-        payload,
-        signatureHeader: signature,
-      }),
-    ).resolves.toBe(true);
+    expect(source).not.toContain("SUBMISSION_IMPORT_QUEUE");
+    expect(source).not.toContain("SUBMISSION_IMPORT_RUNNER");
+    expect(source).not.toContain("SubmissionImportRunner");
+    expect(source).not.toContain("handleImportMessage");
+    expect(source).not.toContain("completeImportPr");
+    expect(source).not.toContain("importCompleteRoute");
+    expect(source).not.toContain("/internal/import-complete");
+    expect(source).not.toContain('body.kind === "import_pr"');
   });
 
   it("encrypts short-lived GitHub user token handoffs", async () => {
@@ -451,48 +473,70 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("fields: redactPublicDraftFields(fields)");
   });
 
-  it("limits and rate-limits public submission gate request bodies before parsing", () => {
+  it("guards public draft creation before persistent writes", () => {
     const source = readWorkerSource();
-    const draftIndex = source.indexOf("async function createDraftRoute");
-    const draftReadIndex = source.indexOf("readJsonWithLimit", draftIndex);
-    const draftPersistIndex = source.indexOf("await createDraft", draftIndex);
-    const webhookIndex = source.indexOf("async function githubWebhookRoute");
-    const webhookReadIndex = source.indexOf(
-      "readRequestTextWithLimit",
-      webhookIndex,
+    const routeSource =
+      source.match(
+        /async function createDraftRoute[\s\S]*?\nasync function getDraftRoute/,
+      )?.[0] || "";
+    const originIndex = routeSource.indexOf(
+      "isAllowedRequestOrigin(request, env)",
     );
-    const webhookVerifyIndex = source.indexOf(
-      "verifyGitHubWebhookSignature",
-      webhookIndex,
+    const contentTypeIndex = routeSource.indexOf("isJsonContentType(request)");
+    const rateLimitIndex = routeSource.indexOf(
+      "enforceDraftRateLimit(request, env)",
     );
-    const importIndex = source.indexOf("async function importCompleteRoute");
-    const importReadIndex = source.indexOf(
-      "readRequestTextWithLimit",
-      importIndex,
+    const boundedReadIndex = routeSource.indexOf(
+      "readJsonBodyWithLimit(request)",
     );
-    const importVerifyIndex = source.indexOf(
-      "verifyInternalSignature",
-      importIndex,
+    const writeIndex = routeSource.indexOf(
+      "createDraft(env.SUBMISSION_GATE_DB",
     );
-    const routeIndex = source.indexOf("async function route");
-    const rateLimitIndex = source.indexOf("enforceRouteRateLimit", routeIndex);
 
-    expect(source).toContain("DRAFT_BODY_LIMIT_BYTES");
-    expect(source).toContain("GITHUB_WEBHOOK_BODY_LIMIT_BYTES");
-    expect(source).toContain("INTERNAL_BODY_LIMIT_BYTES");
-    expect(source).toContain("class BodyTooLargeError extends Error");
+    expect(originIndex).toBeGreaterThan(0);
+    expect(contentTypeIndex).toBeGreaterThan(originIndex);
+    expect(rateLimitIndex).toBeGreaterThan(contentTypeIndex);
+    expect(boundedReadIndex).toBeGreaterThan(rateLimitIndex);
+    expect(writeIndex).toBeGreaterThan(boundedReadIndex);
+    expect(routeSource).not.toContain("request.json()");
+    expect(source).toContain("const MAX_DRAFT_BODY_BYTES = 64 * 1024");
+  });
+
+  it("configures a durable Cloudflare rate limit for draft creation", () => {
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(wranglerConfig).toContain('"ratelimits"');
+    expect(wranglerConfig).toContain('"name": "SUBMISSION_DRAFT_RATE_LIMIT"');
+  });
+
+  it("limits GitHub webhook bodies before parsing or persistence", () => {
+    const source = readWorkerSource();
+    const webhookSource =
+      source.match(
+        /async function githubWebhookRoute[\s\S]*?\nasync function handleReviewMessage/,
+      )?.[0] || "";
+    const signatureIndex = webhookSource.indexOf(
+      'request.headers.get("x-hub-signature-256")',
+    );
+    const missingSignatureIndex = webhookSource.indexOf("if (!signature)");
+    const readIndex = webhookSource.indexOf("readRequestTextWithLimit");
+    const verifyIndex = webhookSource.indexOf("verifyGitHubWebhookSignature");
+    const parseIndex = webhookSource.indexOf("JSON.parse(raw)");
+    const auditIndex = webhookSource.indexOf("putAuditObject");
+
+    expect(source).toContain("const GITHUB_WEBHOOK_BODY_LIMIT_BYTES");
+    expect(source).toContain("class RequestBodyTooLargeError extends Error");
     expect(source).toContain('error: "body_too_large"');
-    expect(source).toContain('error: "rate_limited"');
-    expect(source).not.toContain("body = await request.json();");
     expect(source).not.toContain("const raw = await request.text();");
-    expect(source).not.toContain("const body = await request.text();");
-    expect(draftReadIndex).toBeGreaterThan(draftIndex);
-    expect(draftPersistIndex).toBeGreaterThan(draftReadIndex);
-    expect(webhookReadIndex).toBeGreaterThan(webhookIndex);
-    expect(webhookVerifyIndex).toBeGreaterThan(webhookReadIndex);
-    expect(importReadIndex).toBeGreaterThan(importIndex);
-    expect(importVerifyIndex).toBeGreaterThan(importReadIndex);
-    expect(rateLimitIndex).toBeGreaterThan(routeIndex);
+    expect(signatureIndex).toBeGreaterThan(0);
+    expect(missingSignatureIndex).toBeGreaterThan(signatureIndex);
+    expect(readIndex).toBeGreaterThan(missingSignatureIndex);
+    expect(verifyIndex).toBeGreaterThan(readIndex);
+    expect(parseIndex).toBeGreaterThan(verifyIndex);
+    expect(auditIndex).toBeGreaterThan(parseIndex);
   });
 
   it("rejects cancelled GitHub authorization callbacks before token exchange", () => {
@@ -517,5 +561,131 @@ describe("Cloudflare submission gate helpers", () => {
     expect(verifyIndex).toBeGreaterThan(guardIndex);
     expect(source).toContain('error: "webhook_secret_not_configured"');
     expect(source).toContain("secret: env.GITHUB_WEBHOOK_SECRET,");
+  });
+
+  it("detects neutral duplicate submissions from canonical source URLs", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/ccusage.mdx",
+      content: `---
+title: ccusage
+slug: ccusage
+category: tools
+description: Local CLI for analyzing Claude Code usage.
+websiteUrl: "https://ccusage.com"
+repoUrl: "https://github.com/ryoppippi/ccusage"
+---
+`,
+      label: "accepted entry content/tools/ccusage.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/usage-meter.mdx",
+      content: `---
+title: Claude Usage Meter
+slug: usage-meter
+category: tools
+description: Command-line reports for coding-agent usage and cost tracking.
+websiteUrl: "https://ccusage.com/?utm_source=submission"
+repoUrl: "https://github.com/ryoppippi/ccusage#readme"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
+  });
+
+  it("fails aggressively on same non-generic source domains in one category", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/tools/example.mdx",
+      content: `---
+title: Example Agent Tool
+slug: example-agent-tool
+category: tools
+description: Source-backed tool listing.
+websiteUrl: "https://example-agent-tool.dev"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/tools/example-agent-workbench.mdx",
+      content: `---
+title: Example Agent Workbench
+slug: example-agent-workbench
+category: tools
+description: Different wording for a related submission.
+websiteUrl: "https://example-agent-tool.dev/pricing"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same non-generic source domain"),
+      ]),
+    });
+  });
+
+  it("blocks content edits that change protected provenance fields", () => {
+    const before = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+author: Original Author
+submittedBy: contributor
+repoUrl: "https://github.com/example/existing-tool"
+disclosure: editorial
+---
+`;
+    const after = `---
+title: Existing Tool
+slug: existing-tool
+category: tools
+author: New Author
+submittedBy: different-user
+repoUrl: "https://github.com/example/other-tool"
+disclosure: affiliate
+---
+`;
+
+    expect(protectedFrontmatterChanges(before, after)).toEqual([
+      "author",
+      "disclosure",
+      "repoUrl",
+      "submittedBy",
+    ]);
+  });
+
+  it("detects duplicate collisions introduced by otherwise safe content edits", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/guides/claude-code-setup.mdx",
+      content: `---
+title: Claude Code Setup Guide
+slug: claude-code-setup
+category: guides
+description: Practical setup guide for Claude Code projects.
+sourceUrl: "https://example.com/claude-code-setup"
+---
+`,
+    });
+    const edited = extractContentDuplicateSignals({
+      filePath: "content/guides/agent-workflow-setup.mdx",
+      content: `---
+title: Agent Workflow Setup
+slug: agent-workflow-setup
+category: guides
+description: Practical setup guide for Claude Code projects.
+sourceUrl: "https://example.com/agent-workflow-setup"
+---
+`,
+    });
+
+    expect(findContentDuplicateMatch(edited, [existing])).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same normalized description"),
+      ]),
+    });
   });
 });

@@ -62,8 +62,7 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
   ZIP/MCPB artifacts are review/quarantine material only; public downloads are
   maintainer-built artifacts after review.
 - PR creation and final review happen in the private Cloudflare submission gate
-  through GitHub App user auth, webhooks, Queues, Durable Objects, D1/R2, and a
-  Container import runner.
+  through GitHub App user auth, webhooks, Queues, Durable Objects, and D1/R2.
 - Cloudflare rate-limit bindings are configured for registry, dynamic, strict,
   and MCP routes. The public no-key MCP endpoint uses a dedicated
   `API_MCP_RATE_LIMIT` binding with a `60 requests/minute/IP` production cap.
@@ -72,10 +71,10 @@ dynamic endpoints. Registry publishing is not exposed over the public API.
 - Worker responses attach security headers in code as well as static asset
   headers: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`,
   `Referrer-Policy`, `Permissions-Policy`, and `Cross-Origin-Opener-Policy`.
-- No public website endpoint may import content into the registry, create
-  pull requests, or publish submissions directly. Maintainer-owned import PRs
-  are created only by the private gate after policy checks. Maintainer review
-  still gates merge.
+- No public website endpoint may import content into the registry or publish
+  submissions directly. Content PR creation and direct merge decisions are
+  isolated in the private submission gate after public checks and private
+  maintainer review pass.
 - Job lead intake is intentionally shallow. Paid job publication remains gated
   by the token-protected D1 admin flow, which requires enriched reviewed listing
   content before active paid rows can publish.

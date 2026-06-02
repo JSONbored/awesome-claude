@@ -965,9 +965,13 @@ describe("HeyClaude read-only MCP helpers", () => {
         createsPullRequests: false,
       },
       reviewModel: {
-        autoMerge: false,
+        autoMerge: "content_only_private_gate",
         prFirst: true,
-        importPrRequiresApprovalLabel: ["accepted", "import-approved"],
+        autoMergeRequires: expect.arrayContaining([
+          "validate-content",
+          "Superagent Security Scan",
+          "private maintainer-agent review",
+        ]),
       },
       artifactPolicy: {
         communityZipHostingAllowed: false,

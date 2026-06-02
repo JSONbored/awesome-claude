@@ -1,7 +1,7 @@
-import { Container } from "@cloudflare/containers";
 import { DurableObject } from "cloudflare:workers";
 
 import {
+  CONTENT_CATEGORY_LABEL_PREFIX,
   DEFAULT_REVIEW_MARKER,
   LABELS,
   PILOT_LABEL,
@@ -14,6 +14,12 @@ import {
   slugify,
 } from "./drafts";
 import {
+  extractContentDuplicateSignals,
+  findContentDuplicateMatch,
+  protectedFrontmatterChanges,
+  type ContentDuplicateSignals,
+} from "./duplicates";
+import {
   addLabels,
   approvePullRequest,
   buildGitHubAppAuthorizeUrl,
@@ -23,7 +29,10 @@ import {
   getCommitValidationState,
   getInstallationToken,
   getPullRequest,
+  getRepositoryBlobText,
   getRepositoryFileContent,
+  getRepositoryTree,
+  listOpenPullRequests,
   listPullRequestFiles,
   listPullRequestsForCommit,
   mergePullRequest,
@@ -44,7 +53,6 @@ import {
   randomToken,
   signInternalPayload,
   verifyGitHubWebhookSignature,
-  verifyInternalSignature,
 } from "./security";
 import {
   consumeDraftUserToken,
@@ -80,17 +88,34 @@ type Env = {
   SUBMISSION_GATE_DB: D1Database;
   SUBMISSION_GATE_AUDIT: R2Bucket;
   SUBMISSION_REVIEW_QUEUE: Queue<Record<string, unknown>>;
-  SUBMISSION_IMPORT_QUEUE: Queue<Record<string, unknown>>;
   SUBMISSION_LOCK: DurableObjectNamespace<SubmissionLock>;
-  SUBMISSION_IMPORT_RUNNER: DurableObjectNamespace<SubmissionImportRunner>;
   ALLOWED_CORS_ORIGINS?: string;
+  SUBMISSION_DRAFT_RATE_LIMIT?: RateLimitBinding;
+};
+
+type RateLimitBinding = {
+  limit: (params: { key: string }) => Promise<{ success: boolean }>;
 };
 
 type QueueMessage = {
-  kind: "review_pr" | "submit_draft" | "import_pr";
+  kind: "review_pr" | "submit_draft";
   targetKey: string;
   payload: Record<string, unknown>;
 };
+
+class DraftBodyTooLargeError extends Error {
+  constructor() {
+    super("Draft request body is too large.");
+    this.name = "DraftBodyTooLargeError";
+  }
+}
+
+class RequestBodyTooLargeError extends Error {
+  constructor(limitBytes: number) {
+    super(`Request body exceeds ${limitBytes} bytes.`);
+    this.name = "RequestBodyTooLargeError";
+  }
+}
 
 class SubmissionLockBusyError extends Error {
   constructor(targetKey: string) {
@@ -108,13 +133,27 @@ class SubmissionMergePendingError extends Error {
 
 const GATE_VERDICTS = new Set<GateVerdict>([
   "merge",
-  "import",
   "request_changes",
   "close",
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
+const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
+const SUPPORTED_CONTENT_CATEGORIES = new Set([
+  "agents",
+  "collections",
+  "commands",
+  "guides",
+  "hooks",
+  "mcp",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+]);
+
+const MAX_DRAFT_BODY_BYTES = 64 * 1024;
+const GITHUB_WEBHOOK_BODY_LIMIT_BYTES = 1024 * 1024;
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -155,36 +194,26 @@ const TRUSTED_RECHECK_ASSOCIATIONS = new Set([
   "MEMBER",
   "COLLABORATOR",
 ]);
-const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-";
 const DECISION_LABELS = [
+  LABELS.underReview,
   LABELS.requestChanges,
   LABELS.manual,
   LABELS.close,
   LABELS.merged,
-  LABELS.importOpen,
-  LABELS.superseded,
 ];
-
-const DRAFT_BODY_LIMIT_BYTES = 64 * 1024;
-const INTERNAL_BODY_LIMIT_BYTES = 64 * 1024;
-const GITHUB_WEBHOOK_BODY_LIMIT_BYTES = 1024 * 1024;
-const RATE_LIMIT_WINDOW_MS = 60 * 1000;
-const DRAFT_RATE_LIMIT = 20;
-const SIGNED_CALLBACK_RATE_LIMIT = 120;
-
-type RateLimitBucket = {
-  windowStartedAt: number;
-  count: number;
-};
-
-const routeRateLimits = new Map<string, RateLimitBucket>();
-
-class BodyTooLargeError extends Error {
-  constructor(limitBytes: number) {
-    super(`Request body exceeds ${limitBytes} bytes.`);
-    this.name = "BodyTooLargeError";
-  }
-}
+const CONTENT_CATEGORY_LABELS = [
+  "agents",
+  "collections",
+  "commands",
+  "guides",
+  "hooks",
+  "mcp",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+].map(categoryLabel);
+const RECONCILED_GATE_LABELS = [...DECISION_LABELS, ...CONTENT_CATEGORY_LABELS];
 
 type ReviewTarget = {
   repoFullName: string;
@@ -201,11 +230,13 @@ type DirectContentScope = {
   category: string;
   slug: string;
   status: string;
+  rawUrl?: string;
 };
 
-function isMaintainerImportRef(ref: string | undefined) {
-  return String(ref || "").startsWith(MAINTAINER_IMPORT_BRANCH_PREFIX);
-}
+type DirectContentReviewability =
+  | { kind: "review"; scope: DirectContentScope }
+  | { kind: "scope_failure"; decision: GateDecision; category?: string }
+  | { kind: "ignore"; reason: string };
 
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
@@ -227,6 +258,77 @@ function allowedCorsOrigins(env: Env) {
     .map((origin) => origin.trim())
     .filter(Boolean);
   return configured.length ? configured : ["https://heyclau.de"];
+}
+
+function isAllowedRequestOrigin(request: Request, env: Env) {
+  const requestOrigin = request.headers.get("origin") || "";
+  return Boolean(
+    requestOrigin && allowedCorsOrigins(env).includes(requestOrigin),
+  );
+}
+
+function isJsonContentType(request: Request) {
+  const contentType = request.headers.get("content-type") || "";
+  const mediaType = contentType.split(";")[0]?.trim().toLowerCase();
+  return mediaType === "application/json" || mediaType.endsWith("+json");
+}
+
+function clientRateLimitKey(request: Request) {
+  const forwardedFor = request.headers.get("x-forwarded-for") || "";
+  const clientIp =
+    request.headers.get("cf-connecting-ip") ||
+    forwardedFor.split(",")[0]?.trim() ||
+    "unknown";
+  return `draft:${clientIp}`;
+}
+
+async function enforceDraftRateLimit(request: Request, env: Env) {
+  const binding = env.SUBMISSION_DRAFT_RATE_LIMIT;
+  if (!binding) return null;
+  const result = await binding.limit({ key: clientRateLimitKey(request) });
+  if (result.success === false) {
+    return json(
+      {
+        ok: false,
+        error: "rate_limited",
+        message: "Too many draft submissions. Please try again later.",
+      },
+      { status: 429 },
+    );
+  }
+  return null;
+}
+
+async function readJsonBodyWithLimit(request: Request) {
+  const contentLength = Number(request.headers.get("content-length") || 0);
+  if (Number.isFinite(contentLength) && contentLength > MAX_DRAFT_BODY_BYTES) {
+    throw new DraftBodyTooLargeError();
+  }
+
+  const reader = request.body?.getReader();
+  if (!reader) return JSON.parse("");
+
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+    total += value.byteLength;
+    if (total > MAX_DRAFT_BODY_BYTES) {
+      await reader.cancel();
+      throw new DraftBodyTooLargeError();
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return JSON.parse(new TextDecoder().decode(body));
 }
 
 function withCors(response: Response, request: Request, env: Env) {
@@ -294,15 +396,6 @@ function draftStatusUrl(request: Request, id: string) {
   return `${url.origin}/drafts/${id}`;
 }
 
-function trimTrailingSlashes(value: unknown) {
-  const text = String(value || "");
-  let end = text.length;
-  while (end > 0 && text.charCodeAt(end - 1) === 47) {
-    end -= 1;
-  }
-  return text.slice(0, end);
-}
-
 function requestBodyTooLarge(limitBytes: number) {
   return json(
     {
@@ -314,33 +407,15 @@ function requestBodyTooLarge(limitBytes: number) {
   );
 }
 
-function rejectUnsupportedMediaType(message: string) {
-  return json(
-    {
-      ok: false,
-      error: "unsupported_media_type",
-      message,
-    },
-    { status: 415 },
-  );
-}
-
-function contentTypeIncludes(request: Request, mediaType: string) {
-  return (
-    request.headers.get("content-type")?.toLowerCase().split(";")[0].trim() ===
-    mediaType
-  );
-}
-
 function enforceContentLengthLimit(request: Request, limitBytes: number) {
   const contentLength = request.headers.get("content-length");
   if (contentLength === null) return;
   const parsedLength = Number(contentLength);
   if (!Number.isFinite(parsedLength) || parsedLength < 0) {
-    throw new BodyTooLargeError(limitBytes);
+    throw new RequestBodyTooLargeError(limitBytes);
   }
   if (parsedLength > limitBytes) {
-    throw new BodyTooLargeError(limitBytes);
+    throw new RequestBodyTooLargeError(limitBytes);
   }
 }
 
@@ -358,7 +433,7 @@ async function readRequestTextWithLimit(request: Request, limitBytes: number) {
       if (done) break;
       bytesRead += value.byteLength;
       if (bytesRead > limitBytes) {
-        throw new BodyTooLargeError(limitBytes);
+        throw new RequestBodyTooLargeError(limitBytes);
       }
       text += decoder.decode(value, { stream: true });
     }
@@ -369,49 +444,6 @@ async function readRequestTextWithLimit(request: Request, limitBytes: number) {
   }
 }
 
-async function readJsonWithLimit(request: Request, limitBytes: number) {
-  const text = await readRequestTextWithLimit(request, limitBytes);
-  return JSON.parse(text) as unknown;
-}
-
-function rateLimitKey(request: Request, pathname: string) {
-  const forwardedFor = request.headers.get("x-forwarded-for") || "";
-  const clientId =
-    request.headers.get("cf-connecting-ip") ||
-    forwardedFor.split(",")[0]?.trim() ||
-    "unknown";
-  return `${pathname}:${clientId}`;
-}
-
-function enforceRouteRateLimit(
-  request: Request,
-  pathname: string,
-  maxRequests: number,
-) {
-  const now = Date.now();
-  const key = rateLimitKey(request, pathname);
-  const current = routeRateLimits.get(key);
-  if (!current || now - current.windowStartedAt >= RATE_LIMIT_WINDOW_MS) {
-    routeRateLimits.set(key, { windowStartedAt: now, count: 1 });
-    return null;
-  }
-  if (current.count >= maxRequests) {
-    return json(
-      {
-        ok: false,
-        error: "rate_limited",
-        message: "Too many requests. Please retry shortly.",
-      },
-      {
-        status: 429,
-        headers: { "retry-after": String(RATE_LIMIT_WINDOW_MS / 1000) },
-      },
-    );
-  }
-  current.count += 1;
-  return null;
-}
-
 async function putAuditObject(env: Env, key: string, payload: unknown) {
   await env.SUBMISSION_GATE_AUDIT.put(key, JSON.stringify(payload, null, 2), {
     httpMetadata: { contentType: "application/json" },
@@ -419,17 +451,43 @@ async function putAuditObject(env: Env, key: string, payload: unknown) {
 }
 
 async function createDraftRoute(request: Request, env: Env) {
-  if (!contentTypeIncludes(request, "application/json")) {
-    return rejectUnsupportedMediaType(
-      "Draft requests must use application/json.",
+  if (!isAllowedRequestOrigin(request, env)) {
+    return json(
+      {
+        ok: false,
+        error: "origin_not_allowed",
+        message:
+          "Draft submissions must originate from an allowed HeyClaude site.",
+      },
+      { status: 403 },
     );
   }
+  if (!isJsonContentType(request)) {
+    return json(
+      {
+        ok: false,
+        error: "unsupported_media_type",
+        message: "Draft request body must use application/json.",
+      },
+      { status: 415 },
+    );
+  }
+  const rateLimitResponse = await enforceDraftRateLimit(request, env);
+  if (rateLimitResponse) return rateLimitResponse;
+
   let body: unknown;
   try {
-    body = await readJsonWithLimit(request, DRAFT_BODY_LIMIT_BYTES);
+    body = await readJsonBodyWithLimit(request);
   } catch (error) {
-    if (error instanceof BodyTooLargeError) {
-      return requestBodyTooLarge(DRAFT_BODY_LIMIT_BYTES);
+    if (error instanceof DraftBodyTooLargeError) {
+      return json(
+        {
+          ok: false,
+          error: "request_too_large",
+          message: "Draft request body must be 64 KiB or smaller.",
+        },
+        { status: 413 },
+      );
     }
     return json(
       {
@@ -465,7 +523,7 @@ async function createDraftRoute(request: Request, env: Env) {
     );
   }
   const fields = draftFieldsFromBody(body);
-  const baseRef = env.PILOT_BASE_REF || "submission-gate-pilot";
+  const baseRef = env.PILOT_BASE_REF || "main";
   let target: ReturnType<typeof buildDraftTarget>;
   try {
     target = buildDraftTarget(fields, baseRef);
@@ -603,12 +661,10 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
         number?: number;
         draft?: boolean;
         base?: { ref?: string; repo?: { full_name?: string } };
-        head?: { ref?: string };
         labels?: Array<{ name?: string }>;
       }
     | undefined;
   if (!pull || pull.draft) return false;
-  if (isMaintainerImportRef(pull.head?.ref)) return false;
   const labels = pull.labels?.map((label) => label.name) || [];
   return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
 }
@@ -723,45 +779,11 @@ async function installationTokenForInstallationId(
   });
 }
 
-async function installationTokenForPayload(
+async function applyUnderReviewToTarget(
   env: Env,
-  payload: Record<string, unknown>,
+  target: ReviewTarget,
+  scope?: DirectContentScope,
 ) {
-  return installationTokenForInstallationId(
-    env,
-    installationIdFromPayload(payload),
-  );
-}
-
-async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
-  const pull = payload.pull_request as
-    | {
-        number?: number;
-        base?: { repo?: { full_name?: string } };
-      }
-    | undefined;
-  if (!pull?.number || !pull.base?.repo?.full_name) return;
-  const token = await installationTokenForPayload(env, payload);
-  if (!token) return;
-  const repo = parseRepo(pull.base.repo.full_name);
-  await addLabels({
-    token,
-    repo,
-    issueNumber: pull.number,
-    labels: [LABELS.underReview],
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await upsertMarkerComment({
-    token,
-    repo,
-    issueNumber: pull.number,
-    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-}
-
-async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
   const token = await installationTokenForInstallationId(
     env,
     Number(target.installationId || 0),
@@ -772,7 +794,7 @@ async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
     token,
     repo,
     issueNumber: target.number,
-    labels: [LABELS.underReview],
+    labels: [LABELS.underReview, ...gateLabelsForCategory(scope?.category)],
     apiVersion: env.GITHUB_API_VERSION,
   });
   await upsertMarkerComment({
@@ -781,6 +803,29 @@ async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
     issueNumber: target.number,
     marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
     body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+}
+
+async function directContentReviewabilityForTarget(
+  env: Env,
+  target: ReviewTarget,
+) {
+  const token = await installationTokenForInstallationId(
+    env,
+    Number(target.installationId || 0),
+  );
+  if (!token) {
+    return {
+      kind: "ignore" as const,
+      reason: "No installation token available for PR file inspection.",
+    };
+  }
+  const repo = parseRepo(target.repoFullName);
+  return directContentReviewabilityForPr({
+    token,
+    repo,
+    number: target.number,
     apiVersion: env.GITHUB_API_VERSION,
   });
 }
@@ -837,7 +882,6 @@ async function targetFromIssueCommentRecheck(
   if (pull.draft) return null;
   const target = reviewTargetFromPullRecord(pull, installationId);
   if (!target) return null;
-  if (isMaintainerImportRef(target.headRef)) return null;
   if (target.baseRef !== env.PILOT_BASE_REF && !hasPilotLabel(issue)) {
     return null;
   }
@@ -853,19 +897,12 @@ function hasTerminalGateDecision(
     | {
         status?: unknown;
         verdict?: unknown;
-        importPrUrl?: unknown;
       }
     | null
     | undefined,
 ) {
   if (!state) return false;
   if (String(state.status || "") === "merged") return true;
-  if (String(state.status || "") === "import_pr_open") return true;
-  if (String(state.verdict || "") === "import") {
-    return (
-      typeof state.importPrUrl === "string" && state.importPrUrl.length > 0
-    );
-  }
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
 }
 
@@ -885,50 +922,116 @@ function importContentPathParts(filePath: string) {
   };
 }
 
-async function directContentScopeForPr(params: {
+function categoryLabel(category: string) {
+  return `${CONTENT_CATEGORY_LABEL_PREFIX}${category}`;
+}
+
+function gateLabelsForCategory(category?: string) {
+  return category ? [categoryLabel(category)] : [];
+}
+
+function classifyPullRequestFilesForContentReview(
+  files: Array<{ filename?: string; status?: string }>,
+): DirectContentReviewability {
+  const entryFiles = files
+    .map((file) => ({
+      file,
+      filePath: String(file.filename || ""),
+      pathParts: importContentPathParts(String(file.filename || "")),
+    }))
+    .filter((item) => Boolean(item.pathParts));
+
+  if (entryFiles.length === 0) {
+    return {
+      kind: "ignore",
+      reason: "No source content entry file changed.",
+    };
+  }
+
+  if (files.length !== 1 || entryFiles.length !== 1) {
+    return {
+      kind: "scope_failure",
+      category: entryFiles[0]?.pathParts?.category,
+      decision: scopeFailureDecision(
+        "Direct content submissions must change exactly one source content file and no generated artifacts, README, workflows, scripts, packages, or additional entries.",
+      ),
+    };
+  }
+
+  const entry = entryFiles[0];
+  if (!SUPPORTED_CONTENT_CATEGORIES.has(entry.pathParts!.category)) {
+    return {
+      kind: "scope_failure",
+      category: entry.pathParts?.category,
+      decision: scopeFailureDecision(
+        `Unsupported content category \`${entry.pathParts!.category}\`. Supported categories are ${[
+          ...SUPPORTED_CONTENT_CATEGORIES,
+        ]
+          .sort()
+          .join(", ")}.`,
+      ),
+    };
+  }
+
+  const status = String(entry.file.status || "");
+  if (!["added", "modified"].includes(status)) {
+    return {
+      kind: "scope_failure",
+      category: entry.pathParts?.category,
+      decision: scopeFailureDecision(
+        "Direct content submissions can only add a new content file or edit one existing content file. Deletes, renames, and generated-artifact updates are not accepted in this path.",
+      ),
+    };
+  }
+
+  return {
+    kind: "review",
+    scope: {
+      filePath: entry.filePath,
+      category: entry.pathParts!.category,
+      slug: entry.pathParts!.slug,
+      status,
+      rawUrl: String(entry.file.raw_url || ""),
+    },
+  };
+}
+
+async function directContentReviewabilityForPr(params: {
   token: string;
   repo: ReturnType<typeof parseRepo>;
   number: number;
   apiVersion?: string;
-}): Promise<DirectContentScope> {
+}): Promise<DirectContentReviewability> {
   const files = await listPullRequestFiles({
     token: params.token,
     repo: params.repo,
     number: params.number,
     apiVersion: params.apiVersion,
   });
-  if (files.length !== 1) {
-    throw new Error(
-      "Direct content submissions must change exactly one source content file.",
-    );
-  }
+  return classifyPullRequestFilesForContentReview(files);
+}
 
-  const file = files[0];
-  const filePath = String(file.filename || "");
-  const pathParts = importContentPathParts(filePath);
-  if (!pathParts || !pathParts.slug) {
-    throw new Error(
-      "Direct content submissions must change one content/<category>/<slug>.mdx file.",
-    );
+async function directContentScopeForPr(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  number: number;
+  apiVersion?: string;
+}): Promise<DirectContentScope> {
+  const classification = await directContentReviewabilityForPr(params);
+  if (classification.kind === "review") return classification.scope;
+  if (classification.kind === "scope_failure") {
+    throw new Error(classification.decision.summary);
   }
-  const status = String(file.status || "");
-  if (status === "removed") {
-    throw new Error("Direct content submissions cannot remove content files.");
-  }
-
-  return {
-    filePath,
-    category: pathParts.category,
-    slug: pathParts.slug,
-    status,
-  };
+  throw new Error(classification.reason);
 }
 
 function scopeFailureDecision(error: unknown): GateDecision {
   const message =
     error instanceof Error
       ? error.message
-      : "Direct content scope validation failed.";
+      : typeof error === "string" && error.trim()
+        ? error.trim()
+        : "Direct content scope validation failed.";
   return {
     verdict: "close" as const,
     summary: [
@@ -944,18 +1047,6 @@ function scopeFailureDecision(error: unknown): GateDecision {
     ].join("\n"),
     labels: [LABELS.close],
     close: true,
-  };
-}
-
-function normalizeGateDecision(decision: GateDecision): GateDecision {
-  if (decision.verdict !== "import") return decision;
-  return {
-    ...decision,
-    verdict: "merge",
-    labels: decision.labels.filter(
-      (label) => label !== LABELS.importOpen && label !== LABELS.superseded,
-    ),
-    importJob: undefined,
   };
 }
 
@@ -1027,7 +1118,9 @@ async function mergeAcceptedPullRequest(params: {
     repo: params.repo,
     number: params.target.number,
     expectedHeadSha,
-    commitTitle: `feat(content): add ${params.scope.category} ${params.scope.slug}`,
+    commitTitle: `feat(content): ${
+      params.scope.status === "modified" ? "update" : "add"
+    } ${params.scope.category} ${params.scope.slug}`,
     commitMessage: [
       `Accepted by HeyClaude Maintainer Agent from PR #${params.target.number}.`,
       "",
@@ -1047,7 +1140,7 @@ async function fetchRawPullRequestFileContent(rawUrl: unknown) {
     url.protocol !== "https:" ||
     !["github.com", "raw.githubusercontent.com"].includes(url.hostname)
   ) {
-    throw new Error("Import synthesis raw file URL is not a GitHub HTTPS URL.");
+    throw new Error("Direct content raw file URL is not a GitHub HTTPS URL.");
   }
   const response = await fetch(url.toString(), {
     headers: { "user-agent": "heyclaude-submission-gate" },
@@ -1058,75 +1151,224 @@ async function fetchRawPullRequestFileContent(rawUrl: unknown) {
   }
   const content = await response.text();
   if (content.length > 100_000) {
-    throw new Error("Import synthesis raw file is too large.");
+    throw new Error("Direct content raw file is too large.");
   }
   return content;
 }
 
-async function synthesizeImportJobFromSourcePr(params: {
+async function fetchDirectContentScopeContent(scope: DirectContentScope) {
+  if (!scope.rawUrl) {
+    throw new Error("Direct content PR file did not include a raw GitHub URL.");
+  }
+  return fetchRawPullRequestFileContent(scope.rawUrl);
+}
+
+function duplicateCloseDecision(
+  match: ReturnType<typeof findContentDuplicateMatch>,
+  candidate: ContentDuplicateSignals,
+): GateDecision | null {
+  if (!match) return null;
+  const existing = match.existing;
+  const existingTarget = existing.url
+    ? `${existing.label || existing.filePath}: ${existing.url}`
+    : existing.label || existing.filePath;
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      `- This submission overlaps an existing or earlier pending content item: ${existingTarget}.`,
+      "- HeyClaude closes duplicate or ambiguous same-source submissions in one shot so the directory does not accumulate redundant listings.",
+      "",
+      "Duplicate / History Review:",
+      ...match.reasons.map((reason) => `- ${reason}.`),
+      "",
+      "Recommended Action:",
+      "- Close this PR. If this is genuinely a distinct resource, resubmit with a clearly different canonical source, title, scope, and value proposition.",
+      "",
+      `Changed file: \`${candidate.filePath}\``,
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+function protectedEditCloseDecision(changedFields: string[]): GateDecision {
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      "- This PR edits protected content identity, provenance, review, disclosure, source, or verification metadata.",
+      "- HeyClaude allows one-file content edits through this gate only when they avoid protected fields and keep the entry identity intact.",
+      "",
+      "Protected fields changed:",
+      ...changedFields.map((field) => `- \`${field}\``),
+      "",
+      "Recommended Action:",
+      "- Close this PR. Resubmit as a focused content edit that only changes safe descriptive copy, safety notes, privacy notes, usage text, tags, or factual body content.",
+      "- For source, attribution, disclosure, or verification changes, open a maintainer-reviewed issue or PR with explicit rationale.",
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+async function acceptedContentSignals(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  baseRef: string;
+  currentFilePath: string;
+  apiVersion?: string;
+}) {
+  const tree = await getRepositoryTree({
+    token: params.token,
+    repo: params.repo,
+    ref: params.baseRef,
+    recursive: true,
+    apiVersion: params.apiVersion,
+  });
+  if (tree.truncated) {
+    throw new Error("GitHub content tree was truncated during duplicate scan.");
+  }
+  const contentFiles = (tree.tree || []).filter(
+    (item) =>
+      item.type === "blob" &&
+      item.sha &&
+      /^content\/[^/]+\/[^/]+\.mdx$/i.test(String(item.path || "")),
+  );
+  const signals: ContentDuplicateSignals[] = [];
+  for (const item of contentFiles) {
+    const filePath = String(item.path || "");
+    if (filePath === params.currentFilePath) continue;
+    const content = await getRepositoryBlobText({
+      token: params.token,
+      repo: params.repo,
+      sha: String(item.sha),
+      apiVersion: params.apiVersion,
+    });
+    signals.push(
+      extractContentDuplicateSignals({
+        filePath,
+        content,
+        label: `accepted entry ${filePath}`,
+        url: `https://github.com/${params.repo.owner}/${params.repo.repo}/blob/${params.baseRef}/${filePath}`,
+      }),
+    );
+  }
+  return signals;
+}
+
+function isEarlierPullRequest(
+  pull: { number?: number; created_at?: string },
+  target: ReviewTarget,
+) {
+  const pullNumber = Number(pull.number || 0);
+  if (!pullNumber || pullNumber === target.number) return false;
+  return pullNumber < target.number;
+}
+
+async function earlierOpenContentPrSignals(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  baseRef: string;
+  apiVersion?: string;
+}) {
+  const pulls = await listOpenPullRequests({
+    token: params.token,
+    repo: params.repo,
+    baseRef: params.baseRef,
+    apiVersion: params.apiVersion,
+  });
+  const signals: ContentDuplicateSignals[] = [];
+  for (const pull of pulls) {
+    if (!isEarlierPullRequest(pull, params.target) || pull.draft) continue;
+    const number = Number(pull.number || 0);
+    const files = await listPullRequestFiles({
+      token: params.token,
+      repo: params.repo,
+      number,
+      apiVersion: params.apiVersion,
+    });
+    const reviewability = classifyPullRequestFilesForContentReview(files);
+    if (reviewability.kind !== "review") continue;
+    let content = "";
+    try {
+      content = await fetchDirectContentScopeContent(reviewability.scope);
+    } catch {
+      continue;
+    }
+    signals.push(
+      extractContentDuplicateSignals({
+        filePath: reviewability.scope.filePath,
+        content,
+        label: `earlier open PR #${number}`,
+        url:
+          pull.html_url ||
+          `https://github.com/${params.repo.owner}/${params.repo.repo}/pull/${number}`,
+      }),
+    );
+  }
+  return signals;
+}
+
+async function deterministicContentPrecheck(params: {
   env: Env;
   token: string;
   repo: ReturnType<typeof parseRepo>;
   target: ReviewTarget;
+  scope: DirectContentScope;
 }) {
-  const files = await listPullRequestFiles({
-    token: params.token,
-    repo: params.repo,
-    number: params.target.number,
-    apiVersion: params.env.GITHUB_API_VERSION,
-  });
-  if (files.length !== 1) {
-    throw new Error("Import synthesis requires exactly one changed PR file.");
-  }
+  const baseRef = params.target.baseRef || params.env.PILOT_BASE_REF;
+  const candidateContent = await fetchDirectContentScopeContent(params.scope);
 
-  const file = files[0];
-  const filePath = String(file.filename || "");
-  const pathParts = importContentPathParts(filePath);
-  if (!pathParts || !pathParts.slug) {
-    throw new Error(
-      "Import synthesis requires one content/<category>/<slug>.mdx file.",
-    );
-  }
-  if (String(file.status || "") === "removed") {
-    throw new Error("Import synthesis cannot import removed content files.");
-  }
-
-  const headRepo = parseRepo(
-    params.target.headRepo || params.target.repoFullName,
-  );
-  const headRef = params.target.headSha || params.target.headRef || "";
-  if (!headRef) {
-    throw new Error("Import synthesis requires a PR head ref or SHA.");
-  }
-
-  let content: string;
-  try {
-    content = await getRepositoryFileContent({
+  if (params.scope.status === "modified") {
+    const baseContent = await getRepositoryFileContent({
       token: params.token,
-      repo: headRepo,
-      path: filePath,
-      ref: headRef,
+      repo: params.repo,
+      path: params.scope.filePath,
+      ref: baseRef,
       apiVersion: params.env.GITHUB_API_VERSION,
     });
-  } catch {
-    content = await fetchRawPullRequestFileContent(file.raw_url);
+    const protectedChanges = protectedFrontmatterChanges(
+      baseContent,
+      candidateContent,
+    );
+    if (protectedChanges.length) {
+      return {
+        content: candidateContent,
+        decision: protectedEditCloseDecision(protectedChanges),
+      };
+    }
   }
 
+  const candidate = extractContentDuplicateSignals({
+    filePath: params.scope.filePath,
+    content: candidateContent,
+    label: `PR #${params.target.number}`,
+    url: `https://github.com/${params.target.repoFullName}/pull/${params.target.number}`,
+  });
+  const existing = [
+    ...(await acceptedContentSignals({
+      token: params.token,
+      repo: params.repo,
+      baseRef,
+      currentFilePath: params.scope.filePath,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    })),
+    ...(await earlierOpenContentPrSignals({
+      token: params.token,
+      repo: params.repo,
+      target: params.target,
+      baseRef,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    })),
+  ];
   return {
-    branchName: `automation/submission-pr-${params.target.number}-${pathParts.slug}`,
-    title: `feat(content): import ${pathParts.category} ${pathParts.slug}`,
-    body: [
-      `Maintainer-owned import generated from source PR #${params.target.number}.`,
-      "",
-      "The private submission gate accepted the source PR after public validation and private review.",
-      "Generated artifacts are produced during validation/build and are not committed in this import PR.",
-    ].join("\n"),
-    files: [
-      {
-        path: filePath,
-        content,
-      },
-    ],
+    content: candidateContent,
+    decision: duplicateCloseDecision(
+      findContentDuplicateMatch(candidate, existing),
+      candidate,
+    ),
   };
 }
 
@@ -1139,7 +1381,6 @@ async function enqueueReviewTarget(
   pilotScoped = false,
   forceRecheck = false,
 ) {
-  if (isMaintainerImportRef(target.headRef)) return false;
   if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
   const targetKey = targetKeyForReview(target);
   const existing = await getPrState(env.SUBMISSION_GATE_DB, {
@@ -1286,7 +1527,7 @@ async function githubWebhookRoute(
       GITHUB_WEBHOOK_BODY_LIMIT_BYTES,
     );
   } catch (error) {
-    if (error instanceof BodyTooLargeError) {
+    if (error instanceof RequestBodyTooLargeError) {
       return requestBodyTooLarge(GITHUB_WEBHOOK_BODY_LIMIT_BYTES);
     }
     throw error;
@@ -1321,7 +1562,16 @@ async function githubWebhookRoute(
     }
     if (!isPilotPr(payload, env))
       return json({ ok: true, ignored: true, reason: "outside_pilot" });
-    ctx.waitUntil(applyUnderReview(env, payload));
+    const reviewability = await directContentReviewabilityForTarget(
+      env,
+      target,
+    );
+    if (reviewability.kind === "ignore") {
+      return json({ ok: true, ignored: true, reason: reviewability.reason });
+    }
+    const reviewScope =
+      reviewability.kind === "review" ? reviewability.scope : undefined;
+    ctx.waitUntil(applyUnderReviewToTarget(env, target, reviewScope));
     await enqueueReviewTarget(
       env,
       target,
@@ -1338,7 +1588,16 @@ async function githubWebhookRoute(
   if (eventName === "issue_comment") {
     const target = await targetFromIssueCommentRecheck(env, payload);
     if (!target) return json({ ok: true, ignored: true });
-    await applyUnderReviewToTarget(env, target);
+    const reviewability = await directContentReviewabilityForTarget(
+      env,
+      target,
+    );
+    if (reviewability.kind === "ignore") {
+      return json({ ok: true, ignored: true, reason: reviewability.reason });
+    }
+    const reviewScope =
+      reviewability.kind === "review" ? reviewability.scope : undefined;
+    await applyUnderReviewToTarget(env, target, reviewScope);
     await enqueueReviewTarget(
       env,
       target,
@@ -1356,6 +1615,11 @@ async function githubWebhookRoute(
     const targets = await targetsFromValidationWebhook(env, eventName, payload);
     let queued = 0;
     for (const target of targets) {
+      const reviewability = await directContentReviewabilityForTarget(
+        env,
+        target,
+      );
+      if (reviewability.kind === "ignore") continue;
       if (
         await enqueueReviewTarget(env, target, deliveryId, eventName, payload)
       ) {
@@ -1401,15 +1665,14 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       "Private corpus review returned an unexpected payload.",
     );
   }
-  return normalizeGateDecision({
+  return {
     verdict: raw.verdict as GateVerdict,
     summary: typeof raw.summary === "string" ? raw.summary : "",
     labels: Array.isArray(raw.labels)
       ? raw.labels.filter((label): label is string => typeof label === "string")
       : [],
     close: raw.close === true,
-    importJob: isRecord(raw.importJob) ? raw.importJob : undefined,
-  });
+  };
 }
 
 async function withSubmissionLock(
@@ -1543,6 +1806,43 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       let decision: GateDecision | null = null;
       let validationForPrivateReview: unknown = null;
       let contentScopeForPrivateReview: DirectContentScope | null = null;
+      const reviewability = await directContentReviewabilityForPr({
+        token,
+        repo,
+        number: target.number,
+        apiVersion: env.GITHUB_API_VERSION,
+      });
+      if (reviewability.kind === "ignore") {
+        await removeLabels({
+          token,
+          repo,
+          issueNumber: target.number,
+          labels: RECONCILED_GATE_LABELS,
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        await upsertPrState(env.SUBMISSION_GATE_DB, {
+          repo: target.repoFullName,
+          number: target.number,
+          headRepo: target.headRepo,
+          headRef: target.headRef,
+          baseRef: target.baseRef || env.PILOT_BASE_REF,
+          status: "ignored",
+          deliveryId: String(message.payload.deliveryId || ""),
+        });
+        await insertAudit(env.SUBMISSION_GATE_DB, {
+          id: crypto.randomUUID(),
+          targetKey: message.targetKey,
+          eventType: message.kind,
+          decision: "ignored",
+          summary: reviewability.reason,
+        });
+        return;
+      }
+      if (reviewability.kind === "scope_failure") {
+        decision = reviewability.decision;
+      } else {
+        contentScopeForPrivateReview = reviewability.scope;
+      }
       try {
         const validation = await getCommitValidationState({
           token,
@@ -1552,7 +1852,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           requiredStatusContexts: requiredStatusContexts(env),
           apiVersion: env.GITHUB_API_VERSION,
         });
-        if (validation.state === "pending") {
+        if (!decision && validation.state === "pending") {
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
             number: target.number,
@@ -1571,29 +1871,50 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           });
           return;
         }
-        if (validation.state === "failed") {
+        if (!decision && validation.state === "failed") {
           decision = validationGateDecision(validation);
-        } else {
+        } else if (!decision) {
           validationForPrivateReview = {
             state: validation.state,
             summary: validation.summary,
             checks: validation.checks,
           };
-          try {
-            contentScopeForPrivateReview = await directContentScopeForPr({
-              token,
-              repo,
-              number: target.number,
-              apiVersion: env.GITHUB_API_VERSION,
-            });
-          } catch (error) {
-            decision = scopeFailureDecision(error);
-          }
         }
       } catch {
         decision = defaultManualDecision(
           "Submission gate could not read public validation checks.",
         );
+      }
+
+      if (!decision && contentScopeForPrivateReview) {
+        try {
+          const precheck = await deterministicContentPrecheck({
+            env,
+            token,
+            repo,
+            target,
+            scope: contentScopeForPrivateReview,
+          });
+          if (precheck.decision) {
+            decision = precheck.decision;
+          } else {
+            validationForPrivateReview = {
+              ...(isRecord(validationForPrivateReview)
+                ? validationForPrivateReview
+                : {}),
+              deterministicPrecheck: {
+                status: "passed",
+                contentStatus: contentScopeForPrivateReview.status,
+              },
+            };
+          }
+        } catch (error) {
+          decision = defaultManualDecision(
+            `Submission gate could not complete deterministic duplicate/edit review: ${
+              error instanceof Error ? error.message : "unknown error"
+            }.`,
+          );
+        }
       }
 
       if (!decision) {
@@ -1623,7 +1944,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           },
         });
       }
-      decision = normalizeGateDecision(decision);
       if (decision.verdict === "merge" && !contentScopeForPrivateReview) {
         try {
           contentScopeForPrivateReview = await directContentScopeForPr({
@@ -1638,15 +1958,19 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       }
       const status =
         decision.verdict === "merge" ? "merge_accepted" : decision.verdict;
-      const labelsToApply =
+      const categoryLabels = gateLabelsForCategory(
+        contentScopeForPrivateReview?.category ||
+          (reviewability.kind === "scope_failure"
+            ? reviewability.category
+            : undefined),
+      );
+      const decisionLabelsToApply =
         decision.verdict === "merge"
-          ? decision.labels.filter(
-              (label) =>
-                label !== LABELS.merged &&
-                label !== LABELS.importOpen &&
-                label !== LABELS.superseded,
-            )
+          ? decision.labels.filter((label) => label !== LABELS.merged)
           : decision.labels;
+      const labelsToApply = [
+        ...new Set([...decisionLabelsToApply, ...categoryLabels]),
+      ];
 
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
@@ -1669,7 +1993,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         token,
         repo,
         issueNumber: target.number,
-        labels: DECISION_LABELS.filter(
+        labels: RECONCILED_GATE_LABELS.filter(
           (label) => !labelsToApply.includes(label),
         ),
         apiVersion: env.GITHUB_API_VERSION,
@@ -1725,7 +2049,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           const mergedDecision: GateDecision = {
             ...decision,
             summary: mergedSummary,
-            labels: [LABELS.merged],
+            labels: [LABELS.merged, ...categoryLabels],
           };
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
@@ -1741,14 +2065,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter((label) => label !== LABELS.merged),
+            labels: RECONCILED_GATE_LABELS.filter(
+              (label) =>
+                label !== LABELS.merged && !categoryLabels.includes(label),
+            ),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
             token,
             repo,
             issueNumber: target.number,
-            labels: [LABELS.merged],
+            labels: [LABELS.merged, ...categoryLabels],
             apiVersion: env.GITHUB_API_VERSION,
           });
           await upsertMarkerComment({
@@ -1818,14 +2145,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter((label) => label !== LABELS.manual),
+            labels: RECONCILED_GATE_LABELS.filter(
+              (label) =>
+                label !== LABELS.manual && !categoryLabels.includes(label),
+            ),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
             token,
             repo,
             issueNumber: target.number,
-            labels: manualDecision.labels,
+            labels: [...manualDecision.labels, ...categoryLabels],
             apiVersion: env.GITHUB_API_VERSION,
           });
           await upsertMarkerComment({
@@ -1852,293 +2182,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
   });
 }
 
-async function handleImportMessage(env: Env, message: QueueMessage) {
-  const payload = message.payload as {
-    repo?: string;
-    number?: number;
-    source?: {
-      repo?: string;
-      number?: number;
-      baseRef?: string;
-      installationId?: number;
-    };
-    runnerKey?: string;
-  };
-  const sourceInstallationId = Number(payload.source?.installationId || 0);
-  if (
-    !sourceInstallationId ||
-    !env.GITHUB_APP_ID ||
-    !env.GITHUB_APP_PRIVATE_KEY
-  ) {
-    throw new Error("Import job is missing GitHub App installation context.");
-  }
-  if (!env.INTERNAL_SHARED_SECRET) {
-    throw new Error("Import runner shared secret is not configured.");
-  }
-  const githubToken = await getInstallationToken({
-    appId: env.GITHUB_APP_ID,
-    privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
-    installationId: sourceInstallationId,
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  const callbackBaseUrl = trimTrailingSlashes(env.SUBMISSION_GATE_URL);
-  if (!callbackBaseUrl) {
-    throw new Error("Submission gate callback URL is not configured.");
-  }
-  const body = JSON.stringify({
-    ...payload,
-    targetKey: message.targetKey,
-    githubToken,
-    callbackUrl: `${callbackBaseUrl}/internal/import-complete`,
-  });
-  const signature = await signInternalPayload(env.INTERNAL_SHARED_SECRET, body);
-  const runnerKey = String(payload.runnerKey || message.targetKey);
-  const stub = env.SUBMISSION_IMPORT_RUNNER.getByName(runnerKey);
-  const response = await stub.fetch("https://container.local/import", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      "x-heyclaude-internal-signature": signature,
-    },
-    body,
-  });
-  const result = (await response.json().catch(() => ({}))) as {
-    error?: string;
-    message?: string;
-    accepted?: boolean;
-    pullRequestUrl?: string;
-    pullRequestNumber?: number;
-  };
-  if (response.status === 202 || result.accepted) {
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
-      repo: payload.source?.repo || payload.repo || "",
-      number: Number(payload.source?.number || payload.number || 0),
-      baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
-      status: "import_running",
-      verdict: "import",
-      verdictSummary:
-        result.message || "Maintainer-owned import job accepted by runner.",
-    });
-    await insertAudit(env.SUBMISSION_GATE_DB, {
-      id: crypto.randomUUID(),
-      targetKey: message.targetKey,
-      eventType: "import_pr",
-      decision: "import_queued",
-      summary:
-        result.message || "Maintainer-owned import job accepted by runner.",
-    });
-    return;
-  }
-  if (!response.ok) {
-    if (!result.pullRequestUrl) {
-      const summary = [
-        `Import runner failed: ${response.status}`,
-        result.error ? `error=${result.error}` : "",
-        result.message
-          ? `message=${String(result.message).slice(0, 1000)}`
-          : "",
-      ]
-        .filter(Boolean)
-        .join("; ");
-      await insertAudit(env.SUBMISSION_GATE_DB, {
-        id: crypto.randomUUID(),
-        targetKey: message.targetKey,
-        eventType: "import_pr",
-        decision: "import_failed",
-        summary,
-      });
-      throw new Error(summary);
-    }
-    console.warn("import runner returned existing PR with non-OK response", {
-      status: response.status,
-      pullRequestUrl: result.pullRequestUrl,
-    });
-  }
-  const sourceRepo = payload.source?.repo || payload.repo || "";
-  const sourceNumber = Number(payload.source?.number || payload.number || 0);
-  if (sourceRepo && sourceNumber && result.pullRequestUrl) {
-    await completeImportPr(env, {
-      targetKey: message.targetKey,
-      repo: sourceRepo,
-      number: sourceNumber,
-      baseRef: payload.source?.baseRef || env.PILOT_BASE_REF,
-      installationId: sourceInstallationId,
-      importPrUrl: result.pullRequestUrl,
-      githubToken,
-    });
-  }
-}
-
-async function completeImportPr(
-  env: Env,
-  params: {
-    targetKey?: string;
-    repo: string;
-    number: number;
-    baseRef?: string;
-    installationId?: number;
-    importPrUrl: string;
-    summary?: string;
-    githubToken?: string;
-  },
-) {
-  const summary =
-    params.summary ||
-    `Maintainer-owned import PR opened: ${params.importPrUrl}`;
-  await upsertPrState(env.SUBMISSION_GATE_DB, {
-    repo: params.repo,
-    number: params.number,
-    baseRef: params.baseRef || env.PILOT_BASE_REF,
-    status: "import_pr_open",
-    verdict: "import",
-    verdictSummary: summary,
-    importPrUrl: params.importPrUrl,
-  });
-
-  const token =
-    params.githubToken ||
-    (params.installationId
-      ? await getInstallationToken({
-          appId: env.GITHUB_APP_ID || "",
-          privateKeyPem: env.GITHUB_APP_PRIVATE_KEY || "",
-          installationId: params.installationId,
-          apiVersion: env.GITHUB_API_VERSION,
-        })
-      : "");
-  if (!token) return;
-
-  const repo = parseRepo(params.repo);
-  await addLabels({
-    token,
-    repo,
-    issueNumber: params.number,
-    labels: [LABELS.importOpen, LABELS.superseded],
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await upsertMarkerComment({
-    token,
-    repo,
-    issueNumber: params.number,
-    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    body: markerComment(
-      {
-        verdict: "import",
-        summary: [
-          summary,
-          "",
-          "This contributor PR is closed as superseded so generated artifacts and final validation stay maintainer-owned.",
-        ].join("\n"),
-        labels: [LABELS.importOpen, LABELS.superseded],
-      },
-      env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    ),
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await closeIssueOrPullRequest({
-    token,
-    repo,
-    issueNumber: params.number,
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-}
-
-async function importCompleteRoute(request: Request, env: Env) {
-  const signature = request.headers.get("x-heyclaude-internal-signature");
-  if (!env.INTERNAL_SHARED_SECRET) {
-    return json({ ok: false, error: "not_configured" }, { status: 503 });
-  }
-  if (!signature) {
-    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
-  }
-
-  let body: string;
-  try {
-    body = await readRequestTextWithLimit(request, INTERNAL_BODY_LIMIT_BYTES);
-  } catch (error) {
-    if (error instanceof BodyTooLargeError) {
-      return requestBodyTooLarge(INTERNAL_BODY_LIMIT_BYTES);
-    }
-    throw error;
-  }
-  const valid = await verifyInternalSignature({
-    secret: env.INTERNAL_SHARED_SECRET,
-    payload: body,
-    signatureHeader: signature,
-  });
-  if (!valid)
-    return json({ ok: false, error: "invalid_signature" }, { status: 401 });
-  type ImportCompletePayload = {
-    targetKey?: string;
-    repo?: string;
-    number?: number;
-    baseRef?: string;
-    installationId?: number;
-    importPrUrl?: string;
-    summary?: string;
-    ok?: boolean;
-    error?: string;
-    message?: string;
-  };
-  let payload: ImportCompletePayload;
-  try {
-    payload = JSON.parse(body) as ImportCompletePayload;
-  } catch {
-    return json({ ok: false, error: "invalid_payload" }, { status: 400 });
-  }
-  if (payload.ok === false || !payload.importPrUrl) {
-    const summary = [
-      "Import runner failed.",
-      payload.error ? `error=${payload.error}` : "",
-      payload.message ? `message=${payload.message}` : "",
-    ]
-      .filter(Boolean)
-      .join(" ");
-    if (payload.repo && payload.number) {
-      await upsertPrState(env.SUBMISSION_GATE_DB, {
-        repo: payload.repo,
-        number: payload.number,
-        baseRef: payload.baseRef || env.PILOT_BASE_REF,
-        status: "import_failed",
-        verdict: "import",
-        verdictSummary: summary,
-      });
-    }
-    await insertAudit(env.SUBMISSION_GATE_DB, {
-      id: crypto.randomUUID(),
-      targetKey:
-        payload.targetKey ||
-        `${payload.repo || "unknown"}#${payload.number || 0}`,
-      eventType: "import_complete",
-      decision: "import_failed",
-      summary,
-    });
-    return json({ ok: true });
-  }
-
-  if (!payload.repo || !payload.number) {
-    return json({ ok: false, error: "missing_import_source" }, { status: 400 });
-  }
-  await completeImportPr(env, {
-    targetKey: payload.targetKey,
-    repo: payload.repo,
-    number: payload.number,
-    baseRef: payload.baseRef || env.PILOT_BASE_REF,
-    installationId: payload.installationId,
-    importPrUrl: payload.importPrUrl,
-    summary: payload.summary || "Maintainer-owned import PR opened.",
-  });
-  await insertAudit(env.SUBMISSION_GATE_DB, {
-    id: crypto.randomUUID(),
-    targetKey:
-      payload.targetKey ||
-      `${payload.repo || "unknown"}#${payload.number || 0}`,
-    eventType: "import_complete",
-    decision: "import",
-    summary: payload.summary || payload.importPrUrl || "Import completed.",
-  });
-  return json({ ok: true });
-}
-
 async function route(request: Request, env: Env, ctx: ExecutionContext) {
   const url = new URL(request.url);
   if (request.method === "OPTIONS") return json({ ok: true });
@@ -2146,12 +2189,6 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return json({ ok: true, service: "heyclaude-submission-gate" });
   }
   if (request.method === "POST" && url.pathname === "/drafts") {
-    const rateLimited = enforceRouteRateLimit(
-      request,
-      url.pathname,
-      DRAFT_RATE_LIMIT,
-    );
-    if (rateLimited) return rateLimited;
     return createDraftRoute(request, env);
   }
   if (request.method === "GET" && url.pathname.startsWith("/drafts/")) {
@@ -2185,25 +2222,7 @@ async function route(request: Request, env: Env, ctx: ExecutionContext) {
     return githubCallbackRoute(request, env);
   }
   if (request.method === "POST" && url.pathname === "/webhooks/github") {
-    const rateLimited = enforceRouteRateLimit(
-      request,
-      url.pathname,
-      SIGNED_CALLBACK_RATE_LIMIT,
-    );
-    if (rateLimited) return rateLimited;
     return githubWebhookRoute(request, env, ctx);
-  }
-  if (
-    request.method === "POST" &&
-    url.pathname === "/internal/import-complete"
-  ) {
-    const rateLimited = enforceRouteRateLimit(
-      request,
-      url.pathname,
-      SIGNED_CALLBACK_RATE_LIMIT,
-    );
-    if (rateLimited) return rateLimited;
-    return importCompleteRoute(request, env);
   }
   return json({ ok: false, error: "not_found" }, { status: 404 });
 }
@@ -2253,22 +2272,6 @@ export class SubmissionLock extends DurableObject {
   }
 }
 
-export class SubmissionImportRunner extends Container<Env> {
-  defaultPort = 8080;
-  sleepAfter = "10m";
-
-  constructor(ctx: DurableObjectState, env: Env) {
-    super(ctx, env);
-    this.envVars = {
-      ALLOWED_IMPORT_REPOS:
-        env.ALLOWED_IMPORT_REPOS ||
-        env.PUBLIC_REPO ||
-        "JSONbored/awesome-claude",
-      INTERNAL_SHARED_SECRET: env.INTERNAL_SHARED_SECRET || "",
-    };
-  }
-}
-
 export default {
   async fetch(request, env, ctx) {
     return withCors(await route(request, env, ctx), request, env);
@@ -2277,11 +2280,7 @@ export default {
     for (const message of batch.messages) {
       const body = message.body as QueueMessage;
       try {
-        if (body.kind === "import_pr") {
-          await handleImportMessage(env, body);
-        } else {
-          await handleReviewMessage(env, body);
-        }
+        await handleReviewMessage(env, body);
         message.ack();
       } catch (error) {
         if (error instanceof SubmissionLockBusyError) {

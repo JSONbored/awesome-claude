@@ -177,4 +177,60 @@ Example body.
       ]),
     );
   });
+
+  it("fails external content PRs that include referral or affiliate source URLs", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Tool
+category: tools
+description: Example external referral fixture.
+websiteUrl: https://example.com/products/assistant?ref=creator
+sourceUrl: https://github.com/example/example-tool
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct");
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("affiliate_referral_url"),
+      ]),
+    );
+  });
+
+  it("fails external content PRs that hide referral paths without query params", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Tool
+category: tools
+description: Example external referral path fixture.
+websiteUrl: https://example.com/ref
+sourceUrl: https://github.com/example/example-tool
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct");
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("affiliate_referral_url"),
+      ]),
+    );
+  });
 });
