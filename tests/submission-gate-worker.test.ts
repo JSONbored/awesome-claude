@@ -24,6 +24,10 @@ import {
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
 import { markerComment } from "../apps/submission-gate/src/review";
+import {
+  buildDiscordDecisionPayload,
+  postDiscordDecisionNotification,
+} from "../apps/submission-gate/src/notifications";
 import { repoRoot } from "./helpers/registry-fixtures";
 
 function readWorkerSource() {
@@ -32,6 +36,19 @@ function readWorkerSource() {
     "utf8",
   );
 }
+
+const SUPPORTED_DIRECT_CONTENT_CATEGORIES = [
+  "agents",
+  "collections",
+  "commands",
+  "guides",
+  "hooks",
+  "mcp",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+];
 
 afterEach(() => {
   vi.unstubAllGlobals();
@@ -139,6 +156,37 @@ describe("Cloudflare submission gate helpers", () => {
       "Useful source-backed skill.\n\n## Safety\n\nReview scripts before running.",
     );
   });
+
+  it.each(SUPPORTED_DIRECT_CONTENT_CATEGORIES)(
+    "builds a one-file direct content draft for %s",
+    (category) => {
+      const target = buildDraftTarget(
+        { category, name: `${category} direct fixture` },
+        "main",
+      );
+      const mdx = buildContributorMdx(
+        {
+          category,
+          name: `${category} direct fixture`,
+          description:
+            "Source-backed direct submission fixture for category coverage.",
+          github_url: `https://github.com/example/${category}-direct-fixture`,
+          safety_notes: "Review source provenance before use.",
+          privacy_notes: "Review third-party data handling before use.",
+        },
+        "JSONbored",
+      );
+
+      expect(target.targetPath).toBe(
+        `content/${category}/${category}-direct-fixture.mdx`,
+      );
+      expect(mdx).toContain(`category: "${category}"`);
+      expect(mdx).toContain('submittedBy: "@JSONbored"');
+      expect(mdx).toContain("submittedByUrl: \"https://github.com/JSONbored\"");
+      expect(mdx).not.toContain("README.md");
+      expect(mdx).not.toContain("apps/web/public/data");
+    },
+  );
 
   it("preserves multiline copy snippets as YAML block scalars", () => {
     const mdx = buildContributorMdx({
@@ -300,6 +348,82 @@ describe("Cloudflare submission gate helpers", () => {
     expect(body).toContain("merges accepted source PRs directly");
   });
 
+  it("formats Discord decision notifications without marker or secret text", () => {
+    const payload = buildDiscordDecisionPayload({
+      repoFullName: "JSONbored/awesome-claude",
+      prNumber: 700,
+      prTitle: "feat(content): add useful guide",
+      prUrl: "https://github.com/JSONbored/awesome-claude/pull/700",
+      author: "JSONbored",
+      verdict: "close",
+      category: "guides",
+      changedFile: "content/guides/useful-guide.mdx",
+      ciSummary:
+        "validate-content passed; Superagent Security Scan passed",
+      summary: [
+        "<!-- heyclaude-submission-gate -->",
+        "Summary:",
+        "- Closed because the submission reused an existing source URL.",
+      ].join("\n"),
+      now: new Date("2026-06-02T00:00:00.000Z"),
+    });
+
+    expect(payload.username).toBe("HeyClaude Maintainer Agent");
+    expect(payload.embeds[0]).toMatchObject({
+      title: "Closed: #700 feat(content): add useful guide",
+      url: "https://github.com/JSONbored/awesome-claude/pull/700",
+      color: 0xda3633,
+      timestamp: "2026-06-02T00:00:00.000Z",
+    });
+    expect(JSON.stringify(payload)).toContain("validate-content passed");
+    expect(JSON.stringify(payload)).not.toContain(
+      "<!-- heyclaude-submission-gate -->",
+    );
+  });
+
+  it("keeps Discord notifications optional and non-blocking", async () => {
+    await expect(
+      postDiscordDecisionNotification({
+        repoFullName: "JSONbored/awesome-claude",
+        prNumber: 700,
+        verdict: "merge",
+      }),
+    ).resolves.toEqual({
+      ok: false,
+      skipped: true,
+      reason: "not_configured",
+    });
+
+    await expect(
+      postDiscordDecisionNotification(
+        {
+          webhookUrl: "https://discord.com/api/webhooks/123/token",
+          repoFullName: "JSONbored/awesome-claude",
+          prNumber: 700,
+          verdict: "close",
+        },
+        vi.fn().mockResolvedValue(new Response("", { status: 503 })),
+      ),
+    ).resolves.toMatchObject({
+      ok: false,
+      status: 503,
+      reason: "discord_webhook_failed",
+    });
+
+    await expect(
+      postDiscordDecisionNotification({
+        webhookUrl: "https://discord.com/api/webhooks/123/token",
+        repoFullName: "JSONbored/awesome-claude",
+        prNumber: 700,
+        verdict: "ignore",
+      }),
+    ).resolves.toEqual({
+      ok: false,
+      skipped: true,
+      reason: "ignored_verdict",
+    });
+  });
+
   it("reconciles old verdict labels before applying a new gate decision", () => {
     const source = readWorkerSource();
     const removeIndex = source.indexOf("await removeLabels({");
@@ -373,6 +497,37 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("SubmissionMergePendingError");
     expect(source).toContain('decision: "merge_pending"');
     expect(source).toContain("message.retry({ delaySeconds: 30 })");
+  });
+
+  it("closes direct content PRs when required validation fails", () => {
+    const source = readWorkerSource();
+    const validationBlock =
+      source.match(
+        /function validationGateDecision[\s\S]*?\nfunction validationSummaryForNotification/,
+      )?.[0] || "";
+
+    expect(source).not.toContain("validationFailedDecision");
+    expect(validationBlock).toContain('verdict: "close"');
+    expect(validationBlock).toContain(
+      "hard validation failures are closed instead of iterated in place",
+    );
+    expect(validationBlock).toContain("Superagent did not pass");
+    expect(validationBlock).toContain("Superagent did not return a clear");
+  });
+
+  it("notifies Discord only after actionable gate decisions", () => {
+    const source = readWorkerSource();
+    const ignoreBlock =
+      source.match(
+        /if \(reviewability.kind === "ignore"\) \{[\s\S]*?return;\n      \}/,
+      )?.[0] || "";
+
+    expect(source).toContain("DISCORD_SUBMISSION_WEBHOOK_URL");
+    expect(source).toContain("postDiscordDecisionNotification({");
+    expect(source).toContain("markPrNotificationSent");
+    expect(source).toContain('eventType: "discord_notification"');
+    expect(source).toContain('if (params.decision.verdict === "ignore")');
+    expect(ignoreBlock).not.toContain("notifyGateDecision");
   });
 
   it("keeps one-shot gate verdicts from being overwritten by later check events", () => {

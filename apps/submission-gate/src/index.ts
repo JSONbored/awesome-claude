@@ -43,10 +43,10 @@ import {
 import {
   defaultManualDecision,
   markerComment,
-  validationFailedDecision,
   type GateDecision,
   type GateVerdict,
 } from "./review";
+import { postDiscordDecisionNotification } from "./notifications";
 import {
   decryptText,
   encryptText,
@@ -61,6 +61,7 @@ import {
   getDraft,
   getPrState,
   insertAudit,
+  markPrNotificationSent,
   storeDraftUserToken,
   updateDraftAuthState,
   updateDraftStatus,
@@ -83,6 +84,7 @@ type Env = {
   GITHUB_WEBHOOK_SECRET?: string;
   INTERNAL_SHARED_SECRET?: string;
   PRIVATE_GATE_REVIEW_URL?: string;
+  DISCORD_SUBMISSION_WEBHOOK_URL?: string;
   REQUIRED_VALIDATION_CHECKS?: string;
   REQUIRED_STATUS_CONTEXTS?: string;
   SUBMISSION_GATE_DB: D1Database;
@@ -1084,7 +1086,161 @@ function validationGateDecision(validation: {
       close: true,
     };
   }
-  return validationFailedDecision(validation.summary);
+  return {
+    verdict: "close" as const,
+    summary: [
+      "Summary:",
+      `- ${validation.summary}`,
+      "",
+      "Validation Review:",
+      "- Required public validation did not pass, so this direct content PR is not eligible for automated merge.",
+      "- HeyClaude uses one-shot review for content submissions; hard validation failures are closed instead of iterated in place.",
+      "",
+      "Recommended Action:",
+      "- Close this PR and resubmit a clean single-entry content PR after fixing the validation failure.",
+    ].join("\n"),
+    labels: [LABELS.close],
+    close: true,
+  };
+}
+
+function validationSummaryForNotification(
+  validation:
+    | {
+        summary?: string;
+        checks?: Array<{ name: string; status: string; details?: string }>;
+      }
+    | null
+    | undefined,
+) {
+  if (!validation) return "";
+  const checks = validation.checks || [];
+  if (!checks.length) return validation.summary || "";
+  return checks
+    .map((check) =>
+      [check.name, check.status, check.details ? `(${check.details})` : ""]
+        .filter(Boolean)
+        .join(" "),
+    )
+    .join("; ");
+}
+
+function notificationKeyForDecision(params: {
+  target: ReviewTarget;
+  decision: GateDecision;
+  status: string;
+}) {
+  return [
+    params.target.headSha || params.target.headRef || "unknown-head",
+    params.status,
+    params.decision.verdict,
+  ].join(":");
+}
+
+async function insertNotificationAuditSafe(
+  env: Env,
+  params: {
+    targetKey: string;
+    decision: string;
+    summary: string;
+  },
+) {
+  try {
+    await insertAudit(env.SUBMISSION_GATE_DB, {
+      id: crypto.randomUUID(),
+      targetKey: params.targetKey,
+      eventType: "discord_notification",
+      decision: params.decision,
+      summary: params.summary,
+    });
+  } catch (error) {
+    console.warn("submission gate discord notification audit failed", {
+      targetKey: params.targetKey,
+      error,
+    });
+  }
+}
+
+async function notifyGateDecision(
+  env: Env,
+  params: {
+    target: ReviewTarget;
+    targetKey: string;
+    decision: GateDecision;
+    status: string;
+    scope?: DirectContentScope | null;
+    validation?: {
+      summary?: string;
+      checks?: Array<{ name: string; status: string; details?: string }>;
+    } | null;
+    pull?: {
+      title?: string;
+      html_url?: string;
+      user?: { login?: string };
+    } | null;
+  },
+) {
+  if (params.decision.verdict === "ignore") return;
+  const notificationKey = notificationKeyForDecision({
+    target: params.target,
+    decision: params.decision,
+    status: params.status,
+  });
+  try {
+    const state = await getPrState(env.SUBMISSION_GATE_DB, {
+      repo: params.target.repoFullName,
+      number: params.target.number,
+    });
+    if (String(state?.lastNotificationKey || "") === notificationKey) return;
+
+    const result = await postDiscordDecisionNotification({
+      webhookUrl: env.DISCORD_SUBMISSION_WEBHOOK_URL,
+      repoFullName: params.target.repoFullName,
+      prNumber: params.target.number,
+      prTitle: params.pull?.title,
+      prUrl:
+        params.pull?.html_url ||
+        `https://github.com/${params.target.repoFullName}/pull/${params.target.number}`,
+      author: params.pull?.user?.login,
+      verdict: params.decision.verdict,
+      category: params.scope?.category,
+      changedFile: params.scope?.filePath,
+      ciSummary: validationSummaryForNotification(params.validation),
+      summary: params.decision.summary,
+    });
+
+    if (result.ok) {
+      await markPrNotificationSent(env.SUBMISSION_GATE_DB, {
+        repo: params.target.repoFullName,
+        number: params.target.number,
+        notificationKey,
+      });
+      await insertNotificationAuditSafe(env, {
+        targetKey: params.targetKey,
+        decision: "discord_notified",
+        summary: `${params.decision.verdict} notification sent.`,
+      });
+      return;
+    }
+
+    if (!result.skipped) {
+      console.warn("submission gate discord notification failed", {
+        targetKey: params.targetKey,
+        reason: result.reason,
+        status: result.status,
+      });
+      await insertNotificationAuditSafe(env, {
+        targetKey: params.targetKey,
+        decision: "discord_notification_failed",
+        summary: `${result.reason}${result.status ? ` (${result.status})` : ""}`,
+      });
+    }
+  } catch (error) {
+    console.warn("submission gate discord notification error", {
+      targetKey: params.targetKey,
+      error,
+    });
+  }
 }
 
 async function mergeAcceptedPullRequest(params: {
@@ -1803,8 +1959,36 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       );
       if (!token) return;
       const repo = parseRepo(target.repoFullName);
+      let pullForNotification: {
+        title?: string;
+        html_url?: string;
+        user?: { login?: string };
+        head?: { sha?: string };
+      } | null = null;
+      try {
+        pullForNotification = await getPullRequest({
+          token,
+          repo,
+          number: target.number,
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        if (!target.headSha && pullForNotification.head?.sha) {
+          target.headSha = pullForNotification.head.sha;
+        }
+      } catch (error) {
+        console.warn("submission gate could not refresh PR metadata", {
+          targetKey: message.targetKey,
+          error,
+        });
+      }
       let decision: GateDecision | null = null;
       let validationForPrivateReview: unknown = null;
+      let validationForNotification:
+        | {
+            summary?: string;
+            checks?: Array<{ name: string; status: string; details?: string }>;
+          }
+        | null = null;
       let contentScopeForPrivateReview: DirectContentScope | null = null;
       const reviewability = await directContentReviewabilityForPr({
         token,
@@ -1852,6 +2036,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           requiredStatusContexts: requiredStatusContexts(env),
           apiVersion: env.GITHUB_API_VERSION,
         });
+        validationForNotification = validation;
         if (!decision && validation.state === "pending") {
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
@@ -2030,6 +2215,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           apiVersion: env.GITHUB_API_VERSION,
         });
       }
+      if (decision.verdict !== "merge") {
+        await notifyGateDecision(env, {
+          target,
+          targetKey: message.targetKey,
+          decision,
+          status,
+          scope: contentScopeForPrivateReview,
+          validation: validationForNotification,
+          pull: pullForNotification,
+        });
+      }
       if (decision.verdict === "merge" && contentScopeForPrivateReview) {
         try {
           const mergeResult = await mergeAcceptedPullRequest({
@@ -2095,6 +2291,15 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             eventType: message.kind,
             decision: "merged",
             summary: mergedSummary,
+          });
+          await notifyGateDecision(env, {
+            target,
+            targetKey: message.targetKey,
+            decision: mergedDecision,
+            status: "merged",
+            scope: contentScopeForPrivateReview,
+            validation: validationForNotification,
+            pull: pullForNotification,
           });
         } catch (error) {
           if (isRetryableMergeError(error)) {
@@ -2175,6 +2380,15 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             eventType: message.kind,
             decision: "merge_failed",
             summary: manualDecision.summary,
+          });
+          await notifyGateDecision(env, {
+            target,
+            targetKey: message.targetKey,
+            decision: manualDecision,
+            status: "manual",
+            scope: contentScopeForPrivateReview,
+            validation: validationForNotification,
+            pull: pullForNotification,
           });
         }
       }

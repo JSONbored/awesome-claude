@@ -258,12 +258,27 @@ export async function getPrState(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         base_ref AS baseRef, status, verdict, verdict_summary AS verdictSummary,
         last_delivery_id AS lastDeliveryId,
+        last_notification_key AS lastNotificationKey,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE repo = ? AND number = ?`,
     )
     .bind(params.repo, params.number)
     .first<Record<string, unknown>>();
+}
+
+export async function markPrNotificationSent(
+  db: D1Database,
+  params: { repo: string; number: number; notificationKey: string },
+) {
+  await db
+    .prepare(
+      `UPDATE submission_prs
+       SET last_notification_key = ?, updated_at = ?
+       WHERE repo = ? AND number = ?`,
+    )
+    .bind(params.notificationKey, now(), params.repo, params.number)
+    .run();
 }
 
 export async function insertAudit(

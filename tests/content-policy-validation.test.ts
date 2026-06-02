@@ -10,20 +10,17 @@ function runContentPolicy(
   tmpDir: string,
   content: string,
   sourceType = "same_repo_direct",
+  files = [
+    {
+      filename: "content/tools/example-tool.mdx",
+      status: "added",
+      content,
+    },
+  ],
 ) {
   const filesJson = path.join(tmpDir, "files.json");
   const outputJson = path.join(tmpDir, "policy-output.json");
-  fs.writeFileSync(
-    filesJson,
-    JSON.stringify([
-      {
-        filename: "content/tools/example-tool.mdx",
-        status: "added",
-        content,
-      },
-    ]),
-    "utf8",
-  );
+  fs.writeFileSync(filesJson, JSON.stringify(files), "utf8");
 
   const args = [
     path.join(repoRoot, "scripts/ci/validate-content-policy.mjs"),
@@ -230,6 +227,117 @@ Example body.
     expect(output.failures).toEqual(
       expect.arrayContaining([
         expect.stringContaining("affiliate_referral_url"),
+      ]),
+    );
+  });
+
+  it("fails direct content PRs with category/path mismatch", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Guide
+category: tools
+description: Example mismatched category fixture.
+sourceUrl: https://github.com/example/example-guide
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/guides/example-guide.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("category_path_mismatch"),
+      ]),
+    );
+  });
+
+  it("fails external content PRs that set packageVerified", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example package verification abuse fixture.
+sourceUrl: https://github.com/example/example-mcp
+packageVerified: true
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("unsafe_package_verified_true"),
+      ]),
+    );
+  });
+
+  it("fails external content PRs that edit generated artifacts", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example Tool
+category: tools
+description: Example generated artifact fixture.
+sourceUrl: https://github.com/example/example-tool
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "added",
+        content,
+      },
+      {
+        filename: "apps/web/public/data/directory.json",
+        status: "modified",
+        content: "{}",
+      },
+      {
+        filename: "README.md",
+        status: "modified",
+        content: "# Edited README\n",
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("generated_registry_artifact_change"),
+        expect.stringContaining("generated_readme_change"),
       ]),
     );
   });

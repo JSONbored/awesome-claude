@@ -265,6 +265,9 @@ export async function getPullRequest(params: {
 }) {
   return githubJson<{
     number: number;
+    title?: string;
+    html_url?: string;
+    user?: { login?: string };
     draft?: boolean;
     base?: { ref?: string; repo?: { full_name?: string } };
     head?: {
