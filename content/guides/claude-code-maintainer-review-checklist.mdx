@@ -1,0 +1,95 @@
+---
+title: Claude Code Maintainer Review Checklist
+slug: claude-code-maintainer-review-checklist
+category: guides
+description: >-
+  A practical checklist for reviewing Claude Code agent outputs before merging
+  generated code, documentation, or content changes into a shared repository.
+cardDescription: Review Claude Code agent changes before merging.
+seoTitle: Claude Code Maintainer Review Checklist
+seoDescription: >-
+  Use this practical checklist to review Claude Code agent outputs before
+  merging generated code, documentation, or content changes.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+sourceUrl: "https://docs.anthropic.com/en/docs/claude-code"
+dateAdded: "2026-06-02"
+installable: false
+usageSnippet: >-
+  Review the diff, generated artifacts, tests, security assumptions, and user
+  impact before merging Claude Code agent work into a shared repository.
+prerequisites:
+  - Access to the pull request diff and the repository validation commands.
+  - Maintainer permission to request changes, close, or merge the reviewed PR.
+safetyNotes:
+  - This guide does not install software or run code by itself; it describes a review workflow for agent-authored repository changes.
+  - Treat any agent-authored subprocess execution, package install, credential handling, or generated artifact update as review-critical until validated by a maintainer.
+privacyNotes:
+  - Do not paste secrets, customer data, private repository names, or unpublished operating details into public review comments.
+  - When reviewing agent output, verify that logs, generated docs, and screenshots do not expose tokens, local paths, or private user data.
+tags:
+  - claude-code
+  - code-review
+  - maintainers
+  - agents
+keywords:
+  - claude code review checklist
+  - ai agent code review
+  - maintainer review workflow
+readingTime: 3
+difficultyScore: 28
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Use Claude Code like a fast contributor, not like an automatic merge button. A
+maintainer still needs to verify the scope, diff shape, generated artifacts,
+tests, security assumptions, and user-facing impact before accepting the work.
+
+## Review The Scope First
+
+Confirm the agent changed the files needed for the request and did not fold in
+unrelated cleanup. A strong agent change should be easy to summarize from the
+diff alone. If the branch mixes product changes, generated artifacts, dependency
+updates, and unrelated formatting, split it before review.
+
+## Check Generated Files
+
+Generated output should be reproducible from source. For content directories,
+the source entry should stay separate from registry projections, README output,
+search indexes, and static data feeds. If generated files are committed, verify
+the generator command and confirm the output is deterministic.
+
+## Validate The Behavior
+
+Run the narrowest relevant tests first, then broaden when shared code or public
+API behavior changed. A useful Claude Code handoff states what was run, what was
+not run, and what remains risky. Treat missing validation as a review finding,
+not as a minor paperwork issue.
+
+## Review Safety And Privacy
+
+Look for new network calls, token handling, file access, subprocess execution,
+dependency installs, and logging of user data. Agent-written code can be correct
+and still introduce an operational risk. When the change touches credentials,
+package execution, or user content, require a clear safety note in the PR.
+
+## Check Public Text
+
+Docs and content should be specific, source-backed, and useful without sounding
+like a listing or advertisement. Remove inflated claims, vague marketing copy,
+and unsupported compatibility statements. If a tool is commercial or requires a
+paid account, disclose that plainly instead of hiding it in the body text.
+
+## Merge Decision
+
+Approve when the source diff is focused, validation is clean, generated output is
+explained, and the change improves the repository without adding hidden review
+work. Request changes when the idea is good but the submission needs better
+source support, clearer metadata, or a narrower diff. Close when the submission
+is promotional, unsupported, unsafe, or outside the repository's content model.
