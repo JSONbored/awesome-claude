@@ -4,6 +4,7 @@ import {
   assertSafeImportWrite,
   assertAllowedImportRepo,
   githubUserAgent,
+  importContentPaths,
   maintainerGenerationCommandLabels,
   redactSensitiveOutput,
   resolveValidationChecks,
@@ -104,6 +105,23 @@ describe("submission gate import runner safety", () => {
     expect(() => assertSafeImportWrite("content/mcp/package.json")).toThrow(
       "package manager or workspace files",
     );
+  });
+
+  it("stages only source content paths from accepted import jobs", () => {
+    expect(
+      importContentPaths([
+        { path: "content/guides/example.mdx" },
+        { path: "content/guides/example.mdx" },
+        { path: "content/mcp/example-server.mdx" },
+      ]),
+    ).toEqual(["content/guides/example.mdx", "content/mcp/example-server.mdx"]);
+
+    expect(() =>
+      importContentPaths([
+        { path: "content/guides/example.mdx" },
+        { path: "apps/web/public/data/directory-index.json" },
+      ]),
+    ).toThrow("source content files");
   });
 
   it("allows only fixed validation check keys", () => {

@@ -307,6 +307,46 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('status: "import_pr_open"');
   });
 
+  it("keeps one-shot gate verdicts from being overwritten by later check events", () => {
+    const source = readWorkerSource();
+    const enqueueIndex = source.indexOf("async function enqueueReviewTarget");
+    const enqueueReadIndex = source.indexOf(
+      "getPrState(env.SUBMISSION_GATE_DB",
+      enqueueIndex,
+    );
+    const enqueueWriteIndex = source.indexOf(
+      "await upsertPrState(env.SUBMISSION_GATE_DB",
+      enqueueIndex,
+    );
+    const reviewIndex = source.indexOf('if (message.kind === "review_pr")');
+    const reviewReadIndex = source.indexOf(
+      "getPrState(env.SUBMISSION_GATE_DB",
+      reviewIndex,
+    );
+    const validationIndex = source.indexOf(
+      "getCommitValidationState({",
+      reviewIndex,
+    );
+
+    expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
+    expect(source).toContain("function hasTerminalGateDecision");
+    expect(source).toContain("forceRecheck = false");
+    expect(source).toContain(
+      "payload: { eventName, deliveryId, target, webhook, forceRecheck }",
+    );
+    expect(source).toContain(
+      'String(message.payload.eventName || "") === "issue_comment"',
+    );
+    expect(source).toContain('String(state.status || "") === "import_pr_open"');
+    expect(source).toContain(
+      "Skipped because this submission already has a terminal gate decision.",
+    );
+    expect(enqueueReadIndex).toBeGreaterThan(enqueueIndex);
+    expect(enqueueWriteIndex).toBeGreaterThan(enqueueReadIndex);
+    expect(reviewReadIndex).toBeGreaterThan(reviewIndex);
+    expect(validationIndex).toBeGreaterThan(reviewReadIndex);
+  });
+
   it("ignores maintainer-owned import PR branches during gate review", () => {
     const source = readWorkerSource();
 

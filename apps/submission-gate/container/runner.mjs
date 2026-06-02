@@ -328,7 +328,18 @@ export function assertSafeImportWrite(filePath) {
       "Import job cannot modify package manager or workspace files.",
     );
   }
-  return filePath;
+  return normalized;
+}
+
+export function importContentPaths(files) {
+  if (!Array.isArray(files)) return [];
+  return [
+    ...new Set(
+      files
+        .map((file) => (file?.path ? assertSafeImportWrite(file.path) : ""))
+        .filter(Boolean),
+    ),
+  ].sort();
 }
 
 function gitAuthHeader(token) {
@@ -447,11 +458,11 @@ async function handleImport(job) {
     const repoDir = path.join(workdir, "repo");
     await run("git", ["checkout", "-b", safeBranchName], { cwd: repoDir });
 
+    const stagedImportPaths = importContentPaths(files);
     for (const file of files) {
       if (!file.path || typeof file.content !== "string") {
         throw new Error("Import file is missing path or content.");
       }
-      assertSafeImportWrite(file.path);
       const absolutePath = safeImportPath(repoDir, file.path);
       await mkdir(path.dirname(absolutePath), { recursive: true });
       await writeFile(absolutePath, file.content, "utf8");
@@ -465,7 +476,9 @@ async function handleImport(job) {
       await runValidationCheck(check, repoDir);
     }
 
-    await run("git", ["add", "."], { cwd: repoDir });
+    await run("git", ["add", "--", ...new Set(stagedImportPaths)], {
+      cwd: repoDir,
+    });
     await run(
       "git",
       ["commit", "-m", title || "feat(content): import accepted submission"],

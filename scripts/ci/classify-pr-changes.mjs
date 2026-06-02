@@ -45,6 +45,7 @@ function changedFiles() {
 
 const files = changedFiles();
 const all = forceFull;
+const headRef = process.env.GITHUB_HEAD_REF || process.env.HEAD_REF || "";
 
 function touches(...patterns) {
   if (all) return true;
@@ -70,12 +71,20 @@ function contentCategoriesFromFiles() {
 
 const contentCategories = contentCategoriesFromFiles();
 const contentCategoryTouched = contentCategories.length > 0;
+const sourceContentOnly =
+  eventName === "pull_request" &&
+  !all &&
+  files.length > 0 &&
+  files.every((file) => /^content\/[^/]+\/[^/]+\.mdx$/i.test(file));
+const maintainerImport =
+  sourceContentOnly && /^automation\/submission-pr-\d+-/i.test(headRef);
 const directSubmission =
   eventName === "pull_request" &&
   !all &&
   files.length === 1 &&
   contentCategories.length === 1 &&
-  /^content\/[^/]+\/[^/]+\.mdx$/i.test(files[0]);
+  /^content\/[^/]+\/[^/]+\.mdx$/i.test(files[0]) &&
+  !maintainerImport;
 const contentValidationInfra = touches(
   /^examples\/content\//,
   /^\.github\/ISSUE_TEMPLATE\//,
@@ -100,6 +109,8 @@ const submissionGateInfra = touches(
 
 const flags = {
   direct_submission: directSubmission,
+  maintainer_import: maintainerImport,
+  source_content_only: sourceContentOnly,
   content: contentCategoryTouched || contentValidationInfra,
   content_config: contentValidationInfra,
   registry:
