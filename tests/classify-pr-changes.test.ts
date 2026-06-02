@@ -95,10 +95,33 @@ describe("PR change classifier", () => {
       content_agents: "true",
       direct_submission: "true",
       source_content_only: "true",
+      readme_only: "false",
       maintainer_import: "false",
       registry: "false",
       raycast: "false",
       web: "false",
+    });
+  });
+
+  it("routes README-only refresh PRs through registry contract validation without content review", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    fs.writeFileSync(path.join(cwd, "README.md"), "# refreshed\n");
+    git(cwd, ["add", "README.md"]);
+    git(cwd, ["commit", "-m", "refresh readme"]);
+
+    const outputs = runClassifier(cwd, baseSha, {
+      GITHUB_HEAD_REF: "automation/readme-refresh",
+    });
+    expect(outputs).toMatchObject({
+      readme_only: "true",
+      direct_submission: "false",
+      source_content_only: "false",
+      content: "false",
+      registry: "true",
+      docs: "true",
+      web: "false",
+      raycast: "false",
     });
   });
 

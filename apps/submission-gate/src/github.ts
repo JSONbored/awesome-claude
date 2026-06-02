@@ -26,6 +26,46 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
     color: "0e8a16",
     description: "Private submission gate merged this content PR",
   },
+  "category:agents": {
+    color: "1d76db",
+    description: "Submission category: agents",
+  },
+  "category:collections": {
+    color: "1d76db",
+    description: "Submission category: collections",
+  },
+  "category:commands": {
+    color: "1d76db",
+    description: "Submission category: commands",
+  },
+  "category:guides": {
+    color: "1d76db",
+    description: "Submission category: guides",
+  },
+  "category:hooks": {
+    color: "1d76db",
+    description: "Submission category: hooks",
+  },
+  "category:mcp": {
+    color: "1d76db",
+    description: "Submission category: MCP servers",
+  },
+  "category:rules": {
+    color: "1d76db",
+    description: "Submission category: rules",
+  },
+  "category:skills": {
+    color: "1d76db",
+    description: "Submission category: skills",
+  },
+  "category:statuslines": {
+    color: "1d76db",
+    description: "Submission category: statuslines",
+  },
+  "category:tools": {
+    color: "1d76db",
+    description: "Submission category: tools",
+  },
   "import-pr-open": {
     color: "0e8a16",
     description: "Legacy: a maintainer-owned import PR exists",

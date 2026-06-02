@@ -108,6 +108,7 @@ describe("PR preview artifact validation flow", () => {
 
     expect(workflow).toContain("maintainer_import:");
     expect(workflow).toContain("source_content_only:");
+    expect(workflow).toContain("readme_only:");
     expect(registryBlock).toContain(
       "needs.classify-pr.outputs.source_content_only != 'true'",
     );
@@ -123,6 +124,23 @@ describe("PR preview artifact validation flow", () => {
     );
     expect(registryBlock).toContain("apps/web/public/data/.*");
     expect(registryBlock).toContain("apps/web/src/generated/.*");
+  });
+
+  it("lets README-only refresh PRs validate generated outputs without committing them", () => {
+    const workflow = readContentValidationWorkflow();
+    const registryBlock =
+      workflow.match(/\n  validate-registry:[\s\S]*?\n  validate-web:/)?.[0] ||
+      "";
+
+    expect(registryBlock).toContain(
+      "needs.classify-pr.outputs.readme_only != 'true'",
+    );
+    expect(registryBlock).toContain(
+      "Verify README-only refresh leaves generated artifacts as build outputs",
+    );
+    expect(registryBlock).toContain(
+      "Generated artifact changes are build-time outputs for this README refresh",
+    );
   });
 
   it("does not persist GitHub credentials in the submission-gate validation checkout", () => {

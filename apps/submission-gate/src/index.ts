@@ -2,6 +2,7 @@ import { Container } from "@cloudflare/containers";
 import { DurableObject } from "cloudflare:workers";
 
 import {
+  CONTENT_CATEGORY_LABEL_PREFIX,
   DEFAULT_REVIEW_MARKER,
   LABELS,
   PILOT_LABEL,
@@ -157,6 +158,7 @@ const TRUSTED_RECHECK_ASSOCIATIONS = new Set([
 ]);
 const MAINTAINER_IMPORT_BRANCH_PREFIX = "automation/submission-pr-";
 const DECISION_LABELS = [
+  LABELS.underReview,
   LABELS.requestChanges,
   LABELS.manual,
   LABELS.close,
@@ -164,6 +166,19 @@ const DECISION_LABELS = [
   LABELS.importOpen,
   LABELS.superseded,
 ];
+const CONTENT_CATEGORY_LABELS = [
+  "agents",
+  "collections",
+  "commands",
+  "guides",
+  "hooks",
+  "mcp",
+  "rules",
+  "skills",
+  "statuslines",
+  "tools",
+].map(categoryLabel);
+const RECONCILED_GATE_LABELS = [...DECISION_LABELS, ...CONTENT_CATEGORY_LABELS];
 
 type ReviewTarget = {
   repoFullName: string;
@@ -181,6 +196,11 @@ type DirectContentScope = {
   slug: string;
   status: string;
 };
+
+type DirectContentReviewability =
+  | { kind: "review"; scope: DirectContentScope }
+  | { kind: "scope_failure"; decision: GateDecision; category?: string }
+  | { kind: "ignore"; reason: string };
 
 function isMaintainerImportRef(ref: string | undefined) {
   return String(ref || "").startsWith(MAINTAINER_IMPORT_BRANCH_PREFIX);
@@ -585,45 +605,11 @@ async function installationTokenForInstallationId(
   });
 }
 
-async function installationTokenForPayload(
+async function applyUnderReviewToTarget(
   env: Env,
-  payload: Record<string, unknown>,
+  target: ReviewTarget,
+  scope?: DirectContentScope,
 ) {
-  return installationTokenForInstallationId(
-    env,
-    installationIdFromPayload(payload),
-  );
-}
-
-async function applyUnderReview(env: Env, payload: Record<string, unknown>) {
-  const pull = payload.pull_request as
-    | {
-        number?: number;
-        base?: { repo?: { full_name?: string } };
-      }
-    | undefined;
-  if (!pull?.number || !pull.base?.repo?.full_name) return;
-  const token = await installationTokenForPayload(env, payload);
-  if (!token) return;
-  const repo = parseRepo(pull.base.repo.full_name);
-  await addLabels({
-    token,
-    repo,
-    issueNumber: pull.number,
-    labels: [LABELS.underReview],
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-  await upsertMarkerComment({
-    token,
-    repo,
-    issueNumber: pull.number,
-    marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-    body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
-    apiVersion: env.GITHUB_API_VERSION,
-  });
-}
-
-async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
   const token = await installationTokenForInstallationId(
     env,
     Number(target.installationId || 0),
@@ -634,7 +620,7 @@ async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
     token,
     repo,
     issueNumber: target.number,
-    labels: [LABELS.underReview],
+    labels: [LABELS.underReview, ...gateLabelsForCategory(scope?.category)],
     apiVersion: env.GITHUB_API_VERSION,
   });
   await upsertMarkerComment({
@@ -643,6 +629,29 @@ async function applyUnderReviewToTarget(env: Env, target: ReviewTarget) {
     issueNumber: target.number,
     marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
     body: markerComment(undefined, env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER),
+    apiVersion: env.GITHUB_API_VERSION,
+  });
+}
+
+async function directContentReviewabilityForTarget(
+  env: Env,
+  target: ReviewTarget,
+) {
+  const token = await installationTokenForInstallationId(
+    env,
+    Number(target.installationId || 0),
+  );
+  if (!token) {
+    return {
+      kind: "ignore" as const,
+      reason: "No installation token available for PR file inspection.",
+    };
+  }
+  const repo = parseRepo(target.repoFullName);
+  return directContentReviewabilityForPr({
+    token,
+    repo,
+    number: target.number,
     apiVersion: env.GITHUB_API_VERSION,
   });
 }
@@ -747,50 +756,101 @@ function importContentPathParts(filePath: string) {
   };
 }
 
-async function directContentScopeForPr(params: {
+function categoryLabel(category: string) {
+  return `${CONTENT_CATEGORY_LABEL_PREFIX}${category}`;
+}
+
+function gateLabelsForCategory(category?: string) {
+  return category ? [categoryLabel(category)] : [];
+}
+
+function classifyPullRequestFilesForContentReview(
+  files: Array<{ filename?: string; status?: string }>,
+): DirectContentReviewability {
+  const entryFiles = files
+    .map((file) => ({
+      file,
+      filePath: String(file.filename || ""),
+      pathParts: importContentPathParts(String(file.filename || "")),
+    }))
+    .filter((item) => Boolean(item.pathParts));
+
+  if (entryFiles.length === 0) {
+    return {
+      kind: "ignore",
+      reason: "No source content entry file changed.",
+    };
+  }
+
+  if (files.length !== 1 || entryFiles.length !== 1) {
+    return {
+      kind: "scope_failure",
+      category: entryFiles[0]?.pathParts?.category,
+      decision: scopeFailureDecision(
+        "Direct content submissions must change exactly one source content file and no generated artifacts, README, workflows, scripts, packages, or additional entries.",
+      ),
+    };
+  }
+
+  const entry = entryFiles[0];
+  const status = String(entry.file.status || "");
+  if (status === "removed") {
+    return {
+      kind: "scope_failure",
+      category: entry.pathParts?.category,
+      decision: scopeFailureDecision(
+        "Direct content submissions cannot remove content files.",
+      ),
+    };
+  }
+
+  return {
+    kind: "review",
+    scope: {
+      filePath: entry.filePath,
+      category: entry.pathParts!.category,
+      slug: entry.pathParts!.slug,
+      status,
+    },
+  };
+}
+
+async function directContentReviewabilityForPr(params: {
   token: string;
   repo: ReturnType<typeof parseRepo>;
   number: number;
   apiVersion?: string;
-}): Promise<DirectContentScope> {
+}): Promise<DirectContentReviewability> {
   const files = await listPullRequestFiles({
     token: params.token,
     repo: params.repo,
     number: params.number,
     apiVersion: params.apiVersion,
   });
-  if (files.length !== 1) {
-    throw new Error(
-      "Direct content submissions must change exactly one source content file.",
-    );
-  }
+  return classifyPullRequestFilesForContentReview(files);
+}
 
-  const file = files[0];
-  const filePath = String(file.filename || "");
-  const pathParts = importContentPathParts(filePath);
-  if (!pathParts || !pathParts.slug) {
-    throw new Error(
-      "Direct content submissions must change one content/<category>/<slug>.mdx file.",
-    );
+async function directContentScopeForPr(params: {
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  number: number;
+  apiVersion?: string;
+}): Promise<DirectContentScope> {
+  const classification = await directContentReviewabilityForPr(params);
+  if (classification.kind === "review") return classification.scope;
+  if (classification.kind === "scope_failure") {
+    throw new Error(classification.decision.summary);
   }
-  const status = String(file.status || "");
-  if (status === "removed") {
-    throw new Error("Direct content submissions cannot remove content files.");
-  }
-
-  return {
-    filePath,
-    category: pathParts.category,
-    slug: pathParts.slug,
-    status,
-  };
+  throw new Error(classification.reason);
 }
 
 function scopeFailureDecision(error: unknown): GateDecision {
   const message =
     error instanceof Error
       ? error.message
-      : "Direct content scope validation failed.";
+      : typeof error === "string" && error.trim()
+        ? error.trim()
+        : "Direct content scope validation failed.";
   return {
     verdict: "close" as const,
     summary: [
@@ -1168,7 +1228,16 @@ async function githubWebhookRoute(
     }
     if (!isPilotPr(payload, env))
       return json({ ok: true, ignored: true, reason: "outside_pilot" });
-    ctx.waitUntil(applyUnderReview(env, payload));
+    const reviewability = await directContentReviewabilityForTarget(
+      env,
+      target,
+    );
+    if (reviewability.kind === "ignore") {
+      return json({ ok: true, ignored: true, reason: reviewability.reason });
+    }
+    const reviewScope =
+      reviewability.kind === "review" ? reviewability.scope : undefined;
+    ctx.waitUntil(applyUnderReviewToTarget(env, target, reviewScope));
     await enqueueReviewTarget(
       env,
       target,
@@ -1185,7 +1254,16 @@ async function githubWebhookRoute(
   if (eventName === "issue_comment") {
     const target = await targetFromIssueCommentRecheck(env, payload);
     if (!target) return json({ ok: true, ignored: true });
-    await applyUnderReviewToTarget(env, target);
+    const reviewability = await directContentReviewabilityForTarget(
+      env,
+      target,
+    );
+    if (reviewability.kind === "ignore") {
+      return json({ ok: true, ignored: true, reason: reviewability.reason });
+    }
+    const reviewScope =
+      reviewability.kind === "review" ? reviewability.scope : undefined;
+    await applyUnderReviewToTarget(env, target, reviewScope);
     await enqueueReviewTarget(
       env,
       target,
@@ -1203,6 +1281,11 @@ async function githubWebhookRoute(
     const targets = await targetsFromValidationWebhook(env, eventName, payload);
     let queued = 0;
     for (const target of targets) {
+      const reviewability = await directContentReviewabilityForTarget(
+        env,
+        target,
+      );
+      if (reviewability.kind === "ignore") continue;
       if (
         await enqueueReviewTarget(env, target, deliveryId, eventName, payload)
       ) {
@@ -1390,6 +1473,43 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       let decision: GateDecision | null = null;
       let validationForPrivateReview: unknown = null;
       let contentScopeForPrivateReview: DirectContentScope | null = null;
+      const reviewability = await directContentReviewabilityForPr({
+        token,
+        repo,
+        number: target.number,
+        apiVersion: env.GITHUB_API_VERSION,
+      });
+      if (reviewability.kind === "ignore") {
+        await removeLabels({
+          token,
+          repo,
+          issueNumber: target.number,
+          labels: RECONCILED_GATE_LABELS,
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        await upsertPrState(env.SUBMISSION_GATE_DB, {
+          repo: target.repoFullName,
+          number: target.number,
+          headRepo: target.headRepo,
+          headRef: target.headRef,
+          baseRef: target.baseRef || env.PILOT_BASE_REF,
+          status: "ignored",
+          deliveryId: String(message.payload.deliveryId || ""),
+        });
+        await insertAudit(env.SUBMISSION_GATE_DB, {
+          id: crypto.randomUUID(),
+          targetKey: message.targetKey,
+          eventType: message.kind,
+          decision: "ignored",
+          summary: reviewability.reason,
+        });
+        return;
+      }
+      if (reviewability.kind === "scope_failure") {
+        decision = reviewability.decision;
+      } else {
+        contentScopeForPrivateReview = reviewability.scope;
+      }
       try {
         const validation = await getCommitValidationState({
           token,
@@ -1399,7 +1519,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           requiredStatusContexts: requiredStatusContexts(env),
           apiVersion: env.GITHUB_API_VERSION,
         });
-        if (validation.state === "pending") {
+        if (!decision && validation.state === "pending") {
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
             number: target.number,
@@ -1418,24 +1538,14 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           });
           return;
         }
-        if (validation.state === "failed") {
+        if (!decision && validation.state === "failed") {
           decision = validationGateDecision(validation);
-        } else {
+        } else if (!decision) {
           validationForPrivateReview = {
             state: validation.state,
             summary: validation.summary,
             checks: validation.checks,
           };
-          try {
-            contentScopeForPrivateReview = await directContentScopeForPr({
-              token,
-              repo,
-              number: target.number,
-              apiVersion: env.GITHUB_API_VERSION,
-            });
-          } catch (error) {
-            decision = scopeFailureDecision(error);
-          }
         }
       } catch {
         decision = defaultManualDecision(
@@ -1485,7 +1595,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       }
       const status =
         decision.verdict === "merge" ? "merge_accepted" : decision.verdict;
-      const labelsToApply =
+      const categoryLabels = gateLabelsForCategory(
+        contentScopeForPrivateReview?.category ||
+          (reviewability.kind === "scope_failure"
+            ? reviewability.category
+            : undefined),
+      );
+      const decisionLabelsToApply =
         decision.verdict === "merge"
           ? decision.labels.filter(
               (label) =>
@@ -1494,6 +1610,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
                 label !== LABELS.superseded,
             )
           : decision.labels;
+      const labelsToApply = [
+        ...new Set([...decisionLabelsToApply, ...categoryLabels]),
+      ];
 
       await insertAudit(env.SUBMISSION_GATE_DB, {
         id: crypto.randomUUID(),
@@ -1516,7 +1635,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         token,
         repo,
         issueNumber: target.number,
-        labels: DECISION_LABELS.filter(
+        labels: RECONCILED_GATE_LABELS.filter(
           (label) => !labelsToApply.includes(label),
         ),
         apiVersion: env.GITHUB_API_VERSION,
@@ -1572,7 +1691,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           const mergedDecision: GateDecision = {
             ...decision,
             summary: mergedSummary,
-            labels: [LABELS.merged],
+            labels: [LABELS.merged, ...categoryLabels],
           };
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
@@ -1588,14 +1707,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter((label) => label !== LABELS.merged),
+            labels: RECONCILED_GATE_LABELS.filter(
+              (label) =>
+                label !== LABELS.merged && !categoryLabels.includes(label),
+            ),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
             token,
             repo,
             issueNumber: target.number,
-            labels: [LABELS.merged],
+            labels: [LABELS.merged, ...categoryLabels],
             apiVersion: env.GITHUB_API_VERSION,
           });
           await upsertMarkerComment({
@@ -1665,14 +1787,17 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter((label) => label !== LABELS.manual),
+            labels: RECONCILED_GATE_LABELS.filter(
+              (label) =>
+                label !== LABELS.manual && !categoryLabels.includes(label),
+            ),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
             token,
             repo,
             issueNumber: target.number,
-            labels: manualDecision.labels,
+            labels: [...manualDecision.labels, ...categoryLabels],
             apiVersion: env.GITHUB_API_VERSION,
           });
           await upsertMarkerComment({
