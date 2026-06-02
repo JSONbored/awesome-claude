@@ -890,7 +890,16 @@ jobs:
         if: ${{ steps.preview-url.outputs.base-url != '' }}
         env:
           MCP_ENDPOINT_URL: ${{ steps.preview-url.outputs.base-url }}/api/mcp
-        run: pnpm validate:mcp-endpoint
+        run: |
+          deadline=$((SECONDS + 600))
+          until pnpm validate:mcp-endpoint; do
+            if [ "$SECONDS" -ge "$deadline" ]; then
+              echo "::error::Deployed preview MCP endpoint did not satisfy the endpoint contract before timeout."
+              exit 1
+            fi
+            echo "Preview MCP endpoint contract not ready yet. Waiting 15s..."
+            sleep 15
+          done
 
   required-pr-gate:
     name: required-pr-gate

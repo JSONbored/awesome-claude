@@ -114,12 +114,7 @@ const GATE_VERDICTS = new Set<GateVerdict>([
   "manual",
   "ignore",
 ]);
-const TERMINAL_GATE_VERDICTS = new Set([
-  "import",
-  "close",
-  "manual",
-  "ignore",
-]);
+const TERMINAL_GATE_VERDICTS = new Set(["import", "close", "manual", "ignore"]);
 
 const PUBLIC_DRAFT_FIELD_REDACTIONS = new Set([
   "address",
@@ -1495,7 +1490,8 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           ? decision.labels.filter(
               (label) =>
                 label !== LABELS.merged &&
-                label !== LABELS.importOpen && label !== LABELS.superseded,
+                label !== LABELS.importOpen &&
+                label !== LABELS.superseded,
             )
           : decision.labels;
 
@@ -1592,9 +1588,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter(
-              (label) => label !== LABELS.merged,
-            ),
+            labels: DECISION_LABELS.filter((label) => label !== LABELS.merged),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
@@ -1671,9 +1665,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             token,
             repo,
             issueNumber: target.number,
-            labels: DECISION_LABELS.filter(
-              (label) => label !== LABELS.manual,
-            ),
+            labels: DECISION_LABELS.filter((label) => label !== LABELS.manual),
             apiVersion: env.GITHUB_API_VERSION,
           });
           await addLabels({
