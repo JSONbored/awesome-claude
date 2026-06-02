@@ -43,7 +43,11 @@ function createFixtureRepo() {
   };
 }
 
-function runClassifier(cwd: string, baseSha: string) {
+function runClassifier(
+  cwd: string,
+  baseSha: string,
+  extraEnv: Record<string, string> = {},
+) {
   const outputPath = path.join(cwd, "github-output.txt");
   execFileSync(
     "node",
@@ -52,6 +56,7 @@ function runClassifier(cwd: string, baseSha: string) {
       cwd,
       env: {
         ...process.env,
+        ...extraEnv,
         BASE_SHA: baseSha,
         GITHUB_EVENT_NAME: "pull_request",
         GITHUB_OUTPUT: outputPath,
@@ -87,36 +92,35 @@ describe("PR change classifier", () => {
       content: "true",
       content_agents: "true",
       direct_submission: "true",
+      source_content_only: "true",
+      maintainer_import: "false",
       registry: "false",
       raycast: "false",
       web: "false",
     });
   });
 
-  it("routes maintainer content imports through artifact validation lanes", () => {
+  it("routes maintainer content imports through artifact validation lanes without generated files", () => {
     const { cwd, baseSha } = createFixtureRepo();
 
     const contentDir = path.join(cwd, "content", "agents");
-    const artifactDir = path.join(cwd, "apps", "web", "public", "data");
     fs.mkdirSync(contentDir, { recursive: true });
-    fs.mkdirSync(artifactDir, { recursive: true });
     fs.writeFileSync(
       path.join(contentDir, "example.mdx"),
       "---\ntitle: Example\n---\n",
     );
-    fs.writeFileSync(path.join(artifactDir, "registry.json"), "[]\n");
-    git(cwd, [
-      "add",
-      "content/agents/example.mdx",
-      "apps/web/public/data/registry.json",
-    ]);
+    git(cwd, ["add", "content/agents/example.mdx"]);
     git(cwd, ["commit", "-m", "import content entry"]);
 
-    const outputs = runClassifier(cwd, baseSha);
+    const outputs = runClassifier(cwd, baseSha, {
+      GITHUB_HEAD_REF: "automation/submission-pr-624-example",
+    });
     expect(outputs).toMatchObject({
       content: "true",
       content_agents: "true",
       direct_submission: "false",
+      maintainer_import: "true",
+      source_content_only: "true",
       registry: "true",
       raycast: "true",
       web: "true",
