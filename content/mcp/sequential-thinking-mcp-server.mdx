@@ -1,0 +1,169 @@
+---
+title: Sequential Thinking MCP Server for Claude
+slug: sequential-thinking-mcp-server
+category: mcp
+description: >-
+  Official reference MCP server that gives Claude a structured sequential
+  thinking tool for breaking complex problems into ordered, revisable thought
+  steps, all processed locally with no external calls.
+cardDescription: >-
+  Official reference MCP server that adds a structured sequential thinking tool
+  for Claude to break problems into ordered, revisable reasoning steps.
+seoTitle: Sequential Thinking MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Sequential Thinking MCP server for structured,
+  step-by-step reasoning. Break complex problems into ordered thoughts that can
+  be revised and branched, processed locally with no external requests.
+author: Model Context Protocol
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://www.npmjs.com/package/@modelcontextprotocol/server-sequential-thinking"
+repoUrl: "https://github.com/modelcontextprotocol/servers"
+installable: true
+installCommand: "claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking"
+usageSnippet: "claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking"
+copySnippet: |-
+  {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  }
+configSnippet: |-
+  {
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - Claude Code or Claude Desktop with MCP support
+tags:
+  - reasoning
+  - planning
+  - problem-solving
+  - reference
+  - official
+keywords:
+  - sequential thinking mcp
+  - structured reasoning mcp
+  - step by step problem solving
+  - chain of thought tool
+  - reference mcp server
+safetyNotes:
+  - >-
+    Provides a structured reasoning scaffold only; it does not access the
+    network, read or write files, run shell commands, or use credentials.
+  - >-
+    Runs locally as an stdio process, so its effect is limited to organizing the
+    model's reasoning steps during a session.
+privacyNotes:
+  - >-
+    The thought steps it structures stay within the local MCP session and are
+    not sent to any external service by this server.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Sequential Thinking is one of the official Model Context Protocol reference servers. It gives Claude a dedicated tool for working through a problem in explicit, ordered steps: laying out a thought, revising an earlier one, branching to explore alternatives, and tracking how many steps remain. Rather than asking the model to reason in a single pass, the server provides a structured scaffold that encourages deliberate, reviewable problem-solving. It performs no external actions, so it is a safe, low-overhead way to improve how Claude approaches complex or multi-step tasks.
+
+## Features
+
+- A structured thinking tool that organizes reasoning into ordered, numbered steps.
+- Support for revising earlier thoughts as understanding improves.
+- The ability to branch and explore alternative lines of reasoning.
+- Explicit tracking of progress, including how many steps are expected.
+- Runs locally as a standard stdio MCP server with no network, file, or credential access.
+- Maintained as part of the official Model Context Protocol reference servers.
+
+## Use Cases
+
+- Work through complex, multi-step problems more deliberately.
+- Plan an implementation before writing code by laying out ordered steps.
+- Explore alternative approaches by branching reasoning paths.
+- Revisit and revise an earlier assumption mid-analysis.
+- Add a lightweight, safe reasoning aid to a Claude workflow.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Run: `claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking`
+3. Verify the server is registered: `claude mcp list`
+4. Ask Claude to work through a multi-step problem to see the structured steps.
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the Sequential Thinking server to the `mcpServers` section using the configuration below.
+3. Restart Claude Desktop.
+4. Confirm the server appears and ask Claude to reason through a problem step by step.
+
+## Configuration
+
+```json
+{
+  "sequential-thinking": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+  }
+}
+```
+
+## Examples
+
+### Plan before implementing
+
+Ask Claude to think through the approach in ordered steps.
+
+```text
+"Use sequential thinking to plan how to refactor this module before writing any code."
+```
+
+### Work through a tricky problem
+
+Encourage deliberate, step-by-step analysis.
+
+```text
+"Reason through this scheduling problem step by step, revising earlier steps if needed."
+```
+
+### Explore alternatives
+
+Branch the reasoning to compare options.
+
+```text
+"Use sequential thinking to compare two approaches to caching and explain the trade-offs."
+```
+
+## Security
+
+- The server is a reasoning scaffold only. It does not access the network, read or write files, execute shell commands, or use credentials.
+- It runs locally as an stdio process, so its impact is limited to structuring the model's reasoning during the session.
+- The thought steps it organizes stay within the local MCP session and are not transmitted anywhere by this server.
+- As with any MCP server, install it from the official package source shown above.
+
+## Troubleshooting
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y @modelcontextprotocol/server-sequential-thinking` from resolving.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add sequential-thinking -- npx -y @modelcontextprotocol/server-sequential-thinking`, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in.
+
+### Claude does not use the thinking tool
+
+Add an explicit instruction such as "use sequential thinking" to the prompt. The model decides when to call the tool, so a nudge helps on tasks where it would otherwise answer in a single pass.
+
+### Steps seem to stop early
+
+The tool tracks an expected number of steps but can extend or revise them. Ask Claude to continue reasoning or to add steps if the analysis feels incomplete.
