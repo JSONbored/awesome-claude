@@ -3,6 +3,17 @@ import fs from "node:fs";
 import { pathToFileURL } from "node:url";
 
 const githubUrlPattern = /^https:\/\/github\.com\//i;
+const blockedPreviewHosts = new Set([
+  "app.coderabbit.ai",
+  "canary.discord.com",
+  "coderabbit.ai",
+  "discord.com",
+  "discordapp.com",
+  "ptb.discord.com",
+  "superagent.sh",
+]);
+const nonDeploymentSourcePattern =
+  /(?:coderabbit|superagent|contributor trust|pipelock|codeql|trunk|security scan|repo scan)/i;
 
 export function normalizeBaseUrl(value) {
   const trimmed = String(value || "").trim();
@@ -24,6 +35,15 @@ export function selectPreviewUrl(candidates) {
     const url = normalizeBaseUrl(candidate?.url || candidate);
     if (!url) continue;
     if (githubUrlPattern.test(url)) continue;
+    if (nonDeploymentSourcePattern.test(String(candidate?.source || ""))) {
+      continue;
+    }
+    try {
+      const parsed = new URL(url);
+      if (blockedPreviewHosts.has(parsed.hostname.toLowerCase())) continue;
+    } catch {
+      continue;
+    }
     return {
       url,
       source: candidate?.source || "candidate",

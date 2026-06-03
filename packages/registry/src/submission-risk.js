@@ -10,7 +10,7 @@ import {
   SUBMISSION_RISK_LOW_LABEL,
   SUBMISSION_RISK_MEDIUM_LABEL,
 } from "./submission-labels.js";
-import matter from "gray-matter";
+import { parseSafeFrontmatter } from "./frontmatter.js";
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
 export const SUBMISSION_RISK_COMMENT_MARKER = "<!-- submission-risk-report -->";
@@ -30,17 +30,6 @@ const RISK_LABEL_BY_TIER = {
   medium: SUBMISSION_RISK_MEDIUM_LABEL,
   high: SUBMISSION_RISK_HIGH_LABEL,
   critical: SUBMISSION_RISK_HIGH_LABEL,
-};
-
-const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
-  "Executable JavaScript frontmatter is not allowed in submission risk analysis";
-
-const SAFE_MATTER_OPTIONS = {
-  engines: {
-    javascript() {
-      throw new Error(UNSAFE_FRONTMATTER_LANGUAGE_ERROR);
-    },
-  },
 };
 
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
@@ -236,9 +225,8 @@ function stringList(value) {
 }
 
 function parseContentFrontmatter(value) {
-  const content = String(value ?? "").replace(/^\uFEFF/, "");
   try {
-    const parsed = matter(content, SAFE_MATTER_OPTIONS);
+    const parsed = parseSafeFrontmatter(value);
     return { data: parsed.data || {}, content: parsed.content || "" };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

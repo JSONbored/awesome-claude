@@ -70,6 +70,10 @@
       "types": "./src/content-builder.d.ts",
       "default": "./src/content-builder.js"
     },
+    "./frontmatter": {
+      "types": "./src/index.d.ts",
+      "default": "./src/frontmatter.js"
+    },
     "./category-spec.json": "./src/category-spec.json"
   },
   "dependencies": {

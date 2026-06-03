@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import matter from "gray-matter";
 import prettier from "prettier";
 import categorySpec from "@heyclaude/registry/category-spec";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -34,7 +34,7 @@ function readEntries(category) {
     .sort()
     .map((fileName) => {
       const source = fs.readFileSync(path.join(categoryDir, fileName), "utf8");
-      const { data } = matter(source);
+      const { data } = parseSafeFrontmatter(source);
       return {
         title: String(data.title ?? fileName.replace(/\.mdx$/, "")),
         slug: String(data.slug ?? fileName.replace(/\.mdx$/, "")),

@@ -2,9 +2,9 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import matter from "gray-matter";
 
 import categorySpec from "@heyclaude/registry/category-spec";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -26,7 +26,7 @@ function readContentEntries() {
       .filter((name) => name.endsWith(".mdx"))
       .sort()) {
       const source = fs.readFileSync(path.join(categoryDir, fileName), "utf8");
-      const { data } = matter(source);
+      const { data } = parseSafeFrontmatter(source);
       entries.push({
         category,
         slug: String(data.slug ?? fileName.replace(/\.mdx$/, "")),

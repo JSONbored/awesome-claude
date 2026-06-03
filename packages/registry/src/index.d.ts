@@ -16,6 +16,22 @@ export type ContentHeading = {
   id: string;
 };
 
+export type SafeFrontmatterParseResult = {
+  data: Record<string, unknown>;
+  content: string;
+  excerpt?: string;
+  language?: string;
+  matter?: string;
+  error?: unknown;
+};
+
+export declare const UNSAFE_FRONTMATTER_LANGUAGE_ERROR: string;
+
+export declare function parseSafeFrontmatter(
+  value: unknown,
+  options?: { fallbackOnError?: boolean },
+): SafeFrontmatterParseResult;
+
 export type ContentCollectionItem = {
   slug: string;
   category: string;
@@ -251,13 +267,28 @@ export type ContentEntry = {
 
 export type DirectoryEntry = Omit<
   ContentEntry,
-  "body" | "sections" | "headings" | "codeBlocks" | "scriptBody"
+  | "body"
+  | "sections"
+  | "headings"
+  | "codeBlocks"
+  | "scriptBody"
+  | "copySnippet"
+  | "usageSnippet"
+  | "configSnippet"
 > & {
   body?: string;
   sections?: ContentSection[];
   headings?: ContentHeading[];
   codeBlocks?: ContentCodeBlock[];
   scriptBody?: string;
+  copySnippet?: string;
+  usageSnippet?: string;
+  configSnippet?: string;
+  hasCopySnippet?: boolean;
+  hasUsageSnippet?: boolean;
+  hasConfigSnippet?: boolean;
+  hasScriptBody?: boolean;
+  installable?: boolean;
 };
 
 export type CategorySummary = {

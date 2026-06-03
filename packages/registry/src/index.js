@@ -6,6 +6,7 @@ export * from "./artifacts.js";
 export * from "./brand-assets.js";
 export * from "./commercial.js";
 export * from "./content-schema.js";
+export * from "./frontmatter.js";
 export * from "./presentation.js";
 export * from "./quality.js";
 export * from "./seo.js";

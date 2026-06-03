@@ -37,6 +37,28 @@ describe("PR preview artifact validation flow", () => {
     });
   });
 
+  it("ignores scanner and review app URLs when resolving deploy previews", () => {
+    expect(
+      selectPreviewUrl([
+        {
+          url: "https://superagent.sh",
+          source: "github-check:Superagent Security Scan",
+        },
+        {
+          url: "https://app.coderabbit.ai/change-stack/repo/pr/1",
+          source: "github-status:CodeRabbit",
+        },
+        {
+          url: "https://heyclaude-dev.zeronode.workers.dev",
+          source: "github-deployment:preview",
+        },
+      ]),
+    ).toEqual({
+      url: "https://heyclaude-dev.zeronode.workers.dev",
+      source: "github-deployment:preview",
+    });
+  });
+
   it("uses resolved PR preview URLs instead of a manual merge-gate variable", () => {
     const workflow = readContentValidationWorkflow();
     expect(workflow).toContain("Resolve PR preview URL");

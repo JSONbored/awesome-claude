@@ -62,6 +62,27 @@ function findPredictableSharedTmpHookLogPaths(scriptBody: string) {
   return [...paths];
 }
 
+function artifactSize(relativePath: string) {
+  return fs.statSync(path.join(dataRoot, relativePath)).size;
+}
+
+function artifactTreeSize(relativePath: string) {
+  const target = path.join(dataRoot, relativePath);
+  if (!fs.existsSync(target)) return 0;
+  const stat = fs.statSync(target);
+  if (stat.isFile()) return stat.size;
+  return fs
+    .readdirSync(target, { withFileTypes: true })
+    .reduce(
+      (sum, item) =>
+        sum +
+        artifactTreeSize(
+          path.join(relativePath, item.name).replaceAll(path.sep, "/"),
+        ),
+      0,
+    );
+}
+
 describe("registry artifacts", () => {
   const contentEntries = loadContentEntries();
   const directoryEntries = loadDirectoryEntries();
@@ -163,6 +184,15 @@ describe("registry artifacts", () => {
     });
     expect(directoryEntries.length).toBe(contentEntries.length);
     expect(searchEntries.length).toBe(contentEntries.length);
+  });
+
+  it("keeps public registry payloads within reviewable byte budgets", () => {
+    expect(artifactSize("directory-index.json")).toBeLessThan(1_900_000);
+    expect(artifactSize("search-index.json")).toBeLessThan(1_500_000);
+    expect(artifactSize("raycast-index.json")).toBeLessThan(1_600_000);
+    expect(artifactTreeSize("feeds/categories")).toBeLessThan(2_500_000);
+    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(2_800_000);
+    expect(artifactTreeSize("entries")).toBeLessThan(15_000_000);
   });
 
   it("keeps Atlas list data compact while preserving full entry detail fields", () => {
@@ -823,7 +853,15 @@ Use this hook after reviewing the notes.`,
     for (const entry of directoryEntries) {
       expect(entry.body).toBeUndefined();
       expect(entry.sections).toBeUndefined();
+      expect(entry.headings).toBeUndefined();
+      expect(entry.codeBlocks).toBeUndefined();
       expect(entry.scriptBody).toBeUndefined();
+      expect((entry as Record<string, unknown>).copySnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).usageSnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).configSnippet).toBeUndefined();
+      expect(typeof (entry as Record<string, unknown>).installable).toBe(
+        "boolean",
+      );
       expect(entry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );

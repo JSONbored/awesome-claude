@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-import matter from "gray-matter";
 import categorySpec from "@heyclaude/registry/category-spec";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const categoryOrder = categorySpec.categoryOrder;
 const categoryRank = new Map(
@@ -193,7 +193,7 @@ function readContentFrontmatter(repoRoot, change) {
       if (!name.endsWith(".mdx")) return false;
       {
         const source = fs.readFileSync(path.join(categoryDir, name), "utf8");
-        const { data } = matter(source);
+        const { data } = parseSafeFrontmatter(source);
         return String(data.slug ?? name.replace(/\.mdx$/, "")) === change.slug;
       }
     });
@@ -208,7 +208,7 @@ function readContentFrontmatter(repoRoot, change) {
     contentPath = path.join(repoRoot, relativePath);
   }
 
-  const { data } = matter(fs.readFileSync(contentPath, "utf8"));
+  const { data } = parseSafeFrontmatter(fs.readFileSync(contentPath, "utf8"));
   return { relativePath, data };
 }
 

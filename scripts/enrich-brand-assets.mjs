@@ -9,6 +9,7 @@ import {
   normalizeBrandDomain,
 } from "@heyclaude/registry/brand-assets";
 import { orderFrontmatter } from "@heyclaude/registry/content-schema";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -49,7 +50,7 @@ const changed = [];
 
 for (const filePath of walkMdx(contentRoot)) {
   const source = fs.readFileSync(filePath, "utf8");
-  const parsed = matter(source);
+  const parsed = parseSafeFrontmatter(source);
   const data = parsed.data;
   const title = clean(data.title) || path.basename(filePath, ".mdx");
   const category =

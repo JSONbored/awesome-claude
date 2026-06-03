@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import matter from "gray-matter";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 /**
  * Build the set of `category:slug` keys for every MDX entry under content/.
@@ -27,7 +27,7 @@ export function enumerateContentVoteKeys(repoRoot) {
     for (const fileName of files) {
       const filePath = path.join(categoryDir, fileName);
       const source = fs.readFileSync(filePath, "utf8");
-      const { data } = matter(source);
+      const { data } = parseSafeFrontmatter(source);
       const slug = String(data.slug ?? fileName.replace(/\.mdx$/, ""));
       expected.add(`${category}:${slug}`);
     }

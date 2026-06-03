@@ -244,10 +244,23 @@ export function buildDirectoryEntries(entries) {
       headings: _headings,
       codeBlocks: _codeBlocks,
       scriptBody: _scriptBody,
+      copySnippet: _copySnippet,
+      usageSnippet: _usageSnippet,
+      configSnippet: _configSnippet,
       ...directoryEntry
     } = entry;
     return {
       ...directoryEntry,
+      hasCopySnippet: Boolean(entry.copySnippet),
+      hasUsageSnippet: Boolean(entry.usageSnippet),
+      hasConfigSnippet: Boolean(entry.configSnippet),
+      hasScriptBody: Boolean(entry.scriptBody),
+      installable: Boolean(
+        entry.installable ||
+        entry.installCommand ||
+        entry.downloadUrl ||
+        entry.configSnippet,
+      ),
       canonicalUrl: entryCanonicalUrl(entry),
       llmsUrl: entryLlmsUrl(entry),
       apiUrl: entryApiUrl(entry),
@@ -736,11 +749,12 @@ export function buildRaycastEntries(entries) {
 }
 
 export function buildEntryDetail(entry) {
+  const { codeBlocks: _codeBlocks, ...detailEntry } = entry;
   return {
     schemaVersion: ENTRY_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
     entry: {
-      ...entry,
+      ...detailEntry,
       repoStats: buildRepoStats(entry),
     },
     trustSignals: buildEntryTrustSignals(entry),
