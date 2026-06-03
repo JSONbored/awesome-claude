@@ -7,6 +7,7 @@ import { ECOSYSTEM_FEEDS } from "@/data/ecosystem-feeds";
 import { BEST_LISTS, ENTRIES, WEEKLY_BRIEF } from "@/data/entries";
 import { getIntegration } from "@/data/integrations";
 import { PLATFORM_MATRIX } from "@/data/platforms";
+import { seoClusterDefinitions } from "@/data/seo-cluster-definitions";
 import { REVIEW_COVERAGE, REVIEW_SUMMARY } from "@/data/validators";
 import { repoRoot } from "./helpers/registry-fixtures";
 
@@ -93,6 +94,9 @@ describe("Atlas production data wiring", () => {
     expect(BEST_LISTS.length).toBeGreaterThanOrEqual(20);
     expect(BEST_LISTS.map((list) => list.slug)).toContain(
       "agent-workflow-starter-kits",
+    );
+    expect(BEST_LISTS.map((list) => list.slug).sort()).toEqual(
+      seoClusterDefinitions.map((definition) => definition.slug).sort(),
     );
 
     for (const list of BEST_LISTS) {

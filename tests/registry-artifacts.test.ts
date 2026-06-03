@@ -35,7 +35,10 @@ import {
   isAllowedBrandAssetUrl,
   truncateText,
 } from "@heyclaude/registry";
-import { buildContentEntryFromMdx } from "@heyclaude/registry/content-builder";
+import {
+  buildContentEntryFromMdx,
+  parseGitHubRepo,
+} from "@heyclaude/registry/content-builder";
 
 import {
   dataRoot,
@@ -60,6 +63,27 @@ function findPredictableSharedTmpHookLogPaths(scriptBody: string) {
     paths.add(tmpPath);
   }
   return [...paths];
+}
+
+function artifactSize(relativePath: string) {
+  return fs.statSync(path.join(dataRoot, relativePath)).size;
+}
+
+function artifactTreeSize(relativePath: string) {
+  const target = path.join(dataRoot, relativePath);
+  if (!fs.existsSync(target)) return 0;
+  const stat = fs.statSync(target);
+  if (stat.isFile()) return stat.size;
+  return fs
+    .readdirSync(target, { withFileTypes: true })
+    .reduce(
+      (sum, item) =>
+        sum +
+        artifactTreeSize(
+          path.join(relativePath, item.name).replaceAll(path.sep, "/"),
+        ),
+      0,
+    );
 }
 
 describe("registry artifacts", () => {
@@ -165,7 +189,20 @@ describe("registry artifacts", () => {
     expect(searchEntries.length).toBe(contentEntries.length);
   });
 
-  it("keeps Atlas list data compact while preserving full entry detail fields", () => {
+  it("keeps public registry payloads within reviewable byte budgets", () => {
+    const fullCorpusSize = artifactSize("llms-full.txt");
+    expect(artifactTreeSize(".")).toBeLessThan(22_000_000);
+    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(18_000_000);
+    expect(fullCorpusSize).toBeLessThan(4_500_000);
+    expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
+    expect(artifactSize("search-index.json")).toBeLessThan(750_000);
+    expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
+    expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
+    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
+    expect(artifactTreeSize("entries")).toBeLessThan(7_000_000);
+  });
+
+  it("keeps Atlas list data compact while preserving canonical entry detail fields", () => {
     const atlasPayload = JSON.parse(
       fs.readFileSync(
         path.join(repoRoot, "apps/web/src/generated/atlas-registry.json"),
@@ -191,15 +228,11 @@ describe("registry artifacts", () => {
     expect(atlasSkill).not.toHaveProperty("sections");
     expect(atlasSkill).not.toHaveProperty("copySnippet");
     expect(skillDetail).toMatchObject({
-      copySnippet: expect.any(String),
       body: expect.any(String),
-      sections: expect.arrayContaining([
-        expect.objectContaining({ title: expect.any(String) }),
-      ]),
-      headings: expect.arrayContaining([
-        expect.objectContaining({ text: expect.any(String) }),
-      ]),
     });
+    expect(skillDetail).not.toHaveProperty("sections");
+    expect(skillDetail).not.toHaveProperty("headings");
+    expect(skillDetail).not.toHaveProperty("codeBlocks");
   });
 
   it("publishes schema-specific fields for category-aware detail rendering", () => {
@@ -208,24 +241,21 @@ describe("registry artifacts", () => {
         "entries/hooks/accessibility-checker.json",
         {
           trigger: "PostToolUse",
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
         "entries/commands/cursor-rules.json",
         {
           commandSyntax: expect.any(String),
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
         "entries/statuslines/accessibility-first-statusline.json",
         {
           scriptLanguage: "bash",
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
@@ -527,7 +557,7 @@ describe("registry artifacts", () => {
       expect(entry.trustSignals).toMatchObject({
         sourceStatus: expect.stringMatching(/^(available|missing)$/),
         checksumPresent: Boolean(
-          entry.downloadSha256 || entry.skillPackage?.sha256,
+          contentEntry!.downloadSha256 || contentEntry!.skillPackage?.sha256,
         ),
       });
       expect(entry.trustSignals.sourceUrlCount).toBe(
@@ -575,7 +605,7 @@ describe("registry artifacts", () => {
     ).toEqual(jsonLdSnapshotsPayload);
   });
 
-  it("derives search citation URLs from unhydrated source entries", () => {
+  it("derives compact search URLs from unhydrated source entries", () => {
     const sourceEntry = {
       ...contentEntries[0],
       canonicalUrl: undefined,
@@ -585,9 +615,7 @@ describe("registry artifacts", () => {
     const [searchEntry] = buildSearchEntries([sourceEntry]);
 
     expect(searchEntry?.canonicalUrl).toBe(searchEntry?.url);
-    expect(searchEntry?.llmsUrl).toBe(
-      `https://heyclau.de/data/llms/${sourceEntry.category}/${sourceEntry.slug}.txt`,
-    );
+    expect(searchEntry?.llmsUrl).toBeUndefined();
     expect(searchEntry?.apiUrl).toBe(
       `https://heyclau.de/api/registry/entries/${sourceEntry.category}/${sourceEntry.slug}`,
     );
@@ -625,14 +653,45 @@ Use this hook after reviewing the notes.`,
     ]);
 
     const [searchEntry] = buildSearchEntries([entry]);
-    expect(searchEntry.safetyNotes).toEqual(entry.safetyNotes);
-    expect(searchEntry.privacyNotes).toEqual(entry.privacyNotes);
+    expect(searchEntry.safetyNotes).toBeUndefined();
+    expect(searchEntry.privacyNotes).toBeUndefined();
     expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Trust");
     expect(renderEntryLlms(entry)).toContain("## Safety Notes");
     expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
+  });
+
+  it("rejects executable JavaScript frontmatter without executing it", () => {
+    // gray-matter's default `javascript` engine executes `---js` frontmatter.
+    // Use a unique global as an execution sentinel: with the SAFE_MATTER_OPTIONS
+    // guard, parsing must throw before the body runs, so the sentinel stays false.
+    const sentinel = `__heyclaudeFrontmatterExecuted_${process.pid}_${Date.now()}`;
+    globalThis[sentinel] = false;
+    const source = [
+      "---js",
+      `globalThis[${JSON.stringify(sentinel)}] = true;`,
+      'module.exports = { title: "Pwned", slug: "pwned", category: "hooks" };',
+      "---",
+      "Body content.",
+    ].join("\n");
+
+    try {
+      expect(() =>
+        buildContentEntryFromMdx({
+          category: "hooks",
+          fileName: "malicious.mdx",
+          filePath: path.join(repoRoot, "content/hooks/malicious.mdx"),
+          repoRoot,
+          contentRoot: path.join(repoRoot, "content"),
+          source,
+        }),
+      ).toThrow(/Executable JavaScript frontmatter is not allowed/);
+      expect(globalThis[sentinel]).toBe(false);
+    } finally {
+      delete globalThis[sentinel];
+    }
   });
 
   it("deduplicates repeated JSON-LD values while preserving order", () => {
@@ -792,7 +851,15 @@ Use this hook after reviewing the notes.`,
     for (const entry of directoryEntries) {
       expect(entry.body).toBeUndefined();
       expect(entry.sections).toBeUndefined();
+      expect(entry.headings).toBeUndefined();
+      expect(entry.codeBlocks).toBeUndefined();
       expect(entry.scriptBody).toBeUndefined();
+      expect((entry as Record<string, unknown>).copySnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).usageSnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).configSnippet).toBeUndefined();
+      expect(typeof (entry as Record<string, unknown>).installable).toBe(
+        "boolean",
+      );
       expect(entry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
@@ -806,16 +873,16 @@ Use this hook after reviewing the notes.`,
     for (const entry of searchEntries) {
       expect(entry.url).toBeTruthy();
       expect(entry.seoTitle).toBeTruthy();
-      expect(entry.seoDescription).toBeTruthy();
       expect(entry.canonicalUrl).toBe(entry.url);
-      expect(entry.llmsUrl).toBe(
-        `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
-      );
       expect(entry.apiUrl).toBe(
         `https://heyclau.de/api/registry/entries/${entry.category}/${entry.slug}`,
       );
       expect((entry as Record<string, unknown>).body).toBeUndefined();
       expect((entry as Record<string, unknown>).copySnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).seoDescription).toBeUndefined();
+      expect((entry as Record<string, unknown>).llmsUrl).toBeUndefined();
+      expect((entry as Record<string, unknown>).safetyNotes).toBeUndefined();
+      expect((entry as Record<string, unknown>).privacyNotes).toBeUndefined();
     }
     expect(
       searchEntries.some((entry) => entry.platforms?.includes("Gemini")),
@@ -825,7 +892,7 @@ Use this hook after reviewing the notes.`,
   it("keeps Retro Daily startup debug logs in the user's private metrics directory", () => {
     const detailPayload = readDataJson<{
       entry: {
-        scriptBody: string;
+        body: string;
       };
     }>("entries/hooks/retro-daily.json");
     const scriptBody = detailPayload.entry.scriptBody;
@@ -912,7 +979,8 @@ Use this hook after reviewing the notes.`,
       const raycastDetail = readDataJson<{
         schemaVersion: number;
         key: string;
-        copyText: string;
+        copyText?: string;
+        llmsUrl: string;
       }>(`raycast/${entry.category}/${entry.slug}.json`);
       const entryLlmsPath = path.join(
         dataRoot,
@@ -920,7 +988,6 @@ Use this hook after reviewing the notes.`,
         entry.category,
         `${entry.slug}.txt`,
       );
-      const copyText = getCopyText(entry);
       const raycastFeedEntry = raycastEntryByKey.get(key);
 
       expect(detailPayload).toMatchObject({
@@ -933,21 +1000,17 @@ Use this hook after reviewing the notes.`,
       expect(raycastDetail).toMatchObject({
         schemaVersion: 2,
         key,
-        copyText,
+        llmsUrl: `/data/llms/${entry.category}/${entry.slug}.txt`,
       });
+      expect(raycastDetail).not.toHaveProperty("copyText");
       expect(raycastFeedEntry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
-      expect(raycastFeedEntry.llmsUrl).toBe(
-        `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
-      );
-      expect(raycastFeedEntry.copyTextLength).toBe(copyText.length);
-      expect(raycastFeedEntry.copyText.length).toBeLessThanOrEqual(
-        RAYCAST_COPY_PREVIEW_LIMIT + 3,
-      );
-      expect(raycastFeedEntry.copyTextTruncated).toBe(
-        copyText.length > RAYCAST_COPY_PREVIEW_LIMIT,
-      );
+      expect(raycastFeedEntry).not.toHaveProperty("llmsUrl");
+      expect(raycastFeedEntry).not.toHaveProperty("copyText");
+      expect(raycastFeedEntry).not.toHaveProperty("copyTextLength");
+      expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
+      expect(raycastFeedEntry).not.toHaveProperty("detailMarkdown");
     }
   });
 
@@ -1335,5 +1398,31 @@ describe("source health report", () => {
       report.summary.dormantCount +
       report.summary.unknownFreshnessCount;
     expect(freshnessTotal).toBe(report.count);
+  });
+});
+
+describe("parseGitHubRepo", () => {
+  it("parses github.com repo URLs, including the www. alias", () => {
+    expect(parseGitHubRepo("https://github.com/OpenAI/whisper.git")).toEqual({
+      owner: "OpenAI",
+      repo: "whisper",
+      key: "OpenAI/whisper",
+      url: "https://github.com/OpenAI/whisper",
+    });
+    // The www. alias resolves to the same repo as the bare host.
+    expect(parseGitHubRepo("https://www.github.com/OpenAI/whisper")).toEqual({
+      owner: "OpenAI",
+      repo: "whisper",
+      key: "OpenAI/whisper",
+      url: "https://github.com/OpenAI/whisper",
+    });
+  });
+
+  it("rejects non-github hosts, other subdomains, and empty input", () => {
+    expect(parseGitHubRepo("https://example.com/OpenAI/whisper")).toBeNull();
+    expect(
+      parseGitHubRepo("https://gist.github.com/OpenAI/whisper"),
+    ).toBeNull();
+    expect(parseGitHubRepo("")).toBeNull();
   });
 });

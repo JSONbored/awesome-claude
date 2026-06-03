@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { execFileSync } from "node:child_process";
 
-import matter from "gray-matter";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -91,7 +91,7 @@ function validateSkillArchive(filePath, entry) {
     failures.push(`${entry}: unexpected Agent Skill file (${disallowed})`);
   }
 
-  const skill = matter(unzipText(filePath, skillPath));
+  const skill = parseSafeFrontmatter(unzipText(filePath, skillPath));
   const name = String(skill.data?.name || "").trim();
   const description = String(skill.data?.description || "").trim();
   if (!name) failures.push(`${entry}: SKILL.md frontmatter missing name`);
@@ -146,7 +146,7 @@ for (const category of ["skills", "mcp"]) {
     if (!fileName.endsWith(".mdx")) continue;
     const filePath = path.join(categoryDir, fileName);
     const entry = `${category}/${fileName}`;
-    const parsed = matter(fs.readFileSync(filePath, "utf8"));
+    const parsed = parseSafeFrontmatter(fs.readFileSync(filePath, "utf8"));
     const data = parsed.data ?? {};
     const downloadUrl = normalizeDownloadUrl(data.downloadUrl);
 

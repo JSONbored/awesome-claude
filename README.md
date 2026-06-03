@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>389+ file-backed entries</strong> stay useful as both an
+        <strong>399+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>389</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>399</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -68,12 +68,12 @@
         </td>
 <td align="center" width="20%">
           <a href="#mcp-servers"><strong>🔌 MCP Servers</strong></a><br>
-          <code>50</code><br>
+          <code>59</code><br>
           <sub>Model Context Protocol servers and integrations.</sub>
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>54</code><br>
+          <code>55</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -154,9 +154,10 @@ content validation, Superagent, and private maintainer-agent review pass. Tool,
 app, service promotion, listing claims, and jobs use the website lead forms
 instead of GitHub content submissions.
 
-`README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`, and
-`apps/web/public/downloads/**` are generated or maintainer-owned outputs.
-Direct contributors should not edit them in content PRs.
+`README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`,
+`apps/web/src/routeTree.gen.ts`, and `apps/web/public/downloads/**` are
+generated or maintainer-owned outputs. Direct contributors should not edit them
+in content PRs.
 
 Community submissions may link to source repositories, documentation, install
 commands, or full copyable content. Community-submitted ZIP/MCPB packages are
@@ -175,10 +176,10 @@ packages use checksums and package trust metadata after review.
 
 ### Local Validation
 
-1. Add or update a file under `content/<category>/`
-2. Run `pnpm --filter web run prebuild`
-3. Run `pnpm validate:content:strict`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build`
-4. Commit generated registry artifacts only from maintainer/internal branches
+1. Direct content PRs should add or update exactly one `content/<category>/<slug>.mdx` file.
+2. For direct content PRs, run `pnpm validate:content:strict` and do not commit generated output.
+3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run `pnpm --filter web run prebuild`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build` as relevant.
+4. Generated registry, route, package-download, and README artifacts are build or maintainer automation outputs, not normal content PR diffs.
 
 </details>
 
@@ -228,16 +229,18 @@ packages use checksums and package trust metadata after review.
 - **[UI UX Design Expert Agent - Agents](https://heyclau.de/entry/agents/ui-ux-design-expert-agent)** - Specialized in creating beautiful, intuitive user interfaces and exceptional user experiences
 - **[Web Async Agent Coordinator - Agents](https://heyclau.de/entry/agents/web-async-agent-coordinator)** - Web-based asynchronous agent coordinator leveraging Claude Code for Web's browser interface for managing long-running autonomous coding tasks with async workflows.
 
-## 🔌 MCP Servers (50)
+## 🔌 MCP Servers (59)
 
 - **[Airtable MCP Server for Claude](https://heyclau.de/entry/mcp/airtable-mcp-server)** - Read and write records, manage bases and tables in Airtable directly from Claude
 - **[Asana MCP Server for Claude](https://heyclau.de/entry/mcp/asana-mcp-server)** - Interact with Asana workspaces to manage projects and tasks
 - **[AWS Services MCP Server - MCP Servers](https://heyclau.de/entry/mcp/aws-services-mcp-server)** - Comprehensive AWS cloud services integration for infrastructure management, deployment, and monitoring
 - **[Box MCP Server for Claude](https://heyclau.de/entry/mcp/box-mcp-server)** - Access enterprise content, analyze unstructured data, and automate workflows
 - **[Canva MCP Server for Claude](https://heyclau.de/entry/mcp/canva-mcp-server)** - Browse, summarize, and generate Canva designs directly from Claude
+- **[Chrome DevTools MCP Server for Claude](https://heyclau.de/entry/mcp/chrome-devtools-mcp-server)** - Official Chrome DevTools MCP server that lets Claude inspect and debug a live Chrome browser, capturing performance traces, network activity, console messages, and DOM state through the Chrome DevTools Protocol.
 - **[Clickup MCP Server for Claude](https://heyclau.de/entry/mcp/clickup-mcp-server)** - Task management and project tracking with ClickUp integration
 - **[Cloudflare MCP Server - MCP Servers](https://heyclau.de/entry/mcp/cloudflare-mcp-server)** - Build applications, analyze traffic, and manage security settings through Cloudflare
 - **[Cloudinary MCP Server - MCP Servers](https://heyclau.de/entry/mcp/cloudinary-mcp-server)** - Upload, manage, transform, and analyze media assets in the cloud
+- **[Context7 MCP Server for Claude](https://heyclau.de/entry/mcp/context7-mcp-server)** - Context7 MCP server by Upstash that pulls up-to-date, version-specific library documentation and code examples directly into Claude's context so answers match the libraries you actually use.
 - **[ContrastAPI Security Tools](https://heyclau.de/entry/mcp/contrastapi-mcp-server)** - 49 remote MCP security tools for CVE/KEV/CWE/EPSS lookup, composite CVSS+EPSS+KEV+PoC risk scoring, CVSS v3.x vector parsing, domain/IP/IOC enrichment, dependency and web intelligence checks, MITRE ATLAS AI/ML attacks, and MITRE D3FEND defenses. Anonymous tier available; Pro tier uses an API key.
 - **[Daloopa MCP Server for Claude](https://heyclau.de/entry/mcp/daloopa-mcp-server)** - Access high-quality fundamental financial data from SEC filings and investor presentations
 - **[Claude Desktop MCP Setup](https://heyclau.de/entry/mcp/desktop-mcp-setup)** - Master Claude Desktop MCP server setup in 20 minutes. Complete config JSON tutorial with filesystem integration, troubleshooting, and proven solutions.
@@ -258,22 +261,29 @@ packages use checksums and package trust metadata after review.
 - **[Kubernetes MCP Server - MCP Servers](https://heyclau.de/entry/mcp/kubernetes-mcp-server)** - Kubernetes cluster management and container orchestration through MCP integration
 - **[Spain Legal by Legal Fournier](https://heyclau.de/entry/mcp/legal-fournier-spain-legal-mcp)** - Spain Legal by Legal Fournier is a public, read-only MCP server for Spain legal route screening. It helps AI assistants explore visa options, Beckham Law eligibility, NIE/TIE steps, residency/nationality paths, EU family routes, and when to prepare a human Legal Fournier handoff.
 - **[Linear MCP Server for Claude](https://heyclau.de/entry/mcp/linear-mcp-server)** - Integrate with Linear's issue tracking and project management system
+- **[Magic MCP Server for Claude](https://heyclau.de/entry/mcp/magic-mcp-server)** - Magic MCP by 21st.dev lets Claude generate polished, production-ready UI components from natural language, returning React and Tailwind code you can drop straight into a project.
 - **[Memesio MCP Server](https://heyclau.de/entry/mcp/memesio-mcp-server)** - Memesio MCP Server is a hosted MCP endpoint for meme template discovery, captioned meme creation, share links, and AI-assisted meme generation. Public tools support anonymous/rate-limited usage, while optional developer or agent keys unlock higher-rate, premium, and AI-powered actions.
+- **[Memory MCP Server for Claude](https://heyclau.de/entry/mcp/memory-mcp-server)** - Official reference MCP server that gives Claude persistent memory through a local knowledge graph of entities, relations, and observations, stored in a file on your own machine.
 - **[Monday MCP Server for Claude](https://heyclau.de/entry/mcp/monday-mcp-server)** - Manage monday.com boards, items, and CRM activities
 - **[Netlify MCP Server for Claude](https://heyclau.de/entry/mcp/netlify-mcp-server)** - Create, deploy, and manage websites on Netlify platform
 - **[Notion MCP Server for Claude](https://heyclau.de/entry/mcp/notion-mcp-server)** - Read docs, update pages, and manage tasks in Notion workspaces
 - **[Packrift MCP Server](https://heyclau.de/entry/mcp/packrift-mcp-server)** - Packrift MCP Server exposes Packrift's packaging-supplies catalog through a remote MCP endpoint. It lets AI agents search packaging products, retrieve pricing and inventory context, and create cart URLs for ecommerce packaging workflows. Use it when an agent needs packaging-supply discovery, carton or mailer selection, or cart-building support.
 - **[Paypal MCP Server for Claude](https://heyclau.de/entry/mcp/paypal-mcp-server)** - Integrate PayPal commerce capabilities, payment processing, and transaction management
+- **[Perplexity MCP Server for Claude](https://heyclau.de/entry/mcp/perplexity-mcp-server)** - Official Perplexity MCP server that connects Claude to the Perplexity Sonar API for real-time, web-grounded answers with citations, so responses can draw on current information beyond the model's training data.
 - **[Plaid MCP Server for Claude](https://heyclau.de/entry/mcp/plaid-mcp-server)** - Analyze, troubleshoot, and optimize Plaid integrations for banking data and financial account linking
+- **[Playwright MCP Server for Claude](https://heyclau.de/entry/mcp/playwright-mcp-server)** - Official Microsoft Playwright MCP server that lets Claude drive a real browser through Playwright's accessibility tree for fast, deterministic web automation and testing.
 - **[Postgresql MCP Server - MCP Servers](https://heyclau.de/entry/mcp/postgresql-mcp-server)** - Official MCP server providing read-only access to PostgreSQL databases with schema inspection and query capabilities
 - **[Prompt-to-asset](https://heyclau.de/entry/mcp/prompt-to-asset)** - MCP server that generates production-ready visual assets by routing requests across 30+ image generation models. Handles app icons, favicons, OG images, logos, and wordmarks. Validates output for WCAG contrast and palette consistency. Zero API key required for first run via Pollinations and Stable Horde free tiers.
 - **[Reddit MCP Buddy for Claude](https://heyclau.de/entry/mcp/reddit-mcp-buddy)** - Browse Reddit, search posts, and analyze user activity directly from Claude - no API keys required
 - **[Redis MCP Server for Claude](https://heyclau.de/entry/mcp/redis-mcp-server)** - Official Redis MCP server providing natural language interface for Redis data management and operations
 - **[Sentry MCP Server for Claude](https://heyclau.de/entry/mcp/sentry-mcp-server)** - Monitor errors, debug production issues, and track application health
+- **[Sequential Thinking MCP Server for Claude](https://heyclau.de/entry/mcp/sequential-thinking-mcp-server)** - Official reference MCP server that gives Claude a structured sequential thinking tool for breaking complex problems into ordered, revisable thought steps, all processed locally with no external calls.
+- **[Serena MCP Server for Claude](https://heyclau.de/entry/mcp/serena-mcp-server)** - Serena is an open-source coding-agent toolkit by Oraios that gives Claude semantic, symbol-level code tools backed by language servers, so it can find, read, and edit code precisely instead of pasting whole files.
 - **[Socket MCP Server for Claude](https://heyclau.de/entry/mcp/socket-mcp-server)** - Security analysis and vulnerability scanning for dependencies
 - **[Square MCP Server for Claude](https://heyclau.de/entry/mcp/square-mcp-server)** - Build on Square APIs for payments, inventory, and order management
 - **[Stripe MCP Server for Claude](https://heyclau.de/entry/mcp/stripe-mcp-server)** - Payment processing, subscription management, and financial transaction handling
 - **[Stytch MCP Server for Claude](https://heyclau.de/entry/mcp/stytch-mcp-server)** - Configure and manage Stytch authentication services and workspace settings
+- **[Tavily MCP Server for Claude](https://heyclau.de/entry/mcp/tavily-mcp-server)** - Official Tavily MCP server that gives Claude agent-optimized web search and page extraction, returning concise, source-cited results designed for LLM reasoning rather than raw search engine pages.
 - **[Vercel MCP Server for Claude](https://heyclau.de/entry/mcp/vercel-mcp-server)** - Manage deployments, analyze logs, and control Vercel projects
 - **[Workato MCP Server for Claude](https://heyclau.de/entry/mcp/workato-mcp-server)** - Access any application, workflows, or data via Workato's integration platform
 - **[Xquik MCP Server](https://heyclau.de/entry/mcp/xquik-mcp-server)** - Remote MCP server for X and Twitter automation: tweet search, profile timelines, follower export, media workflows, webhooks, and confirmation-gated write actions.
@@ -283,7 +293,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (54)
+## 🧰 Tools (55)
 
 - **[Aider](https://heyclau.de/entry/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
 - **[Apify](https://heyclau.de/entry/tools/apify)** - Web automation and scraping platform with actors, datasets, APIs, and integrations for data extraction workflows.
@@ -319,6 +329,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Lovable](https://heyclau.de/entry/tools/lovable)** - AI app builder for generating and iterating on web applications from natural language product requests.
 - **[Make](https://heyclau.de/entry/tools/make)** - Visual automation platform for building integrations, scenarios, API workflows, and AI-connected business processes.
 - **[Mastra](https://heyclau.de/entry/tools/mastra)** - TypeScript agent framework for building AI agents, workflows, memory, tool calling, and evaluation-backed applications.
+- **[MCP Inspector](https://heyclau.de/entry/tools/mcp-inspector)** - Official visual testing and debugging tool for Model Context Protocol servers.
 - **[Microsoft AutoGen](https://heyclau.de/entry/tools/microsoft-autogen)** - Open-source framework for building multi-agent AI applications, conversations, workflows, and autonomous systems.
 - **[n8n](https://heyclau.de/entry/tools/n8n)** - Source-available workflow automation platform for self-hosted integrations, AI workflows, triggers, and data pipelines.
 - **[OpenCode](https://heyclau.de/entry/tools/opencode)** - Terminal-first AI coding agent for local development workflows, codebase edits, and model-flexible automation.

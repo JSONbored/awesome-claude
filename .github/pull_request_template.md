@@ -6,22 +6,28 @@
 
 ## Submission Source
 
-- [ ] New content file(s) added under `content/<category>/`
-- [ ] Existing content updated
-- [ ] Submission issue resolved (link it here): #
-- [ ] Direct content submissions include `submittedBy` and `submittedByUrl` frontmatter matching the PR author.
-- [ ] I did not modify `README.md`, generated registry outputs, or `apps/web/public/downloads/**` unless this is a maintainer/internal automation branch.
+For direct content PRs:
+
+- [ ] This PR changes exactly one `content/<category>/<slug>.mdx` file.
+- [ ] The entry includes source/provenance URLs and practical install/use details.
+- [ ] `submittedBy` and `submittedByUrl` match the PR author.
+- [ ] I did not modify `README.md`, generated registry outputs, downloads, workflows, packages, scripts, or multiple content entries.
 - [ ] I did not request HeyClaude-hosted `/downloads/...` package hosting for community-submitted ZIP/MCPB artifacts.
+
+For platform/code/docs PRs:
+
+- [ ] This is not a direct content submission.
+- [ ] Changed routes/components/endpoints/tools are listed below.
+- [ ] Screenshots or `No visual impact` are included when relevant.
 
 ## Schema and Quality Checks
 
-- [ ] `pnpm validate:content` passed
-- [ ] `pnpm validate:packages` passed
-- [ ] `pnpm scan:packages` passed when package artifacts changed
-- [ ] `pnpm audit:content` ran and I reviewed findings
+- [ ] Content PR: `pnpm validate:content:strict` passed, or I am relying on CI.
+- [ ] Platform/code PR: focused validation is listed below.
+- [ ] Package artifact PR: `pnpm validate:packages` and `pnpm scan:packages` passed.
 - [ ] No forbidden fields were added (`viewCount`, `copyCount`, `popularityScore`)
-- [ ] Install/use/copy paths are practical and complete
-- [ ] Skill submissions include capability metadata when applicable (`skillType`, `skillLevel`, `verificationStatus`, `verifiedAt`, `retrievalSources`, `testedPlatforms`)
+- [ ] Install/use/copy paths are practical and complete.
+- [ ] Skill submissions include capability metadata when applicable (`skillType`, `skillLevel`, `verificationStatus`, `verifiedAt`, `retrievalSources`, `testedPlatforms`).
 
 ## Quality Evidence
 
@@ -38,9 +44,10 @@
 
 ## Validation
 
-- [ ] Local build passed (`pnpm build`)
-- [ ] I ran the focused checks listed above
-- [ ] I spot-checked the affected detail page(s), route(s), or integration surface(s)
+- [ ] Direct content PR: I did not run generation or commit generated output.
+- [ ] Platform/code PR: `pnpm build` passed, or the reason it was not run is listed below.
+- [ ] I ran the focused checks listed above.
+- [ ] I spot-checked the affected detail page(s), route(s), or integration surface(s), if applicable.
 
 ## Notes
 

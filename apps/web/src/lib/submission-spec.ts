@@ -447,5 +447,3 @@ export function buildSubmissionPacket(
     .join("\n")
     .trimEnd();
 }
-
-export const buildIssueDraft = buildSubmissionPacket;

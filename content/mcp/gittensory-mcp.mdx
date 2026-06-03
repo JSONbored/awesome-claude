@@ -1,0 +1,261 @@
+---
+title: Gittensory MCP Server for Claude
+slug: gittensory-mcp
+category: mcp
+description: >-
+  Gittensory MCP connects Claude and other MCP clients to private,
+  metadata-only Gittensor contribution mining workflows for branch preflight,
+  scoreability estimates, maintainer-fit checks, and public-safe PR packets.
+cardDescription: >-
+  MCP server for private Gittensor contribution preflight, branch metadata
+  analysis, scoreability estimates, and public-safe PR packet drafting.
+seoTitle: Gittensory MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Gittensory MCP for private Gittensor contribution mining
+  workflows, including metadata-only branch analysis, preflight blockers,
+  scoreability estimates, and public-safe PR packets.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://gittensory.aethereal.dev/docs/mcp-clients"
+repoUrl: "https://github.com/JSONbored/gittensory"
+installable: true
+installCommand: "claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio"
+usageSnippet: "claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio"
+copySnippet: |-
+  {
+    "gittensory": {
+      "command": "npx",
+      "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+    }
+  }
+configSnippet: |-
+  {
+    "gittensory": {
+      "command": "npx",
+      "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Node.js and npx available (verify with: npx --version)"
+  - Claude Code, Claude Desktop, Codex, Cursor, or another MCP-capable client
+  - GitHub account access for the OAuth Device Flow login
+  - Network access to the Gittensory API when using login, preflight, or remote MCP
+safetyNotes:
+  - >-
+    Run Gittensory against the repository and branch you intend to analyze; the
+    MCP is designed for branch preflight, maintainer-fit checks, and PR packet
+    preparation, not broad autonomous code changes.
+  - >-
+    Treat scoreability and risk-adjusted priority as estimates only. They are
+    not payout, reward, acceptance, or merge guarantees.
+  - >-
+    Review generated PR packet text before publishing it. Public output should
+    stay maintainer-friendly and must not leak private scoreability, risk, or
+    reward framing.
+  - >-
+    Prefer local stdio for normal agent use. The remote MCP endpoint is useful
+    for cloud agents, but it shifts more workflow state through the hosted API.
+privacyNotes:
+  - >-
+    Gittensory documents metadata-only analysis by default: source contents are
+    not uploaded during the normal MCP branch analysis flow.
+  - >-
+    Authentication uses GitHub OAuth Device Flow and Gittensory session tokens;
+    the MCP does not ask users to paste or store GitHub personal access tokens.
+  - >-
+    Branch metadata, GitHub identity, repository context, linked issues,
+    labels, validation summaries, and preflight blockers may be sent to
+    Gittensory API surfaces as part of analysis.
+  - >-
+    Avoid pasting secrets, wallet material, hotkeys, private source, or
+    unpublished reviewability details into prompts or public PR output.
+tags:
+  - gittensory
+  - gittensor
+  - contribution-mining
+  - preflight
+  - mcp
+  - github
+keywords:
+  - gittensory mcp
+  - gittensor contribution mining
+  - claude mcp preflight
+  - scoreability estimates
+  - public safe pr packets
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Gittensory MCP gives Claude and other MCP-capable coding agents a private
+control surface for Gittensor OSS contribution workflows. It focuses on the
+work that happens before a contributor opens or updates a PR: branch metadata
+analysis, preflight blockers, maintainer-fit context, scoreability estimates,
+queue pressure, duplicate risk, and public-safe PR packet drafting.
+
+The server is published as `@jsonbored/gittensory-mcp` and is designed to run
+locally over stdio by default. Gittensory also exposes a remote MCP endpoint for
+cloud-hosted agents, but the local stdio path is the recommended starting point
+because it keeps the client process, GitHub Device Flow login, and local branch
+context on the user's machine.
+
+Gittensory is built for the Gittensor ecosystem, but it is not an official
+subnet frontend and does not provide reward guarantees. Its scoreability
+language is private MCP/API context for planning and reviewability; users should
+treat those values as estimates and follow current Gittensor rules for any
+eligibility or rewards.
+
+## Features
+
+- Local stdio MCP server for Claude, Codex, Cursor, and other MCP clients.
+- Config generators for Codex, Claude Desktop, Cursor, and generic MCP clients.
+- GitHub OAuth Device Flow login without asking for a GitHub personal access
+  token.
+- Metadata-only branch analysis for refs, changed-file metadata, linked issues,
+  labels, commit messages, and validation summaries.
+- Preflight checks for branch blockers, account blockers, queue pressure, lane
+  fit, duplicate risk, and maintainer friction.
+- Private scoreability estimates for current gated state, clean-gate scenarios,
+  pending merges, linked issue state, and best reasonable case.
+- Public-safe PR packet drafting that avoids private score, reward, and risk
+  language in maintainer-facing GitHub output.
+- Remote MCP endpoint for cloud agents that cannot run a local Node process.
+
+## Use Cases
+
+- Ask Claude to check whether a Gittensor contribution branch is ready before
+  opening a PR.
+- Generate a maintainer-friendly PR packet without exposing private
+  scoreability or reward language.
+- Inspect blockers such as stale upstream, missing issue links, crowded lanes,
+  queue pressure, or branch hygiene problems.
+- Compare potential contribution lanes before spending time on a low-fit or
+  duplicate PR.
+- Give maintainers an on-demand reviewability packet for confirmed miner PRs
+  while keeping public GitHub comments quiet and sanitized.
+
+## Installation
+
+### Claude Code
+
+1. Confirm `npx` is available: `npx --version`.
+2. Add the MCP server:
+
+```bash
+claude mcp add gittensory -- npx -y @jsonbored/gittensory-mcp@latest --stdio
+```
+
+3. Restart or refresh Claude Code's MCP session.
+4. Ask Claude to run a lightweight Gittensory status or doctor check.
+
+### Claude Desktop
+
+1. Open `claude_desktop_config.json`.
+2. Add the `gittensory` server to `mcpServers`.
+3. Restart Claude Desktop.
+4. Run `gittensory-mcp login` when the server asks for GitHub authentication.
+
+## Configuration
+
+```json
+{
+  "gittensory": {
+    "command": "npx",
+    "args": ["-y", "@jsonbored/gittensory-mcp@latest", "--stdio"]
+  }
+}
+```
+
+## Remote MCP
+
+For cloud agents or hosted clients that cannot run a local Node process, use the
+remote MCP endpoint documented by Gittensory:
+
+```text
+https://gittensory-api.aethereal.dev/mcp
+```
+
+Use local stdio when possible. It is the simpler path for GitHub Device Flow
+login and keeps local branch inspection closest to the developer machine.
+
+## Examples
+
+### Print MCP client configuration
+
+Generate client-specific config snippets before editing your agent settings.
+
+```bash
+npx -y @jsonbored/gittensory-mcp@latest init-client --print claude
+npx -y @jsonbored/gittensory-mcp@latest init-client --print codex
+```
+
+### Sign in and check local readiness
+
+Authenticate with GitHub Device Flow, then confirm the local MCP wrapper is
+ready.
+
+```bash
+gittensory-mcp login
+gittensory-mcp whoami
+gittensory-mcp doctor
+```
+
+### Analyze the current branch
+
+Ask Gittensory for metadata-only branch context before opening or updating a PR.
+
+```bash
+gittensory-mcp analyze-branch --login your-login --json
+gittensory-mcp preflight --login your-login --json
+```
+
+### Draft a public-safe PR packet
+
+Create maintainer-facing PR text that avoids private scoreability and reward
+claims.
+
+```bash
+gittensory-mcp agent packet --json
+```
+
+## Security
+
+- Gittensory's normal MCP analysis path is metadata-only by default; do not
+  paste source code, credentials, wallet material, or private maintainer notes
+  into prompts unless you intend to expose them to your active agent context.
+- The CLI uses GitHub OAuth Device Flow and Gittensory session tokens, not raw
+  GitHub personal access token prompts.
+- Scoreability values are private estimates for planning and prioritization.
+  They should not be copied into public GitHub comments, PR descriptions, or
+  maintainer replies.
+- Generated PR packets should be reviewed before use, especially when a repo has
+  strict contribution, issue-linking, or disclosure rules.
+
+## Troubleshooting
+
+### `npx` cannot resolve the package
+
+Confirm Node.js and npm are installed, then retry with the explicit package
+name: `npx -y @jsonbored/gittensory-mcp@latest --help`.
+
+### Authentication does not complete
+
+Run `gittensory-mcp login` again and complete the GitHub Device Flow in the
+browser. Then verify the session with `gittensory-mcp whoami`.
+
+### Claude cannot see the MCP server
+
+Check that the config uses the `npx` command and includes
+`@jsonbored/gittensory-mcp@latest` plus `--stdio`. Restart the MCP client after
+editing configuration.
+
+### The branch analysis looks stale
+
+Fetch the target repository, confirm the active branch is the branch you want to
+analyze, and rerun `gittensory-mcp analyze-branch --login your-login --json`.

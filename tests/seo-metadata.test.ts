@@ -54,7 +54,7 @@ function pageMetadataDescription(pagePath: string) {
 
 function seoClusterDescription(slug: string) {
   const source = fs.readFileSync(
-    path.join(repoRoot, "apps/web/src/lib/seo-clusters.ts"),
+    path.join(repoRoot, "apps/web/src/data/seo-cluster-definitions.ts"),
     "utf8",
   );
   const start = source.indexOf(`slug: "${slug}"`);
@@ -65,7 +65,7 @@ function seoClusterDescription(slug: string) {
 
 function allSeoClusterDescriptions() {
   const source = fs.readFileSync(
-    path.join(repoRoot, "apps/web/src/lib/seo-clusters.ts"),
+    path.join(repoRoot, "apps/web/src/data/seo-cluster-definitions.ts"),
     "utf8",
   );
   return [...source.matchAll(/seoDescription:\s*"([^"]+)"/g)].map(

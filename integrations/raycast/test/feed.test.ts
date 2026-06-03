@@ -7,7 +7,10 @@ import {
   CACHE_KEY,
   DETAIL_CACHE_PREFIX,
   REGISTRY_SEARCH_URL,
+  RECENT_UPDATES_CACHE_KEY,
+  TRENDING_CACHE_KEY,
   absoluteDataUrl,
+  attachDiscoveryEntries,
   buildFeedSnapshotMetadata,
   buildContributeEntryUrl,
   buildEntrySummary,
@@ -20,23 +23,35 @@ import {
   feedCacheKey,
   feedMetadataCacheKey,
   filterEntriesBySearchText,
+  filterDiscoveryEntries,
+  hasValidDiscoveryEntries,
   filterEntriesByCategory,
   isRaycastDetail,
   parseDetail,
   parseFavoriteKeys,
   parseFeed,
   parseRegistrySearch,
+  parseRecentUpdatesFeed,
+  parseTrendingFeed,
+  recentUpdatesCacheKey,
+  recentUpdatesFeedUrl,
   registryManifestUrl,
   registrySearchUrl,
   resolveFeedUrl,
   serializeFavoriteKeys,
   sortedCategoryOptions,
+  trendingCacheKey,
+  trendingFeedUrl,
   type RaycastEntry,
 } from "../src/feed";
 import {
+  fetchFreshRecentUpdates,
   fetchFreshFeed,
   fetchRegistrySearch,
+  fetchFreshTrending,
   loadCachedFeed,
+  loadCachedRecentUpdates,
+  loadCachedTrending,
   loadEntryDetail,
   type RaycastTextCache,
 } from "../src/runtime";
@@ -296,6 +311,143 @@ describe("Raycast feed helpers", () => {
     );
   });
 
+  it("parses discovery feeds and maps them onto full Raycast entries", () => {
+    const toolEntry = { ...sampleEntry, category: "tools", slug: "raycast" };
+    const trending = parseTrendingFeed(
+      JSON.stringify({
+        generatedAt: "2026-05-26T00:00:00.000Z",
+        kind: "registry-trending",
+        category: "all",
+        platform: "all",
+        signalsAvailable: { votes: true, community: false, intent: true },
+        entries: [
+          {
+            category: "tools",
+            slug: "raycast",
+            title: "Raycast",
+            description: "Desktop launcher.",
+            score: 12.7,
+            reasons: ["upvotes", "recent_intent"],
+          },
+          { category: "mcp" },
+        ],
+      }),
+    );
+    const recent = parseRecentUpdatesFeed(
+      JSON.stringify({
+        generatedAt: "2026-05-26T00:00:00.000Z",
+        currentSignature: "abc123",
+        entries: [
+          {
+            key: "mcp:context7",
+            type: "added",
+            category: "mcp",
+            slug: "context7",
+            title: "Context7",
+            dateAdded: "2026-05-26",
+          },
+        ],
+      }),
+    );
+
+    assert.equal(
+      hasValidDiscoveryEntries(JSON.stringify({ entries: [] })),
+      false,
+    );
+    assert.equal(
+      hasValidDiscoveryEntries(
+        JSON.stringify({ entries: [{ title: "no key" }] }),
+      ),
+      false,
+    );
+    assert.equal(hasValidDiscoveryEntries(JSON.stringify({ ok: true })), false);
+    assert.equal(
+      hasValidDiscoveryEntries(
+        JSON.stringify({ entries: [{ category: "mcp", slug: "context7" }] }),
+      ),
+      true,
+    );
+    assert.equal(trending.signalsAvailable?.votes, true);
+    assert.equal(trending.entries.length, 1);
+    assert.equal(trending.entries[0].key, "tools:raycast");
+    assert.deepEqual(trending.entries[0].reasons, ["upvotes", "recent_intent"]);
+    assert.equal(recent.currentSignature, "abc123");
+    assert.equal(recent.entries[0].updatedAt, "2026-05-26");
+    assert.equal(recent.entries[0].updateKind, "added");
+
+    const attached = attachDiscoveryEntries(
+      [sampleEntry, toolEntry],
+      [...trending.entries, ...recent.entries],
+    );
+    assert.deepEqual(
+      attached.map((entry) => entryKey(entry)),
+      ["tools:raycast", "mcp:context7"],
+    );
+    assert.deepEqual(
+      filterDiscoveryEntries(
+        attached,
+        "favorites",
+        new Set(["mcp:context7"]),
+      ).map((entry) => entryKey(entry)),
+      ["mcp:context7"],
+    );
+    assert.deepEqual(
+      filterDiscoveryEntries(attached, "tools", new Set()).map((entry) =>
+        entryKey(entry),
+      ),
+      ["tools:raycast"],
+    );
+  });
+
+  it("renders removed diff references as fallback rows only when requested", () => {
+    const removedReference = parseRecentUpdatesFeed(
+      JSON.stringify({
+        generatedAt: "2026-05-26T00:00:00.000Z",
+        currentSignature: "abc123",
+        entries: [
+          {
+            key: "mcp:retired",
+            type: "removed",
+            category: "mcp",
+            slug: "retired",
+            title: "Retired MCP",
+            description: "Removed from the registry.",
+            canonicalUrl: "https://heyclau.de/mcp/retired",
+          },
+        ],
+      }),
+    ).entries;
+
+    // Default behavior (e.g. trending): removed-only references are dropped.
+    assert.deepEqual(attachDiscoveryEntries([], removedReference), []);
+
+    const fallback = attachDiscoveryEntries([], removedReference, {
+      fallbackForRemoved: true,
+    });
+    assert.equal(fallback.length, 1);
+    assert.equal(entryKey(fallback[0]), "mcp:retired");
+    assert.equal(fallback[0].title, "Retired MCP");
+    assert.equal(fallback[0].webUrl, "https://heyclau.de/mcp/retired");
+    assert.equal(fallback[0].repoUrl, "");
+    assert.equal(fallback[0].discovery.updateKind, "removed");
+    assert.match(fallback[0].detailMarkdown, /Retired MCP/);
+
+    // Non-removed references without a matching entry stay dropped even with the flag.
+    const addedReference = parseRecentUpdatesFeed(
+      JSON.stringify({
+        generatedAt: "2026-05-26T00:00:00.000Z",
+        currentSignature: "abc123",
+        entries: [
+          { key: "mcp:ghost", type: "added", category: "mcp", slug: "ghost" },
+        ],
+      }),
+    ).entries;
+    assert.deepEqual(
+      attachDiscoveryEntries([], addedReference, { fallbackForRemoved: true }),
+      [],
+    );
+  });
+
   it("normalizes detail URLs relative to the public feed", () => {
     assert.equal(
       absoluteDataUrl("/data/raycast/mcp/context7.json"),
@@ -345,6 +497,28 @@ describe("Raycast feed helpers", () => {
       detailCacheKey(sampleEntry, devFeed),
       `${DETAIL_CACHE_PREFIX}:${entryKey(sampleEntry)}`,
     );
+    assert.equal(
+      trendingFeedUrl(devFeed, 99),
+      "https://preview.example.com/api/registry/trending?limit=50",
+    );
+    assert.equal(
+      recentUpdatesFeedUrl(devFeed, 0),
+      "https://preview.example.com/api/registry/diff?limit=1",
+    );
+    const trendingNaNLimit = new URL(
+      trendingFeedUrl(devFeed, Number.NaN),
+    ).searchParams.get("limit");
+    const recentUpdatesNaNLimit = new URL(
+      recentUpdatesFeedUrl(devFeed, Number.NaN),
+    ).searchParams.get("limit");
+    assert.equal(trendingNaNLimit, "25");
+    assert.equal(recentUpdatesNaNLimit, "25");
+    assert.ok(Number.isFinite(Number(trendingNaNLimit)));
+    assert.ok(Number.isFinite(Number(recentUpdatesNaNLimit)));
+    assert.equal(trendingCacheKey(), TRENDING_CACHE_KEY);
+    assert.equal(recentUpdatesCacheKey(), RECENT_UPDATES_CACHE_KEY);
+    assert.notEqual(trendingCacheKey(devFeed), TRENDING_CACHE_KEY);
+    assert.notEqual(recentUpdatesCacheKey(devFeed), RECENT_UPDATES_CACHE_KEY);
   });
 
   it("builds bounded server search URLs for Raycast queries", () => {
@@ -467,7 +641,12 @@ describe("Raycast feed helpers", () => {
 
   it("validates and parses full detail payloads", () => {
     const detail = { copyText: "full text", detailMarkdown: "# Detail" };
+    const lazyDetail = {
+      detailMarkdown: "# Detail",
+      llmsUrl: "/data/llms/mcp/context7.txt",
+    };
     assert.equal(isRaycastDetail(detail), true);
+    assert.equal(isRaycastDetail(lazyDetail), true);
     assert.deepEqual(parseDetail(JSON.stringify(detail)), detail);
     assert.equal(parseDetail(JSON.stringify({ copyText: "missing md" })), null);
     assert.deepEqual(fallbackDetail(sampleEntry), {
@@ -641,6 +820,23 @@ describe("Raycast feed helpers", () => {
     assert.match(jobsSource, /Action\.CreateQuicklink/);
   });
 
+  it("keeps the discovery Open Source action tied to repoUrl only", () => {
+    const discoverySource = fs.readFileSync(
+      path.join(process.cwd(), "src", "discovery-command.tsx"),
+      "utf8",
+    );
+
+    assert.doesNotMatch(
+      discoverySource,
+      /entry\.repoUrl\s*\|\|\s*entry\.documentationUrl/,
+    );
+    assert.match(
+      discoverySource,
+      /title="Open Source"\s*\n\s*url=\{entry\.repoUrl\}/,
+    );
+    assert.match(discoverySource, /\{entry\.repoUrl \? \(/);
+  });
+
   it("keeps the production Raycast manifest fixed to HeyClaude endpoints", () => {
     const manifest = JSON.parse(
       fs.readFileSync(path.join(process.cwd(), "package.json"), "utf8"),
@@ -661,6 +857,8 @@ describe("Raycast feed helpers", () => {
         "search-guides",
         "search-collections",
         "search-statuslines",
+        "trending",
+        "recent-updates",
         "jobs",
         "submit-content",
         "get-involved",
@@ -1036,29 +1234,180 @@ describe("Raycast feed helpers", () => {
     assert.match(cache.get(feedCacheKey(devFeed)) || "", /context7/);
   });
 
+  it("loads trending and recent update feeds with stale-cache fallback", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const requestedUrls: string[] = [];
+    const trending = await fetchFreshTrending({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        return response({
+          schemaVersion: 1,
+          kind: "registry-trending",
+          category: "all",
+          platform: "all",
+          signalsAvailable: { votes: true, community: true, intent: false },
+          entries: [
+            {
+              category: "mcp",
+              slug: "context7",
+              title: "Context7",
+              description: "Fetch docs.",
+              score: 9,
+              reasons: ["upvotes"],
+            },
+          ],
+        });
+      },
+    });
+    const recent = await fetchFreshRecentUpdates({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async (input) => {
+        requestedUrls.push(String(input));
+        return response({
+          schemaVersion: 1,
+          kind: "registry-diff",
+          generatedAt: "2026-05-26T00:00:00.000Z",
+          currentSignature: "diff-signature",
+          entries: [
+            {
+              key: "mcp:context7",
+              type: "added",
+              category: "mcp",
+              slug: "context7",
+              title: "Context7",
+              dateAdded: "2026-05-26",
+            },
+          ],
+        });
+      },
+    });
+
+    assert.deepEqual(requestedUrls, [
+      "https://preview.example.com/api/registry/trending?limit=25",
+      "https://preview.example.com/api/registry/diff?limit=25",
+    ]);
+    assert.equal(trending.refreshStatus, "updated");
+    assert.equal(trending.entries[0].score, 9);
+    assert.equal(recent.currentSignature, "diff-signature");
+    assert.equal(loadCachedTrending(cache, devFeed).entries.length, 1);
+    assert.equal(loadCachedRecentUpdates(cache, devFeed).entries.length, 1);
+
+    const staleTrending = await fetchFreshTrending({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () => response({ malformed: true }),
+    });
+    const staleRecent = await fetchFreshRecentUpdates({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () => response({}, { status: 503 }),
+    });
+
+    assert.equal(staleTrending.refreshStatus, "stale");
+    assert.match(staleTrending.refreshWarning || "", /malformed/);
+    assert.equal(staleTrending.entries[0].slug, "context7");
+    assert.equal(staleRecent.refreshStatus, "stale");
+    assert.match(staleRecent.refreshWarning || "", /503/);
+    assert.equal(staleRecent.entries[0].slug, "context7");
+  });
+
+  it("keeps a useful discovery snapshot when a payload normalizes to zero entries", async () => {
+    const cache = new MemoryCache();
+    const devFeed = "https://preview.example.com/data/raycast-index.json";
+    const goodTrending = {
+      schemaVersion: 1,
+      kind: "registry-trending",
+      category: "all",
+      platform: "all",
+      entries: [
+        {
+          category: "mcp",
+          slug: "context7",
+          title: "Context7",
+          description: "Fetch docs.",
+          score: 9,
+          reasons: ["upvotes"],
+        },
+      ],
+    };
+    await fetchFreshTrending({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () => response(goodTrending),
+    });
+    const cachedSnapshot = cache.get(trendingCacheKey(devFeed));
+    assert.equal(loadCachedTrending(cache, devFeed).entries.length, 1);
+
+    // Empty entries array: must not overwrite the cache and must fall back to stale.
+    const emptyArray = await fetchFreshTrending({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () => response({ entries: [] }),
+    });
+    assert.equal(emptyArray.refreshStatus, "stale");
+    assert.equal(emptyArray.entries[0].slug, "context7");
+    assert.equal(cache.get(trendingCacheKey(devFeed)), cachedSnapshot);
+
+    // Entries present but all rows fail normalization: same protection.
+    const allMalformed = await fetchFreshTrending({
+      cache,
+      feedUrl: devFeed,
+      fetchFn: async () =>
+        response({ entries: [{ title: "no category or slug" }] }),
+    });
+    assert.equal(allMalformed.refreshStatus, "stale");
+    assert.equal(allMalformed.entries[0].slug, "context7");
+    assert.equal(cache.get(trendingCacheKey(devFeed)), cachedSnapshot);
+
+    // With no prior cache to protect, a zero-entry payload must reject outright.
+    await assert.rejects(
+      fetchFreshRecentUpdates({
+        cache,
+        feedUrl: devFeed,
+        fetchFn: async () => response({ entries: [] }),
+      }),
+      /malformed/,
+    );
+    assert.equal(cache.get(recentUpdatesCacheKey(devFeed)), undefined);
+  });
+
   it("loads detail payloads on demand and falls back only when no detail URL exists", async () => {
     const cache = new MemoryCache();
-    let requestedUrl = "";
+    const requestedUrls: string[] = [];
     const devFeed = "https://preview.example.com/data/raycast-index.json";
     const detail = await loadEntryDetail({
       entry: sampleEntry,
       cache,
       feedUrl: devFeed,
       fetchFn: async (input) => {
-        requestedUrl = String(input);
+        requestedUrls.push(String(input));
+        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+          return response("remote full text", {
+            headers: { "content-type": "text/plain" },
+          });
+        }
         return response({
-          copyText: "remote full text",
           detailMarkdown: "# Remote",
+          llmsUrl: "/data/llms/mcp/context7.txt",
         });
       },
     });
     assert.deepEqual(detail, {
       copyText: "remote full text",
       detailMarkdown: "# Remote",
+      llmsUrl: "/data/llms/mcp/context7.txt",
     });
     assert.equal(
-      requestedUrl,
+      requestedUrls[0],
       "https://preview.example.com/data/raycast/mcp/context7.json",
+    );
+    assert.equal(
+      requestedUrls[1],
+      "https://preview.example.com/data/llms/mcp/context7.txt",
     );
     assert.match(
       cache.get(detailCacheKey(sampleEntry, devFeed)) || "",
@@ -1110,11 +1459,17 @@ describe("Raycast feed helpers", () => {
       entry: sampleEntry,
       cache,
       feedUrl: devFeed,
-      fetchFn: async () =>
-        response({
-          copyText: "current detail",
+      fetchFn: async (input) => {
+        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+          return response("current detail", {
+            headers: { "content-type": "text/plain" },
+          });
+        }
+        return response({
           detailMarkdown: "# Current",
-        }),
+          llmsUrl: "/data/llms/mcp/context7.txt",
+        });
+      },
     });
 
     assert.equal(detail.copyText, "current detail");

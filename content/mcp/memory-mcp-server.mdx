@@ -1,0 +1,178 @@
+---
+title: Memory MCP Server for Claude
+slug: memory-mcp-server
+category: mcp
+description: >-
+  Official reference MCP server that gives Claude persistent memory through a
+  local knowledge graph of entities, relations, and observations, stored in a
+  file on your own machine.
+cardDescription: >-
+  Official reference MCP server that adds persistent memory for Claude via a
+  local knowledge graph of entities, relations, and observations.
+seoTitle: Memory MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Memory MCP server for persistent recall across
+  sessions. It stores entities, relations, and observations in a local
+  knowledge-graph file you control, with no external service.
+author: Model Context Protocol
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://www.npmjs.com/package/@modelcontextprotocol/server-memory"
+installable: true
+installCommand: "claude mcp add memory -- npx -y @modelcontextprotocol/server-memory"
+usageSnippet: "claude mcp add memory -- npx -y @modelcontextprotocol/server-memory"
+copySnippet: |-
+  {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+configSnippet: |-
+  {
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - Claude Code or Claude Desktop with MCP support
+  - >-
+    A writable location for the memory file, optionally set with the
+    MEMORY_FILE_PATH environment variable
+tags:
+  - memory
+  - knowledge-graph
+  - persistence
+  - reference
+  - official
+keywords:
+  - memory mcp
+  - persistent memory for claude
+  - knowledge graph mcp
+  - cross session memory
+  - reference mcp server
+safetyNotes:
+  - >-
+    Persists remembered information to a local file on disk (its location can be
+    set with MEMORY_FILE_PATH); manage and review that file as it accumulates
+    data.
+  - >-
+    Runs locally as an stdio process and makes no external network calls; the
+    knowledge graph stays on your machine.
+privacyNotes:
+  - >-
+    Details Claude chooses to remember are written to and read from the local
+    memory file, so it can retain personal or project information across
+    sessions.
+  - >-
+    Review or clear the memory file if it should not retain sensitive data, and
+    use MEMORY_FILE_PATH to control where it is stored.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Memory is one of the official Model Context Protocol reference servers. It gives Claude a persistent store that survives across sessions by maintaining a knowledge graph: entities (things worth remembering), relations (how they connect), and observations (facts attached to them). Instead of forgetting context when a conversation ends, Claude can record durable information and recall it later. Everything is kept in a local file on your own machine, so the memory stays under your control and the server makes no external calls.
+
+## Features
+
+- Persistent memory backed by a local knowledge graph of entities, relations, and observations.
+- Recall of stored information across separate Claude sessions.
+- Create, update, and query the graph as a normal part of conversation.
+- Storage in a local file whose path you can set with `MEMORY_FILE_PATH`.
+- Runs locally as a standard stdio MCP server with no external network calls.
+- Maintained as part of the official Model Context Protocol reference servers.
+
+## Use Cases
+
+- Remember durable project facts, preferences, or decisions between sessions.
+- Build up context about a codebase or domain over time.
+- Keep track of people, components, or systems and how they relate.
+- Give an assistant workflow continuity without re-explaining background each time.
+- Maintain a private, local memory store you fully control.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Run: `claude mcp add memory -- npx -y @modelcontextprotocol/server-memory`
+3. Verify the server is registered: `claude mcp list`
+4. Ask Claude to remember a fact, then start a new session and ask it to recall.
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the Memory server to the `mcpServers` section using the configuration below.
+3. Optionally set `MEMORY_FILE_PATH` to choose where the memory file is stored.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "memory": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-memory"]
+  }
+}
+```
+
+To control where memory is stored, add an `env` block with `MEMORY_FILE_PATH` pointing to a writable file path.
+
+## Examples
+
+### Remember a durable fact
+
+Ask Claude to store something for later.
+
+```text
+"Remember that this project uses pnpm workspaces and deploys to Cloudflare."
+```
+
+### Recall in a later session
+
+Start fresh and ask Claude to use its memory.
+
+```text
+"What do you remember about how this project is built and deployed?"
+```
+
+### Relate entities
+
+Build connections in the knowledge graph.
+
+```text
+"Remember that the billing service depends on the auth service, and note why."
+```
+
+## Security
+
+- The server writes remembered information to a local file. Treat that file as data storage: know where it lives, and back it up or clear it as appropriate.
+- It runs locally as an stdio process and does not send the knowledge graph to any external service.
+- Because it can retain personal or project details across sessions, review what is stored if the environment should not keep sensitive data.
+- Use `MEMORY_FILE_PATH` to place the memory file in a location with appropriate access controls.
+
+## Troubleshooting
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y @modelcontextprotocol/server-memory` from resolving.
+
+### Memory does not persist between sessions
+
+Confirm the process can write to the memory file location. If you set `MEMORY_FILE_PATH`, make sure the path is writable and consistent across runs so the same file is reused.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add memory -- npx -y @modelcontextprotocol/server-memory`, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in.
+
+### Claude does not store or recall information
+
+Prompt it explicitly, for example "remember this" or "use your memory". The model decides when to call the tools, so a clear instruction helps it write to or read from the graph.

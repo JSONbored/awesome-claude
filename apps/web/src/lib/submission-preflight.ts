@@ -1,5 +1,5 @@
-import { buildSubmissionIssueDraft, validateSubmission } from "@heyclaude/registry/submission";
-import { analyzeIssueSubmissionRisk } from "@heyclaude/registry/submission-risk";
+import { buildSubmissionPrDraft, validateSubmission } from "@heyclaude/registry/submission";
+import { analyzeSubmissionDraftRisk } from "@heyclaude/registry/submission-risk";
 
 import { getDirectoryEntries, type DirectoryEntry } from "@/lib/content.server";
 import { siteConfig } from "@/lib/site";
@@ -144,38 +144,36 @@ function looksLikeCommercialListing(fields: Record<string, unknown>) {
   );
 }
 
-function missingNoteWarnings(risk: ReturnType<typeof analyzeIssueSubmissionRisk>) {
+function missingNoteWarnings(risk: ReturnType<typeof analyzeSubmissionDraftRisk>) {
   const warnings = risk.classificationWarnings ?? [];
   const safety = warnings.find((item) => item.id === "missing_safety_notes");
   const privacy = warnings.find((item) => item.id === "missing_privacy_notes");
   return { safety, privacy };
 }
 
-function buildPrPreview(issue: { title: string; body: string }, category: string, slug: string) {
+function buildPrPreview(draft: { title: string; body: string }, category: string, slug: string) {
   return {
-    title: issue.title.replace(/^Submit /, "Add "),
+    title: draft.title,
     targetPath: category && slug ? `content/${category}/${slug}.mdx` : "",
     branchHint: category && slug ? `heyclaude/submit-${category}-${slug}` : "",
     baseRef: siteConfig.submissionBaseRef,
-    body: issue.body,
+    body: draft.body,
   };
 }
 
 export async function buildSubmissionPreflight(fields: Record<string, unknown>) {
-  const issue = buildSubmissionIssueDraft({
+  const draft = buildSubmissionPrDraft({
     ...fields,
     submitted_via: "website-preflight",
   });
   const validation = validateSubmission({
-    title: issue.title,
-    body: issue.body,
-    labels: issue.labels,
+    title: draft.title,
+    body: draft.body,
   });
-  const risk = analyzeIssueSubmissionRisk(
+  const risk = analyzeSubmissionDraftRisk(
     {
-      title: issue.title,
-      body: issue.body,
-      labels: issue.labels,
+      title: draft.title,
+      body: draft.body,
       author: "website-preflight",
     },
     validation,
@@ -317,6 +315,6 @@ export async function buildSubmissionPreflight(fields: Record<string, unknown>) 
               },
   };
   return routeSuggestion === "submit_pr"
-    ? { ...response, prPreview: buildPrPreview(issue, category, slug) }
+    ? { ...response, prPreview: buildPrPreview(draft, category, slug) }
     : response;
 }

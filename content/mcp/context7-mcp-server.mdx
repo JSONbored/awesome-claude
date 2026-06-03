@@ -1,0 +1,178 @@
+---
+title: Context7 MCP Server for Claude
+slug: context7-mcp-server
+category: mcp
+description: >-
+  Context7 MCP server by Upstash that pulls up-to-date, version-specific library
+  documentation and code examples directly into Claude's context so answers
+  match the libraries you actually use.
+cardDescription: >-
+  Upstash Context7 MCP server that injects current, version-specific library
+  docs and code examples into Claude's prompt context on demand.
+seoTitle: Context7 MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the Context7 MCP server by Upstash to fetch up-to-date,
+  version-specific documentation and code examples for popular libraries
+  directly into the prompt, reducing outdated or hallucinated APIs.
+author: Upstash
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-02"
+documentationUrl: "https://github.com/upstash/context7"
+repoUrl: "https://github.com/upstash/context7"
+websiteUrl: "https://context7.com"
+installable: true
+installCommand: "claude mcp add context7 -- npx -y @upstash/context7-mcp"
+usageSnippet: "claude mcp add context7 -- npx -y @upstash/context7-mcp"
+copySnippet: |-
+  {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+configSnippet: |-
+  {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"]
+    }
+  }
+estimatedSetupTime: 2 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - Claude Code or Claude Desktop with MCP support
+  - >-
+    Internet access so the server can reach the Context7 documentation service
+  - >-
+    Optional Context7 API key for higher rate limits; the server also works
+    without one
+tags:
+  - documentation
+  - code-examples
+  - upstash
+  - developer-tools
+  - context
+keywords:
+  - context7 mcp
+  - up to date library docs
+  - version specific documentation
+  - code examples mcp
+  - upstash context7
+safetyNotes:
+  - >-
+    Makes outbound network requests to the Context7 service to resolve libraries
+    and fetch documentation.
+  - >-
+    Returned documentation and code snippets are third-party content; review
+    examples before running them in your project.
+privacyNotes:
+  - >-
+    The library names and documentation topics you query are sent to the
+    Context7 service to return matching docs.
+  - >-
+    Avoid placing secrets or private identifiers in the library queries passed
+    to the server.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Context7 keeps Claude's answers aligned with the libraries you actually depend on. When you ask for help with a framework or package, the server resolves the library and pulls current, version-specific documentation and code examples straight into the prompt context. That reduces the common failure mode where a model answers from an outdated training snapshot and produces APIs that no longer exist. Add a short instruction like "use context7" to a prompt and Claude can ground its response in fresh docs.
+
+## Features
+
+- Fetches up-to-date, version-specific documentation for popular libraries on demand.
+- Resolves a free-form library name to a canonical documentation source before fetching.
+- Returns focused documentation and code examples scoped to the topic you ask about.
+- Reduces outdated or hallucinated APIs by grounding answers in current docs.
+- Runs as a standard stdio MCP server that installs into Claude Code and Claude Desktop with one command.
+- Works without an account; an optional API key raises rate limits.
+
+## Use Cases
+
+- Get accurate, current usage for a library instead of relying on the model's training cutoff.
+- Pull version-specific code examples while implementing a feature.
+- Confirm the correct API surface for a fast-moving framework before writing code.
+- Reduce time spent cross-checking official docs in a separate browser tab.
+- Ground refactors and migrations in the documentation for the target version.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Run: `claude mcp add context7 -- npx -y @upstash/context7-mcp`
+3. Verify the server is registered: `claude mcp list`
+4. Add "use context7" to a coding prompt to confirm docs are pulled in.
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the Context7 server to the `mcpServers` section using the configuration below.
+3. Restart Claude Desktop.
+4. Confirm the server appears and ask a library question with "use context7".
+
+## Configuration
+
+```json
+{
+  "context7": {
+    "command": "npx",
+    "args": ["-y", "@upstash/context7-mcp"]
+  }
+}
+```
+
+## Examples
+
+### Ground an answer in current docs
+
+Append a short instruction so Claude pulls fresh documentation.
+
+```text
+"Show me how to define a route with the latest version of my web framework. use context7"
+```
+
+### Resolve a specific library version
+
+Ask for version-scoped guidance to avoid outdated APIs.
+
+```text
+"Give me the current recommended client setup for this database library, version-specific. use context7"
+```
+
+### Pull focused code examples
+
+Request examples for a single topic rather than a broad overview.
+
+```text
+"Fetch up-to-date examples for handling file uploads in this framework. use context7"
+```
+
+## Security
+
+- The server makes outbound network requests to the Context7 service; only the library names and topics you query are sent to resolve and fetch documentation.
+- Returned documentation and code examples are third-party content, so review any snippet before running it in your environment.
+- Do not embed secrets, tokens, or private identifiers in the library queries you pass to the server.
+- If you configure an optional API key for higher rate limits, store it as an environment variable rather than committing it to source control.
+
+## Troubleshooting
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y @upstash/context7-mcp` from resolving.
+
+### Documentation requests time out or return nothing
+
+Confirm the machine has internet access to the Context7 service. Transient rate limiting can also cause empty responses; retry, and consider configuring an API key for higher limits.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add context7 -- npx -y @upstash/context7-mcp`, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in.
+
+### Claude does not use Context7 automatically
+
+Add an explicit instruction such as "use context7" to the prompt. The server provides documentation tools, but the model decides when to call them, so a nudge helps in ambiguous requests.

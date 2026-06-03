@@ -80,6 +80,16 @@ describe("source repo signals", () => {
       },
     );
     expect(parseGitHubRepoUrl("https://example.com/OpenAI/whisper")).toBeNull();
+    // The www. alias resolves to the same repo as the bare github.com host.
+    expect(parseGitHubRepoUrl("https://www.github.com/OpenAI/whisper")).toEqual({
+      owner: "OpenAI",
+      repo: "whisper",
+      key: "openai/whisper",
+    });
+    // Only a leading www. is stripped — other subdomains stay rejected.
+    expect(
+      parseGitHubRepoUrl("https://gist.github.com/OpenAI/whisper"),
+    ).toBeNull();
   });
 
   it("strips stale generated stats when the cache is available but empty", () => {

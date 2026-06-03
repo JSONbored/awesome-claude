@@ -1,0 +1,311 @@
+---
+title: ClickHouse MCP Server for Claude
+slug: clickhouse-mcp-server
+category: mcp
+description: >-
+  Connect Claude to ClickHouse for read-only SQL exploration, schema discovery,
+  and safe analytics workflows.
+cardDescription: >-
+  MCP server for ClickHouse SQL queries, database and table discovery, and
+  analytics exploration with read-only defaults.
+seoTitle: ClickHouse MCP Server for Claude
+seoDescription: >-
+  Use the ClickHouse MCP server with Claude for read-only ClickHouse SQL
+  queries, database discovery, table metadata, and safe analytics workflows.
+author: ClickHouse
+authorProfileUrl: "https://clickhouse.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/ClickHouse/mcp-clickhouse#readme"
+repoUrl: "https://github.com/ClickHouse/mcp-clickhouse"
+installable: true
+installCommand: >-
+  claude mcp add clickhouse --env CLICKHOUSE_HOST=YOUR_CLICKHOUSE_HOST --env
+  CLICKHOUSE_PORT=8443 --env CLICKHOUSE_USER=YOUR_CLICKHOUSE_USER --env
+  CLICKHOUSE_PASSWORD=YOUR_CLICKHOUSE_PASSWORD --env CLICKHOUSE_SECURE=true
+  --env CLICKHOUSE_VERIFY=true -- uv run --with mcp-clickhouse --python 3.10
+  mcp-clickhouse
+usageSnippet: >-
+  claude mcp add clickhouse --env CLICKHOUSE_HOST=YOUR_CLICKHOUSE_HOST --env
+  CLICKHOUSE_PORT=8443 --env CLICKHOUSE_USER=YOUR_CLICKHOUSE_USER --env
+  CLICKHOUSE_PASSWORD=YOUR_CLICKHOUSE_PASSWORD --env CLICKHOUSE_SECURE=true
+  --env CLICKHOUSE_VERIFY=true -- uv run --with mcp-clickhouse --python 3.10
+  mcp-clickhouse
+copySnippet: |-
+  {
+    "clickhouse": {
+      "command": "uv",
+      "args": ["run", "--with", "mcp-clickhouse", "--python", "3.10", "mcp-clickhouse"],
+      "env": {
+        "CLICKHOUSE_HOST": "<clickhouse-host>",
+        "CLICKHOUSE_PORT": "8443",
+        "CLICKHOUSE_USER": "<clickhouse-user>",
+        "CLICKHOUSE_PASSWORD": "<clickhouse-password>",
+        "CLICKHOUSE_SECURE": "true",
+        "CLICKHOUSE_VERIFY": "true",
+        "CLICKHOUSE_CONNECT_TIMEOUT": "30",
+        "CLICKHOUSE_SEND_RECEIVE_TIMEOUT": "30"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "clickhouse": {
+      "command": "uv",
+      "args": ["run", "--with", "mcp-clickhouse", "--python", "3.10", "mcp-clickhouse"],
+      "env": {
+        "CLICKHOUSE_HOST": "<clickhouse-host>",
+        "CLICKHOUSE_PORT": "8443",
+        "CLICKHOUSE_USER": "<clickhouse-user>",
+        "CLICKHOUSE_PASSWORD": "<clickhouse-password>",
+        "CLICKHOUSE_SECURE": "true",
+        "CLICKHOUSE_VERIFY": "true",
+        "CLICKHOUSE_CONNECT_TIMEOUT": "30",
+        "CLICKHOUSE_SEND_RECEIVE_TIMEOUT": "30"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - uv available for the documented `uv run --with mcp-clickhouse` launch path, or Python 3.10+ with the `mcp-clickhouse` package installed
+  - ClickHouse Cloud or self-hosted ClickHouse reachable from the MCP server
+  - Dedicated ClickHouse user with the minimum read permissions needed for the intended databases and tables
+  - Claude Code, Claude Desktop, Cursor, VS Code, or another MCP-capable client
+  - Optional chDB support only when local embedded ClickHouse queries are part of the workflow
+safetyNotes:
+  - >-
+    The upstream server runs ClickHouse queries in read-only mode by default
+    because `CLICKHOUSE_ALLOW_WRITE_ACCESS` is false unless explicitly enabled.
+    Leave write access disabled for production investigation workflows.
+  - >-
+    If write access is enabled, destructive operations such as DROP and TRUNCATE
+    require the additional `CLICKHOUSE_ALLOW_DROP` opt-in. Treat both flags as
+    privileged operational changes, not normal client configuration.
+  - >-
+    Use a dedicated least-privilege ClickHouse user or role. MCP read-only mode
+    does not hide tables, columns, rows, or system metadata that the database
+    account is already allowed to read.
+  - >-
+    Review model-generated SQL before execution, especially broad table scans,
+    expensive aggregations, cross-database queries, or wide time ranges against
+    production clusters.
+  - >-
+    For HTTP or SSE transports, keep authentication enabled. The upstream server
+    requires authentication by default for those transports and only documents
+    disabling it for local development.
+privacyNotes:
+  - >-
+    Query results, database names, table names, column metadata, create-table
+    definitions, and aggregate outputs can become visible to the connected MCP
+    client and model session.
+  - >-
+    ClickHouse data often includes logs, events, analytics records, user
+    identifiers, IP addresses, request payloads, or product usage data; use
+    database permissions and query limits before exposing production datasets.
+  - >-
+    Store ClickHouse passwords, roles, and bearer tokens in MCP environment
+    configuration or your client secret-management flow, not in prompts or
+    checked-in configuration files.
+  - >-
+    chDB support can query local files, URLs, and embedded datasets when
+    enabled. Keep it disabled unless that local data access is intentional.
+tags:
+  - clickhouse
+  - sql
+  - database
+  - analytics
+  - read-only
+  - mcp
+keywords:
+  - clickhouse mcp
+  - mcp-clickhouse
+  - read-only sql mcp
+  - database mcp server
+  - clickhouse claude
+  - safe sql mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The ClickHouse MCP server connects Claude and other MCP-capable clients to a
+ClickHouse cluster for SQL exploration, schema discovery, and analytics
+investigation. It is maintained under the ClickHouse GitHub organization and is
+published as the `mcp-clickhouse` Python package.
+
+This entry is focused on the safe query path for production-adjacent data work:
+use a dedicated read-only ClickHouse user, keep the server's write flag disabled,
+and let Claude inspect databases, tables, and query results without giving it
+unnecessary mutation privileges.
+
+The upstream server also supports chDB, ClickHouse's embedded analytical engine,
+for local file and embedded dataset workflows. Keep chDB disabled unless local
+file-backed analysis is explicitly part of the MCP setup.
+
+## Features
+
+- Execute ClickHouse SQL through the `run_query` MCP tool.
+- Read-only query mode is the default unless `CLICKHOUSE_ALLOW_WRITE_ACCESS` is
+  explicitly enabled.
+- List ClickHouse databases.
+- List tables in a database with pagination, `LIKE` and `NOT LIKE` filters, page
+  size controls, and optional detailed column metadata.
+- Use chDB support for embedded ClickHouse-style queries when the optional
+  package extra is installed and enabled.
+- Run over stdio for local MCP clients.
+- Run with HTTP or SSE transports when deployment requires a service endpoint.
+- Require bearer-token, OAuth, OIDC, or equivalent FastMCP authentication for
+  HTTP/SSE transports unless explicitly disabled for local development.
+- Add custom FastMCP middleware for logging, request timing, tenant routing, or
+  other deployment-specific policy checks.
+
+## Use Cases
+
+- Give Claude controlled read access to analytics tables for debugging,
+  dashboard investigation, or exploratory reporting.
+- Ask Claude to list relevant databases and tables before writing a query.
+- Inspect table schemas and column metadata before generating SQL.
+- Run bounded SELECT queries against ClickHouse Cloud or a self-hosted
+  ClickHouse deployment.
+- Compare counts, time buckets, or aggregate metrics during an incident without
+  granting DDL or DML access.
+- Use chDB locally for file-backed analytics when data should stay on the
+  developer machine.
+
+## Installation
+
+### Claude Code
+
+1. Install `uv` and confirm it is available to the process that launches Claude.
+2. Create a dedicated ClickHouse user or role with only the read privileges
+   needed for the target databases and tables.
+3. Add the MCP server with the ClickHouse connection environment:
+
+```bash
+claude mcp add clickhouse --env CLICKHOUSE_HOST=YOUR_CLICKHOUSE_HOST --env CLICKHOUSE_PORT=8443 --env CLICKHOUSE_USER=YOUR_CLICKHOUSE_USER --env CLICKHOUSE_PASSWORD=YOUR_CLICKHOUSE_PASSWORD --env CLICKHOUSE_SECURE=true --env CLICKHOUSE_VERIFY=true -- uv run --with mcp-clickhouse --python 3.10 mcp-clickhouse
+```
+
+4. Restart or refresh the MCP client session.
+5. Start with database and table listing before running a bounded query.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `clickhouse` server configuration shown below.
+3. Replace the placeholder host, user, password, and optional role values with
+   your ClickHouse connection details.
+4. Restart Claude Desktop and test with a narrow database listing or table
+   metadata request.
+
+## Configuration
+
+```json
+{
+  "clickhouse": {
+    "command": "uv",
+    "args": ["run", "--with", "mcp-clickhouse", "--python", "3.10", "mcp-clickhouse"],
+    "env": {
+      "CLICKHOUSE_HOST": "<clickhouse-host>",
+      "CLICKHOUSE_PORT": "8443",
+      "CLICKHOUSE_USER": "<clickhouse-user>",
+      "CLICKHOUSE_PASSWORD": "<clickhouse-password>",
+      "CLICKHOUSE_SECURE": "true",
+      "CLICKHOUSE_VERIFY": "true",
+      "CLICKHOUSE_CONNECT_TIMEOUT": "30",
+      "CLICKHOUSE_SEND_RECEIVE_TIMEOUT": "30"
+    }
+  }
+}
+```
+
+Keep `CLICKHOUSE_ALLOW_WRITE_ACCESS` unset or false for normal investigation
+workflows. Only set it to true when the MCP client is intentionally allowed to
+run write operations, and only set `CLICKHOUSE_ALLOW_DROP` when destructive
+operations are explicitly approved.
+
+## Examples
+
+### Discover available data
+
+Ask Claude to list databases and then list tables in a specific database before
+writing any query.
+
+```plaintext
+List ClickHouse databases, then show tables in the analytics database with page size 25.
+```
+
+### Inspect table metadata
+
+Fetch table details before asking for an aggregate query.
+
+```plaintext
+Show the columns and create-table definition for analytics.events before writing a query.
+```
+
+### Run a bounded aggregate query
+
+Keep production queries narrow by specifying a database, table, time window, and
+maximum result shape.
+
+```plaintext
+Query the last 30 minutes of analytics.events and group error counts by service, returning the top 20 services only.
+```
+
+### Check read-only posture
+
+Ask Claude to explain which ClickHouse user it is configured to use and confirm
+whether write-access environment flags are absent.
+
+```plaintext
+Before running queries, summarize the ClickHouse connection settings and confirm write access is not enabled.
+```
+
+## Security
+
+- Treat the MCP database user like any other external database client. Do not
+  use the `default`, admin, or owner account for agent workflows.
+- Prefer database-enforced least privilege over relying only on MCP-side SQL
+  classification. The server's read-only default is valuable, but database
+  grants decide what data can be read.
+- Keep `CLICKHOUSE_ALLOW_WRITE_ACCESS` disabled unless the user has explicitly
+  approved write-capable automation for that environment.
+- Keep `CLICKHOUSE_ALLOW_DROP` disabled unless destructive operations are part of
+  a deliberate, reviewed maintenance workflow.
+- For HTTP/SSE deployments, configure bearer-token or identity-provider
+  authentication and do not expose unauthenticated MCP endpoints to a network.
+- Review queries before execution when they touch large tables, broad time
+  ranges, sensitive schemas, or high-cost aggregations.
+
+## Troubleshooting
+
+### Claude cannot start the server
+
+Confirm `uv` is installed and available to the MCP client process. If `uv` is
+not the desired runtime, install `mcp-clickhouse` with Python 3.10+ and update
+the command to run the installed package directly.
+
+### Authentication fails
+
+Verify `CLICKHOUSE_HOST`, `CLICKHOUSE_PORT`, `CLICKHOUSE_USER`, and
+`CLICKHOUSE_PASSWORD`. If your user requires a role, add `CLICKHOUSE_ROLE` to
+the environment.
+
+### TLS connection fails
+
+Keep `CLICKHOUSE_SECURE=true` and `CLICKHOUSE_VERIFY=true` for production. If a
+proxy or load balancer uses a different certificate hostname, configure the
+server hostname override documented by the upstream project.
+
+### Queries return permission errors
+
+Check the ClickHouse grants for the configured user or role. A connection can
+authenticate successfully while still lacking permission to read a database,
+table, system table, or metadata view.
+
+### Responses are too large
+
+Use table filters, page sizes, aggregate queries, explicit time windows, and
+top-N limits before asking Claude to inspect large tables or detailed schemas.

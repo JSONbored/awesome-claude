@@ -1,0 +1,184 @@
+---
+title: Magic MCP Server for Claude
+slug: magic-mcp-server
+category: mcp
+description: >-
+  Magic MCP by 21st.dev lets Claude generate polished, production-ready UI
+  components from natural language, returning React and Tailwind code you can
+  drop straight into a project.
+cardDescription: >-
+  21st.dev Magic MCP server that generates production-ready React and Tailwind UI
+  components for Claude from natural-language descriptions.
+seoTitle: Magic MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the 21st.dev Magic MCP server to generate modern UI
+  components from natural language. Get React and Tailwind code for buttons,
+  forms, and layouts directly in your editor workflow.
+author: 21st.dev
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/21st-dev/magic-mcp"
+repoUrl: "https://github.com/21st-dev/magic-mcp"
+websiteUrl: "https://21st.dev"
+installable: true
+installCommand: "claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest"
+usageSnippet: "claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest"
+copySnippet: |-
+  {
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "magic": {
+      "command": "npx",
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - "A 21st.dev Magic API key (create one at https://21st.dev/magic/console)"
+  - Claude Code or Claude Desktop with MCP support
+  - Internet access so the server can reach the 21st.dev Magic service
+tags:
+  - ui
+  - components
+  - frontend
+  - react
+  - generation
+keywords:
+  - magic mcp
+  - ui component generator
+  - react tailwind components
+  - 21st dev magic
+  - ai frontend components
+safetyNotes:
+  - >-
+    Generates UI code that is inserted into your project; review the output
+    before committing or shipping it.
+  - >-
+    Makes outbound network requests to the 21st.dev Magic service to produce
+    components.
+privacyNotes:
+  - >-
+    The component descriptions and prompts you provide are sent to the 21st.dev
+    Magic service to generate code, so avoid embedding secrets in them.
+  - >-
+    The Magic API key is a credential; store it securely and do not commit it to
+    source control.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Magic turns natural-language descriptions into polished UI components without leaving your editor. Ask for a pricing table, a sign-in form, or a navigation bar, and the server returns modern React and Tailwind code ready to paste into a project. It is aimed at speeding up frontend work: instead of hand-writing boilerplate markup and styles, you describe the component you want and refine the generated result. The server exposes generation as an MCP tool, so Claude can call it as part of a normal coding conversation.
+
+## Features
+
+- Generate production-ready UI components from plain-language descriptions.
+- Returns React and Tailwind code you can drop directly into a project.
+- Covers common building blocks like buttons, forms, cards, and layouts.
+- Keeps you in the editor rather than copying snippets from a separate site.
+- Runs as a standard stdio MCP server that installs into Claude Code and Claude Desktop with one command.
+- Maintained by 21st.dev as the official Magic integration.
+
+## Use Cases
+
+- Scaffold a new component quickly instead of writing boilerplate by hand.
+- Produce a first-draft layout to iterate on with Claude.
+- Generate consistent Tailwind markup for repetitive UI elements.
+- Prototype a page section during early frontend development.
+- Hand Claude a design description and get usable code back in the same conversation.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Create a Magic API key at https://21st.dev/magic/console.
+3. Run: `claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest`
+4. Verify the server is registered: `claude mcp list`
+
+### Claude Desktop
+
+1. Create a Magic API key at https://21st.dev/magic/console.
+2. Open your Claude Desktop configuration file.
+3. Add the Magic server to the `mcpServers` section using the configuration below, with `API_KEY` set from your environment or replaced by your key in the `env` object.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "magic": {
+    "command": "npx",
+    "args": ["-y", "@21st-dev/magic@latest"],
+    "env": {
+      "API_KEY": "${API_KEY}"
+    }
+  }
+}
+```
+
+## Examples
+
+### Generate a component
+
+Describe what you want and let Magic produce the code.
+
+```text
+"Create a responsive pricing section with three tiers using React and Tailwind."
+```
+
+### Build a form
+
+Ask for a specific input layout.
+
+```text
+"Generate a sign-in form with email and password fields, a remember-me checkbox, and a submit button."
+```
+
+### Iterate on a result
+
+Refine the generated component in the same conversation.
+
+```text
+"Take that card component and add a hover state and a small badge in the top-right corner."
+```
+
+## Security
+
+- Magic generates code that is inserted into your project. Always review the output before committing or shipping it, just as you would review any generated code.
+- The server makes outbound requests to the 21st.dev Magic service; the prompts and component descriptions you provide are sent there to generate results.
+- The Magic API key is a credential. Keep it out of source control and shared configs, and rotate it if it may have been exposed.
+- Avoid placing secrets or private data in component descriptions, since they are transmitted to the service.
+
+## Troubleshooting
+
+### Authentication or invalid API key errors
+
+Confirm the API key from https://21st.dev/magic/console is correct and active, and that it is set via `--env API_KEY=...` or the configuration `env` object. Regenerate the key if needed.
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y @21st-dev/magic@latest` from resolving.
+
+### Generation requests fail or time out
+
+Check internet access to the 21st.dev Magic service. Transient rate limiting can also cause failures; retry after a short wait and review your plan limits.
+
+### Server not listed in Claude Code
+
+Re-run the `claude mcp add magic ...` command, then `claude mcp list`. Confirm the `API_KEY` environment value was included and that the server was added to the scope (project versus user) you are running in.

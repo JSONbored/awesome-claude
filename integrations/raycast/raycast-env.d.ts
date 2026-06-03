@@ -35,6 +35,10 @@ declare namespace Preferences {
   export type SearchCollections = ExtensionPreferences & {}
   /** Preferences accessible in the `search-statuslines` command */
   export type SearchStatuslines = ExtensionPreferences & {}
+  /** Preferences accessible in the `trending` command */
+  export type Trending = ExtensionPreferences & {}
+  /** Preferences accessible in the `recent-updates` command */
+  export type RecentUpdates = ExtensionPreferences & {}
   /** Preferences accessible in the `jobs` command */
   export type Jobs = ExtensionPreferences & {}
   /** Preferences accessible in the `submit-content` command */
@@ -66,6 +70,10 @@ declare namespace Arguments {
   export type SearchCollections = {}
   /** Arguments passed to the `search-statuslines` command */
   export type SearchStatuslines = {}
+  /** Arguments passed to the `trending` command */
+  export type Trending = {}
+  /** Arguments passed to the `recent-updates` command */
+  export type RecentUpdates = {}
   /** Arguments passed to the `jobs` command */
   export type Jobs = {}
   /** Arguments passed to the `submit-content` command */

@@ -141,6 +141,30 @@
       ]
     },
     {
+      "name": "trending",
+      "title": "Trending Resources",
+      "description": "Browse trending HeyClaude resources from public registry signals.",
+      "mode": "view",
+      "keywords": [
+        "trending",
+        "popular",
+        "claude",
+        "discovery"
+      ]
+    },
+    {
+      "name": "recent-updates",
+      "title": "Recent Updates",
+      "description": "Browse recently added or updated HeyClaude registry entries.",
+      "mode": "view",
+      "keywords": [
+        "recent",
+        "updates",
+        "changelog",
+        "claude"
+      ]
+    },
+    {
       "name": "jobs",
       "title": "Browse HeyClaude Jobs",
       "description": "Browse active HeyClaude jobs, review role details, and open external apply links.",

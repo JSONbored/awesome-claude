@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 
 import type {
   ContentEntry,
@@ -11,7 +12,20 @@ import type {
 export const repoRoot = process.cwd();
 export const dataRoot = path.join(repoRoot, "apps/web/public/data");
 
+let generatedArtifactsEnsured = false;
+
+function ensureGeneratedArtifacts(relativePath: string) {
+  const targetPath = path.join(dataRoot, relativePath);
+  if (fs.existsSync(targetPath) || generatedArtifactsEnsured) return;
+  generatedArtifactsEnsured = true;
+  execFileSync("pnpm", ["--filter", "web", "run", "prebuild"], {
+    cwd: repoRoot,
+    stdio: "inherit",
+  });
+}
+
 export function readDataJson<T>(relativePath: string): T {
+  ensureGeneratedArtifacts(relativePath);
   return JSON.parse(
     fs.readFileSync(path.join(dataRoot, relativePath), "utf8"),
   ) as T;

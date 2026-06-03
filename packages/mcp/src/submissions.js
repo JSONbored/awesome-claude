@@ -1,7 +1,5 @@
 export const SUBMISSION_SITE_URL = "https://heyclau.de/submit";
 
-const defaultLabels = ["content-submission", "needs-review"];
-
 function normalizeText(value) {
   return String(value || "").trim();
 }
@@ -244,10 +242,6 @@ function modelFor(spec, category) {
   return spec?.categories?.[category] || null;
 }
 
-function labelsFor() {
-  return defaultLabels;
-}
-
 function requiredFields(model) {
   return (model?.fields || [])
     .filter((field) => field.required)
@@ -437,9 +431,8 @@ export function buildPrDraftFromSpec(spec, fields = {}) {
   const label = modelLabel.endsWith("s") ? modelLabel.slice(0, -1) : modelLabel;
 
   return {
-    title: `Submit ${label}: ${validation.normalized.name || "New directory entry"}`,
+    title: `Add ${label}: ${validation.normalized.name || "New directory entry"}`,
     body,
-    labels: labelsFor(),
   };
 }
 
@@ -453,11 +446,6 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
   const validation = validateAgainstSpec(spec, fields);
   const category = validation.category || fields.category || "";
   const prDraft = buildPrDraftFromSpec(spec, fields);
-  const publicPrDraft = {
-    ...prDraft,
-    title: prDraft.title.replace(/^Submit /, "Add "),
-  };
-
   const submitUrl = new URL(SUBMISSION_SITE_URL);
 
   for (const [key, value] of Object.entries(fields)) {
@@ -476,9 +464,7 @@ export function buildSubmissionUrlsFromSpec(spec, args = {}) {
     slug: fields.slug || "",
     submitUrl: submitUrl.toString(),
     reviewUrl: submitUrl.toString(),
-    prDraft: args.includePrBody
-      ? publicPrDraft
-      : { title: publicPrDraft.title, labels: publicPrDraft.labels },
+    prDraft: args.includePrBody ? prDraft : { title: prDraft.title },
     validation: {
       errors: validation.errors,
       warnings: validation.warnings,
@@ -531,8 +517,7 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
     warnings: validation.warnings,
     prPreview: prDraft
       ? {
-          title: prDraft.title.replace(/^Submit /, "Add "),
-          labels: prDraft.labels,
+          title: prDraft.title,
         }
       : null,
     nextSteps: validation.valid
@@ -720,9 +705,7 @@ export function prepareSubmissionDraftFromSpec(spec, args = {}) {
     missingRequiredFields: validation.missingRequiredFields || [],
     errors: validation.errors,
     warnings: validation.warnings,
-    prDraft: prDraft
-      ? { ...prDraft, title: prDraft.title.replace(/^Submit /, "Add ") }
-      : null,
+    prDraft: prDraft ? { ...prDraft } : null,
     submitUrl: urls.submitUrl,
     reviewUrl: urls.reviewUrl,
     reviewChecklist: [

@@ -1,7 +1,5 @@
 import path from "node:path";
 
-import matter from "gray-matter";
-
 import {
   deriveSeoFields,
   extractCodeBlocks,
@@ -12,6 +10,7 @@ import {
   normalizeBody,
 } from "./content-schema.js";
 import { buildBrandAssetMetadata } from "./brand-assets.js";
+import { parseSafeFrontmatter } from "./frontmatter.js";
 
 export const DEFAULT_DIRECTORY_REPO_URL =
   "https://github.com/JSONbored/awesome-claude";
@@ -26,7 +25,12 @@ export function parseGitHubRepo(repoUrl) {
 
   try {
     const url = new URL(repoUrl);
-    if (url.hostname !== "github.com") return null;
+    // Accept github.com and its www. alias (both appear in author-provided
+    // repo URLs); stripping only a leading "www." keeps other subdomains
+    // (gist., api., raw.) rejected.
+    if (url.hostname.toLowerCase().replace(/^www\./, "") !== "github.com") {
+      return null;
+    }
 
     const parts = url.pathname.split("/").filter(Boolean);
     if (parts.length < 2) return null;
@@ -210,7 +214,7 @@ export function buildContentEntryFromMdx(params) {
     contentUpdatedAt,
     getLocalDownloadSha256 = () => null,
   } = params;
-  const { data, content } = matter(source);
+  const { data, content } = parseSafeFrontmatter(source);
   const body = normalizeBody(content, category);
   const headings = extractHeadings(body);
   const codeBlocks = extractCodeBlocks(body);

@@ -1,0 +1,282 @@
+---
+title: Grafana MCP Server for Claude
+slug: grafana-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Grafana for metrics, logs, dashboards, alerting, incidents,
+  and observability workflows.
+cardDescription: >-
+  MCP server for querying Grafana metrics and logs, inspecting dashboards,
+  managing alerting, and generating Grafana deeplinks.
+seoTitle: Grafana MCP Server for Claude
+seoDescription: >-
+  Use the Grafana MCP server with Claude to query metrics and logs, inspect
+  dashboards, manage alerting, work with incidents, and generate Grafana
+  deeplinks.
+author: Grafana Labs
+authorProfileUrl: "https://grafana.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://grafana.com/docs/grafana/latest/developer-resources/mcp/"
+repoUrl: "https://github.com/grafana/mcp-grafana"
+installable: true
+installCommand: >-
+  claude mcp add grafana --env GRAFANA_URL=https://myinstance.grafana.net --env
+  GRAFANA_SERVICE_ACCOUNT_TOKEN=YOUR_SERVICE_ACCOUNT_TOKEN -- uvx mcp-grafana
+usageSnippet: >-
+  claude mcp add grafana --env GRAFANA_URL=https://myinstance.grafana.net --env
+  GRAFANA_SERVICE_ACCOUNT_TOKEN=YOUR_SERVICE_ACCOUNT_TOKEN -- uvx mcp-grafana
+copySnippet: |-
+  {
+    "grafana": {
+      "command": "uvx",
+      "args": ["mcp-grafana"],
+      "env": {
+        "GRAFANA_URL": "https://myinstance.grafana.net",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "<your service account token>"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "grafana": {
+      "command": "uvx",
+      "args": ["mcp-grafana"],
+      "env": {
+        "GRAFANA_URL": "https://myinstance.grafana.net",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "<your service account token>"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - uv and uvx available, or Docker, Helm, or the mcp-grafana binary installed
+  - Grafana 9.0 or later for full functionality
+  - Grafana Cloud or self-hosted Grafana instance reachable from the MCP server
+  - Grafana service account token with RBAC permissions for the tools you enable
+  - Claude Code, Claude Desktop, Cursor, VS Code, or another MCP-capable client
+  - Existing Grafana datasources such as Prometheus, Loki, Tempo, CloudWatch, Elasticsearch, OpenSearch, or ClickHouse for query tools
+safetyNotes:
+  - >-
+    Scope the service account token to the smallest set of Grafana permissions
+    needed for your workflow. Broad Editor-style access can query and change
+    many dashboards, alert rules, incidents, annotations, and OnCall resources.
+  - >-
+    Disable write-capable or unused tool groups when you only need investigation.
+    The server can expose operations for creating or updating dashboards,
+    alert rules, incidents, annotations, and other Grafana resources.
+  - >-
+    Treat LLM-generated PromQL, LogQL, SQL, and TraceQL as suggestions. Review
+    expensive or broad time-range queries before running them against production
+    datasources.
+  - >-
+    Large dashboards and broad log queries can consume significant model context
+    and Grafana query capacity. Prefer summaries, narrow time windows, and
+    specific datasource scopes.
+privacyNotes:
+  - >-
+    Grafana query results may include production logs, metrics, traces, labels,
+    dashboard JSON, alert rules, annotations, incident details, and OnCall data
+    that become visible to the connected MCP client and model session.
+  - >-
+    Store GRAFANA_SERVICE_ACCOUNT_TOKEN outside prompts and source control. Pass
+    it through MCP environment configuration or your client secret-management
+    flow.
+  - >-
+    Logs and traces often contain user identifiers, request payloads, IP
+    addresses, error messages, and other sensitive operational data; redact or
+    avoid broad queries before sharing transcripts.
+  - >-
+    When routing through Grafana datasources, the MCP server uses Grafana's
+    configured access path. Credential exposure depends on the server
+    configuration, client logs, and what query results are returned.
+tags:
+  - grafana
+  - observability
+  - metrics
+  - logs
+  - alerting
+  - mcp
+keywords:
+  - grafana mcp
+  - grafana claude
+  - mcp-grafana
+  - observability mcp server
+  - prometheus mcp
+  - loki mcp
+  - grafana dashboards
+  - grafana alerting
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Grafana MCP server connects Claude and other MCP-capable clients to a
+Grafana instance. It gives an assistant a structured way to query observability
+data, inspect dashboards, work with alerting and incident workflows, and
+generate accurate deeplinks back into Grafana.
+
+This is a strong fit for teams that already use Grafana as their operations
+hub. Instead of asking an assistant to guess URLs or invent PromQL, users can
+give Claude access to Grafana-backed tools with explicit authentication,
+transport, and RBAC boundaries.
+
+The official quick-start path uses `uvx mcp-grafana`, but Grafana also documents
+Docker, downloaded binary, source build, and Helm deployment options. Grafana
+9.0 or later is required for full functionality.
+
+## Features
+
+- Query Prometheus metrics through Grafana datasources.
+- Query Loki logs and LogQL-backed metrics.
+- Inspect datasource metadata, labels, metric names, and query examples.
+- Search dashboards and fetch dashboard summaries, properties, panel queries,
+  and datasource details.
+- Generate Grafana deeplinks for dashboards, panels, Explore, time ranges, and
+  datasource-specific views.
+- List and manage Grafana alert rules, notification policies, contact points,
+  and related alerting configuration when permissions allow.
+- Work with Grafana Incident, Sift investigations, and Grafana OnCall resources
+  when those products and permissions are available.
+- Enable or disable tool groups so the MCP surface matches the team's risk
+  tolerance and Grafana setup.
+- Run locally over stdio with `uvx`, Docker, or a binary, or run as an HTTP
+  server with SSE or streamable HTTP transports.
+
+## Use Cases
+
+- Ask Claude to investigate a recent latency spike using Grafana metrics and
+  narrowed time windows.
+- Search dashboards and retrieve only the panels or JSON paths needed for a
+  specific incident review.
+- Generate Grafana Explore links for a Prometheus or Loki query without relying
+  on hand-built URLs.
+- Review alert rule state, routing, and notification policy context during an
+  incident.
+- Use Grafana Incident or OnCall context alongside logs and metrics when
+  triaging production issues.
+- Give an assistant read-only observability context while keeping dashboard and
+  alert writes disabled or out of scope.
+
+## Installation
+
+### Claude Code
+
+1. Install `uv` and confirm `uvx` is available.
+2. Create a Grafana service account token with only the permissions needed for
+   the tool groups you plan to use.
+3. Add the MCP server with your Grafana URL and token:
+
+```bash
+claude mcp add grafana --env GRAFANA_URL=https://myinstance.grafana.net --env GRAFANA_SERVICE_ACCOUNT_TOKEN=YOUR_SERVICE_ACCOUNT_TOKEN -- uvx mcp-grafana
+```
+
+4. Restart or refresh the MCP client session.
+5. Ask Claude to list available Grafana tools or run a narrow dashboard or
+   datasource lookup.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `grafana` server configuration shown below.
+3. Replace the placeholder URL and token with your Grafana instance URL and
+   service account token.
+4. Restart Claude Desktop and test with a narrow read-only query first.
+
+## Configuration
+
+```json
+{
+  "grafana": {
+    "command": "uvx",
+    "args": ["mcp-grafana"],
+    "env": {
+      "GRAFANA_URL": "https://myinstance.grafana.net",
+      "GRAFANA_SERVICE_ACCOUNT_TOKEN": "<your service account token>"
+    }
+  }
+}
+```
+
+## Examples
+
+### Inspect dashboard context
+
+Ask Claude to find the production API dashboard, summarize its panels, and show
+which Prometheus and Loki datasources it uses.
+
+```plaintext
+Find dashboards related to the production API and summarize the panels and datasources.
+```
+
+### Investigate a metric spike
+
+Use the Prometheus tools with a specific datasource, time window, and metric
+name instead of broad exploratory queries.
+
+```plaintext
+For the last 30 minutes, query the production Prometheus datasource for API p95 latency and error rate.
+```
+
+### Review log patterns
+
+Use Loki against a bounded time range and service label when looking for common
+errors.
+
+```plaintext
+Check Loki logs for the checkout service over the last 15 minutes and group recurring error messages.
+```
+
+### Generate a Grafana deeplink
+
+Ask Claude to create a Grafana Explore link for a specific datasource query and
+time range.
+
+```plaintext
+Create a Grafana Explore link for this Loki query over the incident window.
+```
+
+## Security
+
+- Prefer service account token authentication over username and password for
+  automation.
+- Grant only the RBAC actions and scopes required for your enabled tools. Use
+  datasource, dashboard, folder, and team scopes where possible instead of broad
+  organization-wide access.
+- Start with read-only investigation workflows. Add write-capable dashboard,
+  alerting, incident, or annotation tools only when the operator has a clear
+  approval process.
+- Keep tokens in MCP environment configuration, not in prompts, chat history, or
+  checked-in files.
+- Review generated queries before running them against large production
+  datasources, especially when they include wide time ranges or unbounded label
+  selectors.
+
+## Troubleshooting
+
+### Claude cannot start the server
+
+Confirm `uvx` is installed and available in the same environment that launches
+your MCP client. If you use Docker, a downloaded binary, or Helm instead, update
+the client configuration to match that runtime.
+
+### Authentication fails
+
+Verify `GRAFANA_URL` points at the correct Grafana instance and that
+`GRAFANA_SERVICE_ACCOUNT_TOKEN` belongs to a service account with the required
+RBAC permissions.
+
+### Queries return permission errors
+
+Check the service account role and scopes for the datasource, dashboard, folder,
+alerting, or incident resource being accessed. A token can authenticate
+successfully and still lack permission for a specific tool.
+
+### Responses are too large
+
+Use dashboard summaries, specific dashboard properties, narrower time windows,
+and more precise label filters before fetching full dashboard JSON or broad log
+results.

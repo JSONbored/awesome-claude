@@ -34,10 +34,6 @@
       "types": "./src/index.d.ts",
       "default": "./src/submission.js"
     },
-    "./submission-labels": {
-      "types": "./src/index.d.ts",
-      "default": "./src/submission-labels.js"
-    },
     "./submission-risk": {
       "types": "./src/index.d.ts",
       "default": "./src/submission-risk.js"
@@ -69,6 +65,10 @@
     "./content-builder": {
       "types": "./src/content-builder.d.ts",
       "default": "./src/content-builder.js"
+    },
+    "./frontmatter": {
+      "types": "./src/index.d.ts",
+      "default": "./src/frontmatter.js"
     },
     "./category-spec.json": "./src/category-spec.json"
   },

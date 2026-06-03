@@ -55,7 +55,11 @@ type SourceRepoSignalRow = {
 export function parseGitHubRepoUrl(value: unknown) {
   try {
     const parsed = new URL(String(value ?? ""));
-    if (parsed.hostname.toLowerCase() !== "github.com") return null;
+    // Accept github.com and its www. alias; stripping only a leading "www."
+    // keeps other subdomains (gist., api., raw.) rejected.
+    if (parsed.hostname.toLowerCase().replace(/^www\./, "") !== "github.com") {
+      return null;
+    }
     const [owner, repoRaw] = parsed.pathname.split("/").filter(Boolean);
     if (!owner || !repoRaw) return null;
     const repo = repoRaw.replace(/\.git$/i, "");

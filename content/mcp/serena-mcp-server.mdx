@@ -1,0 +1,201 @@
+---
+title: Serena MCP Server for Claude
+slug: serena-mcp-server
+category: mcp
+description: >-
+  Serena is an open-source coding-agent toolkit by Oraios that gives Claude
+  semantic, symbol-level code tools backed by language servers, so it can find,
+  read, and edit code precisely instead of pasting whole files.
+cardDescription: >-
+  Open-source MCP server that gives Claude semantic, symbol-level code retrieval
+  and editing through language servers across many programming languages.
+seoTitle: Serena MCP Server for Claude
+seoDescription: >-
+  Connect Claude to Serena, an open-source coding-agent toolkit that adds
+  semantic code tools through language servers. Find symbols, trace references,
+  and edit code at the symbol level instead of reading entire files.
+author: Oraios
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/oraios/serena"
+repoUrl: "https://github.com/oraios/serena"
+installable: true
+installCommand: "claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant"
+usageSnippet: "claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant"
+copySnippet: |-
+  {
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant"
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant"
+      ]
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - >-
+    The uv toolchain installed (provides uvx; install from https://docs.astral.sh/uv)
+  - Claude Code or Claude Desktop with MCP support
+  - A local project or codebase you want Serena to index and operate on
+  - >-
+    Internet access on first run so uvx can fetch Serena from its Git repository
+tags:
+  - coding-agent
+  - code-navigation
+  - language-server
+  - refactoring
+  - open-source
+keywords:
+  - serena mcp
+  - semantic code tools
+  - symbol level editing
+  - language server mcp
+  - coding agent toolkit
+safetyNotes:
+  - >-
+    Serena can read and modify files in the project you point it at, including
+    applying symbol-level code edits, so run it on code you can review and
+    version-control.
+  - >-
+    Depending on configuration it can run language servers and execute project
+    commands; only enable it on trusted projects and review its actions.
+  - >-
+    Operate it against a version-controlled working tree so any automated edits
+    can be inspected and reverted through normal diff review.
+privacyNotes:
+  - >-
+    Project source code, file paths, and symbol information are read into the
+    model context so Serena can reason about and edit the codebase.
+  - >-
+    Avoid pointing it at directories that contain secrets or private data you do
+    not want surfaced to the model.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Serena turns Claude into a coding agent that works at the level of symbols rather than raw text. Instead of pasting entire files into context, Serena uses language servers to find symbols, trace where they are referenced, and apply precise edits to the right definition. That keeps context focused, reduces the chance of broad and risky rewrites, and lets Claude navigate a real codebase the way an IDE does. It is open source and free, and it works across the languages its underlying language servers support.
+
+## Features
+
+- Semantic, symbol-level code retrieval backed by language servers rather than plain text search.
+- Find symbols and the places that reference them to understand impact before changing code.
+- Apply targeted edits to a specific symbol or definition instead of rewriting whole files.
+- Keeps model context focused by pulling in only the relevant code, not entire files.
+- Works across many programming languages through the language servers it integrates.
+- Open source under an MIT license and runs locally as a standard MCP server.
+
+## Use Cases
+
+- Navigate an unfamiliar codebase by jumping between symbols and their references.
+- Perform focused refactors that touch a single definition and its call sites.
+- Investigate the blast radius of a change before applying it.
+- Let Claude make precise, reviewable edits in a real project under version control.
+- Reduce context bloat on large repositories by retrieving only relevant code.
+
+## Installation
+
+### Claude Code
+
+1. Install the uv toolchain (provides `uvx`) from https://docs.astral.sh/uv.
+2. Run: `claude mcp add serena -- uvx --from git+https://github.com/oraios/serena serena start-mcp-server --context ide-assistant`
+3. Verify the server is registered: `claude mcp list`
+4. Open a project and ask Claude to find a symbol to confirm Serena is active.
+
+### Claude Desktop
+
+1. Install the uv toolchain so `uvx` is available on your PATH.
+2. Open your Claude Desktop configuration file.
+3. Add the Serena server to the `mcpServers` section using the configuration below.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "serena": {
+    "command": "uvx",
+    "args": [
+      "--from",
+      "git+https://github.com/oraios/serena",
+      "serena",
+      "start-mcp-server",
+      "--context",
+      "ide-assistant"
+    ]
+  }
+}
+```
+
+## Examples
+
+### Navigate to a symbol
+
+Ask Claude to locate a definition instead of searching text.
+
+```text
+"Find the definition of the AuthService class and show me its methods."
+```
+
+### Trace references before refactoring
+
+Understand impact before changing a function.
+
+```text
+"Find everywhere that calls parseConfig so I can see what a signature change would affect."
+```
+
+### Apply a focused edit
+
+Let Serena change a single definition rather than a whole file.
+
+```text
+"Update the body of the validateToken function to add an expiry check, and leave the rest of the file unchanged."
+```
+
+## Security
+
+- Serena can read and modify files in the project you target, including applying code edits, so only run it on codebases you control and can review.
+- Run it against a version-controlled working tree so automated changes show up in diffs and can be reverted.
+- Depending on configuration it may start language servers or run project commands; enable it only on trusted projects.
+- Do not point it at directories holding secrets or private data you do not want read into the model context.
+
+## Troubleshooting
+
+### `uvx` is not found
+
+Install the uv toolchain from https://docs.astral.sh/uv and confirm `uvx --version` works. uvx is required because Serena is distributed as a Python project rather than an npm package.
+
+### First run is slow or fails to fetch Serena
+
+The initial launch resolves Serena from its Git repository, which needs internet access and a working uv cache. Retry once the network is available; subsequent runs reuse the cached install.
+
+### Language features or symbol lookups do not work
+
+Serena relies on language servers for the project's language. Make sure the project is one Serena can index and that any required language tooling is available in the environment.
+
+### Server not listed in Claude Code
+
+Re-run the `claude mcp add serena ...` command, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in, and that the working directory points at the project you want to analyze.

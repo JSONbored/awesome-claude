@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import matter from "gray-matter";
 import prettier from "prettier";
 
 import {
@@ -13,6 +12,7 @@ import {
   normalizeBody,
   validateEntry,
 } from "@heyclaude/registry/content-schema";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -74,7 +74,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 
     const filePath = path.join(categoryDir, fileName);
     const source = fs.readFileSync(filePath, "utf8");
-    const parsed = matter(source);
+    const parsed = parseSafeFrontmatter(source);
     const normalizedBody = normalizeBody(parsed.content, category);
     const inferred = inferStructuredFields(
       parsed.data,

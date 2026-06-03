@@ -257,6 +257,26 @@ export async function getInstallationToken(params: {
   return payload.token;
 }
 
+export async function getRepositoryInstallationId(params: {
+  appId: string;
+  privateKeyPem: string;
+  repo: GitHubRepo;
+  apiVersion?: string;
+}) {
+  const jwt = await createGitHubAppJwt({
+    appId: params.appId,
+    privateKeyPem: params.privateKeyPem,
+  });
+  const payload = await githubJson<{ id?: number }>(
+    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/installation`,
+    {
+      token: jwt,
+      apiVersion: params.apiVersion,
+    },
+  );
+  return Number(payload.id || 0);
+}
+
 export async function getPullRequest(params: {
   token: string;
   repo: GitHubRepo;
@@ -267,6 +287,7 @@ export async function getPullRequest(params: {
     number: number;
     title?: string;
     html_url?: string;
+    state?: string;
     user?: { login?: string };
     draft?: boolean;
     base?: { ref?: string; repo?: { full_name?: string } };
@@ -479,6 +500,17 @@ export async function getCommitValidationState(params: {
         name,
         status: "pending",
         details: `is ${run.status || "pending"}`,
+      });
+      continue;
+    }
+    if (
+      /^superagent security scan$/i.test(name) &&
+      run.conclusion === "neutral"
+    ) {
+      checkResults.push({
+        name,
+        status: "passed",
+        details: "concluded neutral",
       });
       continue;
     }

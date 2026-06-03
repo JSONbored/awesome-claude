@@ -2,8 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
-import matter from "gray-matter";
-
 import {
   CATEGORY_SCHEMAS,
   FORBIDDEN_CONTENT_FIELDS,
@@ -12,6 +10,7 @@ import {
   normalizeBody,
   validateEntry,
 } from "@heyclaude/registry/content-schema";
+import { parseSafeFrontmatter } from "@heyclaude/registry/frontmatter";
 
 const repoRoot = process.cwd();
 const contentRoot = path.join(repoRoot, "content");
@@ -56,8 +55,7 @@ const oldBrandOrDomainPattern = new RegExp(
 );
 const sharedTmpDebugPathPattern =
   /(^|[^A-Za-z0-9_$\/{.-])(\/tmp\/[A-Za-z0-9_.$\/{}-]*(?:debug|startup)[A-Za-z0-9_.$\/{}-]*)/gi;
-const nonPredictableTmpPathPattern =
-  /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
+const nonPredictableTmpPathPattern = /\$\$|\$RANDOM|\$\{RANDOM\}|X{3,}/i;
 
 function checkBashSyntax(scriptBody) {
   const result = spawnSync("bash", ["--noprofile", "--norc", "-n", "-s"], {
@@ -116,7 +114,7 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
 
     const filePath = path.join(categoryDir, fileName);
     const source = fs.readFileSync(filePath, "utf8");
-    const parsed = matter(source);
+    const parsed = parseSafeFrontmatter(source);
     const normalizedBody = normalizeBody(parsed.content, category);
     const inferred = inferStructuredFields(
       parsed.data,
@@ -125,7 +123,9 @@ for (const category of Object.keys(CATEGORY_SCHEMAS)) {
     );
     const validation = validateEntry(category, parsed.data, inferred);
     const sectionFlags = inferSectionBooleans(normalizedBody);
-    const scriptBody = String(parsed.data.scriptBody ?? inferred.scriptBody ?? "");
+    const scriptBody = String(
+      parsed.data.scriptBody ?? inferred.scriptBody ?? "",
+    );
     const scriptLanguage = String(
       parsed.data.scriptLanguage ?? inferred.scriptLanguage ?? "",
     )
