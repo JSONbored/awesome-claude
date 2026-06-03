@@ -939,6 +939,20 @@ export function getCopyText(entry: Partial<DirectoryEntry>): string;
 export function getDistributionBadges(
   entry: Partial<DirectoryEntry>,
 ): DistributionBadge[];
+export type EntryAccessSummary = {
+  hasInstall: boolean;
+  hasConfig: boolean;
+  hasDownload: boolean;
+  hasDocs: boolean;
+  hasSource: boolean;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
+  hasPrerequisites: boolean;
+  copyOnly: boolean;
+};
+export function getEntryAccessSummary(
+  entry: Partial<DirectoryEntry>,
+): EntryAccessSummary;
 export function buildContentPromptArtifact(entries: ContentEntry[]): {
   schemaVersion: number;
   kind: string;
