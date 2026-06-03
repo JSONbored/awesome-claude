@@ -40,6 +40,7 @@ Do not edit these in external content PRs:
 - `README.md`
 - `apps/web/public/data/**`
 - `apps/web/src/generated/**`
+- `apps/web/src/routeTree.gen.ts`
 - `apps/web/public/downloads/**`
 
 Maintainer automation regenerates those outputs.
@@ -85,11 +86,22 @@ If you are submitting a package-like resource, include the source repository and
 
 ## Local validation
 
-From the repo root:
+For a direct content PR, keep validation narrow:
 
 ```sh
 pnpm install --frozen-lockfile
 pnpm validate:content:strict
+```
+
+Do not run generation or commit build output for one-file content submissions.
+The website, API, Raycast, LLM, MCP, and route artifacts are generated during
+CI/build/deploy from the accepted source content.
+
+For platform, package, API, MCP, Raycast, or maintainer artifact work, run the
+focused checks that match the changed surface:
+
+```sh
+pnpm install --frozen-lockfile
 pnpm validate:packages
 pnpm scan:packages
 pnpm test:submission-intake

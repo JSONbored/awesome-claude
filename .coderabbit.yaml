@@ -1,0 +1,11 @@
+reviews:
+  path_filters:
+    - "!content/**"
+    - "!apps/web/public/data/**"
+    - "!apps/web/public/downloads/**"
+    - "!apps/web/src/generated/**"
+    - "!apps/web/src/routeTree.gen.ts"
+    - "!README.md"
+  auto_review:
+    ignore_title_keywords:
+      - "content("

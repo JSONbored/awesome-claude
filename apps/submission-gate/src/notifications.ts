@@ -20,8 +20,8 @@ export type DiscordNotificationResult =
   | { ok: false; skipped: true; reason: string }
   | { ok: false; skipped?: false; status?: number; reason: string };
 
-const DISCORD_MAX_FIELD_LENGTH = 1024;
-const DISCORD_MAX_DESCRIPTION_LENGTH = 1800;
+const DISCORD_MAX_FIELD_LENGTH = 220;
+const DISCORD_MAX_DESCRIPTION_LENGTH = 260;
 const DISCORD_MAX_TITLE_LENGTH = 256;
 
 const VERDICT_LABELS: Record<GateVerdict, string> = {
@@ -30,6 +30,14 @@ const VERDICT_LABELS: Record<GateVerdict, string> = {
   request_changes: "Changes requested",
   manual: "Manual review",
   ignore: "Ignored",
+};
+
+const VERDICT_ACTIONS: Record<GateVerdict, string> = {
+  merge: "merged",
+  close: "closed",
+  request_changes: "needs changes",
+  manual: "needs manual review",
+  ignore: "ignored",
 };
 
 const VERDICT_COLORS: Record<GateVerdict, number> = {
@@ -41,7 +49,9 @@ const VERDICT_COLORS: Record<GateVerdict, number> = {
 };
 
 function truncate(value: unknown, limit: number) {
-  const text = String(value || "").replace(/\s+/g, " ").trim();
+  const text = String(value || "")
+    .replace(/\s+/g, " ")
+    .trim();
   if (text.length <= limit) return text;
   return `${text.slice(0, Math.max(0, limit - 1)).trimEnd()}...`;
 }
@@ -75,10 +85,16 @@ function sanitizeRationale(summary: unknown) {
         .trim(),
     )
     .filter(Boolean)
+    .filter(
+      (line) =>
+        !/^(summary|recommended action|required shape|source review|security review|validation review|duplicate \/ history review):?$/i.test(
+          line,
+        ),
+    )
     .filter((line) => !/^automated review by heyclaude/i.test(line))
     .filter((line) => !/^---$/.test(line))
-    .slice(0, 8);
-  return truncate(lines.join("\n"), DISCORD_MAX_DESCRIPTION_LENGTH);
+    .slice(0, 1);
+  return truncate(lines.join(" "), DISCORD_MAX_DESCRIPTION_LENGTH);
 }
 
 function field(name: string, value: unknown, inline = true) {
@@ -87,6 +103,43 @@ function field(name: string, value: unknown, inline = true) {
     value: truncate(value || "n/a", DISCORD_MAX_FIELD_LENGTH),
     inline,
   };
+}
+
+function compactPrSubject(title: unknown) {
+  return (
+    truncate(
+      String(title || "")
+        .replace(/^[a-z]+(?:\([^)]+\))?:\s*/i, "")
+        .replace(/^(add|create|submit|update)\s+/i, "")
+        .trim() || "content submission",
+      120,
+    ) || "content submission"
+  );
+}
+
+function compactCiSummary(value: unknown) {
+  const text = String(value || "").trim();
+  if (!text) return "n/a";
+  const parts = text
+    .split(";")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .map((part) => {
+      const lower = part.toLowerCase();
+      const status = lower.includes("pending")
+        ? "pending"
+        : lower.includes("failed") || lower.includes("failure")
+          ? "failed"
+          : lower.includes("neutral")
+            ? "neutral, non-blocking"
+            : lower.includes("passed") || lower.includes("success")
+              ? "passed"
+              : "reported";
+      if (lower.includes("superagent")) return `Superagent ${status}`;
+      if (lower.includes("validate-content")) return `Content ${status}`;
+      return truncate(part, 80);
+    });
+  return truncate([...new Set(parts)].join(" · "), DISCORD_MAX_FIELD_LENGTH);
 }
 
 function validateDiscordWebhookUrl(value: string) {
@@ -115,12 +168,13 @@ export function buildDiscordDecisionPayload(
   notification: DiscordDecisionNotification,
 ) {
   const verdictLabel = VERDICT_LABELS[notification.verdict];
+  const subject = compactPrSubject(notification.prTitle);
   return {
     username: "HeyClaude Maintainer Agent",
     embeds: [
       {
         title: truncate(
-          `${verdictLabel}: #${notification.prNumber} ${notification.prTitle || ""}`,
+          `#${notification.prNumber} ${VERDICT_ACTIONS[notification.verdict]} · ${subject}`,
           DISCORD_MAX_TITLE_LENGTH,
         ),
         url:
@@ -131,14 +185,15 @@ export function buildDiscordDecisionPayload(
           sanitizeRationale(notification.summary) ||
           "HeyClaude submission gate completed a decision.",
         fields: [
-          field("Verdict", verdictLabel),
+          field("Result", verdictLabel),
           field("Category", notification.category || "n/a"),
           field("Author", notification.author || "n/a"),
-          field("Changed file", notification.changedFile || "n/a", false),
-          field("CI", notification.ciSummary || "n/a", false),
-          field("Repository", notification.repoFullName),
+          field("Checks", compactCiSummary(notification.ciSummary), false),
+          field("File", notification.changedFile || "n/a", false),
         ],
-        footer: { text: "HeyClaude submission gate" },
+        footer: {
+          text: `${notification.repoFullName} · HeyClaude submission gate`,
+        },
         timestamp: (notification.now || new Date()).toISOString(),
       },
     ],

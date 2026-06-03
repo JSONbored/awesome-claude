@@ -221,7 +221,7 @@ describe("Cloudflare submission gate helpers", () => {
       );
       expect(mdx).toContain(`category: "${category}"`);
       expect(mdx).toContain('submittedBy: "@JSONbored"');
-      expect(mdx).toContain("submittedByUrl: \"https://github.com/JSONbored\"");
+      expect(mdx).toContain('submittedByUrl: "https://github.com/JSONbored"');
       expect(mdx).not.toContain("README.md");
       expect(mdx).not.toContain("apps/web/public/data");
     },
@@ -308,6 +308,47 @@ describe("Cloudflare submission gate helpers", () => {
     });
   });
 
+  it("treats neutral Superagent scans as non-failing content gate signals", async () => {
+    const fetchMock = vi.fn(async () =>
+      Response.json({
+        check_runs: [
+          {
+            name: "validate-content",
+            status: "completed",
+            conclusion: "success",
+            completed_at: "2026-06-02T00:00:00Z",
+          },
+          {
+            name: "Superagent Security Scan",
+            status: "completed",
+            conclusion: "neutral",
+            completed_at: "2026-06-02T00:00:01Z",
+          },
+        ],
+      }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      getCommitValidationState({
+        token: "ghs_test",
+        repo: { owner: "JSONbored", repo: "awesome-claude" },
+        ref: "abc123",
+        requiredChecks: ["validate-content", "Superagent Security Scan"],
+      }),
+    ).resolves.toMatchObject({
+      state: "passed",
+      checks: [
+        { name: "validate-content", status: "passed" },
+        {
+          name: "Superagent Security Scan",
+          status: "passed",
+          details: "concluded neutral",
+        },
+      ],
+    });
+  });
+
   it("keeps private review behind required PR validation", () => {
     const source = readWorkerSource();
     const validationIndex = source.indexOf("getCommitValidationState({");
@@ -319,8 +360,22 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"check_run"');
     expect(source).toContain('"check_suite"');
     expect(source).toContain('"status"');
+    expect(source).toContain("targetsFromCommitSha(env, payload");
+    expect(source).toContain("checkRun?.head_sha");
+    expect(source).toContain("checkSuite?.head_sha");
     expect(readConstantsSource()).toContain('"edited"');
     expect(source).toContain('status: "validation_pending"');
+    expect(source).toContain('nextReviewForStatus("validation_pending")');
+    expect(source).toContain("REVIEWING_STALE_SECONDS");
+    expect(source).toContain("QUEUED_STALE_SECONDS");
+    expect(source).toContain("queuedStaleBeforeIso");
+    expect(source).toContain("reviewingStaleBeforeIso");
+    expect(source).toContain("target.headSha = pullForNotification.head.sha");
+    expect(source).toContain("target: {");
+    expect(source).toContain("installationId: target.installationId");
+    expect(source).toContain("isRetryablePrivateReviewerDecision(decision)");
+    expect(source).toContain('status: "error_retryable"');
+    expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
@@ -398,8 +453,7 @@ describe("Cloudflare submission gate helpers", () => {
       verdict: "close",
       category: "guides",
       changedFile: "content/guides/useful-guide.mdx",
-      ciSummary:
-        "validate-content passed; Superagent Security Scan passed",
+      ciSummary: "validate-content passed; Superagent Security Scan passed",
       summary: [
         "<!-- heyclaude-submission-gate -->",
         "Summary:",
@@ -410,14 +464,40 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(payload.username).toBe("HeyClaude Maintainer Agent");
     expect(payload.embeds[0]).toMatchObject({
-      title: "Closed: #700 feat(content): add useful guide",
+      title: "#700 closed · useful guide",
       url: "https://github.com/JSONbored/awesome-claude/pull/700",
       color: 0xda3633,
       timestamp: "2026-06-02T00:00:00.000Z",
     });
-    expect(JSON.stringify(payload)).toContain("validate-content passed");
+    expect(JSON.stringify(payload)).toContain("Content passed");
+    expect(JSON.stringify(payload)).toContain("Superagent passed");
+    expect(JSON.stringify(payload)).toContain("Result");
+    expect(JSON.stringify(payload)).not.toContain("Repository");
     expect(JSON.stringify(payload)).not.toContain(
       "<!-- heyclaude-submission-gate -->",
+    );
+  });
+
+  it("formats neutral Superagent Discord status as non-blocking", () => {
+    const payload = buildDiscordDecisionPayload({
+      repoFullName: "JSONbored/awesome-claude",
+      prNumber: 826,
+      prTitle: "content(mcp): add Chrome DevTools MCP server",
+      author: "contributor",
+      verdict: "merge",
+      category: "mcp",
+      changedFile: "content/mcp/chrome-devtools-mcp-server.mdx",
+      ciSummary:
+        "validate-content passed; Superagent Security Scan passed (concluded neutral)",
+      summary:
+        "Summary:\n- Submission adds the official Chrome DevTools MCP server with source evidence.",
+    });
+
+    expect(payload.embeds[0].title).toBe(
+      "#826 merged · Chrome DevTools MCP server",
+    );
+    expect(JSON.stringify(payload)).toContain(
+      "Superagent neutral, non-blocking",
     );
   });
 
@@ -524,9 +604,8 @@ describe("Cloudflare submission gate helpers", () => {
   it("does not apply the merged label before direct merge succeeds", () => {
     const source = readWorkerSource();
 
-    expect(source).toContain(
-      'const status =\n        decision.verdict === "merge" ? "merge_accepted" : decision.verdict',
-    );
+    expect(source).toContain("function decisionStatus");
+    expect(source).toContain('if (verdict === "merge") return "merge_pending"');
     expect(source).toContain("label !== LABELS.merged");
     expect(source).toContain(
       "label !== LABELS.merged && !categoryLabels.includes(label)",
@@ -535,6 +614,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
     expect(source).toContain("SubmissionMergePendingError");
+    expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
     expect(source).toContain("message.retry({ delaySeconds: 30 })");
   });
@@ -605,9 +685,10 @@ describe("Cloudflare submission gate helpers", () => {
     );
 
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
+    expect(source).toContain("const TERMINAL_PR_STATUSES = new Set");
     expect(source).toContain("function hasTerminalGateDecision");
     expect(terminalSetBlock).not.toContain('"request_changes"');
-    expect(terminalSetBlock).toContain('"merge"');
+    expect(terminalSetBlock).not.toContain('"merge"');
     expect(terminalSetBlock).not.toContain('"import"');
     expect(source).toContain("forceRecheck = false");
     expect(source).toContain(
@@ -616,7 +697,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       'String(message.payload.eventName || "") === "issue_comment"',
     );
-    expect(source).toContain('String(state.status || "") === "merged"');
+    expect(source).toContain(
+      'TERMINAL_PR_STATUSES.has(String(state.status || ""))',
+    );
+    expect(source).toContain('"closed"');
+    expect(source).toContain('"manual"');
+    expect(source).toContain('"ignored"');
     expect(source).toContain(
       "Skipped because this submission already has a terminal gate decision.",
     );
@@ -637,6 +723,35 @@ describe("Cloudflare submission gate helpers", () => {
     expect(validationIndex).toBeGreaterThan(reviewReadIndex);
   });
 
+  it("sweeps stale review queue rows instead of leaving validation-pending PRs stuck", () => {
+    const source = readWorkerSource();
+    const wranglerConfig = fs.readFileSync(
+      path.join(repoRoot, "apps/submission-gate/wrangler.jsonc"),
+      "utf8",
+    );
+
+    expect(source).toContain("async function sweepSubmissionQueue");
+    expect(source).toContain("listDuePrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain('"validation_pending"');
+    expect(source).toContain('"merge_pending"');
+    expect(source).toContain('"error_retryable"');
+    expect(source).toContain("scheduled(_controller, env, ctx)");
+    expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
+    expect(wranglerConfig).toContain('"triggers"');
+    expect(wranglerConfig).toContain('"* * * * *"');
+  });
+
+  it("exposes maintainer-only non-secret queue state", () => {
+    const source = readWorkerSource();
+
+    expect(source).toContain('url.pathname === "/queue"');
+    expect(source).toContain("function hasInternalBearer");
+    expect(source).toContain("Bearer ${env.INTERNAL_SHARED_SECRET}");
+    expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain("lastCheckSummary");
+    expect(source).toContain("attemptCount");
+  });
+
   it("merges accepted direct content PRs instead of creating import PRs", () => {
     const source = readWorkerSource();
 
@@ -649,6 +764,22 @@ describe("Cloudflare submission gate helpers", () => {
       "Direct content submissions must change exactly one source content file and no generated artifacts",
     );
     expect(source).toContain('finalAction: "merge_or_close"');
+    expect(source).toContain("categoryReviewRequired: true");
+    expect(source).toContain("categoryReviewRubric");
+    [
+      "agents",
+      "collections",
+      "commands",
+      "guides",
+      "hooks",
+      "mcp",
+      "rules",
+      "skills",
+      "statuslines",
+      "tools",
+    ].forEach((category) => {
+      expect(source).toContain(`${category}: [`);
+    });
     expect(source).not.toContain(
       "importJob: await synthesizeImportJobFromSourcePr",
     );

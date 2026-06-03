@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>389+ file-backed entries</strong> stay useful as both an
+        <strong>390+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>389</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>390</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -73,7 +73,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#tools"><strong>🧰 Tools</strong></a><br>
-          <code>54</code><br>
+          <code>55</code><br>
           <sub>Apps, developer tools, services, and products for Claude-native builders.</sub>
         </td>
 <td align="center" width="20%">
@@ -154,9 +154,10 @@ content validation, Superagent, and private maintainer-agent review pass. Tool,
 app, service promotion, listing claims, and jobs use the website lead forms
 instead of GitHub content submissions.
 
-`README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`, and
-`apps/web/public/downloads/**` are generated or maintainer-owned outputs.
-Direct contributors should not edit them in content PRs.
+`README.md`, `apps/web/public/data/**`, `apps/web/src/generated/**`,
+`apps/web/src/routeTree.gen.ts`, and `apps/web/public/downloads/**` are
+generated or maintainer-owned outputs. Direct contributors should not edit them
+in content PRs.
 
 Community submissions may link to source repositories, documentation, install
 commands, or full copyable content. Community-submitted ZIP/MCPB packages are
@@ -175,10 +176,10 @@ packages use checksums and package trust metadata after review.
 
 ### Local Validation
 
-1. Add or update a file under `content/<category>/`
-2. Run `pnpm --filter web run prebuild`
-3. Run `pnpm validate:content:strict`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build`
-4. Commit generated registry artifacts only from maintainer/internal branches
+1. Direct content PRs should add or update exactly one `content/<category>/<slug>.mdx` file.
+2. For direct content PRs, run `pnpm validate:content:strict` and do not commit generated output.
+3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run `pnpm --filter web run prebuild`, `pnpm validate:packages`, `pnpm scan:packages`, `pnpm validate:clean`, `pnpm audit:content`, `pnpm validate:emails`, `pnpm validate:raycast-feed`, `pnpm test:mcp`, `pnpm test:registry-artifacts`, `pnpm test:seo-jsonld`, `pnpm test:commercial-intake`, `MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint`, and `pnpm build` as relevant.
+4. Generated registry, route, package-download, and README artifacts are build or maintainer automation outputs, not normal content PR diffs.
 
 </details>
 
@@ -283,7 +284,7 @@ packages use checksums and package trust metadata after review.
 
 Get a free API key on https://app.zyntra.app/
 
-## 🧰 Tools (54)
+## 🧰 Tools (55)
 
 - **[Aider](https://heyclau.de/entry/tools/aider)** - Open-source terminal coding assistant that edits files in Git repositories using chat-driven development loops.
 - **[Apify](https://heyclau.de/entry/tools/apify)** - Web automation and scraping platform with actors, datasets, APIs, and integrations for data extraction workflows.
@@ -319,6 +320,7 @@ Get a free API key on https://app.zyntra.app/
 - **[Lovable](https://heyclau.de/entry/tools/lovable)** - AI app builder for generating and iterating on web applications from natural language product requests.
 - **[Make](https://heyclau.de/entry/tools/make)** - Visual automation platform for building integrations, scenarios, API workflows, and AI-connected business processes.
 - **[Mastra](https://heyclau.de/entry/tools/mastra)** - TypeScript agent framework for building AI agents, workflows, memory, tool calling, and evaluation-backed applications.
+- **[MCP Inspector](https://heyclau.de/entry/tools/mcp-inspector)** - Official visual testing and debugging tool for Model Context Protocol servers.
 - **[Microsoft AutoGen](https://heyclau.de/entry/tools/microsoft-autogen)** - Open-source framework for building multi-agent AI applications, conversations, workflows, and autonomous systems.
 - **[n8n](https://heyclau.de/entry/tools/n8n)** - Source-available workflow automation platform for self-hosted integrations, AI workflows, triggers, and data pipelines.
 - **[OpenCode](https://heyclau.de/entry/tools/opencode)** - Terminal-first AI coding agent for local development workflows, codebase edits, and model-flexible automation.

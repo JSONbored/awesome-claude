@@ -20,8 +20,12 @@ integrations/raycast/package.json.dev-backup
 # Ensure first-party package assets remain tracked even if a global ignore has *.zip
 !content/skills/*.zip
 !content/mcp/*.mcpb
-apps/web/public/downloads/skills/*.zip
-apps/web/public/downloads/mcp/*.mcpb
+
+# Build-time generated website projections.
+apps/web/public/data/
+apps/web/public/downloads/
+apps/web/src/generated/
+apps/web/src/routeTree.gen.ts
 
 # D1 schema migrations must stay tracked even if a global ignore has *.sql
 !apps/web/migrations/

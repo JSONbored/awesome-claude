@@ -15,6 +15,9 @@
   "placement": {
     "mode": "smart",
   },
+  "triggers": {
+    "crons": ["* * * * *"],
+  },
   "vars": {
     "PUBLIC_SITE_URL": "https://heyclau.de",
     "SUBMISSION_GATE_URL": "https://submission-gate.heyclau.de",

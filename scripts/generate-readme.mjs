@@ -233,9 +233,10 @@ content validation, Superagent, and private maintainer-agent review pass. Tool,
 app, service promotion, listing claims, and jobs use the website lead forms
 instead of GitHub content submissions.
 
-\`README.md\`, \`apps/web/public/data/**\`, \`apps/web/src/generated/**\`, and
-\`apps/web/public/downloads/**\` are generated or maintainer-owned outputs.
-Direct contributors should not edit them in content PRs.
+\`README.md\`, \`apps/web/public/data/**\`, \`apps/web/src/generated/**\`,
+\`apps/web/src/routeTree.gen.ts\`, and \`apps/web/public/downloads/**\` are
+generated or maintainer-owned outputs. Direct contributors should not edit them
+in content PRs.
 
 Community submissions may link to source repositories, documentation, install
 commands, or full copyable content. Community-submitted ZIP/MCPB packages are
@@ -254,10 +255,10 @@ packages use checksums and package trust metadata after review.
 
 ### Local Validation
 
-1. Add or update a file under \`content/<category>/\`
-2. Run \`pnpm --filter web run prebuild\`
-3. Run \`pnpm validate:content:strict\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\`
-4. Commit generated registry artifacts only from maintainer/internal branches
+1. Direct content PRs should add or update exactly one \`content/<category>/<slug>.mdx\` file.
+2. For direct content PRs, run \`pnpm validate:content:strict\` and do not commit generated output.
+3. For platform, package, API, MCP, Raycast, or maintainer artifact work, run \`pnpm --filter web run prebuild\`, \`pnpm validate:packages\`, \`pnpm scan:packages\`, \`pnpm validate:clean\`, \`pnpm audit:content\`, \`pnpm validate:emails\`, \`pnpm validate:raycast-feed\`, \`pnpm test:mcp\`, \`pnpm test:registry-artifacts\`, \`pnpm test:seo-jsonld\`, \`pnpm test:commercial-intake\`, \`MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint\`, and \`pnpm build\` as relevant.
+4. Generated registry, route, package-download, and README artifacts are build or maintainer automation outputs, not normal content PR diffs.
 
 </details>
 

@@ -12,8 +12,8 @@ submission path; website submissions must go through the private submission gate
 and GitHub PRs.
 
 The private maintainer gate owns final submission decisions: label immediately,
-review, post one stable marker comment, then `merge`, `close`,
-`request_changes`, `manual`, or `ignore`. For single-file content PRs, the gate
+review, post one stable marker comment, then `merge`, `close`, `manual`, or
+`ignore`. For single-file content PRs, the gate
 is intentionally one-shot and slightly aggressive: ambiguity usually closes the
 PR with a public reason so the contributor can resubmit cleanly.
 
@@ -23,8 +23,9 @@ PR with a public reason so the contributor can resubmit cleanly.
   pilot-labeled PRs; normal submission-gate scope is now `main`.
 - `submission-under-review`: the private worker accepted the webhook and queued
   a serialized review job.
-- `submission-needs-changes`: fixable issues were found and the stable marker
-  comment explains the public reason.
+- `submission-needs-changes`: legacy compatibility label. New direct content
+  review should close fixable failures instead of keeping iterative PR review
+  open.
 - `submission-manual-review`: potentially useful, but source, provenance,
   package, credentials, safety, or category-fit risk needs maintainer judgment.
 - `submission-closed-by-gate`: the worker closed a hard failure or
@@ -66,6 +67,12 @@ The private gate is hosted as a Cloudflare Worker with supporting bindings:
 - R2 for raw webhook payload snapshots, draft payloads, and review reports.
 - Queues for review jobs, with dead-letter queues.
 - Durable Objects for per-draft or per-PR locks.
+- D1 `submission_prs` is the durable maintainer review queue. Valid states are
+  `queued`, `validation_pending`, `reviewing`, `merge_pending`, `merged`,
+  `closed`, `manual`, `ignored`, and `error_retryable`.
+- A scheduled Worker sweeper runs every minute and requeues stale
+  `validation_pending`, `merge_pending`, and `error_retryable` rows so missed
+  GitHub check webhooks do not leave PRs stuck.
 
 Provision queues before deploying the Worker. The production environment needs
 `heyclaude-submission-review` and `heyclaude-submission-review-dlq`.
@@ -91,18 +98,23 @@ the gate later creates its own formal GitHub check run.
   PR, and updates one stable marker comment.
 - The review job waits for configured required validation, currently
   `validate-content` and Superagent. Pending validation keeps the PR in
-  `validation_pending`; failed validation gets one terminal comment and closes
-  or requests changes depending on the failure class. Green source validation
-  is the only path into private corpus review.
+  `validation_pending`, updates the marker comment, and sets a retry time.
+  Failed validation gets one terminal comment and closes. Green source
+  validation is the only path into private corpus review.
 - Accepted one-file content PRs are merged directly. Generated artifacts are
   build-time outputs and are not committed in contributor PRs.
 - `close` is for spam, promo/listing attempts, duplicates, unsupported
   categories, generated-artifact tampering, unsafe package/install patterns,
   missing source of truth, protected-field edits, or non-content PRs.
-- `request_changes` is for clearly fixable missing fields or shape problems
-  where preserving the current PR is better than resubmission.
 - `manual` is rare and reserved for Superagent/private-review outages, merge
   failures after retries, or genuinely close high-risk calls.
+
+## Queue Debugging
+
+Maintainers can inspect non-secret queue state through `GET /queue` with the
+internal bearer secret. The endpoint returns status counts and recent PR queue
+rows, including retry time, attempt count, last public-check summary, and last
+retryable error. Do not expose this endpoint publicly.
 
 ## Legacy Issue Intake
 

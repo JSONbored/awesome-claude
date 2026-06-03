@@ -133,7 +133,7 @@ function normalizeJobListing(value: Partial<JobListing> & Record<string, unknown
 function JobDetail() {
   const { slug, job: initialJob, related } = Route.useLoaderData();
   const job = initialJob;
-  const jobs = initialJob ? [initialJob, ...related] : related;
+  const jobs: JobListing[] = initialJob ? [initialJob, ...related] : related;
 
   if (!job) {
     return (

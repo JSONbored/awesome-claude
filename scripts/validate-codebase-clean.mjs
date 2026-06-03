@@ -49,6 +49,8 @@ const ignoredDirs = new Set([
   "dist-ssr",
   "node_modules",
   "apps/web/public/data",
+  "apps/web/public/downloads",
+  "apps/web/src/generated",
   "integrations/raycast/node_modules",
   "reports",
 ]);
@@ -56,6 +58,7 @@ const ignoredDirs = new Set([
 const ignoredFiles = new Set([
   "CHANGELOG.md",
   "apps/web/worker-configuration.d.ts",
+  "apps/web/src/routeTree.gen.ts",
   "scripts/audit-content.mjs",
   "scripts/validate-content.mjs",
   "scripts/validate-codebase-clean.mjs",
@@ -201,6 +204,8 @@ for (const relativePath of forbiddenPaths) {
 function shouldIgnore(relativePath) {
   if (ignoredFiles.has(relativePath)) return true;
   if (relativePath.startsWith("apps/web/public/data/")) return true;
+  if (relativePath.startsWith("apps/web/public/downloads/")) return true;
+  if (relativePath.startsWith("apps/web/src/generated/")) return true;
   if (relativePath.startsWith("integrations/raycast/node_modules/"))
     return true;
   return relativePath.split(path.sep).some((part) => ignoredDirs.has(part));

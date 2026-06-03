@@ -22,6 +22,7 @@
     "validate:packages": "node scripts/validate-download-packages.mjs",
     "scan:packages": "node scripts/scan-download-packages.mjs",
     "validate:raycast-feed": "node scripts/validate-raycast-feed.mjs",
+    "generate:registry": "node scripts/build-content-index.mjs",
     "brand:enrich": "node scripts/enrich-brand-assets.mjs",
     "validate:deployment-artifacts": "node scripts/validate-deployment-artifacts.mjs",
     "validate:clean": "node scripts/validate-codebase-clean.mjs",
