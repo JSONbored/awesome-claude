@@ -226,6 +226,8 @@ export async function upsertPrState(
     lastError?: string | null;
     lastCheckSummary?: string | null;
     terminalAt?: string | null;
+    clearVerdict?: boolean;
+    clearTerminal?: boolean;
   },
 ) {
   const timestamp = now();
@@ -247,8 +249,14 @@ export async function upsertPrState(
         base_ref = excluded.base_ref,
         installation_id = COALESCE(excluded.installation_id, submission_prs.installation_id),
         status = excluded.status,
-        verdict = COALESCE(excluded.verdict, submission_prs.verdict),
-        verdict_summary = COALESCE(excluded.verdict_summary, submission_prs.verdict_summary),
+        verdict = CASE
+          WHEN ? THEN NULL
+          ELSE COALESCE(excluded.verdict, submission_prs.verdict)
+        END,
+        verdict_summary = CASE
+          WHEN ? THEN NULL
+          ELSE COALESCE(excluded.verdict_summary, submission_prs.verdict_summary)
+        END,
         last_delivery_id = COALESCE(excluded.last_delivery_id, submission_prs.last_delivery_id),
         next_review_at = excluded.next_review_at,
         attempt_count = CASE
@@ -262,6 +270,7 @@ export async function upsertPrState(
         END,
         last_check_summary = COALESCE(excluded.last_check_summary, submission_prs.last_check_summary),
         terminal_at = CASE
+          WHEN ? THEN NULL
           WHEN excluded.terminal_at IS NOT NULL THEN excluded.terminal_at
           ELSE submission_prs.terminal_at
         END,
@@ -286,7 +295,10 @@ export async function upsertPrState(
       terminalAt,
       timestamp,
       timestamp,
+      params.clearVerdict ? 1 : 0,
+      params.clearVerdict ? 1 : 0,
       params.incrementAttempt ? 1 : 0,
+      params.clearTerminal ? 1 : 0,
     )
     .run();
 }
@@ -333,7 +345,8 @@ export async function listDuePrStates(
         last_notification_key AS lastNotificationKey,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
-       WHERE terminal_at IS NULL
+       WHERE (
+         terminal_at IS NULL
          AND (
            (
              status IN ('validation_pending', 'merge_pending', 'error_retryable')
@@ -352,6 +365,12 @@ export async function listDuePrStates(
              AND updated_at <= ?
            )
          )
+       )
+       OR (
+         terminal_at IS NOT NULL
+         AND status = 'closed'
+         AND COALESCE(last_error, '') != 'GitHub terminal state verified.'
+       )
        ORDER BY COALESCE(next_review_at, updated_at) ASC, updated_at ASC
        LIMIT ?`,
     )

@@ -45,6 +45,13 @@ function readConstantsSource() {
   );
 }
 
+function readStorageSource() {
+  return fs.readFileSync(
+    path.join(repoRoot, "apps/submission-gate/src/storage.ts"),
+    "utf8",
+  );
+}
+
 const SUPPORTED_DIRECT_CONTENT_CATEGORIES = [
   "agents",
   "collections",
@@ -354,6 +361,9 @@ describe("Cloudflare submission gate helpers", () => {
     const validationIndex = source.indexOf("getCommitValidationState({");
     const privateReviewIndex = source.indexOf("reviewWithPrivateGate(env, {");
 
+    expect(source).toContain("CONTENT_GATE_BASE_REF");
+    expect(source).toContain("function contentGateBaseRef");
+    expect(source).toContain("function isContentGatePr");
     expect(source).toContain(
       'const DEFAULT_REQUIRED_VALIDATION_CHECKS = [\n  "validate-content",\n  "Superagent Security Scan",\n]',
     );
@@ -554,7 +564,8 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("LABELS.underReview");
     expect(source).toContain("const CONTENT_CATEGORY_LABELS = [");
     expect(source).toContain("categoryLabel");
-    expect(source).toContain("!labelsToApply.includes(label)");
+    expect(source).toContain("!params.labelsToApply.includes(label)");
+    expect(source).toContain("async function applyTerminalGateDecision");
     expect(removeIndex).toBeGreaterThan(0);
     expect(addIndex).toBeGreaterThan(removeIndex);
   });
@@ -657,6 +668,7 @@ describe("Cloudflare submission gate helpers", () => {
 
   it("keeps one-shot gate verdicts from being overwritten by later check events", () => {
     const source = readWorkerSource();
+    const storageSource = readStorageSource();
     const enqueueIndex = source.indexOf("async function enqueueReviewTarget");
     const enqueueReadIndex = source.indexOf(
       "getPrState(env.SUBMISSION_GATE_DB",
@@ -709,7 +721,19 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       "Skipped trusted recheck because this submission already has a terminal gate decision.",
     );
-    expect(enqueueBlock).toContain("if (hasTerminalGateDecision(existing))");
+    expect(source).toContain("function isOpenPullRequest");
+    expect(source).toContain(
+      "Terminal gate state did not match open GitHub PR",
+    );
+    expect(source).toContain("GitHub terminal state verified.");
+    expect(source).toContain("clearVerdict: true");
+    expect(source).toContain("clearTerminal: true");
+    expect(storageSource).toContain(
+      "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
+    );
+    expect(storageSource).toContain("terminal_at IS NOT NULL");
+    expect(storageSource).toContain("status = 'closed'");
+    expect(enqueueBlock).toContain("if (!hasTerminalGateDecision(existing))");
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",
@@ -756,7 +780,18 @@ describe("Cloudflare submission gate helpers", () => {
     const source = readWorkerSource();
 
     expect(source).toContain("async function directContentScopeForPr");
+    expect(source).toContain(
+      "async function assertDirectContentAutoMergeEligibility",
+    );
     expect(source).toContain("async function mergeAcceptedPullRequest");
+    expect(source).toContain("expectedHeadSha");
+    expect(source).toContain(
+      "Direct content auto-merge is only allowed for PRs targeting",
+    );
+    expect(source).toContain(
+      "head branch was modified during content gate review",
+    );
+    expect(source).toContain("await assertDirectContentAutoMergeEligibility({");
     expect(source).toContain("approvePullRequest({");
     expect(source).toContain("mergePullRequest({");
     expect(source).toContain("listPullRequestFiles({");
@@ -887,7 +922,7 @@ describe("Cloudflare submission gate helpers", () => {
     const source = readWorkerSource();
     const callbackSource =
       source.match(
-        /async function githubCallbackRoute[\s\S]*?\nfunction isPilotPr/,
+        /async function githubCallbackRoute[\s\S]*?\nfunction isContentGatePr/,
       )?.[0] || "";
     const guardIndex = callbackSource.indexOf("if (providerError || !code)");
     const exchangeIndex = callbackSource.indexOf("exchangeGitHubUserCode");

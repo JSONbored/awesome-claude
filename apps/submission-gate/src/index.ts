@@ -77,6 +77,7 @@ type Env = {
   SUBMISSION_GATE_URL?: string;
   PUBLIC_REPO: string;
   ALLOWED_IMPORT_REPOS?: string;
+  CONTENT_GATE_BASE_REF?: string;
   PILOT_BASE_REF: string;
   GITHUB_API_VERSION: string;
   REVIEW_MARKER: string;
@@ -327,6 +328,10 @@ function isoAfter(seconds: number) {
 
 function isoBefore(seconds: number) {
   return new Date(Date.now() - seconds * 1000).toISOString();
+}
+
+function contentGateBaseRef(env: Env) {
+  return env.CONTENT_GATE_BASE_REF || env.PILOT_BASE_REF || "main";
 }
 
 function truncateForQueue(value: unknown, maxLength = 500) {
@@ -674,7 +679,7 @@ async function createDraftRoute(request: Request, env: Env) {
     );
   }
   const fields = draftFieldsFromBody(body);
-  const baseRef = env.PILOT_BASE_REF || "main";
+  const baseRef = contentGateBaseRef(env);
   let target: ReturnType<typeof buildDraftTarget>;
   try {
     target = buildDraftTarget(fields, baseRef);
@@ -806,7 +811,7 @@ async function githubCallbackRoute(request: Request, env: Env) {
   );
 }
 
-function isPilotPr(payload: Record<string, unknown>, env: Env) {
+function isContentGatePr(payload: Record<string, unknown>, env: Env) {
   const pull = payload.pull_request as
     | {
         number?: number;
@@ -817,7 +822,9 @@ function isPilotPr(payload: Record<string, unknown>, env: Env) {
     | undefined;
   if (!pull || pull.draft) return false;
   const labels = pull.labels?.map((label) => label.name) || [];
-  return pull.base?.ref === env.PILOT_BASE_REF || labels.includes(PILOT_LABEL);
+  return (
+    pull.base?.ref === contentGateBaseRef(env) || labels.includes(PILOT_LABEL)
+  );
 }
 
 function parseCsv(value: string | undefined, fallback: string[] = []) {
@@ -1043,7 +1050,7 @@ async function targetFromIssueCommentRecheck(
   if (pull.draft) return null;
   const target = reviewTargetFromPullRecord(pull, installationId);
   if (!target) return null;
-  if (target.baseRef !== env.PILOT_BASE_REF && !hasPilotLabel(issue)) {
+  if (target.baseRef !== contentGateBaseRef(env) && !hasPilotLabel(issue)) {
     return null;
   }
   return target;
@@ -1065,6 +1072,10 @@ function hasTerminalGateDecision(
   if (!state) return false;
   if (TERMINAL_PR_STATUSES.has(String(state.status || ""))) return true;
   return TERMINAL_GATE_VERDICTS.has(String(state.verdict || ""));
+}
+
+function isOpenPullRequest(pull: { state?: string }) {
+  return String(pull.state || "").toLowerCase() === "open";
 }
 
 function isRetryableMergeError(error: unknown) {
@@ -1184,6 +1195,75 @@ async function directContentScopeForPr(params: {
     throw new Error(classification.decision.summary);
   }
   throw new Error(classification.reason);
+}
+
+async function assertDirectContentAutoMergeEligibility(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  expectedScope?: DirectContentScope | null;
+  expectedHeadSha?: string;
+}) {
+  const pull = await getPullRequest({
+    token: params.token,
+    repo: params.repo,
+    number: params.target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (pull.draft) {
+    throw new Error(
+      "Draft pull requests are not eligible for content auto-merge.",
+    );
+  }
+
+  const baseRef = pull.base?.ref || "";
+  const gateBaseRef = contentGateBaseRef(params.env);
+  if (baseRef !== gateBaseRef) {
+    throw new Error(
+      `Direct content auto-merge is only allowed for PRs targeting \`${gateBaseRef}\`.`,
+    );
+  }
+
+  const currentHeadSha = pull.head?.sha || "";
+  if (
+    params.expectedHeadSha &&
+    currentHeadSha &&
+    currentHeadSha !== params.expectedHeadSha
+  ) {
+    throw new Error("head branch was modified during content gate review");
+  }
+
+  params.target.baseRef = baseRef;
+  params.target.headSha = currentHeadSha || params.target.headSha;
+  params.target.headRef = pull.head?.ref || params.target.headRef;
+  params.target.headRepo = pull.head?.repo?.full_name || params.target.headRepo;
+
+  const classification = await directContentReviewabilityForPr({
+    token: params.token,
+    repo: params.repo,
+    number: params.target.number,
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (classification.kind === "scope_failure") {
+    throw new Error(classification.decision.summary);
+  }
+  if (classification.kind === "ignore") {
+    throw new Error(classification.reason);
+  }
+
+  const scope = classification.scope;
+  const expected = params.expectedScope;
+  if (
+    expected &&
+    (scope.filePath !== expected.filePath ||
+      scope.category !== expected.category ||
+      scope.slug !== expected.slug ||
+      scope.status !== expected.status)
+  ) {
+    throw new Error("Direct content scope changed during review.");
+  }
+  return scope;
 }
 
 function scopeFailureDecision(error: unknown): GateDecision {
@@ -1417,6 +1497,107 @@ async function notifyGateDecision(
   }
 }
 
+async function applyTerminalGateDecision(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  targetKey: string;
+  decision: GateDecision;
+  status: string;
+  labelsToApply: string[];
+  scope?: DirectContentScope | null;
+  validation?: {
+    summary?: string;
+    checks?: Array<{ name: string; status: string; details?: string }>;
+  } | null;
+  pull?: {
+    title?: string;
+    html_url?: string;
+    user?: { login?: string };
+  } | null;
+  deliveryId?: string;
+}) {
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.target.headRepo,
+    headRef: params.target.headRef,
+    headSha: params.target.headSha,
+    baseRef: params.target.baseRef || contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status: "reviewing",
+    deliveryId: params.deliveryId,
+    nextReviewAt: null,
+    clearVerdict: true,
+    clearTerminal: true,
+  });
+  await removeLabels({
+    token: params.token,
+    repo: params.repo,
+    issueNumber: params.target.number,
+    labels: RECONCILED_GATE_LABELS.filter(
+      (label) => !params.labelsToApply.includes(label),
+    ),
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (params.labelsToApply.length) {
+    await addLabels({
+      token: params.token,
+      repo: params.repo,
+      issueNumber: params.target.number,
+      labels: params.labelsToApply,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    });
+  }
+  await upsertMarkerComment({
+    token: params.token,
+    repo: params.repo,
+    issueNumber: params.target.number,
+    marker: params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    body: markerComment(
+      params.decision,
+      params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    ),
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  if (
+    (params.decision.verdict === "close" ||
+      params.decision.verdict === "request_changes") &&
+    params.decision.close
+  ) {
+    await closeIssueOrPullRequest({
+      token: params.token,
+      repo: params.repo,
+      issueNumber: params.target.number,
+      apiVersion: params.env.GITHUB_API_VERSION,
+    });
+  }
+  await notifyGateDecision(params.env, {
+    target: params.target,
+    targetKey: params.targetKey,
+    decision: params.decision,
+    status: params.status,
+    scope: params.scope,
+    validation: params.validation,
+    pull: params.pull,
+  });
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.target.headRepo,
+    headRef: params.target.headRef,
+    headSha: params.target.headSha,
+    baseRef: params.target.baseRef || contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status: params.status,
+    verdict: params.decision.verdict,
+    verdictSummary: params.decision.summary,
+    nextReviewAt: null,
+    terminalAt: TERMINAL_PR_STATUSES.has(params.status) ? nowIso() : null,
+  });
+}
+
 async function mergeAcceptedPullRequest(params: {
   env: Env;
   token: string;
@@ -1429,6 +1610,14 @@ async function mergeAcceptedPullRequest(params: {
   if (!expectedHeadSha) {
     throw new Error("Direct merge requires the current PR head SHA.");
   }
+  const scope = await assertDirectContentAutoMergeEligibility({
+    env: params.env,
+    token: params.token,
+    repo: params.repo,
+    target: params.target,
+    expectedScope: params.scope,
+    expectedHeadSha,
+  });
   const reviewBody = [
     "Automated review by HeyClaude Maintainer Agent.",
     "",
@@ -1449,8 +1638,8 @@ async function mergeAcceptedPullRequest(params: {
     number: params.target.number,
     expectedHeadSha,
     commitTitle: `feat(content): ${
-      params.scope.status === "modified" ? "update" : "add"
-    } ${params.scope.category} ${params.scope.slug}`,
+      scope.status === "modified" ? "update" : "add"
+    } ${scope.category} ${scope.slug}`,
     commitMessage: [
       `Accepted by HeyClaude Maintainer Agent from PR #${params.target.number}.`,
       "",
@@ -1648,7 +1837,7 @@ async function deterministicContentPrecheck(params: {
   target: ReviewTarget;
   scope: DirectContentScope;
 }) {
-  const baseRef = params.target.baseRef || params.env.PILOT_BASE_REF;
+  const baseRef = params.target.baseRef || contentGateBaseRef(params.env);
   const candidateContent = await fetchDirectContentScopeContent(params.scope);
 
   if (params.scope.status === "modified") {
@@ -1711,26 +1900,27 @@ async function enqueueReviewTarget(
   pilotScoped = false,
   forceRecheck = false,
 ) {
-  if (!pilotScoped && target.baseRef !== env.PILOT_BASE_REF) return false;
+  if (!pilotScoped && target.baseRef !== contentGateBaseRef(env)) return false;
   const targetKey = targetKeyForReview(target);
   const existing = await getPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
   });
-  if (hasTerminalGateDecision(existing)) return false;
-  await upsertPrState(env.SUBMISSION_GATE_DB, {
-    repo: target.repoFullName,
-    number: target.number,
-    headRepo: target.headRepo,
-    headRef: target.headRef,
-    headSha: target.headSha,
-    baseRef: target.baseRef || env.PILOT_BASE_REF,
-    installationId: target.installationId,
-    status: "queued",
-    deliveryId,
-    nextReviewAt: null,
-    incrementAttempt: true,
-  });
+  if (!hasTerminalGateDecision(existing)) {
+    await upsertPrState(env.SUBMISSION_GATE_DB, {
+      repo: target.repoFullName,
+      number: target.number,
+      headRepo: target.headRepo,
+      headRef: target.headRef,
+      headSha: target.headSha,
+      baseRef: target.baseRef || contentGateBaseRef(env),
+      installationId: target.installationId,
+      status: "queued",
+      deliveryId,
+      nextReviewAt: null,
+      incrementAttempt: true,
+    });
+  }
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
     targetKey,
@@ -1905,8 +2095,8 @@ async function githubWebhookRoute(
     if (!REVIEWABLE_PR_ACTIONS.has(action) || !target) {
       return json({ ok: true, ignored: true });
     }
-    if (!isPilotPr(payload, env))
-      return json({ ok: true, ignored: true, reason: "outside_pilot" });
+    if (!isContentGatePr(payload, env))
+      return json({ ok: true, ignored: true, reason: "outside_content_gate" });
     const reviewability = await directContentReviewabilityForTarget(
       env,
       target,
@@ -2097,7 +2287,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       const pr = await createUserForkContentPr({
         userToken,
         publicRepo: env.PUBLIC_REPO,
-        baseRef: String(draft.baseRef || env.PILOT_BASE_REF),
+        baseRef: String(draft.baseRef || contentGateBaseRef(env)),
         branchName: String(draft.branchName),
         targetPath: String(draft.targetPath),
         content,
@@ -2131,18 +2321,6 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         repo: target.repoFullName,
         number: target.number,
       });
-      if (hasTerminalGateDecision(existing)) {
-        await insertAudit(env.SUBMISSION_GATE_DB, {
-          id: crypto.randomUUID(),
-          targetKey: message.targetKey,
-          eventType: message.kind,
-          decision: "ignored",
-          summary: forceRecheck
-            ? "Skipped trusted recheck because this submission already has a terminal gate decision."
-            : "Skipped because this submission already has a terminal gate decision.",
-        });
-        return;
-      }
       const token = await installationTokenForTarget(env, target);
       if (!token) {
         await upsertPrState(env.SUBMISSION_GATE_DB, {
@@ -2151,23 +2329,124 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           headRepo: target.headRepo,
           headRef: target.headRef,
           headSha: target.headSha,
-          baseRef: target.baseRef || env.PILOT_BASE_REF,
+          baseRef: target.baseRef || contentGateBaseRef(env),
           installationId: target.installationId,
           status: "error_retryable",
           nextReviewAt: nextReviewForStatus("error_retryable"),
           lastError: "No installation token available for PR review.",
           deliveryId: String(message.payload.deliveryId || ""),
+          clearVerdict: true,
+          clearTerminal: true,
         });
         return;
       }
       const repo = parseRepo(target.repoFullName);
+      if (hasTerminalGateDecision(existing)) {
+        const existingStatus = String(existing?.status || "");
+        if (existingStatus !== "closed") {
+          await insertAudit(env.SUBMISSION_GATE_DB, {
+            id: crypto.randomUUID(),
+            targetKey: message.targetKey,
+            eventType: message.kind,
+            decision: "ignored",
+            summary: forceRecheck
+              ? "Skipped trusted recheck because this submission already has a terminal gate decision."
+              : "Skipped because this submission already has a terminal gate decision.",
+          });
+          return;
+        }
+        try {
+          const pull = await getPullRequest({
+            token,
+            repo,
+            number: target.number,
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          if (!isOpenPullRequest(pull)) {
+            await upsertPrState(env.SUBMISSION_GATE_DB, {
+              repo: target.repoFullName,
+              number: target.number,
+              headRepo: pull.head?.repo?.full_name || target.headRepo,
+              headRef: pull.head?.ref || target.headRef,
+              headSha: pull.head?.sha || target.headSha,
+              baseRef:
+                pull.base?.ref || target.baseRef || contentGateBaseRef(env),
+              installationId: target.installationId,
+              status: String(existing?.status || "closed"),
+              deliveryId: String(message.payload.deliveryId || ""),
+              lastError: "GitHub terminal state verified.",
+              terminalAt:
+                typeof existing?.terminalAt === "string"
+                  ? existing.terminalAt
+                  : nowIso(),
+            });
+            await insertAudit(env.SUBMISSION_GATE_DB, {
+              id: crypto.randomUUID(),
+              targetKey: message.targetKey,
+              eventType: message.kind,
+              decision: "ignored",
+              summary: forceRecheck
+                ? "Skipped trusted recheck because this submission already has a terminal gate decision and GitHub is terminal."
+                : "Skipped because this submission already has a terminal gate decision and GitHub is terminal.",
+            });
+            return;
+          }
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: pull.head?.repo?.full_name || target.headRepo,
+            headRef: pull.head?.ref || target.headRef,
+            headSha: pull.head?.sha || target.headSha,
+            baseRef:
+              pull.base?.ref || target.baseRef || contentGateBaseRef(env),
+            installationId: target.installationId,
+            status: "error_retryable",
+            nextReviewAt: null,
+            lastError: "Terminal gate state did not match open GitHub PR.",
+            deliveryId: String(message.payload.deliveryId || ""),
+            clearVerdict: true,
+            clearTerminal: true,
+          });
+          target.headSha = pull.head?.sha || target.headSha;
+          target.headRef = pull.head?.ref || target.headRef;
+          target.headRepo = pull.head?.repo?.full_name || target.headRepo;
+          target.baseRef = pull.base?.ref || target.baseRef || "";
+          await insertAudit(env.SUBMISSION_GATE_DB, {
+            id: crypto.randomUUID(),
+            targetKey: message.targetKey,
+            eventType: message.kind,
+            decision: "terminal_reconciled",
+            summary:
+              "Terminal gate state did not match open GitHub PR; requeued for reconciliation.",
+          });
+        } catch (error) {
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            headSha: target.headSha,
+            baseRef: target.baseRef || contentGateBaseRef(env),
+            installationId: target.installationId,
+            status: "error_retryable",
+            nextReviewAt: nextReviewForStatus("error_retryable"),
+            lastError: truncateForQueue(
+              error instanceof Error ? error.message : String(error),
+            ),
+            deliveryId: String(message.payload.deliveryId || ""),
+            clearVerdict: true,
+            clearTerminal: true,
+          });
+          return;
+        }
+      }
       await upsertPrState(env.SUBMISSION_GATE_DB, {
         repo: target.repoFullName,
         number: target.number,
         headRepo: target.headRepo,
         headRef: target.headRef,
         headSha: target.headSha,
-        baseRef: target.baseRef || env.PILOT_BASE_REF,
+        baseRef: target.baseRef || contentGateBaseRef(env),
         installationId: target.installationId,
         status: "reviewing",
         deliveryId: String(message.payload.deliveryId || ""),
@@ -2200,7 +2479,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           headRepo: target.headRepo,
           headRef: target.headRef,
           headSha: target.headSha,
-          baseRef: target.baseRef || env.PILOT_BASE_REF,
+          baseRef: target.baseRef || contentGateBaseRef(env),
           installationId: target.installationId,
           status: "reviewing",
           deliveryId: String(message.payload.deliveryId || ""),
@@ -2239,7 +2518,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           headRepo: target.headRepo,
           headRef: target.headRef,
           headSha: target.headSha,
-          baseRef: target.baseRef || env.PILOT_BASE_REF,
+          baseRef: target.baseRef || contentGateBaseRef(env),
           installationId: target.installationId,
           status: "ignored",
           deliveryId: String(message.payload.deliveryId || ""),
@@ -2258,6 +2537,21 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       } else {
         contentScopeForPrivateReview = reviewability.scope;
       }
+      if (!decision && contentScopeForPrivateReview) {
+        try {
+          contentScopeForPrivateReview =
+            await assertDirectContentAutoMergeEligibility({
+              env,
+              token,
+              repo,
+              target,
+              expectedScope: contentScopeForPrivateReview,
+            });
+        } catch (error) {
+          decision = scopeFailureDecision(error);
+          contentScopeForPrivateReview = null;
+        }
+      }
       try {
         const validation = await getCommitValidationState({
           token,
@@ -2275,7 +2569,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             headRepo: target.headRepo,
             headRef: target.headRef,
             headSha: target.headSha,
-            baseRef: target.baseRef || env.PILOT_BASE_REF,
+            baseRef: target.baseRef || contentGateBaseRef(env),
             installationId: target.installationId,
             status: "validation_pending",
             deliveryId: String(message.payload.deliveryId || ""),
@@ -2356,7 +2650,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             target: {
               repoFullName: target.repoFullName,
               number: target.number,
-              baseRef: target.baseRef || env.PILOT_BASE_REF,
+              baseRef: target.baseRef || contentGateBaseRef(env),
               headRepo: target.headRepo,
               headRef: target.headRef,
               headSha: target.headSha,
@@ -2394,12 +2688,14 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             headRepo: target.headRepo,
             headRef: target.headRef,
             headSha: target.headSha,
-            baseRef: target.baseRef || env.PILOT_BASE_REF,
+            baseRef: target.baseRef || contentGateBaseRef(env),
             installationId: target.installationId,
             status: "error_retryable",
             nextReviewAt: nextReviewForStatus("error_retryable"),
             lastError: truncateForQueue(decision.summary),
             deliveryId: String(message.payload.deliveryId || ""),
+            clearVerdict: true,
+            clearTerminal: true,
           });
           await upsertMarkerComment({
             token,
@@ -2456,150 +2752,33 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         decision: decision.verdict,
         summary: decision.summary,
       });
-      await upsertPrState(env.SUBMISSION_GATE_DB, {
-        repo: target.repoFullName,
-        number: target.number,
-        headRepo: target.headRepo,
-        headRef: target.headRef,
-        headSha: target.headSha,
-        baseRef: target.baseRef || env.PILOT_BASE_REF,
-        installationId: target.installationId,
-        status,
-        verdict: decision.verdict,
-        verdictSummary: decision.summary,
-        nextReviewAt: nextReviewForStatus(status),
-        terminalAt: TERMINAL_PR_STATUSES.has(status) ? nowIso() : null,
-      });
-      await removeLabels({
-        token,
-        repo,
-        issueNumber: target.number,
-        labels: RECONCILED_GATE_LABELS.filter(
-          (label) => !labelsToApply.includes(label),
-        ),
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      if (labelsToApply.length) {
-        await addLabels({
-          token,
-          repo,
-          issueNumber: target.number,
-          labels: labelsToApply,
-          apiVersion: env.GITHUB_API_VERSION,
-        });
-      }
-      await upsertMarkerComment({
-        token,
-        repo,
-        issueNumber: target.number,
-        marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        body: markerComment(
-          decision,
-          env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        ),
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      if (
-        (decision.verdict === "close" ||
-          decision.verdict === "request_changes") &&
-        decision.close
-      ) {
-        await closeIssueOrPullRequest({
-          token,
-          repo,
-          issueNumber: target.number,
-          apiVersion: env.GITHUB_API_VERSION,
-        });
-      }
       if (decision.verdict !== "merge") {
-        await notifyGateDecision(env, {
+        await applyTerminalGateDecision({
+          env,
+          token,
+          repo,
           target,
           targetKey: message.targetKey,
           decision,
           status,
+          labelsToApply,
           scope: contentScopeForPrivateReview,
           validation: validationForNotification,
           pull: pullForNotification,
+          deliveryId: String(message.payload.deliveryId || ""),
         });
+        return;
       }
       if (decision.verdict === "merge" && contentScopeForPrivateReview) {
+        let mergeResult: Awaited<ReturnType<typeof mergeAcceptedPullRequest>>;
         try {
-          const mergeResult = await mergeAcceptedPullRequest({
+          mergeResult = await mergeAcceptedPullRequest({
             env,
             token,
             repo,
             target,
             decision,
             scope: contentScopeForPrivateReview,
-          });
-          const mergedSummary = [
-            decision.summary.trim(),
-            "",
-            "Merge Result:",
-            `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
-          ].join("\n");
-          const mergedDecision: GateDecision = {
-            ...decision,
-            summary: mergedSummary,
-            labels: [LABELS.merged, ...categoryLabels],
-          };
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || env.PILOT_BASE_REF,
-            installationId: target.installationId,
-            status: "merged",
-            verdict: "merge",
-            verdictSummary: mergedSummary,
-            nextReviewAt: null,
-            terminalAt: nowIso(),
-          });
-          await removeLabels({
-            token,
-            repo,
-            issueNumber: target.number,
-            labels: RECONCILED_GATE_LABELS.filter(
-              (label) =>
-                label !== LABELS.merged && !categoryLabels.includes(label),
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await addLabels({
-            token,
-            repo,
-            issueNumber: target.number,
-            labels: [LABELS.merged, ...categoryLabels],
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await upsertMarkerComment({
-            token,
-            repo,
-            issueNumber: target.number,
-            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            body: markerComment(
-              mergedDecision,
-              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await insertAudit(env.SUBMISSION_GATE_DB, {
-            id: crypto.randomUUID(),
-            targetKey: message.targetKey,
-            eventType: message.kind,
-            decision: "merged",
-            summary: mergedSummary,
-          });
-          await notifyGateDecision(env, {
-            target,
-            targetKey: message.targetKey,
-            decision: mergedDecision,
-            status: "merged",
-            scope: contentScopeForPrivateReview,
-            validation: validationForNotification,
-            pull: pullForNotification,
           });
         } catch (error) {
           if (isRetryableMergeError(error)) {
@@ -2618,7 +2797,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               headRepo: target.headRepo,
               headRef: target.headRef,
               headSha: target.headSha,
-              baseRef: target.baseRef || env.PILOT_BASE_REF,
+              baseRef: target.baseRef || contentGateBaseRef(env),
               installationId: target.installationId,
               status: "merge_pending",
               verdict: "merge",
@@ -2640,46 +2819,21 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               error instanceof Error ? error.message : "unknown error"
             }.`,
           );
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || env.PILOT_BASE_REF,
-            installationId: target.installationId,
+          await applyTerminalGateDecision({
+            env,
+            token,
+            repo,
+            target,
+            targetKey: message.targetKey,
+            decision: manualDecision,
             status: "manual",
-            verdict: "manual",
-            verdictSummary: manualDecision.summary,
-            terminalAt: nowIso(),
-          });
-          await removeLabels({
-            token,
-            repo,
-            issueNumber: target.number,
-            labels: RECONCILED_GATE_LABELS.filter(
-              (label) =>
-                label !== LABELS.manual && !categoryLabels.includes(label),
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await addLabels({
-            token,
-            repo,
-            issueNumber: target.number,
-            labels: [...manualDecision.labels, ...categoryLabels],
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await upsertMarkerComment({
-            token,
-            repo,
-            issueNumber: target.number,
-            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            body: markerComment(
-              manualDecision,
-              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
+            labelsToApply: [
+              ...new Set([...manualDecision.labels, ...categoryLabels]),
+            ],
+            scope: contentScopeForPrivateReview,
+            validation: validationForNotification,
+            pull: pullForNotification,
+            deliveryId: String(message.payload.deliveryId || ""),
           });
           await insertAudit(env.SUBMISSION_GATE_DB, {
             id: crypto.randomUUID(),
@@ -2688,17 +2842,77 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             decision: "merge_failed",
             summary: manualDecision.summary,
           });
-          await notifyGateDecision(env, {
-            target,
-            targetKey: message.targetKey,
-            decision: manualDecision,
-            status: "manual",
-            scope: contentScopeForPrivateReview,
-            validation: validationForNotification,
-            pull: pullForNotification,
-          });
         }
+        return;
       }
+      const mergedSummary = [
+        decision.summary.trim(),
+        "",
+        "Merge Result:",
+        `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
+      ].join("\n");
+      const mergedDecision: GateDecision = {
+        ...decision,
+        summary: mergedSummary,
+        labels: [LABELS.merged, ...categoryLabels],
+      };
+      await removeLabels({
+        token,
+        repo,
+        issueNumber: target.number,
+        labels: RECONCILED_GATE_LABELS.filter(
+          (label) => label !== LABELS.merged && !categoryLabels.includes(label),
+        ),
+        apiVersion: env.GITHUB_API_VERSION,
+      });
+      await addLabels({
+        token,
+        repo,
+        issueNumber: target.number,
+        labels: [LABELS.merged, ...categoryLabels],
+        apiVersion: env.GITHUB_API_VERSION,
+      });
+      await upsertMarkerComment({
+        token,
+        repo,
+        issueNumber: target.number,
+        marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+        body: markerComment(
+          mergedDecision,
+          env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+        ),
+        apiVersion: env.GITHUB_API_VERSION,
+      });
+      await insertAudit(env.SUBMISSION_GATE_DB, {
+        id: crypto.randomUUID(),
+        targetKey: message.targetKey,
+        eventType: message.kind,
+        decision: "merged",
+        summary: mergedSummary,
+      });
+      await notifyGateDecision(env, {
+        target,
+        targetKey: message.targetKey,
+        decision: mergedDecision,
+        status: "merged",
+        scope: contentScopeForPrivateReview,
+        validation: validationForNotification,
+        pull: pullForNotification,
+      });
+      await upsertPrState(env.SUBMISSION_GATE_DB, {
+        repo: target.repoFullName,
+        number: target.number,
+        headRepo: target.headRepo,
+        headRef: target.headRef,
+        headSha: target.headSha,
+        baseRef: target.baseRef || contentGateBaseRef(env),
+        installationId: target.installationId,
+        status: "merged",
+        verdict: "merge",
+        verdictSummary: mergedSummary,
+        nextReviewAt: null,
+        terminalAt: nowIso(),
+      });
     }
   });
 }
@@ -2733,12 +2947,14 @@ async function recordRetryableQueueError(
     headRepo: target.headRepo,
     headRef: target.headRef,
     headSha: target.headSha,
-    baseRef: target.baseRef || env.PILOT_BASE_REF,
+    baseRef: target.baseRef || contentGateBaseRef(env),
     installationId: target.installationId,
     status: "error_retryable",
     nextReviewAt: nextReviewForStatus("error_retryable"),
     lastError: truncateForQueue(errorMessage),
     deliveryId: String(message.payload.deliveryId || ""),
+    clearVerdict: true,
+    clearTerminal: true,
   });
 }
 
@@ -2755,7 +2971,6 @@ async function sweepSubmissionQueue(env: Env) {
   for (const row of rows) {
     const target = reviewTargetFromQueueState(row as PrQueueState);
     if (!target) continue;
-    if (hasTerminalGateDecision(row)) continue;
     const deliveryId = `scheduled-${Date.now()}-${target.number}`;
     if (
       await enqueueReviewTarget(
