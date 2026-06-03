@@ -22,20 +22,26 @@ documentationUrl: "https://github.com/21st-dev/magic-mcp"
 repoUrl: "https://github.com/21st-dev/magic-mcp"
 websiteUrl: "https://21st.dev"
 installable: true
-installCommand: "claude mcp add magic -- npx -y @21st-dev/magic@latest API_KEY=\"your-api-key\""
-usageSnippet: "claude mcp add magic -- npx -y @21st-dev/magic@latest API_KEY=\"your-api-key\""
+installCommand: "claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest"
+usageSnippet: "claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest"
 copySnippet: |-
   {
     "magic": {
       "command": "npx",
-      "args": ["-y", "@21st-dev/magic@latest", "API_KEY=\"your-api-key\""]
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
     }
   }
 configSnippet: |-
   {
     "magic": {
       "command": "npx",
-      "args": ["-y", "@21st-dev/magic@latest", "API_KEY=\"your-api-key\""]
+      "args": ["-y", "@21st-dev/magic@latest"],
+      "env": {
+        "API_KEY": "${API_KEY}"
+      }
     }
   }
 estimatedSetupTime: 3 minutes
@@ -102,14 +108,14 @@ Magic turns natural-language descriptions into polished UI components without le
 
 1. Make sure Node.js 18+ is installed (verify with `npx --version`).
 2. Create a Magic API key at https://21st.dev/magic/console.
-3. Run: `claude mcp add magic -- npx -y @21st-dev/magic@latest API_KEY="your-api-key"`
+3. Run: `claude mcp add magic --env API_KEY=your-api-key -- npx -y @21st-dev/magic@latest`
 4. Verify the server is registered: `claude mcp list`
 
 ### Claude Desktop
 
 1. Create a Magic API key at https://21st.dev/magic/console.
 2. Open your Claude Desktop configuration file.
-3. Add the Magic server to the `mcpServers` section using the configuration below, with your key in place of `your-api-key`.
+3. Add the Magic server to the `mcpServers` section using the configuration below, with `API_KEY` set from your environment or replaced by your key in the `env` object.
 4. Restart Claude Desktop and confirm the server appears.
 
 ## Configuration
@@ -118,7 +124,10 @@ Magic turns natural-language descriptions into polished UI components without le
 {
   "magic": {
     "command": "npx",
-    "args": ["-y", "@21st-dev/magic@latest", "API_KEY=\"your-api-key\""]
+    "args": ["-y", "@21st-dev/magic@latest"],
+    "env": {
+      "API_KEY": "${API_KEY}"
+    }
   }
 }
 ```
@@ -160,7 +169,7 @@ Refine the generated component in the same conversation.
 
 ### Authentication or invalid API key errors
 
-Confirm the API key from https://21st.dev/magic/console is correct and active, and that it is passed exactly as shown in the install command or config. Regenerate the key if needed.
+Confirm the API key from https://21st.dev/magic/console is correct and active, and that it is set via `--env API_KEY=...` or the configuration `env` object. Regenerate the key if needed.
 
 ### `npx` cannot resolve the package
 
@@ -172,4 +181,4 @@ Check internet access to the 21st.dev Magic service. Transient rate limiting can
 
 ### Server not listed in Claude Code
 
-Re-run the `claude mcp add magic ...` command, then `claude mcp list`. Confirm the key argument was included and that the server was added to the scope (project versus user) you are running in.
+Re-run the `claude mcp add magic ...` command, then `claude mcp list`. Confirm the `API_KEY` environment value was included and that the server was added to the scope (project versus user) you are running in.
