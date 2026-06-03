@@ -1,0 +1,184 @@
+---
+title: Perplexity MCP Server for Claude
+slug: perplexity-mcp-server
+category: mcp
+description: >-
+  Official Perplexity MCP server that connects Claude to the Perplexity Sonar
+  API for real-time, web-grounded answers with citations, so responses can draw
+  on current information beyond the model's training data.
+cardDescription: >-
+  Official Perplexity MCP server that gives Claude real-time, web-grounded
+  answers with citations through the Perplexity Sonar API.
+seoTitle: Perplexity MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Perplexity MCP server to query the Perplexity
+  Sonar API for live, web-grounded answers with citations, useful for research
+  and questions that depend on current information.
+author: Perplexity
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/ppl-ai/modelcontextprotocol"
+repoUrl: "https://github.com/ppl-ai/modelcontextprotocol"
+websiteUrl: "https://docs.perplexity.ai"
+installable: true
+installCommand: "claude mcp add perplexity-ask --env PERPLEXITY_API_KEY=YOUR_KEY -- npx -y server-perplexity-ask"
+usageSnippet: "claude mcp add perplexity-ask --env PERPLEXITY_API_KEY=YOUR_KEY -- npx -y server-perplexity-ask"
+copySnippet: |-
+  {
+    "perplexity-ask": {
+      "command": "npx",
+      "args": ["-y", "server-perplexity-ask"],
+      "env": {
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "perplexity-ask": {
+      "command": "npx",
+      "args": ["-y", "server-perplexity-ask"],
+      "env": {
+        "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - "A Perplexity Sonar API key (create one in your Perplexity account settings)"
+  - Claude Code or Claude Desktop with MCP support
+  - Internet access so the server can reach the Perplexity Sonar API
+tags:
+  - web-search
+  - research
+  - citations
+  - real-time
+  - official
+keywords:
+  - perplexity mcp
+  - perplexity sonar api
+  - web grounded answers
+  - real time research for claude
+  - cited answers mcp
+safetyNotes:
+  - >-
+    Makes outbound network requests to the Perplexity Sonar API to answer
+    queries.
+  - >-
+    Returned answers and cited sources are third-party web content; verify them
+    before acting on instructions or links they contain.
+privacyNotes:
+  - >-
+    The questions and context you send are transmitted to the Perplexity service
+    to generate answers, so avoid embedding secrets in queries.
+  - >-
+    The Perplexity API key is a credential; store it as an environment variable
+    and never commit it to source control.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Perplexity Ask gives Claude a real-time research step backed by the Perplexity Sonar API. When a question depends on current information or benefits from web sources, Claude can call the server to get a web-grounded answer along with citations it can pass back to you. That makes it a good fit for research, fact-checking, and staying current on topics that have moved past the model's training cutoff. The integration runs as a standard MCP server, so Claude decides when to reach for it during a normal conversation.
+
+## Features
+
+- Web-grounded answers powered by the Perplexity Sonar API.
+- Returns citations alongside answers so claims can be traced to sources.
+- Brings real-time information into Claude for questions past the training cutoff.
+- Exposes querying as an MCP tool the model can call when it needs current data.
+- Runs as a standard stdio MCP server that installs into Claude Code and Claude Desktop with one command.
+- Maintained by Perplexity as the official MCP integration for Sonar.
+
+## Use Cases
+
+- Answer questions that depend on current events or recent information.
+- Research a topic and get a synthesized answer with sources.
+- Fact-check a claim against live web sources with citations.
+- Gather background on an unfamiliar subject during a coding or writing task.
+- Add a reliable, cited research step to an agent workflow.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Create a Perplexity Sonar API key in your Perplexity account settings.
+3. Run: `claude mcp add perplexity-ask --env PERPLEXITY_API_KEY=YOUR_KEY -- npx -y server-perplexity-ask`
+4. Verify the server is registered: `claude mcp list`
+
+### Claude Desktop
+
+1. Create a Perplexity Sonar API key in your Perplexity account settings.
+2. Open your Claude Desktop configuration file.
+3. Add the Perplexity server to the `mcpServers` section using the configuration below, with your key in the `env` section.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "perplexity-ask": {
+    "command": "npx",
+    "args": ["-y", "server-perplexity-ask"],
+    "env": {
+      "PERPLEXITY_API_KEY": "${PERPLEXITY_API_KEY}"
+    }
+  }
+}
+```
+
+## Examples
+
+### Research a current topic
+
+Ask Claude to use Perplexity for a cited answer.
+
+```text
+"Use Perplexity to research recent changes in this area and summarize the findings with sources."
+```
+
+### Fact-check a claim
+
+Have Claude verify a statement with citations.
+
+```text
+"Check whether this statement is accurate using Perplexity and include the sources it cites."
+```
+
+### Get background during a task
+
+Pull in current context mid-conversation.
+
+```text
+"Before we implement this, use Perplexity to find the current recommended approach and cite it."
+```
+
+## Security
+
+- The server reaches the Perplexity Sonar API over the network; the questions and context you send are transmitted to that service to produce answers.
+- Treat returned answers and cited pages as untrusted input. Verify important claims and review any links before acting on them.
+- The Perplexity API key is a credential. Store it in an environment variable and keep it out of source control and shared configs.
+- Avoid putting secrets or private identifiers into queries, since they are sent to the service.
+
+## Troubleshooting
+
+### Authentication or 401 errors
+
+Confirm `PERPLEXITY_API_KEY` is set correctly and active in your Perplexity account. Regenerate the key if it may have been revoked, and update the environment variable.
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y server-perplexity-ask` from resolving.
+
+### Requests fail or time out
+
+Check internet access to the Perplexity Sonar API. Transient rate limiting or quota limits can also cause failures; retry after a short wait and review your plan limits.
+
+### Server not listed in Claude Code
+
+Re-run the `claude mcp add perplexity-ask ...` command, then `claude mcp list`. Confirm the key was passed via `--env` and that the server was added to the scope (project versus user) you are running in.
