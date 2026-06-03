@@ -11,6 +11,7 @@ import {
   buildGitHubAppAuthorizeUrl,
   createGitHubAppJwt,
   getCommitValidationState,
+  listPullRequestFiles,
 } from "../apps/submission-gate/src/github";
 import {
   decryptText,
@@ -33,6 +34,13 @@ import { repoRoot } from "./helpers/registry-fixtures";
 function readWorkerSource() {
   return fs.readFileSync(
     path.join(repoRoot, "apps/submission-gate/src/index.ts"),
+    "utf8",
+  );
+}
+
+function readConstantsSource() {
+  return fs.readFileSync(
+    path.join(repoRoot, "apps/submission-gate/src/constants.ts"),
     "utf8",
   );
 }
@@ -107,6 +115,37 @@ describe("Cloudflare submission gate helpers", () => {
       branchName: "heyclaude/submit-mcp-example-mcp-server",
       targetPath: "content/mcp/example-mcp-server.mdx",
     });
+  });
+
+  it("paginates GitHub pull request files before classifying content scope", async () => {
+    const firstPage = Array.from({ length: 100 }, (_, index) => ({
+      filename: `apps/web/public/data/generated-${index}.json`,
+      status: "modified",
+    }));
+    const secondPage = [
+      {
+        filename: "content/tools/example-tool.mdx",
+        status: "added",
+        raw_url: "https://raw.githubusercontent.com/example/tool.mdx",
+      },
+    ];
+    const fetchMock = vi.fn(async (url: URL | RequestInfo) => {
+      const value = String(url);
+      return Response.json(value.includes("page=2") ? secondPage : firstPage);
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      listPullRequestFiles({
+        token: "ghs_test",
+        repo: { owner: "JSONbored", repo: "awesome-claude" },
+        number: 822,
+      }),
+    ).resolves.toHaveLength(101);
+
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(String(fetchMock.mock.calls[0][0])).toContain("page=1");
+    expect(String(fetchMock.mock.calls[1][0])).toContain("page=2");
   });
 
   it("caps generated branch names while keeping the full target slug", () => {
@@ -280,6 +319,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"check_run"');
     expect(source).toContain('"check_suite"');
     expect(source).toContain('"status"');
+    expect(readConstantsSource()).toContain('"edited"');
     expect(source).toContain('status: "validation_pending"');
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");

@@ -10,6 +10,7 @@ export const PILOT_LABEL = "submission-gate-pilot";
 export const CONTENT_CATEGORY_LABEL_PREFIX = "category:";
 
 type ReviewablePrAction =
+  | "edited"
   | "opened"
   | "synchronize"
   | "reopened"
@@ -17,6 +18,7 @@ type ReviewablePrAction =
 
 export const REVIEWABLE_PR_ACTIONS: ReadonlySet<string> =
   new Set<ReviewablePrAction>([
+    "edited",
     "opened",
     "synchronize",
     "reopened",

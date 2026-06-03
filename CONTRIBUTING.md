@@ -12,15 +12,15 @@ Use the website form:
 
 - [heyclau.de/submit](https://heyclau.de/submit)
 
-This runs public preflight checks, asks you to continue with GitHub, then opens a focused PR with exactly one raw `content/<category>/<slug>.mdx` file. Fully valid, source-backed, non-artifact submissions may be copied into a maintainer-owned import PR after the private gate passes. Automation does not auto-merge.
+This runs public preflight checks, asks you to continue with GitHub, then opens a focused PR with exactly one raw `content/<category>/<slug>.mdx` file targeting `main`. Fully valid, source-backed, non-artifact submissions may be merged directly after content validation, Superagent, and private maintainer-agent review pass.
 
-The private gate can close hard failures, request changes for fixable gaps, route high-risk entries to manual review, or open a maintainer-owned import PR for deterministic low-risk passes. `main` remains maintainer-merge only.
+The private gate can close hard failures, request changes for fixable gaps, route rare high-risk or inconclusive entries to manual review, or merge deterministic low-risk passes. This automation is limited to single-entry content PRs; platform, workflow, package, and product PRs remain maintainer-reviewed.
 
 No CLA signature is required. Repo checks focus on submission quality, source verification, contributor trust, and security review.
 
 ### 2. Open a direct PR
 
-Direct PRs are the advanced path. Edit source content under `content/<category>/`, keep the PR focused on one entry, and target the current submission base during pilot.
+Direct PRs are the advanced path. Edit source content under `content/<category>/`, keep the PR focused on one entry, and target `main`.
 
 Keep submissions concrete. Include canonical source URLs, docs, install/config details, and enough context for someone else to verify the entry.
 

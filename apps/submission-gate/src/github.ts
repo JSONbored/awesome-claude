@@ -290,22 +290,30 @@ export async function listPullRequestFiles(params: {
   number: number;
   apiVersion?: string;
 }) {
-  return githubJson<
-    Array<{
-      filename?: string;
-      status?: string;
-      raw_url?: string;
-      additions?: number;
-      deletions?: number;
-      changes?: number;
-    }>
-  >(
-    `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/files?per_page=100`,
-    {
-      token: params.token,
-      apiVersion: params.apiVersion,
-    },
-  );
+  type PullRequestFile = {
+    filename?: string;
+    status?: string;
+    raw_url?: string;
+    additions?: number;
+    deletions?: number;
+    changes?: number;
+  };
+  const files: PullRequestFile[] = [];
+  const perPage = 100;
+
+  for (let page = 1; page <= 30; page += 1) {
+    const pageFiles = await githubJson<PullRequestFile[]>(
+      `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/files?per_page=${perPage}&page=${page}`,
+      {
+        token: params.token,
+        apiVersion: params.apiVersion,
+      },
+    );
+    files.push(...pageFiles);
+    if (pageFiles.length < perPage) break;
+  }
+
+  return files;
 }
 
 export async function getRepositoryFileContent(params: {
