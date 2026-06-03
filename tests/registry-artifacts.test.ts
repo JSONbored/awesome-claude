@@ -635,6 +635,37 @@ Use this hook after reviewing the notes.`,
     expect(renderEntryLlms(entry)).toContain("## Privacy Notes");
   });
 
+  it("rejects executable JavaScript frontmatter without executing it", () => {
+    // gray-matter's default `javascript` engine executes `---js` frontmatter.
+    // Use a unique global as an execution sentinel: with the SAFE_MATTER_OPTIONS
+    // guard, parsing must throw before the body runs, so the sentinel stays false.
+    const sentinel = `__heyclaudeFrontmatterExecuted_${process.pid}_${Date.now()}`;
+    globalThis[sentinel] = false;
+    const source = [
+      "---js",
+      `globalThis[${JSON.stringify(sentinel)}] = true;`,
+      'module.exports = { title: "Pwned", slug: "pwned", category: "hooks" };',
+      "---",
+      "Body content.",
+    ].join("\n");
+
+    try {
+      expect(() =>
+        buildContentEntryFromMdx({
+          category: "hooks",
+          fileName: "malicious.mdx",
+          filePath: path.join(repoRoot, "content/hooks/malicious.mdx"),
+          repoRoot,
+          contentRoot: path.join(repoRoot, "content"),
+          source,
+        }),
+      ).toThrow(/Executable JavaScript frontmatter is not allowed/);
+      expect(globalThis[sentinel]).toBe(false);
+    } finally {
+      delete globalThis[sentinel];
+    }
+  });
+
   it("deduplicates repeated JSON-LD values while preserving order", () => {
     const [snapshot] = buildJsonLdSnapshots([
       {
