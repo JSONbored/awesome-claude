@@ -514,6 +514,47 @@ describe("Cloudflare submission gate helpers", () => {
     );
   });
 
+  it("adds live HeyClaude entry links to merged content notifications", () => {
+    const payload = buildDiscordDecisionPayload({
+      repoFullName: "JSONbored/awesome-claude",
+      prNumber: 841,
+      prTitle: "content(mcp): update Magic MCP server",
+      prUrl: "https://github.com/JSONbored/awesome-claude/pull/841",
+      author: "JSONbored",
+      verdict: "merge",
+      category: "mcp",
+      changedFile: "content/mcp/magic-mcp-server.mdx",
+      ciSummary: "validate-content passed; Superagent Security Scan passed",
+      summary:
+        "Summary:\n- Updates an existing MCP entry with safer API key guidance.",
+    });
+
+    const fields = payload.embeds[0].fields;
+    expect(fields).toContainEqual({
+      name: "Live",
+      value: "[View content](https://heyclau.de/entry/mcp/magic-mcp-server)",
+      inline: false,
+    });
+  });
+
+  it("does not add live content links to closed notifications", () => {
+    const payload = buildDiscordDecisionPayload({
+      repoFullName: "JSONbored/awesome-claude",
+      prNumber: 839,
+      prTitle: "content(mcp): update Magic MCP server",
+      verdict: "close",
+      category: "mcp",
+      changedFile: "content/mcp/magic-mcp-server.mdx",
+      ciSummary: "validate-content passed; Superagent Security Scan passed",
+      summary:
+        "Summary:\n- Closed because the submitted edit changed protected metadata.",
+    });
+
+    expect(payload.embeds[0].fields.map((item) => item.name)).not.toContain(
+      "Live",
+    );
+  });
+
   it("keeps Discord notifications optional and non-blocking", async () => {
     await expect(
       postDiscordDecisionNotification({

@@ -10,6 +10,7 @@ export type DiscordDecisionNotification = {
   verdict: GateVerdict;
   category?: string;
   changedFile?: string;
+  contentUrl?: string;
   ciSummary?: string;
   summary?: string;
   now?: Date;
@@ -105,6 +106,23 @@ function field(name: string, value: unknown, inline = true) {
   };
 }
 
+function contentUrlFromPath(filePath: unknown, categoryHint?: unknown) {
+  const match = /^content\/([a-z0-9-]+)\/([a-z0-9-]+)\.mdx$/i.exec(
+    String(filePath || "").trim(),
+  );
+  if (!match) return "";
+  const [, category, slug] = match;
+  if (categoryHint && String(categoryHint) !== category) return "";
+  return `https://heyclau.de/entry/${encodeURIComponent(category)}/${encodeURIComponent(slug)}`;
+}
+
+function liveContentUrl(notification: DiscordDecisionNotification) {
+  if (notification.verdict !== "merge") return "";
+  const explicitUrl = String(notification.contentUrl || "").trim();
+  if (explicitUrl.startsWith("https://heyclau.de/entry/")) return explicitUrl;
+  return contentUrlFromPath(notification.changedFile, notification.category);
+}
+
 function compactPrSubject(title: unknown) {
   return (
     truncate(
@@ -169,6 +187,18 @@ export function buildDiscordDecisionPayload(
 ) {
   const verdictLabel = VERDICT_LABELS[notification.verdict];
   const subject = compactPrSubject(notification.prTitle);
+  const contentUrl = liveContentUrl(notification);
+  const fields = [
+    field("Result", verdictLabel),
+    field("Category", notification.category || "n/a"),
+    field("Author", notification.author || "n/a"),
+    field("Checks", compactCiSummary(notification.ciSummary), false),
+    field("File", notification.changedFile || "n/a", false),
+  ];
+  if (contentUrl) {
+    fields.push(field("Live", `[View content](${contentUrl})`, false));
+  }
+
   return {
     username: "HeyClaude Maintainer Agent",
     embeds: [
@@ -184,13 +214,7 @@ export function buildDiscordDecisionPayload(
         description:
           sanitizeRationale(notification.summary) ||
           "HeyClaude submission gate completed a decision.",
-        fields: [
-          field("Result", verdictLabel),
-          field("Category", notification.category || "n/a"),
-          field("Author", notification.author || "n/a"),
-          field("Checks", compactCiSummary(notification.ciSummary), false),
-          field("File", notification.changedFile || "n/a", false),
-        ],
+        fields,
         footer: {
           text: `${notification.repoFullName} · HeyClaude submission gate`,
         },
