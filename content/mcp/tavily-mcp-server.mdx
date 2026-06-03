@@ -1,0 +1,184 @@
+---
+title: Tavily MCP Server for Claude
+slug: tavily-mcp-server
+category: mcp
+description: >-
+  Official Tavily MCP server that gives Claude agent-optimized web search and
+  page extraction, returning concise, source-cited results designed for LLM
+  reasoning rather than raw search engine pages.
+cardDescription: >-
+  Official Tavily MCP server for agent-optimized web search and page extraction,
+  returning concise, source-cited results for Claude.
+seoTitle: Tavily MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Tavily MCP server for real-time web search and
+  content extraction built for AI agents. Get concise, source-cited answers and
+  clean page content instead of raw search result pages.
+author: Tavily
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/tavily-ai/tavily-mcp"
+repoUrl: "https://github.com/tavily-ai/tavily-mcp"
+websiteUrl: "https://tavily.com"
+installable: true
+installCommand: "claude mcp add tavily --env TAVILY_API_KEY=YOUR_KEY -- npx -y tavily-mcp@latest"
+usageSnippet: "claude mcp add tavily --env TAVILY_API_KEY=YOUR_KEY -- npx -y tavily-mcp@latest"
+copySnippet: |-
+  {
+    "tavily": {
+      "command": "npx",
+      "args": ["-y", "tavily-mcp@latest"],
+      "env": {
+        "TAVILY_API_KEY": "${TAVILY_API_KEY}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "tavily": {
+      "command": "npx",
+      "args": ["-y", "tavily-mcp@latest"],
+      "env": {
+        "TAVILY_API_KEY": "${TAVILY_API_KEY}"
+      }
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - "A Tavily API key (create one at https://tavily.com)"
+  - Claude Code or Claude Desktop with MCP support
+  - Internet access so the server can reach the Tavily API
+tags:
+  - web-search
+  - research
+  - extraction
+  - real-time
+  - official
+keywords:
+  - tavily mcp
+  - web search mcp
+  - real time search for claude
+  - ai search api
+  - web content extraction
+safetyNotes:
+  - >-
+    Makes outbound network requests to the Tavily API to run searches and fetch
+    page content.
+  - >-
+    Returned search results and extracted page text are untrusted web content;
+    review it before acting on instructions or links it contains.
+privacyNotes:
+  - >-
+    Search queries and target URLs you provide are sent to the Tavily service to
+    return results, so avoid embedding secrets in queries.
+  - >-
+    The Tavily API key is a credential; store it as an environment variable and
+    never commit it to source control.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Tavily gives Claude real-time access to the web through a search API built for AI agents. Rather than returning a raw page of links, Tavily returns concise, source-cited results and clean extracted content that a model can reason over directly. That makes it a good fit for research tasks, fact-checking, and any workflow where the answer depends on current information beyond the model's training cutoff. The server exposes search and extraction as MCP tools, so Claude can decide when to look something up and ground its response in the results.
+
+## Features
+
+- Real-time web search optimized for LLM and agent consumption.
+- Concise, source-cited results instead of raw search engine result pages.
+- Page extraction that returns clean, readable content from target URLs.
+- Tunable search depth so you can trade speed for thoroughness.
+- Runs as a standard stdio MCP server that installs into Claude Code and Claude Desktop with one command.
+- Maintained by Tavily as the official MCP integration for its search API.
+
+## Use Cases
+
+- Answer questions that depend on current information past the model's training cutoff.
+- Research a topic and gather source-cited findings in one step.
+- Fact-check a claim against live web sources.
+- Extract the readable content of a specific page for summarization.
+- Power agent workflows that need a reliable, structured search step.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Create a Tavily API key at https://tavily.com.
+3. Run: `claude mcp add tavily --env TAVILY_API_KEY=YOUR_KEY -- npx -y tavily-mcp@latest`
+4. Verify the server is registered: `claude mcp list`
+
+### Claude Desktop
+
+1. Create a Tavily API key at https://tavily.com.
+2. Open your Claude Desktop configuration file.
+3. Add the Tavily server to the `mcpServers` section using the configuration below, with your key in the `env` section.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "tavily": {
+    "command": "npx",
+    "args": ["-y", "tavily-mcp@latest"],
+    "env": {
+      "TAVILY_API_KEY": "${TAVILY_API_KEY}"
+    }
+  }
+}
+```
+
+## Examples
+
+### Research a current topic
+
+Ask Claude to search and summarize with sources.
+
+```text
+"Search the web for recent developments on this topic and summarize the key points with sources."
+```
+
+### Fact-check a claim
+
+Have Claude verify a statement against live sources.
+
+```text
+"Check whether this claim is accurate using current web sources, and cite what you find."
+```
+
+### Extract a page
+
+Pull clean content from a specific URL for summarization.
+
+```text
+"Extract the main content of this article URL and give me a concise summary."
+```
+
+## Security
+
+- The server reaches the Tavily API over the network; the queries and URLs you provide are sent to that service to return results.
+- Treat search results and extracted page content as untrusted input. A malicious page could include instructions or links, so review before acting on them.
+- The Tavily API key is a credential. Store it in an environment variable and keep it out of source control and shared configs.
+- Avoid putting secrets or private identifiers into search queries, since they are transmitted to the service.
+
+## Troubleshooting
+
+### Authentication or 401 errors
+
+Confirm `TAVILY_API_KEY` is set correctly and the key is active in your Tavily account. Regenerate the key if it may have been revoked, and update the environment variable.
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx -y tavily-mcp@latest` from resolving.
+
+### Empty results or rate limiting
+
+Free tiers and high request volume can trigger rate limits. Retry after a short wait, reduce request frequency, or review your plan limits in the Tavily dashboard.
+
+### Server not listed in Claude Code
+
+Re-run the `claude mcp add tavily ...` command, then `claude mcp list`. Confirm the key was passed via `--env` and that the server was added to the scope (project versus user) you are running in.
