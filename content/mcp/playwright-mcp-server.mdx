@@ -1,0 +1,178 @@
+---
+title: Playwright MCP Server for Claude
+slug: playwright-mcp-server
+category: mcp
+description: >-
+  Official Microsoft Playwright MCP server that lets Claude drive a real browser
+  through Playwright's accessibility tree for fast, deterministic web automation
+  and testing.
+cardDescription: >-
+  Official Microsoft MCP server for browser automation, letting Claude navigate,
+  click, type, and snapshot pages through Playwright's accessibility tree.
+seoTitle: Playwright MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Microsoft Playwright MCP server for structured
+  browser automation. Navigate pages, fill forms, and capture accessibility
+  snapshots without relying on screenshots or vision models.
+author: Microsoft
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-02"
+documentationUrl: "https://github.com/microsoft/playwright-mcp"
+repoUrl: "https://github.com/microsoft/playwright-mcp"
+installable: true
+installCommand: "claude mcp add playwright -- npx @playwright/mcp@latest"
+usageSnippet: "claude mcp add playwright -- npx @playwright/mcp@latest"
+copySnippet: |-
+  {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+configSnippet: |-
+  {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"]
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - Claude Code or Claude Desktop with MCP support
+  - >-
+    Internet access for the first run, which downloads the Playwright browser
+    binaries
+safetyNotes:
+  - >-
+    Launches and controls a real browser process that can navigate to arbitrary
+    URLs and submit forms on your behalf.
+  - >-
+    Treat any site the agent visits as untrusted; only allow automation against
+    pages and actions you intend to run.
+  - >-
+    Persisted browser profiles can keep cookies and logged-in sessions between
+    runs, so isolate sensitive accounts.
+privacyNotes:
+  - >-
+    Page content, form input, and accessibility snapshots from visited sites are
+    returned to the model context.
+  - >-
+    Avoid driving the browser through pages that contain production credentials
+    or private user data unless the profile is isolated.
+tags:
+  - playwright
+  - browser-automation
+  - testing
+  - microsoft
+  - official
+keywords:
+  - playwright mcp
+  - browser automation mcp
+  - claude browser testing
+  - model context protocol browser
+  - web automation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Playwright MCP connects Claude to a real browser through the official Microsoft Playwright engine. Instead of guessing at pixels, the server exposes the page's accessibility tree, so Claude can read structured page state and act on it with deterministic, element-level commands. That makes it well suited for end-to-end testing, form filling, scraping structured content, and reproducing user flows from natural language.
+
+## Features
+
+- Structured browser control built on the accessibility tree rather than screenshot or vision guessing.
+- Navigate, click, type, hover, select options, and submit forms with deterministic element targeting.
+- Capture accessibility snapshots of the current page for the model to reason over.
+- Works headless or headed, with support for the Chromium browsers Playwright manages.
+- Runs over stdio as a standard MCP server, so it drops into Claude Code and Claude Desktop with one command.
+- Maintained under the official Microsoft Playwright organization and tracks the upstream Playwright release line.
+
+## Use Cases
+
+- Drive end-to-end test scenarios described in plain language.
+- Fill and submit web forms during repetitive workflows.
+- Extract structured content from pages that require interaction before the data appears.
+- Reproduce and debug a reported user flow step by step.
+- Verify that a deployed change renders and behaves as expected in a real browser.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`).
+2. Run: `claude mcp add playwright -- npx @playwright/mcp@latest`
+3. Verify the server is registered: `claude mcp list`
+4. Ask Claude to open a page to confirm the browser launches.
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the Playwright server to the `mcpServers` section using the configuration below.
+3. Restart Claude Desktop.
+4. Confirm the server appears and ask Claude to navigate to a test URL.
+
+## Configuration
+
+```json
+{
+  "playwright": {
+    "command": "npx",
+    "args": ["@playwright/mcp@latest"]
+  }
+}
+```
+
+## Examples
+
+### Navigate and snapshot a page
+
+Ask Claude to open a URL and describe what it sees from the accessibility snapshot.
+
+```text
+"Open https://example.com and tell me the page title and the main heading."
+```
+
+### Fill and submit a form
+
+Drive a multi-field form using natural language; the server targets elements through the accessibility tree.
+
+```text
+"Go to the contact form, enter a test name and email, type a short message, and submit it."
+```
+
+### Reproduce a user flow for testing
+
+Walk through a reported flow step by step to confirm behavior.
+
+```text
+"Open the app, sign in with the test account, add an item to the cart, and confirm the cart count updates."
+```
+
+## Security
+
+- The server controls a real browser that can reach any URL and perform actions like form submission; scope its use to pages and tasks you trust.
+- Treat visited pages as untrusted input. A malicious page could try to steer the agent, so review the actions it takes.
+- Persisted browser profiles can retain cookies and authenticated sessions between runs; isolate sensitive logins or use a clean profile.
+- Avoid running automation against pages that hold production credentials or private user data unless the environment is isolated.
+
+## Troubleshooting
+
+### Browser fails to launch on first run
+
+The first launch may need to download a Playwright-managed Chromium build. Ensure the machine has internet access and enough disk space, then retry.
+
+### `npx` cannot find the package
+
+Confirm Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx @playwright/mcp@latest` from resolving.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add playwright -- npx @playwright/mcp@latest`, then `claude mcp list`. Check that the command was added to the correct scope (project versus user) for the session you are running.
+
+### Actions target the wrong element
+
+Ask Claude to take a fresh accessibility snapshot before acting. Page state can change after navigation or dynamic updates, so re-reading the tree improves targeting accuracy.
