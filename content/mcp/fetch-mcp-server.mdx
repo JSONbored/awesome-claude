@@ -1,0 +1,173 @@
+---
+title: Fetch MCP Server for Claude
+slug: fetch-mcp-server
+category: mcp
+description: >-
+  Official reference MCP server that lets Claude fetch a web page and convert it
+  to clean markdown, so the model can read a specific URL's content directly
+  during a task.
+cardDescription: >-
+  Official reference MCP server that fetches a URL and converts the page to
+  clean markdown for Claude to read.
+seoTitle: Fetch MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Fetch MCP server to retrieve a web page and
+  convert it to markdown for easier reading. Useful for pulling a specific
+  URL's content into a task without a full browser.
+author: Model Context Protocol
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-03"
+documentationUrl: "https://pypi.org/project/mcp-server-fetch"
+installable: true
+installCommand: "claude mcp add fetch -- uvx mcp-server-fetch"
+usageSnippet: "claude mcp add fetch -- uvx mcp-server-fetch"
+copySnippet: |-
+  {
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    }
+  }
+configSnippet: |-
+  {
+    "fetch": {
+      "command": "uvx",
+      "args": ["mcp-server-fetch"]
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - >-
+    The uv toolchain installed (provides uvx; install from https://docs.astral.sh/uv)
+  - Claude Code or Claude Desktop with MCP support
+  - Internet access so the server can retrieve the URLs you request
+tags:
+  - web-fetch
+  - markdown
+  - content-retrieval
+  - reference
+  - official
+keywords:
+  - fetch mcp
+  - web page to markdown
+  - url content retrieval
+  - read web page mcp
+  - reference mcp server
+safetyNotes:
+  - >-
+    Makes outbound network requests to the URLs you provide and returns their
+    content, so only fetch pages you intend to retrieve.
+  - >-
+    Fetched page content is untrusted input and may contain misleading text or
+    embedded instructions; review it before acting on what it says.
+privacyNotes:
+  - >-
+    The URLs you ask it to fetch are requested from your own machine and network,
+    which reveals your interest and IP address to those sites.
+  - >-
+    Avoid fetching links that embed secrets or private tokens in their query
+    parameters, since the full URL is sent in the request.
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Fetch is one of the official Model Context Protocol reference servers. It gives Claude a focused tool for retrieving a single web page and converting it to clean markdown that is easy for the model to read. Rather than driving a full browser, Fetch is a lightweight way to pull the content of a known URL into a task: documentation, an article, a changelog, or any page you want Claude to read and reason over. It runs locally and only reaches out to the URLs you ask it to retrieve.
+
+## Features
+
+- Retrieve a web page by URL and return its content for the model to read.
+- Convert HTML to clean markdown so pages are easier to parse.
+- Lightweight alternative to full browser automation when you just need page content.
+- Supports fetching raw content when markdown conversion is not wanted.
+- Runs locally as a standard stdio MCP server launched through `uvx`.
+- Maintained as part of the official Model Context Protocol reference servers.
+
+## Use Cases
+
+- Read a specific documentation or article URL during a coding or writing task.
+- Pull a changelog or release notes page into context for summarization.
+- Retrieve a known reference page instead of running a broad web search.
+- Convert a cluttered HTML page into readable markdown for analysis.
+- Add a simple content-retrieval step to an agent workflow.
+
+## Installation
+
+### Claude Code
+
+1. Install the uv toolchain (provides `uvx`) from https://docs.astral.sh/uv.
+2. Run: `claude mcp add fetch -- uvx mcp-server-fetch`
+3. Verify the server is registered: `claude mcp list`
+4. Ask Claude to fetch a documentation URL and summarize it.
+
+### Claude Desktop
+
+1. Install the uv toolchain so `uvx` is available on your PATH.
+2. Open your Claude Desktop configuration file.
+3. Add the Fetch server to the `mcpServers` section using the configuration below.
+4. Restart Claude Desktop and confirm the server appears.
+
+## Configuration
+
+```json
+{
+  "fetch": {
+    "command": "uvx",
+    "args": ["mcp-server-fetch"]
+  }
+}
+```
+
+## Examples
+
+### Read a documentation page
+
+Ask Claude to fetch and summarize a known URL.
+
+```text
+"Fetch this documentation URL and summarize the setup steps for me."
+```
+
+### Pull in a changelog
+
+Retrieve release notes for review.
+
+```text
+"Fetch the changelog at this URL and tell me what changed in the latest version."
+```
+
+### Convert a page to markdown
+
+Get a cleaner version of a cluttered page.
+
+```text
+"Fetch this article and give me the main content as clean markdown."
+```
+
+## Security
+
+- The server retrieves whatever URLs you provide and returns their content; scope its use to pages you actually want to fetch.
+- Treat fetched content as untrusted input. A page could include misleading text or instructions, so review before acting on it.
+- Fetching a URL discloses your interest and IP address to the target site, so be mindful of which links you retrieve.
+- Avoid fetching URLs that carry secrets or tokens in their query string, since the full URL is sent in the request.
+
+## Troubleshooting
+
+### `uvx` is not found
+
+Install the uv toolchain from https://docs.astral.sh/uv and confirm `uvx --version` works. uvx is required because Fetch is distributed as a Python package rather than an npm package.
+
+### A page returns little or no content
+
+Some pages render content with JavaScript that a simple fetch cannot execute. For those, a browser-based tool is a better fit; Fetch works best on server-rendered or static pages.
+
+### Requests are blocked or time out
+
+Confirm internet access and that the target site is reachable. Some sites block automated requests or rate-limit them; retry, or use a different source if the page consistently refuses requests.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add fetch -- uvx mcp-server-fetch`, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in.
