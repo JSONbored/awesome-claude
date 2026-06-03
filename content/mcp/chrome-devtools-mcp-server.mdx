@@ -1,0 +1,177 @@
+---
+title: Chrome DevTools MCP Server for Claude
+slug: chrome-devtools-mcp-server
+category: mcp
+description: >-
+  Official Chrome DevTools MCP server that lets Claude inspect and debug a live
+  Chrome browser, capturing performance traces, network activity, console
+  messages, and DOM state through the Chrome DevTools Protocol.
+cardDescription: >-
+  Official Chrome DevTools MCP server for debugging live Chrome: performance
+  traces, network requests, console output, and DOM inspection for Claude.
+seoTitle: Chrome DevTools MCP Server for Claude
+seoDescription: >-
+  Connect Claude to the official Chrome DevTools MCP server to debug real web
+  pages. Record performance traces, inspect network requests, read the console,
+  and analyze the live DOM through the Chrome DevTools Protocol.
+author: Chrome DevTools
+submittedBy: glorydavid03023
+submittedByUrl: "https://github.com/glorydavid03023"
+dateAdded: "2026-06-02"
+documentationUrl: "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+repoUrl: "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+installable: true
+installCommand: "claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest"
+usageSnippet: "claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest"
+copySnippet: |-
+  {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    }
+  }
+configSnippet: |-
+  {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["chrome-devtools-mcp@latest"]
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - "Node.js 18+ and npx available (verify with: npx --version)"
+  - A local installation of Google Chrome that the server can launch or attach to
+  - Claude Code or Claude Desktop with MCP support
+safetyNotes:
+  - >-
+    Launches and controls a real Chrome browser that can navigate to arbitrary
+    URLs; only allow inspection of pages and actions you trust.
+  - >-
+    Treat inspected pages as untrusted input, since a hostile page could attempt
+    to influence the agent through the content it surfaces.
+  - >-
+    Attaching to an existing Chrome profile can expose cookies and logged-in
+    sessions, so prefer an isolated or dedicated profile for sensitive work.
+privacyNotes:
+  - >-
+    Network capture and console output can include request payloads, tokens in
+    URLs, and other sensitive runtime data returned to the model context.
+  - >-
+    Avoid debugging flows that carry production secrets or private user data
+    unless the browser profile and environment are isolated.
+tags:
+  - chrome
+  - devtools
+  - debugging
+  - performance
+  - official
+keywords:
+  - chrome devtools mcp
+  - browser debugging mcp
+  - performance trace mcp
+  - chrome devtools protocol
+  - web performance debugging
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Chrome DevTools MCP gives Claude direct, structured access to the same signals a developer reads in Chrome DevTools. Through the Chrome DevTools Protocol, the server can drive a live Chrome instance and surface performance traces, network requests, console output, and DOM state back to the model. That turns Claude into a debugging partner that can reproduce a slow page load, read the actual network waterfall, and reason about real runtime behavior instead of guessing from source code alone.
+
+## Features
+
+- Inspect a live Chrome page through the Chrome DevTools Protocol rather than static analysis.
+- Record and read performance traces to investigate slow loads and runtime bottlenecks.
+- Examine network requests, status codes, timing, and payload metadata.
+- Read console messages and runtime errors emitted by the page.
+- Inspect the live DOM and evaluate expressions in the page context.
+- Runs as a standard stdio MCP server, so it installs into Claude Code and Claude Desktop with one command.
+- Maintained by the official Chrome DevTools team and tracks upstream protocol changes.
+
+## Use Cases
+
+- Diagnose why a page is slow by recording and analyzing a performance trace.
+- Investigate failing or unexpected network requests during a user flow.
+- Surface console errors and warnings that only appear at runtime.
+- Inspect computed DOM state after JavaScript has executed.
+- Verify that a frontend change behaves correctly in a real Chrome session.
+
+## Installation
+
+### Claude Code
+
+1. Make sure Node.js 18+ is installed (verify with `npx --version`) and Google Chrome is available locally.
+2. Run: `claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest`
+3. Verify the server is registered: `claude mcp list`
+4. Ask Claude to open a page and record a performance trace to confirm it works.
+
+### Claude Desktop
+
+1. Open your Claude Desktop configuration file.
+2. Add the Chrome DevTools server to the `mcpServers` section using the configuration below.
+3. Restart Claude Desktop.
+4. Confirm the server appears and ask Claude to inspect a test page.
+
+## Configuration
+
+```json
+{
+  "chrome-devtools": {
+    "command": "npx",
+    "args": ["chrome-devtools-mcp@latest"]
+  }
+}
+```
+
+## Examples
+
+### Record a performance trace
+
+Ask Claude to load a URL and capture a trace, then summarize the bottlenecks.
+
+```text
+"Open https://example.com, record a performance trace of the page load, and tell me what is slowing it down."
+```
+
+### Inspect network activity
+
+Have Claude walk a flow and report the requests that fired.
+
+```text
+"Navigate to the dashboard and list any network requests that returned an error status."
+```
+
+### Read runtime console errors
+
+Surface errors that only appear when the page runs.
+
+```text
+"Open the checkout page and report any console errors or warnings that appear."
+```
+
+## Security
+
+- The server launches and controls a real Chrome browser that can navigate to arbitrary URLs; scope its use to pages and tasks you trust.
+- Treat inspected pages as untrusted input. A hostile page could attempt to influence the agent, so review the actions and data it surfaces.
+- Network and console capture can expose request payloads, tokens in URLs, and other sensitive runtime data; avoid debugging flows that carry production secrets.
+- If the server attaches to an existing Chrome profile, it may access cookies and logged-in sessions; prefer an isolated or dedicated profile for sensitive work.
+
+## Troubleshooting
+
+### Chrome fails to launch or is not found
+
+Confirm Google Chrome is installed and reachable. On some systems you may need to point the server at the Chrome executable path or ensure it is on the system PATH.
+
+### `npx` cannot resolve the package
+
+Verify Node.js 18+ and npx are installed (`npx --version`). Networks that block the npm registry will prevent `npx chrome-devtools-mcp@latest` from resolving.
+
+### Server not listed in Claude Code
+
+Re-run `claude mcp add chrome-devtools -- npx chrome-devtools-mcp@latest`, then `claude mcp list`. Confirm it was added to the scope (project versus user) you are running in.
+
+### Performance trace or inspection returns no data
+
+Make sure a page is loaded before requesting a trace or inspection. Ask Claude to navigate first, then capture, since the tools operate against the currently active page.
