@@ -112,5 +112,5 @@ body:
           required: true
         - label: UI or page changes must include screenshots in the PR, or explain `No visual impact`.
           required: true
-        - label: This is product/feature work, not a content submission; do not add the `content-submission` label.
+        - label: This is product/feature work, not a content PR; do not route it through the content gate.
           required: true

@@ -130,8 +130,9 @@ export function buildEntrySummary(entry: RaycastEntry) {
 }
 
 export type RaycastDetail = {
-  copyText: string;
+  copyText?: string;
   detailMarkdown: string;
+  llmsUrl?: string;
 };
 
 export type ParsedFeed = {
@@ -401,21 +402,14 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
   const description = optionalString(value.description);
   const copyText = optionalRawString(value.copyText);
   const detailMarkdown = optionalRawString(value.detailMarkdown);
+  const detailUrl = optionalString(value.detailUrl) || undefined;
   const webUrl = optionalString(value.webUrl);
 
-  if (
-    !category ||
-    !slug ||
-    !title ||
-    !description ||
-    !copyText.trim() ||
-    !detailMarkdown.trim() ||
-    !webUrl
-  ) {
+  if (!category || !slug || !title || !description || !detailUrl || !webUrl) {
     return null;
   }
 
-  return {
+  const entry: RaycastEntry = {
     category,
     slug,
     title,
@@ -437,7 +431,7 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
     copyTextLength: optionalNumber(value.copyTextLength),
     copyTextTruncated: optionalBoolean(value.copyTextTruncated),
     detailMarkdown,
-    detailUrl: optionalString(value.detailUrl) || undefined,
+    detailUrl,
     webUrl,
     canonicalUrl: optionalString(value.canonicalUrl) || undefined,
     llmsUrl: optionalString(value.llmsUrl) || undefined,
@@ -449,6 +443,17 @@ export function normalizeRaycastEntry(value: unknown): RaycastEntry | null {
     downloadTrust: normalizeDownloadTrust(value.downloadTrust),
     verificationStatus: optionalString(value.verificationStatus),
   };
+
+  if (!entry.copyText.trim()) {
+    entry.copyText = buildSearchResultCopyText(entry);
+    entry.copyTextLength = entry.copyText.length;
+    entry.copyTextTruncated = false;
+  }
+  if (!entry.detailMarkdown.trim()) {
+    entry.detailMarkdown = buildSearchResultDetailMarkdown(entry);
+  }
+
+  return entry;
 }
 
 export function isValidRaycastEntry(value: unknown) {
@@ -803,8 +808,9 @@ export function isRaycastDetail(value: unknown): value is RaycastDetail {
   const detail = value as Partial<RaycastDetail>;
   return (
     Boolean(detail) &&
-    typeof detail.copyText === "string" &&
-    typeof detail.detailMarkdown === "string"
+    typeof detail.detailMarkdown === "string" &&
+    (detail.copyText === undefined || typeof detail.copyText === "string") &&
+    (detail.llmsUrl === undefined || typeof detail.llmsUrl === "string")
   );
 }
 

@@ -1,5 +1,5 @@
 import {
-  buildSubmissionIssueDraft,
+  buildSubmissionPrDraft,
   normalizeSubmissionPayloadFields,
 } from "@heyclaude/registry/submission";
 import { buildSubmissionFieldModel } from "@heyclaude/registry/submission-spec";
@@ -115,9 +115,9 @@ function buildSubmissionUrl(siteUrl: string, fields: Record<string, string>) {
 }
 
 function buildPrDraft(fields: Record<string, string>) {
-  const draft = buildSubmissionIssueDraft(fields);
+  const draft = buildSubmissionPrDraft(fields);
   return {
-    prTitle: draft.title.replace(/^Submit /, "Add "),
+    prTitle: draft.title,
     prBody: draft.body,
   };
 }

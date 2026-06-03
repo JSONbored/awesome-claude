@@ -65,7 +65,7 @@ Common checks:
 pnpm validate:content:strict
 pnpm validate:packages
 pnpm scan:packages
-pnpm test:submission-intake
+pnpm test:submission-pr-first
 pnpm test:registry-artifacts
 pnpm validate:raycast-feed
 pnpm validate:openapi
@@ -90,7 +90,7 @@ Submission/API changes:
 pnpm validate:openapi
 pnpm exec vitest run tests/submission-api.test.ts tests/api-contracts.test.ts tests/api-router-security.test.ts
 pnpm exec vitest run tests/submission-gate-worker.test.ts
-pnpm test:submission-intake
+pnpm test:submission-pr-first
 pnpm build
 git diff --check
 ```

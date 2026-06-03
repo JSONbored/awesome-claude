@@ -535,24 +535,21 @@ export type SubmissionFieldSpec = {
   options?: string[];
 };
 
-export type SubmissionIssueDraft = {
+export type SubmissionPrDraft = {
   title: string;
   body: string;
-  labels: string[];
 };
 
 export function normalizeSubmissionPayloadFields(
   fields?: Record<string, unknown>,
 ): Record<string, string>;
-export function buildSubmissionIssueTitle(
+export function buildSubmissionPrTitle(
   fields?: Record<string, unknown>,
 ): string;
-export function buildSubmissionIssueBody(
+export function buildSubmissionPrBody(fields?: Record<string, unknown>): string;
+export function buildSubmissionPrDraft(
   fields?: Record<string, unknown>,
-): string;
-export function buildSubmissionIssueDraft(
-  fields?: Record<string, unknown>,
-): SubmissionIssueDraft;
+): SubmissionPrDraft;
 
 export type SubmissionValidationReport = {
   ok: boolean;
@@ -662,7 +659,7 @@ export type SubmissionPolicyMatrix = Record<
 >;
 
 export type SubmissionPolicyDecision =
-  | "auto_import_eligible"
+  | "submit_pr_eligible"
   | "maintainer_review"
   | "blocked";
 
@@ -694,118 +691,6 @@ export type SubmissionRiskReport = {
   requestChangesReasons: string[];
   humanReviewNotes: string[];
   labelDefinitions: Record<string, { color: string; description: string }>;
-};
-
-export type SubmissionQueueEntry = {
-  number: number | null;
-  title: string;
-  url: string;
-  author: string;
-  updatedAt: string;
-  bodyFingerprint: string;
-  bodyUpdatedAt: string;
-  authorCommentedAfterReview: boolean;
-  authorCommentedWithoutBodyUpdate: boolean;
-  lastAuthorCommentAt: string;
-  labels: string[];
-  recommendedLabels: string[];
-  missingLabels: string[];
-  status:
-    | "import_ready"
-    | "maintainer_review"
-    | "needs_author_input"
-    | "source_needs_verification"
-    | "stale_reminder_due"
-    | "close_eligible"
-    | "skipped";
-  nextAction:
-    | "import"
-    | "review_risk"
-    | "verify_source"
-    | "request_author_input"
-    | "update_issue_body_required"
-    | "send_stale_reminder"
-    | "close_stale"
-    | "skip";
-  triageGroup:
-    | "ready"
-    | "blocked"
-    | "needs_author_input"
-    | "source_verification"
-    | "likely_promo_spam"
-    | "stale"
-    | "close_eligible"
-    | "maintainer_review"
-    | "skipped";
-  triageReason: string;
-  staleState: "not_applicable" | "fresh" | "reminder_due" | "close_eligible";
-  ageDays: number;
-  sourceNeedsVerification: boolean;
-  riskTier: SubmissionRiskTier;
-  riskFlags: string[];
-  riskSummary: string;
-  policyMatrix: SubmissionPolicyMatrix;
-  policyDecision: SubmissionPolicyDecision;
-  autoImportEligible: boolean;
-  contributorReview: string[];
-  sourceState: SubmissionContributionAnalysis["sourceState"];
-  maintainerActions: string[];
-  riskRecommendedAction: string;
-  actionDue:
-    | ""
-    | "author_input"
-    | "update_issue_body"
-    | "verify_source"
-    | "remind"
-    | "close";
-  category: string;
-  slug: string;
-  name: string;
-  sourceUrl: string;
-  sourceUrls: string[];
-  contributorContext: {
-    login: string;
-    profileUrl: string;
-    resolutionStatus: string;
-    accountAgeDays: number | null;
-    publicRepos: number | null;
-    signals: string[];
-    warnings: string[];
-  };
-  policyReasons: Array<{
-    name: string;
-    status: string;
-    summary: string;
-    detail: string[];
-  }>;
-  errors: string[];
-  warnings: string[];
-  reviewChecklist: string[];
-  commentDraft: string;
-  importPath: string;
-};
-
-export type SubmissionQueue = {
-  schemaVersion: number;
-  kind: "submission-queue";
-  generatedAt: string;
-  count: number;
-  summary: {
-    ready: number;
-    blocked: number;
-    likelyPromoSpam: number;
-    stale: number;
-    importReady: number;
-    maintainerReview: number;
-    needsAuthorInput: number;
-    sourceNeedsVerification: number;
-    staleReminderDue: number;
-    closeEligible: number;
-    highRisk: number;
-    needsChanges: number;
-    skipped: number;
-  };
-  entries: SubmissionQueueEntry[];
 };
 
 export type JsonLdSnapshot = {
@@ -1349,89 +1234,16 @@ export function normalizeHeading(label: string): string;
 export function normalizeValue(value: unknown): string;
 export function slugify(value: unknown): string;
 export function normalizeCategory(value: unknown): string;
-export function parseIssueFormBody(body: string): Record<string, string>;
+export function parseSubmissionPrBody(body: string): Record<string, string>;
 export function normalizeParsedFields(
   fields: Record<string, string>,
 ): Record<string, string>;
-export function issueLabels(issue: Record<string, unknown>): string[];
-export function looksLikeSubmissionIssue(
-  issue: Record<string, unknown>,
-): boolean;
-export function isLikelyAffiliateUrl(value: unknown): boolean;
-export function recommendedSubmissionLabels(
-  issue: Record<string, unknown>,
-  report?: SubmissionValidationReport,
-): string[];
-export function hasProtectedSubmissionLabel(
-  issue?: Record<string, unknown>,
-): boolean;
-export function submissionSourceNeedsVerification(
-  report: SubmissionValidationReport,
-  issue?: Record<string, unknown>,
-): boolean;
-export function submissionAgeDays(
-  issue?: Record<string, unknown>,
-  options?: { now?: string },
-): number;
-export function submissionStaleState(
-  issue?: Record<string, unknown>,
-  report?: SubmissionValidationReport,
-  options?: { now?: string },
-): "not_applicable" | "fresh" | "reminder_due" | "close_eligible";
-export function submissionQueueStatus(
-  report: SubmissionValidationReport,
-  issue?: Record<string, unknown>,
-  options?: { now?: string },
-): string;
-export const SUBMISSION_BASE_LABELS: string[];
-export const COMMUNITY_CATEGORY_LABELS: Record<string, string>;
-export const SUBMISSION_NEEDS_AUTHOR_INPUT_LABEL: string;
-export const SUBMISSION_SOURCE_NEEDS_VERIFICATION_LABEL: string;
-export const SUBMISSION_STALE_LABEL: string;
-export const SUBMISSION_AUTO_IMPORT_ELIGIBLE_LABEL: string;
-export const SUBMISSION_RISK_LOW_LABEL: string;
-export const SUBMISSION_RISK_MEDIUM_LABEL: string;
-export const SUBMISSION_RISK_HIGH_LABEL: string;
-export const SUBMISSION_PROTECTED_REVIEW_LABELS: string[];
-export const SUBMISSION_MANAGED_VALIDATION_LABELS: string[];
-export const SUBMISSION_RISK_LABELS: string[];
-export const SUBMISSION_VALIDATION_LABEL_DEFINITIONS: Record<
-  string,
-  { color: string; description: string }
->;
-export const SUBMISSION_RISK_LABEL_DEFINITIONS: Record<
-  string,
-  { color: string; description: string }
->;
-export const SUBMISSION_STALE_POLICY: {
-  reminderDays: number;
-  closeDays: number;
-};
-export function submissionLabelsForCategory(category: string): string[];
-export function recommendedLabelsForCategory(category: string): string[];
-export function buildSubmissionQueue(
-  issues: Array<Record<string, unknown>>,
-  options?: { now?: string },
-): SubmissionQueue;
-export function submissionBodyFingerprint(
-  issue?: Record<string, unknown>,
-): string;
-export function submissionBodyUpdatedAt(
-  issue?: Record<string, unknown>,
-): string;
-export function submissionActivityState(issue?: Record<string, unknown>): {
-  bodyFingerprint: string;
-  bodyUpdatedAt: string;
-  lastAuthorCommentAt: string;
-  authorCommentedAfterReview: boolean;
-  authorCommentedWithoutBodyUpdate: boolean;
-};
 export function validateSubmission(
-  issue: Record<string, unknown>,
+  draft: Record<string, unknown>,
 ): SubmissionValidationReport;
 export const SUBMISSION_RISK_SCHEMA_VERSION: number;
 export const SUBMISSION_RISK_COMMENT_MARKER: string;
-export function analyzeIssueSubmissionRisk(
+export function analyzeSubmissionDraftRisk(
   issue?: Record<string, unknown>,
   validationReport?: SubmissionValidationReport | null,
   options?: {

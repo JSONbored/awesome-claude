@@ -4,12 +4,6 @@ import {
   TOOLS_CATEGORY,
   TOOLS_LISTING_FLOW_URL,
 } from "./submission-classification.js";
-import {
-  SUBMISSION_RISK_HIGH_LABEL,
-  SUBMISSION_RISK_LABEL_DEFINITIONS,
-  SUBMISSION_RISK_LOW_LABEL,
-  SUBMISSION_RISK_MEDIUM_LABEL,
-} from "./submission-labels.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
 
 export const SUBMISSION_RISK_SCHEMA_VERSION = 1;
@@ -24,6 +18,26 @@ const SEVERITY_WEIGHT = {
 };
 
 const HEYCLAUDE_HOSTNAME = "heyclau.de";
+const SUBMISSION_RISK_LOW_LABEL = "risk-low";
+const SUBMISSION_RISK_MEDIUM_LABEL = "risk-medium";
+const SUBMISSION_RISK_HIGH_LABEL = "risk-high";
+const SUBMISSION_RISK_LABEL_DEFINITIONS = {
+  [SUBMISSION_RISK_LOW_LABEL]: {
+    color: "0e8a16",
+    description:
+      "Automated submission security/safety review found only low-risk signals",
+  },
+  [SUBMISSION_RISK_MEDIUM_LABEL]: {
+    color: "fbca04",
+    description:
+      "Automated submission security/safety review found signals that need maintainer review",
+  },
+  [SUBMISSION_RISK_HIGH_LABEL]: {
+    color: "d93f0b",
+    description:
+      "Automated submission security/safety review found high-risk or critical signals",
+  },
+};
 
 const RISK_LABEL_BY_TIER = {
   low: SUBMISSION_RISK_LOW_LABEL,
@@ -108,9 +122,9 @@ function lower(value) {
   return normalizeText(value).toLowerCase();
 }
 
-function labelsFromIssue(issue = {}) {
-  return Array.isArray(issue.labels)
-    ? issue.labels
+function labelsFromDraft(draft = {}) {
+  return Array.isArray(draft.labels)
+    ? draft.labels
         .map((label) =>
           typeof label === "string" ? label : String(label?.name ?? ""),
         )
@@ -119,24 +133,24 @@ function labelsFromIssue(issue = {}) {
     : [];
 }
 
-function issueAuthor(issue = {}) {
-  if (typeof issue.author === "string") {
-    return normalizeGitHubLogin(issue.author) || normalizeText(issue.author);
+function draftAuthor(draft = {}) {
+  if (typeof draft.author === "string") {
+    return normalizeGitHubLogin(draft.author) || normalizeText(draft.author);
   }
   return (
-    normalizeGitHubLogin(issue.author?.login) ||
-    normalizeGitHubLogin(issue.user?.login) ||
+    normalizeGitHubLogin(draft.author?.login) ||
+    normalizeGitHubLogin(draft.user?.login) ||
     ""
   );
 }
 
-function issueNumber(issue = {}) {
-  const value = Number(issue.number);
+function draftNumber(draft = {}) {
+  const value = Number(draft.number);
   return Number.isInteger(value) && value > 0 ? value : null;
 }
 
-function issueUrl(issue = {}) {
-  return normalizeText(issue.html_url || issue.url);
+function draftUrl(draft = {}) {
+  return normalizeText(draft.html_url || draft.url);
 }
 
 function isHttpsUrl(value) {
@@ -1199,13 +1213,13 @@ function policyDecisionForReport(report) {
   const matrix = report.policyMatrix || {};
   const gates = Object.values(matrix);
   if (gates.some((gate) => gate?.status === "block")) return "blocked";
-  if (report.subject?.type !== "issue") return "maintainer_review";
+  if (report.subject?.type !== "submission_draft") return "maintainer_review";
   const sourcePass = matrix.source?.status === "pass";
   const packagePass = matrix.package?.status === "pass";
   const qualityPass = matrix.quality?.status === "pass";
   const riskAllowed = report.riskTier === "low" || report.riskTier === "medium";
   return sourcePass && packagePass && qualityPass && riskAllowed
-    ? "auto_import_eligible"
+    ? "submit_pr_eligible"
     : "maintainer_review";
 }
 
@@ -1340,22 +1354,22 @@ function selectSourceRepositories(input = {}) {
     : [];
 }
 
-export function analyzeIssueSubmissionRisk(
-  issue = {},
+export function analyzeSubmissionDraftRisk(
+  draft = {},
   validationReport = null,
   options = {},
 ) {
   const fields = validationReport?.fields ?? {};
-  const text = [issue.title, issue.body, Object.values(fields).join("\n")].join(
+  const text = [draft.title, draft.body, Object.values(fields).join("\n")].join(
     "\n",
   );
   const report = baseReport({
-    type: "issue",
-    number: issueNumber(issue),
-    title: normalizeText(issue.title),
-    url: issueUrl(issue),
-    author: issueAuthor(issue),
-    labels: labelsFromIssue(issue),
+    type: "submission_draft",
+    number: draftNumber(draft),
+    title: normalizeText(draft.title),
+    url: draftUrl(draft),
+    author: draftAuthor(draft),
+    labels: labelsFromDraft(draft),
     category: validationReport?.category || fields.category || "",
     slug: fields.slug || "",
   });
@@ -1363,7 +1377,7 @@ export function analyzeIssueSubmissionRisk(
     addGithubSourceRepo(report, repo);
   }
   const fallbackContributor =
-    issue.user || (typeof issue.author === "object" ? issue.author : {}) || {};
+    draft.user || (typeof draft.author === "object" ? draft.author : {}) || {};
   const contributor = selectContributor(
     options.contributor,
     fallbackContributor,
@@ -1372,7 +1386,7 @@ export function analyzeIssueSubmissionRisk(
   if (contributorProfile) {
     report.provenanceStatus = "passed";
     report.effectiveContributor = contributorProfile;
-    report.contributorSource = "issue_author";
+    report.contributorSource = "draft_author";
   }
 
   addSchemaSignals(report, validationReport);
@@ -1383,7 +1397,7 @@ export function analyzeIssueSubmissionRisk(
   applyContributorAnalysis(
     report,
     contributor,
-    "issue_author",
+    "draft_author",
     fallbackContributor,
   );
 

@@ -151,6 +151,7 @@ const QUEUED_STALE_SECONDS = 60;
 const REVIEWING_STALE_SECONDS = 180;
 const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
+const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
 const SWEEP_LIMIT = 25;
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
   "agents",
@@ -2270,7 +2271,7 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
         "x-heyclaude-internal-signature": signature,
       },
       body,
-      signal: AbortSignal.timeout(90_000),
+      signal: AbortSignal.timeout(PRIVATE_REVIEW_TIMEOUT_MS),
     });
   } catch {
     return defaultManualDecision("Private corpus review request failed.");
@@ -2692,6 +2693,19 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             summary: validation.summary,
             checks: validation.checks,
           };
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            headSha: target.headSha,
+            baseRef: target.baseRef || contentGateBaseRef(env),
+            installationId: target.installationId,
+            status: "reviewing",
+            deliveryId: String(message.payload.deliveryId || ""),
+            nextReviewAt: null,
+            lastCheckSummary: validation.summary,
+          });
         }
       } catch {
         decision = defaultManualDecision(

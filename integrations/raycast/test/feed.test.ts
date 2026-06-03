@@ -641,7 +641,12 @@ describe("Raycast feed helpers", () => {
 
   it("validates and parses full detail payloads", () => {
     const detail = { copyText: "full text", detailMarkdown: "# Detail" };
+    const lazyDetail = {
+      detailMarkdown: "# Detail",
+      llmsUrl: "/data/llms/mcp/context7.txt",
+    };
     assert.equal(isRaycastDetail(detail), true);
+    assert.equal(isRaycastDetail(lazyDetail), true);
     assert.deepEqual(parseDetail(JSON.stringify(detail)), detail);
     assert.equal(parseDetail(JSON.stringify({ copyText: "missing md" })), null);
     assert.deepEqual(fallbackDetail(sampleEntry), {
@@ -1372,27 +1377,37 @@ describe("Raycast feed helpers", () => {
 
   it("loads detail payloads on demand and falls back only when no detail URL exists", async () => {
     const cache = new MemoryCache();
-    let requestedUrl = "";
+    const requestedUrls: string[] = [];
     const devFeed = "https://preview.example.com/data/raycast-index.json";
     const detail = await loadEntryDetail({
       entry: sampleEntry,
       cache,
       feedUrl: devFeed,
       fetchFn: async (input) => {
-        requestedUrl = String(input);
+        requestedUrls.push(String(input));
+        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+          return response("remote full text", {
+            headers: { "content-type": "text/plain" },
+          });
+        }
         return response({
-          copyText: "remote full text",
           detailMarkdown: "# Remote",
+          llmsUrl: "/data/llms/mcp/context7.txt",
         });
       },
     });
     assert.deepEqual(detail, {
       copyText: "remote full text",
       detailMarkdown: "# Remote",
+      llmsUrl: "/data/llms/mcp/context7.txt",
     });
     assert.equal(
-      requestedUrl,
+      requestedUrls[0],
       "https://preview.example.com/data/raycast/mcp/context7.json",
+    );
+    assert.equal(
+      requestedUrls[1],
+      "https://preview.example.com/data/llms/mcp/context7.txt",
     );
     assert.match(
       cache.get(detailCacheKey(sampleEntry, devFeed)) || "",
@@ -1444,11 +1459,17 @@ describe("Raycast feed helpers", () => {
       entry: sampleEntry,
       cache,
       feedUrl: devFeed,
-      fetchFn: async () =>
-        response({
-          copyText: "current detail",
+      fetchFn: async (input) => {
+        if (String(input).endsWith("/data/llms/mcp/context7.txt")) {
+          return response("current detail", {
+            headers: { "content-type": "text/plain" },
+          });
+        }
+        return response({
           detailMarkdown: "# Current",
-        }),
+          llmsUrl: "/data/llms/mcp/context7.txt",
+        });
+      },
     });
 
     assert.equal(detail.copyText, "current detail");

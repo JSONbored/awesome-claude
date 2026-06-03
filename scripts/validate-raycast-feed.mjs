@@ -24,8 +24,6 @@ const requiredEntryFields = [
   "title",
   "description",
   "tags",
-  "copyText",
-  "detailMarkdown",
   "detailUrl",
   "webUrl",
 ];
@@ -206,7 +204,10 @@ for (const entry of payload.entries) {
   if (entry.brandLogoUrl && !isAllowedBrandAssetUrl(entry.brandLogoUrl)) {
     fail(`${key}: invalid brandLogoUrl`);
   }
-  if (String(entry.copyText ?? "").length > RAYCAST_COPY_PREVIEW_LIMIT + 3) {
+  if (
+    entry.copyText !== undefined &&
+    String(entry.copyText ?? "").length > RAYCAST_COPY_PREVIEW_LIMIT + 3
+  ) {
     fail(`${key}: feed copyText exceeds preview cap`);
   }
 
@@ -228,10 +229,21 @@ for (const entry of payload.entries) {
   assertNoLoneSurrogates(detail, `${key} detail`);
   if (detail.schemaVersion !== 2)
     fail(`${key}: detail schemaVersion must be 2`);
-  if (typeof detail.copyText !== "string" || detail.copyText.trim() === "") {
-    fail(`${key}: detail copyText must be non-empty`);
+  if (
+    detail.copyText !== undefined &&
+    (typeof detail.copyText !== "string" || detail.copyText.trim() === "")
+  ) {
+    fail(`${key}: detail copyText must be non-empty when present`);
   }
   if (
+    detail.copyText === undefined &&
+    (typeof detail.llmsUrl !== "string" ||
+      !detail.llmsUrl.startsWith("/data/llms/"))
+  ) {
+    fail(`${key}: detail without copyText must expose llmsUrl`);
+  }
+  if (
+    entry.copyText !== undefined &&
     entry.copyTextTruncated &&
     detail.copyText.length <= String(entry.copyText ?? "").length
   ) {

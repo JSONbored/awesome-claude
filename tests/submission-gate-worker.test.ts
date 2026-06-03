@@ -381,8 +381,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('nextReviewForStatus("validation_pending")');
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
+    expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
     expect(source).toContain("queuedStaleBeforeIso");
     expect(source).toContain("reviewingStaleBeforeIso");
+    expect(source).toContain("lastCheckSummary: validation.summary");
     expect(source).toContain("target.headSha = pullForNotification.head.sha");
     expect(source).toContain("target: {");
     expect(source).toContain("installationId: target.installationId");

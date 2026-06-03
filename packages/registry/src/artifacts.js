@@ -153,6 +153,12 @@ function buildEntryProvenanceFields(entry) {
   return fields;
 }
 
+function compactDefinedObject(value) {
+  return Object.fromEntries(
+    Object.entries(value).filter(([, item]) => item !== undefined),
+  );
+}
+
 export function buildRaycastDetailMarkdown(entry) {
   const lines = [`# ${entry.title}`, "", entry.description];
 
@@ -238,23 +244,27 @@ function buildRepoStats(entry) {
 
 export function buildDirectoryEntries(entries) {
   return entries.map((entry) => {
-    const {
-      body: _body,
-      sections: _sections,
-      headings: _headings,
-      codeBlocks: _codeBlocks,
-      scriptBody: _scriptBody,
-      copySnippet: _copySnippet,
-      usageSnippet: _usageSnippet,
-      configSnippet: _configSnippet,
-      ...directoryEntry
-    } = entry;
-    return {
-      ...directoryEntry,
-      hasCopySnippet: Boolean(entry.copySnippet),
+    return compactDefinedObject({
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      description: entry.cardDescription || entry.description,
+      author: entry.author || "",
+      dateAdded: entry.dateAdded || "",
+      contentUpdatedAt: entry.contentUpdatedAt || "",
+      tags: entry.tags ?? [],
+      keywords: entry.keywords ?? [],
+      documentationUrl: entry.documentationUrl || "",
+      ...buildEntryProvenanceFields(entry),
+      ...buildEntryBrandFields(entry),
+      repoUrl: entry.repoUrl || "",
+      downloadUrl: entry.downloadUrl || "",
+      downloadTrust: entry.downloadTrust ?? null,
+      packageVerified: Boolean(entry.packageVerified),
+      hasCopySnippet: Boolean(entry.copySnippet || entry.hasCopySnippet),
       hasUsageSnippet: Boolean(entry.usageSnippet),
       hasConfigSnippet: Boolean(entry.configSnippet),
-      hasScriptBody: Boolean(entry.scriptBody),
+      hasScriptBody: Boolean(entry.scriptBody || entry.hasScriptBody),
       installable: Boolean(
         entry.installable ||
         entry.installCommand ||
@@ -266,46 +276,45 @@ export function buildDirectoryEntries(entries) {
       apiUrl: entryApiUrl(entry),
       repoStats: buildRepoStats(entry),
       trustSignals: buildEntryTrustSignals(entry),
-    };
+    });
   });
 }
 
 export function buildSearchEntries(entries) {
-  return entries.map((entry) => ({
-    category: entry.category,
-    slug: entry.slug,
-    title: entry.title,
-    seoTitle: entry.seoTitle || entry.title,
-    description: entry.cardDescription || entry.description,
-    seoDescription: entry.seoDescription || entry.description,
-    tags: entry.tags ?? [],
-    keywords: entry.keywords ?? [],
-    author: entry.author || "",
-    ...buildEntryNoteFields(entry),
-    ...buildEntryProvenanceFields(entry),
-    ...buildEntryBrandFields(entry),
-    dateAdded: entry.dateAdded || "",
-    installable: Boolean(
-      entry.installable || entry.installCommand || entry.downloadUrl,
-    ),
-    downloadUrl: entry.downloadUrl || "",
-    downloadTrust: entry.downloadTrust ?? null,
-    verificationStatus: entry.verificationStatus || "",
-    platforms: buildSkillPlatformCompatibility(entry).map(
-      (item) => item.platform,
-    ),
-    supportLevels: buildSkillPlatformCompatibility(entry).map(
-      (item) => item.supportLevel,
-    ),
-    documentationUrl: entry.documentationUrl || "",
-    repoUrl: entry.repoUrl || "",
-    repoStats: buildRepoStats(entry),
-    url: entryCanonicalUrl(entry),
-    canonicalUrl: entryCanonicalUrl(entry),
-    llmsUrl: entryLlmsUrl(entry),
-    apiUrl: entryApiUrl(entry),
-    trustSignals: buildEntryTrustSignals(entry),
-  }));
+  return entries.map((entry) =>
+    compactDefinedObject({
+      category: entry.category,
+      slug: entry.slug,
+      title: entry.title,
+      seoTitle: entry.seoTitle || entry.title,
+      description: entry.cardDescription || entry.description,
+      tags: entry.tags ?? [],
+      keywords: entry.keywords ?? [],
+      author: entry.author || "",
+      ...buildEntryProvenanceFields(entry),
+      ...buildEntryBrandFields(entry),
+      dateAdded: entry.dateAdded || "",
+      installable: Boolean(
+        entry.installable || entry.installCommand || entry.downloadUrl,
+      ),
+      downloadUrl: entry.downloadUrl || "",
+      downloadTrust: entry.downloadTrust ?? null,
+      verificationStatus: entry.verificationStatus || "",
+      platforms: buildSkillPlatformCompatibility(entry).map(
+        (item) => item.platform,
+      ),
+      supportLevels: buildSkillPlatformCompatibility(entry).map(
+        (item) => item.supportLevel,
+      ),
+      documentationUrl: entry.documentationUrl || "",
+      repoUrl: entry.repoUrl || "",
+      repoStats: buildRepoStats(entry),
+      url: entryCanonicalUrl(entry),
+      canonicalUrl: entryCanonicalUrl(entry),
+      apiUrl: entryApiUrl(entry),
+      trustSignals: buildListTrustSignals(entry),
+    }),
+  );
 }
 
 function sha256Text(value) {
@@ -416,6 +425,18 @@ export function buildEntryTrustSignals(entry) {
     adapterGenerated,
     platforms: platformCompatibility.map((item) => item.platform),
     supportLevels: platformCompatibility.map((item) => item.supportLevel),
+  };
+}
+
+function buildListTrustSignals(entry) {
+  const trustSignals = buildEntryTrustSignals(entry);
+  return {
+    firstPartyEditorial: trustSignals.firstPartyEditorial,
+    packageVerified: trustSignals.packageVerified,
+    sourceStatus: trustSignals.sourceStatus,
+    lastVerifiedAt: trustSignals.lastVerifiedAt,
+    platforms: trustSignals.platforms,
+    supportLevels: trustSignals.supportLevels,
   };
 }
 
@@ -713,9 +734,7 @@ export function buildCursorSkillAdapter(entry) {
 
 export function buildRaycastEntries(entries) {
   return entries.map((entry) => {
-    const copyText = getCopyText(entry);
-
-    return {
+    return compactDefinedObject({
       category: entry.category,
       slug: entry.slug,
       title: entry.title,
@@ -724,39 +743,37 @@ export function buildRaycastEntries(entries) {
       author: entry.author || "",
       ...buildEntryProvenanceFields(entry),
       ...buildEntryBrandFields(entry),
-      installCommand: entry.installCommand || "",
-      configSnippet: entry.configSnippet || "",
-      ...buildEntryNoteFields(entry),
-      copyText: truncateText(copyText, RAYCAST_COPY_PREVIEW_LIMIT),
-      copyTextLength: copyText.length,
-      copyTextTruncated: copyText.length > RAYCAST_COPY_PREVIEW_LIMIT,
-      detailMarkdown: buildRaycastDetailMarkdown(entry),
       detailUrl: dataUrl("raycast", entry.category, `${entry.slug}.json`),
       webUrl: entryCanonicalUrl(entry),
       canonicalUrl: entryCanonicalUrl(entry),
-      llmsUrl: entryLlmsUrl(entry),
-      apiUrl: entryApiUrl(entry),
-      seoTitle: entry.seoTitle || entry.title,
-      seoDescription: entry.seoDescription || entry.description,
       repoUrl: entry.repoUrl || "",
       repoStats: buildRepoStats(entry),
       documentationUrl: entry.documentationUrl || "",
       downloadTrust: entry.downloadTrust,
       verificationStatus: entry.verificationStatus || "",
       platformCompatibility: buildSkillPlatformCompatibility(entry),
-    };
+    });
   });
 }
 
 export function buildEntryDetail(entry) {
-  const { codeBlocks: _codeBlocks, ...detailEntry } = entry;
+  const {
+    codeBlocks: _codeBlocks,
+    sections: _sections,
+    headings: _headings,
+    ...detailEntry
+  } = entry;
   return {
     schemaVersion: ENTRY_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
-    entry: {
+    entry: compactDefinedObject({
       ...detailEntry,
+      hasCopySnippet: Boolean(entry.copySnippet || entry.hasCopySnippet),
+      hasUsageSnippet: Boolean(entry.usageSnippet),
+      hasConfigSnippet: Boolean(entry.configSnippet),
+      hasScriptBody: Boolean(entry.scriptBody || entry.hasScriptBody),
       repoStats: buildRepoStats(entry),
-    },
+    }),
     trustSignals: buildEntryTrustSignals(entry),
   };
 }
@@ -771,11 +788,10 @@ export function buildRaycastDetail(entry) {
     author: entry.author || "",
     ...buildEntryProvenanceFields(entry),
     ...buildEntryBrandFields(entry),
-    copyText: getCopyText(entry),
     detailMarkdown: buildRaycastDetailMarkdown(entry),
     webUrl: entryCanonicalUrl(entry),
     canonicalUrl: entryCanonicalUrl(entry),
-    llmsUrl: entryLlmsUrl(entry),
+    llmsUrl: dataUrl("llms", entry.category, `${entry.slug}.txt`),
     apiUrl: entryApiUrl(entry),
     seoTitle: entry.seoTitle || entry.title,
     seoDescription: entry.seoDescription || entry.description,

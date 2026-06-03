@@ -47,8 +47,8 @@ Use the helper in \`scripts/check.sh\` before submitting.
     expect(result.prBody).toContain("Package SHA256");
     expect(
       validateSubmission({
+        title: result.prTitle,
         body: result.prBody,
-        labels: ["content-submission", "skills"],
       }).ok,
     ).toBe(true);
   });

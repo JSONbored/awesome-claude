@@ -48,18 +48,18 @@ const SERVER_ONLY_STUBS: Record<string, string> = {
     }
   `,
   "\0heyclaude-submission-risk-client-stub": `
-    export const analyzeIssueSubmissionRisk = () => {
+    export const analyzeSubmissionDraftRisk = () => {
       throw new Error("Submission risk analysis cannot run in the browser.");
     };
   `,
   "\0heyclaude-submission-client-stub": `
     const fail = () => { throw new Error("Submission intake helpers cannot run in the browser."); };
-    export const buildSubmissionIssueDraft = fail;
+    export const buildSubmissionPrDraft = fail;
     export const validateSubmission = fail;
     export const normalizeSubmissionPayloadFields = fail;
     export const normalizeCategory = fail;
-    export const looksLikeSubmissionIssue = fail;
-    export const parseIssueFormBody = fail;
+    export const looksLikeSubmissionPrDraft = fail;
+    export const parseSubmissionPrBody = fail;
     export const slugify = fail;
     export const submissionActivityState = fail;
   `,

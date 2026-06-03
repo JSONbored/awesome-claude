@@ -416,6 +416,42 @@ export async function loadEntryDetail(options: {
     throw new Error("Detail payload was malformed");
   }
 
-  cache.set(cacheKey, JSON.stringify(parsed));
-  return parsed;
+  const hydrated = await hydrateDetailCopyText({
+    detail: parsed,
+    entry,
+    feedUrl,
+    fetchFn,
+  });
+  cache.set(cacheKey, JSON.stringify(hydrated));
+  return hydrated;
+}
+
+async function hydrateDetailCopyText(options: {
+  detail: RaycastDetail;
+  entry: RaycastEntry;
+  feedUrl: string;
+  fetchFn: FetchLike;
+}): Promise<RaycastDetail> {
+  if (options.detail.copyText?.trim()) return options.detail;
+  const copyTextUrl = options.detail.llmsUrl || options.entry.llmsUrl;
+  if (!copyTextUrl) {
+    return {
+      ...options.detail,
+      copyText: fallbackDetail(options.entry).copyText,
+    };
+  }
+  const response = await options.fetchFn(
+    absoluteDataUrl(copyTextUrl, options.feedUrl),
+    {
+      headers: { accept: "text/plain" },
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Copy text responded with ${response.status}`);
+  }
+  const copyText = await response.text();
+  return {
+    ...options.detail,
+    copyText: copyText.trim() || fallbackDetail(options.entry).copyText,
+  };
 }

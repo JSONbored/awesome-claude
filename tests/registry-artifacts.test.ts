@@ -190,15 +190,19 @@ describe("registry artifacts", () => {
   });
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
-    expect(artifactSize("directory-index.json")).toBeLessThan(1_900_000);
-    expect(artifactSize("search-index.json")).toBeLessThan(1_500_000);
-    expect(artifactSize("raycast-index.json")).toBeLessThan(1_600_000);
-    expect(artifactTreeSize("feeds/categories")).toBeLessThan(2_500_000);
-    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(2_800_000);
-    expect(artifactTreeSize("entries")).toBeLessThan(15_000_000);
+    const fullCorpusSize = artifactSize("llms-full.txt");
+    expect(artifactTreeSize(".")).toBeLessThan(22_000_000);
+    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(18_000_000);
+    expect(fullCorpusSize).toBeLessThan(4_500_000);
+    expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
+    expect(artifactSize("search-index.json")).toBeLessThan(750_000);
+    expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
+    expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
+    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
+    expect(artifactTreeSize("entries")).toBeLessThan(7_000_000);
   });
 
-  it("keeps Atlas list data compact while preserving full entry detail fields", () => {
+  it("keeps Atlas list data compact while preserving canonical entry detail fields", () => {
     const atlasPayload = JSON.parse(
       fs.readFileSync(
         path.join(repoRoot, "apps/web/src/generated/atlas-registry.json"),
@@ -224,15 +228,11 @@ describe("registry artifacts", () => {
     expect(atlasSkill).not.toHaveProperty("sections");
     expect(atlasSkill).not.toHaveProperty("copySnippet");
     expect(skillDetail).toMatchObject({
-      copySnippet: expect.any(String),
       body: expect.any(String),
-      sections: expect.arrayContaining([
-        expect.objectContaining({ title: expect.any(String) }),
-      ]),
-      headings: expect.arrayContaining([
-        expect.objectContaining({ text: expect.any(String) }),
-      ]),
     });
+    expect(skillDetail).not.toHaveProperty("sections");
+    expect(skillDetail).not.toHaveProperty("headings");
+    expect(skillDetail).not.toHaveProperty("codeBlocks");
   });
 
   it("publishes schema-specific fields for category-aware detail rendering", () => {
@@ -241,24 +241,21 @@ describe("registry artifacts", () => {
         "entries/hooks/accessibility-checker.json",
         {
           trigger: "PostToolUse",
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
         "entries/commands/cursor-rules.json",
         {
           commandSyntax: expect.any(String),
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
         "entries/statuslines/accessibility-first-statusline.json",
         {
           scriptLanguage: "bash",
-          scriptBody: expect.any(String),
-          copySnippet: expect.any(String),
+          body: expect.any(String),
         },
       ],
       [
@@ -560,7 +557,7 @@ describe("registry artifacts", () => {
       expect(entry.trustSignals).toMatchObject({
         sourceStatus: expect.stringMatching(/^(available|missing)$/),
         checksumPresent: Boolean(
-          entry.downloadSha256 || entry.skillPackage?.sha256,
+          contentEntry!.downloadSha256 || contentEntry!.skillPackage?.sha256,
         ),
       });
       expect(entry.trustSignals.sourceUrlCount).toBe(
@@ -608,7 +605,7 @@ describe("registry artifacts", () => {
     ).toEqual(jsonLdSnapshotsPayload);
   });
 
-  it("derives search citation URLs from unhydrated source entries", () => {
+  it("derives compact search URLs from unhydrated source entries", () => {
     const sourceEntry = {
       ...contentEntries[0],
       canonicalUrl: undefined,
@@ -618,9 +615,7 @@ describe("registry artifacts", () => {
     const [searchEntry] = buildSearchEntries([sourceEntry]);
 
     expect(searchEntry?.canonicalUrl).toBe(searchEntry?.url);
-    expect(searchEntry?.llmsUrl).toBe(
-      `https://heyclau.de/data/llms/${sourceEntry.category}/${sourceEntry.slug}.txt`,
-    );
+    expect(searchEntry?.llmsUrl).toBeUndefined();
     expect(searchEntry?.apiUrl).toBe(
       `https://heyclau.de/api/registry/entries/${sourceEntry.category}/${sourceEntry.slug}`,
     );
@@ -658,8 +653,8 @@ Use this hook after reviewing the notes.`,
     ]);
 
     const [searchEntry] = buildSearchEntries([entry]);
-    expect(searchEntry.safetyNotes).toEqual(entry.safetyNotes);
-    expect(searchEntry.privacyNotes).toEqual(entry.privacyNotes);
+    expect(searchEntry.safetyNotes).toBeUndefined();
+    expect(searchEntry.privacyNotes).toBeUndefined();
     expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
@@ -878,16 +873,16 @@ Use this hook after reviewing the notes.`,
     for (const entry of searchEntries) {
       expect(entry.url).toBeTruthy();
       expect(entry.seoTitle).toBeTruthy();
-      expect(entry.seoDescription).toBeTruthy();
       expect(entry.canonicalUrl).toBe(entry.url);
-      expect(entry.llmsUrl).toBe(
-        `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
-      );
       expect(entry.apiUrl).toBe(
         `https://heyclau.de/api/registry/entries/${entry.category}/${entry.slug}`,
       );
       expect((entry as Record<string, unknown>).body).toBeUndefined();
       expect((entry as Record<string, unknown>).copySnippet).toBeUndefined();
+      expect((entry as Record<string, unknown>).seoDescription).toBeUndefined();
+      expect((entry as Record<string, unknown>).llmsUrl).toBeUndefined();
+      expect((entry as Record<string, unknown>).safetyNotes).toBeUndefined();
+      expect((entry as Record<string, unknown>).privacyNotes).toBeUndefined();
     }
     expect(
       searchEntries.some((entry) => entry.platforms?.includes("Gemini")),
@@ -897,7 +892,7 @@ Use this hook after reviewing the notes.`,
   it("keeps Retro Daily startup debug logs in the user's private metrics directory", () => {
     const detailPayload = readDataJson<{
       entry: {
-        scriptBody: string;
+        body: string;
       };
     }>("entries/hooks/retro-daily.json");
     const scriptBody = detailPayload.entry.scriptBody;
@@ -984,7 +979,8 @@ Use this hook after reviewing the notes.`,
       const raycastDetail = readDataJson<{
         schemaVersion: number;
         key: string;
-        copyText: string;
+        copyText?: string;
+        llmsUrl: string;
       }>(`raycast/${entry.category}/${entry.slug}.json`);
       const entryLlmsPath = path.join(
         dataRoot,
@@ -992,7 +988,6 @@ Use this hook after reviewing the notes.`,
         entry.category,
         `${entry.slug}.txt`,
       );
-      const copyText = getCopyText(entry);
       const raycastFeedEntry = raycastEntryByKey.get(key);
 
       expect(detailPayload).toMatchObject({
@@ -1005,21 +1000,17 @@ Use this hook after reviewing the notes.`,
       expect(raycastDetail).toMatchObject({
         schemaVersion: 2,
         key,
-        copyText,
+        llmsUrl: `/data/llms/${entry.category}/${entry.slug}.txt`,
       });
+      expect(raycastDetail).not.toHaveProperty("copyText");
       expect(raycastFeedEntry.canonicalUrl).toBe(
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
-      expect(raycastFeedEntry.llmsUrl).toBe(
-        `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
-      );
-      expect(raycastFeedEntry.copyTextLength).toBe(copyText.length);
-      expect(raycastFeedEntry.copyText.length).toBeLessThanOrEqual(
-        RAYCAST_COPY_PREVIEW_LIMIT + 3,
-      );
-      expect(raycastFeedEntry.copyTextTruncated).toBe(
-        copyText.length > RAYCAST_COPY_PREVIEW_LIMIT,
-      );
+      expect(raycastFeedEntry).not.toHaveProperty("llmsUrl");
+      expect(raycastFeedEntry).not.toHaveProperty("copyText");
+      expect(raycastFeedEntry).not.toHaveProperty("copyTextLength");
+      expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
+      expect(raycastFeedEntry).not.toHaveProperty("detailMarkdown");
     }
   });
 
@@ -1429,7 +1420,9 @@ describe("parseGitHubRepo", () => {
 
   it("rejects non-github hosts, other subdomains, and empty input", () => {
     expect(parseGitHubRepo("https://example.com/OpenAI/whisper")).toBeNull();
-    expect(parseGitHubRepo("https://gist.github.com/OpenAI/whisper")).toBeNull();
+    expect(
+      parseGitHubRepo("https://gist.github.com/OpenAI/whisper"),
+    ).toBeNull();
     expect(parseGitHubRepo("")).toBeNull();
   });
 });

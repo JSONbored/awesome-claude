@@ -3,6 +3,7 @@ import { OTPInput, OTPInputContext } from "input-otp";
 import { Minus } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import type { RenderProps } from "input-otp";
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
@@ -32,8 +33,12 @@ const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext);
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
+  const inputOTPContext = React.useContext(OTPInputContext) as RenderProps;
+  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index] ?? {
+    char: null,
+    hasFakeCaret: false,
+    isActive: false,
+  };
 
   return (
     <div

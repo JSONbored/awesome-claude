@@ -171,7 +171,7 @@ function writeFileIfChanged(filePath, content) {
 
 function writeJsonFile(filePath, value) {
   ensureDir(path.dirname(filePath));
-  return writeFileIfChanged(filePath, `${JSON.stringify(value, null, 2)}\n`);
+  return writeFileIfChanged(filePath, `${JSON.stringify(value)}\n`);
 }
 
 async function writePrettierJsonFile(filePath, value) {

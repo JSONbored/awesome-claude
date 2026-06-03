@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { JobCard } from "@/components/job-card";
 import { isFresh, pickDailySpotlight, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { NewsletterInline } from "@/components/newsletter-inline";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 
 const loadPublicJobs = createServerFn({ method: "GET" }).handler(async () => {
   const { buildPublicJobsIndex, getJobs } = await import("@/lib/jobs");
@@ -35,7 +36,7 @@ export const Route = createFileRoute("/jobs/")({
     ],
     links: [{ rel: "canonical", href: "/jobs" }],
   }),
-  errorComponent: ({ error, reset }) => (
+  errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load jobs</h1>
       <p className="mt-2 text-sm text-ink-muted">{error.message}</p>

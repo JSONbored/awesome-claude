@@ -7,6 +7,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { companyTint, monogram, relativePosted, sortJobs } from "@/lib/jobs-utils";
 import { CopyButton } from "@/components/copy-button";
 import type { ReactNode } from "react";
+import type { ErrorComponentProps } from "@tanstack/react-router";
 import type { JobListing, JobTier } from "@/types/registry";
 
 const loadJobDetailData = createServerFn({ method: "GET" })
@@ -66,7 +67,7 @@ export const Route = createFileRoute("/jobs/$slug")({
       links: [{ rel: "canonical", href: url }],
     };
   },
-  errorComponent: ({ error, reset }) => (
+  errorComponent: ({ error, reset }: ErrorComponentProps) => (
     <div className="mx-auto max-w-xl px-4 py-16 text-center">
       <h1 className="font-display text-2xl text-ink">Couldn't load this role</h1>
       <p className="mt-2 text-sm text-ink-muted">{error.message}</p>
