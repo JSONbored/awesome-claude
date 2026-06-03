@@ -652,9 +652,21 @@ Use this hook after reviewing the notes.`,
       "Reads local workspace metadata and does not send it to third parties.",
     ]);
 
+    const [directoryEntry] = buildDirectoryEntries([entry]);
+    expect(directoryEntry.safetyNotes).toEqual([
+      "Runs as a background worker during the configured Claude Code session.",
+    ]);
+    expect(directoryEntry.privacyNotes).toEqual([
+      "Reads local workspace metadata and does not send it to third parties.",
+    ]);
+
     const [searchEntry] = buildSearchEntries([entry]);
-    expect(searchEntry.safetyNotes).toBeUndefined();
-    expect(searchEntry.privacyNotes).toBeUndefined();
+    expect(searchEntry.safetyNotes).toEqual([
+      "Runs as a background worker during the configured Claude Code session.",
+    ]);
+    expect(searchEntry.privacyNotes).toEqual([
+      "Reads local workspace metadata and does not send it to third parties.",
+    ]);
     expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
@@ -881,8 +893,6 @@ Use this hook after reviewing the notes.`,
       expect((entry as Record<string, unknown>).copySnippet).toBeUndefined();
       expect((entry as Record<string, unknown>).seoDescription).toBeUndefined();
       expect((entry as Record<string, unknown>).llmsUrl).toBeUndefined();
-      expect((entry as Record<string, unknown>).safetyNotes).toBeUndefined();
-      expect((entry as Record<string, unknown>).privacyNotes).toBeUndefined();
     }
     expect(
       searchEntries.some((entry) => entry.platforms?.includes("Gemini")),

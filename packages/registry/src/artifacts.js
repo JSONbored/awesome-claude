@@ -257,6 +257,7 @@ export function buildDirectoryEntries(entries) {
       documentationUrl: entry.documentationUrl || "",
       ...buildEntryProvenanceFields(entry),
       ...buildEntryBrandFields(entry),
+      ...buildEntryNoteFields(entry),
       repoUrl: entry.repoUrl || "",
       downloadUrl: entry.downloadUrl || "",
       downloadTrust: entry.downloadTrust ?? null,
@@ -293,6 +294,7 @@ export function buildSearchEntries(entries) {
       author: entry.author || "",
       ...buildEntryProvenanceFields(entry),
       ...buildEntryBrandFields(entry),
+      ...buildEntryNoteFields(entry),
       dateAdded: entry.dateAdded || "",
       installable: Boolean(
         entry.installable || entry.installCommand || entry.downloadUrl,
