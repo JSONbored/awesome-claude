@@ -22,43 +22,31 @@ documentationUrl: "https://github.com/flexprice/mcp-server#readme"
 repoUrl: "https://github.com/flexprice/mcp-server"
 installable: true
 installCommand: >-
-  claude mcp add flexprice -- npx -y @flexprice/mcp-server start --server-url
-  https://us.api.flexprice.io/v1 --api-key-auth YOUR_API_KEY --scope read
+  claude mcp add-json flexprice
+  '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
 usageSnippet: >-
-  claude mcp add flexprice -- npx -y @flexprice/mcp-server start --server-url
-  https://us.api.flexprice.io/v1 --api-key-auth YOUR_API_KEY --scope read
+  claude mcp add-json flexprice
+  '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
 copySnippet: |-
   {
     "flexprice": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@flexprice/mcp-server",
-        "start",
-        "--server-url",
-        "https://us.api.flexprice.io/v1",
-        "--api-key-auth",
-        "YOUR_API_KEY",
-        "--scope",
-        "read"
-      ]
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
     }
   }
 configSnippet: |-
   {
     "flexprice": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@flexprice/mcp-server",
-        "start",
-        "--server-url",
-        "https://us.api.flexprice.io/v1",
-        "--api-key-auth",
-        "YOUR_API_KEY",
-        "--scope",
-        "read"
-      ]
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
     }
   }
 estimatedSetupTime: 10 minutes
@@ -103,8 +91,8 @@ privacyNotes:
     The local MCP process sends requests to the configured Flexprice API base
     URL, so billing data can leave the local machine during tool calls.
   - >-
-    The README examples pass the API key as an argument. Prefer secret-aware MCP
-    client config or environment handling when your client supports it.
+    Keep the API key in the MCP client's environment handling or an external
+    secret manager; do not pass real keys as process arguments.
 tags:
   - flexprice
   - billing
@@ -175,20 +163,23 @@ all available tools.
 
 1. Confirm Node.js 20+ is available: `node --version`.
 2. Create or select a Flexprice API key for the billing tenant Claude should use.
-3. Add the server with read-only scope first:
+3. Store the key in a shell environment variable or secret manager as
+   `FLEXPRICE_API_KEY`; do not paste the raw key into command arguments.
+4. Add the server with read-only scope first. The single quotes preserve the
+   `${FLEXPRICE_API_KEY}` reference in Claude Code's MCP config so the key is
+   resolved from the environment at runtime:
 
 ```bash
-claude mcp add flexprice -- npx -y @flexprice/mcp-server start --server-url https://us.api.flexprice.io/v1 --api-key-auth YOUR_API_KEY --scope read
+claude mcp add-json flexprice '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
 ```
 
-4. Replace `YOUR_API_KEY` with the Flexprice API key.
 5. Run `claude` and use `/mcp` to confirm the server is connected.
 
 ### Claude Desktop
 
 1. Open the Claude Desktop MCP configuration file.
 2. Add the `flexprice` server configuration shown below.
-3. Replace `YOUR_API_KEY` with the Flexprice API key.
+3. Ensure `FLEXPRICE_API_KEY` is available to the MCP client environment.
 4. Restart Claude Desktop.
 
 ## Configuration
@@ -198,33 +189,24 @@ claude mcp add flexprice -- npx -y @flexprice/mcp-server start --server-url http
   "mcpServers": {
     "flexprice": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@flexprice/mcp-server",
-        "start",
-        "--server-url",
-        "https://us.api.flexprice.io/v1",
-        "--api-key-auth",
-        "YOUR_API_KEY",
-        "--scope",
-        "read"
-      ]
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
     }
   }
 }
 ```
 
-To allow account-changing operations, add write scope deliberately:
+To allow account-changing operations, keep the same `env` block and add write
+scope deliberately:
 
 ```json
 "args": [
   "-y",
   "@flexprice/mcp-server",
   "start",
-  "--server-url",
-  "https://us.api.flexprice.io/v1",
-  "--api-key-auth",
-  "YOUR_API_KEY",
   "--scope",
   "read",
   "--scope",
@@ -232,17 +214,14 @@ To allow account-changing operations, add write scope deliberately:
 ]
 ```
 
-Only add delete scope for supervised administrative sessions:
+Only add delete scope for supervised administrative sessions, again keeping the
+API key in `env` rather than command arguments:
 
 ```json
 "args": [
   "-y",
   "@flexprice/mcp-server",
   "start",
-  "--server-url",
-  "https://us.api.flexprice.io/v1",
-  "--api-key-auth",
-  "YOUR_API_KEY",
   "--scope",
   "read",
   "--scope",
@@ -259,15 +238,15 @@ For large tool surfaces, Flexprice also supports dynamic mode:
   "-y",
   "@flexprice/mcp-server",
   "start",
-  "--server-url",
-  "https://us.api.flexprice.io/v1",
-  "--api-key-auth",
-  "YOUR_API_KEY",
   "--scope",
   "read",
   "--mode",
   "dynamic"
-]
+],
+"env": {
+  "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+  "BASE_URL": "https://us.api.flexprice.io/v1"
+}
 ```
 
 ## Examples
