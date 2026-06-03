@@ -215,14 +215,15 @@ export async function upsertPrState(
     verdict?: string;
     verdictSummary?: string;
     deliveryId?: string;
+    lastReviewKey?: string;
   },
 ) {
   const timestamp = now();
   await db
     .prepare(
       `INSERT INTO submission_prs
-        (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, last_delivery_id, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (repo, number, head_repo, head_ref, base_ref, status, verdict, verdict_summary, last_delivery_id, last_review_key, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
         head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
         head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
@@ -231,6 +232,7 @@ export async function upsertPrState(
         verdict = COALESCE(excluded.verdict, submission_prs.verdict),
         verdict_summary = COALESCE(excluded.verdict_summary, submission_prs.verdict_summary),
         last_delivery_id = COALESCE(excluded.last_delivery_id, submission_prs.last_delivery_id),
+        last_review_key = COALESCE(excluded.last_review_key, submission_prs.last_review_key),
         updated_at = excluded.updated_at`,
     )
     .bind(
@@ -243,6 +245,7 @@ export async function upsertPrState(
       params.verdict ?? null,
       params.verdictSummary ?? null,
       params.deliveryId ?? null,
+      params.lastReviewKey ?? null,
       timestamp,
       timestamp,
     )
@@ -258,6 +261,7 @@ export async function getPrState(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         base_ref AS baseRef, status, verdict, verdict_summary AS verdictSummary,
         last_delivery_id AS lastDeliveryId,
+        last_review_key AS lastReviewKey,
         last_notification_key AS lastNotificationKey,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs

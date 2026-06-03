@@ -320,6 +320,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"check_suite"');
     expect(source).toContain('"status"');
     expect(readConstantsSource()).toContain('"edited"');
+    expect(source).toContain("function editedPayloadHasBaseRefChange");
+    expect(source).toContain('if (action !== "edited") return true;');
+    expect(source).toContain("return editedPayloadHasBaseRefChange(payload);");
     expect(source).toContain('status: "validation_pending"');
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
@@ -488,14 +491,25 @@ describe("Cloudflare submission gate helpers", () => {
       pullRequestIndex,
       source.indexOf('if (eventName === "issue_comment")', pullRequestIndex),
     );
+    const inspectIndex = pullRequestBlock.indexOf(
+      "shouldInspectPullRequestFilesForWebhook(",
+    );
     const classifyIndex = pullRequestBlock.indexOf(
       "directContentReviewabilityForTarget(",
     );
     const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
 
     expect(source).toContain('reason: "No source content entry file changed."');
+    expect(source).toContain("function recordReviewedScanKey");
+    expect(source).toContain(
+      "function shouldInspectPullRequestFilesForWebhook",
+    );
+    expect(source).toContain(
+      'String(existing?.lastReviewKey || "") !== reviewScanKey',
+    );
     expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
-    expect(classifyIndex).toBeGreaterThan(0);
+    expect(inspectIndex).toBeGreaterThan(0);
+    expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
   });
 
