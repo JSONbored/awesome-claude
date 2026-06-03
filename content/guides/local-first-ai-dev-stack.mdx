@@ -95,7 +95,7 @@ Local-first is not the same as fully air-gapped. In this architecture a frontier
 
 4. **Add persistent local memory.** Run the `memory` MCP server with its store pointed at local disk. This is the knowledge graph your agent reads and writes across sessions — and it never leaves your machine.
 
-5. **Wire the orchestrator.** Point Claude Code at the HTTP endpoints: `claude mcp add --transport http <name> http://YOUR_HOST:<port>/mcp`. Note the config must use `"type": "http"` — bare `"url"` entries are silently ignored.
+5. **Wire the orchestrator.** Point Claude Code at each server's endpoint with `claude mcp add --transport http <name> <MCP_ENDPOINT_URL>`, where `<MCP_ENDPOINT_URL>` is your gateway's address for that server (an HTTP endpoint on a private network, or HTTPS if you front it with TLS). The config must use `"type": "http"` — bare `"url"` entries are silently ignored.
 
 6. **(Optional) Reach it from anywhere.** Put the host on a private network ([Tailscale](https://tailscale.com)) so your laptop, desktop, and any other machine connect to the same stack without exposing it to the internet.
 
