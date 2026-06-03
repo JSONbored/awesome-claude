@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "ecosystem-feed",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "count": 391,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -1454,7 +1454,7 @@
         "crud",
         "tables"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -2043,7 +2043,7 @@
         "whisper",
         "ffmpeg"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -2545,7 +2545,7 @@
         "deployment",
         "monitoring"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -3498,7 +3498,7 @@
         "powerline",
         "aesthetics"
       ],
-      "qualityScore": 88,
+      "qualityScore": 87,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -3528,6 +3528,67 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "tools:ccusage",
+      "category": "tools",
+      "slug": "ccusage",
+      "title": "ccusage",
+      "description": "Local CLI for coding-agent token usage and cost reports.",
+      "url": "https://heyclau.de/entry/tools/ccusage",
+      "brandName": "ccusage",
+      "brandDomain": "ccusage.com",
+      "brandIconUrl": "/api/brand-assets/icon/ccusage.com",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "https://ccusage.com",
+      "documentationUrl": "https://ccusage.com/guide/getting-started",
+      "repoUrl": "https://github.com/ryoppippi/ccusage",
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "tags": [
+        "usage-analytics",
+        "claude-code",
+        "cli",
+        "cost-tracking"
+      ],
+      "qualityScore": 80,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+          "https://ccusage.com"
+        ],
+        "externalSourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://ccusage.com"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+          "https://ccusage.com"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -4677,7 +4738,7 @@
         "productivity",
         "team-collaboration"
       ],
-      "qualityScore": 96,
+      "qualityScore": 94,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -6947,7 +7008,7 @@
         "refactoring",
         "automation"
       ],
-      "qualityScore": 93,
+      "qualityScore": 91,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -7422,7 +7483,7 @@
         "moderation",
         "social"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -10522,7 +10583,7 @@
         "compatibility",
         "feeds"
       ],
-      "qualityScore": 93,
+      "qualityScore": 91,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": false,
@@ -11612,7 +11673,7 @@
         "orchestration",
         "devops"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12051,7 +12112,7 @@
         "ripgrep",
         "bash"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12230,7 +12291,7 @@
         "remark",
         "node"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -12381,6 +12442,66 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "tools:mcp-inspector",
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "title": "MCP Inspector",
+      "description": "Visual MCP server testing and debugging.",
+      "url": "https://heyclau.de/entry/tools/mcp-inspector",
+      "brandName": "MCP Inspector",
+      "brandDomain": "modelcontextprotocol.io",
+      "brandIconUrl": "/api/brand-assets/icon/modelcontextprotocol.io",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "https://modelcontextprotocol.io/docs/tools",
+      "documentationUrl": "https://modelcontextprotocol.io/docs/tools",
+      "repoUrl": "https://github.com/modelcontextprotocol/inspector",
+      "pricingModel": "open-source",
+      "disclosure": "editorial",
+      "tags": [
+        "mcp",
+        "debugging",
+        "developer-tools",
+        "testing"
+      ],
+      "qualityScore": 85,
+      "provenance": {
+        "sourceQuality": "repo-and-docs",
+        "hasExternalSource": true,
+        "hasRepository": true,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx",
+          "https://modelcontextprotocol.io/docs/tools"
+        ],
+        "externalSourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://modelcontextprotocol.io/docs/tools"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -12878,7 +12999,7 @@
         "bash",
         "lightweight"
       ],
-      "qualityScore": 88,
+      "qualityScore": 87,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -16951,7 +17072,7 @@
         "analytics",
         "community"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -17061,7 +17182,7 @@
         "nosql",
         "official"
       ],
-      "qualityScore": 100,
+      "qualityScore": 98,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -17270,6 +17391,63 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-05-19",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "key": "statuslines:review-queue-maintainer-statusline",
+      "category": "statuslines",
+      "slug": "review-queue-maintainer-statusline",
+      "title": "Review Queue Maintainer Statusline",
+      "description": "Maintainer-focused GitHub review queue statusline showing PRs awaiting review, failing checks, untriaged issues, stale issues, and total queue size.",
+      "url": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+      "brandName": "GitHub",
+      "brandDomain": "github.com",
+      "brandIconUrl": "/api/brand-assets/icon/github.com",
+      "brandAssetSource": "brandfetch",
+      "websiteUrl": "",
+      "documentationUrl": "https://code.claude.com/docs/en/statusline",
+      "repoUrl": "",
+      "pricingModel": "",
+      "disclosure": "editorial",
+      "tags": [
+        "maintainers",
+        "review-queue",
+        "github",
+        "pull-requests",
+        "issue-triage",
+        "statuslines"
+      ],
+      "qualityScore": 81,
+      "provenance": {
+        "sourceQuality": "docs",
+        "hasExternalSource": true,
+        "hasRepository": false,
+        "hasDocumentation": true,
+        "hasFirstPartyPackage": false,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/statusline",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx"
+        ],
+        "externalSourceUrls": [
+          "https://code.claude.com/docs/en/statusline"
+        ]
+      },
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/statusline",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-03",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -18296,7 +18474,7 @@
         "npm",
         "supply-chain"
       ],
-      "qualityScore": 96,
+      "qualityScore": 94,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -20700,7 +20878,7 @@
         "summarization",
         "readability"
       ],
-      "qualityScore": 97,
+      "qualityScore": 95,
       "provenance": {
         "sourceQuality": "repo-and-docs",
         "hasExternalSource": true,
@@ -21641,5 +21819,5 @@
     }
   ],
   "signatureAlgorithm": "sha256",
-  "signature": "bdb5f7db9d849f22b33c1ee71b372f5094e6c4342cbfa15849c83acf1953d5fc"
+  "signature": "bfbd551c0babfc033e2715c9804df10a197fd9fdb2bfec72d6c3ad2b0e5b3a48"
 }

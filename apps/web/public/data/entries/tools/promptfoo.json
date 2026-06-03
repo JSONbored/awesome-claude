@@ -72,15 +72,12 @@
     "filePath": "content/tools/promptfoo.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/promptfoo.mdx",
     "repoUrl": "https://github.com/promptfoo/promptfoo",
-    "githubStars": 21394,
-    "githubForks": 1867,
-    "repoUpdatedAt": "2026-05-19T11:24:05Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "promptfoo/promptfoo",
       "url": "https://github.com/promptfoo/promptfoo",
-      "stars": 21394,
-      "forks": 1867,
-      "updatedAt": "2026-05-19T11:24:05Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

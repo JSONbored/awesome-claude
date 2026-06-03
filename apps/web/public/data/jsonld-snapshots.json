@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "jsonld-snapshots",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "count": 391,
   "entries": [
     {
       "key": "commands:cursor-rules",
@@ -4982,6 +4982,84 @@
           "codeRepository": "https://github.com/catppuccin/catppuccin",
           "programmingLanguage": "bash",
           "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "tools:ccusage",
+      "category": "tools",
+      "slug": "ccusage",
+      "url": "https://heyclau.de/entry/tools/ccusage",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/tools/ccusage#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Tools",
+              "item": "https://heyclau.de/browse?category=tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "ccusage",
+              "item": "https://heyclau.de/entry/tools/ccusage"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/tools/ccusage#webpage",
+          "name": "ccusage",
+          "description": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+          "url": "https://heyclau.de/entry/tools/ccusage",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/tools/ccusage#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/tools/ccusage#entry",
+          "name": "ccusage",
+          "headline": "ccusage",
+          "description": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+          "url": "https://heyclau.de/entry/tools/ccusage",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "claude code usage, coding agent cost tracking, token usage cli, agent usage analytics, usage-analytics, claude-code, cli, cost-tracking, tools, claude, heyclaude, ccusage",
+          "genre": "Tools",
+          "author": {
+            "@type": "Person",
+            "name": "ryoppippi",
+            "url": "https://github.com/ryoppippi"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://ccusage.com/guide/getting-started",
+            "https://github.com/ryoppippi/ccusage"
+          ],
+          "isBasedOn": [
+            "https://ccusage.com/guide/getting-started",
+            "https://github.com/ryoppippi/ccusage",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+            "https://ccusage.com"
+          ]
         }
       ]
     },
@@ -17453,6 +17531,82 @@
       ]
     },
     {
+      "key": "tools:mcp-inspector",
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "url": "https://heyclau.de/entry/tools/mcp-inspector",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Tools",
+              "item": "https://heyclau.de/browse?category=tools"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "MCP Inspector",
+              "item": "https://heyclau.de/entry/tools/mcp-inspector"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#webpage",
+          "name": "MCP Inspector",
+          "description": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+          "url": "https://heyclau.de/entry/tools/mcp-inspector",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/tools/mcp-inspector#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "CreativeWork",
+          "@id": "https://heyclau.de/entry/tools/mcp-inspector#entry",
+          "name": "MCP Inspector",
+          "headline": "MCP Inspector",
+          "description": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+          "url": "https://heyclau.de/entry/tools/mcp-inspector",
+          "datePublished": "2026-06-02",
+          "dateModified": "2026-06-02",
+          "keywords": "mcp inspector, model context protocol debugging, mcp server testing, mcp, debugging, developer-tools, testing, tools, claude, heyclaude",
+          "genre": "Tools",
+          "author": {
+            "@type": "Person",
+            "name": "Model Context Protocol"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://modelcontextprotocol.io/docs/tools",
+            "https://github.com/modelcontextprotocol/inspector"
+          ],
+          "isBasedOn": [
+            "https://modelcontextprotocol.io/docs/tools",
+            "https://github.com/modelcontextprotocol/inspector",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx"
+          ]
+        }
+      ]
+    },
+    {
       "key": "skills:mcp-server-authoring-security-capability-pack",
       "category": "skills",
       "slug": "mcp-server-authoring-security-capability-pack",
@@ -24248,6 +24402,84 @@
             "https://gyanesh-m.github.io/retro-daily/"
           ],
           "codeRepository": "https://github.com/gyanesh-m/retro-daily",
+          "programmingLanguage": "bash",
+          "runtimePlatform": "Claude Code"
+        }
+      ]
+    },
+    {
+      "key": "statuslines:review-queue-maintainer-statusline",
+      "category": "statuslines",
+      "slug": "review-queue-maintainer-statusline",
+      "url": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+      "documents": [
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "@id": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline#breadcrumb",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://heyclau.de"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Statuslines",
+              "item": "https://heyclau.de/browse?category=statuslines"
+            },
+            {
+              "@type": "ListItem",
+              "position": 3,
+              "name": "Review Queue Maintainer Statusline",
+              "item": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline"
+            }
+          ]
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline#webpage",
+          "name": "Review Queue Maintainer Statusline",
+          "description": "Claude Code statusline script for maintainers to monitor GitHub review queues with gh, cached issue and pull request counts, stale issue alerts, and check st...",
+          "url": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "breadcrumb": {
+            "@id": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline#breadcrumb"
+          }
+        },
+        {
+          "@context": "https://schema.org",
+          "@type": "SoftwareSourceCode",
+          "@id": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline#entry",
+          "name": "Review Queue Maintainer Statusline",
+          "headline": "Review Queue Maintainer Statusline",
+          "description": "Claude Code statusline script for maintainers to monitor GitHub review queues with gh, cached issue and pull request counts, stale issue alerts, and check st...",
+          "url": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+          "datePublished": "2026-06-03",
+          "dateModified": "2026-06-03",
+          "keywords": "review queue statusline, maintainer dashboard, github cli statusline, pull request review queue, issue triage statusline, maintainers, review-queue, github, pull-requests, issue-triage, statuslines, claude",
+          "genre": "Statuslines",
+          "author": {
+            "@type": "Person",
+            "name": "JSONbored",
+            "url": "https://github.com/JSONbored"
+          },
+          "isPartOf": {
+            "@id": "https://heyclau.de/#website"
+          },
+          "sameAs": [
+            "https://code.claude.com/docs/en/statusline"
+          ],
+          "isBasedOn": [
+            "https://code.claude.com/docs/en/statusline",
+            "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx"
+          ],
+          "codeRepository": null,
           "programmingLanguage": "bash",
           "runtimePlatform": "Claude Code"
         }

@@ -17,9 +17,6 @@
   "repoStats": {
     "repository": "BurntSushi/ripgrep",
     "url": "https://github.com/BurntSushi/ripgrep",
-    "stars": 63927,
-    "forks": 2568,
-    "updatedAt": "2026-05-19T11:22:40Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

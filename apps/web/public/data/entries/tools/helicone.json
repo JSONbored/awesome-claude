@@ -73,15 +73,12 @@
     "filePath": "content/tools/helicone.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/helicone.mdx",
     "repoUrl": "https://github.com/Helicone/helicone",
-    "githubStars": 5692,
-    "githubForks": 579,
-    "repoUpdatedAt": "2026-05-19T11:11:23Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "Helicone/helicone",
       "url": "https://github.com/Helicone/helicone",
-      "stars": 5692,
-      "forks": 579,
-      "updatedAt": "2026-05-19T11:11:23Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

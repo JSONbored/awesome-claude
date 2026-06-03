@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "ComposioHQ/composio",
     "url": "https://github.com/ComposioHQ/composio",
-    "stars": 28340,
-    "forks": 4571,
-    "updatedAt": "2026-05-19T11:38:54Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

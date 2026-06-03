@@ -267,15 +267,12 @@
     "filePath": "content/hooks/dead-code-eliminator.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/hooks/dead-code-eliminator.mdx",
     "repoUrl": "https://github.com/nadeesha/ts-prune",
-    "githubStars": 2067,
-    "githubForks": 68,
-    "repoUpdatedAt": "2026-04-13T08:47:15Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "nadeesha/ts-prune",
       "url": "https://github.com/nadeesha/ts-prune",
-      "stars": 2067,
-      "forks": 68,
-      "updatedAt": "2026-04-13T08:47:15Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

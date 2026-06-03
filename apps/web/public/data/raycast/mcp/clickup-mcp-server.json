@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "hauptsacheNet/clickup-mcp",
     "url": "https://github.com/hauptsacheNet/clickup-mcp",
-    "stars": 44,
-    "forks": 17,
-    "updatedAt": "2026-05-03T13:43:35Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

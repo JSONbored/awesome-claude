@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "kind": "distribution-feed-index",
-  "generatedAt": "2026-06-02T00:00:00.000Z",
+  "generatedAt": "2026-06-03T00:00:00.000Z",
   "categories": [
     {
       "category": "agents",
@@ -20,7 +20,7 @@
     {
       "category": "tools",
       "label": "Tools",
-      "count": 53,
+      "count": 55,
       "feedUrl": "/data/feeds/categories/tools.json",
       "canonicalUrl": "https://heyclau.de/browse?category=tools"
     },
@@ -69,7 +69,7 @@
     {
       "category": "statuslines",
       "label": "Statuslines",
-      "count": 26,
+      "count": 27,
       "feedUrl": "/data/feeds/categories/statuslines.json",
       "canonicalUrl": "https://heyclau.de/browse?category=statuslines"
     }

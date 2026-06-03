@@ -1,8 +1,8 @@
 {
   "schemaVersion": 2,
   "kind": "search-index",
-  "generatedAt": "2026-05-26T00:00:00.000Z",
-  "count": 388,
+  "generatedAt": "2026-06-03T00:00:00.000Z",
+  "count": 391,
   "entries": [
     {
       "category": "commands",
@@ -1674,9 +1674,6 @@
       "repoStats": {
         "repository": "Aider-AI/aider",
         "url": "https://github.com/Aider-AI/aider",
-        "stars": 45006,
-        "forks": 4443,
-        "updatedAt": "2026-05-19T11:28:44Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -1749,9 +1746,6 @@
       "repoStats": {
         "repository": "domdomegg/airtable-mcp-server",
         "url": "https://github.com/domdomegg/airtable-mcp-server",
-        "stars": 444,
-        "forks": 131,
-        "updatedAt": "2026-05-11T01:11:21Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2294,9 +2288,6 @@
       "repoStats": {
         "repository": "Arize-ai/phoenix",
         "url": "https://github.com/Arize-ai/phoenix",
-        "stars": 9739,
-        "forks": 879,
-        "updatedAt": "2026-05-19T11:06:07Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -2442,9 +2433,6 @@
       "repoStats": {
         "repository": "openai/whisper",
         "url": "https://github.com/openai/whisper",
-        "stars": 99754,
-        "forks": 12214,
-        "updatedAt": "2026-05-19T11:32:31Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3045,9 +3033,6 @@
       "repoStats": {
         "repository": "awslabs/mcp",
         "url": "https://github.com/awslabs/mcp",
-        "stars": 9085,
-        "forks": 1532,
-        "updatedAt": "2026-05-19T08:34:58Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -3713,9 +3698,6 @@
       "repoStats": {
         "repository": "browser-use/browser-use",
         "url": "https://github.com/browser-use/browser-use",
-        "stars": 94603,
-        "forks": 10672,
-        "updatedAt": "2026-05-19T11:41:57Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4175,9 +4157,6 @@
       "repoStats": {
         "repository": "catppuccin/catppuccin",
         "url": "https://github.com/catppuccin/catppuccin",
-        "stars": 19184,
-        "forks": 352,
-        "updatedAt": "2026-05-19T11:04:59Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -4198,6 +4177,85 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T18:18:28-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "category": "tools",
+      "slug": "ccusage",
+      "title": "ccusage",
+      "seoTitle": "ccusage coding-agent usage and cost CLI",
+      "description": "Local CLI for coding-agent token usage and cost reports.",
+      "seoDescription": "ccusage analyzes local Claude Code and coding-agent usage data for daily, weekly, monthly, session, cost, and statusline reports.",
+      "tags": [
+        "usage-analytics",
+        "claude-code",
+        "cli",
+        "cost-tracking"
+      ],
+      "keywords": [
+        "claude code usage",
+        "coding agent cost tracking",
+        "token usage cli",
+        "agent usage analytics",
+        "usage-analytics",
+        "claude-code",
+        "cli",
+        "cost-tracking",
+        "tools",
+        "claude",
+        "heyclaude",
+        "ccusage"
+      ],
+      "author": "ryoppippi",
+      "safetyNotes": [
+        "Run from a trusted package source and review repository/package provenance before using in sensitive workspaces.",
+        "Cost estimates depend on local usage data and pricing metadata; treat them as operational estimates, not billing authority."
+      ],
+      "privacyNotes": [
+        "Reads local coding-agent usage files from the developer machine to calculate token and cost reports.",
+        "JSON export can include project or session metadata, so review output before sharing logs or reports publicly."
+      ],
+      "brandName": "ccusage",
+      "brandDomain": "ccusage.com",
+      "brandIconUrl": "/api/brand-assets/icon/ccusage.com",
+      "brandAssetSource": "brandfetch",
+      "dateAdded": "2026-06-02",
+      "installable": true,
+      "downloadUrl": "",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "https://ccusage.com/guide/getting-started",
+      "repoUrl": "https://github.com/ryoppippi/ccusage",
+      "repoStats": {
+        "repository": "ryoppippi/ccusage",
+        "url": "https://github.com/ryoppippi/ccusage",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
+      "url": "https://heyclau.de/entry/tools/ccusage",
+      "canonicalUrl": "https://heyclau.de/entry/tools/ccusage",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/ccusage.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/ccusage",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 4,
+        "sourceUrls": [
+          "https://ccusage.com/guide/getting-started",
+          "https://github.com/ryoppippi/ccusage",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/ccusage.mdx",
+          "https://ccusage.com"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -5591,9 +5649,6 @@
       "repoStats": {
         "repository": "hauptsacheNet/clickup-mcp",
         "url": "https://github.com/hauptsacheNet/clickup-mcp",
-        "stars": 44,
-        "forks": 17,
-        "updatedAt": "2026-05-03T13:43:35Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5657,9 +5712,6 @@
       "repoStats": {
         "repository": "cline/cline",
         "url": "https://github.com/cline/cline",
-        "stars": 62015,
-        "forks": 6468,
-        "updatedAt": "2026-05-19T11:36:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -5862,9 +5914,6 @@
       "repoStats": {
         "repository": "cloudflare/agents",
         "url": "https://github.com/cloudflare/agents",
-        "stars": 4931,
-        "forks": 552,
-        "updatedAt": "2026-05-19T11:37:01Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6772,9 +6821,6 @@
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -6871,9 +6917,6 @@
       "repoStats": {
         "repository": "openai/codex",
         "url": "https://github.com/openai/codex",
-        "stars": 83749,
-        "forks": 12151,
-        "updatedAt": "2026-05-19T11:39:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7014,9 +7057,6 @@
       "repoStats": {
         "repository": "ComposioHQ/composio",
         "url": "https://github.com/ComposioHQ/composio",
-        "stars": 28340,
-        "forks": 4571,
-        "updatedAt": "2026-05-19T11:38:54Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7264,9 +7304,6 @@
       "repoStats": {
         "repository": "continuedev/continue",
         "url": "https://github.com/continuedev/continue",
-        "stars": 33266,
-        "forks": 4532,
-        "updatedAt": "2026-05-19T11:16:17Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7358,9 +7395,6 @@
       "repoStats": {
         "repository": "UPinar/contrastapi",
         "url": "https://github.com/UPinar/contrastapi",
-        "stars": 25,
-        "forks": 3,
-        "updatedAt": "2026-05-18T16:57:58Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -7425,9 +7459,6 @@
       "repoStats": {
         "repository": "crewAIInc/crewAI",
         "url": "https://github.com/crewAIInc/crewAI",
-        "stars": 51712,
-        "forks": 7160,
-        "updatedAt": "2026-05-19T11:43:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8358,9 +8389,6 @@
       "repoStats": {
         "repository": "nadeesha/ts-prune",
         "url": "https://github.com/nadeesha/ts-prune",
-        "stars": 2067,
-        "forks": 68,
-        "updatedAt": "2026-04-13T08:47:15Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -8925,9 +8953,6 @@
       "repoStats": {
         "repository": "saseq/discord-mcp",
         "url": "https://github.com/saseq/discord-mcp",
-        "stars": 311,
-        "forks": 72,
-        "updatedAt": "2026-05-18T02:46:12Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10426,9 +10451,6 @@
       "repoStats": {
         "repository": "mendableai/firecrawl",
         "url": "https://github.com/mendableai/firecrawl",
-        "stars": 121680,
-        "forks": 7410,
-        "updatedAt": "2026-05-19T11:41:31Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -10974,9 +10996,6 @@
       "repoStats": {
         "repository": "NVIDIA/garak",
         "url": "https://github.com/NVIDIA/garak",
-        "stars": 7848,
-        "forks": 949,
-        "updatedAt": "2026-05-19T10:43:48Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -11100,9 +11119,6 @@
       "repoStats": {
         "repository": "Giskard-AI/giskard",
         "url": "https://github.com/Giskard-AI/giskard",
-        "stars": 5358,
-        "forks": 457,
-        "updatedAt": "2026-05-19T08:02:52Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12514,9 +12530,6 @@
       "repoStats": {
         "repository": "Helicone/helicone",
         "url": "https://github.com/Helicone/helicone",
-        "stars": 5692,
-        "forks": 579,
-        "updatedAt": "2026-05-19T11:11:23Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -12698,9 +12711,6 @@
       "repoStats": {
         "repository": "JSONbored/awesome-claude",
         "url": "https://github.com/JSONbored/awesome-claude",
-        "stars": 218,
-        "forks": 29,
-        "updatedAt": "2026-05-17T08:04:08Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14034,9 +14044,6 @@
       "repoStats": {
         "repository": "feiskyer/mcp-kubernetes-server",
         "url": "https://github.com/feiskyer/mcp-kubernetes-server",
-        "stars": 18,
-        "forks": 9,
-        "updatedAt": "2026-05-13T09:23:32Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14158,9 +14165,6 @@
       "repoStats": {
         "repository": "langfuse/langfuse",
         "url": "https://github.com/langfuse/langfuse",
-        "stars": 27479,
-        "forks": 2805,
-        "updatedAt": "2026-05-19T11:21:59Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14226,9 +14230,6 @@
       "repoStats": {
         "repository": "langchain-ai/langgraph",
         "url": "https://github.com/langchain-ai/langgraph",
-        "stars": 32402,
-        "forks": 5495,
-        "updatedAt": "2026-05-19T11:43:29Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14551,9 +14552,6 @@
       "repoStats": {
         "repository": "BurntSushi/ripgrep",
         "url": "https://github.com/BurntSushi/ripgrep",
-        "stars": 63927,
-        "forks": 2568,
-        "updatedAt": "2026-05-19T11:22:40Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14763,9 +14761,6 @@
       "repoStats": {
         "repository": "remarkjs/remark",
         "url": "https://github.com/remarkjs/remark",
-        "stars": 8880,
-        "forks": 374,
-        "updatedAt": "2026-05-18T12:37:10Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14902,9 +14897,6 @@
       "repoStats": {
         "repository": "mastra-ai/mastra",
         "url": "https://github.com/mastra-ai/mastra",
-        "stars": 24031,
-        "forks": 2092,
-        "updatedAt": "2026-05-19T11:18:03Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -14927,6 +14919,82 @@
         ],
         "sourceStatus": "available",
         "lastVerifiedAt": "2026-04-26T23:21:14-06:00",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
+      "category": "tools",
+      "slug": "mcp-inspector",
+      "title": "MCP Inspector",
+      "seoTitle": "MCP Inspector visual testing tool",
+      "description": "Visual MCP server testing and debugging.",
+      "seoDescription": "MCP Inspector is the official visual testing and debugging tool for Model Context Protocol server implementations. HeyClaude adds source links, install...",
+      "tags": [
+        "mcp",
+        "debugging",
+        "developer-tools",
+        "testing"
+      ],
+      "keywords": [
+        "mcp inspector",
+        "model context protocol debugging",
+        "mcp server testing",
+        "mcp",
+        "debugging",
+        "developer-tools",
+        "testing",
+        "tools",
+        "claude",
+        "heyclaude"
+      ],
+      "author": "Model Context Protocol",
+      "safetyNotes": [
+        "Starts a local inspector UI and proxy process for interactive MCP debugging.",
+        "Only connect it to MCP servers and endpoints you trust during testing."
+      ],
+      "privacyNotes": [
+        "Requests and tool responses from the inspected server may be visible in the local inspector session.",
+        "Avoid testing with production credentials or private user data unless the environment is isolated."
+      ],
+      "brandName": "MCP Inspector",
+      "brandDomain": "modelcontextprotocol.io",
+      "brandIconUrl": "/api/brand-assets/icon/modelcontextprotocol.io",
+      "brandAssetSource": "brandfetch",
+      "dateAdded": "2026-06-02",
+      "installable": true,
+      "downloadUrl": "",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "https://modelcontextprotocol.io/docs/tools",
+      "repoUrl": "https://github.com/modelcontextprotocol/inspector",
+      "repoStats": {
+        "repository": "modelcontextprotocol/inspector",
+        "url": "https://github.com/modelcontextprotocol/inspector",
+        "appliesTo": "listing_source_repo",
+        "label": "Source repo"
+      },
+      "url": "https://heyclau.de/entry/tools/mcp-inspector",
+      "canonicalUrl": "https://heyclau.de/entry/tools/mcp-inspector",
+      "llmsUrl": "https://heyclau.de/data/llms/tools/mcp-inspector.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/tools/mcp-inspector",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 3,
+        "sourceUrls": [
+          "https://modelcontextprotocol.io/docs/tools",
+          "https://github.com/modelcontextprotocol/inspector",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/mcp-inspector.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-02",
         "adapterGenerated": false,
         "platforms": [],
         "supportLevels": []
@@ -15487,9 +15555,6 @@
       "repoStats": {
         "repository": "microsoft/autogen",
         "url": "https://github.com/microsoft/autogen",
-        "stars": 58173,
-        "forks": 8786,
-        "updatedAt": "2026-05-19T11:43:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -15556,9 +15621,6 @@
       "repoStats": {
         "repository": "powerline/powerline",
         "url": "https://github.com/powerline/powerline",
-        "stars": 14752,
-        "forks": 1001,
-        "updatedAt": "2026-05-19T10:46:19Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -16409,9 +16471,6 @@
       "repoStats": {
         "repository": "n8n-io/n8n",
         "url": "https://github.com/n8n-io/n8n",
-        "stars": 188659,
-        "forks": 57807,
-        "updatedAt": "2026-05-19T11:37:32Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17086,9 +17145,6 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17183,9 +17239,6 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17282,9 +17335,6 @@
       "repoStats": {
         "repository": "openclaw/openclaw",
         "url": "https://github.com/openclaw/openclaw",
-        "stars": 373140,
-        "forks": 77409,
-        "updatedAt": "2026-05-19T11:43:27Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17364,9 +17414,6 @@
       "repoStats": {
         "repository": "sst/opencode",
         "url": "https://github.com/sst/opencode",
-        "stars": 162457,
-        "forks": 19131,
-        "updatedAt": "2026-05-19T11:42:52Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -17599,9 +17646,6 @@
       "repoStats": {
         "repository": "Packrift/packrift-mcp",
         "url": "https://github.com/Packrift/packrift-mcp",
-        "stars": 0,
-        "forks": 1,
-        "updatedAt": "2026-05-19T11:41:33Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -19269,9 +19313,6 @@
       "repoStats": {
         "repository": "MohamedAbdallah-14/prompt-to-asset",
         "url": "https://github.com/MohamedAbdallah-14/prompt-to-asset",
-        "stars": 6,
-        "forks": 0,
-        "updatedAt": "2026-05-19T10:08:35Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -19335,9 +19376,6 @@
       "repoStats": {
         "repository": "promptfoo/promptfoo",
         "url": "https://github.com/promptfoo/promptfoo",
-        "stars": 21394,
-        "forks": 1867,
-        "updatedAt": "2026-05-19T11:24:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -20534,9 +20572,6 @@
       "repoStats": {
         "repository": "karanb192/reddit-mcp-buddy",
         "url": "https://github.com/karanb192/reddit-mcp-buddy",
-        "stars": 652,
-        "forks": 82,
-        "updatedAt": "2026-05-19T03:36:39Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -20670,9 +20705,6 @@
       "repoStats": {
         "repository": "redis/mcp-redis",
         "url": "https://github.com/redis/mcp-redis",
-        "stars": 512,
-        "forks": 96,
-        "updatedAt": "2026-05-19T09:13:05Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -20928,6 +20960,81 @@
       }
     },
     {
+      "category": "statuslines",
+      "slug": "review-queue-maintainer-statusline",
+      "title": "Review Queue Maintainer Statusline",
+      "seoTitle": "Review Queue Maintainer Statusline",
+      "description": "Maintainer-focused GitHub review queue statusline showing PRs awaiting review, failing checks, untriaged issues, stale issues, and total queue size.",
+      "seoDescription": "Claude Code statusline script for maintainers to monitor GitHub review queues with gh, cached issue and pull request counts, stale issue alerts, and check st...",
+      "tags": [
+        "maintainers",
+        "review-queue",
+        "github",
+        "pull-requests",
+        "issue-triage",
+        "statuslines"
+      ],
+      "keywords": [
+        "review queue statusline",
+        "maintainer dashboard",
+        "github cli statusline",
+        "pull request review queue",
+        "issue triage statusline",
+        "maintainers",
+        "review-queue",
+        "github",
+        "pull-requests",
+        "issue-triage",
+        "statuslines",
+        "claude"
+      ],
+      "author": "JSONbored",
+      "safetyNotes": [
+        "The script runs local read-only GitHub CLI list commands and caches counts in `/tmp` or `$TMPDIR`.",
+        "It does not mutate issues, pull requests, labels, reviews, checks, or repository settings.",
+        "The statusline may reveal private repository names and queue counts in terminal recordings, screenshots, or shared sessions."
+      ],
+      "privacyNotes": [
+        "GitHub CLI requests may expose repository metadata access to GitHub according to the authenticated account and token scopes.",
+        "Cached queue summaries include repository name plus issue and pull request metadata returned by `gh`.",
+        "Avoid using this statusline in public streams or shared terminals for private repositories unless queue visibility is acceptable."
+      ],
+      "brandName": "GitHub",
+      "brandDomain": "github.com",
+      "brandIconUrl": "/api/brand-assets/icon/github.com",
+      "brandAssetSource": "brandfetch",
+      "dateAdded": "2026-06-03",
+      "installable": true,
+      "downloadUrl": "",
+      "downloadTrust": null,
+      "verificationStatus": "",
+      "platforms": [],
+      "supportLevels": [],
+      "documentationUrl": "https://code.claude.com/docs/en/statusline",
+      "repoUrl": "",
+      "url": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+      "canonicalUrl": "https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline",
+      "llmsUrl": "https://heyclau.de/data/llms/statuslines/review-queue-maintainer-statusline.txt",
+      "apiUrl": "https://heyclau.de/api/registry/entries/statuslines/review-queue-maintainer-statusline",
+      "trustSignals": {
+        "firstPartyEditorial": false,
+        "packageVerified": false,
+        "packageTrust": null,
+        "packageChecksum": "",
+        "checksumPresent": false,
+        "sourceUrlCount": 2,
+        "sourceUrls": [
+          "https://code.claude.com/docs/en/statusline",
+          "https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx"
+        ],
+        "sourceStatus": "available",
+        "lastVerifiedAt": "2026-06-03",
+        "adapterGenerated": false,
+        "platforms": [],
+        "supportLevels": []
+      }
+    },
+    {
       "category": "tools",
       "slug": "roo-code",
       "title": "Roo Code",
@@ -20965,9 +21072,6 @@
       "repoStats": {
         "repository": "RooCodeInc/Roo-Code",
         "url": "https://github.com/RooCodeInc/Roo-Code",
-        "stars": 24101,
-        "forks": 3278,
-        "updatedAt": "2026-05-19T11:16:25Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -22185,9 +22289,6 @@
       "repoStats": {
         "repository": "SocketDev/socket-mcp",
         "url": "https://github.com/SocketDev/socket-mcp",
-        "stars": 107,
-        "forks": 19,
-        "updatedAt": "2026-05-19T04:13:47Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -22447,9 +22548,6 @@
       "repoStats": {
         "repository": "browserbase/stagehand",
         "url": "https://github.com/browserbase/stagehand",
-        "stars": 22712,
-        "forks": 1523,
-        "updatedAt": "2026-05-19T11:40:46Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -23688,9 +23786,6 @@
       "repoStats": {
         "repository": "triggerdotdev/trigger.dev",
         "url": "https://github.com/triggerdotdev/trigger.dev",
-        "stars": 14969,
-        "forks": 1227,
-        "updatedAt": "2026-05-19T09:26:29Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -24499,9 +24594,6 @@
       "repoStats": {
         "repository": "vercel/ai",
         "url": "https://github.com/vercel/ai",
-        "stars": 24333,
-        "forks": 4432,
-        "updatedAt": "2026-05-19T11:09:31Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -25119,9 +25211,6 @@
       "repoStats": {
         "repository": "mozilla/readability",
         "url": "https://github.com/mozilla/readability",
-        "stars": 11200,
-        "forks": 712,
-        "updatedAt": "2026-05-19T04:59:43Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -25666,9 +25755,6 @@
       "repoStats": {
         "repository": "Xquik-dev/x-twitter-scraper",
         "url": "https://github.com/Xquik-dev/x-twitter-scraper",
-        "stars": 87,
-        "forks": 8,
-        "updatedAt": "2026-05-18T21:56:17Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },
@@ -25933,9 +26019,6 @@
       "repoStats": {
         "repository": "zed-industries/zed",
         "url": "https://github.com/zed-industries/zed",
-        "stars": 83231,
-        "forks": 8570,
-        "updatedAt": "2026-05-19T11:31:57Z",
         "appliesTo": "listing_source_repo",
         "label": "Source repo"
       },

@@ -321,15 +321,12 @@
     "filePath": "content/mcp/redis-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/redis-mcp-server.mdx",
     "repoUrl": "https://github.com/redis/mcp-redis",
-    "githubStars": 512,
-    "githubForks": 96,
-    "repoUpdatedAt": "2026-05-19T09:13:05Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "redis/mcp-redis",
       "url": "https://github.com/redis/mcp-redis",
-      "stars": 512,
-      "forks": 96,
-      "updatedAt": "2026-05-19T09:13:05Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

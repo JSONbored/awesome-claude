@@ -29,9 +29,6 @@
   "repoStats": {
     "repository": "Packrift/packrift-mcp",
     "url": "https://github.com/Packrift/packrift-mcp",
-    "stars": 0,
-    "forks": 1,
-    "updatedAt": "2026-05-19T11:41:33Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

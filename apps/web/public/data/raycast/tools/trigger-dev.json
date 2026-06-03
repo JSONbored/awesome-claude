@@ -21,9 +21,6 @@
   "repoStats": {
     "repository": "triggerdotdev/trigger.dev",
     "url": "https://github.com/triggerdotdev/trigger.dev",
-    "stars": 14969,
-    "forks": 1227,
-    "updatedAt": "2026-05-19T09:26:29Z",
     "appliesTo": "listing_source_repo",
     "label": "Source repo"
   },

@@ -73,15 +73,12 @@
     "filePath": "content/tools/cloudflare-agents-sdk.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/tools/cloudflare-agents-sdk.mdx",
     "repoUrl": "https://github.com/cloudflare/agents",
-    "githubStars": 4931,
-    "githubForks": 552,
-    "repoUpdatedAt": "2026-05-19T11:37:01Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "cloudflare/agents",
       "url": "https://github.com/cloudflare/agents",
-      "stars": 4931,
-      "forks": 552,
-      "updatedAt": "2026-05-19T11:37:01Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }

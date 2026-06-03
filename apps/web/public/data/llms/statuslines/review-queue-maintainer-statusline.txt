@@ -1,0 +1,207 @@
+# Review Queue Maintainer Statusline
+URL: https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline
+Category: statuslines
+Author: JSONbored
+Date added: 2026-06-03
+Documentation: https://code.claude.com/docs/en/statusline
+Directory source: https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx
+## Citation Facts
+- Canonical URL: https://heyclau.de/entry/statuslines/review-queue-maintainer-statusline
+- Source URLs: https://code.claude.com/docs/en/statusline, https://github.com/JSONbored/awesome-claude/blob/main/content/statuslines/review-queue-maintainer-statusline.mdx
+- Brand: GitHub
+- Brand domain: github.com
+- Brand asset source: brandfetch
+- Safety notes: The script runs local read-only GitHub CLI list commands and caches counts in `/tmp` or `$TMPDIR`., It does not mutate issues, pull requests, labels, reviews, checks, or repository settings., The statusline may reveal private repository names and queue counts in terminal recordings, screenshots, or shared sessions.
+- Privacy notes: GitHub CLI requests may expose repository metadata access to GitHub according to the authenticated account and token scopes., Cached queue summaries include repository name plus issue and pull request metadata returned by `gh`., Avoid using this statusline in public streams or shared terminals for private repositories unless queue visibility is acceptable.
+- Author: JSONbored
+- Last verified: 2026-06-03
+- Robots: indexable
+## Summary
+Claude Code statusline for maintainers that summarizes open review queues, untriaged issues, stale issues, and pull requests with failing checks.
+## Tags
+- maintainers
+- review-queue
+- github
+- pull-requests
+- issue-triage
+- statuslines
+## Safety Notes
+- The script runs local read-only GitHub CLI list commands and caches counts in `/tmp` or `$TMPDIR`.
+- It does not mutate issues, pull requests, labels, reviews, checks, or repository settings.
+- The statusline may reveal private repository names and queue counts in terminal recordings, screenshots, or shared sessions.
+## Privacy Notes
+- GitHub CLI requests may expose repository metadata access to GitHub according to the authenticated account and token scopes.
+- Cached queue summaries include repository name plus issue and pull request metadata returned by `gh`.
+- Avoid using this statusline in public streams or shared terminals for private repositories unless queue visibility is acceptable.
+## Content
+## Source Basis
+- Claude Code statusline documentation: https://code.claude.com/docs/en/statusline
+- GitHub CLI `gh issue list` manual: https://cli.github.com/manual/gh_issue_list
+- GitHub CLI `gh pr list` manual: https://cli.github.com/manual/gh_pr_list
+- GitHub labels documentation: https://docs.github.com/en/issues/using-labels-and-milestones-to-track-work/managing-labels
+
+Claude Code statuslines run a local command, pass JSON session data on stdin, and display stdout in the terminal. GitHub CLI supports JSON output for issue and pull request listing, which makes it suitable for a cached maintainer queue summary without mutating repository state.
+
+## Features
+- Shows open pull requests that need review or have changes requested.
+- Shows open pull requests with failing, cancelled, timed-out, or action-required checks.
+- Shows untriaged open issues with no labels.
+- Shows stale issues older than `REVIEW_QUEUE_STALE_DAYS` days, defaulting to 14.
+- Caches GitHub CLI output for `REVIEW_QUEUE_CACHE_TTL_SECONDS`, defaulting to 300 seconds.
+- Supports `GH_REPO=owner/repo` override when the current directory is not a GitHub checkout.
+
+## Requirements
+- Claude Code CLI installed and configured with custom statusline support.
+- Git repository with a GitHub remote or `GH_REPO=owner/repo` set.
+- GitHub CLI `gh` installed and authenticated for the target repository.
+- `jq` installed for JSON parsing.
+- Bash shell available on macOS, Linux, or WSL.
+
+## Configuration
+```json
+{
+  "statusLine": {
+    "type": "command",
+    "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/review-queue-maintainer-statusline.sh",
+    "refreshInterval": 300000
+  }
+}
+```
+
+## Script
+```bash
+#!/usr/bin/env bash
+
+# Review Queue Maintainer Statusline for Claude Code
+# Shows cached GitHub issue and PR review queue counts for the current repo.
+
+read -r input
+
+CACHE_TTL_SECONDS="${REVIEW_QUEUE_CACHE_TTL_SECONDS:-300}"
+STALE_DAYS="${REVIEW_QUEUE_STALE_DAYS:-14}"
+MAX_ITEMS="${REVIEW_QUEUE_LIMIT:-100}"
+GREEN="\033[32m"
+YELLOW="\033[33m"
+RED="\033[31m"
+CYAN="\033[36m"
+RESET="\033[0m"
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+json_value() {
+  if command_exists jq; then
+    printf '%s' "$input" | jq -r "$1 // empty" 2>/dev/null
+  fi
+}
+
+workspace="$(json_value '.workspace.current_dir')"
+if [ -z "$workspace" ]; then
+  workspace="$(json_value '.cwd')"
+fi
+if [ -z "$workspace" ]; then
+  workspace="$PWD"
+fi
+
+if ! command_exists jq; then
+  echo "queue unavailable | jq missing"
+  exit 0
+fi
+
+if ! command_exists git; then
+  echo "queue unavailable | git missing"
+  exit 0
+fi
+
+if ! command_exists gh; then
+  echo "queue unavailable | gh missing"
+  exit 0
+fi
+
+if [ -d "$workspace" ]; then
+  cd "$workspace" 2>/dev/null || true
+fi
+
+repo="${GH_REPO:-}"
+if [ -z "$repo" ] && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  remote_url="$(git config --get remote.origin.url 2>/dev/null || true)"
+  repo="$(printf '%s' "$remote_url" | sed -E 's#^git@github.com:##; s#^https://github.com/##; s#\.git$##')"
+fi
+
+if [ -z "$repo" ] || ! printf '%s' "$repo" | grep -Eq '^[^/]+/[^/]+$'; then
+  echo "queue unavailable | set GH_REPO=owner/repo"
+  exit 0
+fi
+
+cache_key="$(printf '%s' "$repo" | tr '/:' '__' | tr -cd 'A-Za-z0-9_.-')"
+cache_file="${TMPDIR:-/tmp}/claude-review-queue-${cache_key}.json"
+now="$(date +%s)"
+
+cache_is_fresh=false
+if [ -f "$cache_file" ]; then
+  cache_mtime="$(stat -c %Y "$cache_file" 2>/dev/null || stat -f %m "$cache_file" 2>/dev/null || echo 0)"
+  cache_age=$((now - cache_mtime))
+  if [ "$cache_age" -lt "$CACHE_TTL_SECONDS" ]; then
+    cache_is_fresh=true
+  fi
+fi
+
+if [ "$cache_is_fresh" = false ]; then
+  issues_json="$(gh issue list --repo "$repo" --state open --limit "$MAX_ITEMS" --json number,labels,updatedAt 2>/dev/null || echo '[]')"
+  prs_json="$(gh pr list --repo "$repo" --state open --limit "$MAX_ITEMS" --json number,isDraft,reviewDecision,statusCheckRollup,updatedAt 2>/dev/null || echo '[]')"
+
+  printf '{"repo":%s,"issues":%s,"prs":%s}\n' \
+    "$(printf '%s' "$repo" | jq -R .)" \
+    "$issues_json" \
+    "$prs_json" > "$cache_file"
+fi
+
+payload="$(cat "$cache_file" 2>/dev/null || echo '{"issues":[],"prs":[]}')"
+stale_cutoff=$((now - (STALE_DAYS * 86400)))
+
+issue_count="$(printf '%s' "$payload" | jq '.issues | length')"
+pr_count="$(printf '%s' "$payload" | jq '.prs | length')"
+untriaged="$(printf '%s' "$payload" | jq '[.issues[] | select((.labels // []) | length == 0)] | length')"
+needs_review="$(printf '%s' "$payload" | jq '[.prs[] | select(.isDraft != true) | select((.reviewDecision // "") == "" or .reviewDecision == "REVIEW_REQUIRED" or .reviewDecision == "CHANGES_REQUESTED")] | length')"
+failing_checks="$(printf '%s' "$payload" | jq '[.prs[] | select((.statusCheckRollup // []) | map(tostring) | join(" ") | test("FAILURE|ERROR|CANCELLED|TIMED_OUT|ACTION_REQUIRED"))] | length')"
+stale_issues="$(printf '%s' "$payload" | jq --argjson cutoff "$stale_cutoff" '[.issues[] | select((.updatedAt | fromdateiso8601? // 0) < $cutoff)] | length')"
+
+total_queue=$((issue_count + pr_count))
+
+if [ "$failing_checks" -gt 0 ]; then
+  state="${RED}queue hot${RESET}"
+elif [ "$needs_review" -gt 0 ] || [ "$untriaged" -gt 0 ]; then
+  state="${YELLOW}queue active${RESET}"
+else
+  state="${GREEN}queue ok${RESET}"
+fi
+
+printf '%b | PR review:%s fail:%s | issues triage:%s stale:%s | open:%s | repo:%s\n' \
+  "$state" \
+  "${CYAN}${needs_review}${RESET}" \
+  "${RED}${failing_checks}${RESET}" \
+  "${YELLOW}${untriaged}${RESET}" \
+  "${YELLOW}${stale_issues}${RESET}" \
+  "$total_queue" \
+  "$repo"
+```
+
+## Installation
+1. Create `.claude/statuslines/review-queue-maintainer-statusline.sh`.
+2. Paste the script and run `chmod +x .claude/statuslines/review-queue-maintainer-statusline.sh`.
+3. Add the configuration block to `.claude/settings.json`.
+4. Run `gh auth status` and set `GH_REPO=owner/repo` if the current workspace does not have a GitHub remote.
+
+## Troubleshooting
+**Issue:** `queue unavailable | gh missing`
+**Fix:** install GitHub CLI and authenticate with `gh auth login`.
+
+**Issue:** `queue unavailable | set GH_REPO=owner/repo`
+**Fix:** run from a GitHub repository checkout or export `GH_REPO=JSONbored/awesome-claude`.
+
+**Issue:** Counts look stale
+**Fix:** lower `REVIEW_QUEUE_CACHE_TTL_SECONDS` or delete `/tmp/claude-review-queue-*.json`.
+
+**Issue:** Private repository counts are visible in recordings
+**Fix:** disable the statusline for shared sessions or use a public-safe repo alias in your terminal prompt.

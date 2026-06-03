@@ -121,15 +121,12 @@
     "filePath": "content/mcp/contrastapi-mcp-server.mdx",
     "githubUrl": "https://github.com/JSONbored/awesome-claude/blob/main/content/mcp/contrastapi-mcp-server.mdx",
     "repoUrl": "https://github.com/UPinar/contrastapi",
-    "githubStars": 25,
-    "githubForks": 3,
-    "repoUpdatedAt": "2026-05-18T16:57:58Z",
+    "githubStars": null,
+    "githubForks": null,
+    "repoUpdatedAt": null,
     "repoStats": {
       "repository": "UPinar/contrastapi",
       "url": "https://github.com/UPinar/contrastapi",
-      "stars": 25,
-      "forks": 3,
-      "updatedAt": "2026-05-18T16:57:58Z",
       "appliesTo": "listing_source_repo",
       "label": "Source repo"
     }
