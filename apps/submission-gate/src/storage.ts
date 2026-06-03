@@ -228,6 +228,7 @@ export async function upsertPrState(
     terminalAt?: string | null;
     clearVerdict?: boolean;
     clearTerminal?: boolean;
+    lastReviewKey?: string | null;
   },
 ) {
   const timestamp = now();
@@ -240,8 +241,8 @@ export async function upsertPrState(
   await db
     .prepare(
       `INSERT INTO submission_prs
-        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, last_review_key, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
         head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
         head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
@@ -258,6 +259,7 @@ export async function upsertPrState(
           ELSE COALESCE(excluded.verdict_summary, submission_prs.verdict_summary)
         END,
         last_delivery_id = COALESCE(excluded.last_delivery_id, submission_prs.last_delivery_id),
+        last_review_key = COALESCE(excluded.last_review_key, submission_prs.last_review_key),
         next_review_at = excluded.next_review_at,
         attempt_count = CASE
           WHEN ? THEN submission_prs.attempt_count + 1
@@ -288,6 +290,7 @@ export async function upsertPrState(
       params.verdict ?? null,
       params.verdictSummary ?? null,
       params.deliveryId ?? null,
+      params.lastReviewKey ?? null,
       params.nextReviewAt ?? null,
       params.incrementAttempt ? 1 : 0,
       params.lastError ?? null,
@@ -312,7 +315,8 @@ export async function getPrState(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         head_sha AS headSha, base_ref AS baseRef, installation_id AS installationId,
         status, verdict, verdict_summary AS verdictSummary,
-        last_delivery_id AS lastDeliveryId, next_review_at AS nextReviewAt,
+        last_delivery_id AS lastDeliveryId, last_review_key AS lastReviewKey,
+        next_review_at AS nextReviewAt,
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,
@@ -339,7 +343,8 @@ export async function listDuePrStates(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         head_sha AS headSha, base_ref AS baseRef, installation_id AS installationId,
         status, verdict, verdict_summary AS verdictSummary,
-        last_delivery_id AS lastDeliveryId, next_review_at AS nextReviewAt,
+        last_delivery_id AS lastDeliveryId, last_review_key AS lastReviewKey,
+        next_review_at AS nextReviewAt,
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,
@@ -393,7 +398,8 @@ export async function listRecentPrStates(
       `SELECT repo, number, head_repo AS headRepo, head_ref AS headRef,
         head_sha AS headSha, base_ref AS baseRef, installation_id AS installationId,
         status, verdict, verdict_summary AS verdictSummary,
-        last_delivery_id AS lastDeliveryId, next_review_at AS nextReviewAt,
+        last_delivery_id AS lastDeliveryId, last_review_key AS lastReviewKey,
+        next_review_at AS nextReviewAt,
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,

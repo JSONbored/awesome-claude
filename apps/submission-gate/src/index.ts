@@ -290,6 +290,7 @@ type PrQueueState = Record<string, unknown> & {
   installationId?: number;
   status?: string;
   verdict?: string;
+  lastReviewKey?: string;
   updatedAt?: string;
 };
 
@@ -848,6 +849,72 @@ function requiredStatusContexts(env: Env) {
 
 function installationIdFromPayload(payload: Record<string, unknown>) {
   return Number((payload.installation as { id?: number } | undefined)?.id || 0);
+}
+
+function editedPayloadHasBaseRefChange(payload: Record<string, unknown>) {
+  const changes = payload.changes;
+  if (!isRecord(changes) || !isRecord(changes.base)) return false;
+  const refChange = changes.base.ref;
+  return isRecord(refChange) && typeof refChange.from === "string";
+}
+
+function isReviewablePullRequestPayload(payload: Record<string, unknown>) {
+  const action = String(payload.action || "");
+  if (!REVIEWABLE_PR_ACTIONS.has(action)) return false;
+  if (action !== "edited") return true;
+  return editedPayloadHasBaseRefChange(payload);
+}
+
+function reviewScanKeyForTarget(target: ReviewTarget) {
+  return target.headSha
+    ? `${target.headSha}:${target.baseRef || "unknown-base"}`
+    : "";
+}
+
+async function recordReviewedScanKey(params: {
+  env: Env;
+  target: ReviewTarget;
+  deliveryId: string;
+  status: string;
+}) {
+  const reviewScanKey = reviewScanKeyForTarget(params.target);
+  if (!reviewScanKey) return;
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.target.headRepo,
+    headRef: params.target.headRef,
+    headSha: params.target.headSha,
+    baseRef: params.target.baseRef || contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status: params.status,
+    deliveryId: params.deliveryId,
+    lastReviewKey: reviewScanKey,
+  });
+}
+
+async function shouldInspectPullRequestFilesForWebhook(
+  env: Env,
+  target: ReviewTarget,
+) {
+  const existing = await getPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+  });
+  const reviewScanKey = reviewScanKeyForTarget(target);
+  const existingReviewKey = String(existing?.lastReviewKey || "");
+  if (
+    hasTerminalGateDecision(existing) &&
+    String(existing?.status || "") !== "closed" &&
+    !(
+      String(existing?.status || "") === "ignored" &&
+      reviewScanKey &&
+      existingReviewKey !== reviewScanKey
+    )
+  ) {
+    return false;
+  }
+  return !reviewScanKey || existingReviewKey !== reviewScanKey;
 }
 
 function reviewTargetFromPullPayload(
@@ -1902,11 +1969,17 @@ async function enqueueReviewTarget(
 ) {
   if (!pilotScoped && target.baseRef !== contentGateBaseRef(env)) return false;
   const targetKey = targetKeyForReview(target);
+  const reviewScanKey = reviewScanKeyForTarget(target);
   const existing = await getPrState(env.SUBMISSION_GATE_DB, {
     repo: target.repoFullName,
     number: target.number,
   });
-  if (!hasTerminalGateDecision(existing)) {
+  const existingReviewKey = String(existing?.lastReviewKey || "");
+  const shouldResetIgnoredScan =
+    String(existing?.status || "") === "ignored" &&
+    reviewScanKey &&
+    existingReviewKey !== reviewScanKey;
+  if (!hasTerminalGateDecision(existing) || shouldResetIgnoredScan) {
     await upsertPrState(env.SUBMISSION_GATE_DB, {
       repo: target.repoFullName,
       number: target.number,
@@ -1919,6 +1992,9 @@ async function enqueueReviewTarget(
       deliveryId,
       nextReviewAt: null,
       incrementAttempt: true,
+      lastReviewKey: reviewScanKey || undefined,
+      clearVerdict: shouldResetIgnoredScan,
+      clearTerminal: shouldResetIgnoredScan,
     });
   }
   await env.SUBMISSION_REVIEW_QUEUE.send({
@@ -2090,18 +2166,30 @@ async function githubWebhookRoute(
   );
 
   if (eventName === "pull_request") {
-    const action = String(payload.action || "");
     const target = reviewTargetFromPullPayload(payload);
-    if (!REVIEWABLE_PR_ACTIONS.has(action) || !target) {
+    if (!isReviewablePullRequestPayload(payload) || !target) {
       return json({ ok: true, ignored: true });
     }
     if (!isContentGatePr(payload, env))
       return json({ ok: true, ignored: true, reason: "outside_content_gate" });
+    const shouldInspect = await shouldInspectPullRequestFilesForWebhook(
+      env,
+      target,
+    );
+    if (!shouldInspect) {
+      return json({ ok: true, ignored: true, reason: "already_reviewed" });
+    }
     const reviewability = await directContentReviewabilityForTarget(
       env,
       target,
     );
     if (reviewability.kind === "ignore") {
+      await recordReviewedScanKey({
+        env,
+        target,
+        deliveryId,
+        status: "ignored",
+      });
       return json({ ok: true, ignored: true, reason: reviewability.reason });
     }
     const reviewScope =

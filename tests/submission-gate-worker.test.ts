@@ -364,6 +364,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("CONTENT_GATE_BASE_REF");
     expect(source).toContain("function contentGateBaseRef");
     expect(source).toContain("function isContentGatePr");
+    expect(source).toContain("function editedPayloadHasBaseRefChange");
+    expect(source).toContain('if (action !== "edited") return true;');
+    expect(source).toContain("return editedPayloadHasBaseRefChange(payload);");
     expect(source).toContain(
       'const DEFAULT_REQUIRED_VALIDATION_CHECKS = [\n  "validate-content",\n  "Superagent Security Scan",\n]',
     );
@@ -579,14 +582,27 @@ describe("Cloudflare submission gate helpers", () => {
       pullRequestIndex,
       source.indexOf('if (eventName === "issue_comment")', pullRequestIndex),
     );
+    const inspectIndex = pullRequestBlock.indexOf(
+      "shouldInspectPullRequestFilesForWebhook(",
+    );
     const classifyIndex = pullRequestBlock.indexOf(
       "directContentReviewabilityForTarget(",
     );
     const applyIndex = pullRequestBlock.indexOf("applyUnderReviewToTarget");
 
     expect(source).toContain('reason: "No source content entry file changed."');
+    expect(source).toContain("function recordReviewedScanKey");
+    expect(source).toContain(
+      "function shouldInspectPullRequestFilesForWebhook",
+    );
+    expect(source).toContain("existingReviewKey !== reviewScanKey");
+    expect(source).toContain("shouldResetIgnoredScan");
+    expect(source).toContain("clearTerminal: shouldResetIgnoredScan");
+    expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
+    expect(source).toContain('reason: "already_reviewed"');
     expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
-    expect(classifyIndex).toBeGreaterThan(0);
+    expect(inspectIndex).toBeGreaterThan(0);
+    expect(classifyIndex).toBeGreaterThan(inspectIndex);
     expect(applyIndex).toBeGreaterThan(classifyIndex);
   });
 
@@ -733,7 +749,9 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
-    expect(enqueueBlock).toContain("if (!hasTerminalGateDecision(existing))");
+    expect(enqueueBlock).toContain(
+      "if (!hasTerminalGateDecision(existing) || shouldResetIgnoredScan)",
+    );
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",
