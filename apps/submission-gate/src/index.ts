@@ -2930,77 +2930,79 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             decision: "merge_failed",
             summary: manualDecision.summary,
           });
+          return;
         }
+        const mergedSummary = [
+          decision.summary.trim(),
+          "",
+          "Merge Result:",
+          `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
+        ].join("\n");
+        const mergedDecision: GateDecision = {
+          ...decision,
+          summary: mergedSummary,
+          labels: [LABELS.merged, ...categoryLabels],
+        };
+        await removeLabels({
+          token,
+          repo,
+          issueNumber: target.number,
+          labels: RECONCILED_GATE_LABELS.filter(
+            (label) =>
+              label !== LABELS.merged && !categoryLabels.includes(label),
+          ),
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        await addLabels({
+          token,
+          repo,
+          issueNumber: target.number,
+          labels: [LABELS.merged, ...categoryLabels],
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        await upsertMarkerComment({
+          token,
+          repo,
+          issueNumber: target.number,
+          marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+          body: markerComment(
+            mergedDecision,
+            env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+          ),
+          apiVersion: env.GITHUB_API_VERSION,
+        });
+        await insertAudit(env.SUBMISSION_GATE_DB, {
+          id: crypto.randomUUID(),
+          targetKey: message.targetKey,
+          eventType: message.kind,
+          decision: "merged",
+          summary: mergedSummary,
+        });
+        await notifyGateDecision(env, {
+          target,
+          targetKey: message.targetKey,
+          decision: mergedDecision,
+          status: "merged",
+          scope: contentScopeForPrivateReview,
+          validation: validationForNotification,
+          pull: pullForNotification,
+        });
+        await upsertPrState(env.SUBMISSION_GATE_DB, {
+          repo: target.repoFullName,
+          number: target.number,
+          headRepo: target.headRepo,
+          headRef: target.headRef,
+          headSha: target.headSha,
+          baseRef: target.baseRef || contentGateBaseRef(env),
+          installationId: target.installationId,
+          status: "merged",
+          verdict: "merge",
+          verdictSummary: mergedSummary,
+          nextReviewAt: null,
+          terminalAt: nowIso(),
+        });
         return;
       }
-      const mergedSummary = [
-        decision.summary.trim(),
-        "",
-        "Merge Result:",
-        `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
-      ].join("\n");
-      const mergedDecision: GateDecision = {
-        ...decision,
-        summary: mergedSummary,
-        labels: [LABELS.merged, ...categoryLabels],
-      };
-      await removeLabels({
-        token,
-        repo,
-        issueNumber: target.number,
-        labels: RECONCILED_GATE_LABELS.filter(
-          (label) => label !== LABELS.merged && !categoryLabels.includes(label),
-        ),
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      await addLabels({
-        token,
-        repo,
-        issueNumber: target.number,
-        labels: [LABELS.merged, ...categoryLabels],
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      await upsertMarkerComment({
-        token,
-        repo,
-        issueNumber: target.number,
-        marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        body: markerComment(
-          mergedDecision,
-          env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-        ),
-        apiVersion: env.GITHUB_API_VERSION,
-      });
-      await insertAudit(env.SUBMISSION_GATE_DB, {
-        id: crypto.randomUUID(),
-        targetKey: message.targetKey,
-        eventType: message.kind,
-        decision: "merged",
-        summary: mergedSummary,
-      });
-      await notifyGateDecision(env, {
-        target,
-        targetKey: message.targetKey,
-        decision: mergedDecision,
-        status: "merged",
-        scope: contentScopeForPrivateReview,
-        validation: validationForNotification,
-        pull: pullForNotification,
-      });
-      await upsertPrState(env.SUBMISSION_GATE_DB, {
-        repo: target.repoFullName,
-        number: target.number,
-        headRepo: target.headRepo,
-        headRef: target.headRef,
-        headSha: target.headSha,
-        baseRef: target.baseRef || contentGateBaseRef(env),
-        installationId: target.installationId,
-        status: "merged",
-        verdict: "merge",
-        verdictSummary: mergedSummary,
-        nextReviewAt: null,
-        terminalAt: nowIso(),
-      });
     }
   });
 }

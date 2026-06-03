@@ -640,6 +640,15 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("labels: [LABELS.merged, ...categoryLabels]");
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
+    expect(source).toContain("        const mergedSummary = [");
+    expect(source).not.toContain(
+      [
+        "        }",
+        "        return;",
+        "      }",
+        "      const mergedSummary = [",
+      ].join("\n"),
+    );
     expect(source).toContain("SubmissionMergePendingError");
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
