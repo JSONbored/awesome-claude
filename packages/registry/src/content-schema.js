@@ -789,7 +789,7 @@ export function validateEntry(category, data, inferred = {}) {
 
   for (const field of [
     "submittedByUrl",
-    "submissionIssueUrl",
+    "sourceSubmissionUrl",
     "importPrUrl",
     "claimedByUrl",
   ]) {
@@ -804,7 +804,7 @@ export function validateEntry(category, data, inferred = {}) {
     }
   }
 
-  for (const field of ["submissionIssueNumber", "importPrNumber"]) {
+  for (const field of ["sourceSubmissionNumber", "importPrNumber"]) {
     const value = merged[field];
     if (
       value !== undefined &&
@@ -924,8 +924,8 @@ export function orderFrontmatter(data) {
     "submittedBy",
     "submittedByUrl",
     "submittedAt",
-    "submissionIssueNumber",
-    "submissionIssueUrl",
+    "sourceSubmissionNumber",
+    "sourceSubmissionUrl",
     "importPrNumber",
     "importPrUrl",
     "reviewedBy",

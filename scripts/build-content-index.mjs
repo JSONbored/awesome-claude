@@ -268,7 +268,7 @@ function pickAtlasEntry(entry) {
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl,
     submittedAt: entry.submittedAt,
-    submissionIssueUrl: entry.submissionIssueUrl,
+    sourceSubmissionUrl: entry.sourceSubmissionUrl,
     importPrUrl: entry.importPrUrl,
     reviewedBy: entry.reviewedBy,
     reviewedAt: entry.reviewedAt,

@@ -95,7 +95,7 @@ export function buildEntryCitationFacts(entry, params = {}) {
     ],
     ["Author", clean(entry.author)],
     ["Submitted by", clean(entry.submittedBy)],
-    ["Submission issue", clean(entry.submissionIssueUrl)],
+    ["Original submission", clean(entry.sourceSubmissionUrl)],
     ["Import PR", clean(entry.importPrUrl)],
     ["Reviewed by", clean(entry.reviewedBy)],
     ["Claim status", clean(entry.claimStatus)],
@@ -121,8 +121,8 @@ export function renderEntryLlms(entry, params = {}) {
     `Category: ${entry.category}`,
     entry.author ? `Author: ${entry.author}` : "",
     entry.submittedBy ? `Submitted by: ${entry.submittedBy}` : "",
-    entry.submissionIssueUrl
-      ? `Submission issue: ${entry.submissionIssueUrl}`
+    entry.sourceSubmissionUrl
+      ? `Original submission: ${entry.sourceSubmissionUrl}`
       : "",
     entry.importPrUrl ? `Import PR: ${entry.importPrUrl}` : "",
     entry.dateAdded ? `Date added: ${entry.dateAdded}` : "",

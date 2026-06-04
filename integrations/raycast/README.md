@@ -44,7 +44,7 @@ The extension can create Raycast-native Quicklinks and Snippets only when you ex
 
 ## Submission Safety
 
-Raycast submission actions remain source-first. They help draft reviewed PR-first submissions with canonical source/docs URLs and do not upload, host, or publish community ZIP/MCPB artifacts. Eligible submissions can move through the private gate after repository checks pass, but maintainers still review before merge.
+Raycast submission actions remain source-first. They help draft reviewed PR-first submissions with canonical source/docs URLs and do not upload, host, or publish community ZIP/MCPB artifacts. Eligible submissions move through the same content validation, Superagent, and private maintainer-agent review used by website and GitHub submissions.
 
 ## Data and Privacy
 

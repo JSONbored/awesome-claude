@@ -780,7 +780,7 @@ function entryTrustSummary(entry) {
       reviewedBy: entry.reviewedBy || "",
       reviewedAt: entry.reviewedAt || "",
       submittedBy: entry.submittedBy || "",
-      submissionIssueUrl: entry.submissionIssueUrl || "",
+      sourceSubmissionUrl: entry.sourceSubmissionUrl || "",
     },
     recommendations: entryTrustRecommendations(entry),
   };

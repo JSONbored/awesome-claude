@@ -223,8 +223,8 @@ export type ContentEntry = {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueNumber?: number;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number;
   importPrUrl?: string;
   reviewedBy?: string;
@@ -638,8 +638,8 @@ export type SubmissionContentProvenance = {
   filename: string;
   submittedBy?: string;
   submittedByUrl?: string;
-  submissionIssueNumber?: number | null;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number | null;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number | null;
   importPrUrl?: string;
 };
@@ -756,8 +756,8 @@ export type SearchDocument = {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueNumber?: number;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number;
   importPrUrl?: string;
   reviewedBy?: string;

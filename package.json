@@ -40,6 +40,8 @@
     "mcp:start:local": "pnpm --filter @heyclaude/mcp start:local",
     "validate:mcp-endpoint": "pnpm --filter @heyclaude/mcp validate:endpoint",
     "validate:mcp-package": "pnpm --filter @heyclaude/mcp validate:package",
+    "check:mcp-release": "node scripts/check-mcp-release-due.mjs --json",
+    "check:raycast-release": "node scripts/check-raycast-release-due.mjs --json",
     "test:mcp": "vitest run tests/mcp-server.test.ts tests/mcp-cli.test.ts",
     "submission:risk": "node scripts/analyze-submission-risk.mjs",
     "submission-gate:deploy:prod": "pnpm --filter @heyclaude/submission-gate run deploy:prod",

@@ -22,7 +22,7 @@ export type RegistryEntry = Record<string, unknown> & {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueUrl?: string;
+  sourceSubmissionUrl?: string;
   importPrUrl?: string;
   reviewedBy?: string;
   reviewedAt?: string;
@@ -394,7 +394,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl ?? entry.authorProfileUrl,
     submittedAt: entry.submittedAt ?? entry.dateAdded,
-    submissionIssueUrl: entry.submissionIssueUrl,
+    sourceSubmissionUrl: entry.sourceSubmissionUrl,
     importPrUrl: entry.importPrUrl,
     reviewedBy: entry.reviewedBy,
     reviewedAt,

@@ -373,16 +373,16 @@ function frontmatterFields(data = {}, category = "") {
 }
 
 function frontmatterProvenance(data = {}) {
-  const submissionIssueNumber = Number(data.submissionIssueNumber);
+  const sourceSubmissionNumber = Number(data.sourceSubmissionNumber);
   const importPrNumber = Number(data.importPrNumber);
   return {
     submittedBy: normalizeText(data.submittedBy),
     submittedByUrl: normalizeText(data.submittedByUrl),
-    submissionIssueNumber:
-      Number.isInteger(submissionIssueNumber) && submissionIssueNumber > 0
-        ? submissionIssueNumber
+    sourceSubmissionNumber:
+      Number.isInteger(sourceSubmissionNumber) && sourceSubmissionNumber > 0
+        ? sourceSubmissionNumber
         : null,
-    submissionIssueUrl: normalizeText(data.submissionIssueUrl),
+    sourceSubmissionUrl: normalizeText(data.sourceSubmissionUrl),
     importPrNumber:
       Number.isInteger(importPrNumber) && importPrNumber > 0
         ? importPrNumber

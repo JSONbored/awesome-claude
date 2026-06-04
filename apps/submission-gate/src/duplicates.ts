@@ -50,8 +50,8 @@ const PROTECTED_FRONTMATTER_FIELDS = new Set([
   "submittedAt",
   "submittedBy",
   "submittedByUrl",
-  "submissionIssueNumber",
-  "submissionIssueUrl",
+  "sourceSubmissionNumber",
+  "sourceSubmissionUrl",
   "websiteUrl",
 ]);
 

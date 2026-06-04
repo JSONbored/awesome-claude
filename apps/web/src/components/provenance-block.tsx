@@ -31,14 +31,14 @@ export function ProvenanceBlock({ entry }: { entry: Entry }) {
         <Row label="Claim" value={CLAIM_LABEL[claim]} />
       </dl>
       <div className="mt-3 flex flex-wrap gap-2 border-t border-border pt-3 text-xs">
-        {entry.submissionIssueUrl && (
+        {entry.sourceSubmissionUrl && (
           <a
-            href={entry.submissionIssueUrl}
+            href={entry.sourceSubmissionUrl}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-1 text-ink-muted hover:text-ink"
           >
-            Submission issue <ExternalLink className="h-3 w-3" />
+            Original submission <ExternalLink className="h-3 w-3" />
           </a>
         )}
         {entry.importPrUrl && (
