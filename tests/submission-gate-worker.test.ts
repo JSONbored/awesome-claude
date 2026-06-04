@@ -892,6 +892,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listOpenPullRequests({");
     expect(source).toContain("scheduled-discovery-");
     expect(source).toContain(
+      'const closedTerminalButOpen = String(state?.status || "") === "closed"',
+    );
+    expect(source).toContain("!closedTerminalButOpen");
+    expect(source).toContain(
       "await applyUnderReviewToTarget(env, target, reviewScope)",
     );
     expect(source).toContain('"validation_pending"');

@@ -3481,6 +3481,7 @@ async function discoverOpenContentPullRequests(
     const reviewScanKey = reviewScanKeyForTarget(target);
     if (
       state &&
+      !closedTerminalButOpen &&
       String(state.status || "") !== "error_retryable" &&
       (!reviewScanKey || String(state.lastReviewKey || "") === reviewScanKey)
     ) {
