@@ -1,0 +1,227 @@
+---
+title: Safe Shell Command Rules for Agentic Coding Sessions
+slug: safe-shell-command-rules
+category: rules
+description: >-
+  Source-backed rules for AI coding agents that propose, compose, review, or run
+  shell commands during coding sessions where quoting, expansion, command
+  injection, file writes, network calls, and destructive operations can cause
+  harm.
+cardDescription: >-
+  Make agentic shell work safer with risk classification, quoting discipline,
+  dry-run review, path checks, secret redaction, and approval gates.
+seoTitle: Safe Shell Command Rules for Agentic Coding Sessions
+seoDescription: >-
+  Practical safe shell command rules for AI coding agents: classify command
+  risk, quote variables, avoid injection, preview writes, protect secrets, and
+  require approval for destructive or privileged operations.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/koalaman/shellcheck/wiki"
+sourceUrls:
+  - "https://github.com/koalaman/shellcheck/wiki"
+  - "https://owasp.org/www-community/attacks/Command_Injection"
+  - "https://www.gnu.org/software/bash/manual/bash.html#Quoting"
+  - "https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions"
+  - "https://man7.org/linux/man-pages/man1/xargs.1.html"
+installable: false
+usageSnippet: >-
+  Apply these rules before an AI coding agent proposes or runs shell commands
+  that read files, write files, install packages, call the network, expand
+  variables, traverse directories, process untrusted paths, or touch secrets.
+copySnippet: |-
+  You are preparing shell commands for an agentic coding session.
+
+  Rules:
+  1. Classify command risk before execution: read-only, local write, network,
+     dependency, privileged, destructive, or secret-touching.
+  2. Prefer inspectable, reversible commands and show the affected files before
+     writing.
+  3. Quote variables and paths; do not build shell code from untrusted text.
+  4. Treat filenames, branch names, environment variables, prompt text, and tool
+     output as untrusted input.
+  5. Require explicit human approval for destructive, privileged, networked, or
+     secret-touching commands.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A shell command proposed by an AI coding assistant, agent, hook, task runner, or reviewer.
+  - Knowledge of the current working directory, repository state, branch, and files the command may read or write.
+  - Permission to pause for human approval before commands that are destructive, privileged, networked, or secret-touching.
+  - A way to inspect output, diffs, exit status, and generated files before committing changes.
+safetyNotes:
+  - "Shell commands can delete files, overwrite data, leak secrets, install untrusted code, call external services, or mutate production-like resources; classify risk before running them."
+  - "Do not let an assistant turn untrusted text into shell syntax. Quote paths and values, avoid dynamic evaluation, and review command substitutions carefully."
+  - "Prefer previews, dry runs, version-control diffs, and narrowly scoped paths before commands that write, rename, clean, or regenerate files."
+privacyNotes:
+  - "Command output can include secrets, local paths, repository names, customer data, tokens, hostnames, prompts, environment variables, or private package names."
+  - "Redact sensitive output before placing it in chat, issue comments, PR bodies, generated docs, or logs."
+  - "Avoid sending command output to network services or package scripts unless the data path and retention behavior are understood."
+tags:
+  - shell-safety
+  - agentic-coding
+  - command-review
+  - command-injection
+  - quoting
+  - terminal-safety
+keywords:
+  - safe shell command rules
+  - agentic coding shell safety
+  - AI coding assistant terminal rules
+  - shell command injection prevention
+  - quote shell variables rules
+readingTime: 6
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant proposes, edits, or runs shell
+commands. The goal is to make terminal work reviewable before the command
+touches files, secrets, dependencies, networks, or shared resources.
+
+Shell commands are compact, powerful, and easy to misread. A safe agent should
+classify risk, quote inputs, preview effects, and stop for approval when the
+blast radius is uncertain.
+
+## Risk Classification
+
+Classify every command before execution.
+
+1. **Read-only.** Lists files, prints metadata, inspects status, or searches
+   source without modifying files or contacting external services.
+2. **Local write.** Formats, rewrites, generates, renames, or edits files inside
+   the working tree.
+3. **Dependency or build.** Runs package managers, compilers, test runners,
+   task runners, or install scripts that may execute project code.
+4. **Networked.** Downloads files, calls APIs, clones repositories, opens remote
+   connections, or sends logs and payloads outside the workspace.
+5. **Privileged or destructive.** Changes permissions, deletes or overwrites
+   broad paths, touches system directories, modifies services, or requires
+   elevated rights.
+6. **Secret-touching.** Reads environment variables, config files, credentials,
+   tokens, logs, deployment output, cloud state, or private package metadata.
+
+When a command belongs to more than one class, apply the strictest rule.
+
+## Review Rules
+
+- Explain what the command will read, write, and depend on before running it.
+- Prefer narrow paths over repository-wide or filesystem-wide commands.
+- Check the current directory and repository status before writes.
+- Preview file lists and diffs before commands that rewrite, clean, sort,
+  format, generate, or rename content.
+- Require explicit approval for privileged, destructive, networked,
+  dependency-installing, or secret-touching commands.
+- Treat command output as data that may need redaction before sharing.
+- Keep generated artifacts out of unrelated commits unless the project expects
+  them.
+
+## Quoting And Expansion Rules
+
+Shell expansion is a common source of accidental broad matches and injection
+risk.
+
+- Quote variables, paths, branch names, filenames, and prompt-derived values.
+- Avoid building shell syntax from untrusted text.
+- Review command substitution before running it; it can hide a second command.
+- Use null-delimited pipelines for arbitrary filenames when tools support them.
+- Avoid glob patterns when the exact file list can be named or previewed.
+- Separate options from user-controlled values when a command supports it.
+- Prefer structured tool arguments or language APIs when shell parsing is not
+  necessary.
+
+## Path And Workspace Rules
+
+- Confirm the working directory before commands that read or write many files.
+- Do not assume a relative path points inside the repository.
+- Avoid following unreviewed symlinks for write or cleanup operations.
+- Keep temporary output in clearly named, reviewable paths.
+- Do not write into parent directories, home directories, system paths, or
+  shared caches without explicit approval.
+- Check whether generated files are ignored, tracked, or expected before
+  committing them.
+
+## Dependency And Network Rules
+
+Package managers and network calls can execute code or disclose context.
+
+- Read the command and target source before installing, updating, or executing
+  downloaded code.
+- Prefer locked, project-defined commands over ad hoc install or bootstrap
+  commands.
+- Review lifecycle scripts, plugin hooks, post-install behavior, and remote
+  URLs when dependency commands are involved.
+- Do not send logs, prompts, diffs, environment variables, or file contents to
+  external services unless the user requested it and the data is safe to share.
+- Record what was fetched or updated when a networked command is necessary.
+
+## Secret And Output Rules
+
+- Never print secrets for convenience.
+- Redact tokens, keys, cookies, private URLs, account IDs, and customer-like
+  values before sharing command output.
+- Do not paste raw environment dumps into chat, issues, or PRs.
+- Treat CI logs, test output, traces, package manager output, and generated
+  reports as potentially sensitive.
+- Stop and request rotation if a command exposes a real credential.
+
+## Review Checklist
+
+- [ ] {"task": "Risk classified", "description": "The command is classified as read-only, local write, dependency/build, networked, privileged/destructive, or secret-touching"}
+- [ ] {"task": "Scope narrow", "description": "Paths, globs, and targets are limited to the files the task actually needs"}
+- [ ] {"task": "Inputs quoted", "description": "Variables, paths, filenames, and prompt-derived values are quoted or passed as structured arguments"}
+- [ ] {"task": "Effects previewed", "description": "Writes, generation, cleanup, formatting, and renames have a preview, dry run, or diff review path"}
+- [ ] {"task": "Approval obtained", "description": "Destructive, privileged, networked, dependency-installing, and secret-touching commands have explicit approval"}
+- [ ] {"task": "Output safe", "description": "Logs and command output are checked for secrets and private context before being shared"}
+
+## Do Not Run When
+
+- the command mixes untrusted text into shell syntax;
+- the target path, working directory, or file list is unclear;
+- a broad write, cleanup, permission change, or regeneration has no preview;
+- the command downloads or executes remote code without source review;
+- output may contain secrets and there is no redaction plan;
+- the assistant is guessing how to fix a failure by escalating permissions or
+  widening scope.
+
+## Troubleshooting
+
+- **The command is too broad:** split it into a read-only inspection step and a
+  narrow write step.
+- **The file list contains unusual names:** use a null-delimited flow or a
+  structured script that treats filenames as data.
+- **The command needs network access:** explain why, name the endpoint or
+  package source, and confirm the data that may leave the workspace.
+- **A command failed because of permissions:** inspect ownership and path first;
+  do not escalate privileges by default.
+- **The output contains a secret:** stop, redact, notify the owner, and request
+  rotation before continuing.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, hooks, skills, commands, open PRs,
+and closed PR history for safe shell command rules, terminal safety, ShellCheck
+guidance, command injection prevention, agentic coding safety, and shell command
+review workflows.
+
+Adjacent content includes a ShellCheck hook, safe Claude Code hook guidance,
+secure workflow guides, and security review entries. This rules entry is
+distinct because it gives portable do/don't behavior for AI coding agents
+deciding whether a proposed shell command is safe to run in an interactive
+coding session.
+
+## References
+
+- ShellCheck wiki: https://github.com/koalaman/shellcheck/wiki
+- OWASP command injection overview: https://owasp.org/www-community/attacks/Command_Injection
+- GNU Bash manual, quoting: https://www.gnu.org/software/bash/manual/bash.html#Quoting
+- GNU Bash manual, shell expansions: https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions
+- Linux xargs manual: https://man7.org/linux/man-pages/man1/xargs.1.html
