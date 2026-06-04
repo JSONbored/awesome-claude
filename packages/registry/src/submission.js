@@ -1,5 +1,6 @@
 import categorySpec from "./category-spec.json" with { type: "json" };
 import { normalizeBrandDomain } from "./brand-assets.js";
+import { hasAffiliateParam } from "./source-url.js";
 import {
   looksLikeToolAppListing,
   missingToolListingReviewFields,
@@ -599,33 +600,7 @@ export function looksLikeSubmissionPrDraft(draft = {}) {
 export function isLikelyAffiliateUrl(value) {
   const normalized = normalizeValue(value);
   if (!normalized) return false;
-
-  try {
-    const url = new URL(normalized);
-    const affiliateParams = new Set([
-      "aff",
-      "affiliate",
-      "affiliate_id",
-      "campaign",
-      "coupon",
-      "irclickid",
-      "partner",
-      "ref",
-      "referral",
-      "referral_code",
-      "via",
-    ]);
-
-    for (const key of url.searchParams.keys()) {
-      const normalizedKey = key.trim().toLowerCase();
-      if (normalizedKey.startsWith("utm_")) return true;
-      if (affiliateParams.has(normalizedKey)) return true;
-    }
-  } catch {
-    return false;
-  }
-
-  return false;
+  return hasAffiliateParam(normalized);
 }
 
 function isHttpsUrl(value) {

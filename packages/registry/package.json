@@ -34,6 +34,10 @@
       "types": "./src/source-repo.d.ts",
       "default": "./src/source-repo.js"
     },
+    "./source-url": {
+      "types": "./src/source-url.d.ts",
+      "default": "./src/source-url.js"
+    },
     "./submission": {
       "types": "./src/index.d.ts",
       "default": "./src/submission.js"

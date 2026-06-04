@@ -1,3 +1,4 @@
+import { canonicalizeSourceUrl } from "@heyclaude/registry/source-url";
 import { buildSubmissionPrDraft, validateSubmission } from "@heyclaude/registry/submission";
 import { analyzeSubmissionDraftRisk } from "@heyclaude/registry/submission-risk";
 
@@ -24,18 +25,10 @@ function normalizeComparable(value: unknown) {
 }
 
 function normalizeUrl(value: unknown) {
-  const text = normalizeText(value);
-  if (!text) return "";
-  try {
-    const url = new URL(text);
-    url.hash = "";
-    if (url.pathname !== "/" && url.pathname.endsWith("/")) {
-      url.pathname = url.pathname.slice(0, -1);
-    }
-    return url.toString().toLowerCase();
-  } catch {
-    return text.toLowerCase();
-  }
+  // Canonicalize through the shared registry helper so analytics/affiliate
+  // query params (utm_*, fbclid, ref, ...) and a leading www. do not let a
+  // resubmission of the same source slip past duplicate detection.
+  return canonicalizeSourceUrl(normalizeText(value));
 }
 
 function normalizeError(error: unknown) {
