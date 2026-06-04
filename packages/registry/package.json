@@ -30,6 +30,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/seo.js"
     },
+    "./source-repo": {
+      "types": "./src/source-repo.d.ts",
+      "default": "./src/source-repo.js"
+    },
     "./submission": {
       "types": "./src/index.d.ts",
       "default": "./src/submission.js"

@@ -1,4 +1,7 @@
 import { parseAbbreviatedCount } from "@heyclaude/registry/presentation";
+import {
+  parseGitHubRepoUrl as parseCanonicalGitHubRepoUrl,
+} from "@heyclaude/registry/source-repo";
 
 import { getEnvString } from "@/lib/cloudflare-env.server";
 import { chunk, inPlaceholders } from "@/lib/d1-batch";
@@ -53,24 +56,14 @@ type SourceRepoSignalRow = {
 };
 
 export function parseGitHubRepoUrl(value: unknown) {
-  try {
-    const parsed = new URL(String(value ?? ""));
-    // Accept github.com and its www. alias; stripping only a leading "www."
-    // keeps other subdomains (gist., api., raw.) rejected.
-    if (parsed.hostname.toLowerCase().replace(/^www\./, "") !== "github.com") {
-      return null;
-    }
-    const [owner, repoRaw] = parsed.pathname.split("/").filter(Boolean);
-    if (!owner || !repoRaw) return null;
-    const repo = repoRaw.replace(/\.git$/i, "");
-    if (!/^[a-z0-9_.-]+$/i.test(owner) || !/^[a-z0-9_.-]+$/i.test(repo)) {
-      return null;
-    }
-    const normalized = `${owner}/${repo}`.toLowerCase();
-    return { owner, repo, key: normalized };
-  } catch {
-    return null;
-  }
+  // Delegate to the shared canonical parser (handles www., the scp/SSH short
+  // form, and the git+/git:// schemes). The source-signal cache keys repos
+  // case-insensitively, so lowercase the dedup key here.
+  const parsed = parseCanonicalGitHubRepoUrl(value);
+  if (!parsed) return null;
+
+  const { owner, repo } = parsed;
+  return { owner, repo, key: `${owner}/${repo}`.toLowerCase() };
 }
 
 function sourceRepoForEntry(entry: EntryWithRepoStats) {

@@ -10,6 +10,7 @@ import {
   normalizeBody,
 } from "./content-schema.js";
 import { buildBrandAssetMetadata } from "./brand-assets.js";
+import { parseGitHubRepoUrl } from "./source-repo.js";
 import { parseSafeFrontmatter } from "./frontmatter.js";
 
 export const DEFAULT_DIRECTORY_REPO_URL =
@@ -21,32 +22,14 @@ export function buildGitHubUrl(filePath, repoRoot) {
 }
 
 export function parseGitHubRepo(repoUrl) {
-  if (!repoUrl) return null;
+  // Delegate to the shared canonical parser (handles www., the scp/SSH short
+  // form, and the git+/git:// schemes). The registry preserves owner/repo case
+  // in its dedup key, so derive the key here rather than in the shared parser.
+  const parsed = parseGitHubRepoUrl(repoUrl);
+  if (!parsed) return null;
 
-  try {
-    const url = new URL(repoUrl);
-    // Accept github.com and its www. alias (both appear in author-provided
-    // repo URLs); stripping only a leading "www." keeps other subdomains
-    // (gist., api., raw.) rejected.
-    if (url.hostname.toLowerCase().replace(/^www\./, "") !== "github.com") {
-      return null;
-    }
-
-    const parts = url.pathname.split("/").filter(Boolean);
-    if (parts.length < 2) return null;
-
-    const owner = parts[0];
-    const repo = parts[1].replace(/\.git$/, "");
-
-    return {
-      owner,
-      repo,
-      key: `${owner}/${repo}`,
-      url: `https://github.com/${owner}/${repo}`,
-    };
-  } catch {
-    return null;
-  }
+  const { owner, repo, url } = parsed;
+  return { owner, repo, key: `${owner}/${repo}`, url };
 }
 
 export function normalizeDownloadUrl(downloadUrl) {
