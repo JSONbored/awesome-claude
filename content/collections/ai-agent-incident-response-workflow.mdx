@@ -1,0 +1,150 @@
+---
+title: AI Agent Incident Response Workflow
+slug: ai-agent-incident-response-workflow
+category: collections
+description: >-
+  A source-backed incident response collection for production AI agent systems:
+  combine OpenTelemetry-style instrumentation, Sentry issue context, Grafana
+  observability, Jam reproduction artifacts, log timeline parsing, reliability
+  triage, and query performance signals.
+cardDescription: >-
+  Incident response bundle for AI agents with telemetry, Sentry, Grafana, Jam,
+  log timelines, reliability triage, and database performance signals.
+seoTitle: AI Agent Incident Response Workflow
+seoDescription: >-
+  A curated collection for debugging production AI agent incidents with
+  observability telemetry, Sentry MCP, Grafana MCP, Jam MCP, log timeline
+  parsing, reliability triage, and database performance logging.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://opentelemetry.io/docs/"
+sourceUrls:
+  - "https://opentelemetry.io/docs/"
+  - "https://mcp.sentry.dev/"
+  - "https://grafana.com/docs/grafana/latest/developer-resources/mcp/"
+  - "https://jam.dev/docs/debug-a-jam/mcp"
+  - "https://github.com/BurntSushi/ripgrep"
+installable: false
+usageSnippet: >-
+  Start with agent observability and reliability triage, then connect Sentry,
+  Grafana, Jam, log timeline parsing, and database performance logging.
+items:
+  - slug: ai-agent-observability-incident-response
+    category: skills
+  - slug: production-reliability-engineer
+    category: agents
+  - slug: sentry-mcp-server
+    category: mcp
+  - slug: grafana-mcp-server
+    category: mcp
+  - slug: jam-mcp-server
+    category: mcp
+  - slug: log-parsing-incident-timeline
+    category: skills
+  - slug: database-query-performance-logger
+    category: hooks
+  - slug: debugging-assistant-agent
+    category: agents
+installationOrder:
+  - ai-agent-observability-incident-response
+  - production-reliability-engineer
+  - sentry-mcp-server
+  - grafana-mcp-server
+  - jam-mcp-server
+  - log-parsing-incident-timeline
+  - database-query-performance-logger
+  - debugging-assistant-agent
+estimatedSetupTime: 95 minutes
+difficulty: advanced
+prerequisites:
+  - A production or staging agent runtime with access to request, tool-call, latency, and error telemetry.
+  - Existing incident ownership, severity definitions, and escalation paths.
+  - Approved access to Sentry, Grafana, Jam, logs, and database performance data for the systems being debugged.
+  - A redaction policy for prompts, model outputs, traces, screenshots, and customer identifiers.
+safetyNotes:
+  - "Use read-only credentials for incident review tools whenever possible."
+  - "Do not replay production user actions from Jam, logs, or traces against live systems without explicit approval."
+  - "Treat automated root-cause suggestions as triage inputs; incident commanders should still verify evidence before mitigation."
+privacyNotes:
+  - "Agent telemetry, Sentry issues, Grafana traces, Jam captures, and logs can contain prompts, outputs, screenshots, request IDs, user IDs, internal URLs, and customer data."
+  - "Redact secrets and personal data before sharing timelines, screenshots, logs, or post-incident reports."
+  - "Hosted observability and debugging tools may store incident artifacts outside the repository."
+tags:
+  - incident-response
+  - observability
+  - debugging
+  - ai-agents
+  - reliability
+keywords:
+  - ai agent incident response collection
+  - production agent observability workflow
+  - sentry grafana jam incident workflow
+  - log timeline debugging collection
+---
+
+## What this collection sets up
+
+This workflow is for diagnosing production AI agent incidents where failures
+span prompts, tools, traces, user-facing sessions, logs, and backend
+dependencies. It is narrower than a general debugging toolkit: the focus is
+incident triage for agent systems with observable evidence and privacy-aware
+artifact handling.
+
+## Layers
+
+### 1. Telemetry and triage model
+
+- **ai-agent-observability-incident-response** defines the telemetry contract,
+  SLOs, alert thresholds, and runbook shape for agent incidents.
+- **production-reliability-engineer** keeps the response aligned to severity,
+  mitigation, rollback, and post-incident review practices.
+
+### 2. Incident context from production systems
+
+- **sentry-mcp-server** brings issue, stack trace, and release context into the
+  investigation.
+- **grafana-mcp-server** connects dashboards, metrics, logs, and traces for
+  correlated observability.
+- **jam-mcp-server** adds user reproduction evidence and browser/session
+  artifacts when the incident starts from a reported UI failure.
+
+### 3. Timeline and dependency analysis
+
+- **log-parsing-incident-timeline** turns logs into chronological incident
+  timelines with error grouping and correlation.
+- **database-query-performance-logger** adds database latency and query-level
+  evidence for agent workflows that depend on retrieval, memory, billing, or
+  stateful backend operations.
+- **debugging-assistant-agent** supports targeted root-cause investigation once
+  evidence has been collected.
+
+## Suggested order
+
+Start with the observability skill and reliability agent so the incident
+response contract is clear. Connect Sentry and Grafana next, then add Jam for
+user reproduction evidence. Add log timeline parsing and database performance
+logging after access boundaries and redaction rules are understood.
+
+## Source and references
+
+- OpenTelemetry documentation: https://opentelemetry.io/docs/
+- Sentry MCP documentation: https://mcp.sentry.dev/
+- Grafana MCP documentation: https://grafana.com/docs/grafana/latest/developer-resources/mcp/
+- Jam MCP documentation: https://jam.dev/docs/debug-a-jam/mcp
+- ripgrep source: https://github.com/BurntSushi/ripgrep
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `ai-agent-incident-response-workflow`, incident
+response, observability, Sentry collection, Grafana collection, Jam debugging,
+log timeline, production reliability, and AI agent incident response. Existing
+debugging and production readiness collections are broad toolkits; no collection
+focuses on AI-agent incident response with telemetry, Sentry, Grafana, Jam,
+timeline parsing, and privacy-aware incident artifacts as the primary workflow.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
