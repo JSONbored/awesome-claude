@@ -327,3 +327,30 @@ export function getDistributionBadges(entry) {
 
   return badges;
 }
+
+export function getEntryAccessSummary(entry) {
+  const source = entry || {};
+  const hasInstall = Boolean(source.installCommand || source.commandSyntax);
+  const hasConfig = Boolean(source.configSnippet);
+  const hasDownload = Boolean(source.downloadUrl);
+  const hasDocs = Boolean(source.documentationUrl);
+  const hasSource = Boolean(source.repoUrl || source.githubUrl);
+  const hasSafetyNotes =
+    Array.isArray(source.safetyNotes) && source.safetyNotes.length > 0;
+  const hasPrivacyNotes =
+    Array.isArray(source.privacyNotes) && source.privacyNotes.length > 0;
+  const hasPrerequisites =
+    Array.isArray(source.prerequisites) && source.prerequisites.length > 0;
+
+  return {
+    hasInstall,
+    hasConfig,
+    hasDownload,
+    hasDocs,
+    hasSource,
+    hasSafetyNotes,
+    hasPrivacyNotes,
+    hasPrerequisites,
+    copyOnly: !hasInstall && !hasConfig && !hasDownload,
+  };
+}

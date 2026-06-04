@@ -1,0 +1,77 @@
+---
+title: BentoML
+slug: bentoml
+category: tools
+description: Apache-2.0 Python framework for building, packaging, serving, containerizing, and deploying AI model inference APIs and multi-model serving systems.
+cardDescription: Build, package, serve, containerize, and deploy AI model inference APIs.
+seoTitle: BentoML model serving framework
+seoDescription: BentoML is an Apache-2.0 Python framework for building, packaging, serving, containerizing, and deploying AI model inference APIs and multi-model serving systems.
+author: BentoML
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.bentoml.com/"
+documentationUrl: "https://docs.bentoml.com/"
+repoUrl: "https://github.com/bentoml/BentoML"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - model-serving
+  - inference
+  - deployment
+keywords:
+  - BentoML
+  - model serving
+  - AI inference APIs
+  - BentoCloud
+  - model deployment
+prerequisites:
+  - Python 3.9 or newer, an isolated project environment, the `bentoml` package, and framework dependencies for the selected model, runtime, or accelerator stack.
+  - Service design for APIs, model loading, batching, workers, task queues, multi-model composition, dependency configuration, and local serving behavior.
+  - Model governance plan for checkpoints, model store entries, licenses, versions, artifacts, dataset provenance, and rollback before packaging a Bento.
+  - Docker or container runtime plan for `bentoml build`, generated images, container scanning, environment pinning, registry publishing, and deployment rollback.
+  - Production plan for BentoCloud, Kubernetes, Cloud Run, or other infrastructure with authentication, authorization, scaling, GPU allocation, observability, cost controls, and incident response.
+safetyNotes:
+  - BentoML makes it easy to expose model inference APIs, but deployed endpoints still need auth, rate limits, input validation, output review, abuse monitoring, and rollback controls.
+  - Generated Bentos and container images package application code, dependencies, model artifacts, and configuration; scan and review them before registry publishing or production deployment.
+  - Dynamic batching, workers, model parallelism, queues, and multi-model pipelines can change latency, resource usage, failure modes, and output behavior under load.
+  - GPU inference, autoscaling, and cloud deployments can create high cost or quota risk if concurrency, batch size, memory, timeout, and retry policies are not bounded.
+  - BentoCloud deployment requires account login and API tokens; teams should use scoped credentials, secret stores, rotation, and environment separation.
+  - Inference services used by Claude-adjacent workflows should include model safety checks, prompt-injection handling, logging boundaries, evaluation coverage, and human escalation where outputs affect users.
+privacyNotes:
+  - BentoML services can process prompts, embeddings, documents, images, audio, video, model inputs, model outputs, request metadata, logs, traces, metrics, and model artifacts.
+  - Local model stores, Bento build directories, generated containers, logs, cache directories, examples, and test payloads can retain sensitive inputs or proprietary model data.
+  - BentoCloud, container registries, observability systems, Kubernetes clusters, Cloud Run, storage backends, and model-provider APIs may process request metadata, model artifacts, logs, credentials, or outputs depending on deployment.
+  - The official README says BentoML collects anonymous usage data for internal API calls and documents opt-out through the `--do-not-track` CLI option or `BENTOML_DO_NOT_TRACK=True`.
+  - Teams should define who can inspect request logs, model store contents, Bento artifacts, generated images, deployment events, metrics, traces, and failed inference records before serving private workloads.
+---
+
+## Editorial notes
+
+BentoML is useful when Claude-adjacent teams need to turn model inference scripts, LLM apps, embeddings services, image generation pipelines, or multi-model workflows into reproducible APIs and deployable artifacts. It gives teams a Python service layer, local serving, Bento packaging, generated Docker images, model-store management, batching, worker and pipeline controls, observability hooks, and deployment paths through BentoCloud or container platforms.
+
+This is distinct from model libraries such as Transformers, Diffusers, Sentence Transformers, or PEFT. BentoML is not the model implementation layer; it is the serving and deployment layer that packages model code, dependencies, APIs, containers, and runtime behavior into a production-oriented inference service.
+
+## Source notes
+
+- The official README describes BentoML as a unified model serving framework for building model inference APIs and multi-model serving systems with open-source or custom AI models.
+- The README describes BentoML as a Python library for building online serving systems optimized for AI apps and model inference.
+- The README says BentoML can turn model inference scripts into REST API servers with Python type hints.
+- The README says BentoML can manage environments, dependencies, model versions, generated Docker images, and deployable Bento artifacts.
+- The README highlights dynamic batching, model parallelism, multi-stage pipelines, multi-model inference graph orchestration, task queues, and custom business logic.
+- The README documents local serving with `bentoml serve`, packaging with `bentoml build`, image generation with `bentoml containerize`, and Docker-based runs.
+- The README documents deployment through BentoCloud with `bentoml cloud login` and `bentoml deploy`.
+- The README lists advanced topics including model composition, workers and model parallelization, adaptive batching, GPU inference, distributed serving systems, autoscaling, model loading and management, observability, and BentoCloud deployment.
+- The README says BentoML requires Python 3.9 or newer for the current quickstart install.
+- The README discloses anonymous usage tracking for internal API calls and opt-out through `--do-not-track` or `BENTOML_DO_NOT_TRACK=True`.
+- The repository is `bentoml/BentoML`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `BentoML`, `Bento ML`, `bentoml.com`, `docs.bentoml.com`, `github.com/bentoml/BentoML`, `BentoCloud`, `bentoml serve`, and `bentoml deploy`. No dedicated BentoML tools entry, source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. BentoML is Apache-2.0 open-source software; BentoCloud, container registries, cloud infrastructure, model providers, checkpoints, datasets, and deployed inference services may have separate licenses, billing, terms, privacy obligations, and access controls.

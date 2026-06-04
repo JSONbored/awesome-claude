@@ -311,64 +311,6 @@ export const SUBMISSION_SPEC: Record<Category, CategorySpec> = {
     webOnly: true,
     fields: [...COMMON],
   },
-  plugins: {
-    category: "plugins",
-    blurb:
-      "Cross-harness plugin bundles. This category is not yet enabled for website PR submission.",
-    riskBearing: true,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  automations: {
-    category: "automations",
-    blurb:
-      "Scheduled or event-triggered agent workflows. This category is not yet enabled for website PR submission.",
-    riskBearing: true,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "codex-plugins": {
-    category: "codex-plugins",
-    blurb: "Legacy harness-prefixed category. Submit through GitHub if needed.",
-    riskBearing: true,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "codex-automations": {
-    category: "codex-automations",
-    blurb: "Legacy harness-prefixed category. Submit through GitHub if needed.",
-    riskBearing: true,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "harness-configs": {
-    category: "harness-configs",
-    blurb: "Legacy harness config category. Submit through GitHub if needed.",
-    riskBearing: true,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "aider-recipes": {
-    category: "aider-recipes",
-    blurb: "Legacy Aider recipe category. Submit through GitHub if needed.",
-    riskBearing: false,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "continue-configs": {
-    category: "continue-configs",
-    blurb: "Legacy Continue config category. Submit through GitHub if needed.",
-    riskBearing: false,
-    webOnly: true,
-    fields: [...COMMON],
-  },
-  "zed-extensions": {
-    category: "zed-extensions",
-    blurb: "Legacy Zed extension category. Submit through GitHub if needed.",
-    riskBearing: false,
-    webOnly: true,
-    fields: [...COMMON],
-  },
 };
 
 export interface PreflightIssue {

@@ -1,0 +1,73 @@
+---
+title: vLLM
+slug: vllm
+category: tools
+description: Open-source high-throughput LLM inference and serving engine with PagedAttention, continuous batching, OpenAI-compatible APIs, tool calling, and structured outputs.
+cardDescription: Serve open models with high-throughput inference and OpenAI-compatible APIs.
+seoTitle: vLLM open-source LLM inference and serving engine
+seoDescription: vLLM helps teams serve open-source LLMs with high-throughput inference, PagedAttention, continuous batching, OpenAI-compatible APIs, structured outputs, tool calling, streaming, and distributed serving.
+author: vLLM Project
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://vllm.ai/"
+documentationUrl: "https://docs.vllm.ai/en/stable/"
+repoUrl: "https://github.com/vllm-project/vllm"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux
+tags:
+  - inference
+  - model-serving
+  - openai-compatible
+keywords:
+  - vllm
+  - llm serving
+  - openai compatible server
+  - pagedattention
+  - structured outputs
+prerequisites:
+  - Supported runtime environment, hardware, drivers, container image, or installation path for the target model size and accelerator type.
+  - Approved model weights, tokenizer files, chat templates, model licenses, gated-model access, and Hugging Face or private registry credentials before deployment.
+  - Capacity plan for GPU memory, KV cache, tensor parallelism, pipeline parallelism, request concurrency, context length, batching, latency, and fallback behavior.
+  - Authentication, TLS, network exposure, rate limiting, request-size limits, CORS, observability, and abuse controls before exposing an OpenAI-compatible vLLM endpoint.
+  - Evaluation cases, safety filters, tool-call validation, structured-output validation, rollback policy, and operator ownership before routing agent or customer traffic through vLLM.
+safetyNotes:
+  - vLLM is an inference and serving engine, not a safety layer; generated answers, structured outputs, reasoning fields, embeddings, tool calls, and served model behavior still require separate review.
+  - OpenAI-compatible endpoints can be dropped into existing agent stacks, so a misconfigured vLLM server may receive production prompts, expose unsupported models, or bypass provider-side safety and abuse controls.
+  - Tool calling and reasoning parsers are model- and template-dependent; parser success does not prove that a requested tool call is safe, authorized, correctly formatted, or semantically valid.
+  - Structured outputs constrain syntax, but they do not prove factual correctness, schema completeness, authorization, policy compliance, or safe downstream execution.
+  - Loading unreviewed model repositories, custom code paths, LoRA adapters, plugins, or chat templates can introduce supply-chain and runtime risk; review model source, license, and remote-code settings before deployment.
+  - High-throughput serving can amplify abuse, cost, data leakage, denial-of-service, and unsafe automation if endpoint auth, quotas, logging, monitoring, and incident response are weak.
+privacyNotes:
+  - vLLM servers can process prompts, chat messages, images or other multimodal inputs, generated outputs, reasoning text, tool-call arguments, embeddings, tokens, request metadata, API keys, and client identifiers.
+  - OpenAI-compatible clients, agent frameworks, gateways, proxies, traces, and logs may store the same data they send to vLLM unless applications define redaction, retention, and access controls.
+  - Prefix caching, KV caches, request batching, model-serving logs, metrics, crash dumps, tracing, and observability systems can retain or expose sensitive request content or derived metadata.
+  - Downloaded model weights, tokenizer files, chat templates, LoRA adapters, and gated-model credentials can reveal model choices, internal capabilities, or licensed assets that should not be exposed publicly.
+  - Self-hosting vLLM reduces third-party model-provider exposure, but operators still need controls for infrastructure administrators, shared GPUs, backups, network captures, and stored logs.
+---
+
+## Editorial notes
+
+vLLM is useful when Claude-adjacent teams want to run open models behind an OpenAI-compatible endpoint for coding agents, eval harnesses, RAG systems, or internal model gateways. It gives operators a production-oriented serving engine for throughput, memory efficiency, streaming, batching, structured outputs, tool calling, and distributed inference.
+
+This is distinct from existing agent-framework and gateway entries. LiteLLM focuses on routing and proxying across many model providers. LlamaIndex, Haystack, Langflow, Agno, and Pydantic AI focus on building agent or RAG applications. vLLM sits lower in the stack: it serves the model itself, with PagedAttention, continuous batching, OpenAI-compatible APIs, structured outputs, tool parsers, reasoning parsers, quantization, distributed inference, and broad model-architecture support.
+
+## Source notes
+
+- The official vLLM documentation describes vLLM as a fast and easy-to-use library for LLM inference and serving.
+- The homepage says vLLM provides state-of-the-art serving throughput, PagedAttention for attention key/value memory, continuous batching, chunked prefill, prefix caching, quantization, optimized attention kernels, speculative decoding, and disaggregated prefill/decode/encode.
+- The documentation lists flexible serving features including Hugging Face model integration, streaming outputs, structured outputs using xgrammar or guidance, tool calling and reasoning parsers, an OpenAI-compatible API server, Anthropic Messages API, gRPC support, multi-LoRA, and distributed parallelism.
+- The online serving documentation redirects the OpenAI-compatible server page to the current online-serving docs, which cover vLLM server usage and OpenAI-compatible access paths.
+- The tool-calling documentation describes model-specific tool-call parsers, chat-template requirements, automatic tool choice, and parser plugin support.
+- The structured-outputs documentation covers JSON schema, regex, choice, grammar, structural tags, offline inference, and reasoning-output combinations.
+- The GitHub repository is `vllm-project/vllm`, is Apache-2.0 licensed, and describes vLLM as a high-throughput and memory-efficient inference and serving engine for LLMs.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `vLLM`, `vllm`, `vllm-project/vllm`, `vllm.ai`, `docs.vllm.ai`, `PagedAttention`, `OpenAI-compatible server`, `LLM serving`, `structured outputs`, `tool calling`, and `high-throughput inference`. Existing LiteLLM, LlamaIndex, Haystack, Langflow, Agno, DSPy, MLflow, and agent-framework entries cover adjacent gateway, framework, orchestration, optimization, or observability workflows, but no dedicated vLLM tools entry, vLLM source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

@@ -1,0 +1,76 @@
+---
+title: Hugging Face PEFT
+slug: hugging-face-peft
+category: tools
+description: Apache-2.0 library for parameter-efficient fine-tuning of large pretrained models with adapters, LoRA, prompt tuning, Transformers, Diffusers, and Accelerate.
+cardDescription: Fine-tune large models with lightweight adapters, LoRA, and PEFT methods.
+seoTitle: Hugging Face PEFT parameter-efficient fine-tuning
+seoDescription: Hugging Face PEFT is an Apache-2.0 library for parameter-efficient fine-tuning of large pretrained models with adapters, LoRA, prompt tuning, Transformers, Diffusers, and Accelerate.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://huggingface.co/docs/peft"
+documentationUrl: "https://huggingface.co/docs/peft"
+repoUrl: "https://github.com/huggingface/peft"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - fine-tuning
+  - adapters
+  - training
+keywords:
+  - Hugging Face PEFT
+  - parameter-efficient fine-tuning
+  - LoRA
+  - adapters
+  - model fine-tuning
+prerequisites:
+  - Python 3.9 or newer, compatible PyTorch, base model, tokenizer or processor, and the Hugging Face ecosystem libraries needed for the target Transformers, Diffusers, Accelerate, or TRL workflow.
+  - Approved base model license, adapter method, PEFT configuration, target modules, quantization plan, task type, training dataset, and evaluation benchmark.
+  - Hardware and runtime plan for GPU, CPU offloading, distributed training, mixed precision, checkpoint storage, adapter merging, inference latency, and rollback.
+  - Data governance plan for fine-tuning examples, labels, prompts, model outputs, evaluation sets, adapter checkpoints, model cards, Hub uploads, and experiment logs.
+  - Review process for adapter compatibility, model behavior changes, safety regressions, catastrophic forgetting, data leakage, and deployment gating before user-facing use.
+safetyNotes:
+  - PEFT reduces training and storage cost, but lightweight adapters can still change model behavior, introduce unsafe responses, overfit, or degrade base-model capabilities.
+  - LoRA, prompt tuning, adapter methods, quantization, target modules, and merging choices need task-specific evaluation before a fine-tuned model is used in Claude-adjacent workflows.
+  - Training on private tickets, chats, customer data, repository text, or internal documents can leak examples through generated outputs, adapter weights, logs, or published model cards.
+  - Base model licenses, dataset licenses, adapter licenses, and Hub publication rules should be reviewed together because an adapter may be unusable without its base model.
+  - Source installs, notebooks, community adapters, example scripts, and custom training loops should be reviewed before execution, especially when pulling assets from public repositories.
+  - Fine-tuned adapters used for automated decisions, content generation, or agent actions should have rollback, red-team tests, evaluation reports, and human-reviewable provenance.
+privacyNotes:
+  - PEFT workflows can process prompts, labels, documents, chat histories, media, training datasets, evaluation examples, generated outputs, metrics, checkpoints, and adapter weights.
+  - Adapter checkpoints are smaller than full model checkpoints, but they can still encode sensitive training data or reveal proprietary task behavior.
+  - Hugging Face Hub pushes, experiment trackers, cloud notebooks, distributed training logs, model cards, and storage buckets may expose dataset names, prompts, metrics, examples, or artifacts depending on setup.
+  - Quantized models, merged adapters, local caches, and intermediate checkpoints should follow the same retention, deletion, access-control, and review policies as the original training data.
+  - Teams should define who can inspect training data, adapter weights, model cards, evaluation failures, experiment logs, and Hub repositories before using PEFT outputs in production workflows.
+---
+
+## Editorial notes
+
+Hugging Face PEFT is useful when Claude-adjacent teams need to adapt a large pretrained model without fully fine-tuning every parameter. It supports adapter-style workflows such as LoRA and prompt-based methods, integrates with Transformers for model training and inference, Diffusers for adapter management in generative image workflows, Accelerate for distributed or limited-hardware training, and TRL for preference-tuning workflows.
+
+This is distinct from the Hugging Face Transformers entry. Transformers is the broader model-definition, pipeline, generation, tokenizer, processor, and Trainer layer. PEFT focuses on parameter-efficient adaptation: wrapping a base model with a PEFT configuration, training only a small number of added parameters, saving lightweight adapter weights, loading adapters for inference, switching adapters, and reducing compute and storage cost.
+
+## Source notes
+
+- The official README describes PEFT as state-of-the-art Parameter-Efficient Fine-Tuning methods for adapting large pretrained models.
+- The README says PEFT fine-tunes a small number of extra model parameters instead of all model parameters, reducing compute and storage costs.
+- The README says PEFT is integrated with Transformers for training and inference, Diffusers for managing adapters, and Accelerate for distributed training and inference.
+- The README describes LoRA examples where only a small percentage of model parameters are trainable and adapter checkpoints can be much smaller than full model checkpoints.
+- The README describes PEFT integrations with Diffusers, Transformers, Accelerate, and TRL.
+- The official docs describe PEFT as a library for efficiently adapting large pretrained models without full fine-tuning.
+- The quicktour describes `PeftConfig`, `PeftModel`, LoRA configuration, `get_peft_model`, training with Transformers Trainer or other loops, saving adapter weights, and loading PEFT models for inference.
+- The installation docs say PEFT is tested on Python 3.9 or newer and is available from PyPI and GitHub.
+- The adapter conceptual guide says adapter methods add trainable parameters to frozen pretrained models and that LoRA is a popular PEFT method for reducing trainable parameters.
+- The repository is `huggingface/peft`, is Apache-2.0 licensed, and describes PEFT as state-of-the-art parameter-efficient fine-tuning.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face PEFT`, `huggingface/peft`, `huggingface.co/docs/peft`, `parameter-efficient fine-tuning`, `parameter efficient fine tuning`, `PEFT`, `LoRA`, and `adapters`. A broad LoRA search produced false positives from words like `exploration`; the PEFT-specific duplicate check found no dedicated PEFT tools entry, PEFT source URL duplicate, or open duplicate PR.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face PEFT is Apache-2.0 open-source software; base models, adapters, datasets, Hub repositories, and hosted services may have separate licenses, terms, and access controls.

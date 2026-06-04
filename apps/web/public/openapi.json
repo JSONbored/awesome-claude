@@ -51,8 +51,8 @@
           "submittedBy": { "type": "string" },
           "submittedByUrl": { "type": "string", "format": "uri" },
           "submittedAt": { "type": "string" },
-          "submissionIssueNumber": { "type": "integer", "exclusiveMinimum": 0 },
-          "submissionIssueUrl": { "type": "string", "format": "uri" },
+          "sourceSubmissionNumber": { "type": "integer", "exclusiveMinimum": 0 },
+          "sourceSubmissionUrl": { "type": "string", "format": "uri" },
           "importPrNumber": { "type": "integer", "exclusiveMinimum": 0 },
           "importPrUrl": { "type": "string", "format": "uri" },
           "reviewedBy": { "type": "string" },
@@ -115,6 +115,8 @@
               },
               "lastVerifiedAt": { "type": "string" },
               "adapterGenerated": { "type": "boolean" },
+              "hasSafetyNotes": { "type": "boolean" },
+              "hasPrivacyNotes": { "type": "boolean" },
               "platforms": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
               "supportLevels": { "type": "array", "items": { "type": "string" }, "maxItems": 12 }
             }
@@ -226,6 +228,8 @@
           },
           "lastVerifiedAt": { "type": "string" },
           "adapterGenerated": { "type": "boolean" },
+          "hasSafetyNotes": { "type": "boolean" },
+          "hasPrivacyNotes": { "type": "boolean" },
           "platforms": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
           "supportLevels": { "type": "array", "items": { "type": "string" }, "maxItems": 12 }
         }
@@ -838,8 +842,8 @@
                           "submittedBy": { "type": "string" },
                           "submittedByUrl": { "type": "string", "format": "uri" },
                           "submittedAt": { "type": "string" },
-                          "submissionIssueNumber": { "type": "integer", "exclusiveMinimum": 0 },
-                          "submissionIssueUrl": { "type": "string", "format": "uri" },
+                          "sourceSubmissionNumber": { "type": "integer", "exclusiveMinimum": 0 },
+                          "sourceSubmissionUrl": { "type": "string", "format": "uri" },
                           "importPrNumber": { "type": "integer", "exclusiveMinimum": 0 },
                           "importPrUrl": { "type": "string", "format": "uri" },
                           "reviewedBy": { "type": "string" },
@@ -921,6 +925,8 @@
                               },
                               "lastVerifiedAt": { "type": "string" },
                               "adapterGenerated": { "type": "boolean" },
+                              "hasSafetyNotes": { "type": "boolean" },
+                              "hasPrivacyNotes": { "type": "boolean" },
                               "platforms": {
                                 "type": "array",
                                 "items": { "type": "string" },

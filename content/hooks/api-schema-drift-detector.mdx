@@ -1,0 +1,211 @@
+---
+title: API Schema Drift Detector - Claude Code Hook
+slug: api-schema-drift-detector
+category: hooks
+description: >-
+  PostToolUse hook that compares a just-edited OpenAPI or JSON Schema document
+  against the version committed in git and warns about backward-incompatible
+  drift — removed OpenAPI paths and removed required properties — so breaking
+  API changes are surfaced before they ship. Advisory only; it never blocks the
+  edit.
+cardDescription: >-
+  Warn when an edited OpenAPI/JSON Schema drops a path or required field
+  compared to the committed version.
+seoTitle: API Schema Drift Detector - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that diffs an edited OpenAPI or JSON Schema
+  against its committed version and flags removed paths and required fields as
+  breaking changes.
+author: jony376
+submittedBy: jony376
+submittedByUrl: "https://github.com/jony376"
+dateAdded: "2026-06-04"
+documentationUrl: "https://spec.openapis.org/oas/latest.html"
+repoUrl: "https://github.com/OAI/OpenAPI-Specification"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/api-schema-drift-detector.sh && chmod +x
+  .claude/hooks/api-schema-drift-detector.sh
+usageSnippet: "API schema drift in openapi.json - removed path /v1/users/{id}"
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/api-schema-drift-detector.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/api-schema-drift-detector.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. After a JSON OpenAPI / JSON Schema file is
+  # written or edited, compare it against the version committed in git (HEAD)
+  # and warn about backward-incompatible drift: removed OpenAPI paths and
+  # removed required properties. Advisory only - it never blocks the edit -
+  # and fails open if jq or git is unavailable.
+
+  if ! command -v jq >/dev/null 2>&1 || ! command -v git >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+
+  [ -z "$FILE" ] && exit 0
+  case "$FILE" in
+    *.json) : ;;
+    *) exit 0 ;;
+  esac
+  [ -f "$FILE" ] || exit 0
+
+  # Only act on OpenAPI / JSON Schema documents.
+  if ! jq -e 'has("openapi") or has("swagger") or has("$schema") or has("paths")' "$FILE" >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  # A committed baseline is required to detect drift.
+  OLD=$(git show "HEAD:$FILE" 2>/dev/null) || exit 0
+  [ -z "$OLD" ] && exit 0
+
+  drift=0
+
+  # Removed OpenAPI paths are breaking for existing clients.
+  removed_paths=$(comm -23 \
+    <(printf '%s' "$OLD" | jq -r '(.paths // {}) | keys[]' 2>/dev/null | sort -u) \
+    <(jq -r '(.paths // {}) | keys[]' "$FILE" 2>/dev/null | sort -u))
+  if [ -n "$removed_paths" ]; then
+    echo "API schema drift in $FILE - removed path(s):" >&2
+    printf '   - %s\n' $removed_paths >&2
+    drift=1
+  fi
+
+  # Removed top-level required properties are breaking for JSON Schema consumers.
+  removed_required=$(comm -23 \
+    <(printf '%s' "$OLD" | jq -r '(.required // []) | .[]' 2>/dev/null | sort -u) \
+    <(jq -r '(.required // []) | .[]' "$FILE" 2>/dev/null | sort -u))
+  if [ -n "$removed_required" ]; then
+    echo "API schema drift in $FILE - removed required field(s):" >&2
+    printf '   - %s\n' $removed_required >&2
+    drift=1
+  fi
+
+  if [ "$drift" -ne 0 ]; then
+    echo "Treat these as breaking changes - bump the major version and update consumers." >&2
+  fi
+
+  exit 0
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "git, jq, and bash on PATH; the hook fails open and stays silent when git or jq is missing."
+  - "The schema file must be tracked in git so a committed baseline exists to diff against."
+safetyNotes:
+  - "Runs after every Write, Edit, and MultiEdit and only inspects JSON files that declare openapi, swagger, a $schema key, or paths."
+  - "Stays read-only and runs git show to read the committed version; it never edits, stages, or commits anything."
+  - "Advisory by design and always exits 0, so it never blocks a write even when drift is detected."
+  - "Uses key-set comparison heuristics for removed paths and required fields, so it catches common breaking changes but is not a full OpenAPI diff."
+privacyNotes:
+  - "Reads the edited schema file and its committed HEAD version from the local repository only."
+  - "Prints removed path and required-field names to local hook stderr; it makes no network calls and writes no logs."
+  - "Path and field names shown in output may reveal internal API surface in your terminal."
+tags:
+  - "openapi"
+  - "json-schema"
+  - "api"
+  - "breaking-changes"
+  - "ci"
+keywords:
+  - "api schema drift detector hook"
+  - "openapi breaking change hook"
+  - "removed path detection"
+  - "json schema required drift"
+---
+
+## Features
+
+- Detects backward-incompatible **schema drift** the moment an OpenAPI or JSON Schema file is saved, by diffing it against the version committed in git.
+- Flags the two most common breaking changes — **removed OpenAPI paths** and **removed top-level `required` properties**.
+- Advisory only — it always exits `0`, so it surfaces risk without interrupting your edit flow.
+- Fails open — if `git` or `jq` is missing, or the file has no committed baseline, it stays silent.
+- Pure local `bash` + `jq` + `git show`; no network calls and no persisted logs.
+
+## How it works
+
+On `PostToolUse`, the hook reads the edited file path from the tool input. If the file is a JSON document that declares `openapi`, `swagger`, `$schema`, or `paths`, it reads the committed version with `git show HEAD:<file>` and compares key sets — paths present before but absent now, and `required` entries removed. Any removal is reported to stderr as a breaking change, with a reminder to bump the major version per semantic versioning.
+
+## Use cases
+
+- Catch an accidentally deleted endpoint or required field while iterating on an API contract.
+- Add a fast, local breaking-change signal ahead of a full contract test in CI.
+- Keep generated clients and consumers in sync by surfacing removals early.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/api-schema-drift-detector.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/api-schema-drift-detector.sh`
+4. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash, jq, and git
+- The schema file must be committed at least once so `HEAD` has a baseline
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/api-schema-drift-detector.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Limitations
+
+- Compares top-level path and `required` key sets only; it does not yet diff nested property types, response schemas, or enum narrowing.
+- Operates on JSON documents. For YAML OpenAPI files, convert or extend the script with a YAML-to-JSON step.
+
+## Source and references
+
+- OpenAPI Specification: https://spec.openapis.org/oas/latest.html
+- OpenAPI Specification repository: https://github.com/OAI/OpenAPI-Specification
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks

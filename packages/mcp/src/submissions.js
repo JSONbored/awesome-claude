@@ -525,7 +525,7 @@ export function validateSubmissionDraftFromSpec(spec, args = {}) {
           "Check for duplicate registry entries.",
           "Open the generated HeyClaude submit URL and continue with GitHub.",
           "Source-backed, non-artifact submissions are reviewed through the private PR gate.",
-          "Maintainers still review before merge.",
+          "Eligible content PRs may be merged automatically after validation, Superagent, and private maintainer-agent review pass.",
         ]
       : ["Fix validation errors before opening a public submission PR."],
     artifactPolicy:

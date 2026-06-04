@@ -1,0 +1,77 @@
+---
+title: Dagster
+slug: dagster
+category: tools
+description: Apache-2.0 data orchestration platform for building, testing, deploying, observing, and automating data assets, jobs, schedules, sensors, and pipelines.
+cardDescription: Orchestrate data assets, pipelines, jobs, schedules, sensors, and observability.
+seoTitle: Dagster data orchestration platform
+seoDescription: Dagster is an Apache-2.0 data orchestration platform for building, testing, deploying, observing, and automating data assets, jobs, schedules, sensors, and pipelines.
+author: Dagster Labs
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://dagster.io/"
+documentationUrl: "https://docs.dagster.io/"
+repoUrl: "https://github.com/dagster-io/dagster"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - data-orchestration
+  - data-pipelines
+  - observability
+keywords:
+  - Dagster
+  - data assets
+  - pipeline orchestration
+  - asset lineage
+  - Dagster OSS
+prerequisites:
+  - Python 3.9 through Python 3.14, an isolated project environment, and selected Dagster packages such as `dagster`, `dagster-webserver`, and `dagster-dg-cli`.
+  - Data asset model for assets, resources, dependencies, asset checks, jobs, schedules, sensors, partitions, backfills, I/O managers, and external systems.
+  - Deployment decision between local development, self-hosted Dagster OSS, Dagster+ Serverless, or Dagster+ Hybrid, with infrastructure ownership and support boundaries defined.
+  - Operational plan for the Dagster webserver, daemon, run launchers, executors, queues, compute logs, metadata database, storage, secrets, environment variables, and backups.
+  - Governance plan for telemetry settings, sensitive asset metadata, logs, run config, materialization metadata, code locations, user access, and production data writes.
+safetyNotes:
+  - Dagster runs user-defined Python code and can orchestrate writes to databases, warehouses, object stores, ML systems, and external APIs, so resources and credentials should be scoped before production runs.
+  - Schedules, sensors, automation policies, backfills, retries, and run queues can trigger repeated or large-scale work; teams should test concurrency, idempotency, cancellation, and rollback behavior.
+  - Asset checks and lineage improve visibility but do not replace data-quality review, access controls, schema contracts, incident response, or manual approval for high-risk production changes.
+  - Self-hosted Dagster OSS deployments need explicit network, auth, TLS, database, object storage, secret-management, backup, upgrade, and log-retention controls.
+  - Dagster+ Serverless documentation says serverless deployments require direct access to data, secrets, and source code; teams should review whether that deployment model fits their compliance needs.
+  - Dagster+ Serverless documentation warns that the default I/O manager can store sensitive data in Dagster+ managed storage for PII, PHI, BAA, GDPR, or similar regulated workloads unless another I/O manager or code pattern is used.
+privacyNotes:
+  - Dagster workflows can process asset names, job names, resource config, run config, schedules, sensors, partitions, logs, errors, materialization metadata, checks, lineage, secrets, and external-system identifiers.
+  - Compute logs, event logs, metadata databases, object stores, I/O manager outputs, code locations, deployment images, and Dagster+ services may retain sensitive operational or data-product information depending on configuration.
+  - The official telemetry docs say Dagster collects frontend and backend usage statistics, does not collect pipeline data, and does not collect identifiable information about definition names such as assets, ops, or jobs.
+  - Backend telemetry collection is logged under `$DAGSTER_HOME/logs/` when configured, or `~/.dagster/logs/` otherwise, and can be disabled in `dagster.yaml` by setting `telemetry.enabled` to false.
+  - Dagster+ Serverless can involve Dagster-managed storage, per-customer registries, container images, secrets, source code, logs, and managed services; deployment teams should review product terms and data-handling requirements.
+---
+
+## Editorial notes
+
+Dagster is useful when Claude-adjacent teams need a production-grade way to turn data and AI workflows into observable assets, scheduled jobs, data-quality checks, lineage graphs, backfills, and repeatable deployment units. It is a good fit for model-evaluation pipelines, embedding refreshes, warehouse transformations, report generation, analytics assets, and ML-adjacent data products that need testing, visibility, and operational discipline.
+
+This is distinct from Ray. Ray is a distributed AI compute engine for scaling Python tasks, actors, training, data processing, and serving across compute clusters. Dagster is the orchestration and control-plane layer for data assets, schedules, sensors, checks, metadata, lineage, run history, and production workflow operations. It is also distinct from Dagster's own docs AI-skill material; this entry lists the Dagster platform itself.
+
+## Source notes
+
+- The official repository describes Dagster as an orchestration platform for the development, production, and observation of data assets.
+- The official README describes Dagster as a cloud-native data pipeline orchestrator for the whole development lifecycle with integrated lineage, observability, a declarative programming model, and testability.
+- The README says Dagster is designed for developing and maintaining data assets such as tables, datasets, machine learning models, and reports.
+- The README shows assets declared as Python functions and says Dagster helps run those functions at the right time and keep assets up to date.
+- The README says Dagster is built for local development, unit tests, integration tests, staging environments, and production.
+- The README says Dagster is available on PyPI, officially supports Python 3.9 through Python 3.14, and shows `uv add dagster dagster-webserver dagster-dg-cli`.
+- The official docs describe Dagster as a data orchestrator built for data engineers with lineage, observability, declarative programming, and testability.
+- The deployment docs distinguish Dagster+ managed deployments from self-hosted Dagster OSS deployments.
+- The telemetry docs describe frontend and backend usage-stat collection, state that pipeline data and identifiable definition names are not collected, and document the `telemetry.enabled: false` opt-out.
+- The Dagster+ Serverless security docs say serverless deployments require direct access to data, secrets, and source code, and warn about managed-storage behavior for sensitive data when using the default I/O manager.
+- The repository is `dagster-io/dagster`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Dagster`, `dagster-io/dagster`, `docs.dagster.io`, `dagster.io`, `Dagster OSS`, `Dagster+`, `data assets`, and `asset lineage`. No dedicated Dagster tools entry, source URL duplicate, target file, issue duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Dagster is Apache-2.0 open-source software; Dagster+, cloud infrastructure, databases, warehouses, storage systems, compute platforms, observability services, and downstream integrations may have separate licenses, billing, terms, privacy obligations, and access controls.

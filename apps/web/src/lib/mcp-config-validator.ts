@@ -383,7 +383,9 @@ function validateServer(name: string, raw: unknown) {
       const isLocal =
         parsed.hostname === "localhost" ||
         parsed.hostname === "127.0.0.1" ||
-        parsed.hostname === "::1";
+        // URL.hostname returns IPv6 hosts wrapped in brackets, so the loopback
+        // address surfaces as "[::1]" (never the bare "::1").
+        parsed.hostname === "[::1]";
       if (
         parsed.protocol !== "https:" &&
         !(isLocal && parsed.protocol === "http:")

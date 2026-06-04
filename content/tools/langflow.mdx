@@ -1,0 +1,74 @@
+---
+title: Langflow
+slug: langflow
+category: tools
+description: Open-source visual framework for building and deploying AI agents, RAG apps, workflows, MCP tools, and LLM applications with reusable components.
+cardDescription: Visual builder for agents, workflows, RAG apps, and MCP-enabled LLM tools.
+seoTitle: Langflow visual AI agent and workflow builder
+seoDescription: Langflow helps teams visually build AI agents, RAG apps, workflows, MCP client and server integrations, and deployable LLM applications with reusable Python components.
+author: Langflow
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.langflow.org/"
+documentationUrl: "https://docs.langflow.org/"
+repoUrl: "https://github.com/langflow-ai/langflow"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - workflows
+  - low-code
+keywords:
+  - langflow
+  - visual ai builder
+  - agent workflows
+  - mcp tools
+  - rag builder
+prerequisites:
+  - Python, Langflow Desktop, container runtime, or deployment environment for installing and running Langflow and any selected component packages.
+  - Approved model provider credentials, embedding provider credentials, vector store, data source, and tool credentials for the flows being built or served.
+  - Authentication, reverse proxy, TLS, secret-key, and network exposure plan before running a shared, public, or production Langflow server.
+  - Reviewed user, tenant, workspace, file-system, database, and network isolation model before allowing multiple people or untrusted flows to share one Langflow environment.
+  - Patch-management process for Langflow releases and GitHub Security Advisories, especially when exposing the visual editor, public flows, MCP servers, or APIs.
+safetyNotes:
+  - Langflow is a visual IDE and code execution platform; custom Python components and some generated-code workflows can execute with access to the backend process, filesystem, environment, and network.
+  - The official security documentation says Langflow does not enforce tenant isolation within a single process and relies on infrastructure-level isolation for multi-tenant or third-party deployments.
+  - Do not expose Langflow directly to the internet without authentication, a non-default secret key, a reverse proxy, TLS, and reviewed API, CORS, and MCP server settings.
+  - MCP server mode can expose flows as tools to external clients, and MCP client mode can let agents call external MCP servers; review tool names, descriptions, permissions, and API-key scope before connecting coding agents.
+  - Flow components can call LLMs, fetch files, read databases, upload documents, invoke APIs, execute code, write outputs, and trigger workflows; review side effects before serving flows to users.
+  - GitHub Security Advisories include a critical unauthenticated RCE affecting Langflow versions up to 1.8.2, patched in 1.9.0; operators should run patched versions and monitor advisories before exposing instances.
+privacyNotes:
+  - Langflow flows can process prompts, chat history, uploaded files, documents, chunks, embeddings, retrieved context, tool arguments, tool outputs, component state, API responses, logs, and generated code.
+  - Model providers, embedding providers, vector stores, MCP servers, SaaS APIs, databases, and tracing or deployment platforms may receive user data or flow context depending on selected components.
+  - Stored flows, exported flow JSON, API keys, environment variables, component credentials, message history, and project metadata need retention, access-control, backup, and deletion policies.
+  - Authentication settings and API keys protect access to Langflow servers and served flows, but component-level credentials can still grant broad third-party access if embedded in flows or environment configuration.
+  - MCP and coding-agent integrations can move flow data, tool descriptions, and credentials-adjacent metadata into external clients, local config files, agent transcripts, logs, and downstream tool calls.
+---
+
+## Editorial notes
+
+Langflow is useful when Claude-adjacent teams want to prototype, inspect, and deploy agentic workflows visually instead of wiring every RAG, model, tool, and MCP path by hand. It gives developers a canvas for composing reusable components into agents, chatbots, document analysis systems, RAG applications, served APIs, and MCP-connected workflows.
+
+This is distinct from existing code-first framework entries. LlamaIndex and Haystack focus on Python framework layers for data-aware apps and orchestration. LangGraph and Pydantic AI focus on programmatic agent construction. Flowise and Dify are adjacent visual builders, but no dedicated Langflow entry exists in this directory. Langflow's center of gravity is the open-source visual workflow builder with Python components, deployable flows, agents, API serving, and MCP client/server support.
+
+## Source notes
+
+- The official documentation describes Langflow as an open-source, Python-based, customizable framework for building AI applications, including agents and MCP, without requiring a specific LLM or vector store.
+- The getting-started documentation says Langflow can build chatbots, document analysis systems, content generators, and agentic applications with a visual editor and reusable component nodes.
+- The agents documentation describes the Agent component as a way to build agent flows that integrate tools, use LLMs as a reasoning engine, and can take actions such as editing files, running scripts, or calling external APIs.
+- The MCP client documentation covers connecting coding agents such as Claude Code to a Langflow instance through `lfx-mcp`, server URL configuration, and API-key based access.
+- The MCP server documentation says Langflow can expose project flows as MCP tools, supports Streamable HTTP and SSE fallback transports, and can configure API-key authentication when server authentication is enabled.
+- The official security documentation says Langflow is inherently capable of executing arbitrary developer-provided Python, does not enforce isolation between users in a single process, and recommends infrastructure isolation for multi-tenant deployments.
+- The GitHub Security Advisory `GHSA-vwmf-pq79-vjvx` describes a critical unauthenticated RCE in versions up to 1.8.2 and lists 1.9.0 or newer as patched.
+- The GitHub repository is `langflow-ai/langflow`, is MIT licensed, and describes Langflow as a tool for building and deploying AI-powered agents and workflows.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Langflow`, `langflow`, `langflow-ai/langflow`, `docs.langflow.org`, `www.langflow.org`, `langflow.org`, `lfx-mcp`, `Langflow MCP Client`, `Langflow MCP server`, `visual AI builder`, `agent workflows`, and `RAG builder`. Existing LlamaIndex, Haystack, LangGraph, Pydantic AI, MLflow, MCP, and agent-framework entries cover adjacent framework or orchestration workflows, but no dedicated Langflow tools entry, Langflow source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

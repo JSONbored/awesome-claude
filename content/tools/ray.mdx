@@ -1,0 +1,78 @@
+---
+title: Ray
+slug: ray
+category: tools
+description: Apache-2.0 distributed AI compute engine for scaling Python, ML data processing, training, tuning, reinforcement learning, and model serving workloads.
+cardDescription: Scale Python and AI workloads with Ray Core and Ray AI libraries.
+seoTitle: Ray distributed AI compute engine
+seoDescription: Ray is an Apache-2.0 distributed AI compute engine for scaling Python, ML data processing, training, tuning, reinforcement learning, and model serving workloads.
+author: Ray Project
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.ray.io/"
+documentationUrl: "https://docs.ray.io/en/latest/"
+repoUrl: "https://github.com/ray-project/ray"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - distributed-computing
+  - machine-learning
+  - model-serving
+keywords:
+  - Ray
+  - Ray Core
+  - Ray Data
+  - Ray Train
+  - Ray Serve
+prerequisites:
+  - Python environment, supported platform, and Ray package extras selected for the intended workload, such as `ray[default]`, `ray[data,train,tune,serve]`, or `ray[rllib]`.
+  - Workload design for Ray Core tasks, actors, objects, runtime environments, object store usage, scheduling, placement groups, retries, and fault-tolerance behavior.
+  - Operational plan for local clusters, VM clusters, Kubernetes or KubeRay clusters, Ray Jobs, Ray Dashboard, Ray Client, logs, metrics, autoscaling, and upgrade/rollback paths.
+  - Security design for trusted code execution, network isolation, token authentication, TLS or encrypted tunnels, dashboard access, job submission, and cluster segmentation.
+  - Cost and capacity plan for CPUs, GPUs, object store memory, autoscaling limits, cloud quotas, storage, batch inference, serving replicas, and distributed training jobs.
+safetyNotes:
+  - Ray executes arbitrary Python code across one or more nodes, so only trusted workloads should run on a cluster and untrusted user code should be isolated outside Ray.
+  - The official security docs warn that exposed Ray Dashboard, Ray Jobs, or Ray Client services can allow anyone with port access to execute arbitrary code on the cluster.
+  - Ray expects security and workload isolation to be enforced through controlled networks, external auth, separate clusters, Kubernetes or cloud controls, and platform policy.
+  - Token authentication is available in Ray 2.52.0 or later, but the docs describe it as defense in depth rather than a replacement for network isolation or encrypted transport.
+  - Tokens should not be committed to git, exposed in logs, or sent over insecure network links; Ray's token-auth docs recommend SSH tunnels, TLS termination, VPNs, or overlay networks for remote access.
+  - Large Ray jobs can quickly consume cluster CPUs, GPUs, object-store memory, cloud budget, and queue capacity, so quotas, autoscaling bounds, monitoring, and cancellation paths should be tested before production use.
+privacyNotes:
+  - Ray workloads can process prompts, embeddings, datasets, model artifacts, checkpoints, object-store data, logs, metrics, traces, job submissions, environment variables, and dashboard metadata.
+  - Ray stores runtime artifacts, logs, object spilling files, usage-stat files, dashboard data, checkpoints, and job outputs on local nodes or configured storage depending on workload and cluster setup.
+  - Usage stats collection is documented as enabled by default in cluster starts, guarded by an opt-out prompt or config, and can be disabled with CLI flags, `ray disable-usage-stats`, environment variables, or KubeRay settings.
+  - When enabled, Ray usage stats are reported to `https://usage-stats.ray.io/` and saved locally under Ray session directories for inspection.
+  - Token files may be stored in plaintext at `~/.ray/auth_token`; teams should protect file permissions, avoid environment leakage, rotate tokens when needed, and restrict who can inspect cluster logs or dashboard sessions.
+---
+
+## Editorial notes
+
+Ray is useful when Claude-adjacent teams need to scale agent workloads, evaluation jobs, data preparation, batch inference, model training, hyperparameter tuning, reinforcement learning, or serving systems beyond a single Python process. It provides a distributed runtime through Ray Core and higher-level AI libraries for data processing, training, tuning, RL, and serving.
+
+This is distinct from the existing Hugging Face entries. Accelerate focuses on distributed training and inference loops for PyTorch-oriented ML code, Datasets focuses on dataset loading and preprocessing, Diffusers focuses on media-generation pipelines, Evaluate focuses on metrics and measurements, and PEFT focuses on adapter-based fine-tuning. Ray is the broader distributed compute and orchestration layer that can run Python tasks, actors, serving replicas, training jobs, data pipelines, and cluster workloads across local machines, VMs, cloud infrastructure, and Kubernetes.
+
+## Source notes
+
+- The official repository describes Ray as an AI compute engine with a core distributed runtime and AI libraries for accelerating ML workloads.
+- The official README describes Ray as a unified framework for scaling AI and Python applications.
+- The README lists Ray Data, Ray Train, Ray Tune, RLlib, and Ray Serve as AI libraries, and Ray Core tasks, actors, and objects as core abstractions.
+- The README says Ray runs on any machine, cluster, cloud provider, and Kubernetes.
+- The installation docs document recommended package extras, including `ray[data,train,tune,serve]` for machine learning applications, `ray[default]` for general Python applications, and `ray[rllib]` for reinforcement learning.
+- The installation docs say Ray officially supports Linux x86_64, Linux aarch64, and Apple silicon hardware, with Windows support currently in beta.
+- The official security docs say Ray runs arbitrary code across one or more nodes and that Dashboard, Jobs, and Client services provide complete access to Ray Cluster compute resources.
+- The security docs recommend controlled network environments, trusted code, external isolation, and separate Ray clusters when workloads require isolation.
+- The token-authentication docs say token auth is available in Ray 2.52.0 or later, is disabled by default in the current docs, and is not a substitute for network isolation or encryption.
+- The token-authentication docs describe `RAY_AUTH_MODE=token`, `RAY_AUTH_TOKEN`, `RAY_AUTH_TOKEN_PATH`, default token files, SSH tunneling, TLS termination, VPNs, and overlay networks.
+- The usage-stats docs describe default usage stats behavior, opt-out mechanisms, hourly reporting, local usage-stat files, and the project's stated policy not to collect PII or proprietary code/data.
+- The repository is `ray-project/ray`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Ray`, `Ray Project`, `ray-project/ray`, `docs.ray.io`, `ray.io`, `Ray Core`, `Ray Data`, `Ray Train`, `Ray Tune`, `RLlib`, and `Ray Serve`. No dedicated Ray tools entry, source URL duplicate, target file, or open duplicate PR was found. The only repository search noise was an unrelated `urllib` example matching the `RLlib` token pattern.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Ray is Apache-2.0 open-source software; Anyscale services, cloud providers, Kubernetes infrastructure, GPU providers, storage systems, observability stacks, model providers, and downstream applications may have separate licenses, billing, terms, privacy obligations, and access controls.

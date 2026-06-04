@@ -1,0 +1,100 @@
+---
+title: /dependency-risk-review - Dependency Risk Review Command for Claude Code
+slug: dependency-risk-review
+category: commands
+description: >-
+  Slash command that reviews the supply-chain risk of a project's dependencies
+  using OpenSSF Scorecard health signals rather than CVE counts. It identifies
+  high-impact dependencies, looks up each one's Scorecard checks (Maintained,
+  Dangerous-Workflow, Pinned-Dependencies, Signed-Releases, Code-Review, and
+  more) through the public API, cross-references OSV for known advisories, ranks
+  the riskiest dependencies, and recommends concrete actions.
+cardDescription: >-
+  Rank dependency supply-chain risk from OpenSSF Scorecard health signals and
+  OSV advisories, with actions.
+seoTitle: /dependency-risk-review - Dependency Risk Review Command for Claude Code
+seoDescription: >-
+  A Claude Code slash command that ranks dependency supply-chain risk using
+  OpenSSF Scorecard health checks and OSV advisories, then recommends concrete
+  mitigations.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://securityscorecards.dev/"
+repoUrl: "https://github.com/ossf/scorecard"
+installable: true
+installCommand: "/dependency-risk-review [package]"
+commandSyntax: "/dependency-risk-review [package]"
+usageSnippet: "/dependency-risk-review express"
+copySnippet: "/dependency-risk-review [package]"
+safetyNotes:
+  - "Queries the public OpenSSF Scorecard API and OSV API with read-only GET requests to look up already-published health scores and advisories; it changes nothing in your project or in any dependency."
+  - "When the optional scorecard CLI is used to score a repository that is not already in the public dataset, it performs read-only analysis and needs a GitHub token; it never modifies repositories."
+  - "The review is advisory - it ranks risk and recommends actions, but it does not pin, update, remove, or vendor any dependency on its own."
+privacyNotes:
+  - "Sends only dependency package names and their already-public source-repository identifiers to the public OpenSSF Scorecard and OSV APIs; it sends no source code, lockfile contents, or credentials."
+  - "Scorecard and OSV responses (numeric check scores and advisory text) enter the model context to explain the risk ranking."
+  - "It writes nothing to disk beyond any output you choose to redirect."
+tags:
+  - "supply-chain"
+  - "dependencies"
+  - "openssf-scorecard"
+  - "security"
+  - "devops"
+keywords:
+  - "dependency risk review command"
+  - "openssf scorecard dependency check"
+  - "supply chain risk slash command"
+  - "dependency health posture review"
+---
+
+The `/dependency-risk-review` command assesses **supply-chain posture** — how healthy and trustworthy your dependencies are to depend on — using [OpenSSF Scorecard](https://securityscorecards.dev/) health checks, with [OSV](https://osv.dev/) advisories as a secondary signal. It complements CVE scanners (which answer "is there a known vulnerability?") by answering "is this dependency well-maintained, reviewed, and safe to trust?".
+
+## Usage
+
+```
+/dependency-risk-review [package]
+```
+
+- With a `package` name: review that single dependency.
+- Without an argument: review the project's high-impact direct dependencies.
+
+## What it does
+
+When you invoke this command, follow these steps and only read public data:
+
+1. **Pick the targets.** Read direct dependencies from `package.json`, a lockfile, `requirements.txt`, `go.mod`, or `Cargo.toml`. Prioritize dependencies that are widely imported, run at build/CI time, or have many transitive children.
+2. **Resolve source repos.** Map each dependency to its source repository (for example via the registry metadata's `repository` field).
+3. **Look up Scorecard.** Query the public API `https://api.securityscorecards.dev/projects/github.com/<owner>/<repo>` for each repo. If a repo is not in the dataset, optionally run `scorecard --repo=github.com/<owner>/<repo>` locally.
+4. **Read the risk-bearing checks.** Surface low scores for `Maintained`, `Dangerous-Workflow`, `Pinned-Dependencies`, `Signed-Releases`, `Token-Permissions`, `Code-Review`, `Branch-Protection`, and `Vulnerabilities`.
+5. **Cross-reference advisories.** Query OSV (`https://api.osv.dev/v1/query`) for known advisories affecting the installed version of each dependency.
+6. **Rank and recommend.** Rank dependencies by combined risk and, for each high-risk one, recommend a concrete action: pin to a hash, update, replace with a healthier alternative, vendor, or add monitoring.
+
+## Output format
+
+- **Dependency:** name + version + source repo.
+- **Scorecard:** aggregate score and the lowest risk-bearing checks.
+- **Advisories:** any OSV matches for the installed version.
+- **Risk:** high / medium / low with the driving signal.
+- **Action:** the recommended mitigation.
+
+## Requirements
+
+- Network access to the public OpenSSF Scorecard API (`api.securityscorecards.dev`) and OSV API (`api.osv.dev`).
+- `curl` or an equivalent HTTP client.
+- Optional: the `scorecard` CLI and a GitHub token to score repositories not already in the public dataset.
+
+## Safety notes
+
+The command only reads public data — it queries the OpenSSF Scorecard and OSV APIs with read-only requests and changes nothing in your project or dependencies. The optional `scorecard` CLI performs read-only analysis. The review is advisory: it ranks risk and recommends actions but does not pin, update, remove, or vendor anything itself.
+
+## Privacy notes
+
+Only dependency package names and their already-public source-repository identifiers are sent to the public Scorecard and OSV APIs — never source code, lockfile contents, or credentials. The API responses (numeric scores and advisory text) enter the model context to explain the ranking. Nothing is written to disk beyond output you redirect.
+
+## Source and references
+
+- OpenSSF Scorecard: https://securityscorecards.dev/
+- Scorecard checks reference: https://github.com/ossf/scorecard/blob/main/docs/checks.md
+- OSV (Open Source Vulnerabilities): https://osv.dev/

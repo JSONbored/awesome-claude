@@ -2,17 +2,9 @@ import type { SearchDocument } from "@heyclaude/registry";
 
 export type BooleanFilterValue = "all" | "true" | "false";
 
-export type DownloadTrustFilterValue =
-  | "all"
-  | "first-party"
-  | "external"
-  | "none";
+export type DownloadTrustFilterValue = "all" | "first-party" | "external" | "none";
 
-export type ClaimStatusFilterValue =
-  | "all"
-  | "unclaimed"
-  | "pending"
-  | "verified";
+export type ClaimStatusFilterValue = "all" | "unclaimed" | "pending" | "verified";
 
 export type SourceStatusFilterValue = "all" | "available" | "missing";
 
@@ -75,25 +67,20 @@ export function matchesQuery(entry: SearchDocument, query: string) {
 
 export function matchesPlatform(entry: SearchDocument, platform: string) {
   if (!platform) return true;
-  return (entry.platforms ?? []).some(
-    (item) => String(item).trim().toLowerCase() === platform,
-  );
+  return (entry.platforms ?? []).some((item) => String(item).trim().toLowerCase() === platform);
 }
 
-export function matchesBooleanFilter(
-  value: boolean,
-  filter: BooleanFilterValue,
-) {
+export function matchesBooleanFilter(value: boolean, filter: BooleanFilterValue) {
   if (filter === "all") return true;
   return filter === "true" ? value : !value;
 }
 
 export function hasSafetyNotes(entry: SearchDocument) {
-  return Boolean(entry.safetyNotes?.length);
+  return Boolean(entry.trustSignals?.hasSafetyNotes || entry.safetyNotes?.length);
 }
 
 export function hasPrivacyNotes(entry: SearchDocument) {
-  return Boolean(entry.privacyNotes?.length);
+  return Boolean(entry.trustSignals?.hasPrivacyNotes || entry.privacyNotes?.length);
 }
 
 export function packageTrustValue(entry: SearchDocument) {
@@ -113,14 +100,9 @@ export function entryMatchesFilters(
   filters: RegistrySearchFilterState,
   except?: ReadonlySet<RegistrySearchFilterDimension>,
 ) {
-  const skip = (dimension: RegistrySearchFilterDimension) =>
-    except?.has(dimension) === true;
+  const skip = (dimension: RegistrySearchFilterDimension) => except?.has(dimension) === true;
 
-  if (
-    !skip("category") &&
-    filters.category &&
-    entry.category !== filters.category
-  ) {
+  if (!skip("category") && filters.category && entry.category !== filters.category) {
     return false;
   }
   if (!skip("platform") && !matchesPlatform(entry, filters.platform)) {
@@ -189,9 +171,7 @@ export function scoreSearchEntry(
   const title = entry.title.toLowerCase();
   const category = entry.category.toLowerCase();
   const tags = new Set((entry.tags ?? []).map((tag) => tag.toLowerCase()));
-  const keywords = new Set(
-    (entry.keywords ?? []).map((keyword) => keyword.toLowerCase()),
-  );
+  const keywords = new Set((entry.keywords ?? []).map((keyword) => keyword.toLowerCase()));
   const haystack = normalizedSearchText(entry);
   let score = 0;
   const reasons = new Set<string>();
@@ -231,10 +211,7 @@ export function scoreSearchEntry(
     score += 8;
     reasons.add("source-backed");
   }
-  if (
-    entry.downloadTrust === "first-party" ||
-    entry.trustSignals?.packageVerified === true
-  ) {
+  if (entry.downloadTrust === "first-party" || entry.trustSignals?.packageVerified === true) {
     score += 8;
     reasons.add("trusted package");
   }

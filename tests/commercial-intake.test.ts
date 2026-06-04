@@ -129,6 +129,28 @@ describe("commercial intake contracts", () => {
     );
   });
 
+  it("rejects contact emails whose domain has an empty TLD label", () => {
+    const base = {
+      kind: "tool",
+      contactName: "Jane",
+      companyName: "Example Co",
+      listingTitle: "Example Tool",
+      websiteUrl: "https://example.com",
+    };
+
+    for (const contactEmail of ["jane@example.", "jane@.com", "jane@example"]) {
+      const result = validateListingLeadPayload({ ...base, contactEmail });
+      expect(result.ok).toBe(false);
+      expect(result.errors).toContain("valid contactEmail is required");
+    }
+
+    const valid = validateListingLeadPayload({
+      ...base,
+      contactEmail: "jane@mail.example.co",
+    });
+    expect(valid.errors).not.toContain("valid contactEmail is required");
+  });
+
   it("enforces a higher content bar before paid jobs can publish", () => {
     expect(
       validateJobPublicationQuality({

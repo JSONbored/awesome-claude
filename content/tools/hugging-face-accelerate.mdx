@@ -1,0 +1,75 @@
+---
+title: Hugging Face Accelerate
+slug: hugging-face-accelerate
+category: tools
+description: Apache-2.0 library for running raw PyTorch training and inference code across CPU, GPU, TPU, DeepSpeed, FSDP, and mixed-precision environments.
+cardDescription: Run raw PyTorch training and inference across distributed and mixed-precision setups.
+seoTitle: Hugging Face Accelerate distributed PyTorch runtime
+seoDescription: Hugging Face Accelerate is an Apache-2.0 library for running raw PyTorch training and inference code across CPU, GPU, TPU, DeepSpeed, FSDP, and mixed-precision environments.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://huggingface.co/docs/accelerate"
+documentationUrl: "https://huggingface.co/docs/accelerate"
+repoUrl: "https://github.com/huggingface/accelerate"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - distributed-training
+  - pytorch
+  - training
+keywords:
+  - Hugging Face Accelerate
+  - distributed PyTorch
+  - mixed precision
+  - DeepSpeed
+  - FSDP
+prerequisites:
+  - Python 3.8 or newer, compatible PyTorch environment, accelerator drivers, and the `accelerate` package installed from PyPI, conda, or the official repository.
+  - Training or inference script with a raw PyTorch loop, model, optimizer, dataloaders, scheduler, checkpoint strategy, and known single-device baseline behavior.
+  - Runtime configuration from `accelerate config`, `accelerate env`, or explicit launch arguments for CPU, single GPU, multi-GPU, TPU, DeepSpeed, FSDP, mixed precision, or multi-node execution.
+  - Hardware and operations plan for GPU memory, process count, rendezvous settings, storage, checkpointing, failure recovery, cluster scheduling, and rollback.
+  - Data governance plan for training data, prompts, labels, metrics, checkpoints, experiment logs, Hub access tokens, and distributed worker access before scaling a workload.
+safetyNotes:
+  - Accelerate can scale a raw PyTorch loop quickly, but distributed execution can also multiply bugs, data leakage, runaway compute cost, checkpoint corruption, and unsafe model behavior.
+  - Run `accelerate config`, DeepSpeed, FSDP, mixed precision, device placement, gradient accumulation, and process counts on a small workload before production training or inference.
+  - Multi-GPU, TPU, MPI, notebook, and multi-node launches can exhaust CPU, GPU, memory, disk, network, or quota resources if batch size, precision, worker count, and checkpoint cadence are not bounded.
+  - Source installs, example scripts, notebooks, cluster launchers, and community configuration snippets should be reviewed before execution, especially when combined with private data or credentials.
+  - Training and fine-tuning workflows still need evaluation, rollback, model-card review, license review, and safety testing before outputs or checkpoints are used in Claude-adjacent products.
+  - Distributed workers, shared filesystems, cloud notebooks, and experiment trackers should be configured so failed runs do not leave sensitive data, tokens, logs, or checkpoints broadly accessible.
+privacyNotes:
+  - Accelerate workflows can process prompts, conversations, documents, datasets, labels, model outputs, metrics, gradients, checkpoints, adapter weights, and experiment artifacts.
+  - The `accelerate env` command, launcher logs, cluster logs, notebooks, crash traces, and tracker integrations may reveal platform details, Python paths, GPU types, process counts, configuration values, dataset names, or model names.
+  - Hugging Face Hub access, private repositories, cloud storage, shared caches, multi-node filesystems, and experiment trackers may expose credentials, examples, metrics, checkpoints, or access metadata depending on setup.
+  - Mixed-precision, FSDP, DeepSpeed, and checkpoint sharding can create multiple intermediate files that need the same retention, deletion, encryption, and access-control policy as the source training data.
+  - Teams should define who can inspect configuration files, launch logs, failed batches, checkpoints, Hub artifacts, and distributed worker outputs before using Accelerate in production workflows.
+---
+
+## Editorial notes
+
+Hugging Face Accelerate is useful when Claude-adjacent teams want to keep control over raw PyTorch training or inference loops while making the same code run on local debugging hardware, single GPUs, multi-GPU machines, TPUs, DeepSpeed, FSDP, mixed precision, notebooks, or distributed environments. It provides an `Accelerator` abstraction and CLI launch path so teams can move from a small local run to larger hardware without rewriting the whole training stack.
+
+This is distinct from the existing Hugging Face entries. Transformers is the model-definition, tokenizer, generation, pipeline, and Trainer layer. PEFT focuses on parameter-efficient adapters and fine-tuning methods. Datasets is the data loading, streaming, and preprocessing layer. Sentence Transformers focuses on embedding and reranking models. Hugging Face Accelerate is the runtime orchestration layer for device placement, distributed launch, mixed precision, DeepSpeed, FSDP, process coordination, and reusable PyTorch loops.
+
+## Source notes
+
+- The official README says Accelerate was created for PyTorch users who want to keep their own training loop while avoiding boilerplate for multi-GPU, TPU, and mixed-precision execution.
+- The README shows the core workflow with `Accelerator`, `accelerator.prepare`, and `accelerator.backward` around a standard PyTorch model, optimizer, dataloader, and loss.
+- The README says the same code can run on a local machine for debugging or on distributed training environments with CPU, GPU, multi-GPU, TPU, fp8, fp16, or bf16 setups.
+- The README documents the optional `accelerate config` and `accelerate launch` CLI flow, plus examples for multi-GPU, MPI, DeepSpeed, and notebook launches.
+- The official docs describe Accelerate as a library for running the same PyTorch code across distributed configurations with minimal code changes.
+- The docs say Accelerate is built on `torch_xla` and `torch.distributed`, with support for DeepSpeed, fully sharded data parallelism, and automatic mixed precision.
+- The installation docs say Accelerate is tested on Python 3.8 or newer and is available from PyPI, conda-forge, and the official GitHub repository.
+- The installation docs show `accelerate env` output that includes local platform, Python, PyTorch, RAM, GPU, and default configuration details, which matters for privacy review.
+- The repository is `huggingface/accelerate`, is Apache-2.0 licensed, and describes the project as a way to launch, train, and use PyTorch models across device and distributed configurations.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face Accelerate`, `huggingface/accelerate`, `huggingface.co/docs/accelerate`, `accelerate launch`, `distributed PyTorch`, `mixed precision`, `DeepSpeed`, and `FSDP`. No dedicated Hugging Face Accelerate tools entry, source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face Accelerate is Apache-2.0 open-source software; individual models, datasets, Hub repositories, cloud runtimes, experiment trackers, and distributed infrastructure may have separate licenses, terms, privacy obligations, and access controls.

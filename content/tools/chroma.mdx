@@ -1,0 +1,74 @@
+---
+title: Chroma
+slug: chroma
+category: tools
+description: Open-source AI data infrastructure for storing documents, embeddings, metadata, and retrieval indexes across local, self-hosted, and managed Chroma Cloud deployments.
+cardDescription: Store embeddings and metadata for AI retrieval with local, self-hosted, or cloud Chroma.
+seoTitle: Chroma AI retrieval database
+seoDescription: Chroma is open-source AI data infrastructure for embeddings, metadata, dense and sparse vector search, hybrid search, full-text search, multimodal retrieval, local development, self-hosting, and Chroma Cloud.
+author: Chroma
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.trychroma.com/"
+documentationUrl: "https://docs.trychroma.com/"
+repoUrl: "https://github.com/chroma-core/chroma"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - retrieval
+  - vector-database
+  - rag
+keywords:
+  - Chroma
+  - ChromaDB
+  - vector database
+  - embedding database
+  - AI search infrastructure
+prerequisites:
+  - Python, TypeScript, Rust, local server, self-hosted service, or Chroma Cloud path selected for the target AI application.
+  - Approved embedding model, embedding function, multimodal model, or precomputed embedding pipeline with known dimensionality and license terms.
+  - Collection design for document IDs, metadata schema, embedding dimensions, update behavior, deletion behavior, and retrieval filters before production ingestion.
+  - Storage, backup, retention, encryption, access-control, and deployment plan for local persistence, client-server mode, self-hosted services, or managed Chroma Cloud databases.
+  - Evaluation prompts, relevance tests, privacy review, and human review process before routing Claude-adjacent agents or customer workflows through retrieved Chroma context.
+safetyNotes:
+  - Chroma can make retrieval easier, but vector, hybrid, full-text, and regex search results still require evaluation for relevance, freshness, permission fit, and hallucination risk.
+  - Retrieved documents, metadata, and embeddings can influence agent actions; review chunking, filters, collection boundaries, and prompt assembly before using results in automated workflows.
+  - Duplicate IDs, mismatched embedding dimensions, stale records, partial updates, and deleted-source drift can produce confusing or incorrect retrieval behavior if ingestion is not controlled.
+  - Metadata filters are useful access boundaries only when the application enforces them consistently; do not rely on model instructions alone to prevent cross-tenant or cross-project retrieval.
+  - Local and self-hosted deployments still need normal database operations including authentication, network exposure review, backups, resource limits, monitoring, and recovery tests.
+  - Chroma Cloud, embedding providers, and connected AI applications may add account, billing, availability, and organization-policy dependencies beyond the open-source database package.
+privacyNotes:
+  - Chroma collections may store source documents, document chunks, metadata, IDs, embeddings, multimodal references, query text, and retrieval results that can reveal sensitive project context.
+  - Embeddings can leak information about the original data and should be governed with the same retention, deletion, access-control, and backup policies as the documents they represent.
+  - Embedding providers, Chroma Cloud, hosted model routes, or application telemetry may receive document or query content depending on how ingestion and search are configured.
+  - Metadata can include user identifiers, source names, document provenance, internal labels, and permission fields; define redaction and minimization rules before ingestion.
+  - Retrieval logs, failed queries, evaluation traces, and agent transcripts can re-expose stored data outside Chroma, so downstream systems need their own retention and access policies.
+---
+
+## Editorial notes
+
+Chroma is useful when Claude-adjacent teams need a practical retrieval layer for RAG, code search, agent memory, knowledge bases, evaluations, and multimodal search. It gives developers collections for documents, embeddings, metadata, dense and sparse vector search, hybrid search, full-text and regex search, metadata filtering, local development, self-hosting, and managed Chroma Cloud.
+
+This is distinct from existing entries. The current `mcp-setup` command mentions Chroma only as an example embedding database. Existing LlamaIndex, Haystack, LangGraph, Agno, and Pydantic AI entries focus on orchestration or agent frameworks; Ollama, vLLM, llama.cpp, and LiteLLM focus on model runtime or routing. Chroma is the storage and retrieval layer that can sit underneath those workflows.
+
+## Source notes
+
+- The official repository README describes Chroma as open-source data infrastructure for AI and links to the official docs and homepage.
+- The README says Chroma Cloud is a hosted service for serverless vector, hybrid, and full-text search, while the open-source project is Apache-2.0 licensed.
+- The docs introduction says Chroma stores embeddings with metadata, searches dense and sparse vectors, filters by metadata, and retrieves across text, images, and more.
+- The docs list document storage, embedding functions for providers such as OpenAI, Cohere, Hugging Face, and sentence-transformers, vector search, full-text and regex search, metadata filtering, and multimodal retrieval.
+- The getting-started docs describe local SDK usage, Chroma Cloud, in-memory clients, persistent clients, and client-server mode for persistence.
+- The collections docs say records require unique string IDs, can include documents, embeddings, and metadata, and must keep embedding dimensions consistent within a collection.
+- The query docs describe nearest-neighbor similarity search, direct embedding queries, metadata filters, full-text filters, ID constraints, result counts, and record retrieval without similarity ranking.
+- The repository is `chroma-core/chroma`, is Apache-2.0 licensed, and describes the project as search infrastructure for AI.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Chroma`, `ChromaDB`, `chromadb`, `chroma-core/chroma`, `trychroma.com`, `docs.trychroma.com`, `embedding database`, `vector database`, and `AI search infrastructure`. The only Chroma-specific content hit is a generic MCP setup command bullet that names Chroma as an embedding database; no dedicated Chroma tools entry, Chroma source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Chroma includes an Apache-2.0 open-source project and hosted Chroma Cloud offerings.

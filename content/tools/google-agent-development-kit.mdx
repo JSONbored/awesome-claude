@@ -1,0 +1,78 @@
+---
+title: Google Agent Development Kit
+slug: google-agent-development-kit
+category: tools
+description: Apache-2.0 code-first toolkit for building, running, evaluating, and deploying AI agents, workflows, tools, sessions, and multi-agent systems.
+cardDescription: Build, run, evaluate, and deploy code-first AI agents and workflows.
+seoTitle: Google Agent Development Kit AI agent framework
+seoDescription: Google Agent Development Kit is an Apache-2.0 code-first toolkit for building, running, evaluating, and deploying AI agents, workflows, tools, sessions, and multi-agent systems.
+author: Google
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://adk.dev/"
+documentationUrl: "https://adk.dev/"
+repoUrl: "https://github.com/google/adk-python"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - agent-framework
+  - workflows
+keywords:
+  - Google Agent Development Kit
+  - Google ADK
+  - AI agents
+  - agent workflows
+  - multi-agent systems
+prerequisites:
+  - Python 3.11 or newer for the current ADK Python repository, or the language runtime required by the selected ADK TypeScript, Go, Java, or Kotlin workflow.
+  - The `google-adk` package, isolated project environment, model provider credentials, Gemini or other model configuration, and secret-management plan for local and deployed runs.
+  - Agent design for root agents, tools, workflows, task delegation, sessions, state, memory, callbacks, grounding, MCP tools, A2A exposure, and human-in-the-loop paths.
+  - Local development plan for `adk run`, `adk web`, eval files, traces, logs, and tool-call debugging before exposing agents to users or production systems.
+  - Deployment plan for Agent Runtime, Cloud Run, GKE, containers, or other infrastructure with authentication, authorization, observability, rate limits, rollback, and data retention defined.
+safetyNotes:
+  - ADK agents can call tools, APIs, workflows, and other agents, so permissions, confirmations, allowlists, budgets, and human-review paths should be designed before connecting real systems.
+  - The ADK 2.0 README notes breaking changes to the agent API, event model, and session schema; teams should pin versions and test session compatibility before upgrading production agents.
+  - The Python quickstart writes model credentials to a local `.env` file; projects should keep secrets out of git, logs, traces, shared notebooks, and generated support artifacts.
+  - The ADK web UI is documented for development and debugging, not production deployment; production agents should use hardened deployment paths with explicit auth and network controls.
+  - Agent evaluations should test final responses, tool-use trajectory, intermediate agent responses, failure paths, and unsafe action attempts before exposing autonomous workflows.
+  - Deployments on Agent Runtime, Cloud Run, GKE, or containers need operational controls for cost, quota, prompt injection, tool misuse, logging, incident response, and rollback.
+privacyNotes:
+  - ADK workflows can process prompts, chat histories, session state, tool arguments, tool outputs, traces, logs, evaluation cases, model responses, API keys, and deployment metadata.
+  - Local `.env` files, generated agent projects, debug logs, web UI sessions, traces, eval sets, and test files can retain sensitive user, project, or credential data.
+  - Google AI Studio, Gemini APIs, Agent Runtime, Cloud Run, GKE, observability integrations, MCP tools, A2A integrations, and third-party model providers may process prompts, outputs, traces, credentials, or service metadata depending on configuration.
+  - Evaluation datasets can include user queries, expected tool calls, intermediate agent responses, final answers, initial session state, and custom metrics that may reveal private workflows.
+  - Teams should define who can inspect sessions, traces, eval sets, tool outputs, deployment logs, API keys, and model-provider artifacts before using ADK for production agents.
+---
+
+## Editorial notes
+
+Google Agent Development Kit is useful when Claude-adjacent teams need a code-first framework for building agents, composing deterministic workflows, defining tools, testing agent behavior, evaluating tool-use trajectories, and deploying agent services. It supports local CLI and web development loops, workflow composition, task delegation, sessions, state, memory, callbacks, observability, evaluation, and deployment paths for Google Cloud and container-friendly infrastructure.
+
+This is distinct from the existing tools entries. It is not a model library like Transformers, a data layer like Datasets, a distributed runtime like Accelerate, or an evaluation-metrics library like Evaluate. Google ADK is an agent application framework: it organizes agent code, tools, workflows, runtime behavior, evaluation cases, deployment surfaces, and integrations around production-oriented agent systems.
+
+## Source notes
+
+- The official repository describes ADK as an open-source, code-first Python framework for building, evaluating, and deploying AI agents with flexibility and control.
+- The ADK 2.0 README documents workflow runtime support for routing, fan-out/fan-in, loops, retry, state management, dynamic nodes, human-in-the-loop, and nested workflows.
+- The README documents the Task API for structured agent-to-agent delegation, multi-turn task mode, controlled output, mixed delegation patterns, and task agents as workflow nodes.
+- The README lists Python 3.11 or newer as the current requirement and installs the Python package with `pip install google-adk`.
+- The README shows `Agent`, `Workflow`, `adk run`, and `adk web` examples for local agent development.
+- The canonical documentation site is `https://adk.dev/`; the older `https://google.github.io/adk-docs/` documentation URL currently redirects there.
+- The documentation describes ADK as a toolkit for building, managing, evaluating, and deploying AI-powered agents, with quickstarts for Python, TypeScript, Go, Java, and Kotlin.
+- The Python quickstart documents `adk create`, root agent structure, tool definitions, Gemini API key setup, command-line runs, and the ADK web interface.
+- The Python quickstart warns that ADK Web is for development and debugging rather than production deployments.
+- The evaluation docs describe testing final responses, trajectories, tool use, intermediate agent responses, eval sets, custom metrics, and CLI, web, or pytest-based evaluation.
+- The deployment docs describe Agent Runtime on Agent Platform, Cloud Run, Google Kubernetes Engine, and other container-friendly infrastructure.
+- The repository is `google/adk-python`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Google Agent Development Kit`, `Google ADK`, `google/adk-python`, `google.github.io/adk-docs`, `adk.dev`, `agent development kit`, `adk run`, and `adk web`. No dedicated Google ADK tools entry, source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Google Agent Development Kit is Apache-2.0 open-source software; Google Cloud services, Gemini APIs, model providers, deployment targets, MCP tools, A2A integrations, and third-party systems may have separate licenses, billing, terms, privacy obligations, and access controls.

@@ -1,7 +1,7 @@
 import type {
-  BundleContent,
   Category,
   Entry,
+  EntryRelation,
   HookTrigger,
   InstallType,
   Platform,
@@ -22,7 +22,7 @@ export type RegistryEntry = Record<string, unknown> & {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueUrl?: string;
+  sourceSubmissionUrl?: string;
   importPrUrl?: string;
   reviewedBy?: string;
   reviewedAt?: string;
@@ -80,6 +80,16 @@ export type RegistryEntry = Record<string, unknown> & {
     platforms?: string[];
     supportLevels?: string[];
   };
+  relatedEntries?: Array<{
+    key?: string;
+    category?: string;
+    slug?: string;
+    title?: string;
+    relation?: string;
+    score?: number;
+    reasons?: string[];
+    url?: string;
+  }>;
   platformCompatibility?: Array<{
     platform: string;
     supportLevel?: string;
@@ -117,10 +127,6 @@ export type RegistryEntry = Record<string, unknown> & {
   claimedBy?: string;
   claimedByUrl?: string;
   claimedAt?: string;
-  bundleContents?: string[];
-  schedule?: string;
-  triggerKind?: string;
-  lastRun?: string;
 };
 
 const CATEGORIES = new Set<Category>([
@@ -134,14 +140,6 @@ const CATEGORIES = new Set<Category>([
   "guides",
   "collections",
   "statuslines",
-  "plugins",
-  "automations",
-  "codex-plugins",
-  "codex-automations",
-  "harness-configs",
-  "aider-recipes",
-  "continue-configs",
-  "zed-extensions",
 ]);
 
 const PLATFORM_ALIASES: Record<string, Platform> = {
@@ -180,16 +178,6 @@ const HOOK_TRIGGERS = new Set<HookTrigger>([
   "Stop",
   "SubagentStop",
   "SessionStart",
-]);
-
-const BUNDLE_CONTENTS = new Set<BundleContent>([
-  "mcp",
-  "skill",
-  "command",
-  "hook",
-  "agent",
-  "rule",
-  "prompt",
 ]);
 
 function asCategory(value: string): Category {
@@ -350,6 +338,39 @@ function normalizeRepoStats(entry: RegistryEntry): Entry["repoStats"] {
   };
 }
 
+function normalizeRelatedEntries(
+  value: RegistryEntry["relatedEntries"],
+): EntryRelation[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const rows = value
+    .map((item) => {
+      const category = asCategory(String(item.category || ""));
+      const slug = String(item.slug || "").trim();
+      const title = String(item.title || "").trim();
+      if (!slug || !title) return null;
+      return {
+        key: item.key || `${category}:${slug}`,
+        category,
+        slug,
+        title,
+        relation:
+          item.relation === "same-project" ||
+          item.relation === "collection-member" ||
+          item.relation === "works-with" ||
+          item.relation === "extends" ||
+          item.relation === "alternative" ||
+          item.relation === "related"
+            ? item.relation
+            : "related",
+        score: typeof item.score === "number" ? item.score : 0,
+        reasons: Array.isArray(item.reasons) ? item.reasons.map(String) : [],
+        url: String(item.url || `/entry/${category}/${slug}`),
+      } satisfies EntryRelation;
+    })
+    .filter((item): item is EntryRelation => Boolean(item));
+  return rows.length ? rows : undefined;
+}
+
 export function buildEntry(entry: RegistryEntry): Entry {
   const category = asCategory(entry.category);
   const source = inferSource(entry);
@@ -372,7 +393,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     submittedBy: entry.submittedBy,
     submittedByUrl: entry.submittedByUrl ?? entry.authorProfileUrl,
     submittedAt: entry.submittedAt ?? entry.dateAdded,
-    submissionIssueUrl: entry.submissionIssueUrl,
+    sourceSubmissionUrl: entry.sourceSubmissionUrl,
     importPrUrl: entry.importPrUrl,
     reviewedBy: entry.reviewedBy,
     reviewedAt,
@@ -395,6 +416,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     trust: inferTrust(entry, source),
     source,
     repoStats: normalizeRepoStats(entry),
+    relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     dateAdded: entry.dateAdded ?? entry.contentUpdatedAt?.slice(0, 10) ?? "2026-01-01",
     reviewed: Boolean(reviewedAt || entry.packageVerified),
     claimed: entry.claimStatus === "verified",
@@ -465,16 +487,5 @@ export function buildEntry(entry: RegistryEntry): Entry {
     hasTroubleshooting: entry.hasTroubleshooting,
     hasBreakingChanges: entry.hasBreakingChanges,
     harness: platforms,
-    bundleContents: stringList(entry.bundleContents)?.filter((item): item is BundleContent =>
-      BUNDLE_CONTENTS.has(item as BundleContent),
-    ),
-    schedule: entry.schedule,
-    triggerKind:
-      entry.triggerKind === "scheduled" ||
-      entry.triggerKind === "event" ||
-      entry.triggerKind === "manual"
-        ? entry.triggerKind
-        : undefined,
-    lastRun: entry.lastRun,
   };
 }

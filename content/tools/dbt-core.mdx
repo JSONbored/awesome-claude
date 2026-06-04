@@ -1,0 +1,80 @@
+---
+title: dbt Core
+slug: dbt-core
+category: tools
+description: Apache-2.0 dbt engine for transforming warehouse data with SQL models, Jinja, YAML configs, tests, documentation, lineage, metadata, and build artifacts.
+cardDescription: Transform warehouse data with SQL models, tests, docs, lineage, and artifacts.
+seoTitle: dbt Core data transformation engine
+seoDescription: dbt Core is an Apache-2.0 dbt engine for transforming warehouse data with SQL models, Jinja, YAML configs, tests, documentation, lineage, metadata, and build artifacts.
+author: dbt Labs
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.getdbt.com/"
+documentationUrl: "https://docs.getdbt.com/docs/introduction"
+repoUrl: "https://github.com/dbt-labs/dbt-core"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - analytics-engineering
+  - data-transformation
+  - sql
+keywords:
+  - dbt Core
+  - dbt
+  - analytics engineering
+  - SQL models
+  - data transformation
+prerequisites:
+  - Choice of dbt Core version and engine path, including dbt Core v1 on the `1.latest` branch or dbt Core v2 alpha on `main` as the Rust-based Fusion foundation.
+  - Supported adapter or driver for the selected data platform, warehouse credentials, target schemas, profiles configuration, and environment-specific dev, staging, and production targets.
+  - dbt project structure for SQL models, Jinja, YAML configs, sources, seeds, snapshots, tests, documentation, exposures, metrics, macros, packages, and model contracts.
+  - Warehouse permission model for creating, replacing, and reading relations, plus cost controls for threads, incremental models, full refreshes, CI builds, and scheduled jobs.
+  - Governance plan for generated artifacts, logs, usage stats, environment variables, manifests, run results, catalog output, source freshness, docs hosting, and project metadata.
+safetyNotes:
+  - dbt runs transformation SQL against a data platform and can create, replace, or mutate warehouse objects, so development and production targets should be separated and permissioned carefully.
+  - The current `dbt-labs/dbt-core` README warns that `main` hosts dbt Core v2.0 alpha, that behavior, APIs, and on-disk formats may change, and that dbt Core v1 development has moved to `1.latest`.
+  - Version, adapter, package, and artifact compatibility should be pinned and tested before upgrading shared projects or production jobs.
+  - Model tests, contracts, lineage, and documentation improve confidence, but they do not replace data review, access controls, warehouse governance, freshness checks, or incident response.
+  - Threads, full refreshes, incremental logic, and CI jobs can consume warehouse budget or lock shared resources; teams should set concurrency, timeout, and rollback expectations before broad automation.
+  - Profile files and environment variables can contain sensitive warehouse credentials, so `profiles.yml` should stay out of git, logs, generated docs, screenshots, and shared support artifacts.
+privacyNotes:
+  - dbt workflows can process SQL models, Jinja macros, YAML configs, sources, tests, seeds, snapshots, metrics, exposures, connection profiles, warehouse relation names, logs, and generated artifacts.
+  - Command output and `logs/dbt.log` can include invocation arguments, runtime context, thread names, node metadata, warehouse relation identifiers, errors, and other debugging details.
+  - dbt artifacts are written to the project's `target/` directory by default and may include manifests, run results, catalogs, source freshness output, semantic manifests, invocation IDs, adapter types, project metadata, and selected environment metadata.
+  - The artifacts docs say environment variables prefixed with `DBT_ENV_CUSTOM_ENV_` can be included in artifact metadata, so teams should avoid placing secrets in those variables.
+  - The usage-stats docs say dbt telemetry is enabled by default and does not track credentials, raw model contents, or model names; dbt Core users can opt out by setting `send_anonymous_usage_stats` to false or `DO_NOT_TRACK=1`.
+---
+
+## Editorial notes
+
+dbt Core is useful when Claude-adjacent teams need repeatable analytics engineering workflows around warehouse transformations, model dependencies, tests, documentation, metadata artifacts, source freshness, and CI-reviewed SQL changes. It gives data teams a code-first way to build trusted data products from SQL select statements while keeping transformations versioned, testable, reviewable, and documented.
+
+This is distinct from Apache Airflow and Dagster. Airflow schedules and monitors workflow DAGs. Dagster orchestrates assets and operational metadata. dbt Core is the data transformation engine and project framework that compiles, tests, documents, and runs SQL-based transformation graphs in a data platform. It is also distinct from the hosted dbt platform and from optional AI or Fusion workflows, which may have separate product terms.
+
+## Source notes
+
+- The official repository says dbt enables data analysts and engineers to transform data using the same practices that software engineers use to build applications.
+- The official docs say dbt transforms raw warehouse data into trusted data products by letting users write SQL select statements while dbt creates modular, maintainable data models.
+- The docs say dbt projects create structured context such as lineage, tests, contracts, metrics, and governance.
+- The docs describe the dbt framework as a language and engine, with SQL select statements, Jinja templating, YAML configs, tests, and metadata.
+- The docs describe dbt Core v1 as the open-source Python-based engine and dbt Core v2 as the open-source foundation for the Fusion engine that is currently in alpha.
+- The current repository README warns that dbt Core v1 development has moved to the `1.latest` branch and that `main` hosts dbt Core v2.0 alpha.
+- The README says dbt Core v2.0 is Apache-2.0 licensed, built for performance at scale, produces Parquet artifacts, and is distributed as a self-contained binary.
+- The `1.latest` README describes dbt models as SQL select statements that build on one another, with relationship management, visualization, and testing.
+- The installation docs describe dbt Core as the open-source engine for running dbt locally and distinguish dbt Core v1 from dbt Core v2 alpha.
+- The profiles docs say command-line dbt uses `profiles.yml` for data-platform connection details, target definitions, execution parameters, and credential separation.
+- The artifact docs describe manifests, run results, catalogs, source freshness, semantic manifests, target-directory output, invocation metadata, adapter type, and environment metadata.
+- The events and logs docs describe command-line output and `logs/dbt.log` debug logs with runtime context.
+- The usage-stats docs describe default telemetry, stated exclusions for credentials, raw model contents, and model names, and dbt Core opt-out paths.
+- The repository is `dbt-labs/dbt-core`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `dbt Core`, `dbt`, `dbt-labs/dbt-core`, `github.com/dbt-labs/dbt-core`, `docs.getdbt.com`, `analytics engineering`, and `SQL models`. No dedicated dbt Core tools entry, source URL duplicate, target file, issue duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. dbt Core is Apache-2.0 open-source software; dbt platform, dbt Fusion engine, dbt Wizard, dbt Copilot, data platforms, adapters, packages, cloud warehouses, CI systems, and downstream analytics tools may have separate licenses, billing, terms, privacy obligations, and access controls.

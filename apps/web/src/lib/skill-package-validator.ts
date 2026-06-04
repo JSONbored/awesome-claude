@@ -44,7 +44,10 @@ function normalizePackagePath(value: string) {
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .split("/")
-    .filter(Boolean)
+    // Drop "." segments so a "./scripts/foo" reference resolves to the same
+    // path as "scripts/foo". ".." is kept so the existing unsafe-path guard
+    // still rejects traversal.
+    .filter((segment) => Boolean(segment) && segment !== ".")
     .join("/");
 }
 

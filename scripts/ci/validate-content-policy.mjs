@@ -373,16 +373,16 @@ function frontmatterFields(data = {}, category = "") {
 }
 
 function frontmatterProvenance(data = {}) {
-  const submissionIssueNumber = Number(data.submissionIssueNumber);
+  const sourceSubmissionNumber = Number(data.sourceSubmissionNumber);
   const importPrNumber = Number(data.importPrNumber);
   return {
     submittedBy: normalizeText(data.submittedBy),
     submittedByUrl: normalizeText(data.submittedByUrl),
-    submissionIssueNumber:
-      Number.isInteger(submissionIssueNumber) && submissionIssueNumber > 0
-        ? submissionIssueNumber
+    sourceSubmissionNumber:
+      Number.isInteger(sourceSubmissionNumber) && sourceSubmissionNumber > 0
+        ? sourceSubmissionNumber
         : null,
-    submissionIssueUrl: normalizeText(data.submissionIssueUrl),
+    sourceSubmissionUrl: normalizeText(data.sourceSubmissionUrl),
     importPrNumber:
       Number.isInteger(importPrNumber) && importPrNumber > 0
         ? importPrNumber
@@ -844,6 +844,11 @@ function directContentRequestChangesReasons(report = {}) {
   const reasons = [];
   const sourceType = report.sourceType || report.subject?.sourceType;
   const isExternalDirect = sourceType === "external_direct";
+  const isDirectContentShape =
+    Number(report.changedFileCount || 0) === 1 &&
+    Number(report.contentFileCount || 0) === 1;
+  if (!isExternalDirect && !isDirectContentShape) return [];
+
   const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
   const warnings = new Set(
     (report.classificationWarnings || []).map((warning) => warning.id),
@@ -942,12 +947,14 @@ function buildReport({ args, files, headRepo, baseRepo, headRef, sourceType }) {
       head: { ref: headRef, repo: { full_name: headRepo } },
       base: { repo: { full_name: baseRepo } },
     },
+    changedFileCount: files.length,
   };
   const contentFiles = files.filter(
     (file) =>
       /^content\/[^/]+\/[^/]+\.mdx$/i.test(normalizeText(file.filename)) &&
       normalizeText(file.status) !== "removed",
   );
+  report.contentFileCount = contentFiles.length;
 
   addGeneratedArtifactSignals(report, files, sourceType);
 

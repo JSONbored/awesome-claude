@@ -1,0 +1,73 @@
+---
+title: Agno
+slug: agno
+category: tools
+description: Open-source SDK and runtime for building, running, and managing agent platforms with agents, teams, workflows, memory, knowledge, tools, MCP, and AgentOS.
+cardDescription: Build and run agent platforms with agents, teams, workflows, memory, MCP, and AgentOS.
+seoTitle: Agno agent platform SDK and runtime
+seoDescription: Agno helps teams build agent platforms with Python agents, multi-agent teams, workflows, memory, knowledge, tools, MCP integrations, AgentOS APIs, tracing, RBAC, and audit logs.
+author: Agno
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.agno.com/"
+documentationUrl: "https://docs.agno.com/"
+repoUrl: "https://github.com/agno-agi/agno"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - workflows
+  - observability
+keywords:
+  - agno
+  - agent platform
+  - agentos
+  - multi-agent teams
+  - agent memory
+prerequisites:
+  - Python project, package manager, or deployment environment for installing Agno and running agents, teams, workflows, AgentOS services, or MCP integrations.
+  - Model provider credentials, local model configuration, database, vector store, embedder, and tool credentials for the agents or workflows being built.
+  - Reviewed database and storage plan for sessions, memory, chat history, traces, audit logs, schedules, agent state, and knowledge indexes.
+  - Authentication, RBAC, network exposure, API, scheduling, and audit-log requirements before exposing AgentOS, agent APIs, or MCP-connected workflows to users.
+  - Evaluation cases, human-in-the-loop rules, guardrails, rollback policy, and operator ownership before letting Agno agents take account, data, infrastructure, or customer-facing actions.
+safetyNotes:
+  - Agno agents are stateful control loops around stateless models, so model reasoning, tool calls, memory, knowledge retrieval, and workflow steps still require review before production use.
+  - Agents, teams, workflows, MCP tools, schedulers, and AgentOS APIs can call external systems, update databases, create memory, trigger background work, and expose capabilities to users or other agents.
+  - Agent memory and knowledge can make behavior more useful, but they can also preserve stale, incorrect, over-broad, or sensitive facts that influence future responses and actions.
+  - Human-in-the-loop approval, guardrails, tracing, RBAC, audit logs, and rollback paths should be configured before connecting Agno to billing, support, production data, infrastructure, or customer operations.
+  - MCP integrations discover tool schemas and let agents call third-party or internal services; review tool names, descriptions, arguments, auth headers, and permission scope before enabling them.
+  - Telemetry, tracing, evals, and AgentOS dashboards are operational signals, not proof that an agent platform is safe, compliant, accurate, or production-ready.
+privacyNotes:
+  - Agno agents can process prompts, messages, tool arguments, tool results, retrieved knowledge, memory content, session history, user identifiers, traces, metrics, schedules, and audit events.
+  - Memory features can automatically store user facts, preferences, inputs, topics, agent IDs, team IDs, and update timestamps in connected databases; define consent, retention, correction, and deletion workflows.
+  - AgentOS and agent APIs can centralize sessions, memory, traces, schedules, RBAC, and audit logs in infrastructure the operator controls, so database credentials, backups, access controls, and exports need normal review.
+  - Model providers, vector stores, embedder providers, MCP servers, and tools may receive user data or internal context depending on the agent configuration.
+  - Agno's telemetry documentation says anonymous usage data is collected about agents, teams, workflows, and AgentOS configurations, and documents `AGNO_TELEMETRY=false` plus per-instance telemetry disabling.
+---
+
+## Editorial notes
+
+Agno is useful when Claude-adjacent teams want to move beyond a single scripted agent and build a managed agent platform. It gives developers a Python SDK for agents, multi-agent teams, workflows, tools, memory, knowledge, reasoning, guardrails, evals, tracing, and model providers, plus AgentOS runtime surfaces for APIs, sessions, scheduling, RBAC, audit logs, and operational control.
+
+This is distinct from existing framework and observability entries. Pydantic AI focuses on type-safe Python agents, LangGraph focuses on graph workflows, CrewAI focuses on role-based crews, DSPy focuses on optimizing language-model programs, and AgentOps focuses on agent observability. Agno's center of gravity is the platform layer for building, running, and managing fleets of agents, teams, workflows, memory, knowledge, and AgentOS services.
+
+## Source notes
+
+- The official documentation describes Agno as an SDK and runtime for building, running, and managing your own agent platform.
+- The welcome page says Agno supports agents, multi-agent teams, step-based agentic workflows, AgentOS APIs, multi-user isolated sessions, tracing, scheduling, RBAC, audit logs, a unified control plane, and data stored in the operator's cloud and database.
+- The agents documentation describes agents as stateful control loops around stateless models, guided by instructions, with tools, memory, knowledge, storage, human-in-the-loop, and guardrails as needed.
+- The memory documentation describes automatic and agentic memory, storing user facts in a connected database, and supported storage in systems such as Postgres, SQLite, MongoDB, and other databases.
+- The MCP documentation says Agno can wrap MCP servers with `MCPTools`, discover tool schemas at connect time, and let agents call MCP tools like native tools.
+- The telemetry documentation says Agno collects anonymous usage data about agents, teams, workflows, and AgentOS configurations, and documents environment-variable and per-instance opt-out options.
+- The GitHub repository is `agno-agi/agno`, is Apache-2.0 licensed, and describes the project as a way to build, run, and manage agent platforms.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Agno`, `agno`, `AgentOS`, `agno-agi/agno`, `docs.agno.com`, `agno.com`, `phidata`, `PhiData`, `agent platform`, `multi-agent teams`, `agent memory`, and `MCPTools`. The only existing Agno hit is an integration mention inside the AgentOps entry; no dedicated Agno tools entry, Agno source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

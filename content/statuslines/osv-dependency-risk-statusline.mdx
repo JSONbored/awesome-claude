@@ -1,0 +1,101 @@
+---
+title: OSV Dependency Risk Statusline
+slug: osv-dependency-risk-statusline
+category: statuslines
+description: Claude Code statusline that reads OSV-Scanner JSON results and prints a compact dependency vulnerability count for review sessions.
+cardDescription: Show dependency vulnerability count from OSV-Scanner JSON.
+seoTitle: OSV dependency risk statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes dependency risk from OSV-Scanner JSON output without running expensive scans on every refresh.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://google.github.io/osv-scanner/"
+repoUrl: "https://github.com/google/osv-scanner"
+tags:
+  - dependencies
+  - security
+  - osv
+  - claude-code
+keywords:
+  - dependency risk statusline
+  - osv scanner statusline
+  - vulnerability statusline
+  - dependency review
+installable: true
+usageSnippet: "deps: vulns 4 | review"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/osv-dependency-risk-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/osv-dependency-risk-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  report="${OSV_STATUSLINE_JSON:-osv-report.json}"
+
+  if [ "${OSV_STATUSLINE_SCAN:-0}" = "1" ] && command -v osv-scanner >/dev/null 2>&1; then
+    osv-scanner --format json . > "$report" 2>/dev/null || true
+  fi
+
+  if [ ! -f "$report" ]; then
+    echo "deps: osv report missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "deps: jq missing"
+    exit 0
+  fi
+
+  count=$(jq '[.. | objects | .vulnerabilities? // empty | .[]] | length' "$report" 2>/dev/null || echo 0)
+  if [ "$count" -gt 0 ]; then
+    state="review"
+  else
+    state="ok"
+  fi
+
+  printf 'deps: vulns %s | %s\n' "$count" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - OSV-Scanner JSON report at `osv-report.json`, or OSV_STATUSLINE_JSON set to another report path.
+  - jq available for reading the report.
+  - Optional OSV-Scanner CLI installed if OSV_STATUSLINE_SCAN is set to 1.
+safetyNotes:
+  - Prefer reading a precomputed report; scanning dependencies during every statusline refresh can be slow.
+  - Vulnerability counts need human triage for reachability, exploitability, and acceptable remediation timing.
+  - Do not let a zero count replace lockfile review, provenance checks, or package-manager audit policy.
+privacyNotes:
+  - OSV reports can reveal package names, versions, ecosystems, and repository structure.
+  - The statusline prints only the count, but the local JSON report may contain detailed dependency metadata.
+  - If scans run against private package manifests, review where the scanner sends package coordinates.
+---
+
+## Source notes
+
+- OSV-Scanner documentation describes scanning dependency manifests and emitting JSON output for automation.
+- This statusline reads a report by default so teams can run scans on their own cadence and keep Claude Code refreshes fast.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `osv-dependency-risk-statusline`, OSV-Scanner, dependency risk, vulnerability count, and dependency statuslines. No statusline entry or open PR with this slug or OSV source was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.

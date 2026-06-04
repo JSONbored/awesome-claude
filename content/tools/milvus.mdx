@@ -1,0 +1,74 @@
+---
+title: Milvus
+slug: milvus
+category: tools
+description: Apache-2.0 vector database for scalable ANN search, hybrid retrieval, RAG, recommendation systems, image search, multimodal search, and AI agent memory.
+cardDescription: Run scalable vector, sparse, and hybrid search for RAG and AI retrieval systems.
+seoTitle: Milvus vector database for RAG and AI search
+seoDescription: Milvus is an Apache-2.0 vector database for scalable ANN search, dense and sparse retrieval, hybrid search, RAG, recommendation systems, image search, multimodal search, and AI agent memory.
+author: Milvus
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://milvus.io/"
+documentationUrl: "https://milvus.io/docs"
+repoUrl: "https://github.com/milvus-io/milvus"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - vector-database
+  - retrieval
+  - rag
+keywords:
+  - Milvus
+  - Zilliz
+  - vector database
+  - ANN search
+  - hybrid search
+prerequisites:
+  - Deployment path selected for Milvus Lite, standalone Milvus, Docker Compose, Kubernetes, self-managed infrastructure, or managed Zilliz Cloud.
+  - Collection and schema design for vector fields, sparse vectors, scalar fields, metadata, primary keys, partitions, indexes, retention, and deletion behavior.
+  - Approved embedding, sparse embedding, reranking, and generative model plan with dimensions, model licenses, provider data handling, and refresh strategy reviewed.
+  - Retrieval evaluation plan for ANN recall, top-K behavior, filters, hybrid search weighting, reranking quality, query latency, and failed-query handling.
+  - Operational plan for storage, backups, access controls, TLS, monitoring, compaction, upgrades, capacity planning, and recovery before production use.
+safetyNotes:
+  - Milvus can power RAG, agent memory, recommendation systems, image search, and multimodal retrieval, but retrieved context still needs relevance checks, freshness checks, permission filtering, and human-reviewable evaluation.
+  - ANN index choices, quantization, memory mapping, GPU indexing, sparse retrieval, hybrid search, and reranking trade off latency, recall, cost, and operational complexity.
+  - Embedding drift, schema changes, stale partitions, deleted-source drift, duplicate IDs, and mismatched vector dimensions can produce confusing retrieval results if ingestion is not controlled.
+  - Multi-tenancy, access controls, TLS, replicas, and Kubernetes-native deployment features are production building blocks, not substitutes for application-level permission checks.
+  - Local, standalone, cluster, and managed deployments need explicit network exposure, storage durability, backup, monitoring, compaction, upgrade, and resource-limit decisions.
+  - Agent actions, chatbot answers, generated summaries, and recommender outputs that use Milvus results should remain attributable to source records and reviewable before affecting users or production workflows.
+privacyNotes:
+  - Milvus collections may store vector embeddings, sparse vectors, scalar fields, metadata, document chunks, image or multimodal references, query records, and retrieval results that reveal sensitive project or user context.
+  - Embeddings can encode information about source records and should follow the same retention, deletion, backup, access-control, and tenant-isolation policies as the underlying data.
+  - Embedding providers, reranking services, generative models, Zilliz Cloud, observability systems, and downstream agent applications may process prompts, queries, source snippets, or retrieved context depending on configuration.
+  - Metadata fields used for filtering can expose user identity, source systems, document provenance, permission groups, customer labels, or business classifications if exported or logged carelessly.
+  - Teams should define who can view retrieval traces, query logs, failed-search artifacts, benchmark datasets, backups, and generated answers before exposing Milvus-backed context to Claude-adjacent workflows.
+---
+
+## Editorial notes
+
+Milvus is useful when Claude-adjacent teams need a scalable vector database for RAG, semantic search, hybrid search, recommendation systems, image search, multimodal retrieval, AI agent memory, and high-throughput ANN workloads. It supports Milvus Lite for Python evaluation, standalone deployments, distributed Kubernetes-native clusters, managed Zilliz Cloud options, dense and sparse vectors, metadata filtering, hybrid search, reranking workflows, multiple index types, and integrations across agent and data tooling.
+
+This is distinct from existing retrieval entries. Chroma focuses on lightweight AI data infrastructure for local, self-hosted, and cloud retrieval. Weaviate focuses on object and vector storage with semantic search, hybrid search, integrated vectorization, Query Agent, and cloud-native deployment options. Milvus is centered on a high-performance, distributed vector database for ANN search at scale, with Lite, standalone, cluster, index, hardware acceleration, and hybrid retrieval paths.
+
+## Source notes
+
+- The official README describes Milvus as a high-performance, cloud-native vector database built for scalable vector ANN search.
+- The README says Milvus helps organize and search unstructured data such as text, images, and multimodal information for AI applications.
+- The README describes Milvus as written in Go and C++, with a distributed and Kubernetes-native architecture that separates compute and storage and can scale horizontally.
+- The README lists standalone mode, Milvus Lite for Python quickstarts, and managed Zilliz Cloud deployment options.
+- The README highlights vector index and acceleration options including HNSW, IVF, FLAT, SCANN, DiskANN, quantization, memory mapping, metadata filtering, range search, and GPU indexing.
+- The README describes sparse-vector and hybrid-search support, including BM25, sparse embeddings, dense and sparse vectors in one collection, and reranking of multiple search results.
+- The official docs include guidance for managing collections, insert, upsert, delete, vector search, hybrid search, and using Milvus for AI agents.
+- The repository is `milvus-io/milvus`, is Apache-2.0 licensed, and is part of the LF AI & Data Foundation, with Zilliz listed as a major contributor.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Milvus`, `milvus.io`, `milvus-io/milvus`, `Zilliz`, `ANN search`, `hybrid search`, and `vector database`. No dedicated Milvus tools entry, Milvus source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Milvus is an Apache-2.0 open-source project with managed Zilliz Cloud deployment options.

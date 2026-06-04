@@ -74,4 +74,35 @@ Use the helper in \`scripts/check.sh\` before submitting.
       ]),
     );
   });
+
+  it("resolves ./ relative references to present package files", () => {
+    const result = validateSkillPackageFiles({
+      githubUrl: "https://github.com/JSONbored/awesome-claude",
+      files: [
+        {
+          path: "sample-skill/SKILL.md",
+          size: 220,
+          text: `---
+name: Sample Skill
+description: Validate packages before submitting them to the HeyClaude registry.
+---
+
+# Sample Skill
+
+Run the helper in [check](./scripts/check.sh) before submitting.
+`,
+        },
+        {
+          path: "sample-skill/scripts/check.sh",
+          size: 20,
+          text: "#!/usr/bin/env bash\n",
+        },
+      ],
+    });
+
+    expect(result.ok).toBe(true);
+    expect(result.errors).not.toContain(
+      "Referenced resource is missing: ./scripts/check.sh",
+    );
+  });
 });

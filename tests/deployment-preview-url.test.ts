@@ -189,13 +189,13 @@ describe("PR preview artifact validation flow", () => {
       ),
     ) as { scripts: Record<string, string> };
 
-    expect(packageJson.scripts["deploy:dev"]).toBe("pnpm run deploy:prod");
+    expect(packageJson.scripts).not.toHaveProperty("deploy");
+    expect(packageJson.scripts).not.toHaveProperty("deploy:dev");
     expect(packageJson.scripts["deploy:prod"]).toContain(
       "check-submission-gate-prod-config.mjs",
     );
-    expect(packageJson.scripts["deploy:dry-run:dev"]).toBe(
-      "pnpm run deploy:dry-run:prod",
-    );
+    expect(packageJson.scripts).not.toHaveProperty("deploy:dry-run");
+    expect(packageJson.scripts).not.toHaveProperty("deploy:dry-run:dev");
     expect(packageJson.scripts["deploy:dry-run:prod"]).toContain(
       'wrangler deploy --config wrangler.jsonc --env "" --dry-run',
     );
@@ -206,7 +206,10 @@ describe("PR preview artifact validation flow", () => {
     );
     expect(wranglerConfig).not.toContain('"env":');
     expect(wranglerConfig).toContain('"pattern": "submission-gate.heyclau.de"');
-    expect(wranglerConfig).toContain('"PILOT_BASE_REF": "main"');
+    expect(wranglerConfig).toContain('"CONTENT_GATE_BASE_REF": "main"');
+    expect(wranglerConfig).not.toContain(
+      `"${["PILOT", "BASE", "REF"].join("_")}"`,
+    );
     expect(wranglerConfig).toContain('"name": "heyclaude-submission-gate"');
   });
 });

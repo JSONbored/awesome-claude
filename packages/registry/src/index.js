@@ -9,6 +9,7 @@ export * from "./content-schema.js";
 export * from "./frontmatter.js";
 export * from "./presentation.js";
 export * from "./quality.js";
+export * from "./relationships.js";
 export * from "./seo.js";
 export * from "./submission.js";
 export * from "./submission-risk.js";

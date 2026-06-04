@@ -1,0 +1,100 @@
+---
+title: Istanbul Coverage Delta Statusline
+slug: istanbul-coverage-delta-statusline
+category: statuslines
+description: Claude Code statusline that reads Istanbul JSON summary output and compares current line coverage with a local baseline percentage.
+cardDescription: Show current line coverage and local coverage delta.
+seoTitle: Istanbul coverage delta statusline for Claude Code
+seoDescription: Add a Claude Code statusline that reads Istanbul coverage-summary.json and shows coverage percentage, baseline delta, and review state.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://istanbul.js.org/docs/advanced/alternative-reporters/#json-summary"
+tags:
+  - coverage
+  - testing
+  - javascript
+  - claude-code
+keywords:
+  - coverage delta statusline
+  - istanbul statusline
+  - coverage summary json
+  - test coverage statusline
+installable: true
+usageSnippet: "coverage: 82.40% | delta +1.20 | ok"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/istanbul-coverage-delta-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/istanbul-coverage-delta-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  summary="${COVERAGE_SUMMARY_JSON:-coverage/coverage-summary.json}"
+  baseline="${COVERAGE_BASELINE_PCT:-80}"
+
+  if [ ! -f "$summary" ]; then
+    echo "coverage: summary missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "coverage: jq missing"
+    exit 0
+  fi
+
+  current=$(jq -r '.total.lines.pct // 0' "$summary" 2>/dev/null || echo 0)
+  delta=$(awk -v c="$current" -v b="$baseline" 'BEGIN { printf "%+.2f", c - b }')
+  below=$(awk -v c="$current" -v b="$baseline" 'BEGIN { print (c < b) ? 1 : 0 }')
+
+  if [ "$below" -eq 1 ]; then
+    state="below"
+  else
+    state="ok"
+  fi
+
+  printf 'coverage: %.2f%% | delta %s | %s\n' "$current" "$delta" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Istanbul-compatible coverage report with `coverage/coverage-summary.json` or COVERAGE_SUMMARY_JSON set.
+  - jq and awk available in the shell used by Claude Code.
+  - COVERAGE_BASELINE_PCT set when the project baseline is not 80 percent.
+safetyNotes:
+  - Coverage percentage is a testing signal, not proof that behavior is correct or edge cases are covered.
+  - Do not run coverage generation inside a fast-refreshing statusline; read an existing summary file instead.
+  - Use project-specific thresholds so generated files and intentionally excluded code do not create misleading pressure.
+privacyNotes:
+  - The script reads a local coverage summary and prints only aggregate line coverage.
+  - Coverage paths inside the JSON file can contain repository structure; avoid printing raw summaries in shared logs.
+  - Team baselines can reveal internal quality gates if screenshots are shared externally.
+---
+
+## Source notes
+
+- Istanbul documents the JSON summary reporter that writes aggregate coverage data for tools to consume.
+- This statusline reads the summary output rather than running tests, keeping Claude Code refreshes fast and predictable.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `istanbul-coverage-delta-statusline`, coverage delta, coverage-summary.json, and test coverage statuslines. Existing hook content reads coverage reports, but no statusline entry or open PR provides a compact coverage delta statusline.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.

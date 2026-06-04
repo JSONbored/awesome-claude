@@ -20,11 +20,17 @@ import {
   verifyGitHubWebhookSignature,
 } from "../apps/submission-gate/src/security";
 import {
+  buildContentDuplicateReview,
   extractContentDuplicateSignals,
   findContentDuplicateMatch,
+  findRelatedContentMatches,
+  findStrictContentDuplicateMatch,
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
-import { markerComment } from "../apps/submission-gate/src/review";
+import {
+  markerComment,
+  validationFailedDecision,
+} from "../apps/submission-gate/src/review";
 import {
   buildDiscordDecisionPayload,
   postDiscordDecisionNotification,
@@ -360,6 +366,13 @@ describe("Cloudflare submission gate helpers", () => {
     const source = readWorkerSource();
     const validationIndex = source.indexOf("getCommitValidationState({");
     const privateReviewIndex = source.indexOf("reviewWithPrivateGate(env, {");
+    const refreshIndex = source.indexOf(
+      "pullForNotification = await getPullRequest({",
+    );
+    const outOfScopeIndex = source.indexOf(
+      "await ignoreOutOfScopeReviewTarget({",
+      refreshIndex,
+    );
 
     expect(source).toContain("CONTENT_GATE_BASE_REF");
     expect(source).toContain("function contentGateBaseRef");
@@ -394,8 +407,33 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
+    expect(source).toContain("deterministicDuplicateReview");
+    expect(source).toContain('eventType: "duplicate_shadow_review"');
+    expect(source).toContain('decision: "related_not_strict_duplicate"');
+    expect(source).toContain(
+      "Public directory index fetch failed during duplicate scan",
+    );
+    expect(source).toContain("acceptedContentSignals({\n      env: params.env");
+    expect(source).not.toContain("getRepositoryBlobText({");
+    expect(source).not.toContain("getRepositoryTree({");
+    expect(source).toContain("function ignoreOutOfScopeReviewTarget");
+    expect(source).toContain(
+      "Skipped because this PR no longer targets the configured content gate base.",
+    );
+    expect(outOfScopeIndex).toBeGreaterThan(refreshIndex);
+    expect(outOfScopeIndex).toBeLessThan(validationIndex);
     expect(validationIndex).toBeGreaterThan(0);
     expect(privateReviewIndex).toBeGreaterThan(validationIndex);
+  });
+
+  it("closes public validation failures instead of requesting changes", () => {
+    expect(validationFailedDecision("Required validation failed.")).toEqual({
+      verdict: "close",
+      summary:
+        "Required validation failed. The private content review will run after the public validation lane is green.",
+      labels: ["submission-closed-by-gate"],
+      close: true,
+    });
   });
 
   it("allows only trusted maintainer comments to trigger rechecks", () => {
@@ -415,7 +453,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
-    expect(issueCommentBlock).toContain("true,\n      true,");
+    expect(issueCommentBlock).toContain("payload,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -431,7 +469,7 @@ describe("Cloudflare submission gate helpers", () => {
         "Recommended Action:",
         "- Close and resubmit a focused PR.",
       ].join("\n"),
-      labels: ["submission-needs-changes"],
+      labels: ["submission-closed-by-gate"],
       close: true,
     });
 
@@ -665,10 +703,19 @@ describe("Cloudflare submission gate helpers", () => {
     expect(classifierBlock).toContain("entryFiles.length === 0");
     expect(classifierBlock).toContain('kind: "ignore"');
     expect(classifierBlock).toContain("files.length !== 1");
+    expect(classifierBlock).toContain(
+      "context.headRepo.toLowerCase() === context.baseRepo.toLowerCase()",
+    );
+    expect(classifierBlock).toContain(
+      "Mixed same-repository maintenance PR; content gate only reviews exact one-file content submissions.",
+    );
     expect(classifierBlock).toContain('kind: "scope_failure"');
     expect(classifierBlock).toContain(
       "no generated artifacts, README, workflows, scripts, packages, or additional entries",
     );
+    expect(source).toContain("type DirectContentReviewContext");
+    expect(source).toContain("headRepo: target.headRepo");
+    expect(source).toContain("baseRepo: target.repoFullName");
   });
 
   it("does not apply the merged label before direct merge succeeds", () => {
@@ -790,10 +837,17 @@ describe("Cloudflare submission gate helpers", () => {
       "Skipped trusted recheck because this submission already has a terminal gate decision.",
     );
     expect(source).toContain("function isOpenPullRequest");
+    expect(source).toContain("function terminalStatusFromPullRequest");
+    expect(source).toContain("async function reconcileTerminalPullRequest");
+    expect(source).toContain("labels: [LABELS.underReview]");
     expect(source).toContain(
       "Terminal gate state did not match open GitHub PR",
     );
     expect(source).toContain("GitHub terminal state verified.");
+    expect(source).toContain(
+      "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+    );
+    expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
     expect(storageSource).toContain(
@@ -826,9 +880,23 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(source).toContain("async function sweepSubmissionQueue");
     expect(source).toContain("listDuePrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain("async function discoverOpenContentPullRequests");
+    expect(source).toContain("OPEN_PR_DISCOVERY_LIMIT");
+    expect(source).toContain("listOpenPullRequests({");
+    expect(source).toContain("scheduled-discovery-");
+    expect(source).toContain(
+      "await applyUnderReviewToTarget(env, target, reviewScope)",
+    );
     expect(source).toContain('"validation_pending"');
     expect(source).toContain('"merge_pending"');
     expect(source).toContain('"error_retryable"');
+    expect(source).toContain("function retryDelayForError");
+    expect(source).toContain("isGitHubRateLimitError(error)");
+    expect(source).toContain("githubRetryDelaySeconds(error");
+    expect(source).toContain("nextReviewForError(error)");
+    expect(source).toContain(
+      "message.retry({ delaySeconds: retryDelayForError(error) })",
+    );
     expect(source).toContain("scheduled(_controller, env, ctx)");
     expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
     expect(wranglerConfig).toContain('"triggers"');
@@ -844,6 +912,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
+  });
+
+  it("records pull request inspection failures before returning from webhooks", () => {
+    const source = readWorkerSource();
+    const webhookIndex = source.indexOf("async function githubWebhookRoute");
+    const webhookSource = source.slice(webhookIndex);
+
+    expect(source).toContain("async function recordRetryableTargetError");
+    expect(webhookSource).toContain(
+      "await recordRetryableTargetError(env, target, deliveryId, error)",
+    );
+    expect(webhookSource).toContain("reason: isGitHubRateLimitError(error)");
+    expect(webhookSource).toContain('"github_rate_limited"');
+    expect(webhookSource).toContain('"inspection_retryable"');
   });
 
   it("merges accepted direct content PRs instead of creating import PRs", () => {
@@ -1073,6 +1155,144 @@ websiteUrl: "https://example-agent-tool.dev/pricing"
     expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
       reasons: expect.arrayContaining([
         expect.stringContaining("same non-generic source domain"),
+      ]),
+    });
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toMatchObject([
+      {
+        reasons: expect.arrayContaining([
+          expect.stringContaining("same non-generic source domain"),
+        ]),
+      },
+    ]);
+    expect(buildContentDuplicateReview(candidate, [existing])).toMatchObject({
+      legacyDuplicate: {
+        reasons: expect.arrayContaining([
+          expect.stringContaining("same non-generic source domain"),
+        ]),
+      },
+      strictDuplicate: null,
+      relatedCandidates: [
+        {
+          reasons: expect.arrayContaining([
+            expect.stringContaining("same non-generic source domain"),
+          ]),
+        },
+      ],
+    });
+  });
+
+  it("distinguishes related vendor resources from strict duplicates", () => {
+    const collection = extractContentDuplicateSignals({
+      filePath: "content/collections/cloudflare-ai-workflow-stack.mdx",
+      content: `---
+title: Cloudflare AI Workflow Stack
+slug: cloudflare-ai-workflow-stack
+category: collections
+description: A collection of Cloudflare tools for building AI workflow systems.
+websiteUrl: "https://developers.cloudflare.com/workers-ai/"
+docsUrl: "https://developers.cloudflare.com/ai-gateway/"
+---
+`,
+    });
+    const specificTool = extractContentDuplicateSignals({
+      filePath: "content/tools/cloudflare-ai-gateway.mdx",
+      content: `---
+title: Cloudflare AI Gateway
+slug: cloudflare-ai-gateway
+category: tools
+description: Observability and routing gateway for AI model calls.
+websiteUrl: "https://developers.cloudflare.com/ai-gateway/"
+docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(specificTool, [collection]),
+    ).toBeNull();
+    expect(findRelatedContentMatches(specificTool, [collection])).toMatchObject(
+      [
+        {
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://developers.cloudflare.com/ai-gateway across collection/resource categories",
+            ),
+          ]),
+        },
+      ],
+    );
+  });
+
+  it("treats same canonical project across different categories as related context", () => {
+    const existingMcp = extractContentDuplicateSignals({
+      filePath: "content/mcp/langchain-mcp-server.mdx",
+      content: `---
+title: LangChain MCP Server
+slug: langchain-mcp-server
+category: mcp
+description: MCP integration for LangChain workflows.
+repoUrl: "https://github.com/langchain-ai/langchain"
+---
+`,
+    });
+    const candidateSkill = extractContentDuplicateSignals({
+      filePath: "content/skills/langchain-agent-patterns.mdx",
+      content: `---
+title: LangChain Agent Patterns Skill
+slug: langchain-agent-patterns
+category: skills
+description: Claude skill for applying LangChain agent patterns.
+repoUrl: "https://github.com/langchain-ai/langchain.git"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
+    ).toBeNull();
+    expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats same canonical repository as a strict duplicate", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/playwright-mcp-server.mdx",
+      content: `---
+title: Playwright MCP Server
+slug: playwright-mcp-server
+category: mcp
+description: MCP server for browser automation through Playwright.
+repoUrl: "https://github.com/microsoft/playwright-mcp"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/browser-automation-mcp.mdx",
+      content: `---
+title: Browser Automation MCP
+slug: browser-automation-mcp
+category: mcp
+description: Browser automation MCP server for Claude.
+repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
       ]),
     });
   });

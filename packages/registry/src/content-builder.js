@@ -104,8 +104,10 @@ function buildProvenanceFields(data = {}) {
     submittedBy: normalizeTextField(data.submittedBy),
     submittedByUrl: normalizeTextField(data.submittedByUrl),
     submittedAt: normalizeDateTimeField(data.submittedAt),
-    submissionIssueNumber: normalizePositiveInteger(data.submissionIssueNumber),
-    submissionIssueUrl: normalizeTextField(data.submissionIssueUrl),
+    sourceSubmissionNumber: normalizePositiveInteger(
+      data.sourceSubmissionNumber,
+    ),
+    sourceSubmissionUrl: normalizeTextField(data.sourceSubmissionUrl),
     importPrNumber: normalizePositiveInteger(data.importPrNumber),
     importPrUrl: normalizeTextField(data.importPrUrl),
     reviewedBy: normalizeTextField(data.reviewedBy),

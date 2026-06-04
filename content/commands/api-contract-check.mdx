@@ -1,0 +1,99 @@
+---
+title: /api-contract-check - API Contract Check Command for Claude Code
+slug: api-contract-check
+category: commands
+description: >-
+  Slash command that runs consumer-driven contract verification for an HTTP API
+  using Pact. It locates the consumer contracts (local pact files or a Pact
+  Broker), verifies the provider against every recorded interaction, reports
+  which consumer expectations the provider breaks, and, when no contracts exist
+  yet, lays out how to record and publish them. It checks real interaction
+  contracts, not just schema shape.
+cardDescription: >-
+  Verify an HTTP provider against its Pact consumer contracts and report which
+  expectations it breaks.
+seoTitle: /api-contract-check - API Contract Check Command for Claude Code
+seoDescription: >-
+  A Claude Code slash command that runs Pact consumer-driven contract
+  verification, reporting which consumer expectations an HTTP provider breaks.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.pact.io/"
+repoUrl: "https://github.com/pact-foundation/pact-js"
+installable: true
+installCommand: "/api-contract-check [provider]"
+commandSyntax: "/api-contract-check [provider]"
+usageSnippet: "/api-contract-check user-service"
+copySnippet: "/api-contract-check [provider]"
+safetyNotes:
+  - "Following the command runs the project's Pact provider-verification step, which typically starts the provider (or a stub of it) and replays recorded requests against it; review what the verify task does before running it."
+  - "It performs read and verify actions only - it replays existing consumer contracts and reports pass or fail; it does not deploy, publish, or mutate the provider."
+  - "When a Pact Broker is configured it fetches consumer contracts over the network using the project's existing broker credentials; it never prints those credentials."
+privacyNotes:
+  - "Pact contract files and verification output contain example request and response bodies, headers, and provider state names, which enter the model context to explain failures."
+  - "If those example payloads include real customer data or tokens, that text becomes part of the prompt; review the pacts before running on sensitive contracts."
+  - "The command itself writes nothing to disk beyond the verifier's own logs."
+tags:
+  - "api"
+  - "contract-testing"
+  - "pact"
+  - "consumer-driven"
+  - "testing"
+keywords:
+  - "api contract check command"
+  - "pact provider verification"
+  - "consumer driven contract testing"
+  - "contract verification slash command"
+---
+
+The `/api-contract-check` command runs [Pact](https://docs.pact.io/) consumer-driven contract verification, so you find out which consumer expectations a provider breaks **before** the change ships — checking real recorded interactions rather than only the schema shape.
+
+## Usage
+
+```
+/api-contract-check [provider]
+```
+
+- With a `provider` name: verify that provider's contracts.
+- Without an argument: detect the provider from the project's Pact config.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Locate the contracts.** Look for a Pact setup — local pact files (`pacts/*.json`, `**/*.pact.json`), a `pact` config in `package.json`, or a configured Pact Broker (`PACT_BROKER_BASE_URL`). If a broker is configured, the contracts come from it; otherwise use the local pact files.
+2. **Identify the verify task.** Find the project's provider-verification entry point — a `pact:verify` npm script, a `pact-provider-verifier` invocation, or the equivalent in the project's test tooling.
+3. **Run verification.** Execute that verify task so each recorded consumer interaction is replayed against the provider, honoring its provider states.
+4. **Report broken expectations.** For every failing interaction, name the consumer, the request, and the exact mismatch (status code, body field, header, or missing provider state). Group results by consumer.
+5. **Recommend the smallest fix.** For each failure, suggest the minimal provider change that satisfies the contract, or flag when the consumer expectation itself is stale.
+6. **Bootstrap if missing.** If no Pact setup exists, explain how to add it: record consumer expectations with a Pact mock, publish the pacts, and wire a provider-verification task.
+
+## Output format
+
+- **Contracts:** source (broker or local) and the consumers covered.
+- **Result:** interactions passed / failed.
+- **Failures:** consumer, interaction, and the precise mismatch.
+- **Fix:** the minimal provider change per failure.
+- **Verdict:** safe to release against these consumers, or blocked.
+
+## Requirements
+
+- A Pact-based contract test setup (for example `@pact-foundation/pact` / `pact-js`) with consumer contracts available locally or via a Pact Broker.
+- The provider runnable locally (or a documented stub) so interactions can be replayed.
+- Broker access configured (`PACT_BROKER_BASE_URL` and credentials) when contracts live in a broker.
+
+## Safety notes
+
+Running the command executes the project's Pact provider-verification task, which typically starts the provider or a stub and replays recorded requests against it. It performs read-and-verify actions only and never deploys, publishes, or mutates the provider. Review what the verify task does before running it.
+
+## Privacy notes
+
+Pact contract files and verifier output include example request/response bodies, headers, and provider state names, which enter the model context to explain failures. If those examples contain real customer data or tokens, review the pacts before running on sensitive contracts. The command writes nothing to disk beyond the verifier's own logs.
+
+## Source and references
+
+- Pact documentation: https://docs.pact.io/
+- Provider verification: https://docs.pact.io/getting_started/verifying_pacts
+- pact-js repository: https://github.com/pact-foundation/pact-js

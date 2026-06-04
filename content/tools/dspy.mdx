@@ -1,0 +1,73 @@
+---
+title: DSPy
+slug: dspy
+category: tools
+description: Python framework from Stanford NLP for programming language-model systems with signatures, modules, tools, metrics, and optimizers instead of hand-written prompts.
+cardDescription: Program and optimize LM systems with signatures, modules, tools, and metrics.
+seoTitle: DSPy language model programming framework
+seoDescription: DSPy helps teams build modular language-model programs with typed signatures, reusable modules, ReAct tools, MCP integrations, metrics, and prompt or weight optimizers.
+author: Stanford NLP
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://dspy.ai/"
+documentationUrl: "https://dspy.ai/"
+repoUrl: "https://github.com/stanfordnlp/dspy"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - programming
+  - optimization
+  - agents
+keywords:
+  - dspy
+  - language model programming
+  - prompt optimization
+  - lm programs
+  - dspy react agents
+prerequisites:
+  - Python 3.10 or newer and a dependency manager for installing `dspy` and optional extras for MCP, retrieval, local models, or deployment workflows.
+  - Model provider credentials, local model endpoint, Databricks environment, or LiteLLM-compatible provider configuration for the language models used by the DSPy program.
+  - Training examples, validation examples, metrics, expected outputs, and reviewer ownership before running DSPy optimizers or using optimized programs in production workflows.
+  - Reviewed data sources, retrieval systems, tools, MCP servers, and Python execution paths before connecting DSPy modules to real files, APIs, databases, or account actions.
+  - Cache, history, saved-program, artifact, and experiment-retention policies for prompts, messages, outputs, optimized examples, model usage metadata, and cost records.
+safetyNotes:
+  - DSPy changes how language-model systems are constructed and optimized, but it does not prove that a generated answer, optimized prompt, ReAct tool action, retrieved passage, or fine-tuned model is correct or safe.
+  - Optimizers can issue many model calls, generate examples, explore instructions, tune prompts, or fine-tune model weights; set budgets, rate limits, evaluation gates, rollback rules, and review ownership before running them.
+  - ReAct modules, Python interpreter tools, function tools, retrieval tools, and MCP-converted tools can trigger external APIs, local code, file access, or business actions if wired into a program.
+  - Metrics and evaluation datasets can overfit, reward the wrong behavior, or miss safety failures; treat optimizer scores as development signals rather than production approval.
+  - Saved programs, optimized prompts, bootstrapped demonstrations, fine-tuning datasets, and experiment artifacts should be reviewed before sharing because they can encode private data or brittle task assumptions.
+  - Local model servers, provider endpoints, and LiteLLM-compatible routes need normal timeout, retry, budget, abuse, model-selection, and credential-handling controls.
+privacyNotes:
+  - DSPy programs can send prompts, messages, typed inputs, retrieved context, tool arguments, generated outputs, optimizer traces, examples, metrics, and fine-tuning data to configured model providers.
+  - DSPy LM history can retain prompts, messages, call kwargs, responses, outputs, token usage, cost metadata, and related debugging information unless applications define cleanup and access controls.
+  - Caches, saved programs, optimized prompt artifacts, demonstration sets, serialized LM state, experiment logs, and evaluation reports can preserve sensitive task data outside the original source system.
+  - MCP integrations and tool calls can move user data, tool descriptions, tool arguments, and tool results into external servers, agent transcripts, provider logs, and downstream system logs.
+  - Local models reduce third-party provider exposure but can still leave data in process logs, tracing systems, prompt caches, generated artifacts, and shared infrastructure storage.
+---
+
+## Editorial notes
+
+DSPy is useful when Claude-adjacent teams want to replace one-off prompt engineering with a programmable, testable way to build language-model systems. It lets developers express tasks as structured signatures, compose them into modules and ReAct agents, define metrics, and optimize prompts, demonstrations, or model weights against examples.
+
+This is distinct from existing framework entries. LlamaIndex and Haystack focus on retrieval/data orchestration, LangGraph focuses on stateful graph workflows, Pydantic AI focuses on typed agent application code, and MLflow, Ragas, TruLens, Langfuse, and Phoenix focus on evaluation or observability evidence. DSPy's center of gravity is programming and optimizing LM programs themselves: signatures, modules, adapters, metrics, optimizers, ReAct tools, multimodal fields, local/provider models, and MCP tool use.
+
+## Source notes
+
+- The official DSPy site describes DSPy as a Python framework for building AI systems by expressing tasks as structured signatures instead of prompts, producing maintainable, modular, and optimizable programs.
+- The official overview lists Python 3.10 or newer, an MIT license, and Stanford NLP as the project origin.
+- The official site describes signatures for typed inputs and outputs, modules such as `Predict`, `ChainOfThought`, and `ReAct`, tools for agents, and optimizers that compile programs against metrics.
+- The language-model documentation covers configuring OpenAI, Gemini, Anthropic, Databricks, local models, OpenAI-compatible endpoints, and other LiteLLM-supported providers.
+- The same documentation says DSPy LM objects maintain interaction history with prompts, messages, call kwargs, responses, outputs, usage, and cost metadata.
+- The MCP tutorial documents installing `dspy[mcp]`, connecting to MCP servers, converting MCP tools to `dspy.Tool`, and using them in DSPy agents.
+- The GitHub repository is `stanfordnlp/dspy`, is MIT licensed, and describes DSPy as a framework for programming, not prompting, language models.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `DSPy`, `dspy`, `dspy.ai`, `stanfordnlp/dspy`, `language model programming`, `prompt optimization`, `LM programs`, `dspy.ReAct`, `GEPA`, `MIPROv2`, `BootstrapFewShot`, and `dspy[mcp]`. Existing LlamaIndex, Haystack, LangGraph, Pydantic AI, MLflow, Ragas, TruLens, Langfuse, Phoenix, and agent-framework entries cover adjacent framework, retrieval, orchestration, evaluation, or observability workflows, but no dedicated DSPy tools entry, DSPy source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

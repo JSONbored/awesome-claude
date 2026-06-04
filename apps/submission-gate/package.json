@@ -5,11 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --config wrangler.jsonc",
-    "deploy": "pnpm run deploy:prod",
-    "deploy:dev": "pnpm run deploy:prod",
     "deploy:prod": "node ../../scripts/check-submission-gate-prod-config.mjs && wrangler deploy --config wrangler.jsonc --env \"\"",
-    "deploy:dry-run": "pnpm run deploy:dry-run:dev",
-    "deploy:dry-run:dev": "pnpm run deploy:dry-run:prod",
     "deploy:dry-run:prod": "node ../../scripts/check-submission-gate-prod-config.mjs && wrangler deploy --config wrangler.jsonc --env \"\" --dry-run",
     "cf-typegen": "wrangler types --env-interface CloudflareEnv worker-configuration.d.ts"
   },

@@ -1,26 +1,12 @@
 import * as React from "react";
-import {
-  Activity,
-  Clock,
-  GitBranch,
-  Layers,
-  ShieldCheck,
-  Sparkles,
-  Terminal,
-  Zap,
-} from "lucide-react";
-import {
-  BUNDLE_CONTENT_LABEL,
-  PLATFORM_LABEL,
-  TRIGGER_KIND_LABEL,
-  type Entry,
-} from "@/types/registry";
+import { Layers, ShieldCheck, Sparkles, Terminal, Zap } from "lucide-react";
+import { type Entry } from "@/types/registry";
 import { cn } from "@/lib/utils";
 
 /**
  * Per-category facet row. Renders the category-specific metadata that the
  * generic card otherwise hides: hook trigger, command syntax, statusline
- * language, skill level, collection items, plugin bundle, automation cadence.
+ * language, skill level, and collection items.
  *
  * `density="card"` is compact (chip row), `density="dossier"` is the richer
  * layout used on the entry page.
@@ -151,40 +137,6 @@ function facetsFor(e: Entry): Facet[] {
             },
           ]
         : [];
-    case "plugins": {
-      const out: Facet[] = [];
-      if (e.harness && e.harness.length > 0) {
-        out.push({
-          label: "Harness",
-          value: e.harness.map((h) => PLATFORM_LABEL[h]).join(" · "),
-          icon: GitBranch,
-          tone: "accent",
-        });
-      }
-      if (e.bundleContents && e.bundleContents.length > 0) {
-        out.push({
-          label: "Bundle",
-          value: e.bundleContents.map((b) => BUNDLE_CONTENT_LABEL[b]).join(" + "),
-          icon: Layers,
-        });
-      }
-      return out;
-    }
-    case "automations": {
-      const out: Facet[] = [];
-      if (e.triggerKind) {
-        out.push({
-          label: TRIGGER_KIND_LABEL[e.triggerKind],
-          value: e.schedule ?? "—",
-          icon: Clock,
-          tone: "accent",
-        });
-      } else if (e.schedule) {
-        out.push({ label: "Schedule", value: e.schedule, icon: Clock });
-      }
-      if (e.lastRun) out.push({ label: "Last run", value: e.lastRun, icon: Activity });
-      return out;
-    }
     default:
       return [];
   }

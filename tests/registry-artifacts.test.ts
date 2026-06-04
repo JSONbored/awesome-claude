@@ -17,6 +17,8 @@ import {
   buildCursorSkillAdapter,
   buildJsonLdSnapshots,
   buildRegistryChangelogFeed,
+  buildEntryRelations,
+  buildRegistryRelationGraph,
   buildRegistryTrustReport,
   buildSourceHealthReport,
   buildEntrySourceHealth,
@@ -191,15 +193,23 @@ describe("registry artifacts", () => {
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
     const fullCorpusSize = artifactSize("llms-full.txt");
-    expect(artifactTreeSize(".")).toBeLessThan(22_000_000);
-    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(18_000_000);
-    expect(fullCorpusSize).toBeLessThan(4_500_000);
+    const entryCount = contentEntries.length;
+    expect(artifactTreeSize(".")).toBeLessThan(1_500_000 + entryCount * 52_000);
+    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(
+      1_000_000 + entryCount * 44_000,
+    );
+    expect(fullCorpusSize).toBeLessThan(500_000 + entryCount * 9_000);
     expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
     expect(artifactSize("search-index.json")).toBeLessThan(750_000);
     expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
+    expect(artifactSize("relation-graph.json")).toBeLessThan(
+      150_000 + entryCount * 1_500,
+    );
     expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
     expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
-    expect(artifactTreeSize("entries")).toBeLessThan(7_000_000);
+    expect(artifactTreeSize("entries")).toBeLessThan(
+      500_000 + entryCount * 17_500,
+    );
   });
 
   it("keeps Atlas list data compact while preserving canonical entry detail fields", () => {
@@ -229,7 +239,9 @@ describe("registry artifacts", () => {
     expect(atlasSkill).not.toHaveProperty("copySnippet");
     expect(skillDetail).toMatchObject({
       body: expect.any(String),
+      relatedEntries: expect.any(Array),
     });
+    expect(atlasSkill).not.toHaveProperty("relatedEntries");
     expect(skillDetail).not.toHaveProperty("sections");
     expect(skillDetail).not.toHaveProperty("headings");
     expect(skillDetail).not.toHaveProperty("codeBlocks");
@@ -471,8 +483,8 @@ describe("registry artifacts", () => {
       expect(surface).toMatchObject({
         submittedBy: "UPinar",
         submittedByUrl: "https://github.com/UPinar",
-        submissionIssueNumber: 304,
-        submissionIssueUrl:
+        sourceSubmissionNumber: 304,
+        sourceSubmissionUrl:
           "https://github.com/JSONbored/awesome-claude/issues/304",
         importPrNumber: 311,
         importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/311",
@@ -483,7 +495,7 @@ describe("registry artifacts", () => {
 
     expect(llmsText).toContain("- Submitted by: UPinar");
     expect(llmsText).toContain(
-      "- Submission issue: https://github.com/JSONbored/awesome-claude/issues/304",
+      "- Original submission: https://github.com/JSONbored/awesome-claude/issues/304",
     );
     expect(llmsText).toContain(
       "- Import PR: https://github.com/JSONbored/awesome-claude/pull/311",
@@ -495,8 +507,8 @@ describe("registry artifacts", () => {
     expect(zyntraEntry).toMatchObject({
       submittedBy: "dd77ss",
       submittedByUrl: "https://github.com/dd77ss",
-      submissionIssueNumber: 310,
-      submissionIssueUrl:
+      sourceSubmissionNumber: 310,
+      sourceSubmissionUrl:
         "https://github.com/JSONbored/awesome-claude/issues/310",
       importPrNumber: 314,
       importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/314",
@@ -586,9 +598,17 @@ describe("registry artifacts", () => {
   });
 
   it("derives all generated aggregate artifacts from registry builders", () => {
+    const relationGraphPayload = readDataJson<Record<string, unknown>>(
+      "relation-graph.json",
+    );
     expect(buildDirectoryEntries(contentEntries)).toEqual(directoryEntries);
     expect(buildSearchEntries(contentEntries)).toEqual(searchEntries);
     expect(buildRaycastEnvelope(contentEntries)).toEqual(raycastPayload);
+    expect(
+      buildRegistryRelationGraph(contentEntries, {
+        generatedAt: String(relationGraphPayload.generatedAt),
+      }),
+    ).toEqual(relationGraphPayload);
     expect(buildContentQualityArtifact(contentEntries)).toEqual(qualityPayload);
     expect(buildContentPromptArtifact(contentEntries)).toEqual(
       qualityPromptsPayload,
@@ -603,6 +623,97 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
+  });
+
+  it("does not derive comparative safety relations from safety notes alone", () => {
+    const target = {
+      category: "skills",
+      slug: "shared-target",
+      title: "Shared Workflow Target",
+      description: "A shared workflow target without safety notes.",
+      tags: ["shared"],
+      keywords: [],
+      safetyNotes: [],
+    };
+    const candidate = {
+      category: "skills",
+      slug: "shared-candidate",
+      title: "Shared Workflow Candidate",
+      description:
+        "A shared workflow candidate with self-declared safety notes.",
+      tags: ["shared"],
+      keywords: [],
+      safetyNotes: ["Review permissions before installing."],
+      downloadTrust: "source-backed",
+    };
+
+    const [relation] = buildEntryRelations(target, [target, candidate], {
+      limit: 1,
+    });
+
+    expect(relation).toMatchObject({
+      key: "skills:shared-candidate",
+      relation: "alternative",
+    });
+    expect(relation?.reasons).not.toContain("safer_metadata");
+    expect(
+      buildRegistryRelationGraph([target, candidate]).relationTypes,
+    ).not.toContain("safer-alternative");
+  });
+
+  it("publishes deterministic relation graph refs into entry details", () => {
+    const graph = readDataJson<{
+      kind: string;
+      count: number;
+      entries: Array<{
+        key: string;
+        related: Array<{
+          key: string;
+          category: string;
+          slug: string;
+          relation: string;
+          score: number;
+          reasons: string[];
+          url: string;
+        }>;
+      }>;
+    }>("relation-graph.json");
+
+    expect(graph).toMatchObject({
+      kind: "registry-relation-graph",
+      count: contentEntries.length,
+    });
+
+    const rowsWithRelations = graph.entries.filter(
+      (entry) => entry.related.length > 0,
+    );
+    expect(rowsWithRelations.length).toBeGreaterThan(0);
+    for (const row of rowsWithRelations.slice(0, 25)) {
+      expect(row.related.length).toBeLessThanOrEqual(4);
+      expect(row.related.map((relation) => relation.key)).not.toContain(
+        row.key,
+      );
+      expect(row.related).toEqual(
+        [...row.related].sort((left, right) => right.score - left.score),
+      );
+    }
+
+    const collectionRow = graph.entries.find(
+      (entry) => entry.key === "collections:browser-automation-mcp-stack",
+    );
+    if (collectionRow) {
+      expect(
+        collectionRow.related.some(
+          (relation) => relation.relation === "collection-member",
+        ),
+      ).toBe(true);
+    }
+
+    const [sample] = rowsWithRelations;
+    const detailPayload = readDataJson<{
+      entry: { relatedEntries?: unknown[] };
+    }>(`entries/${sample.key.replace(":", "/")}.json`);
+    expect(detailPayload.entry.relatedEntries).toEqual(sample.related);
   });
 
   it("derives compact search URLs from unhydrated source entries", () => {
@@ -652,9 +763,21 @@ Use this hook after reviewing the notes.`,
       "Reads local workspace metadata and does not send it to third parties.",
     ]);
 
+    const [directoryEntry] = buildDirectoryEntries([entry]);
+    expect(directoryEntry.safetyNotes).toBeUndefined();
+    expect(directoryEntry.privacyNotes).toBeUndefined();
+    expect(directoryEntry.trustSignals).toMatchObject({
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
+    });
+
     const [searchEntry] = buildSearchEntries([entry]);
     expect(searchEntry.safetyNotes).toBeUndefined();
     expect(searchEntry.privacyNotes).toBeUndefined();
+    expect(searchEntry.trustSignals).toMatchObject({
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
+    });
     expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
@@ -883,6 +1006,8 @@ Use this hook after reviewing the notes.`,
       expect((entry as Record<string, unknown>).llmsUrl).toBeUndefined();
       expect((entry as Record<string, unknown>).safetyNotes).toBeUndefined();
       expect((entry as Record<string, unknown>).privacyNotes).toBeUndefined();
+      expect(entry.trustSignals).toHaveProperty("hasSafetyNotes");
+      expect(entry.trustSignals).toHaveProperty("hasPrivacyNotes");
     }
     expect(
       searchEntries.some((entry) => entry.platforms?.includes("Gemini")),

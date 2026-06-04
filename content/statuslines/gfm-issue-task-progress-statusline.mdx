@@ -1,0 +1,111 @@
+---
+title: GFM Issue Task Progress Statusline
+slug: gfm-issue-task-progress-statusline
+category: statuslines
+description: Claude Code statusline that counts GitHub Flavored Markdown task list items from a linked issue body or local issue-body file.
+cardDescription: Show checked versus open GFM task list items.
+seoTitle: GFM issue task progress statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes GitHub Flavored Markdown task list progress from an issue body.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.github.com/gfm/#task-list-items-extension-"
+tags:
+  - markdown
+  - tasks
+  - issues
+  - claude-code
+keywords:
+  - gfm task list statusline
+  - issue task progress statusline
+  - markdown checklist statusline
+  - task list progress
+installable: true
+usageSnippet: "tasks: issue #804 | 3/5 | 60%"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gfm-issue-task-progress-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gfm-issue-task-progress-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  issue="${GITHUB_ISSUE_NUMBER:-}"
+  if [ -z "$issue" ]; then
+    branch=$(git branch --show-current 2>/dev/null || true)
+    issue=$(printf '%s' "$branch" | grep -Eo '[0-9]+' | head -1 || true)
+  fi
+
+  body=""
+  if [ -n "${GFM_TASK_BODY_FILE:-}" ] && [ -f "$GFM_TASK_BODY_FILE" ]; then
+    body=$(cat "$GFM_TASK_BODY_FILE" 2>/dev/null || true)
+  elif [ -n "$issue" ] && command -v gh >/dev/null 2>&1; then
+    body=$(gh issue view "$issue" --json body --jq '.body' 2>/dev/null || true)
+  fi
+
+  if [ -z "$body" ]; then
+    echo "tasks: set GFM_TASK_BODY_FILE or GITHUB_ISSUE_NUMBER"
+    exit 0
+  fi
+
+  done_count=$(printf '%s\n' "$body" | grep -Eci '^[[:space:]]*[-*] \[[xX]\] ' || true)
+  open_count=$(printf '%s\n' "$body" | grep -Eci '^[[:space:]]*[-*] \[ \] ' || true)
+  total=$((done_count + open_count))
+
+  label="local"
+  if [ -n "$issue" ]; then
+    label="issue #$issue"
+  fi
+
+  if [ "$total" -eq 0 ]; then
+    printf 'tasks: %s | no tasks\n' "$label"
+    exit 0
+  fi
+
+  pct=$((done_count * 100 / total))
+  printf 'tasks: %s | %s/%s | %s%%\n' "$label" "$done_count" "$total" "$pct"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - An issue body available through GFM_TASK_BODY_FILE, GITHUB_ISSUE_NUMBER plus GitHub CLI, or a branch name containing the issue number.
+  - The issue body uses GitHub Flavored Markdown task list syntax.
+  - GitHub CLI is optional unless the statusline should fetch the issue body directly.
+safetyNotes:
+  - Task completion is a planning signal and should not replace tests, review, or acceptance criteria.
+  - Branch-derived issue numbers are a convenience; set GITHUB_ISSUE_NUMBER explicitly when branch names contain unrelated numbers.
+  - Keep issue bodies free of secrets before using them in terminal-visible automation.
+privacyNotes:
+  - The statusline prints only aggregate task counts and an issue number or local label.
+  - If GitHub CLI fetches private issue bodies, access follows the local account and organization policy.
+  - Local issue-body files can contain sensitive planning details; avoid echoing raw bodies in shared logs.
+---
+
+## Source notes
+
+- GitHub Flavored Markdown defines task list items as checkbox-style list items.
+- This statusline counts those GFM task markers and can read them from a local issue-body file or from a linked GitHub issue.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gfm-issue-task-progress-statusline`, GFM task lists, issue task progress, task checklist, and GitHub CLI issue statuslines. The earlier `cli.github.com` submission was self-closed after #960 showed that source domain overlaps the accepted repository-health statusline; this replacement uses the GFM task-list specification as its canonical source.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.

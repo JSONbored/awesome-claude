@@ -38,6 +38,8 @@ function makeEntry(overrides: Partial<SearchDocument>): SearchDocument {
       sourceStatus: "missing",
       lastVerifiedAt: "",
       adapterGenerated: false,
+      hasSafetyNotes: false,
+      hasPrivacyNotes: false,
       platforms: [],
       supportLevels: [],
     },
@@ -67,6 +69,7 @@ const fixtures: SearchDocument[] = [
     trustSignals: {
       ...makeEntry({}).trustSignals,
       sourceStatus: "available",
+      hasSafetyNotes: true,
     },
   }),
   makeEntry({
@@ -90,6 +93,7 @@ const fixtures: SearchDocument[] = [
     trustSignals: {
       ...makeEntry({}).trustSignals,
       sourceStatus: "available",
+      hasPrivacyNotes: true,
     },
   }),
   makeEntry({
@@ -103,6 +107,8 @@ const fixtures: SearchDocument[] = [
     trustSignals: {
       ...makeEntry({}).trustSignals,
       sourceStatus: "available",
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
     },
   }),
 ];
@@ -192,5 +198,29 @@ describe("computeRegistrySearchFacets", () => {
 
     expect(matched).toHaveLength(2);
     expect(facets.hasSafetyNotes.true).toBe(2);
+  });
+
+  it("uses compact trust-signal booleans when full note text is omitted", () => {
+    const compact = makeEntry({
+      slug: "compact-notes",
+      trustSignals: {
+        ...makeEntry({}).trustSignals,
+        hasSafetyNotes: true,
+        hasPrivacyNotes: true,
+      },
+    });
+
+    expect(
+      filterEntries([compact], {
+        ...defaultFilters,
+        hasSafetyNotes: "true",
+      }),
+    ).toHaveLength(1);
+    expect(
+      computeRegistrySearchFacets([compact], defaultFilters),
+    ).toMatchObject({
+      hasSafetyNotes: { true: 1 },
+      hasPrivacyNotes: { true: 1 },
+    });
   });
 });

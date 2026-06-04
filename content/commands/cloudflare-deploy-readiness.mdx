@@ -1,0 +1,100 @@
+---
+title: /deploy-readiness - Cloudflare Deploy Readiness Command for Claude Code
+slug: cloudflare-deploy-readiness
+category: commands
+description: >-
+  Slash command that runs a pre-deploy readiness check for a Cloudflare Workers
+  project before you ship. It confirms Wrangler auth, validates the worker
+  config, dry-runs the build to catch bundling errors without deploying,
+  cross-checks that secrets and bindings referenced in code actually exist, and
+  returns a clear go or no-go summary.
+cardDescription: >-
+  Pre-deploy readiness check for Cloudflare Workers - auth, config, dry-run
+  build, and secret/binding coverage.
+seoTitle: /deploy-readiness - Cloudflare Deploy Readiness Command for Claude Code
+seoDescription: >-
+  A Claude Code slash command that checks Cloudflare Workers deploy readiness
+  with Wrangler - auth, config, a dry-run build, and secret/binding coverage -
+  before you ship.
+author: jony376
+submittedBy: jony376
+submittedByUrl: "https://github.com/jony376"
+dateAdded: "2026-06-04"
+documentationUrl: "https://developers.cloudflare.com/workers/wrangler/commands/"
+repoUrl: "https://github.com/cloudflare/workers-sdk"
+installable: true
+installCommand: "/deploy-readiness"
+commandSyntax: "/deploy-readiness [environment]"
+usageSnippet: "/deploy-readiness production"
+copySnippet: "/deploy-readiness [environment]"
+safetyNotes:
+  - "Runs only read-only and dry-run Wrangler commands - wrangler whoami, wrangler versions or deploy with --dry-run, and wrangler secret list; it never runs a real deploy or publish."
+  - "The --dry-run build compiles and bundles the worker locally without uploading it to Cloudflare, so no production change is made."
+  - "Requires an authenticated Wrangler session; it reads account state but does not modify secrets, bindings, or deployments."
+privacyNotes:
+  - "Wrangler output entering the model context can include your account id, worker name, environment name, and secret names (never secret values)."
+  - "Source files and the wrangler config are read to cross-check referenced secrets and bindings; review the project before running on sensitive accounts."
+  - "The command writes nothing to disk beyond Wrangler's own temporary dry-run build output."
+tags:
+  - "cloudflare"
+  - "workers"
+  - "wrangler"
+  - "deployment"
+  - "devops"
+keywords:
+  - "cloudflare deploy readiness command"
+  - "wrangler dry run check"
+  - "workers pre-deploy checklist"
+  - "wrangler secret binding check"
+---
+
+The `/deploy-readiness` command runs a pre-flight check for a Cloudflare Workers project using the [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/commands/), so build failures, missing secrets, and config gaps surface before a real deploy — not after.
+
+## Usage
+
+```
+/deploy-readiness [environment]
+```
+
+- With an `environment` (a Wrangler named environment): check that environment's config.
+- Without an argument: check the top-level config.
+
+## What it does
+
+When you invoke this command, follow these steps and never run a real deploy:
+
+1. **Confirm auth.** Run `wrangler whoami`. If it fails, stop and report that the user must run `wrangler login` (or set `CLOUDFLARE_API_TOKEN`).
+2. **Validate config.** Read `wrangler.toml` / `wrangler.jsonc` / `wrangler.json` and confirm `name`, `main`, and `compatibility_date` are present. Flag a missing `compatibility_date` as a reproducibility risk.
+3. **Dry-run the build.** Run `wrangler deploy --dry-run --outdir /tmp/wrangler-dry` (add `--env <environment>` when given). This compiles and bundles the worker locally and surfaces TypeScript/bundler errors without uploading anything.
+4. **Check secrets.** List configured secrets with `wrangler secret list` (and `--env` when given), grep the source for `env.<NAME>` references, and report any referenced secret that is not configured.
+5. **Check bindings.** Confirm every KV namespace, R2 bucket, D1 database, queue, and service binding referenced in code is declared in the config.
+6. **Report go / no-go.** Summarize each check as pass or fail and give a single readiness verdict with the exact command to fix any failure.
+
+## Output format
+
+- **Auth:** account + whether authenticated.
+- **Config:** name / main / compatibility_date status.
+- **Build:** dry-run result (and the first error if it failed).
+- **Secrets:** referenced vs configured, with any gaps.
+- **Bindings:** declared vs referenced.
+- **Verdict:** ready to deploy, or blocked with the fixes.
+
+## Requirements
+
+- Wrangler CLI installed (`npm i -g wrangler` or `npx wrangler`).
+- An authenticated Wrangler session (`wrangler login`) or `CLOUDFLARE_API_TOKEN` set.
+- Run from the worker project root so the config and source are discoverable.
+
+## Safety notes
+
+The command runs only read-only and dry-run Wrangler commands (`wrangler whoami`, `wrangler deploy --dry-run`, `wrangler secret list`). The `--dry-run` build never uploads to Cloudflare, and the command never runs a real deploy, edits secrets, or changes bindings.
+
+## Privacy notes
+
+Wrangler output included in the model context can contain your account id, worker name, environment name, and secret names (never values). Review the project before running on sensitive accounts. Nothing is written to disk beyond Wrangler's own temporary dry-run build output.
+
+## Source and references
+
+- Wrangler commands reference: https://developers.cloudflare.com/workers/wrangler/commands/
+- Cloudflare Workers configuration: https://developers.cloudflare.com/workers/wrangler/configuration/
+- workers-sdk (Wrangler) repository: https://github.com/cloudflare/workers-sdk

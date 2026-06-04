@@ -1,0 +1,51 @@
+name: Raycast Release Watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "35 16 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: raycast-release-watch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.16.0
+
+      - name: Check Raycast release status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-raycast-release-due.mjs --output raycast-release-due.json --upsert-issue
+
+      - name: Summarize Raycast release status
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("raycast-release-due.json", "utf8"));
+          const lines = [
+            "## Raycast Release Watch",
+            "",
+            `- Due: \`${report.due}\``,
+            `- Proposed version: \`${report.proposedVersion}\``,
+            `- Latest tag: \`${report.latestTag ?? "none"}\``,
+            `- Raycast-related commits: \`${report.commits.length}\``,
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+          NODE

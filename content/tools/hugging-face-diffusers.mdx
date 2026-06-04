@@ -1,0 +1,76 @@
+---
+title: Hugging Face Diffusers
+slug: hugging-face-diffusers
+category: tools
+description: Apache-2.0 library for pretrained diffusion model pipelines, schedulers, adapters, optimization, and training workflows for image, video, and audio generation in PyTorch.
+cardDescription: Run and train diffusion pipelines for image, video, and audio generation.
+seoTitle: Hugging Face Diffusers diffusion model library
+seoDescription: Hugging Face Diffusers is an Apache-2.0 library for pretrained diffusion model pipelines, schedulers, adapters, optimization, and training workflows for image, video, and audio generation in PyTorch.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://huggingface.co/docs/diffusers"
+documentationUrl: "https://huggingface.co/docs/diffusers"
+repoUrl: "https://github.com/huggingface/diffusers"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - diffusion
+  - image-generation
+  - training
+keywords:
+  - Hugging Face Diffusers
+  - diffusion models
+  - DiffusionPipeline
+  - image generation
+  - video generation
+prerequisites:
+  - Python 3.8 or newer, PyTorch 2.6 or newer, compatible accelerator drivers, and the `diffusers` package installed with the extras needed for the selected pipeline, training, or optimization workflow.
+  - Approved model checkpoint, model card, license, revision pin, pipeline class, scheduler choice, adapter plan, safety policy, and fallback model plan.
+  - Hardware and runtime plan for CPU, GPU, Apple Silicon, memory offload, quantization, torch.compile, batch size, cache directories, checkpoint storage, and rollback.
+  - Data governance plan for prompts, generated media, training images or videos, captions, embeddings, adapters, model weights, Hub tokens, logs, and published artifacts.
+  - Review process for content safety, consent, copyright, likeness rights, provenance, watermarking, output moderation, and dataset licensing before user-facing use.
+safetyNotes:
+  - Diffusers can generate and train image, video, and audio models, so teams need application-level controls for unsafe imagery, deepfakes, impersonation, copyrighted style mimicry, and policy-violating prompts.
+  - Public model availability does not prove a checkpoint, adapter, dataset, or generated output is licensed or safe for a given product workflow.
+  - Pipelines, schedulers, adapters, LoRA weights, ControlNet inputs, and optimization settings can materially change outputs, latency, memory use, and safety behavior.
+  - Training scripts, source installs, example notebooks, community checkpoints, custom pipelines, and adapter repositories should be reviewed before execution, especially with private data or credentials.
+  - Large diffusion workloads can exhaust CPU, GPU, memory, disk, network, or cloud quotas; benchmark batch size, precision, offload, cache growth, and rollback before production deployment.
+  - Generated media and fine-tuned checkpoints should be reviewed before publication, sharing, Hub uploads, or automated use in Claude-adjacent product workflows.
+privacyNotes:
+  - Diffusers workflows can process prompts, negative prompts, images, videos, audio, captions, masks, ControlNet inputs, embeddings, training datasets, generated outputs, model weights, and adapter weights.
+  - Local caches, model downloads, generated media, intermediate latents, training examples, checkpoints, logs, notebooks, and experiment artifacts can retain sensitive inputs outside the primary application database.
+  - Hugging Face Hub access, hosted checkpoints, private repositories, cloud storage, shared filesystems, observability systems, and experiment trackers may expose model names, dataset names, prompts, media, metrics, or artifacts depending on setup.
+  - The official installation docs say telemetry can be sent when loading models and pipelines from the Hub, including Diffusers and PyTorch versions, requested model or pipeline class, and hosted checkpoint path unless disabled.
+  - Teams should define who can inspect prompts, generated media, training records, cache directories, failed outputs, checkpoints, Hub artifacts, and moderation decisions before integrating Diffusers into production workflows.
+---
+
+## Editorial notes
+
+Hugging Face Diffusers is useful when Claude-adjacent teams need a standard library for diffusion model inference, generated media workflows, model experimentation, scheduler comparison, LoRA or adapter loading, memory optimization, and training scripts for image, video, or audio generation. It centers on `DiffusionPipeline`, reusable schedulers, pretrained model components, Hub-hosted checkpoints, and training examples that can be adapted for production or research workflows.
+
+This is distinct from the existing Hugging Face entries. Transformers is the model-definition, tokenizer, generation, pipeline, and Trainer layer for many model families. PEFT focuses on parameter-efficient adaptation. Datasets is the data loading and preprocessing layer. Accelerate is the distributed runtime layer. Sentence Transformers focuses on embeddings and reranking. Hugging Face Diffusers is the diffusion-model layer for media generation pipelines, schedulers, adapters, optimization, and diffusion-specific training examples.
+
+## Source notes
+
+- The official README describes Diffusers as a library for state-of-the-art pretrained diffusion models for generating images, audio, and 3D molecular structures, with support for inference and training.
+- The README describes three core components: diffusion pipelines for inference, interchangeable schedulers, and pretrained models that can be combined into diffusion systems.
+- The README quickstart uses `DiffusionPipeline.from_pretrained` to load a pretrained model from the Hugging Face Hub and run text-to-image generation.
+- The official docs describe Diffusers as a library of pretrained diffusion models for generating videos, images, and audio.
+- The docs say the library revolves around `DiffusionPipeline`, supports mix-and-match components, and can load adapters like LoRA.
+- The docs mention optimization options such as offloading, quantization, and torch.compile for memory-constrained or faster inference setups.
+- The installation docs say Diffusers is tested on Python 3.8 or newer and PyTorch 2.6 or newer, with installs available through PyPI, conda-forge, source, and editable repository workflows.
+- The installation docs describe Hub cache controls, offline mode through `HF_HUB_OFFLINE`, and telemetry behavior for Hub model and pipeline loading.
+- The training overview says Diffusers provides self-contained, adaptable, beginner-friendly, single-purpose training scripts for tasks such as text-to-image, DreamBooth, ControlNet, InstructPix2Pix, and LoRA-supported workflows.
+- The repository is `huggingface/diffusers`, is Apache-2.0 licensed, and describes the project as diffusion models for image, video, and audio generation in PyTorch.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face Diffusers`, `huggingface/diffusers`, `huggingface.co/docs/diffusers`, `DiffusionPipeline`, `diffusion pipelines`, `diffusion models`, and `image generation`. Existing Hugging Face entries mention Diffusers only as an adjacent integration layer; no dedicated Diffusers tools entry, source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face Diffusers is Apache-2.0 open-source software; individual checkpoints, adapters, datasets, generated media, Hub repositories, hosted services, and cloud runtimes may have separate licenses, terms, privacy obligations, and access controls.

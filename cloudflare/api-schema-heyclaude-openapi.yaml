@@ -82,10 +82,10 @@ components:
           format: uri
         submittedAt:
           type: string
-        submissionIssueNumber:
+        sourceSubmissionNumber:
           type: integer
           exclusiveMinimum: 0
-        submissionIssueUrl:
+        sourceSubmissionUrl:
           type: string
           format: uri
         importPrNumber:
@@ -220,6 +220,10 @@ components:
             lastVerifiedAt:
               type: string
             adapterGenerated:
+              type: boolean
+            hasSafetyNotes:
+              type: boolean
+            hasPrivacyNotes:
               type: boolean
             platforms:
               type: array
@@ -380,6 +384,10 @@ components:
         lastVerifiedAt:
           type: string
         adapterGenerated:
+          type: boolean
+        hasSafetyNotes:
+          type: boolean
+        hasPrivacyNotes:
           type: boolean
         platforms:
           type: array
@@ -1095,10 +1103,10 @@ paths:
                           format: uri
                         submittedAt:
                           type: string
-                        submissionIssueNumber:
+                        sourceSubmissionNumber:
                           type: integer
                           exclusiveMinimum: 0
-                        submissionIssueUrl:
+                        sourceSubmissionUrl:
                           type: string
                           format: uri
                         importPrNumber:
@@ -1233,6 +1241,10 @@ paths:
                             lastVerifiedAt:
                               type: string
                             adapterGenerated:
+                              type: boolean
+                            hasSafetyNotes:
+                              type: boolean
+                            hasPrivacyNotes:
                               type: boolean
                             platforms:
                               type: array

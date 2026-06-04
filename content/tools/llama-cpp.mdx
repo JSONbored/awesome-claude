@@ -1,0 +1,72 @@
+---
+title: llama.cpp
+slug: llama-cpp
+category: tools
+description: MIT-licensed C/C++ LLM inference runtime for running GGUF models locally or through a lightweight OpenAI-compatible llama-server.
+cardDescription: Run GGUF models locally with C/C++ inference and an OpenAI-compatible server.
+seoTitle: llama.cpp local LLM inference runtime
+seoDescription: llama.cpp helps teams run GGUF language models locally or in the cloud with C/C++ inference, CPU and GPU backends, quantization, grammars, embeddings, reranking, and an OpenAI-compatible llama-server.
+author: ggml-org
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://llama.app/"
+documentationUrl: "https://github.com/ggml-org/llama.cpp/tree/master/docs"
+repoUrl: "https://github.com/ggml-org/llama.cpp"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - local-models
+  - inference
+  - openai-compatible
+keywords:
+  - llama.cpp
+  - llama-cpp
+  - gguf inference
+  - local llm runtime
+  - llama-server
+prerequisites:
+  - Compatible local machine, container, or server environment with enough CPU, RAM, GPU, VRAM, storage, drivers, and backend support for the target model and quantization level.
+  - Approved GGUF model files, model licenses, tokenizer/chat-template expectations, LoRA adapters, multimodal files, and any Hugging Face credentials or mirror configuration needed to fetch models.
+  - Build, package, or binary distribution path reviewed for the target backend, such as Metal, CUDA, HIP, Vulkan, SYCL, BLAS, CPU-only, or Docker.
+  - Network, authentication, TLS, API-key, firewall, and rate-limit plan before exposing `llama-server`, its web UI, or OpenAI-compatible endpoints beyond a trusted local machine.
+  - Evaluation prompts, safety checks, structured-output or grammar tests, rollback plan, and operator ownership before routing coding agents or customer workflows through a served local model.
+safetyNotes:
+  - llama.cpp runs model inference, but it does not make model outputs factual, policy-compliant, safe to execute, or appropriate for automated account, code, data, or infrastructure actions.
+  - llama-server exposes a local web UI and OpenAI-compatible HTTP endpoints; do not bind it to shared networks or public interfaces without authentication, TLS, firewalling, quotas, and monitoring.
+  - GGUF files, LoRA adapters, tokenizer configuration, chat templates, multimodal projectors, and model metadata should be reviewed for provenance, license, task fit, and prompt-format compatibility.
+  - Grammars and JSON constraints can improve output shape, but they do not prove semantic correctness, authorization, data validity, or downstream action safety.
+  - Local inference can still consume substantial CPU, GPU, memory, disk, and power; set context length, thread count, batch size, GPU offload, concurrency, and cache settings intentionally.
+  - Small local models often underperform frontier models on coding, reasoning, tool use, and safety-sensitive tasks; evaluate behavior before substituting them into Claude-adjacent workflows.
+privacyNotes:
+  - llama.cpp can keep prompts, chat messages, retrieved context, embeddings, reranking inputs, generated outputs, grammar-constrained outputs, and multimodal inputs on local infrastructure when configured locally.
+  - Local-first operation reduces third-party model-provider exposure, but prompts and outputs can still appear in terminal history, server logs, web UI state, reverse proxies, monitoring, crash reports, caches, and saved transcripts.
+  - GGUF model files, adapters, tokenizer files, and Hugging Face cache entries can reveal model choices, licensed assets, private fine-tunes, or internal evaluation targets.
+  - Exposed OpenAI-compatible endpoints can receive sensitive data from clients that assume a cloud provider-style security boundary; document who operates the server and where request data is retained.
+  - Prompt caches, KV caches, embedding stores, reranking inputs, and downstream app logs need retention, access-control, deletion, and backup policies even when inference happens locally.
+---
+
+## Editorial notes
+
+llama.cpp is useful when Claude-adjacent teams want a small, portable local inference runtime for open models, offline experiments, edge deployments, or private model delegation. It gives developers a C/C++ runtime for GGUF models, local CLI usage, grammar-constrained output, embeddings, reranking, multimodal support, and a lightweight OpenAI-compatible `llama-server`.
+
+This is distinct from existing local-model and serving entries. Ollama focuses on user-friendly model management and a local model runner. vLLM focuses on high-throughput model serving at larger operational scale. LiteLLM focuses on gateway and provider routing. llama.cpp sits closer to the runtime layer: C/C++ inference, GGUF model files, quantization, CPU/GPU backends, local CLI workflows, and the `llama-server` HTTP API.
+
+## Source notes
+
+- The official repository README describes llama.cpp as LLM inference in C/C++.
+- The README says the main goal is LLM inference with minimal setup and state-of-the-art performance across a wide range of hardware, locally and in the cloud.
+- The quick-start section documents using a local GGUF model file, downloading compatible models from Hugging Face, and launching an OpenAI-compatible API server with `llama-server`.
+- The README describes `llama-server` as a lightweight OpenAI API-compatible HTTP server for serving LLMs, including a local web UI and chat-completion endpoint.
+- The README documents GGUF model requirements, conversion and quantization tooling, grammar-constrained output, embeddings, reranking, perplexity, benchmarking, multimodal support, and supported hardware backends such as Metal, CUDA, HIP, Vulkan, SYCL, BLAS, and CPU paths.
+- The GitHub repository is `ggml-org/llama.cpp`, is MIT licensed, and describes the project as LLM inference in C/C++.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `llama.cpp`, `llama-cpp`, `llamacpp`, `ggml-org/llama.cpp`, `ggml`, `llama.app`, `llama-server`, `GGUF inference`, `OpenAI-compatible server`, and `local LLM runtime`. Existing Ollama, vLLM, LiteLLM, LlamaIndex, Haystack, Agno, and local-first guide entries cover adjacent model management, serving, gateway, framework, or architecture workflows, but no dedicated llama.cpp tools entry, llama.cpp source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

@@ -1,0 +1,80 @@
+---
+title: Apache Airflow
+slug: apache-airflow
+category: tools
+description: Apache-2.0 platform for programmatically authoring, scheduling, monitoring, and operating workflow DAGs across workers, executors, providers, and task logs.
+cardDescription: Author, schedule, monitor, and operate workflow DAGs as code.
+seoTitle: Apache Airflow workflow orchestration platform
+seoDescription: Apache Airflow is an Apache-2.0 platform for programmatically authoring, scheduling, monitoring, and operating workflow DAGs across workers, executors, providers, and task logs.
+author: Apache Software Foundation
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://airflow.apache.org/"
+documentationUrl: "https://airflow.apache.org/docs/apache-airflow/stable/"
+repoUrl: "https://github.com/apache/airflow"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux, macOS, Windows via WSL2 or Linux containers
+tags:
+  - workflow-orchestration
+  - data-pipelines
+  - scheduling
+keywords:
+  - Apache Airflow
+  - Airflow DAGs
+  - workflow orchestration
+  - DAG scheduling
+  - data pipelines
+prerequisites:
+  - Supported Python and platform version for the selected Airflow release, plus the official constraint-file install workflow for repeatable `apache-airflow` package installs.
+  - Workflow design for mostly static DAGs, idempotent tasks, dependencies, schedules, backfills, retries, providers, operators, sensors, XCom usage, and external compute systems.
+  - Production deployment plan for metadata database, executor, scheduler, webserver, DAG processor, triggerer, workers, DAG synchronization, health checks, upgrades, and rollback.
+  - Security plan for DAG author trust, auth manager, RBAC, API access, connections, variables, Fernet keys, JWT signing keys, secrets backend, task isolation, and audit logs.
+  - Logging and retention plan for task logs, remote logging, object storage, metadata database backups, XCom storage, rendered templates, and operational incident review.
+safetyNotes:
+  - Airflow executes DAG author Python code on workers, the DAG processor, and the triggerer, and the official security model says that code is not verified or sandboxed by Airflow.
+  - DAG authors, admins, connection-configuration users, and deployment managers can have powerful access to workers, credentials, metadata, API actions, and external systems, so roles should be granted conservatively.
+  - Schedules, sensors, backfills, retries, and manually triggered DAG runs can repeat destructive work; production DAGs should be idempotent, tested, observable, and easy to pause or roll back.
+  - The production docs say SQLite is for testing only and can cause production data loss; production Airflow needs an external database such as PostgreSQL or MySQL with backups and migration controls.
+  - The README warns that a plain `pip install apache-airflow` can produce an unusable installation and recommends the official constraint-file workflow for repeatable installs.
+  - Multi-node deployments need careful separation of DAG files, configuration, JWT signing keys, database credentials, Fernet keys, worker permissions, and task-log serving between components.
+privacyNotes:
+  - Airflow can process DAG code, task parameters, run history, schedules, connections, variables, XCom values, rendered templates, logs, audit events, metadata database rows, and external-system identifiers.
+  - XComs are stored for task communication and are intended for small values; large values or sensitive payloads should use an appropriate backend or external storage rather than the default metadata database path.
+  - Task logs are stored locally under the configured Airflow home by default or in remote services such as S3, GCS, WASB, HDFS, Elasticsearch, CloudWatch, or other configured logging backends.
+  - Airflow masks accessed connection passwords, sensitive variables, and selected extra fields in logs and UI views, but values passed through side channels such as XComs or environment variables may not be masked automatically.
+  - The Airflow privacy notice says the website follows the Apache Software Foundation public privacy policy; deployed Airflow environments remain the operator's responsibility for data handling, retention, and access control.
+---
+
+## Editorial notes
+
+Apache Airflow is useful when Claude-adjacent teams need mature workflow-as-code scheduling for data pipelines, report generation, batch jobs, model evaluation runs, data quality checks, warehouse tasks, provider integrations, and operational monitoring. It gives teams a shared DAG model, scheduler, worker execution, UI, command-line tools, provider ecosystem, task logs, and production deployment patterns.
+
+This entry is a dedicated tool listing. Existing repository content mentions Apache Airflow inside a data pipeline engineering agent and a data engineering collection, but those are contextual references rather than a standalone source-backed Airflow entry. It is distinct from Dagster, which centers on data assets, lineage, and asset-oriented orchestration. Airflow centers on DAG-based workflow authoring, scheduling, execution, and monitoring.
+
+## Source notes
+
+- The official repository describes Apache Airflow as a platform to programmatically author, schedule, and monitor workflows.
+- The README says workflows defined as code become more maintainable, versionable, testable, and collaborative.
+- The README says Airflow authors workflows as DAGs, the scheduler executes tasks on workers while following dependencies, and the UI visualizes and troubleshoots production pipelines.
+- The README says Airflow works best with mostly static and slowly changing workflows, encourages idempotent tasks, and recommends delegating high-volume data-intensive work to external specialized services.
+- The README says Airflow is not a streaming solution, though it is often used to process real-time data in batches.
+- The README documents dynamic pipelines, extensibility through operators, flexibility through Jinja templating, official source releases, convenience packages, Docker images, and Helm charts.
+- The README documents tested Python, platform, Kubernetes, PostgreSQL, MySQL, and SQLite versions for current and stable releases, and says production execution should use Linux-based distributions.
+- The README says only `pip` installation is currently officially supported and recommends constraint files for repeatable installs.
+- The production deployment docs warn that SQLite is for testing only and recommend an external metadata database for production.
+- The security model docs describe deployment managers, authenticated UI users, DAG authors, admin users, connection configuration users, and the trust required because DAG author code can execute arbitrary Python.
+- The secrets docs cover variables, connections, encryption at rest, secrets backends, and masking sensitive values in logs, UI, and rendered fields.
+- The XCom docs describe XComs as per-task-instance communication intended for small values, with object storage recommended for larger data.
+- The task logging docs describe local and remote task logs, remote backends, log serving from workers or triggerer, and configuration options.
+- The repository is `apache/airflow`, is Apache-2.0 licensed, and is active.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Apache Airflow`, `Airflow`, `apache/airflow`, `github.com/apache/airflow`, `airflow.apache.org`, `DAG orchestration`, and `workflow orchestration`. Existing references appear only inside `content/agents/data-pipeline-engineering-agent.mdx` and `content/collections/data-engineering-suite.mdx`; no dedicated Apache Airflow tools entry, source URL duplicate, target file, issue duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Apache Airflow is Apache-2.0 open-source software; providers, executors, databases, Kubernetes clusters, cloud services, logging backends, secrets managers, and downstream systems may have separate licenses, billing, terms, privacy obligations, and access controls.
