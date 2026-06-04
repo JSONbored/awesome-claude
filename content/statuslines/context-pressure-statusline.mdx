@@ -1,0 +1,102 @@
+---
+title: Context Pressure Statusline
+slug: context-pressure-statusline
+category: statuslines
+description: Claude Code statusline that estimates context pressure from local session token counts and a configurable context limit, then prints a compact risk tier.
+cardDescription: Show context pressure from session token counts and a configured limit.
+seoTitle: Context pressure statusline for Claude Code
+seoDescription: Add a Claude Code statusline that shows token pressure, context percentage, and review tiers using local statusline input and model context documentation.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+tags:
+  - context
+  - tokens
+  - model
+  - claude-code
+keywords:
+  - context window statusline
+  - token pressure statusline
+  - claude code context
+  - context budget
+installable: true
+usageSnippet: "context: 118432/200000 | 59% | watch"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/context-pressure-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/context-pressure-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  read -r input || input=""
+  limit="${CLAUDE_CONTEXT_LIMIT:-200000}"
+  used=$(printf '%s' "$input" | jq -r '.session.totalTokens // .usage.input_tokens // .cost.total_tokens // 0')
+
+  if ! printf '%s' "$limit" | grep -Eq '^[0-9]+$'; then
+    limit=200000
+  fi
+  if ! printf '%s' "$used" | grep -Eq '^[0-9]+$'; then
+    used=0
+  fi
+
+  if [ "$limit" -le 0 ]; then
+    limit=200000
+  fi
+
+  pct=$((used * 100 / limit))
+  if [ "$pct" -ge 85 ]; then
+    state="compress"
+  elif [ "$pct" -ge 65 ]; then
+    state="watch"
+  else
+    state="ok"
+  fi
+
+  printf 'context: %s/%s | %s%% | %s\n' "$used" "$limit" "$pct" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Claude Code statusline support with local JSON input.
+  - jq available for reading session usage fields.
+  - Optional CLAUDE_CONTEXT_LIMIT set to the model or workflow limit your team wants to track.
+safetyNotes:
+  - Context percentage is only as accurate as the configured limit and the usage fields available in the statusline input.
+  - Use the warning as a cue to summarize or checkpoint work before context pressure affects reasoning quality.
+  - Do not treat a low percentage as proof that all relevant files, instructions, or tool results are still in scope.
+privacyNotes:
+  - The script reads local session counters and does not inspect prompt text, files, or transcript contents.
+  - Token counts and configured limits can still reveal workload size in screenshots or shared terminal logs.
+  - Teams should avoid placing customer names or project identifiers in shell variables that appear in debugging output.
+---
+
+## Source notes
+
+- Claude Code statusline documentation defines command-based statuslines with JSON passed on stdin.
+- Anthropic model documentation explains that models have context windows; this entry leaves the exact limit configurable so teams can track the model and workflow they use.
+
+## Duplicate check
+
+Checked existing statuslines, the live HeyClaude statuslines index, open pull requests, and repository content for `context-pressure-statusline`, context window, token pressure, and context budget statuslines. Existing model and token entries are adjacent, but this file is specifically a configurable context-pressure gauge.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
