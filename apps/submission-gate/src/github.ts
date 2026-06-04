@@ -347,6 +347,7 @@ export async function getPullRequest(params: {
     title?: string;
     html_url?: string;
     state?: string;
+    merged_at?: string | null;
     user?: { login?: string };
     draft?: boolean;
     base?: { ref?: string; repo?: { full_name?: string } };

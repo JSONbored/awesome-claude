@@ -828,10 +828,17 @@ describe("Cloudflare submission gate helpers", () => {
       "Skipped trusted recheck because this submission already has a terminal gate decision.",
     );
     expect(source).toContain("function isOpenPullRequest");
+    expect(source).toContain("function terminalStatusFromPullRequest");
+    expect(source).toContain("async function reconcileTerminalPullRequest");
+    expect(source).toContain("labels: [LABELS.underReview]");
     expect(source).toContain(
       "Terminal gate state did not match open GitHub PR",
     );
     expect(source).toContain("GitHub terminal state verified.");
+    expect(source).toContain(
+      "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+    );
+    expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
     expect(storageSource).toContain(

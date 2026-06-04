@@ -1147,6 +1147,68 @@ function isOpenPullRequest(pull: { state?: string }) {
   return String(pull.state || "").toLowerCase() === "open";
 }
 
+function terminalStatusFromPullRequest(pull: {
+  state?: string;
+  merged_at?: string | null;
+}) {
+  if (isOpenPullRequest(pull)) return null;
+  return pull.merged_at ? "merged" : "closed";
+}
+
+async function reconcileTerminalPullRequest(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  message: QueueMessage;
+  pull: {
+    state?: string;
+    merged_at?: string | null;
+    head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
+    base?: { ref?: string };
+  };
+}) {
+  const status = terminalStatusFromPullRequest(params.pull);
+  if (!status) return false;
+  await removeLabels({
+    token: params.token,
+    repo: params.repo,
+    issueNumber: params.target.number,
+    labels: [LABELS.underReview],
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.pull.head?.repo?.full_name || params.target.headRepo,
+    headRef: params.pull.head?.ref || params.target.headRef,
+    headSha: params.pull.head?.sha || params.target.headSha,
+    baseRef:
+      params.pull.base?.ref ||
+      params.target.baseRef ||
+      contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status,
+    verdict: status === "merged" ? "merge" : undefined,
+    deliveryId: String(params.message.payload.deliveryId || ""),
+    nextReviewAt: null,
+    lastError: "GitHub terminal state verified.",
+    terminalAt: nowIso(),
+    clearVerdict: status === "closed",
+  });
+  await insertAudit(params.env.SUBMISSION_GATE_DB, {
+    id: crypto.randomUUID(),
+    targetKey: params.message.targetKey,
+    eventType: params.message.kind,
+    decision: "github_terminal_reconciled",
+    summary:
+      status === "merged"
+        ? "GitHub PR was already merged; removed transient review label and skipped review continuation."
+        : "GitHub PR was already closed; removed transient review label and skipped review continuation.",
+  });
+  return true;
+}
+
 async function ignoreOutOfScopeReviewTarget(params: {
   env: Env;
   token: string;
@@ -2688,6 +2750,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         title?: string;
         html_url?: string;
         user?: { login?: string };
+        merged_at?: string | null;
         base?: { ref?: string };
         head?: { sha?: string; ref?: string; repo?: { full_name?: string } };
       } | null = null;
@@ -2705,6 +2768,18 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         target.headRepo =
           pullForNotification.head?.repo?.full_name || target.headRepo;
         target.baseRef = pullForNotification.base?.ref || target.baseRef || "";
+        if (
+          await reconcileTerminalPullRequest({
+            env,
+            token,
+            repo,
+            target,
+            message,
+            pull: pullForNotification,
+          })
+        ) {
+          return;
+        }
         if (target.baseRef !== contentGateBaseRef(env)) {
           await ignoreOutOfScopeReviewTarget({
             env,
@@ -3050,6 +3125,24 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       if (decision.verdict === "merge" && contentScopeForPrivateReview) {
         let mergeResult: Awaited<ReturnType<typeof mergeAcceptedPullRequest>>;
         try {
+          const latestPull = await getPullRequest({
+            token,
+            repo,
+            number: target.number,
+            apiVersion: env.GITHUB_API_VERSION,
+          });
+          if (
+            await reconcileTerminalPullRequest({
+              env,
+              token,
+              repo,
+              target,
+              message,
+              pull: latestPull,
+            })
+          ) {
+            return;
+          }
           mergeResult = await mergeAcceptedPullRequest({
             env,
             token,
