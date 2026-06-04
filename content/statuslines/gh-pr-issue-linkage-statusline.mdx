@@ -1,0 +1,107 @@
+---
+title: GitHub PR Issue Linkage Statusline
+slug: gh-pr-issue-linkage-statusline
+category: statuslines
+description: Claude Code statusline that checks whether the active GitHub pull request links closing issues and shows the linked issue count.
+cardDescription: Show active PR closing-issue linkage from GitHub CLI.
+seoTitle: GitHub PR issue linkage statusline for Claude Code
+seoDescription: Add a Claude Code statusline that uses GitHub CLI to show whether the active pull request closes or links GitHub issues.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_pr_view"
+tags:
+  - github
+  - pull-requests
+  - issues
+  - claude-code
+keywords:
+  - pr issue linkage statusline
+  - closing issues statusline
+  - github pull request statusline
+  - gh pr view
+installable: true
+usageSnippet: "pr #42 | closes 1 issue | linked"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-pr-issue-linkage-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-pr-issue-linkage-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "pr: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "pr: jq missing"
+    exit 0
+  fi
+
+  pr_json=$(gh pr view --json number,closingIssuesReferences 2>/dev/null || true)
+  if [ -z "$pr_json" ]; then
+    echo "pr: no active PR"
+    exit 0
+  fi
+
+  number=$(printf '%s' "$pr_json" | jq -r '.number // empty')
+  linked=$(printf '%s' "$pr_json" | jq '.closingIssuesReferences | length')
+
+  if [ "$linked" -gt 0 ]; then
+    state="linked"
+    label="issues"
+    if [ "$linked" -eq 1 ]; then
+      label="issue"
+    fi
+  else
+    state="missing link"
+    label="issues"
+  fi
+
+  printf 'pr #%s | closes %s %s | %s\n' "$number" "$linked" "$label" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in for the current repository.
+  - jq available for reading pull request JSON.
+  - The current branch has an associated pull request.
+safetyNotes:
+  - Closing-issue linkage is a workflow signal, not proof that the PR actually satisfies the linked issue.
+  - Some repositories use manual issue closure or external trackers, so missing links should be interpreted with project policy.
+  - Keep automated PR edits separate from this read-only statusline.
+privacyNotes:
+  - The script reads pull request metadata and prints only PR number plus linked issue count.
+  - Private issue references follow the local GitHub CLI account's access.
+  - Pull request and issue numbers can reveal internal workflow timing in shared screenshots.
+---
+
+## Source notes
+
+- GitHub CLI documents `gh pr view` with JSON output, including pull request metadata fields.
+- The statusline uses closing issue references as a focused linkage signal for issue-driven repositories.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gh-pr-issue-linkage-statusline`, issue linkage, closingIssuesReferences, and PR linkage statuslines. No statusline entry or open PR with this slug or issue-linkage focus was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
