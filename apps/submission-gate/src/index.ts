@@ -309,6 +309,11 @@ type DirectContentReviewability =
   | { kind: "scope_failure"; decision: GateDecision; category?: string }
   | { kind: "ignore"; reason: string };
 
+type DirectContentReviewContext = {
+  headRepo?: string;
+  baseRepo?: string;
+};
+
 function json(payload: unknown, init: ResponseInit = {}) {
   const headers = new Headers(init.headers);
   headers.set("content-type", "application/json; charset=utf-8");
@@ -1071,6 +1076,10 @@ async function directContentReviewabilityForTarget(
     repo,
     number: target.number,
     apiVersion: env.GITHUB_API_VERSION,
+    context: {
+      headRepo: target.headRepo,
+      baseRepo: target.repoFullName,
+    },
   });
 }
 
@@ -1271,6 +1280,7 @@ function gateLabelsForCategory(category?: string) {
 
 function classifyPullRequestFilesForContentReview(
   files: Array<{ filename?: string; status?: string }>,
+  context: DirectContentReviewContext = {},
 ): DirectContentReviewability {
   const entryFiles = files
     .map((file) => ({
@@ -1288,6 +1298,18 @@ function classifyPullRequestFilesForContentReview(
   }
 
   if (files.length !== 1 || entryFiles.length !== 1) {
+    if (
+      context.headRepo &&
+      context.baseRepo &&
+      context.headRepo.toLowerCase() === context.baseRepo.toLowerCase()
+    ) {
+      return {
+        kind: "ignore",
+        reason:
+          "Mixed same-repository maintenance PR; content gate only reviews exact one-file content submissions.",
+      };
+    }
+
     return {
       kind: "scope_failure",
       category: entryFiles[0]?.pathParts?.category,
@@ -1340,6 +1362,7 @@ async function directContentReviewabilityForPr(params: {
   repo: ReturnType<typeof parseRepo>;
   number: number;
   apiVersion?: string;
+  context?: DirectContentReviewContext;
 }): Promise<DirectContentReviewability> {
   const files = await listPullRequestFiles({
     token: params.token,
@@ -1347,7 +1370,7 @@ async function directContentReviewabilityForPr(params: {
     number: params.number,
     apiVersion: params.apiVersion,
   });
-  return classifyPullRequestFilesForContentReview(files);
+  return classifyPullRequestFilesForContentReview(files, params.context);
 }
 
 async function directContentScopeForPr(params: {
@@ -1411,6 +1434,10 @@ async function assertDirectContentAutoMergeEligibility(params: {
     repo: params.repo,
     number: params.target.number,
     apiVersion: params.env.GITHUB_API_VERSION,
+    context: {
+      headRepo: params.target.headRepo,
+      baseRepo: params.target.repoFullName,
+    },
   });
   if (classification.kind === "scope_failure") {
     throw new Error(classification.decision.summary);
@@ -2822,6 +2849,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         repo,
         number: target.number,
         apiVersion: env.GITHUB_API_VERSION,
+        context: {
+          headRepo: target.headRepo,
+          baseRepo: target.repoFullName,
+        },
       });
       if (reviewability.kind === "ignore") {
         await removeLabels({

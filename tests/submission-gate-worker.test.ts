@@ -703,10 +703,19 @@ describe("Cloudflare submission gate helpers", () => {
     expect(classifierBlock).toContain("entryFiles.length === 0");
     expect(classifierBlock).toContain('kind: "ignore"');
     expect(classifierBlock).toContain("files.length !== 1");
+    expect(classifierBlock).toContain(
+      "context.headRepo.toLowerCase() === context.baseRepo.toLowerCase()",
+    );
+    expect(classifierBlock).toContain(
+      "Mixed same-repository maintenance PR; content gate only reviews exact one-file content submissions.",
+    );
     expect(classifierBlock).toContain('kind: "scope_failure"');
     expect(classifierBlock).toContain(
       "no generated artifacts, README, workflows, scripts, packages, or additional entries",
     );
+    expect(source).toContain("type DirectContentReviewContext");
+    expect(source).toContain("headRepo: target.headRepo");
+    expect(source).toContain("baseRepo: target.repoFullName");
   });
 
   it("does not apply the merged label before direct merge succeeds", () => {
