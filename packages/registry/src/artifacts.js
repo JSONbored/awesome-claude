@@ -438,16 +438,16 @@ export function buildEntryTrustSignals(entry) {
 
 function buildListTrustSignals(entry) {
   const trustSignals = buildEntryTrustSignals(entry);
-  return {
-    firstPartyEditorial: trustSignals.firstPartyEditorial,
-    packageVerified: trustSignals.packageVerified,
+  return compactDefinedObject({
+    firstPartyEditorial: trustSignals.firstPartyEditorial || undefined,
+    packageVerified: trustSignals.packageVerified || undefined,
     sourceStatus: trustSignals.sourceStatus,
     lastVerifiedAt: trustSignals.lastVerifiedAt,
     hasSafetyNotes: trustSignals.hasSafetyNotes,
     hasPrivacyNotes: trustSignals.hasPrivacyNotes,
     platforms: trustSignals.platforms,
     supportLevels: trustSignals.supportLevels,
-  };
+  });
 }
 
 function verificationAgeDays(entry, generatedAt) {
@@ -744,6 +744,7 @@ export function buildCursorSkillAdapter(entry) {
 
 export function buildRaycastEntries(entries) {
   return entries.map((entry) => {
+    const platformCompatibility = buildSkillPlatformCompatibility(entry);
     return compactDefinedObject({
       category: entry.category,
       slug: entry.slug,
@@ -756,12 +757,14 @@ export function buildRaycastEntries(entries) {
       detailUrl: dataUrl("raycast", entry.category, `${entry.slug}.json`),
       webUrl: entryCanonicalUrl(entry),
       canonicalUrl: entryCanonicalUrl(entry),
-      repoUrl: entry.repoUrl || "",
+      repoUrl: entry.repoUrl || undefined,
       repoStats: buildRepoStats(entry),
-      documentationUrl: entry.documentationUrl || "",
-      downloadTrust: entry.downloadTrust,
-      verificationStatus: entry.verificationStatus || "",
-      platformCompatibility: buildSkillPlatformCompatibility(entry),
+      documentationUrl: entry.documentationUrl || undefined,
+      downloadTrust: entry.downloadTrust || undefined,
+      verificationStatus: entry.verificationStatus || undefined,
+      platformCompatibility: platformCompatibility.length
+        ? platformCompatibility
+        : undefined,
     });
   });
 }

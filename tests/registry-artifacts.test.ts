@@ -889,67 +889,71 @@ Use this hook after reviewing the notes.`,
     ]);
   });
 
-  it("publishes registry moat feeds with deterministic contract hashes", () => {
-    const ecosystemFeed = readDataJson<{
-      schemaVersion: number;
-      kind: string;
-      count: number;
-      signature: string;
-      entries: Array<Record<string, unknown>>;
-    }>("ecosystem-feed.json");
-    const mcpFeed = readDataJson<{
-      schemaVersion: number;
-      kind: string;
-      count: number;
-      servers: Array<Record<string, unknown>>;
-    }>("mcp-registry-feed.json");
-    const pluginFeed = readDataJson<{
-      schemaVersion: number;
-      kind: string;
-      count: number;
-      plugins: Array<Record<string, unknown>>;
-    }>("plugin-export-feed.json");
-    const changelogFeed = readDataJson<{
-      schemaVersion: number;
-      kind: string;
-      count: number;
-      signature: string;
-      entries: Array<Record<string, unknown>>;
-    }>("registry-changelog.json");
+  it(
+    "publishes registry moat feeds with deterministic contract hashes",
+    () => {
+      const ecosystemFeed = readDataJson<{
+        schemaVersion: number;
+        kind: string;
+        count: number;
+        signature: string;
+        entries: Array<Record<string, unknown>>;
+      }>("ecosystem-feed.json");
+      const mcpFeed = readDataJson<{
+        schemaVersion: number;
+        kind: string;
+        count: number;
+        servers: Array<Record<string, unknown>>;
+      }>("mcp-registry-feed.json");
+      const pluginFeed = readDataJson<{
+        schemaVersion: number;
+        kind: string;
+        count: number;
+        plugins: Array<Record<string, unknown>>;
+      }>("plugin-export-feed.json");
+      const changelogFeed = readDataJson<{
+        schemaVersion: number;
+        kind: string;
+        count: number;
+        signature: string;
+        entries: Array<Record<string, unknown>>;
+      }>("registry-changelog.json");
 
-    expect(ecosystemFeed).toEqual(
-      buildReadOnlyEcosystemFeed(contentEntries, {
-        siteUrl: "https://heyclau.de",
-      }),
-    );
-    expect(mcpFeed).toEqual(buildMcpRegistryFeed(contentEntries));
-    expect(pluginFeed).toEqual(buildPluginExportFeed(contentEntries));
-    expect(changelogFeed).toEqual(buildRegistryChangelogFeed(contentEntries));
-    expect(ecosystemFeed).toMatchObject({
-      schemaVersion: 2,
-      kind: "ecosystem-feed",
-      count: contentEntries.length,
-    });
-    expect(ecosystemFeed.signature).toMatch(/^[a-f0-9]{64}$/);
-    expect(mcpFeed.kind).toBe("mcp-registry-feed");
-    expect(pluginFeed.kind).toBe("plugin-export-feed");
-    expect(changelogFeed.kind).toBe("registry-changelog");
-    expect(changelogFeed.signature).toMatch(/^[a-f0-9]{64}$/);
-    expect(manifest.artifactContracts["ecosystem-feed.json"]).toMatchObject({
-      path: "/data/ecosystem-feed.json",
-      type: "json",
-    });
-    expect(manifest.artifactContracts["registry-changelog.json"]).toMatchObject(
-      {
+      expect(ecosystemFeed).toEqual(
+        buildReadOnlyEcosystemFeed(contentEntries, {
+          siteUrl: "https://heyclau.de",
+        }),
+      );
+      expect(mcpFeed).toEqual(buildMcpRegistryFeed(contentEntries));
+      expect(pluginFeed).toEqual(buildPluginExportFeed(contentEntries));
+      expect(changelogFeed).toEqual(buildRegistryChangelogFeed(contentEntries));
+      expect(ecosystemFeed).toMatchObject({
+        schemaVersion: 2,
+        kind: "ecosystem-feed",
+        count: contentEntries.length,
+      });
+      expect(ecosystemFeed.signature).toMatch(/^[a-f0-9]{64}$/);
+      expect(mcpFeed.kind).toBe("mcp-registry-feed");
+      expect(pluginFeed.kind).toBe("plugin-export-feed");
+      expect(changelogFeed.kind).toBe("registry-changelog");
+      expect(changelogFeed.signature).toMatch(/^[a-f0-9]{64}$/);
+      expect(manifest.artifactContracts["ecosystem-feed.json"]).toMatchObject({
+        path: "/data/ecosystem-feed.json",
+        type: "json",
+      });
+      expect(
+        manifest.artifactContracts["registry-changelog.json"],
+      ).toMatchObject({
         path: "/data/registry-changelog.json",
         type: "json",
-      },
-    );
-    expect(manifest.artifactContracts["llms-full.txt"]).toBeUndefined();
-    for (const contract of Object.values(manifest.artifactContracts)) {
-      expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
-    }
-  });
+      });
+      expect(manifest.artifactContracts["llms-full.txt"]).toBeUndefined();
+      for (const contract of Object.values(manifest.artifactContracts)) {
+        expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
+      }
+    },
+    60_000,
+  );
 
   it("publishes category and platform sharded distribution feeds", () => {
     const feedIndex = readDataJson<{

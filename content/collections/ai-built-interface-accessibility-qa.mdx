@@ -1,0 +1,155 @@
+---
+title: AI-Built Interface Accessibility QA
+slug: ai-built-interface-accessibility-qa
+category: collections
+description: >-
+  A source-backed accessibility QA collection for interfaces generated or
+  heavily changed by AI: anchor review in WCAG, inspect generated ARIA and
+  keyboard behavior, run axe-backed Playwright checks, verify component states
+  in Storybook, and review browser runtime evidence before release.
+cardDescription: >-
+  Accessibility QA stack for AI-generated UI semantics, keyboard flows,
+  component states, and browser evidence.
+seoTitle: AI-Built Interface Accessibility QA Collection
+seoDescription: >-
+  Validate AI-built interfaces with WCAG and ARIA references, accessibility
+  hooks, Playwright axe scans, Storybook state review, browser inspection, and
+  explicit manual QA checks.
+author: HeyClaude Contributors
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored/awesome-claude"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.w3.org/TR/WCAG22/"
+sourceUrls:
+  - "https://www.w3.org/TR/WCAG22/"
+  - "https://www.w3.org/WAI/ARIA/apg/"
+  - "https://playwright.dev/docs/accessibility-testing"
+  - "https://storybook.js.org/docs/writing-tests/accessibility-testing"
+  - "https://github.com/dequelabs/axe-core"
+installable: false
+usageSnippet: >-
+  Use this collection after AI generates or rewrites UI: run automated
+  accessibility checks, inspect component states, verify keyboard paths, and
+  document manual review gaps before merging.
+items:
+  - slug: accessibility-checker
+    category: hooks
+  - slug: react-component-test-generator
+    category: hooks
+  - slug: playwright-test-runner
+    category: hooks
+  - slug: playwright-mcp-server
+    category: mcp
+  - slug: storybook-mcp-server
+    category: mcp
+  - slug: chrome-devtools-mcp-server
+    category: mcp
+  - slug: accessibility-first-statusline
+    category: statuslines
+  - slug: test-automation-engineer-agent
+    category: agents
+installationOrder:
+  - accessibility-checker
+  - react-component-test-generator
+  - playwright-test-runner
+  - playwright-mcp-server
+  - storybook-mcp-server
+  - chrome-devtools-mcp-server
+  - accessibility-first-statusline
+  - test-automation-engineer-agent
+estimatedSetupTime: 60 minutes
+difficulty: intermediate
+prerequisites:
+  - A local or preview build of the AI-built interface with deterministic routes and seeded test data.
+  - A WCAG target, usually WCAG 2.2 A/AA, agreed before deciding which findings block merge.
+  - Storybook stories or equivalent component fixtures for generated states such as empty, loading, error, disabled, and expanded views.
+  - Permission to run browser automation against the target environment without touching production user data.
+safetyNotes:
+  - "Browser automation can click controls, submit forms, mutate state, and trigger emails or payments if pointed at production."
+  - "Automated axe checks catch many machine-detectable failures but do not replace keyboard-only, screen-reader, zoom, cognitive, and content review."
+  - "AI-generated ARIA can make a UI less accessible when roles, labels, or focus behavior are guessed; verify against native HTML and ARIA APG guidance before keeping custom semantics."
+privacyNotes:
+  - "Playwright, DevTools, and Storybook review artifacts can include DOM text, screenshots, network URLs, console logs, cookies, tokens, form input, and generated trace files."
+  - "Use synthetic accounts and redact screenshots, traces, console output, and accessibility snapshots before sharing them outside the project."
+  - "When testing authenticated flows, keep session storage and cookies out of committed fixtures, generated reports, and issue attachments."
+tags:
+  - accessibility
+  - ai-generated-ui
+  - qa
+  - wcag
+  - playwright
+keywords:
+  - accessibility QA for AI-built interfaces
+  - AI generated UI WCAG review
+  - axe Playwright accessibility checks
+  - Storybook accessibility component states
+  - Claude interface accessibility workflow
+---
+
+## What this collection sets up
+
+AI-generated interface changes often look visually complete while missing
+semantic labels, focus order, keyboard paths, error messaging, or state-specific
+accessibility details. This collection gives reviewers a repeatable QA path:
+start with standards-backed expectations, run automated checks, inspect
+component states, and finish with manual evidence that automation cannot cover.
+
+## Review layers
+
+### 1. Standards and generated semantics
+
+- **accessibility-checker** keeps WCAG review visible during coding sessions.
+- **accessibility-first-statusline** keeps accessibility status in the working
+  context so AI-generated UI work does not drift into visual-only review.
+- Use WCAG 2.2 and ARIA APG as references before accepting custom roles,
+  keyboard handlers, generated labels, or non-native widgets.
+
+### 2. Component state coverage
+
+- **react-component-test-generator** helps create coverage for generated
+  component states that are easy for AI to omit: empty, loading, error,
+  disabled, expanded, selected, and validation states.
+- **storybook-mcp-server** gives Claude component-level context so state-specific
+  accessibility issues can be reviewed before full-page QA.
+
+### 3. Browser evidence and automated scans
+
+- **playwright-test-runner** and **playwright-mcp-server** support repeatable
+  keyboard flows, page navigation, and axe-backed accessibility scans.
+- **chrome-devtools-mcp-server** helps inspect runtime DOM, console errors,
+  network behavior, focus changes, and generated attributes in the browser.
+- **test-automation-engineer-agent** can turn accepted QA paths into regression
+  tests after the initial review is complete.
+
+## Suggested QA flow
+
+1. Define the WCAG target and the user flows the AI-generated interface changed.
+2. Review generated HTML first; prefer native elements before adding ARIA.
+3. Check component states in Storybook or an equivalent fixture harness.
+4. Run Playwright and axe-backed scans against local or preview pages.
+5. Manually verify keyboard navigation, focus visibility, reading order,
+   accessible names, error announcements, zoom/reflow, and screen-reader paths.
+6. Record accepted exceptions with owner, reason, scope, and follow-up date.
+
+## Source and references
+
+- WCAG 2.2 Recommendation: https://www.w3.org/TR/WCAG22/
+- WAI-ARIA Authoring Practices Guide: https://www.w3.org/WAI/ARIA/apg/
+- Playwright accessibility testing: https://playwright.dev/docs/accessibility-testing
+- Storybook accessibility testing: https://storybook.js.org/docs/writing-tests/accessibility-testing
+- axe-core source repository: https://github.com/dequelabs/axe-core
+
+## Duplicate check
+
+Checked existing collections, repository content, open issue context, and the
+closed frontend QA slot for `frontend-qa-accessibility-workflow`,
+`ai-built-interface-accessibility-qa`, accessibility QA, AI-built interfaces,
+WCAG, ARIA, axe, Playwright, Storybook, and browser QA. The existing frontend QA
+collection is broader and includes cross-browser/device coverage; this entry is
+narrower and focused on accessibility-specific review risks introduced by
+AI-generated interface code.
+
+## Disclosure
+
+Editorial collection. No paid placement, affiliate link, referral URL, or
+commercial listing claim is used.
