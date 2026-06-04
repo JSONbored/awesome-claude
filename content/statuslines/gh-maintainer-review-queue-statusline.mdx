@@ -1,0 +1,97 @@
+---
+title: GitHub Maintainer Review Queue Statusline
+slug: gh-maintainer-review-queue-statusline
+category: statuslines
+description: Claude Code statusline that uses GitHub CLI to show a maintainer's requested review queue, excluding drafts from the ready count.
+cardDescription: Show requested review queue counts for maintainers.
+seoTitle: GitHub maintainer review queue statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes requested pull request reviews, draft count, and ready review count for maintainers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_pr_list"
+tags:
+  - github
+  - reviews
+  - maintainers
+  - claude-code
+keywords:
+  - review queue statusline
+  - maintainer statusline
+  - github review requested
+  - gh pr list
+installable: true
+usageSnippet: "reviews: requested 6 | ready 4 | drafts 2"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-maintainer-review-queue-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-maintainer-review-queue-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "reviews: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "reviews: jq missing"
+    exit 0
+  fi
+
+  prs=$(gh pr list --search 'review-requested:@me' --state open --limit 100 --json number,isDraft 2>/dev/null || true)
+  if [ -z "$prs" ]; then
+    echo "reviews: unavailable"
+    exit 0
+  fi
+
+  requested=$(printf '%s' "$prs" | jq 'length')
+  drafts=$(printf '%s' "$prs" | jq '[.[] | select(.isDraft == true)] | length')
+  ready=$((requested - drafts))
+
+  printf 'reviews: requested %s | ready %s | drafts %s\n' "$requested" "$ready" "$drafts"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in as the maintainer account whose review queue should be shown.
+  - jq available for counting pull request fields.
+  - Repository access that lets `review-requested:@me` return relevant pull requests.
+safetyNotes:
+  - Queue counts help with triage but do not rank urgency, security impact, or release blockers.
+  - Draft PRs are excluded from ready count, but repositories may use labels or checks for additional readiness rules.
+  - Keep the refresh interval moderate to avoid repeated GitHub search calls.
+privacyNotes:
+  - The script prints aggregate counts only, not PR titles, authors, or branch names.
+  - Private review requests follow the local GitHub CLI account and may reveal workload size in screenshots.
+  - Organization review-team rules may cause counts to differ from the GitHub web UI.
+---
+
+## Source notes
+
+- GitHub CLI documents `gh pr list` with search queries and JSON output for pull request fields.
+- This statusline uses `review-requested:@me` to keep the maintainer queue focused on PRs awaiting the current account.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gh-maintainer-review-queue-statusline`, review queue, maintainer reviews, review-requested, and GitHub PR list statuslines. No statusline entry or open PR with this slug or maintainer-review focus was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
