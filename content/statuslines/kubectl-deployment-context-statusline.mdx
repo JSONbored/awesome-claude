@@ -1,0 +1,103 @@
+---
+title: kubectl Deployment Context Statusline
+slug: kubectl-deployment-context-statusline
+category: statuslines
+description: Claude Code statusline that shows the active kubectl context and namespace with a deployment-environment risk label.
+cardDescription: Show kubectl context, namespace, and deployment environment risk.
+seoTitle: kubectl deployment context statusline for Claude Code
+seoDescription: Add a Claude Code statusline that displays kubectl context and namespace so deployment environment risk is visible before edits or commands.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://kubernetes.io/docs/reference/kubectl/quick-reference/"
+tags:
+  - kubernetes
+  - deployment
+  - environment
+  - claude-code
+keywords:
+  - deployment environment statusline
+  - kubectl context statusline
+  - kubernetes namespace statusline
+  - production context warning
+installable: true
+usageSnippet: "deploy: prod-cluster | ns payments | high"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/kubectl-deployment-context-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/kubectl-deployment-context-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v kubectl >/dev/null 2>&1; then
+    echo "deploy: kubectl missing"
+    exit 0
+  fi
+
+  context=$(kubectl config current-context 2>/dev/null || true)
+  if [ -z "$context" ]; then
+    echo "deploy: no context"
+    exit 0
+  fi
+
+  namespace=$(kubectl config view --minify --output 'jsonpath={..namespace}' 2>/dev/null || true)
+  if [ -z "$namespace" ]; then
+    namespace="default"
+  fi
+
+  combined=$(printf '%s %s' "$context" "$namespace" | tr '[:upper:]' '[:lower:]')
+  if printf '%s' "$combined" | grep -Eq 'prod|production|live'; then
+    risk="high"
+  elif printf '%s' "$combined" | grep -Eq 'stage|staging|preprod'; then
+    risk="watch"
+  else
+    risk="dev"
+  fi
+
+  printf 'deploy: %s | ns %s | %s\n' "$context" "$namespace" "$risk"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - kubectl installed and configured for the environments you want visible.
+  - A kubeconfig context selected before Claude Code starts or before the statusline refreshes.
+  - Team naming conventions that distinguish production, staging, and development contexts.
+safetyNotes:
+  - The script is read-only and does not contact workloads, apply manifests, or change namespaces.
+  - Risk labels are based on names; confirm the actual cluster and namespace before deployment commands.
+  - Avoid running write-capable automation solely because the statusline says an environment looks like development.
+privacyNotes:
+  - Context and namespace names can expose customer, region, cluster, or service names in screenshots.
+  - kubectl reads local kubeconfig, which may reference private clusters and identities.
+  - The script does not print server URLs or certificates.
+---
+
+## Source notes
+
+- Kubernetes kubectl documentation covers `kubectl config current-context` and config inspection commands.
+- This statusline keeps the output to context, namespace, and a name-based risk label so environment awareness is visible without issuing deployment actions.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `kubectl-deployment-context-statusline`, deployment environment, kubectl context, namespace warning, and production context statuslines. Existing Kubernetes content appears in MCP and hook categories, but no statusline entry or open PR covers deployment context.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
