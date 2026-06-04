@@ -1,0 +1,147 @@
+---
+title: OpenAPI Documentation Sync Workflow
+slug: openapi-documentation-sync-workflow
+category: collections
+description: >-
+  A source-backed documentation automation collection for keeping API reference
+  docs synchronized with OpenAPI contracts: generate endpoint docs, lint
+  contract changes, inspect public specs, generate documentation artifacts, and
+  run coverage and link checks before publishing.
+cardDescription: >-
+  API docs automation bundle for OpenAPI specs, generated reference docs,
+  Spectral linting, coverage checks, link validation, and spec inspection.
+seoTitle: OpenAPI Documentation Sync Workflow
+seoDescription: >-
+  A curated collection for automating API documentation around OpenAPI
+  contracts with endpoint doc generation, Spectral checks, OpenAPI Generator,
+  OpenAPI MCP inspection, documentation coverage, and markdown link validation.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/versions/3.1.1.md"
+sourceUrls:
+  - "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/versions/3.1.1.md"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/getting-started/4-openapi.md"
+  - "https://raw.githubusercontent.com/OpenAPITools/openapi-generator/master/README.md"
+  - "https://raw.githubusercontent.com/janwilmake/openapi-mcp-server/main/README.md"
+installable: false
+usageSnippet: >-
+  Start with API endpoint documentation generation, then add OpenAPI linting,
+  generated documentation artifacts, coverage checks, link validation, and
+  spec inspection.
+items:
+  - slug: api-endpoint-documentation-generator
+    category: hooks
+  - slug: documentation-coverage-checker
+    category: hooks
+  - slug: markdown-link-checker
+    category: hooks
+  - slug: spectral-openapi-contract-audit-capability-pack
+    category: skills
+  - slug: openapi-generator
+    category: tools
+  - slug: openapi-mcp-server
+    category: mcp
+  - slug: technical-documentation-writer-agent
+    category: agents
+installationOrder:
+  - api-endpoint-documentation-generator
+  - spectral-openapi-contract-audit-capability-pack
+  - openapi-generator
+  - documentation-coverage-checker
+  - markdown-link-checker
+  - openapi-mcp-server
+  - technical-documentation-writer-agent
+estimatedSetupTime: 80 minutes
+difficulty: intermediate
+prerequisites:
+  - An authored or generated OpenAPI 3.x contract that the team treats as the API documentation source of truth.
+  - A known docs output path, such as `docs/api/`, generated markdown, or generated static reference artifacts.
+  - Agreement on which examples, server URLs, auth schemes, and internal endpoints are safe to publish.
+  - Node.js tooling available for Spectral, OpenAPI Generator, or project-specific doc generation commands.
+safetyNotes:
+  - "Do not generate or publish API docs from an unreviewed OpenAPI spec; specs can include destructive, admin, billing, or internal operations."
+  - "Run Spectral and generated-documentation checks in review mode first so contract linting does not block unrelated code changes unexpectedly."
+  - "Treat generated docs as artifacts to review, not proof that the implementation and contract are fully synchronized."
+privacyNotes:
+  - "OpenAPI files can expose internal route names, server URLs, auth schemes, examples, object names, planned endpoints, and vendor extensions."
+  - "Generated API docs, SDKs, and screenshots can publish sensitive examples if the source spec is not scrubbed."
+  - "Hosted spec inspection through MCP should be limited to public or approved-to-share OpenAPI documents."
+tags:
+  - documentation
+  - openapi
+  - api-docs
+  - automation
+  - contract-review
+keywords:
+  - openapi documentation automation collection
+  - api docs sync workflow
+  - openapi generator documentation workflow
+  - spectral openapi docs validation
+---
+
+## What this collection sets up
+
+This workflow keeps API reference documentation close to the OpenAPI source of
+truth. It combines endpoint doc generation, OpenAPI contract linting, generated
+documentation artifacts, coverage checks, link checks, and spec inspection so
+teams can review API docs as part of normal code and contract changes.
+
+## Layers
+
+### 1. Generate docs from endpoint and contract changes
+
+- **api-endpoint-documentation-generator** updates API documentation when route,
+  controller, or API files change.
+- **openapi-generator** turns reviewed OpenAPI or Swagger specs into generated
+  documentation artifacts alongside clients, schemas, or server stubs when
+  needed.
+
+### 2. Review the OpenAPI source of truth
+
+- **spectral-openapi-contract-audit-capability-pack** gives Claude a focused
+  review workflow for OpenAPI lint output, rulesets, schema drift, and release
+  readiness.
+- **openapi-mcp-server** lets Claude inspect public or approved OpenAPI specs
+  through a hosted MCP server before writing or reviewing docs.
+
+### 3. Keep published docs trustworthy
+
+- **documentation-coverage-checker** highlights missing documentation coverage
+  for functions, endpoints, components, or modules.
+- **markdown-link-checker** catches broken internal and external links before
+  generated docs are merged or published.
+- **technical-documentation-writer-agent** handles final human-readable
+  explanation around generated references, examples, migration notes, and
+  consumer-facing caveats.
+
+## Suggested order
+
+Start with the endpoint documentation hook and a clearly identified OpenAPI
+contract. Add Spectral review before generated artifacts become release inputs.
+Use OpenAPI Generator only after the source spec is reviewed. Add coverage and
+link checks before publishing. Connect OpenAPI MCP only for public or
+approved-to-share specs.
+
+## Source and references
+
+- OpenAPI Specification source: https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/versions/3.1.1.md
+- Spectral OpenAPI documentation source: https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/getting-started/4-openapi.md
+- OpenAPI Generator source: https://raw.githubusercontent.com/OpenAPITools/openapi-generator/master/README.md
+- OpenAPI MCP Server source: https://raw.githubusercontent.com/janwilmake/openapi-mcp-server/main/README.md
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `openapi-documentation-sync-workflow`, OpenAPI docs
+automation, API documentation sync, OpenAPI Generator collection, Spectral
+documentation workflow, and API reference automation. Existing API starter and
+content creation collections mention documentation broadly, but no collection
+focuses on OpenAPI documentation synchronization, contract-backed doc
+generation, linting, coverage, link validation, and spec inspection as the
+primary workflow.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
