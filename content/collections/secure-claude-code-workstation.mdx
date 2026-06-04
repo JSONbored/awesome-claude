@@ -1,0 +1,126 @@
+---
+title: Secure Claude Code Workstation
+slug: secure-claude-code-workstation
+category: collections
+description: >-
+  A defense-in-depth bundle for hardening an agentic Claude Code workstation:
+  block secrets and sensitive data before they are written, verify dependency
+  provenance and known vulnerabilities, review supply-chain risk and run code
+  security audits, and harden MCP tool access against prompt injection. It pulls
+  together existing hooks, commands, rules, and skills into one secure setup,
+  organized around the NIST Secure Software Development Framework.
+cardDescription: >-
+  Defense-in-depth bundle of secret, dependency, audit, and MCP hardening
+  entries for an agentic Claude Code setup.
+seoTitle: Secure Claude Code Workstation
+seoDescription: >-
+  A curated collection that hardens an agentic Claude Code workstation with
+  secret guards, dependency provenance and vulnerability checks, security
+  audits, and MCP prompt-injection defenses.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://csrc.nist.gov/projects/ssdf"
+sourceUrls:
+  - "https://csrc.nist.gov/projects/ssdf"
+  - "https://best.openssf.org/"
+  - "https://docs.anthropic.com/en/docs/claude-code/hooks"
+installable: false
+usageSnippet: >-
+  Install the write-time guards first (secret scanner, sensitive-data scanner),
+  then the supply-chain checks, then the audit command and MCP hardening skills.
+items:
+  - slug: pre-write-secret-scanner
+    category: hooks
+  - slug: sensitive-data-alert-scanner
+    category: hooks
+  - slug: lockfile-provenance-checker
+    category: hooks
+  - slug: dependency-security-scanner
+    category: hooks
+  - slug: package-vulnerability-scanner
+    category: hooks
+  - slug: dependency-risk-review
+    category: commands
+  - slug: security-audit
+    category: commands
+  - slug: security-auditor-penetration-tester
+    category: rules
+  - slug: mcp-server-security-hardening
+    category: skills
+  - slug: prompt-injection-defense-guardrails
+    category: skills
+installationOrder:
+  - pre-write-secret-scanner
+  - sensitive-data-alert-scanner
+  - lockfile-provenance-checker
+  - dependency-security-scanner
+  - package-vulnerability-scanner
+  - dependency-risk-review
+  - security-audit
+  - security-auditor-penetration-tester
+  - mcp-server-security-hardening
+  - prompt-injection-defense-guardrails
+estimatedSetupTime: 40 minutes
+difficulty: intermediate
+prerequisites:
+  - A software project with dependencies and, ideally, CI access.
+  - Claude Code with hooks enabled for the write-time guards.
+safetyNotes:
+  - "This is a curated index of existing directory entries; the collection runs nothing itself - review each linked hook, command, rule, and skill's own safety notes before installing it."
+privacyNotes:
+  - "The collection handles no data on its own; consult each linked entry's privacy notes for its runtime behavior and any local or network access."
+tags:
+  - "security"
+  - "supply-chain"
+  - "secrets"
+  - "mcp-security"
+  - "hardening"
+keywords:
+  - "secure claude code workstation collection"
+  - "agentic security hardening bundle"
+  - "secret and dependency guard collection"
+  - "mcp prompt injection defense collection"
+---
+
+## What this collection sets up
+
+A layered, defense-in-depth setup for an agentic Claude Code workstation, organized around the practices in the [NIST Secure Software Development Framework (SSDF)](https://csrc.nist.gov/projects/ssdf). Each layer is an existing, source-backed directory entry; together they cover the main ways an agent session can leak secrets, pull untrusted code, or be steered by malicious content.
+
+## Layers
+
+### 1. Write-time guards (SSDF PW — protect the code)
+
+- **pre-write-secret-scanner** (hook) — blocks a write whose content matches a high-confidence secret format before it reaches disk.
+- **sensitive-data-alert-scanner** (hook) — flags sensitive data in content being produced.
+
+### 2. Dependency and supply-chain (SSDF PS — protect the software)
+
+- **lockfile-provenance-checker** (hook) — flags npm lockfile entries resolved from outside the public registry or missing an integrity hash.
+- **dependency-security-scanner** (hook) and **package-vulnerability-scanner** (hook) — scan dependency changes for known vulnerabilities.
+- **dependency-risk-review** (command) — reviews supply-chain posture with OpenSSF Scorecard health signals.
+
+### 3. Audit and policy (SSDF RV — respond to vulnerabilities)
+
+- **security-audit** (command) — runs an on-demand code security audit.
+- **security-auditor-penetration-tester** (rules) — keeps the assistant in a security-first, adversarial mindset.
+
+### 4. MCP and prompt-injection hardening
+
+- **mcp-server-security-hardening** (skill) — hardens MCP tool/server access.
+- **prompt-injection-defense-guardrails** (skill) — defends against instructions injected through retrieved content.
+
+## Suggested order
+
+Install the write-time guards first so secrets and sensitive data are stopped at the source, then add the supply-chain checks, then the audit command and policy rules, and finally the MCP and prompt-injection hardening skills. See `installationOrder` for the exact sequence.
+
+## Notes
+
+Each entry carries its own prerequisites, safety notes, and privacy notes — read them before enabling a hook that blocks writes or a command that runs audits in your environment.
+
+## Source and references
+
+- NIST Secure Software Development Framework: https://csrc.nist.gov/projects/ssdf
+- OpenSSF security best practices: https://best.openssf.org/
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
