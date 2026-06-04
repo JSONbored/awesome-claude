@@ -1,0 +1,87 @@
+---
+title: Model Provider Statusline
+slug: model-provider-statusline
+category: statuslines
+description: Claude Code statusline that prints the current model label, provider label, and optional routing hint from local statusline input.
+cardDescription: Show current model and provider routing context.
+seoTitle: Model provider statusline for Claude Code
+seoDescription: Add a Claude Code statusline that displays the current model and provider label using Claude Code statusline JSON and local routing hints.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+tags:
+  - model
+  - provider
+  - routing
+  - claude-code
+keywords:
+  - model provider statusline
+  - current model statusline
+  - provider routing statusline
+  - claude code model
+installable: true
+usageSnippet: "model: Claude Sonnet | provider: anthropic | route: default"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/model-provider-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/model-provider-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  read -r input || input=""
+  model=$(printf '%s' "$input" | jq -r '.model.display_name // .model.name // .model // "unknown"')
+  provider=$(printf '%s' "$input" | jq -r '.model.provider // empty')
+  route="${CLAUDE_PROVIDER_ROUTE:-default}"
+
+  if [ -z "$provider" ] || [ "$provider" = "null" ]; then
+    provider="${CLAUDE_PROVIDER_LABEL:-anthropic}"
+  fi
+
+  printf 'model: %s | provider: %s | route: %s\n' "$model" "$provider" "$route"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Claude Code statusline support with model information in the JSON input.
+  - jq available for reading model fields.
+  - Optional CLAUDE_PROVIDER_LABEL or CLAUDE_PROVIDER_ROUTE set when your wrapper uses non-default routing labels.
+safetyNotes:
+  - Provider labels are operational hints and should not be treated as proof of model capability, data residency, or policy coverage.
+  - Keep route labels generic enough for terminal screenshots and shared logs.
+  - Verify model and provider changes in the actual Claude Code configuration before relying on the display.
+privacyNotes:
+  - The script reads local statusline input and optional shell labels, then prints only model and route names.
+  - Custom route labels can reveal internal deployment names if teams use sensitive naming conventions.
+  - The statusline does not send model information to external services.
+---
+
+## Source notes
+
+- Claude Code statusline documentation describes local commands receiving structured JSON and printing status text.
+- Anthropic model documentation provides the source context for treating model identity as an important runtime signal.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `model-provider-statusline`, current model, provider route, and model switching statuslines. Existing model entries focus on history or token counting; this one focuses on the current provider/routing label.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
