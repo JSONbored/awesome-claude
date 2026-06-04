@@ -140,6 +140,7 @@ async function upsertIssue({ marker, issue, userAgent }) {
       body: {
         title: issue.title,
         body: issue.body,
+        labels: issue.labels,
         assignees: issue.assignees,
       },
     });

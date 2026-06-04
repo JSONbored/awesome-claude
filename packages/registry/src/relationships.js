@@ -199,9 +199,7 @@ function categoryPairKind(target, candidate) {
 function relationTypeFor(target, candidate, evidence) {
   if (evidence.collectionMember) return "collection-member";
   if (evidence.sameProject) {
-    return target.category === candidate.category
-      ? "duplicate"
-      : "complementary";
+    return "same-project";
   }
   if (
     target.category === candidate.category &&

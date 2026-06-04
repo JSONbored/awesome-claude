@@ -668,7 +668,7 @@ describe("registry artifacts", () => {
     ).not.toContain("safer-alternative");
   });
 
-  it("treats same project across categories as complementary content", () => {
+  it("preserves same-project relations across categories", () => {
     const repoUrl = "https://github.com/example/langchain-helper";
     const target = {
       category: "mcp",
@@ -695,8 +695,10 @@ describe("registry artifacts", () => {
 
     expect(relation).toMatchObject({
       key: "skills:langchain-helper-skill",
-      relation: "complementary",
+      relation: "same-project",
     });
+    expect(relation?.relation).not.toBe("duplicate");
+    expect(relation?.relation).not.toBe("complementary");
   });
 
   it("publishes deterministic relation graph refs into entry details", () => {

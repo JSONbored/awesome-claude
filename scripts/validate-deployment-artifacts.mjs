@@ -152,28 +152,26 @@ try {
     fail("/data directory and search artifact counts must match");
   } else {
     for (const field of ["canonicalUrl", "llmsUrl", "apiUrl"]) {
-      if (
-        !String(directoryEntries[0]?.[field] || "").startsWith(
-          `${canonicalOrigin}/`,
-        )
-      ) {
-        fail(`${field} must be an absolute URL in directory artifacts`);
+      for (const entry of directoryEntries) {
+        if (!String(entry?.[field] || "").startsWith(`${canonicalOrigin}/`)) {
+          fail(`${field} must be an absolute URL in directory artifacts`);
+        }
       }
     }
     for (const field of ["canonicalUrl", "apiUrl"]) {
-      if (
-        !String(searchEntries[0]?.[field] || "").startsWith(
-          `${canonicalOrigin}/`,
-        )
-      ) {
-        fail(`${field} must be an absolute URL in search artifacts`);
+      for (const entry of searchEntries) {
+        if (!String(entry?.[field] || "").startsWith(`${canonicalOrigin}/`)) {
+          fail(`${field} must be an absolute URL in search artifacts`);
+        }
       }
     }
-    if (searchEntries[0]?.llmsUrl) {
-      if (!String(searchEntries[0].llmsUrl).startsWith(`${canonicalOrigin}/`)) {
-        fail(
-          "llmsUrl must be an absolute URL in search artifacts when present",
-        );
+    for (const entry of searchEntries) {
+      if (entry?.llmsUrl) {
+        if (!String(entry.llmsUrl).startsWith(`${canonicalOrigin}/`)) {
+          fail(
+            "llmsUrl must be an absolute URL in search artifacts when present",
+          );
+        }
       }
     }
   }
