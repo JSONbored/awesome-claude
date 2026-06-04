@@ -1,0 +1,151 @@
+---
+title: Open Source Evals Prompt Testing
+slug: open-source-evals-prompt-testing
+category: collections
+description: >-
+  A source-backed collection for building repeatable LLM eval and prompt testing
+  workflows with open-source tools: prompt regression tests, RAG and agent
+  metrics, human review datasets, traces, prompt optimization, and release gates.
+cardDescription: >-
+  Open-source evals bundle for prompt tests, RAG metrics, traces, human review,
+  and regression gates.
+seoTitle: Open Source Evals Prompt Testing
+seoDescription: >-
+  A curated collection for prompt testing and LLM eval workflows using
+  Promptfoo, DeepEval, Ragas, DSPy, Langfuse, TruLens, MLflow, Giskard, Agenta,
+  and Label Studio.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.promptfoo.dev/docs"
+sourceUrls:
+  - "https://www.promptfoo.dev/docs"
+  - "https://deepeval.com/docs/getting-started"
+  - "https://docs.ragas.io"
+  - "https://langfuse.com/docs"
+installable: false
+usageSnippet: >-
+  Start with Promptfoo prompt regression tests, add DeepEval or Ragas metrics,
+  capture traces with Langfuse/TruLens/MLflow, and use Label Studio for human
+  review data.
+items:
+  - slug: promptfoo
+    category: tools
+  - slug: deepeval
+    category: tools
+  - slug: ragas
+    category: tools
+  - slug: dspy
+    category: tools
+  - slug: giskard
+    category: tools
+  - slug: langfuse
+    category: tools
+  - slug: trulens
+    category: tools
+  - slug: mlflow
+    category: tools
+  - slug: agenta
+    category: tools
+  - slug: label-studio
+    category: tools
+  - slug: agent-evals-regression-gate
+    category: skills
+installationOrder:
+  - promptfoo
+  - deepeval
+  - ragas
+  - dspy
+  - langfuse
+  - trulens
+  - mlflow
+  - agenta
+  - giskard
+  - label-studio
+  - agent-evals-regression-gate
+estimatedSetupTime: 90 minutes
+difficulty: advanced
+prerequisites:
+  - Representative prompts, traces, retrieval cases, expected answers, and failure examples for the behavior being evaluated.
+  - A policy for which eval scores block releases, which trigger human review, and which are advisory only.
+  - Redaction rules for prompts, documents, tool calls, traces, and human labels before they enter eval datasets.
+safetyNotes:
+  - "Eval scores are development and regression signals, not proof that an AI system is safe, fair, or production-ready."
+  - "Red-team, prompt-injection, and adversarial prompt tests should run against isolated environments and reviewed credentials."
+  - "Optimizer workflows can issue many model calls or overfit to narrow datasets; set budgets, holdout sets, and rollback rules."
+privacyNotes:
+  - "Eval datasets, traces, prompts, retrieved context, labels, and model outputs can contain user, customer, or proprietary data."
+  - "LLM-graded metrics may send eval payloads to the configured model provider unless a reviewed local model path is used."
+  - "Human review tools can retain annotations, reviewer decisions, and benchmark examples outside the original product system."
+tags:
+  - evals
+  - prompt-testing
+  - llmops
+  - open-source
+  - regression
+keywords:
+  - open source evals collection
+  - prompt testing workflow
+  - llm regression testing bundle
+  - agent evals promptfoo deepeval ragas
+---
+
+## What this collection sets up
+
+This collection turns prompt and agent behavior into a repeatable engineering
+workflow. It covers fast prompt regression checks, Python-style evaluation
+tests, RAG and agent metrics, trace-backed debugging, human review datasets, and
+release gates that decide what happens when evals fail.
+
+## Layers
+
+### 1. Prompt and regression tests
+
+- **promptfoo** gives teams prompt matrices, regression tests, and red-team
+  checks.
+- **deepeval** provides Python-first LLM unit tests and metrics.
+- **agent-evals-regression-gate** helps define merge/release gates around eval
+  suites.
+
+### 2. RAG, agent, and optimization loops
+
+- **ragas** focuses on RAG and LLM application evaluation.
+- **dspy** helps teams program and optimize language-model pipelines with
+  metrics and optimizers.
+- **giskard** adds broader testing, scanning, and monitoring coverage.
+
+### 3. Observability and review data
+
+- **langfuse**, **trulens**, **mlflow**, and **agenta** capture traces, prompt
+  versions, metrics, and experiment evidence.
+- **label-studio** supports human review, annotation, benchmark curation, and
+  preference data.
+
+## Suggested order
+
+Start with Promptfoo for fast prompt regression coverage. Add DeepEval or Ragas
+for application-specific metrics, then wire traces into Langfuse, TruLens,
+MLflow, or Agenta. Use Label Studio only after the team has written reviewer
+instructions, sampling rules, and export boundaries.
+
+## Source and references
+
+- Promptfoo documentation: https://www.promptfoo.dev/docs
+- DeepEval documentation: https://deepeval.com/docs/getting-started
+- Ragas documentation: https://docs.ragas.io
+- Langfuse documentation: https://langfuse.com/docs
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `open-source-evals-prompt-testing`, open-source
+evals, prompt testing collection, LLM regression testing, Promptfoo, DeepEval,
+Ragas, and eval workflow. Existing collections cover code quality, production
+readiness, API development, and data engineering, but none curates an
+open-source LLM eval and prompt-testing lifecycle across prompt tests, metrics,
+traces, human review, and release gates.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
