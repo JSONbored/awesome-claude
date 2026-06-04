@@ -1,0 +1,87 @@
+---
+title: Chainlit
+slug: chainlit
+category: tools
+description: Apache-2.0 Python framework for building production-ready conversational AI apps with chat lifecycles, messages, steps, actions, elements, authentication, persistence, and integrations.
+cardDescription: Build Python conversational AI apps with chat UI, steps, auth, and integrations.
+seoTitle: Chainlit conversational AI app framework
+seoDescription: Chainlit is an Apache-2.0 Python framework for building production-ready conversational AI apps with chat lifecycles, messages, steps, actions, elements, authentication, persistence, and integrations.
+author: Chainlit Maintainers
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://chainlit.io/"
+documentationUrl: "https://docs.chainlit.io/get-started/overview"
+repoUrl: "https://github.com/Chainlit/chainlit"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - conversational-ai
+  - chat-ui
+  - python
+keywords:
+  - Chainlit
+  - conversational AI
+  - chat lifecycle
+  - LLM apps
+  - MCP tools
+prerequisites:
+  - Python environment with Chainlit, model provider SDKs, vector or database clients, agent frameworks, deployment runtime, and frontend customization dependencies installed as needed.
+  - Chat lifecycle design for `on_chat_start`, `on_message`, messages, steps, actions, elements, commands, user sessions, chat profiles, chat settings, streaming, ask-user flows, and testing.
+  - Authentication and authorization plan for public-by-default apps, `CHAINLIT_AUTH_SECRET`, password auth, OAuth, header auth, user identifiers, admin actions, and user-specific data.
+  - Data plan for chat history, human feedback, data persistence, open-source data layers, tags, metadata, file elements, generated artifacts, and retention policies.
+  - Deployment plan for host binding, websockets, subpaths, cross-origin settings, environment variables, reverse proxy behavior, Slack, Discord, Teams, Copilot embeds, and custom React frontends.
+  - Tooling plan for LangChain, LangGraph, OpenAI, Mistral AI, Semantic Kernel, LlamaIndex, LiteLLM, vLLM, local model servers, MCP connections, and any external tool execution.
+safetyNotes:
+  - Chainlit apps run Python code in response to user chat events, actions, lifecycle hooks, MCP tool calls, and integrations, so app functions should be treated as trusted server code.
+  - The docs say Chainlit applications are public by default; private apps require an authentication secret and at least one authentication callback.
+  - Authentication identifies users, but app code still needs explicit authorization checks for admin controls, private chat history, user-specific data, file access, and external tool execution.
+  - Steps can expose intermediate reasoning, tool inputs, tool outputs, and chain-of-thought-style traces depending on configuration, so production apps should decide whether to show full steps, only tool calls, or hide them.
+  - Actions trigger Python callbacks from clickable UI controls, and Ask APIs can block code while requesting text, files, actions, or forms; handlers should validate user input and guard side effects.
+  - MCP support can connect to SSE, streamable HTTP, and stdio tool providers, discover tools, and execute them, so tool permissions, command-line tools, credentials, and network reachability need review.
+  - Deployment docs note that production runs should use headless mode, host binding must be intentional, and Docker deployments commonly need `--host 0.0.0.0`; reverse proxies and websockets need explicit configuration.
+  - Environment variable docs warn against hardcoding API keys and recommend keeping `.env` out of version control; public apps should not ship the maintainer's own provider keys to broad audiences.
+privacyNotes:
+  - Chainlit apps can process chat messages, prompts, chat history, steps, tool inputs and outputs, user sessions, uploaded files, elements, human feedback, tags, metadata, logs, API calls, and generated artifacts.
+  - Enabling data persistence stores and uses chat and element data that is otherwise not persisted by default; teams should define retention, deletion, access, export, and monitoring policies.
+  - Authentication can store user identity, unique identifiers, headers, OAuth profile data, login state, and auth tokens that should be scoped and protected as sensitive application data.
+  - The user session is unique to a user and a chat session; shared globals can leak state across users, as the docs warn in their user-session example.
+  - Environment variables, `.env` files, model provider keys, vector database keys, OAuth secrets, MCP credentials, and deployment settings should stay out of committed code, screenshots, logs, and persisted chat artifacts.
+  - Multi-platform deployments such as web app, Copilot embed, Teams, Slack, Discord, custom React frontends, and Chainlit integrations may pass chat content and metadata through additional platforms with separate privacy terms.
+---
+
+## Editorial notes
+
+Chainlit is useful when Claude-adjacent teams need to ship conversational AI prototypes, agent review apps, internal copilots, model evaluation chats, RAG interfaces, tool-calling demos, and human-in-the-loop workflows without building a chat frontend from scratch. Its message, step, action, element, session, authentication, persistence, and integration APIs give agents and developers a practical Python surface for turning LLM logic into usable chat applications.
+
+This entry covers the open-source Chainlit framework. It is distinct from Gradio, Streamlit, Marimo, Hugging Face MCP Server, and LangChain. Gradio focuses on model demos and AI app interfaces. Streamlit focuses on data apps and dashboards. Marimo focuses on reactive notebooks. Hugging Face MCP Server exposes Hugging Face resources through MCP. LangChain is an LLM application framework. Chainlit focuses on production-oriented conversational AI applications and chat user interfaces around Python app logic.
+
+## Source notes
+
+- The official docs describe Chainlit as an open-source Python package for building production-ready conversational AI.
+- The docs list key features including fast Python setup, authentication, data persistence, multi-step reasoning visualization, and multi-platform use.
+- The repository README describes Chainlit as a way to build Python production-ready conversational AI applications in minutes and says the project is Apache-2.0 licensed.
+- The README says Chainlit is community-maintained as of May 1, 2025, with the original Chainlit team stepping back from active development and maintainers responsible for code review, releases, and security.
+- The message docs define messages as information sent between user and assistant, with lifecycle hooks as the building blocks of a chat.
+- The `on_message` API docs say the decorated function runs every time a new message is received from the UI.
+- The step docs describe steps with type, input, output, start, and end, and say the chain-of-thought display can be configured to show full reasoning, hide it, or show only tool calls.
+- The action docs describe clickable UI buttons attached to messages that trigger Python callbacks.
+- The element docs describe attaching images, PDFs, custom elements, and other content to messages or steps.
+- The user-session docs say each user session is unique to a user and a chat session, and warn that naive global state can be shared across users.
+- The authentication docs say Chainlit apps are public by default and require `CHAINLIT_AUTH_SECRET` plus authentication callbacks for private apps.
+- The data-persistence docs say Chainlit does not persist chats and generated elements by default, but persistence can be enabled through an official, community, or custom data layer.
+- The environment-variable docs warn against hardcoding API keys, describe `.env` loading, and say `.env` should be added to `.gitignore`.
+- The deployment docs describe web app, Copilot, custom React, Teams, Slack, and Discord targets, plus production notes for headless startup, host binding, websockets, subpaths, and cross origins.
+- The MCP docs say Chainlit can connect to SSE, streamable HTTP, and stdio MCP services, discover available tools, execute them, and integrate tool responses into the application flow.
+- The integrations docs cover LangChain, LangGraph, OpenAI, OpenAI Assistants, Mistral AI, Semantic Kernel, LlamaIndex, LiteLLM, vLLM, LMStudio, and Hugging Face workflows.
+- The repository is `Chainlit/chainlit`, is Apache-2.0 licensed, active, and community-maintained.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Chainlit`, `Chainlit/chainlit`, `github.com/Chainlit/chainlit`, `docs.chainlit.io`, `chainlit.io`, `conversational AI`, `chat lifecycle`, and `MCP tools`. Existing mentions are contextual distinction notes inside the recent Marimo, Streamlit, and Gradio entries; no dedicated Chainlit tools entry, source URL duplicate, target file, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Chainlit is Apache-2.0 open-source software and its README says it is community-maintained as of May 1, 2025. Chainlit Help, model providers, LLM APIs, vector databases, MCP tool providers, Slack, Discord, Teams, Copilot embeds, custom frontends, cloud hosts, and downstream deployment services may have separate licenses, billing, terms, privacy obligations, warranties, and access controls.

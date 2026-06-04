@@ -85,7 +85,7 @@ scriptBody: |-
     *) exit 0 ;;
   esac
 
-  dir=$(dirname "$FILE")
+  dir=$(dirname -- "$FILE")
   if [ -z "$readme" ]; then
     for c in "$dir/README.md" "README.md" "$dir/readme.md"; do
       [ -f "$c" ] && { readme="$c"; break; }
@@ -114,10 +114,10 @@ scriptBody: |-
     bins=$(jq -r '
       if (.bin | type) == "object" then (.bin | keys[])
       elif (.bin | type) == "string" then (.name // empty)
-      else empty end' "$pkg" 2>/dev/null)
+      else empty end' -- "$pkg" 2>/dev/null)
     printf '%s\n' "$bins" | while IFS= read -r b; do
       [ -z "$b" ] && continue
-      if ! grep -qiF "$b" "$readme"; then
+      if ! grep -qiF -e "$b" -- "$readme"; then
         echo "README refresh: CLI command '$b' (from package.json bin) is not mentioned in $readme." >&2
       fi
     done

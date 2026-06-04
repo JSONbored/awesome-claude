@@ -18,33 +18,6 @@ const SEVERITY_WEIGHT = {
 };
 
 const HEYCLAUDE_HOSTNAME = "heyclau.de";
-const SUBMISSION_RISK_LOW_LABEL = "risk-low";
-const SUBMISSION_RISK_MEDIUM_LABEL = "risk-medium";
-const SUBMISSION_RISK_HIGH_LABEL = "risk-high";
-const SUBMISSION_RISK_LABEL_DEFINITIONS = {
-  [SUBMISSION_RISK_LOW_LABEL]: {
-    color: "0e8a16",
-    description:
-      "Automated submission security/safety review found only low-risk signals",
-  },
-  [SUBMISSION_RISK_MEDIUM_LABEL]: {
-    color: "fbca04",
-    description:
-      "Automated submission security/safety review found signals that need maintainer review",
-  },
-  [SUBMISSION_RISK_HIGH_LABEL]: {
-    color: "d93f0b",
-    description:
-      "Automated submission security/safety review found high-risk or critical signals",
-  },
-};
-
-const RISK_LABEL_BY_TIER = {
-  low: SUBMISSION_RISK_LOW_LABEL,
-  medium: SUBMISSION_RISK_MEDIUM_LABEL,
-  high: SUBMISSION_RISK_HIGH_LABEL,
-  critical: SUBMISSION_RISK_HIGH_LABEL,
-};
 
 const SAFETY_NOTE_REQUIRED_FLAGS = new Set([
   "unsafe_install_pipeline",
@@ -1302,7 +1275,6 @@ export function directContentRequestChangesReasons(report = {}) {
 
 function finalizeReport(report, validationReport) {
   report.riskTier = tierFromFlags(report.reviewFlags);
-  report.recommendedLabels = [RISK_LABEL_BY_TIER[report.riskTier]];
   report.recommendedAction = recommendedAction(
     report.riskTier,
     validationReport,
@@ -1312,7 +1284,6 @@ function finalizeReport(report, validationReport) {
   report.policyDecision = policyDecisionForReport(report);
   report.requestChangesReasons = directContentRequestChangesReasons(report);
   report.humanReviewNotes = riskNotes(report);
-  report.labelDefinitions = SUBMISSION_RISK_LABEL_DEFINITIONS;
   return report;
 }
 
@@ -1335,13 +1306,11 @@ function baseReport(subject) {
     trustSignals: [],
     sourceUrls: [],
     classificationWarnings: [],
-    recommendedLabels: [],
     recommendedAction: "maintainer_review",
     policyMatrix: {},
     policyDecision: "maintainer_review",
     requestChangesReasons: [],
     humanReviewNotes: [],
-    labelDefinitions: SUBMISSION_RISK_LABEL_DEFINITIONS,
   };
 }
 
@@ -2028,7 +1997,6 @@ export function formatSubmissionRiskMarkdown(report) {
     `## Submission security/safety review: ${report.riskTier}`,
     "",
     `- Recommended action: \`${report.recommendedAction}\``,
-    `- Recommended labels: ${report.recommendedLabels.map((label) => `\`${label}\``).join(", ") || "none"}`,
     `- Policy decision: \`${report.policyDecision || "maintainer_review"}\``,
   ];
 

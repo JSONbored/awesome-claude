@@ -5,7 +5,7 @@ export const Route = createFileRoute("/$category/$slug/llms.txt")({
     handlers: {
       GET: async ({ request, params }) => {
         const url = new URL(
-          `/data/llms/${encodeURIComponent(params.category)}/${encodeURIComponent(params.slug)}.txt`,
+          `/api/registry/entries/${encodeURIComponent(params.category)}/${encodeURIComponent(params.slug)}/llms`,
           request.url,
         );
         return Response.redirect(url, 301);

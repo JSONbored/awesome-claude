@@ -221,7 +221,7 @@ function Dossier() {
               title={entry.title}
               description={entry.description}
               ogUrl={`/og/${entry.category}/${entry.slug}`}
-              llmsUrl={`/data/llms/${entry.category}/${entry.slug}.txt`}
+              llmsUrl={`/api/registry/entries/${entry.category}/${entry.slug}/llms`}
             />
           </div>
 

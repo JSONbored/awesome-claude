@@ -2,6 +2,7 @@ import { cache } from "react";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
+import { renderEntryLlms } from "@heyclaude/registry";
 import type {
   ArtifactManifestV2,
   CategorySummary,
@@ -173,11 +174,8 @@ export const getEntryLlmsText = cache(async (category: string, slug: string) => 
     return null;
   }
 
-  try {
-    return await loadTextDataFile(`llms/${category}/${slug}.txt`);
-  } catch {
-    return null;
-  }
+  const entry = await getEntry(category, slug);
+  return entry ? renderEntryLlms(entry) : null;
 });
 
 export const getRegistryManifest = cache(async () => {

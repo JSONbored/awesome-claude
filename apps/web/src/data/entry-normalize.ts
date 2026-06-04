@@ -354,8 +354,12 @@ function normalizeRelatedEntries(
         slug,
         title,
         relation:
+          item.relation === "duplicate" ||
           item.relation === "same-project" ||
           item.relation === "collection-member" ||
+          item.relation === "complementary" ||
+          item.relation === "same-ecosystem" ||
+          item.relation === "prerequisite" ||
           item.relation === "works-with" ||
           item.relation === "extends" ||
           item.relation === "alternative" ||

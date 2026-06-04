@@ -218,7 +218,7 @@ function categoryCanonicalUrl(category, siteUrl = SITE_URL) {
 }
 
 function entryLlmsUrl(entry, siteUrl = SITE_URL) {
-  return `${siteUrl.replace(/\/$/, "")}${dataUrl("llms", entry.category, `${entry.slug}.txt`)}`;
+  return `${entryApiUrl(entry, siteUrl)}/llms`;
 }
 
 function entryApiUrl(entry, siteUrl = SITE_URL) {
@@ -806,7 +806,7 @@ export function buildRaycastDetail(entry) {
     detailMarkdown: buildRaycastDetailMarkdown(entry),
     webUrl: entryCanonicalUrl(entry),
     canonicalUrl: entryCanonicalUrl(entry),
-    llmsUrl: dataUrl("llms", entry.category, `${entry.slug}.txt`),
+    llmsUrl: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,
     apiUrl: entryApiUrl(entry),
     seoTitle: entry.seoTitle || entry.title,
     seoDescription: entry.seoDescription || entry.description,
@@ -1163,9 +1163,8 @@ export function buildRegistryManifest(entries, extra = {}) {
       contentQuality: dataUrl("content-quality-report.json"),
       contentQualityPrompts: dataUrl("content-quality-prompts.json"),
       jsonLdSnapshots: dataUrl("jsonld-snapshots.json"),
-      llmsFull: dataUrl("llms-full.txt"),
+      llmsFull: "/llms-full.txt",
       entryDetails: dataUrl("entries"),
-      entryLlms: dataUrl("llms"),
       raycastDetails: dataUrl("raycast"),
       skillAdapters: dataUrl("skill-adapters"),
       distributionFeeds: dataUrl("feeds"),
@@ -1209,9 +1208,6 @@ export function buildCorpusLlmsArtifact(entries, params = {}) {
 export function buildRegistryArtifactSet(entries, params = {}) {
   const siteUrl = params.siteUrl ?? SITE_URL;
   const siteName = params.siteName ?? "HeyClaude";
-  const siteDescription =
-    params.siteDescription ??
-    "The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.";
   const relationGraph = buildRegistryRelationGraph(entries, {
     siteUrl,
     limit: params.relationLimit,
@@ -1292,15 +1288,6 @@ export function buildRegistryArtifactSet(entries, params = {}) {
       type: "json",
       value: buildJsonLdSnapshots(entries, { siteUrl, siteName }),
     },
-    {
-      path: "llms-full.txt",
-      type: "text",
-      value: buildCorpusLlmsArtifact(entries, {
-        siteUrl,
-        siteName,
-        siteDescription,
-      }),
-    },
   ];
 
   for (const entry of entries) {
@@ -1309,11 +1296,6 @@ export function buildRegistryArtifactSet(entries, params = {}) {
         path: `entries/${entry.category}/${entry.slug}.json`,
         type: "json",
         value: buildEntryDetail(entry, { relationLookup }),
-      },
-      {
-        path: `llms/${entry.category}/${entry.slug}.txt`,
-        type: "text",
-        value: buildEntryLlmsArtifact(entry, { siteUrl }),
       },
       {
         path: `raycast/${entry.category}/${entry.slug}.json`,

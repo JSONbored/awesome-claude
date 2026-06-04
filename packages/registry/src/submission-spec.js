@@ -349,7 +349,7 @@ export function buildSubmissionSpecs(options = {}) {
     prIntake: {
       mode: "github_app_user_fork_pr",
       ...(submitUrl ? { submitUrl } : {}),
-      pilotBaseRef: "main",
+      contentGateBaseRef: "main",
     },
   };
 }

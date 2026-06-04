@@ -40,20 +40,19 @@ describe("crawler and AI citation policy", () => {
       path.join(repoRoot, "apps/web/src/lib/llms.ts"),
       "utf8",
     );
-    const fullCorpus = fs.readFileSync(
-      path.join(repoRoot, "apps/web/public/data/llms-full.txt"),
+    const fullRouteSource = fs.readFileSync(
+      path.join(repoRoot, "apps/web/src/routes/llms-full[.]txt.ts"),
       "utf8",
     );
 
     expect(routeSource).toContain("respondText");
+    expect(fullRouteSource).toContain("buildLlmsFullTxt");
+    expect(fullRouteSource).toContain("respondText");
     expect(llmsHelperSource).toContain("applySecurityHeaders");
     expect(llmsHelperSource).toContain("Content-Type");
     expect(llmsHelperSource).toContain("Cache-Control");
-    expect(fullCorpus).toContain("Base URL: https://heyclau.de");
-    expect(fullCorpus).toContain("## Citation Facts");
-    expect(fullCorpus).toContain("Canonical URL: https://heyclau.de/");
-    expect(fullCorpus).toContain(
-      "Platform compatibility: Claude (native-skill)",
-    );
+    expect(
+      fs.existsSync(path.join(repoRoot, "apps/web/public/data/llms-full.txt")),
+    ).toBe(false);
   });
 });
