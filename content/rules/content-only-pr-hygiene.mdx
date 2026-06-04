@@ -1,0 +1,206 @@
+---
+title: Content-Only PR Hygiene Rules
+slug: content-only-pr-hygiene
+category: rules
+description: >-
+  Source-backed rules for AI coding assistants preparing content-only
+  contribution pull requests: keep one raw MDX file, cite verifiable sources,
+  link the slot issue, document duplicate checks, avoid generated artifacts,
+  and run focused validation before opening the PR.
+cardDescription: >-
+  Rules for clean, one-file content-only PRs with source evidence, issue
+  closure, duplicate checks, and no generated artifact churn.
+seoTitle: Content-Only PR Hygiene Rules for AI Coding Assistants
+seoDescription: >-
+  Practical rules for AI coding assistants that prepare HeyClaude content-only
+  PRs: one raw content file, source-backed claims, issue linkage, validation,
+  and generated-artifact boundaries.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"
+sourceUrls:
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests"
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/.github/pull_request_template.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/validate-content.mjs"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs"
+installable: false
+usageSnippet: >-
+  Apply these rules before opening a direct content PR: one raw content file,
+  source URLs verified, duplicate check documented, issue linked with
+  `Closes #...`, local validation run, and generated artifacts excluded.
+copySnippet: |-
+  You are preparing a direct content-only pull request.
+
+  Rules:
+  1. Change exactly one raw content file under content/<category>/<slug>.mdx.
+  2. Do not edit README.md, generated registry output, downloads, workflows,
+     package files, scripts, or unrelated content.
+  3. Include source/provenance URLs that directly support the entry's claims.
+  4. Link the slot issue in the PR body with the exact closure keyword.
+  5. Document duplicate checks across title, slug, source URL, docs URL,
+     package URL, provider name, aliases, source domain, existing content, and
+     open or closed PRs.
+  6. Include specific safety and privacy notes when the content can run code,
+     read local files, call networks, use credentials, store logs, or expose
+     user data.
+  7. Run focused validation before pushing.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A selected issue slot, target category, and proposed slug before any file is created.
+  - Canonical source URLs that are public, reachable, and relevant to the claims in the entry.
+  - A local checkout where category validation and policy validation can run before the PR is opened.
+safetyNotes:
+  - "These rules are review-process rules, not runtime automation; they should prevent unsafe PR scope rather than execute code."
+  - "If a PR entry includes install commands, shell snippets, hooks, MCP servers, or credentialed tools, require a separate safety review for those behaviors."
+  - "Do not run generation commands or commit generated output while preparing a direct content-only PR."
+privacyNotes:
+  - "PR bodies, duplicate checks, source URLs, screenshots, issue links, and examples are public review artifacts."
+  - "Do not include private repository names, customer data, unpublished docs, access tokens, local file paths, or internal account identifiers as evidence."
+  - "Safety and privacy notes should explain what the submitted content may read, write, transmit, store, or log."
+tags:
+  - pull-requests
+  - content-prs
+  - contribution-hygiene
+  - validation
+  - source-backed
+keywords:
+  - content-only PR hygiene rules
+  - source-backed content contribution
+  - generated artifact churn prevention
+  - pull request issue closure rules
+  - AI coding assistant PR checklist
+readingTime: 5
+difficultyScore: 32
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+These rules keep an AI coding assistant from turning a simple content
+submission into a noisy platform change. A clean content-only PR is small,
+source-backed, issue-linked, and easy for the maintainer gate to classify.
+
+Use these rules whenever the requested work is a direct content contribution,
+especially issue slots that ask for exactly one `content/<category>/<slug>.mdx`
+file.
+
+## Required PR Shape
+
+1. **One raw content file only.** The PR must add or modify exactly one MDX
+   file in the requested content category.
+2. **No generated artifacts.** Do not edit `README.md`, generated registry
+   data, downloads, route files, workflow files, package files, scripts, or
+   unrelated entries.
+3. **No opportunistic refactors.** Do not reformat nearby content, rename
+   existing slugs, update metadata across the directory, or "clean up" files
+   outside the issue slot.
+4. **Non-draft unless the maintainer asks otherwise.** If a repository uses a
+   one-shot content gate, open the PR ready for review only after validation.
+
+## Source Evidence Rules
+
+1. **Use public, primary sources.** Prefer official docs, repository files,
+   package pages, standards, or the repository's own validation files.
+2. **Verify the final URL.** Follow redirects and cite the final canonical URL
+   when practical.
+3. **Make every claim traceable.** If the entry says a validator rejects
+   generated files, cite the validator or PR template that says so.
+4. **Avoid thin citation lists.** Sources should support the actual workflow,
+   not just prove a tool name exists.
+5. **Do not cite private evidence.** Internal docs, private issues, and local
+   logs cannot back a public content entry.
+
+## Duplicate Check Rules
+
+Before opening the PR, search for:
+
+- the proposed title and slug;
+- the source URL, documentation URL, package URL, repository URL, and source
+  domain;
+- provider names, common aliases, product names, and related issue numbers;
+- open PRs, closed PRs, and already-merged content in every category that might
+  cover the same workflow.
+
+The PR body should name the closest related entries and explain why the new
+rules entry is different enough to merge.
+
+## PR Body Rules
+
+The PR body must include:
+
+- `Closes #<issue-number>` for the exact child issue slot;
+- a short summary that says the PR changes one content file;
+- the duplicate and history check;
+- validation commands that were run locally;
+- source URLs verified as reachable;
+- an explicit note that generated artifacts and README output were not edited.
+
+GitHub documents issue-closing keywords for linked pull requests, and the
+repository PR template also asks direct content submissions to confirm one-file
+scope, source/provenance, author attribution, and generated-artifact boundaries.
+
+## Local Validation Rules
+
+Run focused checks before opening the PR:
+
+```bash
+git diff --check upstream/main...HEAD
+node scripts/validate-content.mjs --category rules
+node scripts/ci/validate-content-policy.mjs --files-json /tmp/content-pr-files.json --head-repo <fork-owner>/<repo> --base-repo JSONbored/awesome-claude --head-ref <branch> --pr-author <author>
+```
+
+Use a files JSON manifest that contains only the intended MDX file. If the
+validator reports unrelated changes, stop and remove them before pushing.
+
+## Safety And Privacy Rules
+
+Content-only PR hygiene is mostly review safety, but entries can still describe
+dangerous tools. Require specific notes when submitted content:
+
+- runs shell commands, installs packages, or uses hooks;
+- reads local files, browser state, repositories, databases, logs, or tickets;
+- uses API keys, OAuth, MCP server credentials, cookies, or session data;
+- writes to external services, opens PRs, modifies issues, sends messages, or
+  publishes artifacts;
+- stores screenshots, traces, prompts, generated output, or user data.
+
+If none of those risks apply, say why instead of leaving generic boilerplate.
+
+## Troubleshooting
+
+- **The diff includes generated files:** reset the PR scope to the raw MDX file
+  and leave generated output to maintainer automation.
+- **The entry overlaps an existing guide:** narrow the rules to enforcement
+  behavior, then explain the guide/rules distinction in the duplicate check.
+- **A source URL redirects or intermittently fails:** cite a more stable
+  primary source, such as a repository file or official docs page.
+- **The PR body is missing the issue closure line:** add the exact `Closes
+  #...` line before opening the PR.
+- **The validator flags a policy risk:** either remove the risky field or add
+  specific safety/privacy notes that explain the behavior.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, open PRs, closed PRs, and
+repository content for content-only PR hygiene, source-backed content PRs,
+generated artifact churn, PR template rules, direct content submissions, issue
+closure keywords, and validation policy. The existing
+`source-backed-content-prs` guide explains how contributors prepare strong
+content PRs. This rules entry is narrower and operational: it gives an AI coding
+assistant enforceable rules to apply before opening a direct content-only PR.
+
+## References
+
+- GitHub pull request overview: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
+- GitHub linked issue closure: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue
+- Repository PR template: https://github.com/JSONbored/awesome-claude/blob/main/.github/pull_request_template.md
+- Content validator: https://github.com/JSONbored/awesome-claude/blob/main/scripts/validate-content.mjs
+- Content policy validator: https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs
