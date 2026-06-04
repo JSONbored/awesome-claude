@@ -4,7 +4,6 @@ export const REGISTRY_RELATION_TYPES = [
   "works-with",
   "extends",
   "alternative",
-  "safer-alternative",
   "related",
 ];
 
@@ -198,13 +197,6 @@ function relationTypeFor(target, candidate, evidence) {
   if (evidence.sameProject) return "same-project";
   if (
     target.category === candidate.category &&
-    evidence.candidateHasStrongerSafety &&
-    evidence.sharedTokens.length > 0
-  ) {
-    return "safer-alternative";
-  }
-  if (
-    target.category === candidate.category &&
     (evidence.sharedTokens.length > 0 || evidence.sharedDomains.length > 0)
   ) {
     return "alternative";
@@ -245,11 +237,6 @@ function scoreCandidate(target, candidate) {
   );
   const sharedTokens = intersection(textTokens(target), textTokens(candidate));
   const categoryPair = categoryPairKind(target, candidate);
-  const candidateHasStrongerSafety =
-    !notes(target.safetyNotes).length &&
-    notes(candidate.safetyNotes).length > 0 &&
-    candidate.downloadTrust !== "external";
-
   const score =
     (collectionMember ? 100 : 0) +
     (sameProject ? 90 : 0) +
@@ -257,8 +244,7 @@ function scoreCandidate(target, candidate) {
     sharedDomains.length * 16 +
     Math.min(sharedTokens.length, 8) * 4 +
     (target.category === candidate.category ? 10 : 0) +
-    (categoryPair ? 6 : 0) +
-    (candidateHasStrongerSafety ? 5 : 0);
+    (categoryPair ? 6 : 0);
 
   if (score < 18) return null;
 
@@ -269,7 +255,6 @@ function scoreCandidate(target, candidate) {
     sharedDomains,
     sharedTokens,
     categoryPair,
-    candidateHasStrongerSafety,
   };
 
   return {
@@ -285,15 +270,8 @@ function scoreCandidate(target, candidate) {
       ...(categoryPair && categoryPair !== "same-category"
         ? [`category_pair:${categoryPair}`]
         : []),
-      ...(candidateHasStrongerSafety ? ["safer_metadata"] : []),
     ]).slice(0, 6),
   };
-}
-
-function notes(values) {
-  return Array.isArray(values)
-    ? values.map((value) => String(value || "").trim()).filter(Boolean)
-    : [];
 }
 
 function intersection(left = [], right = []) {

@@ -17,6 +17,7 @@ import {
   buildCursorSkillAdapter,
   buildJsonLdSnapshots,
   buildRegistryChangelogFeed,
+  buildEntryRelations,
   buildRegistryRelationGraph,
   buildRegistryTrustReport,
   buildSourceHealthReport,
@@ -622,6 +623,41 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
+  });
+
+  it("does not derive comparative safety relations from safety notes alone", () => {
+    const target = {
+      category: "skills",
+      slug: "shared-target",
+      title: "Shared Workflow Target",
+      description: "A shared workflow target without safety notes.",
+      tags: ["shared"],
+      keywords: [],
+      safetyNotes: [],
+    };
+    const candidate = {
+      category: "skills",
+      slug: "shared-candidate",
+      title: "Shared Workflow Candidate",
+      description: "A shared workflow candidate with self-declared safety notes.",
+      tags: ["shared"],
+      keywords: [],
+      safetyNotes: ["Review permissions before installing."],
+      downloadTrust: "source-backed",
+    };
+
+    const [relation] = buildEntryRelations(target, [target, candidate], {
+      limit: 1,
+    });
+
+    expect(relation).toMatchObject({
+      key: "skills:shared-candidate",
+      relation: "alternative",
+    });
+    expect(relation?.reasons).not.toContain("safer_metadata");
+    expect(
+      buildRegistryRelationGraph([target, candidate]).relationTypes,
+    ).not.toContain("safer-alternative");
   });
 
   it("publishes deterministic relation graph refs into entry details", () => {

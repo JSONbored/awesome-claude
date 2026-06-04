@@ -359,7 +359,6 @@ function normalizeRelatedEntries(
           item.relation === "works-with" ||
           item.relation === "extends" ||
           item.relation === "alternative" ||
-          item.relation === "safer-alternative" ||
           item.relation === "related"
             ? item.relation
             : "related",

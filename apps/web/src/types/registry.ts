@@ -94,7 +94,6 @@ export type EntryRelationType =
   | "works-with"
   | "extends"
   | "alternative"
-  | "safer-alternative"
   | "related";
 
 export interface EntryRelation {

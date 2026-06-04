@@ -87,7 +87,6 @@ export type RegistryRelationType =
   | "works-with"
   | "extends"
   | "alternative"
-  | "safer-alternative"
   | "related";
 
 export type RegistryRelation = {
