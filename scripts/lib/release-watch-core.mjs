@@ -1,6 +1,34 @@
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+
 export const MCP_RELEASE_DUE_MARKER = "<!-- heyclaude:mcp-release-due -->";
 export const RAYCAST_RELEASE_DUE_MARKER =
   "<!-- heyclaude:raycast-release-due -->";
+const RELEASE_WATCH_CONFIG_PATH = ".github/release-watch.json";
+
+export function readReleaseWatchConfig({ repoRoot = process.cwd() } = {}) {
+  const configPath = resolve(repoRoot, RELEASE_WATCH_CONFIG_PATH);
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(configPath, "utf8"));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(
+      `Unable to read release watch config at ${RELEASE_WATCH_CONFIG_PATH}: ${message}`,
+    );
+  }
+
+  const assignees = Array.isArray(parsed?.assignees)
+    ? parsed.assignees.map((value) => String(value).trim()).filter(Boolean)
+    : [];
+  if (assignees.length === 0) {
+    throw new Error(
+      `${RELEASE_WATCH_CONFIG_PATH} must define at least one assignee`,
+    );
+  }
+
+  return { assignees };
+}
 
 export function latestSemverTag(tags, prefix) {
   const matches = tags
@@ -109,12 +137,14 @@ export function buildRaycastReleaseReport({
   };
 }
 
-export function buildMcpReleaseIssue(report) {
+export function buildMcpReleaseIssue(report, options = {}) {
+  const config = options.config ?? readReleaseWatchConfig(options);
   return buildReleaseIssue({
     report,
     marker: MCP_RELEASE_DUE_MARKER,
     title: `MCP release due: ${report.proposedVersion}`,
     packageLabel: "@heyclaude/mcp",
+    assignees: config.assignees,
     labels: ["release", "mcp"],
     checklist: [
       "Run the MCP package validation workflow.",
@@ -124,12 +154,14 @@ export function buildMcpReleaseIssue(report) {
   });
 }
 
-export function buildRaycastReleaseIssue(report) {
+export function buildRaycastReleaseIssue(report, options = {}) {
+  const config = options.config ?? readReleaseWatchConfig(options);
   return buildReleaseIssue({
     report,
     marker: RAYCAST_RELEASE_DUE_MARKER,
     title: `Raycast update due: ${report.proposedVersion}`,
     packageLabel: "Raycast extension",
+    assignees: config.assignees,
     labels: ["release", "raycast"],
     checklist: [
       "Run the Raycast extension validation workflow.",
@@ -144,6 +176,7 @@ function buildReleaseIssue({
   marker,
   title,
   packageLabel,
+  assignees,
   labels,
   checklist,
 }) {
@@ -173,7 +206,7 @@ function buildReleaseIssue({
   return {
     title,
     labels,
-    assignees: ["JSONbored"],
+    assignees,
     body: [
       marker,
       "",

@@ -1,3 +1,5 @@
+// "duplicate" is reserved for explicit curated annotations. Automatic relation
+// inference must not treat shared project ownership as a strict duplicate.
 export const REGISTRY_RELATION_TYPES = [
   "duplicate",
   "same-project",

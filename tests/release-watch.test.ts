@@ -8,6 +8,7 @@ import {
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
   RAYCAST_RELEASE_DUE_MARKER,
+  readReleaseWatchConfig,
 } from "../scripts/lib/release-watch-core.mjs";
 
 describe("release watch", () => {
@@ -48,6 +49,12 @@ describe("release watch", () => {
     expect(issue.body).toContain(MCP_RELEASE_DUE_MARKER);
   });
 
+  it("loads release assignees from shared workflow config", () => {
+    const config = readReleaseWatchConfig();
+
+    expect(config.assignees).toEqual(["JSONbored"]);
+  });
+
   it("filters Raycast release checks to Raycast-relevant files", () => {
     const report = buildRaycastReleaseReport({
       latestTag: { tag: "raycast-v1.0.0", version: "1.0.0" },
@@ -69,9 +76,11 @@ describe("release watch", () => {
     expect(report.due).toBe(true);
     expect(report.commits).toHaveLength(1);
     expect(report.commits[0].subject).toBe("fix(raycast): harden feed parser");
-    const issue = buildRaycastReleaseIssue(report);
+    const issue = buildRaycastReleaseIssue(report, {
+      config: { assignees: ["release-maintainer"] },
+    });
     expect(issue.labels).toEqual(["release", "raycast"]);
-    expect(issue.assignees).toEqual(["JSONbored"]);
+    expect(issue.assignees).toEqual(["release-maintainer"]);
     expect(issue.body).toContain(RAYCAST_RELEASE_DUE_MARKER);
   });
 
