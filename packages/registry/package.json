@@ -18,6 +18,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/content-schema.js"
     },
+    "./package-spec": {
+      "types": "./src/package-spec.d.ts",
+      "default": "./src/package-spec.js"
+    },
     "./presentation": {
       "types": "./src/index.d.ts",
       "default": "./src/presentation.js"

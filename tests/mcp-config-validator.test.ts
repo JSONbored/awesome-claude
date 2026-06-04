@@ -364,4 +364,31 @@ describe("MCP config validator", () => {
     );
     expect(remote.warnings).toContain(`remote: ${httpsWarning}`);
   });
+
+  it("warns when a runner installs an unpinned package, not when pinned", () => {
+    const unpinned = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: { svc: { command: "npx", args: ["-y", "@scope/server"] } },
+      }),
+    );
+    expect(unpinned.ok).toBe(true);
+    expect(unpinned.warnings).toEqual(
+      expect.arrayContaining([
+        'svc: npx runs "@scope/server" without a pinned version; pin it (for example "@scope/server@1.2.3") so the MCP server cannot change between runs.',
+      ]),
+    );
+
+    const pinned = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: {
+          svc: { command: "npx", args: ["-y", "@scope/server@1.2.3"] },
+        },
+      }),
+    );
+    expect(
+      pinned.warnings.some((warning) =>
+        warning.includes("without a pinned version"),
+      ),
+    ).toBe(false);
+  });
 });

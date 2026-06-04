@@ -1,3 +1,5 @@
+import { isPinnedPackageSpec } from "@heyclaude/registry/package-spec";
+
 export type McpConfigServerReport = {
   name: string;
   transport: "stdio" | "remote" | "unknown";
@@ -370,11 +372,25 @@ function validateServer(name: string, raw: unknown) {
   }
   if (command) {
     const packageName = packageFromRunner(command, args);
-    if (
-      ["npx", "uvx", "bunx"].includes(command.toLowerCase()) &&
-      !packageName
-    ) {
+    // Scope to the unambiguous package runners (npx/uvx/bunx always run a
+    // package). pnpm/yarn/npm only run one with dlx/exec, so checking them here
+    // would misread "pnpm install" as a package and is left out.
+    const isPackageRunner = ["npx", "uvx", "bunx"].includes(
+      command.toLowerCase(),
+    );
+    if (isPackageRunner && !packageName) {
       errors.push(`${command} server is missing a package name in args.`);
+    }
+    // An unpinned package re-resolves to the latest published version on every
+    // run; for an MCP server (granted tool access) that is a supply-chain risk.
+    if (
+      isPackageRunner &&
+      packageName &&
+      !isPinnedPackageSpec(packageName)
+    ) {
+      warnings.push(
+        `${command} runs "${packageName}" without a pinned version; pin it (for example "${packageName}@1.2.3") so the MCP server cannot change between runs.`,
+      );
     }
   }
   if (url) {
