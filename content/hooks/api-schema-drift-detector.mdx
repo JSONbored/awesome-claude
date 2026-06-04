@@ -102,7 +102,9 @@ scriptBody: |-
     <(jq -r '(.paths // {}) | keys[]' "$FILE" 2>/dev/null | sort -u))
   if [ -n "$removed_paths" ]; then
     echo "API schema drift in $FILE - removed path(s):" >&2
-    printf '   - %s\n' $removed_paths >&2
+    while IFS= read -r path; do
+      printf '   - %s\n' "$path" >&2
+    done <<< "$removed_paths"
     drift=1
   fi
 
@@ -112,7 +114,9 @@ scriptBody: |-
     <(jq -r '(.required // []) | .[]' "$FILE" 2>/dev/null | sort -u))
   if [ -n "$removed_required" ]; then
     echo "API schema drift in $FILE - removed required field(s):" >&2
-    printf '   - %s\n' $removed_required >&2
+    while IFS= read -r field; do
+      printf '   - %s\n' "$field" >&2
+    done <<< "$removed_required"
     drift=1
   fi
 
