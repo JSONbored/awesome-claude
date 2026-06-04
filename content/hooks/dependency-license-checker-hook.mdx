@@ -1,0 +1,212 @@
+---
+title: Dependency License Checker Hook for Claude Code
+slug: dependency-license-checker-hook
+category: hooks
+description: >-
+  Claude Code PostToolUse hook that runs a local npm dependency license policy
+  check after package manifest or lockfile edits, using
+  @onebeyond/license-checker to flag forbidden or non-allowlisted SPDX
+  licenses before dependency changes are committed.
+cardDescription: >-
+  Check npm dependency licenses after Claude edits package manifests or
+  lockfiles.
+seoTitle: Dependency License Checker Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for local npm dependency license checks with
+  explicit prerequisites, exit behavior, safety notes, and privacy guidance.
+author: techforgeworks
+authorProfileUrl: "https://github.com/techforgeworks"
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+documentationUrl: "https://github.com/onebeyond/license-checker"
+repoUrl: "https://github.com/onebeyond/license-checker"
+packageUrl: "https://www.npmjs.com/package/@onebeyond/license-checker"
+installable: true
+installCommand: >-
+  npm install --save-dev @onebeyond/license-checker && mkdir -p .claude/hooks
+  && touch .claude/hooks/dependency-license-checker.sh && chmod +x
+  .claude/hooks/dependency-license-checker.sh
+usageSnippet: >-
+  Install `@onebeyond/license-checker`, save the script as
+  `.claude/hooks/dependency-license-checker.sh`, and configure PostToolUse for
+  Write, Edit, and MultiEdit.
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/dependency-license-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/dependency-license-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+  command -v jq >/dev/null 2>&1 || {
+    echo "Dependency license hook skipped: jq is required." >&2
+    exit 0
+  }
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  case "$(basename "$file_path")" in
+    package.json|package-lock.json|npm-shrinkwrap.json|yarn.lock|pnpm-lock.yaml) ;;
+    *) exit 0 ;;
+  esac
+
+  project_dir="$(dirname "$file_path")"
+  while [ "$project_dir" != "/" ] && [ ! -f "$project_dir/package.json" ]; do
+    project_dir="$(dirname "$project_dir")"
+  done
+  [ -f "$project_dir/package.json" ] || exit 0
+
+  checker_bin="$project_dir/node_modules/.bin/license-checker"
+  [ -x "$checker_bin" ] || {
+    echo "Dependency license hook skipped: install @onebeyond/license-checker locally." >&2
+    exit 0
+  }
+
+  default_fail_on="AGPL-1.0-only AGPL-1.0-or-later AGPL-3.0-only AGPL-3.0-or-later GPL-1.0-only GPL-1.0-or-later GPL-2.0-only GPL-2.0-or-later GPL-3.0-only GPL-3.0-or-later LGPL-2.0-only LGPL-2.0-or-later LGPL-2.1-only LGPL-2.1-or-later LGPL-3.0-only LGPL-3.0-or-later SSPL-1.0"
+
+  cd "$project_dir" || exit 0
+  echo "Dependency license hook: checking npm dependency licenses in $project_dir" >&2
+
+  if [ -n "${LICENSE_ALLOW_ONLY:-}" ]; then
+    # shellcheck disable=SC2086
+    "$checker_bin" scan --allowOnly $LICENSE_ALLOW_ONLY --ignoreRootPackageLicense --disableReport --disableErrorReport
+  else
+    # shellcheck disable=SC2086
+    "$checker_bin" scan --failOn ${LICENSE_FAIL_ON:-$default_fail_on} --ignoreRootPackageLicense --disableReport --disableErrorReport
+  fi
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code hooks enabled in user or project settings."
+  - "Node.js, npm, `jq`, and a reviewed local devDependency on `@onebeyond/license-checker`."
+  - "A project license policy via `LICENSE_FAIL_ON` or `LICENSE_ALLOW_ONLY`, or acceptance of the script's default forbidden-license list."
+safetyNotes:
+  - "Runs after `Write`, `Edit`, or `MultiEdit` only for `package.json`, npm lockfiles, `yarn.lock`, or `pnpm-lock.yaml`."
+  - "Runs the local `node_modules/.bin/license-checker scan` from the nearest parent npm project; it does not call `npx`, install packages, rewrite files, or edit lockfiles."
+  - "Exits non-zero when the checker reports a policy violation or command error, which can interrupt Claude Code until a human reviews the dependency change."
+  - "License metadata can be incomplete, inferred, dual-licensed, or legally nuanced; use the hook as triage, not legal advice."
+privacyNotes:
+  - "Reads local `package.json`, lockfiles, and installed package metadata under `node_modules`."
+  - "The script makes no network calls during hook execution; network access is only needed for the separate reviewed npm install step."
+  - "Output may include package names, versions, SPDX IDs, local paths, and policy failures in terminal output, Claude Code logs, issue comments, or transcripts."
+sourceUrls:
+  - "https://github.com/onebeyond/license-checker"
+  - "https://www.npmjs.com/package/@onebeyond/license-checker"
+  - "https://spdx.org/licenses/"
+tags:
+  - dependencies
+  - licenses
+  - npm
+  - compliance
+  - hooks
+keywords:
+  - "dependency license checker hook"
+  - "Claude Code license hook"
+  - "npm dependency license check"
+  - "SPDX dependency license scanner"
+readingTime: 4
+difficultyScore: 48
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook runs `@onebeyond/license-checker scan` after Claude Code edits an npm
+manifest or lockfile. It is intentionally local-first: the hook uses
+`node_modules/.bin/license-checker` and skips with a message if the reviewed
+devDependency is not installed.
+
+The upstream README describes `@onebeyond/license-checker` as a tool to audit
+npm dependencies and reject forbidden licenses, with `scan`, `--failOn`,
+`--allowOnly`, report controls, and failing exit behavior documented. Sources
+reviewed on **2026-06-04**: the GitHub repository, npm package page, and SPDX
+license list.
+
+## Configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/dependency-license-checker.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Script
+
+Save the frontmatter script body as
+`.claude/hooks/dependency-license-checker.sh`, make it executable, and install
+`@onebeyond/license-checker` as a reviewed dev dependency in the npm project.
+
+## Policy
+
+By default, the script fails on common GPL, LGPL, AGPL, and SSPL SPDX IDs. Set
+`LICENSE_FAIL_ON` to a project-specific forbidden list, or set
+`LICENSE_ALLOW_ONLY` for a positive allowlist. Treat every finding as a review
+prompt: package metadata can be stale, inferred, or dual-licensed.
+
+## Duplicate Check
+
+Checked local `content/hooks`, generated README search results, source URLs, and
+open pull requests for `dependency license checker`, `license checker`,
+`@onebeyond/license-checker`, `onebeyond/license-checker`,
+`license-checker-rseidelsohn`, and npm license policy terms. Existing dependency
+hooks cover updates, vulnerability scanning, or lockfile provenance; no
+dedicated dependency-license policy hook was found.
+
+## Editorial Disclosure
+
+Independent source-backed HeyClaude entry. It is not sponsored by One Beyond,
+npm, SPDX, or the `@onebeyond/license-checker` maintainers, and it uses no
+affiliate or referral links.
