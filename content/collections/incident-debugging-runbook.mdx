@@ -1,0 +1,179 @@
+---
+title: Incident Debugging Runbook
+slug: incident-debugging-runbook
+category: collections
+description: >-
+  A source-backed incident response and debugging collection for AI-assisted
+  production triage: instrument agent telemetry, inspect Sentry and Grafana
+  evidence, capture Jam bug context, rebuild timelines, and hand findings to a
+  debugging agent without exposing unnecessary production data.
+cardDescription: >-
+  Incident triage bundle for telemetry, observability evidence, bug context,
+  timeline reconstruction, and root-cause debugging.
+seoTitle: Incident Debugging Runbook Collection
+seoDescription: >-
+  Source-backed collection for AI-assisted incident response and debugging with
+  OpenTelemetry concepts, Sentry MCP, Grafana MCP, Jam MCP, timeline parsing,
+  reliability review, and production-safe root-cause analysis.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://opentelemetry.io/docs/concepts/observability-primer/"
+sourceUrls:
+  - "https://opentelemetry.io/docs/concepts/observability-primer/"
+  - "https://opentelemetry.io/docs/concepts/signals/traces/"
+  - "https://mcp.sentry.dev/"
+  - "https://grafana.com/docs/grafana/latest/developer-resources/mcp/"
+  - "https://jam.dev/docs/jam-mcp"
+installable: false
+usageSnippet: >-
+  Start with telemetry and reliability ownership, then gather Sentry, Grafana,
+  and Jam evidence before reconstructing timelines and asking Claude for
+  root-cause hypotheses.
+items:
+  - slug: ai-agent-observability-incident-response
+    category: skills
+  - slug: production-reliability-engineer
+    category: agents
+  - slug: sentry-mcp-server
+    category: mcp
+  - slug: grafana-mcp-server
+    category: mcp
+  - slug: jam-mcp-server
+    category: mcp
+  - slug: log-parsing-incident-timeline
+    category: skills
+  - slug: database-query-performance-logger
+    category: hooks
+  - slug: debugging-assistant-agent
+    category: agents
+installationOrder:
+  - ai-agent-observability-incident-response
+  - production-reliability-engineer
+  - sentry-mcp-server
+  - grafana-mcp-server
+  - jam-mcp-server
+  - log-parsing-incident-timeline
+  - database-query-performance-logger
+  - debugging-assistant-agent
+estimatedSetupTime: 70 minutes
+difficulty: advanced
+prerequisites:
+  - A production or staging system with structured logs, traces, metrics, error tracking, and incident ownership already defined.
+  - Read-only or narrowly scoped credentials for Sentry, Grafana, Jam, log stores, and database performance views.
+  - A severity model, escalation path, and post-incident review process so Claude-generated analysis has a human owner.
+safetyNotes:
+  - "Keep investigation tools read-only by default; do not let an incident debugging session mutate alerts, dashboards, tickets, releases, or production data unless a human explicitly approves the action."
+  - "Use narrow time windows, service names, trace IDs, release versions, and environment filters before querying production observability systems."
+  - "Treat Claude's root-cause output as hypotheses until confirmed against logs, traces, metrics, deploy history, and reproducible evidence."
+  - "Pause automation during active incidents if tool calls are increasing load, exhausting rate limits, or distracting responders from the agreed incident commander."
+privacyNotes:
+  - "Incident evidence can include customer identifiers, request payloads, stack traces, screenshots, session recordings, API paths, database names, IP addresses, and internal service topology."
+  - "Redact secrets, tokens, personal data, and tenant identifiers before sharing transcripts, bug recordings, traces, or postmortem drafts outside the response team."
+  - "Sentry, Grafana, Jam, log stores, and database hooks each have their own retention, export, and access-control model; align Claude access with the strictest system in the chain."
+tags:
+  - incident-response
+  - debugging
+  - observability
+  - reliability
+  - production
+keywords:
+  - incident response debugging collection
+  - ai agent observability incident runbook
+  - sentry grafana jam claude workflow
+  - production debugging runbook
+  - root cause analysis collection
+---
+
+## What this collection sets up
+
+This collection gives responders a bounded path from alert to evidence to
+debugging hypothesis. It is not a generic debugging toolkit or a broad
+production readiness checklist; it is an incident-room workflow for gathering
+source-backed observability context, preserving what happened, and asking
+Claude to reason over a controlled evidence set.
+
+The workflow starts with OpenTelemetry-style telemetry thinking, then connects
+Claude to the systems responders already use: Sentry for errors, Grafana for
+metrics/logs/dashboards, Jam for user-reported bug context, and local timeline
+or database signals for root-cause analysis.
+
+## Layers
+
+### 1. Telemetry contract and ownership
+
+- **ai-agent-observability-incident-response** defines the telemetry fields,
+  SLOs, alert thresholds, and incident playbook structure needed before a
+  model-assisted investigation begins.
+- **production-reliability-engineer** keeps responder roles, health checks,
+  deployment context, rollback thinking, and post-incident follow-up visible.
+
+### 2. Production evidence collection
+
+- **sentry-mcp-server** lets Claude inspect errors, stack traces, issue trends,
+  releases, and performance context through Sentry's MCP surface.
+- **grafana-mcp-server** lets Claude query narrowed observability windows,
+  inspect dashboards, retrieve panel context, and generate deeplinks back into
+  Grafana.
+- **jam-mcp-server** adds user-reported reproduction context, screenshots,
+  console output, network failures, and browser/session details when a bug
+  report is the starting signal.
+
+### 3. Timeline and root-cause debugging
+
+- **log-parsing-incident-timeline** turns log and trace fragments into an
+  ordered incident narrative.
+- **database-query-performance-logger** helps identify database latency,
+  missing indexes, slow queries, and query-level symptoms that align with the
+  incident window.
+- **debugging-assistant-agent** receives the curated evidence packet and
+  produces hypotheses, verification steps, and fix options for the human
+  responder.
+
+## Suggested order
+
+Start by defining what the incident room is allowed to inspect and which
+systems are read-only. Add the telemetry and reliability workflow first, then
+connect Sentry and Grafana with scoped credentials. Add Jam only for teams that
+debug user-reported browser or product issues. Use timeline and database tools
+after the initial evidence is narrowed, then hand the summarized facts to the
+debugging assistant.
+
+## Incident drill checklist
+
+- [ ] {"task": "Scope is bounded", "description": "Incident severity, affected service, environment, time window, and owner are named before tool calls begin"}
+- [ ] {"task": "Credentials are scoped", "description": "Sentry, Grafana, Jam, log, and database access are read-only or limited to the specific investigation need"}
+- [ ] {"task": "Evidence is preserved", "description": "Trace IDs, release versions, screenshots, console logs, dashboard links, and query snippets are captured before remediation changes"}
+- [ ] {"task": "Hypotheses are verified", "description": "Claude-generated causes are checked against at least two independent signals before a fix or rollback is proposed"}
+- [ ] {"task": "Privacy is reviewed", "description": "Customer data, secrets, identifiers, and screenshots are redacted before postmortem or ticket sharing"}
+
+## Source and references
+
+- OpenTelemetry observability primer: https://opentelemetry.io/docs/concepts/observability-primer/
+- OpenTelemetry traces concepts: https://opentelemetry.io/docs/concepts/signals/traces/
+- Sentry MCP: https://mcp.sentry.dev/
+- Grafana MCP documentation: https://grafana.com/docs/grafana/latest/developer-resources/mcp/
+- Jam MCP documentation: https://jam.dev/docs/jam-mcp
+
+## Duplicate and history check
+
+Checked existing collections, upstream collection history, open PRs, closed PRs,
+and repository content for `incident-debugging-runbook`, incident response
+debugging, AI agent incident response, observability incident workflow, Sentry
+MCP, Grafana MCP, Jam MCP, production reliability, log timeline, and root-cause
+debugging.
+
+`debugging-troubleshooting-system` is a general debugging collection with a
+debugging agent and commands. `production-readiness-toolkit` is a broad
+deployment-readiness checklist. `saas-mcp-starter-pack` includes Sentry as one
+SaaS-builder integration. The closed PR #1050 used a related incident-response
+concept, and the maintainer agent said the concept could be valid but rejected
+that submission because its exact source URLs were unreachable. This entry
+keeps the incident workflow narrow and uses reachable source URLs verified by
+GET requests.
+
+## Disclosure
+
+Editorial collection. No paid placement, affiliate link, or referral link is
+used.
