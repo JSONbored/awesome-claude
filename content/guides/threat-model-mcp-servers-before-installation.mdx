@@ -1,0 +1,207 @@
+---
+title: Threat Model MCP Servers Before Installation
+slug: threat-model-mcp-servers-before-installation
+category: guides
+description: >-
+  A practical pre-installation review workflow for Model Context Protocol
+  servers. Inventory tools, resources, prompts, credentials, network reach,
+  storage, and runtime permissions before connecting a server to Claude or
+  another MCP client.
+cardDescription: Review MCP server trust boundaries before connecting them to Claude.
+seoTitle: Threat Model MCP Servers Before Installation
+seoDescription: >-
+  Threat model MCP servers before installation by reviewing exposed tools,
+  resources, prompts, authorization, credentials, filesystem access, network
+  reach, logs, and rollback controls.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Before installing an MCP server, map every tool, resource, prompt, credential,
+  data source, transport, and side effect. Approve only the minimum permissions
+  needed, isolate the runtime, and keep logs plus rollback steps ready.
+prerequisites:
+  - The MCP server's documentation, package/repository source, config example, and declared tools/resources/prompts.
+  - A list of credentials, files, network services, databases, browsers, or cloud APIs the server will access.
+  - Permission to install the server in an isolated test profile before connecting it to production or personal data.
+  - A rollback plan for removing the server and revoking tokens.
+safetyNotes:
+  - Do not connect an MCP server to sensitive files, production systems, browsers, or cloud credentials until its tool surface and runtime permissions are reviewed.
+  - Treat each exposed tool as code execution or data access according to what it can actually do, not according to the server's marketing category.
+  - Prefer least-privilege credentials, local test data, scoped directories, and explicit human approval for tools with side effects.
+privacyNotes:
+  - MCP servers can expose local files, resources, prompt templates, tool arguments, tool outputs, logs, tokens, and retrieved data to the connected client and model workflow.
+  - Review whether logs, traces, caches, crash reports, browser profiles, or remote APIs retain prompts or tool outputs.
+  - Revoke credentials and delete persisted caches when uninstalling a server that had access to private repositories, databases, or personal files.
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/resources"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://csrc.nist.gov/pubs/sp/800/218/final"
+tags:
+  - mcp
+  - threat-modeling
+  - security
+  - least-privilege
+  - privacy
+  - tools
+  - claude
+keywords:
+  - threat model mcp servers
+  - mcp server security checklist
+  - model context protocol security
+  - safe mcp installation
+  - mcp least privilege
+readingTime: 8
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+An MCP server is not just a plugin. It can expose tools, resources, prompts,
+credentials, local files, network calls, and side effects to an AI workflow.
+Before installation, threat model what the server can read, what it can change,
+where data can leave, and how you will revoke access if something goes wrong.
+
+Use this guide as a pre-flight checklist before adding a new server to Claude
+Code, Claude Desktop, an editor, or any other MCP client.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Server inventory", "description": "Docs, package source, config examples, and declared tools/resources/prompts are available"}
+- [ ] {"task": "Data map", "description": "You know which files, APIs, databases, browsers, or cloud services the server can access"}
+- [ ] {"task": "Test profile", "description": "You can install the server with non-production data before granting sensitive access"}
+- [ ] {"task": "Revocation path", "description": "You know how to remove the server, rotate credentials, and delete persisted state"}
+
+## Core Concepts Explained
+
+### Tools are the action surface
+
+MCP tools are model-callable functions. A harmless-looking server can still
+include tools that write files, run commands, create pull requests, query
+databases, send messages, or call external APIs. Review tools by their real
+side effects.
+
+### Resources are the read surface
+
+Resources expose contextual data to the client. A resource that reads a local
+directory, database table, ticket system, browser profile, or private repository
+can leak sensitive information even if it never writes anything.
+
+### Prompts can shape behavior
+
+MCP prompts are reusable templates. Review prompts for hidden assumptions,
+unsafe instructions, data-sharing requests, or operational steps that conflict
+with your team's policy.
+
+### Authorization is not the whole threat model
+
+Authorization matters, but it is only one boundary. Also review the server's
+package provenance, runtime isolation, logs, storage, network destinations,
+credential scope, and uninstall process.
+
+## Step-by-Step Implementation Guide
+
+1. **Identify the server owner and source.** Record the package name, repository,
+   publisher, documentation URL, license, release history, and how updates are
+   delivered. Avoid installing a server when you cannot identify who maintains
+   it or what code will run.
+
+2. **Inventory every exposed capability.** List tools, resources, prompts, and
+   any startup behavior. For each item, write down whether it reads data, writes
+   data, calls a network service, starts a process, mutates state, or stores
+   output.
+
+3. **Map credentials and scopes.** Note each API key, OAuth grant, token, SSH
+   key, browser session, or cloud credential the server needs. Replace broad
+   credentials with scoped test tokens whenever possible.
+
+4. **Draw the data path.** Track where prompts, tool arguments, tool outputs,
+   resources, logs, traces, cache files, and crash reports can go. Include the
+   MCP client, local disk, remote APIs, observability tools, and any model
+   provider that receives context.
+
+5. **Decide the runtime boundary.** Prefer a dedicated test profile, container,
+   restricted working directory, or separate machine for servers with filesystem,
+   shell, browser, database, or cloud access. Do not begin by mounting your home
+   directory or production credentials.
+
+6. **Review side-effect tools first.** Tools that write files, execute commands,
+   send messages, create tickets, approve changes, publish packages, deploy code,
+   or delete data should require explicit human approval and tight credentials.
+
+7. **Check update and dependency risk.** Review how the package is installed and
+   upgraded. Pin versions for sensitive workflows and avoid automatic updates
+   that can silently expand the server's tool surface.
+
+8. **Run with safe data before real data.** Connect the server to a throwaway
+   repository, test database, or sample directory. Exercise the dangerous tools
+   and inspect logs before adding private or production access.
+
+9. **Document approval and rollback.** Keep a short record of approved tools,
+   granted credentials, known risks, owner, review date, and removal steps. When
+   uninstalling, remove config, delete cached state, and revoke tokens.
+
+## Pre-Install Checklist
+
+- [ ] {"task": "Owner is identifiable", "description": "Maintainer, package, docs, license, and update channel are known"}
+- [ ] {"task": "Tool surface is reviewed", "description": "Every model-callable action has a documented side effect and approval expectation"}
+- [ ] {"task": "Resource surface is reviewed", "description": "Every data source is scoped to the minimum directory, project, or account"}
+- [ ] {"task": "Prompt templates are reviewed", "description": "Prompts do not hide unsafe instructions or request unnecessary data"}
+- [ ] {"task": "Credentials are scoped", "description": "Tokens are least-privilege, revocable, and separate from personal or production secrets"}
+- [ ] {"task": "Runtime is isolated", "description": "The server cannot casually read the whole home directory or unrestricted network"}
+- [ ] {"task": "Logs are understood", "description": "Prompt, argument, output, trace, cache, and crash-report retention is acceptable"}
+- [ ] {"task": "Rollback is tested", "description": "Config removal, cache deletion, and credential revocation steps are known"}
+
+## When to Reject or Delay Installation
+
+Delay installation when:
+
+- The server asks for broad filesystem, shell, browser, cloud, or database access
+  without a narrow use case.
+- The package source, maintainer, release history, or install script cannot be
+  verified.
+- A side-effect tool can publish, deploy, approve, delete, message, or spend
+  money without explicit review.
+- The server requires personal credentials when a scoped service account would
+  work.
+- Logs or traces retain sensitive prompts and cannot be disabled or controlled.
+- You cannot test the server with safe data before using real repositories or
+  production systems.
+
+## Troubleshooting
+
+- **The server needs too much filesystem access**: create a dedicated workspace
+  and expose only that directory.
+- **The server requires a broad API token**: create a lower-privilege token or
+  separate account, then document what the server cannot do.
+- **The tool list changes after an update**: pin the version and repeat the tool
+  inventory before reconnecting it to sensitive data.
+- **You cannot tell where logs go**: keep the server in a test profile until
+  logging, tracing, and cache behavior are understood.
+
+## Duplicate Check
+
+This guide is specifically about pre-installation threat modeling for MCP
+servers. Existing MCP setup and development guides explain how to connect or
+build servers; this entry is distinct because it focuses on deciding whether a
+server should be trusted before it receives files, credentials, network access,
+or production context.
+
+## References
+
+- Model Context Protocol: Tools - https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- Model Context Protocol: Resources - https://modelcontextprotocol.io/specification/2025-06-18/server/resources
+- Model Context Protocol: Prompts - https://modelcontextprotocol.io/specification/2025-06-18/server/prompts
+- Model Context Protocol: Authorization - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- Model Context Protocol: Security best practices - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
+- NIST SP 800-218: Secure Software Development Framework - https://csrc.nist.gov/pubs/sp/800/218/final
