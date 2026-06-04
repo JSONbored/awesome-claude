@@ -879,6 +879,15 @@ function isReviewablePullRequestPayload(payload: Record<string, unknown>) {
   return editedPayloadHasBaseRefChange(payload);
 }
 
+function isReopenedPullRequestEvent(
+  eventName: string,
+  webhook?: Record<string, unknown>,
+) {
+  return (
+    eventName === "pull_request" && String(webhook?.action || "") === "reopened"
+  );
+}
+
 function reviewScanKeyForTarget(target: ReviewTarget) {
   return target.headSha
     ? `${target.headSha}:${target.baseRef || "unknown-base"}`
@@ -1890,7 +1899,7 @@ function duplicateCloseDecision(
     summary: [
       "Summary:",
       `- This submission overlaps an existing or earlier pending content item: ${existingTarget}.`,
-      "- HeyClaude closes duplicate or ambiguous same-source submissions in one shot so the directory does not accumulate redundant listings.",
+      "- HeyClaude closes strict duplicates in one shot so the directory does not accumulate redundant listings.",
       "",
       "Duplicate / History Review:",
       ...match.reasons.map((reason) => `- ${reason}.`),
@@ -2160,7 +2169,15 @@ async function enqueueReviewTarget(
     String(existing?.status || "") === "ignored" &&
     reviewScanKey &&
     existingReviewKey !== reviewScanKey;
-  if (!hasTerminalGateDecision(existing) || shouldResetIgnoredScan) {
+  const shouldResetClosedTerminal =
+    String(existing?.status || "") === "closed" &&
+    (isReopenedPullRequestEvent(eventName, webhook) ||
+      eventName === "scheduled");
+  if (
+    !hasTerminalGateDecision(existing) ||
+    shouldResetIgnoredScan ||
+    shouldResetClosedTerminal
+  ) {
     await upsertPrState(env.SUBMISSION_GATE_DB, {
       repo: target.repoFullName,
       number: target.number,
@@ -2174,8 +2191,8 @@ async function enqueueReviewTarget(
       nextReviewAt: null,
       incrementAttempt: true,
       lastReviewKey: reviewScanKey || undefined,
-      clearVerdict: shouldResetIgnoredScan,
-      clearTerminal: shouldResetIgnoredScan,
+      clearVerdict: shouldResetIgnoredScan || shouldResetClosedTerminal,
+      clearTerminal: shouldResetIgnoredScan || shouldResetClosedTerminal,
     });
   }
   await env.SUBMISSION_REVIEW_QUEUE.send({
@@ -3062,6 +3079,12 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
                 "accepted_history",
                 "rejected_history",
               ],
+              strictDuplicatePolicy:
+                "Only same path, same category+slug, same category+canonical URL/repo, same category+title, or same category+normalized description should block as a duplicate.",
+              relatedContentPolicy:
+                "Cross-category source overlap, same ecosystem/project ownership, and collection-member overlap are related/complementary context, not automatic duplicates.",
+              collectionPolicy:
+                "Collections may bundle existing entries when they add distinct workflow value, ordering, prerequisites, source-backed rationale, and safety/privacy guidance; repeated same-scope collection variants can still close as duplicates.",
             },
           },
         });
@@ -3453,7 +3476,8 @@ async function discoverOpenContentPullRequests(
       repo: target.repoFullName,
       number: target.number,
     });
-    if (hasTerminalGateDecision(state)) continue;
+    const closedTerminalButOpen = String(state?.status || "") === "closed";
+    if (hasTerminalGateDecision(state) && !closedTerminalButOpen) continue;
     const reviewScanKey = reviewScanKeyForTarget(target);
     if (
       state &&
