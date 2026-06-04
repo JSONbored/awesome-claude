@@ -1,0 +1,145 @@
+---
+title: SaaS MCP Starter Pack
+slug: saas-mcp-starter-pack
+category: collections
+description: >-
+  A source-backed Model Context Protocol starter collection for SaaS builders:
+  connect product code, database state, payments, deployment telemetry, issue
+  tracking, and production errors while keeping MCP authorization and tool
+  boundaries explicit.
+cardDescription: >-
+  MCP starter bundle for SaaS builders connecting code, data, billing,
+  deployments, issues, and observability.
+seoTitle: SaaS MCP Starter Pack
+seoDescription: >-
+  A curated collection for SaaS builders adopting MCP servers across GitHub,
+  Supabase, Stripe, Vercel, Linear, Sentry, Postgres, Redis, and security
+  hardening.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices"
+  - "https://docs.claude.com/en/docs/claude-code/mcp"
+installable: false
+usageSnippet: >-
+  Start with MCP setup and security hardening, then add GitHub, Supabase,
+  Stripe, Vercel, Linear, Sentry, Postgres, and Redis as the product needs each
+  integration.
+items:
+  - slug: mcp-setup
+    category: commands
+  - slug: mcp-server-authoring-security-capability-pack
+    category: skills
+  - slug: github-mcp-server
+    category: mcp
+  - slug: supabase-mcp-server
+    category: mcp
+  - slug: stripe-mcp-server
+    category: mcp
+  - slug: vercel-mcp-server
+    category: mcp
+  - slug: linear-mcp-server
+    category: mcp
+  - slug: sentry-mcp-server
+    category: mcp
+  - slug: postgresql-mcp-server
+    category: mcp
+  - slug: redis-mcp-server
+    category: mcp
+installationOrder:
+  - mcp-setup
+  - mcp-server-authoring-security-capability-pack
+  - github-mcp-server
+  - supabase-mcp-server
+  - postgresql-mcp-server
+  - redis-mcp-server
+  - stripe-mcp-server
+  - vercel-mcp-server
+  - linear-mcp-server
+  - sentry-mcp-server
+estimatedSetupTime: 70 minutes
+difficulty: intermediate
+prerequisites:
+  - Claude Code with MCP support enabled and a project where external tools are approved by the team.
+  - Least-privilege tokens for each SaaS service before connecting write-capable MCP servers.
+  - A written list of which environments each MCP server may read or modify.
+safetyNotes:
+  - "This collection is an index; it runs nothing itself, but several linked MCP servers can read or write production SaaS data."
+  - "Install read-only or sandbox-scoped credentials first, then expand permissions only after testing approval boundaries."
+  - "Review each linked entry's own safety notes before enabling write, billing, deployment, or issue-tracker actions."
+privacyNotes:
+  - "The collection stores no data itself; connected MCP servers may expose repository, customer, billing, deployment, and incident metadata."
+  - "Private SaaS records follow the credentials configured for each MCP server."
+  - "Avoid sharing transcripts that include MCP tool results from customer, billing, or production systems."
+tags:
+  - mcp
+  - saas
+  - product-engineering
+  - integrations
+  - observability
+keywords:
+  - saas mcp starter pack
+  - mcp collection for saas builders
+  - claude code mcp workflow
+  - product engineering mcp bundle
+---
+
+## What this collection sets up
+
+This collection gives a SaaS team a practical first MCP stack: local setup and
+security discipline, then the product systems a builder usually needs during
+implementation and support. It favors explicit service boundaries over a single
+all-powerful integration.
+
+## Layers
+
+### 1. Setup and security boundaries
+
+- **mcp-setup** gives Claude Code users a focused MCP setup workflow.
+- **mcp-server-authoring-security-capability-pack** keeps tool schemas,
+  authentication, approval, and prompt-injection boundaries visible before new
+  servers are trusted.
+
+### 2. Product code and data
+
+- **github-mcp-server** connects repository and pull request context.
+- **supabase-mcp-server**, **postgresql-mcp-server**, and **redis-mcp-server**
+  cover the common database and cache layer for SaaS products.
+
+### 3. Business workflow and operations
+
+- **stripe-mcp-server** supports billing and subscription context.
+- **vercel-mcp-server** connects deployment and hosting operations.
+- **linear-mcp-server** maps implementation work back to product issues.
+- **sentry-mcp-server** closes the loop with production errors and debugging
+  context.
+
+## Suggested order
+
+Start with setup and security, then connect code and data systems, then add
+billing, deployment, issue tracking, and observability. Use sandbox or read-only
+credentials until the team is comfortable with the prompts, tool approval flow,
+and audit trail.
+
+## Source and references
+
+- Model Context Protocol specification: https://modelcontextprotocol.io/specification/2025-06-18/
+- MCP security best practices: https://modelcontextprotocol.io/specification/2025-06-18/basic/security_best_practices
+- Claude Code MCP documentation: https://docs.claude.com/en/docs/claude-code/mcp
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `saas-mcp-starter-pack`, SaaS MCP starter, MCP
+starter pack, product engineering MCP, and SaaS builder collection. Existing
+collections cover backend, API, AWS, data engineering, productivity, and secure
+workstations, but none is a SaaS-focused MCP starter pack with setup, security,
+code, data, billing, deployment, issues, and observability.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
