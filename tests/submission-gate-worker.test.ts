@@ -410,6 +410,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
+    expect(source).toContain(
+      "Public directory index fetch failed during duplicate scan",
+    );
+    expect(source).toContain("acceptedContentSignals({\n      env: params.env");
+    expect(source).not.toContain("getRepositoryBlobText({");
+    expect(source).not.toContain("getRepositoryTree({");
     expect(source).toContain("function ignoreOutOfScopeReviewTarget");
     expect(source).toContain(
       "Skipped because this PR no longer targets the configured content gate base.",
@@ -858,9 +864,23 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(source).toContain("async function sweepSubmissionQueue");
     expect(source).toContain("listDuePrStates(env.SUBMISSION_GATE_DB");
+    expect(source).toContain("async function discoverOpenContentPullRequests");
+    expect(source).toContain("OPEN_PR_DISCOVERY_LIMIT");
+    expect(source).toContain("listOpenPullRequests({");
+    expect(source).toContain("scheduled-discovery-");
+    expect(source).toContain(
+      "await applyUnderReviewToTarget(env, target, reviewScope)",
+    );
     expect(source).toContain('"validation_pending"');
     expect(source).toContain('"merge_pending"');
     expect(source).toContain('"error_retryable"');
+    expect(source).toContain("function retryDelayForError");
+    expect(source).toContain("isGitHubRateLimitError(error)");
+    expect(source).toContain("githubRetryDelaySeconds(error");
+    expect(source).toContain("nextReviewForError(error)");
+    expect(source).toContain(
+      "message.retry({ delaySeconds: retryDelayForError(error) })",
+    );
     expect(source).toContain("scheduled(_controller, env, ctx)");
     expect(source).toContain("ctx.waitUntil(sweepSubmissionQueue(env))");
     expect(wranglerConfig).toContain('"triggers"');
@@ -876,6 +896,20 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
+  });
+
+  it("records pull request inspection failures before returning from webhooks", () => {
+    const source = readWorkerSource();
+    const webhookIndex = source.indexOf("async function githubWebhookRoute");
+    const webhookSource = source.slice(webhookIndex);
+
+    expect(source).toContain("async function recordRetryableTargetError");
+    expect(webhookSource).toContain(
+      "await recordRetryableTargetError(env, target, deliveryId, error)",
+    );
+    expect(webhookSource).toContain("reason: isGitHubRateLimitError(error)");
+    expect(webhookSource).toContain('"github_rate_limited"');
+    expect(webhookSource).toContain('"inspection_retryable"');
   });
 
   it("merges accepted direct content PRs instead of creating import PRs", () => {
@@ -1171,6 +1205,46 @@ docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
           ]),
         },
       ],
+    );
+  });
+
+  it("treats same canonical project across different categories as related context", () => {
+    const existingMcp = extractContentDuplicateSignals({
+      filePath: "content/mcp/langchain-mcp-server.mdx",
+      content: `---
+title: LangChain MCP Server
+slug: langchain-mcp-server
+category: mcp
+description: MCP integration for LangChain workflows.
+repoUrl: "https://github.com/langchain-ai/langchain"
+---
+`,
+    });
+    const candidateSkill = extractContentDuplicateSignals({
+      filePath: "content/skills/langchain-agent-patterns.mdx",
+      content: `---
+title: LangChain Agent Patterns Skill
+slug: langchain-agent-patterns
+category: skills
+description: Claude skill for applying LangChain agent patterns.
+repoUrl: "https://github.com/langchain-ai/langchain.git"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidateSkill, [existingMcp]),
+    ).toBeNull();
+    expect(findRelatedContentMatches(candidateSkill, [existingMcp])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://github.com/langchain-ai/langchain across skills/mcp",
+            ),
+          ]),
+        }),
+      ]),
     );
   });
 

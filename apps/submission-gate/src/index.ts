@@ -28,12 +28,12 @@ import {
   createUserForkContentPr,
   exchangeGitHubUserCode,
   getCommitValidationState,
+  githubRetryDelaySeconds,
   getInstallationToken,
   getPullRequest,
   getRepositoryInstallationId,
-  getRepositoryBlobText,
   getRepositoryFileContent,
-  getRepositoryTree,
+  isGitHubRateLimitError,
   listOpenPullRequests,
   listPullRequestFiles,
   listPullRequestsForCommit,
@@ -151,8 +151,10 @@ const QUEUED_STALE_SECONDS = 60;
 const REVIEWING_STALE_SECONDS = 180;
 const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
+const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
 const SWEEP_LIMIT = 25;
+const OPEN_PR_DISCOVERY_LIMIT = 25;
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
   "agents",
   "collections",
@@ -359,6 +361,17 @@ function nextReviewForStatus(status: string) {
     return isoAfter(RETRYABLE_ERROR_SECONDS);
   }
   return null;
+}
+
+function retryDelayForError(error: unknown) {
+  if (isGitHubRateLimitError(error)) {
+    return githubRetryDelaySeconds(error, GITHUB_RATE_LIMIT_FALLBACK_SECONDS);
+  }
+  return RETRYABLE_ERROR_SECONDS;
+}
+
+function nextReviewForError(error: unknown) {
+  return isoAfter(retryDelayForError(error));
 }
 
 function normalizeOneShotDecision(decision: GateDecision): GateDecision {
@@ -1851,49 +1864,77 @@ function protectedEditCloseDecision(changedFields: string[]): GateDecision {
   };
 }
 
-async function acceptedContentSignals(params: {
-  token: string;
-  repo: ReturnType<typeof parseRepo>;
-  baseRef: string;
-  currentFilePath: string;
-  apiVersion?: string;
-}) {
-  const tree = await getRepositoryTree({
-    token: params.token,
-    repo: params.repo,
-    ref: params.baseRef,
-    recursive: true,
-    apiVersion: params.apiVersion,
-  });
-  if (tree.truncated) {
-    throw new Error("GitHub content tree was truncated during duplicate scan.");
+function publicSiteUrl(env: Env) {
+  let url = env.PUBLIC_SITE_URL || "https://heyclau.de";
+  while (url.endsWith("/")) url = url.slice(0, -1);
+  return url;
+}
+
+function yamlScalar(value: unknown) {
+  return JSON.stringify(String(value || ""));
+}
+
+function contentSignalSourceFromDirectoryEntry(entry: Record<string, unknown>) {
+  const lines = [
+    "---",
+    `title: ${yamlScalar(entry.title)}`,
+    `description: ${yamlScalar(entry.description)}`,
+    `category: ${yamlScalar(entry.category)}`,
+    `slug: ${yamlScalar(entry.slug)}`,
+  ];
+  for (const [field, value] of [
+    ["documentationUrl", entry.documentationUrl],
+    ["downloadUrl", entry.downloadUrl],
+    ["repoUrl", entry.repoUrl],
+    ["websiteUrl", entry.websiteUrl],
+  ] as const) {
+    if (value) lines.push(`${field}: ${yamlScalar(value)}`);
   }
-  const contentFiles = (tree.tree || []).filter(
-    (item) =>
-      item.type === "blob" &&
-      item.sha &&
-      /^content\/[^/]+\/[^/]+\.mdx$/i.test(String(item.path || "")),
-  );
-  const signals: ContentDuplicateSignals[] = [];
-  for (const item of contentFiles) {
-    const filePath = String(item.path || "");
-    if (filePath === params.currentFilePath) continue;
-    const content = await getRepositoryBlobText({
-      token: params.token,
-      repo: params.repo,
-      sha: String(item.sha),
-      apiVersion: params.apiVersion,
-    });
-    signals.push(
-      extractContentDuplicateSignals({
-        filePath,
-        content,
-        label: `accepted entry ${filePath}`,
-        url: `https://github.com/${params.repo.owner}/${params.repo.repo}/blob/${params.baseRef}/${filePath}`,
-      }),
+  lines.push("---", "");
+  return lines.join("\n");
+}
+
+async function acceptedContentSignals(params: {
+  env: Env;
+  currentFilePath: string;
+}) {
+  const siteUrl = publicSiteUrl(params.env);
+  const response = await fetch(`${siteUrl}/data/directory-index.json`, {
+    headers: { accept: "application/json" },
+    signal: AbortSignal.timeout(10_000),
+  });
+  if (!response.ok) {
+    throw new Error(
+      `Public directory index fetch failed during duplicate scan: ${response.status}.`,
     );
   }
-  return signals;
+  const payload = (await response.json().catch(() => null)) as {
+    entries?: Array<Record<string, unknown>>;
+  } | null;
+  const entries = Array.isArray(payload?.entries) ? payload.entries : [];
+  return entries
+    .map((entry) => {
+      const category = String(entry.category || "").trim();
+      const slug = String(entry.slug || "").trim();
+      if (!category || !slug) return null;
+      const filePath = `content/${category}/${slug}.mdx`;
+      return { entry, filePath };
+    })
+    .filter(
+      (item): item is { entry: Record<string, unknown>; filePath: string } =>
+        Boolean(item),
+    )
+    .filter(({ filePath }) => filePath !== params.currentFilePath)
+    .map(({ entry, filePath }) =>
+      extractContentDuplicateSignals({
+        filePath,
+        content: contentSignalSourceFromDirectoryEntry(entry),
+        label: `accepted entry ${filePath}`,
+        url:
+          String(entry.canonicalUrl || "") ||
+          `${siteUrl}/entry/${String(entry.category)}/${String(entry.slug)}`,
+      }),
+    );
 }
 
 function isEarlierPullRequest(
@@ -1988,11 +2029,8 @@ async function deterministicContentPrecheck(params: {
   });
   const existing = [
     ...(await acceptedContentSignals({
-      token: params.token,
-      repo: params.repo,
-      baseRef,
+      env: params.env,
       currentFilePath: params.scope.filePath,
-      apiVersion: params.env.GITHUB_API_VERSION,
     })),
     ...(await earlierOpenContentPrSignals({
       token: params.token,
@@ -2006,7 +2044,7 @@ async function deterministicContentPrecheck(params: {
   return {
     content: candidateContent,
     decision: duplicateCloseDecision(
-      duplicateReview.legacyDuplicate,
+      duplicateReview.strictDuplicate,
       candidate,
     ),
     duplicateReview: summarizeDuplicateReview(duplicateReview),
@@ -2057,6 +2095,31 @@ async function enqueueReviewTarget(
     payload: { eventName, deliveryId, target, webhook, forceRecheck },
   });
   return true;
+}
+
+async function recordRetryableTargetError(
+  env: Env,
+  target: ReviewTarget,
+  deliveryId: string,
+  error: unknown,
+) {
+  await upsertPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+    headRepo: target.headRepo,
+    headRef: target.headRef,
+    headSha: target.headSha,
+    baseRef: target.baseRef || contentGateBaseRef(env),
+    installationId: target.installationId,
+    status: "error_retryable",
+    nextReviewAt: nextReviewForError(error),
+    lastError: truncateForQueue(
+      error instanceof Error ? error.message : String(error),
+    ),
+    deliveryId,
+    clearVerdict: true,
+    clearTerminal: true,
+  });
 }
 
 function targetsFromWebhookPullRefs(
@@ -2233,10 +2296,22 @@ async function githubWebhookRoute(
     if (!shouldInspect) {
       return json({ ok: true, ignored: true, reason: "already_reviewed" });
     }
-    const reviewability = await directContentReviewabilityForTarget(
-      env,
-      target,
-    );
+    let reviewability: Awaited<
+      ReturnType<typeof directContentReviewabilityForTarget>
+    >;
+    try {
+      reviewability = await directContentReviewabilityForTarget(env, target);
+    } catch (error) {
+      await recordRetryableTargetError(env, target, deliveryId, error);
+      return json({
+        ok: true,
+        queued: false,
+        retryScheduled: true,
+        reason: isGitHubRateLimitError(error)
+          ? "github_rate_limited"
+          : "inspection_retryable",
+      });
+    }
     if (reviewability.kind === "ignore") {
       await recordReviewedScanKey({
         env,
@@ -2264,10 +2339,22 @@ async function githubWebhookRoute(
   if (eventName === "issue_comment") {
     const target = await targetFromIssueCommentRecheck(env, payload);
     if (!target) return json({ ok: true, ignored: true });
-    const reviewability = await directContentReviewabilityForTarget(
-      env,
-      target,
-    );
+    let reviewability: Awaited<
+      ReturnType<typeof directContentReviewabilityForTarget>
+    >;
+    try {
+      reviewability = await directContentReviewabilityForTarget(env, target);
+    } catch (error) {
+      await recordRetryableTargetError(env, target, deliveryId, error);
+      return json({
+        ok: true,
+        queued: false,
+        retryScheduled: true,
+        reason: isGitHubRateLimitError(error)
+          ? "github_rate_limited"
+          : "inspection_retryable",
+      });
+    }
     if (reviewability.kind === "ignore") {
       return json({ ok: true, ignored: true, reason: reviewability.reason });
     }
@@ -2290,10 +2377,15 @@ async function githubWebhookRoute(
     const targets = await targetsFromValidationWebhook(env, eventName, payload);
     let queued = 0;
     for (const target of targets) {
-      const reviewability = await directContentReviewabilityForTarget(
-        env,
-        target,
-      );
+      let reviewability: Awaited<
+        ReturnType<typeof directContentReviewabilityForTarget>
+      >;
+      try {
+        reviewability = await directContentReviewabilityForTarget(env, target);
+      } catch (error) {
+        await recordRetryableTargetError(env, target, deliveryId, error);
+        continue;
+      }
       if (reviewability.kind === "ignore") continue;
       if (
         await enqueueReviewTarget(env, target, deliveryId, eventName, payload)
@@ -2569,7 +2661,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             baseRef: target.baseRef || contentGateBaseRef(env),
             installationId: target.installationId,
             status: "error_retryable",
-            nextReviewAt: nextReviewForStatus("error_retryable"),
+            nextReviewAt: nextReviewForError(error),
             lastError: truncateForQueue(
               error instanceof Error ? error.message : String(error),
             ),
@@ -3138,7 +3230,7 @@ async function recordRetryableQueueError(
     baseRef: target.baseRef || contentGateBaseRef(env),
     installationId: target.installationId,
     status: "error_retryable",
-    nextReviewAt: nextReviewForStatus("error_retryable"),
+    nextReviewAt: nextReviewForError(error),
     lastError: truncateForQueue(errorMessage),
     deliveryId: String(message.payload.deliveryId || ""),
     clearVerdict: true,
@@ -3173,7 +3265,122 @@ async function sweepSubmissionQueue(env: Env) {
       queued += 1;
     }
   }
-  return { scanned: rows.length, queued };
+  const discovered = await discoverOpenContentPullRequests(env, queued);
+  return { scanned: rows.length, queued, discovered };
+}
+
+async function discoverOpenContentPullRequests(
+  env: Env,
+  alreadyQueued: number,
+) {
+  if (alreadyQueued >= OPEN_PR_DISCOVERY_LIMIT) return 0;
+  const repo = parseRepo(env.PUBLIC_REPO);
+  let installationId = 0;
+  try {
+    installationId = await getRepositoryInstallationId({
+      appId: env.GITHUB_APP_ID,
+      privateKeyPem: env.GITHUB_APP_PRIVATE_KEY,
+      repo,
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+  } catch (error) {
+    console.warn(
+      "submission gate open PR discovery could not resolve installation",
+      {
+        error,
+      },
+    );
+    return 0;
+  }
+  let token = "";
+  try {
+    token = await installationTokenForInstallationId(env, installationId);
+  } catch (error) {
+    console.warn(
+      "submission gate open PR discovery could not create installation token",
+      { error },
+    );
+    return 0;
+  }
+  if (!token) return 0;
+
+  let pulls: Awaited<ReturnType<typeof listOpenPullRequests>>;
+  try {
+    pulls = await listOpenPullRequests({
+      token,
+      repo,
+      baseRef: contentGateBaseRef(env),
+      apiVersion: env.GITHUB_API_VERSION,
+    });
+  } catch (error) {
+    console.warn("submission gate open PR discovery could not list PRs", {
+      error,
+    });
+    return 0;
+  }
+
+  let discovered = 0;
+  for (const pull of pulls) {
+    if (discovered + alreadyQueued >= OPEN_PR_DISCOVERY_LIMIT) break;
+    if (pull.draft) continue;
+    const target = reviewTargetFromPullRecord(pull, installationId);
+    if (!target || target.baseRef !== contentGateBaseRef(env)) continue;
+    const state = await getPrState(env.SUBMISSION_GATE_DB, {
+      repo: target.repoFullName,
+      number: target.number,
+    });
+    if (hasTerminalGateDecision(state)) continue;
+    const reviewScanKey = reviewScanKeyForTarget(target);
+    if (
+      state &&
+      String(state.status || "") !== "error_retryable" &&
+      (!reviewScanKey || String(state.lastReviewKey || "") === reviewScanKey)
+    ) {
+      continue;
+    }
+
+    let reviewability: Awaited<
+      ReturnType<typeof directContentReviewabilityForTarget>
+    >;
+    try {
+      reviewability = await directContentReviewabilityForTarget(env, target);
+    } catch (error) {
+      await recordRetryableTargetError(
+        env,
+        target,
+        `scheduled-discovery-${Date.now()}-${target.number}`,
+        error,
+      );
+      continue;
+    }
+    if (reviewability.kind === "ignore") {
+      await recordReviewedScanKey({
+        env,
+        target,
+        deliveryId: `scheduled-discovery-${Date.now()}-${target.number}`,
+        status: "ignored",
+      });
+      continue;
+    }
+    const reviewScope =
+      reviewability.kind === "review" ? reviewability.scope : undefined;
+    const deliveryId = `scheduled-discovery-${Date.now()}-${target.number}`;
+    try {
+      await applyUnderReviewToTarget(env, target, reviewScope);
+      const queued = await enqueueReviewTarget(
+        env,
+        target,
+        deliveryId,
+        "scheduled",
+        undefined,
+        false,
+      );
+      if (queued) discovered += 1;
+    } catch (error) {
+      await recordRetryableTargetError(env, target, deliveryId, error);
+    }
+  }
+  return discovered;
 }
 
 function hasInternalBearer(request: Request, env: Env) {
@@ -3339,7 +3546,7 @@ export default {
         } else {
           await recordRetryableQueueError(env, body, error);
           console.error("submission gate queue failure", error);
-          message.retry({ delaySeconds: RETRYABLE_ERROR_SECONDS });
+          message.retry({ delaySeconds: retryDelayForError(error) });
         }
       }
     }

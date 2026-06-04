@@ -327,7 +327,11 @@ export function findStrictContentDuplicateMatch(
     }
 
     const sharedUrls = intersection(candidate.urls, existing.urls);
-    if (sharedUrls.length && !isCollectionBridge(candidate, existing)) {
+    if (
+      sharedUrls.length &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
       reasons.push(`same canonical source URL ${sharedUrls[0]}`);
     }
 
@@ -343,6 +347,8 @@ export function findStrictContentDuplicateMatch(
     const sharedDomains = intersection(candidate.domains, existing.domains);
     if (
       sharedDomains.length &&
+      candidate.category &&
+      candidate.category === existing.category &&
       candidate.normalizedTitle &&
       candidate.normalizedTitle === existing.normalizedTitle
     ) {
@@ -365,9 +371,11 @@ export function findRelatedContentMatches(
     if (candidate.filePath === existing.filePath) continue;
 
     const sharedUrls = intersection(candidate.urls, existing.urls);
-    if (sharedUrls.length && isCollectionBridge(candidate, existing)) {
+    if (sharedUrls.length && candidate.category !== existing.category) {
       reasons.push(
-        `same canonical source URL ${sharedUrls[0]} across collection/resource categories`,
+        isCollectionBridge(candidate, existing)
+          ? `same canonical source URL ${sharedUrls[0]} across collection/resource categories`
+          : `same canonical source URL ${sharedUrls[0]} across ${candidate.category}/${existing.category}`,
       );
     }
 

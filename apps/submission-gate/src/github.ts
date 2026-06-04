@@ -64,14 +64,62 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
   },
 };
 
-class GitHubApiError extends Error {
+export class GitHubApiError extends Error {
   status: number;
+  rateLimitRemaining: number | null;
+  rateLimitResetAt: string | null;
+  retryAfterSeconds: number | null;
 
-  constructor(status: number, message: string) {
+  constructor(
+    status: number,
+    message: string,
+    options: {
+      rateLimitRemaining?: number | null;
+      rateLimitResetAt?: string | null;
+      retryAfterSeconds?: number | null;
+    } = {},
+  ) {
     super(message);
     this.name = "GitHubApiError";
     this.status = status;
+    this.rateLimitRemaining = options.rateLimitRemaining ?? null;
+    this.rateLimitResetAt = options.rateLimitResetAt ?? null;
+    this.retryAfterSeconds = options.retryAfterSeconds ?? null;
   }
+}
+
+function parseNumericHeader(value: string | null) {
+  if (!value) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+export function isGitHubRateLimitError(error: unknown) {
+  if (!(error instanceof GitHubApiError)) return false;
+  return (
+    error.status === 403 &&
+    (error.rateLimitRemaining === 0 ||
+      /rate limit exceeded|secondary rate limit/i.test(error.message))
+  );
+}
+
+export function githubRetryDelaySeconds(
+  error: unknown,
+  fallbackSeconds: number,
+) {
+  if (!(error instanceof GitHubApiError)) return fallbackSeconds;
+  if (error.retryAfterSeconds && error.retryAfterSeconds > 0) {
+    return Math.max(fallbackSeconds, error.retryAfterSeconds);
+  }
+  if (error.rateLimitResetAt) {
+    const resetDelaySeconds = Math.ceil(
+      (Date.parse(error.rateLimitResetAt) - Date.now()) / 1000,
+    );
+    if (Number.isFinite(resetDelaySeconds) && resetDelaySeconds > 0) {
+      return Math.max(fallbackSeconds, resetDelaySeconds + 30);
+    }
+  }
+  return fallbackSeconds;
 }
 
 export type GitHubRepo = {
@@ -175,9 +223,24 @@ export async function githubJson<T>(
     }
   }
   if (!response.ok) {
+    const resetSeconds = parseNumericHeader(
+      response.headers.get("x-ratelimit-reset"),
+    );
+    const resetAt = resetSeconds
+      ? new Date(resetSeconds * 1000).toISOString()
+      : null;
     throw new GitHubApiError(
       response.status,
       `GitHub API ${response.status}: ${payload?.message || text}`,
+      {
+        rateLimitRemaining: parseNumericHeader(
+          response.headers.get("x-ratelimit-remaining"),
+        ),
+        rateLimitResetAt: resetAt,
+        retryAfterSeconds: parseNumericHeader(
+          response.headers.get("retry-after"),
+        ),
+      },
     );
   }
   if (text && !payload) {
