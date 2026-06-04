@@ -1,0 +1,109 @@
+---
+title: Git Upstream Drift Statusline
+slug: git-upstream-drift-statusline
+category: statuslines
+description: Git statusline that shows branch hygiene by comparing the current branch with its upstream and surfacing ahead, behind, and no-upstream states.
+cardDescription: Show ahead, behind, and missing-upstream branch drift.
+seoTitle: Git upstream drift statusline for Claude Code
+seoDescription: Add a Claude Code statusline that uses Git upstream comparison to show branch hygiene, ahead commits, behind commits, and missing tracking branches.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://git-scm.com/docs/git-rev-list"
+tags:
+  - git
+  - branch
+  - drift
+  - claude-code
+keywords:
+  - upstream drift statusline
+  - branch hygiene statusline
+  - git ahead behind
+  - git rev-list statusline
+installable: true
+usageSnippet: "branch: feature/login | ahead 2 | behind 1 | sync"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-upstream-drift-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-upstream-drift-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "branch: no repository"
+    exit 0
+  fi
+
+  branch=$(git branch --show-current 2>/dev/null)
+  if [ -z "$branch" ]; then
+    echo "branch: detached | review"
+    exit 0
+  fi
+
+  upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null || true)
+  if [ -z "$upstream" ]; then
+    printf 'branch: %s | no upstream | publish\n' "$branch"
+    exit 0
+  fi
+
+  counts=$(git rev-list --left-right --count "$upstream...HEAD" 2>/dev/null || echo "0 0")
+  behind=$(printf '%s' "$counts" | awk '{ print $1 + 0 }')
+  ahead=$(printf '%s' "$counts" | awk '{ print $2 + 0 }')
+
+  if [ "$behind" -gt 0 ] && [ "$ahead" -gt 0 ]; then
+    state="sync"
+  elif [ "$behind" -gt 0 ]; then
+    state="pull"
+  elif [ "$ahead" -gt 0 ]; then
+    state="push"
+  else
+    state="current"
+  fi
+
+  printf 'branch: %s | ahead %s | behind %s | %s\n' "$branch" "$ahead" "$behind" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Git installed and a branch with a configured upstream for full drift reporting.
+  - Network access is not required unless another process fetches remote refs before the statusline runs.
+  - A refresh strategy for teams that want fetched remote state rather than only local remote-tracking refs.
+safetyNotes:
+  - The script does not fetch, pull, push, rebase, or merge; it only reads local Git refs.
+  - Behind counts may be stale until a separate fetch updates remote-tracking refs.
+  - Treat divergent branches as a review cue before force-pushes, rebases, or release branches.
+privacyNotes:
+  - Branch names and upstream names can reveal ticket IDs, customer labels, or release names in screenshots.
+  - The script reads local Git metadata and does not print commit messages or file paths.
+  - Remote URLs are not printed, but shell wrappers around Git may add logging outside this script.
+---
+
+## Source notes
+
+- Git `rev-list --left-right --count` is documented for counting commits on each side of a revision range.
+- The statusline combines that count with Git's upstream tracking ref so branch drift is visible before opening or updating a PR.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `git-upstream-drift-statusline`, branch hygiene, upstream drift, ahead behind, and Git branch statuslines. Existing Git entries are adjacent, but this one is specifically about upstream drift and tracking-branch hygiene.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
