@@ -1,0 +1,109 @@
+---
+title: Git Worktree Risk Statusline
+slug: git-worktree-risk-statusline
+category: statuslines
+description: Git statusline that turns porcelain worktree state into a concise risk signal for conflicts, staged changes, unstaged edits, and untracked files.
+cardDescription: Show dirty worktree risk from Git porcelain status counts.
+seoTitle: Git worktree risk statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes Git dirty worktree risk using porcelain status, conflict markers, staged changes, and untracked files.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://git-scm.com/docs/git-status"
+tags:
+  - git
+  - worktree
+  - review
+  - claude-code
+keywords:
+  - git worktree risk
+  - dirty worktree statusline
+  - git porcelain status
+  - conflict statusline
+installable: true
+usageSnippet: "git: main | risk high | staged 2 | dirty 4 | untracked 1"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-worktree-risk-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-worktree-risk-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "git: no repository"
+    exit 0
+  fi
+
+  branch=$(git branch --show-current 2>/dev/null)
+  if [ -z "$branch" ]; then
+    branch="detached"
+  fi
+
+  status=$(git status --porcelain=v1 2>/dev/null)
+  if [ -z "$status" ]; then
+    printf 'git: %s | clean\n' "$branch"
+    exit 0
+  fi
+
+  staged=$(printf '%s\n' "$status" | awk 'substr($0,1,1) ~ /[MADRC]/ { count++ } END { print count + 0 }')
+  dirty=$(printf '%s\n' "$status" | awk 'substr($0,2,1) ~ /[MD]/ { count++ } END { print count + 0 }')
+  untracked=$(printf '%s\n' "$status" | awk 'substr($0,1,2) == "??" { count++ } END { print count + 0 }')
+  conflicts=$(printf '%s\n' "$status" | awk 'substr($0,1,2) ~ /^(UU|AA|DD|AU|UA|DU|UD)$/ { count++ } END { print count + 0 }')
+
+  if [ "$conflicts" -gt 0 ]; then
+    risk="blocked"
+  elif [ "$dirty" -gt 5 ] || [ "$staged" -gt 10 ]; then
+    risk="high"
+  elif [ "$dirty" -gt 0 ] || [ "$untracked" -gt 0 ]; then
+    risk="watch"
+  else
+    risk="review"
+  fi
+
+  printf 'git: %s | risk %s | staged %s | dirty %s | untracked %s\n' "$branch" "$risk" "$staged" "$dirty" "$untracked"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Git installed and available on PATH.
+  - The statusline command runs inside a Git worktree or exits with a no-repository message.
+  - jq is not required for this script because it only reads Git state.
+safetyNotes:
+  - The signal is a review aid, not a replacement for inspecting the diff before commits, rebases, or merges.
+  - Large repositories can make frequent Git status calls expensive; use a slower statusline refresh if needed.
+  - Conflict counts should stop automated edits until a human reviews the affected files.
+privacyNotes:
+  - The script reads local repository status and branch names but does not print file paths or diff contents.
+  - Branch names can reveal ticket IDs, customer names, or incident labels in terminal screenshots.
+  - Git hooks or shell wrappers around Git commands may add behavior outside this statusline script.
+---
+
+## Source notes
+
+- Git's `status --porcelain=v1` documentation defines a stable short format for scripts.
+- This statusline uses only counts and a branch label so it stays concise while still warning about conflicted or noisy worktrees.
+
+## Duplicate check
+
+Checked `content/statuslines/`, live HeyClaude statuslines, open pull requests, and repository content for `git-worktree-risk-statusline`, `git status statusline`, dirty worktree, porcelain status, and conflict statuslines. The existing Git status entry is adjacent, but this one is risk-scored around staged, unstaged, untracked, and conflicted states.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
