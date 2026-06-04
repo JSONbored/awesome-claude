@@ -24,7 +24,62 @@ websiteUrl: "https://www.shellcheck.net/"
 documentationUrl: "https://github.com/koalaman/shellcheck/wiki"
 repoUrl: "https://github.com/koalaman/shellcheck"
 installable: true
-installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/shellcheck-static-analysis.sh && chmod +x .claude/hooks/shellcheck-static-analysis.sh"
+installCommand: |-
+  mkdir -p .claude/hooks
+  hook_path=.claude/hooks/shellcheck-static-analysis.sh
+  tmp_path="$(mktemp "${hook_path}.tmp.XXXXXX")" || exit 1
+  cat > "$tmp_path" <<'SHELLCHECK_STATIC_ANALYSIS_HOOK'
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+    exit 0
+  fi
+
+  case "$file_path" in
+    *.sh|*.bash|*.bats|*.ksh) ;;
+    *)
+      first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+      case "$first_line" in
+        '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*) ;;
+        *) exit 0 ;;
+      esac
+      ;;
+  esac
+
+  if ! command -v shellcheck >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: install shellcheck to enable shell diagnostics." >&2
+    exit 0
+  fi
+
+  echo "ShellCheck hook: checking $file_path" >&2
+  shellcheck --format=gcc "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "ShellCheck hook: diagnostics found. Review quoting, expansion, portability, and error-handling issues before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+  SHELLCHECK_STATIC_ANALYSIS_HOOK
+  chmod 755 "$tmp_path"
+  rm -f -- "$hook_path"
+  mv -- "$tmp_path" "$hook_path"
 usageSnippet: >-
   Install ShellCheck locally, save the script as
   `.claude/hooks/shellcheck-static-analysis.sh`, and configure it as a
