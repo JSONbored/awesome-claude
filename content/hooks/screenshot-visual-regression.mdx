@@ -1,0 +1,207 @@
+---
+title: Screenshot Visual Regression - Claude Code Hook
+slug: screenshot-visual-regression
+category: hooks
+description: >-
+  PostToolUse hook that catches unintended UI changes by pixel-diffing a
+  just-saved screenshot against its baseline with odiff. When a PNG lands in a
+  screenshots or snapshots directory, the hook finds the matching baseline,
+  compares the two images, writes a diff image when they differ, and reports the
+  pixel-difference summary so a visual regression is surfaced the moment the
+  screenshot is updated. Advisory only; it never overwrites the screenshot or
+  the baseline.
+cardDescription: >-
+  Pixel-diff a new screenshot against its baseline with odiff and report visual
+  regressions.
+seoTitle: Screenshot Visual Regression - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that pixel-diffs a new screenshot against its
+  baseline with odiff and reports visual regressions.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/dmtrKovalenko/odiff"
+repoUrl: "https://github.com/dmtrKovalenko/odiff"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/screenshot-visual-regression.sh && chmod +x
+  .claude/hooks/screenshot-visual-regression.sh
+usageSnippet: "Visual regression: home.png differs from its baseline (Different pixels: 1840, 2.1%)"
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/screenshot-visual-regression.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/screenshot-visual-regression.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. Pixel-diffs a just-saved screenshot against its
+  # baseline using odiff and reports a visual regression. Advisory only - it
+  # always exits 0, never overwrites the screenshot or baseline - and fails open
+  # when jq or odiff is unavailable.
+
+  command -v jq >/dev/null 2>&1 || exit 0
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+
+  # Only act on PNG screenshots saved in a visual-test location.
+  case "$FILE" in
+    *.png) : ;;
+    *) exit 0 ;;
+  esac
+  case "$FILE" in
+    *screenshots/*|*snapshots/*|*__snapshots__/*|*__screenshots__/*|*/visual/*) : ;;
+    *) exit 0 ;;
+  esac
+  [ -f "$FILE" ] || exit 0
+
+  dir=$(dirname "$FILE")
+  base=$(basename "$FILE")
+
+  baseline=""
+  for c in "$dir/baseline/$base" "$dir/baselines/$base" "$dir/__baselines__/$base" "${FILE%.png}.baseline.png"; do
+    [ -f "$c" ] && { baseline="$c"; break; }
+  done
+
+  if [ -z "$baseline" ]; then
+    echo "Visual regression: no baseline found for $FILE - if this is the intended reference, save it as the baseline." >&2
+    exit 0
+  fi
+
+  if ! command -v odiff >/dev/null 2>&1; then
+    echo "Visual regression: install odiff (npm i -g odiff-bin) to diff $base against its baseline." >&2
+    exit 0
+  fi
+
+  diff_out="${FILE%.png}.diff.png"
+  summary=$(odiff "$baseline" "$FILE" "$diff_out" 2>&1)
+  if [ "$?" -ne 0 ]; then
+    echo "Visual regression: $base differs from its baseline." >&2
+    printf '%s\n' "$summary" | while IFS= read -r line; do
+      [ -n "$line" ] && echo "   $line" >&2
+    done
+    echo "   Review $diff_out; update the baseline only if the change is intended." >&2
+  fi
+
+  exit 0
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
+  - "odiff installed (npm i -g odiff-bin) for the image comparison; without it the hook prints an install hint and exits."
+safetyNotes:
+  - "Runs after every Write, Edit, and MultiEdit but only acts on PNG files saved under a screenshots, snapshots, or visual directory, and reads the screenshot and its baseline image from disk."
+  - "When a baseline exists and odiff is installed, it writes a diff image next to the screenshot (file.diff.png) describing the difference; it never deletes or overwrites the screenshot or the baseline."
+  - "Advisory and always exits 0 - it reports a visual difference but never blocks the write or updates the baseline on its own."
+  - "Fails open: with no baseline, no odiff, or no jq, it prints a short hint and does nothing else."
+privacyNotes:
+  - "Reads only local image files (the new screenshot and its baseline); it makes no network calls."
+  - "Writes one local diff image (file.diff.png) next to the screenshot when a difference is found; it writes no other logs."
+  - "File paths and odiff's pixel-difference summary are printed to local hook stderr and may reveal project structure."
+tags:
+  - "visual-regression"
+  - "screenshots"
+  - "testing"
+  - "ui"
+  - "odiff"
+keywords:
+  - "screenshot visual regression hook"
+  - "odiff pixel diff hook"
+  - "baseline screenshot comparison"
+  - "ui regression detection"
+---
+
+## Features
+
+- Catches unintended UI changes by pixel-diffing a just-saved screenshot against its baseline with [odiff](https://github.com/dmtrKovalenko/odiff), a fast image-comparison tool.
+- Triggers only on PNG screenshots saved under a `screenshots`, `snapshots`, `__snapshots__`, or `visual` directory.
+- Writes a diff image next to the screenshot and reports odiff's pixel-difference summary when the images differ.
+- Advisory only — it always exits `0`, never blocks the write, and never updates the baseline for you.
+- Fails open: with no matching baseline, no odiff, or no jq, it prints a short hint and stops.
+
+## How it works
+
+On `PostToolUse`, the hook checks whether the saved file is a screenshot PNG in a visual-test location. It looks for a baseline at `baseline/<name>`, `baselines/<name>`, `__baselines__/<name>`, or `<name>.baseline.png`, then runs `odiff <baseline> <new> <diff>`. odiff exits non-zero when the images differ; the hook then reports the difference and points at the generated diff image so the change can be reviewed and the baseline updated only if intended.
+
+## Use cases
+
+- Surface a layout or styling regression the moment an updated screenshot is written during a UI change.
+- Add a fast local visual check ahead of a full visual-regression suite in CI.
+- Keep agent-driven UI edits honest by flagging pixel changes against an approved baseline.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/screenshot-visual-regression.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/screenshot-visual-regression.sh`
+4. Install odiff: `npm i -g odiff-bin`
+5. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash and jq
+- odiff (`npm i -g odiff-bin`)
+- A baseline image stored alongside each screenshot (in `baseline/`, `baselines/`, `__baselines__/`, or as `name.baseline.png`)
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/screenshot-visual-regression.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Limitations
+
+- Compares against a baseline by filename convention; projects that store baselines elsewhere need the `baseline` lookup paths adjusted.
+- Operates on PNG screenshots; other image formats need odiff's format support and an added path pattern.
+
+## Source and references
+
+- odiff (fast pixel-by-pixel image diff): https://github.com/dmtrKovalenko/odiff
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
