@@ -178,6 +178,13 @@ export const CompareEntriesInputSchema = z
 
 export const RegistryStatsInputSchema = z.object({}).strict();
 
+export const CategoryOverviewInputSchema = z
+  .object({
+    category: pathPart,
+    sampleLimit: z.number().int().min(1).max(10).optional(),
+  })
+  .strict();
+
 export const ClientSetupInputSchema = z
   .object({
     client: clientName.optional(),
@@ -318,6 +325,7 @@ export const TOOL_INPUT_SCHEMAS = {
   get_submission_policy: SubmissionPolicyInputSchema,
   explain_entry_trust: ExplainEntryTrustInputSchema,
   review_entry_safety: ReviewEntrySafetyInputSchema,
+  get_category_overview: CategoryOverviewInputSchema,
 };
 
 function stripUnsupportedJsonSchemaFields(value) {

@@ -93,6 +93,7 @@ export const READ_ONLY_TOOL_NAMES = [
   "get_submission_policy",
   "explain_entry_trust",
   "review_entry_safety",
+  "get_category_overview",
 ];
 
 export const TOOL_DEFINITIONS = [
@@ -265,6 +266,12 @@ export const TOOL_DEFINITIONS = [
     description:
       "Review 1-5 HeyClaude entries for source, package, safety, and privacy metadata fit before install or recommendation. This is a metadata review only and does not provide malware scanning, automatic safety guarantees, or installation approval.",
     inputSchema: jsonSchemaForTool("review_entry_safety"),
+  },
+  {
+    name: "get_category_overview",
+    description:
+      "Fetch a read-only orientation overview for one HeyClaude category: entry count, install and download-trust coverage, verification status mix, freshness, platform coverage, top tags, top authors, and a sample of the newest entries.",
+    inputSchema: jsonSchemaForTool("get_category_overview"),
   },
 ];
 
@@ -1451,6 +1458,111 @@ export async function getRegistryStats(args = {}, options = {}) {
   };
 }
 
+function countAddedWithinDays(entries, days) {
+  const windowMs = days * 24 * 60 * 60 * 1000;
+  const now = Date.now();
+  return entries.filter((entry) => {
+    const added = Date.parse(entry.dateAdded || "");
+    return Number.isFinite(added) && now - added <= windowMs;
+  }).length;
+}
+
+function rankedCounts(entries, selectValues, limit) {
+  const counts = new Map();
+  for (const entry of entries) {
+    for (const value of selectValues(entry)) {
+      const key = String(value || "").trim();
+      if (!key) continue;
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+  }
+  const sorted = [...counts.entries()].sort(
+    (left, right) => right[1] - left[1] || left[0].localeCompare(right[0]),
+  );
+  return typeof limit === "number" ? sorted.slice(0, limit) : sorted;
+}
+
+/**
+ * Build a read-only orientation overview for a single registry category from
+ * the generated search index. Aggregates entry counts, install and
+ * download-trust coverage, verification status mix, freshness, platform
+ * coverage, top tags, top authors, and a bounded sample of the newest entries
+ * so an agent can scope a category before listing or comparing entries.
+ */
+export async function getCategoryOverview(args = {}, options = {}) {
+  const category = normalizeText(args.category);
+  if (!category) {
+    return invalid("category is required.");
+  }
+  const sampleLimit = Math.min(normalizeLimit(args.sampleLimit, 5), 10);
+  const searchIndex = unwrapEntries(
+    await readJsonArtifact("search-index.json", options),
+  );
+  const entries = searchIndex.filter((entry) => entry.category === category);
+  if (entries.length === 0) {
+    return notFound(`No HeyClaude entries found for category ${category}.`);
+  }
+
+  const installableCount = entries.filter((entry) => entry.installable).length;
+  const downloadTrust = Object.fromEntries(
+    rankedCounts(entries, (entry) => [entry.downloadTrust || "none"]),
+  );
+  const verificationStatus = Object.fromEntries(
+    rankedCounts(entries, (entry) =>
+      entry.verificationStatus ? [entry.verificationStatus] : [],
+    ),
+  );
+  const platforms = Object.fromEntries(
+    rankedCounts(entries, (entry) => entry.platforms || []).sort(
+      (left, right) => left[0].localeCompare(right[0]),
+    ),
+  );
+  const newestUpdatedAt = entries
+    .map((entry) => entryUpdatedAt(entry))
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+
+  const sampleEntries = entries
+    .slice()
+    .sort((left, right) =>
+      entryUpdatedAt(right).localeCompare(entryUpdatedAt(left)),
+    )
+    .slice(0, sampleLimit)
+    .map((entry) => ({
+      ...toEntrySummary(entry),
+      updatedAt: entryUpdatedAt(entry),
+    }));
+
+  return {
+    ok: true,
+    category,
+    count: entries.length,
+    installable: {
+      count: installableCount,
+      percent: Math.round((installableCount / entries.length) * 100),
+    },
+    downloadTrust,
+    verificationStatus,
+    freshness: {
+      withRepoUpdatedAt: entries.filter((entry) => entry.repoUpdatedAt).length,
+      addedLast30Days: countAddedWithinDays(entries, 30),
+      addedLast90Days: countAddedWithinDays(entries, 90),
+      newestUpdatedAt: newestUpdatedAt || "",
+    },
+    platforms,
+    topTags: rankedCounts(entries, (entry) => entry.tags || [], 10).map(
+      ([tag, count]) => ({ tag, count }),
+    ),
+    topAuthors: rankedCounts(
+      entries,
+      (entry) => (entry.author ? [entry.author] : []),
+      5,
+    ).map(([author, count]) => ({ author, count })),
+    sampleEntries,
+  };
+}
+
 export async function getClientSetup(args = {}) {
   let endpointUrl;
   try {
@@ -2484,6 +2596,9 @@ export async function callRegistryTool(name, args = {}, options = {}) {
       break;
     case "review_entry_safety":
       result = await reviewEntrySafety(parsedArgs, options);
+      break;
+    case "get_category_overview":
+      result = await getCategoryOverview(parsedArgs, options);
       break;
   }
 

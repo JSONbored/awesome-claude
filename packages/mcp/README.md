@@ -46,6 +46,9 @@ strict request validation, a 64 KiB body limit, and a dedicated Cloudflare
   install complexity, and source metadata.
 - `get_registry_stats` - fetch aggregate counts, freshness metadata, and real
   source-signal coverage without implying popularity when stats are absent.
+- `get_category_overview` - fetch a per-category orientation summary: entry
+  count, install and download-trust coverage, verification status mix,
+  freshness, platform coverage, top tags, top authors, and the newest entries.
 - `get_client_setup` - fetch tested setup snippets for Codex, Claude Desktop,
   Cursor, Windsurf, and raw Streamable HTTP clients.
 - `get_compatibility` - fetch skill platform compatibility metadata.

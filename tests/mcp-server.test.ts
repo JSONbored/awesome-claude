@@ -7,6 +7,7 @@ import { createRemoteMcpProxyServerFromClient } from "../packages/mcp/src/remote
 import { createHeyClaudeMcpServer } from "../packages/mcp/src/server.js";
 import {
   callRegistryTool,
+  getCategoryOverview,
   getClientSetup,
   getRegistryPrompt,
   listRegistryPrompts,
@@ -136,6 +137,7 @@ function validToolArguments(name: string) {
       ],
       platform: "claude",
     },
+    get_category_overview: { category: skill.category, sampleLimit: 3 },
   };
   if (!(name in argsByTool)) {
     throw new Error(`Missing protocol test arguments for ${name}.`);
@@ -1186,6 +1188,92 @@ describe("HeyClaude read-only MCP helpers", () => {
         },
       },
       policy: { createsIssues: false },
+    });
+  });
+
+  it("summarizes a category overview from generated registry metadata", async () => {
+    const overview = await callRegistryTool(
+      "get_category_overview",
+      { category: "mcp", sampleLimit: 3 },
+      { dataDir },
+    );
+
+    expect(overview).toMatchObject({
+      ok: true,
+      category: "mcp",
+      count: expect.any(Number),
+      installable: {
+        count: expect.any(Number),
+        percent: expect.any(Number),
+      },
+      downloadTrust: expect.any(Object),
+      freshness: {
+        withRepoUpdatedAt: expect.any(Number),
+        addedLast30Days: expect.any(Number),
+        addedLast90Days: expect.any(Number),
+      },
+      policy: { readOnly: true, createsIssues: false },
+    });
+    expect(overview.count).toBeGreaterThan(0);
+    expect(overview.installable.percent).toBeGreaterThanOrEqual(0);
+    expect(overview.installable.percent).toBeLessThanOrEqual(100);
+    expect(overview.topTags[0]).toMatchObject({
+      tag: expect.any(String),
+      count: expect.any(Number),
+    });
+    expect(overview.sampleEntries.length).toBeGreaterThan(0);
+    expect(overview.sampleEntries.length).toBeLessThanOrEqual(3);
+    expect(
+      overview.sampleEntries.every((entry: any) => entry.category === "mcp"),
+    ).toBe(true);
+    const updatedDates = overview.sampleEntries.map(
+      (entry: any) => entry.updatedAt,
+    );
+    expect(updatedDates).toEqual([...updatedDates].sort().reverse());
+  });
+
+  it("returns not_found for an empty or unknown category overview", async () => {
+    const overview = await callRegistryTool(
+      "get_category_overview",
+      { category: "nonexistent" },
+      { dataDir },
+    );
+    expect(overview).toMatchObject({
+      ok: false,
+      error: { code: "not_found" },
+    });
+  });
+
+  it("clamps the category overview sample to 10 even when called directly", async () => {
+    const readJsonArtifact = async (relativePath: string) => {
+      expect(relativePath).toBe("search-index.json");
+      return {
+        entries: Array.from({ length: 15 }, (_, index) => ({
+          category: "mcp",
+          slug: `overview-entry-${index}`,
+          title: `Overview Entry ${index}`,
+          description: "Overview fixture entry.",
+          tags: ["overview", index % 2 === 0 ? "even" : "odd"],
+          platforms: ["Claude"],
+          author: index % 3 === 0 ? "Author A" : "Author B",
+          installable: index % 2 === 0,
+          downloadTrust: index % 2 === 0 ? "first-party" : "none",
+          dateAdded: `2026-05-${String((index % 28) + 1).padStart(2, "0")}`,
+        })),
+      };
+    };
+
+    const overview = await getCategoryOverview(
+      { category: "mcp", sampleLimit: 50 },
+      { readJsonArtifact },
+    );
+
+    expect(overview.ok).toBe(true);
+    expect(overview.count).toBe(15);
+    expect(overview.sampleEntries.length).toBe(10);
+    expect(overview.topAuthors[0]).toMatchObject({
+      author: expect.any(String),
+      count: expect.any(Number),
     });
   });
 

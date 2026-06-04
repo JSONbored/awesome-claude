@@ -67,6 +67,11 @@ export function getRegistryStats(
   options?: RegistryArtifactLoaders,
 ): Promise<RegistryToolResult>;
 
+export function getCategoryOverview(
+  args?: Record<string, unknown>,
+  options?: RegistryArtifactLoaders,
+): Promise<RegistryToolResult>;
+
 export function getClientSetup(
   args?: Record<string, unknown>,
   options?: RegistryArtifactLoaders,
@@ -205,6 +210,7 @@ export {
   CopyableAssetInputSchema,
   CompareEntriesInputSchema,
   RegistryStatsInputSchema,
+  CategoryOverviewInputSchema,
   ClientSetupInputSchema,
   CompatibilityInputSchema,
   InstallGuidanceInputSchema,

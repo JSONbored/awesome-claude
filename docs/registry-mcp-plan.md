@@ -31,6 +31,7 @@ artifact directory.
 - `get_copyable_asset`
 - `compare_entries`
 - `get_registry_stats`
+- `get_category_overview`
 - `get_client_setup`
 - `get_compatibility`
 - `get_install_guidance`
