@@ -173,6 +173,7 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("Product or feature improvement");
+    expect(source).not.toContain("gittensor:feature");
     expect(source).toContain("id: quality_evidence");
     expect(source).toContain("desktop and mobile screenshots");
     expect(source).toContain("No visual impact");
