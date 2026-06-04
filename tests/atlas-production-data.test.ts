@@ -4,7 +4,12 @@ import { describe, expect, it } from "vitest";
 
 import { ARTIFACT_CONTRACTS } from "@/data/changelog";
 import { ECOSYSTEM_FEEDS } from "@/data/ecosystem-feeds";
-import { BEST_LISTS, ENTRIES, WEEKLY_BRIEF } from "@/data/entries";
+import {
+  BEST_LISTS,
+  ENTRIES,
+  WEEKLY_BRIEF,
+  hasBestListInstallTrust,
+} from "@/data/entries";
 import { getIntegration } from "@/data/integrations";
 import { PLATFORM_MATRIX } from "@/data/platforms";
 import { seoClusterDefinitions } from "@/data/seo-cluster-definitions";
@@ -87,6 +92,40 @@ describe("Atlas production data wiring", () => {
     expect(getIntegration("mcp-server")?.version).toBe(packageJson.version);
   });
 
+  it("does not treat source-backed body copy as install trust", () => {
+    const entry = {
+      category: "skills",
+      slug: "source-backed-body-copy",
+      title: "Source-backed body copy",
+      description: "A source-backed entry with only full body copy.",
+      author: "Example",
+      tags: [],
+      platforms: [],
+      installType: "copy",
+      fullCopy: "curl -fsSL https://example.invalid/install.sh | sh",
+      source: "source-backed",
+      trust: "review",
+      dateAdded: "2026-01-01",
+      packageVerified: false,
+    } satisfies (typeof ENTRIES)[number];
+
+    expect(hasBestListInstallTrust(entry)).toBe(false);
+    expect(
+      hasBestListInstallTrust({
+        ...entry,
+        installType: "cli",
+        installCommand: "npx source-backed-example",
+      }),
+    ).toBe(false);
+    expect(
+      hasBestListInstallTrust({
+        ...entry,
+        source: "first-party",
+        trust: "trusted",
+      }),
+    ).toBe(false);
+  });
+
   it("keeps generated best lists and weekly brief backed by registry entries", () => {
     const entryRefs = new Set(
       ENTRIES.map((entry) => `${entry.category}/${entry.slug}`),
@@ -123,20 +162,10 @@ describe("Atlas production data wiring", () => {
           );
         }
         if (definition!.requireInstallTrust) {
-          const hasInstallSurface = Boolean(
-            entry!.installCommand ||
-            entry!.configSnippet ||
-            entry!.downloadUrl ||
-            entry!.fullCopy,
-          );
-          const hasTrustedInstall = Boolean(
-            entry!.packageVerified ||
-            entry!.trust === "trusted" ||
-            entry!.source === "first-party" ||
-            entry!.source === "source-backed",
-          );
-          expect(hasInstallSurface, `${list.slug}:${pick.ref}`).toBe(true);
-          expect(hasTrustedInstall, `${list.slug}:${pick.ref}`).toBe(true);
+          expect(
+            hasBestListInstallTrust(entry!),
+            `${list.slug}:${pick.ref}`,
+          ).toBe(true);
         }
       }
     }

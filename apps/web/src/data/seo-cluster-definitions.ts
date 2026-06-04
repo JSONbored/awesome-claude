@@ -111,10 +111,10 @@ export const seoClusterDefinitions: SeoClusterDefinition[] = [
     title: "Safer install paths for Agent Skills",
     eyebrow: "Install trust",
     description:
-      "Agent Skills and related resources with package, source, or copyable install metadata that can be reviewed before use.",
+      "Agent Skills and related resources with package verification, first-party source, or trusted copyable setup metadata that can be reviewed before use.",
     seoTitle: "Safer install paths for Agent Skills",
     seoDescription:
-      "Find Agent Skills with safer install signals, source-backed metadata, package verification context, checksums, and copyable setup guidance.",
+      "Find Agent Skills with safer install signals, package verification context, first-party source, checksums, and trusted setup guidance.",
     categories: ["skills", "rules", "commands", "hooks"],
     tags: ["skills", "security", "workflow", "automation"],
     requireInstallTrust: true,
