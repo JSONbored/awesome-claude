@@ -1,0 +1,161 @@
+---
+title: Notebook Analytics Workbench
+slug: notebook-analytics-workbench
+category: collections
+description: >-
+  A source-backed collection for reproducible data analysis and notebook work:
+  Marimo notebooks, DuckDB analytical SQL, Polars DataFrames, Hugging Face
+  Datasets loading, Great Expectations quality checks, and Streamlit sharing.
+cardDescription: >-
+  Notebook analytics bundle for reproducible notebooks, local SQL, DataFrames,
+  dataset loading, quality checks, and lightweight data apps.
+seoTitle: Notebook Analytics Workbench Collection
+seoDescription: >-
+  Build a data analysis and notebook workflow with Marimo, DuckDB, Polars,
+  Hugging Face Datasets, Great Expectations, and Streamlit.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.marimo.io/getting_started/"
+sourceUrls:
+  - "https://docs.marimo.io/getting_started/"
+  - "https://duckdb.org/docs/stable/clients/overview"
+  - "https://docs.pola.rs/user-guide/getting-started/"
+  - "https://huggingface.co/docs/datasets/index"
+  - "https://docs.greatexpectations.io/docs/core/introduction/"
+  - "https://docs.streamlit.io/get-started"
+installable: false
+usageSnippet: >-
+  Keep analysis in reviewable Marimo notebooks, query local files with DuckDB,
+  transform data with Polars, load approved datasets, validate important fields,
+  and publish only reviewed Streamlit views.
+items:
+  - slug: marimo
+    category: tools
+  - slug: duckdb
+    category: tools
+  - slug: polars
+    category: tools
+  - slug: hugging-face-datasets
+    category: tools
+  - slug: great-expectations
+    category: tools
+  - slug: streamlit
+    category: tools
+installationOrder:
+  - marimo
+  - duckdb
+  - polars
+  - hugging-face-datasets
+  - great-expectations
+  - streamlit
+estimatedSetupTime: 65 minutes
+difficulty: intermediate
+prerequisites:
+  - Python environment with pinned notebook, data, and visualization dependencies for the project.
+  - Data source inventory covering local files, database exports, Parquet/CSV/JSON files, Hub datasets, and any licensed or private datasets.
+  - Column dictionary, data-quality expectations, join keys, time windows, and output review rules before analysis results are shared.
+  - Storage and retention plan for notebook outputs, DuckDB files, cached datasets, Great Expectations Data Docs, Streamlit app state, and exported charts.
+  - Agreement on which data can be queried locally, downloaded from external hubs, embedded into notebooks, or published in dashboards.
+safetyNotes:
+  - Notebooks, data loaders, SQL queries, DataFrame transforms, validation checkpoints, and Streamlit apps execute project code; run them in an isolated environment with bounded file and network access.
+  - DuckDB and Polars can process large local files quickly but can still exhaust memory, disk, or CPU when joins, scans, and exports are unbounded.
+  - Hugging Face Datasets can download or stream external datasets; review licenses, revisions, dataset cards, scripts, and cache behavior before using them in production analysis.
+  - Streamlit apps can expose data, credentials, and Python side effects through a browser interface, so review authentication, secrets, query limits, and deployment settings before sharing.
+privacyNotes:
+  - Notebook outputs, DuckDB databases, DataFrame exports, dataset caches, validation reports, Streamlit state, charts, and screenshots can retain sensitive rows after source files are deleted.
+  - Dataset names, access patterns, package downloads, Hub requests, Streamlit telemetry, and remote data connectors can disclose project interests or data sources to external services.
+  - Great Expectations Data Docs, validation failures, sampled examples, and dashboard filters can expose row values, column names, business metrics, and data-quality issues.
+tags:
+  - notebooks
+  - data-analysis
+  - analytics
+  - duckdb
+  - polars
+  - data-quality
+  - streamlit
+keywords:
+  - notebook analytics workbench
+  - data analysis notebook workflow
+  - Marimo DuckDB Polars collection
+  - data quality notebook dashboard workflow
+  - reproducible analytics collection
+---
+
+## What this collection sets up
+
+This collection is a practical notebook analytics workbench: write analysis in
+reviewable notebooks, query local files without standing up a warehouse,
+transform tabular data efficiently, load approved datasets, validate important
+columns, and share reviewed results as lightweight apps.
+
+It is not a privacy-first research workflow and it is not a full data
+engineering platform. The focus is the analyst loop from raw files or approved
+datasets to reproducible notebook, validated result, and shareable report.
+
+## Layers
+
+### 1. Notebook and local query layer
+
+- **marimo** keeps Python notebooks in a git-friendly source format and supports
+  notebook, script, app, SQL, and reactive execution workflows.
+- **duckdb** gives notebooks and scripts an embedded analytical SQL engine for
+  local files, Parquet, CSV, joins, and single-file analysis.
+- **polars** provides a fast DataFrame engine for filtering, joins,
+  transformations, lazy execution, streaming, and export preparation.
+
+### 2. Dataset intake and quality checks
+
+- **hugging-face-datasets** loads, streams, inspects, and preprocesses Hub or
+  local datasets with cache and split/configuration controls.
+- **great-expectations** records data-quality expectations, validation
+  definitions, checkpoints, and Data Docs before outputs are trusted.
+
+### 3. Sharing reviewed analysis
+
+- **streamlit** turns reviewed scripts into interactive data apps, dashboards,
+  reports, and analytical interfaces when a notebook needs a human-facing view.
+
+## Suggested order
+
+Start with Marimo so analysis lives in reviewable source. Add DuckDB for local
+SQL against files and Polars for DataFrame transformations. Load external or
+large datasets only after their source, license, schema, and cache behavior are
+approved. Add Great Expectations checks around key columns and metrics before
+sharing results. Use Streamlit last, after the analysis is stable and the data
+exposure rules are clear.
+
+## Analysis checklist
+
+- [ ] {"task": "Sources are inventoried", "description": "Files, datasets, licenses, revisions, credentials, and cache paths are known"}
+- [ ] {"task": "Notebook is reproducible", "description": "Dependencies, paths, parameters, and execution order are clear enough for review"}
+- [ ] {"task": "Queries are bounded", "description": "Large scans, joins, exports, and remote downloads have limits and expected sizes"}
+- [ ] {"task": "Data quality is checked", "description": "Important columns, row counts, nulls, ranges, and joins have validation expectations"}
+- [ ] {"task": "Outputs are reviewed", "description": "Charts, CSVs, notebooks, Data Docs, and apps are checked before sharing"}
+- [ ] {"task": "Retention is explicit", "description": "Caches, DuckDB files, Streamlit state, screenshots, and exports have cleanup rules"}
+
+## Source and references
+
+- Marimo getting started: https://docs.marimo.io/getting_started/
+- DuckDB clients overview: https://duckdb.org/docs/stable/clients/overview
+- Polars getting started: https://docs.pola.rs/user-guide/getting-started/
+- Hugging Face Datasets documentation: https://huggingface.co/docs/datasets/index
+- Great Expectations introduction: https://docs.greatexpectations.io/docs/core/introduction/
+- Streamlit get started: https://docs.streamlit.io/get-started
+
+## Duplicate check
+
+Checked existing collections, tools, skills, commands, hooks, guides, open PRs,
+closed PRs, and issue history for `notebook-analytics-workbench`, data analysis
+notebook workflow, Marimo, DuckDB, Polars, Hugging Face Datasets, Great
+Expectations, Streamlit, analytics workbench, and notebook dashboards.
+`privacy-first-research-workflow` uses Marimo, DuckDB, and Polars inside a
+privacy/redaction/research workflow. `data-engineering-suite` focuses on ETL,
+databases, cloud services, and pipeline infrastructure. This entry is narrower:
+it covers the analyst notebook loop from data intake to local query,
+transformation, quality checks, and reviewed sharing.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
