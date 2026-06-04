@@ -1,0 +1,110 @@
+---
+title: GitHub Issue Task Progress Statusline
+slug: gh-issue-task-progress-statusline
+category: statuslines
+description: Claude Code statusline that reads a linked GitHub issue body and shows checked versus open Markdown tasks for session progress.
+cardDescription: Show linked issue task completion from GitHub CLI.
+seoTitle: GitHub issue task progress statusline for Claude Code
+seoDescription: Add a Claude Code statusline that uses GitHub CLI to summarize checked and open task list items from a linked issue.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_issue_view"
+tags:
+  - github
+  - issues
+  - tasks
+  - claude-code
+keywords:
+  - issue task progress statusline
+  - github issue statusline
+  - task checklist statusline
+  - gh issue view
+installable: true
+usageSnippet: "issue #804 | tasks 3/5 | 60%"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-issue-task-progress-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-issue-task-progress-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "issue: gh missing"
+    exit 0
+  fi
+
+  issue="${GITHUB_ISSUE_NUMBER:-}"
+  if [ -z "$issue" ]; then
+    branch=$(git branch --show-current 2>/dev/null || true)
+    issue=$(printf '%s' "$branch" | grep -Eo '[0-9]+' | head -1 || true)
+  fi
+
+  if [ -z "$issue" ]; then
+    echo "issue: set GITHUB_ISSUE_NUMBER"
+    exit 0
+  fi
+
+  body=$(gh issue view "$issue" --json body --jq '.body' 2>/dev/null || true)
+  if [ -z "$body" ]; then
+    printf 'issue #%s | unavailable\n' "$issue"
+    exit 0
+  fi
+
+  done_count=$(printf '%s\n' "$body" | grep -Eci '^[[:space:]]*[-*] \[[xX]\] ' || true)
+  open_count=$(printf '%s\n' "$body" | grep -Eci '^[[:space:]]*[-*] \[ \] ' || true)
+  total=$((done_count + open_count))
+
+  if [ "$total" -eq 0 ]; then
+    printf 'issue #%s | no tasks\n' "$issue"
+    exit 0
+  fi
+
+  pct=$((done_count * 100 / total))
+  printf 'issue #%s | tasks %s/%s | %s%%\n' "$issue" "$done_count" "$total" "$pct"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in for the repository.
+  - GITHUB_ISSUE_NUMBER set, or a branch name containing the issue number.
+  - The linked issue body uses Markdown task list syntax.
+safetyNotes:
+  - Task completion is a planning signal and should not replace tests, review, or acceptance criteria.
+  - Branch-number inference can pick the wrong issue when branch names contain multiple numbers.
+  - Keep statusline refresh moderate to avoid repeated issue reads during long sessions.
+privacyNotes:
+  - The script reads the issue body through GitHub CLI but prints only counts.
+  - Issue numbers and task percentages can reveal project workflow in terminal screenshots.
+  - Private issue access follows the local GitHub CLI login and repository permissions.
+---
+
+## Source notes
+
+- GitHub CLI documents `gh issue view` with JSON output for issue fields such as the body.
+- The statusline counts Markdown task list markers locally and only prints aggregate progress.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gh-issue-task-progress-statusline`, task progress, issue checklist, and GitHub issue statuslines. No statusline entry or open PR with this slug, source URL, or issue-task focus was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
