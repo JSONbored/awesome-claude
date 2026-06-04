@@ -1,0 +1,113 @@
+---
+title: npm Publish Readiness Statusline
+slug: npm-publish-readiness-statusline
+category: statuslines
+description: Claude Code statusline that checks package publish readiness from package.json, npm login visibility, package privacy, and dirty package metadata files.
+cardDescription: Show npm package publish readiness without publishing.
+seoTitle: npm publish readiness statusline for Claude Code
+seoDescription: Add a Claude Code statusline that checks package name, version, private flag, npm login visibility, and dirty package files before publishing.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.npmjs.com/cli/v11/commands/npm-publish/"
+tags:
+  - npm
+  - package
+  - publish
+  - claude-code
+keywords:
+  - package publish readiness statusline
+  - npm publish statusline
+  - package json statusline
+  - release readiness
+installable: true
+usageSnippet: "npm: my-package@1.2.3 | clean | logged-in | ready"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/npm-publish-readiness-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/npm-publish-readiness-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if [ ! -f package.json ]; then
+    echo "npm: no package.json"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "npm: jq missing"
+    exit 0
+  fi
+
+  name=$(jq -r '.name // "unnamed"' package.json)
+  version=$(jq -r '.version // "0.0.0"' package.json)
+  private=$(jq -r '.private // false' package.json)
+  dirty=$(git status --porcelain=v1 -- package.json package-lock.json npm-shrinkwrap.json pnpm-lock.yaml yarn.lock 2>/dev/null | wc -l | tr -d ' ')
+
+  if command -v npm >/dev/null 2>&1 && npm whoami >/dev/null 2>&1; then
+    login="logged-in"
+  else
+    login="login-missing"
+  fi
+
+  if [ "$private" = "true" ]; then
+    state="blocked"
+  elif [ "$dirty" -gt 0 ]; then
+    state="review"
+  elif [ "$login" = "login-missing" ]; then
+    state="auth"
+  else
+    state="ready"
+  fi
+
+  cleanliness="clean"
+  if [ "$dirty" -gt 0 ]; then
+    cleanliness="dirty"
+  fi
+
+  printf 'npm: %s@%s | %s | %s | %s\n' "$name" "$version" "$cleanliness" "$login" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Node.js project with package.json.
+  - jq available for reading package metadata.
+  - npm CLI installed if login visibility should be shown.
+safetyNotes:
+  - The script does not run `npm publish`; it only reads metadata and login visibility.
+  - Readiness is a checklist signal, not approval to publish; run `npm pack --dry-run` and project release checks separately.
+  - Dirty lockfiles or package metadata should be reviewed before release tagging.
+privacyNotes:
+  - The output prints package name and version, which can reveal unreleased package plans in screenshots.
+  - npm login visibility follows local npm configuration but does not print account names.
+  - package.json can contain private package names; avoid sharing terminal output when those names are sensitive.
+---
+
+## Source notes
+
+- npm documents `npm publish` behavior and package metadata that affects publication.
+- npm also documents `npm pack --dry-run`; this statusline intentionally stays read-only and leaves dry-run verification to a separate release command.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `npm-publish-readiness-statusline`, package publish readiness, npm publish, release readiness, and package statuslines. No statusline entry or open PR with this slug or npm publish-readiness focus was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
