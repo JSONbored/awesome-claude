@@ -17,6 +17,7 @@ import {
   buildCursorSkillAdapter,
   buildJsonLdSnapshots,
   buildRegistryChangelogFeed,
+  buildRegistryRelationGraph,
   buildRegistryTrustReport,
   buildSourceHealthReport,
   buildEntrySourceHealth,
@@ -200,6 +201,9 @@ describe("registry artifacts", () => {
     expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
     expect(artifactSize("search-index.json")).toBeLessThan(750_000);
     expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
+    expect(artifactSize("relation-graph.json")).toBeLessThan(
+      150_000 + entryCount * 1_500,
+    );
     expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
     expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
     expect(artifactTreeSize("entries")).toBeLessThan(
@@ -234,7 +238,9 @@ describe("registry artifacts", () => {
     expect(atlasSkill).not.toHaveProperty("copySnippet");
     expect(skillDetail).toMatchObject({
       body: expect.any(String),
+      relatedEntries: expect.any(Array),
     });
+    expect(atlasSkill).not.toHaveProperty("relatedEntries");
     expect(skillDetail).not.toHaveProperty("sections");
     expect(skillDetail).not.toHaveProperty("headings");
     expect(skillDetail).not.toHaveProperty("codeBlocks");
@@ -591,9 +597,17 @@ describe("registry artifacts", () => {
   });
 
   it("derives all generated aggregate artifacts from registry builders", () => {
+    const relationGraphPayload = readDataJson<Record<string, unknown>>(
+      "relation-graph.json",
+    );
     expect(buildDirectoryEntries(contentEntries)).toEqual(directoryEntries);
     expect(buildSearchEntries(contentEntries)).toEqual(searchEntries);
     expect(buildRaycastEnvelope(contentEntries)).toEqual(raycastPayload);
+    expect(
+      buildRegistryRelationGraph(contentEntries, {
+        generatedAt: String(relationGraphPayload.generatedAt),
+      }),
+    ).toEqual(relationGraphPayload);
     expect(buildContentQualityArtifact(contentEntries)).toEqual(qualityPayload);
     expect(buildContentPromptArtifact(contentEntries)).toEqual(
       qualityPromptsPayload,
@@ -608,6 +622,61 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
+  });
+
+  it("publishes deterministic relation graph refs into entry details", () => {
+    const graph = readDataJson<{
+      kind: string;
+      count: number;
+      entries: Array<{
+        key: string;
+        related: Array<{
+          key: string;
+          category: string;
+          slug: string;
+          relation: string;
+          score: number;
+          reasons: string[];
+          url: string;
+        }>;
+      }>;
+    }>("relation-graph.json");
+
+    expect(graph).toMatchObject({
+      kind: "registry-relation-graph",
+      count: contentEntries.length,
+    });
+
+    const rowsWithRelations = graph.entries.filter(
+      (entry) => entry.related.length > 0,
+    );
+    expect(rowsWithRelations.length).toBeGreaterThan(0);
+    for (const row of rowsWithRelations.slice(0, 25)) {
+      expect(row.related.length).toBeLessThanOrEqual(4);
+      expect(row.related.map((relation) => relation.key)).not.toContain(
+        row.key,
+      );
+      expect(row.related).toEqual(
+        [...row.related].sort((left, right) => right.score - left.score),
+      );
+    }
+
+    const collectionRow = graph.entries.find(
+      (entry) => entry.key === "collections:browser-automation-mcp-stack",
+    );
+    if (collectionRow) {
+      expect(
+        collectionRow.related.some(
+          (relation) => relation.relation === "collection-member",
+        ),
+      ).toBe(true);
+    }
+
+    const [sample] = rowsWithRelations;
+    const detailPayload = readDataJson<{
+      entry: { relatedEntries?: unknown[] };
+    }>(`entries/${sample.key.replace(":", "/")}.json`);
+    expect(detailPayload.entry.relatedEntries).toEqual(sample.related);
   });
 
   it("derives compact search URLs from unhydrated source entries", () => {

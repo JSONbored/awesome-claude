@@ -1176,6 +1176,39 @@ export async function getRelatedEntries(args = {}, options = {}) {
     return notFound(`No HeyClaude entry found for ${category}/${slug}.`);
   }
 
+  const graph = await readJsonArtifact("relation-graph.json", options).catch(
+    () => null,
+  );
+  const graphRow = Array.isArray(graph?.entries)
+    ? graph.entries.find((entry) => entry.key === `${category}:${slug}`)
+    : null;
+  if (graphRow?.related?.length) {
+    const searchByKey = new Map(
+      searchIndex.map((entry) => [`${entry.category}:${entry.slug}`, entry]),
+    );
+    const entries = graphRow.related
+      .map((relation) => {
+        const entry = searchByKey.get(relation.key);
+        if (!entry) return null;
+        return {
+          ...toEntrySummary(entry),
+          relation: relation.relation,
+          relatedScore: relation.score,
+          relatedReasons: relation.reasons || [],
+        };
+      })
+      .filter(Boolean)
+      .slice(0, limit);
+
+    return {
+      ok: true,
+      key: `${target.category}:${target.slug}`,
+      relationGraph: true,
+      count: entries.length,
+      entries,
+    };
+  }
+
   const entries = searchIndex
     .map((entry) => {
       const related = scoreRelatedEntry(target, entry);

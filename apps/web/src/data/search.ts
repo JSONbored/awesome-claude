@@ -66,6 +66,18 @@ export function getEntry(category: string, slug: string): Entry | undefined {
 }
 
 export function related(entry: Entry, limit = 4): Entry[] {
+  const graphEntries = (entry.relatedEntries ?? [])
+    .map((relation) =>
+      ENTRIES.find(
+        (candidate) => candidate.category === relation.category && candidate.slug === relation.slug,
+      ),
+    )
+    .filter((candidate): candidate is Entry => Boolean(candidate))
+    .filter((candidate) => candidate.category !== entry.category || candidate.slug !== entry.slug)
+    .slice(0, limit);
+
+  if (graphEntries.length > 0) return graphEntries;
+
   return ENTRIES.filter((e) => e.slug !== entry.slug)
     .map((e) => {
       let score = 0;

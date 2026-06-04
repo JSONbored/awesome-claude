@@ -88,6 +88,26 @@ export interface RepoStats {
   label?: string;
 }
 
+export type EntryRelationType =
+  | "same-project"
+  | "collection-member"
+  | "works-with"
+  | "extends"
+  | "alternative"
+  | "safer-alternative"
+  | "related";
+
+export interface EntryRelation {
+  key: string;
+  category: Category;
+  slug: string;
+  title: string;
+  relation: EntryRelationType;
+  score: number;
+  reasons: string[];
+  url: string;
+}
+
 export interface EntrySection {
   title: string;
   id: string;
@@ -134,6 +154,7 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   trust: TrustLevel;
   source: SourceStatus;
   repoStats?: RepoStats;
+  relatedEntries?: EntryRelation[];
   /** @deprecated Repo stars are source metadata, not listing popularity. */
   stars?: number;
   dateAdded: string;

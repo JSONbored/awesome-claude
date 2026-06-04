@@ -10,6 +10,10 @@ import {
 import { renderCorpusLlms, renderEntryLlms } from "./llms.js";
 import { buildEntryJsonLdSnapshot } from "./seo.js";
 import { buildSubmissionSpecs } from "./submission-spec.js";
+import {
+  buildRegistryRelationGraph,
+  relationLookupFromGraph,
+} from "./relationships.js";
 
 export const ENTRY_SCHEMA_VERSION = 1;
 export const RAYCAST_SCHEMA_VERSION = 2;
@@ -756,18 +760,23 @@ export function buildRaycastEntries(entries) {
   });
 }
 
-export function buildEntryDetail(entry) {
+export function buildEntryDetail(entry, params = {}) {
   const {
     codeBlocks: _codeBlocks,
     sections: _sections,
     headings: _headings,
     ...detailEntry
   } = entry;
+  const relatedEntries =
+    params.relatedEntries ??
+    params.relationLookup?.get?.(`${entry.category}:${entry.slug}`) ??
+    undefined;
   return {
     schemaVersion: ENTRY_SCHEMA_VERSION,
     key: `${entry.category}:${entry.slug}`,
     entry: compactDefinedObject({
       ...detailEntry,
+      relatedEntries,
       hasCopySnippet: Boolean(entry.copySnippet || entry.hasCopySnippet),
       hasUsageSnippet: Boolean(entry.usageSnippet),
       hasConfigSnippet: Boolean(entry.configSnippet),
@@ -945,7 +954,16 @@ export function buildPluginExportFeed(entries) {
   };
 }
 
-export function buildRegistryChangelogFeed(entries) {
+export function buildRegistryChangelogFeed(entries, params = {}) {
+  const relationLookup =
+    params.relationLookup ??
+    relationLookupFromGraph(
+      buildRegistryRelationGraph(entries, {
+        siteUrl: params.siteUrl ?? SITE_URL,
+        generatedAt: generatedAtForEntries(entries),
+        limit: params.relationLimit,
+      }),
+    );
   const changes = [...entries]
     .sort((left, right) => {
       const dateCompare = String(right.dateAdded || "").localeCompare(
@@ -963,7 +981,9 @@ export function buildRegistryChangelogFeed(entries) {
       canonicalUrl: entryCanonicalUrl(entry),
       llmsUrl: entryLlmsUrl(entry),
       apiUrl: entryApiUrl(entry),
-      artifactHash: buildArtifactHash(buildEntryDetail(entry)),
+      artifactHash: buildArtifactHash(
+        buildEntryDetail(entry, { ...params, relationLookup }),
+      ),
     }));
 
   const payload = {
@@ -1133,6 +1153,7 @@ export function buildRegistryManifest(entries, extra = {}) {
       registryChangelog: dataUrl("registry-changelog.json"),
       registryManifest: dataUrl("registry-manifest.json"),
       registryTrust: dataUrl("registry-trust-report.json"),
+      relationGraph: dataUrl("relation-graph.json"),
       contentQuality: dataUrl("content-quality-report.json"),
       contentQualityPrompts: dataUrl("content-quality-prompts.json"),
       jsonLdSnapshots: dataUrl("jsonld-snapshots.json"),
@@ -1185,6 +1206,12 @@ export function buildRegistryArtifactSet(entries, params = {}) {
   const siteDescription =
     params.siteDescription ??
     "The Claude directory for agents, MCP servers, skills, commands, hooks, rules, guides, collections, and statuslines.";
+  const relationGraph = buildRegistryRelationGraph(entries, {
+    siteUrl,
+    limit: params.relationLimit,
+    generatedAt: generatedAtForEntries(entries),
+  });
+  const relationLookup = relationLookupFromGraph(relationGraph);
   const files = [
     {
       path: "directory-index.json",
@@ -1222,7 +1249,12 @@ export function buildRegistryArtifactSet(entries, params = {}) {
     {
       path: "registry-changelog.json",
       type: "json",
-      value: buildRegistryChangelogFeed(entries),
+      value: buildRegistryChangelogFeed(entries, { relationLookup }),
+    },
+    {
+      path: "relation-graph.json",
+      type: "json",
+      value: relationGraph,
     },
     {
       path: "registry-trust-report.json",
@@ -1270,7 +1302,7 @@ export function buildRegistryArtifactSet(entries, params = {}) {
       {
         path: `entries/${entry.category}/${entry.slug}.json`,
         type: "json",
-        value: buildEntryDetail(entry),
+        value: buildEntryDetail(entry, { relationLookup }),
       },
       {
         path: `llms/${entry.category}/${entry.slug}.txt`,

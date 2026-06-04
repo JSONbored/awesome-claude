@@ -1,6 +1,7 @@
 import type {
   Category,
   Entry,
+  EntryRelation,
   HookTrigger,
   InstallType,
   Platform,
@@ -79,6 +80,16 @@ export type RegistryEntry = Record<string, unknown> & {
     platforms?: string[];
     supportLevels?: string[];
   };
+  relatedEntries?: Array<{
+    key?: string;
+    category?: string;
+    slug?: string;
+    title?: string;
+    relation?: string;
+    score?: number;
+    reasons?: string[];
+    url?: string;
+  }>;
   platformCompatibility?: Array<{
     platform: string;
     supportLevel?: string;
@@ -327,6 +338,40 @@ function normalizeRepoStats(entry: RegistryEntry): Entry["repoStats"] {
   };
 }
 
+function normalizeRelatedEntries(
+  value: RegistryEntry["relatedEntries"],
+): EntryRelation[] | undefined {
+  if (!Array.isArray(value)) return undefined;
+  const rows = value
+    .map((item) => {
+      const category = asCategory(String(item.category || ""));
+      const slug = String(item.slug || "").trim();
+      const title = String(item.title || "").trim();
+      if (!slug || !title) return null;
+      return {
+        key: item.key || `${category}:${slug}`,
+        category,
+        slug,
+        title,
+        relation:
+          item.relation === "same-project" ||
+          item.relation === "collection-member" ||
+          item.relation === "works-with" ||
+          item.relation === "extends" ||
+          item.relation === "alternative" ||
+          item.relation === "safer-alternative" ||
+          item.relation === "related"
+            ? item.relation
+            : "related",
+        score: typeof item.score === "number" ? item.score : 0,
+        reasons: Array.isArray(item.reasons) ? item.reasons.map(String) : [],
+        url: String(item.url || `/entry/${category}/${slug}`),
+      } satisfies EntryRelation;
+    })
+    .filter((item): item is EntryRelation => Boolean(item));
+  return rows.length ? rows : undefined;
+}
+
 export function buildEntry(entry: RegistryEntry): Entry {
   const category = asCategory(entry.category);
   const source = inferSource(entry);
@@ -372,6 +417,7 @@ export function buildEntry(entry: RegistryEntry): Entry {
     trust: inferTrust(entry, source),
     source,
     repoStats: normalizeRepoStats(entry),
+    relatedEntries: normalizeRelatedEntries(entry.relatedEntries),
     dateAdded: entry.dateAdded ?? entry.contentUpdatedAt?.slice(0, 10) ?? "2026-01-01",
     reviewed: Boolean(reviewedAt || entry.packageVerified),
     claimed: entry.claimStatus === "verified",
