@@ -220,6 +220,10 @@ components:
               type: string
             adapterGenerated:
               type: boolean
+            hasSafetyNotes:
+              type: boolean
+            hasPrivacyNotes:
+              type: boolean
             platforms:
               type: array
               items:
@@ -379,6 +383,10 @@ components:
         lastVerifiedAt:
           type: string
         adapterGenerated:
+          type: boolean
+        hasSafetyNotes:
+          type: boolean
+        hasPrivacyNotes:
           type: boolean
         platforms:
           type: array
@@ -1232,6 +1240,10 @@ paths:
                             lastVerifiedAt:
                               type: string
                             adapterGenerated:
+                              type: boolean
+                            hasSafetyNotes:
+                              type: boolean
+                            hasPrivacyNotes:
                               type: boolean
                             platforms:
                               type: array

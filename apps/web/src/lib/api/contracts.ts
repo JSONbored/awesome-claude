@@ -235,6 +235,8 @@ export const registryTrustSignalsSchema = z.object({
   sourceStatus: z.enum(["available", "missing"]).or(z.string()).optional(),
   lastVerifiedAt: z.string().optional(),
   adapterGenerated: z.boolean().optional(),
+  hasSafetyNotes: z.boolean().optional(),
+  hasPrivacyNotes: z.boolean().optional(),
   platforms: z.array(z.string()).max(12).optional(),
   supportLevels: z.array(z.string()).max(12).optional(),
 });

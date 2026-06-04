@@ -415,6 +415,8 @@ export function buildEntryTrustSignals(entry) {
   const packageChecksum =
     entry.downloadSha256 || entry.skillPackage?.sha256 || "";
   const sourceUrls = sourceUrlsForEntry(entry);
+  const hasSafetyNotes = noteList(entry.safetyNotes).length > 0;
+  const hasPrivacyNotes = noteList(entry.privacyNotes).length > 0;
 
   return {
     firstPartyEditorial: entry.disclosure === "heyclaude_pick",
@@ -427,6 +429,8 @@ export function buildEntryTrustSignals(entry) {
     sourceStatus: sourceUrls.length ? "available" : "missing",
     lastVerifiedAt: lastVerifiedForEntry(entry),
     adapterGenerated,
+    hasSafetyNotes,
+    hasPrivacyNotes,
     platforms: platformCompatibility.map((item) => item.platform),
     supportLevels: platformCompatibility.map((item) => item.supportLevel),
   };
@@ -439,6 +443,8 @@ function buildListTrustSignals(entry) {
     packageVerified: trustSignals.packageVerified,
     sourceStatus: trustSignals.sourceStatus,
     lastVerifiedAt: trustSignals.lastVerifiedAt,
+    hasSafetyNotes: trustSignals.hasSafetyNotes,
+    hasPrivacyNotes: trustSignals.hasPrivacyNotes,
     platforms: trustSignals.platforms,
     supportLevels: trustSignals.supportLevels,
   };

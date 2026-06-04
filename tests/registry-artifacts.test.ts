@@ -639,7 +639,8 @@ describe("registry artifacts", () => {
       category: "skills",
       slug: "shared-candidate",
       title: "Shared Workflow Candidate",
-      description: "A shared workflow candidate with self-declared safety notes.",
+      description:
+        "A shared workflow candidate with self-declared safety notes.",
       tags: ["shared"],
       keywords: [],
       safetyNotes: ["Review permissions before installing."],
@@ -762,9 +763,21 @@ Use this hook after reviewing the notes.`,
       "Reads local workspace metadata and does not send it to third parties.",
     ]);
 
+    const [directoryEntry] = buildDirectoryEntries([entry]);
+    expect(directoryEntry.safetyNotes).toBeUndefined();
+    expect(directoryEntry.privacyNotes).toBeUndefined();
+    expect(directoryEntry.trustSignals).toMatchObject({
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
+    });
+
     const [searchEntry] = buildSearchEntries([entry]);
     expect(searchEntry.safetyNotes).toBeUndefined();
     expect(searchEntry.privacyNotes).toBeUndefined();
+    expect(searchEntry.trustSignals).toMatchObject({
+      hasSafetyNotes: true,
+      hasPrivacyNotes: true,
+    });
     expect(searchEntry.downloadUrl).toBe("");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Safety notes");
     expect(buildRaycastDetailMarkdown(entry)).toContain("## Privacy notes");
@@ -993,6 +1006,8 @@ Use this hook after reviewing the notes.`,
       expect((entry as Record<string, unknown>).llmsUrl).toBeUndefined();
       expect((entry as Record<string, unknown>).safetyNotes).toBeUndefined();
       expect((entry as Record<string, unknown>).privacyNotes).toBeUndefined();
+      expect(entry.trustSignals).toHaveProperty("hasSafetyNotes");
+      expect(entry.trustSignals).toHaveProperty("hasPrivacyNotes");
     }
     expect(
       searchEntries.some((entry) => entry.platforms?.includes("Gemini")),

@@ -115,6 +115,8 @@
               },
               "lastVerifiedAt": { "type": "string" },
               "adapterGenerated": { "type": "boolean" },
+              "hasSafetyNotes": { "type": "boolean" },
+              "hasPrivacyNotes": { "type": "boolean" },
               "platforms": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
               "supportLevels": { "type": "array", "items": { "type": "string" }, "maxItems": 12 }
             }
@@ -226,6 +228,8 @@
           },
           "lastVerifiedAt": { "type": "string" },
           "adapterGenerated": { "type": "boolean" },
+          "hasSafetyNotes": { "type": "boolean" },
+          "hasPrivacyNotes": { "type": "boolean" },
           "platforms": { "type": "array", "items": { "type": "string" }, "maxItems": 12 },
           "supportLevels": { "type": "array", "items": { "type": "string" }, "maxItems": 12 }
         }
@@ -921,6 +925,8 @@
                               },
                               "lastVerifiedAt": { "type": "string" },
                               "adapterGenerated": { "type": "boolean" },
+                              "hasSafetyNotes": { "type": "boolean" },
+                              "hasPrivacyNotes": { "type": "boolean" },
                               "platforms": {
                                 "type": "array",
                                 "items": { "type": "string" },

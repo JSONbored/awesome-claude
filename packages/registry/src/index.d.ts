@@ -77,6 +77,8 @@ export type EntryTrustSignals = {
   sourceStatus: "available" | "missing" | string;
   lastVerifiedAt: string;
   adapterGenerated: boolean;
+  hasSafetyNotes: boolean;
+  hasPrivacyNotes: boolean;
   platforms: string[];
   supportLevels: string[];
 };
