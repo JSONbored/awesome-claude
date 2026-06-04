@@ -61,8 +61,10 @@ scriptBody: |-
   name=$(printf '%s' "$repo_json" | jq -r '.nameWithOwner // "unknown"')
   branch=$(printf '%s' "$repo_json" | jq -r '.defaultBranchRef.name // "main"')
   archived=$(printf '%s' "$repo_json" | jq -r '.isArchived // false')
-  prs=$(gh pr list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null || echo 0)
-  issues=$(gh issue list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null || echo 0)
+  prs=$(gh pr list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null)
+  issues=$(gh issue list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null)
+  prs=${prs:-0}
+  issues=${issues:-0}
 
   if [ "$archived" = "true" ]; then
     state="archived"
