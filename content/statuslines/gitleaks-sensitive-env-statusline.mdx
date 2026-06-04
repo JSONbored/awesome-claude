@@ -1,0 +1,100 @@
+---
+title: Gitleaks Sensitive Environment Statusline
+slug: gitleaks-sensitive-env-statusline
+category: statuslines
+description: Claude Code statusline that surfaces sensitive-value review risk by pairing cheap environment-file indicators with an optional redacted Gitleaks scan.
+cardDescription: Show sensitive-value review risk with optional Gitleaks scanning.
+seoTitle: Gitleaks sensitive environment statusline for Claude Code
+seoDescription: Add a Claude Code statusline that warns about sensitive environment files and optionally runs a redacted Gitleaks scan for repository review.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/gitleaks/gitleaks"
+repoUrl: "https://github.com/gitleaks/gitleaks"
+tags:
+  - security
+  - environment
+  - review
+  - claude-code
+keywords:
+  - gitleaks statusline
+  - sensitive environment statusline
+  - secret risk statusline
+  - repository scan statusline
+installable: true
+usageSnippet: "sensitive: env files 2 | scan opt-in"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gitleaks-sensitive-env-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gitleaks-sensitive-env-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "sensitive: no repository"
+    exit 0
+  fi
+
+  env_count=$(git status --porcelain=v1 -- .env '.env.*' .npmrc .pypirc 2>/dev/null | wc -l | tr -d ' ')
+
+  if [ "${GITLEAKS_STATUSLINE_SCAN:-0}" != "1" ]; then
+    printf 'sensitive: env files %s | scan opt-in\n' "$env_count"
+    exit 0
+  fi
+
+  if ! command -v gitleaks >/dev/null 2>&1; then
+    printf 'sensitive: env files %s | gitleaks missing\n' "$env_count"
+    exit 0
+  fi
+
+  if gitleaks dir --redact --no-banner . >/dev/null 2>&1; then
+    printf 'sensitive: env files %s | scan clean\n' "$env_count"
+  else
+    printf 'sensitive: env files %s | review scan\n' "$env_count"
+  fi
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Git installed and the command run from a repository worktree.
+  - Optional Gitleaks CLI installed if GITLEAKS_STATUSLINE_SCAN is set to 1.
+  - A slow refresh interval if optional scanning is enabled, because repository scans can be expensive.
+safetyNotes:
+  - The default mode does not scan file contents; it only counts sensitive-looking environment files in Git status.
+  - Enable the Gitleaks scan only in repositories where you are authorized to inspect all files under the current directory.
+  - Treat any scan warning as a stop-and-review signal before committing, sharing logs, or opening a PR.
+privacyNotes:
+  - The default output prints counts only and does not print filenames or matched values.
+  - A full Gitleaks scan reads repository files and may inspect sensitive local material; use redaction and avoid sharing raw reports.
+  - Terminal recordings can still reveal that a workspace contains sensitive environment files.
+---
+
+## Source notes
+
+- The Gitleaks README documents `git`, `dir`, and `stdin` scan modes plus redaction options for keeping findings out of stdout.
+- The statusline defaults to a cheap count and requires explicit opt-in for full scans so frequent statusline refreshes do not surprise the user.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gitleaks-sensitive-env-statusline`, Gitleaks statuslines, sensitive environment warnings, and secret-risk statuslines. A Gitleaks tool listing exists, but no statusline entry or open PR packages this source as a Claude Code statusline.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
