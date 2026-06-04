@@ -31,6 +31,7 @@ import {
 import {
   approvalReviewBody,
   enforceAutoMergeConfidenceFloor,
+  isRetryableGateDecision,
   markerComment,
   normalizePrivateGateDecisionPayload,
   retryingReviewComment,
@@ -411,6 +412,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("isRetryableGateDecision(decision)");
     expect(source).toContain('"invalid_private_response"');
     expect(source).toContain('"private_reviewer_unavailable"');
+    expect(source).not.toContain("summary.includes");
+    expect(source).not.toContain(
+      "ai maintainer review returned an unexpected payload",
+    );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
@@ -849,6 +854,33 @@ describe("Cloudflare submission gate helpers", () => {
       verdict: "request_changes",
       summary: "Temporary V1 fallback.",
     });
+  });
+
+  it("retries private review only from structured retry errors", () => {
+    expect(
+      isRetryableGateDecision({
+        verdict: "manual",
+        summary:
+          "Private corpus review request failed. A maintainer needs to review this.",
+        labels: ["submission-manual-review"],
+      }),
+    ).toBe(false);
+
+    expect(
+      isRetryableGateDecision({
+        verdict: "manual",
+        summary:
+          "Private corpus review returned an unexpected payload. A maintainer needs to review this.",
+        labels: ["submission-manual-review"],
+        errors: [
+          {
+            code: "invalid_private_response",
+            retryable: true,
+            message: "Private corpus review returned an unexpected payload.",
+          },
+        ],
+      }),
+    ).toBe(true);
   });
 
   it("keeps approval reviews short and links to the canonical report", () => {

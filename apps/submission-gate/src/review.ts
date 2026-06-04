@@ -363,21 +363,11 @@ export function privateReviewErrorDecision(
 
 export function isRetryableGateDecision(decision: GateDecision) {
   if (decision.verdict !== "manual") return false;
-  if (
+  return Boolean(
     decision.errors?.some(
       (error) =>
         error.retryable || RETRYABLE_PRIVATE_REVIEW_CODES.has(error.code),
-    )
-  ) {
-    return true;
-  }
-  const summary = decision.summary.toLowerCase();
-  return (
-    summary.includes("could not determine the github app installation") ||
-    summary.includes("ai maintainer review returned an unexpected payload") ||
-    summary.includes("private corpus review request failed") ||
-    summary.includes("private corpus review returned") ||
-    summary.includes("private corpus review returned an unexpected payload")
+    ),
   );
 }
 
