@@ -159,7 +159,7 @@ export const INTEGRATIONS: Integration[] = [
     bullets: [
       "/llms.txt — full directory map for retrieval",
       "/llms-full.txt — entire corpus in one file",
-      "/data/llms/<category>/<slug>.txt — per-entry text export",
+      "/api/registry/entries/<category>/<slug>/llms — per-entry text export",
     ],
     primaryAction: { label: "View llms.txt", href: "https://heyclau.de/llms.txt" },
     secondaryAction: { label: "Full corpus", href: "https://heyclau.de/llms-full.txt" },

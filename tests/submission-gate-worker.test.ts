@@ -407,6 +407,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
+    expect(source).toContain("strictDuplicatePolicy:");
+    expect(source).toContain("relatedContentPolicy:");
+    expect(source).toContain("collectionPolicy:");
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -839,6 +842,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("function isOpenPullRequest");
     expect(source).toContain("function terminalStatusFromPullRequest");
     expect(source).toContain("async function reconcileTerminalPullRequest");
+    expect(source).toContain("function isReopenedPullRequestEvent");
+    expect(source).toContain("shouldResetClosedTerminal");
+    expect(source).toContain('String(state?.status || "") === "closed"');
     expect(source).toContain("labels: [LABELS.underReview]");
     expect(source).toContain(
       "Terminal gate state did not match open GitHub PR",
@@ -855,9 +861,10 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
-    expect(enqueueBlock).toContain(
-      "if (!hasTerminalGateDecision(existing) || shouldResetIgnoredScan)",
-    );
+    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("!hasTerminalGateDecision(existing)");
+    expect(enqueueBlock).toContain("shouldResetIgnoredScan");
+    expect(enqueueBlock).toContain("shouldResetClosedTerminal");
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",
@@ -1264,6 +1271,47 @@ repoUrl: "https://github.com/langchain-ai/langchain.git"
     );
   });
 
+  it("treats collection member overlap as related context, not a strict duplicate", () => {
+    const existingTool = extractContentDuplicateSignals({
+      filePath: "content/tools/storybook-a11y.mdx",
+      content: `---
+title: Storybook Accessibility Testing
+slug: storybook-a11y
+category: tools
+description: Tooling for accessibility checks inside Storybook.
+docsUrl: "https://storybook.js.org/docs/writing-tests/accessibility-testing"
+---
+`,
+    });
+    const workflowCollection = extractContentDuplicateSignals({
+      filePath: "content/collections/frontend-a11y-browser-qa.mdx",
+      content: `---
+title: Frontend A11y Browser QA Workflow
+slug: frontend-a11y-browser-qa
+category: collections
+description: Ordered workflow for browser QA using Playwright, Storybook, and WCAG references.
+docsUrl: "https://storybook.js.org/docs/writing-tests/accessibility-testing"
+websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(workflowCollection, [existingTool]),
+    ).toBeNull();
+    expect(
+      findRelatedContentMatches(workflowCollection, [existingTool]),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining("across collection/resource categories"),
+          ]),
+        }),
+      ]),
+    );
+  });
+
   it("treats same canonical repository as a strict duplicate", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/mcp/playwright-mcp-server.mdx",
@@ -1290,6 +1338,41 @@ repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
 
     expect(
       findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
+      ]),
+    });
+  });
+
+  it("treats repeated same-scope collections as strict duplicates", () => {
+    const existingCollection = extractContentDuplicateSignals({
+      filePath: "content/collections/frontend-a11y-browser-qa.mdx",
+      content: `---
+title: Frontend A11y Browser QA Workflow
+slug: frontend-a11y-browser-qa
+category: collections
+description: Ordered browser QA workflow using Playwright, Storybook, and WCAG references.
+docsUrl: "https://playwright.dev/docs/intro"
+websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
+---
+`,
+    });
+    const repeatedCollection = extractContentDuplicateSignals({
+      filePath: "content/collections/frontend-accessibility-qa-stack.mdx",
+      content: `---
+title: Frontend Accessibility QA Stack
+slug: frontend-accessibility-qa-stack
+category: collections
+description: Similar browser QA workflow using Playwright, Storybook, and WCAG references.
+docsUrl: "https://playwright.dev/docs/intro"
+websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(repeatedCollection, [existingCollection]),
     ).toMatchObject({
       reasons: expect.arrayContaining([
         expect.stringContaining("same canonical source URL"),

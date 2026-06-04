@@ -1,0 +1,199 @@
+---
+title: Review AI-Generated Code Before Merge
+slug: review-ai-generated-code-before-merge
+category: guides
+description: >-
+  A source-backed review workflow for pull requests that include AI-generated
+  code. Treat generated diffs as untrusted implementation work, verify behavior
+  in CI, inspect security-sensitive paths first, and merge only after a
+  reviewer-owned checklist passes.
+cardDescription: Review AI-generated pull requests with repeatable security, test, and evidence checks.
+seoTitle: Review AI-Generated Code Before Merge
+seoDescription: >-
+  Use a practical checklist for reviewing AI-generated code before merge:
+  scope the diff, verify tests, inspect security-sensitive paths, check secrets
+  and dependencies, and require evidence for risky claims.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Before merging AI-generated code, freeze the PR scope, rebuild from a clean
+  checkout, review security-sensitive paths first, run code scanning and
+  dependency checks, and require tests or reviewer-visible evidence for every
+  behavior change.
+prerequisites:
+  - Access to the pull request diff and the branch's CI results.
+  - Permission to request changes or block merge when evidence is missing.
+  - Project-specific test commands for the touched package or service.
+  - Secret scanning, code scanning, or equivalent local checks for risky repositories.
+safetyNotes:
+  - Treat AI-generated changes as untrusted code until a human reviewer verifies behavior, security impact, and rollback risk.
+  - Block merge when the PR changes authentication, authorization, data deletion, payment, networking, serialization, or release automation without focused tests.
+  - Do not accept generated explanations as proof; require CI output, reproducible commands, or links to authoritative project docs.
+privacyNotes:
+  - Do not paste private code, secrets, customer data, logs, or incident details into external AI review tools unless your organization has approved that workflow.
+  - Keep review notes in the pull request or internal tracker so security decisions remain auditable.
+sourceUrls:
+  - "https://docs.github.com/en/copilot/responsible-use/code-review"
+  - "https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output"
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request"
+  - "https://docs.github.com/en/code-security/concepts/code-scanning/about-code-scanning"
+  - "https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning"
+  - "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review"
+  - "https://csrc.nist.gov/pubs/sp/800/218/final"
+tags:
+  - code-review
+  - ai-generated-code
+  - security
+  - pull-requests
+  - ci
+  - dependency-review
+  - secret-scanning
+keywords:
+  - review ai generated code
+  - ai code review checklist
+  - pull request security review
+  - ai coding tool review
+  - secure ai generated code
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Review AI-generated code like any other untrusted implementation: inspect the
+diff, rebuild it, test the changed behavior, check security-sensitive paths, and
+only merge after a reviewer can explain why the code is correct.
+
+The useful mental model is simple: **AI can propose code, but the reviewer owns
+the merge decision.** The pull request should contain enough evidence for a
+human maintainer to verify the change without relying on generated confidence.
+Even when an AI reviewer provides comments or suggested changes, validate that
+feedback carefully and supplement it with human review before merging.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Clean checkout", "description": "You can rebuild the branch from scratch and reproduce the test results"}
+- [ ] {"task": "Project test commands", "description": "You know the focused tests, linters, and type checks for the touched code"}
+- [ ] {"task": "Security scanning", "description": "Code scanning, secret scanning, dependency review, or local equivalents are available for risky diffs"}
+- [ ] {"task": "Reviewer authority", "description": "You can request changes when the PR lacks tests, source links, or a clear rollback path"}
+
+## Core Concepts Explained
+
+### AI output is an implementation, not evidence
+
+Generated code may be useful, but the explanation around it is not proof that
+the change is correct. Treat claims such as "all edge cases are handled" or "no
+security impact" as review prompts. Ask for the command, test, trace, design
+reference, or code path that proves the claim.
+
+### Review behavior before style
+
+Generated diffs often look polished. Start with behavior: what input changed,
+what output changed, which permissions changed, what data moves, and what can
+fail. Style cleanups can wait until the reviewer understands the actual runtime
+effect.
+
+### Separate generated-size risk from feature risk
+
+A small generated diff can change authorization logic. A large generated diff
+can be mostly generated fixtures. Review risk by the code path and blast radius,
+not by whether the author used an AI tool.
+
+## Step-by-Step Implementation Guide
+
+1. **Freeze the PR scope.** Ask the author to state which files were generated,
+   which were manually edited, and what user-visible behavior should change. If
+   the PR mixes unrelated refactors, generated rewrites, and feature work,
+   request a smaller branch before reviewing.
+
+2. **Rebuild from a clean checkout.** Pull the branch, install dependencies using
+   the repository's documented workflow, and run the focused checks for the
+   touched package. Do not rely only on screenshots, generated summaries, or
+   copied terminal output in the PR body.
+
+3. **Review security-sensitive paths first.** Start with authentication,
+   authorization, secrets, payments, migrations, data deletion, networking,
+   deserialization, sandbox escapes, release automation, and permission changes.
+   These paths get review priority because a plausible-looking generated patch
+   can still change a trust boundary.
+
+4. **Check secrets and dependency changes.** Run secret scanning or a local
+   equivalent before merge. If the PR changes package manifests, lockfiles,
+   container images, GitHub Actions, or third-party SDKs, inspect the dependency
+   diff and confirm why each new dependency is required.
+
+5. **Read the diff in small slices.** Review one behavior path at a time. For
+   each slice, ask: what invariant should stay true, what test proves it, what
+   user data is touched, and what happens when the new code fails?
+
+6. **Require focused tests for changed behavior.** Unit tests are usually enough
+   for pure functions. Integration tests are better for permission checks,
+   persistence, API clients, migrations, and concurrency. If a test would be too
+   expensive, ask for a documented manual verification command.
+
+7. **Verify AI-written comments and docs.** Generated comments can drift from the
+   code they describe. Check that public docs, migration notes, and inline
+   comments match the implementation and do not promise unsupported behavior.
+
+8. **Review agent-created PRs as production code.** If an AI coding agent opened
+   the pull request, inspect the final diff thoroughly before merging. Confirm
+   that the agent's summary matches the files, that requested review comments
+   were actually addressed, and that no unrelated generated changes slipped in.
+
+9. **Merge only after the reviewer-owned checklist passes.** The reviewer should
+   be able to summarize the change, name the highest-risk file, point to the
+   verification evidence, and explain the rollback plan.
+
+## Reviewer Checklist
+
+- [ ] {"task": "Scope is narrow", "description": "The PR changes one behavior or one coherent workflow"}
+- [ ] {"task": "Generated files are identified", "description": "The author says which parts came from an AI coding tool"}
+- [ ] {"task": "Clean build succeeds", "description": "The branch installs and checks from a fresh checkout"}
+- [ ] {"task": "Tests cover the changed behavior", "description": "Focused tests or a manual verification command are visible to reviewers"}
+- [ ] {"task": "Security-sensitive paths are inspected", "description": "Auth, permissions, data movement, secrets, dependencies, and automation changes are reviewed first"}
+- [ ] {"task": "Scanners are clean or triaged", "description": "Code scanning, secret scanning, and dependency alerts are resolved or explicitly accepted"}
+- [ ] {"task": "Claims have evidence", "description": "Generated explanations are backed by code, tests, logs, docs, or maintainer reasoning"}
+- [ ] {"task": "Rollback is understandable", "description": "The team knows how to revert or disable the change if production behavior regresses"}
+
+## When to Block the Merge
+
+Block or request changes when the PR:
+
+- Adds a dependency without a reason, version pin, lockfile update, or license/security check.
+- Changes authentication, authorization, payment, data deletion, or release automation without focused tests.
+- Includes generated code that the author cannot explain.
+- Relies on AI-written claims instead of reproducible verification.
+- Moves secret handling, logging, or telemetry into a new path without privacy review.
+- Makes sweeping style or architecture rewrites while claiming to fix a small bug.
+
+## Troubleshooting
+
+- **The PR is too large to review**: ask for a smaller PR that separates generated refactors from behavior changes.
+- **CI is green but the risk still feels high**: add a targeted test around the risky path before merge.
+- **The author says the AI tool verified it**: ask for the actual command output, test case, or source link a maintainer can inspect.
+- **A scanner reports a warning the team accepts**: document the rationale in the PR so future reviewers can see the decision.
+
+## Duplicate Check
+
+This guide is intentionally about the maintainer workflow for reviewing
+AI-generated pull requests before merge. Adjacent entries in the repository cover
+code review tools, security scanners, and review-oriented agents, but they do not
+provide a source-backed guide for the human merge decision on generated code.
+
+## References
+
+- GitHub Docs: Reviewing proposed changes in a pull request - https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request
+- GitHub Docs: Responsible use of GitHub Copilot code review - https://docs.github.com/en/copilot/responsible-use/code-review
+- GitHub Docs: Review output from Copilot - https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output
+- GitHub Docs: About code scanning - https://docs.github.com/en/code-security/concepts/code-scanning/about-code-scanning
+- GitHub Docs: About secret scanning - https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning
+- GitHub Docs: About dependency review - https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review
+- NIST SP 800-218: Secure Software Development Framework - https://csrc.nist.gov/pubs/sp/800/218/final

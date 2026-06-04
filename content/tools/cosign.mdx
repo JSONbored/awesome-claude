@@ -1,0 +1,85 @@
+---
+title: Cosign
+slug: cosign
+category: tools
+description: Apache-2.0 Sigstore CLI for signing, verifying, and attesting containers, blobs, binaries, SBOMs, and OCI artifacts with keyless OIDC, KMS keys, Fulcio, Rekor, bundles, and registry storage.
+cardDescription: Sign, verify, and attest containers, binaries, SBOMs, and OCI artifacts.
+seoTitle: Cosign Sigstore signing and verification
+seoDescription: Cosign is an Apache-2.0 Sigstore CLI for signing, verifying, and attesting containers, blobs, binaries, SBOMs, and OCI artifacts with keyless OIDC, KMS keys, Fulcio, Rekor, bundles, and registry storage.
+author: Sigstore
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.sigstore.dev/"
+documentationUrl: "https://docs.sigstore.dev/cosign/"
+repoUrl: "https://github.com/sigstore/cosign"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - security
+  - devops
+  - developer-tools
+keywords:
+  - Cosign
+  - Sigstore
+  - artifact signing
+  - container signing
+  - supply chain security
+prerequisites:
+  - Cosign installed from an official or trusted path such as GitHub releases, Homebrew, Go install, a Linux package, the official container image, or a CI installer action.
+  - Artifact target plan for container images by digest, local blobs, binaries, SBOMs, WASM modules, Tekton bundles, OCI artifacts, or release files.
+  - Signing identity or key plan covering keyless OIDC, expected certificate identity and issuer, self-managed keys, hardware keys, KMS, Vault, Kubernetes secrets, PKCS11, or custom PKI.
+  - Registry and artifact-storage plan for OCI referrers, signature artifacts, private registry authentication, local bundles, offline verification, and later upload workflows.
+  - Verification policy for certificate identity, OIDC issuer, public keys, CA roots, intermediates, annotations, attestations, predicate types, policy checks, claim validation, timestamps, and transparency-log evidence.
+  - CI and release workflow plan for digest pinning, protected refs, token permissions, OIDC trust boundaries, signing secrets, logs, artifact retention, and rollback behavior.
+safetyNotes:
+  - Sign container images by immutable digest rather than mutable tag so the signature is attached to the intended artifact.
+  - Keyless workflows depend on OIDC issuer and subject claims; overly broad certificate identity, issuer, or regular-expression verification can approve artifacts from the wrong workflow or account.
+  - Public-key, KMS, Vault, Kubernetes secret, environment-variable, and hardware-backed signing flows can expose high-value signing material if CI permissions or logs are too broad.
+  - Disabling Cosign claim checks or bypassing transparency-log and timestamp expectations weakens the connection between the verified signature and the artifact being consumed.
+  - Attestation and policy workflows can gate releases, deploys, or promotion decisions; review predicate schemas, policy rules, and failure behavior before enforcing them in production.
+  - Cosign can upload signatures, certificates, attestations, and bundles to registries or transparency infrastructure; test registry support and cleanup behavior before relying on it.
+  - Registry cleanup or deletion commands can remove signatures where the registry supports deletion, so keep release evidence retention and recovery requirements explicit.
+  - Offline and air-gapped verification requires current trusted roots, bundles or signed-entry evidence, local artifacts, and a process for refreshing trust data safely.
+privacyNotes:
+  - Keyless signing can publish email addresses, OIDC identities, certificate metadata, timestamps, and transparency-log records that are intentionally public and may be permanent.
+  - Registry-stored signatures, certificates, attestations, OCI referrers, annotations, and bundles can reveal image names, digests, artifact relationships, workflow identity, and release metadata.
+  - Sigstore bundles can include signatures, certificates, timestamps, transparency-log inclusion proofs, and issuer or subject details that should be reviewed before publishing.
+  - CI logs and artifacts can expose image references, registry hosts, certificate identities, issuer URLs, workflow paths, annotations, KMS URIs, bundle paths, and verification payloads.
+  - Cloud KMS, Vault, registry, GitHub Actions, GitLab CI, and other identity providers may receive authentication, authorization, and audit metadata when Cosign signs or verifies artifacts.
+  - Private keys, KMS credentials, registry tokens, client certificates, OIDC tokens, and signing environment variables should be scoped, rotated, masked, and excluded from generated artifacts.
+---
+
+## Editorial notes
+
+Cosign is useful when Claude-adjacent teams need concrete supply-chain controls around agents, CLI releases, containers, SBOMs, model-serving images, MCP servers, and automation artifacts. It gives developers and agents a scriptable way to sign build outputs, verify downloaded tools, attach attestations, prove CI identity, and make promotion gates depend on artifact identity instead of naming convention alone.
+
+This entry covers the open-source Cosign CLI from the Sigstore project. It is distinct from Syft, which generates SBOMs, and Grype, which scans artifacts and SBOMs for vulnerabilities. Cosign can sign or verify SBOMs and attestations produced by other tools, but this listing focuses on Cosign itself as the artifact signing, verification, and attestation tool.
+
+## Source notes
+
+- The official repository describes Cosign as code signing and transparency for containers and binaries.
+- The official repository says Cosign signs OCI containers and other artifacts using Sigstore.
+- The README says Cosign supports keyless signing through Sigstore's Fulcio certificate authority and Rekor transparency log.
+- The README lists support for hardware and KMS signing, encrypted key pairs, container signing, container verification, storage in OCI registries, and bring-your-own PKI.
+- The README says users should sign images by digest rather than by tag to avoid signing something unintended.
+- The README describes keyless signing with OIDC, a short-lived certificate from Fulcio, Rekor transparency-log storage, and signature upload beside the image in the OCI registry.
+- The README shows verification with expected certificate identity and OIDC issuer arguments, including regular-expression variants.
+- The Cosign installation docs describe release binaries, Go install, Homebrew, Linux package paths, the official container image, GitHub Actions installation, and GitLab CI installation.
+- The signing docs say keyless signing can use OIDC providers such as Google, GitHub, and Microsoft, while key-based signing can use local keys, cloud KMS, Vault, OpenBao, Kubernetes secrets, and PKCS11.
+- The signing docs describe signatures, attestations, annotations, saved bundles, later upload with ORAS, OCI 1.1 referrers, signature discovery with `cosign tree`, and cleanup behavior with `cosign clean`.
+- The verification docs show public-key, KMS, keyless, blob, multiple-image, local-image, custom-CA, attestation, annotation, bundle, and transparency-log verification workflows.
+- The verification docs explain that Cosign payloads include digests and that claim checking validates the digest unless explicitly disabled.
+- The Sigstore quickstart says Cosign signs and verifies blobs and containers and that bundles include signature, certificate, timestamp, and transparency-log inclusion metadata.
+- The Sigstore quickstart describes Fulcio issuing a short-lived certificate after OIDC identity verification and Rekor recording the signing activity.
+- The repository is `sigstore/cosign`, is Apache-2.0 licensed, active, and maintained under the Sigstore project.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Cosign`, `Sigstore`, `sigstore/cosign`, `github.com/sigstore/cosign`, `docs.sigstore.dev/cosign`, `Fulcio`, `Rekor`, `keyless signing`, `container signing`, `artifact signing`, and `supply chain signing`. Existing content contains only incidental Cosign-compatible signing mentions inside the Syft tools entry; no dedicated Cosign tools entry, target file, exact source URL duplicate, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Cosign is Apache-2.0 open-source software under the Sigstore project; public Sigstore services, OCI registries, cloud KMS providers, Vault providers, CI platforms, artifact stores, policy engines, and downstream deployment systems may have separate licenses, billing, terms, privacy obligations, and access controls.

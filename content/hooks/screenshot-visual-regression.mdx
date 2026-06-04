@@ -123,6 +123,7 @@ prerequisites:
   - "odiff installed (npm i -g odiff-bin) for the image comparison; without it the hook prints an install hint and exits."
 safetyNotes:
   - "Runs after every Write, Edit, and MultiEdit but only acts on PNG files saved under a screenshots, snapshots, or visual directory, and reads the screenshot and its baseline image from disk."
+  - "Install this project-local command only in project settings (`.claude/settings.json`). Do not place `$CLAUDE_PROJECT_DIR/.claude/hooks/screenshot-visual-regression.sh` in user/global settings, because that would allow each opened project to supply the executed script."
   - "When a baseline exists and odiff is installed, it writes a diff image next to the screenshot (file.diff.png) describing the difference; it never deletes or overwrites the screenshot or the baseline."
   - "Advisory and always exits 0 - it reports a visual difference but never blocks the write or updates the baseline on its own."
   - "Fails open: with no baseline, no odiff, or no jq, it prints a short hint and does nothing else."
@@ -167,7 +168,7 @@ On `PostToolUse`, the hook checks whether the saved file is a screenshot PNG in 
 2. Create the hook file: `touch .claude/hooks/screenshot-visual-regression.sh`
 3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/screenshot-visual-regression.sh`
 4. Install odiff: `npm i -g odiff-bin`
-5. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+5. Add the configuration below to the project settings file, `.claude/settings.json`. Do not add this project-local `$CLAUDE_PROJECT_DIR/.claude/hooks/...` command to user/global settings (`~/.claude/settings.json`); global hooks should only point to trusted user-owned scripts outside the project.
 
 ## Requirements
 
@@ -177,6 +178,8 @@ On `PostToolUse`, the hook checks whether the saved file is a screenshot PNG in 
 - A baseline image stored alongside each screenshot (in `baseline/`, `baselines/`, `__baselines__/`, or as `name.baseline.png`)
 
 ## Hook configuration
+
+This configuration is for project settings (`.claude/settings.json`) only. For user/global settings, point to a trusted script in a user-owned location such as `~/.claude/hooks/` instead of using `$CLAUDE_PROJECT_DIR`.
 
 ```json
 {

@@ -35,10 +35,6 @@ const PURPOSES: Record<string, Pick<EcosystemFeed, "purpose" | "consumers">> = {
     purpose: "JSON index of public machine-readable feeds.",
     consumers: ["Web", "API clients"],
   },
-  "/data/llms-full.txt": {
-    purpose: "LLM-ingestible directory corpus.",
-    consumers: ["LLM ingestion"],
-  },
 };
 
 function contentTypeFor(path: string): EcosystemFeed["contentType"] {

@@ -89,8 +89,12 @@ export interface RepoStats {
 }
 
 export type EntryRelationType =
+  | "duplicate"
   | "same-project"
   | "collection-member"
+  | "complementary"
+  | "same-ecosystem"
+  | "prerequisite"
   | "works-with"
   | "extends"
   | "alternative"

@@ -1,0 +1,84 @@
+---
+title: Prefect
+slug: prefect
+category: tools
+description: Apache-2.0 Python workflow orchestration framework for resilient data pipelines with flows, tasks, deployments, schedules, retries, caching, workers, work pools, and observability.
+cardDescription: Orchestrate resilient Python data pipelines with flows, tasks, schedules, and workers.
+seoTitle: Prefect Python workflow orchestration
+seoDescription: Prefect is an Apache-2.0 Python workflow orchestration framework for resilient data pipelines with flows, tasks, deployments, schedules, retries, caching, workers, work pools, and observability.
+author: Prefect
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.prefect.io/"
+documentationUrl: "https://docs.prefect.io/v3/get-started"
+repoUrl: "https://github.com/PrefectHQ/prefect"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - orchestration
+  - data-engineering
+  - python
+keywords:
+  - Prefect
+  - workflow orchestration
+  - data pipelines
+  - Python flows
+  - work pools
+prerequisites:
+  - Python 3.10 or newer with Prefect and the workflow's data, cloud, database, notification, storage, container, and infrastructure dependencies installed.
+  - Workflow design for flows, tasks, subflows, parameters, states, task runners, retries, timeouts, caching, concurrency limits, background tasks, artifacts, and result persistence.
+  - Deployment plan for local processes, workers, work pools, work queues, Docker, Kubernetes, cloud services, serverless infrastructure, schedules, events, automations, and manual runs.
+  - Configuration and secrets plan for profiles, settings, variables, blocks, SecretStr fields, cloud credentials, database credentials, Docker or Kubernetes credentials, and environment variables.
+  - Observability plan for Prefect server or Prefect Cloud, logs, print capture, subprocess logs, thread logs, flow and task metadata, event history, alerts, notifications, and data retention.
+  - Security plan for self-hosted server authentication, reverse proxy, API access, CSRF settings, CORS settings, custom headers, worker permissions, and network access to execution infrastructure.
+safetyNotes:
+  - Prefect flows and tasks run arbitrary Python code and can query databases, mutate files, call APIs, launch subprocesses, provision infrastructure, and trigger downstream jobs, so workflows should be treated as trusted production code.
+  - Retries, schedules, event triggers, deployment runs, backfills, and automations can repeat side effects unless tasks are idempotent and external writes are guarded.
+  - Work pools and workers can start subprocesses, containers, Kubernetes jobs, or cloud jobs; base job templates, queue limits, worker permissions, and infrastructure credentials should be scoped tightly.
+  - Flow and task timeouts help prevent unintentional long-running work, but teams still need resource limits, cancellation behavior, and cleanup policies for jobs that touch external systems.
+  - Blocks can store credentials and typed configuration for external services; SecretStr fields are encrypted and hidden by default in the UI, but credentials still need rotation, least privilege, and environment separation.
+  - Logging can capture custom logs, print statements, subprocess output, thread output, task parameters, and exception details; secrets and sensitive rows should not be printed or attached to artifacts.
+  - Self-hosted Prefect servers should use authentication, reverse proxy controls, CSRF protection, CORS policy, and secure custom-header handling before being exposed beyond a trusted network.
+  - Prefect Cloud, webhooks, automations, notifications, and external integrations can trigger or observe workflow activity and should be reviewed for permissions, rate limits, and incident response behavior.
+privacyNotes:
+  - Prefect workflows can process flow parameters, task inputs and outputs, cached results, state history, run metadata, logs, artifacts, events, schedules, deployments, work-pool data, block documents, and infrastructure job variables.
+  - Logs and captured print statements can disclose SQL queries, file paths, data samples, credentials, API responses, exception traces, and environment details if workflow code does not redact them.
+  - Blocks, variables, settings, profiles, and environment variables can contain cloud credentials, database credentials, Docker registry credentials, Git credentials, Slack webhooks, Snowflake credentials, and other integration secrets.
+  - Prefect server or Prefect Cloud stores orchestration metadata used for monitoring, retries, states, automations, alerts, and dashboards; teams should review retention, access controls, workspace boundaries, and export requirements.
+  - Workers running in local, Docker, Kubernetes, serverless, or managed infrastructure may expose environment variables, mounted files, network metadata, container images, and cloud identity details to the execution environment.
+  - Automations, webhooks, notifications, and integrations can forward run metadata, event payloads, failure details, and parameters to chat tools, incident systems, APIs, or downstream services.
+---
+
+## Editorial notes
+
+Prefect is useful when Claude-adjacent teams need to turn Python scripts, data transformations, model-evaluation jobs, ingestion pipelines, reporting workflows, and agent-generated automation into observable, retryable, scheduled production workflows. Its Python-native flow and task decorators are a good fit for agents that need to modify pipeline logic without forcing a separate DSL or YAML-first orchestration layer.
+
+This entry covers the open-source Prefect orchestration framework. It is distinct from Apache Airflow, Dagster, FastMCP, dbt Core, DuckDB, and Polars. Airflow is a DAG scheduler and workflow platform. Dagster emphasizes software-defined assets and data platform observability. FastMCP is a separate PrefectHQ MCP framework. dbt Core structures warehouse transformations. DuckDB and Polars are analytical data engines. Prefect focuses on orchestrating Python workflows with flows, tasks, states, deployments, workers, work pools, schedules, events, and recovery behavior.
+
+## Source notes
+
+- The official repository describes Prefect as a workflow orchestration framework for building resilient data pipelines in Python.
+- The README says Prefect elevates scripts into production workflows and supports scheduling, caching, retries, event-based automations, monitoring, self-hosted Prefect server, and Prefect Cloud.
+- The README says Prefect requires Python 3.10 or newer and uses `flow` and `task` decorators to orchestrate and observe workflows.
+- The Get Started docs describe Prefect as an open-source orchestration engine that turns Python functions into production-grade data pipelines without DSLs or complex config files.
+- The Get Started docs list Pythonic workflows, state and recovery, flexible execution from local processes to containers, Kubernetes or cloud services, event-driven triggering, dynamic runtime tasks, UI, and monitoring.
+- The flows docs say flows are decorated Python functions that accept inputs, perform work, return results, track states, validate parameters, support retries, enforce timeouts, and can be deployed for remote interaction.
+- The tasks docs say tasks are decorated Python functions with tracked metadata, state lifecycles, futures, retries, timeouts, caching, concurrency, parallel execution, and transactional semantics.
+- The work-pools docs describe work pools as a bridge between Prefect orchestration and execution infrastructure, with dynamic infrastructure provisioning, work queues, priorities, and concurrency limits.
+- The blocks docs say blocks manage configuration schemas, infrastructure, and secrets, and that SecretStr fields are stored with additional encryption and hidden by default in the UI.
+- The logging docs describe custom logs, capturing print statements with `log_prints`, subprocess logging, thread logging, and access to logs from the CLI and UI.
+- The security settings docs describe Basic Authentication, reverse proxy hosting, CSRF protection settings, CORS settings, and secure handling for custom client headers on self-hosted Prefect servers.
+- The settings and profiles docs describe type-validated settings, active profiles, project settings, temporary process settings, and commands for viewing current configuration.
+- The documentation index lists automations, events, deployment triggers, concurrency limits, workers, webhooks, the Prefect MCP server, and AI log summaries as supported areas.
+- The repository is `PrefectHQ/prefect`, is Apache-2.0 licensed, active, and maintained by PrefectHQ.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Prefect`, `PrefectHQ/prefect`, `github.com/PrefectHQ/prefect`, `docs.prefect.io`, `prefect.io`, `workflow orchestration`, `flows`, `tasks`, and `work pools`. Existing source matches are for `PrefectHQ/fastmcp`, a separate FastMCP skill entry; no dedicated Prefect tools entry, source URL duplicate, target file, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Prefect is Apache-2.0 open-source software; Prefect Cloud, Prefect Managed infrastructure, databases, warehouses, cloud providers, container registries, Kubernetes clusters, notification systems, webhooks, MCP clients, and downstream deployment services may have separate licenses, billing, terms, privacy obligations, data-retention policies, and access controls.

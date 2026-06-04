@@ -1,0 +1,85 @@
+---
+title: Grype
+slug: grype
+category: tools
+description: Apache-2.0 vulnerability scanner from Anchore for container images, filesystems, archives, SBOMs, PURLs, and CPEs, with risk scoring, VEX filtering, and CI-friendly output.
+cardDescription: Scan images, directories, SBOMs, PURLs, and CPEs for known vulnerabilities.
+seoTitle: Grype vulnerability scanner
+seoDescription: Grype is an Apache-2.0 vulnerability scanner from Anchore for container images, filesystems, archives, SBOMs, PURLs, and CPEs, with risk scoring, VEX filtering, and CI-friendly output.
+author: Anchore
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://anchore.com/opensource/"
+documentationUrl: "https://oss.anchore.com/docs/guides/vulnerability/getting-started/"
+repoUrl: "https://github.com/anchore/grype"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - security
+  - vulnerability
+  - developer-tools
+keywords:
+  - Grype
+  - vulnerability scanner
+  - container scanning
+  - SBOM scanning
+  - Anchore
+prerequisites:
+  - Grype installed from an official or trusted package path such as the Anchore install script, Homebrew, Windows package manager, Docker image, or GitHub release.
+  - Target selection for container images, registries, Docker, Podman, containerd, OCI archives, Docker archives, Singularity images, directories, files, SBOMs, Package URLs, or CPEs.
+  - Vulnerability database update policy, cache directory, offline scanning expectations, database age policy, and network allowance for database downloads.
+  - CI policy for output formats, JSON/SARIF artifacts, fail-on severity thresholds, fix-state filters, VEX documents, ignore rules, and suppressed-result review.
+  - Registry access plan for private images, credentials, TLS policy, platform selection, image-pull source, and least-privilege authentication.
+  - SBOM and supply-chain workflow plan if pairing Grype with Syft, CycloneDX, SPDX, OpenVEX, GitHub code scanning, ticketing, or release gates.
+safetyNotes:
+  - Grype parses container images, archives, filesystems, SBOMs, package identifiers, and vulnerability data; run it from trusted automation with bounded filesystem access and resource limits for untrusted targets.
+  - The install script and binary update paths should be verified before use in production CI; pin versions and checksums where reproducible builds or regulated environments require it.
+  - Scanning private images can use registry credentials, client certificates, tokens, Docker or Podman daemon access, and local image metadata, so CI jobs should scope credentials and avoid broad registry permissions.
+  - Vulnerability findings are advisory and depend on package detection, vulnerability database freshness, distro context, CPE matching, fix-state metadata, EPSS, KEV, and risk-scoring inputs; high-impact findings still need human triage.
+  - Fail-on thresholds, only-fixed filters, only-notfixed filters, ignore rules, VEX documents, and suppressed-result settings can change pipeline outcomes, so policy changes should be reviewed like security code.
+  - The configuration reference includes options for insecure registry TLS behavior and HTTP registry access; these should be avoided outside tightly controlled test environments.
+  - Automatic database updates and application update checks make outbound network requests unless disabled or pinned by policy.
+  - Large images, archives, monorepos, or SBOMs can produce expensive scans and large JSON/SARIF artifacts; set timeouts, artifact limits, cache policy, and retention rules in CI.
+privacyNotes:
+  - The Grype getting-started docs say Grype runs locally and does not send scan data to external services; it needs internet access for downloading container images and the vulnerability database.
+  - Pulling images from remote or private registries can disclose image names, tags, digests, registry hostnames, platform requests, authentication attempts, and network metadata to registry infrastructure.
+  - Scan output can reveal package names, package versions, ecosystems, distro names, image identifiers, file metadata, file digests, executable metadata, vulnerability identifiers, fix versions, EPSS, KEV, risk scores, and suppressed findings.
+  - JSON, SARIF, CycloneDX, and template outputs are useful for automation but can leak dependency inventory and security posture when uploaded to CI logs, code scanning tools, tickets, dashboards, or long-retention artifacts.
+  - Configuration files and environment variables can include registry usernames, passwords, tokens, client certificates, client keys, CA certificates, cache paths, update URLs, ignore rules, VEX documents, and output paths.
+  - SBOM inputs may contain full dependency inventories and build metadata; treat Grype reports and source SBOMs as security-sensitive artifacts.
+---
+
+## Editorial notes
+
+Grype is useful when Claude-adjacent teams need a local, scriptable vulnerability scanner for containers, repositories, SBOM-driven release checks, dependency review, image promotion, and CI/CD gates. It gives agents and developers a concrete security artifact to inspect: table output for human triage, JSON for automation, SARIF for code-scanning integrations, and configurable failure thresholds for release policy.
+
+This entry covers Anchore's open-source Grype vulnerability scanner. It is distinct from the existing Docker image security scanner hook, which can optionally invoke Grype as one scanner inside a Claude Code hook. This tools entry documents Grype itself as a standalone CLI and automation tool. It is also distinct from Syft: Syft generates SBOMs, while Grype scans images, filesystems, archives, SBOMs, PURLs, and CPEs for known vulnerabilities.
+
+## Source notes
+
+- The official repository describes Grype as a vulnerability scanner for container images and filesystems.
+- The README says Grype scans container images, filesystems, and SBOMs for known vulnerabilities.
+- The README lists support for major OS package ecosystems, language-specific packages, Docker, OCI, Singularity image formats, EPSS, KEV, risk scoring, and OpenVEX filtering.
+- The README shows scanning a container image, scanning a directory, scanning a Syft SBOM, and piping an SBOM into Grype.
+- The getting-started docs describe Grype as a CLI tool for scanning container images, filesystems, and SBOMs for known vulnerabilities.
+- The getting-started docs say Grype downloads the latest vulnerability database for scans and can emit JSON output for downstream processing.
+- The getting-started FAQ says Grype needs internet access only for downloading container images and the vulnerability database, and that after initial database download scanning works offline until database update.
+- The getting-started FAQ says Grype supports authentication for private registries and is designed for CI/CD automation with severity-threshold pipeline failures.
+- The scan-targets docs say Grype supports container images, directories, files, archives, SBOMs, PURLs, and CPEs, with automatic target detection or explicit `--from` hints.
+- The scan-targets docs say Grype can scan SBOMs in Syft JSON, SPDX, and CycloneDX formats, including SBOM input from files or stdin.
+- The interpreting-results docs describe table, JSON, SARIF, and template outputs, as well as package name, installed version, fixed version, package type, vulnerability ID, severity, EPSS, risk, KEV, suppressed status, and distribution annotations.
+- The interpreting-results docs explain default risk-based sorting, `--by-cve`, EPSS, KEV, severity, and package/vulnerability sorting options.
+- The filtering docs describe `--fail-on`, fix-state filters, ignore rules, VEX documents, suppressed results, and JSON `ignoredMatches`.
+- The configuration reference describes `.grype.yaml` lookup, environment-backed configuration, output formats, ignore rules, VEX documents, registry authentication, insecure registry options, database cache/update settings, database age validation, and `fail-on-severity`.
+- The repository is `anchore/grype`, is Apache-2.0 licensed, active, and maintained by Anchore.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Grype`, `anchore/grype`, `github.com/anchore/grype`, `oss.anchore.com`, `Anchore`, `vulnerability scanner`, `SBOM scanning`, `container image scanning`, and `OpenVEX`. Existing content mentions Grype only as an optional scanner inside `content/hooks/docker-image-security-scanner.mdx`; no dedicated Grype tools entry, target file, exact source URL duplicate, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Grype is Apache-2.0 open-source software sponsored by Anchore; Anchore Enterprise, commercial support, private registries, CI platforms, code-scanning systems, SBOM tools, VEX tooling, ticketing systems, container runtimes, and downstream artifact stores may have separate licenses, billing, terms, privacy obligations, and access controls.

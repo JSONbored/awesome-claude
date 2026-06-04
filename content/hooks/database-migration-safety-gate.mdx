@@ -83,12 +83,54 @@ scriptBody: |-
     *) exit 0 ;;
   esac
 
-  CONTENT=$(printf '%s' "$INPUT" | jq -r '
-    [ .tool_input.content,
-      .tool_input.new_string,
-      (.tool_input.edits[]?.new_string) ]
-    | map(select(. != null)) | join("\n")
-  ')
+  TOOL_NAME=$(printf '%s' "$INPUT" | jq -r '.tool_name // ""')
+  CONTENT=$(printf '%s' "$INPUT" | jq -r '.tool_input.content // ""')
+
+  if [ "$TOOL_NAME" = "Edit" ] || [ "$TOOL_NAME" = "MultiEdit" ]; then
+    EXISTING_FILE=""
+    if [ -r "$FILE" ]; then
+      EXISTING_FILE="$FILE"
+    elif [ -n "${CLAUDE_PROJECT_DIR:-}" ] && [ -r "$CLAUDE_PROJECT_DIR/$FILE" ]; then
+      EXISTING_FILE="$CLAUDE_PROJECT_DIR/$FILE"
+    fi
+
+    if [ -n "$EXISTING_FILE" ]; then
+      if ! CONTENT=$(printf '%s' "$INPUT" | jq -r --rawfile content "$EXISTING_FILE" '
+        def replace_once($old; $new):
+          if ($old == "") then .
+          else (index($old) as $ix
+            | if $ix == null then .
+              else .[0:$ix] + $new + .[($ix + ($old | length)):]
+              end)
+          end;
+        def apply_edit($edit):
+          if ($edit.replace_all == true) then split($edit.old_string) | join($edit.new_string)
+          else replace_once($edit.old_string; $edit.new_string)
+          end;
+        . as $input
+        | if $input.tool_name == "Edit" then
+            $content | apply_edit($input.tool_input)
+          elif $input.tool_name == "MultiEdit" then
+            reduce ($input.tool_input.edits[]? // empty) as $edit ($content; apply_edit($edit))
+          else
+            $content
+          end
+      '); then
+        echo "Unable to reconstruct edited migration for ${FILE:-pending write}; blocked by the safety gate." >&2
+        exit 2
+      fi
+    else
+      if ! CONTENT=$(printf '%s' "$INPUT" | jq -r '
+        [ .tool_input.new_string,
+          (.tool_input.edits[]?.new_string) ]
+        | map(select(. != null)) | join("\n")
+      '); then
+        echo "Unable to inspect edited migration for ${FILE:-pending write}; blocked by the safety gate." >&2
+        exit 2
+      fi
+    fi
+  fi
+
   [ -z "$CONTENT" ] && exit 0
 
   # Escape hatch: an explicit acknowledgement lets an intentional change proceed.
@@ -128,12 +170,12 @@ prerequisites:
   - "Claude Code CLI with hooks enabled."
   - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
 safetyNotes:
-  - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension and reads the pending SQL from the tool input."
+  - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension; for edits, it reads the existing file and applies the requested replacement before scanning the final SQL."
   - "Blocks the write with exit code 2 when it detects DROP TABLE/COLUMN, TRUNCATE, a table/column RENAME, or CREATE INDEX without CONCURRENTLY; the hook never connects to or runs SQL against any database."
   - "Provides an explicit escape hatch - add a '-- safety-gate: allow' comment to the migration to acknowledge the risk and let it through."
   - "Uses regex heuristics, so it can miss obfuscated statements or flag an intentional change; review every migration regardless of the result."
 privacyNotes:
-  - "Reads only the pending migration content from the tool input; it opens no database connections and makes no network calls."
+  - "Reads the pending Write content from the tool input and, for Edit or MultiEdit, the targeted local migration file so it can scan the final content; it opens no database connections and makes no network calls."
   - "Prints the file path and the names of the detected risky operation classes to local hook stderr; it writes no logs."
   - "The file path shown in output may reveal local directory structure in your terminal."
 tags:
@@ -159,7 +201,7 @@ keywords:
 
 ## How it works
 
-On `PreToolUse`, the hook checks whether the target path looks like a migration (a `migrations/`, `migrate/`, or `db/migrate/` directory, or a `.sql` file). If so, it reads the pending SQL from the tool input and scans it for the unsafe operation classes above. Any match prints a blocked-reason list to stderr and exits `2`, which stops the write — unless the content carries an acknowledgement comment.
+On `PreToolUse`, the hook checks whether the target path looks like a migration (a `migrations/`, `migrate/`, or `db/migrate/` directory, or a `.sql` file). If so, it reads Write content from the tool input, or reconstructs the final migration for Edit and MultiEdit by applying the requested replacements to the existing local file, then scans that final SQL for the unsafe operation classes above. Any match prints a blocked-reason list to stderr and exits `2`, which stops the write — unless the content carries an acknowledgement comment.
 
 ## Safe-pattern guidance it nudges toward
 

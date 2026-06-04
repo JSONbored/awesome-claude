@@ -62,10 +62,15 @@ scriptBody: |-
   budget="${CLAUDE_CODE_DAILY_BUDGET_USD:-50}"
   url="https://api.anthropic.com/v1/organizations/usage_report/claude_code?starting_at=${day}&limit=${limit}"
 
-  json=$(curl -fsS "$url" \
-    --header "anthropic-version: 2023-06-01" \
-    --header "x-api-key: $ANTHROPIC_ADMIN_API_KEY" \
-    --header "User-Agent: heyclaude-statusline/1.0" 2>/dev/null || true)
+  api_key="$ANTHROPIC_ADMIN_API_KEY"
+  unset ANTHROPIC_ADMIN_API_KEY
+  json=$(ANTHROPIC_ADMIN_API_KEY= curl -fsS \
+    --config <(printf '%s\n' \
+      'header = "anthropic-version: 2023-06-01"' \
+      "header = \"x-api-key: ${api_key}\"" \
+      'header = "User-Agent: heyclaude-statusline/1.0"') \
+    "$url" 2>/dev/null || true)
+  unset api_key
 
   if [ -z "$json" ]; then
     echo "cc analytics: unavailable"
@@ -106,7 +111,7 @@ scriptBody: |-
   esac
 prerequisites:
   - Anthropic Admin API access for an organization with Claude Code Analytics enabled.
-  - ANTHROPIC_ADMIN_API_KEY set in the statusline environment.
+  - ANTHROPIC_ADMIN_API_KEY set in the statusline environment; prefer a narrowly scoped/read-only credential if Anthropic offers one for analytics access.
   - curl and jq available on the machine running the Claude Code statusline command.
   - Optional CLAUDE_CODE_ANALYTICS_EMAIL to limit the display to one user and CLAUDE_CODE_DAILY_BUDGET_USD to set the budget denominator.
 safetyNotes:
@@ -117,6 +122,7 @@ privacyNotes:
   - The script sends an Admin API request to Anthropic and receives organization-level Claude Code analytics.
   - It prints aggregate cost, session, and budget numbers, not email addresses, model names, prompts, file paths, or code.
   - Admin API keys can expose organization analytics; store them in a scoped local secret manager or shell environment with restricted access.
+  - The script feeds the API key to curl through a config file descriptor instead of command-line arguments and unsets the exported key before launching curl, reducing process-list exposure on shared machines.
 ---
 
 ## Source notes

@@ -1,0 +1,85 @@
+---
+title: Gradio
+slug: gradio
+category: tools
+description: Apache-2.0 Python framework for building and sharing machine-learning demos, AI web apps, model interfaces, chatbots, API front ends, and interactive evaluation tools.
+cardDescription: Build and share Python machine-learning demos, AI apps, and chatbot interfaces.
+seoTitle: Gradio Python AI app framework
+seoDescription: Gradio is an Apache-2.0 Python framework for building and sharing machine-learning demos, AI web apps, model interfaces, chatbots, API front ends, and interactive evaluation tools.
+author: Gradio
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.gradio.app/"
+documentationUrl: "https://www.gradio.app/docs"
+repoUrl: "https://github.com/gradio-app/gradio"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - ml-apps
+  - demos
+  - python
+keywords:
+  - Gradio
+  - machine learning demos
+  - AI web apps
+  - chatbot interfaces
+  - Hugging Face Spaces
+prerequisites:
+  - Python 3.10 or newer with Gradio and model, inference, data, UI, media, and deployment dependencies installed in an isolated environment.
+  - App design for `gr.Interface`, `gr.Blocks`, `gr.ChatInterface`, components, event listeners, state, examples, flagging, streaming, queues, batching, and API visibility.
+  - Runtime plan for local development, notebooks, Google Colab, Hugging Face Spaces, Docker, Modal, custom FastAPI mounting, public share links, or self-hosted servers.
+  - Resource plan for GPU or CPU concurrency, queue limits, request size, file upload limits, model warmup, streaming outputs, background cleanup, logs, and rate limiting.
+  - Security plan for public links, authentication, allowed and blocked file paths, strict CORS, custom CSS or JavaScript, API clients, MCP exposure, and user-submitted inputs.
+safetyNotes:
+  - Gradio apps wrap arbitrary Python functions and can run model inference, file operations, network calls, database queries, subprocesses, and side effects, so exposed functions should be treated as trusted server code.
+  - Setting `share=True` creates a publicly accessible share link through a tunnel, and the docs warn that anyone with the link can use the model while computation continues on the local computer.
+  - Public apps, API endpoints, and MCP servers need authentication, authorization, rate limits, queue limits, API visibility settings, resource quotas, and monitoring before being exposed to untrusted users.
+  - File upload components allow users to upload files to the computer or server running the app; apps should set maximum file sizes, validate content, clean temporary files, and avoid processing untrusted files unsafely.
+  - File access controls such as `allowed_paths`, `blocked_paths`, and static paths can expose local files if configured too broadly, so allowed paths should be minimal and app-specific.
+  - Queue and concurrency settings can protect scarce GPU or model resources, but unlimited concurrency or unbounded queues can exhaust memory, disk, network, API quota, or accelerator capacity.
+  - Custom CSS, JavaScript, HTML, iframes, components, client-side functions, and embedded analytics can run browser code or load third-party resources and should be reviewed before deployment.
+  - Strict CORS should normally stay enabled for localhost apps; disabling it can increase CSRF exposure when embedding locally running apps.
+privacyNotes:
+  - Gradio apps can process prompts, chat history, uploaded files, images, audio, video, labels, model inputs and outputs, flagging data, examples, API requests, queue metadata, logs, and generated artifacts.
+  - Public share links, Hugging Face Spaces, API clients, JavaScript clients, cURL access, MCP exposure, and hosted deployment platforms may make demos reachable beyond the original local environment.
+  - Authentication, user identity, IP addresses, request headers, API visibility, rate-limiting metadata, and queue status can become part of app logic or logs and should be handled as sensitive operational data.
+  - Uploaded files and generated outputs may be moved into Gradio cache directories or allowed static paths; teams should define retention, cleanup, and access-control policies.
+  - Custom telemetry, analytics, JavaScript, third-party components, model providers, databases, object stores, LLM APIs, and deployment hosts may receive user inputs or outputs depending on app design.
+  - Gradio exposes analytics configuration options, and teams with privacy requirements should review telemetry settings, environment variables, hosted-platform terms, and downstream service logging.
+---
+
+## Editorial notes
+
+Gradio is useful when Claude-adjacent teams need to turn model functions, evaluation workflows, LLM prompts, multimodal pipelines, classifiers, image generators, speech tools, and AI prototypes into shareable interfaces quickly. It gives agents and developers a Python-first path from function to demo, chatbot, API endpoint, hosted Space, or internal review app without building a separate frontend.
+
+This entry covers the open-source Gradio framework. It is distinct from Streamlit, Marimo, Chainlit, Hugging Face MCP Server, DuckDB, and Polars. Streamlit focuses on data apps and dashboards. Marimo focuses on reactive Python notebooks. Chainlit focuses on conversational AI apps. Hugging Face MCP Server lets Claude access Hugging Face Hub and Gradio applications through MCP. DuckDB and Polars are analytical data engines. Gradio focuses on building and sharing machine-learning demos, model interfaces, AI apps, and chatbot UIs around Python functions.
+
+## Source notes
+
+- The official repository describes Gradio as a way to build and share machine-learning apps in Python.
+- The README says Gradio is an open-source Python package for quickly building a demo or web application for a machine-learning model, API, or arbitrary Python function.
+- The README says Gradio requires Python 3.10 or newer and recommends installation in a virtual environment.
+- The README describes `gr.Interface` as a high-level class that wraps a Python function with input and output components, and says the wrapped function can be anything from a model prediction function to another arbitrary function.
+- The Interface docs say each function parameter maps to an input component and each return value maps to an output component.
+- The README and Blocks docs describe `gr.Blocks` as a lower-level API for custom layouts, events, multi-step data flows, tabs, and more complex interactions, still entirely in Python.
+- The ChatInterface docs describe `gr.ChatInterface` as a high-level abstraction for chatbot UIs where a function governs responses based on user input and chat history.
+- The README describes the Gradio Python client, JavaScript client, Hugging Face Spaces hosting, and Server mode for custom frontends with queueing, streaming, MCP, ZeroGPU, and Spaces support.
+- The sharing docs say setting `share=True` creates a public share link and that processing continues on the local device while remote users access the demo.
+- The sharing docs warn that share links are publicly accessible, meaning anyone can use the model for prediction, and recommend not exposing sensitive information or critical device-changing functions.
+- The queueing docs describe built-in queues, per-event listener concurrency limits, shared concurrency IDs, and global default concurrency limits through `Blocks.queue()`.
+- The launch API docs describe public links, `auth`, API visibility, strict CORS, maximum threads, share server options, and local or Colab behavior.
+- The file-access docs describe user uploads, `max_file_size`, `allowed_paths`, `blocked_paths`, static paths, and the recommendation to keep allowed paths as small as possible.
+- The custom CSS and JS docs describe adding custom CSS, JavaScript, HTML head content, and analytics scripts to a Gradio demo.
+- The README describes Gradio Skills for AI coding assistants such as Claude Code, Codex, Cursor, OpenCode, and project-specific Spaces.
+- The repository is `gradio-app/gradio`, is Apache-2.0 licensed, active, and maintained by the Gradio project.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Gradio`, `gradio-app/gradio`, `github.com/gradio-app/gradio`, `gradio.app`, `machine learning demos`, `AI web apps`, `ChatInterface`, and `Hugging Face Spaces`. Existing mentions are contextual references inside Hugging Face MCP Server, Python data-science rules, and the Streamlit distinction notes; no dedicated Gradio tools entry, source URL duplicate, target file, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Gradio is Apache-2.0 open-source software; Hugging Face Spaces, Gradio share infrastructure, model providers, LLM APIs, cloud hosts, databases, object stores, analytics tools, custom components, MCP clients, and downstream deployment services may have separate licenses, billing, terms, privacy obligations, and access controls.

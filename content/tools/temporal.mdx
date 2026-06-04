@@ -1,0 +1,85 @@
+---
+title: Temporal
+slug: temporal
+category: tools
+description: MIT-licensed durable execution platform for building resilient applications with Workflows, Activities, Workers, Task Queues, Namespaces, retries, schedules, and event history.
+cardDescription: Build resilient long-running workflows with durable execution and worker-backed activities.
+seoTitle: Temporal durable execution platform
+seoDescription: Temporal is an MIT-licensed durable execution platform for resilient applications with Workflows, Activities, Workers, Task Queues, Namespaces, retries, schedules, and event history.
+author: Temporal Technologies
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://temporal.io/"
+documentationUrl: "https://docs.temporal.io/"
+repoUrl: "https://github.com/temporalio/temporal"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - orchestration
+  - workflow
+  - developer-tools
+keywords:
+  - Temporal
+  - durable execution
+  - workflow runtime
+  - activities
+  - workers
+prerequisites:
+  - Temporal Service plan for local development with the Temporal CLI, a self-hosted cluster, or Temporal Cloud.
+  - Supported SDK and Worker runtime for the target language, such as Go, Java, TypeScript, Python, .NET, PHP, Ruby, or Rust.
+  - Workflow and Activity design that separates deterministic Workflow logic from non-deterministic or side-effecting Activity code.
+  - Task Queue, Worker, concurrency, retry, timeout, heartbeat, schedule, signal, query, update, and deployment-versioning plan for production workloads.
+  - Namespace, authentication, retention, archival, search attribute, visibility, mTLS, API key, RBAC, and network-access plan for the chosen deployment model.
+  - Observability and operations plan for the Web UI, CLI, metrics, traces, logs, worker health, queue backlog, event history size, and incident response.
+safetyNotes:
+  - Temporal Workers execute application code and Activities can mutate databases, call APIs, charge accounts, send emails, write files, provision infrastructure, and trigger downstream jobs, so Workers should be treated as trusted production services.
+  - Workflow code is replayed from event history and must remain deterministic; side effects, random values, wall-clock calls, and external I/O belong in Activities or SDK-supported deterministic APIs.
+  - Retries, schedules, backfills, cron-style runs, signals, updates, and workflow restarts can repeat side effects unless Activities are idempotent and guarded with external consistency checks.
+  - Activity timeouts, retry policies, cancellation behavior, and heartbeats should be designed before long-running or externally mutating work is automated.
+  - Task Queues route work to Workers; misnamed queues, stopped Workers, low concurrency, or overloaded Worker fleets can stall workflow execution even when the Temporal Service is healthy.
+  - Long-running workflows retain event history; high-event workflows should use child workflows, batching, Continue-As-New, or history-management patterns before event histories become expensive or unwieldy.
+  - Self-hosted Temporal deployments and Web UI/API endpoints need TLS, authentication, authorization, network controls, persistence backups, upgrade testing, and database security before exposure outside trusted infrastructure.
+  - Temporal Cloud manages the Temporal Service but not user applications or Workers; teams still own Worker runtime security, secrets, cloud identities, network egress, data conversion keys, and downstream system permissions.
+privacyNotes:
+  - Temporal event histories can contain workflow inputs, activity results, failures, stack traces, retry metadata, timer data, signal payloads, update payloads, search attributes, visibility metadata, and business identifiers.
+  - Without a payload data converter or encryption strategy, payloads and metadata may be visible to Temporal operators, the Web UI, CLI users, logs, backups, exported histories, and anyone with namespace-level access.
+  - Temporal Cloud supports payload encryption through client-side data conversion, but key management, Codec Server access, Web UI decryption, and Worker-side encryption behavior remain customer responsibilities.
+  - Workers may handle credentials, environment variables, mounted files, service tokens, cloud identities, user data, and external API responses in application code, logs, metrics, and traces.
+  - Namespaces, retention, archival, visibility, and search attributes determine how long workflow metadata is retained and where it can be queried or exported.
+  - Logs, metrics, traces, alerts, and incident tooling can disclose workflow IDs, activity names, queue names, payload summaries, exceptions, endpoint names, and tenant or customer identifiers.
+---
+
+## Editorial notes
+
+Temporal is useful when Claude-adjacent teams need reliable long-running workflows for background jobs, tool execution, payment or order flows, data ingestion, human-in-the-loop processes, LLM task pipelines, and agentic systems that must survive crashes, retries, deploys, and external-service failures. It gives agents and developers a durable application runtime built around Workflow code, Activity code, Workers, Task Queues, event history, and language SDKs rather than a YAML-only scheduler.
+
+This entry covers the open-source Temporal durable execution platform and server. It is distinct from Apache Airflow, Dagster, and Prefect. Airflow is a DAG scheduler and workflow platform. Dagster emphasizes software-defined assets and data platform observability. Prefect orchestrates Python flows, tasks, deployments, and workers. Temporal focuses on durable execution for application workflows implemented in general-purpose languages, with deterministic Workflow replay, Activity execution, Task Queues, Namespaces, and Worker processes.
+
+## Source notes
+
+- The official repository describes Temporal as a durable execution platform for building scalable applications without sacrificing productivity or reliability.
+- The repository README says the Temporal server executes units of application logic called Workflows and automatically handles intermittent failures, retries, and execution resilience.
+- The README shows local development through the Temporal CLI with `temporal server start-dev`, and says the Web UI is available on the local development port.
+- The Temporal overview docs describe Temporal as a scalable and reliable runtime for durable function executions called Temporal Workflow Executions.
+- The overview docs say Durable Execution maintains application state and progress through event history and can resume execution after process or server interruptions.
+- The Workflows docs define Workflow Definitions, Workflow Types, and Workflow Executions, and describe writing Workflow code in general-purpose languages such as Go, Java, TypeScript, and Python.
+- The Activities docs describe Activities as normal functions or methods that execute a single well-defined action, such as calling services, sending emails, transcoding media, or performing slow reads and writes.
+- The Activities docs recommend idempotent Activity design and explain that Activity retries start from their initial state unless heartbeat details are used to checkpoint progress.
+- The Workers docs describe Worker Programs, Worker Processes, and Worker Entities that poll Task Queues and execute Workflow or Activity work.
+- The Task Queue docs describe Task Queues as lightweight, dynamically allocated queues polled by Workers, with routing, load balancing, and server-side throttling behavior for Activity Task Queues.
+- The Namespaces docs describe Namespaces as isolation units for Workflow Executions and Task Queues, with retention, archival, authorization, and multi-tenancy implications.
+- The Temporal Cloud security docs say Temporal Cloud manages the Temporal Service, while applications and Workers run in the customer's compute environment.
+- The Temporal Cloud security docs describe optional client-side Data Conversion for encrypting payloads before data is sent to Temporal Cloud, with decryption handled by Workers, Clients, or controlled Codec Server access.
+- The Develop docs list SDK guides for Go, Java, PHP, Python, TypeScript, .NET, Ruby, and Rust, plus worker performance, observability, safe deployments, integrations, task queue priority, and Temporal Cloud guidance.
+- The repository is `temporalio/temporal`, is MIT licensed, active, and maintained by Temporal Technologies.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Temporal`, `temporalio/temporal`, `github.com/temporalio/temporal`, `docs.temporal.io`, `temporal.io`, `durable execution`, `Workflow Executions`, `Activities`, `Workers`, and `Task Queues`. Existing matches were generic uses of the word "temporal" in unrelated content and no dedicated Temporal tools entry, source URL duplicate, target file, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Temporal Server is MIT open-source software; Temporal Cloud, cloud providers, databases, queues, storage systems, worker infrastructure, identity providers, observability services, Codec Server hosting, and downstream systems may have separate licenses, billing, terms, privacy obligations, and access controls.

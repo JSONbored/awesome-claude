@@ -1,0 +1,89 @@
+---
+title: Kubescape
+slug: kubescape
+category: tools
+description: Apache-2.0 CNCF-incubating Kubernetes security platform and CLI for scanning clusters, manifests, Helm charts, Kustomize projects, Git repositories, and container images for misconfigurations, compliance gaps, and vulnerabilities.
+cardDescription: Scan Kubernetes clusters, manifests, charts, repositories, and images for security risk.
+seoTitle: Kubescape Kubernetes security scanner
+seoDescription: Kubescape is an Apache-2.0 CNCF-incubating Kubernetes security platform and CLI for scanning clusters, manifests, Helm charts, Kustomize projects, Git repositories, and container images for misconfigurations, compliance gaps, and vulnerabilities.
+author: Kubescape
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://kubescape.io/"
+documentationUrl: "https://kubescape.io/docs/"
+repoUrl: "https://github.com/kubescape/kubescape"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - security
+  - kubernetes
+  - developer-tools
+keywords:
+  - Kubescape
+  - Kubernetes security
+  - posture management
+  - compliance scanning
+  - container image scanning
+prerequisites:
+  - Kubescape installed from an official or trusted path such as the install script, GitHub releases, Homebrew, Krew, package manager, or source build after reviewing the installer.
+  - Target plan for scanning the current Kubernetes cluster, an alternate kubeconfig or context, namespaces, YAML manifests, Helm charts, Kustomize directories, Git repositories, or container images.
+  - Framework and policy plan for NSA-CISA, MITRE ATT&CK, CIS, SOC 2, PCI DSS, HIPAA, individual controls, exceptions, severity thresholds, compliance thresholds, and baseline drift.
+  - Kubernetes access plan with least-privilege kubeconfig, RBAC, namespace boundaries, operator permissions, and safe handling for production clusters.
+  - Registry and image-scanning plan for private images, registry credentials, Grype database access, offline database use, image patching, and patched-image tagging or push behavior.
+  - CI and reporting plan for JSON, JUnit, SARIF, HTML, PDF, Prometheus, exit-code thresholds, artifact retention, code scanning upload, and human triage of findings.
+  - Remediation plan before using manifest auto-fix, image patching, Validating Admission Policies, Deny actions, operator scans, continuous scanning, or MCP access to cluster security data.
+safetyNotes:
+  - Cluster scans use kubeconfig and Kubernetes API access; run Kubescape with the narrowest practical permissions and avoid broad production credentials in untrusted automation.
+  - Manifest and repository scans can reveal sensitive workload structure, names, images, RBAC bindings, network policy gaps, and security posture; treat reports as security-sensitive evidence.
+  - Auto-fix commands can modify Kubernetes manifests, so use dry-run output, review diffs, and keep version-controlled rollback paths before applying generated changes.
+  - Image patching can require BuildKit and elevated local privileges, and the push option can publish patched images back to a registry; test tags and registry scope before enabling it.
+  - Validating Admission Policy generation and Deny bindings can block deploys cluster-wide if policy scope, namespace selectors, or control IDs are wrong.
+  - Exceptions, suppressed findings, severity thresholds, compliance thresholds, and baseline configuration can hide meaningful risk when used without review.
+  - Image scanning and vulnerability matching depend on image access, vulnerability database freshness, package detection, distro context, and Grype database behavior; high-impact results still need human triage.
+  - The MCP server exposes vulnerability and configuration scan data to AI assistants using the same Kubernetes access context, so connect it only to trusted clients and service accounts.
+privacyNotes:
+  - Kubescape reports can include cluster names, namespaces, workload names, RBAC subjects, users with administrative rights, image names, tags, digests, CVEs, control failures, file paths, and compliance scores.
+  - Pulling private images or scanning registries can disclose image references, registry hosts, authentication attempts, platform requests, and network metadata to registry infrastructure.
+  - CLI configuration can include account IDs, access keys, backend URLs, kubeconfig paths, registry usernames, registry passwords, output paths, cache directories, and exception files.
+  - SaaS submission, backend discovery, operator telemetry, Prometheus export, code-scanning uploads, and CI artifacts can move scan metadata outside the local machine or cluster when enabled.
+  - SARIF, JSON, JUnit, HTML, PDF, Prometheus, and MCP outputs can expose detailed security posture and should have retention, access control, and redaction policies.
+  - The Kubescape MCP server can make vulnerability manifests and configuration scan results available to AI tools, which may have their own logging, retention, and data-handling behavior.
+---
+
+## Editorial notes
+
+Kubescape is useful when Claude-adjacent teams need a Kubernetes-aware security scanner that works before and after deployment. Agents can use it to inspect manifests, check cluster posture, generate CI artifacts, review framework failures, query scan results through MCP, and keep remediation work grounded in concrete controls rather than vague best-practice advice.
+
+This entry covers Kubescape as a Kubernetes security tool and CLI. It is distinct from general vulnerability scanners such as Grype because Kubescape combines Kubernetes misconfiguration scanning, compliance frameworks, cluster posture, operator workflows, image vulnerability scanning, admission policy generation, remediation helpers, runtime-oriented capabilities, and an MCP server. The MCP server is a feature of Kubescape, but the listing is for the broader tool rather than a standalone MCP server entry.
+
+## Source notes
+
+- The official repository describes Kubescape as an open-source Kubernetes security platform for IDEs, CI/CD pipelines, and clusters.
+- The repository description says Kubescape includes risk analysis, security, compliance, and misconfiguration scanning for Kubernetes users and administrators.
+- The README describes Kubescape as comprehensive Kubernetes security from development to runtime, with hardening, posture management, and runtime security capabilities.
+- The README says Kubescape was created by ARMO and is a Cloud Native Computing Foundation incubating project.
+- The README feature table lists misconfiguration scanning, image vulnerability scanning using Grype, image patching using Copacetic, auto-remediation, admission control with Validating Admission Policies, runtime security using Inspektor Gadget, and MCP server support for AI assistant integration.
+- The README quick start shows scanning the current cluster, scanning YAML files or directories, and scanning container images.
+- The installation docs describe the install script, GitHub releases, Homebrew, Krew, Linux package managers, Windows package managers, manual installation, source builds, verification, updates, and uninstall options.
+- The getting-started docs say Kubescape can run as a command-line tool, an in-cluster operator, part of CI/CD, or other workflows.
+- The getting-started docs list capabilities for scanning Kubernetes clusters, YAML files, Helm charts, and container images.
+- The getting-started docs describe NSA-CISA, MITRE ATT&CK, and CIS Benchmark scanning, controls, kubeconfig selection, namespace include and exclude filters, local YAML scans, Git repository scans, exceptions, Helm chart detection, Kustomize detection, and operator-triggered scans.
+- The CLI reference lists scan targets for clusters, paths, and Git repository URLs, plus output formats including JSON, JUnit, SARIF, HTML, PDF, and Prometheus.
+- The CLI reference documents compliance thresholds, severity thresholds, exceptions, local artifact use, SaaS submission flags, and backend configuration fields.
+- The CLI reference documents manifest auto-fix with dry-run and no-confirm flags.
+- The CLI reference says image patching can produce a local patched image by default and can push the patched image to the source registry when explicitly requested.
+- The CLI reference documents offline artifact downloads and later scans using local artifacts.
+- The MCP server docs say Kubescape exposes vulnerability manifests and configuration security scan results to AI assistants through the Model Context Protocol, using data produced by the Kubescape operator.
+- The MCP server docs state that the server uses the same Kubernetes permissions as the kubeconfig, provides read-only access to vulnerability and configuration data, and should use limited permissions in production.
+- The repository is `kubescape/kubescape`, is Apache-2.0 licensed, active, and has official documentation at `kubescape.io/docs`.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Kubescape`, `kubescape/kubescape`, `github.com/kubescape/kubescape`, `kubescape.io/docs`, `ARMO`, `CNCF incubating`, `NSA-CISA`, `MITRE ATT&CK`, `Kubernetes security posture`, `Validating Admission Policies`, and `Kubescape MCP`. No dedicated Kubescape tools entry, target file, exact source URL duplicate, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Kubescape is Apache-2.0 open-source software created by ARMO and hosted as a CNCF incubating project; ARMO services, Kubernetes providers, cloud registries, CI platforms, code-scanning systems, telemetry backends, MCP clients, policy engines, and downstream artifact stores may have separate licenses, billing, terms, privacy obligations, and access controls.

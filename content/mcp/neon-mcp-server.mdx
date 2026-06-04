@@ -1,0 +1,325 @@
+---
+title: Neon MCP Server for Claude
+slug: neon-mcp-server
+category: mcp
+description: >-
+  Official Neon MCP server that connects Claude and other MCP clients to Neon
+  Postgres projects, branches, schemas, SQL queries, migrations, performance
+  tuning, Neon Auth, Data API setup, and Neon documentation through a hosted
+  Streamable HTTP endpoint.
+cardDescription: >-
+  Connect Claude to Neon Postgres projects, branches, schemas, queries,
+  migrations, Auth, Data API setup, and docs.
+seoTitle: Neon MCP Server for Claude
+seoDescription: >-
+  Use the Neon MCP server with Claude to manage Neon Postgres projects,
+  branches, schemas, SQL queries, migrations, query tuning, Neon Auth, Data API
+  setup, and Neon documentation.
+author: Neon
+authorProfileUrl: "https://neon.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://neon.com/docs/ai/neon-mcp-server"
+repoUrl: "https://github.com/neondatabase/mcp-server-neon"
+installable: true
+installCommand: "npx add-mcp https://mcp.neon.tech/mcp"
+usageSnippet: "npx add-mcp https://mcp.neon.tech/mcp"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "neon": {
+        "type": "http",
+        "url": "https://mcp.neon.tech/mcp?readonly=true"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "neon": {
+        "type": "http",
+        "url": "https://mcp.neon.tech/mcp?readonly=true&projectId=PROJECT_ID"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Neon account with access to the projects, branches, databases, organizations, or shared projects Claude should inspect or manage.
+  - MCP-capable client that supports remote Streamable HTTP MCP servers, OAuth, `mcp-remote`, or Neon-supported configuration through `add-mcp`.
+  - Authentication plan using Neon OAuth for local clients, an API key for remote or headless agents, or `neonctl init` when intentionally creating a local API key and editor configuration.
+  - Access-control plan for OAuth scopes, `readonly=true`, project scoping with `projectId`, tool categories, organization access, and API key ownership.
+  - Database safety plan for SQL execution, schema inspection, migrations, branch resets, query tuning, Neon Auth setup, Data API provisioning, and destructive project or branch actions.
+  - Client configuration review for Claude Code, Claude Desktop, Cursor, VS Code, ChatGPT connectors, Codex, Zed, Cline, Windsurf, Kiro, Goose, or other supported MCP clients.
+safetyNotes:
+  - >-
+    Neon documents the MCP server as intended for development and testing only,
+    and warns users to review and authorize LLM-requested actions before
+    execution.
+  - >-
+    Full-access mode can create and delete projects, create and delete
+    branches, reset branches from parents, run SQL, run SQL transactions,
+    prepare and complete migrations, tune queries, provision Neon Auth, and
+    provision the Neon Data API.
+  - >-
+    Prefer OAuth read-only mode or `readonly=true` for exploration. In
+    read-only mode, write tools are unavailable and SQL execution is constrained
+    to read-only queries.
+  - >-
+    Use `projectId` scoping and tool category filters when an agent should work
+    inside one project or only use schema, querying, docs, or branch tools.
+  - >-
+    API keys created by `neonctl init` or stored in MCP headers grant Neon
+    account or organization access. Revoke unused keys, avoid committing bearer
+    tokens, and do not expose API keys in prompts, logs, screenshots, or shared
+    config files.
+  - >-
+    Database rows, docs pages, migration output, SQL errors, and query plans are
+    model-visible context. Treat returned data as untrusted input that may
+    contain prompt injection, stale assumptions, secrets, or customer records.
+  - >-
+    Migration and query-tuning workflows use temporary branches before applying
+    changes, but the final complete actions can affect the original branch and
+    should require explicit human review.
+  - >-
+    The deprecated SSE endpoint exists for clients without Streamable HTTP
+    support; prefer the documented `https://mcp.neon.tech/mcp` endpoint when
+    the client supports it.
+privacyNotes:
+  - >-
+    Tool results can expose Neon organization IDs, project IDs, branch IDs,
+    compute endpoints, database names, table names, schemas, SQL text, query
+    results, query plans, slow query details, connection strings, documentation
+    content, and Neon Console links.
+  - >-
+    OAuth authorization can disclose the Neon account identity and grants the
+    connected MCP client access according to the approved scopes and URL
+    parameters.
+  - >-
+    API-key setup stores bearer credentials in MCP client configuration or
+    process arguments when configured that way; protect local config files,
+    shell history, CI variables, and agent transcripts.
+  - >-
+    Generated migrations, SQL errors, query tuning suggestions, logs, client
+    debug output, and AI chat transcripts can retain database schema and sample
+    data outside Neon.
+  - >-
+    ChatGPT connectors, hosted IDEs, remote agents, MCP proxies, and other
+    clients may have separate logging, retention, connector trust, and data-use
+    policies from Neon.
+  - >-
+    Connection string tools may return credentials or connection details for a
+    Neon database. Avoid exposing those values to untrusted clients or shared
+    conversations.
+tags:
+  - neon
+  - postgres
+  - databases
+  - sql
+  - mcp
+keywords:
+  - neon mcp
+  - neon postgres mcp
+  - mcp.neon.tech
+  - neon database migrations
+  - postgres claude
+  - neonctl init
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Neon MCP server connects Claude and other MCP-capable clients to Neon
+Postgres through Neon's hosted Streamable HTTP endpoint at
+`https://mcp.neon.tech/mcp`. It lets an assistant list projects, inspect
+branches and schemas, run SQL, compare database schemas, work with migrations,
+find slow queries, provision Neon Auth or the Neon Data API, and fetch Neon
+documentation without building a custom database integration.
+
+The conservative default is to start with OAuth, read-only mode, and a single
+project scope. Neon supports broader write-capable workflows, but those should
+be reserved for development or testing environments with explicit human review.
+
+## Features
+
+- Hosted remote MCP endpoint at `https://mcp.neon.tech/mcp`.
+- Quick setup through `npx neonctl@latest init` or MCP-only setup through
+  `npx add-mcp https://mcp.neon.tech/mcp`.
+- OAuth setup for local IDEs and API-key setup for remote or headless agents.
+- Read-only mode through OAuth scope selection or the `readonly=true` query
+  parameter.
+- Project scoping through the `projectId` query parameter.
+- Tool category filtering for projects, branches, schema, querying, Neon Auth,
+  Data API, and docs capabilities.
+- Project and organization discovery, shared project lookup, and detailed
+  project and branch descriptions.
+- SQL execution, table listing, table schema inspection, connection string
+  lookup, slow query analysis, and explain plans.
+- Branch-based migration and query-tuning flows that prepare changes on
+  temporary branches before a separate completion step.
+- Neon documentation search and fetch tools backed by the Neon docs index.
+- Client setup coverage for Claude Code, Claude Desktop, Cursor, VS Code,
+  ChatGPT connectors, Codex, Zed, Cline, Windsurf, Kiro, Goose, and other MCP
+  clients supported by `add-mcp`.
+
+## Use Cases
+
+- Ask Claude to inspect a Neon project and summarize branches, databases, and
+  tables before making schema changes.
+- Explore schemas in read-only mode before writing SQL or application code.
+- Run bounded read-only SQL to understand test data, development fixtures, or
+  staging data.
+- Prepare a migration on a temporary Neon branch, test it, and require human
+  approval before applying it to the original branch.
+- Compare schemas between branches before merging a migration.
+- Investigate slow queries and explain plans in a development database.
+- Fetch Neon docs into the conversation when building with Neon Auth, Data API,
+  Postgres branching, or framework integrations.
+
+## Installation
+
+### MCP-only hosted setup
+
+Use Neon's documented `add-mcp` flow to add the hosted MCP endpoint to detected
+clients in the current workspace:
+
+```bash
+npx add-mcp https://mcp.neon.tech/mcp
+```
+
+Restart or refresh the MCP client, then complete the Neon OAuth authorization
+flow when prompted.
+
+### Full Neon editor setup
+
+Use `neonctl init` when you intentionally want Neon to configure supported
+editors, create an API key, and install Neon agent skills as part of the setup:
+
+```bash
+npx neonctl@latest init
+```
+
+Review generated API keys in the Neon Console afterward and revoke any key that
+is no longer needed.
+
+## Configuration
+
+### Read-only hosted configuration
+
+```json
+{
+  "mcpServers": {
+    "neon": {
+      "type": "http",
+      "url": "https://mcp.neon.tech/mcp?readonly=true"
+    }
+  }
+}
+```
+
+### Read-only and project-scoped configuration
+
+```json
+{
+  "mcpServers": {
+    "neon": {
+      "type": "http",
+      "url": "https://mcp.neon.tech/mcp?readonly=true&projectId=PROJECT_ID"
+    }
+  }
+}
+```
+
+### API-key configuration
+
+Use API-key authentication only when OAuth is not available or a remote agent
+needs bearer-token authentication:
+
+```bash
+npx add-mcp https://mcp.neon.tech/mcp --header "Authorization: Bearer $NEON_API_KEY"
+```
+
+## Examples
+
+### Inspect projects read-only
+
+```plaintext
+Using the Neon MCP server in read-only mode, list my projects and summarize the branches and databases without changing anything.
+```
+
+### Inspect a schema
+
+```plaintext
+For project PROJECT_ID, describe the default branch schema and list the tables that look relevant to user accounts.
+```
+
+### Run a bounded query
+
+```plaintext
+Run a read-only SQL query against project PROJECT_ID to count rows in the users table and return only aggregate results.
+```
+
+### Prepare a migration safely
+
+```plaintext
+Prepare a migration on a temporary Neon branch that adds an indexed created_at column, then stop and show the diff before completing it.
+```
+
+### Fetch Neon docs
+
+```plaintext
+Search Neon docs for branch-based migrations and summarize the official guidance before proposing database changes.
+```
+
+## Source notes
+
+- The official Neon docs describe the Neon MCP Server as an open-source tool
+  for managing Neon Postgres projects through natural language.
+- Neon documents the hosted endpoint as `https://mcp.neon.tech/mcp` and the
+  fastest MCP-only setup as `npx add-mcp https://mcp.neon.tech/mcp`.
+- Neon documents `npx neonctl@latest init` as a broader setup flow that creates
+  a Neon API key, configures supported clients, and installs Neon agent skills.
+- The docs describe supported clients including Claude Code, Claude Desktop,
+  Cursor, VS Code with GitHub Copilot, ChatGPT connectors, Codex, Zed, Cline,
+  Windsurf, Kiro, Goose, and other clients supported by `add-mcp`.
+- The README says the MCP server bridges natural language requests to the Neon
+  API for project management, branch management, SQL queries, and database
+  migrations.
+- The README and docs warn that the Neon MCP server grants powerful database
+  management capabilities and is intended for local development, IDE
+  integrations, development, and testing rather than production environments.
+- The README documents OAuth authentication, API-key authentication, read-only
+  mode, `readonly=true`, project scoping with `projectId`, category filtering,
+  and the deprecated SSE transport fallback.
+- The README lists read-only tools such as project listing, branch description,
+  schema comparison, read-only SQL, table listing, table schema description,
+  slow query listing, explain plans, docs search, and docs fetch.
+- The README lists write-access tools including project creation and deletion,
+  branch creation and deletion, branch reset, Neon Auth provisioning, Data API
+  provisioning, migration preparation and completion, and query-tuning
+  preparation and completion.
+- The README describes the remote server as a Next.js App Router application
+  running on Vercel at `mcp.neon.tech`.
+- The repository is `neondatabase/mcp-server-neon`, is MIT licensed, active,
+  and maintained by Neon.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, hooks,
+open pull requests, live issue state, and repository-wide content for `Neon MCP`,
+`neondatabase/mcp-server-neon`, `mcp-server-neon`, `mcp.neon.tech`,
+`neon.com/docs/ai/neon-mcp-server`, `neonctl init`, `Neon Postgres`,
+`branch-based migrations`, and `read-only Neon MCP`. No dedicated Neon MCP entry,
+target file, exact source URL duplicate, issue duplicate, semantic duplicate, or
+open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Neon MCP Server
+is MIT-licensed open-source software maintained by Neon; Neon accounts, Neon
+compute and storage usage, Postgres databases, API keys, OAuth providers, MCP
+clients, hosted IDEs, ChatGPT connectors, remote agents, and downstream logs or
+artifact stores may have separate licenses, billing, terms, privacy obligations,
+and access controls.

@@ -1,0 +1,86 @@
+---
+title: Syft
+slug: syft
+category: tools
+description: Apache-2.0 CLI and Go library from Anchore for generating SBOMs from container images, filesystems, directories, files, archives, and OCI layouts in SPDX, CycloneDX, and Syft JSON formats.
+cardDescription: Generate SBOMs from images, directories, files, archives, and OCI layouts.
+seoTitle: Syft SBOM generator
+seoDescription: Syft is an Apache-2.0 CLI and Go library from Anchore for generating SBOMs from container images, filesystems, directories, files, archives, and OCI layouts in SPDX, CycloneDX, and Syft JSON formats.
+author: Anchore
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://oss.anchore.com/docs/guides/sbom/getting-started/"
+documentationUrl: "https://oss.anchore.com/docs/reference/syft/cli/"
+repoUrl: "https://github.com/anchore/syft"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - security
+  - dependencies
+  - developer-tools
+keywords:
+  - Syft
+  - SBOM
+  - software bill of materials
+  - CycloneDX
+  - SPDX
+prerequisites:
+  - Syft installed from an official or trusted package path such as the Anchore install script, Homebrew, Windows package manager, Docker image, or GitHub release.
+  - Target selection for container images, Docker, Podman, containerd, direct registry access, OCI archives, Docker archives, OCI layout directories, Singularity images, directories, files, and compressed archives.
+  - SBOM format plan for table, Syft JSON, SPDX JSON, SPDX tag-value, CycloneDX JSON, CycloneDX XML, GitHub dependency snapshot JSON, PURLs, templates, and downstream compatibility requirements.
+  - File-selection, cataloger, archive, layer-scope, platform, output-path, source-name, source-version, source-supplier, and base-path policy for the target being scanned.
+  - Registry access plan for private images, Docker credentials, direct registry credentials, TLS policy, platform selection, image-pull source, and least-privilege authentication.
+  - Supply-chain workflow plan if pairing Syft with Grype, attestations, vulnerability scanners, license checks, release gates, artifact storage, GitHub dependency submission, or compliance evidence.
+safetyNotes:
+  - Syft parses container images, archives, filesystems, directories, individual files, package manifests, binaries, and metadata; scan untrusted targets with bounded filesystem access, timeouts, and resource limits.
+  - The install script and binary update paths should be verified before production use; pin versions and checksums where reproducibility or regulated environments require it.
+  - Container daemon access, Docker credentials, Podman sockets, containerd sockets, direct registry access, SSH-based Podman connections, and private-registry credentials should be scoped tightly in CI.
+  - Syft can recursively scan directories and archives; exclude build caches, virtual environments, node_modules trees, generated artifacts, secrets directories, and mounted filesystems that do not belong in the SBOM.
+  - Syft's native JSON contains the most complete information, while SPDX and CycloneDX may transform or omit some Syft-specific metadata; downstream policy should account for format differences.
+  - Enrichment is disabled by default, but when enabled it can query online package services for supplemental package or license data, so teams should review network policy before enabling it.
+  - Attestation workflows can involve signing keys, passwords, Cosign-compatible environment variables, and release provenance; protect keys and test attestation verification before relying on signed SBOMs.
+  - SBOMs are evidence artifacts, not proof that software is secure; pair generated inventories with vulnerability scanning, license review, source verification, and human triage.
+privacyNotes:
+  - The Syft getting-started docs say Syft runs locally and does not send scan data to external services; it needs internet access for downloading container images, and enrichment can use online sources when enabled.
+  - Pulling images from remote or private registries can disclose image names, tags, digests, registry hostnames, platform requests, authentication attempts, and network metadata to registry infrastructure.
+  - SBOM outputs can reveal package names, versions, package types, file paths, file metadata, file digests, executable metadata, license information, package relationships, dependency inventories, image identifiers, source names, source versions, and supplier metadata.
+  - Syft can use Docker, Podman, and containerd environment variables, registry credentials, client certificates, client keys, CA certificates, SSH keys, passphrases, and local Docker config files.
+  - Configuration options can cause Syft to search local Go module caches, vendor folders, Maven repositories, Python packages, JavaScript registries, package indexes, or remote enrichment sources depending on language settings.
+  - Generated SPDX, CycloneDX, Syft JSON, GitHub dependency snapshot JSON, template output, logs, and CI artifacts should be treated as security-sensitive inventory data with retention and access controls.
+---
+
+## Editorial notes
+
+Syft is useful when Claude-adjacent teams need reproducible package inventories for container builds, release gates, dependency review, vulnerability scanning, license checks, attestation workflows, and compliance handoffs. It gives agents and developers a concrete SBOM artifact that can be inspected directly, converted between formats, checked by Grype, uploaded to dependency tools, attached to releases, or stored as build evidence.
+
+This entry covers Anchore's open-source Syft SBOM generator. It is distinct from Grype: Syft generates Software Bill of Materials documents, while Grype scans images, filesystems, archives, SBOMs, PURLs, and CPEs for known vulnerabilities. It is also distinct from generic package vulnerability hooks because this entry documents Syft itself as a standalone CLI and Go library for SBOM generation.
+
+## Source notes
+
+- The official repository describes Syft as a CLI tool and Go library for generating a Software Bill of Materials from container images and filesystems.
+- The README says Syft is useful for vulnerability detection when paired with a scanner like Grype.
+- The README lists support for container images, filesystems, archives, many package ecosystems, OCI, Docker, Singularity, CycloneDX, SPDX, Syft JSON, format conversion, and signed SBOM attestations.
+- The README shows basic usage for container images and directories, plus CycloneDX JSON output and multiple SBOM outputs written to files.
+- The getting-started docs define an SBOM as a detailed list of all libraries and components that make up software.
+- The getting-started docs describe Syft as a CLI tool for generating SBOMs from container images and filesystems.
+- The getting-started docs show Linux/macOS install script usage, Homebrew installation, and Windows installation through `winget install Anchore.Syft`.
+- The getting-started docs show generating SPDX JSON and CycloneDX JSON in one run, inspecting package names with `jq`, and using `--scope all-layers` to include packages from all image layers.
+- The getting-started FAQ says Syft needs internet access only for downloading container images by default, and that online supplemental enrichment is available when enabled.
+- The scan-targets docs say Syft supports container images, directories, files, archives, Docker, Podman, containerd, registries, Docker archives, OCI archives, OCI directories, Singularity images, and explicit `--from` hints.
+- The scan-targets docs describe default image resolution order through Docker, Podman, containerd, and direct registry access, plus default Docker Hub registry handling and linux/amd64 platform behavior for unspecific multi-architecture images.
+- The scan-targets docs describe recursive directory scans, skipped virtual filesystems, excluded special file types, archive extraction, OCI archive/layout workflows, container runtime environment variables, and private registry authentication behavior.
+- The output formats docs list table, JSON, PURLs, GitHub dependency snapshot JSON, template output, CycloneDX JSON/XML, SPDX JSON, and SPDX tag-value formats.
+- The output formats docs say Syft's native JSON contains the most complete information, while standard formats may omit or transform some Syft-specific metadata.
+- The configuration reference describes `.syft.yaml` lookup, environment-backed configuration, output settings, cataloger selection, file metadata/digest settings, layer scope, parallelism, relationships, enrichment, registry authentication, source metadata, excludes, cache settings, and attestation options.
+- The repository is `anchore/syft`, is Apache-2.0 licensed, active, and maintained by Anchore.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, collections, open pull requests, live issue state, and repository-wide content for `Syft`, `anchore/syft`, `github.com/anchore/syft`, `oss.anchore.com/docs/guides/sbom`, `get.anchore.io/syft`, `SBOM Generation`, `Software Bill of Materials`, `CycloneDX`, and `SPDX`. Existing content contains generic SBOM mentions and the Grype tools entry distinguishes Syft from Grype; no dedicated Syft tools entry, target file, exact source URL duplicate, issue duplicate, semantic duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Syft is Apache-2.0 open-source software sponsored by Anchore; Anchore Enterprise, commercial support, private registries, CI platforms, vulnerability scanners, license scanners, dependency-submission systems, SBOM consumers, attestation tooling, Cosign-compatible signing infrastructure, and artifact stores may have separate licenses, billing, terms, privacy obligations, and access controls.

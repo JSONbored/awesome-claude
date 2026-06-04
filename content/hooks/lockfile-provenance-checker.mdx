@@ -80,7 +80,8 @@ scriptBody: |-
   case "$FILE" in
     *package-lock.json|*npm-shrinkwrap.json) : ;;
     *yarn.lock|*pnpm-lock.yaml)
-      echo "Lockfile changed - run 'npx lockfile-lint --path $FILE --validate-https --validate-integrity' to check resolved hosts and integrity." >&2
+      printf -v SAFE_FILE '%q' "$FILE"
+      echo "Lockfile changed - run 'npx lockfile-lint --path $SAFE_FILE --validate-https --validate-integrity' to check resolved hosts and integrity." >&2
       exit 0 ;;
     *) exit 0 ;;
   esac

@@ -84,8 +84,12 @@ export type EntryTrustSignals = {
 };
 
 export type RegistryRelationType =
+  | "duplicate"
   | "same-project"
   | "collection-member"
+  | "complementary"
+  | "same-ecosystem"
+  | "prerequisite"
   | "works-with"
   | "extends"
   | "alternative"
@@ -722,7 +726,6 @@ export type SubmissionRiskReport = {
   trustSignals: string[];
   sourceUrls: string[];
   classificationWarnings: SubmissionClassificationWarning[];
-  recommendedLabels: string[];
   recommendedAction:
     | "maintainer_review"
     | "request_author_input"
@@ -731,7 +734,6 @@ export type SubmissionRiskReport = {
   policyDecision: SubmissionPolicyDecision;
   requestChangesReasons: string[];
   humanReviewNotes: string[];
-  labelDefinitions: Record<string, { color: string; description: string }>;
 };
 
 export type JsonLdSnapshot = {
@@ -784,7 +786,7 @@ export type SearchDocument = {
   repoStats?: RepoStats;
   url: string;
   canonicalUrl: string;
-  llmsUrl: string;
+  llmsUrl?: string;
   apiUrl: string;
   trustSignals: EntryTrustSignals;
 };

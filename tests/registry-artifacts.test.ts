@@ -141,6 +141,14 @@ describe("registry artifacts", () => {
     entries: any[];
   }>("registry-trust-report.json");
 
+  function renderEntryLlmsByKey(key: string) {
+    const entry = contentEntries.find(
+      (item) => `${item.category}:${item.slug}` === key,
+    );
+    expect(entry).toBeTruthy();
+    return renderEntryLlms(entry!);
+  }
+
   it("parses abbreviated Shields fallback counts", () => {
     expect(parseAbbreviatedCount("987")).toBe(987);
     expect(parseAbbreviatedCount("1.2k")).toBe(1200);
@@ -192,13 +200,8 @@ describe("registry artifacts", () => {
   });
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
-    const fullCorpusSize = artifactSize("llms-full.txt");
     const entryCount = contentEntries.length;
-    expect(artifactTreeSize(".")).toBeLessThan(1_500_000 + entryCount * 52_000);
-    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(
-      1_000_000 + entryCount * 44_000,
-    );
-    expect(fullCorpusSize).toBeLessThan(500_000 + entryCount * 9_000);
+    expect(artifactTreeSize(".")).toBeLessThan(20_000_000);
     expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
     expect(artifactSize("search-index.json")).toBeLessThan(750_000);
     expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
@@ -363,10 +366,7 @@ describe("registry artifacts", () => {
     const raycastDetail = readDataJson<Record<string, unknown>>(
       "raycast/mcp/asana-mcp-server.json",
     );
-    const llmsText = fs.readFileSync(
-      path.join(dataRoot, "llms", "mcp", "asana-mcp-server.txt"),
-      "utf8",
-    );
+    const llmsText = renderEntryLlmsByKey(key);
 
     expect(directoryEntry).toMatchObject({
       brandName: "Asana",
@@ -468,10 +468,7 @@ describe("registry artifacts", () => {
     const entryDetail = readDataJson<{ entry: Record<string, unknown> }>(
       "entries/mcp/contrastapi-mcp-server.json",
     );
-    const llmsText = fs.readFileSync(
-      path.join(dataRoot, "llms", "mcp", "contrastapi-mcp-server.txt"),
-      "utf8",
-    );
+    const llmsText = renderEntryLlmsByKey(key);
 
     for (const surface of [
       directoryEntry,
@@ -658,7 +655,50 @@ describe("registry artifacts", () => {
     expect(relation?.reasons).not.toContain("safer_metadata");
     expect(
       buildRegistryRelationGraph([target, candidate]).relationTypes,
+    ).toEqual(
+      expect.arrayContaining([
+        "duplicate",
+        "complementary",
+        "same-ecosystem",
+        "prerequisite",
+      ]),
+    );
+    expect(
+      buildRegistryRelationGraph([target, candidate]).relationTypes,
     ).not.toContain("safer-alternative");
+  });
+
+  it("preserves same-project relations across categories", () => {
+    const repoUrl = "https://github.com/example/langchain-helper";
+    const target = {
+      category: "mcp",
+      slug: "langchain-helper-mcp",
+      title: "LangChain Helper MCP",
+      description: "An MCP integration for LangChain workflows.",
+      tags: ["langchain", "mcp"],
+      keywords: ["langchain"],
+      repoUrl,
+    };
+    const candidate = {
+      category: "skills",
+      slug: "langchain-helper-skill",
+      title: "LangChain Helper Skill",
+      description: "A skill for LangChain workflow prompting.",
+      tags: ["langchain", "skills"],
+      keywords: ["langchain"],
+      repoUrl,
+    };
+
+    const [relation] = buildEntryRelations(target, [target, candidate], {
+      limit: 1,
+    });
+
+    expect(relation).toMatchObject({
+      key: "skills:langchain-helper-skill",
+      relation: "same-project",
+    });
+    expect(relation?.relation).not.toBe("duplicate");
+    expect(relation?.relation).not.toBe("complementary");
   });
 
   it("publishes deterministic relation graph refs into entry details", () => {
@@ -905,10 +945,7 @@ Use this hook after reviewing the notes.`,
         type: "json",
       },
     );
-    expect(manifest.artifactContracts["llms-full.txt"]).toMatchObject({
-      path: "/data/llms-full.txt",
-      type: "text",
-    });
+    expect(manifest.artifactContracts["llms-full.txt"]).toBeUndefined();
     for (const contract of Object.values(manifest.artifactContracts)) {
       expect(contract.sha256).toMatch(/^[a-f0-9]{64}$/);
     }
@@ -987,7 +1024,7 @@ Use this hook after reviewing the notes.`,
         `https://heyclau.de/entry/${entry.category}/${entry.slug}`,
       );
       expect(entry.llmsUrl).toBe(
-        `https://heyclau.de/data/llms/${entry.category}/${entry.slug}.txt`,
+        `https://heyclau.de/api/registry/entries/${entry.category}/${entry.slug}/llms`,
       );
       expect(entry.apiUrl).toBe(
         `https://heyclau.de/api/registry/entries/${entry.category}/${entry.slug}`,
@@ -1086,7 +1123,7 @@ Use this hook after reviewing the notes.`,
     }
   });
 
-  it("writes per-entry detail, LLM, and Raycast payloads", () => {
+  it("writes per-entry detail and Raycast payloads without static LLM shards", () => {
     const raycastEntryByKey = new Map(
       raycastPayload.entries.map((entry) => [
         `${entry.category}:${entry.slug}`,
@@ -1107,12 +1144,6 @@ Use this hook after reviewing the notes.`,
         copyText?: string;
         llmsUrl: string;
       }>(`raycast/${entry.category}/${entry.slug}.json`);
-      const entryLlmsPath = path.join(
-        dataRoot,
-        "llms",
-        entry.category,
-        `${entry.slug}.txt`,
-      );
       const raycastFeedEntry = raycastEntryByKey.get(key);
 
       expect(detailPayload).toMatchObject({
@@ -1120,12 +1151,11 @@ Use this hook after reviewing the notes.`,
         key,
       });
       expect(detailPayload.entry.title).toBe(entry.title);
-      expect(fs.existsSync(entryLlmsPath)).toBe(true);
       expect(raycastFeedEntry).toBeTruthy();
       expect(raycastDetail).toMatchObject({
         schemaVersion: 2,
         key,
-        llmsUrl: `/data/llms/${entry.category}/${entry.slug}.txt`,
+        llmsUrl: `/api/registry/entries/${entry.category}/${entry.slug}/llms`,
       });
       expect(raycastDetail).not.toHaveProperty("copyText");
       expect(raycastFeedEntry.canonicalUrl).toBe(
@@ -1137,6 +1167,7 @@ Use this hook after reviewing the notes.`,
       expect(raycastFeedEntry).not.toHaveProperty("copyTextTruncated");
       expect(raycastFeedEntry).not.toHaveProperty("detailMarkdown");
     }
+    expect(fs.existsSync(path.join(dataRoot, "llms"))).toBe(false);
   });
 
   it("publishes skill compatibility metadata and Cursor adapters", () => {
@@ -1192,12 +1223,9 @@ Use this hook after reviewing the notes.`,
     }
   });
 
-  it("writes the generated full corpus LLM text artifact", () => {
+  it("publishes full corpus LLM text through the dynamic site route", () => {
     const llmsFullPath = path.join(dataRoot, "llms-full.txt");
-    expect(fs.existsSync(llmsFullPath)).toBe(true);
-    const llmsFull = fs.readFileSync(llmsFullPath, "utf8");
-    expect(llmsFull).toMatch(/## Citation Facts/);
-    expect(llmsFull).toMatch(/## Entry Content/);
+    expect(fs.existsSync(llmsFullPath)).toBe(false);
     expect(contentEntries.some((entry) => getCopyText(entry).trim())).toBe(
       true,
     );
@@ -1211,10 +1239,10 @@ Use this hook after reviewing the notes.`,
       /^https:\/\/heyclau\.de\//,
     );
     expect(manifest.routes[0]?.llmsUrl).toMatch(
-      /^https:\/\/heyclau\.de\/data\/llms\//,
+      /^https:\/\/heyclau\.de\/api\/registry\/entries\/.+\/llms$/,
     );
     expect(manifest.qualitySummary).toBeTruthy();
-    expect(manifest.artifacts.llmsFull).toBe("/data/llms-full.txt");
+    expect(manifest.artifacts.llmsFull).toBe("/llms-full.txt");
     expect(manifest.artifacts.contentQualityPrompts).toBe(
       "/data/content-quality-prompts.json",
     );
@@ -1229,10 +1257,7 @@ Use this hook after reviewing the notes.`,
   });
 
   it("keeps generated entry LLM exports free of duplicated code blocks", () => {
-    const yieldLlms = fs.readFileSync(
-      path.join(dataRoot, "llms", "mcp", "yield-intelligence-mcp.txt"),
-      "utf8",
-    );
+    const yieldLlms = renderEntryLlmsByKey("mcp:yield-intelligence-mcp");
 
     expect(yieldLlms.match(/^## Content$/gm)).toHaveLength(1);
     expect(
