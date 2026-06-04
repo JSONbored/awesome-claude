@@ -1,0 +1,167 @@
+---
+title: Documentation Automation Workflow
+slug: documentation-automation-workflow
+category: collections
+description: >-
+  A source-backed documentation automation collection for Claude Code projects:
+  combine CLAUDE.md context, slash commands, doc generation hooks, coverage and
+  link checks, API reference generation, Mintlify publishing support, and
+  GitBook published-docs retrieval into one docs-as-code workflow.
+cardDescription: >-
+  Docs-as-code bundle for CLAUDE.md context, generated docs, coverage checks,
+  link validation, Mintlify, API docs, and GitBook retrieval.
+seoTitle: Documentation Automation Workflow
+seoDescription: >-
+  A curated collection for automating technical documentation with Claude Code
+  commands, hooks, CLAUDE.md context, Mintlify docs, JSDoc, API reference
+  generation, and GitBook published-docs MCP.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.mintlify.com/docs"
+sourceUrls:
+  - "https://www.mintlify.com/docs"
+  - "https://jsdoc.app/"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/claude-md"
+  - "https://gitbook.com/docs/ai-and-search/mcp-servers-for-published-docs"
+installable: false
+usageSnippet: >-
+  Start by building CLAUDE.md project context, then add docs generation,
+  coverage, link checking, Mintlify publishing, and GitBook published-docs
+  retrieval.
+items:
+  - slug: technical-documentation-writer-agent
+    category: agents
+  - slug: claudemd-builder
+    category: commands
+  - slug: docs
+    category: commands
+  - slug: mintlify-docs
+    category: commands
+  - slug: documentation-generator
+    category: hooks
+  - slug: documentation-auto-generator-on-stop
+    category: hooks
+  - slug: documentation-coverage-checker
+    category: hooks
+  - slug: api-endpoint-documentation-generator
+    category: hooks
+  - slug: markdown-link-checker
+    category: hooks
+  - slug: mintlify-documentation-automation
+    category: skills
+  - slug: gitbook-published-docs-mcp-server
+    category: mcp
+installationOrder:
+  - claudemd-builder
+  - technical-documentation-writer-agent
+  - docs
+  - documentation-generator
+  - documentation-auto-generator-on-stop
+  - documentation-coverage-checker
+  - api-endpoint-documentation-generator
+  - markdown-link-checker
+  - mintlify-documentation-automation
+  - mintlify-docs
+  - gitbook-published-docs-mcp-server
+estimatedSetupTime: 90 minutes
+difficulty: intermediate
+prerequisites:
+  - A repository with an agreed documentation home, such as `docs/`, `README.md`, or a Mintlify docs tree.
+  - A review process for generated documentation before it is published or merged.
+  - A local test/build command for validating examples, code snippets, and generated API references.
+  - Access tokens or workspace permissions for publishing tools only when the workflow actually publishes externally.
+safetyNotes:
+  - "Generated documentation can overwrite or drift from hand-written guidance if hooks run without review."
+  - "Keep auto-generation hooks in advisory or pull-request mode until maintainers trust the output and file scope."
+  - "Do not publish generated API references until examples, auth details, and version-specific behavior are checked by a maintainer."
+privacyNotes:
+  - "Documentation automation can expose internal paths, comments, environment names, private endpoints, screenshots, or unreleased feature details."
+  - "Review generated docs for secrets, customer identifiers, incident details, and private roadmap information before publishing."
+  - "Hosted documentation and published-docs MCP integrations may send repository documentation content to third-party services."
+tags:
+  - documentation
+  - automation
+  - mintlify
+  - claude-code
+  - docs-as-code
+keywords:
+  - documentation automation collection
+  - claude code docs workflow
+  - mintlify documentation automation
+  - docs as code claude collection
+---
+
+## What this collection sets up
+
+This collection turns documentation into a repeatable Claude Code workflow:
+capture project context, draft or update docs, check coverage, validate links,
+generate API references, and connect published documentation systems. It is
+useful for teams that want Claude to help maintain docs without treating
+generated prose as automatically publishable truth.
+
+## Layers
+
+### 1. Project context and writing ownership
+
+- **claudemd-builder** creates or refreshes CLAUDE.md context so future doc
+  generation follows local conventions.
+- **technical-documentation-writer-agent** gives the workflow a focused writing
+  role for API, feature, onboarding, and architecture documentation.
+
+### 2. Drafting and local generation
+
+- **docs** provides an explicit command path for documentation generation.
+- **documentation-generator** and
+  **documentation-auto-generator-on-stop** support generated or updated docs
+  during coding sessions.
+- **api-endpoint-documentation-generator** helps turn endpoint changes into API
+  reference material.
+
+### 3. Quality gates
+
+- **documentation-coverage-checker** highlights undocumented functions,
+  modules, components, or endpoints.
+- **markdown-link-checker** validates internal and external documentation links
+  before review.
+
+### 4. Publishing and published-doc retrieval
+
+- **mintlify-documentation-automation** and **mintlify-docs** support Mintlify
+  docs maintenance and publishing workflows.
+- **gitbook-published-docs-mcp-server** lets Claude retrieve published GitBook
+  documentation when a team needs to compare generated drafts with the live
+  public docs.
+
+## Suggested order
+
+Start by building CLAUDE.md context, then add the documentation writer agent and
+manual docs command. Enable generation hooks after the file scope is understood.
+Add coverage and link checks before publishing tools. Connect Mintlify or GitBook
+last, after the team has agreed which docs are safe to publish or query.
+
+## Source and references
+
+- Mintlify documentation: https://www.mintlify.com/docs
+- JSDoc documentation: https://jsdoc.app/
+- Claude Code slash commands: https://code.claude.com/docs/en/slash-commands
+- Claude Code hooks: https://code.claude.com/docs/en/hooks
+- Claude Code CLAUDE.md: https://code.claude.com/docs/en/claude-md
+- GitBook published-docs MCP: https://gitbook.com/docs/ai-and-search/mcp-servers-for-published-docs
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `documentation-automation-workflow`, documentation
+automation, docs-as-code, Mintlify collection, GitBook documentation workflow,
+CLAUDE.md workflow, and docs generation collection. Existing content creation
+and API starter collections include documentation as one step, but no collection
+focuses on documentation automation, doc quality gates, publishing support, and
+published-doc retrieval as a complete workflow.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
