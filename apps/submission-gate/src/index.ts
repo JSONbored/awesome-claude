@@ -1212,7 +1212,6 @@ async function reconcileTerminalPullRequest(params: {
     nextReviewAt: null,
     lastError: "GitHub terminal state verified.",
     terminalAt: nowIso(),
-    clearVerdict: status === "closed",
   });
   await insertAudit(params.env.SUBMISSION_GATE_DB, {
     id: crypto.randomUUID(),

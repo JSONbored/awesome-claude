@@ -813,6 +813,14 @@ describe("Cloudflare submission gate helpers", () => {
       terminalSetIndex,
       terminalSetEndIndex,
     );
+    const reconcileIndex = source.indexOf(
+      "async function reconcileTerminalPullRequest",
+    );
+    const reconcileEndIndex = source.indexOf(
+      "async function ignoreOutOfScopeReviewTarget",
+      reconcileIndex,
+    );
+    const reconcileBlock = source.slice(reconcileIndex, reconcileEndIndex);
 
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
     expect(source).toContain("const TERMINAL_PR_STATUSES = new Set");
@@ -856,6 +864,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
+    expect(reconcileBlock).not.toContain("clearVerdict");
     expect(storageSource).toContain(
       "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
     );
