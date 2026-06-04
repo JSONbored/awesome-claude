@@ -27,7 +27,7 @@ import { HowItWorks } from "@/components/how-it-works";
 import { AgentNativeStrip } from "@/components/agent-native-strip";
 import { EcosystemPulse } from "@/components/ecosystem-pulse";
 import { useRecents } from "@/lib/recents";
-import { CATEGORIES, PRIMARY_CATEGORIES, type Category } from "@/types/registry";
+import { CATEGORIES, type Category } from "@/types/registry";
 import { ENTRIES, BRIEF_ISSUES, REGISTRY_GENERATED_AT } from "@/data/entries";
 import { search } from "@/data/search";
 
@@ -41,8 +41,6 @@ const CATEGORY_ICONS: Partial<Record<Category, typeof Bot>> = {
   agents: Bot,
   mcp: Server,
   skills: Sparkles,
-  plugins: Package,
-  automations: Activity,
   commands: Terminal,
   hooks: Activity,
   rules: BookOpen,
@@ -113,8 +111,6 @@ function Home() {
   const sourceBacked = ENTRIES.filter(
     (e) => e.source !== "unverified" && e.trust === "trusted",
   ).slice(0, 4);
-  const claudeNative = PRIMARY_CATEGORIES;
-  const adjacent = CATEGORIES.filter((c) => c.legacy);
   const latestBrief = BRIEF_ISSUES[0];
   const recents = useRecents();
   const recentEntries = recents.entries
@@ -259,7 +255,7 @@ function Home() {
           ctaLabel="All categories"
         />
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-border bg-border stagger-children sm:grid-cols-3 lg:grid-cols-5">
-          {claudeNative.map((c) => {
+          {CATEGORIES.map((c) => {
             const count = ENTRIES.filter((e) => e.category === c.id).length;
             const Icon = CATEGORY_ICONS[c.id] ?? Sparkles;
             return (
@@ -283,27 +279,6 @@ function Home() {
             );
           })}
         </div>
-        {adjacent.length > 0 && (
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <span className="eyebrow">Also indexed</span>
-            {adjacent.map((c) => {
-              const count = ENTRIES.filter((e) => e.category === c.id).length;
-              return (
-                <Link
-                  key={c.id}
-                  to="/browse"
-                  search={{ category: c.id }}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-ink-muted hover:border-border-strong hover:text-ink"
-                >
-                  {c.label}
-                  <span className="font-mono text-[10px] text-ink-subtle tabular-nums">
-                    {count}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        )}
       </section>
 
       {recentEntries.length > 0 && (

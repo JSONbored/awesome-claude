@@ -1,0 +1,60 @@
+---
+title: Browserless
+slug: browserless
+category: tools
+description: Managed and self-hostable headless browser infrastructure for Puppeteer, Playwright, BrowserQL, REST APIs, and AI browser automation workflows.
+cardDescription: Headless browser infrastructure for Puppeteer, Playwright, and AI agents.
+seoTitle: Browserless browser automation infrastructure
+seoDescription: Browserless provides managed and self-hostable headless browser infrastructure for Puppeteer, Playwright, REST APIs, BrowserQL, and AI automation.
+author: Browserless
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.browserless.io"
+documentationUrl: "https://docs.browserless.io/"
+repoUrl: "https://github.com/browserless/browserless"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Web, Docker, Self-hosted, Cloud
+tags:
+  - browser-automation
+  - testing
+  - infrastructure
+keywords:
+  - headless browser
+  - puppeteer
+  - playwright
+prerequisites:
+  - Browserless Cloud account and API token, or a reviewed self-hosted Browserless deployment.
+  - Existing Puppeteer, Playwright, REST API, BrowserQL, or AI-agent workflow that needs remote browser sessions.
+  - Policy for what sites, accounts, credentials, and production environments automated browsers are allowed to access.
+safetyNotes:
+  - Browserless can drive real websites, authenticated sessions, forms, downloads, screenshots, PDFs, and scraping flows, so automation should respect site terms, rate limits, robots policies, and internal approval rules.
+  - Stealth, CAPTCHA-solving, proxy, and residential routing features can be abused; restrict them to legitimate testing, accessibility, QA, research, or owned/approved workflows.
+  - Keep API tokens, browser connection URLs, cookies, session identifiers, and proxy credentials out of prompts, logs, screenshots, generated reports, and public CI output.
+privacyNotes:
+  - Browser sessions may process visited URLs, page content, screenshots, PDFs, DOM data, cookies, localStorage, form input, downloads, and authentication state.
+  - Hosted Browserless use sends browser traffic and session metadata through Browserless infrastructure; self-hosted deployments still need retention, access-control, and network egress policies.
+  - Features such as persistent sessions, session replay, debug viewers, webhooks, and crawl or scrape output can retain or expose sensitive browser state if not scoped and purged.
+---
+
+## Editorial notes
+
+Browserless is useful when Claude-adjacent test agents, QA jobs, scrapers, or browser workflows need a reliable remote browser runtime instead of launching local Chrome in every environment. It supports standard Puppeteer and Playwright connections over WebSocket/CDP, plus BrowserQL, REST APIs, Docker deployment, cloud hosting, debug sessions, queues, concurrency controls, and AI integration docs.
+
+## Source notes
+
+- The official docs describe Browserless as covering BrowserQL, Browsers as a Service, REST APIs, AI integrations, MCP, and enterprise/self-hosted deployments.
+- The Browserless BaaS quick start documents connecting Puppeteer or Playwright to Browserless through Chrome DevTools Protocol over WebSocket.
+- The AI integration docs cover using Browserless with Claude Agent SDK and Playwright for remote browser automation, including API-token setup and Browserless connection URLs.
+- The GitHub repository is `browserless/browserless` and describes Browserless as headless browsers in Docker that can run on Browserless Cloud or bring-your-own infrastructure.
+- The repository documents Docker startup, standard Puppeteer and Playwright compatibility, queueing, debug viewer, configurable timeouts, REST APIs, persistent sessions, session replay, private deployment, and SSPL-1.0 or commercial licensing.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, open pull requests, live HeyClaude search results, and repository-wide content for `Browserless`, `browserless.io`, `github.com/browserless/browserless`, `headless browser`, `browser automation`, `Puppeteer`, `Playwright`, `Browserbase`, `Hyperbrowser`, `Stagehand`, and `Browser Use`. Browserbase and Hyperbrowser are separate cloud browser infrastructure providers, Stagehand is an AI-assisted browser automation framework, Browser Use is an agent browser-control library, and Playwright MCP is an MCP server. No Browserless tools entry, Browserless source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

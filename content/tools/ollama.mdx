@@ -1,0 +1,59 @@
+---
+title: Ollama
+slug: ollama
+category: tools
+description: Local model runner for downloading, serving, and integrating open models with developer tools and agent workflows.
+cardDescription: Local model runner for open models and developer workflows.
+seoTitle: Ollama local LLM runner for developer workflows
+seoDescription: Ollama runs open models locally with a CLI, local REST API, model library, Docker image, and integrations for Claude Code and other coding tools.
+author: Ollama
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://ollama.com"
+documentationUrl: "https://docs.ollama.com"
+repoUrl: "https://github.com/ollama/ollama"
+packageUrl: "https://hub.docker.com/r/ollama/ollama"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Docker
+tags:
+  - local-llm
+  - model-runner
+  - open-source
+keywords:
+  - local llm runner
+  - offline model workflow
+  - ollama claude code
+prerequisites:
+  - A supported macOS, Windows, Linux, or Docker environment with enough CPU, memory, disk, and optional GPU capacity for the selected model.
+  - Locally downloaded models from the Ollama library or imported model files you are allowed to use.
+  - A reviewed integration path before connecting Ollama to Claude Code, Codex, OpenCode, or other agent clients.
+safetyNotes:
+  - Downloaded models can be large and may carry their own license, usage, and safety constraints; review model cards before use.
+  - Ollama exposes a local service and REST API, so bind addresses, firewall rules, and shared-machine access should be configured intentionally.
+  - Generated outputs from local models still need review before they are applied to code, documentation, or operational decisions.
+privacyNotes:
+  - Local prompts and responses can stay on the machine when using local models, but they may appear in client logs, shell history, or application telemetry around the integration.
+  - Any remote model source, community integration, or connected chat/workflow client may add its own data handling behavior.
+  - Do not assume local execution removes the need to protect secrets or sensitive repository context from prompts and logs.
+---
+
+## Editorial notes
+
+Ollama is a practical fit for Claude and agent users who want a local model runtime for offline or private development workflows. The official README and docs cover the CLI, model library, local REST API, Docker image, Python and JavaScript libraries, and coding integrations including Claude Code.
+
+## Source notes
+
+- The official README says Ollama helps users start building with open models and documents macOS, Windows, Linux, Docker, CLI, REST API, Python, and JavaScript usage.
+- The docs include CLI, API, model import, Modelfile, and integration references.
+- The official Docker Hub image is `ollama/ollama`.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, and the repository for `Ollama`, `ollama.com`, `github.com/ollama/ollama`, `local LLM`, `local model runner`, and `offline model workflow`. No existing Ollama listing or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

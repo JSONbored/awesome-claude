@@ -1,0 +1,316 @@
+---
+title: Microsandbox MCP Server for Claude
+slug: microsandbox-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Microsandbox microVMs for sandbox lifecycle, command
+  execution, filesystem, volume, and metrics workflows.
+cardDescription: >-
+  MCP server for giving Claude structured access to Microsandbox microVM
+  sandboxes, command execution, files, volumes, and runtime metrics.
+seoTitle: Microsandbox MCP Server for Claude
+seoDescription: >-
+  Use the Microsandbox MCP server with Claude to create microVM sandboxes,
+  execute commands, manage sandbox files and volumes, inspect resource metrics,
+  and keep strict safety boundaries around code execution.
+author: Superrad Company
+authorProfileUrl: "https://github.com/superradcompany"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://docs.microsandbox.dev/getting-started/agents"
+repoUrl: "https://github.com/superradcompany/microsandbox-mcp"
+installable: true
+installCommand: >-
+  claude mcp add --transport stdio microsandbox -- npx -y microsandbox-mcp
+usageSnippet: >-
+  claude mcp add --transport stdio microsandbox -- npx -y microsandbox-mcp
+copySnippet: |-
+  {
+    "microsandbox": {
+      "command": "npx",
+      "args": ["-y", "microsandbox-mcp"]
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "microsandbox": {
+        "command": "npx",
+        "args": ["-y", "microsandbox-mcp"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - macOS on Apple Silicon, or Linux on x86_64 or ARM64 with KVM support
+  - Node.js 22+ and npm/npx for running the `microsandbox-mcp` package
+  - MCP-capable client with stdio transport, such as Claude Code, Claude Desktop, Cursor, VS Code, Windsurf, OpenCode, or Zed
+  - Permission to install and run the Microsandbox `msb` runtime and `libkrunfw` on the host
+  - Disk space for sandbox images, writable layers, snapshots, and named volumes
+  - A clear policy for what code Claude may run and what files, network destinations, secrets, and volumes those sandboxes may access
+safetyNotes:
+  - >-
+    Treat this as code-execution infrastructure. The MCP tools can create
+    sandboxes, run commands and shell strings, write files, manage volumes, stop
+    sandboxes, and remove sandbox resources.
+  - >-
+    Use ephemeral sandboxes for untrusted or one-off commands. Persistent named
+    sandboxes and volumes can retain code, logs, artifacts, package caches, and
+    other state across sessions.
+  - >-
+    Keep manual approval enabled for `sandbox_exec`, `sandbox_shell`,
+    filesystem writes, volume changes, and sandbox removal until the workflow is
+    well understood.
+  - >-
+    Microsandbox documents host-controlled network policy and default defenses
+    for private IP ranges, loopback, link-local addresses, cloud metadata
+    endpoints, and DNS rebinding; review those defaults before allowing broad
+    network access.
+  - >-
+    Do not mount sensitive host paths or grant broad network egress to code you
+    have not reviewed. The microVM boundary reduces host exposure, but it is not
+    a reason to run arbitrary privileged workflows.
+  - >-
+    Review any installer, runtime update, or image pull path before approving it
+    in regulated or production environments.
+privacyNotes:
+  - >-
+    Commands, stdout, stderr, exit codes, file paths, file contents, sandbox
+    names, image names, environment variables, metrics, and logs can be returned
+    to the MCP client and model session.
+  - >-
+    Files written inside a sandbox may persist when using named sandboxes,
+    snapshots, or volumes. Remove temporary sandboxes and volumes when their
+    artifacts are no longer needed.
+  - >-
+    Secrets should stay in host-side secret management where possible.
+    Microsandbox documents placeholder-based secret injection and
+    host-restricted delivery; keep allowed hosts narrow.
+  - >-
+    Networked code can still send permitted data to external services. Pair
+    sandbox use with explicit egress rules for workflows that touch private
+    source code, credentials, datasets, or customer data.
+  - >-
+    Package installs, image pulls, and commands run inside the sandbox can
+    contact third-party registries or services and may leave audit, billing, or
+    telemetry records with those providers.
+tags:
+  - microsandbox
+  - sandbox
+  - code-execution
+  - microvm
+  - runtime
+  - mcp
+keywords:
+  - microsandbox mcp
+  - microsandbox claude
+  - code execution mcp server
+  - sandbox mcp server
+  - microvm mcp
+  - ai agent sandbox
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Microsandbox MCP server exposes the Microsandbox runtime to Claude and other
+MCP-capable clients over stdio. It gives agents structured tools for creating
+microVM sandboxes, running commands inside them, reading and writing sandbox
+files, managing named volumes, and inspecting resource metrics.
+
+This entry is for workflows where Claude needs an isolated execution target,
+not direct access to the host shell. The practical safety boundary still depends
+on how the sandbox is configured: what image it uses, whether it is ephemeral or
+persistent, which volumes are attached, which secrets are available, and what
+network policy is active.
+
+Microsandbox documents the MCP server in its AI agents guide, publishes the
+server as the `microsandbox-mcp` npm package, and maintains the source in the
+`superradcompany/microsandbox-mcp` repository.
+
+## Features
+
+- Stdio MCP server installable with `npx -y microsandbox-mcp`.
+- Sandbox lifecycle tools for creating, listing, inspecting, stopping, and
+  removing sandboxes.
+- Ephemeral `sandbox_run` tool for creating a sandbox, running a command, and
+  cleaning it up.
+- Command execution tools for command-plus-args execution and shell-string
+  execution inside an existing sandbox.
+- Filesystem tools for reading, writing, listing, creating, removing, and
+  statting files inside the sandbox filesystem.
+- Named volume tools for creating, listing, and removing persistent volumes.
+- Metrics tools for live CPU, memory, disk I/O, and network visibility.
+- Runtime installation check for the local `msb` runtime and `libkrunfw`.
+- Client examples for Claude Code, Claude Desktop, Cursor, VS Code, Windsurf,
+  OpenCode, Zed, and other stdio-capable MCP clients.
+- Microsandbox runtime support for macOS on Apple Silicon and Linux on x86_64
+  or ARM64 with KVM support.
+
+## Use Cases
+
+- Give Claude a disposable microVM for running untrusted snippets, tests, or
+  package experiments without handing it the host shell directly.
+- Run commands in a known sandbox image while keeping stdout, stderr, and exit
+  codes available to the agent.
+- Let Claude inspect or edit files inside a sandboxed workspace before copying
+  only approved artifacts back into a project.
+- Create persistent sandboxes for repeatable debugging sessions that need state
+  across multiple tool calls.
+- Attach named volumes when a workflow needs cached dependencies or reusable
+  data between sandbox runs.
+- Monitor CPU, memory, disk I/O, and network metrics for long-running sandboxed
+  tasks.
+- Test code that needs outbound internet access while relying on Microsandbox's
+  host-controlled network policy for local-network and metadata-endpoint
+  boundaries.
+
+## Installation
+
+### Claude Code
+
+1. Confirm Node.js 22+ is installed:
+
+```bash
+node --version
+```
+
+2. Add the stdio MCP server:
+
+```bash
+claude mcp add --transport stdio microsandbox -- npx -y microsandbox-mcp
+```
+
+3. Start a fresh Claude Code session and inspect the available Microsandbox
+   tools before approving any execution request.
+4. Run the `check_installed` tool first. If the host runtime is missing, follow
+   the Microsandbox installation docs for the `msb` runtime and `libkrunfw`.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `microsandbox` server configuration shown below.
+3. Restart Claude Desktop.
+4. Start with low-risk prompts such as checking whether the runtime is
+   installed or creating a short-lived sandbox for a simple command.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "microsandbox": {
+      "command": "npx",
+      "args": ["-y", "microsandbox-mcp"]
+    }
+  }
+}
+```
+
+For clients that expect the server object directly, use the same command and
+arguments:
+
+```json
+{
+  "microsandbox": {
+    "command": "npx",
+    "args": ["-y", "microsandbox-mcp"]
+  }
+}
+```
+
+## Examples
+
+### Check the runtime
+
+Ask Claude to verify that the local Microsandbox runtime is available before
+running any sandboxed code.
+
+```plaintext
+Check whether Microsandbox is installed and report what runtime pieces are missing.
+```
+
+### Run an ephemeral command
+
+Use an ephemeral sandbox when the task does not need state after the command
+finishes.
+
+```plaintext
+Create a temporary Microsandbox Python sandbox, run a hello-world command, return stdout and stderr, and clean up the sandbox afterward.
+```
+
+### Inspect sandbox state
+
+Use lifecycle and metrics tools for a persistent sandbox during a debugging
+session.
+
+```plaintext
+List the running Microsandbox sandboxes, inspect the one named "agent-test", and show current CPU, memory, disk I/O, and network metrics.
+```
+
+### Work with sandbox files
+
+Keep file operations scoped to the sandbox filesystem.
+
+```plaintext
+Create a file inside the sandbox, run a command that reads it, then show me the output and the final file metadata.
+```
+
+## Best Practices
+
+- Prefer `sandbox_run` for disposable tasks that should not keep state.
+- Use persistent sandboxes only when the workflow genuinely needs continuity.
+- Name sandboxes and volumes clearly so cleanup decisions are obvious.
+- Keep network access narrow for workflows involving private code, credentials,
+  datasets, or customer data.
+- Review shell-string commands before approval because `sandbox_shell` supports
+  pipes, redirects, and shell syntax.
+- Avoid passing secrets as command arguments or prompts. Use the Microsandbox
+  secret-injection model and narrow allowed hosts when secrets are required.
+- Clean up unused sandboxes and volumes after each workflow.
+- Treat output from sandboxed code as untrusted input, especially when it comes
+  from downloaded packages, web content, tests, or generated files.
+
+## Troubleshooting
+
+### Runtime check reports missing components
+
+Run the MCP `check_installed` tool first, then follow the Microsandbox install
+docs for the host operating system. Linux hosts need KVM support; macOS support
+is for Apple Silicon.
+
+### Sandbox creation fails
+
+Confirm the host platform is supported, the runtime is installed, the user has
+permission to run it, and there is enough disk space for images and writable
+layers.
+
+### Commands hang or produce no output
+
+Use explicit command arguments where possible, add a timeout, and inspect
+stdout, stderr, and the exit code. For shell syntax, confirm the target image
+has the expected shell and binaries installed.
+
+### Network access is blocked
+
+Review the Microsandbox networking docs and the active sandbox policy. The
+default network model is designed to prevent workloads from reaching private
+network ranges, loopback, link-local addresses, cloud metadata endpoints, and
+DNS rebinding targets.
+
+### Files disappear between runs
+
+Ephemeral sandboxes are meant to be disposable. Use a persistent named sandbox,
+snapshot, or named volume only when retaining state is intentional.
+
+## Related Links
+
+- [Microsandbox AI agents guide](https://docs.microsandbox.dev/getting-started/agents)
+- [Microsandbox MCP repository](https://github.com/superradcompany/microsandbox-mcp)
+- [microsandbox-mcp on npm](https://www.npmjs.com/package/microsandbox-mcp)
+- [Microsandbox documentation](https://docs.microsandbox.dev)
+- [Microsandbox security model](https://docs.microsandbox.dev/networking/security-model)
+- [Microsandbox secrets documentation](https://docs.microsandbox.dev/sandboxes/secrets)

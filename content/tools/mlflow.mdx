@@ -1,0 +1,71 @@
+---
+title: MLflow
+slug: mlflow
+category: tools
+description: Open-source AI engineering platform for tracing, evaluating, prompt-managing, and deploying agents, LLM applications, and ML models.
+cardDescription: Trace, evaluate, monitor, and manage agents, LLM apps, prompts, and models.
+seoTitle: MLflow for AI agents and LLM applications
+seoDescription: MLflow helps teams trace, evaluate, monitor, prompt-manage, and deploy AI agents, LLM applications, and machine-learning models.
+author: MLflow Project
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://mlflow.org/"
+documentationUrl: "https://mlflow.org/docs/latest/genai/"
+repoUrl: "https://github.com/mlflow/mlflow"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - observability
+  - evaluation
+  - prompt-management
+keywords:
+  - mlflow
+  - agent tracing
+  - llm evaluation
+  - prompt management
+  - ai gateway
+prerequisites:
+  - Python environment, package manager, or managed MLflow environment for installing and running MLflow in the project being traced or evaluated.
+  - AI agent, LLM application, RAG pipeline, prompt workflow, model pipeline, or production trace source to connect to MLflow.
+  - MLflow tracking server, backend store, artifact store, or managed service path sized for traces, datasets, prompts, model artifacts, and evaluation results.
+  - Model provider credentials, gateway policy, rate limits, and budget controls for LLM calls, LLM-as-a-judge scorers, prompt optimization, and deployed endpoints.
+  - Reviewed retention, redaction, access-control, and release policy for traces, prompts, datasets, model versions, deployment decisions, and evaluation thresholds.
+safetyNotes:
+  - MLflow evaluations, traces, judges, and dashboards are review signals, not proof that an agent, LLM application, prompt, model, or deployment is correct, safe, fair, or production-ready.
+  - Autologging, decorators, OpenTelemetry ingestion, manual spans, and framework integrations can wrap live application code and record intermediate agent steps, retrievals, tool calls, model requests, and model responses.
+  - LLM-as-a-judge scorers and prompt optimization workflows can call configured model providers, consume quota, hit rate limits, and produce evaluator-model errors that require separate handling.
+  - AI Gateway and serving workflows can centralize model access, routing, rate limits, and credentials; incorrect configuration can route traffic to the wrong provider or expose more access than intended.
+  - Production tracing, async logging, tracking servers, registries, artifact stores, and deployment endpoints should be reviewed for authentication, TLS, network exposure, backups, and incident response before production use.
+  - Model registry and deployment workflows can influence real production behavior, so promotion, rollback, and approval rules should be separated from exploratory eval results.
+privacyNotes:
+  - MLflow traces and evaluations can capture prompts, completions, retrieved context, tool arguments, tool outputs, spans, metadata, latency, token usage, costs, scores, datasets, expectations, and human feedback.
+  - Agent traces may contain customer data, private documents, source snippets, proprietary prompts, internal identifiers, secrets accidentally passed to tools, or model outputs that need redaction before storage or sharing.
+  - LLM-as-a-judge scorers, prompt optimization, AI Gateway calls, and serving endpoints may send prompts, outputs, context, or traces to configured model providers unless a reviewed local or private provider path is used.
+  - Tracking servers, backend databases, artifact stores, evaluation datasets, prompt registries, model registries, and exported reports should follow normal access-control, retention, audit-log, and deletion policies.
+  - Public demos, notebooks, and examples should not be copied into production workflows with real API keys, raw customer traces, unreleased prompts, or sensitive evaluation data.
+---
+
+## Editorial notes
+
+MLflow is useful when Claude-adjacent engineering teams need one open-source control plane for agent tracing, LLM app evaluation, prompt iteration, model registry workflows, and production monitoring. It can help an agent-building team move from ad-hoc notebook experiments to versioned traces, datasets, prompts, scores, and deployment decisions without splitting evaluation evidence across several unrelated tools.
+
+This is distinct from existing observability and evaluation entries. Langfuse and Phoenix are focused LLM observability platforms, DeepEval is strongest as a Python unit-test-style evaluation framework, TruLens focuses on feedback functions and trace-level agent/RAG evaluation, and Weave/Braintrust cover adjacent evaluation and experiment workflows. MLflow is broader: an Apache-2.0, Linux Foundation open-source AI engineering platform spanning agents, LLM applications, classic ML workflows, OpenTelemetry-compatible tracing, prompt management, AI Gateway, experiment tracking, model registry, and deployment.
+
+## Source notes
+
+- The official MLflow GenAI overview describes MLflow as an open-source AI engineering platform for agents and LLMs with observability, evaluation, prompt management, AI Gateway, experiment tracking, deployment, and integrations.
+- The tracing documentation describes MLflow Tracing as OpenTelemetry-compatible observability for LLM applications and agents that captures inputs, outputs, metadata, prompts, retrievals, tool calls, LLM responses, latency, token usage, and quality metrics.
+- The evaluation documentation covers evaluation-driven development for LLM and agent applications, including evaluation datasets, human feedback, LLM-as-a-judge scorers, custom scorers, systematic evaluation, and production monitoring.
+- The official docs describe running MLflow locally, on-premises, in cloud platforms, or through managed services, with vendor-neutral open-source usage.
+- The GitHub repository is `mlflow/mlflow`, is Apache-2.0 licensed, and describes MLflow as an open-source AI engineering platform for agents, LLMs, and ML models.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `MLflow`, `mlflow.org`, `github.com/mlflow/mlflow`, `MLflow Tracing`, `MLflow Evaluation`, `AI Gateway`, `prompt management`, `model registry`, `experiment tracking`, `OpenTelemetry-compatible tracing`, and `mlflow.genai`. Existing Langfuse, Phoenix, DeepEval, Ragas, TruLens, Evidently, Weave, Braintrust, and Promptfoo entries cover adjacent observability, evaluation, or experiment workflows, but no dedicated MLflow tools entry, MLflow source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

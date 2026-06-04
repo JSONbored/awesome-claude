@@ -1,0 +1,68 @@
+---
+title: Semgrep
+slug: semgrep
+category: tools
+description: Static analysis platform and open-source CLI for finding bugs, security issues, secrets, dependency risk, and custom rule matches in code.
+cardDescription: Static analysis, SAST, secrets, dependency checks, and custom code rules.
+seoTitle: Semgrep static analysis and code security scanning
+seoDescription: Semgrep helps teams scan code for bugs, security issues, secrets, dependency risk, and custom rule matches across local, CI, and developer workflows.
+author: Semgrep
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://semgrep.dev"
+documentationUrl: "https://semgrep.dev/docs/"
+repoUrl: "https://github.com/semgrep/semgrep"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: SecurityApplication
+operatingSystem: macOS, Windows, Linux, Docker, Web
+tags:
+  - security
+  - static-analysis
+  - code-review
+keywords:
+  - semgrep
+  - sast
+  - custom rules
+prerequisites:
+  - Repository, folder, or CI workspace that you are authorized to scan.
+  - Semgrep CLI installed through Homebrew, pipx, uv, Docker, or another official setup path.
+  - Python 3.10 or later when using the native CLI installation path.
+  - Reviewed rule selection, ignore policy, baseline policy, and triage owner for security, bug, dependency, and secrets findings.
+  - Semgrep account and token when using Semgrep AppSec Platform, managed scans, or `semgrep ci` with hosted findings.
+safetyNotes:
+  - Semgrep findings are review signals, not proof that code is safe or unsafe. False positives and false negatives need human triage.
+  - Semgrep Community Edition has more limited analysis than the Semgrep AppSec Platform for security use cases, so high-risk release gates should account for that limitation.
+  - Custom rules can be noisy or overly broad. Test rules on representative code before enforcing them in CI, hooks, or agent-managed review workflows.
+  - Secrets and dependency findings can include sensitive values, package paths, or vulnerable code snippets, so reports and PR comments need careful handling.
+  - Do not let automated Semgrep results directly trigger production deploys, dependency upgrades, or irreversible changes without owner review.
+privacyNotes:
+  - Semgrep scans source code, file paths, dependency manifests, lockfiles, comments, generated code, and rule matches in the selected project scope.
+  - The upstream README says Semgrep analyzes code locally by default and code is not uploaded, while platform workflows send findings for triage and reporting.
+  - Findings, SARIF, JSON output, CI logs, dashboard records, and PR comments can include file paths, code snippets, dependency names, rule IDs, and suspected secrets.
+  - Docker-based scans mount local source directories into the Semgrep container, so review volume paths and CI workspace scope before scanning private repositories.
+  - Logged-in platform scans, Semgrep Assistant, managed scans, and organization policies create additional hosted data and access-control considerations.
+---
+
+## Editorial notes
+
+Semgrep is useful when Claude or an engineering agent is reviewing code that may need static security checks, custom organization rules, or repeatable CI guardrails. Its rule syntax looks like source code, which makes it easier to author targeted checks for project-specific bug patterns than raw grep or broad lint rules.
+
+This is distinct from the existing Gitleaks tools entry and the security hook content that mentions Semgrep. Gitleaks is focused on secret scanning. Existing hooks and agents show Semgrep as one possible command inside broader Claude workflows. This entry is the dedicated Semgrep listing for the actual static analysis CLI and AppSec Platform.
+
+## Source notes
+
+- The official docs describe Semgrep as a platform for SAST, software composition analysis, and secrets scans, with custom rules for enforcing organization coding standards.
+- The quickstart documents Python 3.10+, Homebrew, pipx, uv, Docker installation paths, `semgrep login`, `semgrep ci`, and `semgrep scan` for local CLI use without a GitHub or GitLab account.
+- The docs and README list broad language support for Semgrep Code, Supply Chain reachability, and language-agnostic secrets detection.
+- The README says Semgrep analyzes code locally by default and that code is not uploaded, while findings can be sent to the Semgrep AppSec Platform.
+- The GitHub repository is `semgrep/semgrep`, is LGPL-2.1 licensed, and describes the project as lightweight static analysis for many languages using patterns that look like source code.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, open pull requests, live issue state, and repository-wide content for `Semgrep`, `semgrep.dev`, `github.com/semgrep/semgrep`, `static analysis`, `SAST`, `custom rules`, `code scanning`, `Semgrep AppSec Platform`, and `semgrep ci`. Existing files mention Semgrep inside broader security agents, hooks, or auditor rules, and Gitleaks already covers secret scanning, but no dedicated Semgrep tools entry, Semgrep source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

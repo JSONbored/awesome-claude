@@ -98,6 +98,6 @@ export function buildSubmissionDraftText(draft: SubmissionDraft) {
     "Policy notes:",
     "- Use canonical source/docs URLs or copyable source content.",
     "- Do not request HeyClaude-hosted /downloads ZIP/MCPB artifacts for community submissions.",
-    "- Eligible submissions may auto-open a PR after gates pass, but maintainers still review before merge.",
+    "- Eligible content submissions move through HeyClaude's PR-first maintainer-agent review.",
   ].join("\n");
 }

@@ -1,0 +1,68 @@
+---
+title: DVC
+slug: dvc
+category: tools
+description: Open-source data and model versioning tool for tracking datasets, ML artifacts, pipelines, experiments, metrics, and remote storage alongside Git.
+cardDescription: Version datasets, models, ML pipelines, experiments, metrics, and remotes with Git.
+seoTitle: DVC data versioning and ML experiment management
+seoDescription: DVC helps AI and ML teams version datasets, models, pipelines, experiments, metrics, and remote storage metadata alongside source code in Git.
+author: Iterative
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://dvc.org"
+documentationUrl: "https://dvc.org/doc"
+repoUrl: "https://github.com/treeverse/dvc"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - mlops
+  - data-versioning
+  - pipelines
+keywords:
+  - dvc
+  - data version control
+  - ml experiments
+prerequisites:
+  - Git repository for the project whose data, model artifacts, metrics, or pipeline metadata will be tracked.
+  - DVC installed through uv, pipx, system packages, or another documented installation path.
+  - Approved storage remote for datasets and models, such as local storage, S3, Azure Blob Storage, Google Cloud Storage, SSH, Google Drive, or another supported remote.
+  - Credentials, access controls, retention policy, and cost limits for any remote storage used by the project.
+  - Team agreement on which artifacts belong in Git as metadata and which large files belong in DVC cache or remote storage.
+safetyNotes:
+  - DVC can move, checkout, pull, push, remove, and garbage-collect large datasets or model files, so run commands from the intended repository root and review diffs before committing.
+  - DVC checkout, pull, and experiment commands can change workspace files outside normal source-code edits, which can surprise agent workflows that assume Git-only changes.
+  - DVC pipelines can execute project commands through DVC repro, so pipeline definitions should be reviewed before running untrusted or newly generated stages.
+  - Remote storage writes can incur cost, overwrite shared artifact state, or expose incorrect model and dataset versions if remotes, branches, and cache policies are not coordinated.
+  - Do not treat a reproducible DVC pipeline as proof of model quality, data licensing compliance, privacy compliance, or production readiness without separate review.
+privacyNotes:
+  - DVC tracks metadata about datasets, models, metrics, parameters, plots, hashes, file paths, remotes, pipeline stages, and experiment outputs.
+  - Large data and model artifacts normally live in the DVC cache or configured remote storage, where normal storage permissions, retention, encryption, and audit controls apply.
+  - DVC metadata files, pipeline files, lock files, metrics, plots, and experiment metadata committed to Git can reveal dataset names, model names, paths, hashes, feature labels, or project structure.
+  - Remote URLs, credentials, and cloud account details should be configured through approved secret-management paths rather than committed config.
+  - The DVC docs include anonymized usage analytics documentation, so teams with telemetry restrictions should review those settings before broad rollout.
+---
+
+## Editorial notes
+
+DVC is useful when Claude or an engineering agent is working in an AI/ML repository where the important state is not just source code. It lets teams keep Git as the review surface for metadata while large datasets, model checkpoints, pipeline outputs, metrics, and experiment artifacts live in cache or remote storage.
+
+This is distinct from general evaluation and observability tools already in the directory. DVC is not an LLM eval framework, prompt manager, or model monitor. It is the data and model versioning layer that makes AI/ML changes reviewable when code, data, parameters, and generated artifacts all need to line up.
+
+## Source notes
+
+- The official docs describe DVC as installable in a system terminal, VS Code, or Python library workflow, with guides for data pipelines, experiment management, data/model versioning, CI/CD for machine learning, and data registries.
+- The get started guide shows `uv tool install dvc` or `pipx install dvc`, `dvc init` inside a Git repository, `dvc add` for data tracking, and committing the generated `.dvc` metadata file to Git.
+- The docs describe DVC remotes for storing and sharing artifacts, including local directories, Amazon S3, Azure Blob Storage, Google Cloud Storage, Google Drive, SSH/SFTP, HDFS, HTTP, and WebDAV.
+- The command reference covers `dvc add`, `dvc checkout`, `dvc pull`, `dvc push`, `dvc repro`, experiments, metrics, plots, stages, remotes, and cache management.
+- The GitHub repository is `treeverse/dvc`, is Apache-2.0 licensed, and describes the project as data versioning and ML experiments.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, open pull requests, live issue state, and repository-wide content for `DVC`, `Data Version Control`, `dvc.org`, `github.com/treeverse/dvc`, `treeverse/dvc`, `data versioning`, `model versioning`, `dvc remote`, `dvc pipeline`, and `ML experiments`. No dedicated DVC tools entry, DVC source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

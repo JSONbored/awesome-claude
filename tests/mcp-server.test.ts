@@ -900,6 +900,7 @@ describe("HeyClaude read-only MCP helpers", () => {
     expect(result).toMatchObject({
       ok: true,
       key: `${skill.category}:${skill.slug}`,
+      relationGraph: true,
       count: expect.any(Number),
     });
     expect(result.entries.length).toBeGreaterThan(0);
@@ -907,6 +908,7 @@ describe("HeyClaude read-only MCP helpers", () => {
       `${skill.category}:${skill.slug}`,
     );
     expect(result.entries[0]).toMatchObject({
+      relation: expect.any(String),
       relatedScore: expect.any(Number),
       relatedReasons: expect.arrayContaining([expect.any(String)]),
     });

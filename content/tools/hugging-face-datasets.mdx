@@ -1,0 +1,74 @@
+---
+title: Hugging Face Datasets
+slug: hugging-face-datasets
+category: tools
+description: Apache-2.0 library for loading, sharing, streaming, inspecting, and preprocessing AI datasets from the Hugging Face Hub or local files.
+cardDescription: Load, stream, inspect, and preprocess AI datasets for training and evaluation.
+seoTitle: Hugging Face Datasets data loading and preprocessing library
+seoDescription: Hugging Face Datasets is an Apache-2.0 library for loading, sharing, streaming, inspecting, and preprocessing AI datasets from the Hugging Face Hub or local files.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://huggingface.co/datasets"
+documentationUrl: "https://huggingface.co/docs/datasets"
+repoUrl: "https://github.com/huggingface/datasets"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - datasets
+  - data-processing
+  - training
+keywords:
+  - Hugging Face Datasets
+  - datasets library
+  - dataset streaming
+  - AI datasets
+  - Hugging Face Hub
+prerequisites:
+  - Python environment with the `datasets` package and optional extras for the selected audio, vision, PDF, NIfTI, Torch, TensorFlow, JAX, or large-file workflow.
+  - Approved dataset source, revision pin, license, data card, split/configuration choice, schema expectations, and fallback dataset plan.
+  - Storage and runtime plan for local cache directories, streaming mode, multiprocessing, Apache Arrow files, large downloads, and network access to the Hugging Face Hub.
+  - Data governance plan for local files, Hub datasets, private datasets, credentials, labels, evaluation examples, derived columns, and processed artifacts.
+  - Review process for dataset quality, consent, provenance, bias, PII, evaluation leakage, and train/test contamination before model training or evaluation.
+safetyNotes:
+  - Hugging Face Datasets makes it easy to load public and local datasets, but dataset availability does not prove license fit, consent, quality, or safety for a given use case.
+  - Public datasets, community scripts, local files, and generated preprocessing steps should be reviewed before use in production model training, evaluation, or Claude-adjacent workflows.
+  - Streaming large datasets can reduce disk use, but it still performs network access and may expose dataset names, access patterns, credentials, and workload metadata.
+  - Dataset preprocessing with `map`, multiprocessing, format conversion, indexing, or filtering can silently change examples, labels, splits, or ordering if transforms are not versioned and tested.
+  - Training, fine-tuning, and evaluation workflows should guard against PII leakage, benchmark contamination, duplicated examples, prompt/output leakage, and accidental publication to the Hub.
+  - Dataset cards, licenses, private repository settings, and organization policies should be checked together before sharing, caching, or reusing datasets across teams.
+privacyNotes:
+  - Workflows can process prompts, conversations, labels, documents, images, audio, video, PDFs, medical images, tabular records, agent traces, generated outputs, and evaluation examples.
+  - Local dataset caches, Apache Arrow files, downloaded archives, derived columns, indexes, logs, notebooks, and temporary files can retain sensitive examples outside the main application database.
+  - Hugging Face Hub downloads, uploads, private dataset access, storage buckets, hosted viewers, experiment trackers, and observability systems may process dataset names, access metadata, examples, metrics, or artifacts depending on setup.
+  - Embeddings, search indexes, filtered subsets, train/test splits, and preprocessed datasets should follow the same retention, deletion, access-control, and review rules as the original data.
+  - Teams should define who can inspect raw examples, derived datasets, failed preprocessing records, dataset cards, cache directories, Hub repositories, and published artifacts before using Datasets in production workflows.
+---
+
+## Editorial notes
+
+Hugging Face Datasets is useful when Claude-adjacent teams need a reproducible way to load AI datasets, inspect dataset metadata, stream large datasets, preprocess local or Hub-hosted data, and prepare examples for model training, evaluation, retrieval, or fine-tuning workflows. It supports Hub datasets and local files across common formats, with Apache Arrow-backed storage, caching, streaming mode, multiprocessing, and framework interoperability.
+
+This is distinct from the existing Hugging Face entries. Transformers is the model-definition, tokenization, generation, and training layer. PEFT focuses on parameter-efficient adaptation of pretrained models. Sentence Transformers focuses on embeddings, retrieval, and reranking models. Hugging Face Datasets is the data layer: loading splits/configurations, inspecting dataset metadata, transforming records, streaming examples, caching processed artifacts, and sharing datasets through the Hugging Face Hub.
+
+## Source notes
+
+- The official README describes Datasets as a lightweight library for one-line dataloaders for many public datasets and efficient data preprocessing.
+- The README says Datasets can load Hub datasets and local files in formats including CSV, JSON, JSONL, Parquet, HDF5, XML, text, image, audio, PDF, NIfTI, and more.
+- The README documents streaming mode for iterating over datasets without downloading the entire dataset first.
+- The README describes Apache Arrow-backed storage, caching, multiprocessing, and interoperability with NumPy, Pandas, Polars, PyTorch, TensorFlow, JAX, and Spark.
+- The official docs describe Datasets as a library for accessing and sharing AI datasets for audio, computer vision, and NLP tasks.
+- The docs say Datasets can load a dataset in one line, process data for training, and integrate with the Hugging Face Hub.
+- The Hub-loading guide describes `load_dataset_builder`, `DatasetInfo`, dataset splits, configurations, and loading datasets from the Hub.
+- The repository is `huggingface/datasets`, is Apache-2.0 licensed, and describes the project as ready-to-use AI datasets with fast, efficient data manipulation tools.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face Datasets`, `huggingface/datasets`, `huggingface.co/docs/datasets`, `datasets library`, `dataset streaming`, `load_dataset`, and `Hugging Face Hub datasets`. No dedicated Hugging Face Datasets tools entry, source URL duplicate, target file, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face Datasets is Apache-2.0 open-source software; individual datasets, dataset cards, Hub repositories, hosted services, and storage buckets may have separate licenses, terms, privacy obligations, and access controls.

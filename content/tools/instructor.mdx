@@ -1,0 +1,59 @@
+---
+title: Instructor
+slug: instructor
+category: tools
+description: Open-source Python library for structured LLM outputs using Pydantic response models, validation, retries, streaming, and provider adapters.
+cardDescription: Structured LLM outputs with Pydantic models, validation, and retries.
+seoTitle: Instructor structured LLM output validation
+seoDescription: Instructor helps LLM apps extract typed structured data with Pydantic response models, provider adapters, validation, retries, and streaming support.
+author: 567 Labs
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://useinstructor.com/"
+documentationUrl: "https://python.useinstructor.com/"
+repoUrl: "https://github.com/567-labs/instructor"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - structured-output
+  - validation
+  - open-source
+keywords:
+  - pydantic
+  - response models
+  - llm extraction
+prerequisites:
+  - Python LLM application or extraction pipeline that needs typed structured outputs rather than free-form text parsing.
+  - Pydantic response models, validation rules, retry policy, and downstream error-handling behavior reviewed before production use.
+  - Model provider credentials and provider-specific configuration for OpenAI, Anthropic, Google, Ollama, Groq, or another supported backend.
+safetyNotes:
+  - Instructor validates structure and field constraints, but schema-valid LLM output can still be factually wrong, hallucinated, incomplete, biased, or unsafe for automated decisions.
+  - Automatic retries can increase model cost, latency, rate-limit pressure, and repeated exposure of prompts or failed outputs, so retries should be bounded and observable.
+  - Do not let successful parsing directly trigger irreversible writes, approvals, billing changes, or user-facing actions without domain checks, provenance, and fallback review.
+privacyNotes:
+  - Prompts, source text, extracted fields, validation errors, failed outputs, retry messages, and typed response objects may contain sensitive user or business data.
+  - Provider calls send extraction inputs and retry context to the configured LLM backend unless a local model path is used.
+  - Application logs, traces, eval datasets, examples, and debugging output can retain structured records that are easier to query and exfiltrate than raw prose.
+---
+
+## Editorial notes
+
+Instructor is useful when Claude-adjacent apps need structured data from LLMs without hand-rolled JSON parsing. It lets developers define Pydantic response models, call supported providers through a common interface, validate model output, retry failed validations with error context, and stream partial structured objects for extraction-heavy workflows.
+
+## Source notes
+
+- The official documentation explains structured outputs as a way to make LLM responses consistent and machine-readable, with Instructor using Pydantic models to define expected output structure.
+- The validation docs describe constraint checks, required fields, type safety, automatic retry with validation feedback, and domain-specific validation patterns.
+- The GitHub README describes Instructor as "Structured Outputs for LLMs" and says it is built on Pydantic for validation, type safety, and IDE support.
+- The repository documents provider adapters for OpenAI, Anthropic, Google, Ollama, and Groq-style usage, plus automatic retries, streaming partial objects, nested objects, and MIT licensing.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, guides, skills, agents, open pull requests, live HeyClaude `llms-full.txt`, and repository-wide content for `Instructor`, `useinstructor`, `567-labs`, `github.com/567-labs/instructor`, `python.useinstructor.com`, `structured output`, `structured outputs`, `Pydantic`, `response_model`, `validation retry`, and `JSON schema`. Guardrails AI is already listed as a broader input/output guardrail and validator framework, while existing FastAPI, Zod, and JSON Schema entries are skills for application/API validation rather than Instructor's LLM structured-output extraction library. No dedicated Instructor tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

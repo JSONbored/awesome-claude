@@ -1,0 +1,339 @@
+---
+title: Flexprice MCP Server for Claude
+slug: flexprice-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Flexprice for scoped customer, subscription, invoice,
+  pricing, and usage-event billing operations.
+cardDescription: >-
+  Official Flexprice MCP server with explicit read, write, and delete scopes for
+  billing automation and reporting workflows.
+seoTitle: Flexprice MCP Server for Claude
+seoDescription: >-
+  Use the official Flexprice MCP server with Claude to query customers,
+  subscriptions, invoices, plans, prices, usage events, and billing state through
+  explicit read, write, and delete scopes.
+author: Flexprice
+authorProfileUrl: "https://flexprice.io"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/flexprice/mcp-server#readme"
+repoUrl: "https://github.com/flexprice/mcp-server"
+installable: true
+installCommand: >-
+  claude mcp add-json flexprice
+  '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
+usageSnippet: >-
+  claude mcp add-json flexprice
+  '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
+copySnippet: |-
+  {
+    "flexprice": {
+      "command": "npx",
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "flexprice": {
+      "command": "npx",
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Flexprice account and API key from the Flexprice app
+  - Node.js 20+ with npm or npx available for the published package
+  - Claude Code, Claude Desktop, Cursor, VS Code, or another MCP-capable client
+  - Network access from the MCP host to the Flexprice API base URL
+  - Permission to expose the selected billing tenant and account data to the connected AI client
+  - Understanding of the `--scope read`, `--scope write`, and `--scope delete` startup flags
+safetyNotes:
+  - >-
+    Start with `--scope read` for reporting and investigation. The upstream
+    README notes that omitting `--scope` mounts all available tools.
+  - >-
+    `write` scope can create or update customers, subscriptions, invoices,
+    plans, prices, usage events, and related billing resources.
+  - >-
+    Some operationally risky actions, including canceling subscriptions and
+    voiding invoices, are implemented as `write`-scope tools in the source.
+  - >-
+    `delete` scope includes destructive tools such as deleting customers, plans,
+    prices, subscription line items, and add-ons, plus invoice finalization.
+  - >-
+    Use a limited API key or non-production tenant for evaluation, and review
+    model-generated billing changes before allowing tool calls.
+  - >-
+    Dynamic mode reduces exposed tools but does not remove the need for
+    least-privilege scopes and human review of account-changing operations.
+privacyNotes:
+  - >-
+    Flexprice API keys grant access to billing records in the selected account;
+    do not paste real keys into prompts, chat logs, or checked-in configs.
+  - >-
+    Customer records, subscriptions, invoices, usage summaries, event payloads,
+    prices, plans, and entitlements returned by tools can enter the model session.
+  - >-
+    Usage events may contain customer identifiers, product identifiers, metering
+    dimensions, quantities, timestamps, and other business-sensitive metadata.
+  - >-
+    The local MCP process sends requests to the configured Flexprice API base
+    URL, so billing data can leave the local machine during tool calls.
+  - >-
+    Keep the API key in the MCP client's environment handling or an external
+    secret manager; do not pass real keys as process arguments.
+tags:
+  - flexprice
+  - billing
+  - subscriptions
+  - invoices
+  - usage-events
+  - mcp
+keywords:
+  - flexprice mcp
+  - billing mcp server
+  - subscription mcp
+  - invoice mcp
+  - usage based billing mcp
+  - claude flexprice
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Flexprice MCP server connects Claude and other MCP-capable clients to the
+Flexprice billing API. It is published as `@flexprice/mcp-server` and exposes
+billing operations for customers, plans, prices, subscriptions, invoices, usage
+events, entitlements, and related account data.
+
+This entry is focused on scoped billing operations. Flexprice documents three
+startup scopes: `read`, `write`, and `delete`. Use `read` for exploration and
+reporting, add `write` only when Claude should create or modify billing state,
+and add `delete` only for tightly supervised administrative workflows. The
+upstream README notes that starting the server without any `--scope` flag mounts
+all available tools.
+
+## Features
+
+- Run the official `@flexprice/mcp-server` npm package through stdio with npx.
+- Query customers, customer entitlements, upcoming grants, and usage summaries.
+- Query invoices, invoice previews, invoice PDFs, customer invoice summaries,
+  and invoice payment state.
+- Create, update, finalize, recalculate, void, and communicate invoice changes
+  when write or delete scopes are mounted.
+- Create, update, clone, sync, query, and delete plans and prices.
+- Create, update, activate, cancel, preview, modify, and inspect subscriptions,
+  subscription schedules, line items, add-ons, usage, and entitlements.
+- Ingest single or bulk usage events and inspect event-driven usage analytics.
+- Use `--scope read`, `--scope write`, and `--scope delete` to limit mounted
+  tools.
+- Use `--mode dynamic` to expose discovery meta-tools instead of registering
+  every operation directly in the client context.
+- Run from the npm package, a cloned local repository, or Docker.
+
+## Use Cases
+
+- Let Claude inspect a customer's subscription, invoices, entitlements, and usage
+  history during a support or billing investigation.
+- Query unpaid invoices, invoice previews, or invoice PDFs before contacting a
+  customer.
+- Review plans and prices before changing a metered billing setup.
+- Preview subscription changes before applying upgrades, downgrades, line-item
+  changes, or add-on changes.
+- Ingest or backfill usage events when a metered billing workflow needs operator
+  assistance.
+- Mount read-only tools for reporting and mount write/delete scopes only for
+  supervised billing-admin sessions.
+
+## Installation
+
+### Claude Code
+
+1. Confirm Node.js 20+ is available: `node --version`.
+2. Create or select a Flexprice API key for the billing tenant Claude should use.
+3. Store the key in a shell environment variable or secret manager as
+   `FLEXPRICE_API_KEY`; do not paste the raw key into command arguments.
+4. Add the server with read-only scope first. The single quotes preserve the
+   `${FLEXPRICE_API_KEY}` reference in Claude Code's MCP config so the key is
+   resolved from the environment at runtime:
+
+```bash
+claude mcp add-json flexprice '{"type":"stdio","command":"npx","args":["-y","@flexprice/mcp-server","start","--scope","read"],"env":{"API_KEY_APIKEYAUTH":"${FLEXPRICE_API_KEY}","BASE_URL":"https://us.api.flexprice.io/v1"}}'
+```
+
+5. Run `claude` and use `/mcp` to confirm the server is connected.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `flexprice` server configuration shown below.
+3. Ensure `FLEXPRICE_API_KEY` is available to the MCP client environment.
+4. Restart Claude Desktop.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "flexprice": {
+      "command": "npx",
+      "args": ["-y", "@flexprice/mcp-server", "start", "--scope", "read"],
+      "env": {
+        "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+        "BASE_URL": "https://us.api.flexprice.io/v1"
+      }
+    }
+  }
+}
+```
+
+To allow account-changing operations, keep the same `env` block and add write
+scope deliberately:
+
+```json
+"args": [
+  "-y",
+  "@flexprice/mcp-server",
+  "start",
+  "--scope",
+  "read",
+  "--scope",
+  "write"
+]
+```
+
+Only add delete scope for supervised administrative sessions, again keeping the
+API key in `env` rather than command arguments:
+
+```json
+"args": [
+  "-y",
+  "@flexprice/mcp-server",
+  "start",
+  "--scope",
+  "read",
+  "--scope",
+  "write",
+  "--scope",
+  "delete"
+]
+```
+
+For large tool surfaces, Flexprice also supports dynamic mode:
+
+```json
+"args": [
+  "-y",
+  "@flexprice/mcp-server",
+  "start",
+  "--scope",
+  "read",
+  "--mode",
+  "dynamic"
+],
+"env": {
+  "API_KEY_APIKEYAUTH": "${FLEXPRICE_API_KEY}",
+  "BASE_URL": "https://us.api.flexprice.io/v1"
+}
+```
+
+## Examples
+
+### Investigate a customer
+
+Use read scope to pull billing context before making support decisions.
+
+```plaintext
+Find the customer by email, summarize their active subscription, latest invoice, entitlements, and recent usage.
+```
+
+### Review invoices
+
+Use read scope to inspect open or failed billing state.
+
+```plaintext
+List unpaid invoices for this customer and include invoice status, due dates, and payment state.
+```
+
+### Preview a subscription change
+
+Enable write scope only when the operator intends to let Claude prepare billing
+changes.
+
+```plaintext
+Preview downgrading this subscription at period end and explain the billing impact before making any changes.
+```
+
+### Ingest usage events
+
+Use write scope for metered-billing event ingestion and review event payloads
+before submission.
+
+```plaintext
+Prepare a bulk usage-event payload for these records and ask for approval before ingesting it.
+```
+
+### Admin-only cleanup
+
+Use delete scope only for supervised cleanup where the operator has confirmed the
+target resources.
+
+```plaintext
+Identify the stale plan and price records that match this migration list, but do not delete anything until I confirm each ID.
+```
+
+## Security
+
+- Mount the narrowest scope that fits the task. `read` is the right default for
+  reporting and investigation.
+- Treat `write` as billing-operator access. It can change customers,
+  subscriptions, invoices, prices, plans, and usage event state.
+- Treat `delete` as admin access. The source includes destructive tools for
+  customer, plan, price, subscription-line-item, add-on, and invoice workflows.
+- Use a dedicated API key with only the tenant and permissions needed for the
+  current workflow.
+- Keep approval prompts explicit for changes that affect charges, invoices,
+  subscriptions, metering, or customer entitlements.
+- Avoid long autonomous loops against billing tools; repeated retries can create
+  duplicate operational changes or noisy audit trails.
+
+## Troubleshooting
+
+### The server cannot reach the API
+
+Confirm `--server-url` is set to the correct Flexprice API base URL. The upstream
+README uses `https://us.api.flexprice.io/v1` and notes that `/v1` is required.
+
+### Authentication fails
+
+Check that the API key is current and belongs to the intended Flexprice account.
+Do not paste production API keys into issue reports or chat transcripts.
+
+### Expected tools are missing
+
+Check the mounted scopes. A read-only configuration will not expose write or
+delete tools, and dynamic mode exposes discovery tools instead of registering
+every operation directly.
+
+### Too many tools are loaded
+
+Start the server with `--mode dynamic` so Claude can discover and execute tools
+on demand through Flexprice's dynamic mode.
+
+### A billing change looks risky
+
+Stop the tool call, inspect the resource IDs and requested operation in the
+Flexprice dashboard or API, and rerun with read-only scope until the intended
+change is clear.

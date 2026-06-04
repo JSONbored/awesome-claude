@@ -1,0 +1,210 @@
+---
+title: LLMs.txt Search Artifact Validation Capability Pack Skill
+slug: llms-search-artifact-validation-capability-pack
+category: skills
+description: "Expert validation skill for reviewing /llms.txt, search discovery artifacts, canonical signals, structured data, and LLM-ready documentation links."
+cardDescription: "Validate /llms.txt, sitemap, robots, canonical, and structured data artifacts with source-backed checks and reviewer-ready evidence."
+seoTitle: LLMs.txt Search Artifact Validation Capability Pack Skill
+seoDescription: "Advanced AI skill for validating /llms.txt, sitemap, robots, canonical, structured data, and LLM-ready search discovery artifacts."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 724
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/724"
+repoUrl: "https://github.com/AnswerDotAI/llms-txt"
+documentationUrl: "https://llmstxt.org/"
+downloadUrl: "https://github.com/AnswerDotAI/llms-txt/archive/refs/tags/0.0.6.zip"
+installable: true
+installCommand: "python -m pip install llms-txt==0.0.6"
+usageSnippet: "Use this skill when reviewing /llms.txt, llms-full context, sitemap, robots, canonical, structured data, or search artifact readiness."
+copySnippet: |-
+  # Trigger
+  "Apply the LLMs.txt search artifact validation capability pack to this published documentation site."
+
+  # Required output
+  1) Source versions, artifact inventory, and duplicate/overlap scope
+  2) /llms.txt parse, section, link, and context expansion findings
+  3) Sitemap, robots, canonical, and structured data consistency review
+  4) Validation plan and publish, hold, or follow-up recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://llmstxt.org/"
+  - "https://github.com/AnswerDotAI/llms-txt/releases/tag/0.0.6"
+  - "https://pypi.org/pypi/llms-txt/0.0.6/json"
+  - "https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/pyproject.toml"
+  - "https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/llms_txt/core.py"
+  - "https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/llms_txt/txt2html.py"
+  - "https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/nbs/index.qmd"
+  - "https://developers.google.com/search/docs/crawling-indexing/robots/intro"
+  - "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"
+  - "https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+  - "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Published or staged documentation site with a known canonical origin"
+  - "`/llms.txt` draft, `llms-full.txt` or expanded context artifact when available"
+  - "`sitemap.xml`, `robots.txt`, canonical URL policy, and structured data inventory"
+  - "Python 3.10 or newer when using the pinned `llms-txt` parser and context helpers"
+  - "Owner decision on which linked pages are essential, optional, stale, or out of scope"
+safetyNotes:
+  - "Installing `llms-txt` adds Python dependencies in the selected environment; pin the reviewed version and prefer project-scoped tooling."
+  - "The `llms_txt2ctx` helper can retrieve linked HTTPS resources while expanding context; review target URLs before running it against private staging content."
+  - "Search artifacts influence crawler and model-facing discovery signals; treat canonical, robots, sitemap, and structured data changes as publish-impacting."
+  - "The source archive is external and version-pinned for reference; package trust should remain a maintainer decision."
+privacyNotes:
+  - "`/llms.txt`, expanded context, sitemap, and structured data artifacts can expose URL paths, page titles, product terms, doc structure, and internal naming."
+  - "Context expansion can collect linked markdown content into a single artifact, which may reveal more detail than the compact index."
+  - "Keep public review notes focused on artifact shape, URL classes, stale links, and source evidence; avoid exposing private staging paths or unreleased content."
+tags:
+  - llms-txt
+  - technical-seo
+  - search-artifacts
+  - structured-data
+  - capability-pack
+keywords:
+  - llms.txt validation
+  - LLM search artifact review
+  - sitemap robots canonical audit
+  - structured data validation skill
+  - LLM-ready documentation artifacts
+  - search discovery artifact validation
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to `llms-txt` **0.0.6**, source tag **0.0.6**, PyPI metadata, Answer.AI documentation, and Google Search Central documentation verified on **2026-06-03**. The reviewed Python package requires Python **>=3.10** and declares `fastcore`, `httpx`, and `mistletoe` dependencies.
+
+## Retrieval Sources
+
+- https://llmstxt.org/
+- https://github.com/AnswerDotAI/llms-txt/releases/tag/0.0.6
+- https://pypi.org/pypi/llms-txt/0.0.6/json
+- https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/pyproject.toml
+- https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/llms_txt/core.py
+- https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/llms_txt/txt2html.py
+- https://raw.githubusercontent.com/AnswerDotAI/llms-txt/0.0.6/nbs/index.qmd
+- https://developers.google.com/search/docs/crawling-indexing/robots/intro
+- https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview
+- https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls
+- https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data
+
+Prefer the pinned package metadata, source files, llms.txt proposal, and current Google Search Central docs over model memory for format, parser behavior, canonical signals, sitemap expectations, robots semantics, and structured data placement.
+
+## Scope Note
+
+This is not a generic content-cluster strategy skill, PageSpeed optimization skill, IndexNow submission workflow, or crawler product listing. Use it for human-in-the-loop review of published LLM-facing and search discovery artifacts: `/llms.txt`, expanded context outputs, sitemap membership, robots consistency, canonical URL signals, and structured data alignment.
+
+## Core Workflow
+
+1. Confirm the site origin, reviewed URL set, `llms-txt` version, source tag, Python runtime, and whether the artifacts are generated or hand-authored.
+2. Inventory artifacts: `/llms.txt`, optional expanded context output, markdown page variants, `sitemap.xml`, `robots.txt`, canonical link elements, structured data, and redirect policy.
+3. Parse `/llms.txt` against the proposal shape: H1 title, optional summary blockquote, explanatory content, H2-delimited sections, markdown link lists, descriptions, and an Optional section when shorter context is useful.
+4. Review linked resources for relevance, HTTPS URLs, stale destinations, duplicate targets, overly broad pages, and whether descriptions help a model choose the right source.
+5. Expand context with the pinned helper when appropriate, then inspect output size, section balance, missing linked content, and whether optional resources should stay optional.
+6. Compare `/llms.txt` and expanded context against sitemap coverage. Essential documentation should be discoverable, canonical, and represented consistently.
+7. Review robots policy for crawler intent without treating it as a substitute for `/llms.txt`; note conflicts that could confuse discovery or indexability.
+8. Review canonical URL signals for duplicate paths, redirect variants, trailing slash policy, `.md` page variants, and sitemap URL agreement.
+9. Review structured data placement and type alignment so machine-readable markup supports the same entity, product, guide, or documentation intent as the linked pages.
+10. Produce a recommendation with blockers, non-blocking improvements, artifact refresh steps, owner decisions, and a publish, hold, or follow-up outcome.
+
+## Capability Scope
+
+- `/llms.txt` source and format review
+- `llms_txt2ctx` context expansion review
+- LLM-ready markdown variant triage
+- Sitemap membership and URL consistency checks
+- Robots policy consistency review
+- Canonical URL and duplicate-path review
+- Structured data alignment review
+- Reviewer-ready artifact evidence and publish recommendation
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for documentation artifact review and LLM discovery readiness.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for search artifact validation and release review.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level documentation release guidance.
+
+## Required Inputs
+
+- Site origin and canonical URL policy
+- `/llms.txt` content and generation source
+- `sitemap.xml`, `robots.txt`, and representative page HTML
+- Structured data snippets or rendered page metadata
+- Expanded context artifact when available
+- Owner expectations for essential, optional, stale, and excluded resources
+
+## Production Rules
+
+- Do not approve `/llms.txt` until the reviewed artifact matches the source site, title, summary, and essential documentation boundaries.
+- Do not use `/llms.txt` as a crawl policy document; compare it with robots and sitemap behavior instead.
+- Keep human SEO goals separate from model context goals. A good search page can still be too broad or noisy for LLM context.
+- Treat broken links, conflicting canonical URLs, stale sitemap entries, and missing essential docs as release blockers until the owner accepts a documented exception.
+- Keep optional resources optional when they are secondary, long, or only needed for rare questions.
+- Prefer concise descriptions that explain why each linked resource matters.
+- Review structured data for alignment with page intent rather than adding markup only to satisfy a checklist.
+- Record enough source evidence that another reviewer can reproduce the artifact decision.
+
+## Output Contract
+
+1. Source evidence: `llms-txt` version, source tag, package metadata, docs, URL set, and artifacts reviewed.
+2. Artifact inventory: `/llms.txt`, expanded context, markdown variants, sitemap, robots, canonical signals, structured data, and generation source.
+3. Findings: parse issues, stale links, missing sections, noisy resources, sitemap gaps, robots conflicts, canonical conflicts, and structured data mismatches.
+4. Impact classification: release blocker, non-blocking polish, accepted exception, or owner decision needed.
+5. Validation plan: exact parser/context command, URL checks, artifact diffs, sitemap/canonical review, and structured data review.
+6. Recommendation: publish, hold, or publish with tracked follow-up.
+
+## Troubleshooting
+
+**Issue:** `/llms.txt` parses but the expanded context is too large
+
+**Fix:** Move secondary links into the Optional section, split broad docs into smaller markdown pages, and keep descriptions specific.
+
+**Issue:** Sitemap and `/llms.txt` disagree about essential docs
+
+**Fix:** Decide whether the page is search-discoverable, LLM-context-only, or stale, then align sitemap membership, canonical target, and link description.
+
+**Issue:** Canonical URL signals conflict with `.md` variants
+
+**Fix:** Check redirect policy, canonical link elements, sitemap URLs, and markdown variant naming before recommending publication.
+
+**Issue:** Robots policy and LLM guidance are being mixed
+
+**Fix:** Keep crawler access policy in robots and model-facing orientation in `/llms.txt`; report conflicts without treating one artifact as a replacement for the other.
+
+**Issue:** Structured data exists but does not match page intent
+
+**Fix:** Compare the page purpose, primary entity, visible content, and markup type, then recommend narrower or corrected markup.
+
+## Validation Checklist
+
+- `llms-txt` version, source tag, package metadata, and docs verified.
+- Python runtime requirement checked.
+- `/llms.txt` title, summary, sections, links, descriptions, and Optional section reviewed.
+- Linked markdown resources checked for relevance and stale destinations.
+- Expanded context output reviewed when available.
+- Sitemap membership compared with essential docs.
+- Robots policy checked for discovery conflicts.
+- Canonical URL targets and redirect variants reviewed.
+- Structured data alignment checked.
+- Publish, hold, or follow-up recommendation documented.

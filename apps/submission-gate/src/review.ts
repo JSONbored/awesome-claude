@@ -75,8 +75,9 @@ export function defaultManualDecision(
 
 export function validationFailedDecision(summary: string): GateDecision {
   return {
-    verdict: "request_changes" as const,
+    verdict: "close" as const,
     summary: `${summary} The private content review will run after the public validation lane is green.`,
-    labels: [LABELS.requestChanges],
+    labels: [LABELS.close],
+    close: true,
   };
 }

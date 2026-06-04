@@ -1,0 +1,265 @@
+---
+title: Dropbox Dash MCP Server for Claude
+slug: dropbox-dash-mcp-server
+category: mcp
+description: >-
+  Official Dropbox Dash remote MCP server that lets Claude search connected
+  company content, read documents, resolve source URLs, and inspect Dash
+  knowledge from MCP-capable clients.
+cardDescription: >-
+  Connect Claude to Dropbox Dash for cross-source company search, document
+  reading, URL resolution, and knowledge lookup.
+seoTitle: Dropbox Dash MCP Server for Claude
+seoDescription: >-
+  Use the Dropbox Dash MCP server with Claude to search connected company
+  content, read documents, resolve URLs, and access Dash knowledge through a
+  remote HTTP MCP endpoint.
+author: Dropbox
+authorProfileUrl: "https://www.dropbox.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://help.dropbox.com/integrations/set-up-MCP-server"
+repoUrl: "https://github.com/dropbox/mcp-server-dash"
+installable: true
+installCommand: "claude mcp add --transport http DropboxDashMCP https://mcp.dropbox.com/dash"
+usageSnippet: "claude mcp add --transport http DropboxDashMCP https://mcp.dropbox.com/dash"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Dropbox Dash MCP": {
+        "url": "https://mcp.dropbox.com/dash"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Dropbox Dash MCP": {
+        "url": "https://mcp.dropbox.com/dash"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Dropbox Dash account with access to the sources Claude should search or read
+  - MCP-capable client with remote HTTP MCP support, such as Claude Code, Claude Web/Desktop custom connectors, Cursor, or ChatGPT
+  - Dropbox OAuth approval or a Dropbox app access token when using clients that do not support Dynamic Client Registration
+  - Dropbox team/admin policy allowing the user to connect Dash to external MCP clients
+  - Agreement on which connected sources, document types, labels, and workspaces may be exposed to AI-assisted workflows
+safetyNotes:
+  - >-
+    Dropbox Dash can search across many connected company sources, including
+    cloud documents, collaboration tools, CRM records, support systems, meeting
+    content, and code or project tools. Start with narrow prompts and source
+    filters instead of broad company-wide searches.
+  - >-
+    Treat Dropbox OAuth tokens, app keys, app secrets, and bearer tokens as
+    secrets. Store them in MCP client credential storage or environment
+    variables rather than prompts, checked-in config, screenshots, or shared
+    transcripts.
+  - >-
+    The published remote MCP tools are centered on search, reading, discovery,
+    URL resolution, identity lookup, and read-only source actions, but returned
+    content can still influence generated code, decisions, emails, or tickets.
+    Keep human review on downstream actions.
+  - >-
+    Respect Dropbox team admin controls for app integrations. If a user cannot
+    register or connect an app, do not work around that by sharing another
+    user's token or app credentials.
+privacyNotes:
+  - >-
+    Tool results can expose document titles, metadata, preview text, markdown
+    content, visual page renders, binary file content, source names, labels,
+    original URLs, user identity details, and source-specific records visible
+    through Dropbox Dash.
+  - >-
+    Connected sources may include Google Workspace, Microsoft 365, Slack,
+    Gmail, Jira, Confluence, Gong, Zoom, Workday, GitHub, Dropbox, and other
+    internal systems. Returned snippets can contain customer data, credentials,
+    unreleased product details, employee records, sales notes, or support
+    history.
+  - >-
+    MCP client logs, AI transcripts, screenshots, terminal scrollback, and
+    generated artifacts may retain Dash results outside Dropbox's normal audit
+    and retention controls.
+  - >-
+    The optional local MCP server stores Dropbox tokens in the system keyring
+    when available, with a documented fallback token file. Review local machine
+    access, backups, and secret-cleanup policy before using it on shared hosts.
+tags:
+  - dropbox-dash
+  - company-search
+  - document-search
+  - knowledge-management
+  - mcp
+keywords:
+  - dropbox dash mcp
+  - dropbox dash claude
+  - mcp.dropbox.com/dash
+  - company content search
+  - document reading mcp
+  - cloud storage mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Dropbox Dash MCP server connects Claude and other MCP-capable clients to
+Dropbox Dash through Dropbox's managed remote endpoint at
+`https://mcp.dropbox.com/dash`. It is built for company knowledge workflows
+where an assistant needs to search connected sources, read document content,
+resolve original URLs, inspect available sources, and bring relevant file or
+workspace context into an active coding, support, sales, or operations task.
+
+Dropbox also publishes a local `dropbox/mcp-server-dash` repository, but the
+official help article recommends the remote server because it is easier to use
+and updated more frequently. This entry therefore treats the remote HTTP server
+as the primary setup path and the GitHub repository as source context for teams
+that need a local stdio option.
+
+## Features
+
+- Remote HTTP MCP endpoint at `https://mcp.dropbox.com/dash`.
+- Dynamic Client Registration support for ChatGPT, Claude Code, Claude
+  Web/Desktop, and Cursor.
+- Company content search with optional filters for file type, source, and
+  source-specific labels.
+- Document metadata and text retrieval by UUID or URI.
+- Markdown document reading with chunked transfer support for larger files.
+- Visual page rendering for PDFs and presentation slides.
+- Binary content reading for images, video, and audio as base64-encoded data.
+- Source discovery, filter examples, current-user identity lookup, and original
+  URL resolution.
+- Read-only source actions for connected systems through Dash's native source
+  integrations.
+
+## Use Cases
+
+- Ask Claude to find the latest spec, brief, or runbook across Dropbox Dash
+  before changing code.
+- Pull a specific document by Dash UUID or original URL and summarize the
+  implementation requirements.
+- Search only approved source types, such as Dropbox, Google Drive, Confluence,
+  GitHub, Jira, Slack, or Microsoft 365, for task-specific context.
+- Read a PDF page or slide image when the exact visual content matters.
+- Resolve a shared document URL to Dash metadata before asking an agent to use
+  it as context.
+- Give support, sales, or operations assistants access to current company
+  knowledge without switching tabs.
+
+## Installation
+
+### Claude Code
+
+1. Confirm your Dropbox Dash account can connect MCP clients.
+2. Add the remote MCP server:
+
+```bash
+claude mcp add --transport http DropboxDashMCP https://mcp.dropbox.com/dash
+```
+
+3. Complete the Dropbox OAuth or client-specific authentication flow.
+4. Start with a narrow prompt that names the source, file type, label, or URL
+   you want Claude to inspect.
+
+### Claude Web/Desktop
+
+1. Confirm your Claude plan includes custom connectors.
+2. Open Claude settings, then Connectors.
+3. Add a custom connector named `Dropbox Dash MCP`.
+4. Use `https://mcp.dropbox.com/dash` as the server URL.
+5. Complete the OAuth flow and test with a non-sensitive document first.
+
+### Cursor
+
+1. Open Cursor settings, then Tools and MCP.
+2. Create a new MCP server using the configuration below.
+3. Authenticate with Dropbox when prompted by the client.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "Dropbox Dash MCP": {
+      "url": "https://mcp.dropbox.com/dash"
+    }
+  }
+}
+```
+
+### Codex CLI bearer-token setup
+
+For clients that need a bearer token, Dropbox documents a Dropbox app setup
+flow and a bearer-token environment variable:
+
+```bash
+export DROPBOX_DASH_MCP_TOKEN="YOUR_DROPBOX_DASH_ACCESS_TOKEN"
+codex mcp add dropbox-dash-mcp \
+  --url https://mcp.dropbox.com/dash \
+  --bearer-token-env-var DROPBOX_DASH_MCP_TOKEN
+```
+
+## Examples
+
+### Search approved sources
+
+```plaintext
+Search Dropbox Dash for the latest onboarding runbook in Confluence or Dropbox only. Return the document title, source, owner, and updated date before summarizing.
+```
+
+### Read a specific document
+
+```plaintext
+Use Dropbox Dash to read this document URL and summarize only the deployment requirements that affect the current code change.
+```
+
+### Resolve a shared URL
+
+```plaintext
+Resolve this shared project brief URL through Dropbox Dash, then tell me which source it came from and whether the content appears current.
+```
+
+### Inspect a visual page
+
+```plaintext
+Read page 3 of the product launch PDF through Dropbox Dash and summarize the visible checklist items without guessing beyond the page image.
+```
+
+## Source notes
+
+- Dropbox's official help article describes the Dropbox Dash remote MCP server
+  as available to Dropbox Dash users and lists `https://mcp.dropbox.com/dash`
+  as the server location.
+- The help article documents tools for Dash search, document reading, markdown
+  reading, visual page rendering, binary content reading, source discovery,
+  examples, identity lookup, URL resolution, and read-only source actions.
+- Dropbox documents Dynamic Client Registration support for ChatGPT, Claude
+  Code, Claude Web/Desktop, and Cursor, plus bearer-token setup for clients
+  that need a manually created Dropbox app.
+- The Dropbox app setup instructions call for scoped access, Full Dropbox
+  access type, and permissions including `account_info.read`,
+  `dash/content.read`, and `dash/content.write`.
+- The official `dropbox/mcp-server-dash` repository provides a local stdio MCP
+  server, documents Python 3.10+, `uv`, Dropbox app setup, OAuth flow tools,
+  company search, file details, token storage, and Apache-2.0 licensing.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, and repository-wide content for `Dropbox Dash`,
+`DropboxDashMCP`, `dropbox/mcp-server-dash`, `mcp-server-dash`,
+`mcp.dropbox.com/dash`, `dash_search`, `dash_read_document`, `dash_get_sources`,
+`cloud storage MCP`, `file collaboration`, `company content search`, and
+related generic file/storage MCP entries. Existing Filesystem, Cloudinary,
+Cloudflare, Plaid, Jira/Confluence, and other source-specific MCP entries do
+not duplicate Dropbox Dash's cross-source company search and document-reading
+MCP server. No dedicated Dropbox Dash MCP entry, Dropbox Dash source URL
+duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

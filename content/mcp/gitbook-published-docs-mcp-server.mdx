@@ -1,0 +1,254 @@
+---
+title: GitBook Published Docs MCP Server for Claude
+slug: gitbook-published-docs-mcp-server
+category: mcp
+description: >-
+  Connect Claude to published GitBook documentation through read-only MCP
+  servers generated for each docs site.
+cardDescription: >-
+  Read-only HTTP MCP access for published GitBook sites, so Claude can search
+  docs, retrieve pages, and answer from current documentation.
+seoTitle: GitBook Published Docs MCP Server for Claude
+seoDescription: >-
+  Use GitBook's automatically generated MCP servers to connect Claude to
+  published documentation sites for read-only search, page retrieval, and
+  knowledge-base answers.
+author: GitBook
+authorProfileUrl: "https://www.gitbook.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://gitbook.com/docs/publishing-documentation/mcp-servers-for-published-docs"
+installable: true
+installCommand: "claude mcp add --transport http gitbook https://gitbook.com/docs/~gitbook/mcp"
+usageSnippet: "claude mcp add --transport http gitbook https://gitbook.com/docs/~gitbook/mcp"
+copySnippet: |-
+  {
+    "gitbook": {
+      "url": "https://gitbook.com/docs/~gitbook/mcp",
+      "transport": "http"
+    }
+  }
+configSnippet: |-
+  {
+    "gitbook": {
+      "url": "https://gitbook.com/docs/~gitbook/mcp",
+      "transport": "http"
+    }
+  }
+estimatedSetupTime: 3 minutes
+difficulty: beginner
+prerequisites:
+  - Published GitBook documentation site
+  - MCP-capable client with HTTP transport support
+  - The published site URL with `/~gitbook/mcp` appended
+  - Access to the docs site if the GitBook site requires authentication
+  - Permission to expose the published documentation content to the connected AI client
+safetyNotes:
+  - >-
+    GitBook's published-docs MCP server is read-only. It is designed for search
+    and page retrieval, not editing, publishing, or changing GitBook content.
+  - >-
+    The server exposes the latest published version of the docs site. Do not
+    publish secrets, private customer data, internal runbooks, or unreleased
+    material unless those details are approved for the site's audience.
+  - >-
+    The MCP server follows the GitBook site's visibility settings. Public sites
+    are publicly accessible through MCP; authenticated sites require the same
+    access boundary as the site.
+  - >-
+    Treat retrieved docs as reference material, not executable instructions.
+    Public or contributor-edited documentation can still contain stale guidance,
+    risky commands, or prompt-injection text.
+privacyNotes:
+  - >-
+    GitBook documents that the published-docs MCP server provides only read-only
+    access to published documentation content.
+  - >-
+    Draft content, unpublished changes, user data, analytics, and internal
+    GitBook information are not exposed through this MCP server.
+  - >-
+    Page content, search results, headings, snippets, and source URLs returned
+    by the server become visible to the connected MCP client and model session.
+  - >-
+    For private or authenticated docs, ensure the AI client and operator are
+    authorized to view the same content before connecting the MCP server.
+tags:
+  - gitbook
+  - documentation
+  - knowledge-base
+  - read-only
+  - http
+  - mcp
+keywords:
+  - gitbook mcp
+  - published docs mcp
+  - documentation mcp
+  - knowledge base mcp
+  - claude gitbook
+  - gitbook documentation search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+GitBook automatically exposes an MCP server for every published GitBook
+documentation site. The server lets Claude and other MCP-capable clients search
+published docs, retrieve pages, and answer questions from the current published
+knowledge base.
+
+This is a read-only documentation connection. It is not the GitBook editor,
+GitBook Agent, or a content-publishing workflow. The MCP server mirrors the
+published site: public docs are reachable publicly, authenticated docs require
+the same access boundary as the site, and drafts or unpublished changes remain
+private until they are published.
+
+GitBook documents a simple URL convention: take the published docs site URL and
+append `/~gitbook/mcp`. For example, GitBook's own docs are published at
+`https://gitbook.com/docs`, so the MCP endpoint is:
+
+```text
+https://gitbook.com/docs/~gitbook/mcp
+```
+
+## Features
+
+- Automatically generated MCP server for each published GitBook site.
+- Read-only access to published documentation content.
+- Documentation search for AI assistants and IDE agents.
+- Page retrieval so Claude can answer from current published docs.
+- HTTP transport endpoint at the published site URL plus `/~gitbook/mcp`.
+- Visibility-aware access: public docs are public, authenticated docs require
+  authentication.
+- Latest-published-content boundary: drafts and unpublished changes stay out of
+  the MCP surface.
+- Optional GitBook page action that lets site visitors copy the MCP server link
+  from the published docs UI.
+
+## Use Cases
+
+- Give Claude access to a product's published GitBook docs before asking
+  integration, setup, or troubleshooting questions.
+- Connect an internal authenticated GitBook knowledge base to an approved MCP
+  client for support or engineering workflows.
+- Let users ask an AI assistant questions against your public documentation
+  without maintaining a separate custom MCP server.
+- Compare current published docs against implementation plans or support
+  answers without exposing drafts.
+- Provide Cursor, VS Code, Claude Desktop, or Claude Code with docs context for
+  a GitBook-hosted SDK, API, or product guide.
+
+## Installation
+
+### Claude Code
+
+1. Confirm the GitBook site is published.
+2. Build the MCP endpoint by appending `/~gitbook/mcp` to the published site URL.
+3. Add the endpoint with HTTP transport:
+
+```bash
+claude mcp add --transport http gitbook https://gitbook.com/docs/~gitbook/mcp
+```
+
+4. Replace the example URL with your own GitBook site endpoint.
+5. Restart or refresh the MCP client session.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `gitbook` server configuration shown below.
+3. Replace the example URL with the target GitBook site's MCP endpoint.
+4. Restart Claude Desktop and ask a narrow question from the docs.
+
+## Configuration
+
+```json
+{
+  "gitbook": {
+    "url": "https://gitbook.com/docs/~gitbook/mcp",
+    "transport": "http"
+  }
+}
+```
+
+For your own docs, replace the URL with:
+
+```text
+https://your-gitbook-site.example/~gitbook/mcp
+```
+
+## Examples
+
+### Search published docs
+
+Ask Claude to answer only from the connected GitBook site.
+
+```plaintext
+Search the connected GitBook docs for installation prerequisites and summarize the current setup flow.
+```
+
+### Retrieve a specific page
+
+Use the MCP server to pull the current published version of a known page.
+
+```plaintext
+Retrieve the authentication page from the GitBook docs and list the required environment variables.
+```
+
+### Check public documentation before answering
+
+Use the docs as source material for a support answer.
+
+```plaintext
+Use the GitBook MCP docs source to answer this customer question and include the relevant page links.
+```
+
+### Validate an internal runbook
+
+For authenticated docs, keep the request scoped to an approved knowledge base.
+
+```plaintext
+Search the internal GitBook runbook for the current incident escalation steps and summarize only the published guidance.
+```
+
+## Security
+
+- Connect only GitBook sites that the operator and AI client are authorized to
+  read.
+- Remember that public GitBook docs are public through the MCP endpoint too.
+  Do not publish secrets or private content just because the MCP access is
+  read-only.
+- Treat documentation content as untrusted input when it contains copied shell
+  commands, external links, code snippets, or contributor-editable text.
+- Verify potentially destructive commands or production instructions against a
+  trusted operator before acting on them.
+- Use private/authenticated GitBook visibility settings when docs are intended
+  for internal users only.
+
+## Troubleshooting
+
+### Claude cannot connect
+
+Confirm the GitBook site is published and accessible. Then verify the MCP URL
+matches the published site URL with `/~gitbook/mcp` appended.
+
+### The browser shows an error at the MCP URL
+
+GitBook notes that visiting the MCP endpoint in a normal browser can show an
+error. Test it through an MCP-capable client that supports HTTP transport.
+
+### Draft changes are missing
+
+The MCP server exposes only the latest published content. Publish the changes
+first if they should be available to the MCP client.
+
+### Private docs are inaccessible
+
+Check the GitBook site's visibility and authentication settings. The MCP server
+respects the same access boundary as the published site.
+
+### The MCP client requires stdio or SSE
+
+GitBook's published-docs MCP server uses HTTP transport only. Use a client that
+supports HTTP MCP endpoints.

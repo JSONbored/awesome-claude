@@ -1,0 +1,75 @@
+---
+title: LanceDB
+slug: lancedb
+category: tools
+description: Apache-2.0 multimodal AI lakehouse and embedded retrieval database for vector search, full-text search, SQL filtering, RAG, and AI/ML data workflows.
+cardDescription: Store multimodal data and run vector, full-text, and SQL retrieval for AI applications.
+seoTitle: LanceDB multimodal AI retrieval database
+seoDescription: LanceDB is an Apache-2.0 multimodal AI lakehouse and embedded retrieval database for vector search, full-text search, SQL filtering, RAG, multimodal search, and AI/ML workloads.
+author: LanceDB
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://lancedb.com/"
+documentationUrl: "https://docs.lancedb.com/"
+repoUrl: "https://github.com/lancedb/lancedb"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - vector-database
+  - retrieval
+  - multimodal
+keywords:
+  - LanceDB
+  - multimodal AI lakehouse
+  - vector search
+  - full-text search
+  - embedded retrieval database
+prerequisites:
+  - Deployment path selected for local embedded use, self-managed storage, cloud deployment, or LanceDB Cloud.
+  - Data model for vector columns, scalar fields, text, images, video, point clouds, metadata, table versions, indexes, filters, retention, and deletion behavior.
+  - Approved embedding, multimodal embedding, full-text search, reranking, and query plan with model licenses, dimensions, and provider data handling reviewed.
+  - SDK or API path selected for Python, JavaScript/TypeScript, Rust, Java, REST, or integrations with frameworks such as LangChain and LlamaIndex.
+  - Operational plan for storage growth, compaction, backups, access controls, observability, local file permissions, remote credentials, and recovery before production use.
+safetyNotes:
+  - LanceDB can support RAG, multimodal search, recommendation systems, and AI/ML data workflows, but retrieved records still need relevance checks, freshness checks, permission filtering, and evaluation.
+  - Vector search, full-text search, SQL filters, hybrid retrieval, and reranking can return plausible but incomplete context when chunking, filters, indexes, or embedding models are poorly matched to the task.
+  - Local embedded databases reduce server overhead, but they still need controlled file permissions, backup practices, storage monitoring, version cleanup, and safe handling in shared development environments.
+  - Cloud, REST, and remote deployments add network exposure, account, billing, latency, availability, and access-control decisions beyond the open-source local package.
+  - Index choices, GPU-assisted index building, automatic versioning, and zero-copy workflows can improve performance, but operators should benchmark recall, latency, storage size, and update behavior before production use.
+  - Agent outputs, generated summaries, and automated decisions that depend on LanceDB results should remain attributable to source records and reviewable by the owning team.
+privacyNotes:
+  - LanceDB tables may store vectors, source records, metadata, text, images, video, point clouds, generated context, search results, query records, and table versions that can expose sensitive project or user data.
+  - Embeddings and multimodal features can encode information from source content and should follow the same retention, deletion, backup, tenant-isolation, and access policies as the original records.
+  - Embedding providers, rerankers, LanceDB Cloud, REST services, observability systems, and downstream agent applications may process prompts, queries, files, metadata, or retrieved context depending on configuration.
+  - Versioned data and local database files can retain older records after application-level changes unless teams explicitly define compaction, deletion, and cleanup behavior.
+  - Teams should define who can inspect retrieval traces, failed-query artifacts, local database directories, table versions, logs, backups, and generated answers before exposing LanceDB-backed context to Claude-adjacent workflows.
+---
+
+## Editorial notes
+
+LanceDB is useful when Claude-adjacent teams need an embedded, source-backed retrieval layer for multimodal RAG, vector search, full-text search, SQL filtering, image search, recommendation systems, AI agent memory, and AI/ML data analysis. Its center of gravity is an Apache-2.0 local and cloud-capable database built on the Lance columnar format, with Python, JavaScript/TypeScript, Rust, Java, REST, and ecosystem integrations for data and agent workflows.
+
+This is distinct from existing retrieval entries. Chroma focuses on lightweight AI data infrastructure for embeddings and metadata. Weaviate focuses on object and vector storage with integrated vectorization, Query Agent, and cloud-native deployment. Milvus focuses on high-performance distributed ANN search at scale. LanceDB is narrower and more embedded: a multimodal AI lakehouse and retrieval database built around Lance columnar storage, local-first operation, versioned data, vector search, full-text search, SQL filtering, and multimodal records.
+
+## Source notes
+
+- The official repository describes LanceDB as an open-source embedded retrieval library and multimodal data platform for AI/ML applications.
+- The README says LanceDB is designed for fast, scalable, production-ready vector search and is built on top of the Lance columnar format.
+- The README says LanceDB can store, index, and search multimodal data and vectors, including text, images, videos, point clouds, and metadata.
+- The README lists vector similarity search, full-text search, SQL support, zero-copy behavior, automatic versioning, and GPU support for building vector indexes.
+- The README says the open-source product can run locally or in a user's cloud, while LanceDB Cloud and Enterprise provide managed production-scale options.
+- The README lists Python, Node.js, Rust, REST APIs, and integrations with LangChain, LlamaIndex, Apache Arrow, Pandas, Polars, DuckDB, and related data tooling.
+- The SDK reference says LanceDB provides Python, JavaScript/TypeScript, Java, Rust, and REST API documentation.
+- The Python API reference documents synchronous and asynchronous connections, tables, vector queries, full-text search, hybrid queries, embedding functions, rerankers, and supported index types.
+- The repository is `lancedb/lancedb`, is Apache-2.0 licensed, and describes LanceDB as an OSS embedded retrieval library for multimodal AI.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `LanceDB`, `lancedb`, `lancedb/lancedb`, `lancedb.com`, `docs.lancedb.com`, `Lance columnar`, `multimodal AI lakehouse`, and `embedded retrieval database`. No dedicated LanceDB entry, LanceDB source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. LanceDB includes an Apache-2.0 open-source project plus LanceDB Cloud and Enterprise offerings.

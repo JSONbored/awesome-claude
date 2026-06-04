@@ -1,0 +1,279 @@
+---
+title: Snowflake MCP Server for Claude
+slug: snowflake-mcp-server
+category: mcp
+description: >-
+  Snowflake-managed MCP server for connecting Claude and other MCP clients to
+  Cortex Analyst, Cortex Search, Cortex Agents, SQL execution, UDFs, stored
+  procedures, and governed warehouse data.
+cardDescription: >-
+  Connect Claude to governed Snowflake data, Cortex tools, SQL, UDFs, and
+  stored procedures through MCP.
+seoTitle: Snowflake MCP Server for Claude
+seoDescription: >-
+  Use Snowflake's managed MCP server with Claude to expose governed Cortex
+  Analyst, Cortex Search, Cortex Agents, SQL execution, UDF, and stored
+  procedure tools through Snowflake OAuth and RBAC.
+author: Snowflake
+authorProfileUrl: "https://www.snowflake.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://docs.snowflake.com/en/user-guide/snowflake-cortex/cortex-agents-mcp"
+repoUrl: "https://github.com/Snowflake-Labs/mcp"
+installable: true
+installCommand: "claude mcp add --transport http snowflake https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME"
+usageSnippet: "claude mcp add --transport http snowflake https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "snowflake": {
+        "type": "http",
+        "url": "https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "snowflake": {
+        "type": "http",
+        "url": "https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME"
+      }
+    }
+  }
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Snowflake account in a supported region, with the managed MCP server feature available for the account.
+  - Database and schema where the MCP server object will be created.
+  - Snowflake role with least-privilege access to the MCP server object and each exposed tool.
+  - Default role and default warehouse configured for each user who will authenticate through an MCP client.
+  - Snowflake OAuth security integration for the MCP client, or an approved Programmatic Access Token fallback when OAuth is not available.
+  - Reviewed Cortex Analyst, Cortex Search, Cortex Agent, SQL execution, UDF, or stored procedure tools that should be exposed to Claude.
+  - MCP client that supports HTTP transport and Snowflake authentication, such as Claude, VS Code, or another compatible client.
+safetyNotes:
+  - >-
+    Snowflake recommends verifying third-party MCP servers and tool
+    descriptions before use because overlapping MCP servers can create tool
+    poisoning or tool shadowing risk.
+  - >-
+    Prefer OAuth. Hardcoded tokens and broad Programmatic Access Tokens can
+    leak privileged Snowflake access into client config, logs, shell history,
+    support bundles, or AI transcripts.
+  - >-
+    Configure the Snowflake MCP server and each tool with least privilege.
+    Access to the MCP server object does not automatically mean the user should
+    have access to every Cortex, SQL, UDF, or stored procedure tool behind it.
+  - >-
+    SQL execution tools can query Snowflake data and, if configured with
+    write-capable settings, can run mutating SQL. Review generated SQL and use
+    read-only configuration where Claude should only inspect data.
+  - >-
+    Avoid recursive agent or MCP configurations. Snowflake documents a maximum
+    recursion depth for circular MCP and Cortex Agent invocations, but loops can
+    still create cost, latency, and confusing automation behavior before they
+    stop.
+  - >-
+    UDF and stored procedure tools can execute business logic in Snowflake, so
+    do not expose procedures that perform billing, deletion, notification,
+    privilege, or workflow actions without human approval.
+privacyNotes:
+  - >-
+    Tool results can expose Snowflake account identifiers, database names,
+    schema names, table names, semantic views, Cortex Search results, SQL text,
+    query results, citations, reasoning traces, tool calls, UDF inputs, stored
+    procedure outputs, and warehouse metadata.
+  - >-
+    Cortex Agent responses intentionally include intermediate steps such as
+    reasoning traces, tool calls, search results, and citations, which can make
+    MCP payloads large and data-rich.
+  - >-
+    Claude transcripts, MCP client logs, terminal scrollback, screenshots,
+    support exports, and generated summaries can retain Snowflake data outside
+    Snowflake's normal access, retention, and audit controls.
+  - >-
+    OAuth sessions use the connecting user's default role for Snowflake MCP
+    access. Confirm default role and default warehouse settings before relying
+    on per-session role selection in clients such as Claude.
+  - >-
+    Warehouse rows, semantic search results, UDF outputs, and stored procedure
+    results can contain prompt-injection text, secrets, customer data, financial
+    data, product telemetry, or regulated data that should not be pasted into
+    unrestricted AI conversations.
+tags:
+  - snowflake
+  - cortex
+  - data-warehouse
+  - analytics
+  - mcp
+keywords:
+  - snowflake mcp
+  - cortex agents mcp
+  - cortex analyst mcp
+  - cortex search mcp
+  - snowflake sql mcp
+  - Snowflake-Labs/mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Snowflake-managed MCP server lets Claude and other MCP-capable clients
+discover and call governed Snowflake tools without deploying a separate server
+beside the warehouse. Snowflake administrators create an MCP server object in a
+database and schema, attach selected tools, configure OAuth or token-based
+access, and grant roles access to the server and the underlying tools.
+
+This is an enterprise data-access integration, not a toy local connector.
+Treat the MCP server as a governed interface to Snowflake data, Cortex AI
+features, SQL execution, UDFs, stored procedures, and agent workflows. Start
+with narrow read-only tools, explicit role grants, and non-production data
+before allowing Claude to query broader warehouses or trigger custom tools.
+
+## Features
+
+- Snowflake-managed MCP endpoint for database and schema scoped MCP server
+  objects.
+- Snowflake OAuth based authentication, with Programmatic Access Token fallback
+  when OAuth is not available.
+- Role-based access control for MCP server discovery and individual tool use.
+- Cortex Search Service query tools for unstructured search over Snowflake
+  data.
+- Cortex Analyst tools for natural-language analysis over supported semantic
+  views.
+- Cortex Agent tools for invoking configured Snowflake Cortex Agents through
+  MCP.
+- SQL execution tools, with documented read-only configuration and query
+  timeout options.
+- Custom tools backed by Snowflake UDFs and stored procedures.
+- Support for standard MCP `tools/list` and `tools/call` requests.
+- Official Snowflake-Labs open-source MCP repository for Snowflake MCP
+  workflows that need a Snowflake-backed server implementation outside the
+  managed server path.
+
+## Use Cases
+
+- Let Claude ask governed questions over Snowflake semantic views through
+  Cortex Analyst.
+- Search enterprise knowledge or product data through Cortex Search without
+  handing Claude unrestricted database access.
+- Expose a narrowly scoped read-only SQL execution tool for bounded warehouse
+  analysis.
+- Call approved Snowflake UDFs or stored procedures as MCP tools after human
+  review of the business action.
+- Connect an MCP client to a Cortex Agent that already has curated resources,
+  tools, and response behavior.
+- Prototype Snowflake-backed MCP workflows locally with the Snowflake-Labs MCP
+  repository, then move production access behind managed Snowflake governance.
+
+## Installation
+
+### Snowflake setup
+
+1. Choose the database and schema where the MCP server object will live.
+2. Create or select the Cortex Analyst, Cortex Search, Cortex Agent, SQL, UDF,
+   or stored procedure tools that should be exposed.
+3. Create the Snowflake MCP server object with a reviewed specification.
+4. Configure Snowflake OAuth for the client or approve a least-privilege
+   Programmatic Access Token fallback.
+5. Grant the connecting role access to the MCP server and only the tools it
+   should discover and invoke.
+6. Set each MCP user's default role and default warehouse to the intended
+   least-privilege values.
+
+### Claude Code
+
+After the Snowflake MCP server object and authentication are configured, add
+the server URL to Claude Code:
+
+```bash
+claude mcp add --transport http snowflake https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME
+```
+
+Start with a prompt that lists tools and summarizes what each one can access
+before asking Claude to query or invoke anything.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "snowflake": {
+      "type": "http",
+      "url": "https://ACCOUNT.snowflakecomputing.com/api/v2/databases/DATABASE/schemas/SCHEMA/mcp-servers/SERVER_NAME"
+    }
+  }
+}
+```
+
+## Examples
+
+### Inspect available tools first
+
+```plaintext
+List the Snowflake MCP tools available on this server and explain what each one can access before calling any tool.
+```
+
+### Query through Cortex Analyst
+
+```plaintext
+Use the approved Cortex Analyst tool to answer this revenue question from the semantic view, then show the generated SQL before summarizing.
+```
+
+### Search governed data
+
+```plaintext
+Use the product Cortex Search tool to find the top matches for this customer question and include citations from the returned search results.
+```
+
+### Run bounded read-only SQL
+
+```plaintext
+Use the read-only Snowflake SQL tool to return the top 10 rows needed for this analysis, avoiding broad scans or writes.
+```
+
+### Call a custom tool after review
+
+```plaintext
+Show the exact stored procedure tool call you want to make and wait for approval before invoking it.
+```
+
+## Source notes
+
+- Snowflake's official documentation describes the Snowflake-managed MCP server
+  as a generally available feature for letting AI agents retrieve data from
+  Snowflake accounts without deploying separate infrastructure.
+- The documentation says MCP servers on Snowflake can expose Cortex Analyst,
+  Cortex Search, Cortex Agents, SQL execution, UDFs, and stored procedures as
+  tools through a standards-based interface.
+- Snowflake documents OAuth-based authentication, role-based access control,
+  the importance of least privilege, default role behavior for OAuth sessions,
+  and default warehouse requirements.
+- Snowflake's security recommendations warn about third-party MCP server
+  verification, hardcoded token leakage, least-privilege PATs, tool-level
+  permissions, and recursive MCP or Cortex Agent loops.
+- The docs show the MCP server endpoint shape under
+  `/api/v2/databases/<database>/schemas/<schema>/mcp-servers/<name>` and
+  describe `tools/list` and `tools/call` interactions.
+- The GitHub repository `Snowflake-Labs/mcp` is Apache-2.0 licensed and
+  describes an MCP server for Snowflake including Cortex AI, object management,
+  SQL orchestration, semantic view consumption, and more.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, live issue state, and repository-wide content for `Snowflake
+MCP`, `Snowflake-managed MCP`, `Cortex Agents MCP`, `Cortex Analyst MCP`,
+`Cortex Search MCP`, `Snowflake-Labs/mcp`, `SYSTEM_EXECUTE_SQL`,
+`CORTEX_AGENT_RUN`, `CORTEX_SEARCH_SERVICE_QUERY`, `CORTEX_ANALYST_MESSAGE`,
+`snowflakecomputing.com/api/v2`, and `Snowflake SQL MCP`. Existing BigQuery and
+database MCP entries cover adjacent warehouse access, and the TruLens entry
+mentions Snowflake as the current steward of TruLens, but no dedicated
+Snowflake MCP entry, Snowflake MCP source URL duplicate, or open duplicate PR
+was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

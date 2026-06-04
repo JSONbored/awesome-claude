@@ -1,0 +1,204 @@
+---
+title: FastMCP Server Review Capability Pack Skill
+slug: fastmcp-server-review-capability-pack
+category: skills
+description: "Expert FastMCP review skill for auditing Python MCP server structure, tools, resources, prompts, transports, and deployment readiness before release."
+cardDescription: "Review FastMCP servers with package/version checks, tool/resource/prompt inventory, runtime readiness, and release evidence."
+seoTitle: FastMCP Server Review Capability Pack Skill
+seoDescription: "Advanced AI skill for reviewing FastMCP Python MCP servers, tool contracts, resource templates, prompts, CLI usage, and deployment readiness."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 717
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/717"
+repoUrl: "https://github.com/PrefectHQ/fastmcp"
+documentationUrl: "https://gofastmcp.com/servers/server"
+downloadUrl: "https://github.com/PrefectHQ/fastmcp/archive/refs/tags/v3.4.0.zip"
+installable: true
+installCommand: "uv pip install fastmcp==3.4.0"
+usageSnippet: "Use this skill when reviewing a FastMCP-based Python MCP server for tool quality, resource exposure, prompt templates, transport behavior, and release readiness."
+copySnippet: |-
+  # Trigger
+  "Apply the FastMCP server review capability pack to this MCP server."
+
+  # Required output
+  1) FastMCP package/source version and Python runtime check
+  2) Server, tool, resource, prompt, and CLI inventory
+  3) Review findings with release-blocking and non-blocking issues
+  4) Validation plan and final release recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://gofastmcp.com/getting-started/welcome"
+  - "https://gofastmcp.com/servers/server"
+  - "https://gofastmcp.com/servers/tools"
+  - "https://gofastmcp.com/servers/resources"
+  - "https://gofastmcp.com/servers/prompts"
+  - "https://gofastmcp.com/deployment/running-server"
+  - "https://gofastmcp.com/patterns/cli"
+  - "https://pypi.org/pypi/fastmcp/3.4.0/json"
+  - "https://raw.githubusercontent.com/PrefectHQ/fastmcp/v3.4.0/pyproject.toml"
+  - "https://raw.githubusercontent.com/PrefectHQ/fastmcp/v3.4.0/README.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - FastMCP server implementation, pull request, or design draft
+  - Python environment compatible with FastMCP 3.4.0 and Python 3.10 or newer
+  - Tool, resource, prompt, transport, and deployment target inventory
+  - Expected client behavior and sample inputs for critical tools
+  - Approval to inspect the server code, configuration, and review fixtures
+safetyNotes:
+  - Installing FastMCP adds Python packages to the selected environment; use an isolated project environment and pin the reviewed version.
+  - Reviewing a server can exercise tool, resource, and prompt paths; use controlled fixtures and avoid live side effects unless the release plan explicitly permits them.
+  - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
+  - Treat destructive tools, write-capable resources, network calls, and long-running jobs as release-blocking until their behavior is documented and tested.
+privacyNotes:
+  - FastMCP tools and resources can expose files, API responses, database records, prompts, and application state.
+  - Keep review notes focused on public source links, object names, version data, and summarized findings; omit operational details that do not need to be public.
+tags:
+  - fastmcp
+  - mcp
+  - server-review
+  - python
+  - capability-pack
+keywords:
+  - FastMCP server review
+  - FastMCP tools resources prompts
+  - Python MCP server review
+  - MCP server release readiness
+  - FastMCP deployment review
+  - FastMCP CLI review
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to FastMCP **3.4.0** documentation, PyPI metadata, and source files verified on **2026-06-03**. The reviewed package metadata requires Python **3.10 or newer**.
+
+## Retrieval Sources
+
+- https://gofastmcp.com/getting-started/welcome
+- https://gofastmcp.com/servers/server
+- https://gofastmcp.com/servers/tools
+- https://gofastmcp.com/servers/resources
+- https://gofastmcp.com/servers/prompts
+- https://gofastmcp.com/deployment/running-server
+- https://gofastmcp.com/patterns/cli
+- https://pypi.org/pypi/fastmcp/3.4.0/json
+- https://raw.githubusercontent.com/PrefectHQ/fastmcp/v3.4.0/pyproject.toml
+- https://raw.githubusercontent.com/PrefectHQ/fastmcp/v3.4.0/README.md
+
+Prefer the current FastMCP docs, PyPI metadata, and pinned source files over model memory for CLI behavior, package version, server APIs, and deployment notes.
+
+## Scope Note
+
+This is not a generic MCP security checklist. Use it when the server under review is implemented with FastMCP and the review needs framework-aware coverage of server construction, tools, resources, prompts, runtime invocation, and release evidence.
+
+## Core Workflow
+
+1. Confirm the FastMCP package version, Python runtime, source tag, package source URL, and docs version used for review.
+2. Locate the `FastMCP` server object and inventory server name, instructions, mounts or imports, transport choices, and run path.
+3. Inventory tools defined through FastMCP decorators or registration helpers. Check function names, docstrings, type hints, validation expectations, return shape, side effects, timeout behavior, and diagnostics.
+4. Inventory resources and templates. Check URI patterns, parameter handling, data source boundaries, missing-data behavior, caching assumptions, and response shape.
+5. Inventory prompts. Check argument names, default behavior, interpolation, wording stability, and whether prompt templates fit the intended client workflow.
+6. Review CLI and developer-run behavior from the FastMCP command path. Confirm entry command, module path, environment assumptions, log level, and expected transport.
+7. Review deployment readiness. Confirm process manager, target transport, health check or smoke check, dependency pinning, and rollback path.
+8. Build a validation plan using controlled sample inputs for critical tools, resources, prompts, launch, and failure cases.
+9. Produce a release recommendation with blockers, non-blocking improvements, evidence links, and exact checks that must pass before exposing the server.
+
+## Capability Scope
+
+- FastMCP package/source verification
+- Server object and runtime path review
+- Tool inventory and behavior review
+- Resource and resource-template review
+- Prompt-template review
+- CLI invocation and local run checks
+- Deployment readiness and rollback planning
+- Evidence-based release decision for FastMCP servers
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for FastMCP server PR and release review.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for FastMCP code review and release planning.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the review rules and validation checklist into repository-level MCP review rules.
+
+## Required Inputs
+
+- FastMCP package version and Python version
+- Server entrypoint, module path, and entry command
+- Tool, resource, and prompt inventory
+- Intended clients and transport mode
+- Deployment target and rollback approach
+- Sample inputs and expected outputs for critical paths
+
+## Production Rules
+
+- Do not approve a server until the FastMCP version, Python version, entrypoint, and transport mode are explicit.
+- Do not treat generated schemas as sufficient review evidence; check the underlying Python function behavior and side effects.
+- Mark tools as release-blocking when they mutate state, call external systems, or run long jobs without clear limits and tests.
+- Mark resources as release-blocking when their URI templates or data boundaries are ambiguous.
+- Mark prompts as release-blocking when required arguments, defaults, or output expectations are unclear.
+- Keep deployment review separate from local demo success; a server that runs locally can still be unready for shared use.
+- Prefer pinned package versions and reproducible entry commands over latest-version examples.
+
+## Output Contract
+
+1. Source evidence: FastMCP version, PyPI metadata, source tag, docs pages, and package constraints reviewed.
+2. Inventory: server object, entry command, tools, resources, prompts, transport, and deployment target.
+3. Findings: release blockers, non-blocking improvements, unknowns, and evidence links.
+4. Validation plan: exact launch, smoke, positive-path, negative-path, and regression checks.
+5. Release decision: accept, accept with caveats, request changes, or block release.
+6. Follow-up: owner, file path, or source area for each required change.
+
+## Troubleshooting
+
+**Issue:** The server starts locally but clients cannot discover tools
+
+**Fix:** Check the FastMCP server entrypoint, selected transport, CLI command, tool registration path, and whether the reviewed process is the same process the client launches.
+
+**Issue:** Tool schemas look correct but runtime behavior is unstable
+
+**Fix:** Review the Python function body, type hints, default values, error handling, and sample inputs instead of relying only on generated schema output.
+
+**Issue:** Resources return inconsistent shapes
+
+**Fix:** Add explicit response contracts for each resource URI or template, then test empty, missing, large, and malformed input cases.
+
+**Issue:** Prompt templates drift across releases
+
+**Fix:** Pin prompt argument names and expected output roles in review notes, then add regression examples for the prompts that clients depend on.
+
+**Issue:** Deployment differs from local development
+
+**Fix:** Compare the local command, deployed command, package version, Python version, transport, and runtime settings before approving release.
+
+## Validation Checklist
+
+- FastMCP version and Python runtime verified.
+- Source tag, PyPI metadata, docs, and package URL checked.
+- Server entrypoint and entry command confirmed.
+- Tool, resource, and prompt inventory completed.
+- Critical tools tested with positive, negative, and boundary inputs.
+- Resource templates tested for valid, missing, and malformed parameters.
+- Prompt templates checked for argument stability and expected output shape.
+- Transport and deployment path smoke-tested.
+- Rollback or disable path documented for release-blocking failures.

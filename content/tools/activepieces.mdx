@@ -1,0 +1,59 @@
+---
+title: Activepieces
+slug: activepieces
+category: tools
+description: Open-source, self-hostable workflow automation platform with AI workflows, TypeScript pieces, human-in-the-loop steps, and a built-in MCP server.
+cardDescription: Self-hostable workflow automation with AI pieces and MCP access.
+seoTitle: Activepieces self-hosted AI workflow automation
+seoDescription: Activepieces is an open-source workflow automation platform with self-hosting, AI pieces, TypeScript integrations, human-in-the-loop steps, and MCP access.
+author: Activepieces
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.activepieces.com"
+documentationUrl: "https://www.activepieces.com/docs/getting-started/introduction"
+repoUrl: "https://github.com/activepieces/activepieces"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: BusinessApplication
+operatingSystem: Web, Docker, Kubernetes, Self-hosted
+tags:
+  - workflow-automation
+  - self-hosted
+  - mcp
+keywords:
+  - ai workflows
+  - automation platform
+  - mcp automation
+prerequisites:
+  - Activepieces Cloud account or reviewed self-hosted deployment using Docker, Docker Compose, Kubernetes, or another supported hosting path.
+  - Connected app credentials, OAuth grants, webhooks, tables, and flow permissions scoped to the automations being built.
+  - Review policy for which flows an AI assistant or MCP client may create, modify, publish, test, retry, or disable.
+safetyNotes:
+  - Activepieces flows can send messages, call APIs, write records, publish webhooks, run code, and trigger cross-system side effects, so production flows need tests, approvals, rollback paths, and rate-limit controls.
+  - The built-in MCP server can let AI assistants build flows, manage tables, inspect runs, test automations, and publish changes; enable only the needed tool categories and keep project scope tight.
+  - Custom TypeScript pieces and code steps should be reviewed like application code, especially when they handle secrets, filesystem access, network calls, or business-critical integrations.
+privacyNotes:
+  - Workflows can process prompts, customer records, emails, documents, form responses, table data, app payloads, webhooks, run logs, error traces, and AI-generated outputs.
+  - Activepieces connections may store OAuth tokens, API keys, account identifiers, webhook URLs, and service credentials; avoid exposing them in prompts, logs, MCP tool output, screenshots, or exported flows.
+  - Self-hosted deployments still need retention, backup, database, Redis, worker isolation, outbound network, telemetry, and access-control policies for all flow and run data.
+---
+
+## Editorial notes
+
+Activepieces is useful for teams that want a self-hostable automation layer between Claude-adjacent agents and business systems without routing everything through a closed automation platform. It combines a visual flow builder, open-source TypeScript pieces, AI workflow support, human-in-the-loop steps, self-hosting options, and a built-in MCP server that can expose approved automation capabilities to Claude Desktop, Cursor, Windsurf, or Claude.ai connectors.
+
+## Source notes
+
+- The official docs describe Activepieces as an open-source all-in-one automation tool with AI-ready flows, TypeScript pieces, enterprise customization, self-hosted/network-gapped deployment, and human-in-the-loop steps.
+- The installation overview says Activepieces Community Edition can be deployed with Docker, Docker Compose, and Kubernetes, and that Community Edition is free and open source.
+- The MCP Server docs describe a built-in MCP server that lets AI assistants build flows, manage tables, test automations, inspect runs, and use OAuth-authenticated project-scoped tools.
+- The GitHub repository describes Activepieces as an open-source replacement for Zapier, an AI automation platform with TypeScript pieces, MCP support for pieces, AI-first workflow features, and MIT-licensed Community Edition code with commercial enterprise features.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, guides, skills, agents, open pull requests, live HeyClaude `llms-full.txt`, and repository-wide content for `Activepieces`, `activepieces.com`, `github.com/activepieces/activepieces`, `workflow automation`, `Zapier`, `Make`, `n8n`, `Pipedream`, `Workato`, and `Windmill`. Existing n8n, Make, Pipedream, Workato, Zapier AI, Zapier MCP, and Workato MCP entries cover adjacent automation platforms or MCP connectors, but no Activepieces tools entry, Activepieces source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

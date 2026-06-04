@@ -1,0 +1,317 @@
+---
+title: Azure DevOps MCP Server for Claude
+slug: azure-devops-mcp-server
+category: mcp
+description: >-
+  Official Microsoft Azure DevOps MCP server for querying work items, pull
+  requests, repositories, pipelines, wikis, test plans, and project metadata
+  through remote HTTP or local stdio transports.
+cardDescription: >-
+  Connect AI agents to Azure DevOps work items, repos, pull requests,
+  pipelines, wikis, test plans, and project metadata.
+seoTitle: Azure DevOps MCP Server for Claude
+seoDescription: >-
+  Use the Azure DevOps MCP server with Claude and other MCP clients to inspect
+  work items, repositories, pull requests, pipelines, wikis, test plans, and
+  Azure DevOps project context.
+author: Microsoft
+authorProfileUrl: "https://www.microsoft.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://learn.microsoft.com/en-us/azure/devops/mcp-server/remote-mcp-server"
+repoUrl: "https://github.com/microsoft/azure-devops-mcp"
+packageUrl: "https://www.npmjs.com/package/@azure-devops/mcp"
+installable: true
+installCommand: "claude mcp add azure-devops -- npx -y @azure-devops/mcp YOUR_AZURE_DEVOPS_ORG"
+usageSnippet: "claude mcp add azure-devops -- npx -y @azure-devops/mcp YOUR_AZURE_DEVOPS_ORG"
+copySnippet: |-
+  {
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure-devops/mcp",
+        "YOUR_AZURE_DEVOPS_ORG",
+        "-d",
+        "core",
+        "work",
+        "work-items",
+        "repositories"
+      ],
+      "env": {
+        "ado_mcp_project": "YOUR_PROJECT"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "servers": {
+      "ado-remote-mcp": {
+        "url": "https://mcp.dev.azure.com/YOUR_AZURE_DEVOPS_ORG",
+        "type": "http",
+        "headers": {
+          "X-MCP-Toolsets": "repos,wiki,wit",
+          "X-MCP-Readonly": "true"
+        }
+      }
+    },
+    "inputs": []
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Azure DevOps organization and project membership for the resources Claude should access
+  - Microsoft Entra ID connected Azure DevOps organization for the remote MCP server
+  - Visual Studio Code or Visual Studio for the Microsoft-supported remote MCP preview path
+  - Node.js 20 or later and npx for the optional local `@azure-devops/mcp` stdio server
+  - Azure DevOps permissions, PAT, Microsoft Entra authentication, or Azure CLI authentication appropriate to the chosen transport
+  - Team policy for which work items, repositories, pipelines, wikis, and test plans may be exposed to AI-assisted workflows
+safetyNotes:
+  - >-
+    Start with read-only mode for investigation. The remote server supports the
+    `X-MCP-Readonly: true` header, and the local server supports domain
+    filtering so agents only load the Azure DevOps areas they need.
+  - >-
+    Azure DevOps write-capable tools can create or update work items, pull
+    requests, pull request comments, branches, wiki pages, test plans, test
+    suites, test cases, and pipeline runs. Keep manual approval on any
+    operation that changes project state.
+  - >-
+    Treat Azure DevOps PATs, Microsoft Entra tokens, Azure CLI sessions, and
+    MCP configuration as sensitive credentials. Do not paste tokens into
+    prompts, commit them to repositories, or share them in issue/PR threads.
+  - >-
+    Use toolsets, domains, project defaults, and team defaults to keep the MCP
+    surface narrow. Loading every repo, work item, wiki, pipeline, and test
+    plan tool can confuse the model and expose more context than the task
+    needs.
+  - >-
+    The remote MCP server is in public preview. Preview behavior, available
+    tools, supported clients, and authentication requirements can change before
+    general availability.
+privacyNotes:
+  - >-
+    Tool results can expose organization names, project names, teams,
+    iteration data, capacity information, work item titles and fields,
+    comments, attachments, pull request discussions, repository file content,
+    branch names, commit metadata, pipeline logs, build artifacts, wiki pages,
+    test plans, and search results.
+  - >-
+    Work item comments, PR threads, pipeline logs, wiki pages, and attachments
+    often contain customer data, production incident details, credentials,
+    internal URLs, unreleased roadmap information, employee names, or security
+    findings.
+  - >-
+    MCP client logs, AI transcripts, generated code comments, local terminal
+    history, and downstream ticket summaries can retain Azure DevOps content
+    outside the original Azure DevOps audit, permission, and retention model.
+  - >-
+    Microsoft Entra authentication exposes the user's organizational identity
+    to the MCP client and constrains access to the authenticated user's Azure
+    DevOps permissions.
+tags:
+  - azure-devops
+  - issue-tracking
+  - pull-requests
+  - pipelines
+  - mcp
+keywords:
+  - azure devops mcp
+  - azure devops claude
+  - mcp.dev.azure.com
+  - "@azure-devops/mcp"
+  - work item mcp
+  - ado mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Azure DevOps MCP Server brings Azure DevOps context into AI-assisted
+development workflows. It gives agents structured access to project metadata,
+work items, repositories, pull requests, branches, files, pipeline runs, build
+logs, artifacts, wikis, test plans, and search results so a task can start from
+the actual Azure DevOps source of truth rather than a copied ticket or stale
+summary.
+
+Microsoft now recommends the Azure DevOps-hosted remote MCP server for
+supported clients. The remote server uses streamable HTTP at
+`https://mcp.dev.azure.com/{organization}`, authenticates with Microsoft Entra
+ID, and can be narrowed with toolset and read-only headers. The local
+`@azure-devops/mcp` package remains useful for Claude Code, Cursor, Codex, and
+other stdio-oriented clients while remote OAuth client support continues to
+roll out.
+
+## Features
+
+- Remote HTTP endpoint at `https://mcp.dev.azure.com/{organization}` for the
+  public preview hosted server.
+- Local stdio server through `npx -y @azure-devops/mcp`.
+- Core organization, project, and team discovery.
+- Work item lookup, batch retrieval, comments, revisions, backlog data, saved
+  query results, and full-text work item search.
+- Repository, branch, file, commit, pull request, and pull request thread
+  inspection.
+- Pipeline build listing, build status, build changes, logs, pipeline runs, and
+  artifacts.
+- Wiki listing, page retrieval, and wiki search.
+- Test plan, suite, case, and build test-result lookup.
+- Remote toolset filtering with `X-MCP-Toolsets` and read-only restriction with
+  `X-MCP-Readonly`.
+- Local domain filtering for focused tool loading, such as `core`, `work`,
+  `work-items`, `repositories`, `wiki`, `pipelines`, and `test-plans`.
+
+## Use Cases
+
+- Ask Claude to list your assigned Azure DevOps work items and summarize what
+  needs attention.
+- Pull a work item, related PRs, and repository files before implementing a
+  feature.
+- Review pull request threads and changed branches before drafting a response.
+- Inspect a failed build's status, associated commits, work items, and logs.
+- Search Azure DevOps wiki pages for runbooks or architecture notes connected
+  to a task.
+- Limit the server to issue-tracking toolsets for triage workflows that should
+  not touch repositories or pipelines.
+
+## Installation
+
+### Claude Code with the local stdio server
+
+1. Confirm Node.js 20 or later and `npx` are available.
+2. Confirm your Azure DevOps organization name, project, and authentication
+   method.
+3. Add the local MCP server:
+
+```bash
+claude mcp add azure-devops -- npx -y @azure-devops/mcp YOUR_AZURE_DEVOPS_ORG
+```
+
+4. Use domain filters when you only need a subset of tools:
+
+```bash
+claude mcp add azure-devops -- npx -y @azure-devops/mcp YOUR_AZURE_DEVOPS_ORG -d core work work-items repositories
+```
+
+5. Authenticate when the server prompts, then test with a read-only request
+   such as listing projects or your assigned work items.
+
+### Remote MCP server in Visual Studio Code
+
+1. Confirm the Azure DevOps organization is connected to Microsoft Entra ID.
+2. Add an MCP configuration like the one below to `.vscode/mcp.json`.
+3. Start the MCP server from the VS Code MCP view.
+4. Authenticate with the Microsoft Entra account that has access to the Azure
+   DevOps organization.
+5. Ask a read-only prompt such as `List the projects in my Azure DevOps organization`.
+
+## Configuration
+
+### Remote read-only toolset configuration
+
+```json
+{
+  "servers": {
+    "ado-remote-mcp": {
+      "url": "https://mcp.dev.azure.com/YOUR_AZURE_DEVOPS_ORG",
+      "type": "http",
+      "headers": {
+        "X-MCP-Toolsets": "repos,wiki,wit",
+        "X-MCP-Readonly": "true"
+      }
+    }
+  },
+  "inputs": []
+}
+```
+
+### Local stdio configuration
+
+```json
+{
+  "mcpServers": {
+    "azure-devops": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure-devops/mcp",
+        "YOUR_AZURE_DEVOPS_ORG",
+        "-d",
+        "core",
+        "work",
+        "work-items",
+        "repositories"
+      ],
+      "env": {
+        "ado_mcp_project": "YOUR_PROJECT"
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+### Triage assigned work items
+
+```plaintext
+List my Azure DevOps work items in PROJECT_NAME and group them by priority, blocked status, and next action.
+```
+
+### Inspect a pull request
+
+```plaintext
+Find pull requests in PROJECT_NAME that require my review, summarize the active comment threads, and do not post any comments.
+```
+
+### Debug a failed pipeline
+
+```plaintext
+Get the latest failed pipeline run for PROJECT_NAME, summarize the failed stage and relevant logs, and link related commits or work items.
+```
+
+### Read a wiki runbook
+
+```plaintext
+Search Azure DevOps wiki pages for the deployment rollback runbook and summarize the exact steps without changing the wiki.
+```
+
+## Source notes
+
+- Microsoft Learn documents the remote Azure DevOps MCP Server as a public
+  preview hosted service using streamable HTTP transport at
+  `https://mcp.dev.azure.com/{organization}`.
+- The remote setup guide says the hosted server avoids local installation,
+  authenticates with Microsoft Entra ID, and provides access to work items,
+  pull requests, pipelines, and more.
+- Microsoft documents toolset filtering with `X-MCP-Toolsets`, read-only
+  filtering with `X-MCP-Readonly`, individual tool selection with
+  `X-MCP-Tools`, and insiders features with `X-MCP-Insiders`.
+- The available remote toolsets include `repos`, `wit`, `pipelines`, `wiki`,
+  `work`, and `testplan`, with read-only and write-capable tools called out in
+  the Microsoft Learn reference.
+- The official GitHub repository recommends the remote MCP server going forward
+  while continuing to support the local `@azure-devops/mcp` stdio package for
+  clients and scenarios that need it.
+- npm metadata identifies `@azure-devops/mcp` as Microsoft's MCP server for
+  interacting with Azure DevOps and points to the `microsoft/azure-devops-mcp`
+  repository under the MIT license.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, and repository-wide content for `Azure DevOps`,
+`azure-devops-mcp`, `microsoft/azure-devops-mcp`, `@azure-devops/mcp`,
+`mcp.dev.azure.com`, `ado-remote-mcp`, `work item`, `pull request tools`,
+`Microsoft Entra`, `pipelines`, and `issue tracker MCP`. Existing Jira MCP
+content covers Atlassian Jira and Confluence, while this entry covers
+Microsoft Azure DevOps work items, repos, PRs, pipelines, wiki, and test plans.
+Existing Microsoft AutoGen content is an agent framework entry, not an Azure
+DevOps MCP server. No dedicated Azure DevOps MCP entry, Azure DevOps source URL
+duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

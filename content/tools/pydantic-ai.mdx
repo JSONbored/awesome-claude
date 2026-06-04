@@ -1,0 +1,72 @@
+---
+title: Pydantic AI
+slug: pydantic-ai
+category: tools
+description: Python agent framework from the Pydantic team for type-safe GenAI apps, tools, structured outputs, MCP, evals, and durable workflows.
+cardDescription: Type-safe Python agent framework with tools, outputs, MCP, and evals.
+seoTitle: Pydantic AI Python agent framework
+seoDescription: Pydantic AI helps Python teams build type-safe GenAI agents with tools, structured outputs, model providers, MCP, evals, Logfire tracing, and durable workflows.
+author: Pydantic
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://ai.pydantic.dev/"
+documentationUrl: "https://pydantic.dev/docs/ai/overview/"
+repoUrl: "https://github.com/pydantic/pydantic-ai"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - agents
+  - python
+  - structured-output
+keywords:
+  - pydantic ai
+  - python agent framework
+  - type-safe agents
+  - pydantic evals
+  - mcp agent framework
+prerequisites:
+  - Python project and dependency manager for installing `pydantic-ai`, `pydantic-evals`, Logfire, model-provider SDKs, or optional integration packages.
+  - Model provider credentials or local model configuration for the providers used by the agent, evals, native tools, or gateway layer.
+  - Clear tool, dependency injection, structured output, and model-selection boundaries before connecting agents to databases, APIs, MCP servers, or business workflows.
+  - Test cases, eval datasets, expected outputs, approval policies, and reviewer ownership before using Pydantic Evals or Logfire results in release decisions.
+  - Observability destination, retention policy, and redaction plan if using Pydantic Logfire, OpenTelemetry traces, spans, eval reports, or exported run data.
+safetyNotes:
+  - Pydantic AI type hints and output validation reduce classes of integration errors, but they do not prove an agent, model response, tool call, or generated workflow is correct or safe.
+  - Agents can call function tools, toolsets, provider-native tools, MCP servers, web search capabilities, external APIs, databases, and durable workflow backends; review tool side effects before enabling them.
+  - Tool names, docstrings, schemas, dynamic instructions, dependencies, previous messages, and MCP tool descriptions become model-facing context and should be treated as untrusted input surfaces.
+  - Human-in-the-loop approval, deferred tools, retries, and durable execution workflows need idempotency, timeout, rollback, and escalation policies before they are used for account, billing, data, or infrastructure actions.
+  - Evals, LLM judges, span-based evaluators, and Logfire dashboards are quality signals, not proof that an agent is safe, fair, compliant, or production-ready.
+  - Multi-agent, MCP, A2A, UI event stream, graph, and streaming-output workflows can create complex control flow; keep production permissions narrower than demo or notebook examples.
+privacyNotes:
+  - Pydantic AI runs can send prompts, instructions, chat history, dependency-derived context, tool arguments, tool results, structured outputs, retry prompts, and validation errors to configured model providers.
+  - Function tools and dependency injection can expose customer records, database values, API responses, internal identifiers, secrets, or proprietary business rules if those objects are made available to an agent.
+  - Pydantic Logfire, OpenTelemetry traces, eval reports, spans, metrics, cost tracking, and behavior monitoring can retain prompts, outputs, tool calls, metadata, errors, and performance data outside the application runtime.
+  - Pydantic Evals datasets, case metadata, expected outputs, human feedback, LLM-judge inputs, and report artifacts should follow normal retention, access-control, and deletion policies.
+  - MCP clients, MCP servers, native tools, and external toolsets can return third-party or workspace data into the conversation transcript, logs, traces, and evaluation outputs.
+---
+
+## Editorial notes
+
+Pydantic AI is useful when Claude-adjacent Python teams want agents to feel like normal typed application code. It gives developers a Pydantic-native way to define agents, dependencies, function tools, structured outputs, model settings, capabilities, evals, and tracing so coding agents can work against explicit types instead of loose prompt contracts.
+
+This is distinct from existing agent-framework entries. CrewAI focuses on role-based multi-agent crews, LangGraph focuses on graph/stateful workflows, Mastra is a TypeScript agent framework, AutoGen is Microsoft's multi-agent framework, and Instructor focuses on structured output validation. Pydantic AI is the Python agent framework from the Pydantic team, with type-safe dependencies and outputs, model-provider support, Pydantic Evals, Logfire/OpenTelemetry observability, MCP/A2A integration, capabilities, durable execution, and graph support.
+
+## Source notes
+
+- The official repository README describes Pydantic AI as a GenAI agent framework from the Pydantic team for building production-grade applications and workflows.
+- The official overview says Pydantic AI is model-agnostic, integrates with Pydantic Logfire for OpenTelemetry observability, supports Pydantic Evals, provides capabilities for tools and instructions, and includes MCP, A2A, UI event streams, human-in-the-loop approval, durable execution, streamed outputs, and graph support.
+- The agent documentation defines agents as containers for developer instructions, function tools and toolsets, structured output types, dependency constraints, LLM models, model settings, and reusable capabilities.
+- The evals documentation describes Pydantic Evals as a code-first evaluation framework for testing AI systems from simple LLM calls to complex multi-agent applications, with datasets, cases, experiments, evaluators, and optional Logfire visualization.
+- The MCP documentation says Pydantic AI agents can connect to local and remote MCP servers, use FastMCP clients, use provider-native MCP tools, and be used within MCP servers.
+- The GitHub repository is `pydantic/pydantic-ai`, is MIT licensed, and describes the project as "AI Agent Framework, the Pydantic way."
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Pydantic AI`, `pydantic-ai`, `pydantic_ai`, `ai.pydantic.dev`, `pydantic.dev/docs/ai`, `github.com/pydantic/pydantic-ai`, `Pydantic Evals`, `Pydantic Logfire`, `type-safe agents`, `MCP agent framework`, and `GenAI Agent Framework`. Existing FastAPI/Pydantic mentions are generic validation references, and existing CrewAI, Mastra, LangGraph, Microsoft AutoGen, and Instructor entries cover adjacent agent or structured-output workflows, but no dedicated Pydantic AI tools entry, Pydantic AI source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

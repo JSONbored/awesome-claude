@@ -1,0 +1,52 @@
+name: MCP Release Watch
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 16 * * *"
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: mcp-release-watch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f
+        with:
+          node-version: 24.16.0
+
+      - name: Check MCP release status
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/check-mcp-release-due.mjs --output mcp-release-due.json --upsert-issue
+
+      - name: Summarize MCP release status
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const report = JSON.parse(fs.readFileSync("mcp-release-due.json", "utf8"));
+          const lines = [
+            "## MCP Release Watch",
+            "",
+            `- Due: \`${report.due}\``,
+            `- Proposed version: \`${report.proposedVersion}\``,
+            `- Latest tag: \`${report.latestTag ?? "none"}\``,
+            `- npm latest: \`${report.publishedVersion ?? "unknown"}\``,
+            `- MCP-related commits: \`${report.commits.length}\``,
+          ];
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `${lines.join("\n")}\n`);
+          NODE

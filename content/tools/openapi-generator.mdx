@@ -1,0 +1,64 @@
+---
+title: OpenAPI Generator
+slug: openapi-generator
+category: tools
+description: Open-source code generation tool for producing API clients, server stubs, documentation, schemas, and configuration from OpenAPI specs.
+cardDescription: Generate clients, servers, docs, schemas, and config from OpenAPI specs.
+seoTitle: OpenAPI Generator open-source API code generation
+seoDescription: OpenAPI Generator turns OpenAPI and Swagger specs into generated API clients, server stubs, documentation, schemas, and configuration artifacts.
+author: OpenAPI Generator Contributors
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://openapi-generator.tech"
+documentationUrl: "https://openapi-generator.tech/docs/installation/"
+repoUrl: "https://github.com/OpenAPITools/openapi-generator"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - openapi
+  - api-generation
+  - codegen
+keywords:
+  - openapi generator
+  - sdk generation
+  - server stubs
+prerequisites:
+  - Reviewed OpenAPI or Swagger specification for the API surface being generated.
+  - Approved installation path for the CLI, such as npm, Homebrew, Scoop, PyPI, Docker, JAR, or another documented option.
+  - Java runtime or package-manager prerequisites required by the selected installation path.
+  - Generator choice, configuration options, templates, ignore rules, and output directory reviewed before large regeneration runs.
+safetyNotes:
+  - Generated clients, server stubs, docs, schemas, and config can expose every endpoint described in the source spec, including admin, billing, destructive, or internal operations.
+  - Regeneration can overwrite local generated files, remove hand edits, or produce broad diffs, so run in version control and review generated output before committing or publishing.
+  - Treat generated code like application code and review dependency changes, auth handling, retries, timeouts, pagination, validation, error behavior, and language-specific security defaults.
+  - OpenAPI descriptions, examples, operation names, and vendor extensions can become model context or generated comments, so do not use untrusted specs directly in agent workflows.
+privacyNotes:
+  - OpenAPI specs can reveal endpoint paths, schemas, examples, server URLs, auth schemes, internal object models, and business workflow names.
+  - Normal CLI generation can run locally, but package managers, Docker pulls, CI jobs, hosted specs, and remote spec URLs may still create network and logging exposure.
+  - Generated documentation, clients, server stubs, CI artifacts, package releases, and screenshots can publish sensitive examples or internal routes if specs are not scrubbed first.
+  - Docker-based generation mounts local directories into the container, so review volume paths and output locations before running against private repositories.
+---
+
+## Editorial notes
+
+OpenAPI Generator is useful when Claude or an engineering agent needs repeatable SDK, server-stub, documentation, or schema generation from a reviewed API contract. It keeps agent-written integration code closer to the source OpenAPI spec instead of relying on copied endpoint notes, stale examples, or hand-maintained clients.
+
+This is distinct from the existing Speakeasy and OpenAPI MCP Server entries. Speakeasy is an OpenAPI-native platform for managed SDK, CLI, Terraform, contract test, and MCP generation workflows. OpenAPI MCP Server lets Claude inspect OpenAPI specs through a hosted MCP server. OpenAPI Generator is the open-source code generation project and CLI for producing local clients, server stubs, docs, schemas, and config artifacts from OpenAPI or Swagger specs.
+
+## Source notes
+
+- The official installation docs describe npm, Homebrew, Scoop, PyPI, Docker, JAR, JBang, and launcher-script installation paths for the CLI.
+- The installation docs show generating code from a valid spec with `openapi-generator generate` or `npx @openapitools/openapi-generator-cli generate`.
+- The generator list documents client, server, documentation, schema, and config generators across many languages and frameworks.
+- The GitHub repository is `OpenAPITools/openapi-generator`, is Apache-2.0 licensed, and describes the project as generating API client libraries, server stubs, documentation, and configuration from OpenAPI v2 and v3 specs.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, guides, skills, commands, open pull requests, live issue state, and repository-wide content for `OpenAPI Generator`, `openapi-generator`, `OpenAPITools`, `openapi-generator.tech`, `github.com/OpenAPITools/openapi-generator`, `openapi-generator-cli`, `server stubs`, `SDK generation`, and `API code generation`. Existing Speakeasy and OpenAPI MCP Server entries are adjacent but not duplicates: Speakeasy covers a managed OpenAPI-native generation platform, and OpenAPI MCP Server covers hosted spec exploration for Claude. No dedicated OpenAPI Generator tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

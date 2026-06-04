@@ -1,0 +1,75 @@
+---
+title: Hugging Face Transformers
+slug: hugging-face-transformers
+category: tools
+description: Apache-2.0 model-definition framework for pretrained text, vision, audio, video, and multimodal models across inference, training, pipelines, generation, and fine-tuning.
+cardDescription: Use pretrained models for inference, generation, multimodal tasks, and training.
+seoTitle: Hugging Face Transformers model framework
+seoDescription: Hugging Face Transformers is an Apache-2.0 model-definition framework for pretrained text, vision, audio, video, and multimodal models across inference, training, pipelines, generation, and fine-tuning.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://huggingface.co/transformers"
+documentationUrl: "https://huggingface.co/docs/transformers"
+repoUrl: "https://github.com/huggingface/transformers"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - model-framework
+  - inference
+  - training
+keywords:
+  - Hugging Face Transformers
+  - transformers library
+  - pretrained models
+  - model inference
+  - model fine-tuning
+prerequisites:
+  - Python 3.10 or newer, PyTorch 2.4 or newer, compatible accelerator drivers, and the Transformers extras needed for the selected inference, training, serving, or model-conversion workflow.
+  - Approved model checkpoint, model license, revision pin, architecture support, tokenizer or processor requirements, hardware budget, and fallback model plan.
+  - Inference design for pipelines, text generation, chat templates, multimodal inputs, streaming, decoding strategy, batching, cache behavior, and output review.
+  - Training or fine-tuning plan for datasets, evaluation, checkpoints, mixed precision, distributed training, Hub publishing, and rollback before modifying model weights.
+  - Privacy and retention plan for prompts, documents, media inputs, generated outputs, local model caches, checkpoints, logs, Hub credentials, and experiment artifacts.
+safetyNotes:
+  - Transformers can run text, vision, audio, video, and multimodal models, but model outputs still need factual checks, policy review, source attribution, and application-level guardrails.
+  - Downloaded checkpoints and model cards need license, provenance, version, architecture, and resource review before use in production or customer-facing Claude-adjacent workflows.
+  - Custom model code, conversion scripts, example scripts, and source installs should be reviewed before execution, especially when loading community models or enabling custom code paths.
+  - Text generation, chat templates, decoding settings, and multimodal processors can produce plausible but wrong or unsafe outputs if prompts, sampling, stopping, and evaluation are weak.
+  - Training and fine-tuning can leak data, overfit, create regressions, or publish sensitive checkpoints if datasets, callbacks, logs, model cards, and Hub pushes are not controlled.
+  - Large models can exhaust CPU, GPU, memory, disk, or network resources; teams should benchmark batch size, cache size, precision, quantization, latency, and rollback behavior before deployment.
+privacyNotes:
+  - Inputs can include prompts, chat histories, documents, images, audio, video, labels, datasets, evaluation records, generated outputs, and model traces that may contain sensitive user or project data.
+  - Local model caches, tokenizer files, generated outputs, checkpoints, exported weights, training logs, and intermediate datasets can retain sensitive context outside the main application database.
+  - Hugging Face Hub downloads, hosted inference, telemetry, experiment trackers, remote storage, and observability systems may process model names, dataset names, prompts, media, metrics, or artifacts depending on setup.
+  - Fine-tuned models and adapters can memorize sensitive examples; evaluate leakage risk before sharing, publishing, or reusing checkpoints across teams.
+  - Teams should define who may inspect prompts, generated outputs, model cache directories, training datasets, logs, checkpoints, evaluation failures, and Hub artifacts before integrating Transformers into user-facing workflows.
+---
+
+## Editorial notes
+
+Hugging Face Transformers is useful when Claude-adjacent teams need a standard model framework for local inference, model prototyping, multimodal processing, fine-tuning, text generation, pipeline-based tasks, chat templates, and model-definition compatibility across the broader open-model ecosystem. It is often the layer that makes pretrained checkpoints usable before teams move a workload into a dedicated serving engine, retrieval stack, evaluation harness, or product workflow.
+
+This is distinct from existing entries. vLLM and llama.cpp focus on serving or local inference runtime behavior. Sentence Transformers focuses on embeddings, reranking, and retrieval model training. Hugging Face Transformers is broader: model definitions, tokenizers/processors, pipelines, generation, Trainer, architecture support, multimodal models, and interoperability with training frameworks, inference engines, and the Hugging Face Hub.
+
+## Source notes
+
+- The official README describes Transformers as a model-definition framework for state-of-the-art machine learning with text, computer vision, audio, video, and multimodal models.
+- The README says Transformers supports both inference and training and acts as a pivot across training frameworks, inference engines, and adjacent modeling libraries.
+- The README says there are more than one million Transformers model checkpoints on the Hugging Face Hub.
+- The README documents Python 3.10 or newer and PyTorch 2.4 or newer as current baseline requirements.
+- The README describes the Pipeline API for text, audio, vision, and multimodal tasks, and shows text generation, chat, speech recognition, image classification, and visual question answering examples.
+- The official docs describe Transformers as a model-definition framework for text, vision, audio, video, and multimodal inference and training.
+- The docs highlight Pipeline, Trainer, and `generate` for optimized inference, training, distributed training, fast generation, streaming, and decoding strategies.
+- The docs say supported model definitions can be compatible with many training frameworks, inference engines, and adjacent libraries that leverage Transformers model definitions.
+- The repository is `huggingface/transformers`, is Apache-2.0 licensed, and describes the project as state-of-the-art pretrained models for inference and training.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face Transformers`, `huggingface/transformers`, `huggingface.co/transformers`, `huggingface.co/docs/transformers`, `transformers library`, and `model-definition framework`. Existing Python data-science rules mention Hugging Face Transformers only as a generic pre-trained model library; no dedicated Transformers tools entry, Transformers source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face Transformers is Apache-2.0 open-source software; individual model checkpoints, datasets, hosted services, and Hub accounts may have separate licenses, terms, and access controls.

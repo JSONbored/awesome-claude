@@ -1,0 +1,58 @@
+---
+title: Gitleaks
+slug: gitleaks
+category: tools
+description: Open-source secret scanner for finding passwords, API keys, tokens, and other credentials in git history, files, directories, and stdin.
+cardDescription: Open-source secret scanner for repositories and files.
+seoTitle: Gitleaks open-source secret scanner
+seoDescription: Gitleaks is an open-source secret scanner for detecting passwords, API keys, tokens, and credentials in git repositories, files, directories, and stdin.
+author: Gitleaks
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://gitleaks.io"
+documentationUrl: "https://github.com/gitleaks/gitleaks"
+repoUrl: "https://github.com/gitleaks/gitleaks"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: SecurityApplication
+operatingSystem: macOS, Windows, Linux, Docker
+tags:
+  - security
+  - secrets
+  - code-review
+keywords:
+  - secret scanning
+  - api key detection
+  - ai generated code review
+prerequisites:
+  - A repository, directory, file, or stdin stream that you are authorized to scan.
+  - Gitleaks installed through Homebrew, Docker, Go, a release binary, pre-commit, or the official GitHub Action.
+  - A plan for handling findings, baselines, and allowed test credentials without exposing real secrets in reports.
+safetyNotes:
+  - Gitleaks can scan git history and large directories, so scope scans intentionally and use baselines for noisy legacy repositories.
+  - Findings may include real active credentials; treat reports, CI logs, and exported SARIF or JSON artifacts as sensitive.
+  - The upstream README states Gitleaks is feature complete and future releases are expected to be security patches only.
+privacyNotes:
+  - Scans inspect repository contents, file contents, commit metadata, and streamed input for credential-like strings.
+  - Report files and verbose logs can contain secret values unless redaction and artifact retention are configured carefully.
+  - CI integrations may expose findings to workflow logs, code-scanning systems, or third-party build infrastructure.
+---
+
+## Editorial notes
+
+Gitleaks is a useful fit for AI-generated code review because agents can accidentally introduce placeholders, copied credentials, or leaked tokens into diffs. Running a focused Gitleaks scan before merge gives maintainers a concrete check for secret exposure across working trees, files, stdin, and git history.
+
+## Source notes
+
+- The official README describes Gitleaks as a tool for detecting passwords, API keys, and tokens in git repositories, files, directories, and stdin.
+- The README documents installation through Homebrew, Docker, Go/source builds, release binaries, pre-commit, and the Gitleaks GitHub Action.
+- The documented scan modes include `git`, `dir`, and `stdin`, with redaction, report, baseline, and configuration options.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, and repository-wide content for `Gitleaks`, `gitleaks.io`, `github.com/gitleaks/gitleaks`, `secret scanner`, `secret scanning`, and `secrets`. Existing files only mention secret scanning generically or reference Gitleaks inside broader security guidance; no dedicated Gitleaks tools entry or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

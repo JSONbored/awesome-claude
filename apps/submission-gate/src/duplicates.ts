@@ -16,6 +16,12 @@ export type ContentDuplicateMatch = {
   reasons: string[];
 };
 
+export type ContentDuplicateReview = {
+  legacyDuplicate: ContentDuplicateMatch | null;
+  strictDuplicate: ContentDuplicateMatch | null;
+  relatedCandidates: ContentDuplicateMatch[];
+};
+
 const PROTECTED_FRONTMATTER_FIELDS = new Set([
   "affiliateUrl",
   "author",
@@ -44,8 +50,8 @@ const PROTECTED_FRONTMATTER_FIELDS = new Set([
   "submittedAt",
   "submittedBy",
   "submittedByUrl",
-  "submissionIssueNumber",
-  "submissionIssueUrl",
+  "sourceSubmissionNumber",
+  "sourceSubmissionUrl",
   "websiteUrl",
 ]);
 
@@ -224,6 +230,17 @@ function intersection(left: string[], right: string[]) {
   return left.filter((value) => rightSet.has(value));
 }
 
+function isCollectionBridge(
+  candidate: ContentDuplicateSignals,
+  existing: ContentDuplicateSignals,
+) {
+  return (
+    candidate.category !== existing.category &&
+    (candidate.category === "collections" ||
+      existing.category === "collections")
+  );
+}
+
 export function findContentDuplicateMatch(
   candidate: ContentDuplicateSignals,
   existingItems: ContentDuplicateSignals[],
@@ -289,4 +306,115 @@ export function findContentDuplicateMatch(
     if (reasons.length) return { existing, reasons };
   }
   return null;
+}
+
+export function findStrictContentDuplicateMatch(
+  candidate: ContentDuplicateSignals,
+  existingItems: ContentDuplicateSignals[],
+): ContentDuplicateMatch | null {
+  for (const existing of existingItems) {
+    const reasons: string[] = [];
+    if (candidate.filePath === existing.filePath) {
+      reasons.push(`same content path \`${existing.filePath}\``);
+    }
+    if (
+      candidate.category &&
+      candidate.slug &&
+      candidate.category === existing.category &&
+      candidate.slug === existing.slug
+    ) {
+      reasons.push(`same ${candidate.category} slug \`${candidate.slug}\``);
+    }
+
+    const sharedUrls = intersection(candidate.urls, existing.urls);
+    if (
+      sharedUrls.length &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
+      reasons.push(`same canonical source URL ${sharedUrls[0]}`);
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedTitle &&
+      candidate.category === existing.category &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(`same normalized title in ${candidate.category}`);
+    }
+
+    const sharedDomains = intersection(candidate.domains, existing.domains);
+    if (
+      sharedDomains.length &&
+      candidate.category &&
+      candidate.category === existing.category &&
+      candidate.normalizedTitle &&
+      candidate.normalizedTitle === existing.normalizedTitle
+    ) {
+      reasons.push(`same source domain ${sharedDomains[0]} and title`);
+    }
+
+    if (reasons.length) return { existing, reasons };
+  }
+  return null;
+}
+
+export function findRelatedContentMatches(
+  candidate: ContentDuplicateSignals,
+  existingItems: ContentDuplicateSignals[],
+  limit = 5,
+): ContentDuplicateMatch[] {
+  const matches: ContentDuplicateMatch[] = [];
+  for (const existing of existingItems) {
+    const reasons: string[] = [];
+    if (candidate.filePath === existing.filePath) continue;
+
+    const sharedUrls = intersection(candidate.urls, existing.urls);
+    if (sharedUrls.length && candidate.category !== existing.category) {
+      reasons.push(
+        isCollectionBridge(candidate, existing)
+          ? `same canonical source URL ${sharedUrls[0]} across collection/resource categories`
+          : `same canonical source URL ${sharedUrls[0]} across ${candidate.category}/${existing.category}`,
+      );
+    }
+
+    const sharedDomains = intersection(candidate.domains, existing.domains);
+    const relatedDomain = sharedDomains.find(
+      (domain) => !DOMAIN_ONLY_EXCLUSIONS.has(domain),
+    );
+    if (relatedDomain && candidate.category && existing.category) {
+      reasons.push(
+        candidate.category === existing.category
+          ? `same non-generic source domain ${relatedDomain} in ${candidate.category}`
+          : `same non-generic source domain ${relatedDomain} across ${candidate.category}/${existing.category}`,
+      );
+    }
+
+    if (
+      candidate.category &&
+      candidate.normalizedDescription &&
+      candidate.category === existing.category &&
+      candidate.normalizedDescription === existing.normalizedDescription
+    ) {
+      reasons.push(`same normalized description in ${candidate.category}`);
+    }
+
+    if (reasons.length) {
+      matches.push({ existing, reasons });
+      if (matches.length >= limit) break;
+    }
+  }
+  return matches;
+}
+
+export function buildContentDuplicateReview(
+  candidate: ContentDuplicateSignals,
+  existingItems: ContentDuplicateSignals[],
+): ContentDuplicateReview {
+  return {
+    legacyDuplicate: findContentDuplicateMatch(candidate, existingItems),
+    strictDuplicate: findStrictContentDuplicateMatch(candidate, existingItems),
+    relatedCandidates: findRelatedContentMatches(candidate, existingItems),
+  };
 }

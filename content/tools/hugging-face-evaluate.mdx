@@ -1,0 +1,79 @@
+---
+title: Hugging Face Evaluate
+slug: hugging-face-evaluate
+category: tools
+description: Apache-2.0 library for loading, computing, comparing, saving, and sharing evaluation modules for machine learning models and datasets.
+cardDescription: Load metrics, comparisons, and measurements for reproducible model and dataset evaluation.
+seoTitle: Hugging Face Evaluate model and dataset evaluation library
+seoDescription: Hugging Face Evaluate is an Apache-2.0 library for loading, computing, comparing, saving, and sharing evaluation modules for machine learning models and datasets.
+author: Hugging Face
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://huggingface.co/docs/evaluate"
+documentationUrl: "https://huggingface.co/docs/evaluate"
+repoUrl: "https://github.com/huggingface/evaluate"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - evaluation
+  - metrics
+  - model-evaluation
+keywords:
+  - Hugging Face Evaluate
+  - model evaluation
+  - evaluation metrics
+  - evaluation modules
+  - dataset measurements
+prerequisites:
+  - Python 3.7 or newer, a virtual environment, the `evaluate` package, and any optional dependencies required by the selected metric, comparison, or measurement module.
+  - Approved evaluation task, dataset split, prediction/reference schema, metric definitions, comparison method, measurement scope, and reproducibility plan.
+  - Review process for metric cards, citations, limitations, licenses, Hub module provenance, community module code, and evaluation result publication.
+  - Storage and runtime plan for predictions, references, temporary Apache Arrow tables, distributed evaluation files, saved JSON results, logs, and cache directories.
+  - Privacy and governance plan for model outputs, labels, datasets, benchmark results, model cards, Hub uploads, and leaderboard submissions.
+safetyNotes:
+  - Evaluate standardizes metric computation, but metric choice can still hide bias, leakage, data quality problems, task mismatch, or unsafe model behavior if evaluation design is weak.
+  - Metrics, comparisons, measurements, and community evaluation modules should be reviewed before execution because modules can include code, dependencies, limitations, and licenses that vary by source.
+  - Model scores should not be treated as product readiness without qualitative review, safety testing, adversarial examples, fairness checks, calibration, and task-specific acceptance criteria.
+  - Distributed evaluation can write temporary prediction and reference data to disk, so cleanup, access control, and failure handling matter when evaluating private datasets.
+  - Saved results, model card metadata, Hub evaluation files, community leaderboards, and benchmark submissions should be reviewed before publication because they can disclose model behavior, dataset names, or sensitive labels.
+  - The official README points LLM-focused evaluation users toward Hugging Face LightEval for newer and more actively maintained LLM evaluation approaches, so Evaluate should not be over-positioned as the primary current LLM evaluation stack.
+privacyNotes:
+  - Evaluate workflows can process predictions, references, labels, prompts, generated outputs, dataset measurements, model names, benchmark metadata, metrics, comparison results, and saved evaluation artifacts.
+  - Local caches, temporary Apache Arrow tables, JSON result files, experiment directories, logs, notebooks, and distributed worker files can retain sensitive predictions or references outside the main application database.
+  - Hugging Face Hub modules, community metrics, model cards, benchmark datasets, evaluation result files, Spaces, and leaderboards may expose metadata, results, examples, or access patterns depending on configuration.
+  - Evaluation outputs can reveal model weaknesses, protected-class performance, private benchmark names, dataset composition, label distributions, or proprietary task behavior.
+  - Teams should define who can inspect raw predictions, references, failure cases, metric outputs, saved results, Hub artifacts, and leaderboard submissions before integrating Evaluate into production workflows.
+---
+
+## Editorial notes
+
+Hugging Face Evaluate is useful when Claude-adjacent teams need reproducible metrics, comparisons, and dataset measurements around model experiments, benchmark runs, data quality checks, regression testing, or offline evaluation reports. It gives teams a common `evaluate.load` and `compute` interface, supports Hub-hosted evaluation modules, handles common input formats, can combine metrics, and can save results for later reporting.
+
+This is distinct from the existing Hugging Face entries. Transformers is the model-definition, tokenizer, generation, and training layer. Datasets is the data loading and preprocessing layer. Accelerate is the distributed runtime layer. PEFT handles parameter-efficient adapters. Diffusers handles media-generation diffusion pipelines. Hugging Face Evaluate is the metrics, comparisons, measurements, result-saving, and evaluation-module layer.
+
+The official README and docs also point LLM-specific evaluation teams toward Hugging Face LightEval for more recent and actively maintained LLM evaluation approaches. This entry treats Evaluate as the general-purpose Hugging Face metrics/comparisons/measurements library, not as a replacement for specialized LLM evaluation harnesses.
+
+## Source notes
+
+- The official README describes Evaluate as a library for making model comparison and performance reporting easier and more standardized.
+- The README says Evaluate includes metrics across NLP and computer vision, plus comparisons for model differences and measurements for datasets.
+- The README documents `evaluate.load`, module `compute`, `evaluate.list_evaluation_modules`, and `evaluate-cli create` for creating evaluation modules.
+- The README says metrics have cards describing values, limitations, ranges, examples, and usefulness.
+- The official docs describe Hub evaluation through community leaderboards, model cards, and libraries/packages for evaluating custom models or tasks.
+- The official docs describe Evaluate as a library for evaluating machine learning models and datasets with metrics, comparisons, and measurements.
+- The quick tour says evaluation modules live on the Hugging Face Hub as Spaces, include interactive widgets and documentation cards, and are loaded through `evaluate.load`.
+- The quick tour documents distributed evaluation behavior, including temporary Apache Arrow storage for predictions and references before final metric computation.
+- The quick tour documents combining metrics and saving results with `evaluate.save` into JSON files with metadata.
+- The installation docs say Evaluate is tested on Python 3.7 or newer and can be installed with `pip install evaluate` or from the official GitHub repository.
+- The repository is `huggingface/evaluate`, is Apache-2.0 licensed, and describes the project as a library for evaluating machine learning models and datasets.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Hugging Face Evaluate`, `huggingface/evaluate`, `huggingface.co/docs/evaluate`, `evaluate-cli`, `evaluation modules`, `model evaluation`, and `dataset measurements`. No dedicated Hugging Face Evaluate tools entry, source URL duplicate, target file, LightEval conflict, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Hugging Face Evaluate is Apache-2.0 open-source software; individual evaluation modules, metrics, datasets, model cards, Hub repositories, Spaces, leaderboards, and hosted services may have separate licenses, terms, privacy obligations, and access controls.

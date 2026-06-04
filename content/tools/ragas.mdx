@@ -1,0 +1,58 @@
+---
+title: Ragas
+slug: ragas
+category: tools
+description: Open-source evaluation framework for testing RAG systems, prompts, agents, workflows, and other LLM application behavior.
+cardDescription: Open-source evaluation framework for RAG and LLM application testing.
+seoTitle: Ragas open-source RAG and LLM evaluation framework
+seoDescription: Ragas helps teams build systematic evaluation loops for RAG systems, prompts, agents, workflows, and other LLM applications.
+author: Vibrant Labs
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://docs.ragas.io"
+documentationUrl: "https://docs.ragas.io"
+repoUrl: "https://github.com/vibrantlabsai/ragas"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - rag
+  - evaluation
+  - open-source
+keywords:
+  - rag evaluation
+  - llm evals
+  - retrieval quality testing
+prerequisites:
+  - Python environment for installing and running Ragas.
+  - Test data, application outputs, or production-aligned examples for the RAG, prompt, workflow, or agent behavior being evaluated.
+  - Model provider credentials when using LLM-based metrics or generated test data.
+safetyNotes:
+  - Ragas scores should be treated as decision support, not a substitute for domain review of critical outputs.
+  - LLM-based metrics can call configured model providers, so evaluation runs should be scoped and budgeted before use on large datasets.
+  - Generated test data and evaluator prompts should be reviewed before they influence release, ranking, or regression decisions.
+privacyNotes:
+  - Evaluation examples may include prompts, retrieved context, generated responses, references, and metadata from the application under test.
+  - LLM-based metrics can send evaluation payloads to the configured model provider unless a local model path is used.
+  - The upstream README says Ragas collects minimal, anonymized usage analytics; review or disable analytics where policy requires it.
+---
+
+## Editorial notes
+
+Ragas is a strong fit for Claude and agent teams that need repeatable RAG quality checks instead of manual "looks good" review. It supports evaluation loops around retrieval, prompts, workflows, and agents, with prebuilt metrics plus custom metrics for project-specific behavior.
+
+## Source notes
+
+- The official documentation describes Ragas as a library for moving from subjective checks to systematic evaluation loops for AI applications.
+- The get started docs include tutorials for evaluating prompts, simple RAG systems, AI workflows, and AI agents.
+- The GitHub README documents Ragas metrics, production-aligned test set generation, integrations with common LLM frameworks, and the `ragas quickstart rag_eval` template.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, live HeyClaude search results, and repository-wide content for `Ragas`, `docs.ragas.io`, `github.com/vibrantlabsai/ragas`, `RAG evaluation`, `LLM evals`, and `retrieval quality testing`. No existing Ragas listing or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

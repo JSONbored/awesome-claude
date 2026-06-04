@@ -1,0 +1,192 @@
+---
+title: Large Generated Diff Detector - Claude Code Hook
+slug: large-generated-diff-detector
+category: hooks
+description: >-
+  PostToolUse hook that flags two review hazards as Claude writes files: edits
+  to generated or vendored artifacts (lockfiles, minified bundles, source maps,
+  dist/build output, snapshots, protobuf output) and oversized diffs that change
+  more lines than a configurable threshold versus the committed version. It
+  keeps machine-generated churn and unreviewably large changes out of commits.
+cardDescription: >-
+  Flag edits to generated/vendored files and oversized diffs so machine churn
+  stays out of reviewable commits.
+seoTitle: Large Generated Diff Detector - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that warns when Claude edits generated or
+  vendored artifacts or produces an oversized diff against the committed
+  version.
+author: jony376
+submittedBy: jony376
+submittedByUrl: "https://github.com/jony376"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/github-linguist/linguist/blob/main/docs/overrides.md"
+repoUrl: "https://github.com/github-linguist/linguist"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/large-generated-diff-detector.sh && chmod +x
+  .claude/hooks/large-generated-diff-detector.sh
+usageSnippet: "Large diff - package-lock.json changes 1840 lines vs HEAD (threshold 500)"
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/large-generated-diff-detector.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/large-generated-diff-detector.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. Flags two review hazards after a write/edit:
+  # (1) the target is a generated or vendored artifact, and (2) the diff versus
+  # the committed version exceeds a line threshold. Advisory only - it always
+  # exits 0 and never blocks - and fails open if jq is unavailable.
+
+  command -v jq >/dev/null 2>&1 || exit 0
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+  [ -z "$FILE" ] && exit 0
+
+  LINE_THRESHOLD=${GENERATED_DIFF_LINE_THRESHOLD:-500}
+
+  # 1) Generated / vendored artifact paths that are usually regenerated, not
+  #    hand-edited (mirrors common linguist-generated / linguist-vendored sets).
+  case "$FILE" in
+    *package-lock.json|*pnpm-lock.yaml|*yarn.lock|*.min.js|*.min.css|*.map|*/dist/*|*/build/*|*/out/*|*/vendor/*|*.snap|*/__snapshots__/*|*.generated.*|*_pb2.py|*.pb.go)
+      echo "Generated artifact - $FILE looks generated or vendored; prefer regenerating it or marking it linguist-generated in .gitattributes instead of hand-editing." >&2
+      ;;
+  esac
+
+  # 2) Oversized diff against the committed version (only when git-tracked).
+  if command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    changed=$(git diff --numstat HEAD -- "$FILE" 2>/dev/null | awk '{sum += $1 + $2} END {print sum + 0}')
+    case "$changed" in
+      ''|*[!0-9]*) changed=0 ;;
+    esac
+    if [ "$changed" -ge "$LINE_THRESHOLD" ]; then
+      echo "Large diff - $FILE changes $changed lines vs HEAD (threshold $LINE_THRESHOLD); consider splitting into smaller, reviewable commits." >&2
+    fi
+  fi
+
+  exit 0
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
+  - "git is optional - the diff-size check runs only inside a git work tree with a committed baseline; the generated-path check works without git."
+safetyNotes:
+  - "Runs after every Write, Edit, and MultiEdit and inspects only the edited file path and its line-change count."
+  - "Stays read-only and uses git diff --numstat to count changed lines; it never edits, stages, or commits anything."
+  - "Advisory by design and always exits 0, so it never blocks a write even when it flags a large or generated diff."
+  - "The line threshold defaults to 500 and is configurable through the GENERATED_DIFF_LINE_THRESHOLD environment variable."
+privacyNotes:
+  - "Reads only the edited file path from the tool input and the git numstat for that path; it does not read or transmit file contents."
+  - "Prints the file path and a changed-line count to local hook stderr; it makes no network calls and writes no logs."
+  - "The file path shown in output may reveal local directory structure in your terminal."
+tags:
+  - "git"
+  - "code-review"
+  - "generated-files"
+  - "diff"
+  - "hygiene"
+keywords:
+  - "large generated diff detector hook"
+  - "generated artifact write warning"
+  - "oversized diff detector"
+  - "lockfile edit warning"
+---
+
+## Features
+
+- Flags two distinct review hazards the moment Claude writes a file: edits to **generated or vendored artifacts**, and **oversized diffs** against the committed version.
+- Generated-path detection mirrors common [linguist-generated / linguist-vendored](https://github.com/github-linguist/linguist/blob/main/docs/overrides.md) sets — lockfiles, minified bundles, source maps, `dist/`/`build/`/`out/`/`vendor/` trees, snapshots, and protobuf output.
+- Diff-size detection counts added + removed lines versus `HEAD` and warns past a configurable threshold (`GENERATED_DIFF_LINE_THRESHOLD`, default `500`).
+- Advisory only — it always exits `0`, so it surfaces churn without blocking the edit.
+- Fails open and reads no file contents; only the path and line counts are inspected.
+
+## How it works
+
+On `PostToolUse`, the hook reads the edited file path from the tool input. It matches that path against a set of generated/vendored patterns and, when inside a git work tree, runs `git diff --numstat HEAD -- <file>` to total the changed lines. Either signal prints an advisory message to stderr; neither blocks the write.
+
+## Use cases
+
+- Keep a regenerated `package-lock.json` or minified bundle from being hand-edited or buried in a review.
+- Catch an accidental 2,000-line change that should have been several focused commits.
+- Nudge contributors to mark generated paths `linguist-generated` so diffs collapse in review.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/large-generated-diff-detector.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/large-generated-diff-detector.sh`
+4. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash and jq
+- git (optional; required only for the diff-size check)
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/large-generated-diff-detector.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Configuration
+
+- `GENERATED_DIFF_LINE_THRESHOLD` — changed-line count (added + removed) above which a diff is flagged. Defaults to `500`.
+
+## Limitations
+
+- The generated-path list covers common ecosystems; extend the `case` patterns for your stack (for example Go `*.pb.go`, Python `*_pb2.py`, or framework-specific build dirs).
+- The diff-size check needs a committed baseline; brand-new untracked files are reported only by the generated-path check.
+
+## Source and references
+
+- GitHub Linguist generated/vendored overrides: https://github.com/github-linguist/linguist/blob/main/docs/overrides.md
+- Linguist repository: https://github.com/github-linguist/linguist
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks

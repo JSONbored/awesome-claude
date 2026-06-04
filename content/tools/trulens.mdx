@@ -1,0 +1,68 @@
+---
+title: TruLens
+slug: trulens
+category: tools
+description: Open-source evaluation and tracing framework for measuring AI agents, RAG systems, LLM apps, retrieval quality, feedback metrics, and trace-level regressions.
+cardDescription: Evaluate and trace agents, RAG systems, LLM apps, metrics, and regressions.
+seoTitle: TruLens evaluation and tracing for AI agents
+seoDescription: TruLens helps teams evaluate and trace AI agents, RAG systems, LLM applications, feedback metrics, OpenTelemetry traces, and experiment regressions.
+author: TruEra / Snowflake
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.trulens.org/"
+documentationUrl: "https://www.trulens.org/getting_started/quickstarts/quickstart/"
+repoUrl: "https://github.com/truera/trulens"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - evaluation
+  - tracing
+  - observability
+keywords:
+  - trulens
+  - agent evaluation
+  - feedback functions
+prerequisites:
+  - Python environment for installing and running TruLens and any provider, vector store, framework, or dashboard dependencies used by the project.
+  - AI agent, RAG system, LLM application, trace export, test dataset, or production-aligned examples to evaluate.
+  - Model provider credentials or local model configuration for feedback functions, LLM-as-judge metrics, embeddings, and retrieval evaluations.
+  - Reviewed metric selection, evaluator provider, trace schema, storage backend, pass and fail thresholds, and reviewer ownership before using results in CI or release decisions.
+  - Approved local, PostgreSQL, Snowflake, or other documented logging and storage path for traces, records, feedback results, and leaderboard data.
+safetyNotes:
+  - TruLens feedback metrics and benchmark scores are review signals, not proof that an agent, RAG system, prompt, retrieval pipeline, or LLM app is correct, safe, fair, or production-ready.
+  - LLM-as-judge feedback functions can call configured model providers, consume quota, hit rate limits, and produce evaluator-model errors that need separate handling.
+  - Instrumentation, OpenTelemetry ingestion, and runtime evaluation can wrap live application code and traces, so keep experiment, staging, and production scopes clearly separated.
+  - Guardrail and inline evaluation workflows can influence runtime behavior if wired into an application, so review failure handling before using them in user-facing paths.
+  - Regression dashboards and metric leaderboards can drive deployment decisions, so thresholds should be calibrated on representative data before blocking releases or triggering automation.
+privacyNotes:
+  - TruLens can capture prompts, responses, retrieved context, tool calls, execution plans, traces, records, feedback scores, embeddings, metadata, latency, cost, and app version data.
+  - RAG and agent traces may include customer data, private documents, secrets accidentally passed to tools, proprietary prompts, or model outputs that need redaction before sharing.
+  - Local dashboards, database connectors, PostgreSQL logging, Snowflake logging, exported traces, and generated reports should follow normal retention, access-control, and incident-review policies.
+  - Feedback functions may send prompts, outputs, retrieved context, or trace fragments to configured model providers unless a local or approved private evaluator is used.
+  - Notebook quickstarts and example dashboards should not be copied into production repositories with real API keys, sensitive examples, or raw customer traces.
+---
+
+## Editorial notes
+
+TruLens is useful when Claude or an engineering agent is iterating on an AI agent, RAG workflow, summarizer, co-pilot, or multi-step LLM app and needs trace-level evidence instead of a single aggregate score. It combines app instrumentation, feedback functions, OpenTelemetry-oriented tracing, metrics, records, dashboards, and comparison workflows so teams can inspect where an agent or retrieval flow changed across versions.
+
+This is distinct from the existing evaluation and observability entries. DeepEval is strongest as a Python unit-test-style eval framework, Ragas is RAG and LLM app evaluation focused, Evidently covers broader ML and LLM monitoring, and Langfuse or Phoenix are broader LLM observability and tracing platforms. TruLens is the agent and RAG evaluation layer focused on feedback functions, trace-level regressions, metric leaderboards, OpenTelemetry traces, and framework integrations.
+
+## Source notes
+
+- The official site describes TruLens as a tool for evaluating and tracing AI agents, including retrieved context, tool calls, plans, groundedness, context relevance, answer relevance, coherence, fairness, bias, harmful language, user sentiment, and custom metrics.
+- The site says TruLens emits and evaluates OpenTelemetry traces and can work with agents through a Python SDK or by ingesting OpenTelemetry traces.
+- The quickstart walks through building a RAG application, tracing execution, and evaluating responses with groundedness, context relevance, and answer relevance.
+- The documentation includes quickstarts and guides for feedback functions, guardrails, human feedback, ground-truth evaluations, streaming apps, LangChain, LangGraph, LlamaIndex, OpenAI Agents SDK, MLflow traces, Snowflake logging, PostgreSQL logging, and multiple model providers.
+- The GitHub repository is `truera/trulens`, is MIT licensed, and describes the project as evaluation and tracking for LLM experiments and AI agents.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, open pull requests, live issue state, and repository-wide content for `TruLens`, `truera`, `trulens.org`, `github.com/truera/trulens`, `feedback functions`, `agent evaluation`, `OpenTelemetry traces`, `groundedness`, `context relevance`, `RAG triad`, and `trace-level regressions`. Existing Ragas, DeepEval, Evidently, Arize Phoenix, Langfuse, LangSmith, Helicone, and Giskard entries cover adjacent evaluation and observability use cases, but no dedicated TruLens tools entry, TruLens source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

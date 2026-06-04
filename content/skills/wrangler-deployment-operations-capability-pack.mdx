@@ -1,0 +1,213 @@
+---
+title: Wrangler Deployment Operations Capability Pack Skill
+slug: wrangler-deployment-operations-capability-pack
+category: skills
+description: "Expert Wrangler CLI deployment skill for release planning, config review, environment checks, version traffic splits, trigger application, and rollback."
+cardDescription: "Operate Wrangler deploys with config inventory, scoped credentials, version rollout, trigger checks, and rollback-ready verification."
+seoTitle: Wrangler Deployment Operations Capability Pack Skill
+seoDescription: "Advanced AI skill for Wrangler CLI deployment operations using Workers SDK source, npm metadata, version traffic splits, and rollback controls."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 714
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/714"
+repoUrl: "https://github.com/cloudflare/workers-sdk"
+documentationUrl: "https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler"
+downloadUrl: "https://github.com/cloudflare/workers-sdk/archive/refs/tags/wrangler@4.97.0.zip"
+installable: true
+installCommand: "npm install --save-dev wrangler@4.97.0 && npx wrangler --version"
+usageSnippet: "Use this skill when a Wrangler-managed Worker release needs config review, deploy command planning, version traffic control, trigger updates, and rollback evidence."
+copySnippet: |-
+  # Trigger
+  "Apply the Wrangler deployment operations capability pack to this release."
+
+  # Required output
+  1) Wrangler source/package version and command inventory
+  2) Account, Worker, environment, route, and binding review
+  3) Deploy/version/trigger command plan
+  4) Verification evidence and rollback path
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/README.md"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/package.json"
+  - "https://registry.npmjs.org/wrangler/4.97.0"
+  - "https://api.github.com/repos/cloudflare/workers-sdk/git/ref/tags/wrangler%404.97.0"
+  - "https://api.github.com/repos/cloudflare/workers-sdk/git/tags/f212de33d52fc0e6614d09b43c3998a7d8bda9c8"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/deploy/deploy.ts"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/versions/deploy.ts"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/versions/rollback/index.ts"
+  - "https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/triggers/deploy.ts"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Wrangler-managed Worker project or release plan
+  - Project-local Node.js toolchain that satisfies the pinned Wrangler package engines
+  - Access to account ID, Worker name, environment name, route, and binding inventory
+  - CI or local authentication plan for non-interactive deploys
+  - Known smoke checks and rollback target for the release
+safetyNotes:
+  - Wrangler deployment and rollback commands mutate live Worker traffic; verify account, Worker name, route, and environment before running them.
+  - The archive URL points to Cloudflare's external Workers SDK tag archive; pin versions and review release provenance before using it in CI.
+  - Use least-privilege API tokens and secret stores; never commit `.dev.vars`, `.env`, tokens, account credentials, or CI secret values.
+  - Version rollback can restore Worker code/config traffic but does not restore bound KV, R2, D1, Durable Object, queue, or downstream service state.
+  - Trigger and route updates can change public reachability; treat them as separate release steps with explicit verification.
+privacyNotes:
+  - Wrangler deploy uploads bundled Worker source, static assets, and configuration metadata to the target account.
+  - Release logs can include request URLs, headers, exception details, route names, account IDs, and zone IDs; redact before sharing publicly.
+  - CI deploys rely on API tokens and account IDs; avoid printing environment dumps, secret values, or full request payloads in logs.
+  - Worker routes, custom domains, and account metadata can reveal infrastructure topology; keep public notes minimal and intentional.
+tags:
+  - wrangler
+  - workers-sdk
+  - deployment
+  - release-operations
+  - rollback
+keywords:
+  - wrangler deployment operations
+  - wrangler deploy
+  - wrangler versions deploy
+  - wrangler rollback
+  - workers sdk release
+  - worker trigger deploy
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to Wrangler package/source metadata verified on **2026-06-03**. The package metadata checked was `wrangler@4.97.0`, tagged on 2026-06-02 at Workers SDK commit `0b6042466efdc845b374f82ab49f977399e6c237`.
+
+## Retrieval Sources
+
+- https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/README.md
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/package.json
+- https://registry.npmjs.org/wrangler/4.97.0
+- https://api.github.com/repos/cloudflare/workers-sdk/git/ref/tags/wrangler%404.97.0
+- https://api.github.com/repos/cloudflare/workers-sdk/git/tags/f212de33d52fc0e6614d09b43c3998a7d8bda9c8
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/deploy/deploy.ts
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/versions/deploy.ts
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/versions/rollback/index.ts
+- https://raw.githubusercontent.com/cloudflare/workers-sdk/0b6042466efdc845b374f82ab49f977399e6c237/packages/wrangler/src/triggers/deploy.ts
+
+Prefer the pinned Workers SDK package source, npm package metadata, and exact tag/commit evidence over model memory for command availability and release behavior.
+
+## Core Workflow
+
+1. Confirm the exact Wrangler package version, tag, package integrity, and Node engine requirement before planning the deploy.
+2. Inventory the release target: account ID, Worker name, environment, route/custom domain, worker.dev exposure, bindings, secrets, service bindings, assets, queues, and build command.
+3. Review Wrangler configuration as the deploy source of truth and call out dashboard/API drift that the deploy may overwrite.
+4. Separate local/auth discovery from mutation: run `npx wrangler --version`, `npx wrangler whoami`, project tests, build, and a dry-run or preview step when available.
+5. Choose the release path:
+   - `npx wrangler deploy` for direct deploys that can shift traffic immediately.
+   - `npx wrangler versions deploy` for selected version traffic splits.
+   - `npx wrangler triggers deploy` when routes, domains, or time-based triggers need their own application step.
+6. Verify the release with command output, deployment status, smoke checks, logs, and application-specific success criteria.
+7. Prepare rollback before production mutation. Use explicit version IDs where possible and document resources that rollback will not restore.
+8. Produce a concise release record with commands run, account/Worker/environment, changed targets, verification evidence, and residual risks.
+
+## Capability Scope
+
+- Wrangler package/source verification
+- Project-local install and command inventory
+- Deploy command risk classification
+- Environment and configuration drift review
+- Version traffic split planning
+- Trigger and route application checks
+- Rollback planning and evidence capture
+- CI secret handling for non-interactive deploys
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for planning and executing Wrangler release operations.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for Worker deploy changes and release review.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the trigger, workflow, and output contract into their skill or command format.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level release rules.
+
+## Required Inputs
+
+- Wrangler package version and package manager
+- Worker name, account ID, and target environment
+- Configuration file path and relevant environment block
+- Route, custom domain, worker.dev, and trigger inventory
+- Binding inventory for storage, services, queues, vars, and secrets
+- CI secret names and deploy workflow trigger
+- Health check, smoke test, and rollback criteria
+
+## Production Rules
+
+- Do not run a deploy command until the account, Worker name, environment, and route target are explicit.
+- Treat direct deploys as immediate traffic changes unless the command is explicitly dry-run or targets isolated infrastructure.
+- Pin Wrangler in the project and CI; avoid unpinned `npx wrangler` in release workflows.
+- Use scoped API tokens and keep account IDs/tokens in CI secret storage.
+- Do not assume rollback restores external resource state; record storage and binding caveats before release.
+- Keep trigger, domain, and route changes visible in the release plan because they can change public reachability independently of Worker code.
+- Use version traffic splits when blast radius, compatibility date, assets, or runtime behavior make an all-at-once release too risky.
+
+## Output Contract
+
+1. Source evidence: Wrangler package version, tag/commit, npm integrity, and command source files reviewed.
+2. Release inventory: account, Worker, environment, route/domain, bindings, secrets, triggers, and CI path.
+3. Command plan: exact deploy/version/trigger/rollback commands with each placeholder named.
+4. Risk decision: direct deploy, traffic split, or no-go with explicit reason.
+5. Verification record: checks run, live smoke result, logs/status inspected, and caveats.
+6. Rollback record: version ID or fallback command plus non-versioned resources that need separate recovery.
+
+## CI/CD Notes
+
+- Store API tokens and account IDs as CI secrets; do not hardcode them in workflow YAML or Wrangler config.
+- Prefer a project-pinned Wrangler install before the deploy step so local and CI behavior match.
+- Protect production deploy jobs with branch rules, environment approvals, manual dispatch, or equivalent release controls.
+- Emit enough deployment output to prove which account, Worker, environment, and version were affected without exposing secrets.
+- Keep package provenance checks lightweight but concrete: package version, tag/commit, integrity metadata, and source repository.
+
+## Troubleshooting
+
+**Issue:** The deploy targets the wrong Worker or environment
+
+**Fix:** Stop before another mutation. Check `wrangler whoami`, config `name`, selected environment, route/custom domain, CI secrets, and package-manager script arguments.
+
+**Issue:** Direct deploy would overwrite dashboard/API changes
+
+**Fix:** Compare local config against remote state and decide whether to accept the overwrite, backport remote changes into config, or pause for owner review.
+
+**Issue:** A version traffic split is stuck or ambiguous
+
+**Fix:** List deployments, capture version IDs and percentages, then either progress the intended version or roll back to a known-good version ID.
+
+**Issue:** Route or trigger changes did not apply
+
+**Fix:** Treat trigger application as its own release step and verify route/domain/time-based trigger state after the command completes.
+
+**Issue:** Rollback does not fix data behavior
+
+**Fix:** Inspect storage, queues, migrations, Durable Objects, and downstream services separately. Worker version rollback does not restore those states.
+
+## Validation Checklist
+
+- Wrangler package version, npm metadata, tag, and commit verified.
+- Local build/test/dry-run or preview checks completed where supported.
+- Account, Worker, environment, route/domain, and trigger target confirmed.
+- Bindings, secrets, and external resources inventoried.
+- CI secrets and deploy workflow protections reviewed.
+- Direct deploy versus version traffic split decision documented.
+- Smoke checks and logs/status evidence collected.
+- Rollback target and non-versioned resource caveats documented.

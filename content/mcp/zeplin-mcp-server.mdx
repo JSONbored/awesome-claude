@@ -1,0 +1,237 @@
+---
+title: Zeplin MCP Server for Claude
+slug: zeplin-mcp-server
+category: mcp
+description: >-
+  Official Zeplin MCP server that lets AI coding agents access Zeplin screen
+  specs, component specs, annotations, assets, and design tokens for
+  design-to-code workflows.
+cardDescription: >-
+  Connect Claude to Zeplin design handoff data for screen, component, asset,
+  documentation, and token context.
+seoTitle: Zeplin MCP Server for Claude
+seoDescription: >-
+  Use the Zeplin MCP server with Claude to fetch Zeplin screen specs,
+  component specs, annotations, assets, and design tokens for UI implementation
+  workflows.
+author: Zeplin
+authorProfileUrl: "https://zeplin.io/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://support.zeplin.io/en/articles/11559086-zeplin-mcp-server"
+repoUrl: "https://github.com/zeplin/mcp-server"
+packageUrl: "https://www.npmjs.com/package/@zeplin/mcp-server"
+installable: true
+installCommand: >-
+  claude mcp add zeplin --env
+  ZEPLIN_ACCESS_TOKEN=YOUR_ZEPLIN_PERSONAL_ACCESS_TOKEN -- npx -y
+  @zeplin/mcp-server@latest
+usageSnippet: >-
+  claude mcp add zeplin --env
+  ZEPLIN_ACCESS_TOKEN=YOUR_ZEPLIN_PERSONAL_ACCESS_TOKEN -- npx -y
+  @zeplin/mcp-server@latest
+copySnippet: |-
+  {
+    "zeplin": {
+      "command": "npx",
+      "args": ["-y", "@zeplin/mcp-server@latest"],
+      "env": {
+        "ZEPLIN_ACCESS_TOKEN": "${ZEPLIN_ACCESS_TOKEN}"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "zeplin": {
+      "command": "npx",
+      "args": ["-y", "@zeplin/mcp-server@latest"],
+      "env": {
+        "ZEPLIN_ACCESS_TOKEN": "${ZEPLIN_ACCESS_TOKEN}"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Zeplin account with access to the projects, screens, components, and styleguides Claude should use
+  - Zeplin personal access token generated from the Zeplin profile developer settings
+  - Node.js 20 or later and npx available for running `@zeplin/mcp-server`
+  - Claude Code, Cursor, Windsurf, VS Code with Copilot, or another MCP-capable client
+  - Project policy for which Zeplin links, screens, components, and design systems are allowed in AI-assisted implementation
+safetyNotes:
+  - >-
+    Treat `ZEPLIN_ACCESS_TOKEN` as a secret. It can expose design handoff data
+    for every Zeplin project the token holder can access, so store it in MCP
+    environment configuration rather than prompts, checked-in files, or shared
+    transcripts.
+  - >-
+    Use specific Zeplin screen, component, or layer links in prompts. Broad
+    design-context requests can pull too much implementation detail into the
+    model context and increase the chance of incorrect generated UI.
+  - >-
+    Generated code should still be reviewed against the real product codebase,
+    existing components, accessibility requirements, responsive behavior, and
+    design-system constraints before merge.
+  - >-
+    Avoid giving agents production deploy rights just because they can inspect
+    Zeplin specs. Design context is input to implementation, not approval to
+    ship unreviewed UI changes.
+privacyNotes:
+  - >-
+    Zeplin MCP results can expose unreleased screens, component specs, assets,
+    annotations, interaction notes, product copy, styleguide tokens, brand
+    details, and internal design-system structure.
+  - >-
+    Mock data in design files can still contain customer names, email
+    addresses, account screenshots, revenue figures, support details, or other
+    sensitive examples that should not be copied into public prompts or logs.
+  - >-
+    MCP client logs, AI transcripts, generated code comments, screenshots, and
+    debugging output can retain Zeplin links and design details outside Zeplin's
+    normal access controls.
+tags:
+  - zeplin
+  - design-handoff
+  - design-tokens
+  - ui-development
+  - mcp
+keywords:
+  - zeplin mcp
+  - zeplin claude
+  - design handoff mcp
+  - screen specs
+  - component specs
+  - design tokens
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Zeplin MCP server connects Claude and other MCP-capable coding agents to
+Zeplin project context. It lets an assistant fetch structured design handoff
+data for screens and components, including specs, assets, annotations,
+documentation, and design tokens, so UI implementation prompts can refer to the
+same source of truth designers and engineers use in Zeplin.
+
+This is distinct from the existing Figma MCP Server entry. Figma's Dev Mode MCP
+server exposes design context from Figma Desktop over a local HTTP server, while
+Zeplin's MCP server runs through the `@zeplin/mcp-server` package and a Zeplin
+personal access token for teams whose design handoff source of truth is Zeplin.
+
+## Features
+
+- Access Zeplin component and screen specs for design-aligned UI code.
+- Fetch assets and detailed implementation specs for screens and components.
+- Use screen annotations and documentation as behavior or implementation
+  context.
+- Reuse colors, typography, spacing, and other design tokens from Zeplin
+  styleguides.
+- Run through `npx @zeplin/mcp-server@latest` in Claude Code, Cursor, VS Code,
+  Windsurf, or another stdio-capable MCP client.
+- Use Zeplin short URLs in prompts to keep requests focused on a specific
+  screen, component, or implementation task.
+- Follow Zeplin's README guidance for component-first implementation and
+  targeted prompts to manage model context limits.
+
+## Use Cases
+
+- Ask Claude to implement a specific Zeplin component using existing local code
+  conventions.
+- Pull screen specs and annotations while building a responsive page from an
+  approved Zeplin design.
+- Use Zeplin design tokens to align generated UI with the product styleguide.
+- Ask an agent to focus on one named layer or component instead of the entire
+  screen.
+- Break larger screen builds into component-sized tasks using separate Zeplin
+  links for each piece.
+
+## Installation
+
+### Claude Code
+
+1. Generate a Zeplin personal access token from your Zeplin profile developer
+   settings.
+2. Confirm Node.js 20 or later and `npx` are available.
+3. Add the MCP server:
+
+```bash
+claude mcp add zeplin --env ZEPLIN_ACCESS_TOKEN=YOUR_ZEPLIN_PERSONAL_ACCESS_TOKEN -- npx -y @zeplin/mcp-server@latest
+```
+
+4. Restart or refresh the MCP client session.
+5. Test with a narrow prompt that references one Zeplin screen or component URL.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `zeplin` server configuration shown below.
+3. Replace the token placeholder with a secret-managed Zeplin personal access
+   token.
+4. Restart Claude Desktop and test on a non-sensitive design first.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "zeplin": {
+      "command": "npx",
+      "args": ["-y", "@zeplin/mcp-server@latest"],
+      "env": {
+        "ZEPLIN_ACCESS_TOKEN": "YOUR_ZEPLIN_PERSONAL_ACCESS_TOKEN"
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+### Implement a focused component
+
+```plaintext
+Use Zeplin for this component: https://zpl.io/EXAMPLE. Implement only the Button variant shown there using our existing Button primitives.
+```
+
+### Update one screen element
+
+```plaintext
+The latest Zeplin screen adds a checkbox to the menu item. Focus only on that layer and update the existing MenuItem component.
+```
+
+### Use design tokens
+
+```plaintext
+Fetch the Zeplin design tokens for this screen and map colors, typography, and spacing to our existing CSS variables where possible.
+```
+
+## Source notes
+
+- Zeplin's official help article describes the MCP server for connecting AI
+  agents like Cursor, Windsurf, VS Code, and Claude Code to Zeplin projects.
+- The help article says agents can access component and screen specs,
+  documentation annotations, and design tokens such as colors, typography, and
+  spacing.
+- The official Claude Code setup command uses `npx -y @zeplin/mcp-server@latest`
+  with a `ZEPLIN_ACCESS_TOKEN` environment variable.
+- The npm package metadata identifies `@zeplin/mcp-server` as Zeplin's official
+  MCP server for AI-assisted UI development and points to the
+  `zeplin/mcp-server` repository.
+- The GitHub README documents Node.js 20+, a Zeplin account, a personal access
+  token, MCP client configuration, prompt examples, and MIT licensing.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, live HeyClaude `llms-full.txt`, and repository-wide content for
+`Zeplin`, `@zeplin/mcp-server`, `zeplin/mcp-server`, `support.zeplin.io`,
+`design handoff`, `screen specs`, `component specs`, `design tokens`, and
+`Figma MCP`. Existing Figma MCP Server content is a local Figma Desktop Dev
+Mode MCP entry, not Zeplin's design handoff MCP server. No dedicated Zeplin MCP
+entry, Zeplin source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

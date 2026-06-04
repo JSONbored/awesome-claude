@@ -1,0 +1,107 @@
+---
+title: /draft-release-notes - Release Notes Drafting Command for Claude Code
+slug: release-notes-drafting
+category: commands
+description: >-
+  Slash command that drafts release notes from the Conventional Commits made
+  since the last release tag. It reads the git log, groups changes into Keep a
+  Changelog sections (Added, Changed, Fixed, and more), recommends the
+  Semantic Versioning bump, and produces human-readable notes ready to paste
+  into a CHANGELOG or GitHub release.
+cardDescription: >-
+  Draft Keep a Changelog release notes from Conventional Commits since the last
+  tag and recommend the SemVer bump.
+seoTitle: /draft-release-notes - Release Notes Drafting Command for Claude Code
+seoDescription: >-
+  A Claude Code slash command that turns Conventional Commits since the last
+  tag into grouped Keep a Changelog release notes and a recommended Semantic
+  Versioning bump.
+author: jony376
+submittedBy: jony376
+submittedByUrl: "https://github.com/jony376"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.conventionalcommits.org/en/v1.0.0/"
+repoUrl: "https://github.com/conventional-commits/conventionalcommits.org"
+installable: true
+installCommand: "/draft-release-notes [from-ref]"
+commandSyntax: "/draft-release-notes [from-ref]"
+usageSnippet: "/draft-release-notes v1.4.0"
+copySnippet: "/draft-release-notes [from-ref]"
+safetyNotes:
+  - Read-only with respect to your repository; it only reads git history (tags and commit log) and never creates tags, commits, branches, or release artifacts.
+  - It proposes a version bump and notes for you to review; it does not publish a release or push anything.
+privacyNotes:
+  - Commit subjects, bodies, and author names from the selected range are included in the model's context to draft the notes.
+  - If commit messages contain internal identifiers, customer names, or unreleased details, those become part of the prompt; review the range before running on a private history.
+  - The command writes nothing to disk on its own.
+tags:
+  - release
+  - changelog
+  - conventional-commits
+  - semver
+  - automation
+keywords:
+  - release notes drafting command
+  - conventional commits changelog
+  - keep a changelog generator
+  - semver bump recommendation
+---
+
+The `/draft-release-notes` command turns the [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) made since your last release into clean, grouped release notes following [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), plus a recommended [Semantic Versioning](https://semver.org/spec/v2.0.0.html) bump.
+
+## Usage
+
+```
+/draft-release-notes [from-ref]
+```
+
+- With `from-ref` (a tag or commit): draft notes for everything after that ref.
+- Without an argument: use the most recent tag as the starting point.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Find the range.** If a `from-ref` was given, use it. Otherwise resolve the latest tag with `git describe --tags --abbrev=0` and fall back to the repository root if there are no tags.
+2. **Read the commits.** Run `git log <from-ref>..HEAD --no-merges --pretty=format:%s%x00%b%x00%an` to collect each commit's subject, body, and author.
+3. **Parse Conventional Commits.** Classify each subject by its `type(scope):` prefix. Map types to Keep a Changelog groups: `feat` → **Added**, `fix` → **Fixed**, `perf`/`refactor` → **Changed**, `deprecate` → **Deprecated**, removals → **Removed**, security fixes → **Security**. Skip pure `docs`, `style`, `test`, `chore`, `ci`, and `build` commits unless they are user-visible.
+4. **Detect breaking changes.** Treat any `type!:` marker or `BREAKING CHANGE:` footer as breaking and list it under a prominent heading.
+5. **Recommend the bump.** Any breaking change → **major**; otherwise any `feat` → **minor**; otherwise **patch**.
+6. **Write for humans.** Rewrite terse commit subjects into clear, impact-focused bullet points; collapse duplicates; link issue/PR numbers when present.
+
+## Output format
+
+```
+## [Unreleased] - proposed vX.Y.Z (<bump> bump)
+
+### Added
+- ...
+
+### Fixed
+- ...
+
+### Changed
+- ...
+
+### Breaking changes
+- ...
+```
+
+## Requirements
+
+- `git` available, run from inside the repository.
+- A commit history that follows Conventional Commits gives the best grouping; non-conforming commits are listed under a generic "Other" section.
+
+## Safety notes
+
+Read-only: the command only reads git history. It does not create tags, commits, or releases, and it does not push — you review and apply the draft yourself.
+
+## Privacy notes
+
+Commit subjects, bodies, and author names from the selected range are included in the model's context to draft the notes. If your history contains internal identifiers or unreleased details, review the range before running. Nothing is written to disk by the command.
+
+## Source and references
+
+- Conventional Commits 1.0.0: https://www.conventionalcommits.org/en/v1.0.0/
+- Keep a Changelog 1.1.0: https://keepachangelog.com/en/1.1.0/
+- Semantic Versioning 2.0.0: https://semver.org/spec/v2.0.0.html

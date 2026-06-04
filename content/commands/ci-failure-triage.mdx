@@ -1,0 +1,91 @@
+---
+title: /ci-failure-triage - CI Failure Triage Command for Claude Code
+slug: ci-failure-triage
+category: commands
+description: >-
+  Slash command that triages a failing GitHub Actions run: it pulls the failed
+  job logs with the GitHub CLI, isolates the first real error, classifies the
+  failure (test, lint, type, build, dependency, or flaky), and proposes a
+  targeted, minimal fix with the exact command to reproduce it locally.
+cardDescription: >-
+  Pull failed GitHub Actions logs, classify the root cause, and propose a
+  minimal fix and local repro.
+seoTitle: /ci-failure-triage - CI Failure Triage Command for Claude Code
+seoDescription: >-
+  A Claude Code slash command that fetches failed GitHub Actions job logs via
+  the GitHub CLI, classifies the failure, and proposes a targeted fix and local
+  reproduction.
+author: jony376
+submittedBy: jony376
+submittedByUrl: "https://github.com/jony376"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_run_view"
+repoUrl: "https://github.com/cli/cli"
+installable: true
+installCommand: "/ci-failure-triage [run-id]"
+commandSyntax: "/ci-failure-triage [run-id]"
+usageSnippet: "/ci-failure-triage 26872683174"
+copySnippet: "/ci-failure-triage [run-id]"
+tags:
+  - ci
+  - github-actions
+  - triage
+  - debugging
+  - devops
+keywords:
+  - ci failure triage command
+  - github actions log triage
+  - claude code ci debugging
+  - failed run root cause
+---
+
+The `/ci-failure-triage` command turns a red GitHub Actions run into a focused root-cause analysis and a minimal fix, using the [GitHub CLI](https://cli.github.com/manual/gh_run_view) to read the failed logs.
+
+## Usage
+
+```
+/ci-failure-triage [run-id]
+```
+
+- With a `run-id`: triage that specific run.
+- Without an argument: triage the most recent failed run on the current branch.
+
+## What it does
+
+When you invoke this command, follow these steps:
+
+1. **Resolve the run.** If a `run-id` was supplied, use it. Otherwise run `gh run list --branch "$(git branch --show-current)" --status failure --limit 1 --json databaseId,workflowName` and select the most recent failed run.
+2. **Fetch only the failure.** Run `gh run view <run-id> --log-failed` to pull the logs of the failed jobs/steps. If the output is large, narrow to the failing job with `gh run view --job <job-id> --log`.
+3. **Isolate the first real error.** Skip retry/cleanup noise and find the earliest line that actually failed (compiler/test/linter error, non-zero exit, assertion, stack trace). Quote that line with its file and line number when present.
+4. **Classify the failure** into exactly one primary category: `test`, `lint`, `type`, `build`, `dependency`, `infra/flaky`, or `config`. State one sentence of evidence for the classification.
+5. **Propose a minimal fix.** Describe the smallest change that addresses the root cause — not the symptom — and give the exact local command to reproduce the failure (for example `npm test -- <file>`, `cargo clippy -p <crate>`, or the failing step's own command).
+6. **Flag uncertainty.** If the log points to a flaky or infrastructure failure (network timeout, runner OOM, cache miss), say so explicitly and recommend a re-run before any code change.
+
+## Output format
+
+- **Run:** workflow name + run id + failing job.
+- **Root cause:** the quoted error line and a one-line explanation.
+- **Category:** one of the categories above.
+- **Fix:** the minimal change and the local repro command.
+- **Confidence:** high / medium / low, with the reason.
+
+## Requirements
+
+- GitHub CLI (`gh`) installed and authenticated (`gh auth status`).
+- The repository's runs must be visible to the authenticated account.
+- `git` available for branch detection when no run id is passed.
+
+## Safety notes
+
+- Read-only: the command only *reads* CI logs via `gh run view` and never re-runs, cancels, or mutates workflows or code on its own.
+- It requires an authenticated `gh`; it does not transmit credentials anywhere beyond the GitHub CLI's normal API calls.
+
+## Privacy notes
+
+- Failed CI logs are included in the model's context for analysis. If your workflows print secrets, tokens, or customer data into logs, that text will be shared with the model — scrub log output or fix the leak before using this command on sensitive runs.
+- No data is written to disk by the command.
+
+## Source and references
+
+- GitHub CLI `gh run view` (including `--log-failed`): https://cli.github.com/manual/gh_run_view
+- GitHub Actions logs documentation: https://docs.github.com/actions/monitoring-and-troubleshooting-workflows/using-workflow-run-logs

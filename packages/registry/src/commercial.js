@@ -97,10 +97,16 @@ export function validateListingLeadPayload(payload = {}) {
   if (!contactName) errors.push("contactName is required");
   const emailParts = contactEmail.split("@");
   const emailDomain = emailParts[1] || "";
+  // Require a dotted domain with non-empty labels on both sides of every dot,
+  // so trailing-dot / empty-label domains ("user@example.", "user@.com") are
+  // rejected rather than passing on a bare includes(".") check.
+  const domainLabels = emailDomain.split(".");
+  const hasValidDomain =
+    domainLabels.length >= 2 && domainLabels.every((label) => label.length > 0);
   if (
     emailParts.length !== 2 ||
     !emailParts[0] ||
-    !emailDomain.includes(".") ||
+    !hasValidDomain ||
     contactEmail.includes(" ")
   ) {
     errors.push("valid contactEmail is required");

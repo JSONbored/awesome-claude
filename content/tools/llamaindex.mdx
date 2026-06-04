@@ -1,0 +1,71 @@
+---
+title: LlamaIndex
+slug: llamaindex
+category: tools
+description: Open-source framework for building agentic LLM applications over private data with ingestion, indexes, retrieval, RAG, tools, workflows, and evaluation.
+cardDescription: Build agents, RAG pipelines, retrieval, indexing, and data-aware LLM apps.
+seoTitle: LlamaIndex framework for agents and RAG applications
+seoDescription: LlamaIndex helps teams build agentic LLM applications over private data with ingestion, indexes, retrieval, RAG pipelines, tools, workflows, MCP, observability, and evaluation.
+author: LlamaIndex
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.llamaindex.ai/"
+documentationUrl: "https://developers.llamaindex.ai/python/framework/"
+repoUrl: "https://github.com/run-llama/llama_index"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - rag
+  - agents
+  - data-ingestion
+keywords:
+  - llamaindex
+  - llama index
+  - rag framework
+  - data agents
+  - retrieval augmented generation
+prerequisites:
+  - Python project and dependency manager for installing `llama-index`, `llama-index-core`, and the model, embedding, vector store, reader, or integration packages needed by the application.
+  - Approved data sources, file paths, SaaS connectors, databases, or document repositories to ingest, parse, index, and query.
+  - Model provider credentials, embedding provider credentials, local model configuration, or gateway configuration for generation, embeddings, reranking, and structured extraction.
+  - Reviewed storage backend for indexes, vector stores, document stores, chat stores, cache data, traces, and persisted retrieval artifacts.
+  - Evaluation cases, expected answers, retrieval-quality checks, redaction rules, and reviewer ownership before using generated answers or agent actions in production workflows.
+safetyNotes:
+  - LlamaIndex retrieval, RAG, structured extraction, and agent workflows improve access to private data, but they do not prove that generated answers, retrieved context, or tool calls are correct or safe.
+  - Data connectors, readers, parsers, indexes, tools, query engines, workflows, and MCP integrations can access private files, SaaS systems, databases, APIs, and vector stores; review permissions before connecting them.
+  - Retrieved documents, metadata, parsed tables, user uploads, tool descriptions, and external connector results become model-facing context and can contain stale, malicious, or prompt-injection-like instructions.
+  - Persistent indexes, vector stores, document stores, and local storage directories can outlive the original experiment; define cleanup, retention, migration, and access-control rules before indexing sensitive data.
+  - Optional LlamaParse, LlamaCloud, or hosted document-agent workflows can upload documents or extracted content to hosted services and should be reviewed separately from local open-source framework use.
+  - Evaluation and observability results are quality signals, not proof that a RAG pipeline, agent, extraction workflow, or document workflow is production-ready.
+privacyNotes:
+  - LlamaIndex workflows can process source documents, chunks, metadata, embeddings, prompts, retrieved context, generated answers, tool arguments, tool outputs, traces, evaluation datasets, and callback data.
+  - Model and embedding providers may receive document snippets, user questions, generated summaries, extracted fields, or metadata unless a local or approved private provider path is used.
+  - Connectors can ingest private repositories, tickets, PDFs, spreadsheets, databases, chats, notes, emails, or cloud files; verify that ingestion scope matches the user's authorization.
+  - Vector stores, persisted indexes, chat stores, document stores, and exported eval reports may retain data outside the source system's native permissions, deletion policy, and audit controls.
+  - Optional hosted parsing, OCR, extraction, indexing, or agent services should be assessed for upload scope, retention, residency, access controls, and incident response before processing confidential documents.
+---
+
+## Editorial notes
+
+LlamaIndex is useful when Claude-adjacent teams are building data-aware agents, retrieval pipelines, document workflows, or RAG applications. It provides the framework layer for ingesting private data, parsing and structuring documents, building indexes, querying over retrieval context, wiring tools and agents, evaluating results, and integrating with model, embedding, vector-store, and MCP ecosystems.
+
+This is distinct from existing evaluation and observability entries. Ragas and TruLens focus on evaluating RAG or agent behavior. Langfuse, Phoenix, and MLflow focus on traces and operational evidence. LlamaIndex is the open-source framework used to build the actual data and retrieval layer: loaders, documents and nodes, indexes, retrievers, query engines, tools, workflows, agents, structured extraction, storage, and evaluation hooks.
+
+## Source notes
+
+- The official repository README describes LlamaIndex OSS as an open-source framework for building agentic applications and as a data framework for building LLM apps.
+- The README says LlamaIndex provides data connectors for existing data sources and formats, ways to structure data with indexes and graphs, retrieval and query interfaces over data, and integrations with outer application frameworks.
+- The current framework documentation covers building agents, RAG pipelines, indexing, loading data, querying, structured data extraction, MCP, observability, callbacks, evaluating, vector stores, document stores, chat stores, and local or provider-based LLM integrations.
+- The repository documents starter and customized installation paths using `llama-index`, `llama-index-core`, and selected integration packages.
+- The GitHub repository is `run-llama/llama_index`, is MIT licensed, and describes the project as a document agent and OCR platform with the LlamaIndex framework.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `LlamaIndex`, `llamaindex`, `llama-index`, `llama_index`, `developers.llamaindex.ai`, `docs.llamaindex.ai`, `github.com/run-llama/llama_index`, `run-llama`, `LlamaParse`, `LlamaAgents`, `RAG framework`, and `data agents`. Existing AgentOps and TruLens entries mention LlamaIndex as an integration, but no dedicated LlamaIndex tools entry, LlamaIndex source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

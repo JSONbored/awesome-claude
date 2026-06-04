@@ -1,0 +1,269 @@
+---
+title: Storybook MCP Server for Claude
+slug: storybook-mcp-server
+category: mcp
+description: >-
+  Storybook MCP addon that lets Claude and other MCP clients inspect component
+  documentation, generate stories, preview UI states, and run Storybook tests
+  against a local Storybook project.
+cardDescription: >-
+  Connect Claude to Storybook docs, stories, component previews, and
+  interaction or accessibility tests.
+seoTitle: Storybook MCP Server for Claude
+seoDescription: >-
+  Use Storybook's MCP server with Claude to inspect component documentation,
+  reuse design-system components, generate stories, preview UI, and run
+  Storybook tests.
+author: Storybook
+authorProfileUrl: "https://storybook.js.org/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://storybook.js.org/docs/ai/mcp/overview"
+repoUrl: "https://github.com/storybookjs/mcp"
+installable: true
+installCommand: "npx storybook add @storybook/addon-mcp"
+usageSnippet: "npx mcp-add --type http --url STORYBOOK_LOCAL_MCP_URL --scope project"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "storybook": {
+        "type": "http",
+        "url": "STORYBOOK_LOCAL_MCP_URL"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "storybook": {
+        "type": "http",
+        "url": "STORYBOOK_LOCAL_MCP_URL"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - React Storybook project, because Storybook documents the MCP server and manifests as preview AI capabilities currently limited to React projects.
+  - Node.js package manager access for installing `@storybook/addon-mcp`.
+  - Running Storybook dev server, with the local MCP endpoint captured as `STORYBOOK_LOCAL_MCP_URL`.
+  - MCP-compatible agent or editor that can connect to local HTTP MCP servers, such as Claude Code, Gemini CLI, OpenAI Codex, VS Code Copilot, or another compatible client.
+  - Storybook Test, interaction tests, and accessibility checks configured if the agent should use the `run-story-tests` tool.
+  - Project instructions such as `AGENTS.md` or `CLAUDE.md` telling the agent when to use the Storybook MCP tools and how to avoid undocumented props.
+safetyNotes:
+  - >-
+    Storybook's MCP server and AI manifests are preview capabilities, and
+    Storybook states that the API may change in future releases.
+  - >-
+    The MCP server can guide an agent to generate components, write stories,
+    preview states, and run tests. Review generated UI, stories, tests, and
+    source changes before committing or shipping them.
+  - >-
+    Storybook docs and stories are project-controlled input. Treat component
+    docs, story text, examples, and addon output as untrusted context that can
+    contain stale guidance or prompt-injection-like instructions.
+  - >-
+    `run-story-tests` can execute interaction tests and browser-based
+    component code. Do not run untrusted stories or tests with secrets,
+    production credentials, or privileged browser sessions available.
+  - >-
+    The default MCP endpoint is local to the Storybook dev server. Do not expose
+    the local Storybook MCP endpoint or equivalent Storybook preview URLs to
+    networks or tunnels unless access control and data exposure have been
+    reviewed.
+  - >-
+    When multiple Storybooks or MCP servers are configured, use descriptive
+    server names so the model does not confuse design systems, toolsets, or
+    component libraries.
+privacyNotes:
+  - >-
+    Storybook MCP tool results can expose component names, props, examples,
+    docs, stories, design-system conventions, theme tokens, UI states, test
+    results, accessibility findings, and story preview links.
+  - >-
+    Storybook stories and previews can contain mock customer data, screenshots,
+    private workflows, unreleased product UI, internal brand details, or
+    business logic visible through component examples.
+  - >-
+    Test output, accessibility reports, browser console logs, agent transcripts,
+    screenshots, and generated summaries can retain Storybook content outside
+    the normal repository and design-system access controls.
+  - >-
+    Composed Storybooks can aggregate documentation and stories from multiple
+    component libraries, so verify which composed sources are exposed before
+    connecting an agent.
+  - >-
+    Keep secrets, real user records, internal API tokens, and production
+    credentials out of stories, play functions, test fixtures, and local
+    Storybook environments used by AI agents.
+tags:
+  - storybook
+  - frontend
+  - design-systems
+  - testing
+  - mcp
+keywords:
+  - storybook mcp
+  - storybook addon mcp
+  - component documentation mcp
+  - storybook tests
+  - design system ai
+  - run-story-tests
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Storybook MCP server connects Claude and other MCP-capable agents to a
+running Storybook project. Once `@storybook/addon-mcp` is installed and the
+Storybook dev server is running, the local MCP endpoint exposes toolsets for
+component documentation, story authoring guidance, previews, and Storybook
+tests.
+
+This is useful when an agent is building UI inside a real design system. Instead
+of hallucinating component props or copying patterns from unrelated projects,
+Claude can inspect documented components, read story examples, generate or
+update stories, preview UI states, and run Storybook tests or accessibility
+checks when they are configured.
+
+## Features
+
+- Local HTTP MCP endpoint exposed from the Storybook dev server.
+- Installation through `npx storybook add @storybook/addon-mcp`.
+- Agent configuration through `npx mcp-add --type http --url
+  STORYBOOK_LOCAL_MCP_URL --scope project` or manual MCP client config.
+- Docs toolset for listing component documentation, fetching component docs,
+  and reading story-specific documentation.
+- Development toolset for story-writing instructions and story previews.
+- Testing toolset for running Storybook tests and returning results, including
+  accessibility findings when configured.
+- Storybook composition support, so composed Storybooks with manifests can
+  expose combined component knowledge to agents.
+- Project-instruction guidance for telling agents to verify component props and
+  usage before generating UI.
+
+## Use Cases
+
+- Ask Claude to build UI using only documented components from the local
+  Storybook design system.
+- Inspect component props and examples before generating a new screen or state.
+- Generate or update stories that demonstrate a component or feature workflow.
+- Preview generated stories directly in an MCP-capable chat interface or return
+  links to local Storybook stories.
+- Run Storybook interaction tests and accessibility checks for stories touched
+  by an agent.
+- Use composed Storybooks to let an agent find components across multiple
+  internal design systems without copying implementation details manually.
+
+## Installation
+
+### Add the Storybook MCP addon
+
+From the project with Storybook installed, run:
+
+```bash
+npx storybook add @storybook/addon-mcp
+```
+
+Start the Storybook dev server, then set `STORYBOOK_LOCAL_MCP_URL` to the local
+MCP endpoint shown by Storybook.
+
+```plaintext
+STORYBOOK_LOCAL_MCP_URL
+```
+
+### Add the MCP server to an agent
+
+Use Storybook's documented `mcp-add` flow, replacing
+`STORYBOOK_LOCAL_MCP_URL` with the local Storybook MCP endpoint:
+
+```bash
+npx mcp-add --type http --url STORYBOOK_LOCAL_MCP_URL --scope project
+```
+
+Choose a descriptive server name, such as `project-storybook`, so the agent can
+distinguish it from other MCP tools.
+
+### Manual MCP configuration
+
+```json
+{
+  "mcpServers": {
+    "storybook": {
+      "type": "http",
+      "url": "STORYBOOK_LOCAL_MCP_URL"
+    }
+  }
+}
+```
+
+## Examples
+
+### List documented components
+
+```plaintext
+Use the Storybook MCP server to list all documented components before generating UI.
+```
+
+### Inspect props before coding
+
+```plaintext
+Get documentation for the Button and TextInput components, then build a login form using only documented props.
+```
+
+### Generate a story
+
+```plaintext
+Fetch the latest Storybook story-writing instructions and create a story for the empty, loading, and error states of this component.
+```
+
+### Preview a state
+
+```plaintext
+Preview the dark-mode Button story and return the Storybook link or embedded preview if supported.
+```
+
+### Run component tests
+
+```plaintext
+Run Storybook tests for stories that cover the Header component and summarize failures without changing code yet.
+```
+
+## Source notes
+
+- Storybook's official MCP docs describe the MCP server as a preview AI
+  capability that connects Storybook to AI agents so they can understand
+  components and documentation, generate stories, run tests, and reuse existing
+  design-system components.
+- The docs state that Storybook's AI capabilities, specifically manifests and
+  the MCP server, are currently supported for React projects and that the API
+  may change in future releases.
+- Storybook documents installation with `npx storybook add
+  @storybook/addon-mcp` and a local MCP endpoint served by the Storybook dev
+  server.
+- The setup guide documents adding the local MCP server to an agent with
+  `npx mcp-add`, or manually following agent-specific MCP configuration docs.
+- The docs list development, docs, and testing toolsets, including
+  `get-storybook-story-instructions`, `preview-stories`, `get-documentation`,
+  `get-documentation-for-story`, `list-all-documentation`, and
+  `run-story-tests`.
+- The GitHub repository is `storybookjs/mcp`, is MIT licensed, and hosts the
+  Storybook MCP implementation.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, live issue state, and repository-wide content for `Storybook
+MCP`, `storybookjs/mcp`, `@storybook/addon-mcp`,
+`storybook.js.org/docs/ai/mcp`, `STORYBOOK_LOCAL_MCP_URL`, `mcp-add Storybook`,
+`list-all-documentation`, `get-documentation`, `preview-stories`,
+`run-story-tests`, and `component documentation mcp`. An existing slash-command
+agent example mentions writing Storybook stories as a generic workflow example,
+but no dedicated Storybook MCP entry, Storybook MCP source URL duplicate, or
+open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

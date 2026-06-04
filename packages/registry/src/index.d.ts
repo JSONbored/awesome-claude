@@ -81,6 +81,45 @@ export type EntryTrustSignals = {
   supportLevels: string[];
 };
 
+export type RegistryRelationType =
+  | "same-project"
+  | "collection-member"
+  | "works-with"
+  | "extends"
+  | "alternative"
+  | "safer-alternative"
+  | "related";
+
+export type RegistryRelation = {
+  key: string;
+  category: string;
+  slug: string;
+  title: string;
+  relation: RegistryRelationType;
+  score: number;
+  reasons: string[];
+  url: string;
+};
+
+export type RegistryRelationGraphEntry = {
+  key: string;
+  category: string;
+  slug: string;
+  title: string;
+  url: string;
+  related: RegistryRelation[];
+};
+
+export type RegistryRelationGraph = {
+  schemaVersion: number;
+  kind: "registry-relation-graph";
+  generatedAt: string;
+  relationTypes: RegistryRelationType[];
+  maxRelationsPerEntry: number;
+  count: number;
+  entries: RegistryRelationGraphEntry[];
+};
+
 export type RegistryTrustReportEntry = {
   key: string;
   category: string;
@@ -184,8 +223,8 @@ export type ContentEntry = {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueNumber?: number;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number;
   importPrUrl?: string;
   reviewedBy?: string;
@@ -263,6 +302,7 @@ export type ContentEntry = {
   llmsUrl?: string;
   apiUrl?: string;
   trustSignals?: EntryTrustSignals;
+  relatedEntries?: RegistryRelation[];
 };
 
 export type DirectoryEntry = Omit<
@@ -598,8 +638,8 @@ export type SubmissionContentProvenance = {
   filename: string;
   submittedBy?: string;
   submittedByUrl?: string;
-  submissionIssueNumber?: number | null;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number | null;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number | null;
   importPrUrl?: string;
 };
@@ -716,8 +756,8 @@ export type SearchDocument = {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueNumber?: number;
-  submissionIssueUrl?: string;
+  sourceSubmissionNumber?: number;
+  sourceSubmissionUrl?: string;
   importPrNumber?: number;
   importPrUrl?: string;
   reviewedBy?: string;
@@ -882,6 +922,7 @@ export function buildRegistryArtifactSet(
     siteUrl?: string;
     siteName?: string;
     siteDescription?: string;
+    relationLimit?: number;
   },
 ): Array<
   | {
@@ -901,6 +942,19 @@ export function buildSkillPlatformCompatibility(
 export function buildEntryTrustSignals(
   entry: Partial<ContentEntry>,
 ): EntryTrustSignals;
+export const REGISTRY_RELATION_TYPES: RegistryRelationType[];
+export function buildEntryRelations(
+  target: ContentEntry,
+  entries: ContentEntry[],
+  params?: { siteUrl?: string; limit?: number },
+): RegistryRelation[];
+export function buildRegistryRelationGraph(
+  entries: ContentEntry[],
+  params?: { siteUrl?: string; limit?: number; generatedAt?: string },
+): RegistryRelationGraph;
+export function relationLookupFromGraph(
+  graph: Partial<RegistryRelationGraph> | null | undefined,
+): Map<string, RegistryRelation[]>;
 export function buildRegistryTrustReport(
   entries: ContentEntry[],
 ): RegistryTrustReport;

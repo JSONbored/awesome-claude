@@ -1,0 +1,72 @@
+---
+title: mini-SWE-agent
+slug: mini-swe-agent
+category: tools
+description: MIT-licensed command-line software-engineering agent for local coding tasks, GitHub issue fixing, trajectory inspection, and SWE-bench style evaluation.
+cardDescription: Minimal CLI coding agent with confirm, human, and automatic execution modes.
+seoTitle: mini-SWE-agent coding agent CLI
+seoDescription: mini-SWE-agent is a minimal MIT-licensed software-engineering agent for local CLI tasks, GitHub issue fixing, SWE-bench runs, trajectory inspection, and Python extension.
+author: SWE-agent
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://mini-swe-agent.com/"
+documentationUrl: "https://mini-swe-agent.com/latest/"
+repoUrl: "https://github.com/SWE-agent/mini-swe-agent"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - coding-agent
+  - cli
+  - open-source
+keywords:
+  - mini-swe-agent
+  - swe-agent
+  - coding agent cli
+  - SWE-bench
+  - trajectory browser
+prerequisites:
+  - Python environment, package manager, and supported local shell environment for running the mini-SWE-agent CLI, batch workflows, or Python bindings.
+  - Approved model route, provider account, local model setup, or gateway configuration prepared outside the repository where the agent will run.
+  - Disposable checkout, sandbox, container, or tightly scoped working tree for tasks that may modify source files, dependencies, tests, or generated artifacts.
+  - Clear task prompt, target branch, test command, rollback plan, and reviewer ownership before asking the agent to work on a real issue or codebase.
+  - Retention plan for saved histories, trajectories, command output, benchmark artifacts, and any local logs produced while the agent is running.
+safetyNotes:
+  - mini-SWE-agent is designed around language-model-generated terminal actions, so operators should review proposed actions before allowing changes in important repositories.
+  - The default CLI mode asks for confirmation before each proposed action, while automatic execution mode runs model-proposed actions without confirmation and should be limited to disposable or sandboxed environments.
+  - The project intentionally keeps the agent loop small and bash-oriented; that simplicity makes behavior easier to inspect, but it does not make actions safe, correct, authorized, or reversible.
+  - Generated patches, dependency changes, tests, issue updates, and benchmark runs still need human review before they affect protected branches, production systems, customer data, or shared infrastructure.
+  - Sandboxing choices such as local folders, containers, and isolated environments should be reviewed for mounted files, network access, dependency caches, and private access exposure.
+  - SWE-bench or other benchmark scores are useful evaluation signals, not proof that the agent is appropriate for a specific repository, policy boundary, or production workflow.
+privacyNotes:
+  - Prompts, issue text, repository snippets, diffs, command output, test logs, and error traces may be sent to the configured model provider, gateway, or local model runtime.
+  - The CLI documentation says mini saves the full history of the last run to the global configuration directory, which can include local paths, source excerpts, model messages, and command output.
+  - Trajectory browser files, batch output, benchmark artifacts, and saved histories should be treated as potentially sensitive development records with retention and redaction rules.
+  - Local sandbox or container configuration can expose mounted source trees, dependency caches, environment settings, and private project access if the operator grants broad access.
+  - Teams using mini-SWE-agent for issue fixing should document who can access trajectories, logs, model-provider records, and any generated patches before sharing outputs.
+---
+
+## Editorial notes
+
+mini-SWE-agent is useful when Claude-adjacent teams want a small, auditable coding-agent CLI for local tasks, issue fixing, research baselines, or SWE-bench style evaluation. Its center of gravity is intentionally minimal: a compact agent loop, local environment support, terminal-action based operation, confirm and human modes, optional automatic execution, trajectory inspection, batch inference, and Python extension points.
+
+This is distinct from existing coding-assistant and agent-framework entries. Claude Code, Cline, Roo Code, Aider, Continue, Cursor, Windsurf, Replit Agent, and Sourcegraph Cody focus on broader IDE, editor, or coding-assistant workflows. LangGraph, Pydantic AI, Agno, CrewAI, and AutoGen focus on agent framework construction. mini-SWE-agent is narrower: a research-backed, minimal software-engineering agent that uses simple local control flow for CLI coding tasks, issue repair, trajectories, and benchmark runs.
+
+## Source notes
+
+- The official README describes mini-SWE-agent as a minimal AI software-engineering agent built by the Princeton and Stanford team behind SWE-bench and SWE-agent.
+- The README says mini is widely adopted, intentionally minimal, MIT licensed, compatible with many model routes, and designed for local environments, containers, and other sandboxing approaches.
+- The README says mini does not use custom tools beyond bash, does not require model tool-calling interfaces, executes independent actions, and keeps a linear history for debugging and fine-tuning.
+- The README recommends mini-SWE-agent as the default choice when users want a quick command-line tool, simple control flow, sandboxing, benchmark evaluation, or a fine-tuning/reinforcement-learning baseline.
+- The official quick-start documentation covers package-manager based installation paths, CLI and extra utility entry points, source installation, model setup, local model guidance, and example coding prompts.
+- The official CLI documentation describes `mini` as a REPL-style interactive command-line interface with confirm, human, and automatic execution modes; confirm mode is the default, and the last run history is saved locally.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `mini-SWE-agent`, `mini swe agent`, `mini-swe`, `SWE-agent/mini-swe-agent`, `mini-swe-agent.com`, `SWE-agent`, `SWE-bench agent`, `coding agent CLI`, and `trajectory browser`. Existing Claude Code, Cline, Roo Code, Aider, Continue, Cursor, Windsurf, Replit Agent, Sourcegraph Cody, LangGraph, Pydantic AI, Agno, CrewAI, and AutoGen entries cover adjacent coding assistant or framework workflows, but no dedicated mini-SWE-agent tools entry, mini-SWE-agent source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

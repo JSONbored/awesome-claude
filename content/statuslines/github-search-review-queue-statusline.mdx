@@ -1,0 +1,98 @@
+---
+title: GitHub Search Review Queue Statusline
+slug: github-search-review-queue-statusline
+category: statuslines
+description: Claude Code statusline that uses GitHub pull request search qualifiers to show review-requested queue counts for maintainers.
+cardDescription: Show requested review queue counts from GitHub PR search.
+seoTitle: GitHub search review queue statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes requested pull request reviews using GitHub search qualifiers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/github/docs/blob/main/content/search-github/searching-on-github/searching-issues-and-pull-requests.md"
+repoUrl: "https://github.com/github/docs"
+tags:
+  - github
+  - reviews
+  - maintainers
+  - claude-code
+keywords:
+  - review queue statusline
+  - github search statusline
+  - review requested statusline
+  - maintainer queue
+installable: true
+usageSnippet: "reviews: requested 6 | ready 4 | drafts 2"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/github-search-review-queue-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/github-search-review-queue-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "reviews: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "reviews: jq missing"
+    exit 0
+  fi
+
+  prs=$(gh search prs --review-requested=@me --state=open --limit 100 --json number,isDraft 2>/dev/null || true)
+  if [ -z "$prs" ]; then
+    echo "reviews: unavailable"
+    exit 0
+  fi
+
+  requested=$(printf '%s' "$prs" | jq 'length')
+  drafts=$(printf '%s' "$prs" | jq '[.[] | select(.isDraft == true)] | length')
+  ready=$((requested - drafts))
+
+  printf 'reviews: requested %s | ready %s | drafts %s\n' "$requested" "$ready" "$drafts"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in as the maintainer account whose review queue should be shown.
+  - jq available for counting pull request fields.
+  - Repository access that lets GitHub search return pull requests requesting the current account's review.
+safetyNotes:
+  - Queue counts help with triage but do not rank urgency, security impact, or release blockers.
+  - Draft PRs are excluded from the ready count, but repositories may use labels or checks for additional readiness rules.
+  - Keep the refresh interval moderate to avoid repeated GitHub search calls.
+privacyNotes:
+  - The script prints aggregate counts only, not PR titles, authors, or branch names.
+  - Private review requests follow the local GitHub account and may reveal workload size in screenshots.
+  - Organization review-team rules may cause counts to differ from the GitHub web UI.
+---
+
+## Source notes
+
+- GitHub's search documentation covers issue and pull request search qualifiers, including review-requested workflows.
+- This entry focuses on the maintainer search queue rather than the GitHub CLI `gh pr list` manual page that overlaps the accepted repository-health statusline source domain.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `github-search-review-queue-statusline`, review queue, maintainer reviews, review-requested, GitHub search statuslines, and `gh-maintainer-review-queue-statusline`. The earlier `cli.github.com` submission was self-closed after #960 showed that source domain overlaps the accepted repository-health statusline; this replacement uses GitHub search documentation and a search-queue-focused scope.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.

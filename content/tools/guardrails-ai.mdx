@@ -1,0 +1,59 @@
+---
+title: Guardrails AI
+slug: guardrails-ai
+category: tools
+description: Open-source Python framework for adding input and output guards, validators, structured generation, and policy checks to LLM applications.
+cardDescription: Open-source input/output guardrails and validators for LLM apps.
+seoTitle: Guardrails AI open-source LLM guardrails framework
+seoDescription: Guardrails AI helps teams validate LLM inputs and outputs, combine policy validators, and generate structured data from language models.
+author: Guardrails AI
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.guardrailsai.com"
+documentationUrl: "https://www.guardrailsai.com/docs"
+repoUrl: "https://github.com/guardrails-ai/guardrails"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - guardrails
+  - validation
+  - open-source
+keywords:
+  - llm safety
+  - input output guards
+  - guardrails validators
+prerequisites:
+  - Python application or service that sends prompts to, or receives responses from, an LLM.
+  - A reviewed policy for which inputs, outputs, topics, formats, and risk categories should be blocked, transformed, or escalated.
+  - Model provider credentials and installation approval for any Guardrails Hub validators used by the application.
+safetyNotes:
+  - Guardrails can block, raise exceptions, re-ask the model, or otherwise alter application flow, so failure handling should be tested before production use.
+  - Validators are policy controls, not proof of safety; high-risk domains still need human review, logging, escalation paths, and adversarial testing.
+  - Guardrails Server exposes validation through a network service, so production deployments need normal API hardening, authentication, rate limits, and secret handling.
+privacyNotes:
+  - Validation can inspect prompts, retrieved context, model outputs, structured fields, user messages, and other application payloads.
+  - Some validators or configured LLM calls can send validation payloads to external model providers or APIs; review each validator before using production data.
+  - Logs, traces, failed validations, and server request data may contain sensitive content and should follow the same retention rules as the parent LLM application.
+---
+
+## Editorial notes
+
+Guardrails AI is a strong fit for teams that need policy checks and structured validation inside Claude-adjacent LLM applications. It is not just a prompt template: it provides input and output guards, composable validators from Guardrails Hub, custom validators, structured data generation, and a server mode for exposing guards through an API.
+
+## Source notes
+
+- The official docs describe Guardrails as a Python framework for building reliable AI applications with input/output guards and structured data generation.
+- Guardrails Hub is documented as a collection of pre-built validators that can be combined into input and output guards for specific risk categories.
+- The docs cover using Guardrails with supported LLMs, creating custom validators, and running Guardrails as a standalone server.
+- The GitHub repository is `guardrails-ai/guardrails`, is Apache-2.0 licensed, and describes the project as adding guardrails to large language models.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, live HeyClaude search results, and repository-wide content for `Guardrails AI`, `guardrails-ai`, `guardrailsai.com`, `github.com/guardrails-ai/guardrails`, `Guardrails Hub`, `input output guards`, `policy guardrails`, and `LLM application safety`. No existing Guardrails AI tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

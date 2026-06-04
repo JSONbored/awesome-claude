@@ -1,0 +1,301 @@
+---
+title: GitLab MCP Server for Claude
+slug: gitlab-mcp-server
+category: mcp
+description: >-
+  Official GitLab MCP server that connects Claude and other MCP clients to
+  GitLab projects, issues, merge requests, pipelines, job logs, labels, work
+  items, and semantic code search through OAuth.
+cardDescription: >-
+  Connect Claude to GitLab issues, merge requests, pipelines, job logs,
+  labels, work items, and code search.
+seoTitle: GitLab MCP Server for Claude
+seoDescription: >-
+  Use the GitLab MCP server with Claude to access GitLab project information,
+  issues, merge requests, CI/CD pipelines, job logs, labels, work items, and
+  semantic code search.
+author: GitLab
+authorProfileUrl: "https://about.gitlab.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://docs.gitlab.com/user/gitlab_duo/model_context_protocol/mcp_server/"
+installable: true
+installCommand: "claude mcp add --transport http GitLab https://gitlab.com/api/v4/mcp"
+usageSnippet: "claude mcp add --transport http GitLab https://gitlab.com/api/v4/mcp"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "GitLab": {
+        "type": "http",
+        "url": "https://gitlab.com/api/v4/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "GitLab": {
+        "type": "http",
+        "url": "https://gitlab.com/api/v4/mcp",
+        "headers": {
+          "X-Gitlab-Mcp-Server-Tool-Name-Prefix": "gitlab_"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - GitLab Premium or Ultimate access on GitLab.com, GitLab Self-Managed, or GitLab Dedicated
+  - GitLab Duo enabled for the top-level group or instance
+  - Beta and experimental features enabled for the top-level group or instance
+  - MCP client that supports HTTP transport and OAuth, such as Claude Code, Cursor, GitHub Copilot in VS Code, Gemini CLI, Kiro, Codex, or another compatible client
+  - Node.js 20 or later when using `mcp-remote` for stdio-based clients such as Claude Desktop, Continue, or Zed
+  - Project or group permissions for the GitLab issues, merge requests, pipelines, code, labels, and work items Claude should access
+safetyNotes:
+  - >-
+    GitLab explicitly warns that you are responsible for guarding against
+    prompt injection when using MCP tools. Treat issue text, merge request
+    comments, code diffs, wiki-like content, job logs, and pipeline output as
+    untrusted input that can attempt to steer the agent.
+  - >-
+    Some GitLab MCP tools perform write actions, including creating issues,
+    creating merge requests, creating work item notes, and managing pipelines.
+    Keep manual approval on any operation that changes GitLab state.
+  - >-
+    OAuth Dynamic Client Registration creates an OAuth application and access
+    token for the connected client. Review the authorization request, keep
+    tokens out of prompts and logs, and revoke access when a client is no
+    longer trusted.
+  - >-
+    Use the HTTP tool-name prefix header when connecting multiple GitLab
+    instances or overlapping MCP servers so the model does not confuse similar
+    tool names.
+  - >-
+    The GitLab MCP server is beta. Availability, tool behavior, protocol
+    support, feature gates, and required GitLab versions can change between
+    GitLab releases.
+privacyNotes:
+  - >-
+    Tool results can expose project paths, issue titles and descriptions,
+    confidential issue metadata, merge request titles, comments, commits,
+    diffs, pipeline status, job logs, labels, work item notes, semantic code
+    search results, user names, group names, and project identifiers.
+  - >-
+    GitLab issues, merge requests, comments, job logs, and code search results
+    can contain secrets, customer data, vulnerability details, incident notes,
+    unreleased roadmap information, internal URLs, employee data, and
+    proprietary source code.
+  - >-
+    MCP client logs, AI transcripts, terminal scrollback, screenshots,
+    generated summaries, and downstream tickets can retain GitLab data outside
+    GitLab's normal permission, audit, and retention controls.
+  - >-
+    Self-managed GitLab instances may have stricter network, SSO, retention,
+    and data residency policies than GitLab.com. Confirm MCP clients are
+    approved before connecting them to internal instances.
+tags:
+  - gitlab
+  - merge-requests
+  - issue-tracking
+  - ci-cd
+  - mcp
+keywords:
+  - gitlab mcp
+  - gitlab claude
+  - gitlab duo mcp
+  - gitlab.com/api/v4/mcp
+  - merge request mcp
+  - gitlab issue tracking
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The GitLab MCP server connects Claude and other MCP-compatible tools directly
+to GitLab through the GitLab API endpoint at `/api/v4/mcp`. It is designed for
+teams that want AI assistants to inspect GitLab project information, retrieve
+issues and merge requests, inspect CI/CD pipelines and job logs, search labels
+and code, and perform selected GitLab actions through OAuth-authorized access.
+
+GitLab's MCP server is a beta GitLab Duo feature for Premium and Ultimate tiers
+on GitLab.com, GitLab Self-Managed, and GitLab Dedicated. It supports OAuth 2.0
+Dynamic Client Registration, so compatible clients can register with the GitLab
+instance, open a browser authorization flow, and receive an access token for
+the approved GitLab scope. HTTP transport is the recommended setup path; stdio
+clients can use `mcp-remote` as a proxy.
+
+## Features
+
+- HTTP MCP endpoint at `https://gitlab.com/api/v4/mcp` or the equivalent
+  self-managed GitLab instance URL.
+- OAuth 2.0 Dynamic Client Registration for first-time client setup.
+- Claude Code HTTP setup with `claude mcp add --transport http`.
+- Claude Desktop, Continue, and Zed setup through `npx -y mcp-remote`.
+- Optional tool-name prefixing with `X-Gitlab-Mcp-Server-Tool-Name-Prefix`.
+- Issue creation and issue lookup.
+- Merge request creation, lookup, commit listing, diff retrieval, and pipeline
+  lookup.
+- CI/CD pipeline job listing, job log retrieval, and pipeline management.
+- Work item note creation and retrieval.
+- Global, group, and project search across scopes such as issues, merge
+  requests, and projects.
+- Label search and semantic code search for relevant code snippets.
+
+## Use Cases
+
+- Ask Claude to inspect a GitLab issue and summarize related merge requests
+  before starting implementation.
+- Review merge request diffs, commits, and pipeline status without switching
+  out of the coding session.
+- Pull failing CI job logs and summarize likely failure causes.
+- Search issues or merge requests across a group for prior art before filing a
+  duplicate.
+- Use semantic code search to find relevant implementation examples inside a
+  GitLab project.
+- Draft an issue or merge request only after a human approves the exact action.
+
+## Installation
+
+### Claude Code
+
+1. Confirm GitLab Duo, beta features, and MCP server access are enabled for the
+   target GitLab group or instance.
+2. Add the GitLab MCP server:
+
+```bash
+claude mcp add --transport http GitLab https://gitlab.com/api/v4/mcp
+```
+
+3. Start Claude Code:
+
+```bash
+claude
+```
+
+4. Type `/mcp`, select the GitLab server, and complete the browser OAuth
+   authorization flow.
+5. Verify the connection with `/mcp`, then start with a read-only prompt.
+
+### Claude Desktop
+
+1. Confirm Node.js 20 or later and `npx` are available.
+2. Add the `mcp-remote` configuration below to the Claude Desktop MCP config.
+3. Restart Claude Desktop.
+4. Complete the browser OAuth authorization flow on first connect.
+
+## Configuration
+
+### HTTP transport
+
+```json
+{
+  "mcpServers": {
+    "GitLab": {
+      "type": "http",
+      "url": "https://gitlab.com/api/v4/mcp"
+    }
+  }
+}
+```
+
+### HTTP transport with tool prefixing
+
+```json
+{
+  "mcpServers": {
+    "GitLab": {
+      "type": "http",
+      "url": "https://gitlab.com/api/v4/mcp",
+      "headers": {
+        "X-Gitlab-Mcp-Server-Tool-Name-Prefix": "gitlab_"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop with `mcp-remote`
+
+```json
+{
+  "mcpServers": {
+    "GitLab": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://gitlab.com/api/v4/mcp"]
+    }
+  }
+}
+```
+
+## Examples
+
+### Inspect an issue before coding
+
+```plaintext
+Get GitLab issue 42 in project group/project, summarize the acceptance criteria, and list any linked merge requests without changing anything.
+```
+
+### Review a merge request
+
+```plaintext
+Fetch merge request 15 from group/project, summarize the changed files, pipeline status, and unresolved risks.
+```
+
+### Debug a CI failure
+
+```plaintext
+Get the jobs for the latest failed pipeline in group/project and summarize the relevant job log lines.
+```
+
+### Search for related work
+
+```plaintext
+Search GitLab issues for "flaky login test" in group/project and return likely duplicates or related fixes.
+```
+
+### Use semantic code search
+
+```plaintext
+Use semantic code search in group/project to find where authorization decisions are implemented.
+```
+
+## Source notes
+
+- GitLab's official documentation describes the GitLab MCP server as a beta
+  GitLab Duo feature for Premium and Ultimate tiers on GitLab.com, GitLab
+  Self-Managed, and GitLab Dedicated.
+- The setup guide states that the server lets AI assistants such as Claude
+  Desktop, Claude Code, Cursor, and other MCP-compatible tools access GitLab
+  data and perform actions on behalf of the authenticated user.
+- GitLab documents OAuth 2.0 Dynamic Client Registration, where the client
+  registers as an OAuth application, requests authorization, and receives an
+  access token.
+- The recommended HTTP configuration points to
+  `https://<gitlab.example.com>/api/v4/mcp`, with GitLab.com using
+  `https://gitlab.com/api/v4/mcp`.
+- GitLab documents Claude Code setup with
+  `claude mcp add --transport http GitLab https://<gitlab.example.com>/api/v4/mcp`
+  and Claude Desktop setup through `npx -y mcp-remote`.
+- The tools reference lists issue, merge request, pipeline, work item note,
+  search, label, and semantic code search tools, including write-capable tools
+  such as `create_issue`, `create_merge_request`, `create_workitem_note`, and
+  `manage_pipeline`.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, and repository-wide content for `GitLab MCP`, `GitLab Duo MCP`,
+`/api/v4/mcp`, `gitlab.com/api/v4/mcp`, `mcp-remote GitLab`,
+`oauth_dynamic_client_registration`, `create_merge_request`,
+`get_merge_request`, `semantic_code_search`, `GitLab issue tracking`, and
+`self-hosted git platform MCP`. Existing GitHub, Jira, Azure DevOps, and
+generic MCP server content do not duplicate GitLab's native MCP server for
+GitLab.com and self-managed GitLab instances. No dedicated GitLab MCP entry,
+GitLab MCP source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

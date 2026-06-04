@@ -1,0 +1,68 @@
+---
+title: Evidently
+slug: evidently
+category: tools
+description: Open-source ML and LLM observability framework for evaluating, testing, and monitoring data quality, drift, model behavior, and AI application outputs.
+cardDescription: Evaluate, test, and monitor ML models, LLM apps, data quality, and drift.
+seoTitle: Evidently ML and LLM observability framework
+seoDescription: Evidently helps AI teams evaluate, test, and monitor predictive ML models, LLM applications, data quality, data drift, reports, test suites, and dashboards.
+author: Evidently AI
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.evidentlyai.com"
+documentationUrl: "https://docs.evidentlyai.com/"
+repoUrl: "https://github.com/evidentlyai/evidently"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Docker, Web
+tags:
+  - mlops
+  - observability
+  - evaluation
+keywords:
+  - evidently
+  - data drift
+  - ml monitoring
+prerequisites:
+  - Python environment for running the Evidently library, reports, test suites, or local UI.
+  - Dataset, model outputs, LLM application traces, prompts, responses, labels, or other production-aligned examples to evaluate.
+  - Reference or baseline data when using drift, regression, or data quality checks.
+  - Reviewed metric selection, pass and fail thresholds, alert ownership, and release policy before using results in CI or production monitoring.
+  - Evidently Cloud account, self-hosted platform, or approved local report storage when teams need dashboards, shared monitoring, or hosted evaluation history.
+safetyNotes:
+  - Evidently metrics and tests are decision support, not proof that a model, dataset, prompt, or LLM application is correct, fair, safe, or production-ready.
+  - Drift, data quality, and LLM judge results can be noisy or context-dependent, so thresholds should be calibrated on representative data before blocking releases or triggering alerts.
+  - Reports, test suites, and dashboards can influence deployment and incident workflows, so review generated conditions before wiring them into CI, monitoring, or agent-managed remediation.
+  - Synthetic data generation, prompt optimization, LLM-as-judge evaluations, and provider-backed metrics can call configured model services and should be scoped for cost and data handling.
+  - Self-hosted dashboards, local reports, and exported artifacts need normal access controls because they can become a shared source of operational decisions.
+privacyNotes:
+  - Evidently can process dataset columns, feature values, predictions, labels, model metadata, prompts, retrieved context, responses, traces, evaluation scores, and custom metric outputs.
+  - HTML, JSON, and Python dictionary reports can contain samples, column names, feature distributions, prompt text, generated answers, labels, or other sensitive operational data.
+  - Evidently Platform and Cloud workflows add hosted storage, dashboards, dataset management, tracing, user management, and alerting that should be reviewed against team data-retention and access-control policies.
+  - LLM-based evaluations may send prompts, responses, references, or scoring context to configured model providers unless a local evaluation path is used.
+  - Local report files and dashboard exports should be kept out of public repositories and shared workspaces unless reviewed for sensitive data.
+---
+
+## Editorial notes
+
+Evidently is useful when Claude or an engineering agent is working on AI systems where quality checks need to cover more than prompt transcripts. It gives teams a Python-first way to evaluate tabular data, model outputs, LLM responses, drift, data quality, reports, test suites, and monitoring dashboards around production-facing AI pipelines.
+
+This is distinct from the existing LLM observability entries. Arize Phoenix, Langfuse, LangSmith, and Helicone are centered on LLM tracing, prompt workflows, hosted observability, evaluation, or cost and gateway visibility. Evidently is the broader ML and LLM evaluation and monitoring layer for data quality, drift, tabular model behavior, LLM outputs, reports, pass/fail tests, and dashboards.
+
+## Source notes
+
+- The official docs describe Evidently as an Apache-2.0 open-source framework for evaluating, testing, and monitoring data and AI systems, with both a Python library and a self-hosted platform.
+- The docs describe 100+ metrics, a declarative testing API, a visual interface for results, synthetic data generation, prompt optimization workflows, tracing, storage for AI application data, test dataset management, dashboards, and monitoring.
+- The GitHub README describes Evidently as an open-source Python library for evaluating, testing, and monitoring ML and LLM systems from experiments to production.
+- The README documents support for tabular and text data, predictive and generative tasks, classification, RAG, offline evaluations, live monitoring, reports, test suites, exported HTML and JSON artifacts, and a monitoring UI.
+- The GitHub repository is `evidentlyai/evidently`, is Apache-2.0 licensed, and describes the project as an open-source ML and LLM observability framework with 100+ metrics.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, open pull requests, live issue state, and repository-wide content for `Evidently`, `Evidently AI`, `evidentlyai.com`, `docs.evidentlyai.com`, `github.com/evidentlyai/evidently`, `data drift`, `model monitoring`, `ML monitoring`, `LLM observability`, and `AI observability`. Existing entries cover adjacent LLM observability and evaluation tools, including Arize Phoenix, Langfuse, LangSmith, Helicone, Ragas, DeepEval, and DVC, but no dedicated Evidently tools entry, Evidently source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

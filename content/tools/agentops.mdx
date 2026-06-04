@@ -1,0 +1,59 @@
+---
+title: AgentOps
+slug: agentops
+category: tools
+description: Open-source observability platform and SDK for tracing, debugging, replaying, and cost-monitoring AI agent and LLM application runs.
+cardDescription: Open-source observability for AI agent traces, replays, and costs.
+seoTitle: AgentOps AI agent observability and tracing
+seoDescription: AgentOps helps teams monitor, trace, replay, debug, and cost-track AI agent and LLM application workflows.
+author: AgentOps
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://agentops.ai"
+documentationUrl: "https://docs.agentops.ai"
+repoUrl: "https://github.com/AgentOps-AI/agentops"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Web, Self-hosted
+tags:
+  - observability
+  - tracing
+  - open-source
+keywords:
+  - agent observability
+  - llm tracing
+  - agent cost tracking
+prerequisites:
+  - Python or TypeScript/JavaScript application using a supported LLM provider or agent framework.
+  - AgentOps project/API key for hosted dashboard use, or a reviewed self-hosted deployment plan.
+  - A telemetry policy for which prompts, responses, tool calls, metadata, and host details may be captured.
+safetyNotes:
+  - AgentOps instruments LLM calls, tools, operations, and agent workflows, so enable it intentionally in environments where captured traces are allowed.
+  - Cost and latency dashboards are useful for operations, but alerting and budget decisions still need human-reviewed thresholds.
+  - Self-hosted deployments require normal backend hardening for database access, secrets, authentication, and retained trace data.
+privacyNotes:
+  - Traces can include prompts, completions, tool inputs, tool outputs, errors, costs, tokens, tags, and application metadata.
+  - The docs say AgentOps automatically collects basic host environment details such as OS, Python version, anonymized hostname, and SDK version.
+  - Hosted dashboard use sends telemetry to AgentOps infrastructure; self-hosted use still requires retention, access-control, and log-review policies.
+---
+
+## Editorial notes
+
+AgentOps is a practical fit for teams running Claude-adjacent agents in production because it focuses on the parts that are hard to reconstruct after a failure: traces, spans, session replays, LLM calls, tool activity, errors, latency, and cost. It also has integrations for common agent stacks and providers, including OpenAI Agents SDK, CrewAI, AG2/AutoGen, Agno, LangChain, LangGraph, Anthropic, OpenAI, LiteLLM, LlamaIndex, and others.
+
+## Source notes
+
+- The official introduction describes AgentOps as a platform for testing, debugging, and deploying AI agents and LLM apps, with automatic tracking after initialization.
+- The quickstart documents SDK installation, API-key setup, automatic instrumentation, decorators for custom tracing, and dashboard trace viewing.
+- The core concepts docs describe sessions, agents, workflows, operations, LLM spans, tool spans, OpenTelemetry foundations, dashboard views, and host-environment metadata.
+- The GitHub README describes replay analytics, debugging, LLM cost management, framework integrations, and self-hosting.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, live HeyClaude search results, and repository-wide content for `AgentOps`, `agentops.ai`, `github.com/AgentOps-AI/agentops`, `agent observability`, `LLM tracing`, and `agent cost tracking`. Existing content includes a generic observability skill, but no dedicated AgentOps tools entry or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

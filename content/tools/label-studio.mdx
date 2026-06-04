@@ -1,0 +1,60 @@
+---
+title: Label Studio
+slug: label-studio
+category: tools
+description: Open-source data labeling, annotation, and human-in-the-loop AI evaluation platform for text, images, audio, video, time series, and multimodal datasets.
+cardDescription: Open-source data labeling and human-in-the-loop AI evaluation.
+seoTitle: Label Studio data labeling and AI evaluation platform
+seoDescription: Label Studio helps teams label datasets, curate benchmark data, review model outputs, and run human-in-the-loop AI evaluation workflows.
+author: HumanSignal
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://labelstud.io"
+documentationUrl: "https://labelstud.io/guide/"
+repoUrl: "https://github.com/HumanSignal/label-studio"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Web, Docker, Self-hosted
+tags:
+  - data-labeling
+  - evaluation
+  - open-source
+keywords:
+  - dataset curation
+  - human evaluation
+  - annotation tool
+prerequisites:
+  - Dataset or evaluation corpus that needs labeling, review, ranking, rubric scoring, or benchmark curation.
+  - Label Studio Community Edition, Label Studio Cloud, or a reviewed self-hosted deployment with persistent storage.
+  - Labeling instructions, reviewer policy, access controls, and export format requirements for downstream eval or training use.
+safetyNotes:
+  - Human labels, preference rankings, and rubric scores are judgment data, not ground truth; production eval pipelines should track reviewer agreement, sampling bias, and escalation rules.
+  - Model-assisted pre-labeling and ML backends can reinforce model errors if annotators accept predictions without review.
+  - API tokens, webhooks, storage connectors, and ML backend integrations should be scoped so labeling workflows cannot accidentally expose, overwrite, or retrain on the wrong dataset.
+privacyNotes:
+  - Label Studio projects can contain source data, annotations, predictions, reviewer identities, comments, task history, exports, and model feedback.
+  - Datasets may include sensitive text, images, audio, video, documents, time-series data, customer records, or proprietary prompts and completions.
+  - Hosted use sends project data to Label Studio Cloud; self-hosted deployments still need database, file storage, backup, access-control, and retention policies.
+  - External storage integrations such as S3, Google Cloud, Azure, Databricks, Redis, and local storage should be reviewed before syncing production data.
+---
+
+## Editorial notes
+
+Label Studio is a practical fit for teams building eval sets, preference datasets, benchmark corpora, and human review workflows around Claude-adjacent systems. It supports many data modalities, configurable labeling interfaces, project management, import/export, model-assisted labeling, API access, Python SDK usage, webhooks, and self-hosted or hosted deployment paths.
+
+## Source notes
+
+- The official website describes Label Studio as an open-source platform for data labeling, AI evaluation, and human-in-the-loop workflows.
+- The website covers LLM and agent evaluation use cases including agentic traces, RLHF and fine-tuning, custom benchmarks and rubrics, side-by-side comparison, and retrieval QA evaluation.
+- The documentation covers project creation, labeling interface configuration, data manager workflows, imports, pre-annotations, exports, storage connectors, API, Python SDK, webhooks, and machine-learning integration.
+- The GitHub repository is `HumanSignal/label-studio`, is Apache-2.0 licensed, and describes Label Studio as a multi-type data labeling and annotation tool with standardized output formats.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, open pull requests, live HeyClaude search results, and repository-wide content for `Label Studio`, `label-studio`, `labelstud.io`, `github.com/HumanSignal/label-studio`, `HumanSignal`, `data labeling`, `dataset curation`, `annotation`, `benchmark dataset`, and `eval dataset`. Agenta mentions annotations in prompt/eval workflow metadata, but no dedicated Label Studio tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

@@ -1,0 +1,59 @@
+---
+title: Microsoft PyRIT
+slug: pyrit
+category: tools
+description: Open-source Python framework from Microsoft for identifying generative AI safety and security risks through automated and human-led red-team assessments.
+cardDescription: Microsoft framework for generative AI risk identification and red-team assessment.
+seoTitle: Microsoft PyRIT generative AI red-team framework
+seoDescription: PyRIT is an open-source Microsoft framework for assessing generative AI security and safety risks with targets, scorers, memory, and red-team workflows.
+author: Microsoft
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://github.com/microsoft/PyRIT"
+documentationUrl: "https://github.com/microsoft/PyRIT/blob/main/doc/index.md"
+repoUrl: "https://github.com/microsoft/PyRIT"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Docker
+tags:
+  - ai-red-teaming
+  - security-testing
+  - open-source
+keywords:
+  - generative ai risk
+  - adversarial testing
+  - responsible ai
+prerequisites:
+  - Authorized generative AI system, test tenant, or lab target with written approval for red-team assessment.
+  - PyRIT installation path selected from the official Docker or local setup guidance in the repository.
+  - Provider credentials, target configuration, scorers, datasets, and result-retention rules reviewed before running assessments.
+safetyNotes:
+  - PyRIT is intended for responsible security and safety assessment; do not run red-team workflows against systems, accounts, or providers you are not authorized to test.
+  - Automated and multi-turn assessment strategies can generate adversarial prompts and risky model outputs, so runs should stay inside approved environments with monitoring and review.
+  - Treat scenario datasets, custom converters, scorers, and target connectors as test code that can affect cost, rate limits, model behavior, and downstream reporting.
+privacyNotes:
+  - PyRIT can store prompts, model responses, scores, attack results, conversation history, target metadata, and assessment notes in memory backends such as SQLite or Azure SQL.
+  - Provider credentials and endpoint secrets are configured through local PyRIT files and environment-style secret storage, and should not be committed or copied into shared reports.
+  - Assessment outputs may contain sensitive system behavior, policy weaknesses, generated harmful text, customer data from test targets, or proprietary prompts.
+---
+
+## Editorial notes
+
+Microsoft PyRIT is relevant for teams that need repeatable, source-backed AI risk assessment beyond ad hoc prompt probing. It provides an extensible Python framework for targets, attack strategies, scenarios, datasets, scorers, memory, command-line scanning, and a graphical interface for human-led red teaming.
+
+## Source notes
+
+- The GitHub README describes PyRIT as the Python Risk Identification Tool for generative AI, an open-source framework for proactively identifying risks in generative AI systems.
+- The in-repository documentation describes PyRIT as an automated and human-led AI red-teaming framework for assessing the security and safety of generative AI systems at scale.
+- The repository documentation lists built-in support for single-turn and multi-turn strategies, standardized scenarios, data leakage assessment, CoPyRIT, target adapters, memory, and flexible scoring.
+- The GitHub repository is `microsoft/PyRIT`, is MIT licensed, and uses repository topics for responsible AI, red-team tools, generative AI, and AI red-team workflows.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, open pull requests, live HeyClaude search results, and repository-wide content for `PyRIT`, `microsoft/PyRIT`, `github.com/microsoft/PyRIT`, `risk identification tool`, `generative AI risk`, `AI red team`, `adversarial prompt`, `garak`, `promptfoo`, `Giskard`, `Lakera`, and `Protect AI`. Garak and promptfoo already cover other LLM scanning and prompt-testing workflows, while Giskard, Lakera Guard, and Protect AI cover adjacent AI testing or protection surfaces. No dedicated PyRIT tools entry, PyRIT repository URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

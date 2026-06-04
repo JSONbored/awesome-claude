@@ -1,0 +1,59 @@
+---
+title: ast-grep
+slug: ast-grep
+category: tools
+description: Open-source CLI for structural code search, linting, and rewriting with abstract syntax tree patterns.
+cardDescription: Fast AST-based structural search, linting, and rewriting for codebases.
+seoTitle: ast-grep structural code search and rewrite CLI
+seoDescription: ast-grep helps teams search, lint, and rewrite code with abstract syntax tree patterns instead of plain text matching.
+author: ast-grep
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://ast-grep.github.io/"
+documentationUrl: "https://ast-grep.github.io/guide/introduction.html"
+repoUrl: "https://github.com/ast-grep/ast-grep"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - code-search
+  - static-analysis
+  - open-source
+keywords:
+  - structural search
+  - ast rewrite
+  - codemod
+prerequisites:
+  - Local source checkout for the codebase being searched, linted, or rewritten.
+  - ast-grep CLI installed from a reviewed package source such as npm, pip, cargo, Homebrew, Scoop, mise, MacPorts, or a source build.
+  - Language selection and rule patterns reviewed against representative files before large repository scans or rewrites.
+safetyNotes:
+  - ast-grep can rewrite many files quickly, so run searches, tests, and version-control review before applying broad fixes.
+  - Structural patterns can still overmatch when rules are too broad; use narrow language settings, test cases, and staged changes for codemods.
+  - Custom YAML rules and scripts should be reviewed before use in CI or automated agent workflows.
+privacyNotes:
+  - ast-grep primarily runs locally over source files and does not require uploading code to a hosted service for normal CLI use.
+  - Search results, JSON output, logs, CI artifacts, and generated patches may expose source snippets or proprietary code.
+  - Any package manager, editor extension, CI integration, or third-party wrapper around ast-grep may have its own telemetry or network behavior.
+---
+
+## Editorial notes
+
+ast-grep is useful when Claude or an engineering agent needs structural code search instead of brittle text matching. It lets teams search and rewrite code using patterns that look like ordinary code, backed by tree-sitter parsing, so large refactors, lint rules, and migration checks can target syntax shape rather than raw strings.
+
+## Source notes
+
+- The official README describes ast-grep as a CLI tool for code structural search, linting, and rewriting.
+- The documentation describes ast-grep as an AST-based tool that searches code by pattern code instead of plain text.
+- The guide covers command-line one-liners, YAML rule configuration, linting rules, project scans, code rewriting, editor integration, and language support.
+- The GitHub repository is `ast-grep/ast-grep`, is MIT licensed, and describes the project as written in Rust.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, live HeyClaude search results, and repository-wide content for `ast-grep`, `ast grep`, `astgrep`, `ast-grep.github.io`, `github.com/ast-grep/ast-grep`, `structural search`, `semantic code search`, `repository map`, and `codemod`. Related ast-grep MCP and Claude skill projects exist upstream, but no dedicated ast-grep tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

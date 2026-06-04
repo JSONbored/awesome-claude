@@ -1,0 +1,65 @@
+---
+title: DeepEval
+slug: deepeval
+category: tools
+description: Open-source Python framework for unit-testing LLM applications, agents, RAG pipelines, metrics, regression suites, and traces.
+cardDescription: Python LLM evaluation tests, metrics, regression checks, and tracing.
+seoTitle: DeepEval open-source LLM evaluation framework
+seoDescription: DeepEval helps teams write Python evaluation tests for LLM applications, agents, RAG systems, metrics, traces, and regression workflows.
+author: Confident AI
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://deepeval.com"
+documentationUrl: "https://deepeval.com/docs/getting-started"
+repoUrl: "https://github.com/confident-ai/deepeval"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - evaluation
+  - testing
+  - tracing
+keywords:
+  - deepeval
+  - llm unit testing
+  - llm tracing
+prerequisites:
+  - Python environment for installing and running the `deepeval` package in the project being tested.
+  - Representative LLM test cases, expected outputs, retrieval context, traces, datasets, or golden examples for the behavior being evaluated.
+  - Model provider credentials for LLM-as-a-judge metrics such as G-Eval, Answer Relevancy, or other configured metrics.
+  - CI policy for which evaluation thresholds are advisory, which are blocking, and who reviews failures before release decisions.
+safetyNotes:
+  - DeepEval metrics should be treated as regression and review signals, not proof that an LLM application is safe, correct, or production-ready.
+  - LLM-as-a-judge metrics can call configured model providers, consume quota, hit rate limits, and produce judge-model errors that need separate handling.
+  - Evaluation thresholds should be calibrated on real examples before they block deployments or trigger automated rollback, ranking, billing, or moderation decisions.
+  - Tracing instrumentation can wrap live application code, agents, retrievers, tools, and model calls; keep eval and production environments clearly separated.
+privacyNotes:
+  - Test cases, traces, spans, prompts, actual outputs, expected outputs, retrieval context, tool arguments, metadata, and evaluation results may contain sensitive user or business data.
+  - LLM-based metrics can send evaluation payloads to the configured model provider unless a reviewed local model path is used.
+  - DeepEval documentation says evaluations run locally by default, while Confident AI login and cloud reporting are optional paths for centralized results.
+  - The official data privacy docs say DeepEval collects basic PostHog telemetry by default, including event names, metric names, notebook usage, an anonymous UUID, and public IP, with `DEEPEVAL_TELEMETRY_OPT_OUT=1` available for opt-out.
+---
+
+## Editorial notes
+
+DeepEval is useful when Claude-adjacent application teams want evals to behave more like normal Python tests. It lets developers define LLM test cases, run metrics with `deepeval test run`, trace agents and internal components, compare regressions, and put evaluation failures into CI without turning the workflow into a separate prompt spreadsheet.
+
+This is distinct from Ragas, Promptfoo, and Giskard entries already in the directory: Ragas is strongest for RAG and LLM app evaluation loops, Promptfoo focuses on prompt testing and red teaming, and Giskard covers broader AI testing, scanning, and monitoring. DeepEval is the Python-first eval framework for writing unit-test-style checks, metrics, traces, and regression suites directly beside LLM application code.
+
+## Source notes
+
+- The official quickstart describes DeepEval as taking users from installation to a first local eval with a test case, metric, and `deepeval test run`.
+- The docs show `LLMTestCase`, `GEval`, `AnswerRelevancyMetric`, `assert_test`, and tracing with `@observe` for agent and component-level evaluation.
+- The docs state that DeepEval runs evaluations locally, with optional Confident AI login for centralized cloud reports, observability, evals, and monitoring.
+- The official data privacy page documents default basic telemetry, opt-out via `DEEPEVAL_TELEMETRY_OPT_OUT=1`, and optional Confident AI cloud data storage.
+- The GitHub repository is `confident-ai/deepeval`, is Apache-2.0 licensed, and describes the project as "The LLM Evaluation Framework."
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, guides, skills, agents, open pull requests, live issue state, and repository-wide content for `DeepEval`, `deepeval`, `confident-ai/deepeval`, `deepeval.com`, `Confident AI`, `LLMTestCase`, `AnswerRelevancyMetric`, `GEval`, `deepeval test run`, `llm unit testing`, and `llm tracing`. Existing Ragas, Promptfoo, Giskard, and Agenta entries cover adjacent evaluation, testing, safety, and LLMOps workflows, but no dedicated DeepEval tools entry, DeepEval source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

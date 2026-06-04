@@ -1,0 +1,314 @@
+---
+title: BrowserStack MCP Server for Claude
+slug: browserstack-mcp-server
+category: mcp
+description: >-
+  Connect Claude to BrowserStack for permission-scoped web, app, accessibility,
+  and test automation workflows.
+cardDescription: >-
+  Official BrowserStack MCP server for running browser and device testing,
+  fetching automation artifacts, and managing test workflows.
+seoTitle: BrowserStack MCP Server for Claude
+seoDescription: >-
+  Use the official BrowserStack MCP server with Claude to run browser and app
+  testing workflows, fetch automation artifacts, manage test cases, and access
+  BrowserStack tools through account-scoped permissions.
+author: BrowserStack
+authorProfileUrl: "https://www.browserstack.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://www.browserstack.com/docs/browserstack-mcp-server/overview"
+repoUrl: "https://github.com/browserstack/mcp-server"
+installable: true
+installCommand: >-
+  claude mcp add browserstack --env BROWSERSTACK_USERNAME=YOUR_USERNAME --env
+  BROWSERSTACK_ACCESS_KEY=YOUR_ACCESS_KEY -- npx -y
+  @browserstack/mcp-server@latest
+usageSnippet: >-
+  claude mcp add browserstack --env BROWSERSTACK_USERNAME=YOUR_USERNAME --env
+  BROWSERSTACK_ACCESS_KEY=YOUR_ACCESS_KEY -- npx -y
+  @browserstack/mcp-server@latest
+copySnippet: |-
+  {
+    "browserstack": {
+      "command": "npx",
+      "args": ["-y", "@browserstack/mcp-server@latest"],
+      "env": {
+        "BROWSERSTACK_USERNAME": "<username>",
+        "BROWSERSTACK_ACCESS_KEY": "<access key>"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "browserstack": {
+      "command": "npx",
+      "args": ["-y", "@browserstack/mcp-server@latest"],
+      "env": {
+        "BROWSERSTACK_USERNAME": "<username>",
+        "BROWSERSTACK_ACCESS_KEY": "<access key>"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - BrowserStack account with access to the products and projects you want Claude to use
+  - BrowserStack username and access key for local MCP setup, or OAuth access for the remote MCP server
+  - Node.js 18+ for the npm package; BrowserStack recommends the current Node.js LTS release
+  - Claude Desktop, VS Code, Cursor, Cline, or another MCP-capable client
+  - Local Testing setup when you need BrowserStack to reach localhost, staging, VPN, or firewall-restricted sites through the local server path
+safetyNotes:
+  - >-
+    BrowserStack MCP tools can launch real browser and device sessions, run web
+    and app automation, start accessibility scans, fetch screenshots and logs,
+    and create or update Test Management assets.
+  - >-
+    Access is bounded by the BrowserStack account, plan, product access, and
+    user permissions connected to the MCP server. Use a dedicated account or
+    least-privilege access key when possible.
+  - >-
+    Review prompts before allowing Claude to start sessions, run tests, upload
+    apps, upload PRDs or screenshots, create test cases, update test results, or
+    change BrowserStack project state.
+  - >-
+    BrowserStack Local can expose localhost, staging, VPN, or internal
+    application traffic to BrowserStack's cloud testing infrastructure for the
+    duration of a session. Use it only for approved environments.
+  - >-
+    Test runs, device minutes, accessibility scans, and automation sessions can
+    consume BrowserStack quota or incur account usage. Keep automated loops and
+    retry behavior explicit.
+privacyNotes:
+  - >-
+    BrowserStack may receive URLs, app binaries, test packages, screenshots,
+    videos, console logs, network logs, accessibility scan results, failure
+    logs, Test Management records, and uploaded PRD or screenshot files,
+    depending on the tools invoked.
+  - >-
+    Store `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` in MCP
+    environment configuration or your client's secret-management flow, not in
+    prompts, chat transcripts, or checked-in files.
+  - >-
+    The local MCP server runs on the user's machine and can keep credentials in
+    local environment configuration. The remote MCP option uses OAuth and avoids
+    manually passing an access key to the client.
+  - >-
+    Returned session links, screenshots, logs, test results, and AI-generated
+    fixes can become visible to the connected MCP client and model session.
+tags:
+  - browserstack
+  - browser-testing
+  - app-testing
+  - automation
+  - permissions
+  - mcp
+keywords:
+  - browserstack mcp
+  - browserstack claude
+  - browser automation mcp
+  - real device testing mcp
+  - app automate mcp
+  - browserstack automate
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The BrowserStack MCP server connects Claude and other MCP-capable clients to
+BrowserStack's testing platform. It can start real browser and device sessions,
+run web and app automation workflows, fetch screenshots and failure logs, launch
+accessibility scans, and manage BrowserStack Test Management assets from a
+coding assistant.
+
+This entry is focused on browser and device automation where permission
+boundaries matter. BrowserStack access is scoped by the account credentials or
+OAuth identity used by the MCP server, plus the BrowserStack products and
+projects available to that user. Treat the MCP server as a bridge into a real
+testing account, not a sandboxed toy browser.
+
+BrowserStack supports both local and remote MCP setup. The local server runs
+through `@browserstack/mcp-server` and uses a BrowserStack username and access
+key. The remote MCP server is hosted by BrowserStack, uses OAuth, and is useful
+when users cannot or do not want to install a local package.
+
+## Features
+
+- Start manual web testing sessions on BrowserStack Live across desktop and
+  mobile browser combinations.
+- Start manual app testing sessions on real iOS and Android devices through App
+  Live.
+- Set up and run BrowserStack Automate and App Automate workflows for Selenium,
+  Playwright, Appium, Espresso, XCUITest, and related testing stacks.
+- Fetch automation screenshots and failure logs for BrowserStack sessions.
+- Start web accessibility scans and ask BrowserStack's Accessibility Expert for
+  WCAG-oriented guidance.
+- Create projects, folders, test cases, test runs, and test results in
+  BrowserStack Test Management.
+- Upload PRDs, screenshots, or test-case files for BrowserStack AI-assisted test
+  generation workflows.
+- Use BrowserStack Local through the local MCP setup when testing localhost,
+  staging, VPN, or internal sites is approved.
+- Use remote MCP with OAuth when local installation is not practical and Local
+  Testing support is not required.
+
+## Use Cases
+
+- Ask Claude to open a website on a specific desktop browser or mobile device
+  combination for manual verification.
+- Run existing Playwright, Selenium, Appium, Espresso, or XCUITest suites on
+  BrowserStack infrastructure from an AI-enabled development environment.
+- Fetch screenshots or failure logs for a failed Automate or App Automate
+  session and summarize the likely cause.
+- Launch an accessibility scan for a target page and turn results into
+  actionable implementation tasks.
+- Create or update Test Management projects, cases, runs, and results during a
+  QA workflow.
+- Test a local development site on remote browsers through BrowserStack Local
+  when the environment is approved for cloud-device access.
+
+## Installation
+
+### Claude Code
+
+1. Confirm Node.js is installed: `node --version`.
+2. Create or select a BrowserStack account with access only to the products and
+   projects Claude should use.
+3. Add the local MCP server with BrowserStack credentials:
+
+```bash
+claude mcp add browserstack --env BROWSERSTACK_USERNAME=YOUR_USERNAME --env BROWSERSTACK_ACCESS_KEY=YOUR_ACCESS_KEY -- npx -y @browserstack/mcp-server@latest
+```
+
+4. Restart or refresh the MCP client session.
+5. Start with low-impact prompts such as listing available BrowserStack tools or
+   opening a single browser session.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `browserstack` server configuration shown below.
+3. Replace the username and access key placeholders with BrowserStack account
+   credentials.
+4. Restart Claude Desktop and test with a narrow browser or Test Management
+   request.
+
+## Configuration
+
+```json
+{
+  "browserstack": {
+    "command": "npx",
+    "args": ["-y", "@browserstack/mcp-server@latest"],
+    "env": {
+      "BROWSERSTACK_USERNAME": "<username>",
+      "BROWSERSTACK_ACCESS_KEY": "<access key>"
+    }
+  }
+}
+```
+
+## Remote MCP
+
+BrowserStack also documents a hosted remote MCP endpoint:
+
+```text
+https://mcp.browserstack.com/mcp
+```
+
+Use the remote option when OAuth-based setup is preferred or local package
+installation is blocked. Use the local MCP server when BrowserStack Local is
+needed for localhost, staging, VPN, or firewall-restricted test targets.
+
+## Examples
+
+### Open a browser session
+
+Ask Claude to launch a specific browser and operating system combination for a
+single approved URL.
+
+```plaintext
+Open the staging login page on the latest Chrome version on Windows 11 in BrowserStack Live.
+```
+
+### Run automated web tests
+
+Use BrowserStack Automate for an existing browser test suite.
+
+```plaintext
+Set up this Playwright test suite to run on BrowserStack and run the checkout smoke tests on Chrome and Firefox.
+```
+
+### Fetch failure artifacts
+
+Ask Claude to retrieve screenshots or logs for a known failed session.
+
+```plaintext
+Fetch screenshots and failure logs for this BrowserStack Automate session ID and summarize the likely failing step.
+```
+
+### Start an accessibility scan
+
+Run a focused scan for one URL instead of broad crawling.
+
+```plaintext
+Start an accessibility scan for the pricing page and summarize critical WCAG issues only.
+```
+
+### Manage test cases
+
+Create or update test assets only when the target project and folder are
+specified.
+
+```plaintext
+Add a high-priority invalid-login test case to the Checkout QA project under the Login folder.
+```
+
+## Security
+
+- Use a dedicated BrowserStack account or access key with only the products,
+  projects, and team permissions needed for MCP workflows.
+- Keep credentials in environment configuration or OAuth flows, not prompts or
+  repository files.
+- Confirm the target site, device, browser, project, and action before allowing
+  Claude to start sessions, upload app packages, run automation, or update Test
+  Management records.
+- Treat BrowserStack Local as an approved network bridge. Do not expose
+  internal apps, VPN-only systems, staging data, or localhost services unless
+  the environment owner has approved cloud testing.
+- Avoid unbounded automation loops. Test sessions, screenshots, scans, and
+  retries consume account quota and may create operational noise.
+
+## Troubleshooting
+
+### Claude cannot start the local server
+
+Confirm Node.js is installed and available to the MCP client process. Then run
+the package through `npx -y @browserstack/mcp-server@latest` from the same user
+environment.
+
+### Authentication fails
+
+Verify `BROWSERSTACK_USERNAME` and `BROWSERSTACK_ACCESS_KEY` against the
+BrowserStack Account Settings page. For remote MCP, reconnect through the OAuth
+flow instead of pasting access keys into prompts.
+
+### A tool is unavailable or denied
+
+Check whether the BrowserStack account has access to that product, project, or
+team feature. The MCP server cannot grant access beyond the connected
+BrowserStack identity.
+
+### Local site testing does not work
+
+Use the local MCP path and configure BrowserStack Local. The remote MCP path does
+not support Local Testing for localhost, VPN, firewall-restricted, or internal
+sites.
+
+### Session artifacts expose too much data
+
+Restrict the target URL, device session, test suite, and time window. Review
+screenshots, logs, uploaded files, and generated summaries before sharing them
+outside the team.

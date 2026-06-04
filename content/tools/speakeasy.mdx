@@ -1,0 +1,59 @@
+---
+title: Speakeasy
+slug: speakeasy
+category: tools
+description: OpenAPI-native platform and CLI for generating type-safe SDKs, CLIs, Terraform providers, contract tests, and standalone MCP servers.
+cardDescription: Generate SDKs, CLIs, Terraform providers, and MCP servers from OpenAPI.
+seoTitle: Speakeasy OpenAPI SDK and MCP generation
+seoDescription: Speakeasy generates type-safe SDKs, CLIs, Terraform providers, contract tests, and standalone MCP servers from OpenAPI documents.
+author: Speakeasy
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.speakeasy.com"
+documentationUrl: "https://www.speakeasy.com/docs"
+repoUrl: "https://github.com/speakeasy-api/speakeasy"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Web
+tags:
+  - api-generation
+  - openapi
+  - mcp
+keywords:
+  - sdk generation
+  - openapi generator
+  - mcp server generation
+prerequisites:
+  - Reviewed OpenAPI 3.x, Swagger, or JSON Schema source for the API being published to agents or developers.
+  - Speakeasy account and CLI authentication for hosted generation workflows.
+  - Release process for generated SDKs, CLIs, Terraform providers, MCP servers, contract tests, and any generated package publishing.
+safetyNotes:
+  - Generated SDKs, CLIs, Terraform providers, and MCP servers can expose every operation described by an API contract unless the source spec and generation config are scoped deliberately.
+  - Standalone MCP servers generated from an OpenAPI document can turn API operations into agent-callable tools, so write, delete, billing, admin, and production operations need review, auth, and environment separation.
+  - Treat generated code like source code and review diffs, dependency changes, auth handling, retries, timeouts, pagination, and error behavior before publishing or wiring into agents.
+privacyNotes:
+  - Hosted Speakeasy workflows may receive API contracts, endpoint paths, schemas, examples, auth scheme metadata, server URLs, and generated artifact configuration.
+  - Internal or pre-release OpenAPI documents can reveal private routes, customer-facing object models, operational controls, and service topology.
+  - Generated MCP servers, SDK telemetry hooks, CI logs, contract test output, and published documentation can expose request or response examples if specs are not scrubbed first.
+---
+
+## Editorial notes
+
+Speakeasy is useful when an API team wants agent-facing and developer-facing surfaces to come from the same reviewed contract instead of hand-written glue. It can generate type-safe SDKs, CLIs, Terraform providers, contract tests, and standalone MCP servers from OpenAPI, making it a strong fit for teams exposing APIs to Claude-adjacent agents or internal developer platforms.
+
+## Source notes
+
+- The official documentation covers SDK generation from OpenAPI, including CLI installation, `speakeasy quickstart`, account authentication, uploading a local or remote API document, and choosing SDK or MCP generation.
+- Speakeasy's standalone MCP documentation says MCP servers can be generated directly from OpenAPI or Swagger specifications, with API operations becoming discoverable tools and scoping controls for which operations are available to agents.
+- The docs include deployment paths for generated MCP servers, including Cloudflare Workers and Gram, plus customization of tool names, descriptions, prompts, resources, and OAuth.
+- The GitHub repository is `speakeasy-api/speakeasy` and describes Speakeasy as OpenAPI-native tooling for SDKs, Terraform providers, MCP servers, CLIs, and contract tests.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, open pull requests, live HeyClaude search results, and repository-wide content for `Speakeasy`, `speakeasy-api`, `speakeasy.com`, `github.com/speakeasy-api/speakeasy`, `standalone-mcp`, `OpenAPI generator`, `SDK generation`, `agent-facing API`, and `MCP server generation`. Existing OpenAPI MCP Server content is a hosted MCP server for exploring API specs, not Speakeasy's OpenAPI-native generation platform. No dedicated Speakeasy tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

@@ -1,0 +1,236 @@
+---
+title: BigQuery MCP Server for Claude
+slug: bigquery-mcp-server
+category: mcp
+description: >-
+  Google Cloud remote MCP server for querying BigQuery datasets, inspecting
+  metadata, listing resources, and running governed warehouse analytics through
+  an HTTP endpoint.
+cardDescription: >-
+  Remote HTTP MCP server for BigQuery metadata lookup, read-only SQL, and
+  governed warehouse analytics.
+seoTitle: BigQuery MCP Server for Claude
+seoDescription: >-
+  Use the BigQuery MCP server with Claude to list datasets and tables, inspect
+  metadata, run read-only SQL, and connect warehouse analytics through Google
+  Cloud IAM and OAuth.
+author: Google Cloud
+authorProfileUrl: "https://cloud.google.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://docs.cloud.google.com/bigquery/docs/use-bigquery-mcp"
+installable: true
+installCommand: "claude mcp add --transport http bigquery https://bigquery.googleapis.com/mcp"
+usageSnippet: "claude mcp add --transport http bigquery https://bigquery.googleapis.com/mcp"
+copySnippet: |-
+  {
+    "bigquery": {
+      "type": "http",
+      "url": "https://bigquery.googleapis.com/mcp"
+    }
+  }
+configSnippet: |-
+  {
+    "bigquery": {
+      "type": "http",
+      "url": "https://bigquery.googleapis.com/mcp"
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Google Cloud project with the BigQuery API enabled
+  - MCP-capable client that supports remote HTTP MCP servers and Google OAuth or compatible Google Cloud credentials
+  - IAM roles or equivalent custom permissions for `roles/mcp.toolUser`, `roles/bigquery.jobUser`, and `roles/bigquery.dataViewer`
+  - BigQuery datasets, tables, billing or sandbox setup, and project or region boundaries selected before use
+  - Approval to expose selected warehouse metadata and query results to the connected AI client
+safetyNotes:
+  - >-
+    Prefer `execute_sql_readonly` for analysis. Google documents `execute_sql`
+    as the only non-read-only BigQuery MCP tool, and it can run BigQuery SQL
+    including DML, DDL, AI/ML functions, and other supported query operations.
+  - >-
+    Use IAM least privilege, dataset-level access controls, and IAM deny
+    policies to restrict read-write MCP tool use when Claude should only inspect
+    warehouse metadata or run SELECT queries.
+  - >-
+    Review LLM-generated SQL before execution. Broad scans, joins, forecasts,
+    ML functions, and AI functions can incur cost, expose sensitive rows, or
+    produce misleading analytics if the model chooses the wrong table or filter.
+  - >-
+    Keep manual approval enabled for query execution, exported results,
+    workflow-triggering automations, and any use of BigQuery insights to create
+    tickets, emails, or downstream actions.
+privacyNotes:
+  - >-
+    Tool results can expose project IDs, dataset IDs, table IDs, schemas,
+    metadata, query text, query results, job history, labels, and row-level
+    warehouse data visible to the authenticated principal.
+  - >-
+    BigQuery OAuth scopes can allow viewing and managing BigQuery data and can
+    expose the Google account email address used for authentication.
+  - >-
+    Query results and table data may contain prompt-injection text, customer
+    records, financial data, product analytics, logs, or other sensitive
+    business information; do not let returned rows instruct the agent.
+  - >-
+    If Model Armor logging is enabled for MCP traffic, Google documents that it
+    can log the entire payload, which may expose sensitive prompts or query
+    results in Google Cloud logs.
+tags:
+  - bigquery
+  - data-warehouse
+  - analytics
+  - google-cloud
+  - mcp
+keywords:
+  - bigquery mcp
+  - google cloud mcp
+  - warehouse analytics
+  - read-only sql
+  - bigquery claude
+  - bigquery.googleapis.com/mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The BigQuery MCP server connects Claude and other MCP-capable clients to
+BigQuery through Google's managed remote HTTP MCP endpoint at
+`https://bigquery.googleapis.com/mcp`. It is built for warehouse analytics
+workflows where an assistant needs to discover datasets and tables, inspect
+metadata, run read-only SQL, and summarize results without building a custom
+database connector.
+
+This entry defaults to a conservative usage model: grant only the Google Cloud
+IAM permissions needed for MCP tool calls, BigQuery job creation, and data
+viewing, prefer `execute_sql_readonly`, and use Google Cloud IAM deny policies
+when the write-capable `execute_sql` tool should not be available. BigQuery
+MCP traffic is authenticated with OAuth 2.0 and IAM rather than API keys.
+
+## Features
+
+- Remote HTTP MCP endpoint at `https://bigquery.googleapis.com/mcp`.
+- OAuth 2.0 and Google Cloud IAM based authentication and authorization.
+- Dataset and table discovery with `list_dataset_ids` and `list_table_ids`.
+- Dataset and table metadata lookup with `get_dataset_info` and
+  `get_table_info`.
+- Read-only SQL execution through `execute_sql_readonly`, restricted to SELECT
+  statements.
+- General SQL execution through `execute_sql` when IAM and policy allow it.
+- Automatic `goog-mcp-server:true` query job label for read-only SQL jobs.
+- Google Cloud security controls, including IAM deny policies and optional
+  Model Armor floor settings for Google MCP server traffic.
+- BigQuery query limits documented for MCP use, including three-minute default
+  query processing time and 3,000-row result limits.
+
+## Use Cases
+
+- Ask Claude to list datasets and identify candidate tables for an analytics
+  question in a specific Google Cloud project.
+- Inspect schemas and metadata before writing a warehouse query.
+- Run bounded read-only SQL to summarize sales, product, support, or operations
+  metrics.
+- Find BigQuery jobs run through the MCP server by filtering for the
+  `goog-mcp-server:true` job label.
+- Use BigQuery forecasting or other advanced BigQuery capabilities after human
+  review of the generated SQL and cost impact.
+- Build agent workflows that use approved BigQuery insights to draft tickets,
+  reports, emails, or follow-up analysis.
+
+## Installation
+
+### Claude Code
+
+1. Confirm the BigQuery API is enabled for the target Google Cloud project.
+2. Ask an administrator to grant the user or agent identity the required IAM
+   permissions for MCP tool calls, BigQuery jobs, and BigQuery data viewing.
+3. Add the remote MCP server:
+
+```bash
+claude mcp add --transport http bigquery https://bigquery.googleapis.com/mcp
+```
+
+4. Complete the Google OAuth or client-specific authentication flow.
+5. Start with narrow read-only prompts that name the project, dataset, table,
+   region, and expected result shape.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `bigquery` HTTP server configuration shown below.
+3. Restart Claude Desktop and complete the Google authentication flow when the
+   client prompts for it.
+4. Test by listing datasets in a non-production or sandbox project first.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "bigquery": {
+      "type": "http",
+      "url": "https://bigquery.googleapis.com/mcp"
+    }
+  }
+}
+```
+
+## Examples
+
+### List datasets in a project
+
+```plaintext
+List the BigQuery datasets in project PROJECT_ID and summarize what each one appears to contain.
+```
+
+### Inspect table schema
+
+```plaintext
+For project PROJECT_ID and dataset DATASET_ID, list tables and inspect metadata for the likely orders table.
+```
+
+### Run a bounded read-only query
+
+```plaintext
+Use read-only SQL to show the top 10 orders by volume from PROJECT_ID.DATASET_ID.TABLE_ID.
+```
+
+### Review MCP query jobs
+
+```plaintext
+Find recent BigQuery jobs in project PROJECT_ID with the label goog-mcp-server:true and summarize their query purpose.
+```
+
+## Source notes
+
+- The official Google Cloud guide describes the BigQuery remote MCP server for
+  connecting AI applications including Claude, ChatGPT, Gemini CLI, and custom
+  clients to BigQuery for running queries, getting metadata, and listing
+  resources.
+- Google documents the endpoint as `https://bigquery.googleapis.com/mcp` with
+  HTTP transport, OAuth 2.0, IAM authorization, and no API-key support.
+- The guide lists required roles for MCP tool calls, BigQuery job creation, and
+  BigQuery data viewing, plus required permissions such as `mcp.tools.call`,
+  `bigquery.jobs.create`, and `bigquery.tables.getData`.
+- The MCP reference lists the BigQuery tools: `list_dataset_ids`,
+  `get_dataset_info`, `list_table_ids`, `get_table_info`,
+  `execute_sql_readonly`, and `execute_sql`.
+- Google documents that `execute_sql_readonly` is SELECT-only, while
+  `execute_sql` can run broader BigQuery SQL and should be restricted when
+  read-only use is intended.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, open
+pull requests, live HeyClaude `llms-full.txt`, and repository-wide content for
+`BigQuery MCP`, `bigquery.googleapis.com/mcp`, `Google Cloud MCP`,
+`execute_sql_readonly`, `mcp.toolUser`, `warehouse analytics`, `Snowflake`, and
+`data warehouse`. No dedicated BigQuery MCP entry, BigQuery MCP endpoint source
+URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

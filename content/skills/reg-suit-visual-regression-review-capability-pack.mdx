@@ -1,0 +1,198 @@
+---
+title: Reg-suit Visual Regression Review Capability Pack Skill
+slug: reg-suit-visual-regression-review-capability-pack
+category: skills
+description: "Expert reg-suit review skill for evaluating rendered UI image baselines, thresholds, snapshot storage, report artifacts, and visual QA release readiness."
+cardDescription: "Review reg-suit visual regression runs with baseline provenance, threshold checks, storage review, report triage, and release recommendations."
+seoTitle: Reg-suit Visual Regression Review Capability Pack Skill
+seoDescription: "Advanced AI skill for reviewing reg-suit visual regression testing, image baselines, threshold policy, report artifacts, and CI release gates."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 720
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/720"
+repoUrl: "https://github.com/reg-viz/reg-suit"
+documentationUrl: "https://github.com/reg-viz/reg-suit#readme"
+downloadUrl: "https://github.com/reg-viz/reg-suit/archive/refs/tags/v0.14.6.zip"
+installable: true
+installCommand: "npm install --save-dev reg-suit@0.14.5"
+usageSnippet: "Use this skill when reviewing reg-suit visual regression runs, image baseline changes, threshold policy, report artifacts, or visual QA release gates."
+copySnippet: |-
+  # Trigger
+  "Apply the reg-suit visual regression review capability pack to this UI change."
+
+  # Required output
+  1) reg-suit package/source version and config inventory
+  2) Baseline, actual image, threshold, and report review
+  3) Visual-diff findings with release-blocking and non-blocking issues
+  4) Validation plan and merge, hold, or request-changes recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://github.com/reg-viz/reg-suit#readme"
+  - "https://github.com/reg-viz/reg-suit/releases/tag/v0.14.6"
+  - "https://registry.npmjs.org/reg-suit/0.14.5"
+  - "https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/README.md"
+  - "https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/package.json"
+  - "https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/packages/reg-suit-cli/package.json"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - UI change, pull request, or release candidate with rendered image artifacts
+  - reg-suit configuration such as `regconfig.json`
+  - Baseline image source, actual image directory, and generated report location
+  - Threshold policy for accepted pixel or rate differences
+  - CI logs, storage configuration, and reviewer policy for accepting baseline changes
+safetyNotes:
+  - Installing reg-suit adds npm packages to the selected project environment; pin the reviewed package version and avoid global installs for review work.
+  - reg-suit can publish image snapshots and HTML reports through storage plugins such as S3 or Google Cloud Storage; review destination configuration before running in shared CI.
+  - Visual baselines can normalize accidental UI changes if accepted too casually; require owner approval for broad layout, color, text, or viewport changes.
+  - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
+privacyNotes:
+  - Rendered UI images and reports can expose environment URLs, branch names, visible UI text, test account data, and product screenshots.
+  - Storage and notification plugins can publish report links to CI systems, pull request comments, chat tools, or cloud buckets.
+  - Keep public review notes focused on changed components, thresholds, artifact links, and summarized findings; omit sensitive rendered content that does not need to be public.
+tags:
+  - reg-suit
+  - visual-regression
+  - rendered-page-qa
+  - screenshots
+  - capability-pack
+keywords:
+  - reg-suit visual regression review
+  - rendered page visual QA capability pack
+  - rendered UI screenshot review
+  - visual baseline review
+  - visual diff report triage
+  - screenshot threshold policy
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to reg-suit CLI package **0.14.5**, the reg-suit source release **v0.14.6**, npm metadata, and source files verified on **2026-06-03**. The source release contains `packages/reg-suit-cli/package.json` with package name `reg-suit` and version `0.14.5`.
+
+## Retrieval Sources
+
+- https://github.com/reg-viz/reg-suit#readme
+- https://github.com/reg-viz/reg-suit/releases/tag/v0.14.6
+- https://registry.npmjs.org/reg-suit/0.14.5
+- https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/README.md
+- https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/package.json
+- https://raw.githubusercontent.com/reg-viz/reg-suit/v0.14.6/packages/reg-suit-cli/package.json
+
+Prefer current reg-suit source, npm metadata, and repository documentation over model memory for CLI commands, plugin names, threshold options, and report behavior.
+
+## Scope Note
+
+This is not a Playwright E2E testing skill, a generic rendered-page workflow, or an after-edit hook. Use it for human-in-the-loop review of reg-suit visual regression artifacts: baselines, actual image sets, diff reports, thresholds, storage plugins, notification plugins, and release decisions.
+
+## Core Workflow
+
+1. Confirm the reg-suit package version, source release, npm metadata, repository status, and install path used for review.
+2. Locate `regconfig.json` and inventory `core.workingDir`, `core.actualDir`, `thresholdRate`, `thresholdPixel`, `matchingThreshold`, antialias handling, x-img-diff settings, and concurrency.
+3. Inventory configured plugins: key generator, publisher, notifier, storage destination, report destination, and pull request notification behavior.
+4. Confirm the baseline source, actual image source, expected branch or commit key, and whether the comparison target matches the release branch.
+5. Review generated reports for changed regions, inserted or moved areas, missing images, viewport-specific drift, font rendering changes, and component-level ownership.
+6. Classify visual changes as intentional, suspicious, release-blocking, flaky capture, environment mismatch, or baseline-maintenance noise.
+7. Review threshold policy. Check whether thresholds mask meaningful UI changes or fail harmless rendering variation.
+8. Build a validation plan: recapture steps, targeted page checks, owner review, usability spot checks when visual changes affect text or controls, and CI reruns for flaky captures.
+9. Produce a release recommendation with evidence links, accepted baseline list, blockers, follow-up owners, and a merge, hold, or request-changes decision.
+
+## Capability Scope
+
+- reg-suit package/source verification
+- `regconfig.json` and plugin review
+- Baseline and actual image provenance review
+- Threshold and antialias policy review
+- HTML report and visual diff triage
+- Storage and notification behavior review
+- CI visual QA gate review
+- Evidence-based release decision for UI changes
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for visual regression review and release gating.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for UI artifact review.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the review rules and validation checklist into repository-level visual QA instructions.
+
+## Required Inputs
+
+- reg-suit package version and source release
+- Pull request, release candidate, or UI change summary
+- `regconfig.json` and configured plugin list
+- Baseline image source and actual image directory
+- Generated report URL or local report path
+- Threshold policy and owner approval rules for accepting new baselines
+
+## Production Rules
+
+- Do not accept a new baseline until the visual change is tied to an intentional product or design change.
+- Do not treat a low diff percentage as safe when the changed region affects navigation, forms, prices, permissions, or critical calls to action.
+- Do not approve broad baseline churn when only one component was expected to change.
+- Treat missing, blank, clipped, overlapped, or wrong-viewport images as release-blocking until recaptured.
+- Keep visual review separate from functional test results; passing E2E tests do not prove the UI rendered correctly.
+- Require storage and notification destinations to be explicit before publishing visual reports from CI.
+- Prefer targeted recapture and owner review over raising thresholds to make a noisy run pass.
+
+## Output Contract
+
+1. Source evidence: reg-suit package version, source release, npm metadata, repo links, and docs reviewed.
+2. Config inventory: actual directory, working directory, thresholds, x-img-diff settings, plugins, storage, and notifications.
+3. Artifact review: baseline source, actual image set, report location, changed images, and changed regions.
+4. Findings: release blockers, non-blocking visual issues, flaky capture symptoms, and accepted intentional changes.
+5. Validation plan: exact recapture, CI, owner-review, and targeted page checks needed before merge.
+6. Recommendation: merge, hold, request changes, or recapture with evidence.
+
+## Troubleshooting
+
+**Issue:** The report shows widespread pixel drift
+
+**Fix:** Check rendering environment, fonts, viewport size, animation state, and capture timing before accepting a broad baseline update.
+
+**Issue:** The target branch has no expected images
+
+**Fix:** Review the key generator plugin, branch/commit key, storage destination, and CI checkout depth before treating every image as new.
+
+**Issue:** Thresholds hide meaningful changes
+
+**Fix:** Lower the threshold or split critical pages into stricter scenarios. Escalate changes affecting navigation, forms, pricing, permissions, or primary actions.
+
+**Issue:** Report links are unavailable after CI finishes
+
+**Fix:** Check publisher plugin settings, bucket permissions, report retention, and whether notification plugins point reviewers to the same report generated by the run.
+
+**Issue:** Baselines keep changing without product changes
+
+**Fix:** Stabilize fonts, viewport, locale, time, seeded data, animation state, and network fixtures before approving new images.
+
+## Validation Checklist
+
+- reg-suit package version, source release, npm metadata, and docs verified.
+- `regconfig.json` found and reviewed.
+- Baseline source and actual image directory identified.
+- Thresholds and antialias settings checked against project policy.
+- Storage and notification plugins inventoried.
+- Changed images and changed regions reviewed.
+- Missing, blank, clipped, and wrong-viewport captures checked.
+- Intentional visual changes tied to product or design evidence.
+- Recapture and owner-review requirements documented.
+- Merge, hold, request-changes, or recapture recommendation recorded.

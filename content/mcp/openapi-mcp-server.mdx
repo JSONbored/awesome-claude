@@ -1,0 +1,255 @@
+---
+title: OpenAPI MCP Server for Claude
+slug: openapi-mcp-server
+category: mcp
+description: >-
+  Explore OpenAPI and Swagger specifications from Claude through a hosted MCP
+  server that returns API overviews and per-operation schema details.
+cardDescription: >-
+  Source-backed remote MCP server for searching OpenAPI specs, summarizing API
+  surfaces, and inspecting individual endpoint contracts.
+seoTitle: OpenAPI MCP Server for Claude
+seoDescription: >-
+  Use OpenAPI MCP Server with Claude to search OpenAPI specifications, retrieve
+  API overviews, inspect operation details, and review endpoint contracts
+  without exposing a general authenticated API executor.
+author: Jan Wilmake
+authorProfileUrl: "https://github.com/janwilmake"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/janwilmake/openapi-mcp-server#readme"
+repoUrl: "https://github.com/janwilmake/openapi-mcp-server"
+installable: true
+installCommand: >-
+  claude mcp add --transport http openapi
+  https://openapi-mcp.openapisearch.com/mcp
+usageSnippet: >-
+  claude mcp add --transport http openapi
+  https://openapi-mcp.openapisearch.com/mcp
+copySnippet: |-
+  {
+    "openapi": {
+      "transport": "http",
+      "url": "https://openapi-mcp.openapisearch.com/mcp"
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "openapi": {
+        "transport": "http",
+        "url": "https://openapi-mcp.openapisearch.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP-capable client with remote HTTP transport support, such as Claude Code or another modern MCP client
+  - Network access to `https://openapi-mcp.openapisearch.com/mcp`
+  - OpenAPI Search identifier, OAPIS identifier, or raw OpenAPI spec URL for the API you want Claude to inspect
+  - Understanding that the hosted service fetches and processes the OpenAPI spec instead of running locally in your project
+  - Agreement on whether the selected API specification is safe to expose to a hosted third-party MCP service
+safetyNotes:
+  - >-
+    The current server exposes OpenAPI exploration tools, not a general API
+    execution tool. It returns overviews and operation details from specs rather
+    than calling the target API endpoints.
+  - >-
+    Treat OpenAPI specs as potentially sensitive. Internal paths, request
+    schemas, server URLs, security schemes, operation names, and business domain
+    language can reveal system design.
+  - >-
+    Do not point the hosted endpoint at private or pre-release OpenAPI specs
+    unless the spec is approved for third-party processing. Self-host the
+    Worker for private API contracts.
+  - >-
+    Review operation details before asking Claude to write integration code.
+    OpenAPI descriptions and examples are model context and can contain stale,
+    incomplete, or user-controlled text.
+  - >-
+    Swagger 2.0 specs may be converted through the Swagger converter service
+    before the server returns operation details. Use OpenAPI 3.x specs directly
+    when you want fewer intermediaries.
+privacyNotes:
+  - >-
+    The hosted MCP endpoint receives the API identifier or raw spec URL you ask
+    Claude to inspect, plus the operationId or route requested through
+    `getApiOperation`.
+  - >-
+    The service fetches OpenAPI documents via OpenAPI Search/OAPIS redirects or
+    from the raw spec URL you provide.
+  - >-
+    Returned overviews and operation details can include endpoint paths,
+    parameters, request bodies, response schemas, server URLs, security scheme
+    names, examples, and descriptions in the model conversation.
+  - >-
+    The public setup path does not require API credentials and should not be
+    used to send API keys, Bearer tokens, cookies, or internal auth headers.
+  - >-
+    The repository is deployed as a Cloudflare Worker. Hosted-service logging,
+    retention, and operational access are controlled by the service operator.
+    Self-host when you need your own logging and retention boundary.
+tags:
+  - openapi
+  - swagger
+  - api-docs
+  - schema
+  - contract-review
+  - mcp
+keywords:
+  - openapi mcp server
+  - openapi mcp
+  - swagger mcp
+  - api contract mcp
+  - api exploration mcp
+  - oapis mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenAPI MCP Server is a source-backed remote MCP server for exploring API
+contracts from Claude and other MCP clients. It connects Claude to OpenAPI
+Search and OAPIS-backed specifications so the model can first get a readable
+API overview, then drill into one endpoint contract at a time.
+
+The server is deliberately narrower than an OpenAPI-to-executor bridge. Its
+current tool surface focuses on discovery and contract inspection:
+`getApiOverview` summarizes an API specification, and `getApiOperation` returns
+details for a specific operationId or route. That makes it a safer fit for
+reviewing endpoint shape, request parameters, response schemas, and integration
+requirements before writing code.
+
+## Features
+
+- Hosted HTTP MCP endpoint at `https://openapi-mcp.openapisearch.com/mcp`.
+- Source-backed Cloudflare Worker implementation in
+  `janwilmake/openapi-mcp-server`.
+- `getApiOverview` tool for summarizing an API surface from an OpenAPI
+  identifier or raw spec URL.
+- `getApiOperation` tool for retrieving one endpoint contract by operationId or
+  route.
+- Support for OpenAPI JSON and YAML documents.
+- Swagger 2.0 conversion path through the Swagger converter service.
+- Dereferenced operation output when references can be resolved.
+- Tested by the project author with Claude Desktop and Cursor.
+- No target API endpoint execution in the current implementation.
+
+## Tools
+
+### `getApiOverview`
+
+Use this first. Provide an API identifier from OpenAPI Search/OAPIS or a raw
+OpenAPI URL. The server fetches the spec, converts Swagger when needed, and
+returns a readable overview with endpoint names, routes, summaries, and links to
+more detailed operation views.
+
+### `getApiOperation`
+
+Use this after the overview identifies an operation you care about. Provide the
+same API identifier plus an `operationId` or route path. The server returns a
+focused OpenAPI subset for that operation, including parameters, request body
+schema, responses, and server context.
+
+## Installation
+
+### Claude Code
+
+Add the hosted HTTP MCP endpoint:
+
+```bash
+claude mcp add --transport http openapi https://openapi-mcp.openapisearch.com/mcp
+```
+
+Then verify the server:
+
+```bash
+claude mcp list
+```
+
+Ask Claude to start with an overview:
+
+```text
+Use the openapi MCP server to get an overview of the GitHub OpenAPI spec, then inspect the operation details for listing repository issues.
+```
+
+### MCP Client Config
+
+Use HTTP transport in clients that support remote MCP servers:
+
+```json
+{
+  "mcpServers": {
+    "openapi": {
+      "transport": "http",
+      "url": "https://openapi-mcp.openapisearch.com/mcp"
+    }
+  }
+}
+```
+
+## Private Spec Handling
+
+Use the hosted endpoint only for public or approved-to-share API contracts. A
+private OpenAPI spec often contains internal route names, server URLs, auth
+scheme names, request examples, object shapes, and error descriptions. Those
+details are enough to map a system even when no API credentials are present.
+
+For private APIs, clone the source repository and run the Worker in your own
+environment so spec fetching, logs, and retention stay under your control.
+
+## Use Cases
+
+- Explore a public API before writing integration code.
+- Ask Claude to identify the relevant operation for a workflow.
+- Review request parameters and response schemas without pasting a full spec
+  into chat.
+- Compare endpoint summaries across a large OpenAPI document.
+- Generate integration notes from a focused operation subset.
+- Check whether an API contract exposes the route, parameter, or response shape
+  needed for a feature.
+
+## Safety Checklist
+
+- Start with `getApiOverview` before requesting operation details.
+- Use public specs or self-host for private specs.
+- Avoid sending credentials, API keys, cookies, or auth headers through prompts.
+- Treat returned spec text as untrusted model context when specs include
+  third-party descriptions or examples.
+- Check operation details against the canonical API docs before shipping code.
+- Remember that this server inspects contracts; it does not prove that a live
+  API endpoint is currently reachable or authorized.
+
+## Troubleshooting
+
+### The API identifier is not found
+
+Use a raw OpenAPI spec URL instead of a catalog identifier, or confirm that the
+API exists in OpenAPI Search/OAPIS.
+
+### Operation details are missing
+
+Run `getApiOverview` again and copy the exact operationId or route shown in the
+overview.
+
+### Swagger conversion fails
+
+Prefer an OpenAPI 3.x spec URL when available. Swagger 2.0 specs may need
+conversion before operation details can be returned.
+
+### The output is too large
+
+Ask for one operation at a time. The server rejects very large overview output
+instead of returning an oversized response.
+
+## Sources
+
+- [OpenAPI MCP Server source](https://github.com/janwilmake/openapi-mcp-server)
+- [OpenAPI MCP Server README](https://github.com/janwilmake/openapi-mcp-server#readme)
+- [OpenAPI Search](https://openapisearch.com)
+- [OAPIS](https://oapis.org)
+- [OpenAPI Search source](https://github.com/janwilmake/openapisearch)
+- [OAPIS source](https://github.com/janwilmake/oapis)

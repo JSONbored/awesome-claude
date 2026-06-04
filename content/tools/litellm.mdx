@@ -1,0 +1,59 @@
+---
+title: LiteLLM
+slug: litellm
+category: tools
+description: Open-source AI gateway and Python SDK for routing LLM calls through a unified OpenAI-compatible interface.
+cardDescription: Open-source AI gateway for routing LLM calls across providers.
+seoTitle: LiteLLM open-source AI gateway and model router
+seoDescription: LiteLLM is an open-source AI gateway and Python SDK for routing calls across OpenAI, Anthropic, Gemini, Bedrock, Azure, and other model providers.
+author: BerriAI
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://www.litellm.ai/ai-gateway"
+documentationUrl: "https://docs.litellm.ai/docs/"
+repoUrl: "https://github.com/BerriAI/litellm"
+packageUrl: "https://pypi.org/project/litellm/"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux, Self-hosted
+tags:
+  - ai-gateway
+  - model-routing
+  - open-source
+keywords:
+  - llm gateway
+  - model router
+  - openai compatible proxy
+prerequisites:
+  - Python or Docker for local/self-hosted use.
+  - Provider credentials for the model backends you choose to route through LiteLLM.
+  - A reviewed gateway configuration before sharing it with teammates or production clients.
+safetyNotes:
+  - LiteLLM can proxy requests to multiple model providers, so route and fallback behavior should be reviewed before production use.
+  - Gateway deployments can expose model access to teams or applications; configure authentication, budgets, rate limits, and network access intentionally.
+  - Avoid logging sensitive prompt, response, or credential material when enabling debugging, observability, or admin features.
+privacyNotes:
+  - Prompts and responses pass through the LiteLLM process and then to the selected upstream model provider.
+  - Gateway logs, spend tracking, and observability integrations may retain request metadata or payload excerpts depending on configuration.
+  - Self-hosted deployments still depend on the privacy terms of each configured model provider.
+---
+
+## Editorial notes
+
+LiteLLM is a strong fit for Claude and agent workflows that need one OpenAI-compatible gateway in front of multiple model providers. The official docs describe both the Python SDK and the self-hosted proxy, including routing, load balancing, virtual keys, spend tracking, guardrails, observability, and an admin UI.
+
+## Source notes
+
+- The official documentation describes LiteLLM as an open-source library with a unified interface for 100+ LLMs and a self-hosted LLM gateway/proxy.
+- The GitHub README describes LiteLLM as an open-source AI gateway for 100+ LLMs with OpenAI-format calls.
+- The PyPI package is published as `litellm` for Python SDK and proxy installation paths.
+
+## Duplicate check
+
+Checked current `content/tools/`, open pull requests, and the repository for `LiteLLM`, `BerriAI`, `llm gateway`, `model router`, and `openai compatible proxy`. No existing LiteLLM listing or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

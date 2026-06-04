@@ -1,0 +1,73 @@
+---
+title: Haystack
+slug: haystack
+category: tools
+description: Open-source AI orchestration framework for building production-ready agents, RAG pipelines, multimodal search, retrieval, and tool-using LLM applications.
+cardDescription: Build agents, RAG pipelines, search, retrieval, and tool-using LLM apps.
+seoTitle: Haystack AI orchestration framework
+seoDescription: Haystack helps teams build production-ready AI agents, RAG pipelines, multimodal search, retrieval, MCP tool integrations, and LLM applications with modular Python pipelines.
+author: deepset
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://haystack.deepset.ai/"
+documentationUrl: "https://docs.haystack.deepset.ai/docs/intro"
+repoUrl: "https://github.com/deepset-ai/haystack"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - rag
+  - agents
+  - orchestration
+keywords:
+  - haystack
+  - deepset haystack
+  - ai orchestration framework
+  - rag pipelines
+  - agentic pipelines
+prerequisites:
+  - Python project and dependency manager for installing `haystack-ai`, integration packages, document-store packages, tracing packages, or optional MCP support.
+  - Approved model provider, embedding provider, local model, or gateway configuration for generation, embeddings, reranking, and tool-calling workflows.
+  - Reviewed source documents, databases, APIs, web sources, SaaS connectors, or document stores that the pipeline is allowed to ingest, retrieve from, or update.
+  - Document store, vector store, search backend, cache, tracing backend, or deployment path sized for the pipeline's retrieval volume, latency, retention, and access-control needs.
+  - Test questions, expected answers, retrieval-quality checks, evaluation criteria, human review rules, and rollback ownership before using Haystack agents or RAG outputs in production workflows.
+safetyNotes:
+  - Haystack pipelines and agents can improve retrieval and orchestration, but they do not prove that generated answers, retrieved context, tool calls, or document-store writes are correct or safe.
+  - Pipeline components can fetch URLs, convert files, query document stores, call model providers, invoke tools, run loops, route branches, and write to storage; review each component's side effects before production use.
+  - Tool descriptions, retrieved documents, metadata, Jinja templates, pipeline YAML, web content, and connector outputs become model-facing context and can contain stale, malicious, or prompt-injection-like instructions.
+  - Agent loops, branching pipelines, validators, routers, and fallback generators need explicit iteration limits, timeout handling, rate-limit behavior, error handling, and human approval for account, data, or infrastructure actions.
+  - MCP toolsets can load external tools from local or remote MCP servers; narrow the tool list, review server permissions, and avoid exposing broad tool collections directly to an LLM.
+  - Tracing, evaluation, and pipeline logs are operational signals, not proof that an agent, search system, RAG pipeline, or multimodal workflow is safe, fair, compliant, or production-ready.
+privacyNotes:
+  - Haystack workflows can process source documents, chunks, metadata, embeddings, prompts, retrieved context, generated answers, tool arguments, tool results, component inputs, component outputs, traces, and logs.
+  - Model, embedding, reranking, search, tracing, and MCP integrations may send prompts, retrieved passages, user questions, metadata, or tool payloads to configured providers unless a reviewed local or private path is used.
+  - Document stores, vector databases, search indexes, caches, serialized pipelines, tracing backends, and deployed services may retain derived data outside the source system's native permissions, deletion, and audit controls.
+  - Haystack's official telemetry documentation says anonymous component-usage statistics are shared automatically by default and documents `HAYSTACK_TELEMETRY_ENABLED=False` as an opt-out path.
+  - Logging and tracing can capture pipeline flow, component inputs and outputs, generated text, retrieval payloads, latency, token usage, and errors; configure redaction and retention before enabling them on sensitive workloads.
+---
+
+## Editorial notes
+
+Haystack is useful when Claude-adjacent teams need a Python framework for production-oriented AI agents, RAG systems, multimodal search, and retrieval-heavy LLM applications. It gives developers a modular pipeline model for connecting retrievers, generators, rankers, routers, converters, document stores, tools, MCP toolsets, tracing, and deployment paths without collapsing the whole application into a single prompt chain.
+
+This is distinct from existing framework, evaluation, and observability entries. LlamaIndex focuses on data-aware LLM applications and document workflows, LangGraph focuses on stateful graph workflows, Pydantic AI focuses on typed Python agents, and MLflow, TruLens, Ragas, Langfuse, and Phoenix focus on evaluation or observability evidence. Haystack's center of gravity is modular AI orchestration: directed multigraph pipelines, agentic loops and branches, retrieval components, document-store integrations, search and RAG pipelines, and optional MCP tools.
+
+## Source notes
+
+- The official introduction describes Haystack as an open-source AI framework for production-ready agents, RAG applications, and scalable multimodal search systems.
+- The pipeline documentation describes Haystack pipelines as directed multigraphs of components and integrations, with support for simultaneous flows, standalone components, loops, branches, routers, indexing, querying, preprocessing, and agentic pipelines.
+- The agent documentation describes the `Agent` component as a loop-based system that uses chat LLMs and external tools, can maintain state, can stream outputs, and supports configurable exit conditions, maximum steps, confirmation strategies, and toolsets.
+- The MCPToolset documentation says Haystack can connect to MCP-compliant servers, dynamically discover tools, support Streamable HTTP, deprecated SSE, and StdIO transports, and use loaded tools with Chat Generators, `ToolInvoker`, or `Agent`.
+- The tracing documentation describes support for OpenTelemetry, Datadog, and custom tracing backends for understanding pipeline flow and component execution.
+- The telemetry documentation says Haystack shares anonymous component-usage statistics by default, lists data it says is not included, and documents an environment-variable opt-out.
+- The GitHub repository is `deepset-ai/haystack`, is Apache-2.0 licensed, and describes Haystack as an open-source AI orchestration framework for context-engineered, production-ready LLM applications.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Haystack`, `haystack`, `deepset`, `deepset-ai/haystack`, `haystack.deepset.ai`, `docs.haystack.deepset.ai`, `haystack-ai`, `MCPToolset`, `agentic pipelines`, `AI orchestration framework`, and `RAG pipelines`. Existing LlamaIndex, LangGraph, Pydantic AI, MLflow, TruLens, Ragas, Langfuse, Phoenix, and other entries cover adjacent framework, retrieval, evaluation, or observability workflows, but no dedicated Haystack tools entry, Haystack source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

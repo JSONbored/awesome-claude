@@ -104,7 +104,7 @@ focused checks that match the changed surface:
 pnpm install --frozen-lockfile
 pnpm validate:packages
 pnpm scan:packages
-pnpm test:submission-intake
+pnpm test:submission-pr-first
 pnpm test:registry-artifacts
 pnpm validate:raycast-feed
 MCP_ENDPOINT_URL=http://localhost:3000/api/mcp pnpm --filter @heyclaude/mcp validate:endpoint

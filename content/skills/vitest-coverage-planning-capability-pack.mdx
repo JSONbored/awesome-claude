@@ -1,0 +1,207 @@
+---
+title: Vitest Coverage Planning Capability Pack Skill
+slug: vitest-coverage-planning-capability-pack
+category: skills
+description: "Expert Vitest coverage planning skill for choosing providers, scoping reports, setting thresholds, triaging gaps, and designing practical coverage gates."
+cardDescription: "Plan Vitest coverage with V8/Istanbul provider choice, include/exclude scope, thresholds, reporters, gap triage, and CI-ready recommendations."
+seoTitle: Vitest Coverage Planning Capability Pack Skill
+seoDescription: "Advanced AI skill for Vitest coverage planning, including V8 and Istanbul providers, coverage include/exclude rules, thresholds, reporters, and gap triage."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 723
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/723"
+repoUrl: "https://github.com/vitest-dev/vitest"
+documentationUrl: "https://vitest.dev/guide/coverage.html"
+downloadUrl: "https://github.com/vitest-dev/vitest/archive/refs/tags/v4.1.8.zip"
+installable: true
+installCommand: "npm install --save-dev vitest@4.1.8 @vitest/coverage-v8@4.1.8"
+usageSnippet: "Use this skill when planning Vitest coverage scope, provider choice, threshold policy, coverage reporters, changed-file triage, or CI coverage gates."
+copySnippet: |-
+  # Trigger
+  "Apply the Vitest coverage planning capability pack to this test coverage gap."
+
+  # Required output
+  1) Vitest package/source version and coverage provider inventory
+  2) Coverage scope, include/exclude, reporters, and threshold review
+  3) Coverage gap findings with prioritized test-plan recommendations
+  4) Validation plan and merge, hold, or follow-up recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://vitest.dev/guide/coverage.html"
+  - "https://vitest.dev/config/coverage.html"
+  - "https://vitest.dev/guide/reporters.html"
+  - "https://vitest.dev/guide/cli.html"
+  - "https://github.com/vitest-dev/vitest/releases/tag/v4.1.8"
+  - "https://registry.npmjs.org/vitest/4.1.8"
+  - "https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/packages/vitest/package.json"
+  - "https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/guide/coverage.md"
+  - "https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/config/coverage.md"
+  - "https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/guide/cli.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - JavaScript or TypeScript project using Vitest or evaluating a Vitest coverage gate
+  - Test command, package manager, and `vitest.config` or Vite config
+  - Current coverage report, changed-file context, or uncovered source inventory
+  - Project risk areas, owner expectations, and release policy for test gaps
+  - Agreement on whether coverage is advisory, blocking, per-file, or trend-based
+safetyNotes:
+  - Installing Vitest and coverage providers adds npm packages to the selected project environment; pin reviewed versions and use project-local installs.
+  - Coverage runs execute the project test suite and can use test fixtures, network mocks, databases, or generated artifacts configured by the project.
+  - Vitest coverage can clean the configured reports directory before a run; confirm the reports directory is disposable before enabling coverage in shared workflows.
+  - Threshold changes can block or unblock CI; review threshold updates separately from test additions.
+  - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
+privacyNotes:
+  - Coverage output can reveal source paths, module names, uncovered function names, branch structure, report file names, and project layout.
+  - HTML, JSON, LCOV, and JUnit artifacts can include snippets, line ranges, and package structure from the reviewed project.
+  - Keep public review notes focused on aggregate gaps, file groups, risk areas, and validation commands; omit sensitive implementation details that do not need to be public.
+tags:
+  - vitest
+  - test-coverage
+  - coverage-planning
+  - testing
+  - capability-pack
+keywords:
+  - Vitest coverage planning
+  - test coverage capability pack
+  - coverage threshold review
+  - V8 Istanbul coverage review
+  - coverage gap triage
+  - Vitest coverage gate
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to Vitest **4.1.8**, source tag **v4.1.8**, npm metadata, and coverage documentation verified on **2026-06-03**. The reviewed package metadata requires Node **^20.0.0**, **^22.0.0**, or **>=24.0.0**.
+
+## Retrieval Sources
+
+- https://vitest.dev/guide/coverage.html
+- https://vitest.dev/config/coverage.html
+- https://vitest.dev/guide/reporters.html
+- https://vitest.dev/guide/cli.html
+- https://github.com/vitest-dev/vitest/releases/tag/v4.1.8
+- https://registry.npmjs.org/vitest/4.1.8
+- https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/packages/vitest/package.json
+- https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/guide/coverage.md
+- https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/config/coverage.md
+- https://raw.githubusercontent.com/vitest-dev/vitest/v4.1.8/docs/guide/cli.md
+
+Prefer current Vitest docs, npm metadata, and pinned source files over model memory for provider behavior, coverage options, thresholds, reporters, and CLI behavior.
+
+## Scope Note
+
+This is not a generic TDD rule pack, a stop-hook coverage report, or a test-suite generation command. Use it for human-in-the-loop planning of Vitest coverage scope, provider choice, gap triage, threshold policy, changed-file reports, and release gates.
+
+## Core Workflow
+
+1. Confirm Vitest version, Node runtime, package manager, coverage provider package, source tag, and coverage command used for review.
+2. Inventory test configuration: `vitest.config`, Vite config, `test.coverage`, scripts, reporters, output files, and CI command.
+3. Choose or validate provider strategy. Use V8 when fast runtime collection fits the environment; consider Istanbul when instrumentation scope or non-V8 runtime constraints matter.
+4. Review coverage scope: `coverage.include`, `coverage.exclude`, uncovered-file inclusion, generated files, test files, fixtures, and package boundaries.
+5. Review report settings: `reportsDirectory`, reporter list, LCOV/JSON/HTML/JUnit needs, `reportOnFailure`, and whether the report format supports the reviewer workflow.
+6. Review thresholds: lines, functions, branches, statements, per-file behavior, negative uncovered-item limits, and any auto-update policy.
+7. Triage gaps by product risk rather than percentage alone: core flows, error paths, adapters, edge cases, state transitions, and recent change areas.
+8. Build a coverage plan: tests to add, tests to refactor, low-value files to exclude with rationale, thresholds to ratchet, and checks to run before merge.
+9. Produce a recommendation with blockers, safe follow-ups, threshold proposal, validation commands, and owner decisions.
+
+## Capability Scope
+
+- Vitest package/source verification
+- Coverage provider selection
+- Coverage include/exclude review
+- Threshold and per-file policy review
+- Reporter and artifact planning
+- Changed-file coverage triage
+- Coverage gap prioritization
+- Evidence-based merge or follow-up recommendation
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for Vitest coverage planning and test-gap review.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for coverage review and release-gate planning.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level test coverage guidance.
+
+## Required Inputs
+
+- Vitest version and coverage provider package
+- Test command and package manager
+- `vitest.config` or Vite config
+- Current coverage output or changed-file context
+- Project risk areas and release policy
+- Owner expectations for thresholds, exclusions, and follow-up work
+
+## Production Rules
+
+- Do not judge test adequacy by aggregate percentage alone; connect gaps to product risk and recent changes.
+- Do not add broad exclusions without a written reason and owner agreement.
+- Treat threshold decreases, auto-update changes, and per-file policy changes as release-impacting until reviewed.
+- Include uncovered source files intentionally; otherwise untouched files can disappear from the report.
+- Keep generated code, fixtures, and test helpers out of coverage only when the exclusion is deliberate.
+- Prefer small, risk-based threshold ratchets over unrealistic all-at-once coverage targets.
+- Keep coverage planning separate from test execution success; passing tests can still leave critical branches uncovered.
+
+## Output Contract
+
+1. Source evidence: Vitest version, source tag, npm metadata, coverage docs, and config files reviewed.
+2. Configuration inventory: provider, include/exclude, reporters, reports directory, thresholds, and CI command.
+3. Gap analysis: uncovered file groups, branches, functions, changed files, and risk areas.
+4. Coverage plan: test additions, refactors, exclusions, threshold ratchets, and owner follow-up.
+5. Validation plan: exact coverage command, focused test command, report artifact, and CI gate.
+6. Recommendation: merge, hold, request changes, or accept with tracked follow-up.
+
+## Troubleshooting
+
+**Issue:** Coverage report ignores untouched source files
+
+**Fix:** Configure `coverage.include` with source globs so uncovered files are present in the report.
+
+**Issue:** V8 coverage is unexpectedly slow
+
+**Fix:** Check module count and runtime environment. Compare V8 with Istanbul when instrumentation can limit the measured file set.
+
+**Issue:** Thresholds fail on unrelated files
+
+**Fix:** Separate global and per-file thresholds, check changed-file scope, and decide whether the failure reflects product risk or stale baseline policy.
+
+**Issue:** Report artifacts are too noisy for review
+
+**Fix:** Use targeted reporters such as text-summary, LCOV, JSON, or JUnit depending on whether reviewers need quick triage, CI annotations, or trend ingestion.
+
+**Issue:** Coverage improves but misses important behavior
+
+**Fix:** Review branch and function coverage for core workflows, error paths, adapters, and state transitions instead of relying only on line coverage.
+
+## Validation Checklist
+
+- Vitest version, source tag, npm metadata, and coverage docs verified.
+- Node runtime requirement checked.
+- Coverage provider selected and provider package identified.
+- Include/exclude scope reviewed.
+- Reports directory and reporter list checked.
+- Thresholds reviewed for global, per-file, and uncovered-item behavior.
+- Changed-file and product-risk gaps triaged.
+- Exclusions documented with rationale.
+- Validation commands and artifacts recorded.
+- Merge, hold, request-changes, or follow-up recommendation documented.

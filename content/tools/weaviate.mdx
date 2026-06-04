@@ -1,0 +1,74 @@
+---
+title: Weaviate
+slug: weaviate
+category: tools
+description: Open-source, cloud-native vector database for semantic search, hybrid search, RAG, reranking, multimodal retrieval, agent workflows, and production AI applications.
+cardDescription: Build AI retrieval systems with semantic search, hybrid search, RAG, and cloud-native deployment.
+seoTitle: Weaviate vector database for AI applications
+seoDescription: Weaviate is an open-source vector database for AI applications with semantic search, hybrid search, RAG, reranking, multimodal retrieval, multi-tenancy, replication, role-based access control, and cloud deployment options.
+author: Weaviate
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://weaviate.io/"
+documentationUrl: "https://docs.weaviate.io/weaviate"
+repoUrl: "https://github.com/weaviate/weaviate"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - vector-database
+  - retrieval
+  - rag
+keywords:
+  - Weaviate
+  - vector database
+  - semantic search
+  - hybrid search
+  - agentic RAG
+prerequisites:
+  - Deployment path selected for local Docker, Kubernetes, embedded evaluation, marketplace deployment, self-hosted infrastructure, or Weaviate Cloud.
+  - Data model for collections, objects, vector embeddings, metadata properties, tenant boundaries, schema evolution, indexing strategy, and deletion behavior.
+  - Approved vectorization plan using integrated model providers or precomputed embeddings, with embedding dimensions, model licenses, and provider data handling reviewed.
+  - Search and retrieval design for semantic search, keyword search, hybrid search, filters, reranking, generative search, and agent-facing context assembly.
+  - Operational plan for backups, replication, role-based access control, network exposure, monitoring, cost limits, and recovery before using Weaviate in production workflows.
+safetyNotes:
+  - Weaviate can power RAG and agent workflows, but retrieved context still needs relevance checks, freshness checks, permission filtering, and evaluation before influencing automated decisions.
+  - Integrated vectorizers, generative search, rerankers, Query Agent, and external model providers can send text, metadata, queries, or search results outside the database boundary depending on configuration.
+  - Hybrid, vector, keyword, image, multimedia, and generative search can return plausible but incomplete or stale context if chunking, filters, schema, or indexing settings are wrong.
+  - Multi-tenancy, replication, and role-based access control are production features, not substitutes for application-level permission checks and tenant-aware prompt assembly.
+  - Local Docker, Kubernetes, embedded, marketplace, and cloud deployments each need explicit network, storage, upgrade, observability, and resource-limit decisions.
+  - Generated summaries, chatbot answers, and agent actions that use Weaviate results should remain reviewable, testable, and attributable to the source objects retrieved.
+privacyNotes:
+  - Weaviate databases can store source objects, vectors, metadata, tenant labels, query history, retrieved context, generated outputs, and operational logs that may contain sensitive project or user data.
+  - Embeddings can encode information about source records and should follow the same retention, deletion, backup, and access policies as the underlying documents.
+  - Integrated model providers, Weaviate Cloud, Query Agent, external generative modules, and observability systems may process prompts, queries, search results, or object metadata depending on setup.
+  - Metadata properties used for filtering can expose user identity, source systems, document provenance, access groups, or business labels if exported or logged carelessly.
+  - Agent workflows should define who may view retrieval traces, generated answers, source citations, logs, and failed-query artifacts before exposing Weaviate-backed context to users.
+---
+
+## Editorial notes
+
+Weaviate is useful when Claude-adjacent teams need a production-oriented vector database for semantic search, hybrid search, RAG, reranking, multimodal retrieval, recommendation systems, chatbots, content classification, and agent workflows. It combines object storage, vector search, keyword search, filters, generative search, client libraries, APIs, Docker and Kubernetes deployments, Weaviate Cloud, Query Agent, and role-based operational controls.
+
+This is distinct from existing entries. The current `mcp-setup` command mentions Weaviate only as an example vector search engine. Chroma is another retrieval database, but Chroma's entry centers on lightweight AI data infrastructure for embeddings, metadata, local development, self-hosting, and Chroma Cloud. Weaviate's center of gravity is a cloud-native vector database with object and vector storage, semantic and hybrid search, integrated vectorization, RAG and reranking, multi-tenancy, replication, role-based controls, Query Agent, and broader deployment options.
+
+## Source notes
+
+- The official README describes Weaviate as an open-source, cloud-native vector database that stores objects and vectors for semantic search at scale.
+- The README says Weaviate combines vector similarity search with keyword filtering, retrieval-augmented generation, and reranking in a single query interface.
+- The README lists common use cases including RAG systems, semantic and image search, recommendation engines, chatbots, and content classification.
+- The README says Weaviate supports automatic vectorization at import through integrated models from providers such as OpenAI, Cohere, Hugging Face, and others, or direct import of precomputed embeddings.
+- The README describes production features including multi-tenancy, replication, role-based access control, horizontal scaling, vector compression, object time-to-live, REST, gRPC, GraphQL, and client libraries.
+- The official docs describe Weaviate as an open-source AI vector database and list Weaviate Database, Weaviate Cloud, Query Agent, Weaviate Embeddings, external model providers, Docker, Kubernetes, and embedded deployment options.
+- The search docs list query basics, Query Agent natural-language search, vector similarity search, image search, multimedia search, BM25 keyword search, hybrid search, RAG, reranking, aggregation, and filters.
+- The repository is `weaviate/weaviate`, is BSD-3-Clause licensed, and describes Weaviate as an open-source vector database with objects, vectors, structured filtering, and cloud-native scalability.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `Weaviate`, `weaviate.io`, `weaviate/weaviate`, `Weaviate Cloud`, `Weaviate vector`, `Query Agent`, `semantic search`, and `hybrid search`. The only Weaviate-specific content hit is a generic MCP setup command bullet that names Weaviate as a vector search engine; no dedicated Weaviate tools entry, Weaviate source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. Weaviate includes a BSD-3-Clause open-source database, Weaviate Cloud, and commercial deployment options.

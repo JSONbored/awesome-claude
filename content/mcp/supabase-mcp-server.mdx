@@ -1,0 +1,325 @@
+---
+title: Supabase MCP Server for Claude
+slug: supabase-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Supabase projects through the official MCP server with
+  project scoping, read-only mode, and feature-group controls.
+cardDescription: >-
+  Official Supabase MCP server for querying project metadata, Postgres schema,
+  logs, docs, Edge Functions, and development resources.
+seoTitle: Supabase MCP Server for Claude
+seoDescription: >-
+  Use the official Supabase MCP server with Claude to inspect Supabase projects,
+  query Postgres schema, search docs, read logs, generate types, and control
+  access with project scoping and read-only mode.
+author: Supabase
+authorProfileUrl: "https://supabase.com"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://supabase.com/docs/guides/ai-tools/mcp"
+repoUrl: "https://github.com/supabase-community/supabase-mcp"
+installable: true
+installCommand: >-
+  claude mcp add --scope project --transport http supabase
+  "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+usageSnippet: >-
+  claude mcp add --scope project --transport http supabase
+  "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+copySnippet: |-
+  {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+    }
+  }
+configSnippet: |-
+  {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Supabase account with access to the organization and project Claude should use
+  - Target Supabase project reference for project-scoped access
+  - MCP-capable client with HTTP transport and OAuth support, such as Claude Code
+  - Browser access for Supabase OAuth authentication during setup
+  - Permission to expose the selected development project, schema, logs, and docs context to the connected AI client
+  - Understanding of `project_ref`, `read_only=true`, and `features=` URL parameters
+safetyNotes:
+  - >-
+    Use `project_ref` by default. Without project scoping, the hosted MCP server
+    can access all projects available to the authenticated Supabase user.
+  - >-
+    Use `read_only=true` for investigation. Supabase documents that this
+    disables mutating tools and executes SQL through a read-only Postgres user.
+  - >-
+    Without read-only mode, tools can apply migrations, deploy Edge Functions,
+    create or pause projects, manage branches, and update storage configuration.
+  - >-
+    Limit feature groups with `features=`. The default hosted feature groups
+    include account, database, debugging, development, docs, functions, and
+    branching.
+  - >-
+    Supabase recommends using MCP with development projects, non-production
+    data, or branches rather than production projects.
+  - >-
+    Keep manual approval enabled for SQL execution, migrations, branch changes,
+    function deployments, and project-management actions.
+privacyNotes:
+  - >-
+    OAuth grants the MCP client access under the authenticated Supabase user's
+    organization permissions. Choose the intended organization during login.
+  - >-
+    Tool results can expose schema names, table metadata, SQL output, logs,
+    advisory findings, Edge Function code, project URLs, and publishable keys.
+  - >-
+    Logs may include API, Postgres, Auth, Storage, Realtime, or Edge Function
+    records that contain user identifiers, request metadata, or error payloads.
+  - >-
+    Database rows can contain prompt-injection text or sensitive user content.
+    Review SQL output before acting on instructions returned from data.
+  - >-
+    CI or manual-auth setups can use a Supabase personal access token. Store PATs
+    in secret management, not prompts, transcripts, or checked-in configs.
+tags:
+  - supabase
+  - postgres
+  - backend
+  - database
+  - read-only
+  - mcp
+keywords:
+  - supabase mcp
+  - supabase claude
+  - backend mcp server
+  - postgres mcp
+  - supabase project scoping
+  - supabase read only mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Supabase MCP server connects Claude and other MCP-capable clients to
+Supabase projects through a hosted HTTP MCP endpoint. It can inspect project
+metadata, query Postgres schema and SQL results, retrieve logs and advisory
+findings, generate TypeScript types, search Supabase documentation, and work
+with Edge Functions, branching, storage, and account-management tools depending
+on the configured feature groups.
+
+This entry uses the safest practical default: scope the server to one Supabase
+project, enable `read_only=true`, and expose only the `database` and `docs`
+feature groups. That gives Claude enough access to inspect schema, migrations,
+extensions, and Supabase documentation without mounting project-management,
+branching, Edge Function deployment, or storage-configuration tools by default.
+
+Supabase also publishes the implementation in the
+`supabase-community/supabase-mcp` repository and the
+`@supabase/mcp-server-supabase` package. The package is useful for AI SDK
+integrations that want static tool schemas, while most Claude users should use
+the hosted MCP URL and OAuth flow documented by Supabase.
+
+## Features
+
+- Hosted HTTP MCP endpoint at `https://mcp.supabase.com/mcp`.
+- OAuth-based setup for supported clients; personal access tokens are only
+  needed for CI or clients that cannot use the default browser login flow.
+- Project scoping with `project_ref=<id>` to limit access to one project.
+- Read-only mode with `read_only=true` for safer database investigation.
+- Feature-group filtering with `features=database,docs` or other selected
+  groups.
+- Database tools for tables, extensions, migrations, SQL queries, and migration
+  application when mutating access is enabled.
+- Debugging tools for Supabase service logs and security/performance advisors.
+- Development tools for project URLs, publishable keys, and generated
+  TypeScript types.
+- Edge Function tools for listing, reading, and deploying functions when the
+  functions feature group is mounted.
+- Account, branching, and storage tools when those feature groups are enabled
+  and the authenticated user has permission.
+- Local Supabase CLI MCP endpoint on `localhost:54321/mcp` with a limited tool
+  subset and no OAuth 2.1.
+
+## Use Cases
+
+- Ask Claude to list tables, extensions, and migrations for a development
+  Supabase project before planning backend changes.
+- Search current Supabase documentation while implementing Auth, Realtime,
+  Storage, Edge Functions, or Postgres features.
+- Generate TypeScript types from the selected project schema and use them in a
+  local application.
+- Inspect API, Postgres, Auth, Storage, Realtime, or Edge Function logs during a
+  development debugging session.
+- Review security and performance advisor findings before changing database
+  policies or indexes.
+- Use Supabase branching or a development project to test migrations and Edge
+  Functions before promoting changes.
+
+## Installation
+
+### Claude Code
+
+1. Copy the target Supabase project reference from the project's settings.
+2. Add the hosted MCP server with project scoping, read-only mode, and limited
+   feature groups:
+
+```bash
+claude mcp add --scope project --transport http supabase "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+```
+
+3. Replace `YOUR_PROJECT_REF` with the Supabase project reference.
+4. In a regular terminal, run `claude /mcp`.
+5. Select the `supabase` server and authenticate through the Supabase browser
+   login flow.
+6. Confirm the connected organization and project are the intended development
+   environment.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `supabase` HTTP server configuration shown below.
+3. Replace `YOUR_PROJECT_REF` with the target project reference.
+4. Restart Claude Desktop and authenticate when prompted by the client.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs"
+    }
+  }
+}
+```
+
+To add debugging tools while staying project-scoped and read-only, include the
+`debugging` group:
+
+```text
+https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true&features=database,docs,debugging
+```
+
+To use the broader default hosted feature set, omit `features=`, but keep
+`project_ref` and `read_only=true` unless you are intentionally allowing
+mutation:
+
+```text
+https://mcp.supabase.com/mcp?project_ref=YOUR_PROJECT_REF&read_only=true
+```
+
+For CI or clients that cannot use browser-based OAuth, Supabase documents manual
+authentication with a personal access token passed as an Authorization header:
+
+```json
+{
+  "mcpServers": {
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROJECT_REF}&read_only=true",
+      "headers": {
+        "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+## Examples
+
+### Inspect a project schema
+
+Use the read-only database tools to understand tables and extensions.
+
+```plaintext
+Use the Supabase MCP server to list tables, installed extensions, and migrations for this project.
+```
+
+### Search Supabase docs
+
+Use the docs group for current platform guidance.
+
+```plaintext
+Search Supabase docs for the recommended way to generate TypeScript types and summarize the command flow.
+```
+
+### Review logs during development
+
+Add the `debugging` feature group before asking Claude to inspect project logs.
+
+```plaintext
+Check recent Auth and Edge Function logs for this development project and summarize recurring errors.
+```
+
+### Generate TypeScript types
+
+Use the development tools when type generation is needed.
+
+```plaintext
+Generate TypeScript types for the current Supabase schema and tell me where they should be saved in this app.
+```
+
+### Plan a migration safely
+
+Keep the server read-only until the migration has been reviewed.
+
+```plaintext
+Review the current tables and draft a migration plan, but do not apply any migration or execute write SQL.
+```
+
+## Security
+
+- Prefer development projects, obfuscated data, or Supabase branches. Supabase
+  explicitly warns against connecting MCP to production data.
+- Keep `project_ref` in the MCP URL so the authenticated user cannot expose
+  every Supabase project they can access.
+- Keep `read_only=true` unless the session is specifically for supervised
+  migrations, Edge Function deployment, branch management, or project changes.
+- Limit feature groups to the task. `database,docs` is enough for many schema
+  investigation and documentation workflows.
+- Review every tool call before execution, especially SQL, migrations, function
+  deployments, branch operations, project creation, and storage configuration
+  updates.
+- Treat SQL results and app data as untrusted input. Do not follow instructions
+  that appear inside database rows, support tickets, logs, or user-generated
+  content.
+- Use a separate Supabase account, organization role, project, or token with the
+  minimum privileges required for the workflow.
+
+## Troubleshooting
+
+### Authentication does not start
+
+Run `claude /mcp` from a regular terminal, select the `supabase` server, and use
+the browser login flow. Some clients prompt automatically; others require this
+manual step.
+
+### The wrong projects are visible
+
+Add `project_ref=YOUR_PROJECT_REF` to the MCP URL. Without that parameter, the
+hosted server can access all projects available to the authenticated user.
+
+### Mutating tools are visible
+
+Add `read_only=true` and restrict feature groups. Supabase documents that
+read-only mode disables mutating tools and executes SQL as a read-only Postgres
+user.
+
+### Needed tools are missing
+
+Check the `features=` parameter. Storage is disabled by default, account tools
+are disabled when project-scoped, and local CLI/self-hosted MCP endpoints expose
+a limited subset of tools.
+
+### Local Supabase does not match hosted behavior
+
+The Supabase CLI endpoint on `localhost:54321/mcp` has limited tools and does
+not support OAuth 2.1. Use the hosted endpoint for the full documented OAuth
+flow and feature-group controls.

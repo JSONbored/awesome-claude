@@ -345,4 +345,23 @@ describe("MCP config validator", () => {
     );
     expect(JSON.parse(result.fixedConfigText)).toHaveProperty("mcpServers");
   });
+
+  it("treats http://[::1] IPv6 loopback as localhost", () => {
+    const httpsWarning =
+      "Remote MCP URLs should use HTTPS unless they are localhost.";
+
+    const loopback = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: { local: { url: "http://[::1]:3000/sse" } },
+      }),
+    );
+    expect(loopback.warnings).not.toContain(`local: ${httpsWarning}`);
+
+    const remote = validateMcpConfigText(
+      JSON.stringify({
+        mcpServers: { remote: { url: "http://example.com:3000/sse" } },
+      }),
+    );
+    expect(remote.warnings).toContain(`remote: ${httpsWarning}`);
+  });
 });

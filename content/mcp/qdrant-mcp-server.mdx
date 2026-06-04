@@ -1,0 +1,382 @@
+---
+title: Qdrant MCP Server for Claude
+slug: qdrant-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Qdrant for read-only semantic search or opt-in semantic
+  memory storage through the official MCP server.
+cardDescription: >-
+  Official Qdrant MCP server for finding and optionally storing semantic memory
+  in Qdrant collections with FastEmbed embeddings.
+seoTitle: Qdrant MCP Server for Claude
+seoDescription: >-
+  Use the official Qdrant MCP server with Claude to search vector collections,
+  retrieve semantic memory, and optionally store memories with clear read-only,
+  metadata, embedding, and API-key boundaries.
+author: Qdrant
+authorProfileUrl: "https://github.com/qdrant"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://github.com/qdrant/mcp-server-qdrant#readme"
+repoUrl: "https://github.com/qdrant/mcp-server-qdrant"
+installable: true
+installCommand: >-
+  claude mcp add qdrant --env QDRANT_URL=https://YOUR_QDRANT_HOST:6333 --env
+  QDRANT_API_KEY=YOUR_QDRANT_API_KEY --env COLLECTION_NAME=YOUR_COLLECTION
+  --env QDRANT_READ_ONLY=true -- uvx mcp-server-qdrant
+usageSnippet: >-
+  claude mcp add qdrant --env QDRANT_URL=https://YOUR_QDRANT_HOST:6333 --env
+  QDRANT_API_KEY=YOUR_QDRANT_API_KEY --env COLLECTION_NAME=YOUR_COLLECTION
+  --env QDRANT_READ_ONLY=true -- uvx mcp-server-qdrant
+copySnippet: |-
+  {
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"],
+      "env": {
+        "QDRANT_URL": "https://YOUR_QDRANT_HOST:6333",
+        "QDRANT_API_KEY": "<api key>",
+        "COLLECTION_NAME": "<collection>",
+        "QDRANT_READ_ONLY": "true"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "qdrant": {
+        "command": "uvx",
+        "args": ["mcp-server-qdrant"],
+        "env": {
+          "QDRANT_URL": "https://YOUR_QDRANT_HOST:6333",
+          "QDRANT_API_KEY": "<api key>",
+          "COLLECTION_NAME": "<collection>",
+          "QDRANT_READ_ONLY": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Qdrant Cloud cluster, self-hosted Qdrant instance, or local Qdrant database path
+  - Qdrant collection containing documents or memories to search, unless you intentionally enable writes and allow the server to create a collection
+  - Qdrant API key when connecting to an authenticated remote Qdrant deployment
+  - Python 3.10+ with `uvx` available, or Docker if building/running the server container yourself
+  - MCP-capable client with stdio support, such as Claude Code, Claude Desktop, VS Code, Cursor, or Windsurf
+  - Agreement on what content, metadata, code snippets, documents, or user memories Claude is allowed to store and retrieve
+safetyNotes:
+  - >-
+    Start with `QDRANT_READ_ONLY=true`. In read-only mode the server exposes
+    `qdrant-find` and disables the `qdrant-store` write tool.
+  - >-
+    Without read-only mode, `qdrant-store` can write new embedded entries and
+    metadata into the configured collection and can create the collection when
+    it does not already exist.
+  - >-
+    Collection scope matters. Set `COLLECTION_NAME` to a narrow collection so
+    Claude is not asked to choose from or write into unrelated vector indexes.
+  - >-
+    Review custom `TOOL_STORE_DESCRIPTION` and `TOOL_FIND_DESCRIPTION` values.
+    Tool descriptions can steer agents toward storing broad memory or searching
+    sensitive records if written too loosely.
+  - >-
+    If using SSE or streamable HTTP transport, keep the server reachable only by
+    trusted MCP clients and bind/expose network interfaces deliberately.
+  - >-
+    Search results are model context. Treat stored documents and metadata as
+    untrusted input, especially when collections contain web pages, support
+    tickets, generated code, or user-provided text.
+privacyNotes:
+  - >-
+    Queries, retrieved documents, metadata, collection names, and result
+    snippets can be returned to the MCP client and model session.
+  - >-
+    Stored entries include the `information` text and optional JSON metadata.
+    That metadata can contain code, file paths, user identifiers, URLs, ticket
+    IDs, internal project names, or other sensitive context.
+  - >-
+    FastEmbed runs locally in the MCP server process for the documented default
+    embedding provider, but the configured Qdrant deployment may be local,
+    self-hosted, or Qdrant Cloud.
+  - >-
+    Keep `QDRANT_API_KEY` in MCP environment configuration or secret management,
+    not in prompts, transcripts, checked-in configs, or shared examples.
+  - >-
+    Local-path mode stores data on the machine running the MCP server. Remote
+    mode sends vectors, payloads, and searches to the configured Qdrant service.
+tags:
+  - qdrant
+  - vector-database
+  - semantic-search
+  - embeddings
+  - memory
+  - mcp
+keywords:
+  - qdrant mcp
+  - qdrant claude
+  - vector database mcp
+  - semantic search mcp
+  - mcp server qdrant
+  - semantic memory claude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Qdrant MCP Server is Qdrant's official MCP server for semantic memory and
+vector search workflows. It connects Claude and other MCP-capable clients to a
+Qdrant collection, embeds search queries with FastEmbed, and returns relevant
+stored entries as model context.
+
+The server has a deliberately small tool surface: `qdrant-find` for semantic
+retrieval and, when read-only mode is not enabled, `qdrant-store` for writing
+new embedded entries. That makes the safety boundary easy to reason about: use
+read-only mode for retrieval over an approved collection, and enable storage
+only when Claude is explicitly allowed to add memory, documents, code snippets,
+or metadata.
+
+Qdrant supports remote deployments through `QDRANT_URL` and `QDRANT_API_KEY`,
+or local-path mode through `QDRANT_LOCAL_PATH`. The two modes are mutually
+exclusive in the server settings.
+
+## Features
+
+- Official Qdrant MCP server from the `qdrant/mcp-server-qdrant` repository.
+- `qdrant-find` tool for semantic retrieval from Qdrant collections.
+- Optional `qdrant-store` tool for writing information and JSON metadata to a
+  collection.
+- `QDRANT_READ_ONLY=true` mode that disables the write tool.
+- Remote Qdrant connection through `QDRANT_URL` and `QDRANT_API_KEY`.
+- Local database mode through `QDRANT_LOCAL_PATH`.
+- Default collection scoping with `COLLECTION_NAME`.
+- FastEmbed-based embeddings with `sentence-transformers/all-MiniLM-L6-v2` as
+  the documented default model.
+- Configurable search result limit through `QDRANT_SEARCH_LIMIT`.
+- Optional metadata filtering through configured filterable fields or arbitrary
+  filters.
+- Stdio transport by default, with SSE and streamable HTTP transport options
+  available through the `--transport` flag.
+- Tool description overrides for adapting the server to semantic memory, code
+  search, documentation retrieval, or other approved workflows.
+
+## Use Cases
+
+- Let Claude search an approved Qdrant collection of documentation snippets,
+  runbooks, support notes, or code examples by natural language.
+- Retrieve semantic memory for a project without exposing the whole source
+  repository or document set in every prompt.
+- Use a narrow read-only collection as a retrieval layer for common
+  implementation patterns, deployment notes, or product facts.
+- Store code snippets with explanatory metadata when Claude is explicitly
+  allowed to build a reusable semantic code-search collection.
+- Search local Qdrant data during offline or local-first development.
+- Connect to Qdrant Cloud for shared team retrieval when API-key and collection
+  boundaries are controlled.
+
+## Installation
+
+### Claude Code
+
+1. Confirm `uvx` is available:
+
+```bash
+uvx --version
+```
+
+2. Add the server in read-only mode against one approved collection:
+
+```bash
+claude mcp add qdrant --env QDRANT_URL=https://YOUR_QDRANT_HOST:6333 --env QDRANT_API_KEY=YOUR_QDRANT_API_KEY --env COLLECTION_NAME=YOUR_COLLECTION --env QDRANT_READ_ONLY=true -- uvx mcp-server-qdrant
+```
+
+3. Start with a narrow query that proves the intended collection is connected.
+4. Keep `QDRANT_READ_ONLY=true` unless storing new memory is explicitly in
+   scope.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `qdrant` server configuration shown below.
+3. Replace the Qdrant host, API key, and collection placeholders.
+4. Restart Claude Desktop and test with a read-only retrieval prompt.
+
+## Configuration
+
+Read-only remote Qdrant configuration:
+
+```json
+{
+  "mcpServers": {
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"],
+      "env": {
+        "QDRANT_URL": "https://YOUR_QDRANT_HOST:6333",
+        "QDRANT_API_KEY": "<api key>",
+        "COLLECTION_NAME": "<collection>",
+        "QDRANT_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+Local-path mode uses local Qdrant storage instead of a remote URL and API key:
+
+```json
+{
+  "mcpServers": {
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"],
+      "env": {
+        "QDRANT_LOCAL_PATH": "./qdrant-local-storage",
+        "COLLECTION_NAME": "project-memory",
+        "QDRANT_READ_ONLY": "true"
+      }
+    }
+  }
+}
+```
+
+To allow storage, remove read-only mode or set it to `false`, then keep the
+collection narrow and review each storage request:
+
+```json
+{
+  "mcpServers": {
+    "qdrant": {
+      "command": "uvx",
+      "args": ["mcp-server-qdrant"],
+      "env": {
+        "QDRANT_URL": "https://YOUR_QDRANT_HOST:6333",
+        "QDRANT_API_KEY": "<api key>",
+        "COLLECTION_NAME": "approved-agent-memory",
+        "QDRANT_READ_ONLY": "false"
+      }
+    }
+  }
+}
+```
+
+## Tools
+
+### `qdrant-find`
+
+Searches the configured collection using an embedded natural-language query.
+The server returns matching entries as separate messages containing stored
+content and metadata.
+
+Important inputs and settings:
+
+- `query`: natural-language search query.
+- `collection_name`: exposed as a tool argument when no default
+  `COLLECTION_NAME` is configured.
+- `QDRANT_SEARCH_LIMIT`: maximum number of search results, defaulting to 10.
+- Optional filters when filterable fields or arbitrary filters are configured.
+
+### `qdrant-store`
+
+Stores text and optional JSON metadata into Qdrant after embedding the text.
+This tool is hidden when `QDRANT_READ_ONLY=true`.
+
+Important inputs and behavior:
+
+- `information`: text to embed and store.
+- `metadata`: optional JSON metadata stored with the entry.
+- `collection_name`: exposed as a tool argument when no default
+  `COLLECTION_NAME` is configured.
+- Creates the target collection if it does not already exist.
+- Uses the configured FastEmbed model to determine vector dimensions and vector
+  name.
+
+## Examples
+
+### Search project memory
+
+Use read-only retrieval against a curated project-memory collection.
+
+```plaintext
+Search Qdrant for prior notes about the billing import workflow and return the most relevant entries with their metadata.
+```
+
+### Search code snippets
+
+Use a collection that stores code snippets and descriptions.
+
+```plaintext
+Find examples of the retry wrapper we use for external API calls. Include metadata that identifies the source module if present.
+```
+
+### Store approved memory
+
+Enable writes only when the user explicitly wants Claude to add memory.
+
+```plaintext
+Store this deployment note in the approved project-memory collection with metadata for service name, environment, and date.
+```
+
+### Limit returned results
+
+Tune `QDRANT_SEARCH_LIMIT` when search results are too broad or too sparse.
+
+```plaintext
+Search the release-runbook collection for migration rollback steps and return only the three strongest matches.
+```
+
+## Best Practices
+
+- Use a dedicated collection for each project or workflow.
+- Prefer `QDRANT_READ_ONLY=true` for retrieval-only assistants.
+- Enable `qdrant-store` only for workflows where persistent memory writes are
+  expected and reviewed.
+- Keep collection names, tool descriptions, and metadata conventions explicit.
+- Avoid storing secrets, raw credentials, private keys, customer personal data,
+  or unrestricted source-code dumps.
+- Treat retrieved entries as context, not authority; stale or user-generated
+  documents can still be wrong or prompt-injected.
+- Use `QDRANT_SEARCH_LIMIT` to reduce accidental disclosure from overly broad
+  result sets.
+- Rotate and scope Qdrant API keys like other production database credentials.
+- Use local-path mode only when local disk persistence is intentional.
+
+## Troubleshooting
+
+### No results are returned
+
+Confirm the collection exists, the server is pointed at the expected Qdrant
+deployment or local path, the collection has embedded entries, and the query is
+specific enough. Increase `QDRANT_SEARCH_LIMIT` only after checking collection
+scope.
+
+### The store tool is missing
+
+`QDRANT_READ_ONLY=true` disables `qdrant-store`. Remove read-only mode only if
+Claude is allowed to write persistent memory into the configured collection.
+
+### Authentication fails
+
+Verify `QDRANT_URL` and `QDRANT_API_KEY`, and make sure the key has access to
+the selected collection. Do not paste API keys into prompts while debugging.
+
+### Local and remote settings conflict
+
+Use either `QDRANT_URL` or `QDRANT_LOCAL_PATH`, not both. The server rejects
+configurations that combine local-path mode with a remote URL or API key.
+
+### Search quality is poor
+
+Check the embedding model, collection contents, metadata conventions, and
+stored text quality. The default FastEmbed model is convenient, but collections
+should be populated consistently for useful semantic retrieval.
+
+## Related Links
+
+- [Qdrant MCP server source](https://github.com/qdrant/mcp-server-qdrant)
+- [mcp-server-qdrant on PyPI](https://pypi.org/project/mcp-server-qdrant/)
+- [Qdrant documentation](https://qdrant.tech/documentation/)
+- [Qdrant Cloud](https://qdrant.tech/cloud/)
+- [FastEmbed documentation](https://qdrant.github.io/fastembed/)

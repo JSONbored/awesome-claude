@@ -19,13 +19,8 @@ PR with a public reason so the contributor can resubmit cleanly.
 
 ## Labels
 
-- `submission-gate-pilot`: legacy manual escape hatch for explicitly
-  pilot-labeled PRs; normal submission-gate scope is now `main`.
 - `submission-under-review`: the private worker accepted the webhook and queued
   a serialized review job.
-- `submission-needs-changes`: legacy compatibility label. New direct content
-  review should close fixable failures instead of keeping iterative PR review
-  open.
 - `submission-manual-review`: potentially useful, but source, provenance,
   package, credentials, safety, or category-fit risk needs maintainer judgment.
 - `submission-closed-by-gate`: the worker closed a hard failure or
@@ -92,8 +87,8 @@ the gate later creates its own formal GitHub check run.
 - Website `/submit` runs public preflight, then posts a draft to the private
   Worker. If the Worker is configured, the contributor continues through GitHub
   App user auth and the gate creates or updates a user-fork branch and PR.
-- Webhook review starts when a PR targets the configured base ref, currently
-  `main`, or carries the `submission-gate-pilot` label.
+- Webhook review starts when a PR targets the configured content gate base ref,
+  currently `main`.
 - The Worker applies `submission-under-review` immediately, enqueues one job per
   PR, and updates one stable marker comment.
 - The review job waits for configured required validation, currently
@@ -125,8 +120,8 @@ management, or queue mutation workflows.
 
 ## Promotion Criteria
 
-- Zero actions outside pilot scope.
-- No false auto-closes in regression fixtures or live pilot batches.
+- Zero actions outside content-gate scope.
+- No false auto-closes in regression fixtures or live batches.
 - Stable marker comments, labels, branches, and PRs across repeated events.
 - Successful direct merge for accepted one-file content PRs.
 - Clean validation before private review and merge.

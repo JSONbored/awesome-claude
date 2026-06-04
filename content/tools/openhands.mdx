@@ -1,0 +1,75 @@
+---
+title: OpenHands
+slug: openhands
+category: tools
+description: AI-driven software development platform with a local GUI, CLI, Software Agent SDK, agent sandboxes, terminal/browser tools, and hosted cloud options.
+cardDescription: Run coding agents with a local GUI, CLI, SDK, sandboxes, and hosted options.
+seoTitle: OpenHands AI-driven development platform
+seoDescription: OpenHands helps teams run AI software-development agents through a local GUI, CLI, Software Agent SDK, Docker sandboxing, confirmation mode, terminal and browser tools, and hosted cloud options.
+author: OpenHands
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://openhands.dev/"
+documentationUrl: "https://docs.openhands.dev/"
+repoUrl: "https://github.com/OpenHands/OpenHands"
+pricingModel: freemium
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+tags:
+  - coding-agent
+  - developer-tools
+  - open-source
+keywords:
+  - OpenHands
+  - AI-driven development
+  - coding agent
+  - software agent SDK
+  - OpenDevin
+prerequisites:
+  - Supported local system, container setup, or managed workspace for running the OpenHands local GUI, CLI, SDK, or hosted workflow.
+  - Docker Desktop, Linux container environment, WSL setup, or remote sandbox plan when using the recommended isolated local execution path.
+  - Approved model provider, local model, or hosted model route configured with the organization controls, spend limits, and data handling rules required for the target repository.
+  - Git provider access, repository permissions, branch strategy, review ownership, and rollback plan before connecting OpenHands to real issues, pull requests, or production codebases.
+  - Policy for browser access, terminal use, mounted workspaces, saved conversations, logs, traces, cloud integrations, and any Slack, Jira, Linear, GitHub, GitLab, or Bitbucket connections.
+safetyNotes:
+  - OpenHands agents can edit files, run terminal commands, browse websites, start servers, and interact with repositories, so each workspace needs a clear permission boundary.
+  - The documentation recommends Docker sandboxing for local use; process-based execution is faster but has no container isolation and should be treated as unsafe for sensitive projects.
+  - Mounts into the sandbox can be modified by the agent when granted write access, so avoid broad host mounts and review exactly which project files are exposed.
+  - Confirmation mode and security analyzers can reduce risk by pausing high-risk actions, but they do not prove that an action is correct, reversible, policy-compliant, or safe to merge.
+  - Hosted, cloud, enterprise, and integration workflows add additional access-control, audit, retention, budget, and organization-policy requirements beyond the local open-source project.
+  - Benchmark performance, agent planning, context compression, and security analysis are useful signals, but human review is still required before generated changes affect protected branches or production systems.
+privacyNotes:
+  - OpenHands may process prompts, issue text, source snippets, diffs, terminal output, browser context, logs, traces, uploaded files, repository metadata, and generated patches.
+  - Model providers, local model routes, OpenHands Cloud, enterprise deployments, or connected gateways may receive task context depending on the selected configuration.
+  - Local GUI, CLI, SDK, and sandbox workflows can save conversation history, workspace state, logs, screenshots, browser artifacts, and server output on the machine or managed workspace.
+  - Cloud and enterprise integrations with GitHub, GitLab, Bitbucket, Slack, Jira, and Linear should be reviewed for repository access, user identity, issue data, retention, and audit visibility.
+  - Operators should define retention and redaction rules before sharing OpenHands conversations, trajectories, screenshots, generated patches, or benchmark artifacts outside the project team.
+---
+
+## Editorial notes
+
+OpenHands is useful when Claude-adjacent teams want an open, full-stack software-development agent environment rather than only an editor extension or a small CLI. It combines a local GUI, CLI, Software Agent SDK, agent server, terminal and browser tools, confirmation mode, sandbox providers, repository workflows, and hosted cloud or enterprise options.
+
+This is distinct from existing entries. Claude Code, Aider, Cline, Roo Code, Continue, Cursor, Windsurf, Replit Agent, Devin, and mini-SWE-agent cover narrower coding-assistant, editor, commercial-agent, or minimal CLI workflows. LangGraph, Agno, Pydantic AI, CrewAI, AutoGen, and DSPy cover general agent-framework or language-model programming patterns. OpenHands sits closer to a software-engineering agent platform with a local GUI, SDK, agent server, sandboxing model, browser and terminal surfaces, and optional hosted collaboration workflows.
+
+## Source notes
+
+- The official README describes OpenHands as an AI-driven development project and lists multiple ways to use it: Software Agent SDK, CLI, local GUI, Cloud, and Enterprise.
+- The README says the SDK is a composable Python library that powers the other OpenHands surfaces, and that agents can run locally or at larger cloud scale.
+- The README says the CLI is a familiar coding-agent interface, while the local GUI provides a REST API and React application for running agents on a laptop.
+- The docs introduction describes Agent Canvas, OpenHands Cloud, OpenHands Enterprise, the Software Agent SDK, legacy CLI and local GUI paths, and integrations such as GitHub, GitLab, Bitbucket, Slack, Jira, and Linear.
+- The key-features documentation describes chat, changes, embedded VS Code, terminal, app preview, and browser tabs.
+- The confirmation-mode documentation describes Confirmation Mode and Security Analyzers, including high-risk action prompts and analyzer-based risk assessment.
+- The sandbox documentation defines sandboxes as the place where OpenHands runs commands, edits files, and starts servers; it lists Docker as the recommended local provider, process execution as unsafe but fast, and remote sandboxing for managed setups.
+- The SDK documentation describes Python and REST APIs for agents that work with code, including tools for shell commands, file editing, web browsing, MCP integration, and remote agent-server execution.
+- The repository license says content outside `enterprise/` is available under MIT, while the enterprise directory has separate licensing.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, agents, hooks, rules, skills, commands, guides, open pull requests, live issue state, and repository-wide content for `OpenHands`, `Open Hands`, `OpenDevin`, `opendevin`, `all-hands`, `openhands.dev`, `docs.openhands.dev`, `github.com/OpenHands/OpenHands`, `Software Agent SDK`, `Agent Canvas`, and `CodeActAgent`. Existing Claude Code, Aider, Cline, Roo Code, Continue, Cursor, Windsurf, Replit Agent, Devin, mini-SWE-agent, LangGraph, Agno, Pydantic AI, CrewAI, AutoGen, and DSPy entries are adjacent, but no dedicated OpenHands tools entry, OpenHands source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. OpenHands includes MIT-licensed local/core project code, source-available enterprise code, and hosted commercial options.

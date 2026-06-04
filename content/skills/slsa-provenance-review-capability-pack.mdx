@@ -1,0 +1,232 @@
+---
+title: SLSA Provenance Review Capability Pack Skill
+slug: slsa-provenance-review-capability-pack
+category: skills
+description: "Expert SLSA provenance review skill for checking source, build, artifact, and trust evidence before accepting content or package submissions."
+cardDescription: "Review source and artifact provenance with SLSA expectations, revision checks, builder checks, and risk-aware intake decisions."
+seoTitle: SLSA Provenance Review Capability Pack Skill
+seoDescription: "Advanced AI skill for SLSA provenance review, source revision checks, build provenance checks, and submission intake evidence."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 716
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/716"
+repoUrl: "https://github.com/slsa-framework/slsa"
+documentationUrl: "https://slsa.dev/spec/v1.2/provenance"
+downloadUrl: "https://github.com/slsa-framework/slsa/archive/refs/tags/v1.2.zip"
+installable: true
+installCommand: "curl -L https://github.com/slsa-framework/slsa/archive/refs/tags/v1.2.zip -o slsa-v1.2.zip"
+usageSnippet: "Use this skill when a registry, package, or content submission needs source provenance, build provenance, artifact evidence, and trust-claim review before acceptance."
+copySnippet: |-
+  # Trigger
+  "Apply the SLSA provenance review capability pack to this submission."
+
+  # Required output
+  1) Source, package, artifact, and provenance evidence inventory
+  2) Expected producer, repository, revision, builder, and policy
+  3) SLSA source/build provenance review result
+  4) Acceptance, rejection, or manual-review decision with evidence
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://slsa.dev/spec/v1.2/provenance"
+  - "https://slsa.dev/spec/v1.2/verifying-artifacts"
+  - "https://slsa.dev/spec/v1.2/verifying-source"
+  - "https://slsa.dev/spec/v1.2/build-provenance"
+  - "https://slsa.dev/spec/v1.2/source-requirements"
+  - "https://slsa.dev/spec/v1.2/distributing-provenance"
+  - "https://slsa.dev/spec/v1.2/threats"
+  - "https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/provenance.md"
+  - "https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/verifying-artifacts.md"
+  - "https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/verifying-source.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Submission target such as a registry entry, package listing, source-backed content item, or release artifact
+  - Canonical source repository, docs page, release page, package URL, commit, tag, or digest evidence
+  - Expected producer, repository, source revision, artifact name, and artifact digest when available
+  - Access to provenance records, verification summaries, or package ecosystem metadata when the producer publishes them
+  - Local policy for deciding when missing provenance is acceptable, blocking, or manual-review only
+safetyNotes:
+  - Use this as a read-only evidence review workflow; ordinary intake should not require running submitted projects.
+  - The install command fetches a pinned SLSA source archive for reference, not an executable package.
+  - Provenance evidence improves confidence but does not replace human source review, category-fit review, or maintainer judgment.
+  - Treat missing, stale, unverifiable, or mismatched provenance as a risk signal and request clearer evidence before accepting strong trust claims.
+privacyNotes:
+  - Work from public source URLs, release metadata, package metadata, and maintainer-approved context.
+  - Keep public notes focused on source URLs, revisions, digests, and high-level risk summaries; omit operational details that do not need to be public.
+tags:
+  - slsa
+  - provenance
+  - source-review
+  - supply-chain
+  - content-review
+keywords:
+  - SLSA provenance review
+  - source provenance review
+  - build provenance review
+  - artifact evidence review
+  - content submission provenance
+  - package source review
+  - supply chain intake
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to SLSA v1.2 documentation and source files verified on **2026-06-03**. Refresh the SLSA spec, provenance format, and package ecosystem behavior before using it for production policy decisions.
+
+## Retrieval Sources
+
+- https://slsa.dev/spec/v1.2/provenance
+- https://slsa.dev/spec/v1.2/verifying-artifacts
+- https://slsa.dev/spec/v1.2/verifying-source
+- https://slsa.dev/spec/v1.2/build-provenance
+- https://slsa.dev/spec/v1.2/source-requirements
+- https://slsa.dev/spec/v1.2/distributing-provenance
+- https://slsa.dev/spec/v1.2/threats
+- https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/provenance.md
+- https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/verifying-artifacts.md
+- https://raw.githubusercontent.com/slsa-framework/slsa/v1.2/docs/spec/v1.2/verifying-source.md
+
+Prefer current SLSA specification pages and pinned source files over model memory for predicate details, verification expectations, and level-specific requirements.
+
+## Scope Note
+
+This is not a HeyClaude submission-field factory. Use it for source and provenance review when a content, package, or registry intake needs evidence about where a submission came from, how an artifact was produced, and whether trust claims match the expected source.
+
+## Core Workflow
+
+1. Classify the submission as source-only content, package metadata, generated output, or a release artifact.
+2. Inventory evidence before judgment: canonical docs, repository, commit, tag, release, package metadata, artifact digest, provenance record, verification summary, and submitter claims.
+3. Establish expectations from policy: trusted producer, repository, source revision, branch or tag, artifact name, digest algorithm, builder ID, build type, external parameters, and required SLSA level.
+4. Review artifact provenance when an artifact is present: subject digest, provenance signature status, trusted builder ID, expected build type, expected source repository, expected source revision, and allowed external parameters.
+5. Review source provenance when the claim is about a repository revision: source control system, revision immutability, change history continuity, technical controls, code review claims, and verification summaries if available.
+6. Compare trust claims to evidence. Separate confirmed facts, unsupported claims, stale evidence, unverifiable links, and policy gaps.
+7. Decide the intake path: accept, accept with caveats, request more evidence, route to manual review, or reject as unverifiable or mismatched.
+8. Produce a compact provenance report with source URLs, checked identifiers, failed expectations, residual risks, and the final recommendation.
+
+## Capability Scope
+
+- Source repository and revision provenance review
+- Build provenance and artifact evidence checks
+- Package or generated-output source review
+- SLSA expectation mapping for intake policy
+- Digest, builder, predicate, and source-URI comparison
+- Evidence classification for maintainer review
+- Unverifiable, stale, or overclaimed trust-signal detection
+- Public-safe verification notes for PRs, registry entries, and package listings
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for provenance-heavy submission review.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for registry, package, or artifact intake.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level intake rules.
+
+## Required Inputs
+
+- Submission category and acceptance policy
+- Canonical source URL, repository URL, docs URL, release URL, or package URL
+- Commit SHA, tag, branch, release version, package version, or artifact digest
+- Published provenance, verification summary, or package ecosystem trust metadata when available
+- Expected producer and builder IDs
+- Decision threshold for missing or partial provenance
+
+## Production Rules
+
+- Do not treat provenance as a replacement for source review, license review, or category-fit review.
+- Do not accept a package-trust claim when the artifact digest does not match the provenance subject.
+- Do not accept a source-trust claim when the source repository, source revision, or producer is ambiguous.
+- Do not infer SLSA level from marketing copy. Require published evidence or mark the claim unsupported.
+- Prefer immutable identifiers such as commit SHAs, release tags with tag object evidence, artifact digests, and package integrity metadata.
+- Treat branch names, moving tags, latest URLs, and generated archive links as weaker evidence unless backed by stronger provenance.
+- Keep public notes focused on non-sensitive identifiers and high-level risk. Avoid publishing raw logs or operational context that is not needed for review.
+
+## Decision Rubric
+
+### Accept
+
+- Canonical source and artifact identifiers are clear.
+- Digest, repository, revision, builder, and predicate expectations match.
+- Published provenance or source verification evidence is reachable and current.
+- Safety, privacy, and trust notes reflect the verified evidence.
+
+### Request More Evidence
+
+- The source is real but the artifact digest, builder ID, release tag, or verification summary is missing.
+- Provenance exists but cannot be linked to the submitted artifact or source revision.
+- The submission makes trust claims that require maintainer confirmation.
+
+### Reject Or Route Away
+
+- The source URL is unverifiable, redirects to unrelated content, or conflicts with package metadata.
+- The provenance subject does not match the artifact under review.
+- The builder, source repository, or revision does not match the expected producer.
+- The submission asks maintainers to validate a generated artifact without source-backed trust evidence.
+
+## Output Contract
+
+1. Evidence inventory: source URL, repo, revision, package, artifact, digest, provenance, and verification-summary links.
+2. Expectations: producer, source repository, revision, builder, predicate, SLSA level, and policy threshold.
+3. Review result: matched evidence, failed checks, missing data, stale links, and unsupported claims.
+4. Safety and privacy notes: runtime risk, package or generated-output risk, public-note redactions, and residual uncertainty.
+5. Intake decision: accept, accept with caveats, request evidence, manual review, or reject.
+6. Follow-up: exact evidence needed from the submitter or maintainer before the decision can change.
+
+## Workflow Notes
+
+- Keep automated provenance checks read-only in public PR workflows.
+- Use maintainer-controlled workflows for any privileged package, generated output, or provenance review.
+- Store review results as summaries, not raw operational logs.
+- Re-run review when the artifact, release tag, package version, builder, or source revision changes.
+
+## Troubleshooting
+
+**Issue:** The artifact has no provenance
+
+**Fix:** Record the missing evidence and fall back to source, package, release, and maintainer judgment. Missing provenance may be acceptable for low-risk content but should block strong verification claims.
+
+**Issue:** The provenance exists but the digest does not match
+
+**Fix:** Treat the artifact as unverified. Ask for the exact artifact referenced by the provenance record or a new provenance record for the submitted artifact.
+
+**Issue:** The source revision is a branch name
+
+**Fix:** Resolve the branch to an immutable commit SHA, record when it was checked, and prefer a tag or release object when reviewing a published package.
+
+**Issue:** The submitter claims SLSA compliance without evidence
+
+**Fix:** Mark the claim unsupported. Require reachable source, builder, predicate, and verification evidence before using the claim in public metadata.
+
+**Issue:** The evidence includes details that do not need to be public
+
+**Fix:** Summarize only the identifiers needed for review and keep unnecessary operational details out of public issues or PRs.
+
+## Validation Checklist
+
+- Source, repo, package, release, and artifact URLs are reachable.
+- Artifact digest and provenance subject match when an artifact is reviewed.
+- Builder ID is one of the trusted builders for the expected policy.
+- Build type and external parameters match expected values.
+- Source repository and source revision match the submitted package or artifact.
+- Source provenance or verification summary evidence is recorded when source-level claims are made.
+- Missing or partial provenance is called out as a caveat, not hidden.
+- Public notes do not expose operational details that are unnecessary for review.

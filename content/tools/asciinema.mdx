@@ -1,0 +1,59 @@
+---
+title: Asciinema
+slug: asciinema
+category: tools
+description: Open-source CLI and web ecosystem for recording, replaying, live streaming, sharing, and embedding terminal sessions as lightweight asciicast files.
+cardDescription: Record, replay, stream, and embed terminal sessions as text-based casts.
+seoTitle: Asciinema terminal session recording and streaming
+seoDescription: Asciinema records terminal sessions to lightweight asciicast files, replays them locally, streams sessions live, and publishes or embeds them for review.
+author: asciinema
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+websiteUrl: "https://asciinema.org/"
+documentationUrl: "https://docs.asciinema.org/manual/cli/"
+repoUrl: "https://github.com/asciinema/asciinema"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux, macOS, FreeBSD, Web, Self-hosted
+tags:
+  - terminal-recording
+  - collaboration
+  - open-source
+keywords:
+  - asciicast
+  - terminal replay
+  - cli demo
+prerequisites:
+  - asciinema CLI installed from an official package manager, release binary, or reviewed source build.
+  - Terminal workflow, CLI demo, pair-programming session, support reproduction, or AI-agent run that is safe to record.
+  - Decision on whether recordings stay local, are shared through asciinema.org, are streamed live, or are hosted on a reviewed self-hosted asciinema server.
+safetyNotes:
+  - Terminal recordings can capture secrets, prompts, commands, file paths, hostnames, account names, API output, and generated code, so review and redact casts before publishing or embedding them.
+  - Live streaming exposes terminal output as it happens; use it only in approved environments and avoid production shells, private repositories, credentials, customer data, and destructive commands.
+  - Optional input and environment capture should be configured deliberately because it can record keystrokes, command context, and metadata that are more sensitive than the visible terminal output.
+privacyNotes:
+  - Local `.cast` files can contain terminal output, timing data, window size, command metadata, titles, captured environment fields, and optionally keyboard input.
+  - Uploading or streaming through asciinema.org sends recordings or live terminal output to the public asciinema service unless visibility and sharing settings are reviewed first.
+  - Self-hosted asciinema servers still need access control, retention, backup, log, database, and upload-storage policies for recorded terminal sessions.
+---
+
+## Editorial notes
+
+Asciinema is useful when Claude-adjacent teams need a durable, text-based record of what happened in a terminal without shipping a large screen recording. It can capture a CLI demo, failed reproduction, pair-programming session, or agent run as an asciicast, then replay it locally, publish it to asciinema.org, embed it in docs, or stream the terminal live for reviewers.
+
+## Source notes
+
+- The official docs describe asciinema as a suite of tools for recording, streaming, and sharing terminal sessions.
+- The CLI manual describes asciinema CLI as a recorder/client for terminal sessions that stores lightweight `.cast` files, replays them locally, publishes them to an asciinema server, embeds them with the player, or streams sessions live.
+- The quick-start docs cover installation from common Linux, macOS, FreeBSD, Cargo, and release-binary paths, plus `rec`, `play`, `upload`, and `stream` workflows.
+- The GitHub repository is `asciinema/asciinema`, describes the project as a terminal session recorder, streamer, and player, and is GPL-3.0 licensed.
+
+## Duplicate check
+
+Checked current `content/tools/`, `content/mcp/`, guides, skills, agents, open pull requests, live HeyClaude `llms-full.txt`, and repository-wide content for `Asciinema`, `asciicast`, `asciinema.org`, `docs.asciinema.org`, `github.com/asciinema/asciinema`, `terminal session recorder`, `terminal recording`, `live terminal streaming`, `VHS`, `terminalizer`, `ttyrec`, and `scriptreplay`. Existing AgentOps, Browserless, and Jam entries mention adjacent session replay concepts for agents, browsers, or feedback capture, but no dedicated terminal session recording tools entry, source URL duplicate, or open duplicate PR was found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.

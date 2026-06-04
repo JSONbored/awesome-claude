@@ -1226,6 +1226,15 @@ function policyDecisionForReport(report) {
 export function directContentRequestChangesReasons(report = {}) {
   if (report.subject?.type !== "pull_request") return [];
   const reasons = [];
+  const sourceType = report.sourceType || report.subject?.sourceType;
+  const isExternalDirect = sourceType === "external_direct";
+  const isDirectContentShape =
+    Number(report.subject?.changedFileCount || report.changedFileCount || 0) ===
+      1 &&
+    Number(report.subject?.contentFileCount || report.contentFileCount || 0) ===
+      1;
+  if (!isExternalDirect && !isDirectContentShape) return [];
+
   const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
   const warnings = new Set(
     (report.classificationWarnings || []).map((warning) => warning.id),
@@ -1430,16 +1439,16 @@ function frontmatterFields(data = {}, category = "") {
 }
 
 function frontmatterProvenance(data = {}) {
-  const submissionIssueNumber = Number(data.submissionIssueNumber);
+  const sourceSubmissionNumber = Number(data.sourceSubmissionNumber);
   const importPrNumber = Number(data.importPrNumber);
   return {
     submittedBy: normalizeText(data.submittedBy),
     submittedByUrl: normalizeText(data.submittedByUrl),
-    submissionIssueNumber:
-      Number.isInteger(submissionIssueNumber) && submissionIssueNumber > 0
-        ? submissionIssueNumber
+    sourceSubmissionNumber:
+      Number.isInteger(sourceSubmissionNumber) && sourceSubmissionNumber > 0
+        ? sourceSubmissionNumber
         : null,
-    submissionIssueUrl: normalizeText(data.submissionIssueUrl),
+    sourceSubmissionUrl: normalizeText(data.sourceSubmissionUrl),
     importPrNumber:
       Number.isInteger(importPrNumber) && importPrNumber > 0
         ? importPrNumber
@@ -1525,17 +1534,24 @@ function prSourceType(input = {}) {
   return "same_repo_direct";
 }
 
-function issueContributorMap(input = {}) {
+function sourceSubmissionContributorMap(input = {}) {
   const map = new Map();
-  const contributors = Array.isArray(input.submissionIssueContributors)
-    ? input.submissionIssueContributors
+  const contributors = Array.isArray(input.sourceSubmissionContributors)
+    ? input.sourceSubmissionContributors
     : [];
   for (const item of contributors) {
-    const issueNumberValue = Number(item.issueNumber || item.issue?.number);
-    if (!Number.isInteger(issueNumberValue) || issueNumberValue <= 0) continue;
-    map.set(issueNumberValue, {
-      issue: item.issue || {},
-      contributor: item.contributor || item.issue?.user || {},
+    const submissionNumberValue = Number(
+      item.number || item.submission?.number,
+    );
+    if (
+      !Number.isInteger(submissionNumberValue) ||
+      submissionNumberValue <= 0
+    ) {
+      continue;
+    }
+    map.set(submissionNumberValue, {
+      submission: item.submission || {},
+      contributor: item.contributor || item.submission?.user || {},
     });
   }
   return map;
@@ -1553,13 +1569,17 @@ function frontmatterContributorMap(input = {}) {
   return map;
 }
 
-function issueUrlMatchesNumber(url, number) {
+function submissionUrlMatchesNumber(url, number) {
   const text = normalizeText(url);
   if (!text) return false;
   try {
     const parts = new URL(text).pathname.split("/").filter(Boolean);
-    const issuesIndex = parts.indexOf("issues");
-    return issuesIndex >= 0 && parts[issuesIndex + 1] === String(number);
+    const issueIndex = parts.indexOf("issues");
+    const pullIndex = parts.indexOf("pull");
+    return (
+      (issueIndex >= 0 && parts[issueIndex + 1] === String(number)) ||
+      (pullIndex >= 0 && parts[pullIndex + 1] === String(number))
+    );
   } catch {
     return false;
   }
@@ -1583,11 +1603,11 @@ function validatePrProvenance(report, entries, input, sourceType) {
     );
   }
 
-  const issuesByNumber = issueContributorMap(input);
+  const sourceSubmissionsByNumber = sourceSubmissionContributorMap(input);
   const contributorsByLogin = frontmatterContributorMap(input);
   let contributorSource =
     sourceType === "automation_import"
-      ? "submission_issue_author"
+      ? "source_submission_author"
       : sourceType === "external_direct"
         ? "pull_request_author"
         : "pull_request_or_maintainer";
@@ -1597,16 +1617,17 @@ function validatePrProvenance(report, entries, input, sourceType) {
       : contributorSummary(input.contributor || input.pullRequest?.user || {});
 
   if (sourceType === "automation_import") {
-    const issueNumbers = [
+    const sourceSubmissionNumbers = [
       ...new Set(
         entries
-          .map((entry) => entry.provenance.submissionIssueNumber)
+          .map((entry) => entry.provenance.sourceSubmissionNumber)
           .filter(Boolean),
       ),
     ];
-    if (issueNumbers.length === 1) {
+    if (sourceSubmissionNumbers.length === 1) {
       effectiveContributor = contributorSummary(
-        issuesByNumber.get(issueNumbers[0])?.contributor || {},
+        sourceSubmissionsByNumber.get(sourceSubmissionNumbers[0])
+          ?.contributor || {},
       );
     }
   } else if (sourceType === "same_repo_direct") {
@@ -1636,7 +1657,7 @@ function validatePrProvenance(report, entries, input, sourceType) {
 
   if (
     !effectiveContributor &&
-    contributorSource !== "submission_issue_author"
+    contributorSource !== "source_submission_author"
   ) {
     const fallbackCandidates = [
       [input.contributor, contributorSource || "provided_contributor"],
@@ -1661,8 +1682,8 @@ function validatePrProvenance(report, entries, input, sourceType) {
       const required = [
         ["submittedBy", provenance.submittedBy],
         ["submittedByUrl", provenance.submittedByUrl],
-        ["submissionIssueNumber", provenance.submissionIssueNumber],
-        ["submissionIssueUrl", provenance.submissionIssueUrl],
+        ["sourceSubmissionNumber", provenance.sourceSubmissionNumber],
+        ["sourceSubmissionUrl", provenance.sourceSubmissionUrl],
       ].filter(([, value]) => !value);
 
       if (required.length) {
@@ -1670,31 +1691,35 @@ function validatePrProvenance(report, entries, input, sourceType) {
           report,
           "error",
           `missing_import_provenance_${entry.filename}`,
-          "Automation import content is missing required issue provenance",
+          "Automation import content is missing required source-submission provenance",
           `${entry.filename}: ${required.map(([field]) => field).join(", ")}`,
         );
         continue;
       }
 
-      const issueContributor = issuesByNumber.get(
-        provenance.submissionIssueNumber,
+      const sourceSubmissionContributor = sourceSubmissionsByNumber.get(
+        provenance.sourceSubmissionNumber,
       )?.contributor;
-      const issueLogin = normalizeGitHubLogin(issueContributor?.login);
-      if (!issueLogin) {
+      const sourceSubmissionLogin = normalizeGitHubLogin(
+        sourceSubmissionContributor?.login,
+      );
+      if (!sourceSubmissionLogin) {
         addProvenanceFinding(
           report,
           "error",
-          `missing_issue_contributor_${provenance.submissionIssueNumber}`,
-          "Could not resolve the original issue submitter for import provenance",
-          `Issue #${provenance.submissionIssueNumber}`,
+          `missing_source_submission_contributor_${provenance.sourceSubmissionNumber}`,
+          "Could not resolve the original source-submission contributor for import provenance",
+          `Submission #${provenance.sourceSubmissionNumber}`,
         );
-      } else if (!sameGitHubLogin(provenance.submittedBy, issueLogin)) {
+      } else if (
+        !sameGitHubLogin(provenance.submittedBy, sourceSubmissionLogin)
+      ) {
         addProvenanceFinding(
           report,
           "error",
           `import_submitter_mismatch_${entry.filename}`,
-          "Imported content submitter does not match the linked issue author",
-          `${entry.filename}: submittedBy=${provenance.submittedBy}, issueAuthor=${issueLogin}`,
+          "Imported content submitter does not match the linked source-submission contributor",
+          `${entry.filename}: submittedBy=${provenance.submittedBy}, sourceSubmissionContributor=${sourceSubmissionLogin}`,
         );
       }
 
@@ -1712,18 +1737,18 @@ function validatePrProvenance(report, entries, input, sourceType) {
       }
 
       if (
-        provenance.submissionIssueUrl &&
-        !issueUrlMatchesNumber(
-          provenance.submissionIssueUrl,
-          provenance.submissionIssueNumber,
+        provenance.sourceSubmissionUrl &&
+        !submissionUrlMatchesNumber(
+          provenance.sourceSubmissionUrl,
+          provenance.sourceSubmissionNumber,
         )
       ) {
         addProvenanceFinding(
           report,
           "error",
-          `import_issue_url_mismatch_${entry.filename}`,
-          "Imported content submission issue URL does not match submissionIssueNumber",
-          `${entry.filename}: ${provenance.submissionIssueUrl}`,
+          `import_source_submission_url_mismatch_${entry.filename}`,
+          "Imported content source submission URL does not match sourceSubmissionNumber",
+          `${entry.filename}: ${provenance.sourceSubmissionUrl}`,
         );
       }
     }
@@ -1803,10 +1828,10 @@ function validatePrProvenance(report, entries, input, sourceType) {
 
   if (sourceType === "automation_import") {
     const issues = entries
-      .map((entry) => entry.provenance.submissionIssueNumber)
+      .map((entry) => entry.provenance.sourceSubmissionNumber)
       .filter(Boolean);
     for (const issueNumberValue of [...new Set(issues)]) {
-      report.trustSignals.push(`Submission issue: #${issueNumberValue}`);
+      report.trustSignals.push(`Original submission: #${issueNumberValue}`);
     }
   }
 }
@@ -1814,7 +1839,7 @@ function validatePrProvenance(report, entries, input, sourceType) {
 function contributorAnalysisTarget(report, input = {}) {
   const pullRequestUser = input.pullRequest?.user || {};
   if (
-    report.contributorSource === "submission_issue_author" &&
+    report.contributorSource === "source_submission_author" &&
     !report.effectiveContributor
   ) {
     return {
@@ -1877,6 +1902,8 @@ export function analyzeDirectContentRisk(input = {}) {
       normalizeText(input.author),
     sourceType,
     contentFiles: contentFiles.map((file) => file.filename),
+    changedFileCount: files.length,
+    contentFileCount: contentFiles.length,
   });
 
   for (const repo of selectSourceRepositories(input)) {
@@ -2024,8 +2051,8 @@ export function formatSubmissionRiskMarkdown(report) {
       if (provenance.submittedBy) {
         parts.push(`by ${githubUserReference(provenance.submittedBy)}`);
       }
-      if (provenance.submissionIssueNumber) {
-        parts.push(`via issue #${provenance.submissionIssueNumber}`);
+      if (provenance.sourceSubmissionNumber) {
+        parts.push(`via submission #${provenance.sourceSubmissionNumber}`);
       } else if (provenance.importPrNumber) {
         parts.push(`via PR #${provenance.importPrNumber}`);
       }

@@ -1,0 +1,203 @@
+---
+title: Renovate Dependency Upgrade Review Capability Pack Skill
+slug: renovate-dependency-upgrade-review-capability-pack
+category: skills
+description: "Expert Renovate review skill for evaluating dependency upgrade PRs, package rules, lockfile changes, grouping, automerge, and release readiness."
+cardDescription: "Review Renovate dependency updates with config checks, package-rule reasoning, lockfile scrutiny, validation plans, and merge recommendations."
+seoTitle: Renovate Dependency Upgrade Review Capability Pack Skill
+seoDescription: "Advanced AI skill for reviewing Renovate dependency upgrade PRs, packageRules, dashboards, automerge behavior, lockfiles, and release risk."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 719
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/719"
+repoUrl: "https://github.com/renovatebot/renovate"
+documentationUrl: "https://docs.renovatebot.com/configuration-options/"
+downloadUrl: "https://github.com/renovatebot/renovate/archive/refs/tags/43.210.1.zip"
+installable: true
+installCommand: "npm install --save-dev renovate@43.210.1"
+usageSnippet: "Use this skill when reviewing Renovate dependency upgrade PRs, config changes, grouped updates, lockfile diffs, or automerge readiness."
+copySnippet: |-
+  # Trigger
+  "Apply the Renovate dependency upgrade review capability pack to this PR."
+
+  # Required output
+  1) Renovate package/source version and config inventory
+  2) Dependency update classification and package-rule analysis
+  3) Risk, lockfile, validation, and automerge findings
+  4) Merge, hold, split, or request-changes recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://docs.renovatebot.com/"
+  - "https://docs.renovatebot.com/configuration-options/"
+  - "https://docs.renovatebot.com/configuration-options/#packagerules"
+  - "https://docs.renovatebot.com/key-concepts/dashboard/"
+  - "https://docs.renovatebot.com/key-concepts/automerge/"
+  - "https://docs.renovatebot.com/presets-default/"
+  - "https://registry.npmjs.org/renovate/43.210.1"
+  - "https://raw.githubusercontent.com/renovatebot/renovate/43.210.1/package.json"
+  - "https://raw.githubusercontent.com/renovatebot/renovate/43.210.1/README.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Renovate dependency upgrade PR, config diff, or dependency dashboard item
+  - Dependency manifest and lockfile diff for the reviewed package manager
+  - Renovate config source such as `renovate.json`, package config, or inherited presets
+  - Release notes, changelog, package metadata, or source tag for the updated dependency
+  - Project validation commands and owner policy for grouped updates or automerge
+safetyNotes:
+  - Installing Renovate adds an npm package to the selected project environment; pin the reviewed version and avoid global installs for review work.
+  - Renovate can update dependency manifests and lockfiles; review generated diffs before approving automerge or grouped updates.
+  - Major upgrades, runtime dependencies, toolchain changes, and lockfile churn should be treated as release-blocking until tests and smoke checks pass.
+  - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
+privacyNotes:
+  - Dependency metadata can reveal package names, repository layout, branch names, internal registry hosts, and release cadence.
+  - Keep public review notes focused on package names, versions, config keys, and test results; omit operational details that do not need to be public.
+tags:
+  - renovate
+  - dependencies
+  - upgrades
+  - package-management
+  - capability-pack
+keywords:
+  - Renovate dependency review
+  - dependency upgrade review
+  - Renovate packageRules
+  - Renovate automerge review
+  - lockfile review
+  - dependency update PR review
+  - Renovate dependency dashboard
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to Renovate **43.210.1** package metadata, source files, and documentation verified on **2026-06-03**. The reviewed npm metadata declares Node **^24.11.0** and pnpm **^10.0.0** engine requirements.
+
+## Retrieval Sources
+
+- https://docs.renovatebot.com/
+- https://docs.renovatebot.com/configuration-options/
+- https://docs.renovatebot.com/configuration-options/#packagerules
+- https://docs.renovatebot.com/key-concepts/dashboard/
+- https://docs.renovatebot.com/key-concepts/automerge/
+- https://docs.renovatebot.com/presets-default/
+- https://registry.npmjs.org/renovate/43.210.1
+- https://raw.githubusercontent.com/renovatebot/renovate/43.210.1/package.json
+- https://raw.githubusercontent.com/renovatebot/renovate/43.210.1/README.md
+
+Prefer current Renovate docs, npm metadata, and pinned source files over model memory for config names, package-rule behavior, automerge behavior, and runtime requirements.
+
+## Scope Note
+
+This is not a generic dependency update checker or a hook that scans manifests after edits. Use it for human-in-the-loop review of Renovate-driven upgrade PRs, grouped updates, package-rule behavior, dependency dashboard items, and automerge readiness.
+
+## Core Workflow
+
+1. Confirm the Renovate package version, docs version, source tag, and runtime requirements used for the review.
+2. Identify the package manager, datasource, dependency name, current version, proposed version, semver class, direct or transitive impact, and runtime or development scope.
+3. Inspect Renovate config sources: presets, extends, package rules, schedules, grouping rules, range strategy, labels, reviewers, and automerge settings.
+4. Classify the update as patch, minor, major, digest, lockfile-only, grouped, replacement, deprecation response, or toolchain change.
+5. Compare release notes, changelog, package metadata, source tags, and migration notes against the project usage.
+6. Review manifest and lockfile diffs for unexpected package additions, manager changes, registry changes, peer dependency shifts, or large transitive churn.
+7. Build a validation plan based on package role: unit tests, integration tests, build, type check, lint, smoke test, or targeted runtime check.
+8. Decide whether to merge, hold, split the group, disable automerge, request config changes, or escalate to a project owner.
+9. Produce a concise review record with evidence links, config keys reviewed, risk class, validation result, and final recommendation.
+
+## Capability Scope
+
+- Renovate package/source verification
+- Config, preset, and package-rule review
+- Dependency dashboard triage
+- Semver and update-type classification
+- Grouped update and automerge review
+- Manifest and lockfile diff review
+- Test and smoke-check planning
+- Merge, hold, split, or request-changes decisions
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for Renovate PR and config review.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for dependency upgrade review.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level dependency review rules.
+
+## Required Inputs
+
+- Renovate package version or hosted Renovate context
+- Dependency PR URL, dashboard item, or config diff
+- Package manager and dependency manifest path
+- Lockfile diff when the package manager uses lockfiles
+- Renovate config source and inherited presets when available
+- Project validation commands and merge policy
+
+## Production Rules
+
+- Do not approve automerge when package rules, grouping, schedules, or validation requirements are unclear.
+- Do not treat a patch update as low risk until the package role, lockfile impact, and changelog are checked.
+- Split grouped updates when one package has a major, runtime, toolchain, or migration risk that obscures the rest.
+- Hold updates that change package managers, registries, peer dependency ranges, or runtime engines without explicit owner review.
+- Prefer package-specific validation over broad test commands when the dependency has a narrow blast radius.
+- Require stronger validation for runtime dependencies than for isolated development tooling.
+- Keep config changes separate from dependency updates when the config change alters future Renovate behavior.
+
+## Output Contract
+
+1. Source evidence: Renovate version, docs, npm metadata, source tag, package metadata, and release notes reviewed.
+2. Update inventory: package manager, dependency, current version, target version, update type, scope, and lockfile impact.
+3. Config review: presets, package rules, grouping, schedules, labels, reviewers, and automerge settings.
+4. Risk decision: patch/minor/major/toolchain/grouped/automerge class with blockers and caveats.
+5. Validation plan: exact checks needed before merge and why each check maps to the package role.
+6. Recommendation: merge, hold, split, request changes, or escalate with evidence.
+
+## Troubleshooting
+
+**Issue:** Renovate grouped unrelated packages together
+
+**Fix:** Identify the package rule or preset causing the group, then recommend splitting packages that have different runtime, major-version, or migration risk.
+
+**Issue:** A minor update causes broad lockfile churn
+
+**Fix:** Check package manager behavior, peer dependency changes, registry source, and transitive dependency shifts before approving the PR.
+
+**Issue:** Automerge is enabled but confidence is low
+
+**Fix:** Disable automerge for that package rule or update class until required tests and smoke checks are stable.
+
+**Issue:** The PR has no useful release notes
+
+**Fix:** Fall back to package metadata, source tags, compare views, and project usage. Mark unsupported claims as unknown rather than guessing.
+
+**Issue:** The dependency dashboard is noisy
+
+**Fix:** Group by package manager, runtime impact, update type, and owner. Start with blocked updates, failed automerge, and major upgrades.
+
+## Validation Checklist
+
+- Renovate version, npm metadata, source tag, and docs verified.
+- Dependency manager, package name, current version, and target version recorded.
+- Config sources and package rules reviewed.
+- Update type and package role classified.
+- Manifest and lockfile diff reviewed.
+- Release notes, changelog, source tag, or package metadata checked.
+- Grouping and automerge behavior explained.
+- Validation commands mapped to package risk.
+- Merge, hold, split, or request-changes recommendation documented.

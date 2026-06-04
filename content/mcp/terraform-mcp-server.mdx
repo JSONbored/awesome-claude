@@ -1,0 +1,418 @@
+---
+title: Terraform MCP Server for Claude
+slug: terraform-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Terraform Registry, HCP Terraform, and Terraform Enterprise
+  context through HashiCorp's MCP server.
+cardDescription: >-
+  Official HashiCorp MCP server for Terraform Registry lookups, provider and
+  module context, and optional HCP Terraform or Terraform Enterprise workflows.
+seoTitle: Terraform MCP Server for Claude
+seoDescription: >-
+  Use HashiCorp's Terraform MCP server with Claude to search Terraform Registry
+  providers, modules, and policies, inspect HCP Terraform workspaces, and manage
+  Terraform runs with strict opt-in safety controls.
+author: HashiCorp
+authorProfileUrl: "https://github.com/hashicorp"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+documentationUrl: "https://developer.hashicorp.com/terraform/mcp-server"
+repoUrl: "https://github.com/hashicorp/terraform-mcp-server"
+installable: true
+installCommand: >-
+  claude mcp add terraform -s user -t stdio -- docker run -i --rm
+  hashicorp/terraform-mcp-server
+usageSnippet: >-
+  claude mcp add terraform -s user -t stdio -- docker run -i --rm
+  hashicorp/terraform-mcp-server
+copySnippet: |-
+  {
+    "mcpServers": {
+      "terraform": {
+        "command": "docker",
+        "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "terraform": {
+        "command": "docker",
+        "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Docker installed and running for the documented container-based setup, or Go installed for building/running the binary from source
+  - Claude Code, Claude Desktop, VS Code, Cursor, Kiro, Gemini, Bob, or another MCP-capable client
+  - Network access to Terraform Registry for the default public registry toolset
+  - HCP Terraform or Terraform Enterprise account only if enabling workspace, private registry, run, variable, stack, or policy-set tools
+  - Terraform API token with the minimum organization, project, workspace, registry, run, and variable permissions needed for the selected toolsets
+  - Approval policy for any workflow that can create workspaces, change variables, start runs, apply runs, or delete resources
+safetyNotes:
+  - >-
+    The default toolset is public Terraform Registry access for providers,
+    modules, and policies. Keep that default when Claude only needs current IaC
+    reference material for code generation or review.
+  - >-
+    HCP Terraform and Terraform Enterprise tools require token-backed
+    configuration and can expose or modify real organization, project,
+    workspace, run, variable, stack, private registry, and policy-set state.
+  - >-
+    Mutating tools can create or update workspaces, variables, variable sets,
+    workspace tags, policy-set attachments, and runs when their toolsets are
+    enabled and the token has permission.
+  - >-
+    HashiCorp disables destructive Terraform operations by default. Setting
+    `ENABLE_TF_OPERATIONS=true` enables additional capabilities such as applying
+    or destroying infrastructure and deleting workspaces.
+  - >-
+    Keep manual approval enabled for `create_run`, `action_run`, workspace
+    changes, variable changes, policy-set changes, and any operation that can
+    trigger a Terraform plan, apply, destroy, or delete.
+  - >-
+    HashiCorp labels the Terraform MCP server as beta in its developer docs. Do
+    not rely on beta behavior for production change control without your own
+    review, testing, and approval gates.
+  - >-
+    If using streamable HTTP mode, keep it local by default and configure
+    allowed origins, TLS, and rate limits before exposing it beyond a trusted
+    local client.
+privacyNotes:
+  - >-
+    Registry queries can reveal provider, module, policy, and infrastructure
+    design interests to the connected MCP client and model session.
+  - >-
+    HCP Terraform or Terraform Enterprise tools can return organization names,
+    project names, workspace names, variable names, run history, plan output,
+    apply logs, Sentinel mocks, stack details, private provider details, and
+    private module metadata.
+  - >-
+    Terraform plan JSON and logs may contain resource names, cloud regions,
+    account identifiers, network topology, state-derived values, policy
+    findings, and other infrastructure-sensitive data.
+  - >-
+    Store `TFE_TOKEN` and related credentials in your MCP client's secret or
+    environment configuration, not in prompts, chat transcripts, checked-in MCP
+    config files, or shared examples.
+  - >-
+    Centralized HTTP deployments can accept per-user Terraform tokens through
+    headers. Use TLS and avoid query parameters so tokens are not leaked through
+    URLs, logs, browser history, or intermediary systems.
+tags:
+  - terraform
+  - hcp-terraform
+  - terraform-registry
+  - infrastructure-as-code
+  - workspace-management
+  - mcp
+keywords:
+  - terraform mcp
+  - hashicorp terraform mcp server
+  - terraform registry mcp
+  - hcp terraform claude
+  - terraform enterprise mcp
+  - infrastructure as code mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Terraform MCP Server is HashiCorp's MCP server for Terraform development
+workflows. It gives Claude and other MCP-capable clients current Terraform
+Registry context for providers, modules, and policies, and it can optionally
+connect to HCP Terraform or Terraform Enterprise for workspace, run, private
+registry, variable, stack, and policy-set workflows.
+
+The safest default is registry-only mode. In that configuration, Claude can look
+up current provider versions, resource documentation, module inputs and outputs,
+and policy information before generating or reviewing Terraform code, without
+receiving a Terraform API token or managing live workspaces.
+
+For organizations that want AI-assisted HCP Terraform or Terraform Enterprise
+operations, the server supports additional toolsets. Those tools should be
+enabled deliberately, backed by least-privilege tokens, and kept behind normal
+infrastructure review and approval gates.
+
+## Features
+
+- Official HashiCorp Terraform MCP server with source code in the
+  `hashicorp/terraform-mcp-server` repository.
+- Public Terraform Registry tools for searching providers, modules, and
+  policies.
+- Provider tools for latest versions, provider details, and provider
+  capabilities.
+- Module tools for module search, latest module versions, and module details.
+- Policy tools for Sentinel policy search and policy details.
+- Optional private registry tools for HCP Terraform or Terraform Enterprise
+  private providers and modules.
+- Optional HCP Terraform and Terraform Enterprise tools for organizations,
+  projects, workspaces, runs, plan details, plan logs, apply details, apply logs,
+  workspace variables, variable sets, workspace tags, stacks, and policy sets.
+- Stdio transport for local MCP clients.
+- Streamable HTTP transport with host, port, endpoint, CORS, TLS, session, and
+  rate-limit configuration for controlled deployments.
+- Toolset and individual-tool filtering with `--toolsets` and `--tools`.
+- OpenTelemetry metrics for HTTP server and MCP tool calls when metrics are
+  enabled.
+
+## Use Cases
+
+- Ask Claude to look up current Terraform provider resources before drafting a
+  module or resource block.
+- Search Terraform Registry modules and inspect inputs, outputs, examples, and
+  version constraints before selecting a module.
+- Pull provider capabilities and latest versions while modernizing existing IaC.
+- Review provider or module documentation during a code review without relying
+  only on model training data.
+- Query private registry modules or providers when a Terraform token and
+  private-registry toolset are intentionally enabled.
+- List HCP Terraform organizations, projects, workspaces, and runs during an
+  approved operational review.
+- Retrieve plan details, plan logs, plan JSON, apply details, and apply logs for
+  a Terraform run already managed through HCP Terraform or Terraform Enterprise.
+- Create a plan-only run for review when workspace/run tools are enabled and
+  your team has an explicit approval workflow.
+
+## Installation
+
+### Claude Code
+
+1. Confirm Docker is installed and running:
+
+```bash
+docker version
+```
+
+2. Add the Terraform MCP server in local stdio mode:
+
+```bash
+claude mcp add terraform -s user -t stdio -- docker run -i --rm hashicorp/terraform-mcp-server
+```
+
+3. Start with registry-only prompts, such as searching for current provider
+   documentation.
+4. Add HCP Terraform or Terraform Enterprise credentials only when the workflow
+   needs organization, private registry, workspace, run, variable, or stack
+   access.
+
+### Claude Desktop
+
+1. Open the Claude Desktop MCP configuration file.
+2. Add the `terraform` server configuration shown below.
+3. Restart Claude Desktop.
+4. Verify that Claude can search public Terraform Registry documentation before
+   enabling any token-backed toolsets.
+
+## Configuration
+
+Default registry-only configuration:
+
+```json
+{
+  "mcpServers": {
+    "terraform": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server"]
+    }
+  }
+}
+```
+
+To enable HCP Terraform or Terraform Enterprise tools, pass credentials and
+explicit toolsets. Keep the token scoped to the exact organization and actions
+Claude should use.
+
+```json
+{
+  "mcpServers": {
+    "terraform": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "-e",
+        "TFE_ADDRESS=https://app.terraform.io",
+        "-e",
+        "TFE_TOKEN=${TFE_TOKEN}",
+        "hashicorp/terraform-mcp-server",
+        "--toolsets=registry,registry-private,terraform"
+      ]
+    }
+  }
+}
+```
+
+Keep destructive Terraform operations disabled unless your team has a separate
+review gate. The server defaults `ENABLE_TF_OPERATIONS` to `false`; leave it
+that way for discovery, plan review, and workspace inspection workflows.
+
+Tool filtering can narrow the server further:
+
+```bash
+terraform-mcp-server --tools=search_providers,get_provider_details,search_modules
+```
+
+## Toolsets
+
+### `registry`
+
+The default toolset. It covers public Terraform Registry providers, modules, and
+policies.
+
+Representative tools include:
+
+- `search_providers`
+- `get_provider_details`
+- `get_latest_provider_version`
+- `get_provider_capabilities`
+- `search_modules`
+- `get_module_details`
+- `get_latest_module_version`
+- `search_policies`
+- `get_policy_details`
+
+### `registry-private`
+
+Private registry tools for HCP Terraform or Terraform Enterprise. These require
+valid Terraform credentials and can expose private provider or module metadata.
+
+Representative tools include:
+
+- `search_private_modules`
+- `get_private_module_details`
+- `search_private_providers`
+- `get_private_provider_details`
+
+### `terraform`
+
+HCP Terraform and Terraform Enterprise operations. These require valid Terraform
+credentials and should be enabled only for approved operational workflows.
+
+Representative tools include:
+
+- `list_terraform_orgs`
+- `list_terraform_projects`
+- `list_workspaces`
+- `get_workspace_details`
+- `create_workspace`
+- `update_workspace`
+- `list_runs`
+- `get_run_details`
+- `get_plan_details`
+- `get_plan_logs`
+- `get_plan_json_output`
+- `get_apply_details`
+- `get_apply_logs`
+- `create_run`
+- `list_workspace_variables`
+- `create_workspace_variable`
+- `update_workspace_variable`
+- `list_variable_sets`
+- `create_variable_set`
+- `attach_policy_set_to_workspaces`
+- `get_token_permissions`
+- `list_stacks`
+- `get_stack_details`
+
+## Examples
+
+### Look up provider documentation
+
+Use the default registry toolset to ground code generation in current provider
+documentation.
+
+```plaintext
+Search the Terraform Registry for the AWS provider, get the latest version, and summarize the current documentation for S3 bucket encryption resources.
+```
+
+### Review a module before use
+
+Ask Claude to inspect a module before writing Terraform code that depends on
+it.
+
+```plaintext
+Find Terraform Registry modules for an AWS VPC, compare the main inputs and outputs, and tell me what version constraints I should review before adoption.
+```
+
+### Inspect a workspace
+
+Use token-backed Terraform tools only after enabling the `terraform` toolset and
+confirming the token permissions.
+
+```plaintext
+List my HCP Terraform workspaces, identify the development workspace for this service, and show the most recent plan status without applying anything.
+```
+
+### Review a run
+
+Use read-oriented run and plan tools to inspect an existing run before a human
+decides whether to apply.
+
+```plaintext
+Get the latest run details, plan logs, and plan JSON for the selected workspace, then summarize resource changes and possible risk areas.
+```
+
+## Best Practices
+
+- Start with the default `registry` toolset.
+- Enable `registry-private` and `terraform` only when a task needs private
+  registry or HCP Terraform/TFE state.
+- Use a dedicated least-privilege Terraform token for MCP access.
+- Keep `ENABLE_TF_OPERATIONS=false` unless apply, destroy, or workspace deletion
+  is explicitly in scope.
+- Prefer plan-only workflows and human review before any run action.
+- Filter tools with `--tools` when Claude only needs a small set of registry or
+  read-only operations.
+- Keep Terraform tokens out of prompts, transcripts, and committed MCP config.
+- Treat plan logs, plan JSON, apply logs, and workspace variables as
+  infrastructure-sensitive data.
+- Replace or supplement the default server instructions when your organization
+  has specific Terraform module, naming, policy, cost, or compliance practices.
+
+## Troubleshooting
+
+### Docker cannot start the server
+
+Confirm Docker is running and the client can pull the `hashicorp/terraform-mcp-server`
+image. If Docker is not allowed in the environment, install the binary from
+source with Go and point the MCP client at the local binary.
+
+### Terraform tools are missing
+
+The default server configuration only enables public registry tools. Add the
+appropriate `--toolsets` value or narrow `--tools` list for the workflow.
+
+### HCP Terraform or TFE tools return credential errors
+
+Confirm `TFE_ADDRESS` and `TFE_TOKEN` are available to the MCP server process.
+Check that the token is valid for the organization, projects, workspaces,
+private registry entries, and actions Claude is trying to use.
+
+### Claude tries to apply or destroy infrastructure
+
+Keep `ENABLE_TF_OPERATIONS=false` and require explicit human approval for run
+actions. If destructive operations are intentionally enabled, use a separate
+least-privilege token and normal change-management controls.
+
+### HTTP transport is reachable by the wrong client
+
+Prefer stdio for local use. If streamable HTTP is required, bind to a trusted
+interface, configure allowed origins, use TLS for non-local deployments, and set
+appropriate rate limits.
+
+## Related Links
+
+- [Terraform MCP server overview](https://developer.hashicorp.com/terraform/mcp-server)
+- [Terraform MCP server reference](https://developer.hashicorp.com/terraform/mcp-server/reference)
+- [Terraform MCP server source](https://github.com/hashicorp/terraform-mcp-server)
+- [Terraform MCP server releases](https://github.com/hashicorp/terraform-mcp-server/releases)
+- [Terraform Registry](https://registry.terraform.io)
+- [HCP Terraform documentation](https://developer.hashicorp.com/terraform/cloud-docs)

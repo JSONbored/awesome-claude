@@ -1,0 +1,203 @@
+---
+title: Spectral OpenAPI Contract Audit Capability Pack Skill
+slug: spectral-openapi-contract-audit-capability-pack
+category: skills
+description: "Expert Spectral review skill for auditing OpenAPI contracts, OAS rulesets, lint results, schema drift, CI gates, and API release readiness."
+cardDescription: "Audit OpenAPI contracts with Spectral ruleset review, lint-result triage, schema drift checks, CI gating, and release recommendations."
+seoTitle: Spectral OpenAPI Contract Audit Capability Pack Skill
+seoDescription: "Advanced AI skill for reviewing OpenAPI contracts with Stoplight Spectral, OAS rulesets, lint output, schema drift, and API release gates."
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-03"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+submittedAt: "2026-06-03"
+sourceSubmissionNumber: 722
+sourceSubmissionUrl: "https://github.com/JSONbored/awesome-claude/issues/722"
+repoUrl: "https://github.com/stoplightio/spectral"
+documentationUrl: "https://github.com/stoplightio/spectral/blob/v6.15.0/README.md"
+downloadUrl: "https://github.com/stoplightio/spectral/archive/refs/tags/v6.15.0.zip"
+installable: true
+installCommand: "npm install --save-dev @stoplight/spectral-cli@6.15.0"
+usageSnippet: "Use this skill when reviewing an OpenAPI contract, Spectral ruleset, lint report, schema drift, or API release gate."
+copySnippet: |-
+  # Trigger
+  "Apply the Spectral OpenAPI contract audit capability pack to this API contract change."
+
+  # Required output
+  1) Spectral package/source version and ruleset inventory
+  2) OpenAPI version, file set, references, and lint-result review
+  3) Contract findings with release-blocking and non-blocking issues
+  4) Validation plan and merge, hold, or request-changes recommendation
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-03"
+retrievalSources:
+  - "https://github.com/stoplightio/spectral/blob/v6.15.0/README.md"
+  - "https://github.com/stoplightio/spectral/releases/tag/v6.15.0"
+  - "https://registry.npmjs.org/@stoplight/spectral-cli/6.15.0"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/packages/cli/package.json"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/getting-started/4-openapi.md"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/2-cli.md"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/4-custom-rulesets.md"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/8-continuous-integration.md"
+  - "https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/reference/openapi-rules.md"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - OpenAPI v2, v3.0, or v3.1 contract file set
+  - Spectral ruleset such as `.spectral.yaml` or an explicit ruleset path
+  - Lint output, CI output, or proposed contract diff
+  - API owner expectations for breaking changes, naming, examples, and release gates
+  - Consumer impact notes, changelog, or compatibility policy for the reviewed API
+safetyNotes:
+  - Installing Spectral adds npm packages to the selected project environment; pin the reviewed version and avoid global installs for review work.
+  - Spectral can lint local files, globs, and remote contract URLs; review source locations before running checks in shared CI.
+  - Ruleset changes can silently weaken future API gates; review disabled rules, severity changes, and overrides as release-impacting changes.
+  - The source ZIP is external and version-pinned for reference; package trust should remain a maintainer decision.
+privacyNotes:
+  - OpenAPI files can reveal internal route names, hostnames, example payloads, business object names, and planned endpoints.
+  - Lint reports can include source paths, schema paths, rule names, snippets, and examples from the reviewed contract.
+  - Keep public review notes focused on rule IDs, contract paths, compatibility impact, and summarized examples; omit details that do not need to be public.
+tags:
+  - spectral
+  - openapi
+  - api-contracts
+  - contract-audit
+  - capability-pack
+keywords:
+  - Spectral OpenAPI contract audit
+  - OpenAPI lint review
+  - OAS ruleset audit
+  - API schema drift review
+  - API contract release gate
+  - Spectral ruleset review
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is pinned to Stoplight Spectral **6.15.0**, source tag **v6.15.0**, npm metadata, and source documentation verified on **2026-06-03**. The reviewed CLI package requires Node **^16.20**, **^18.18**, or **>=20.17**.
+
+## Retrieval Sources
+
+- https://github.com/stoplightio/spectral/blob/v6.15.0/README.md
+- https://github.com/stoplightio/spectral/releases/tag/v6.15.0
+- https://registry.npmjs.org/@stoplight/spectral-cli/6.15.0
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/packages/cli/package.json
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/getting-started/4-openapi.md
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/2-cli.md
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/4-custom-rulesets.md
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/guides/8-continuous-integration.md
+- https://raw.githubusercontent.com/stoplightio/spectral/v6.15.0/docs/reference/openapi-rules.md
+
+Prefer the pinned Spectral source, npm metadata, and source documentation over model memory for CLI flags, built-in ruleset names, OpenAPI support, ruleset structure, and CI behavior.
+
+## Scope Note
+
+This is not an API design rule pack, documentation generator, MCP server listing, or slash command. Use it for human-in-the-loop review of OpenAPI contract changes with Spectral evidence: rulesets, lint output, schema drift, reference behavior, compatibility risk, and release gate decisions.
+
+## Core Workflow
+
+1. Confirm the Spectral package version, source tag, npm metadata, Node runtime requirement, ruleset location, and OpenAPI contract file set.
+2. Identify the OpenAPI version, document boundaries, referenced files, generated files, source-of-truth owner, and contract consumers.
+3. Inventory Spectral configuration: `.spectral.yaml`, explicit `--ruleset` usage, extended rulesets, formats, overrides, parser options, and custom rule documentation.
+4. Run or review lint output with the expected formatter and fail severity. Preserve rule IDs, JSON paths, line ranges, source file names, and severity values.
+5. Classify findings as syntax/parser failures, built-in OAS rule failures, custom rule failures, style drift, compatibility risk, generated-output noise, or false positives.
+6. Review contract diffs for endpoint addition, endpoint removal, method changes, request and response shape changes, enum changes, required-field changes, examples, tags, operation IDs, and reference moves.
+7. Review ruleset changes separately from contract changes. Treat disabled rules, lower severities, broad overrides, or format changes as release-impacting until explained.
+8. Build a validation plan: Spectral lint, generated client/type check when applicable, documentation render check when applicable, and consumer compatibility review for breaking changes.
+9. Produce a release recommendation with blockers, non-blocking fixes, accepted exceptions, owner follow-up, and a merge, hold, or request-changes decision.
+
+## Capability Scope
+
+- Spectral package/source verification
+- OpenAPI v2, v3.0, and v3.1 contract review
+- `.spectral.yaml` and custom ruleset audit
+- Built-in `spectral:oas` rule-result triage
+- Reference and multi-file contract review
+- CI fail-severity and formatter review
+- Compatibility and schema-drift classification
+- Evidence-based API release recommendation
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for OpenAPI PR review and API release readiness.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions for contract-audit work.
+
+### Manual Adaptation
+
+- **Windsurf and Gemini**: adapt the workflow and output contract into their skill formats.
+- **Cursor and Generic AGENTS files**: convert the production rules and validation checklist into repository-level OpenAPI review guidance.
+
+## Required Inputs
+
+- Spectral package version and ruleset path
+- OpenAPI contract file path, generated source, or review diff
+- Lint output, CI output, or command needed to reproduce results
+- Expected OpenAPI version and consumer compatibility policy
+- Owner policy for breaking changes, deprecations, examples, and release notes
+
+## Production Rules
+
+- Do not approve a contract change until the OpenAPI version and source-of-truth file set are clear.
+- Do not mix ruleset weakening with contract changes unless the reason and release impact are explicit.
+- Treat endpoint removals, required-field additions, enum narrowing, status-code changes, and response shape changes as compatibility risks until reviewed by an owner.
+- Treat parser errors, unresolved references, missing operation IDs, and ambiguous schemas as release-blocking unless the owner accepts a documented exception.
+- Do not rely only on generated docs rendering; lint the source contract and inspect the relevant schema path.
+- Keep style-only lint findings separate from consumer-breaking findings.
+- Prefer targeted ruleset exceptions with documentation over broad overrides.
+
+## Output Contract
+
+1. Source evidence: Spectral version, source tag, npm metadata, docs, ruleset, and contract files reviewed.
+2. Contract inventory: OpenAPI version, file set, generated or authored status, references, and consumer impact area.
+3. Ruleset review: extends, formats, overrides, parser options, custom rules, fail severity, and formatter outputs.
+4. Findings: parser errors, OAS rule failures, custom rule failures, compatibility risks, and accepted exceptions.
+5. Validation plan: exact lint command, CI gate, generated client/type check when relevant, and owner review.
+6. Recommendation: merge, hold, request changes, or split ruleset changes from contract changes.
+
+## Troubleshooting
+
+**Issue:** Spectral reports no ruleset found
+
+**Fix:** Confirm `.spectral.yaml`, `.spectral.yml`, `.spectral.json`, or `.spectral.js` exists near the contract, or pass the intended file with `--ruleset`.
+
+**Issue:** A contract diff looks harmless but generated clients break
+
+**Fix:** Check required fields, enum values, oneOf/anyOf shape, nullable behavior, status codes, and renamed operation IDs before approving.
+
+**Issue:** Custom rules create noisy findings
+
+**Fix:** Separate style preference from compatibility risk, then recommend targeted severity changes or documented exceptions instead of disabling the rule broadly.
+
+**Issue:** Remote references behave differently in CI
+
+**Fix:** Compare local and CI resolver behavior, reference URLs, checkout depth, generated artifacts, and pinned dependency versions before accepting the result.
+
+**Issue:** Lint results are hard to map back to the diff
+
+**Fix:** Ask for JSON or SARIF output, preserve rule IDs and JSON paths, then map each finding to the changed contract path and owner.
+
+## Validation Checklist
+
+- Spectral package version, source tag, npm metadata, and docs verified.
+- OpenAPI version and source-of-truth file set identified.
+- Ruleset location, extends, formats, overrides, and parser options reviewed.
+- Lint command, formatter, and fail severity recorded.
+- Parser errors and unresolved references checked.
+- Built-in OAS findings triaged.
+- Custom rule findings triaged.
+- Contract diff reviewed for compatibility risk.
+- Ruleset changes reviewed separately from contract changes.
+- Merge, hold, request-changes, or split recommendation documented.
