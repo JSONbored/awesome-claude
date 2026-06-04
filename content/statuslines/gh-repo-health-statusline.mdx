@@ -1,0 +1,107 @@
+---
+title: GitHub Repository Health Statusline
+slug: gh-repo-health-statusline
+category: statuslines
+description: "Claude Code statusline that uses GitHub CLI to show repository health basics: archive state, open PR count, open issue count, and default branch."
+cardDescription: Show repository health counts from GitHub CLI.
+seoTitle: GitHub repository health statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes repository health with GitHub CLI repository metadata, open pull requests, open issues, and default branch.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_repo_view"
+tags:
+  - github
+  - repository
+  - health
+  - claude-code
+keywords:
+  - repository health statusline
+  - github repo statusline
+  - open issues statusline
+  - gh repo view
+installable: true
+usageSnippet: "repo: owner/app | prs 7 | issues 19 | main | active"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-repo-health-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-repo-health-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "repo: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "repo: jq missing"
+    exit 0
+  fi
+
+  repo_json=$(gh repo view --json nameWithOwner,isArchived,defaultBranchRef 2>/dev/null || true)
+  if [ -z "$repo_json" ]; then
+    echo "repo: unavailable"
+    exit 0
+  fi
+
+  name=$(printf '%s' "$repo_json" | jq -r '.nameWithOwner // "unknown"')
+  branch=$(printf '%s' "$repo_json" | jq -r '.defaultBranchRef.name // "main"')
+  archived=$(printf '%s' "$repo_json" | jq -r '.isArchived // false')
+  prs=$(gh pr list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null || echo 0)
+  issues=$(gh issue list --state open --limit 100 --json number 2>/dev/null | jq 'length' 2>/dev/null || echo 0)
+
+  if [ "$archived" = "true" ]; then
+    state="archived"
+  elif [ "$prs" -gt 20 ] || [ "$issues" -gt 100 ]; then
+    state="busy"
+  else
+    state="active"
+  fi
+
+  printf 'repo: %s | prs %s | issues %s | %s | %s\n' "$name" "$prs" "$issues" "$branch" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in with access to the current repository.
+  - jq available for reading GitHub CLI JSON output.
+  - A refresh interval that respects repository size and GitHub API rate limits.
+safetyNotes:
+  - Repository counts are orientation signals and should not replace issue triage, release gates, or maintainer review.
+  - The `--limit 100` query cap keeps the statusline fast; very large queues may need a dedicated dashboard.
+  - The script does not modify repository settings, issues, or pull requests.
+privacyNotes:
+  - The statusline prints repository owner/name, counts, default branch, and state.
+  - Private repository metadata follows the local GitHub CLI login and may appear in terminal screenshots.
+  - Organization policies can restrict which counts are visible to the local account.
+---
+
+## Source notes
+
+- GitHub CLI documents `gh repo view` with JSON fields for repository metadata.
+- This entry combines repository metadata with `gh pr list` and `gh issue list` counts for a compact maintainer-facing signal.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gh-repo-health-statusline`, repository health, GitHub repo status, open issue counts, and open PR counts. No statusline entry or open PR with this slug or GitHub repository-health focus was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
