@@ -1,0 +1,107 @@
+---
+title: Claude Cost Burn Rate Statusline
+slug: claude-cost-burn-rate-statusline
+category: statuslines
+description: Source-backed Claude Code statusline that reads session usage fields and shows estimated spend pace, per-hour burn rate, and budget pressure without calling external services.
+cardDescription: Show Claude Code estimated spend pace and budget pressure from statusline input.
+seoTitle: Claude cost burn rate statusline for Claude Code
+seoDescription: Add a Claude Code statusline for estimated spend, hourly burn rate, and budget pressure using local statusline input and configurable budget thresholds.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+tags:
+  - usage
+  - cost
+  - budget
+  - claude-code
+keywords:
+  - claude cost statusline
+  - burn rate statusline
+  - budget pressure
+  - claude code usage
+installable: true
+usageSnippet: "cost: $2.14 | burn: $0.31/h | budget 43% | ok"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/claude-cost-burn-rate-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/claude-cost-burn-rate-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  read -r input || input=""
+  budget="${CLAUDE_COST_BUDGET_USD:-5}"
+
+  cost=$(printf '%s' "$input" | jq -r '.cost.total_cost_usd // .session.estimatedCost // 0')
+  started=$(printf '%s' "$input" | jq -r '.session.startTime // .session.started_at // empty')
+
+  now=$(date +%s)
+  start_epoch="$now"
+  if [ -n "$started" ]; then
+    parsed=$(date -d "$started" +%s 2>/dev/null || date -j -f "%Y-%m-%dT%H:%M:%SZ" "$started" +%s 2>/dev/null || echo "$now")
+    start_epoch="$parsed"
+  fi
+
+  elapsed=$((now - start_epoch))
+  if [ "$elapsed" -lt 60 ]; then
+    elapsed=60
+  fi
+
+  burn=$(awk -v c="$cost" -v s="$elapsed" 'BEGIN { printf "%.2f", c * 3600 / s }')
+  pct=$(awk -v c="$cost" -v b="$budget" 'BEGIN { if (b > 0) printf "%.0f", c * 100 / b; else print 0 }')
+
+  if [ "$pct" -ge 90 ]; then
+    state="limit"
+  elif [ "$pct" -ge 70 ]; then
+    state="watch"
+  else
+    state="ok"
+  fi
+
+  printf 'cost: $%.2f | burn: $%s/h | budget %s%% | %s\n' "$cost" "$burn" "$pct" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Claude Code statusline support with JSON input enabled for the command.
+  - jq and awk available in the shell used by the statusline command.
+  - Optional CLAUDE_COST_BUDGET_USD value set to the local session budget to make the percentage meaningful.
+safetyNotes:
+  - The display is an estimate from statusline input and should not be treated as billing authority or approval to continue spending.
+  - High refresh intervals can make shell commands noisy on slower machines; keep the statusline lightweight and local.
+  - Configure budget thresholds per workspace so demos, experiments, and production support sessions are not mixed together.
+privacyNotes:
+  - The script reads Claude Code statusline JSON from stdin and does not send usage data to a network service.
+  - Terminal scrollback, screenshots, or session recordings can expose spend estimates and project pacing.
+  - If teams share budget values through shell configuration, review who can read those local files.
+---
+
+## Source notes
+
+- Claude Code statusline documentation describes command-based statuslines that receive JSON on stdin and print compact terminal text.
+- The entry uses only local statusline fields and a user-supplied budget value, which keeps the cost display practical without claiming billing precision.
+
+## Duplicate check
+
+Checked existing statuslines, the live HeyClaude statuslines index, open pull requests, and repository content for `claude-cost-burn-rate-statusline`, `burn rate`, `cost tracker`, and Claude Code usage statuslines. Existing cost and session entries are adjacent, but this file focuses on budget percentage plus hourly burn-rate pacing from source-backed statusline input.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
