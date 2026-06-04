@@ -28,7 +28,8 @@ commandSyntax: "/draft-release-notes [from-ref]"
 usageSnippet: "/draft-release-notes v1.4.0"
 copySnippet: "/draft-release-notes [from-ref]"
 safetyNotes:
-  - Read-only with respect to your repository; it only reads git history (tags and commit log) and never creates tags, commits, branches, or release artifacts.
+  - Read-only with respect to your repository when refs are validated and passed as git arguments; it only reads git history (tags and commit log) and never creates tags, commits, branches, or release artifacts.
+  - Validate the optional ref or discovered tag with `git rev-parse --verify --quiet <ref>^{commit}` and reject refs containing shell metacharacters before reading history.
   - It proposes a version bump and notes for you to review; it does not publish a release or push anything.
 privacyNotes:
   - Commit subjects, bodies, and author names from the selected range are included in the model's context to draft the notes.
@@ -62,12 +63,13 @@ The `/draft-release-notes` command turns the [Conventional Commits](https://www.
 
 When you invoke this command, follow these steps:
 
-1. **Find the range.** If a `from-ref` was given, use it. Otherwise resolve the latest tag with `git describe --tags --abbrev=0` and fall back to the repository root if there are no tags.
-2. **Read the commits.** Run `git log <from-ref>..HEAD --no-merges --pretty=format:%s%x00%b%x00%an` to collect each commit's subject, body, and author.
-3. **Parse Conventional Commits.** Classify each subject by its `type(scope):` prefix. Map types to Keep a Changelog groups: `feat` → **Added**, `fix` → **Fixed**, `perf`/`refactor` → **Changed**, `deprecate` → **Deprecated**, removals → **Removed**, security fixes → **Security**. Skip pure `docs`, `style`, `test`, `chore`, `ci`, and `build` commits unless they are user-visible.
-4. **Detect breaking changes.** Treat any `type!:` marker or `BREAKING CHANGE:` footer as breaking and list it under a prominent heading.
-5. **Recommend the bump.** Any breaking change → **major**; otherwise any `feat` → **minor**; otherwise **patch**.
-6. **Write for humans.** Rewrite terse commit subjects into clear, impact-focused bullet points; collapse duplicates; link issue/PR numbers when present.
+1. **Find the range.** If a `from-ref` was given, treat it as untrusted input. Otherwise resolve the latest tag with `git describe --tags --abbrev=0` and treat that tag as untrusted too; fall back to the repository root if there are no tags.
+2. **Validate the ref.** Before using any supplied or discovered ref, reject empty values and refs containing shell metacharacters or whitespace (for example `;`, `&`, `|`, `` ` ``, `$`, `(`, `)`, `<`, `>`, quotes, backslashes, or spaces). Then verify it resolves to a commit with `git rev-parse --verify --quiet <ref>^{commit}`. Stop and ask for a safe tag or commit SHA if validation fails.
+3. **Read the commits safely.** Do not interpolate the ref into a shell command. Pass the range as a quoted argument or argv element, for example `git log "<validated-ref>..HEAD" --no-merges --pretty=format:%s%x00%b%x00%an`, to collect each commit's subject, body, and author. If there is no starting ref, pass `HEAD` as the revision argument.
+4. **Parse Conventional Commits.** Classify each subject by its `type(scope):` prefix. Map types to Keep a Changelog groups: `feat` → **Added**, `fix` → **Fixed**, `perf`/`refactor` → **Changed**, `deprecate` → **Deprecated**, removals → **Removed**, security fixes → **Security**. Skip pure `docs`, `style`, `test`, `chore`, `ci`, and `build` commits unless they are user-visible.
+5. **Detect breaking changes.** Treat any `type!:` marker or `BREAKING CHANGE:` footer as breaking and list it under a prominent heading.
+6. **Recommend the bump.** Any breaking change → **major**; otherwise any `feat` → **minor**; otherwise **patch**.
+7. **Write for humans.** Rewrite terse commit subjects into clear, impact-focused bullet points; collapse duplicates; link issue/PR numbers when present.
 
 ## Output format
 
@@ -94,7 +96,7 @@ When you invoke this command, follow these steps:
 
 ## Safety notes
 
-Read-only: the command only reads git history. It does not create tags, commits, or releases, and it does not push — you review and apply the draft yourself.
+Read-only when refs are validated and passed safely: the command only reads git history. Treat both user-provided refs and discovered tags as untrusted input, reject refs with shell metacharacters or whitespace, verify them with `git rev-parse --verify --quiet <ref>^{commit}`, and pass the final range as a quoted argument or argv element rather than interpolating it into a shell command. The command does not create tags, commits, or releases, and it does not push — you review and apply the draft yourself.
 
 ## Privacy notes
 
