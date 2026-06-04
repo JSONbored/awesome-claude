@@ -204,8 +204,8 @@ Kibana contribution process when official sources are available.
   is explicitly needed.
 - Do not target `.buildkite/` with `scripts/type_check`; typecheck Buildkite
   code from inside `.buildkite/` using its workspace command.
-- Fix lint in changed files with:
-  `node scripts/eslint --fix $(git diff --name-only)`
+- Fix lint in changed files with NUL-delimited paths and an option terminator:
+  `git diff --name-only -z --diff-filter=ACMR | xargs -0 node scripts/eslint --fix --`
 - Run i18n checks when user-facing strings change:
   `node scripts/i18n_check --fix`
 - Use the `bk` CLI when Buildkite interaction is required and credentials are
