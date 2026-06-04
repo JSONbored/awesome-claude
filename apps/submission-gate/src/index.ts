@@ -408,6 +408,7 @@ function isRetryablePrivateReviewerDecision(decision: GateDecision) {
   const summary = decision.summary.toLowerCase();
   return (
     summary.includes("could not determine the github app installation") ||
+    summary.includes("ai maintainer review returned an unexpected payload") ||
     summary.includes("private corpus review request failed") ||
     summary.includes("private corpus review returned") ||
     summary.includes("private corpus review returned an unexpected payload")

@@ -402,6 +402,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("target: {");
     expect(source).toContain("installationId: target.installationId");
     expect(source).toContain("isRetryablePrivateReviewerDecision(decision)");
+    expect(source).toContain(
+      "ai maintainer review returned an unexpected payload",
+    );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
