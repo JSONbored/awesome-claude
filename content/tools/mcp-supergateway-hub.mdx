@@ -1,0 +1,53 @@
+---
+title: MCP Supergateway Hub
+slug: mcp-supergateway-hub
+category: tools
+description: Self-hostable hub that wraps stdio MCP servers as streamable HTTP endpoints via supergateway, so a fleet of Model Context Protocol servers can run on one machine and be reached from any MCP client over the network.
+cardDescription: Self-host many MCP servers as HTTP endpoints via supergateway.
+seoTitle: MCP Supergateway Hub self-hosted MCP gateway
+seoDescription: MCP Supergateway Hub bridges stdio MCP servers to streamable HTTP via supergateway, letting you run a fleet of Model Context Protocol servers on one host and connect any MCP client over the network.
+author: dpdanpittman
+authorProfileUrl: "https://github.com/dpdanpittman"
+submittedBy: dpdanpittman
+submittedByUrl: "https://github.com/dpdanpittman"
+dateAdded: "2026-06-02"
+websiteUrl: "https://github.com/dpdanpittman/mcp-supergateway-hub"
+documentationUrl: "https://github.com/dpdanpittman/mcp-supergateway-hub#readme"
+repoUrl: "https://github.com/dpdanpittman/mcp-supergateway-hub"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: Linux
+installable: true
+installCommand: "git clone https://github.com/dpdanpittman/mcp-supergateway-hub && cd mcp-supergateway-hub/gateway && npm install"
+usageSnippet: "node index.js --only github,git,memory,fetch"
+prerequisites:
+  - Node.js 22+ (the gateway runs as a Node process; an optional systemd unit is provided for always-on use).
+  - Python 3.10+ with uv for uvx-based servers, Docker for the docker server, and the Quint CLI for the formal-verification server.
+  - API keys/connection strings in a local .env for any servers that authenticate against external services.
+safetyNotes:
+  - Bridges stdio MCP servers to HTTP and exposes them on your network, so each wrapped server's tools become reachable over HTTP — run it on a trusted network or behind authentication, not on a public interface.
+  - Running dozens of servers behind one host broadens the tool surface available to any connected client; use the --only/--exclude flags to scope what is exposed.
+privacyNotes:
+  - The gateway process and its .env hold API keys and see traffic passing between MCP clients and the wrapped servers.
+  - Fully self-hosted, so data stays on your own infrastructure rather than a third-party service.
+tags:
+  - mcp
+  - gateway
+  - self-hosted
+  - developer-tools
+keywords:
+  - mcp gateway
+  - supergateway
+  - self-hosted mcp servers
+  - streamable http mcp
+  - model context protocol
+---
+
+## Editorial notes
+
+MCP Supergateway Hub is relevant to HeyClaude users who self-host MCP infrastructure. It uses [supergateway](https://github.com/supercorp-ai/supergateway) to bridge stdio MCP servers to streamable HTTP endpoints (one sequential port per server, starting at 3170), so a large set of Model Context Protocol servers — 62 are included across tiers like core dev, databases, cloud/infra, and AI bridges — can run on a dedicated machine and be reached from any MCP client. It ships a systemd unit for always-on operation and pairs well with Claude Code's Tool Search, which keeps the cost of many configured servers low.
+
+## Disclosure
+
+Editorial listing submitted by the project author (the repository owner). No paid placement or affiliate link is used.
