@@ -41,7 +41,7 @@ export const INTENTS: Intent[] = [
     id: "automate",
     label: "Automate workflows",
     Icon: Zap,
-    search: { category: "automations", sort: "popular" },
+    search: { q: "automation", category: "hooks", sort: "popular" },
   },
   {
     id: "harden-agents",

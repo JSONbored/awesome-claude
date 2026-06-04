@@ -9,10 +9,6 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
     color: "fbca04",
     description: "Private submission gate is reviewing this item",
   },
-  "submission-needs-changes": {
-    color: "d93f0b",
-    description: "Submission needs author edits before review can continue",
-  },
   "submission-manual-review": {
     color: "5319e7",
     description:
@@ -20,7 +16,7 @@ const MANAGED_LABELS: Record<string, { color: string; description: string }> = {
   },
   "submission-closed-by-gate": {
     color: "b60205",
-    description: "Private submission gate closed this pilot-scoped item",
+    description: "Private submission gate closed this content PR",
   },
   "submission-merged-by-gate": {
     color: "0e8a16",

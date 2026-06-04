@@ -24,7 +24,10 @@ import {
   findContentDuplicateMatch,
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
-import { markerComment } from "../apps/submission-gate/src/review";
+import {
+  markerComment,
+  validationFailedDecision,
+} from "../apps/submission-gate/src/review";
 import {
   buildDiscordDecisionPayload,
   postDiscordDecisionNotification,
@@ -360,6 +363,13 @@ describe("Cloudflare submission gate helpers", () => {
     const source = readWorkerSource();
     const validationIndex = source.indexOf("getCommitValidationState({");
     const privateReviewIndex = source.indexOf("reviewWithPrivateGate(env, {");
+    const refreshIndex = source.indexOf(
+      "pullForNotification = await getPullRequest({",
+    );
+    const outOfScopeIndex = source.indexOf(
+      "await ignoreOutOfScopeReviewTarget({",
+      refreshIndex,
+    );
 
     expect(source).toContain("CONTENT_GATE_BASE_REF");
     expect(source).toContain("function contentGateBaseRef");
@@ -394,8 +404,24 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
+    expect(source).toContain("function ignoreOutOfScopeReviewTarget");
+    expect(source).toContain(
+      "Skipped because this PR no longer targets the configured content gate base.",
+    );
+    expect(outOfScopeIndex).toBeGreaterThan(refreshIndex);
+    expect(outOfScopeIndex).toBeLessThan(validationIndex);
     expect(validationIndex).toBeGreaterThan(0);
     expect(privateReviewIndex).toBeGreaterThan(validationIndex);
+  });
+
+  it("closes public validation failures instead of requesting changes", () => {
+    expect(validationFailedDecision("Required validation failed.")).toEqual({
+      verdict: "close",
+      summary:
+        "Required validation failed. The private content review will run after the public validation lane is green.",
+      labels: ["submission-closed-by-gate"],
+      close: true,
+    });
   });
 
   it("allows only trusted maintainer comments to trigger rechecks", () => {
@@ -415,7 +441,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
-    expect(issueCommentBlock).toContain("true,\n      true,");
+    expect(issueCommentBlock).toContain("payload,\n      true,");
   });
 
   it("renders Taopedia-style verdict comments with stable sections", () => {
@@ -431,7 +457,7 @@ describe("Cloudflare submission gate helpers", () => {
         "Recommended Action:",
         "- Close and resubmit a focused PR.",
       ].join("\n"),
-      labels: ["submission-needs-changes"],
+      labels: ["submission-closed-by-gate"],
       close: true,
     });
 

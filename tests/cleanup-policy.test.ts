@@ -196,6 +196,78 @@ describe("cleanup policy", () => {
     }
   });
 
+  it("keeps retired submission-gate compatibility out of active runtime config", () => {
+    const retiredTokens = [
+      ["submission", "gate", ["pil", "ot"].join("")].join("-"),
+      ["submission", "-needs", "-changes"].join(""),
+      ["PILOT", "_BASE", "_REF"].join(""),
+      ["submission", "-gate:deploy:dev"].join(""),
+    ];
+    const activeFiles = [
+      "package.json",
+      "apps/submission-gate/package.json",
+      "apps/submission-gate/wrangler.jsonc",
+      "apps/submission-gate/src/constants.ts",
+      "apps/submission-gate/src/github.ts",
+      "apps/submission-gate/src/index.ts",
+      "docs/submission-queue-ops.md",
+    ];
+
+    for (const relativePath of activeFiles) {
+      const source = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+      for (const token of retiredTokens) {
+        expect(
+          source,
+          `${relativePath} should not contain ${token}`,
+        ).not.toContain(token);
+      }
+    }
+
+    const gatePackage = JSON.parse(
+      fs.readFileSync(
+        path.join(repoRoot, "apps/submission-gate/package.json"),
+        "utf8",
+      ),
+    ) as { scripts: Record<string, string> };
+    expect(gatePackage.scripts).not.toHaveProperty("deploy");
+    expect(gatePackage.scripts).not.toHaveProperty("deploy:dev");
+    expect(gatePackage.scripts).not.toHaveProperty("deploy:dry-run");
+    expect(gatePackage.scripts).not.toHaveProperty("deploy:dry-run:dev");
+  });
+
+  it("keeps active web category surfaces on the canonical content categories", () => {
+    const unsupportedCategoryTokens = [
+      ["codex", "-plugins"].join(""),
+      ["codex", "-automations"].join(""),
+      ["harness", "-configs"].join(""),
+      ["aider", "-recipes"].join(""),
+      ["continue", "-configs"].join(""),
+      ["zed", "-extensions"].join(""),
+      `"${["plugins"].join("")}"`,
+      `"${["automations"].join("")}"`,
+      ["PRIMARY", "CATEGORIES"].join("_"),
+      [".", "legacy"].join(""),
+      ["legacy", "?:"].join(""),
+    ];
+    const activeFiles = [
+      "apps/web/src/types/registry.ts",
+      "apps/web/src/data/entry-normalize.ts",
+      "apps/web/src/lib/submission-spec.ts",
+      "apps/web/src/routes/index.tsx",
+      "apps/web/src/components/intent-chips.tsx",
+    ];
+
+    for (const relativePath of activeFiles) {
+      const source = fs.readFileSync(path.join(repoRoot, relativePath), "utf8");
+      for (const token of unsupportedCategoryTokens) {
+        expect(
+          source,
+          `${relativePath} should not contain ${token}`,
+        ).not.toContain(token);
+      }
+    }
+  });
+
   it("requires SITE_DB as the only dynamic-state D1 binding", () => {
     const wranglerConfig = fs.readFileSync(
       path.join(repoRoot, "apps/web/wrangler.jsonc"),

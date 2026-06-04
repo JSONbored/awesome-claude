@@ -191,15 +191,20 @@ describe("registry artifacts", () => {
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
     const fullCorpusSize = artifactSize("llms-full.txt");
-    expect(artifactTreeSize(".")).toBeLessThan(22_000_000);
-    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(18_000_000);
-    expect(fullCorpusSize).toBeLessThan(4_500_000);
+    const entryCount = contentEntries.length;
+    expect(artifactTreeSize(".")).toBeLessThan(1_500_000 + entryCount * 52_000);
+    expect(artifactTreeSize(".") - fullCorpusSize).toBeLessThan(
+      1_000_000 + entryCount * 44_000,
+    );
+    expect(fullCorpusSize).toBeLessThan(500_000 + entryCount * 9_000);
     expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
     expect(artifactSize("search-index.json")).toBeLessThan(750_000);
     expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
     expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
     expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
-    expect(artifactTreeSize("entries")).toBeLessThan(7_000_000);
+    expect(artifactTreeSize("entries")).toBeLessThan(
+      500_000 + entryCount * 17_500,
+    );
   });
 
   it("keeps Atlas list data compact while preserving canonical entry detail fields", () => {

@@ -24,7 +24,6 @@
     "PUBLIC_REPO": "JSONbored/awesome-claude",
     "ALLOWED_CORS_ORIGINS": "https://heyclau.de",
     "CONTENT_GATE_BASE_REF": "main",
-    "PILOT_BASE_REF": "main",
     "GITHUB_API_VERSION": "2022-11-28",
     "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
     "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",

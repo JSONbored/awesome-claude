@@ -8,19 +8,9 @@ export type Category =
   | "hooks"
   | "guides"
   | "collections"
-  | "statuslines"
-  | "plugins"
-  | "automations"
-  | "codex-plugins"
-  | "codex-automations"
-  | "harness-configs"
-  | "aider-recipes"
-  | "continue-configs"
-  | "zed-extensions";
+  | "statuslines";
 
 export type Harness = Platform;
-export type BundleContent = "mcp" | "skill" | "command" | "hook" | "agent" | "rule" | "prompt";
-export type TriggerKind = "scheduled" | "event" | "manual";
 
 export type TrustLevel = "trusted" | "review" | "limited" | "blocked";
 export type SourceStatus = "source-backed" | "first-party" | "external" | "unverified";
@@ -193,32 +183,13 @@ export interface Entry extends Provenance, BrandInfo, SkillFields {
   disclosure?: string;
   applicationCategory?: string;
   operatingSystem?: string;
-  /** Plugins: which harnesses this plugin works with. */
   harness?: Harness[];
-  /** Plugins: what the bundle packages. */
-  bundleContents?: BundleContent[];
-  /** Automations: human-readable cadence ("daily 09:00 UTC", "on PR open"). */
-  schedule?: string;
-  /** Automations: scheduling taxonomy. */
-  triggerKind?: TriggerKind;
-  /** Automations: relative last-run signal ("2h ago"). */
-  lastRun?: string;
 }
 
-export const CATEGORIES: { id: Category; label: string; blurb: string; legacy?: boolean }[] = [
+export const CATEGORIES: { id: Category; label: string; blurb: string }[] = [
   { id: "agents", label: "Agents", blurb: "Autonomous and semi-autonomous agents" },
   { id: "mcp", label: "MCP servers", blurb: "Model Context Protocol servers and bridges" },
   { id: "skills", label: "Skills", blurb: "Reusable Claude Skills and capability packs" },
-  {
-    id: "plugins",
-    label: "Plugins",
-    blurb: "Cross-harness bundles: Claude Code, Codex, Gemini, Cursor, Zed",
-  },
-  {
-    id: "automations",
-    label: "Automations",
-    blurb: "Scheduled or event-triggered agent workflows",
-  },
   { id: "commands", label: "Commands", blurb: "Slash commands for Claude Code and Codex" },
   { id: "hooks", label: "Hooks", blurb: "Pre/post hooks for agent lifecycles" },
   { id: "rules", label: "Rules", blurb: "Editor rules and CLAUDE.md / AGENTS.md presets" },
@@ -226,46 +197,7 @@ export const CATEGORIES: { id: Category; label: string; blurb: string; legacy?: 
   { id: "guides", label: "Guides", blurb: "Practical guides and playbooks" },
   { id: "collections", label: "Collections", blurb: "Curated bundles of registry entries" },
   { id: "tools", label: "Tools", blurb: "Commercial tools and integrations" },
-  // Legacy harness-prefixed categories — kept for backwards compatibility, hidden from top-level browse.
-  {
-    id: "codex-plugins",
-    label: "Codex plugins",
-    blurb: "Plugins extending OpenAI Codex agent",
-    legacy: true,
-  },
-  {
-    id: "codex-automations",
-    label: "Codex automations",
-    blurb: "Scheduled Codex automations",
-    legacy: true,
-  },
-  {
-    id: "harness-configs",
-    label: "Harness configs",
-    blurb: "Reusable harness/runtime configurations",
-    legacy: true,
-  },
-  {
-    id: "aider-recipes",
-    label: "Aider recipes",
-    blurb: "Aider playbooks and configs",
-    legacy: true,
-  },
-  {
-    id: "continue-configs",
-    label: "Continue configs",
-    blurb: "Continue.dev model and rule configs",
-    legacy: true,
-  },
-  {
-    id: "zed-extensions",
-    label: "Zed extensions",
-    blurb: "Extensions for Zed's agent panel",
-    legacy: true,
-  },
 ];
-
-export const PRIMARY_CATEGORIES = CATEGORIES.filter((c) => !c.legacy);
 
 export const HARNESSES: { id: Harness; label: string }[] = [
   { id: "claude-code", label: "Claude Code" },
@@ -278,22 +210,6 @@ export const HARNESSES: { id: Harness; label: string }[] = [
   { id: "aider", label: "Aider" },
   { id: "continue", label: "Continue" },
 ];
-
-export const BUNDLE_CONTENT_LABEL: Record<BundleContent, string> = {
-  mcp: "MCP",
-  skill: "Skill",
-  command: "Command",
-  hook: "Hook",
-  agent: "Agent",
-  rule: "Rule",
-  prompt: "Prompt",
-};
-
-export const TRIGGER_KIND_LABEL: Record<TriggerKind, string> = {
-  scheduled: "Scheduled",
-  event: "Event-triggered",
-  manual: "Manual",
-};
 
 export const TRUST_LABEL: Record<TrustLevel, string> = {
   trusted: "Trusted",

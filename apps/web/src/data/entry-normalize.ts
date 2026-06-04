@@ -1,5 +1,4 @@
 import type {
-  BundleContent,
   Category,
   Entry,
   HookTrigger,
@@ -117,10 +116,6 @@ export type RegistryEntry = Record<string, unknown> & {
   claimedBy?: string;
   claimedByUrl?: string;
   claimedAt?: string;
-  bundleContents?: string[];
-  schedule?: string;
-  triggerKind?: string;
-  lastRun?: string;
 };
 
 const CATEGORIES = new Set<Category>([
@@ -134,14 +129,6 @@ const CATEGORIES = new Set<Category>([
   "guides",
   "collections",
   "statuslines",
-  "plugins",
-  "automations",
-  "codex-plugins",
-  "codex-automations",
-  "harness-configs",
-  "aider-recipes",
-  "continue-configs",
-  "zed-extensions",
 ]);
 
 const PLATFORM_ALIASES: Record<string, Platform> = {
@@ -180,16 +167,6 @@ const HOOK_TRIGGERS = new Set<HookTrigger>([
   "Stop",
   "SubagentStop",
   "SessionStart",
-]);
-
-const BUNDLE_CONTENTS = new Set<BundleContent>([
-  "mcp",
-  "skill",
-  "command",
-  "hook",
-  "agent",
-  "rule",
-  "prompt",
 ]);
 
 function asCategory(value: string): Category {
@@ -465,16 +442,5 @@ export function buildEntry(entry: RegistryEntry): Entry {
     hasTroubleshooting: entry.hasTroubleshooting,
     hasBreakingChanges: entry.hasBreakingChanges,
     harness: platforms,
-    bundleContents: stringList(entry.bundleContents)?.filter((item): item is BundleContent =>
-      BUNDLE_CONTENTS.has(item as BundleContent),
-    ),
-    schedule: entry.schedule,
-    triggerKind:
-      entry.triggerKind === "scheduled" ||
-      entry.triggerKind === "event" ||
-      entry.triggerKind === "manual"
-        ? entry.triggerKind
-        : undefined,
-    lastRun: entry.lastRun,
   };
 }
