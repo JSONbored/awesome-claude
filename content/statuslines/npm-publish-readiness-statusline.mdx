@@ -2,10 +2,10 @@
 title: npm Publish Readiness Statusline
 slug: npm-publish-readiness-statusline
 category: statuslines
-description: Claude Code statusline that checks package publish readiness from package.json, npm login visibility, package privacy, and dirty package metadata files.
+description: Claude Code statusline that checks package publish readiness from package.json, optional npm login visibility, package privacy, and dirty package metadata files.
 cardDescription: Show npm package publish readiness without publishing.
 seoTitle: npm publish readiness statusline for Claude Code
-seoDescription: Add a Claude Code statusline that checks package name, version, private flag, npm login visibility, and dirty package files before publishing.
+seoDescription: Add a Claude Code statusline that checks package name, version, private flag, optional npm login visibility, and dirty package files before publishing.
 author: MkDev11
 submittedBy: MkDev11
 submittedByUrl: "https://github.com/MkDev11"
@@ -22,7 +22,7 @@ keywords:
   - package json statusline
   - release readiness
 installable: true
-usageSnippet: "npm: my-package@1.2.3 | clean | logged-in | ready"
+usageSnippet: "npm: my-package@1.2.3 | clean | auth-unchecked | review"
 copySnippet: |-
   {
     "statusLine": {
@@ -57,10 +57,17 @@ scriptBody: |-
   private=$(jq -r '.private // false' package.json)
   dirty=$(git status --porcelain=v1 -- package.json package-lock.json npm-shrinkwrap.json pnpm-lock.yaml yarn.lock 2>/dev/null | wc -l | tr -d ' ')
 
-  if command -v npm >/dev/null 2>&1 && npm whoami >/dev/null 2>&1; then
-    login="logged-in"
-  else
-    login="login-missing"
+  login="auth-unchecked"
+  if [ "${NPM_STATUSLINE_CHECK_WHOAMI:-}" = "1" ] && command -v npm >/dev/null 2>&1; then
+    if command -v timeout >/dev/null 2>&1; then
+      if timeout 3s npm whoami >/dev/null 2>&1; then
+        login="logged-in"
+      else
+        login="login-missing"
+      fi
+    else
+      login="whoami-timeout-missing"
+    fi
   fi
 
   if [ "$private" = "true" ]; then
@@ -69,6 +76,8 @@ scriptBody: |-
     state="review"
   elif [ "$login" = "login-missing" ]; then
     state="auth"
+  elif [ "$login" != "logged-in" ]; then
+    state="review"
   else
     state="ready"
   fi
@@ -88,21 +97,23 @@ scriptBody: |-
 prerequisites:
   - Node.js project with package.json.
   - jq available for reading package metadata.
-  - npm CLI installed if login visibility should be shown.
+  - npm CLI installed only if optional login visibility is enabled with `NPM_STATUSLINE_CHECK_WHOAMI=1`.
 safetyNotes:
-  - The script does not run `npm publish`; it only reads metadata and login visibility.
+  - The script does not run `npm publish`; by default it only reads local package metadata and git status.
+  - npm login visibility is disabled by default because `npm whoami` can contact the configured registry; set `NPM_STATUSLINE_CHECK_WHOAMI=1` only for trusted projects.
+  - Optional `npm whoami` checks require the `timeout` command and are capped at 3 seconds to avoid stalled statusline rendering.
   - Readiness is a checklist signal, not approval to publish; run `npm pack --dry-run` and project release checks separately.
   - Dirty lockfiles or package metadata should be reviewed before release tagging.
 privacyNotes:
   - The output prints package name and version, which can reveal unreleased package plans in screenshots.
-  - npm login visibility follows local npm configuration but does not print account names.
+  - With `NPM_STATUSLINE_CHECK_WHOAMI=1`, npm login visibility follows local npm configuration and can send credentials to the configured registry.
   - package.json can contain private package names; avoid sharing terminal output when those names are sensitive.
 ---
 
 ## Source notes
 
 - npm documents `npm publish` behavior and package metadata that affects publication.
-- npm also documents `npm pack --dry-run`; this statusline intentionally stays read-only and leaves dry-run verification to a separate release command.
+- npm also documents `npm pack --dry-run`; this statusline intentionally avoids publishing and leaves dry-run verification to a separate release command.
 
 ## Duplicate check
 
