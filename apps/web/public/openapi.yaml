@@ -81,10 +81,10 @@ components:
           format: uri
         submittedAt:
           type: string
-        submissionIssueNumber:
+        sourceSubmissionNumber:
           type: integer
           exclusiveMinimum: 0
-        submissionIssueUrl:
+        sourceSubmissionUrl:
           type: string
           format: uri
         importPrNumber:
@@ -1094,10 +1094,10 @@ paths:
                           format: uri
                         submittedAt:
                           type: string
-                        submissionIssueNumber:
+                        sourceSubmissionNumber:
                           type: integer
                           exclusiveMinimum: 0
-                        submissionIssueUrl:
+                        sourceSubmissionUrl:
                           type: string
                           format: uri
                         importPrNumber:

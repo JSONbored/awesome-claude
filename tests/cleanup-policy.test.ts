@@ -235,6 +235,48 @@ describe("cleanup policy", () => {
     expect(gatePackage.scripts).not.toHaveProperty("deploy:dry-run:dev");
   });
 
+  it("keeps retired issue-intake provenance fields out of active source and content", () => {
+    const roots = [
+      "apps/submission-gate/src",
+      "apps/web/src",
+      "content",
+      "integrations/raycast/src",
+      "packages/mcp/src",
+      "packages/registry/src",
+      "scripts",
+    ];
+    const forbiddenPatterns = [
+      /submissionIssue(Number|Url|Contributors)/,
+      /maintainers still review before merge/i,
+      /eligible submissions may auto-open a PR/i,
+    ];
+
+    for (const root of roots) {
+      const stack = [path.join(repoRoot, root)];
+      while (stack.length) {
+        const current = stack.pop()!;
+        for (const item of fs.readdirSync(current, { withFileTypes: true })) {
+          const absolutePath = path.join(current, item.name);
+          if (item.isDirectory()) {
+            stack.push(absolutePath);
+            continue;
+          }
+          if (
+            !item.isFile() ||
+            !/\.(mdx?|tsx?|mjs|js|d\.ts)$/.test(item.name)
+          ) {
+            continue;
+          }
+          const source = fs.readFileSync(absolutePath, "utf8");
+          const relativePath = path.relative(repoRoot, absolutePath);
+          for (const pattern of forbiddenPatterns) {
+            expect(source, relativePath).not.toMatch(pattern);
+          }
+        }
+      }
+    }
+  });
+
   it("keeps active web category surfaces on the canonical content categories", () => {
     const unsupportedCategoryTokens = [
       ["codex", "-plugins"].join(""),

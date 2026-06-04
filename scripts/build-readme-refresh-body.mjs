@@ -219,7 +219,7 @@ export function summarizeReadmeEntryChange({
 }) {
   const action = change.changeType === "updated" ? "Updated" : "Added";
   const title = escapeMarkdownText(frontmatter.title || change.title);
-  const issueNumber = frontmatter.submissionIssueNumber;
+  const sourceSubmissionNumber = frontmatter.sourceSubmissionNumber;
   const pullRequestNumber =
     frontmatter.importPrNumber ?? associatedPullRequest?.number;
   const contributor = frontmatter.submittedBy
@@ -229,7 +229,9 @@ export function summarizeReadmeEntryChange({
   const pieces = [`${action} ${title} content submission`];
   if (pullRequestNumber) pieces.push(`(#${pullRequestNumber})`);
   if (contributor) pieces.push(`by ${contributor}`);
-  if (issueNumber) pieces.push(`via issue #${issueNumber}`);
+  if (sourceSubmissionNumber) {
+    pieces.push(`via submission #${sourceSubmissionNumber}`);
+  }
 
   return pieces.join(" ");
 }

@@ -343,8 +343,8 @@ export function getSourceSignals(entry: ContentEntry) {
       ? { label: "Content updated", value: entry.contentUpdatedAt.slice(0, 10) }
       : null,
     entry.downloadSha256 ? { label: "Package checksum", value: entry.downloadSha256 } : null,
-    entry.submissionIssueUrl
-      ? { label: "Submission issue", value: entry.submissionIssueUrl }
+    entry.sourceSubmissionUrl
+      ? { label: "Original submission", value: entry.sourceSubmissionUrl }
       : null,
     entry.importPrUrl ? { label: "Import PR", value: entry.importPrUrl } : null,
     entry.reviewedBy

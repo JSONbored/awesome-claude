@@ -138,8 +138,8 @@ function buildEntryProvenanceFields(entry) {
     "submittedBy",
     "submittedByUrl",
     "submittedAt",
-    "submissionIssueNumber",
-    "submissionIssueUrl",
+    "sourceSubmissionNumber",
+    "sourceSubmissionUrl",
     "importPrNumber",
     "importPrUrl",
     "reviewedBy",
@@ -475,7 +475,7 @@ function entryTrustReportRow(entry, generatedAt) {
   const hasProvenance = Boolean(
     entry.submittedBy ||
     entry.reviewedBy ||
-    entry.submissionIssueUrl ||
+    entry.sourceSubmissionUrl ||
     entry.importPrUrl,
   );
   const recommendations = [];

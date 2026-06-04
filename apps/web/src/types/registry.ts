@@ -48,7 +48,7 @@ export interface Provenance {
   submittedBy?: string;
   submittedByUrl?: string;
   submittedAt?: string;
-  submissionIssueUrl?: string;
+  sourceSubmissionUrl?: string;
   importPrUrl?: string;
   reviewedBy?: string;
   reviewedAt?: string;

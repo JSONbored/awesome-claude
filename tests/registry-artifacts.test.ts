@@ -482,8 +482,8 @@ describe("registry artifacts", () => {
       expect(surface).toMatchObject({
         submittedBy: "UPinar",
         submittedByUrl: "https://github.com/UPinar",
-        submissionIssueNumber: 304,
-        submissionIssueUrl:
+        sourceSubmissionNumber: 304,
+        sourceSubmissionUrl:
           "https://github.com/JSONbored/awesome-claude/issues/304",
         importPrNumber: 311,
         importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/311",
@@ -494,7 +494,7 @@ describe("registry artifacts", () => {
 
     expect(llmsText).toContain("- Submitted by: UPinar");
     expect(llmsText).toContain(
-      "- Submission issue: https://github.com/JSONbored/awesome-claude/issues/304",
+      "- Original submission: https://github.com/JSONbored/awesome-claude/issues/304",
     );
     expect(llmsText).toContain(
       "- Import PR: https://github.com/JSONbored/awesome-claude/pull/311",
@@ -506,8 +506,8 @@ describe("registry artifacts", () => {
     expect(zyntraEntry).toMatchObject({
       submittedBy: "dd77ss",
       submittedByUrl: "https://github.com/dd77ss",
-      submissionIssueNumber: 310,
-      submissionIssueUrl:
+      sourceSubmissionNumber: 310,
+      sourceSubmissionUrl:
         "https://github.com/JSONbored/awesome-claude/issues/310",
       importPrNumber: 314,
       importPrUrl: "https://github.com/JSONbored/awesome-claude/pull/314",
