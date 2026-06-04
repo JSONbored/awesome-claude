@@ -1,0 +1,116 @@
+---
+title: simple-git Worktree Risk Statusline
+slug: simple-git-worktree-risk-statusline
+category: statuslines
+description: Claude Code statusline that uses simple-git status data to show dirty worktree risk, staged changes, untracked files, and merge conflicts.
+cardDescription: Show dirty worktree risk from simple-git structured status data.
+seoTitle: simple-git worktree risk statusline for Claude Code
+seoDescription: Add a Claude Code statusline that uses simple-git to summarize staged, dirty, untracked, and conflicted worktree state.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.npmjs.com/package/simple-git"
+repoUrl: "https://github.com/steveukx/git-js"
+tags:
+  - git
+  - worktree
+  - node
+  - review
+keywords:
+  - simple-git statusline
+  - dirty worktree statusline
+  - worktree risk statusline
+  - merge conflict statusline
+installable: true
+usageSnippet: "worktree: main | risk watch | staged 2 | dirty 4 | untracked 1 | conflicts 0"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "node $CLAUDE_PROJECT_DIR/.claude/statuslines/simple-git-worktree-risk-statusline.cjs"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "node $CLAUDE_PROJECT_DIR/.claude/statuslines/simple-git-worktree-risk-statusline.cjs"
+    }
+  }
+scriptLanguage: javascript
+scriptBody: |-
+  #!/usr/bin/env node
+  let simpleGit;
+  try {
+    simpleGit = require("simple-git");
+  } catch {
+    console.log("worktree: simple-git missing");
+    process.exit(0);
+  }
+
+  async function main() {
+    const git = simpleGit({ baseDir: process.cwd(), maxConcurrentProcesses: 1 });
+    const isRepo = await git.checkIsRepo();
+    if (!isRepo) {
+      console.log("worktree: no repository");
+      return;
+    }
+
+    const status = await git.status();
+    const branch = status.current || "detached";
+    const staged = (status.staged || []).length;
+    const dirty =
+      (status.modified || []).length +
+      (status.deleted || []).length +
+      (status.renamed || []).length;
+    const untracked = (status.not_added || []).length + (status.created || []).length;
+    const conflicts = (status.conflicted || []).length;
+
+    let risk = "clean";
+    if (conflicts > 0) {
+      risk = "blocked";
+    } else if (staged > 0 && dirty > 0) {
+      risk = "split";
+    } else if (dirty + untracked > 10 || staged > 20) {
+      risk = "high";
+    } else if (dirty > 0 || untracked > 0) {
+      risk = "watch";
+    } else if (staged > 0) {
+      risk = "review";
+    }
+
+    console.log(
+      `worktree: ${branch} | risk ${risk} | staged ${staged} | dirty ${dirty} | untracked ${untracked} | conflicts ${conflicts}`,
+    );
+  }
+
+  main().catch(() => {
+    console.log("worktree: unavailable");
+  });
+prerequisites:
+  - Node.js available in the shell used by the statusline command.
+  - simple-git installed in the project or statusline script directory, for example with npm install --save-dev simple-git.
+  - Git installed and the command run from a repository worktree for full status output.
+safetyNotes:
+  - This is a read-only review aid; inspect the actual diff before committing, rebasing, merging, or discarding files.
+  - Frequent statusline refreshes can still run Git status often in large repositories, so use a moderate refresh interval.
+  - Treat split staged/dirty state and conflict counts as stop-and-review cues before automated edits.
+privacyNotes:
+  - The statusline prints aggregate counts and the branch name, not file paths, diff hunks, or commit messages.
+  - Branch names can reveal ticket IDs, customer names, incident labels, or release names in screenshots.
+  - The simple-git library shells out to local Git; any custom Git wrappers or hooks are outside this script's control.
+---
+
+## Source notes
+
+- simple-git documents a Node.js API for running Git operations and exposes structured status results through `git.status()`.
+- This statusline uses that library-level status result to report aggregate worktree risk without printing filenames or raw porcelain output.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `simple-git-worktree-risk-statusline`, simple-git, dirty worktree, Git status statusline, and worktree risk. The earlier `git-worktree-risk-statusline` submission was closed because it reused the Git status manual and `git-scm.com`; this replacement uses simple-git with a different canonical source, runtime, slug, and value proposition.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
