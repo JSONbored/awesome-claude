@@ -20,8 +20,11 @@ import {
   verifyGitHubWebhookSignature,
 } from "../apps/submission-gate/src/security";
 import {
+  buildContentDuplicateReview,
   extractContentDuplicateSignals,
   findContentDuplicateMatch,
+  findRelatedContentMatches,
+  findStrictContentDuplicateMatch,
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
 import {
@@ -404,6 +407,9 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("validation: validationForPrivateReview");
     expect(source).toContain("contentScope: contentScopeForPrivateReview");
     expect(source).toContain("duplicateHistoryRequired: true");
+    expect(source).toContain("deterministicDuplicateReview");
+    expect(source).toContain('eventType: "duplicate_shadow_review"');
+    expect(source).toContain('decision: "related_not_strict_duplicate"');
     expect(source).toContain("function ignoreOutOfScopeReviewTarget");
     expect(source).toContain(
       "Skipped because this PR no longer targets the configured content gate base.",
@@ -1099,6 +1105,104 @@ websiteUrl: "https://example-agent-tool.dev/pricing"
     expect(findContentDuplicateMatch(candidate, [existing])).toMatchObject({
       reasons: expect.arrayContaining([
         expect.stringContaining("same non-generic source domain"),
+      ]),
+    });
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toMatchObject([
+      {
+        reasons: expect.arrayContaining([
+          expect.stringContaining("same non-generic source domain"),
+        ]),
+      },
+    ]);
+    expect(buildContentDuplicateReview(candidate, [existing])).toMatchObject({
+      legacyDuplicate: {
+        reasons: expect.arrayContaining([
+          expect.stringContaining("same non-generic source domain"),
+        ]),
+      },
+      strictDuplicate: null,
+      relatedCandidates: [
+        {
+          reasons: expect.arrayContaining([
+            expect.stringContaining("same non-generic source domain"),
+          ]),
+        },
+      ],
+    });
+  });
+
+  it("distinguishes related vendor resources from strict duplicates", () => {
+    const collection = extractContentDuplicateSignals({
+      filePath: "content/collections/cloudflare-ai-workflow-stack.mdx",
+      content: `---
+title: Cloudflare AI Workflow Stack
+slug: cloudflare-ai-workflow-stack
+category: collections
+description: A collection of Cloudflare tools for building AI workflow systems.
+websiteUrl: "https://developers.cloudflare.com/workers-ai/"
+docsUrl: "https://developers.cloudflare.com/ai-gateway/"
+---
+`,
+    });
+    const specificTool = extractContentDuplicateSignals({
+      filePath: "content/tools/cloudflare-ai-gateway.mdx",
+      content: `---
+title: Cloudflare AI Gateway
+slug: cloudflare-ai-gateway
+category: tools
+description: Observability and routing gateway for AI model calls.
+websiteUrl: "https://developers.cloudflare.com/ai-gateway/"
+docsUrl: "https://developers.cloudflare.com/ai-gateway/get-started/"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(specificTool, [collection]),
+    ).toBeNull();
+    expect(findRelatedContentMatches(specificTool, [collection])).toMatchObject(
+      [
+        {
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://developers.cloudflare.com/ai-gateway across collection/resource categories",
+            ),
+          ]),
+        },
+      ],
+    );
+  });
+
+  it("treats same canonical repository as a strict duplicate", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/playwright-mcp-server.mdx",
+      content: `---
+title: Playwright MCP Server
+slug: playwright-mcp-server
+category: mcp
+description: MCP server for browser automation through Playwright.
+repoUrl: "https://github.com/microsoft/playwright-mcp"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/browser-automation-mcp.mdx",
+      content: `---
+title: Browser Automation MCP
+slug: browser-automation-mcp
+category: mcp
+description: Browser automation MCP server for Claude.
+repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
+---
+`,
+    });
+
+    expect(
+      findStrictContentDuplicateMatch(candidate, [existing]),
+    ).toMatchObject({
+      reasons: expect.arrayContaining([
+        expect.stringContaining("same canonical source URL"),
       ]),
     });
   });

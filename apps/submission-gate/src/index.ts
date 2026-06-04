@@ -13,9 +13,11 @@ import {
   slugify,
 } from "./drafts";
 import {
+  buildContentDuplicateReview,
   extractContentDuplicateSignals,
   findContentDuplicateMatch,
   protectedFrontmatterChanges,
+  type ContentDuplicateReview,
   type ContentDuplicateSignals,
 } from "./duplicates";
 import {
@@ -1801,6 +1803,34 @@ function duplicateCloseDecision(
   };
 }
 
+function summarizeDuplicateReview(review: ContentDuplicateReview) {
+  return {
+    legacyDuplicate: review.legacyDuplicate
+      ? {
+          target:
+            review.legacyDuplicate.existing.label ||
+            review.legacyDuplicate.existing.filePath,
+          url: review.legacyDuplicate.existing.url,
+          reasons: review.legacyDuplicate.reasons,
+        }
+      : null,
+    strictDuplicate: review.strictDuplicate
+      ? {
+          target:
+            review.strictDuplicate.existing.label ||
+            review.strictDuplicate.existing.filePath,
+          url: review.strictDuplicate.existing.url,
+          reasons: review.strictDuplicate.reasons,
+        }
+      : null,
+    relatedCandidates: review.relatedCandidates.map((match) => ({
+      target: match.existing.label || match.existing.filePath,
+      url: match.existing.url,
+      reasons: match.reasons,
+    })),
+  };
+}
+
 function protectedEditCloseDecision(changedFields: string[]): GateDecision {
   return {
     verdict: "close" as const,
@@ -1972,12 +2002,14 @@ async function deterministicContentPrecheck(params: {
       apiVersion: params.env.GITHUB_API_VERSION,
     })),
   ];
+  const duplicateReview = buildContentDuplicateReview(candidate, existing);
   return {
     content: candidateContent,
     decision: duplicateCloseDecision(
-      findContentDuplicateMatch(candidate, existing),
+      duplicateReview.legacyDuplicate,
       candidate,
     ),
+    duplicateReview: summarizeDuplicateReview(duplicateReview),
   };
 }
 
@@ -2753,6 +2785,27 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             target,
             scope: contentScopeForPrivateReview,
           });
+          if (precheck.duplicateReview) {
+            validationForPrivateReview = {
+              ...(isRecord(validationForPrivateReview)
+                ? validationForPrivateReview
+                : {}),
+              deterministicDuplicateReview: precheck.duplicateReview,
+            };
+            if (
+              precheck.duplicateReview.legacyDuplicate &&
+              !precheck.duplicateReview.strictDuplicate
+            ) {
+              await insertAudit(env.SUBMISSION_GATE_DB, {
+                id: crypto.randomUUID(),
+                targetKey: message.targetKey,
+                eventType: "duplicate_shadow_review",
+                decision: "related_not_strict_duplicate",
+                summary:
+                  "Legacy duplicate classifier matched, but strict duplicate classifier only found related-content context.",
+              });
+            }
+          }
           if (precheck.decision) {
             decision = precheck.decision;
           } else {
