@@ -1,0 +1,202 @@
+---
+title: API Contract Change Rules
+slug: api-contract-change-rules
+category: rules
+description: >-
+  Source-backed rules for typed web apps that change API contracts: name the
+  contract source of truth, classify breaking changes, update generated types
+  only after review, validate OpenAPI and JSON Schema changes, version releases
+  with SemVer, and keep client/server types aligned before merge.
+cardDescription: >-
+  Rules for reviewing API contract changes in typed web apps before clients,
+  schemas, generated types, and releases drift apart.
+seoTitle: API Contract Change Rules for Typed Web Apps
+seoDescription: >-
+  Practical source-backed API contract change rules for TypeScript web apps:
+  OpenAPI, JSON Schema, SemVer, Spectral checks, generated client types, and
+  breaking-change review.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://spec.openapis.org/oas/latest.html"
+sourceUrls:
+  - "https://spec.openapis.org/oas/latest.html"
+  - "https://json-schema.org/draft/2020-12/json-schema-core"
+  - "https://semver.org/"
+  - "https://www.typescriptlang.org/docs/handbook/2/objects.html"
+  - "https://github.com/stoplightio/spectral/blob/v6.15.0/README.md"
+installable: false
+usageSnippet: >-
+  Apply these rules whenever a typed web app changes request bodies, response
+  shapes, OpenAPI paths, JSON schemas, generated clients, SDK types, or release
+  compatibility guarantees.
+copySnippet: |-
+  You are reviewing an API contract change in a typed web app.
+
+  Rules:
+  1. Name the contract source of truth before changing code.
+  2. Classify removed fields, renamed properties, stricter validation, removed
+     enum values, changed status codes, removed paths, and auth changes as
+     breaking until the API owner proves otherwise.
+  3. Update server handlers, OpenAPI or JSON Schema files, tests, examples, and
+     generated TypeScript clients from the same reviewed contract.
+  4. Do not hand-edit generated client types as the compatibility fix.
+  5. Run schema validation and contract linting before merge.
+  6. Require SemVer release notes or a migration note for breaking changes.
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A named API contract source of truth, such as OpenAPI, JSON Schema, or a typed route schema, with an owner who can approve compatibility changes.
+  - A typed client or shared TypeScript model that represents API requests, responses, errors, auth state, or pagination.
+  - CI or local commands that can validate schemas, regenerate types, run contract tests, and compare generated output.
+  - A release policy for breaking changes, deprecations, major-version bumps, migration notes, and downstream consumer notification.
+safetyNotes:
+  - "Contract validation tools can read schemas, examples, generated clients, fixtures, and CI configuration; review local rules before running untrusted project commands."
+  - "Do not point contract tests or generated clients at production endpoints unless the test plan explicitly uses safe read-only requests."
+  - "Treat generated type diffs, stricter validation, removed fields, and changed auth requirements as release-impacting until an API owner signs off."
+privacyNotes:
+  - "API contracts can expose endpoint names, object models, request examples, response examples, enum values, error bodies, auth schemes, internal hostnames, and planned product behavior."
+  - "Validation output can include schema paths, snippets, example payloads, local file paths, customer-like fixtures, and downstream consumer names."
+  - "Redact secrets, tokens, tenant identifiers, internal URLs, and private payload examples before sharing contract diffs or generated type output in public PRs."
+tags:
+  - api-contracts
+  - typescript
+  - openapi
+  - json-schema
+  - semver
+  - compatibility
+keywords:
+  - API contract change rules
+  - typed web app API compatibility
+  - OpenAPI TypeScript contract review
+  - JSON Schema breaking change rules
+  - generated client type drift
+readingTime: 6
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when a typed web app changes an API contract. The goal is to
+prevent server code, OpenAPI documents, JSON schemas, generated TypeScript
+clients, examples, tests, and release notes from drifting apart.
+
+These rules are narrower than general API design guidance. They apply at review
+time, when a change may alter the contract consumed by browsers, SDKs, mobile
+clients, server-to-server integrations, or generated TypeScript types.
+
+## Contract Source Of Truth
+
+1. **Name one source of truth.** A PR must say whether the reviewed contract is
+   an OpenAPI document, JSON Schema set, typed route definition, generated
+   client source, or another owned schema file.
+2. **Do not infer compatibility from implementation code alone.** Handler code
+   can accept or return shapes that are not documented for consumers.
+3. **Keep examples attached to the same contract.** Request and response
+   examples should change with the schema so reviewers can see the practical
+   consumer impact.
+4. **Record the validator command.** The PR should name the command that checks
+   the contract and the command that regenerates client types.
+
+## Breaking Change Rules
+
+Treat a change as breaking until reviewed when it:
+
+- removes a path, method, operation, field, enum value, response member, status
+  code, header, cookie, or error shape;
+- renames a property, changes casing, changes nullability, or narrows an
+  accepted type;
+- changes a field from optional to required or makes validation stricter;
+- changes pagination, sorting, filtering, id formats, timestamps, or default
+  values;
+- changes authentication, authorization, scopes, rate limits, idempotency, or
+  webhook signatures;
+- changes generated TypeScript types in a way that requires downstream code
+  edits.
+
+Breaking changes need one of three outcomes: a major version boundary, a
+backward-compatible compatibility layer, or an explicit migration/deprecation
+plan.
+
+## Typed Client Rules
+
+1. **Generate from the reviewed contract.** Client types and SDKs should be
+   regenerated from OpenAPI, JSON Schema, or the owned typed route source after
+   the contract passes review.
+2. **Do not patch generated output by hand.** A manual generated-client edit
+   hides the real contract mismatch and will be overwritten later.
+3. **Keep server and client checks together.** The same PR should update server
+   validation, contract files, generated client types, and tests when they are
+   part of one compatibility change.
+4. **Review type narrowing carefully.** A TypeScript property change can be
+   source-compatible in one app but breaking for generated SDK consumers.
+
+## Validation Rules
+
+- Validate OpenAPI syntax and structure before merge.
+- Validate JSON Schema files against the selected draft and keep examples in
+  sync with schemas.
+- Run contract linting for naming, operation IDs, response shapes, examples,
+  and security metadata.
+- Run consumer or generated-client tests against the changed contract.
+- Include a release note when SemVer compatibility changes.
+- Review generated diffs as application code, not as harmless build output.
+
+## PR Review Checklist
+
+- [ ] {"task": "Source of truth", "description": "The PR names the contract file or typed route source that owns the API shape"}
+- [ ] {"task": "Breaking changes", "description": "Removed, renamed, stricter, or auth-related changes are classified before approval"}
+- [ ] {"task": "Generated output", "description": "Generated TypeScript clients or SDKs are regenerated from the reviewed contract, not hand-edited"}
+- [ ] {"task": "Examples", "description": "Request and response examples still match the schema and do not expose private data"}
+- [ ] {"task": "Validation", "description": "Schema validation, linting, and client or contract tests ran successfully"}
+- [ ] {"task": "Release plan", "description": "Breaking changes include SemVer, migration, deprecation, or consumer-notification notes"}
+
+## Do Not Merge When
+
+- the server accepts a new shape but the public contract was not updated;
+- a generated TypeScript client changed without the source contract changing;
+- validation errors are dismissed without an API owner review;
+- examples contain secrets, customer data, or internal hostnames;
+- breaking changes are hidden as refactors or cleanup;
+- the PR changes API behavior and generated clients but has no release note.
+
+## Troubleshooting
+
+- **Generated types changed unexpectedly:** compare the generator input and
+  generator version before reviewing downstream TypeScript errors.
+- **The schema validator and runtime disagree:** identify whether the runtime
+  accepts undocumented data or the schema is too narrow, then update the source
+  of truth first.
+- **A field removal seems safe:** check known clients, SDKs, examples, and
+  analytics before treating the removal as non-breaking.
+- **A compatibility shim is added:** require tests for both old and new shapes,
+  and record the deprecation path.
+- **Contract linting is noisy:** tune rules with an API owner rather than
+  disabling the gate for the whole repository.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, open PRs, closed PRs, and
+repository content for `api-contract-change-rules`, API contract change rules,
+typed web app API compatibility, OpenAPI breaking change rules, JSON Schema
+review, SemVer API versioning, Spectral API linting, generated TypeScript
+clients, and API schema drift.
+
+`api-first-development-architect` is broad API design guidance. The
+`api-contract-review-gate` collection bundles review tools and validators. This
+rules entry is narrower: it gives portable do/don't behavior for reviewing API
+contract changes in typed web apps before merge.
+
+## References
+
+- OpenAPI Specification: https://spec.openapis.org/oas/latest.html
+- JSON Schema core specification: https://json-schema.org/draft/2020-12/json-schema-core
+- Semantic Versioning: https://semver.org/
+- TypeScript object types: https://www.typescriptlang.org/docs/handbook/2/objects.html
+- Stoplight Spectral README: https://github.com/stoplightio/spectral/blob/v6.15.0/README.md
