@@ -100,6 +100,12 @@ scriptBody: |-
   const errors = [];
   const warnings = [];
 
+  function displayName(value) {
+    return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
+      return `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`;
+    });
+  }
+
   function stripJsonc(value) {
     let out = "";
     let inString = false;
@@ -193,7 +199,7 @@ scriptBody: |-
     if (config.vars && typeof config.vars === "object") {
       for (const key of Object.keys(config.vars)) {
         if (looksSecretLike(key)) {
-          warnings.push(`Top-level vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+          warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
         }
       }
     }
@@ -217,14 +223,14 @@ scriptBody: |-
 
         for (const key of bindingKeys) {
           if (config[key] && !Object.prototype.hasOwnProperty.call(envConfig, key)) {
-            warnings.push(`Environment \`${envName}\` does not define \`${key}\`; Wrangler treats bindings and vars as non-inheritable.`);
+            warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
           }
         }
 
         if (envConfig.vars && typeof envConfig.vars === "object") {
           for (const key of Object.keys(envConfig.vars)) {
             if (looksSecretLike(key)) {
-              warnings.push(`Environment \`${envName}\` vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+              warnings.push(`Environment ${displayName(envName)} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
             }
           }
         }
@@ -308,11 +314,11 @@ scriptBody: |-
       if (!section) {
         top.add(key);
       } else if (section === "vars" && looksSecretLike(key)) {
-        warnings.push(`Top-level vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+        warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
       } else {
         const envVarMatch = section.match(/^env\.([A-Za-z0-9_-]+)\.vars$/);
         if (envVarMatch && looksSecretLike(key)) {
-          warnings.push(`Environment \`${envVarMatch[1]}\` vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+          warnings.push(`Environment ${displayName(envVarMatch[1])} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
         }
       }
     }
@@ -333,7 +339,7 @@ scriptBody: |-
       const keys = envKeys.get(envName) || new Set();
       for (const key of bindingKeys) {
         if (sections.has(key) && !keys.has(key)) {
-          warnings.push(`Environment \`${envName}\` does not define \`${key}\`; Wrangler treats bindings and vars as non-inheritable.`);
+          warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
         }
       }
     }
@@ -500,6 +506,12 @@ const name = path.split(/[\\/]/).pop();
 const errors = [];
 const warnings = [];
 
+function displayName(value) {
+  return JSON.stringify(String(value)).replace(/[\u007f-\u009f]/g, (char) => {
+    return `\\u${char.charCodeAt(0).toString(16).padStart(4, "0")}`;
+  });
+}
+
 function stripJsonc(value) {
   let out = "";
   let inString = false;
@@ -593,7 +605,7 @@ function checkConfigObject(config) {
   if (config.vars && typeof config.vars === "object") {
     for (const key of Object.keys(config.vars)) {
       if (looksSecretLike(key)) {
-        warnings.push(`Top-level vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+        warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
       }
     }
   }
@@ -617,14 +629,14 @@ function checkConfigObject(config) {
 
       for (const key of bindingKeys) {
         if (config[key] && !Object.prototype.hasOwnProperty.call(envConfig, key)) {
-          warnings.push(`Environment \`${envName}\` does not define \`${key}\`; Wrangler treats bindings and vars as non-inheritable.`);
+          warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
         }
       }
 
       if (envConfig.vars && typeof envConfig.vars === "object") {
         for (const key of Object.keys(envConfig.vars)) {
           if (looksSecretLike(key)) {
-            warnings.push(`Environment \`${envName}\` vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+            warnings.push(`Environment ${displayName(envName)} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
           }
         }
       }
@@ -708,11 +720,11 @@ function checkToml() {
     if (!section) {
       top.add(key);
     } else if (section === "vars" && looksSecretLike(key)) {
-      warnings.push(`Top-level vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+      warnings.push(`Top-level vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
     } else {
       const envVarMatch = section.match(/^env\.([A-Za-z0-9_-]+)\.vars$/);
       if (envVarMatch && looksSecretLike(key)) {
-        warnings.push(`Environment \`${envVarMatch[1]}\` vars contains secret-like key \`${key}\`; use Wrangler secrets for sensitive values.`);
+        warnings.push(`Environment ${displayName(envVarMatch[1])} vars contains secret-like key ${displayName(key)}; use Wrangler secrets for sensitive values.`);
       }
     }
   }
@@ -733,7 +745,7 @@ function checkToml() {
     const keys = envKeys.get(envName) || new Set();
     for (const key of bindingKeys) {
       if (sections.has(key) && !keys.has(key)) {
-        warnings.push(`Environment \`${envName}\` does not define \`${key}\`; Wrangler treats bindings and vars as non-inheritable.`);
+        warnings.push(`Environment ${displayName(envName)} does not define ${displayName(key)}; Wrangler treats bindings and vars as non-inheritable.`);
       }
     }
   }
