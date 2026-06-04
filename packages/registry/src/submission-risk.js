@@ -1226,6 +1226,15 @@ function policyDecisionForReport(report) {
 export function directContentRequestChangesReasons(report = {}) {
   if (report.subject?.type !== "pull_request") return [];
   const reasons = [];
+  const sourceType = report.sourceType || report.subject?.sourceType;
+  const isExternalDirect = sourceType === "external_direct";
+  const isDirectContentShape =
+    Number(report.subject?.changedFileCount || report.changedFileCount || 0) ===
+      1 &&
+    Number(report.subject?.contentFileCount || report.contentFileCount || 0) ===
+      1;
+  if (!isExternalDirect && !isDirectContentShape) return [];
+
   const flags = new Set((report.reviewFlags || []).map((flag) => flag.id));
   const warnings = new Set(
     (report.classificationWarnings || []).map((warning) => warning.id),
@@ -1893,6 +1902,8 @@ export function analyzeDirectContentRisk(input = {}) {
       normalizeText(input.author),
     sourceType,
     contentFiles: contentFiles.map((file) => file.filename),
+    changedFileCount: files.length,
+    contentFileCount: contentFiles.length,
   });
 
   for (const repo of selectSourceRepositories(input)) {

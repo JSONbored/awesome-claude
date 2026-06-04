@@ -144,6 +144,51 @@ Example body.
     );
   });
 
+  it("does not fail mixed same-repository maintenance PRs as direct submissions", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Example MCP
+category: mcp
+description: Example maintainer metadata migration fixture.
+sourceUrl: https://github.com/example/example-mcp
+installCommand: npx example-mcp --api-key $EXAMPLE_API_KEY
+submittedBy: JSONbored
+submittedByUrl: https://github.com/JSONbored
+sourceSubmissionNumber: 123
+---
+
+Example body.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "same_repo_direct", [
+      {
+        filename: "content/mcp/example-mcp.mdx",
+        status: "modified",
+        content,
+      },
+      {
+        filename: "packages/registry/src/content-schema.js",
+        status: "modified",
+        content: "export const schema = {};",
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output).toMatchObject({
+      ok: true,
+      sourceType: "same_repo_direct",
+    });
+    expect(output.requestChangesReasons).toEqual([]);
+    expect(output.classificationWarnings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "missing_privacy_notes" }),
+      ]),
+    );
+  });
+
   it("still blocks external content PRs that request HeyClaude-hosted downloads", () => {
     const tmpDir = fs.mkdtempSync(
       path.join(os.tmpdir(), "heyclaude-content-policy-"),

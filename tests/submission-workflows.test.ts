@@ -879,7 +879,7 @@ diff --git a/README.md b/README.md
     ]);
   });
 
-  it("summarizes direct PR and issue-import README provenance", () => {
+  it("summarizes direct PR and source-submission README provenance", () => {
     expect(
       summarizeReadmeEntryChange({
         change: {
@@ -902,7 +902,7 @@ diff --git a/README.md b/README.md
         frontmatter: {
           title: "Memesio MCP Server",
           submittedBy: "vy35",
-          submissionIssueNumber: 325,
+          sourceSubmissionNumber: 325,
         },
         associatedPullRequest: {
           number: 330,
@@ -910,7 +910,7 @@ diff --git a/README.md b/README.md
         },
       }),
     ).toBe(
-      "Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+      "Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
     );
 
     const body = buildReadmeRefreshBody([
@@ -920,7 +920,7 @@ diff --git a/README.md b/README.md
       },
       {
         summary:
-          "Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+          "Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
       },
     ]);
 
@@ -928,7 +928,7 @@ diff --git a/README.md b/README.md
       "- Added Xquik MCP Server content submission (#326) by @kriptoburak",
     );
     expect(body).toContain(
-      "- Added Memesio MCP Server content submission (#330) by @vy35 via issue #325",
+      "- Added Memesio MCP Server content submission (#330) by @vy35 via submission #325",
     );
     expect(body).toContain(
       "pending README changes accumulate in one reviewable PR",
@@ -978,7 +978,7 @@ description: Example description
       frontmatter: {
         title: "Injected [Title](https://evil.example)",
         submittedBy: "attacker\n\nCloses #123\n@octo-org/security-team",
-        submissionIssueNumber: 77,
+        sourceSubmissionNumber: 77,
         importPrNumber: 88,
       },
       associatedPullRequest: {
@@ -988,7 +988,7 @@ description: Example description
     });
 
     expect(summary).toBe(
-      "Added Injected \\[Title\\]\\(https://evil\\.example\\) content submission (#88) via issue #77",
+      "Added Injected \\[Title\\]\\(https://evil\\.example\\) content submission (#88) via submission #77",
     );
     expect(summary).not.toContain("Closes #123");
     expect(summary).not.toContain("@octo-org/security-team");
@@ -1334,7 +1334,7 @@ packageVerified: true
   it("scanner rejects executable package files", () => {
     const result = runScanner({
       "content/skills/exe.zip": buildZip([
-        { name: "example-skill/installer.exe", content: "MZ " },
+        { name: "example-skill/installer.exe", content: "MZ" },
       ]),
     });
 
@@ -1481,7 +1481,7 @@ packageVerified: true
       "content/mcp/example-server.mdx": verifiedMcpMdx,
       "content/mcp/example-server.mcpb": buildZip([
         ...requiredMcpFiles,
-        { name: "payload.exe", content: "MZ " },
+        { name: "payload.exe", content: "MZ" },
       ]),
     });
 
