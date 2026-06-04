@@ -1,0 +1,147 @@
+---
+title: Frontend QA Accessibility Workflow
+slug: frontend-qa-accessibility-workflow
+category: collections
+description: >-
+  A source-backed frontend QA collection for AI-assisted UI work: combine WCAG
+  accessibility checks, Playwright browser automation, Storybook component
+  context, Chrome DevTools inspection, BrowserStack coverage, and test hooks
+  before shipping user interfaces.
+cardDescription: >-
+  Frontend QA bundle for accessibility, browser automation, component review,
+  and cross-browser validation.
+seoTitle: Frontend QA Accessibility Workflow
+seoDescription: >-
+  A curated collection for validating AI-built frontend changes with WCAG
+  checks, Playwright, Storybook, Chrome DevTools, BrowserStack, and test
+  automation.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.w3.org/WAI/WCAG21/quickref/"
+sourceUrls:
+  - "https://www.w3.org/WAI/WCAG21/quickref/"
+  - "https://playwright.dev/docs/intro"
+  - "https://storybook.js.org/docs/writing-tests/accessibility-testing"
+installable: false
+usageSnippet: >-
+  Start with accessibility and React component test hooks, then add Playwright,
+  Storybook, Chrome DevTools, and BrowserStack for browser-level validation.
+items:
+  - slug: accessibility-checker
+    category: hooks
+  - slug: react-component-test-generator
+    category: hooks
+  - slug: test-runner-hook
+    category: hooks
+  - slug: playwright-e2e-testing
+    category: skills
+  - slug: playwright-mcp-browser-automation-engineer
+    category: skills
+  - slug: playwright-mcp-server
+    category: mcp
+  - slug: storybook-mcp-server
+    category: mcp
+  - slug: chrome-devtools-mcp-server
+    category: mcp
+  - slug: browserstack-mcp-server
+    category: mcp
+  - slug: accessibility-first-statusline
+    category: statuslines
+installationOrder:
+  - accessibility-checker
+  - react-component-test-generator
+  - test-runner-hook
+  - playwright-e2e-testing
+  - playwright-mcp-browser-automation-engineer
+  - playwright-mcp-server
+  - storybook-mcp-server
+  - chrome-devtools-mcp-server
+  - browserstack-mcp-server
+  - accessibility-first-statusline
+estimatedSetupTime: 75 minutes
+difficulty: intermediate
+prerequisites:
+  - A frontend project with a repeatable local dev server and test command.
+  - Agreement on the browser/device matrix and WCAG conformance target before enabling blocking checks.
+  - Test credentials or seeded demo data for flows that require login, checkout, dashboards, or user-specific state.
+safetyNotes:
+  - "This collection is read/validation oriented, but browser automation can still submit forms or trigger side effects if pointed at production."
+  - "Run Playwright, BrowserStack, and DevTools workflows against local, preview, or staging environments first."
+  - "Treat accessibility findings as review inputs; manual keyboard, screen-reader, and content checks are still needed before release."
+privacyNotes:
+  - "The collection itself stores no data; linked browser tools may capture screenshots, DOM text, network requests, console logs, or session cookies."
+  - "Use test accounts and scrub screenshots or traces before sharing them outside the team."
+  - "Cross-browser cloud testing can send page content and assets to a third-party provider."
+tags:
+  - frontend
+  - accessibility
+  - qa
+  - playwright
+  - browser-testing
+keywords:
+  - frontend qa accessibility collection
+  - ai built interface testing
+  - playwright accessibility workflow
+  - browser qa claude collection
+---
+
+## What this collection sets up
+
+This workflow gives frontend teams a layered QA pass for AI-built interfaces:
+static and component checks first, then scripted browser behavior, then
+cross-browser and runtime inspection. It is organized around WCAG accessibility
+expectations and modern browser automation practice.
+
+## Layers
+
+### 1. Local quality gates
+
+- **accessibility-checker** catches accessibility regressions early.
+- **react-component-test-generator** creates component-level coverage for UI
+  states Claude changes.
+- **test-runner-hook** keeps the project test command in the loop.
+
+### 2. Browser behavior and component context
+
+- **playwright-e2e-testing** and **playwright-mcp-browser-automation-engineer**
+  help build durable end-to-end flows.
+- **playwright-mcp-server** gives Claude a controlled browser automation bridge.
+- **storybook-mcp-server** keeps component stories and states visible during
+  review.
+
+### 3. Runtime inspection and device coverage
+
+- **chrome-devtools-mcp-server** surfaces console, network, and performance
+  details.
+- **browserstack-mcp-server** adds cross-browser and device validation.
+- **accessibility-first-statusline** keeps accessibility attention visible
+  during the session.
+
+## Suggested order
+
+Install the local hooks first, then add Playwright and Storybook, then connect
+DevTools and cross-browser services. Keep cloud/browser tools pointed at local,
+preview, or staging URLs until tests and credentials are clearly separated from
+production.
+
+## Source and references
+
+- W3C WCAG quick reference: https://www.w3.org/WAI/WCAG21/quickref/
+- Playwright documentation: https://playwright.dev/docs/intro
+- Storybook accessibility testing: https://storybook.js.org/docs/writing-tests/accessibility-testing
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `frontend-qa-accessibility-workflow`, frontend QA,
+accessibility workflow, Playwright collection, browser QA, and AI-built
+interfaces. Existing code-quality and production collections include general
+testing/review items, but no collection focuses on frontend accessibility,
+component states, browser automation, DevTools inspection, and cross-browser QA
+as one workflow.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
