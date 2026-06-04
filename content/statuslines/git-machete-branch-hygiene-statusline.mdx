@@ -1,0 +1,125 @@
+---
+title: git-machete Branch Hygiene Statusline
+slug: git-machete-branch-hygiene-statusline
+category: statuslines
+description: Claude Code statusline that uses git-machete branch layout data to show whether the current branch is managed, how many branches are outside the layout, and when fork-point overrides need review.
+cardDescription: Show branch layout hygiene from git-machete managed branch data.
+seoTitle: git-machete branch hygiene statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes git-machete branch layout health, unmanaged branches, and fork-point override review cues.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://git-machete.readthedocs.io/en/stable/"
+repoUrl: "https://github.com/VirtusLab/git-machete"
+tags:
+  - git
+  - branches
+  - workflow
+  - review
+keywords:
+  - git machete statusline
+  - branch hygiene statusline
+  - stacked branch statusline
+  - upstream drift statusline
+installable: true
+usageSnippet: "machete: feature/api | managed | branches 6 | unmanaged 1 | overrides 0 | review"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-machete-branch-hygiene-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/git-machete-branch-hygiene-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  count_lines() {
+    sed '/^[[:space:]]*$/d' | wc -l | tr -d ' '
+  }
+
+  main() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "machete: no repository"
+    exit 0
+  fi
+  if ! git machete --version >/dev/null 2>&1; then
+    echo "machete: command missing"
+    exit 0
+  fi
+
+  branch=$(git branch --show-current 2>/dev/null)
+  if [ -z "$branch" ]; then
+    branch="detached"
+  fi
+
+  layout=$(git rev-parse --git-path machete 2>/dev/null || true)
+  if [ -z "$layout" ] || [ ! -s "$layout" ]; then
+    printf 'machete: %s | no layout | discover\n' "$branch"
+    exit 0
+  fi
+
+  managed=$(git machete list managed 2>/dev/null | count_lines)
+  unmanaged=$(git machete list unmanaged 2>/dev/null | count_lines)
+  overrides=$(git machete list with-overridden-fork-point 2>/dev/null | count_lines)
+
+  if git machete is-managed "$branch" >/dev/null 2>&1; then
+    current="managed"
+  else
+    current="unmanaged"
+  fi
+
+  if [ "$branch" = "detached" ]; then
+    state="review"
+  elif [ "$current" = "unmanaged" ]; then
+    state="add branch"
+  elif [ "$overrides" -gt 0 ]; then
+    state="fork-point"
+  elif [ "$unmanaged" -gt 0 ]; then
+    state="review"
+  else
+    state="ok"
+  fi
+
+  printf 'machete: %s | %s | branches %s | unmanaged %s | overrides %s | %s\n' "$branch" "$current" "$managed" "$unmanaged" "$overrides" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Git and git-machete installed and available as git machete.
+  - A repository with a .git/machete branch layout for full managed-branch reporting.
+  - A moderate statusline refresh interval so branch-layout scans do not run too often in very large repositories.
+safetyNotes:
+  - This statusline is read-only and does not run git machete update, traverse, rebase, push, or pull.
+  - Unmanaged branches and fork-point overrides are review cues; inspect git machete status before changing stacked branches.
+  - The compact output intentionally avoids automated branch repair because stacked-branch workflows can rewrite history.
+privacyNotes:
+  - The script prints the current branch name and aggregate branch-layout counts.
+  - Branch names can reveal ticket IDs, customers, incidents, or release names in terminal screenshots.
+  - It reads local branch layout metadata and does not print commit messages, remote URLs, or file paths.
+---
+
+## Source notes
+
+- git-machete documents a branch layout file, `git machete status`, `git machete is-managed`, and `git machete list` categories such as managed, unmanaged, and with-overridden-fork-point.
+- This statusline uses those branch-layout commands to summarize stacked-branch hygiene without calling plain Git upstream-count manuals or mutating branch history.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `git-machete-branch-hygiene-statusline`, git-machete, branch hygiene, upstream drift, ahead/behind, and Git status statuslines. The earlier Git upstream drift draft used Git manual sources adjacent to the existing `git-status-statusline`; this replacement uses git-machete with a different canonical source, branch-layout scope, and value proposition.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
