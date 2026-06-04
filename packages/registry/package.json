@@ -14,6 +14,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/category-spec.js"
     },
+    "./command-safety": {
+      "types": "./src/command-safety.d.ts",
+      "default": "./src/command-safety.js"
+    },
     "./content-schema": {
       "types": "./src/index.d.ts",
       "default": "./src/content-schema.js"
