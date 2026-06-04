@@ -95,8 +95,7 @@ scriptBody: |-
     fi
 
     if [ -n "$EXISTING_FILE" ]; then
-      EXISTING_CONTENT=$(cat -- "$EXISTING_FILE")
-      CONTENT=$(printf '%s' "$INPUT" | jq -r --arg content "$EXISTING_CONTENT" '
+      if ! CONTENT=$(printf '%s' "$INPUT" | jq -r --rawfile content "$EXISTING_FILE" '
         def replace_once($old; $new):
           if ($old == "") then .
           else (index($old) as $ix
@@ -116,13 +115,19 @@ scriptBody: |-
           else
             $content
           end
-      ')
+      '); then
+        echo "Unable to reconstruct edited migration for ${FILE:-pending write}; blocked by the safety gate." >&2
+        exit 2
+      fi
     else
-      CONTENT=$(printf '%s' "$INPUT" | jq -r '
+      if ! CONTENT=$(printf '%s' "$INPUT" | jq -r '
         [ .tool_input.new_string,
           (.tool_input.edits[]?.new_string) ]
         | map(select(. != null)) | join("\n")
-      ')
+      '); then
+        echo "Unable to inspect edited migration for ${FILE:-pending write}; blocked by the safety gate." >&2
+        exit 2
+      fi
     fi
   fi
 
