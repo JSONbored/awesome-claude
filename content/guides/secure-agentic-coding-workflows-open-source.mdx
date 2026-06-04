@@ -1,0 +1,206 @@
+---
+title: Secure Agentic Coding Workflows in Open-Source Repos
+slug: secure-agentic-coding-workflows-open-source
+category: guides
+description: >-
+  A practical security workflow for open-source maintainers using AI coding
+  agents. Scope repository permissions, protect CI secrets, review generated
+  diffs, gate dependency changes, and keep human approval in the merge path.
+cardDescription: Secure open-source repo workflows that use AI coding agents.
+seoTitle: Secure Agentic Coding Workflows in Open-Source Repos
+seoDescription: >-
+  Learn how to secure AI coding agent workflows in open-source repositories with
+  GitHub token permissions, rulesets, secret scanning, dependency review, CI
+  hardening, and human-owned merge gates.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Treat every agent-created pull request as untrusted code: use least-privilege
+  tokens, protect secrets from forked PRs, require rulesets and reviews, scan
+  generated diffs, inspect dependency changes, and merge only after a maintainer
+  can reproduce the result.
+prerequisites:
+  - Admin or maintainer access to configure repository rulesets, branch protections, workflow permissions, and code-security features.
+  - A documented policy for which AI coding agents may open pull requests, run commands, or access repository secrets.
+  - CI jobs that can run tests, linters, code scanning, secret scanning, and dependency review for the protected branch.
+  - Maintainers who can review agent-created changes before merge.
+safetyNotes:
+  - Do not grant an AI coding agent broad write access, long-lived credentials, or production deployment permissions by default.
+  - Treat pull requests from forks and agent-created branches as untrusted until CI, scanners, and a human maintainer have inspected the diff.
+  - Keep workflows that use secrets, deployment tokens, package publishing, or `pull_request_target` events under explicit maintainer control.
+privacyNotes:
+  - Agent prompts, CI logs, workflow artifacts, traces, and generated diffs can contain private code, secrets, package names, issue details, and contributor metadata.
+  - Redact secrets and customer data before sharing logs with external AI tools or pasting incident context into agent prompts.
+  - Prefer short-lived tokens and auditable repository settings so credential exposure can be contained and investigated.
+sourceUrls:
+  - "https://docs.github.com/en/actions/reference/security/secure-use"
+  - "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+  - "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"
+  - "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets"
+  - "https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning"
+  - "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review"
+  - "https://csrc.nist.gov/pubs/sp/800/218/final"
+tags:
+  - security
+  - agentic-coding
+  - open-source
+  - github-actions
+  - secret-scanning
+  - dependency-review
+  - ci
+keywords:
+  - secure ai coding agents
+  - agentic coding security
+  - open source repository security
+  - github actions ai agent security
+  - secure generated pull requests
+readingTime: 8
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Open-source repositories should treat AI coding agents as powerful contributors,
+not as trusted maintainers. Agents can edit code, trigger CI, suggest dependency
+updates, and create convincing pull request summaries, but the repository still
+needs least-privilege permissions, scanner evidence, and human merge ownership.
+
+The goal is not to ban agents. The goal is to make the workflow boring: every
+agent-created branch goes through the same protected path as any other untrusted
+change.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Repository rules", "description": "Rulesets or branch protections are available for the default branch"}
+- [ ] {"task": "Workflow permissions", "description": "GitHub Actions token permissions can be scoped per repository or workflow"}
+- [ ] {"task": "Security scanners", "description": "Secret scanning, dependency review, code scanning, or equivalent checks are enabled"}
+- [ ] {"task": "Maintainer review policy", "description": "A human maintainer owns approval for agent-created changes"}
+
+## Core Concepts Explained
+
+### Agent branches are untrusted input
+
+An AI coding agent may run commands, edit files, update lockfiles, and summarize
+its own work. That does not make the branch trustworthy. Review the final diff
+as untrusted input and verify the behavior through CI, tests, and human review.
+
+### CI is a security boundary
+
+CI jobs often hold repository tokens, cloud credentials, package-publishing
+permissions, and access to private caches or artifacts. A generated workflow
+change can be more dangerous than an application-code change because it may
+alter who can execute privileged automation.
+
+### Human approval should stay in the merge path
+
+Agents are useful for implementation and triage, but the merge decision should
+belong to maintainers. A protected branch or ruleset gives the project a
+repeatable place to enforce that decision.
+
+## Step-by-Step Implementation Guide
+
+1. **Create an agent access policy.** Write down which agents may open pull
+   requests, which repositories they may access, whether they can run commands,
+   and whether they can read secrets. Keep production deployment, release, and
+   package-publishing permissions outside the default agent role.
+
+2. **Scope `GITHUB_TOKEN` permissions.** Configure repository and workflow
+   permissions so jobs receive only the access they need. Prefer read-only
+   defaults, then grant write scopes explicitly for narrow workflows that require
+   them.
+
+3. **Treat forked PRs carefully.** Pull requests from forks are part of normal
+   open-source collaboration, but they are also untrusted. Do not expose secrets
+   or privileged write paths to unreviewed fork code. Be especially cautious
+   around workflows that run with elevated context.
+
+4. **Protect the default branch with rulesets.** Require reviews, status checks,
+   linear history or merge rules as appropriate, and block direct pushes from
+   agent accounts. Put the same rules around files that control CI, releases,
+   package publishing, deployment, and repository policy.
+
+5. **Add scanner gates.** Run secret scanning and dependency review before merge.
+   Add code scanning or a local equivalent for application changes. A scanner
+   result is not a substitute for review, but it gives maintainers concrete
+   evidence to inspect.
+
+6. **Review workflow and dependency diffs first.** If the agent touched
+   `.github/workflows`, package manifests, lockfiles, install scripts,
+   containerfiles, or release automation, inspect those files before reviewing
+   ordinary application code.
+
+7. **Require reproducible verification.** Ask the agent operator or contributor
+   to list the exact test commands, generated files, and manual checks used.
+   Merge only when a maintainer can reproduce or independently inspect the
+   evidence.
+
+8. **Keep logs and artifacts on a short leash.** CI logs and artifacts may hold
+   prompts, file paths, environment names, generated code, or accidental secrets.
+   Set retention deliberately and avoid uploading broad workspaces as artifacts.
+
+9. **Review the agent account itself.** Use a dedicated bot or service account
+   where possible, with auditable access and no personal long-lived credentials.
+   Rotate credentials after suspected exposure and remove access when the agent
+   is no longer used.
+
+## Maintainer Checklist
+
+- [ ] {"task": "Least privilege", "description": "Agent and CI tokens have only the permissions required for the workflow"}
+- [ ] {"task": "Protected merge path", "description": "Rulesets or branch protections require human approval and passing checks"}
+- [ ] {"task": "Secret boundary", "description": "Forked PRs and untrusted branches cannot read production secrets"}
+- [ ] {"task": "Workflow review", "description": "Changes to Actions, release, publishing, or deployment files receive extra scrutiny"}
+- [ ] {"task": "Dependency review", "description": "New dependencies, lockfile changes, install scripts, and package updates are explained"}
+- [ ] {"task": "Scanner evidence", "description": "Secret, dependency, and code scanning findings are clean or explicitly triaged"}
+- [ ] {"task": "Reproducible tests", "description": "A maintainer can rerun the focused checks or inspect the logs"}
+- [ ] {"task": "Rollback path", "description": "The team knows how to revert, disable the workflow, or revoke credentials"}
+
+## When to Block the Merge
+
+Block or request changes when an agent-created PR:
+
+- Grants broader workflow, repository, cloud, package, or deployment permissions.
+- Changes `pull_request_target`, release, publishing, or deployment automation
+  without a clear security rationale.
+- Adds dependencies or install scripts without explaining why they are needed.
+- Uploads broad workspace artifacts, logs secrets, or changes retention policies
+  without review.
+- Claims tests passed but does not provide reproducible commands or CI evidence.
+- Includes a generated summary that does not match the actual file diff.
+
+## Troubleshooting
+
+- **The agent needs write access to update the branch**: give it the narrowest
+  branch-specific permission possible and keep the default branch protected.
+- **A workflow needs secrets for legitimate tests**: run the privileged job only
+  after maintainer approval, or split untrusted tests from trusted deployment
+  jobs.
+- **Dependency review blocks a generated lockfile update**: ask for a smaller PR
+  that isolates the dependency change and explains the upgrade path.
+- **A scanner warning is accepted**: record the rationale in the pull request so
+  future maintainers can audit the decision.
+
+## Duplicate Check
+
+This guide is focused on securing the repository workflow around AI coding
+agents in open-source projects. Existing entries cover individual tools,
+security scanners, and code-review practices, but this slot is distinct: it
+combines agent access policy, GitHub Actions hardening, rulesets, secrets,
+dependency review, and maintainer-owned merge gates for OSS repositories.
+
+## References
+
+- GitHub Docs: Security hardening for GitHub Actions - https://docs.github.com/en/actions/reference/security/secure-use
+- GitHub Docs: Using secrets in GitHub Actions - https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets
+- GitHub Docs: Authenticate with `GITHUB_TOKEN` - https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
+- GitHub Docs: About rulesets - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets
+- GitHub Docs: About secret scanning - https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning
+- GitHub Docs: About dependency review - https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review
+- NIST SP 800-218: Secure Software Development Framework - https://csrc.nist.gov/pubs/sp/800/218/final
