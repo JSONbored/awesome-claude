@@ -1,0 +1,103 @@
+---
+title: GitHub PR Checks Statusline
+slug: gh-pr-checks-statusline
+category: statuslines
+description: Claude Code statusline that summarizes GitHub CLI check status for the active pull request, including failed, pending, and passing checks.
+cardDescription: Show active pull request check health from GitHub CLI.
+seoTitle: GitHub PR checks statusline for Claude Code
+seoDescription: Add a Claude Code statusline that uses GitHub CLI to show failed, pending, and passing checks for the active pull request.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://cli.github.com/manual/gh_pr_checks"
+tags:
+  - github
+  - ci
+  - pull-requests
+  - claude-code
+keywords:
+  - github checks statusline
+  - pr checks statusline
+  - ci statusline
+  - gh pr checks
+installable: true
+usageSnippet: "checks: PR #42 | fail 1 | pending 2 | pass 8"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-pr-checks-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/gh-pr-checks-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "checks: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "checks: jq missing"
+    exit 0
+  fi
+
+  pr_number=$(gh pr view --json number --jq '.number' 2>/dev/null || true)
+  if [ -z "$pr_number" ]; then
+    echo "checks: no active PR"
+    exit 0
+  fi
+
+  checks=$(gh pr checks "$pr_number" --json name,state,conclusion 2>/dev/null || true)
+  if [ -z "$checks" ]; then
+    printf 'checks: PR #%s | unavailable\n' "$pr_number"
+    exit 0
+  fi
+
+  fail=$(printf '%s' "$checks" | jq '[.[] | select((.conclusion // "") | test("failure|cancelled|timed_out"; "i"))] | length')
+  pending=$(printf '%s' "$checks" | jq '[.[] | select((.state // "") | test("queued|pending|in_progress|waiting"; "i"))] | length')
+  pass=$(printf '%s' "$checks" | jq '[.[] | select((.conclusion // "") == "success")] | length')
+
+  printf 'checks: PR #%s | fail %s | pending %s | pass %s\n' "$pr_number" "$fail" "$pending" "$pass"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in for the repository.
+  - jq available for counting check states from JSON output.
+  - The current branch has an associated pull request visible to the GitHub CLI account.
+safetyNotes:
+  - Treat the statusline as a prompt to inspect failing checks, not as proof that the branch is merge-ready.
+  - GitHub rate limits and repository permissions can make the signal temporarily unavailable.
+  - Keep the refresh interval moderate so the statusline does not spam GitHub API requests.
+privacyNotes:
+  - The script reads pull request check metadata through GitHub CLI and prints only aggregate counts.
+  - Repository names, branch names, and pull request numbers may still appear in shell history or terminal recordings.
+  - Private repository access follows the local GitHub CLI login state and organization policy.
+---
+
+## Source notes
+
+- GitHub CLI documents `gh pr checks` for showing CI check status on pull requests.
+- This entry keeps the statusline compact by aggregating check conclusions instead of printing check names or log URLs.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `gh-pr-checks-statusline`, `gh pr checks`, GitHub checks, CI status, and active pull request statuslines. No statusline entry or open PR with this slug or GitHub CLI checks source was found.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
