@@ -1,0 +1,218 @@
+---
+title: Database Migration Safety Gate - Claude Code Hook
+slug: database-migration-safety-gate
+category: hooks
+description: >-
+  PreToolUse hook that inspects a database migration before it is written and
+  blocks irreversible or lock-heavy operations — DROP TABLE/COLUMN, TRUNCATE,
+  table/column RENAME, and CREATE INDEX without CONCURRENTLY — following the
+  strong_migrations safe-migration checks. An explicit acknowledgement comment
+  lets an intentional change through, so risky schema edits are a deliberate
+  choice rather than an accident.
+cardDescription: >-
+  Block DROP, TRUNCATE, RENAME, and non-concurrent index migrations unless
+  explicitly acknowledged.
+seoTitle: Database Migration Safety Gate - Claude Code Hook
+seoDescription: >-
+  A Claude Code PreToolUse hook that blocks unsafe database migrations (DROP,
+  TRUNCATE, RENAME, non-concurrent indexes) following strong_migrations until
+  they are explicitly acknowledged.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/ankane/strong_migrations#checks"
+repoUrl: "https://github.com/ankane/strong_migrations"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/database-migration-safety-gate.sh && chmod +x
+  .claude/hooks/database-migration-safety-gate.sh
+usageSnippet: "Unsafe database migration blocked - DROP COLUMN (irreversible data loss)"
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/database-migration-safety-gate.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/database-migration-safety-gate.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook. Inspects a pending database migration and blocks
+  # irreversible or lock-heavy operations (the strong_migrations safe-migration
+  # check classes). Exit code 2 blocks the write and feeds the reason back to
+  # Claude. An explicit "-- safety-gate: allow" comment acknowledges the risk and
+  # lets the migration through. Fails open when jq is missing.
+
+  command -v jq >/dev/null 2>&1 || exit 0
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+
+  # Only gate files that look like database migrations.
+  case "$FILE" in
+    *migrations/*|*migrate/*|*/db/migrate/*|*.sql) : ;;
+    *) exit 0 ;;
+  esac
+
+  CONTENT=$(printf '%s' "$INPUT" | jq -r '
+    [ .tool_input.content,
+      .tool_input.new_string,
+      (.tool_input.edits[]?.new_string) ]
+    | map(select(. != null)) | join("\n")
+  ')
+  [ -z "$CONTENT" ] && exit 0
+
+  # Escape hatch: an explicit acknowledgement lets an intentional change proceed.
+  if printf '%s' "$CONTENT" | grep -qiE 'safety-gate:[[:space:]]*allow|safety_assured|strong_migrations[[:space:]]*:[[:space:]]*disable'; then
+    exit 0
+  fi
+
+  findings=""
+  flag() {
+    if printf '%s' "$CONTENT" | grep -iqE "$2"; then
+      findings="${findings}${1}"$'\n'
+    fi
+  }
+
+  flag "DROP TABLE (irreversible data loss)" 'drop[[:space:]]+table'
+  flag "DROP COLUMN (irreversible data loss)" 'drop[[:space:]]+column'
+  flag "TRUNCATE (removes all rows)" '(^|[^a-z])truncate[[:space:]]'
+  flag "Table/column RENAME (breaks running code mid-deploy)" 'rename[[:space:]]+(table|column|to)[[:space:]]'
+
+  # CREATE INDEX without CONCURRENTLY locks writes on large tables.
+  if printf '%s' "$CONTENT" | grep -iE 'create[[:space:]]+(unique[[:space:]]+)?index' | grep -ivqE 'concurrently'; then
+    findings="${findings}CREATE INDEX without CONCURRENTLY (locks writes on large tables)"$'\n'
+  fi
+
+  if [ -n "$findings" ]; then
+    echo "Unsafe database migration in ${FILE:-pending write} blocked by the safety gate:" >&2
+    printf '%s' "$findings" | while IFS= read -r f; do
+      [ -n "$f" ] && echo "   - $f" >&2
+    done
+    echo "Use a safe pattern (add columns nullable then backfill, create indexes CONCURRENTLY, expand-then-contract for renames) or add a '-- safety-gate: allow' comment to acknowledge the risk and proceed." >&2
+    exit 2
+  fi
+
+  exit 0
+trigger: PreToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
+safetyNotes:
+  - "Runs before Write, Edit, and MultiEdit on files under a migrations path or with a .sql extension and reads the pending SQL from the tool input."
+  - "Blocks the write with exit code 2 when it detects DROP TABLE/COLUMN, TRUNCATE, a table/column RENAME, or CREATE INDEX without CONCURRENTLY; the hook never connects to or runs SQL against any database."
+  - "Provides an explicit escape hatch - add a '-- safety-gate: allow' comment to the migration to acknowledge the risk and let it through."
+  - "Uses regex heuristics, so it can miss obfuscated statements or flag an intentional change; review every migration regardless of the result."
+privacyNotes:
+  - "Reads only the pending migration content from the tool input; it opens no database connections and makes no network calls."
+  - "Prints the file path and the names of the detected risky operation classes to local hook stderr; it writes no logs."
+  - "The file path shown in output may reveal local directory structure in your terminal."
+tags:
+  - "database"
+  - "migrations"
+  - "safety"
+  - "ddl"
+  - "guardrail"
+keywords:
+  - "database migration safety gate hook"
+  - "block unsafe migration"
+  - "strong migrations check hook"
+  - "drop truncate concurrently guard"
+---
+
+## Features
+
+- Gates database migrations **before they are written**, blocking irreversible or lock-heavy operations rather than discovering them after a bad deploy.
+- Detection classes follow the [strong_migrations](https://github.com/ankane/strong_migrations#checks) safe-migration checks: `DROP TABLE`, `DROP COLUMN`, `TRUNCATE`, table/column `RENAME`, and `CREATE INDEX` without `CONCURRENTLY`.
+- Blocks with exit code `2` and feeds the reason back to Claude, so the model can switch to a safe pattern instead of shipping the risky statement.
+- Includes an explicit escape hatch — a `-- safety-gate: allow` comment acknowledges the risk and lets an intentional change through.
+- Pure local `bash` + `jq`; it never connects to a database, runs SQL, or makes a network call.
+
+## How it works
+
+On `PreToolUse`, the hook checks whether the target path looks like a migration (a `migrations/`, `migrate/`, or `db/migrate/` directory, or a `.sql` file). If so, it reads the pending SQL from the tool input and scans it for the unsafe operation classes above. Any match prints a blocked-reason list to stderr and exits `2`, which stops the write — unless the content carries an acknowledgement comment.
+
+## Safe-pattern guidance it nudges toward
+
+- Add columns nullable, backfill, then add the `NOT NULL` constraint in a later migration.
+- Create indexes with `CONCURRENTLY` to avoid locking writes on large tables.
+- Use expand-then-contract for renames so running code never breaks mid-deploy.
+- Treat `DROP`/`TRUNCATE` as deliberate, acknowledged steps.
+
+## Use cases
+
+- Stop an agent from generating a `DROP COLUMN` or non-concurrent index migration during a refactor.
+- Enforce safe-migration discipline in a team without wiring a full migration linter into CI.
+- Make irreversible schema changes an explicit, acknowledged decision.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/database-migration-safety-gate.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/database-migration-safety-gate.sh`
+4. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash and jq
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/database-migration-safety-gate.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Limitations
+
+- Regex heuristics target common SQL phrasings; ORM-DSL migrations (for example `remove_column` in Rails or a Knex `dropColumn` call) and heavily obfuscated SQL may not match — extend the patterns for your toolchain.
+- Detecting `DELETE`/`UPDATE` without a `WHERE` clause reliably requires real SQL parsing and is intentionally left out to avoid false positives.
+
+## Source and references
+
+- strong_migrations safe-migration checks: https://github.com/ankane/strong_migrations#checks
+- strong_migrations repository: https://github.com/ankane/strong_migrations
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
