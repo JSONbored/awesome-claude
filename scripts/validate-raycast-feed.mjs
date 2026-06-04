@@ -235,12 +235,14 @@ for (const entry of payload.entries) {
   ) {
     fail(`${key}: detail copyText must be non-empty when present`);
   }
-  if (
-    detail.copyText === undefined &&
-    (typeof detail.llmsUrl !== "string" ||
-      !detail.llmsUrl.startsWith("/data/llms/"))
-  ) {
-    fail(`${key}: detail without copyText must expose llmsUrl`);
+  if (detail.copyText === undefined) {
+    const llmsUrl = String(detail.llmsUrl || "");
+    const validLlmsUrl =
+      llmsUrl.startsWith("/api/registry/entries/") ||
+      llmsUrl.startsWith("/data/llms/");
+    if (!validLlmsUrl) {
+      fail(`${key}: detail without copyText must expose llmsUrl`);
+    }
   }
   if (
     entry.copyText !== undefined &&

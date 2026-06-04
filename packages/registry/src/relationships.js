@@ -1,6 +1,10 @@
 export const REGISTRY_RELATION_TYPES = [
+  "duplicate",
   "same-project",
   "collection-member",
+  "complementary",
+  "same-ecosystem",
+  "prerequisite",
   "works-with",
   "extends",
   "alternative",
@@ -194,17 +198,21 @@ function categoryPairKind(target, candidate) {
 
 function relationTypeFor(target, candidate, evidence) {
   if (evidence.collectionMember) return "collection-member";
-  if (evidence.sameProject) return "same-project";
+  if (evidence.sameProject) {
+    return target.category === candidate.category
+      ? "duplicate"
+      : "complementary";
+  }
   if (
     target.category === candidate.category &&
     (evidence.sharedTokens.length > 0 || evidence.sharedDomains.length > 0)
   ) {
     return "alternative";
   }
-  if (
-    evidence.categoryPair === "guide-adjacent" ||
-    evidence.categoryPair === "collection-adjacent"
-  ) {
+  if (evidence.categoryPair === "collection-adjacent") {
+    return "prerequisite";
+  }
+  if (evidence.categoryPair === "guide-adjacent") {
     return "extends";
   }
   if (
@@ -212,7 +220,10 @@ function relationTypeFor(target, candidate, evidence) {
       evidence.categoryPair,
     )
   ) {
-    return "works-with";
+    return "complementary";
+  }
+  if (evidence.sharedDomains.length > 0) {
+    return "same-ecosystem";
   }
   return "related";
 }

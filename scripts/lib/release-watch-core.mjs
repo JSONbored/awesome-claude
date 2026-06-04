@@ -115,6 +115,7 @@ export function buildMcpReleaseIssue(report) {
     marker: MCP_RELEASE_DUE_MARKER,
     title: `MCP release due: ${report.proposedVersion}`,
     packageLabel: "@heyclaude/mcp",
+    labels: ["release", "mcp"],
     checklist: [
       "Run the MCP package validation workflow.",
       "Run the manual npm publish workflow after checks pass.",
@@ -129,6 +130,7 @@ export function buildRaycastReleaseIssue(report) {
     marker: RAYCAST_RELEASE_DUE_MARKER,
     title: `Raycast update due: ${report.proposedVersion}`,
     packageLabel: "Raycast extension",
+    labels: ["release", "raycast"],
     checklist: [
       "Run the Raycast extension validation workflow.",
       "Review store metadata, screenshots, and changelog.",
@@ -137,7 +139,14 @@ export function buildRaycastReleaseIssue(report) {
   });
 }
 
-function buildReleaseIssue({ report, marker, title, packageLabel, checklist }) {
+function buildReleaseIssue({
+  report,
+  marker,
+  title,
+  packageLabel,
+  labels,
+  checklist,
+}) {
   const commitPreviewLimit = 25;
   const commitPreview = report.commits.slice(-commitPreviewLimit);
   const omittedCommitCount = Math.max(
@@ -163,6 +172,7 @@ function buildReleaseIssue({ report, marker, title, packageLabel, checklist }) {
 
   return {
     title,
+    labels,
     assignees: ["JSONbored"],
     body: [
       marker,

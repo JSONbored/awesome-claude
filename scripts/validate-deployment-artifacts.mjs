@@ -151,11 +151,29 @@ try {
   } else if (directoryEntries.length !== searchEntries.length) {
     fail("/data directory and search artifact counts must match");
   } else {
-    for (const entry of [directoryEntries[0], searchEntries[0]]) {
-      for (const field of ["canonicalUrl", "llmsUrl", "apiUrl"]) {
-        if (!String(entry?.[field] || "").startsWith(`${canonicalOrigin}/`)) {
-          fail(`${field} must be an absolute URL in deployment artifacts`);
-        }
+    for (const field of ["canonicalUrl", "llmsUrl", "apiUrl"]) {
+      if (
+        !String(directoryEntries[0]?.[field] || "").startsWith(
+          `${canonicalOrigin}/`,
+        )
+      ) {
+        fail(`${field} must be an absolute URL in directory artifacts`);
+      }
+    }
+    for (const field of ["canonicalUrl", "apiUrl"]) {
+      if (
+        !String(searchEntries[0]?.[field] || "").startsWith(
+          `${canonicalOrigin}/`,
+        )
+      ) {
+        fail(`${field} must be an absolute URL in search artifacts`);
+      }
+    }
+    if (searchEntries[0]?.llmsUrl) {
+      if (!String(searchEntries[0].llmsUrl).startsWith(`${canonicalOrigin}/`)) {
+        fail(
+          "llmsUrl must be an absolute URL in search artifacts when present",
+        );
       }
     }
   }

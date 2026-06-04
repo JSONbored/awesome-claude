@@ -42,7 +42,10 @@ describe("release watch", () => {
       proposedVersion: "0.3.0",
       packageAhead: true,
     });
-    expect(buildMcpReleaseIssue(report).body).toContain(MCP_RELEASE_DUE_MARKER);
+    const issue = buildMcpReleaseIssue(report);
+    expect(issue.labels).toEqual(["release", "mcp"]);
+    expect(issue.assignees).toEqual(["JSONbored"]);
+    expect(issue.body).toContain(MCP_RELEASE_DUE_MARKER);
   });
 
   it("filters Raycast release checks to Raycast-relevant files", () => {
@@ -66,9 +69,10 @@ describe("release watch", () => {
     expect(report.due).toBe(true);
     expect(report.commits).toHaveLength(1);
     expect(report.commits[0].subject).toBe("fix(raycast): harden feed parser");
-    expect(buildRaycastReleaseIssue(report).body).toContain(
-      RAYCAST_RELEASE_DUE_MARKER,
-    );
+    const issue = buildRaycastReleaseIssue(report);
+    expect(issue.labels).toEqual(["release", "raycast"]);
+    expect(issue.assignees).toEqual(["JSONbored"]);
+    expect(issue.body).toContain(RAYCAST_RELEASE_DUE_MARKER);
   });
 
   it("escapes backslashes and pipes in commit subjects before issue upserts", () => {

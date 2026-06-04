@@ -21,7 +21,6 @@ const contentRoot = path.join(repoRoot, "content");
 const generatedDir = path.join(repoRoot, "apps/web/src/generated");
 const publicDataDir = path.join(repoRoot, "apps/web/public/data");
 const entryDataDir = path.join(publicDataDir, "entries");
-const entryLlmsDir = path.join(publicDataDir, "llms");
 const raycastDetailDir = path.join(publicDataDir, "raycast");
 const siteStatsFile = path.join(generatedDir, "site-stats.json");
 const atlasRegistryFile = path.join(generatedDir, "atlas-registry.json");
@@ -559,7 +558,8 @@ async function main() {
   entries.sort((left, right) => left.title.localeCompare(right.title));
 
   resetGeneratedJsonDir(entryDataDir);
-  resetGeneratedJsonDir(entryLlmsDir);
+  fs.rmSync(path.join(publicDataDir, "llms"), { recursive: true, force: true });
+  fs.rmSync(path.join(publicDataDir, "llms-full.txt"), { force: true });
   resetGeneratedJsonDir(raycastDetailDir);
 
   const artifactFiles = buildRegistryArtifactSet(entries, {
@@ -642,9 +642,6 @@ async function main() {
   }
   console.log(
     `Wrote ${artifactResults.filter((file) => file.path.startsWith("entries/")).length} entry detail files to ${path.relative(repoRoot, entryDataDir)}`,
-  );
-  console.log(
-    `Wrote ${artifactResults.filter((file) => file.path.startsWith("llms/")).length} entry LLM files to ${path.relative(repoRoot, entryLlmsDir)}`,
   );
   console.log(
     `Wrote ${artifactResults.filter((file) => file.path.startsWith("raycast/")).length} Raycast detail files to ${path.relative(repoRoot, raycastDetailDir)}`,

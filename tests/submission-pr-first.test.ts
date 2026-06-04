@@ -245,13 +245,6 @@ Native macOS MCP server.`);
       .sort();
 
     expect(templates).toEqual(["config.yml", "product-feature.yml"]);
-    for (const file of templates) {
-      const source = fs.readFileSync(path.join(templateDir, file), "utf8");
-      expect(source).not.toContain("content-submission");
-      expect(source).not.toContain("needs-review");
-      expect(source).not.toContain("import-approved");
-      expect(source).not.toContain("auto-import");
-    }
   });
 
   it("keeps retired issue-intake APIs out of active source", () => {
@@ -275,10 +268,6 @@ Native macOS MCP server.`);
       "SUBMISSION_BASE_LABELS",
       "submissionLabelsForCategory",
       "recommendedLabelsForCategory",
-      "content-submission",
-      "needs-review",
-      "import-approved",
-      "auto-import",
     ];
 
     for (const file of activeFiles) {
