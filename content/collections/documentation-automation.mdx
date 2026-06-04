@@ -1,0 +1,117 @@
+---
+title: Documentation Automation
+slug: documentation-automation
+category: collections
+description: >-
+  An automation bundle for keeping project documentation accurate and current:
+  generate docs from code, measure documentation coverage, validate README
+  structure and links, document API endpoints, and publish to a docs site. It
+  pulls together existing hooks and commands into one documentation workflow
+  organized around the Diataxis framework.
+cardDescription: >-
+  Automation bundle to generate, measure, validate, and publish project
+  documentation that stays current.
+seoTitle: Documentation Automation
+seoDescription: >-
+  A curated collection that automates project documentation — generation,
+  coverage, README and link validation, API docs, and publishing — organized
+  around the Diataxis framework.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://diataxis.fr/"
+sourceUrls:
+  - "https://diataxis.fr/"
+  - "https://www.writethedocs.org/"
+installable: false
+usageSnippet: >-
+  Generate docs from code, measure coverage, validate the README and links,
+  then publish to your docs site.
+items:
+  - slug: documentation-generator
+    category: hooks
+  - slug: documentation-coverage-checker
+    category: hooks
+  - slug: documentation-auto-generator-on-stop
+    category: hooks
+  - slug: api-endpoint-documentation-generator
+    category: hooks
+  - slug: readme-refresh-validator
+    category: hooks
+  - slug: markdown-link-checker
+    category: hooks
+  - slug: explain
+    category: commands
+  - slug: docs
+    category: commands
+  - slug: mintlify-docs
+    category: commands
+installationOrder:
+  - documentation-generator
+  - api-endpoint-documentation-generator
+  - documentation-coverage-checker
+  - readme-refresh-validator
+  - markdown-link-checker
+  - documentation-auto-generator-on-stop
+  - explain
+  - docs
+  - mintlify-docs
+estimatedSetupTime: 40 minutes
+difficulty: intermediate
+prerequisites:
+  - A project with source code and a README to document.
+  - Claude Code with hooks enabled for the generation and validation guards.
+safetyNotes:
+  - "This is a curated index of existing directory entries; the collection runs nothing itself - review each linked hook and command's own safety notes before installing it."
+privacyNotes:
+  - "The collection handles no data on its own; consult each linked entry's privacy notes for its runtime behavior and any local or network access."
+tags:
+  - "documentation"
+  - "automation"
+  - "developer-experience"
+  - "api-docs"
+  - "diataxis"
+keywords:
+  - "documentation automation collection"
+  - "generate and validate docs bundle"
+  - "readme and api docs automation"
+  - "diataxis documentation workflow"
+---
+
+## What this collection sets up
+
+A documentation-automation workflow that keeps docs accurate as the code changes, organized around the [Diataxis](https://diataxis.fr/) documentation framework (tutorials, how-to guides, reference, explanation). Each piece is an existing, source-backed directory entry; together they generate, measure, validate, and publish documentation.
+
+## Workflow stages
+
+### 1. Generate
+
+- **documentation-generator** (hook) — generates and updates docs from code comments.
+- **api-endpoint-documentation-generator** (hook) — documents API endpoints (reference docs).
+
+### 2. Measure and validate
+
+- **documentation-coverage-checker** (hook) — measures documentation coverage and flags missing docs.
+- **readme-refresh-validator** (hook) — checks the README for Install/Usage sections and documents the package CLI surface.
+- **markdown-link-checker** (hook) — flags broken links in docs and READMEs.
+- **documentation-auto-generator-on-stop** (hook) — refreshes docs at session end so they do not drift.
+
+### 3. Explain and publish
+
+- **explain** (command) — produces clear explanations of code (explanation docs).
+- **docs** (command) — drafts and updates project documentation.
+- **mintlify-docs** (command) — formats and publishes docs to a Mintlify site.
+
+## Suggested order
+
+Generate the reference docs from code first, then measure coverage and validate the README and links, then keep them fresh at session end, and finally use the explanation and publishing commands. See `installationOrder` for the exact sequence.
+
+## Notes
+
+Each entry carries its own prerequisites, safety notes, and privacy notes — read them before enabling a hook that writes documentation or a command that publishes to an external docs site.
+
+## Source and references
+
+- Diataxis documentation framework: https://diataxis.fr/
+- Write the Docs (documentation practices): https://www.writethedocs.org/
