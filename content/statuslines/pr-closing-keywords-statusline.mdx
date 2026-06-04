@@ -1,0 +1,103 @@
+---
+title: PR Closing Keywords Statusline
+slug: pr-closing-keywords-statusline
+category: statuslines
+description: Claude Code statusline that checks the active pull request body for GitHub closing keywords and shows whether issue auto-closure linkage is present.
+cardDescription: Show whether the active PR body contains GitHub closing keywords.
+seoTitle: PR closing keywords statusline for Claude Code
+seoDescription: Add a Claude Code statusline that checks GitHub pull request bodies for closing keywords such as fixes, closes, and resolves.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue"
+tags:
+  - github
+  - pull-requests
+  - issues
+  - claude-code
+keywords:
+  - closing keywords statusline
+  - pull request issue linkage
+  - github closes issue statusline
+  - pr body statusline
+installable: true
+usageSnippet: "linkage: PR #42 | closing refs 1 | linked"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/pr-closing-keywords-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/pr-closing-keywords-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "linkage: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "linkage: jq missing"
+    exit 0
+  fi
+
+  pr_json=$(gh pr view --json number,body 2>/dev/null || true)
+  if [ -z "$pr_json" ]; then
+    echo "linkage: no active PR"
+    exit 0
+  fi
+
+  number=$(printf '%s' "$pr_json" | jq -r '.number // empty')
+  body=$(printf '%s' "$pr_json" | jq -r '.body // ""')
+  closing_refs=$(printf '%s\n' "$body" | grep -Eio '\b(close[sd]?|fix(e[sd])?|resolve[sd]?)[: ]+#([0-9]+)' | wc -l | tr -d ' ')
+
+  if [ "$closing_refs" -gt 0 ]; then
+    state="linked"
+  else
+    state="missing close"
+  fi
+
+  printf 'linkage: PR #%s | closing refs %s | %s\n' "$number" "$closing_refs" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in for the current repository.
+  - jq available for reading pull request JSON.
+  - The current branch has an associated pull request with a body that can be read by the local account.
+safetyNotes:
+  - Closing keywords are workflow signals, not proof that the PR actually satisfies the linked issue.
+  - Some repositories use manual issue closure or external trackers, so missing keywords should be interpreted with project policy.
+  - Keep automated PR body edits separate from this read-only statusline.
+privacyNotes:
+  - The script prints only aggregate closing-reference counts and the pull request number.
+  - It reads the pull request body, which can contain private planning details in private repositories.
+  - Private repository access follows the local GitHub CLI account and organization policy.
+---
+
+## Source notes
+
+- GitHub documents closing keywords that link pull requests to issues and close the linked issues when the pull request merges.
+- This entry checks for those documented keywords in the active pull request body rather than relying on GitHub CLI metadata docs.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `pr-closing-keywords-statusline`, PR issue linkage, closing keywords, GitHub pull request linkage, and `gh-pr-issue-linkage-statusline`. The earlier `cli.github.com` submission was self-closed after #960 showed that source domain overlaps the accepted repository-health statusline; this replacement uses GitHub's issue-linking documentation and a closing-keyword-focused scope.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
