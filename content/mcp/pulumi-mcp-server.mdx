@@ -1,0 +1,257 @@
+---
+title: Pulumi MCP Server for Claude
+slug: pulumi-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Pulumi's MCP server for Pulumi Cloud stacks, resource
+  search, Registry context, policy findings, organization access, and Pulumi
+  Neo infrastructure workflows.
+cardDescription: >-
+  Pulumi MCP server for querying Pulumi Cloud, searching infrastructure,
+  consulting the Pulumi Registry, and delegating tasks to Pulumi Neo.
+seoTitle: Pulumi MCP Server for Claude
+seoDescription: >-
+  Use Pulumi MCP Server with Claude to inspect Pulumi Cloud stacks and
+  resources, search the Pulumi Registry, review policy violations, and launch
+  Pulumi Neo infrastructure tasks through a remote MCP connection.
+author: Pulumi
+authorProfileUrl: "https://www.pulumi.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://www.pulumi.com/"
+documentationUrl: "https://www.pulumi.com/docs/ai/mcp-server/"
+packageUrl: "https://www.npmjs.com/package/@pulumi/mcp-server"
+installable: true
+installCommand: "claude mcp add --transport http pulumi https://mcp.ai.pulumi.com/mcp"
+usageSnippet: "Ask Claude to use Pulumi MCP to list production stacks with policy violations before launching any Neo task."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pulumi": {
+        "transport": "http",
+        "url": "https://mcp.ai.pulumi.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "pulumi": {
+        "transport": "http",
+        "url": "https://mcp.ai.pulumi.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Pulumi Cloud account and organization access for the stacks, resources, policies, and Neo workflows Claude should use.
+  - MCP-capable client with remote HTTP and OAuth support, such as Claude Code, Cursor, Windsurf, Claude Desktop through `mcp-remote`, or another compatible assistant.
+  - Approval to connect the selected Pulumi organization to an AI assistant and expose stack/resource metadata in tool results.
+  - Pulumi organization role and permissions that match the task, with read-only access preferred for inventory and policy review.
+  - Pulumi Neo access and repository permissions only if delegating infrastructure tasks that can create plans, code changes, tests, or pull requests.
+  - Local Pulumi CLI and a Pulumi access token only when using the older/local `@pulumi/mcp-server` stdio package or local CLI tools instead of the hosted remote server.
+safetyNotes:
+  - >-
+    The current Pulumi docs describe a hosted remote MCP server at
+    `https://mcp.ai.pulumi.com/mcp` that authenticates through OAuth. Connect it
+    only to Pulumi organizations and stacks approved for assistant access.
+  - >-
+    Pulumi MCP can search deployed resources, inspect stacks, retrieve Registry
+    context, report policy violations, manage organization member access, and
+    delegate work to Pulumi Neo. Treat those capabilities as infrastructure
+    administration, not simple documentation lookup.
+  - >-
+    Pulumi Neo can perform multi-step infrastructure work, generate code, run
+    tests, and create pull requests. Launch Neo tasks only after the target
+    organization, repository, stack, environment, and approval path are clear.
+  - >-
+    The npm package for local stdio use includes Pulumi CLI tools such as
+    preview, up, refresh, and stack output. Do not expose those local tools in a
+    production project unless the MCP client has explicit approval prompts and
+    the workspace credentials are least privilege.
+  - >-
+    `pulumi up`, refresh, import, destroy, or stack configuration changes can
+    affect real cloud resources, state, secrets, costs, and availability. Use
+    preview and policy review before any deployment action.
+  - >-
+    Avoid broad resource searches or repeated stack scans against large
+    organizations unless you understand Pulumi Cloud API usage, cloud provider
+    API impact, and the sensitivity of the returned inventory.
+privacyNotes:
+  - >-
+    Pulumi MCP can return organization names, stack names, project names,
+    resource URNs, cloud resource identifiers, tags, outputs, policy findings,
+    environment names, member access data, pull request links, and Neo task
+    context into the model conversation.
+  - >-
+    Pulumi stack outputs and configuration can include secrets or sensitive
+    operational details if projects are not modeled carefully. Review outputs,
+    resource names, and policy reports before sharing transcripts or generated
+    summaries.
+  - >-
+    Do not paste Pulumi access tokens, cloud provider credentials, secret
+    values, customer data, state files, stack export JSON, or private pull
+    request content into prompts, issue comments, screenshots, or PR
+    descriptions.
+  - >-
+    Chat history, MCP client logs, local package logs, Neo task descriptions,
+    generated pull requests, and screenshots may retain infrastructure metadata
+    outside Pulumi Cloud's normal access controls and audit boundaries.
+tags:
+  - pulumi
+  - infrastructure
+  - iac
+  - cloud
+  - mcp
+keywords:
+  - Pulumi MCP Server
+  - Pulumi Claude MCP
+  - mcp.ai.pulumi.com
+  - Pulumi Neo MCP
+  - Pulumi Cloud MCP
+  - pulumi-mcp-server
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Pulumi MCP Server is Pulumi's Model Context Protocol support for connecting
+Claude and other MCP-capable assistants to Pulumi infrastructure workflows. The
+current Pulumi documentation focuses on the hosted remote MCP server at
+`https://mcp.ai.pulumi.com/mcp`, which uses OAuth and can connect an assistant
+to Pulumi Cloud resources, Registry context, policy findings, organization
+access, and Pulumi Neo tasks.
+
+Use it when Claude needs current infrastructure context before writing or
+reviewing infrastructure as code: which stacks exist, what resources are
+deployed, which policies are failing, what Registry resources and properties
+are available, or whether a Pulumi Neo task should be launched. For first-time
+use, keep the assistant in inventory, documentation, and policy-review mode
+before delegating any infrastructure-changing work.
+
+Pulumi also publishes the `@pulumi/mcp-server` npm package for local stdio
+workflows. That package documents Pulumi Registry tools and local Pulumi CLI
+tools, but the official docs now make the hosted OAuth endpoint the preferred
+setup path for most AI assistants.
+
+## Features
+
+- Official Pulumi documentation page for MCP setup and supported assistants.
+- Hosted remote MCP endpoint at `https://mcp.ai.pulumi.com/mcp`.
+- OAuth authentication and organization selection through the MCP client.
+- Claude Code, Cursor, Windsurf, Claude Desktop, and other MCP-compatible
+  assistant setup paths.
+- Pulumi Cloud stack and resource queries.
+- Resource search across cloud infrastructure in a Pulumi organization.
+- Pulumi Registry access for resource information, properties, examples, and
+  documentation.
+- Policy violation reporting for deployed infrastructure.
+- Organization member and access management capabilities.
+- Pulumi Neo task delegation for automated infrastructure planning and pull
+  request workflows.
+- Published `@pulumi/mcp-server` npm package for local stdio usage when a local
+  package-based setup is required.
+
+## Tool Surface
+
+Pulumi documents the hosted MCP server as a way for AI assistants to query
+Pulumi Cloud stacks and resources, search infrastructure across an
+organization, access Pulumi Registry information, get policy violation reports,
+manage organization members and access, delegate infrastructure tasks to Pulumi
+Neo, and generate infrastructure code using Registry tools and best practices.
+
+The npm package README documents local tools such as Registry resource and
+function lookup, Pulumi CLI preview, update, refresh, stack output, resource
+search, and a Neo task launcher. Treat the local package as an alternative
+runtime with a broader local-machine blast radius because it can use local
+Pulumi CLI configuration and project files.
+
+## Installation
+
+### Claude Code Remote Server
+
+Add the hosted Pulumi MCP server:
+
+```bash
+claude mcp add --transport http pulumi https://mcp.ai.pulumi.com/mcp
+```
+
+Start a Claude Code session, open `/mcp`, and complete the Pulumi OAuth flow
+when prompted. Choose the intended Pulumi organization and confirm that the
+assistant sees only the resources needed for the task.
+
+### Remote MCP Config
+
+Use this remote HTTP configuration for clients that accept MCP JSON config:
+
+```json
+{
+  "mcpServers": {
+    "pulumi": {
+      "transport": "http",
+      "url": "https://mcp.ai.pulumi.com/mcp"
+    }
+  }
+}
+```
+
+For Claude Desktop clients that do not connect directly to remote HTTP MCP
+servers, use Pulumi's documented `mcp-remote` path and follow the OAuth prompt.
+
+### Local Package Alternative
+
+If your workflow needs the local stdio package instead of the hosted endpoint,
+Pulumi publishes:
+
+```bash
+npx @pulumi/mcp-server@latest stdio
+```
+
+Use the local package only in a workspace where Pulumi CLI credentials,
+project files, cloud provider credentials, and stack configuration are approved
+for assistant access.
+
+## Use Cases
+
+- Ask Claude to list stacks with production in the name before writing a change
+  plan.
+- Search deployed resources across a Pulumi organization during an inventory or
+  migration review.
+- Review policy violations before assigning remediation work.
+- Look up Pulumi Registry resource properties and examples while drafting
+  TypeScript, Python, Go, .NET, Java, or YAML Pulumi code.
+- Inspect stack outputs or resource IDs needed for a support handoff.
+- Ask whether a proposed task is safe to delegate to Pulumi Neo, then launch
+  Neo only after the target repository and stack are confirmed.
+- Use local package tools to preview a Pulumi project after confirming the
+  workspace, stack, backend, and credentials.
+
+## Safety Checklist
+
+- Connect the hosted server to the smallest Pulumi organization and role that
+  satisfies the current task.
+- Prefer inventory, Registry lookup, and policy review before any task that can
+  create infrastructure changes.
+- Confirm stack, project, repository, branch, and environment before launching
+  a Pulumi Neo task.
+- Keep MCP approval prompts enabled for member access changes, Neo delegation,
+  local CLI preview/update/refresh tools, and any deployment-adjacent action.
+- Use `pulumi preview` and policy findings before approving `pulumi up` or any
+  generated pull request.
+- Do not mount local project directories into a Docker or stdio MCP runtime
+  unless the assistant should read those files.
+- Rotate Pulumi access tokens created for temporary MCP work.
+- Document organization-specific naming, policy, cost, and approval rules in
+  project instructions before asking Claude to act on infrastructure.
+
+## Source Links
+
+- Pulumi MCP server docs: https://www.pulumi.com/docs/ai/mcp-server/
+- Pulumi remote MCP announcement: https://www.pulumi.com/blog/remote-mcp-server/
+- npm package: https://www.npmjs.com/package/@pulumi/mcp-server
+- Pulumi Neo docs: https://www.pulumi.com/docs/pulumi-cloud/neo/
+- Pulumi Registry: https://www.pulumi.com/registry/
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/
