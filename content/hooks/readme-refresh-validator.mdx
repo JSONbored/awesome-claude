@@ -1,0 +1,210 @@
+---
+title: README Refresh Validator - Claude Code Hook
+slug: readme-refresh-validator
+category: hooks
+description: >-
+  PostToolUse hook that keeps a project's README in sync with the code. When the
+  README or package.json is edited it checks for the standard-readme core
+  sections (Install and Usage) and verifies that every CLI command the package
+  exposes through its package.json bin field is actually documented, so the
+  README does not drift out of date as the project changes. Advisory only; it
+  never edits files.
+cardDescription: >-
+  Check that a README has Install and Usage sections and documents every
+  package.json bin command.
+seoTitle: README Refresh Validator - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that flags a README missing standard-readme
+  sections or undocumented package.json bin commands, so docs stay in sync with
+  the code.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/RichardLitt/standard-readme"
+repoUrl: "https://github.com/RichardLitt/standard-readme"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/readme-refresh-validator.sh && chmod +x
+  .claude/hooks/readme-refresh-validator.sh
+usageSnippet: "README refresh: CLI command 'my-cli' (from package.json bin) is not mentioned in README.md"
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/readme-refresh-validator.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/readme-refresh-validator.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. When a README or package.json is edited, it
+  # checks the README for the standard-readme core sections (Install, Usage) and
+  # verifies that every CLI command exposed via package.json "bin" is mentioned.
+  # Advisory only - it always exits 0, never edits files - and fails open when jq
+  # is unavailable.
+
+  command -v jq >/dev/null 2>&1 || exit 0
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+
+  readme=""
+  pkg=""
+  case "$FILE" in
+    *README.md|*README.markdown|*Readme.md|*readme.md) readme="$FILE" ;;
+    */package.json|package.json) pkg="$FILE" ;;
+    *) exit 0 ;;
+  esac
+
+  dir=$(dirname "$FILE")
+  if [ -z "$readme" ]; then
+    for c in "$dir/README.md" "README.md" "$dir/readme.md"; do
+      [ -f "$c" ] && { readme="$c"; break; }
+    done
+  fi
+  if [ -z "$pkg" ]; then
+    for c in "$dir/package.json" "package.json"; do
+      [ -f "$c" ] && { pkg="$c"; break; }
+    done
+  fi
+
+  if [ -z "$readme" ] || [ ! -f "$readme" ]; then
+    [ -n "$pkg" ] && echo "README refresh: no README found near $FILE - add one with Install and Usage sections (see standard-readme)." >&2
+    exit 0
+  fi
+
+  low=$(tr '[:upper:]' '[:lower:]' < "$readme")
+
+  for sec in install usage; do
+    if ! printf '%s' "$low" | grep -qE "^#{1,3}[[:space:]].*${sec}"; then
+      echo "README refresh: missing a '${sec}' section (standard-readme expects Install and Usage)." >&2
+    fi
+  done
+
+  if [ -n "$pkg" ] && [ -f "$pkg" ]; then
+    bins=$(jq -r '
+      if (.bin | type) == "object" then (.bin | keys[])
+      elif (.bin | type) == "string" then (.name // empty)
+      else empty end' "$pkg" 2>/dev/null)
+    printf '%s\n' "$bins" | while IFS= read -r b; do
+      [ -z "$b" ] && continue
+      if ! grep -qiF "$b" "$readme"; then
+        echo "README refresh: CLI command '$b' (from package.json bin) is not mentioned in $readme." >&2
+      fi
+    done
+  fi
+
+  exit 0
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
+safetyNotes:
+  - "Runs after every Write, Edit, and MultiEdit but only acts when the edited file is a README or a package.json, then reads those files and the nearby README from disk."
+  - "Read-only and advisory - it inspects text only, never edits, creates, or deletes files, and always exits 0."
+  - "Section and command matching uses simple text heuristics, so it can miss an unconventional README layout or flag a command that is documented only indirectly."
+privacyNotes:
+  - "Reads the local README and package.json only; it makes no network calls."
+  - "Prints missing section names and undocumented command names to local hook stderr; it writes no logs."
+  - "Command and file names shown in output may reveal project structure in your terminal."
+tags:
+  - "documentation"
+  - "readme"
+  - "developer-experience"
+  - "standard-readme"
+  - "hygiene"
+keywords:
+  - "readme refresh validator hook"
+  - "standard-readme section check"
+  - "undocumented cli command hook"
+  - "readme drift detection"
+---
+
+## Features
+
+- Keeps the README in sync with the code by checking it whenever the README or `package.json` is edited.
+- Verifies the [standard-readme](https://github.com/RichardLitt/standard-readme) core sections are present — **Install** and **Usage**.
+- Confirms every CLI command the package exposes through its `package.json` `bin` field is actually documented in the README.
+- Advisory only — it always exits `0` and never edits, creates, or deletes files.
+- Fails open and makes no network calls; it reads only the local README and `package.json`.
+
+## How it works
+
+On `PostToolUse`, the hook acts only when the edited file is a README or a `package.json`. It locates the nearest README, lowercases it, and checks for `Install` and `Usage` headings. If a `package.json` is present, it reads the `bin` field (an object of command names, or a string command equal to the package name) and reports any exposed command that the README never mentions. Findings print to stderr; nothing is blocked.
+
+## Use cases
+
+- Catch a README that still lists an old command set after a CLI is renamed or added.
+- Enforce a minimum README shape (Install + Usage) on new packages.
+- Nudge an agent to document a new `bin` entry it just added to `package.json`.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/readme-refresh-validator.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/readme-refresh-validator.sh`
+4. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash and jq
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/readme-refresh-validator.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Limitations
+
+- Section detection looks for `Install` and `Usage` headings; a README that documents those steps under different heading names will be flagged even though it is complete.
+- The command-coverage check uses npm `package.json` `bin`; it does not yet read CLI definitions from other ecosystems (for example Python entry points or Go `cmd/` packages).
+
+## Source and references
+
+- standard-readme specification: https://github.com/RichardLitt/standard-readme
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
