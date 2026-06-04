@@ -28,13 +28,13 @@ commandSyntax: "/deploy-readiness [environment]"
 usageSnippet: "/deploy-readiness production"
 copySnippet: "/deploy-readiness [environment]"
 safetyNotes:
-  - "Runs only read-only and dry-run Wrangler commands - wrangler whoami, wrangler versions or deploy with --dry-run, and wrangler secret list; it never runs a real deploy or publish."
-  - "The --dry-run build compiles and bundles the worker locally without uploading it to Cloudflare, so no production change is made."
-  - "Requires an authenticated Wrangler session; it reads account state but does not modify secrets, bindings, or deployments."
+  - "Runs Wrangler auth, secret-list, and deploy dry-run checks, but Wrangler deploy --dry-run still executes the project's local build/bundling pipeline and any configured build command or plugins."
+  - "Run this command only in a trusted Workers repository after reviewing wrangler config, package scripts, and bundler plugins; do not use it to evaluate untrusted submissions."
+  - "Never run a real deploy or publish, and validate any environment argument before passing it to Wrangler."
 privacyNotes:
   - "Wrangler output entering the model context can include your account id, worker name, environment name, and secret names (never secret values)."
-  - "Source files and the wrangler config are read to cross-check referenced secrets and bindings; review the project before running on sensitive accounts."
-  - "The command writes nothing to disk beyond Wrangler's own temporary dry-run build output."
+  - "The dry-run build reads source files and may execute project-controlled local code with inherited environment variables, including Cloudflare-related tokens; review the project before running on sensitive accounts."
+  - "The command writes Wrangler dry-run output to disk and project build tooling may write additional local files."
 tags:
   - "cloudflare"
   - "workers"
@@ -63,12 +63,14 @@ The `/deploy-readiness` command runs a pre-flight check for a Cloudflare Workers
 
 When you invoke this command, follow these steps and never run a real deploy:
 
-1. **Confirm auth.** Run `wrangler whoami`. If it fails, stop and report that the user must run `wrangler login` (or set `CLOUDFLARE_API_TOKEN`).
-2. **Validate config.** Read `wrangler.toml` / `wrangler.jsonc` / `wrangler.json` and confirm `name`, `main`, and `compatibility_date` are present. Flag a missing `compatibility_date` as a reproducibility risk.
-3. **Dry-run the build.** Run `wrangler deploy --dry-run --outdir /tmp/wrangler-dry` (add `--env <environment>` when given). This compiles and bundles the worker locally and surfaces TypeScript/bundler errors without uploading anything.
-4. **Check secrets.** List configured secrets with `wrangler secret list` (and `--env` when given), grep the source for `env.<NAME>` references, and report any referenced secret that is not configured.
-5. **Check bindings.** Confirm every KV namespace, R2 bucket, D1 database, queue, and service binding referenced in code is declared in the config.
-6. **Report go / no-go.** Summarize each check as pass or fail and give a single readiness verdict with the exact command to fix any failure.
+1. **Confirm trust first.** Before running Wrangler, confirm the repository is trusted and review `wrangler.toml` / `wrangler.jsonc` / `wrangler.json`, package scripts, and bundler/plugin config for build hooks. If the project is untrusted or the user only wants a static review, skip the dry-run and report that it can execute local project code.
+2. **Validate the environment argument.** If an environment is provided, accept only a Wrangler environment name matching `^[A-Za-z0-9_-]+$`; otherwise stop and ask for a safe environment name. Pass it as a separate `--env` argument, not by interpolating a shell string.
+3. **Confirm auth.** Run `wrangler whoami`. If it fails, stop and report that the user must run `wrangler login` (or set `CLOUDFLARE_API_TOKEN`).
+4. **Validate config.** Read `wrangler.toml` / `wrangler.jsonc` / `wrangler.json` and confirm `name`, `main`, and `compatibility_date` are present. Flag a missing `compatibility_date` as a reproducibility risk.
+5. **Dry-run the build only after the trust review passes.** Run `wrangler deploy --dry-run --outdir /tmp/wrangler-dry` (add the validated environment as separate `--env` and value arguments when given). This compiles and bundles the worker locally and surfaces TypeScript/bundler errors without uploading anything, but it can execute project-controlled build commands and plugins with your local privileges and inherited environment variables.
+6. **Check secrets.** List configured secrets with `wrangler secret list` (and the validated `--env` arguments when given), grep the source for `env.<NAME>` references, and report any referenced secret that is not configured.
+7. **Check bindings.** Confirm every KV namespace, R2 bucket, D1 database, queue, and service binding referenced in code is declared in the config.
+8. **Report go / no-go.** Summarize each check as pass or fail and give a single readiness verdict with the exact command to fix any failure.
 
 ## Output format
 
@@ -87,11 +89,11 @@ When you invoke this command, follow these steps and never run a real deploy:
 
 ## Safety notes
 
-The command runs only read-only and dry-run Wrangler commands (`wrangler whoami`, `wrangler deploy --dry-run`, `wrangler secret list`). The `--dry-run` build never uploads to Cloudflare, and the command never runs a real deploy, edits secrets, or changes bindings.
+The command never runs a real deploy, edits secrets, or changes bindings. However, `wrangler deploy --dry-run` is not safe for untrusted projects: it still runs the local Workers build and bundling pipeline, including configured build commands, package scripts, and plugins. Run it only in trusted repositories after reviewing local build hooks, and validate the optional environment name before passing it to Wrangler.
 
 ## Privacy notes
 
-Wrangler output included in the model context can contain your account id, worker name, environment name, and secret names (never values). Review the project before running on sensitive accounts. Nothing is written to disk beyond Wrangler's own temporary dry-run build output.
+Wrangler output included in the model context can contain your account id, worker name, environment name, and secret names (never values). The dry-run build reads source files and may execute project-controlled local code with inherited environment variables, including Cloudflare-related tokens. Wrangler writes dry-run output to disk, and project build tooling may create or modify additional local files.
 
 ## Source and references
 
