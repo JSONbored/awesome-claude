@@ -1,0 +1,127 @@
+---
+title: Build a Local-First AI Developer Stack
+slug: local-first-ai-dev-stack
+category: guides
+description: >-
+  Run the parts of your AI dev workflow that touch your code and data — tools,
+  memory, and auxiliary models — on infrastructure you control, while still
+  using Claude as the orchestrator. A practical architecture for a self-hosted,
+  privacy-first developer stack.
+cardDescription: Run AI dev tools, MCP servers, models, and memory on infrastructure you own.
+seoTitle: Build a Local-First AI Developer Stack
+seoDescription: >-
+  Self-host your AI developer stack: local models with Ollama, a fleet of MCP
+  servers over HTTP via a gateway, persistent local memory, and Claude Code as
+  the orchestrator — keeping data on hardware you control.
+author: dpdanpittman
+authorProfileUrl: "https://github.com/dpdanpittman"
+submittedBy: dpdanpittman
+submittedByUrl: "https://github.com/dpdanpittman"
+dateAdded: "2026-06-02"
+usageSnippet: >-
+  Build a self-hosted AI dev stack — local models (Ollama), a fleet of MCP
+  servers exposed over HTTP via a gateway, persistent local memory, and Claude
+  Code wired to all of it — so tools, memory, and data stay on your hardware.
+prerequisites:
+  - A machine with enough RAM/VRAM for local models (16GB+ for small quantized models; a GPU helps for larger ones).
+  - Node.js 18+ and Python 3.10+ (with uv) to run the common MCP servers.
+  - Claude Code or another MCP client as the orchestrator.
+  - "Optional: Docker or a small Kubernetes setup to host a server fleet, and a private network (e.g., Tailscale) to reach it from other machines."
+safetyNotes:
+  - Exposing MCP servers over HTTP makes their tools reachable on the network — run them on a trusted/private network or behind authentication, never a public interface.
+  - Self-hosted services are yours to patch and secure; a local model runtime executes code/tools on your machine, so only run models and servers you trust.
+privacyNotes:
+  - The point of the stack is data locality — prompts, tool I/O, and memory stay on infrastructure you control instead of scattered across SaaS.
+  - "Caveat: if Claude Code is the orchestrator, its prompts still go to Anthropic's model. For full data locality, run a local model loop (Ollama + an MCP-capable client) and accept the smaller-model tradeoffs."
+  - The memory knowledge-graph persists on local disk — secure and back it up like any other sensitive store.
+tags:
+  - local-first
+  - self-hosted
+  - mcp
+  - ollama
+  - privacy
+  - homelab
+  - claude-code
+keywords:
+  - local-first ai stack
+  - self-hosted mcp servers
+  - ollama local llm
+  - private ai developer setup
+  - mcp gateway
+readingTime: 8
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+A **local-first AI developer stack** keeps the parts that touch your code and data — tools, memory, and auxiliary models — on hardware you control, instead of scattering them across SaaS. You can still use a frontier model like Claude as the orchestrator, but the MCP servers it calls, the memory it reads, and any delegated or offline model work all run on your own box.
+
+**The payoff:** better privacy (your data stays on your network), no per-tool lock-in, and a stack that keeps working on your own infrastructure.
+
+> **What you'll build:** a local model runtime (Ollama) + a self-hosted fleet of MCP servers reachable over HTTP + persistent local memory + Claude Code wired to all of it, optionally reachable from any dev machine over a private network.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "A host with enough RAM/VRAM for local models", "description": "16GB+ for small quantized models; a GPU helps for larger ones"}
+- [ ] {"task": "Node.js 18+ and Python 3.10+ (with uv)", "description": "Runtimes for the common MCP servers"}
+- [ ] {"task": "Claude Code or another MCP client", "description": "Acts as the orchestrator that calls your local tools"}
+- [ ] {"task": "Optional: Docker/Kubernetes + a private network", "description": "To host a server fleet and reach it from other machines (e.g., Tailscale)"}
+
+## Core Concepts Explained
+
+### What "local-first" actually means
+
+Local-first is not the same as fully air-gapped. In this architecture a frontier orchestrator (Claude Code) still calls a cloud model — what's *local* is everything around it: the tools, the memory, your data, and any auxiliary models. That gets you most of the privacy and durability benefits without giving up frontier reasoning. If you need true locality (offline / air-gapped), you swap the orchestrator for a **local model loop** — a local LLM via Ollama driving an MCP-capable client — and accept that smaller models are less capable.
+
+### The four layers
+
+1. **Model runtime** — a local inference server ([Ollama](https://ollama.com)) for delegation and offline work.
+2. **Tool layer** — [MCP](https://modelcontextprotocol.io) servers, self-hosted and exposed over HTTP so any client or machine can reach them.
+3. **Memory** — a memory/knowledge-graph MCP server persisting to local disk.
+4. **Orchestrator** — Claude Code (or a local agent) that drives the loop, plus lifecycle hooks for automation.
+
+## Step-by-Step Implementation Guide
+
+1. **Install a local model runtime.** Install [Ollama](https://github.com/ollama/ollama) and `ollama pull` a small instruct model. Use it for cheap delegation (summarizing logs, first-pass drafts) and as your offline fallback.
+
+2. **Pick your MCP servers.** Start from the official [Model Context Protocol servers](https://github.com/modelcontextprotocol/servers) — `filesystem`, `git`, `memory`, `fetch`, and friends. These run as local stdio processes.
+
+3. **Self-host the fleet over HTTP.** stdio is local-only, so bridge it: [supergateway](https://github.com/supercorp-ai/supergateway) wraps a stdio MCP server as a streamable HTTP endpoint. To run many at once on one box (one port per server), use a hub like [mcp-supergateway-hub](https://github.com/dpdanpittman/mcp-supergateway-hub).
+
+4. **Add persistent local memory.** Run the `memory` MCP server with its store pointed at local disk. This is the knowledge graph your agent reads and writes across sessions — and it never leaves your machine.
+
+5. **Wire the orchestrator.** Point Claude Code at each server's endpoint with `claude mcp add --transport http <name> <MCP_ENDPOINT_URL>`, where `<MCP_ENDPOINT_URL>` is your gateway's address for that server (an HTTP endpoint on a private network, or HTTPS if you front it with TLS). The config must use `"type": "http"` — bare `"url"` entries are silently ignored.
+
+6. **(Optional) Reach it from anywhere.** Put the host on a private network ([Tailscale](https://tailscale.com)) so your laptop, desktop, and any other machine connect to the same stack without exposing it to the internet.
+
+7. **(Optional) Add lifecycle hooks.** Use [Claude Code](https://www.anthropic.com/claude-code) hooks (e.g., SessionStart, PreCompact, Stop) to automate the stack — restore context on start, snapshot state before compaction, etc.
+
+8. **(Optional) Go fully local.** Drive a local agent loop with an Ollama model against the same MCP servers for offline or air-gapped work.
+
+## Honest Limitations
+
+- **Local models trail frontier models.** Ollama models are great for delegation and offline use, but they are not always a drop-in replacement for a frontier orchestrator.
+- **Not air-gapped by default.** With Claude Code as the orchestrator, prompts still reach Anthropic. Full locality requires the local model loop in step 8.
+- **You own the ops.** Self-hosting means you patch, secure, and monitor the stack; exposing MCP over HTTP demands network discipline (private network or auth).
+- **Hardware matters.** Useful local models need real RAM/VRAM; large models need a GPU.
+
+## Troubleshooting
+
+- **MCP client won't connect** → use `claude mcp add --transport http`; bare `"url"` entries don't work.
+- **A server reports OK then dies** → it likely needs credentials/permissions that fail after startup; check the server logs.
+- **Local model too slow or weak** → use a smaller quantized model, or keep local inference for delegation and route hard tasks to the frontier orchestrator.
+
+## References
+
+- Ollama — https://ollama.com · https://github.com/ollama/ollama
+- Model Context Protocol — https://modelcontextprotocol.io
+- MCP servers — https://github.com/modelcontextprotocol/servers
+- supergateway — https://github.com/supercorp-ai/supergateway
+- mcp-supergateway-hub — https://github.com/dpdanpittman/mcp-supergateway-hub
+- Claude Code — https://www.anthropic.com/claude-code
+- Tailscale — https://tailscale.com
