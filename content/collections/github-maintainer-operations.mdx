@@ -1,0 +1,121 @@
+---
+title: GitHub Maintainer Operations
+slug: github-maintainer-operations
+category: collections
+description: >-
+  An operations bundle for maintainers running a busy GitHub repository: triage
+  failing CI, review pull requests, keep commits and changelogs disciplined,
+  validate workflows and links, and draft release notes. It pulls together
+  existing commands, hooks, and skills into one maintainer workflow grounded in
+  the GitHub Open Source Guides.
+cardDescription: >-
+  Maintainer workflow bundle for CI triage, PR review, commit governance,
+  releases, and workflow validation.
+seoTitle: GitHub Maintainer Operations
+seoDescription: >-
+  A curated collection for GitHub maintainers — CI failure triage, PR review,
+  commit and changelog governance, workflow and link validation, and release
+  notes drafting.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://opensource.guide/best-practices/"
+sourceUrls:
+  - "https://opensource.guide/best-practices/"
+  - "https://docs.github.com/actions"
+installable: false
+usageSnippet: >-
+  Wire in the commit and CI guards first, then the PR review and triage tools,
+  and finish with changelog and release-notes automation.
+items:
+  - slug: git-pre-commit-validator
+    category: hooks
+  - slug: github-actions-workflow-validator
+    category: hooks
+  - slug: markdown-link-checker
+    category: hooks
+  - slug: git-smart-commit
+    category: commands
+  - slug: review
+    category: commands
+  - slug: ci-failure-triage
+    category: commands
+  - slug: release-notes-drafting
+    category: commands
+  - slug: coderabbit-lite-pr-review-capability-pack
+    category: skills
+  - slug: husky-commit-governance-capability-pack
+    category: skills
+  - slug: git-cliff-release-changelog-capability-pack
+    category: skills
+installationOrder:
+  - git-pre-commit-validator
+  - github-actions-workflow-validator
+  - markdown-link-checker
+  - git-smart-commit
+  - review
+  - ci-failure-triage
+  - release-notes-drafting
+  - coderabbit-lite-pr-review-capability-pack
+  - husky-commit-governance-capability-pack
+  - git-cliff-release-changelog-capability-pack
+estimatedSetupTime: 45 minutes
+difficulty: intermediate
+prerequisites:
+  - A GitHub repository with Actions and the GitHub CLI (gh) authenticated.
+  - Claude Code with hooks enabled for the commit and link guards.
+safetyNotes:
+  - "This is a curated index of existing directory entries; the collection runs nothing itself - review each linked hook, command, and skill's own safety notes before installing it."
+privacyNotes:
+  - "The collection handles no data on its own; consult each linked entry's privacy notes for its runtime behavior and any repository or network access."
+tags:
+  - "github"
+  - "maintainer"
+  - "ci-cd"
+  - "release-management"
+  - "pull-requests"
+keywords:
+  - "github maintainer operations collection"
+  - "ci triage and pr review bundle"
+  - "commit governance and release collection"
+  - "open source maintainer workflow"
+---
+
+## What this collection sets up
+
+A maintainer-operations workflow for a busy GitHub repository, grounded in the [GitHub Open Source Guides](https://opensource.guide/best-practices/). Each piece is an existing, source-backed directory entry; together they cover the recurring maintainer loop — commit hygiene, CI, review, and releases.
+
+## Workflow stages
+
+### 1. Commit and workflow guards
+
+- **git-pre-commit-validator** (hook) — validates commits before they land.
+- **github-actions-workflow-validator** (hook) — catches broken GitHub Actions workflow files on edit.
+- **markdown-link-checker** (hook) — flags broken links in docs and READMEs.
+
+### 2. Day-to-day operations
+
+- **git-smart-commit** (command) — produces clean, conventional commit messages.
+- **review** (command) — structured pull request review.
+- **ci-failure-triage** (command) — pulls failed Actions logs, classifies the root cause, and proposes a fix.
+
+### 3. Release management
+
+- **release-notes-drafting** (command) — drafts Keep a Changelog release notes from Conventional Commits.
+- **git-cliff-release-changelog-capability-pack** (skill) — generates changelogs with git-cliff.
+- **husky-commit-governance-capability-pack** (skill) — enforces commit governance via Husky.
+- **coderabbit-lite-pr-review-capability-pack** (skill) — automated PR review support.
+
+## Suggested order
+
+Set up the commit and workflow guards first so problems are caught at the source, then add the day-to-day operations (smart commits, review, CI triage), and finish with changelog and release-notes automation. See `installationOrder` for the exact sequence.
+
+## Notes
+
+Each entry carries its own prerequisites, safety notes, and privacy notes — read them before enabling a hook on commits or a command that reads CI logs in your environment.
+
+## Source and references
+
+- GitHub Open Source Guides (maintainer best practices): https://opensource.guide/best-practices/
+- GitHub Actions documentation: https://docs.github.com/actions
