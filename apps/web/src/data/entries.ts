@@ -70,6 +70,9 @@ export interface BestList {
   slug: string;
   title: string;
   subtitle: string;
+  eyebrow: string;
+  seoTitle: string;
+  seoDescription: string;
   category: string;
   curator: string;
   updatedAt: string;
@@ -82,9 +85,15 @@ type BestListSeed = {
   slug: string;
   title: string;
   subtitle: string;
+  eyebrow: string;
+  seoTitle: string;
+  seoDescription: string;
   categories: Category[];
   tags?: string[];
   keywords?: string[];
+  requireSource?: boolean;
+  requireInstallTrust?: boolean;
+  itemLimit: number;
   intro: string;
 };
 
@@ -92,11 +101,36 @@ const BEST_LIST_SEEDS: BestListSeed[] = seoClusterDefinitions.map((definition) =
   slug: definition.slug,
   title: definition.title,
   subtitle: definition.description,
+  eyebrow: definition.eyebrow,
+  seoTitle: definition.seoTitle,
+  seoDescription: definition.seoDescription,
   categories: definition.categories as Category[],
   tags: definition.tags,
   keywords: definition.keywords,
+  requireSource: definition.requireSource,
+  requireInstallTrust: definition.requireInstallTrust,
+  itemLimit: definition.itemLimit,
   intro: definition.description,
 }));
+
+function matchesBestListSeed(entry: Entry, seed: BestListSeed) {
+  if (!seed.categories.includes(entry.category)) return false;
+  if (seed.requireSource && entry.source === "unverified") return false;
+
+  if (seed.requireInstallTrust) {
+    const hasInstallSurface = Boolean(
+      entry.installCommand || entry.configSnippet || entry.downloadUrl || entry.fullCopy,
+    );
+    const hasTrustedInstall =
+      entry.packageVerified ||
+      entry.trust === "trusted" ||
+      entry.source === "first-party" ||
+      entry.source === "source-backed";
+    if (!hasInstallSurface || !hasTrustedInstall) return false;
+  }
+
+  return true;
+}
 
 function entryScore(entry: Entry, seed: BestListSeed) {
   const terms = [...(seed.tags ?? []), ...(seed.keywords ?? [])];
@@ -107,8 +141,23 @@ function entryScore(entry: Entry, seed: BestListSeed) {
     (score, tag) => score + (tagSet.has(tag.toLowerCase()) ? 10 : 0),
     0,
   );
+  const searchableText = [
+    entry.title,
+    entry.description,
+    entry.cardDescription,
+    entry.category,
+    ...(entry.tags ?? []),
+    ...(entry.keywords ?? []),
+  ]
+    .join(" ")
+    .toLowerCase();
+  const textScore = terms.reduce(
+    (score, term) => score + (searchableText.includes(term.toLowerCase()) ? 3 : 0),
+    0,
+  );
   return (
     tagScore +
+    textScore +
     (entry.packageVerified ? 12 : 0) +
     (entry.safetyNotes ? 8 : 0) +
     (entry.privacyNotes ? 4 : 0) +
@@ -138,21 +187,17 @@ function makeBestPick(entry: Entry): BestPick {
 }
 
 export const BEST_LISTS: BestList[] = BEST_LIST_SEEDS.map((seed) => {
-  const terms = [...(seed.tags ?? []), ...(seed.keywords ?? [])];
-  const candidates = ENTRIES.filter((entry) => {
-    if (seed.categories.includes(entry.category)) return true;
-    const tagSet = new Set(
-      [...(entry.tags ?? []), ...(entry.keywords ?? [])].map((tag) => tag.toLowerCase()),
-    );
-    return terms.some((tag) => tagSet.has(tag.toLowerCase()));
-  })
+  const candidates = ENTRIES.filter((entry) => matchesBestListSeed(entry, seed))
     .sort((a, b) => entryScore(b, seed) - entryScore(a, seed))
-    .slice(0, 6);
+    .slice(0, seed.itemLimit);
 
   return {
     slug: seed.slug,
     title: seed.title,
     subtitle: seed.subtitle,
+    eyebrow: seed.eyebrow,
+    seoTitle: seed.seoTitle,
+    seoDescription: seed.seoDescription,
     category: seed.categories[0] ?? "tools",
     curator: "@heyclaude-editors",
     updatedAt: generatedAt.slice(0, 10),

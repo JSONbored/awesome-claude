@@ -29,10 +29,10 @@ export const Route = createFileRoute("/best/$slug")({
     };
     return {
       meta: [
-        { title: `${l.title} — HeyClaude` },
-        { name: "description", content: l.subtitle },
+        { title: `${l.seoTitle} — HeyClaude` },
+        { name: "description", content: l.seoDescription },
         { property: "og:title", content: l.title },
-        { property: "og:description", content: l.subtitle },
+        { property: "og:description", content: l.seoDescription },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
@@ -73,7 +73,7 @@ function BestDetail() {
       </Link>
 
       <div className="mt-6 eyebrow">
-        Best · {list.category} · {resolved.length} picks
+        {list.eyebrow} · {list.category} · {resolved.length} picks
       </div>
       <h1 className="mt-2 h-display-1 text-ink text-balance">{list.title}</h1>
       <p className="mt-4 max-w-2xl text-pretty text-lg text-ink-muted">{list.subtitle}</p>

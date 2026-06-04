@@ -13,20 +13,6 @@ export type SeoClusterDefinition = {
   itemLimit: number;
 };
 
-export type SeoClusterItem = {
-  title: string;
-  description: string;
-  category: string;
-  slug: string;
-  url: string;
-  tags: string[];
-  disclosure?: string;
-};
-
-export type SeoCluster = SeoClusterDefinition & {
-  items: SeoClusterItem[];
-};
-
 export const seoClusterDefinitions: SeoClusterDefinition[] = [
   {
     slug: "claude-code-hooks",
