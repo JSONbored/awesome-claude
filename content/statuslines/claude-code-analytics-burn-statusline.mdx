@@ -1,0 +1,133 @@
+---
+title: Claude Code Analytics Burn Statusline
+slug: claude-code-analytics-burn-statusline
+category: statuslines
+description: Claude Code statusline that reads Anthropic Claude Code Analytics Admin API data and shows daily estimated cost, hourly pace, sessions, and budget pressure.
+cardDescription: Show Claude Code Analytics daily cost pace from Anthropic Admin API data.
+seoTitle: Claude Code analytics burn statusline
+seoDescription: Add a Claude Code statusline that summarizes Claude Code Analytics daily estimated cost, sessions, and budget pressure.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://platform.claude.com/docs/en/manage-claude/claude-code-analytics-api"
+tags:
+  - claude-code
+  - analytics
+  - cost
+  - budget
+keywords:
+  - claude code analytics statusline
+  - claude code cost statusline
+  - claude usage burn statusline
+  - admin api budget statusline
+installable: true
+usageSnippet: "cc analytics: org | $8.40 today | burn $0.62/h | budget 42% | ok"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/claude-code-analytics-burn-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/claude-code-analytics-burn-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if [ -z "${ANTHROPIC_ADMIN_API_KEY:-}" ]; then
+    echo "cc analytics: admin key missing"
+    exit 0
+  fi
+  if ! command -v curl >/dev/null 2>&1; then
+    echo "cc analytics: curl missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "cc analytics: jq missing"
+    exit 0
+  fi
+
+  day="${CLAUDE_CODE_ANALYTICS_DAY:-$(date -u +%F)}"
+  limit="${CLAUDE_CODE_ANALYTICS_LIMIT:-1000}"
+  email="${CLAUDE_CODE_ANALYTICS_EMAIL:-}"
+  budget="${CLAUDE_CODE_DAILY_BUDGET_USD:-50}"
+  url="https://api.anthropic.com/v1/organizations/usage_report/claude_code?starting_at=${day}&limit=${limit}"
+
+  json=$(curl -fsS "$url" \
+    --header "anthropic-version: 2023-06-01" \
+    --header "x-api-key: $ANTHROPIC_ADMIN_API_KEY" \
+    --header "User-Agent: heyclaude-statusline/1.0" 2>/dev/null || true)
+
+  if [ -z "$json" ]; then
+    echo "cc analytics: unavailable"
+    exit 0
+  fi
+
+  if [ -n "$email" ]; then
+    cents=$(printf '%s' "$json" | jq --arg email "$email" '[.data[]? | select(.actor.email_address == $email) | .model_breakdown[]?.estimated_cost.amount // 0] | add // 0' 2>/dev/null || echo 0)
+    sessions=$(printf '%s' "$json" | jq --arg email "$email" '[.data[]? | select(.actor.email_address == $email) | .core_metrics.num_sessions // 0] | add // 0' 2>/dev/null || echo 0)
+    scope="user"
+  else
+    cents=$(printf '%s' "$json" | jq '[.data[]? | .model_breakdown[]?.estimated_cost.amount // 0] | add // 0' 2>/dev/null || echo 0)
+    sessions=$(printf '%s' "$json" | jq '[.data[]? | .core_metrics.num_sessions // 0] | add // 0' 2>/dev/null || echo 0)
+    scope="org"
+  fi
+
+  cost=$(awk -v cents="$cents" 'BEGIN { printf "%.2f", cents / 100 }')
+  hour=$(date -u +%H)
+  minute=$(date -u +%M)
+  elapsed_minutes=$((10#$hour * 60 + 10#$minute + 1))
+  burn=$(awk -v cost="$cost" -v minutes="$elapsed_minutes" 'BEGIN { printf "%.2f", cost * 60 / minutes }')
+  pct=$(awk -v cost="$cost" -v budget="$budget" 'BEGIN { if (budget > 0) printf "%.0f", cost * 100 / budget; else print 0 }')
+
+  if [ "$pct" -ge 90 ]; then
+    state="limit"
+  elif [ "$pct" -ge 70 ]; then
+    state="watch"
+  else
+    state="ok"
+  fi
+
+  printf 'cc analytics: %s | $%s today | burn $%s/h | sessions %s | budget %s%% | %s\n' "$scope" "$cost" "$burn" "$sessions" "$pct" "$state"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - Anthropic Admin API access for an organization with Claude Code Analytics enabled.
+  - ANTHROPIC_ADMIN_API_KEY set in the statusline environment.
+  - curl and jq available on the machine running the Claude Code statusline command.
+  - Optional CLAUDE_CODE_ANALYTICS_EMAIL to limit the display to one user and CLAUDE_CODE_DAILY_BUDGET_USD to set the budget denominator.
+safetyNotes:
+  - Claude Code Analytics data is daily aggregated and can lag recent activity, so the burn-rate display is a pacing signal rather than real-time billing control.
+  - Keep the refresh interval moderate because the statusline calls an authenticated Admin API endpoint.
+  - Treat budget thresholds as operational prompts; reconcile invoices and Console reports before making spending decisions.
+privacyNotes:
+  - The script sends an Admin API request to Anthropic and receives organization-level Claude Code analytics.
+  - It prints aggregate cost, session, and budget numbers, not email addresses, model names, prompts, file paths, or code.
+  - Admin API keys can expose organization analytics; store them in a scoped local secret manager or shell environment with restricted access.
+---
+
+## Source notes
+
+- Anthropic documents the Claude Code Analytics Admin API for daily aggregated Claude Code usage, productivity metrics, token data, and estimated cost by model.
+- The API is explicitly daily aggregated rather than real time, so this statusline reports budget pace from the latest available daily analytics instead of claiming live billing precision.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `claude-code-analytics-burn-statusline`, Claude Code Analytics, Claude cost, burn rate, `real-time-cost-tracker`, and `burn-rate-monitor`. Existing cost entries use local statusline JSON estimates; this entry uses Anthropic's Claude Code Analytics Admin API with an organization/user reporting scope and a different canonical source.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
