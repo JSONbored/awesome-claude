@@ -1,0 +1,112 @@
+---
+title: GitHub Check Runs Statusline
+slug: github-check-runs-statusline
+category: statuslines
+description: Claude Code statusline that reads GitHub REST check runs for the active pull request head commit and summarizes failed, pending, and passing checks.
+cardDescription: Show active PR check-run health from GitHub REST data.
+seoTitle: GitHub check runs statusline for Claude Code
+seoDescription: Add a Claude Code statusline that summarizes GitHub REST check runs for the active pull request head commit.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://raw.githubusercontent.com/github/rest-api-description/main/descriptions/api.github.com/api.github.com.json"
+repoUrl: "https://github.com/github/rest-api-description"
+tags:
+  - github
+  - ci
+  - checks
+  - claude-code
+keywords:
+  - github check runs statusline
+  - rest check runs statusline
+  - pull request checks statusline
+  - ci check statusline
+installable: true
+usageSnippet: "checks: PR #42 | fail 1 | pending 2 | pass 8"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/github-check-runs-statusline.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/github-check-runs-statusline.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  main() {
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "checks: gh missing"
+    exit 0
+  fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "checks: jq missing"
+    exit 0
+  fi
+
+  pr_json=$(gh pr view --json number,headRefOid 2>/dev/null || true)
+  if [ -z "$pr_json" ]; then
+    echo "checks: no active PR"
+    exit 0
+  fi
+
+  pr_number=$(printf '%s' "$pr_json" | jq -r '.number // empty')
+  head_sha=$(printf '%s' "$pr_json" | jq -r '.headRefOid // empty')
+  repo=$(gh repo view --json nameWithOwner --jq '.nameWithOwner' 2>/dev/null || true)
+  if [ -z "$pr_number" ] || [ -z "$head_sha" ] || [ -z "$repo" ]; then
+    echo "checks: unavailable"
+    exit 0
+  fi
+
+  runs=$(gh api "repos/$repo/commits/$head_sha/check-runs?per_page=100" 2>/dev/null || true)
+  if [ -z "$runs" ]; then
+    printf 'checks: PR #%s | unavailable\n' "$pr_number"
+    exit 0
+  fi
+
+  fail=$(printf '%s' "$runs" | jq '[.check_runs[]? | select((.conclusion // "") | test("failure|cancelled|timed_out|action_required"; "i"))] | length')
+  pending=$(printf '%s' "$runs" | jq '[.check_runs[]? | select((.status // "") != "completed")] | length')
+  pass=$(printf '%s' "$runs" | jq '[.check_runs[]? | select((.conclusion // "") == "success")] | length')
+
+  printf 'checks: PR #%s | fail %s | pending %s | pass %s\n' "$pr_number" "$fail" "$pending" "$pass"
+  }
+
+  case $- in
+    *n*) ;;
+    *) main "$@" ;;
+  esac
+prerequisites:
+  - GitHub CLI installed and logged in for the repository.
+  - jq available for counting GitHub REST check-run states.
+  - The current branch has an associated pull request and the account can read check runs for its head commit.
+safetyNotes:
+  - Check-run counts are a review prompt, not proof that every required branch protection rule is satisfied.
+  - Repositories with more than 100 check runs may need pagination or a slower dedicated dashboard.
+  - Keep the refresh interval moderate so the statusline does not repeatedly query GitHub APIs.
+privacyNotes:
+  - The script prints aggregate check-run counts and the pull request number.
+  - Private repository metadata follows the local GitHub CLI account and may appear in terminal recordings.
+  - The statusline does not print check names, workflow names, branch names, or commit messages.
+---
+
+## Source notes
+
+- GitHub's REST API description includes the check-runs endpoint for listing check runs on a Git reference.
+- This entry uses check-run state from the REST API rather than the GitHub CLI `gh pr checks` manual page that overlaps the existing repository-health statusline source domain.
+
+## Duplicate check
+
+Checked existing statuslines, live HeyClaude statuslines, open pull requests, and repository content for `github-check-runs-statusline`, check runs, GitHub checks, and `gh-pr-checks-statusline`. The earlier CLI-docs submission was closed for overlapping `cli.github.com`; this replacement uses a different canonical source, title, slug, and REST check-run scope.
+
+## Disclosure
+
+Editorial statusline recipe. No paid placement or affiliate link is used.
