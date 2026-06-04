@@ -70,4 +70,23 @@ describe("release watch", () => {
       RAYCAST_RELEASE_DUE_MARKER,
     );
   });
+
+  it("escapes backslashes and pipes in commit subjects before issue upserts", () => {
+    const report = buildMcpReleaseReport({
+      latestTag: { tag: "mcp-v0.2.0", version: "0.2.0" },
+      packageVersion: "0.3.0",
+      publishedVersion: "0.2.0",
+      commits: [
+        {
+          sha: "cccccccccccccccc",
+          subject: "fix(mcp): handle path \\tmp | fallback",
+          files: ["packages/mcp/src/registry.js"],
+        },
+      ],
+    });
+
+    expect(buildMcpReleaseIssue(report).body).toContain(
+      "fix(mcp): handle path \\\\tmp \\| fallback",
+    );
+  });
 });
