@@ -1,0 +1,201 @@
+---
+title: Release Manager Automation
+slug: release-manager-automation
+category: collections
+description: >-
+  A source-backed release-manager collection for turning merged changes into a
+  reviewed release: branch protection, secure GitHub Actions workflows, release
+  notes, changelog and SemVer review, dependency update review, provenance,
+  SBOM generation, vulnerability gates, and artifact signing.
+cardDescription: >-
+  Release-manager bundle for protected release branches, notes, changelogs,
+  dependency review, provenance, SBOMs, vulnerability gates, and signing.
+seoTitle: Release Manager Automation Collection
+seoDescription: >-
+  Build a release-manager automation workflow with GitHub Actions, release
+  notes, git-cliff changelogs, Renovate review, SLSA provenance, Syft, Grype,
+  and Cosign.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases"
+sourceUrls:
+  - "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases"
+  - "https://docs.github.com/en/actions"
+  - "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"
+  - "https://www.conventionalcommits.org/en/v1.0.0/"
+  - "https://keepachangelog.com/en/1.1.0/"
+  - "https://semver.org/spec/v2.0.0.html"
+  - "https://docs.renovatebot.com/"
+  - "https://slsa.dev/spec/v1.2/provenance"
+  - "https://oss.anchore.com/docs/reference/syft/cli/"
+  - "https://oss.anchore.com/docs/guides/vulnerability/getting-started/"
+  - "https://docs.sigstore.dev/cosign/"
+installable: false
+usageSnippet: >-
+  Protect release branches first, harden the release workflow, draft notes and
+  changelogs from reviewed commits, review dependency updates, then generate
+  provenance, SBOMs, vulnerability reports, and signed artifacts before publish.
+items:
+  - slug: git-branch-protection
+    category: hooks
+  - slug: github-actions-secure-cicd-capability-pack
+    category: skills
+  - slug: github-actions-ai-cicd
+    category: skills
+  - slug: release-notes-drafting
+    category: commands
+  - slug: git-cliff-release-changelog-capability-pack
+    category: skills
+  - slug: renovate-dependency-upgrade-review-capability-pack
+    category: skills
+  - slug: slsa-provenance-review-capability-pack
+    category: skills
+  - slug: syft
+    category: tools
+  - slug: grype
+    category: tools
+  - slug: cosign
+    category: tools
+installationOrder:
+  - git-branch-protection
+  - github-actions-secure-cicd-capability-pack
+  - github-actions-ai-cicd
+  - release-notes-drafting
+  - git-cliff-release-changelog-capability-pack
+  - renovate-dependency-upgrade-review-capability-pack
+  - slsa-provenance-review-capability-pack
+  - syft
+  - grype
+  - cosign
+estimatedSetupTime: 90 minutes
+difficulty: advanced
+prerequisites:
+  - A repository with an owned release process, protected default or release branches, and clear authority for creating tags, releases, packages, or container images.
+  - GitHub Actions or an equivalent CI system with documented permissions, protected environments, artifact retention, and rollback expectations.
+  - A commit and versioning policy such as Conventional Commits, Keep a Changelog, and Semantic Versioning, plus a maintainer-approved changelog source of truth.
+  - Dependency update policy for Renovate PRs, grouped updates, lockfile review, automerge limits, and release-blocking validation.
+  - Artifact policy covering SBOM format, vulnerability thresholds, provenance evidence, signing identity, registry storage, and public/private release metadata.
+safetyNotes:
+  - Release automation can create public tags, release notes, packages, images, signatures, attestations, SBOMs, and vulnerability reports; keep final publish and rollback steps behind human review.
+  - Privileged GitHub Actions jobs should run only from trusted refs with minimal token permissions, pinned third-party actions, protected environments, and explicit artifact-retention rules.
+  - SemVer recommendations, dependency upgrade decisions, vulnerability gates, and provenance reviews are decision aids; maintainers still need to confirm user impact, migration risk, and false positives.
+  - Signing keys, OIDC trust rules, registry credentials, package tokens, and KMS identities are high-value release controls and should be scoped, masked, rotated, and tested before enforcing them.
+privacyNotes:
+  - Release notes, changelogs, dependency reports, SBOMs, vulnerability findings, provenance records, signatures, and transparency-log entries can reveal unreleased features, package inventories, workflow identities, image names, and commit metadata.
+  - CI logs and artifacts may include branch names, tag names, registry hosts, package versions, certificate identities, dependency graphs, scanner findings, and rollback details that need retention and access-control review.
+  - Public artifact signing and provenance systems can intentionally publish durable identity and timestamp evidence; review whether email addresses, issuer claims, workflow paths, and repository names are acceptable to expose.
+tags:
+  - release-management
+  - github-actions
+  - changelog
+  - provenance
+  - sbom
+  - supply-chain
+  - artifact-signing
+keywords:
+  - release manager automation collection
+  - release notes changelog provenance SBOM signing
+  - GitHub Actions release workflow bundle
+  - SemVer Renovate SLSA Cosign release process
+  - source-backed release automation workflow
+---
+
+## What this collection sets up
+
+This collection gives a release manager a reviewable path from "changes are
+merged" to "artifacts are published." It combines branch and workflow controls,
+release note drafting, changelog and version review, dependency upgrade review,
+source and build provenance review, SBOM generation, vulnerability scanning, and
+artifact signing.
+
+The intent is automation with deliberate release authority. Each piece helps
+collect evidence or reduce manual work, but the final tag, release, package,
+image, or rollback decision should remain visible to the maintainer who owns the
+release.
+
+## Layers
+
+### 1. Release boundary and workflow hardening
+
+- **git-branch-protection** keeps direct edits away from protected release
+  branches so changes land through review.
+- **github-actions-secure-cicd-capability-pack** focuses on least-privilege
+  GitHub Actions permissions, trusted refs, reusable workflow governance, and
+  resilient release jobs.
+- **github-actions-ai-cicd** helps assemble the CI/CD workflow shape for build,
+  test, package, and deploy stages after the trust boundaries are known.
+
+### 2. Change, version, and dependency review
+
+- **release-notes-drafting** turns Conventional Commits since the previous tag
+  into Keep a Changelog style release notes and a SemVer bump recommendation.
+- **git-cliff-release-changelog-capability-pack** gives the maintainer a more
+  deterministic changelog and tag checklist when release notes need to be
+  generated from commit history.
+- **renovate-dependency-upgrade-review-capability-pack** reviews dependency
+  update PRs, package rules, lockfile churn, grouping, automerge settings, and
+  release readiness before the release branch is cut.
+
+### 3. Evidence, gates, and publication
+
+- **slsa-provenance-review-capability-pack** checks source, build, artifact, and
+  trust evidence before accepting or publishing release artifacts.
+- **syft** generates SBOMs from images, directories, archives, filesystems, and
+  OCI layouts for release evidence and downstream review.
+- **grype** scans images, directories, archives, SBOMs, PURLs, and CPEs for
+  known vulnerabilities so release gates have concrete findings.
+- **cosign** signs, verifies, and attests release artifacts, SBOMs, images,
+  binaries, and OCI artifacts with Sigstore-compatible workflows.
+
+## Suggested order
+
+Start with the protected-branch and workflow-hardening controls, because those
+define who can publish and which automation is trusted. Add the CI/CD assembly
+skill only after the release job permissions and environments are clear. Draft
+release notes and changelogs from reviewed commits, then review dependency
+updates and lockfiles before the tag is created. Finish by generating
+provenance, SBOMs, vulnerability reports, and signatures for the exact artifacts
+that will be published.
+
+## Release checklist
+
+- [ ] {"task": "Release authority is explicit", "description": "The branch, tag, package, image, or release action has an owner and approval point"}
+- [ ] {"task": "Workflow permissions are scoped", "description": "Privileged release jobs run from trusted refs with minimal token and environment access"}
+- [ ] {"task": "Changes are explainable", "description": "Release notes, changelog sections, and version bump rationale come from reviewed commits"}
+- [ ] {"task": "Dependency risk is reviewed", "description": "Renovate updates, grouped PRs, lockfile churn, and automerge behavior are checked before release"}
+- [ ] {"task": "Artifacts have evidence", "description": "Provenance, SBOMs, vulnerability scan outputs, and signatures refer to the same release artifacts"}
+- [ ] {"task": "Rollback is documented", "description": "The maintainer knows how to unpublish, yank, revert, retag, or roll forward when release automation fails"}
+
+## Source and references
+
+- GitHub Releases documentation: https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases
+- GitHub Actions documentation: https://docs.github.com/en/actions
+- GitHub Actions token authentication: https://docs.github.com/en/actions/tutorials/authenticate-with-github_token
+- Conventional Commits 1.0.0: https://www.conventionalcommits.org/en/v1.0.0/
+- Keep a Changelog 1.1.0: https://keepachangelog.com/en/1.1.0/
+- Semantic Versioning 2.0.0: https://semver.org/spec/v2.0.0.html
+- Renovate documentation: https://docs.renovatebot.com/
+- SLSA provenance specification: https://slsa.dev/spec/v1.2/provenance
+- Syft CLI reference: https://oss.anchore.com/docs/reference/syft/cli/
+- Grype getting started: https://oss.anchore.com/docs/guides/vulnerability/getting-started/
+- Cosign documentation: https://docs.sigstore.dev/cosign/
+
+## Duplicate check
+
+Checked existing collections, commands, hooks, skills, tools, open PRs, closed
+PRs, and issue history for `release-manager-automation`, release manager
+automation, release workflow, release notes, changelog, SemVer, GitHub Actions
+release, Renovate release review, SLSA provenance, SBOM, Syft, Grype, Cosign,
+and artifact signing. `github-maintainer-operations` covers the broader
+maintainer loop of commits, CI triage, PR review, link validation, and release
+notes. `production-readiness-toolkit` covers broad production readiness and
+deployment preparation. This collection is narrower: it focuses on the
+release-manager evidence chain from protected release workflow to versioning,
+dependency readiness, provenance, SBOMs, vulnerability gates, and artifact
+signing.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
