@@ -1,0 +1,244 @@
+---
+title: Algolia MCP Server for Claude
+slug: algolia-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Algolia-managed MCP servers for curated public search and
+  recommendation access or internal, user-scoped search and analytics
+  workflows.
+cardDescription: >-
+  Algolia-managed MCP servers for Public MCP search/recommend integrations and
+  Productivity MCP analysis across your Algolia permissions.
+seoTitle: Algolia MCP Server for Claude
+seoDescription: >-
+  Use Algolia MCP Server with Claude to search curated Algolia indices, retrieve
+  recommendations, explore user-scoped search analytics, and connect remote MCP
+  clients to Algolia-managed endpoints.
+author: Algolia
+authorProfileUrl: "https://www.algolia.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://www.algolia.com/"
+documentationUrl: "https://www.algolia.com/doc/guides/model-context-protocol"
+installable: true
+installCommand: "claude mcp add --transport http algolia https://mcp.algolia.com/mcp"
+usageSnippet: "Ask Claude to use Algolia MCP to find top no-result searches before planning synonyms or content fixes."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "algolia": {
+        "transport": "http",
+        "url": "https://mcp.algolia.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "algolia": {
+        "transport": "http",
+        "url": "https://mcp.algolia.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Algolia account with access to the applications and indices you want Claude to use.
+  - MCP-capable client with remote HTTP transport support, such as Claude, Claude Code, ChatGPT, Cursor, VS Code, Gemini CLI, Codex, OpenAI Playground, or another compatible client.
+  - For Algolia Productivity MCP, access to enable Productivity MCP in the Algolia dashboard and sign in through the MCP client when prompted.
+  - For Algolia Public MCP, an Algolia application with at least one index and the dashboard permission to create or copy a Public MCP server URL.
+  - Decision on whether the workflow should use Public MCP for curated application-scoped access or Productivity MCP for internal user-scoped analysis.
+  - Review of Algolia plan usage, Search API key permissions, index descriptions, and prompt/result handling before exposing production indices to AI clients.
+safetyNotes:
+  - >-
+    Algolia documents two Algolia-managed MCP offerings. Public MCP is for
+    curated search and recommendation access to selected indices; Productivity
+    MCP is for internal, user-scoped workflows that inherit the signed-in
+    user's Algolia permissions.
+  - >-
+    Algolia describes Public MCP as a beta feature under its Beta Services
+    terms. Treat setup behavior, limits, dashboard controls, and client support
+    as changeable until Algolia marks the feature generally available.
+  - >-
+    Public MCP uses a generated server URL for a specific Algolia application
+    and selected indices. Do not publish that URL in public repositories,
+    issues, logs, screenshots, or client configs unless the exposed records are
+    intended for that audience.
+  - >-
+    Public MCP client configuration does not require client-side authentication,
+    so the selected Search API key restrictions, selected indices, Recommend
+    models, and index descriptions are the primary controls.
+  - >-
+    Productivity MCP is documented as read-only for analysis and exploration,
+    but it can expose anything the signed-in user can access in Algolia. Use a
+    least-privilege account for sensitive projects.
+  - >-
+    Algolia says MCP usage counts toward the existing Algolia plan. Monitor API
+    usage and avoid broad automated loops, high-traffic prompts, or repeated
+    large searches through an MCP client.
+privacyNotes:
+  - >-
+    Algolia MCP can return search hits, object attributes, facet values,
+    recommendations, index names, analytics metrics, top searches, no-result
+    queries, countries, click positions, user counts, and other search
+    performance data into the model conversation.
+  - >-
+    Public MCP exposes records according to the configured indices and Search
+    API key permissions. Remove private object attributes or use secured,
+    filtered, or separate indices before connecting customer-facing agents.
+  - >-
+    Productivity MCP uses the signed-in user's Algolia identity and permissions.
+    Treat prompts, outputs, screenshots, and MCP client logs as internal data
+    whenever they include Algolia analytics, index names, or object records.
+  - >-
+    Do not paste Admin API keys, write API keys, private secured API keys,
+    customer identifiers, unreleased product catalog fields, pricing rules,
+    personal data, or raw exports into prompts or PR comments.
+  - >-
+    Algolia recommends prompt guidance that preserves result fidelity. Avoid
+    asking the assistant to filter, reorder, or summarize returned hits when an
+    exact search result order matters.
+tags:
+  - algolia
+  - search
+  - recommendations
+  - analytics
+  - mcp
+keywords:
+  - Algolia MCP Server
+  - Algolia Public MCP
+  - Algolia Productivity MCP
+  - Algolia Claude MCP
+  - mcp.algolia.com
+  - Algolia search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Algolia MCP Server is Algolia's managed Model Context Protocol support for
+connecting AI assistants to Algolia search and analytics workflows. Algolia
+documents two managed offerings:
+
+- Algolia Public MCP exposes selected indices and Recommend models through an
+  application-scoped MCP URL for AI-facing search and recommendation use cases.
+- Algolia Productivity MCP exposes internal, user-scoped search and analytics
+  tools through `https://mcp.algolia.com/mcp` after the user signs in.
+
+Use Public MCP when the assistant should search a curated set of records, such
+as product discovery, documentation search, support answers, or customer-facing
+AI experiences. Use Productivity MCP when a team member wants Claude to inspect
+top searches, no-result queries, click positions, countries, users, or index
+data that the signed-in Algolia account can already access.
+
+## Features
+
+- Algolia-managed MCP services, not a self-hosted integration requirement.
+- Public MCP for selected indices and Recommend models.
+- Productivity MCP for internal, user-scoped search and analytics exploration.
+- Claude custom connector setup for both Public MCP and Productivity MCP.
+- Claude Code setup for Productivity MCP with remote HTTP transport.
+- Codex, Cursor, VS Code, Gemini CLI, ChatGPT, and OpenAI Playground setup
+  paths documented by Algolia.
+- Public MCP URL pattern:
+  `https://{APP_ID}.algolia.net/mcp/1/{UNIQ_ID}/mcp`.
+- Productivity MCP URL: `https://mcp.algolia.com/mcp`.
+- Public MCP tools for search, facet values, recommendations, and ChatGPT
+  `search`/`fetch` compatibility.
+- Productivity MCP tools for listing/searching indices, recommendations, and
+  analytics such as top searches, no-result queries, click positions, filters,
+  countries, users, and top hits.
+- Existing Algolia plan usage applies to MCP calls.
+
+## Installation
+
+### Productivity MCP for Claude Code
+
+Enable Algolia Productivity MCP in the Algolia dashboard, then register the
+remote MCP server:
+
+```bash
+claude mcp add --transport http algolia https://mcp.algolia.com/mcp
+```
+
+Start a Claude Code session, run `/mcp`, and sign in when prompted to authorize
+Algolia.
+
+### Productivity MCP Client Config
+
+Use this remote HTTP configuration for MCP clients that accept JSON
+configuration:
+
+```json
+{
+  "mcpServers": {
+    "algolia": {
+      "transport": "http",
+      "url": "https://mcp.algolia.com/mcp"
+    }
+  }
+}
+```
+
+The client should prompt for OAuth-style sign-in. Algolia's docs say no OAuth
+client ID or client secret is needed when the client asks for those fields.
+
+### Public MCP Client Config
+
+Create or copy a Public MCP server URL from the Algolia dashboard, then add it
+to your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "Algolia": {
+      "url": "https://{APP_ID}.algolia.net/mcp/1/{UNIQ_ID}/mcp"
+    }
+  }
+}
+```
+
+For Claude, add the copied URL as a custom connector remote MCP server URL and
+leave advanced settings empty.
+
+## Use Cases
+
+- Let a customer-facing assistant search only the curated product, help center,
+  or documentation indices selected for Public MCP.
+- Ask Claude to return Algolia hits exactly as provided for a search or support
+  workflow.
+- Explore top searches and no-result queries before planning synonyms, rules,
+  content fixes, or index changes.
+- Review click positions, no-click rate, top countries, top filters, and top
+  hits while diagnosing search relevance.
+- Validate which indices and attributes are visible before adding a new AI
+  search experience.
+- Compare recommendation results from selected Recommend models without
+  building a separate integration.
+- Use Productivity MCP for one-off internal analysis while keeping production
+  updates in the Algolia dashboard or APIs.
+
+## Safety Checklist
+
+- Choose Public MCP for a deliberately curated external-facing surface.
+- Choose Productivity MCP only for internal users whose Algolia permissions are
+  appropriate for the data being queried.
+- For Public MCP, select only the indices and Recommend models that the agent
+  should use.
+- Add descriptions that help the LLM choose the right index or tool.
+- Confirm Search API key restrictions before exposing a Public MCP URL.
+- Keep generated Public MCP URLs out of public code, logs, tickets, and
+  screenshots.
+- Monitor Algolia usage because MCP calls count toward the existing plan.
+- Use prompt instructions that preserve Algolia result order and content when
+  exact search results matter.
+
+## Source Links
+
+- Algolia MCP overview: https://www.algolia.com/doc/guides/model-context-protocol
+- Public MCP guide: https://www.algolia.com/doc/guides/model-context-protocol/public-mcp
+- Productivity MCP guide: https://www.algolia.com/doc/guides/model-context-protocol/productivity-mcp
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/
