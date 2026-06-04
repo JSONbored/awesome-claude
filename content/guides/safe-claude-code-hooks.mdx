@@ -1,0 +1,190 @@
+---
+title: Set Up Claude Code Hooks Safely
+slug: safe-claude-code-hooks
+category: guides
+description: >-
+  A source-backed safety checklist for introducing Claude Code hooks with
+  scoped events, minimal authority, reviewable commands, clear ownership, and a
+  rollback path.
+cardDescription: Add Claude Code hooks with scoped events and safe review.
+seoTitle: Set Up Claude Code Hooks Safely
+seoDescription: >-
+  Learn how to set up Claude Code hooks safely by choosing narrow lifecycle
+  events, reviewing commands, protecting secrets, documenting ownership, and
+  keeping humans in control of risky actions.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Use hooks for small deterministic lifecycle automation, keep commands
+  reviewable and scoped, start with non-mutating behavior, and require explicit
+  approval before hooks write files, call networks, or influence tool use.
+prerequisites:
+  - A trusted Claude Code workspace where hook behavior is allowed by project or user policy.
+  - A specific lifecycle event you want to automate, such as notification, pre-tool review, post-tool follow-up, or session cleanup.
+  - A reviewed command or script owned by the project, with a documented rollback path.
+  - Agreement on which data the hook may read, write, log, or send outside the machine.
+safetyNotes:
+  - "Treat hook commands like project automation code: review them before enabling, keep them small, and avoid hidden side effects."
+  - Start with read-only or notification-style hooks before adding hooks that write files, block tools, run package scripts, or call external services.
+  - Never store credentials in hook configuration; use environment-specific secret handling and avoid printing secrets to logs.
+privacyNotes:
+  - Hook input and output may include prompts, file paths, tool names, command output, error messages, repository context, and user-provided text.
+  - Logs created by hooks can retain sensitive project names, local paths, customer reports, or excerpts from code and command output.
+  - Network-capable hooks can expose local metadata outside the workspace, so document destinations and get team approval first.
+sourceUrls:
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/settings#permissions"
+  - "https://code.claude.com/docs/en/security"
+  - "https://code.claude.com/docs/en/iam"
+tags:
+  - claude-code
+  - hooks
+  - safety
+  - permissions
+  - automation
+  - workflow-design
+keywords:
+  - claude code hooks safely
+  - safe claude hooks setup
+  - claude code hook permissions
+  - claude code lifecycle automation
+  - claude code hook security
+readingTime: 8
+difficultyScore: 57
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Claude Code hooks are useful when a small, deterministic action should run
+around a Claude Code lifecycle event. Set them up safely by narrowing the event,
+scoping the matcher, reviewing the command like code, keeping secrets out of
+configuration, and starting with non-mutating behavior. Hooks that can block
+tools, write files, run local commands, or contact external systems need a
+clear owner and an easy disable path.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Trusted workspace", "description": "The repository and local automation are trusted enough to run project commands"}
+- [ ] {"task": "Single purpose", "description": "The hook has one narrow job and one owner"}
+- [ ] {"task": "Scoped event", "description": "The lifecycle event and matcher are as specific as the workflow allows"}
+- [ ] {"task": "Reviewed command", "description": "The command or script is readable, versioned, and reviewed before enablement"}
+- [ ] {"task": "Rollback path", "description": "A teammate can disable or remove the hook without reverse-engineering it"}
+
+## Core Concepts Explained
+
+### Hooks run at lifecycle points
+
+Claude Code hooks attach automation to specific lifecycle moments. That makes
+them more deterministic than asking Claude to remember a workflow, but it also
+means a hook can run when the matching event occurs, not only when a user thinks
+about it.
+
+### Matchers are a safety boundary
+
+A broad matcher can make a hook run more often than expected. Treat the event
+and matcher as part of the security review. A hook that only reacts to one
+well-understood event is easier to audit than one that reacts to many tools,
+paths, or situations.
+
+### Commands are automation code
+
+The command behind a hook can read local data, transform output, write files, or
+call other tools depending on what it does. Review it like any other project
+automation. If the command is too long to understand quickly, move it into a
+versioned script with comments and ownership.
+
+### Settings and permissions shape behavior
+
+Claude Code settings and permissions help define what is allowed in a workspace.
+Hook setup should fit those boundaries instead of bypassing them. If the team
+has different rules for personal and project-level configuration, document where
+the hook belongs.
+
+## Step-by-Step Safe Setup
+
+1. **Write the purpose first.** State what the hook should do, when it should
+   run, and what it must never do. This prevents a small convenience hook from
+   growing into broad automation.
+
+2. **Choose the narrowest lifecycle event.** Pick the event that matches the
+   actual need. A notification, reminder, or summary hook is usually lower risk
+   than a hook that blocks tool use or mutates project files.
+
+3. **Scope the matcher.** Limit the hook to the relevant tool, path, or event
+   pattern when the hook system supports that distinction. Review broad matchers
+   before sharing them with a team.
+
+4. **Start non-mutating.** First make the hook report what it would do, write to
+   local review output, or notify the user. Add file writes, network calls, or
+   blocking behavior only after the team sees stable results.
+
+5. **Review data flow.** Identify what the hook receives, what it logs, and
+   whether it can send data outside the machine. Keep secrets and customer data
+   out of hook input, output, and persistent logs.
+
+6. **Document ownership.** Record who maintains the hook, where the command or
+   script lives, what dependencies it needs, and how to disable it quickly.
+
+7. **Test in a small workspace.** Enable the hook in a low-risk project or user
+   scope before committing shared configuration. Confirm it does not loop,
+   block unrelated work, or create noisy output.
+
+8. **Review before sharing.** Project-level hooks should go through normal code
+   review. The reviewer should understand the event, matcher, command,
+   dependency footprint, data flow, and rollback path.
+
+## Safety Matrix
+
+| Hook behavior | Risk | Review focus |
+| --- | --- | --- |
+| Notification or reminder | Lower | Noise, log content, personal data |
+| Local read-only check | Medium | Files read, command output, runtime cost |
+| Blocking pre-tool guardrail | Medium | False positives, bypass path, owner |
+| File-writing automation | Higher | Scope, backups, formatting, rollback |
+| Network-capable hook | Higher | Destination, credentials, retained data |
+| Package or build command | Higher | Untrusted scripts, dependency side effects |
+
+## Review Checklist
+
+- [ ] {"task": "Small command", "description": "The command or script is short enough to review or is versioned with clear comments"}
+- [ ] {"task": "No embedded secrets", "description": "Configuration does not contain tokens, passwords, private URLs, or customer data"}
+- [ ] {"task": "Scoped trigger", "description": "The hook event and matcher are narrower than a global catch-all"}
+- [ ] {"task": "Human-visible result", "description": "Output explains what happened and how to disable the hook"}
+- [ ] {"task": "No hidden network call", "description": "Any external destination is documented and approved"}
+- [ ] {"task": "Team rollback", "description": "A maintainer can disable the hook if it blocks work or leaks noisy output"}
+
+## Troubleshooting
+
+- **The hook fires too often**: narrow the matcher or split the hook into
+  separate event-specific entries.
+- **The hook blocks good work**: make it advisory first, then add blocking only
+  for high-confidence cases.
+- **The hook output exposes sensitive data**: redact file contents and command
+  output before logging, or disable persistent logs.
+- **The command is hard to review**: move it into a named script, document its
+  inputs and outputs, and add ownership.
+- **Different teammates see different behavior**: clarify whether the hook is a
+  user setting or project setting, then document the expected scope.
+
+## Duplicate Check
+
+This guide focuses on safe hook setup and review practice. Existing entries
+include individual hook examples, hook generator commands, and broader workflow
+guides that mention hooks, but they do not provide a source-backed safety guide
+for introducing Claude Code hooks with scoped events, command review, privacy
+review, and rollback planning.
+
+## References
+
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
+- Claude Code settings and permissions - https://code.claude.com/docs/en/settings#permissions
+- Claude Code security - https://code.claude.com/docs/en/security
+- Claude Code IAM - https://code.claude.com/docs/en/iam
