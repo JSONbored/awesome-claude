@@ -1334,15 +1334,20 @@ export async function compareEntries(args = {}, options = {}) {
       trust: entryTrustSummary(entry),
     };
   });
+  const sharedTags = compared.length
+    ? compared
+        .slice(1)
+        .reduce(
+          (tags, entry) => intersection(tags, entry.tags || []),
+          compared[0].tags || [],
+        )
+    : [];
 
   return {
     ok: true,
     platform: platform || "",
     count: compared.length,
-    sharedTags: intersection(
-      compared[0]?.tags || [],
-      compared.slice(1).flatMap((entry) => entry.tags || []),
-    ),
+    sharedTags,
     entries: compared,
     comparisonNotes: [
       "Prefer exact category fit before source popularity.",

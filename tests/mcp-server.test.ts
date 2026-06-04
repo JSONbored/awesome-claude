@@ -1079,6 +1079,74 @@ describe("HeyClaude read-only MCP helpers", () => {
     });
   });
 
+  it("reports compare_entries sharedTags only when every entry has the tag", async () => {
+    const fixtures = new Map([
+      [
+        "entries/skills/alpha.json",
+        {
+          entry: {
+            category: "skills",
+            slug: "alpha",
+            title: "Alpha Skill",
+            description: "Alpha fixture.",
+            tags: ["shared-by-all", "alpha-beta", "alpha-gamma"],
+            platforms: ["Claude"],
+          },
+        },
+      ],
+      [
+        "entries/skills/beta.json",
+        {
+          entry: {
+            category: "skills",
+            slug: "beta",
+            title: "Beta Skill",
+            description: "Beta fixture.",
+            tags: ["shared-by-all", "alpha-beta"],
+            platforms: ["Claude"],
+          },
+        },
+      ],
+      [
+        "entries/skills/gamma.json",
+        {
+          entry: {
+            category: "skills",
+            slug: "gamma",
+            title: "Gamma Skill",
+            description: "Gamma fixture.",
+            tags: ["shared-by-all", "alpha-gamma"],
+            platforms: ["Claude"],
+          },
+        },
+      ],
+    ]);
+
+    const compared = await callRegistryTool(
+      "compare_entries",
+      {
+        entries: [
+          { category: "skills", slug: "alpha" },
+          { category: "skills", slug: "beta" },
+          { category: "skills", slug: "gamma" },
+        ],
+      },
+      {
+        readJsonArtifact: async (relativePath: string) => {
+          const fixture = fixtures.get(relativePath);
+          if (!fixture) throw new Error(`Missing fixture: ${relativePath}`);
+          return fixture;
+        },
+      },
+    );
+
+    expect(compared).toMatchObject({
+      ok: true,
+      count: 3,
+      sharedTags: ["shared-by-all"],
+    });
+  });
+
   it("returns registry stats and client setup snippets without auth requirements", async () => {
     const stats = await callRegistryTool("get_registry_stats", {}, { dataDir });
     expect(stats).toMatchObject({
