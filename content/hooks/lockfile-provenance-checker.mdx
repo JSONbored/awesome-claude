@@ -1,0 +1,206 @@
+---
+title: Lockfile Provenance Checker - Claude Code Hook
+slug: lockfile-provenance-checker
+category: hooks
+description: >-
+  PostToolUse hook that inspects an edited npm package-lock.json for
+  supply-chain provenance risk rather than known CVEs — dependencies resolved
+  from outside the public npm registry (git, alternate-registry, or insecure
+  transports) and registry tarballs missing an integrity hash. It mirrors the
+  lockfile-lint provenance checks so a tampered or unexpected dependency source
+  is caught at edit time. Advisory only; it never installs or runs anything.
+cardDescription: >-
+  Flag npm lockfile entries resolved outside the public registry or missing an
+  integrity hash.
+seoTitle: Lockfile Provenance Checker - Claude Code Hook
+seoDescription: >-
+  A Claude Code PostToolUse hook that flags npm package-lock.json provenance
+  risk — non-registry sources and missing integrity hashes — using the
+  lockfile-lint checks.
+author: techforgeworks
+submittedBy: techforgeworks
+submittedByUrl: "https://github.com/techforgeworks"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/lirantal/lockfile-lint"
+repoUrl: "https://github.com/lirantal/lockfile-lint"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/lockfile-provenance-checker.sh && chmod +x
+  .claude/hooks/lockfile-provenance-checker.sh
+usageSnippet: "Dependencies resolved from outside the public npm registry: node_modules/foo: git+ssh://..."
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lockfile-provenance-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lockfile-provenance-checker.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PostToolUse hook. Inspects an edited npm package-lock.json for
+  # supply-chain provenance risk (the lockfile-lint check set): dependencies
+  # resolved from outside the public npm registry and registry tarballs missing
+  # an integrity hash. Advisory only - it always exits 0, never installs or runs
+  # anything - and fails open when jq is unavailable.
+
+  command -v jq >/dev/null 2>&1 || exit 0
+
+  INPUT=$(cat)
+  FILE=$(printf '%s' "$INPUT" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+
+  case "$FILE" in
+    *package-lock.json|*npm-shrinkwrap.json) : ;;
+    *yarn.lock|*pnpm-lock.yaml)
+      echo "Lockfile changed - run 'npx lockfile-lint --path $FILE --validate-https --validate-integrity' to check resolved hosts and integrity." >&2
+      exit 0 ;;
+    *) exit 0 ;;
+  esac
+  [ -f "$FILE" ] || exit 0
+
+  # npm v2/v3 lockfiles use the .packages map; older formats are skipped.
+  jq -e 'has("packages")' "$FILE" >/dev/null 2>&1 || exit 0
+
+  found=0
+  report() {
+    local lines
+    lines=$(jq -r "$2" "$FILE" 2>/dev/null | sed '/^$/d' | head -10)
+    if [ -n "$lines" ]; then
+      echo "$1" >&2
+      printf '%s\n' "$lines" | while IFS= read -r l; do
+        [ -n "$l" ] && echo "   - $l" >&2
+      done
+      found=1
+    fi
+  }
+
+  # Anything whose resolved URL is not an https public-registry tarball is a
+  # provenance signal: git sources, alternate registries, and insecure
+  # transports all fail this test.
+  report "Dependencies resolved from outside the public npm registry (supply-chain risk):" \
+    '.packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/") | not) | "\(.key): \(.value.resolved)"'
+
+  report "Registry tarballs missing an integrity hash:" \
+    '.packages | to_entries[] | select(.value.resolved) | select(.value.resolved | test("^https://registry\\.npmjs\\.org/")) | select((.value.integrity // "") == "") | .key'
+
+  if [ "$found" -ne 0 ]; then
+    echo "Confirm these sources are expected; run lockfile-lint for the full check set and an allowlist." >&2
+  fi
+
+  exit 0
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash and jq on PATH; the hook fails open and stays silent when jq is missing."
+safetyNotes:
+  - "Runs after every Write, Edit, and MultiEdit and inspects only npm package-lock.json or npm-shrinkwrap.json content; for yarn.lock and pnpm-lock.yaml it prints a one-line reminder to run lockfile-lint."
+  - "Read-only and advisory - it parses the lockfile JSON, never installs packages, runs npm, or makes a network call, and always exits 0."
+  - "Uses the resolved-URL and integrity fields to flag provenance risk (sources outside the public registry, missing integrity); it does not assess known vulnerabilities, so pair it with an audit tool."
+privacyNotes:
+  - "Reads only the local lockfile from disk; it makes no network or registry calls."
+  - "Prints dependency paths and their resolved URLs to local hook stderr; it writes no logs."
+  - "Resolved URLs shown in output may include internal registry or git host names if your project depends on them."
+tags:
+  - "supply-chain"
+  - "npm"
+  - "lockfile"
+  - "provenance"
+  - "security"
+keywords:
+  - "lockfile provenance checker hook"
+  - "non-registry dependency detection"
+  - "package lock risk hook"
+  - "lockfile integrity hook"
+---
+
+## Features
+
+- Inspects an edited `package-lock.json` for **supply-chain provenance risk** — where a dependency came from — rather than known CVEs.
+- Detection mirrors the [lockfile-lint](https://github.com/lirantal/lockfile-lint) check set: dependencies resolved from **outside the public npm registry** (git sources, alternate registries, or insecure transports) and registry tarballs **missing an integrity hash**.
+- Advisory only — it always exits `0` and never installs, runs, or fetches anything.
+- Fails open and makes no network calls; it reads only the local lockfile.
+- For `yarn.lock` / `pnpm-lock.yaml` it prints a one-line reminder to run `lockfile-lint`, since those formats are not JSON.
+
+## How it works
+
+On `PostToolUse`, the hook checks whether the edited file is an npm lockfile. For `package-lock.json` (npm v2/v3, the `.packages` map), it scans each resolved dependency and reports any entry whose `resolved` URL is not an https public-registry tarball, or that lacks an `integrity` hash. Findings go to stderr with a reminder to confirm the sources and run lockfile-lint for the full check set.
+
+## Why provenance, not CVEs
+
+CVE scanners answer "does this version have a known vulnerability?". This hook answers a different question: "did this dependency come from where I expect?" A swapped registry, a git URL pointing at a fork, an insecure transport, or a missing integrity hash are tampering and dependency-confusion signals that a CVE scan will not catch.
+
+## Use cases
+
+- Catch a dependency-confusion or registry-swap edit the moment the lockfile changes.
+- Enforce "public registry + integrity only" provenance locally, ahead of a full lockfile-lint run in CI.
+- Surface a stray git or alternate-registry dependency introduced during an agentic edit.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file: `touch .claude/hooks/lockfile-provenance-checker.sh`
+3. Paste the script body into that file and make it executable: `chmod +x .claude/hooks/lockfile-provenance-checker.sh`
+4. Add the configuration below to `.claude/settings.json` (project) or `~/.claude/settings.json` (user).
+
+## Requirements
+
+- Claude Code CLI with hooks enabled
+- bash and jq
+
+## Hook configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/lockfile-provenance-checker.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Limitations
+
+- Targets npm v2/v3 `package-lock.json` and `npm-shrinkwrap.json`; for `yarn.lock` and `pnpm-lock.yaml` it defers to `lockfile-lint`.
+- Non-registry sources can be legitimate (a deliberate git dependency or a private registry); treat findings as items to confirm against an allowlist, not automatic failures.
+
+## Source and references
+
+- lockfile-lint (resolved-host and integrity checks): https://github.com/lirantal/lockfile-lint
+- Claude Code hooks documentation: https://docs.anthropic.com/en/docs/claude-code/hooks
