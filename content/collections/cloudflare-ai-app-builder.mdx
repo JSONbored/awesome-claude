@@ -1,0 +1,146 @@
+---
+title: Cloudflare AI App Builder
+slug: cloudflare-ai-app-builder
+category: collections
+description: >-
+  A source-backed Cloudflare collection for building AI apps on the edge:
+  combine Workers, Workers AI, Agents, D1, KV, R2, Wrangler deployment
+  operations, and Cloudflare MCP access with explicit environment and data
+  boundaries.
+cardDescription: >-
+  Cloudflare AI app bundle for Workers, Agents, Workers AI, storage, Wrangler,
+  and MCP operations.
+seoTitle: Cloudflare AI App Builder
+seoDescription: >-
+  A curated collection for building Claude-assisted AI apps on Cloudflare with
+  Workers, Workers AI, Agents, D1, KV, R2, Wrangler, and Cloudflare MCP.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://developers.cloudflare.com/workers/"
+sourceUrls:
+  - "https://developers.cloudflare.com/workers/"
+  - "https://developers.cloudflare.com/workers-ai/"
+  - "https://developers.cloudflare.com/agents/"
+  - "https://developers.cloudflare.com/workers/wrangler/"
+installable: false
+usageSnippet: >-
+  Start with Workers AI and Cloudflare Agents design, add D1/KV/R2 storage
+  boundaries, then use Wrangler and Cloudflare MCP for deployment and operations.
+items:
+  - slug: cloudflare-agents-sdk
+    category: tools
+  - slug: cloudflare-workers-ai-edge
+    category: skills
+  - slug: cloudflare-workers-d1-kv-r2-capability-pack
+    category: skills
+  - slug: wrangler-deployment-operations-capability-pack
+    category: skills
+  - slug: cloudflare-mcp-server
+    category: mcp
+  - slug: zero-budget-saas-launch-capability-pack
+    category: skills
+  - slug: github-actions-ai-cicd
+    category: skills
+  - slug: performance-impact-monitor
+    category: hooks
+  - slug: environment-variable-validator
+    category: hooks
+installationOrder:
+  - cloudflare-agents-sdk
+  - cloudflare-workers-ai-edge
+  - cloudflare-workers-d1-kv-r2-capability-pack
+  - wrangler-deployment-operations-capability-pack
+  - cloudflare-mcp-server
+  - environment-variable-validator
+  - github-actions-ai-cicd
+  - performance-impact-monitor
+  - zero-budget-saas-launch-capability-pack
+estimatedSetupTime: 80 minutes
+difficulty: advanced
+prerequisites:
+  - A Cloudflare account, Wrangler authentication, and a target account/project for development or staging.
+  - Agreement on which resources use Workers AI, Agents, D1, KV, R2, Queues, or external APIs.
+  - Separate secrets and environment bindings for local, preview, staging, and production deployments.
+safetyNotes:
+  - "This collection runs nothing itself; linked entries can deploy Workers, inspect Cloudflare resources, or change app configuration."
+  - "Use preview/staging environments and scoped API tokens before allowing Claude-assisted deployment or MCP operations."
+  - "Review storage consistency, cache behavior, and rollback plans before moving AI workflows to production traffic."
+privacyNotes:
+  - "The collection stores no data itself; linked Cloudflare resources may process prompts, user requests, logs, analytics, object storage, or database rows."
+  - "Workers AI and external model calls may involve account-level telemetry and provider-specific retention rules."
+  - "Do not paste production secrets, customer data, or Cloudflare API tokens into transcripts or PR comments."
+tags:
+  - cloudflare
+  - workers
+  - ai-apps
+  - edge
+  - deployment
+keywords:
+  - cloudflare ai app builder
+  - workers ai claude collection
+  - cloudflare agents workflow
+  - wrangler deployment collection
+---
+
+## What this collection sets up
+
+This bundle is for builders shipping AI applications on Cloudflare's edge
+platform. It pairs app architecture guidance with deployment operations, storage
+boundaries, MCP access, and operational checks so Claude can help without
+blurring the line between preview and production resources.
+
+## Layers
+
+### 1. AI runtime and application shape
+
+- **cloudflare-agents-sdk** provides the Cloudflare Agents foundation for
+  agentic apps on Workers.
+- **cloudflare-workers-ai-edge** focuses on Workers AI usage, bindings, and
+  edge inference patterns.
+
+### 2. Durable state and platform boundaries
+
+- **cloudflare-workers-d1-kv-r2-capability-pack** covers storage tradeoffs for
+  D1, KV, and R2.
+- **environment-variable-validator** helps keep account IDs, tokens, and
+  environment bindings explicit before running deployment workflows.
+
+### 3. Deploy, operate, and iterate
+
+- **wrangler-deployment-operations-capability-pack** handles Wrangler planning,
+  deploys, versions, and rollback thinking.
+- **cloudflare-mcp-server** exposes Cloudflare operations through MCP when
+  scoped credentials are approved.
+- **github-actions-ai-cicd** and **performance-impact-monitor** keep CI and
+  performance feedback in the loop.
+- **zero-budget-saas-launch-capability-pack** helps constrain launch scope and
+  free-tier assumptions for early SaaS experiments.
+
+## Suggested order
+
+Start by defining the Workers/Agents runtime and storage boundaries, then set up
+Wrangler and environment validation, then connect Cloudflare MCP and CI/CD.
+Keep production tokens out of early experiments and make rollback paths part of
+the first deployment plan.
+
+## Source and references
+
+- Cloudflare Workers documentation: https://developers.cloudflare.com/workers/
+- Workers AI documentation: https://developers.cloudflare.com/workers-ai/
+- Cloudflare Agents documentation: https://developers.cloudflare.com/agents/
+- Wrangler documentation: https://developers.cloudflare.com/workers/wrangler/
+
+## Duplicate check
+
+Checked existing collections, upstream collection history, open collection PRs,
+and repository content for `cloudflare-ai-app-builder`, Cloudflare AI app,
+Workers AI collection, Cloudflare Agents workflow, and Wrangler deployment
+collection. Existing AWS, backend, API, data, and SaaS MCP collections do not
+provide a Cloudflare-specific AI app builder bundle around Workers, Agents,
+Workers AI, storage primitives, Wrangler, and Cloudflare MCP.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.
