@@ -7,6 +7,7 @@ import { pathToFileURL } from "node:url";
 import {
   buildMcpReleaseIssue,
   buildMcpReleaseReport,
+  isTrustedReleaseWatchIssue,
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
 } from "./lib/release-watch-core.mjs";
@@ -129,6 +130,7 @@ async function upsertIssue({ marker, issue, userAgent }) {
     repo,
     token,
     marker,
+    expectedLabels: issue.labels,
     userAgent,
   });
   if (existingIssue) {
@@ -160,7 +162,14 @@ async function upsertIssue({ marker, issue, userAgent }) {
   process.stdout.write(`Opened issue #${created.number}: ${issue.title}\n`);
 }
 
-async function findExistingIssue({ owner, repo, token, marker, userAgent }) {
+async function findExistingIssue({
+  owner,
+  repo,
+  token,
+  marker,
+  expectedLabels,
+  userAgent,
+}) {
   for (let page = 1; page <= 10; page += 1) {
     const issues = await githubRequest({
       token,
@@ -171,9 +180,9 @@ async function findExistingIssue({ owner, repo, token, marker, userAgent }) {
     if (!Array.isArray(issues) || issues.length === 0) return null;
     const match = issues.find(
       (issue) =>
-        !issue.pull_request &&
         typeof issue.body === "string" &&
-        issue.body.includes(marker),
+        issue.body.includes(marker) &&
+        isTrustedReleaseWatchIssue(issue, expectedLabels),
     );
     if (match) return match;
   }

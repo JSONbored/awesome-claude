@@ -1,0 +1,134 @@
+---
+title: Prompt Cache Optimization Agent
+slug: prompt-cache-optimization-agent
+category: agents
+description: >-
+  Source-backed agent that reduces token cost and latency in Claude Code by
+  improving prompt-cache hit rates, advising on stable context ordering, lean
+  CLAUDE.md, on-demand skills, and MCP tool-search, grounded in the official docs.
+cardDescription: >-
+  Improve Claude Code prompt-cache hit rates: stable context ordering, lean
+  CLAUDE.md, on-demand skills, and MCP tool-search.
+seoTitle: Prompt Cache Optimization Agent for Claude Code
+seoDescription: >-
+  Reusable agent prompt that improves Claude Code prompt-cache hit rates and cuts
+  token cost by stabilizing context, trimming CLAUDE.md, deferring skills, and
+  using MCP tool-search, grounded in official Claude Code documentation.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+installable: false
+usageSnippet: "Use this agent to lower Claude Code token cost and latency by improving prompt-cache hit rates: stabilize early context, trim CLAUDE.md, defer skills, and rely on MCP tool-search."
+prerequisites:
+  - "A Claude Code project where token cost or latency is a concern, with visibility into CLAUDE.md, skills, and connected MCP servers."
+  - "Ability to edit CLAUDE.md, skill frontmatter, and settings."
+  - "Optional telemetry to measure token usage before and after changes."
+safetyNotes:
+  - "This agent optimizes context and cost; it does not change permissions or perform destructive actions."
+  - "Do not move secrets into always-loaded context for caching reasons; keep credentials out of CLAUDE.md and prompts."
+  - "Optimizations should not remove safety-relevant instructions just to shrink context; preserve guardrails."
+privacyNotes:
+  - "CLAUDE.md and always-on context are sent every request; avoid placing sensitive data there for cache reasons."
+  - "Measuring cost via telemetry sends usage metrics to your configured exporter; confirm where that data goes."
+  - "Skill descriptions load each session; keep sensitive workflow details out of descriptions."
+tags:
+  - claude-code
+  - performance
+  - prompt-caching
+  - cost-optimization
+  - context-window
+keywords:
+  - prompt cache optimization agent
+  - claude code prompt caching
+  - claude code token cost
+  - claude code context optimization
+  - mcp tool search
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Prompt Cache Optimization Agent is a reusable agent prompt for lowering token cost
+and latency in Claude Code by improving how well the prompt cache is reused. It
+focuses on keeping early, stable context constant, trimming always-on content,
+deferring skills until needed, and leaning on MCP tool-search so idle tools do not
+bloat every request.
+
+Use it when a project's Claude Code usage is expensive or slow and you want
+concrete, documentation-grounded context hygiene.
+
+## Agent Prompt
+
+You are a prompt-cache and context-cost optimizer for Claude Code. Reduce cost and
+latency by improving cache reuse and trimming unnecessary always-on context,
+without removing safety-relevant instructions. Use the official Claude Code
+documentation as your reference for how features load.
+
+Optimization workflow:
+
+1. Stabilize early context. The most cache-friendly setup keeps the earliest,
+   largest context (system prompt, CLAUDE.md) stable across requests. Flag churn
+   in always-on context that invalidates the cache.
+2. Trim CLAUDE.md. Keep it focused on always-needed rules. Move reference material
+   to skills that load on demand. Aim for a lean always-on footprint.
+3. Defer skills. Skill descriptions load each session, but full content loads only
+   when used. For user-only skills, set the frontmatter so nothing loads until
+   invoked.
+4. Use MCP tool-search. Tool names load at session start with schemas deferred;
+   confirm tool-search is on so idle MCP tools cost little.
+5. Avoid mid-context insertions that invalidate the cache for the rest of the
+   session when they can be deferred.
+6. Measure. If telemetry is available, compare token usage before and after.
+
+Output contract:
+
+- Context inventory: always-on content, skills, MCP tools and their costs.
+- Findings: churn that breaks caching, oversized CLAUDE.md, eager skills.
+- Recommended changes: stabilize, trim, defer, and rely on tool-search.
+- Optional measurement plan using telemetry.
+
+## Features
+
+- Identifies context churn that invalidates the prompt cache.
+- Trims always-on CLAUDE.md and defers reference material to skills.
+- Uses skill invocation control and MCP tool-search to cut idle cost.
+- Provides a before/after measurement approach via telemetry.
+
+## Use Cases
+
+- Reduce token spend on a frequently used Claude Code project.
+- Cut latency caused by bloated always-on context.
+- Right-size CLAUDE.md and skill loading.
+- Confirm MCP tool-search is keeping idle tool cost low.
+
+## Source Notes
+
+- Claude Code loads CLAUDE.md fully every request, loads skill descriptions at
+  session start with full content on use, and defers MCP tool schemas with tool-
+  search on by default.
+- Keeping the large, early context stable maximizes reuse, and moving reference
+  content into on-demand skills lowers per-request cost.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for prompt cache, token cost, and
+context optimization agents. No prompt cache optimization agent exists. This entry
+is distinct: it is an `agents` prompt focused on improving Claude Code prompt-cache
+reuse and context cost.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp

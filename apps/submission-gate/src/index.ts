@@ -1541,6 +1541,14 @@ function scopeFailureDecision(error: unknown): GateDecision {
         : "Direct content scope validation failed.";
   return {
     verdict: "close" as const,
+    reasonCode: "scope_failure",
+    evidence: [
+      {
+        ruleId: "direct_content_scope",
+        behavior: message,
+        fix: "Submit exactly one raw content/<category>/<slug>.mdx file.",
+      },
+    ],
     summary: [
       "Summary:",
       `- ${message}`,
@@ -1556,6 +1564,39 @@ function scopeFailureDecision(error: unknown): GateDecision {
     labels: [LABELS.close],
     close: true,
   };
+}
+
+function validationReasonCode(validation: {
+  summary: string;
+  checks: Array<{ name: string; status: string; details?: string }>;
+}) {
+  const text = `${validation.summary} ${validation.checks
+    .map((check) => `${check.name} ${check.details || ""}`)
+    .join(" ")}`;
+  return /provenance|submittedBy|submittedByUrl|submitter/i.test(text)
+    ? ("provenance_failure" as const)
+    : ("validation_failure" as const);
+}
+
+function validationEvidence(validation: {
+  summary: string;
+  checks: Array<{ name: string; status: string; details?: string }>;
+}) {
+  const failed = validation.checks.filter((check) => check.status === "failed");
+  const checkText = failed
+    .map((check) => `${check.name} ${check.details || ""}`.trim())
+    .join("; ");
+  return [
+    {
+      ruleId: validationReasonCode(validation),
+      behavior: validation.summary,
+      source: checkText || "required public validation checks",
+      fix:
+        validationReasonCode(validation) === "provenance_failure"
+          ? "Fix submitter provenance fields and resubmit a clean one-file content PR."
+          : "Fix the failing validation check and resubmit a clean one-file content PR.",
+    },
+  ];
 }
 
 function validationGateDecision(validation: {
@@ -1578,6 +1619,8 @@ function validationGateDecision(validation: {
     }
     return {
       verdict: "close" as const,
+      reasonCode: "validation_failure",
+      evidence: validationEvidence(validation),
       summary: [
         "Summary:",
         `- ${validation.summary}`,
@@ -1595,6 +1638,8 @@ function validationGateDecision(validation: {
   }
   return {
     verdict: "close" as const,
+    reasonCode: validationReasonCode(validation),
+    evidence: validationEvidence(validation),
     summary: [
       "Summary:",
       `- ${validation.summary}`,
@@ -1960,6 +2005,15 @@ function duplicateCloseDecision(
     : existing.label || existing.filePath;
   return {
     verdict: "close" as const,
+    reasonCode: "strict_duplicate",
+    evidence: [
+      {
+        ruleId: "strict_duplicate",
+        behavior: match.reasons.join("; "),
+        source: existingTarget,
+        fix: "Resubmit only if the resource has a clearly different canonical source, title, scope, and value proposition.",
+      },
+    ],
     summary: [
       "Summary:",
       `- This submission overlaps an existing or earlier pending content item: ${existingTarget}.`,
@@ -2009,6 +2063,14 @@ function summarizeDuplicateReview(review: ContentDuplicateReview) {
 function protectedEditCloseDecision(changedFields: string[]): GateDecision {
   return {
     verdict: "close" as const,
+    reasonCode: "protected_metadata_edit",
+    evidence: [
+      {
+        ruleId: "protected_frontmatter_fields",
+        behavior: changedFields.map((field) => `\`${field}\``).join(", "),
+        fix: "Resubmit a focused content edit without changing protected identity, provenance, source, or verification fields.",
+      },
+    ],
     summary: [
       "Summary:",
       "- This PR edits protected content identity, provenance, review, disclosure, source, or verification metadata.",
@@ -3163,13 +3225,15 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
                 "rejected_history",
               ],
               strictDuplicatePolicy:
-                "Only same path, same category+slug, same category+canonical URL/repo, same category+title, or same category+normalized description should block as a duplicate. Shared official multi-entry catalog repositories, such as organization MCP catalogs that host multiple distinct servers, are related context rather than automatic duplicates when title, slug, package, documentation URL, and endpoint differ.",
+                "Only same path, same category+slug, same category+title, same category+normalized description, or same upstream product/source with the same purpose should block as a duplicate. Shared official docs, shared safety doctrine, same broad source domain, and same ecosystem are related/complementary context unless the submitted resource has the same action surface and value proposition.",
               relatedContentPolicy:
-                "Cross-category source overlap, same ecosystem/project ownership, and collection-member overlap are related/complementary context, not automatic duplicates.",
+                "Cross-category source overlap, same ecosystem/project ownership, collection-member overlap, shared official docs, and adjacent controls such as different hook trigger points are related/complementary context, not automatic duplicates. Call out possible complementary content, then close only true repeats.",
               collectionPolicy:
                 "Collections may bundle existing entries when they add distinct workflow value, ordering, prerequisites, source-backed rationale, and safety/privacy guidance; repeated same-scope collection variants can still close as duplicates.",
               defensiveSecurityPolicy:
                 "Do not close a submission merely because it defensively discusses OAuth, tokens, credentials, authorization, attestations, artifacts, packages, downloads, security, privacy, or destructive-risk prevention. These topics require careful evidence review, but source-backed guides, rules, skills, collections, hooks, tools, and statuslines about safe review practices can merge when validation, sources, scope, and safety/privacy notes pass. A hard safety, secret, package, or abuse close must cite concrete unsafe behavior or a concrete policy violation such as credential theft, exposed secrets, destructive defaults, malware/abuse tooling, unverified package hosting, packageVerified:true by an external contributor, broken source evidence, or promotional/affiliate content. Generic phrases like 'contains patterns that cannot be accepted' are not sufficient evidence for a close verdict.",
+              closeEvidenceContract:
+                "Every close verdict must include reasonCode and evidence. Supported reasonCode values are scope_failure, validation_failure, provenance_failure, protected_metadata_edit, strict_duplicate, source_hard_failure, commercial_listing_route, embedded_secret, unsafe_install_pipeline, malicious_data_theft, prohibited_content, and policy_fit_failure. Safety closes must include ruleId, matched snippet or behavior, and whyNotDefensive. Defensive security examples like Claude Code permission auditing or env-leak warning hooks should not close on keyword matches alone.",
             },
           },
         });

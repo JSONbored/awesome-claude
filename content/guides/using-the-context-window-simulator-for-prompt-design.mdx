@@ -1,0 +1,106 @@
+---
+title: Using the Context Window Simulator for Prompt Design
+slug: using-the-context-window-simulator-for-prompt-design
+category: guides
+description: >-
+  A practical walkthrough of the Claude Code context window explorer: what
+  consumes context (system prompt, memory, CLAUDE.md, MCP tools, skills, file
+  reads, history), how each loads, and how to use it plus /context to design
+  leaner prompts and setups.
+cardDescription: >-
+  Use the Claude Code context window explorer and /context to see what consumes
+  context and design leaner prompts and setups.
+seoTitle: Using the Context Window Simulator for Prompt Design
+seoDescription: >-
+  How to use Claude Code's interactive context window explorer and the /context
+  command to see what fills context (CLAUDE.md, MCP tools, skills, file reads,
+  history) and design leaner prompts and project setups.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/context-window"
+usageSnippet: "Use this guide to understand what fills the Claude Code context window and to design leaner CLAUDE.md, skills, and MCP setups using the context explorer and /context."
+prerequisites:
+  - "Access to the Claude Code context window documentation and its interactive explorer."
+  - "A project with CLAUDE.md, skills, or MCP servers whose context cost you want to understand."
+  - "Claude Code installed to run /context in a live session."
+safetyNotes:
+  - "This is a design and analysis activity; it does not change permissions or run risky actions."
+  - "Trimming context should not remove safety-relevant instructions; keep guardrails even while reducing tokens."
+  - "Do not move secrets into always-on context (CLAUDE.md) to make them convenient; that increases exposure every request."
+privacyNotes:
+  - "Always-on context such as CLAUDE.md is sent to the model provider on every request; keep sensitive data out of it."
+  - "Skill descriptions load each session; keep sensitive workflow detail out of descriptions."
+  - "The /context command reports local context composition and does not export anything by itself."
+tags:
+  - claude-code
+  - context-window
+  - prompt-design
+  - performance
+  - cost-optimization
+keywords:
+  - claude code context window
+  - context window simulator
+  - claude code /context
+  - claude code prompt design
+  - reduce context cost claude code
+---
+
+## Overview
+
+Claude Code's documentation includes an interactive explorer of the context
+window: a simulation of how context fills during a session, showing what loads
+automatically, what each file read costs, and when rules and hooks fire. Pairing
+that mental model with the in-session `/context` command lets you design leaner
+prompts, CLAUDE.md files, and MCP setups.
+
+## What consumes context
+
+Loaded at session start:
+
+- **System prompt**: core behavior instructions, always first.
+- **Auto memory (MEMORY.md)**: the first 200 lines or 25KB of Claude's notes.
+- **Environment info**: working directory, platform, git status.
+- **MCP tool names**: listed so Claude knows what is available; full schemas stay
+  deferred and load on demand via tool search.
+- **Skill descriptions**: so Claude can decide when to use a skill; full content
+  loads only when used.
+- **CLAUDE.md**: loaded fully every request.
+
+Loaded as you work:
+
+- **File reads** and tool results, which accumulate.
+- **Conversation history**, until compaction.
+
+## Use the explorer and /context
+
+1. Open the interactive explorer in the context window docs to see how a session
+   fills and what each event costs.
+2. In a live session, run `/context` to see what is currently consuming context.
+3. Identify the heaviest contributors: an oversized CLAUDE.md, eager skills, large
+   pasted content, or many large file reads.
+
+## Design leaner setups
+
+- **Trim CLAUDE.md**: keep it to always-needed rules; move reference material to
+  on-demand skills. Aim to keep it small.
+- **Defer skills**: skill descriptions load each session, but set
+  `disable-model-invocation: true` for user-only skills so nothing loads until you
+  invoke them.
+- **Rely on MCP tool search**: tool names load at start with schemas deferred, so
+  idle MCP tools cost little.
+- **Prefer file references over giant pastes**: write large content to a file and
+  ask Claude to read it.
+
+## Manage context mid-session
+
+- `/clear` resets to an empty context (the conversation is saved).
+- `/compact [instructions]` replaces history with a focused summary.
+- `/context` re-checks composition after changes.
+
+## Source
+
+- Explore the context window: https://code.claude.com/docs/en/context-window

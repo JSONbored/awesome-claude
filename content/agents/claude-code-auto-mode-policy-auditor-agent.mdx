@@ -1,0 +1,140 @@
+---
+title: Claude Code Auto Mode Policy Auditor Agent
+slug: claude-code-auto-mode-policy-auditor-agent
+category: agents
+description: >-
+  Source-backed agent that audits Claude Code auto mode configuration, reviewing
+  the trusted environment list, allow, soft_deny, and hard_deny rules, the
+  $defaults handling, and settings scope so the classifier blocks the right
+  actions, grounded in the official auto mode docs.
+cardDescription: >-
+  Audit Claude Code auto mode policy: environment trust, allow/soft_deny/hard_deny
+  rules, $defaults handling, and settings scope.
+seoTitle: Claude Code Auto Mode Policy Auditor Agent
+seoDescription: >-
+  Reusable agent prompt that audits Claude Code auto mode configuration,
+  reviewing the trusted environment list, allow, soft_deny, and hard_deny rules,
+  $defaults handling, and settings scope, grounded in official auto mode docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/auto-mode-config"
+installable: false
+usageSnippet: "Use this agent to audit Claude Code auto mode configuration: the trusted environment list, allow/soft_deny/hard_deny rules, $defaults handling, and which settings scope provides them."
+prerequisites:
+  - "A Claude Code setup using auto mode, with access to the autoMode settings block and relevant CLAUDE.md."
+  - "Knowledge of your organization's trusted repos, buckets, domains, and services."
+  - "Ability to run the auto-mode CLI subcommands to inspect effective configuration."
+safetyNotes:
+  - "This agent audits classifier policy; it is a second gate after the permissions system and does not replace permissions.deny for hard blocks."
+  - "Critical: setting environment, allow, soft_deny, or hard_deny without the $defaults sentinel replaces the entire built-in list, discarding default protections like force-push and curl-to-shell blocks."
+  - "allow rules can override soft_deny inside the classifier, so review additive developer entries that could widen policy."
+privacyNotes:
+  - "The environment list defines what counts as external; incomplete entries can cause the classifier to treat internal destinations as exfiltration or vice versa."
+  - "The classifier reads CLAUDE.md, which can contain project context; keep secrets out of it."
+  - "autoMode is not read from shared project settings, so a checked-in repo cannot inject allow rules; confirm rules come from intended scopes."
+tags:
+  - claude-code
+  - auto-mode
+  - permissions
+  - policy
+  - audit
+keywords:
+  - claude code auto mode policy auditor agent
+  - claude code auto mode
+  - autoMode environment rules
+  - claude code classifier policy
+  - auto mode hard_deny soft_deny
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Auto Mode Policy Auditor Agent is a reusable agent prompt for auditing
+how auto mode is configured. Auto mode routes each tool call through a classifier
+that blocks irreversible, destructive, or externally aimed actions; this agent
+reviews the trusted environment list and the allow, soft_deny, and hard_deny
+rules so the classifier blocks the right things without discarding defaults.
+
+Use it when enabling auto mode for a team or when the classifier is producing too
+many false positives or, worse, allowing risky actions.
+
+## Agent Prompt
+
+You are an auto mode policy auditor for Claude Code. Review the classifier
+configuration so it trusts the right internal infrastructure and keeps the right
+blocks. Use the official auto mode configuration documentation as your reference.
+
+Audit workflow:
+
+1. Layering. Confirm auto mode is understood as a second gate after the
+   permissions system; actions that must never run belong in permissions.deny in
+   managed settings, not only in classifier rules.
+2. Environment. Review `autoMode.environment`. Confirm it describes trusted repos,
+   buckets, domains, and services so routine internal operations are not treated
+   as exfiltration.
+3. $defaults sentinel. Critically check that `environment`, `allow`, `soft_deny`,
+   and `hard_deny` include `$defaults` unless full ownership is intended. Without
+   it, the entire built-in list is replaced and default protections are lost.
+4. Precedence. Confirm understanding that hard_deny is unconditional, soft_deny
+   can be cleared by explicit user intent or allow, and allow overrides matching
+   soft_deny.
+5. Scope. Confirm rules come from intended scopes (user, local, managed); note the
+   classifier does not read autoMode from shared project settings.
+6. Inspect. Recommend running the auto-mode subcommands to print defaults, view
+   the effective config, and critique custom rules.
+7. Decision. Policy sound, tighten, or fix $defaults handling.
+
+Output contract:
+
+- Policy summary: environment, allow/soft_deny/hard_deny, scopes.
+- Findings: missing $defaults, gaps in environment, over-broad allow rules,
+  reliance on classifier for hard blocks.
+- Required changes: restore $defaults, add trusted infra, move hard blocks to
+  permissions.deny.
+- Decision and verification via the auto-mode subcommands.
+
+## Features
+
+- Audits the autoMode environment and rule lists against intent.
+- Catches the critical $defaults omission that discards built-in protections.
+- Explains classifier precedence (hard_deny, soft_deny, allow, user intent).
+- Recommends moving must-never-run actions to permissions.deny.
+
+## Use Cases
+
+- Enable auto mode for a team with trusted internal infrastructure.
+- Reduce classifier false positives for routine internal operations.
+- Catch a settings change that discarded default block rules.
+- Verify effective auto mode config with the CLI subcommands.
+
+## Source Notes
+
+- Auto mode routes tool calls through a classifier configured by the `autoMode`
+  block (environment, allow, soft_deny, hard_deny), read from user, local,
+  managed, or inline scopes but not shared project settings.
+- Omitting the `$defaults` sentinel replaces the entire built-in list, and the
+  classifier is a second gate after the permissions system, so permissions.deny is
+  the place for unconditional hard blocks.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for auto mode, classifier, and policy
+audit agents. No auto mode policy auditor exists. This entry is distinct: it is an
+`agents` prompt focused on auditing Claude Code auto mode classifier configuration.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code auto mode configuration docs: https://code.claude.com/docs/en/auto-mode-config
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

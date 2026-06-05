@@ -137,6 +137,28 @@ export function buildRaycastReleaseReport({
   };
 }
 
+export function isTrustedReleaseWatchIssue(issue, expectedLabels = []) {
+  if (!issue || issue.pull_request) return false;
+  if (issue.user?.login === "github-actions[bot]") return true;
+
+  const issueLabels = new Set(
+    Array.isArray(issue.labels)
+      ? issue.labels
+          .map((label) => {
+            if (typeof label === "string") return label;
+            if (typeof label?.name === "string") return label.name;
+            return null;
+          })
+          .filter(Boolean)
+      : [],
+  );
+
+  return (
+    expectedLabels.length > 0 &&
+    expectedLabels.every((label) => issueLabels.has(label))
+  );
+}
+
 export function buildMcpReleaseIssue(report, options = {}) {
   const config = options.config ?? readReleaseWatchConfig(options);
   return buildReleaseIssue({

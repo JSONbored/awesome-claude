@@ -1,0 +1,107 @@
+---
+title: Checkpointing Claude Code Changes Before Risky Refactors
+slug: checkpointing-claude-code-changes-before-risky-refactors
+category: guides
+description: >-
+  A practical walkthrough of Claude Code checkpointing: how automatic checkpoints
+  capture code before each edit, how to rewind and summarize with /rewind, the
+  difference between restore and summarize, and the limitations you must know
+  before a risky refactor.
+cardDescription: >-
+  Use Claude Code checkpoints to rewind code and conversation with /rewind before
+  risky refactors, and know what they do not track.
+seoTitle: Checkpointing Claude Code Changes Before Risky Refactors
+seoDescription: >-
+  How Claude Code checkpointing works: automatic per-prompt checkpoints, /rewind
+  to restore code or conversation, summarize options, and key limitations such
+  as bash-command changes not being tracked, before risky refactors.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/checkpointing"
+usageSnippet: "Use this guide before a risky refactor to understand how Claude Code checkpoints capture state, how to rewind with /rewind, and what checkpoints do not track."
+prerequisites:
+  - "Claude Code installed and a session where Claude makes edits with its file-editing tools."
+  - "A working understanding that checkpoints complement, not replace, Git."
+  - "Optional: configured cleanupPeriodDays if you want to change the 30-day retention."
+safetyNotes:
+  - "Checkpoints only track files edited through Claude's file-editing tools; changes made by bash commands (rm, mv, cp) are NOT tracked and cannot be undone via rewind."
+  - "External or concurrent-session edits are generally not captured unless they touch the same files; do not rely on checkpoints for those."
+  - "Checkpoints are session-level local undo, not version control; commit to Git before and after risky work for permanent history."
+privacyNotes:
+  - "Checkpoints and session state are stored locally and cleaned up with the session after 30 days by default."
+  - "Restoring or summarizing changes session state locally; it does not transmit anything beyond the normal model requests."
+  - "Summaries are AI-generated from your conversation; the original messages remain in the local transcript."
+tags:
+  - claude-code
+  - checkpointing
+  - refactoring
+  - recovery
+  - workflow
+keywords:
+  - claude code checkpointing
+  - claude code rewind
+  - undo claude code changes
+  - claude code restore code
+  - safe refactor claude code
+---
+
+## Overview
+
+Claude Code automatically tracks the file edits Claude makes, so you can rewind
+to an earlier state if a change goes wrong. That safety net is what makes
+ambitious, wide-scale refactors less risky, as long as you understand exactly
+what checkpoints do and do not cover.
+
+## How checkpoints work
+
+- Every user prompt creates a new checkpoint capturing code state before edits.
+- Checkpoints persist across sessions, so you can access them in a resumed
+  conversation.
+- They are cleaned up with the session after 30 days by default.
+
+## Rewind and summarize
+
+Run `/rewind`, or press `Esc` twice when the prompt input is empty, to open the
+rewind menu. It lists each prompt you sent. Choose an action:
+
+- **Restore code and conversation**: revert both to that point.
+- **Restore conversation**: rewind the conversation, keep current code.
+- **Restore code**: revert files, keep the conversation.
+- **Summarize from here** / **Summarize up to here**: compress part of the
+  conversation into a summary to free context, without changing files.
+
+Restore options revert state; summarize options only compress conversation. In
+both summarize cases the original messages stay in the transcript.
+
+## A safe refactor workflow
+
+1. Commit your current work to Git so you have permanent history.
+2. Start the refactor with Claude in a session.
+3. If it goes off track, run `/rewind` and **Restore code** to the prompt before
+   the bad change.
+4. Re-prompt with a corrected approach.
+5. When the refactor is good, commit again.
+
+## Limitations to know
+
+- **Bash changes are not tracked**: files modified by `rm`, `mv`, `cp`, or other
+  shell commands cannot be undone through rewind. Only direct file edits are
+  tracked.
+- **External changes are not tracked**: manual edits or edits from other
+  concurrent sessions are usually not captured.
+- **Not a Git replacement**: treat checkpoints as local undo and Git as permanent
+  history and collaboration.
+
+## When to branch instead
+
+If you want to try a different approach while preserving the original session
+intact, fork the session (`claude --continue --fork-session`) rather than
+rewinding. Rewinding changes the current session; forking keeps both.
+
+## Source
+
+- Checkpointing: https://code.claude.com/docs/en/checkpointing

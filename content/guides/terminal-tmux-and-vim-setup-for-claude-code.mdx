@@ -1,0 +1,117 @@
+---
+title: Terminal, Tmux, and Vim Setup for Claude Code
+slug: terminal-tmux-and-vim-setup-for-claude-code
+category: guides
+description: >-
+  A practical walkthrough for configuring your terminal to work well with Claude
+  Code: multiline newlines and Shift+Enter, the /terminal-setup command, tmux
+  passthrough and extended keys, notifications, and Vim editor mode.
+cardDescription: >-
+  Configure your terminal for Claude Code: newlines and Shift+Enter, tmux
+  passthrough, notifications, and Vim editor mode.
+seoTitle: Terminal, Tmux, and Vim Setup for Claude Code
+seoDescription: >-
+  How to configure your terminal for Claude Code: fix Shift+Enter newlines with
+  /terminal-setup, configure tmux passthrough and extended keys, enable
+  notifications, and turn on Vim editor mode.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/terminal-config"
+usageSnippet: "Use this guide when Shift+Enter, notifications, tmux, or Vim keybindings are not behaving the way you expect in the Claude Code CLI."
+prerequisites:
+  - "Claude Code installed and running in your terminal."
+  - "Edit access to your terminal emulator settings and, for tmux users, ~/.tmux.conf."
+  - "Edit access to ~/.claude/settings.json for notification and editor-mode settings."
+safetyNotes:
+  - "/terminal-setup writes keybindings into your terminal emulator's configuration file; review the change and note it leaves existing bindings in place."
+  - "In VS Code, Cursor, and Devin Desktop, /terminal-setup also adjusts editor settings (GPU acceleration and scroll sensitivity); revert them if needed."
+  - "tmux passthrough (allow-passthrough on) lets escape sequences reach the outer terminal; enable it knowingly on shared or remote hosts."
+privacyNotes:
+  - "Terminal configuration is local and does not change what data Claude Code sends to the model provider."
+  - "Notifications can reach your desktop over SSH; be aware a remote session can surface activity on your local machine."
+  - "Large pastes are collapsed to a placeholder in the prompt but the full content is still sent on submit."
+tags:
+  - claude-code
+  - terminal
+  - tmux
+  - vim
+  - configuration
+keywords:
+  - claude code terminal setup
+  - claude code tmux
+  - claude code shift+enter
+  - claude code vim mode
+  - terminal-setup command
+---
+
+## Overview
+
+Claude Code works in any terminal without configuration, but a few terminal
+behaviors (multiline input, notifications, tmux, and Vim keys) often need a small
+tweak. This guide walks through the common fixes.
+
+## Multiline prompts and Shift+Enter
+
+Enter submits your prompt. To add a newline without submitting, press `Ctrl+J`,
+or type `\` then Enter. Both work everywhere with no setup.
+
+Shift+Enter for a newline works without setup in many terminals (Ghostty, Kitty,
+iTerm2, WezTerm, Warp, Apple Terminal, Windows Terminal). In VS Code, Cursor,
+Devin Desktop, Alacritty, and Zed, run `/terminal-setup` once to write the
+binding. In gnome-terminal and JetBrains IDEs it is unavailable; use `Ctrl+J` or
+`\` then Enter.
+
+## Configure tmux
+
+Inside tmux, Shift+Enter and desktop notifications break by default. Add the
+following to `~/.tmux.conf`, then run `tmux source-file ~/.tmux.conf`:
+
+```bash
+set -g allow-passthrough on
+set -s extended-keys on
+set -as terminal-features 'xterm*:extkeys'
+```
+
+`allow-passthrough` lets notifications and progress updates reach the outer
+terminal; the extended-keys lines let tmux distinguish Shift+Enter from Enter.
+Run `/terminal-setup` in the host terminal, not inside tmux.
+
+## Notifications
+
+By default Claude Code sends a desktop notification only in Ghostty, Kitty, and
+iTerm2. In other terminals, set `preferredNotifChannel` to `"terminal_bell"` in
+settings, or configure a Notification hook for a custom sound:
+
+```json
+{
+  "hooks": {
+    "Notification": [
+      { "hooks": [{ "type": "command", "command": "afplay /System/Library/Sounds/Glass.aiff" }] }
+    ]
+  }
+}
+```
+
+## Vim editor mode
+
+Enable Vim-style editing in the prompt via `/config` -> Editor mode, or set
+`editorMode` to `"vim"` in `~/.claude/settings.json`. It supports a subset of
+NORMAL and VISUAL motions (`hjkl`, `v`/`V`, `d`/`c`/`y`). Enter still submits in
+INSERT mode; use `o`, `O`, or `Ctrl+J` to insert a newline.
+
+## Quick checklist
+
+1. Newline not working? Use `Ctrl+J` or run `/terminal-setup` for your editor.
+2. On tmux? Add the three lines above to `~/.tmux.conf`.
+3. No alert when Claude finishes? Set `preferredNotifChannel` or add a
+   Notification hook.
+4. Want Vim keys? Set `editorMode: "vim"`.
+5. Display flickering? Switch to fullscreen rendering with `/tui fullscreen`.
+
+## Source
+
+- Configure your terminal for Claude Code: https://code.claude.com/docs/en/terminal-config

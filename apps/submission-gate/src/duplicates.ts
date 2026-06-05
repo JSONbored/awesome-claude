@@ -349,9 +349,22 @@ export function findStrictContentDuplicateMatch(
     if (
       blockingSharedUrls.length &&
       candidate.category &&
-      candidate.category === existing.category
+      candidate.category === existing.category &&
+      candidate.normalizedDescription &&
+      candidate.normalizedDescription === existing.normalizedDescription
     ) {
-      reasons.push(`same canonical source URL ${blockingSharedUrls[0]}`);
+      reasons.push(
+        `same canonical source URL ${blockingSharedUrls[0]} and same normalized description`,
+      );
+    }
+    if (
+      blockingSharedUrls.length >= 2 &&
+      candidate.category === "collections" &&
+      existing.category === "collections"
+    ) {
+      reasons.push(
+        `same collection source set including ${blockingSharedUrls[0]}`,
+      );
     }
 
     if (
@@ -395,6 +408,14 @@ export function findRelatedContentMatches(
         isCollectionBridge(candidate, existing)
           ? `same canonical source URL ${sharedUrls[0]} across collection/resource categories`
           : `same canonical source URL ${sharedUrls[0]} across ${candidate.category}/${existing.category}`,
+      );
+    } else if (
+      sharedUrls.length &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
+      reasons.push(
+        `same canonical source URL ${sharedUrls[0]} in ${candidate.category}, but not a strict duplicate without the same title, slug, or purpose`,
       );
     }
     const catalogUrls = sharedCatalogUrls(sharedUrls);
