@@ -1,0 +1,107 @@
+---
+title: MCP Auth Surface Statusline
+slug: mcp-auth-surface-statusline
+category: statuslines
+description: >-
+  Claude Code statusline that summarizes MCP server count, remote endpoint
+  count, and credential-surface hints without printing tokens, secrets, local
+  paths, or full endpoint URLs.
+cardDescription: Show MCP auth-surface hints without exposing secrets in the terminal.
+seoTitle: MCP Auth Surface Claude Code Statusline
+seoDescription: >-
+  Bash statusline for Claude Code that summarizes MCP servers, remote endpoints,
+  and credential-surface hints while avoiding token, secret, and path leakage.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+sourceUrls:
+  - "https://code.claude.com/docs/en/statusline"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+installable: true
+installCommand: >-
+  mkdir -p .claude/statuslines && touch .claude/statuslines/mcp-auth-surface.sh && chmod +x .claude/statuslines/mcp-auth-surface.sh
+usageSnippet: "MCP auth: 3 servers | 1 remote | credentials: review"
+copySnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/mcp-auth-surface.sh"
+    }
+  }
+configSnippet: |-
+  {
+    "statusLine": {
+      "type": "command",
+      "command": "$CLAUDE_PROJECT_DIR/.claude/statuslines/mcp-auth-surface.sh"
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  input=$(cat)
+  if ! command -v jq >/dev/null 2>&1; then
+    printf 'MCP auth: jq unavailable\n'
+    exit 0
+  fi
+
+  servers=$(printf '%s' "$input" | jq -c '.mcp.servers // []' 2>/dev/null || printf '[]')
+  server_count=$(printf '%s' "$servers" | jq 'length' 2>/dev/null || printf '0')
+  remote_count=$(printf '%s' "$servers" | jq '[.[] | select((.url // .endpoint // "") | test("^https?://"))] | length' 2>/dev/null || printf '0')
+  credential_hint=$(printf '%s' "$servers" | jq '[.[] | select((.auth // .authorization // .headers // .env // null) != null)] | length' 2>/dev/null || printf '0')
+
+  if [ "$credential_hint" -gt 0 ]; then
+    state="credentials: review"
+  else
+    state="credentials: none shown"
+  fi
+
+  printf 'MCP auth: %s servers | %s remote | %s\n' "$server_count" "$remote_count" "$state"
+prerequisites:
+  - Claude Code CLI with statusline support.
+  - jq installed locally.
+  - MCP server metadata available in the Claude Code statusline input.
+safetyNotes:
+  - "This statusline is advisory and should not be used as the only MCP authorization review."
+  - "It intentionally avoids printing full URLs, local paths, header names, tokens, or environment variable values."
+  - "Remote endpoints and credential hints should trigger a separate review of protected resource metadata, scopes, and token handling."
+privacyNotes:
+  - "The statusline reads Claude Code session metadata from stdin and prints only counts plus a generic credential hint."
+  - "Avoid modifying the script to print full server URLs, headers, tokens, local config paths, or account identifiers on shared screens."
+tags:
+  - mcp
+  - statusline
+  - oauth
+  - security
+  - claude-code
+keywords:
+  - MCP auth statusline
+  - Claude Code MCP credential statusline
+  - MCP remote endpoint statusline
+  - MCP OAuth surface monitor
+robotsIndex: true
+robotsFollow: true
+---
+
+## Features
+
+- Counts configured MCP servers from Claude Code statusline input.
+- Counts remote HTTP and HTTPS MCP endpoints.
+- Shows whether credential-like metadata appears without printing values.
+- Keeps terminal output compact enough for repeated refreshes.
+- Uses official Claude Code statusline behavior and MCP authorization guidance as sources.
+
+## Why use it
+
+MCP auth mistakes often start as visibility problems. A local session can have a
+mix of stdio servers, remote servers, and OAuth-backed endpoints. This
+statusline gives a small prompt to review the authorization surface without
+turning the terminal into a secret leak.
+
+## References
+
+- Claude Code statusline docs - https://code.claude.com/docs/en/statusline
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
