@@ -1,0 +1,117 @@
+---
+title: MCP Remote Authorization Boundary Rules
+slug: mcp-remote-authorization-boundary-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing remote MCP server authorization boundaries:
+  protected resource metadata, OAuth resource indicators, token audience checks,
+  least-privilege scopes, and cross-server token isolation.
+cardDescription: Review remote MCP authorization boundaries before approving OAuth-backed servers.
+seoTitle: MCP Remote Authorization Boundary Rules
+seoDescription: >-
+  Practical MCP authorization rules for protected resource metadata, OAuth
+  resource indicators, token audience validation, and least-privilege remote
+  server review.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://www.rfc-editor.org/rfc/rfc8707"
+  - "https://www.rfc-editor.org/rfc/rfc9728"
+installable: false
+usageSnippet: >-
+  Apply these rules before accepting a remote MCP server that uses OAuth,
+  Streamable HTTP, SSE, or any account-scoped tool surface.
+copySnippet: |-
+  Remote MCP authorization review rules:
+  1. Require protected resource metadata discovery for the MCP endpoint.
+  2. Require an OAuth resource indicator tied to the exact MCP resource.
+  3. Reject tokens accepted for the wrong audience or another MCP server.
+  4. Verify scopes are narrow enough for the advertised tools.
+  5. Block token forwarding unless the source and destination trust boundary is explicit.
+  6. Document revocation, refresh, storage, and user consent behavior.
+  7. Keep source evidence public and credential details private.
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Remote MCP server URL, transport type, and authorization server metadata.
+  - Protected resource metadata or documented reason it is not required.
+  - Scope list, token audience expectations, and tool permission map.
+safetyNotes:
+  - "These rules do not execute the MCP server; they define review requirements before a server is connected to a real account."
+  - "A server that accepts wrong-audience tokens, broad scopes, or forwarded user tokens should not be approved until the boundary is corrected."
+  - "Use separate runtime testing before trusting any OAuth-backed tool that can write, delete, bill, publish, or modify account data."
+privacyNotes:
+  - "Authorization metadata, resource identifiers, issuer URLs, scopes, and token-audience notes can reveal account architecture."
+  - "Do not paste access tokens, client secrets, refresh tokens, or internal tenant identifiers into public review comments."
+tags:
+  - mcp
+  - oauth
+  - authorization
+  - protected-resources
+  - security
+keywords:
+  - MCP remote authorization rules
+  - MCP OAuth resource indicator review
+  - MCP protected resource metadata rules
+  - remote MCP token audience checklist
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Remote MCP servers can expose account-scoped tools over HTTP transports. These
+rules keep review focused on the authorization boundary before the server is
+added to Claude or another MCP client. The goal is not to certify the whole
+service. The goal is to prevent obvious mistakes: wrong-audience tokens,
+missing protected resource metadata, broad scopes, unclear token forwarding, and
+unsafe account writes.
+
+## Required Evidence
+
+Collect these items before approving the server.
+
+1. MCP resource URL and transport.
+2. Protected resource metadata URL or discovery path.
+3. Authorization server metadata and issuer.
+4. Required OAuth scopes and their mapped MCP tools.
+5. Expected resource indicator or audience value.
+6. Token storage, refresh, revocation, and logout behavior.
+7. Public source or documentation supporting the implementation.
+
+If the contributor cannot provide the resource metadata, authorization server,
+scope map, or public source evidence, mark the submission as incomplete.
+
+## Blocking Rules
+
+- Reject a remote MCP server that accepts a token minted for another resource.
+- Reject a server that requires broad account scopes when narrower scopes exist.
+- Reject silent token forwarding across MCP servers or backend services.
+- Reject documentation that says "OAuth supported" without showing issuer,
+  resource, scopes, and consent behavior.
+- Reject tools that can write account data without explicit safety and privacy
+  notes.
+- Reject client setup instructions that ask users to paste tokens into public
+  files, screenshots, transcripts, or PR comments.
+
+## Review Output
+
+Return a concise decision with:
+
+- resource metadata status
+- authorization server status
+- resource indicator or audience status
+- scope-to-tool mapping status
+- token handling status
+- blocking gaps
+- safe public wording for any limitations
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- OAuth 2.0 Resource Indicators - https://www.rfc-editor.org/rfc/rfc8707
+- OAuth 2.0 Protected Resource Metadata - https://www.rfc-editor.org/rfc/rfc9728
