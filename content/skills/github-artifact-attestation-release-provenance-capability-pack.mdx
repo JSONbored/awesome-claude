@@ -1,0 +1,82 @@
+---
+title: GitHub Artifact Attestation Release Provenance Capability Pack
+slug: github-artifact-attestation-release-provenance-capability-pack
+category: skills
+description: >-
+  Reusable skill for reviewing GitHub Actions artifact attestations, OIDC
+  permissions, subject digests, SBOM provenance, and verification commands.
+cardDescription: Review release provenance and artifact attestations before trusting build outputs.
+seoTitle: GitHub Artifact Attestation Release Provenance Capability Pack
+seoDescription: >-
+  Capability pack for auditing GitHub artifact attestations, OIDC release jobs,
+  digest-bound subjects, SBOM attestations, and verification commands.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+downloadUrl: "https://github.com/actions/attest-build-provenance/archive/refs/heads/main.zip"
+installable: true
+installCommand: "gh attestation verify <artifact> --repo OWNER/REPO"
+usageSnippet: "Use before release when a workflow publishes archives, containers, packages, or SBOMs."
+copySnippet: |-
+  # Artifact Attestation Review Skill
+  Review the workflow permissions, attestation subject, artifact digest, SBOM
+  relationship, release trigger, and consumer verification command. Return
+  blockers before suggestions.
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: draft
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom"
+  - "https://github.com/actions/attest-build-provenance"
+testedPlatforms:
+  - Claude
+  - Codex
+  - GitHub Actions
+prerequisites:
+  - Release workflow YAML and artifact list.
+  - Expected package, image, or archive digests.
+safetyNotes:
+  - Treat mismatched attestation subject or broad OIDC permissions as release blockers.
+privacyNotes:
+  - Attestations and SBOMs can expose package metadata and build paths.
+tags:
+  - github-actions
+  - provenance
+  - attestations
+  - release-security
+keywords:
+  - GitHub attestation skill
+  - release provenance capability pack
+  - OIDC artifact review
+readingTime: 5
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Apply this skill to release PRs, workflow changes, and package publish jobs. It
+checks whether the artifact users install is the artifact that was attested.
+
+## Output Contract
+
+- Verdict: pass, needs-fix, or block.
+- Artifact subjects and digests.
+- Jobs with `id-token: write`.
+- Attestation steps.
+- Verification command.
+- Blocking findings and minimal patch.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom
+- https://github.com/actions/attest-build-provenance
