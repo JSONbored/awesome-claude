@@ -1,0 +1,301 @@
+---
+title: Package Download Checksum Guard - Claude Code Hook
+slug: package-download-checksum-guard-hook
+category: hooks
+description: >-
+  PreToolUse hook that reviews proposed Bash commands for package, installer,
+  and archive downloads, then blocks curl or wget download commands that do not
+  include an adjacent checksum or signature verification step.
+cardDescription: >-
+  Block package and archive downloads unless the proposed Bash command includes
+  sha256sum, shasum, OpenSSL, Cosign, GPG, or Minisign verification.
+seoTitle: Package Download Checksum Guard Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code PreToolUse hook that blocks unverified package,
+  installer, and archive downloads before Bash runs them.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+repoUrl: "https://git.savannah.gnu.org/cgit/coreutils.git"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/package-download-checksum-guard.sh && chmod +x
+  .claude/hooks/package-download-checksum-guard.sh
+usageSnippet: >-
+  Package download checksum guard: archive or installer download has no
+  checksum/signature verification step.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/package-download-checksum-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/package-download-checksum-guard.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Bash. It looks for curl/wget commands that
+  # download packages, installers, or archives, and blocks the command unless
+  # the same proposed command also includes a checksum or signature verification
+  # step. It reads the proposed command only; it never downloads anything.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$command_text" ]; then
+    exit 0
+  fi
+
+  if [ -n "${PACKAGE_DOWNLOAD_GUARD_ALLOWLIST:-}" ]; then
+    if printf '%s\n' "$command_text" | grep -Eq -- "$PACKAGE_DOWNLOAD_GUARD_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  downloader_a='curl'
+  downloader_b='wget'
+  shell_a='sh'
+  shell_b='bash'
+  shell_c='zsh'
+  pipe_char=$(printf '\174')
+  downloader_names="(${downloader_a}${pipe_char}${downloader_b})"
+  shell_names="(${shell_a}${pipe_char}${shell_b}${pipe_char}${shell_c})"
+  downloader_re="(^|[;&${pipe_char}[:space:]])${downloader_names}([[:space:]]|$)"
+  archive_re='https?://[^[:space:]]*(\.zip|\.tar\.gz|\.tgz|\.tar\.xz|\.tar\.bz2|\.mcpb|\.deb|\.rpm|\.pkg|\.dmg|\.exe|\.msi|\.AppImage|install\.sh|setup\.sh|bootstrap\.sh)([?#][^[:space:]]*)?'
+  pipe_installer_re="${downloader_names}[^${pipe_char}]*https?://[^${pipe_char}[:space:]]*(install|setup|bootstrap|\.sh)[^${pipe_char}]*\\${pipe_char}[[:space:]]*(sudo[[:space:]]+)?${shell_names}"
+  verify_re='(sha256sum[[:space:]].*(-c|--check)|shasum[[:space:]]+-a[[:space:]]+256|openssl[[:space:]]+(dgst[[:space:]])?-sha256|cosign[[:space:]]+verify-blob|gpg[[:space:]]+--verify|minisign[[:space:]]+-V)'
+
+  if ! printf '%s\n' "$command_text" | grep -Eq -- "$downloader_re"; then
+    exit 0
+  fi
+
+  risky_download=0
+  if printf '%s\n' "$command_text" | grep -Eq -- "$archive_re"; then
+    risky_download=1
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eq -- "$pipe_installer_re"; then
+    risky_download=1
+  fi
+
+  if [ "$risky_download" -ne 1 ]; then
+    exit 0
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eq -- "$verify_re"; then
+    exit 0
+  fi
+
+  echo "Package download checksum guard: archive or installer download has no checksum/signature verification step." >&2
+  echo "Add verification such as 'sha256sum -c', 'shasum -a 256', 'openssl dgst -sha256', 'cosign verify-blob', 'gpg --verify', or 'minisign -V' before running the download command." >&2
+  echo "Set PACKAGE_DOWNLOAD_GUARD_MODE=advisory to warn without blocking, or PACKAGE_DOWNLOAD_GUARD_ALLOWLIST to allow a reviewed command pattern." >&2
+
+  if [ "${PACKAGE_DOWNLOAD_GUARD_MODE:-block}" = "advisory" ]; then
+    exit 0
+  fi
+
+  exit 2
+trigger: PreToolUse
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, jq, grep, and a reviewed `.claude/settings.json` or user-level hook configuration."
+  - "A team policy for when package, installer, or archive downloads require checksums, signatures, pinned releases, or manual source review."
+safetyNotes:
+  - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
+  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless the command includes a verification step such as `sha256sum -c`, `shasum -a 256`, `openssl dgst -sha256`, `cosign verify-blob`, `gpg --verify`, or `minisign -V`."
+  - "Does not download, execute, hash, delete, install, or modify files; it is a pre-execution guard around the proposed command text."
+  - "Regex matching can miss unusual shell constructs or flag legitimate internal download workflows; use `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` for reviewed patterns."
+  - "Set `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` to warn without blocking while a team tunes the policy."
+privacyNotes:
+  - "Reads the proposed Bash command text locally; it makes no network calls and writes no logs."
+  - "Default output does not echo the full command or URL, reducing the chance of exposing private package hosts, tokenized URLs, or internal release names."
+  - "Terminal scrollback, Claude Code transcripts, CI logs, or screenshots can still retain the warning text and environment variable names."
+sourceUrls:
+  - "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
+  - "https://git.savannah.gnu.org/cgit/coreutils.git"
+  - "https://github.com/ossf/scorecard/blob/main/docs/checks.md#dangerous-workflow"
+  - "https://slsa.dev/spec/v1.2/requirements"
+  - "https://docs.sigstore.dev/cosign/verifying/verify/"
+  - "https://curl.se/docs/manpage.html"
+tags:
+  - supply-chain
+  - package-security
+  - checksums
+  - downloads
+  - hooks
+keywords:
+  - "package download checksum guard hook"
+  - "Claude Code package download guard"
+  - "sha256sum download verification hook"
+  - "unverified archive download blocker"
+  - "curl wget checksum guard"
+readingTime: 6
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook catches a narrow supply-chain habit that agents can accidentally
+normalize: downloading package archives or installer scripts and immediately
+using them without verifying the artifact.
+
+It runs before Claude Code executes a Bash command. If the proposed command uses
+`curl` or `wget` to fetch a package-like artifact, installer script, or archive,
+the hook expects the same command to include an adjacent verification step such
+as `sha256sum -c`, `shasum -a 256`, `openssl dgst -sha256`, `cosign
+verify-blob`, `gpg --verify`, or `minisign -V`.
+
+## Features
+
+- Blocks unverified `curl` and `wget` downloads of `.zip`, `.tar.gz`, `.tgz`,
+  `.tar.xz`, `.tar.bz2`, `.mcpb`, `.deb`, `.rpm`, `.pkg`, `.dmg`, `.exe`,
+  `.msi`, `.AppImage`, and common installer script names.
+- Detects downloader-to-shell installer pipelines when the URL looks like an
+  installer script.
+- Accepts common checksum and signature verification commands without requiring
+  one specific tool.
+- Makes no network calls and never executes the proposed command itself.
+- Supports `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` for warning-only rollout and
+  `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` for reviewed internal patterns.
+
+## How It Works
+
+Claude Code passes the pending Bash tool call to the hook on stdin. The script
+extracts `.tool_input.command`, checks for `curl` or `wget`, and then looks for
+package/archive URL shapes or installer pipes. If a risky download is found, it
+requires a verification token in the same proposed command. Without that token,
+it exits `2`, which tells Claude Code to block the Bash call.
+
+The guard is intentionally text-based. It does not claim to verify the checksum
+itself. Its job is to stop the session long enough for a human or agent to add
+the reviewed verification step before the download runs.
+
+## Use Cases
+
+- Stop an agent from fetching a release archive and unpacking it without first
+  checking a digest.
+- Nudge package bootstrap snippets toward `sha256sum -c` or signed-release
+  verification before installation.
+- Keep unverified external source archives from becoming normal in project
+  setup docs, skills, CI helpers, and local scripts.
+- Roll out a lightweight local guard before stricter CI supply-chain policy.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/package-download-checksum-guard.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/package-download-checksum-guard.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/package-download-checksum-guard.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Configuration
+
+- `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` - warn without blocking.
+- `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` - extended regular expression for reviewed
+  commands that should bypass the guard.
+
+## Limitations
+
+- This hook checks command text, not the downloaded artifact. It cannot prove a
+  checksum is correct or that a signature chains to a trusted identity.
+- Shell syntax is large; unusual quoting, variables, functions, aliases, or
+  multi-line wrappers can evade simple text matching.
+- Some ecosystems rely on package manager lockfiles and integrity metadata
+  instead of manual archive checks. Tune the allowlist for those workflows.
+- Verification commands can be present but wrong. Review the expected digest,
+  signing identity, release source, and pinned version before trusting the
+  artifact.
+
+## Duplicate And History Check
+
+Checked current hooks, commands, skills, rules, open PRs, closed PR history,
+issue #772 timeline, and live-site search for package download checksum guards,
+download verification hooks, sha256 hooks, archive download blockers, Sigstore
+verification hooks, SLSA provenance hooks, and lockfile integrity entries.
+
+Adjacent content includes `lockfile-provenance-checker`,
+`package-vulnerability-scanner`, dependency review rules, SLSA provenance review
+skill, and safe shell command rules. This entry is distinct because it is a
+runtime `PreToolUse` Bash guard for proposed package/archive downloads before
+they execute; it does not inspect edited lockfiles, scan known CVEs, review
+general shell safety, or perform provenance review after the artifact exists.
+
+## Source And References
+
+- GNU Coreutils sha2 utilities: https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html
+- GNU Coreutils source repository: https://git.savannah.gnu.org/cgit/coreutils.git
+- OpenSSF Scorecard dangerous workflow check: https://github.com/ossf/scorecard/blob/main/docs/checks.md#dangerous-workflow
+- SLSA requirements: https://slsa.dev/spec/v1.2/requirements
+- Sigstore Cosign verify docs: https://docs.sigstore.dev/cosign/verifying/verify/
+- curl command-line manual: https://curl.se/docs/manpage.html

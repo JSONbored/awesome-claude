@@ -1,0 +1,213 @@
+---
+title: Build MCP Servers with Auth and Least Privilege
+slug: mcp-server-auth-least-privilege
+category: guides
+description: >-
+  A source-backed guide for designing Model Context Protocol servers with
+  explicit authorization boundaries, narrow tools, scoped resources,
+  privacy-aware logging, and least-privilege runtime access.
+cardDescription: Design MCP servers with auth boundaries and narrow tools.
+seoTitle: Build MCP Servers with Auth and Least Privilege
+seoDescription: >-
+  Learn how to design MCP servers with scoped tools, protected resources,
+  OAuth-aware HTTP authorization, safe stdio credential handling, runtime
+  isolation, audit logs, and least-privilege review.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Start from a capability inventory, choose the transport and auth model,
+  map each tool and resource to a scope, enforce checks server-side, isolate
+  the runtime, and review logs before connecting the server to real data.
+prerequisites:
+  - A specific MCP server use case, target client, and list of actions or data sources the server should expose.
+  - A chosen transport model such as local stdio for trusted local use or HTTP for remote/protected access.
+  - A credential plan that separates development, test, and production access.
+  - A review owner who can approve tool scopes, side effects, logging, and rollout.
+safetyNotes:
+  - "Design every tool as a capability grant: expose only the narrow action the client needs and reject arguments that exceed that boundary."
+  - Require explicit human approval or a separate workflow for tools that write files, mutate remote systems, spend money, publish content, or delete data.
+  - Do not pass through broad user tokens to downstream services; validate tokens for the MCP server audience and keep credentials revocable.
+privacyNotes:
+  - Tool arguments, resource URIs, resource contents, prompts, traces, server logs, error reports, and downstream API responses can contain private data.
+  - Redact secrets and customer data before logging, tracing, sharing debug output, or storing MCP interaction artifacts.
+  - Keep test fixtures synthetic or sanitized until the server's authorization, resource filtering, and log retention behavior are reviewed.
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/resources"
+  - "https://github.com/modelcontextprotocol/python-sdk"
+  - "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/server.md"
+tags:
+  - mcp
+  - auth
+  - least-privilege
+  - security
+  - server-design
+  - oauth
+  - tools
+keywords:
+  - build mcp server with auth
+  - mcp least privilege guide
+  - model context protocol authorization
+  - secure mcp server design
+  - mcp tool scope review
+readingTime: 8
+difficultyScore: 66
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+An MCP server should expose the smallest useful set of tools and resources, not
+an entire account, filesystem, or internal API. Before writing the first tool,
+define the transport, authorization model, credential source, tool scopes,
+resource filters, logging policy, and rollback path. For HTTP-based protected
+servers, follow the MCP authorization model and validate that presented tokens
+were issued for your server. For local stdio servers, treat environment
+credentials as powerful secrets and keep the runtime tightly scoped.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Capability inventory", "description": "The server has a written list of tools, resources, prompts, side effects, and downstream systems"}
+- [ ] {"task": "Transport decision", "description": "The team has chosen local stdio, HTTP, or another transport deliberately"}
+- [ ] {"task": "Auth plan", "description": "Protected HTTP access has an authorization plan, and local credentials are separated by environment"}
+- [ ] {"task": "Scope matrix", "description": "Every tool and resource maps to a role, scope, account, project, or directory boundary"}
+- [ ] {"task": "Review owner", "description": "A maintainer can approve new capabilities and revoke credentials if the server behaves unexpectedly"}
+
+## Core Concepts Explained
+
+### Transport changes the trust boundary
+
+Local stdio servers usually inherit credentials and filesystem access from the
+process environment. HTTP servers introduce network exposure, protected
+resource metadata, token validation, client registration, and redirect handling
+concerns. Pick the transport first because it shapes the rest of the auth
+review.
+
+### Tools are capability grants
+
+MCP tools are model-callable actions. Each tool should have a narrow verb,
+clear input schema, strict validation, and a documented side effect. Prefer
+separate read and write tools over a broad "manage everything" tool.
+
+### Resources are data exposure points
+
+Resources can provide file contents, database records, schemas, project state,
+or other context. Scope resource URIs and resource templates so clients can
+retrieve only the data they are meant to see.
+
+### Authorization belongs on the server too
+
+Client-side UI prompts and model instructions are helpful, but the MCP server
+still needs its own checks. Validate identity, audience, scope, tenant,
+project, path, and operation before a tool or resource handler touches data.
+
+## Step-by-Step Server Design
+
+1. **Write the capability inventory.** List each tool, resource, prompt,
+   downstream API, file path, database, queue, browser profile, and account the
+   server may touch. Remove anything that is not needed for the first release.
+
+2. **Choose the transport and auth model.** Use local stdio only when the server
+   is meant to run in a trusted local profile. Use HTTP authorization patterns
+   for protected remote servers, and treat the MCP server as a resource server
+   that validates tokens instead of blindly forwarding them.
+
+3. **Build a scope matrix.** For every tool and resource, record who can call
+   it, which OAuth scope or local credential permits it, which tenant or
+   project it can access, and whether it is read-only or mutating.
+
+4. **Split broad tools.** Replace a single admin-style tool with narrower
+   operations. A read-only lookup, a draft creation action, and a final publish
+   action should usually be separate capabilities with different review
+   expectations.
+
+5. **Validate inputs server-side.** Treat tool arguments as untrusted. Check
+   enum values, path prefixes, project IDs, tenant IDs, amount limits, allowed
+   domains, and maximum result sizes before calling downstream systems.
+
+6. **Filter resources by identity and scope.** Do not expose a generic resource
+   template that can read arbitrary paths or records. Bind resource discovery
+   and resource reads to the authenticated subject or the configured local
+   project boundary.
+
+7. **Constrain the runtime.** Run the server with the smallest filesystem,
+   network, process, and environment access that still supports the workflow.
+   Use separate service accounts or test credentials instead of a personal
+   all-access token.
+
+8. **Make side effects reviewable.** Tools that write, delete, publish, deploy,
+   approve, or spend should return a preview when possible and require an
+   explicit approval step before the final mutation.
+
+9. **Design logs for privacy.** Log request IDs, tool names, scope decisions,
+   and high-level outcomes. Avoid logging raw prompts, secrets, full resource
+   bodies, bearer tokens, customer data, or large downstream responses.
+
+10. **Test denial paths.** Verify that missing scopes, wrong tenants, invalid
+    resource URIs, oversized requests, expired credentials, and production
+    targets are rejected before testing happy paths.
+
+## Auth and Scope Matrix
+
+| Surface | Least-privilege design | Review question |
+| --- | --- | --- |
+| Tool list | Publish only the tools needed for this workflow | Could any tool be split or removed? |
+| Tool call | Check identity, scope, tenant, and argument limits | Can a model broaden the action through arguments? |
+| Resource list | Show only discoverable resources for the caller | Does listing reveal private names or IDs? |
+| Resource read | Bind reads to allowed paths, projects, or records | Can a crafted URI escape the boundary? |
+| Downstream API | Use scoped service accounts or user grants | Can the token modify more than the tool needs? |
+| Logs and traces | Store minimal metadata with redaction | Would a debug bundle expose private content? |
+
+## Implementation Review Checklist
+
+- [ ] {"task": "No catch-all tools", "description": "Tools have narrow names, input schemas, and side-effect descriptions"}
+- [ ] {"task": "Scopes are mapped", "description": "Each tool and resource has an explicit scope, role, tenant, or local boundary"}
+- [ ] {"task": "Audience is validated", "description": "Protected HTTP servers reject tokens that were not issued for this MCP server"}
+- [ ] {"task": "Credentials are separated", "description": "Development, staging, and production credentials are not shared"}
+- [ ] {"task": "Runtime is constrained", "description": "The process has only the directories, network destinations, and environment variables it needs"}
+- [ ] {"task": "Mutation has review", "description": "Dangerous tools preview actions or require a separate human-approved final step"}
+- [ ] {"task": "Logs are redacted", "description": "Tokens, prompts, full resources, customer records, and secret values are not retained by default"}
+- [ ] {"task": "Revocation is tested", "description": "Tokens can be revoked and the server can be disabled without searching through client state"}
+
+## Troubleshooting
+
+- **The server needs a broad token**: split the downstream integration, create a
+  narrower service account, or delay the tool until the provider supports the
+  scope you need.
+- **A resource template can read too much**: add an allowlist for projects,
+  directories, schemas, or record prefixes and test path traversal attempts.
+- **Authorization works locally but fails over HTTP**: confirm the client,
+  authorization server, and MCP server agree on resource identifiers, scopes,
+  redirect URIs, and token audience.
+- **Logs contain sensitive data**: switch to metadata-only logs, redact tool
+  arguments, and rotate any tokens or customer data that were captured.
+- **The tool surface keeps growing**: require a scope-matrix update and review
+  for every new tool before publishing the server to shared clients.
+
+## Duplicate Check
+
+This guide focuses on designing and building an MCP server with authorization
+boundaries, scoped tools, protected resources, runtime isolation, and privacy
+review. Existing entries include individual MCP server listings, Claude workflow
+guides that mention least privilege, and a separate pre-installation threat
+model guide for third-party MCP servers. They do not provide a focused
+source-backed build guide for authoring a new MCP server with auth and
+least-privilege design.
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- MCP security best practices - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices
+- MCP tools specification - https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- MCP resources specification - https://modelcontextprotocol.io/specification/2025-06-18/server/resources
+- MCP Python SDK - https://github.com/modelcontextprotocol/python-sdk
+- MCP TypeScript server docs - https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/server.md

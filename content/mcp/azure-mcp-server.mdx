@@ -1,0 +1,375 @@
+---
+title: Azure MCP Server for Claude
+slug: azure-mcp-server
+category: mcp
+description: >-
+  Official Microsoft Azure MCP server that connects Claude and other MCP
+  clients to Azure subscriptions, resource groups, storage, databases, Key
+  Vault, Monitor, App Service, AKS, AI Search, Cosmos DB, RBAC, pricing, and
+  other Azure services through local stdio or self-hosted HTTP transports.
+cardDescription: >-
+  Connect Claude to Azure subscriptions, resource groups, services, logs,
+  storage, databases, Key Vault, RBAC, pricing, and deployment context.
+seoTitle: Azure MCP Server for Claude
+seoDescription: >-
+  Use Microsoft's Azure MCP Server with Claude and other MCP clients to inspect
+  and manage Azure resources through RBAC-backed tools, read-only mode,
+  namespace filters, and package-manager setup.
+author: Microsoft
+authorProfileUrl: "https://azure.microsoft.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+packageUrl: "https://www.npmjs.com/package/@azure/mcp"
+installable: true
+installCommand: "npx -y @azure/mcp@latest server start"
+usageSnippet: "npx -y @azure/mcp@latest tools list"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Azure MCP Server": {
+        "command": "npx",
+        "args": [
+          "-y",
+          "@azure/mcp@latest",
+          "server",
+          "start"
+        ]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "Azure MCP Server": {
+        "command": "uvx",
+        "args": [
+          "--from",
+          "msmcp-azure",
+          "azmcp",
+          "server",
+          "start"
+        ]
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Azure subscription, tenant, and RBAC permissions for the resources Claude should inspect or manage.
+  - MCP-capable client that can run local stdio servers or connect to a self-hosted HTTP MCP endpoint.
+  - Azure authentication through Azure CLI, Azure PowerShell, Visual Studio, Visual Studio Code, Azure Developer CLI, browser login, service principal environment variables, workload identity, or managed identity.
+  - Node.js 20 LTS or later and `npx` for the `@azure/mcp` package, or `uvx` for `msmcp-azure`, or .NET 10 Preview 6 or later for `Azure.Mcp`.
+  - Clear subscription, tenant, namespace, read-only, and tool exposure plan before connecting an autonomous agent to Azure resources.
+  - Secret-handling plan for Azure credentials, MCP client configuration, Docker `.env` files, server logs, terminal history, and AI transcripts.
+safetyNotes:
+  - >-
+    Start in read-only mode and narrow the exposed namespaces or individual
+    tools before enabling broader Azure access. Microsoft documents read-only
+    mode, namespace filters, single-tool mode, and learn mode as controls for
+    reducing the active MCP surface.
+  - >-
+    Azure MCP tools can inspect and manage real cloud resources. Depending on
+    the tool and RBAC role, actions can create, update, delete, deploy,
+    restart, query, or reconfigure resources and can incur cloud spend.
+  - >-
+    Keep human approval on destructive, cost-bearing, deployment, RBAC, Key
+    Vault, database, storage, messaging, and production-environment actions.
+    Do not disable user confirmation for high-risk or sensitive-data commands
+    unless the automation environment is tightly controlled.
+  - >-
+    The server authenticates with Azure credentials available to the local
+    machine or hosted environment. Limit the credential chain with
+    `AZURE_TOKEN_CREDENTIALS`, managed identities, service principals, and
+    least-privilege Azure RBAC where practical.
+  - >-
+    For self-hosted HTTP deployments, configure Entra ID inbound authentication,
+    outbound authentication strategy, network exposure, logging, and per-user
+    versus server-identity audit requirements before sharing the endpoint.
+  - >-
+    Docker setup uses Azure credential environment variables such as
+    `AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, and `AZURE_CLIENT_SECRET`; protect
+    those values and never commit the env file.
+  - >-
+    Microsoft documents telemetry environment variables for the server. Review
+    `AZURE_MCP_COLLECT_TELEMETRY` and
+    `AZURE_MCP_COLLECT_TELEMETRY_MICROSOFT` before using the server in
+    sensitive environments.
+  - >-
+    This is the Azure services MCP server. It is distinct from the Azure DevOps
+    MCP server, which focuses on work items, repositories, pull requests,
+    pipelines, wikis, and test plans.
+privacyNotes:
+  - >-
+    Tool results can expose tenant IDs, subscription IDs, resource groups,
+    resource names, tags, deployment outputs, Azure Monitor logs, metrics,
+    pricing data, quotas, RBAC assignments, policy data, app settings,
+    database metadata, storage account and blob metadata, and service-specific
+    configuration.
+  - >-
+    Key Vault, App Configuration, Storage, database, Service Bus, Event Hubs,
+    Communication Services, and deployment tools may expose secrets,
+    connection strings, keys, certificates, message contents, sample records,
+    or customer data when the authenticated identity has permission.
+  - >-
+    Microsoft documents user confirmation for tools that handle sensitive data,
+    including Key Vault secrets, connection strings, passwords, certificate
+    private keys, and other confidential values. Treat those prompts as a
+    required guardrail rather than friction.
+  - >-
+    MCP client logs, AI transcripts, local terminal history, hosted server
+    logs, prompt traces, generated runbooks, and downstream tickets can retain
+    Azure resource inventory and returned data outside Azure's original access
+    and retention boundaries.
+  - >-
+    Remote HTTP deployments require Entra ID bearer tokens on inbound requests
+    and a configured outbound Azure authentication strategy. Choose
+    On-Behalf-Of when per-user RBAC and audit trails matter, and managed
+    identity only when the shared-server identity model is acceptable.
+  - >-
+    Read-only mode reduces mutation risk, but it does not make returned Azure
+    metadata or data safe to share with untrusted models, logs, chats, or
+    third-party tools.
+tags:
+  - azure
+  - cloud
+  - devops
+  - infrastructure
+  - mcp
+keywords:
+  - azure mcp
+  - azure mcp server
+  - "@azure/mcp"
+  - azmcp
+  - azure claude
+  - azure resources mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+The Azure MCP Server is Microsoft's official MCP server for working with Azure
+resources from Claude and other MCP-capable clients. It connects an assistant
+to Azure subscriptions and services through a local stdio server or a
+self-hosted HTTP server, using Azure authentication and RBAC instead of copied
+portal screenshots or manually pasted resource details.
+
+The strongest use case is developer-side Azure work where the assistant needs
+fresh, permissioned cloud context: list resource groups, inspect storage
+containers, check Cosmos DB or PostgreSQL resources, query Azure Monitor,
+retrieve pricing or quota information, reason about RBAC assignments, generate
+Azure CLI guidance, or look up Azure best-practice recommendations before
+changing infrastructure.
+
+## Features
+
+- Official Microsoft implementation in the `microsoft/mcp` repository.
+- Local stdio server through `@azure/mcp`, `Azure.Mcp`, or `msmcp-azure`.
+- Self-hosted HTTP mode for remote deployments on Azure Container Apps.
+- Azure Identity based authentication using local developer credentials,
+  service principals, workload identity, managed identity, or hosted HTTP
+  authentication flows.
+- Azure RBAC-backed access to subscriptions, resource groups, and individual
+  services.
+- Read-only mode for preventing write operations.
+- Namespace and individual tool filtering so a client can expose only the
+  Azure services required for the task.
+- Learn mode for command and parameter discovery without executing Azure
+  operations.
+- Sensitive-data confirmation for tools that may return secrets, connection
+  strings, passwords, certificate private keys, or other confidential values.
+- Tool coverage across Azure AI Search, App Configuration, Cosmos DB, Key
+  Vault, Monitor, RBAC, Redis, Storage, App Service, Functions, AKS, SQL,
+  PostgreSQL, MySQL, Service Bus, Event Hubs, Event Grid, Azure Policy,
+  pricing, quotas, Resource Health, Well-Architected guidance, and more.
+- Setup paths for VS Code, Visual Studio, IntelliJ, Eclipse, Cursor, Cline,
+  Windsurf, GitHub Copilot CLI, package managers, Docker, and custom MCP
+  clients.
+- Sovereign cloud support through the `--cloud` option or `AZURE_CLOUD`
+  environment variable.
+
+## Use Cases
+
+- Ask Claude to inventory resource groups, storage accounts, app services, AKS
+  clusters, databases, or Azure AI resources before making infrastructure
+  changes.
+- Query Azure Monitor logs or metrics while investigating a failed deployment,
+  incident, or performance regression.
+- Inspect RBAC assignments, policy state, quotas, and pricing before planning a
+  deployment.
+- Generate Azure CLI or Azure Developer CLI guidance from natural-language
+  intent while keeping Azure context in the same MCP session.
+- Work in read-only mode while drafting a migration plan, cost review,
+  incident summary, or architecture audit.
+- Narrow the server to namespaces such as `storage`, `keyvault`, `cosmos`,
+  `monitor`, or `aks` when the assistant only needs a bounded Azure surface.
+- Self-host an HTTP Azure MCP endpoint for approved agents that need shared
+  access through Entra ID controlled authentication.
+
+## Installation
+
+### Claude Code with the Node package
+
+Authenticate to Azure first with an approved method such as `az login`, Visual
+Studio Code Azure sign-in, Azure PowerShell, Azure Developer CLI, or managed
+identity.
+
+Add the stdio server with the official npm package:
+
+```bash
+claude mcp add azure-mcp -- npx -y @azure/mcp@latest server start
+```
+
+Confirm the package can list tools before using it in a high-trust workspace:
+
+```bash
+npx -y @azure/mcp@latest tools list
+```
+
+### Other package-manager options
+
+Use the .NET tool when your environment standardizes on NuGet:
+
+```bash
+dotnet tool install Azure.Mcp
+```
+
+Use the Python package when your environment standardizes on `uvx`:
+
+```bash
+uvx --from msmcp-azure azmcp server start
+```
+
+## Configuration
+
+### Basic MCP client configuration
+
+```json
+{
+  "mcpServers": {
+    "Azure MCP Server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure/mcp@latest",
+        "server",
+        "start"
+      ]
+    }
+  }
+}
+```
+
+### Python-based configuration
+
+```json
+{
+  "mcpServers": {
+    "Azure MCP Server": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "msmcp-azure",
+        "azmcp",
+        "server",
+        "start"
+      ]
+    }
+  }
+}
+```
+
+### VS Code extension controls
+
+Microsoft's VS Code extension exposes server controls for mode, enabled
+services, and read-only behavior:
+
+```json
+{
+  "azureMcp.serverMode": "namespace",
+  "azureMcp.enabledServices": ["storage", "keyvault"],
+  "azureMcp.readOnly": true
+}
+```
+
+Restart the MCP server after changing the exposed namespaces or read-only
+setting.
+
+### Sovereign cloud selection
+
+Use the command-line cloud option or `AZURE_CLOUD` when working outside Azure
+Public Cloud:
+
+```bash
+azmcp server start --cloud AzureUSGovernment
+```
+
+```bash
+AZURE_CLOUD=AzureChinaCloud azmcp server start
+```
+
+## Examples
+
+Ask read-only prompts first:
+
+```text
+Use the Azure MCP Server to list my Azure subscriptions and resource groups.
+```
+
+```text
+Use Azure MCP in read-only mode to list storage accounts in this subscription
+and summarize which resource groups they belong to.
+```
+
+```text
+Use Azure MCP to query Azure Monitor for errors in this Log Analytics workspace
+from the last hour, then summarize the recurring failure patterns.
+```
+
+```text
+Use Azure MCP learn mode to show which storage and key vault tools are
+available before running any Azure operation.
+```
+
+Use explicit boundaries before allowing write-capable work:
+
+```text
+Use only the staging subscription and the appservice namespace. Draft the
+deployment plan first, then wait for approval before changing any resource.
+```
+
+## Source notes
+
+- Microsoft Learn documents the Azure MCP Server as the official way to manage
+  Azure resources through natural-language commands from GitHub Copilot,
+  custom AI agents, and MCP-compatible clients.
+- The official `microsoft/mcp` repository hosts the Azure MCP Server under
+  `servers/Azure.Mcp.Server` and documents the npm, NuGet, PyPI, Docker, IDE,
+  and remote hosting setup paths.
+- Microsoft Learn documents developer credentials, managed identity, Azure
+  RBAC, read-only mode, namespace and tool filtering, learn mode, tool
+  annotations, user confirmation for sensitive data, and remote HTTP
+  authentication behavior.
+- The npm package `@azure/mcp`, NuGet package `Azure.Mcp`, PyPI package
+  `msmcp-azure`, and Microsoft Container Registry image all map back to the
+  official Microsoft Azure MCP Server documentation and repository.
+
+## Duplicate check
+
+This entry covers Microsoft's general Azure MCP Server for Azure cloud
+resources and services. It is intentionally separate from the existing Azure
+DevOps MCP Server entry, which focuses on Azure DevOps organizations, work
+items, repositories, pull requests, pipelines, wikis, and test plans. Before
+submission, the content tree and open PRs were checked for `azure-mcp-server`,
+`Azure MCP Server`, `@azure/mcp`, `Azure.Mcp.Server`, and the official
+`microsoft/mcp` Azure server path; no existing direct Azure MCP Server content
+entry or open content PR was found.
+
+## Disclosure
+
+This is a source-backed listing for an official Microsoft open-source MCP
+server. The submitter is not affiliated with Microsoft, and no sponsorship,
+affiliate relationship, or paid placement is involved.

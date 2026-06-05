@@ -1,0 +1,164 @@
+---
+title: OpenAI Docs Skill
+slug: openai-docs-skill
+category: skills
+description: >-
+  Official OpenAI skill that tells agents to use the OpenAI developer
+  documentation MCP server first for API, Codex, Apps SDK, model-selection,
+  and migration questions.
+cardDescription: Use OpenAI docs MCP tools first for source-backed OpenAI API and Codex answers.
+seoTitle: OpenAI Docs Skill for Codex and Claude Workflows
+seoDescription: >-
+  Add the OpenAI Docs Skill to guide agents toward the official OpenAI
+  developer documentation MCP server, current model guidance, Codex source
+  routes, migration docs, and citation-backed API answers.
+author: OpenAI
+authorProfileUrl: "https://github.com/openai"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+repoUrl: "https://github.com/openai/skills"
+documentationUrl: "https://developers.openai.com/learn/docs-mcp"
+downloadUrl: "https://github.com/openai/skills/archive/refs/heads/main.zip"
+installable: false
+usageSnippet: >-
+  Use this skill when an agent answers OpenAI API, Codex, Apps SDK, model
+  selection, migration, or prompt-upgrade questions and should consult official
+  OpenAI documentation before relying on memory.
+copySnippet: |-
+  Use the OpenAI Docs Skill when answering OpenAI product or API questions.
+  Search and fetch official OpenAI developer docs through the configured
+  `openaiDeveloperDocs` MCP server first, then fall back only to official
+  OpenAI domains when the MCP source is unavailable.
+skillType: general
+skillLevel: foundational
+verificationStatus: validated
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://developers.openai.com/learn/docs-mcp"
+  - "https://github.com/openai/skills/tree/main/skills/.curated/openai-docs"
+  - "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/openai-docs/SKILL.md"
+testedPlatforms:
+  - Codex
+  - Claude
+  - Cursor
+  - VS Code
+  - Generic AGENTS
+prerequisites:
+  - OpenAI developer documentation MCP server configured at `https://developers.openai.com/mcp`.
+  - An agent environment that supports reusable skills, project instructions, or equivalent workflow rules.
+  - Permission to install or reference the `openai/skills` repository in the target agent tooling.
+  - A habit of requesting citations or source URLs when the answer depends on current OpenAI product behavior.
+safetyNotes:
+  - The skill is read-only guidance; it does not call OpenAI APIs, create API keys, modify accounts, or execute code by itself.
+  - Do not use the skill as proof that a model, API parameter, entitlement, or product feature exists; it routes the agent to official docs so the answer can be verified.
+  - Keep model upgrade work narrow unless the user explicitly asks for SDK, auth, environment, or provider migration changes.
+privacyNotes:
+  - Documentation queries can reveal what product, API, model, migration, or customer workflow the user is researching.
+  - Avoid sending private prompts, customer data, secrets, internal repository names, or unreleased product plans through docs-search queries.
+  - Skill text, fetched docs, citations, and agent transcripts can persist in local logs or conversation history depending on the client.
+sourceUrls:
+  - "https://developers.openai.com/learn/docs-mcp"
+  - "https://github.com/openai/skills/tree/main/skills/.curated/openai-docs"
+  - "https://raw.githubusercontent.com/openai/skills/main/skills/.curated/openai-docs/SKILL.md"
+tags:
+  - openai
+  - codex
+  - docs
+  - mcp
+  - skills
+  - citations
+keywords:
+  - OpenAI Docs Skill
+  - OpenAI developer docs MCP
+  - Codex OpenAI docs skill
+  - OpenAI API citations
+  - OpenAI model migration skill
+readingTime: 6
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+OpenAI Docs Skill is an official skill from the `openai/skills` repository. It
+helps agents answer OpenAI product and API questions from current official
+documentation instead of stale memory. The skill is designed to pair with
+OpenAI's public developer documentation MCP server at
+`https://developers.openai.com/mcp`.
+
+Use it when a workflow needs source-backed answers about the OpenAI API,
+Responses API, ChatGPT Apps SDK, Codex, model selection, model migration,
+prompt upgrades, Realtime, Agents SDK, or adjacent OpenAI developer surfaces.
+
+## Features
+
+- Routes OpenAI API and product questions to official developer docs first.
+- Names the expected Docs MCP tools for search, fetch, and API reference
+  lookup when available.
+- Separates broad Codex self-knowledge from ordinary OpenAI API documentation
+  lookup.
+- Includes source-priority rules for model selection, model upgrades, and
+  prompt-upgrade guidance.
+- Encourages bounded uncertainty when public docs do not establish a claim.
+- Restricts web-search fallback to official OpenAI domains.
+- Pairs directly with OpenAI's public Docs MCP server setup instructions.
+
+## Use Cases
+
+- Ask an agent to verify the current Responses API tool schema before changing
+  code.
+- Answer Codex setup, customization, skill, plugin, hook, MCP, or `AGENTS.md`
+  questions with a source route instead of guessing from memory.
+- Check current model-selection guidance before changing an OpenAI model
+  default.
+- Draft an API migration plan while preserving explicitly requested target
+  models or products.
+- Require citations for OpenAI API, Apps SDK, or Codex answers in code review
+  and support workflows.
+
+## Installation
+
+This listing does not package a local archive. Use the source repository and
+your agent's supported skill-install workflow.
+
+1. Configure the OpenAI developer Docs MCP server:
+
+```sh
+codex mcp add openaiDeveloperDocs --url https://developers.openai.com/mcp
+```
+
+2. Install or reference the skill source from:
+
+```txt
+https://github.com/openai/skills/tree/main/skills/.curated/openai-docs
+```
+
+3. Add a project instruction telling the agent to use the skill for OpenAI
+   product and API questions.
+
+## Compatibility
+
+### Native
+
+- Codex workflows with skills and MCP enabled.
+- Agent setups that can load `SKILL.md`-style instructions and call the OpenAI
+  developer Docs MCP server.
+
+### Manual Adaptation
+
+- Claude, Cursor, VS Code, and generic `AGENTS.md` workflows can adapt the
+  routing rules as durable project instructions when their skill runtime differs.
+
+## Boundary Notes
+
+The skill does not authenticate to OpenAI, operate accounts, create keys, or
+perform production API calls. It is a retrieval and source-priority rule for
+agents. Keep private data out of documentation searches and verify claims with
+official docs before changing production code.
+
+## Related Resources
+
+- OpenAI Docs MCP - https://developers.openai.com/learn/docs-mcp
+- OpenAI skills repository - https://github.com/openai/skills
+- OpenAI Docs Skill source - https://raw.githubusercontent.com/openai/skills/main/skills/.curated/openai-docs/SKILL.md

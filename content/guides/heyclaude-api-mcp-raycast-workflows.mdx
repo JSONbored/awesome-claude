@@ -1,0 +1,207 @@
+---
+title: Use HeyClaude API, MCP, and Raycast Together
+slug: heyclaude-api-mcp-raycast-workflows
+category: guides
+description: >-
+  A source-backed guide for choosing between HeyClaude API endpoints, the
+  HeyClaude MCP server, and the Raycast extension surface when building
+  registry discovery, install-guidance, and PR-first submission workflows.
+cardDescription: Choose the right HeyClaude surface for each workflow.
+seoTitle: Use HeyClaude API, MCP, and Raycast Together
+seoDescription: >-
+  Learn when to use the HeyClaude API, MCP server, and Raycast extension
+  together for registry search, entry details, feeds, install guidance,
+  submission drafts, and privacy-aware handoffs.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Use the API for deterministic app or script integrations, MCP for
+  AI-client workflows that need registry tools in context, and Raycast for
+  keyboard-first discovery, copy actions, favorites, and reviewed submit links.
+prerequisites:
+  - A clear workflow goal such as discovery, comparison, install guidance, feed sync, submission drafting, or daily launcher access.
+  - Network access to HeyClaude public registry data and documentation.
+  - An MCP-capable client if using the HeyClaude MCP endpoint.
+  - Raycast on macOS if using the Raycast extension surface.
+safetyNotes:
+  - Treat HeyClaude surfaces as discovery and draft-preparation aids, not as automatic publishing authority.
+  - Verify source URLs and install commands before copying them into production workspaces or shared automation.
+  - Keep content submissions PR-first and human reviewed; do not route private credentials, unpublished package archives, or customer data through draft fields.
+privacyNotes:
+  - API requests, MCP tool arguments, Raycast searches, entry details, install snippets, draft metadata, and local favorites can reveal what resources a user is researching.
+  - Raycast can cache registry feeds, entry details, jobs, favorites, and local ranking signals on the local machine.
+  - Do not include secrets, private repository names, customer data, or unreleased material in search queries, MCP prompts, or submission drafts.
+sourceUrls:
+  - "https://heyclau.de/api-docs"
+  - "https://heyclau.de/data/raycast-index.json"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/apps/web/public/openapi.yaml"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/packages/mcp/README.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/integrations/raycast/README.md"
+  - "https://developers.raycast.com/"
+tags:
+  - heyclaude
+  - api
+  - mcp
+  - raycast
+  - registry
+  - workflow-design
+  - discovery
+keywords:
+  - heyclaude api mcp raycast
+  - heyclaude registry workflow
+  - heyclaude mcp workflow
+  - heyclaude raycast guide
+  - claude registry api guide
+readingTime: 8
+difficultyScore: 53
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+HeyClaude exposes more than one useful surface. Use the API when another app,
+script, dashboard, or feed reader needs deterministic registry data. Use the
+HeyClaude MCP server when an AI client should search, compare, inspect install
+guidance, or prepare reviewed submission drafts in context. Use Raycast when a
+human wants fast macOS launcher access, copy actions, favorites, and links
+without leaving the keyboard.
+
+Do not treat the three surfaces as competing sources of truth. Keep category
+and slug identifiers stable, cite canonical entry URLs, and move sensitive or
+write-capable decisions back into a reviewed PR or human approval step.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Workflow goal", "description": "You know whether the job is discovery, comparison, feed sync, install guidance, submission drafting, or daily lookup"}
+- [ ] {"task": "Surface choice", "description": "API, MCP, and Raycast are mapped to the parts of the workflow they handle best"}
+- [ ] {"task": "Identifier plan", "description": "Category and slug pairs are preserved when moving between surfaces"}
+- [ ] {"task": "Privacy filter", "description": "Queries and draft fields exclude secrets, private repository names, and customer data"}
+- [ ] {"task": "Human review", "description": "Submission and installation decisions remain reviewable before public or production action"}
+
+## Core Concepts Explained
+
+### API is for deterministic integration
+
+Use the HeyClaude API and feed endpoints when software needs predictable inputs:
+registry search, entry detail links, feed sync, jobs data, integrity checks, or
+OpenAPI-backed route discovery. API consumers should handle pagination,
+refreshes, stale cache behavior, and network failures explicitly.
+
+### MCP is for AI-client workflows
+
+Use the HeyClaude MCP server when Claude or another MCP-capable client should
+search the public registry, compare entries, fetch install guidance, inspect
+compatibility, or prepare submission drafts. The MCP surface is useful when the
+model needs registry context during a conversation, but it should still be
+treated as read-only discovery and draft preparation.
+
+### Raycast is for keyboard-first human action
+
+Use Raycast when the user wants fast launcher access to search commands,
+focused category browsing, copy actions, Quicklinks, Snippets, favorites,
+jobs, and contribution links. Raycast is best as a human-operated surface, not
+as an unattended automation layer.
+
+### The handoff key is category plus slug
+
+Move between surfaces with stable identifiers such as `mcp/heyclaude-mcp` or a
+canonical entry URL. Titles and descriptions can change; category and slug are
+the safer handoff handles.
+
+## Step-by-Step Workflow Design
+
+1. **Name the user action.** Write the exact job: find a tool, compare MCP
+   servers, copy an install snippet, sync recent entries, prepare a submission,
+   or open a job listing.
+
+2. **Choose the primary surface.** Pick API for programmatic access, MCP for
+   agent-assisted context, or Raycast for interactive lookup. Avoid forcing one
+   surface to own the whole workflow when another surface is more ergonomic.
+
+3. **Use API for repeatable data access.** Pull registry or feed data from
+   documented endpoints when you need stable refresh logic, a web integration,
+   a report, a dashboard, or a local index.
+
+4. **Use MCP for conversational discovery.** Let the AI client search,
+   compare, fetch details, and prepare reviewed drafts when the user is already
+   working in an AI session.
+
+5. **Use Raycast for daily retrieval.** Put frequent searches, category
+   commands, copy actions, Quicklinks, Snippets, favorites, and submission
+   links where the user can operate them quickly.
+
+6. **Preserve canonical references.** Carry category, slug, source URL,
+   documentation URL, and HeyClaude entry URL through each handoff. This keeps
+   copied notes and PR text verifiable.
+
+7. **Handle freshness deliberately.** API consumers should record generated
+   timestamps or signatures when available. Raycast workflows should account
+   for local cache behavior. MCP users should re-check details before relying
+   on old conversation context.
+
+8. **Keep submissions reviewed.** Use surface helpers to draft and validate,
+   then route final content through HeyClaude's PR-first review path instead of
+   trying to publish from an assistant or launcher.
+
+9. **Document what each surface cannot do.** State which layer does not write
+   files, open PRs, manage accounts, mutate registry entries, or store secrets.
+   Clear non-goals prevent accidental authority creep.
+
+## Surface Decision Matrix
+
+| Need | Best surface | Why |
+| --- | --- | --- |
+| Feed sync or dashboard | API | Predictable URLs, documented response shapes, explicit caching |
+| Registry search inside a chat | MCP | The model can call registry tools during the workflow |
+| Copy install guidance quickly | Raycast | Fast human action with launcher commands and copy actions |
+| Compare entries with context | MCP | The AI client can inspect details and explain tradeoffs |
+| Build a public category index | API | Programmatic access is easier to test and refresh |
+| Favorite repeated resources | Raycast | Local favorites and launcher ranking fit human recall |
+| Prepare submission fields | MCP or Raycast | Both can help draft, but final submission remains reviewed |
+
+## Handoff Checklist
+
+- [ ] {"task": "API to MCP", "description": "Pass category and slug, not just a title copied from a feed"}
+- [ ] {"task": "MCP to Raycast", "description": "Open or copy the canonical entry URL so the launcher workflow uses the same resource"}
+- [ ] {"task": "Raycast to PR", "description": "Keep submit links reviewable and include source URLs rather than private notes"}
+- [ ] {"task": "MCP to install", "description": "Verify install commands and config snippets before applying them to a real workspace"}
+- [ ] {"task": "API cache to user", "description": "Show generated timestamps or refresh status when data may be stale"}
+- [ ] {"task": "Any surface to public", "description": "Remove secrets, private repo names, customer details, and unpublished material"}
+
+## Troubleshooting
+
+- **API and Raycast results differ**: check whether Raycast is using a cached
+  feed and refresh before assuming the registry changed incorrectly.
+- **The AI client cites an old entry**: ask the MCP server for fresh detail by
+  category and slug, then re-check the source and documentation URLs.
+- **A copied install command feels risky**: open the canonical entry and source
+  repository, review safety notes, and test in a low-risk workspace first.
+- **A submission draft includes private material**: remove private fields,
+  replace them with public source URLs, and keep the final PR human reviewed.
+- **A workflow needs writes**: keep writes outside HeyClaude discovery surfaces
+  unless they are part of a separate reviewed system with explicit authority.
+
+## Duplicate Check
+
+This guide focuses on using HeyClaude API, MCP, and Raycast surfaces together
+as a workflow design problem. Existing entries include the HeyClaude MCP server
+listing, the Raycast tool listing, Raycast extension development guidance, and
+HeyClaude submission skills. They do not provide a focused source-backed guide
+for choosing between the API, MCP, and Raycast surfaces, preserving identifiers
+between them, handling cache freshness, and keeping submissions PR-first.
+
+## References
+
+- HeyClaude API docs - https://heyclau.de/api-docs
+- HeyClaude Raycast feed - https://heyclau.de/data/raycast-index.json
+- HeyClaude OpenAPI source - https://github.com/JSONbored/awesome-claude/blob/main/apps/web/public/openapi.yaml
+- HeyClaude MCP README - https://github.com/JSONbored/awesome-claude/blob/main/packages/mcp/README.md
+- HeyClaude Raycast README - https://github.com/JSONbored/awesome-claude/blob/main/integrations/raycast/README.md
+- Raycast developer documentation - https://developers.raycast.com/

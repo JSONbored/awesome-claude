@@ -1,0 +1,272 @@
+---
+title: Content-Only Submission PR Gate Rules
+slug: content-only-submission-pr-gate-rules
+category: rules
+description: >-
+  Source-backed rules for preparing direct content-only pull requests with one
+  raw MDX file, reachable provenance URLs, issue closure, duplicate history,
+  validation evidence, and no generated artifact churn.
+cardDescription: >-
+  Gate content-only PRs before opening: one raw MDX file, reachable sources,
+  issue closure, duplicate checks, validation, and no generated artifacts.
+seoTitle: Content-Only Submission PR Gate Rules
+seoDescription: >-
+  Practical content-only PR gate rules for AI coding assistants and
+  contributors: one-file scope, reachable source URLs, issue-closing keywords,
+  duplicate history, validation commands, and generated-artifact boundaries.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://github.com/JSONbored/awesome-claude/blob/main/.github/pull_request_template.md"
+sourceUrls:
+  - "https://github.com/JSONbored/awesome-claude/blob/main/.github/pull_request_template.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/rule.example.mdx"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/validate-content.mjs"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs"
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue"
+installable: false
+usageSnippet: >-
+  Apply these rules before opening a direct content-only PR so the branch is a
+  single source MDX file with reachable source URLs, a slot-closing PR body,
+  duplicate history, local validation, and no generated output.
+copySnippet: |-
+  You are preparing a direct content-only pull request.
+
+  Rules:
+  1. Change exactly one raw content file under content/<category>/<slug>.mdx.
+  2. Keep README output, generated registry files, downloads, workflows,
+     package files, scripts, and unrelated content out of the PR.
+  3. Verify every source URL as publicly reachable and directly relevant before
+     putting it in frontmatter or the PR body.
+  4. Link the exact child issue with a supported closing keyword.
+  5. Document duplicate checks across titles, slugs, source URLs, docs URLs,
+     providers, aliases, existing content, open PRs, and closed PRs.
+  6. Run focused validation before pushing and report the exact commands.
+  7. Stop before opening the PR when source proof, duplicate history, safety
+     notes, privacy notes, or one-file scope is incomplete.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A selected content slot issue, target category, proposed title, and proposed slug before creating the branch.
+  - Public source URLs that load successfully and directly support the entry's claims.
+  - A duplicate-search pass across existing content, live PRs, closed PRs, source domains, docs URLs, package URLs, provider names, and aliases.
+  - A local checkout where category validation, content policy validation, and whitespace checks can run before the branch is pushed.
+safetyNotes:
+  - "These rules do not run content or automate submissions; they are a review gate for keeping direct content PRs focused and verifiable."
+  - "Do not run generators, package builds, download packaging, README refreshes, or maintainer automation while preparing a content-only PR unless the issue explicitly requires it."
+  - "If the submitted entry describes hooks, MCP servers, shell commands, installers, credentialed tools, external writes, or destructive actions, require specific safety notes for that entry before opening the PR."
+privacyNotes:
+  - "PR bodies, source URLs, issue links, duplicate-search notes, screenshots, and validation logs are public review artifacts."
+  - "Do not use private repositories, customer names, internal docs, local paths, account identifiers, tokens, screenshots with secrets, or unpublished data as public source evidence."
+  - "When validation output or duplicate evidence contains private details, summarize the verification class publicly and keep sensitive evidence in the approved private channel."
+tags:
+  - pull-requests
+  - content-prs
+  - submission-gate
+  - source-provenance
+  - duplicate-checks
+  - validation
+keywords:
+  - content-only submission PR gate rules
+  - source-backed content PR hygiene
+  - one-file content pull request rules
+  - direct content submission validation
+  - generated artifact scope checklist
+readingTime: 6
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules before opening a direct content-only pull request. The goal is
+to make the branch easy for maintainers and automation to classify: one raw
+source file, reachable source evidence, documented duplicate history, focused
+validation, and no generated output.
+
+This is not a general contributor tutorial. It is a gate an AI coding assistant
+or contributor can apply at the moment when a content branch is almost ready to
+push.
+
+## Gate Inputs
+
+Collect these inputs before creating the content file.
+
+1. **Slot and category.** Name the child issue, requested category, target
+   directory, title, and slug.
+2. **Source evidence.** List official docs, repository files, package pages,
+   standards, or primary project pages that prove the claims in the entry.
+3. **Nearby content.** Search existing rules, guides, hooks, skills,
+   collections, commands, agents, open PRs, and closed PRs for the same
+   workflow or source URL.
+4. **Risk class.** Decide whether the submitted entry describes executable
+   code, install commands, credentialed tools, local file reads, external
+   writes, network calls, telemetry, logs, or generated artifacts.
+5. **Validation path.** Know the category validator and content policy command
+   before opening the PR.
+
+Do not open the PR while any gate input is still unknown.
+
+## Scope Rules
+
+- Add or modify exactly one raw MDX source file under the requested
+  `content/<category>/` directory.
+- Do not edit README output, generated registry data, route files, feeds,
+  downloads, ZIP or MCPB artifacts, package metadata, workflows, scripts, or
+  unrelated content.
+- Do not reformat neighboring files, rename existing entries, reorder content
+  directories, or update shared metadata as a side task.
+- Keep the branch based on current upstream main so the PR does not open behind
+  the base branch.
+- If a rejected one-shot submission is being repaired, create a fresh branch
+  and PR with the actual blocker fixed rather than force-pushing the closed PR.
+
+## Source Rules
+
+- Put only reachable public URLs in `documentationUrl`, `repoUrl`, and
+  `sourceUrls`.
+- Prefer primary sources: repository files, official docs, standards,
+  package pages, release notes, or the target repository's validation files.
+- Verify source URLs with a real HTTP request or browser load before opening
+  the PR.
+- Cite the final URL without trailing punctuation, markdown backticks, tracking
+  parameters, local paths, or private redirects.
+- Use sources that support the operational claims in the entry, not just the
+  title.
+- Replace any source that returns a hard 404, requires private auth, or points
+  to a file that does not exist on the target repository's default branch.
+
+## Duplicate Rules
+
+Search and record:
+
+- title, slug, aliases, provider name, package name, docs URL, repository URL,
+  source URL, and source domain;
+- same-category entries and adjacent-category entries that solve the same
+  problem;
+- open PRs, closed PRs, and merged PR history for the child issue;
+- earlier rejection reasons, especially duplicate, source failure, wrong
+  category, generated artifacts, or missing safety/privacy evidence.
+
+The PR body should name the closest related content and explain the difference
+in one or two concrete sentences.
+
+## PR Body Rules
+
+The PR body should include:
+
+- the exact closing reference for the child issue, such as `Closes #730`;
+- a summary that says the PR changes one content file;
+- duplicate and closed-PR history;
+- source URL verification notes;
+- validation commands;
+- a statement that generated artifacts, README output, workflows, package
+  files, and scripts were not changed.
+
+GitHub supports linked pull requests that close issues with keywords, and this
+repository's PR template asks direct content submissions to confirm one-file
+scope, source/provenance, author attribution, and generated-artifact
+boundaries.
+
+## Validation Rules
+
+Run focused checks before pushing the branch.
+
+```bash
+git diff --check upstream/main...HEAD
+node scripts/validate-content.mjs --category rules
+node scripts/ci/validate-content-policy.mjs --files-json /tmp/content-pr-files.json --head-repo <fork-owner>/<repo> --base-repo JSONbored/awesome-claude --head-ref <branch> --pr-author <author>
+```
+
+The files JSON manifest should contain only the intended MDX source file. If a
+validator reports another file, stop and remove the unrelated change before the
+PR is opened.
+
+## Safety And Privacy Rules
+
+Do not use generic warnings when the submitted content has real runtime risk.
+Require specific notes when the entry:
+
+- runs shell commands, install commands, hooks, package managers, or build
+  tools;
+- reads files, browsers, repositories, databases, tickets, logs, prompts, or
+  screenshots;
+- uses credentials, cookies, OAuth, API keys, database URLs, MCP permissions,
+  or cloud accounts;
+- writes to external services, sends messages, opens PRs, edits issues, deploys
+  code, or publishes artifacts;
+- stores or transmits user data, telemetry, traces, generated output, or
+  validation logs.
+
+If none of those behaviors apply, the safety and privacy notes should say that
+the rule itself is review-process guidance and explain what public review
+artifacts still exist.
+
+## Merge Blockers
+
+Do not open or approve the PR when:
+
+- more than one content file changed;
+- generated output, README sections, workflows, package files, scripts, or
+  downloads changed;
+- any `sourceUrls` value is private, broken, redirected to an error page, or
+  decorated with stray markdown characters;
+- the PR body lacks the child issue closure reference;
+- the duplicate check ignores an obvious related entry, open PR, or closed PR;
+- safety or privacy notes are generic for a tool that can execute code, read
+  local data, use credentials, or write externally;
+- local validation was skipped without an explicit reason;
+- the branch is already behind upstream main before the PR is opened.
+
+## Review Checklist
+
+- [ ] {"task": "One file", "description": "The diff contains exactly one raw MDX file under the requested content category"}
+- [ ] {"task": "Sources reachable", "description": "Every documentation, repository, and source URL loads publicly and supports the entry"}
+- [ ] {"task": "Issue closes", "description": "The PR body includes the exact child issue closing reference"}
+- [ ] {"task": "History checked", "description": "Existing content, open PRs, closed PRs, source domains, titles, slugs, and aliases were searched"}
+- [ ] {"task": "Artifacts excluded", "description": "README output, generated files, workflows, packages, scripts, and downloads were not edited"}
+- [ ] {"task": "Validation recorded", "description": "Whitespace, category validation, and content policy validation ran against the reviewed branch"}
+
+## Troubleshooting
+
+- **A source URL returns 404:** replace it with the final reachable source, then
+  rerun source verification before opening a new PR.
+- **The entry overlaps a guide:** make the rule enforce a pre-open or
+  pre-merge decision, and explain how it differs from the contributor guide.
+- **The PR is behind upstream:** rebase before opening or immediately after
+  GitHub reports the stale base.
+- **The closed PR had a private-gate comment:** fix the exact blocker in a new
+  branch and name the prior close reason in the PR body.
+- **The validation command needs a files manifest:** write a JSON array with the
+  single intended file path and pass it to the policy validator.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, collections, hooks, skills, commands, open PRs,
+closed PRs, repository templates, and validator scripts for content-only PR
+hygiene, direct content submissions, source-backed content PRs, generated
+artifact churn, one-file PR gates, issue-closing keywords, and source URL
+verification.
+
+Adjacent content includes the source-backed content PR guide and generated
+artifact churn rules. This entry is distinct because it is an operational gate
+for AI coding assistants and contributors immediately before opening a direct
+content-only PR: it blocks stale branches, broken source URLs, missing issue
+closure, incomplete closed-PR history, and accidental generated-artifact scope.
+
+PR #1135 previously attempted this slot and was closed because source URLs were
+reported as hard 404 failures. This resubmission uses verified reachable URLs
+and a new slug while keeping the one-file rules scope.
+
+## Sources
+
+- Repository PR template: https://github.com/JSONbored/awesome-claude/blob/main/.github/pull_request_template.md
+- Rules example entry: https://github.com/JSONbored/awesome-claude/blob/main/examples/content/rule.example.mdx
+- Content validator: https://github.com/JSONbored/awesome-claude/blob/main/scripts/validate-content.mjs
+- Content policy validator: https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs
+- GitHub linked issue closure documentation: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue

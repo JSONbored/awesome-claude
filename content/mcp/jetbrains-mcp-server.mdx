@@ -1,0 +1,257 @@
+---
+title: JetBrains MCP Server for Claude
+slug: jetbrains-mcp-server
+category: mcp
+description: >-
+  Official built-in JetBrains MCP server that connects Claude and other MCP
+  clients to IntelliJ IDEA, PyCharm, WebStorm, Android Studio, and other
+  IntelliJ-based IDEs for project analysis, code insight, file edits, build
+  feedback, run configurations, terminal commands, debugger context, and
+  optional database tools.
+cardDescription: >-
+  Connect Claude to JetBrains IDE project context, inspections, edits, builds,
+  run configurations, terminals, debugger sessions, and database tools.
+seoTitle: JetBrains MCP Server for Claude
+seoDescription: >-
+  Use the built-in JetBrains MCP Server with Claude to work with IntelliJ IDEA,
+  PyCharm, WebStorm, Android Studio, and other IntelliJ-based IDEs through
+  project-aware tools for analysis, editing, builds, runs, debugging, terminals,
+  and databases.
+author: JetBrains
+authorProfileUrl: "https://www.jetbrains.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.jetbrains.com/help/idea/mcp-server.html"
+repoUrl: "https://github.com/JetBrains/mcp-jetbrains"
+installable: true
+installCommand: "Enable MCP Server from Settings | Tools | MCP Server in a JetBrains IDE 2025.2 or later"
+usageSnippet: "Settings | Tools | MCP Server | Enable MCP Server"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "jetbrains": {
+        "command": "npx",
+        "args": ["-y", "@jetbrains/mcp-proxy"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "jetbrains": {
+        "command": "npx",
+        "args": ["-y", "@jetbrains/mcp-proxy"],
+        "env": {
+          "IDE_PORT": "63342",
+          "HOST": "127.0.0.1"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - JetBrains IDE 2025.2 or later with the bundled MCP Server plugin enabled, such as IntelliJ IDEA, PyCharm, WebStorm, or Android Studio.
+  - MCP-capable client such as Claude Desktop, Claude Code, Cursor, Codex, VS Code, Windsurf, or another client that can use SSE, stdio, or HTTP Stream configuration.
+  - Open JetBrains project that Claude is allowed to inspect, edit, build, run, or debug.
+  - Node.js 18 or later only when using the legacy `@jetbrains/mcp-proxy` stdio bridge for older client setups.
+  - Decision on which exposed tools should remain enabled for analysis, code insight, file modification, terminal commands, run configurations, debugger access, and database operations.
+  - Review process before enabling command execution without confirmation or exposing the IDE to external clients, Docker containers, or non-local hosts.
+safetyNotes:
+  - >-
+    JetBrains MCP is built into IntelliJ-based IDEs starting with 2025.2. The
+    `JetBrains/mcp-jetbrains` npm proxy repository is deprecated, so prefer the
+    IDE's current Settings | Tools | MCP Server workflow and use the npm proxy
+    only as a compatibility bridge when needed.
+  - >-
+    The MCP server exposes IDE tools that can analyze code, modify files, build
+    projects, run configurations, execute terminal commands, inspect debugger
+    sessions, and access optional database tooling depending on the enabled
+    plugins and exposed tool list.
+  - >-
+    Keep the server bound to local clients unless external access is explicitly
+    required. Enabling external IDE connections and setting a LAN host can make
+    the IDE's MCP surface reachable from Docker containers or other machines on
+    the network.
+  - >-
+    Do not enable command execution without confirmation for sensitive
+    repositories, production credentials, deploy-capable projects, or untrusted
+    prompt workflows. Treat JetBrains' brave mode as a privileged automation
+    setting.
+  - >-
+    Disable exposed tools that are not needed for the current workflow,
+    especially terminal, run configuration, debugger, and database tools in
+    shared or production-like environments.
+  - >-
+    Database tools should use read-only database users when the assistant only
+    needs schema discovery, query inspection, or sample data. Do not rely on
+    prompts as the only guardrail against write queries.
+privacyNotes:
+  - >-
+    Tool results can expose project paths, source code, open files, selected
+    text, dependency names, compiler diagnostics, inspections, symbol metadata,
+    run configuration names, terminal output, stack frames, local variables,
+    evaluated expressions, database connection names, schemas, SQL text, and
+    query results.
+  - >-
+    IDE projects often contain secrets in environment files, run
+    configurations, test fixtures, logs, shell history, database consoles, and
+    generated output. Exclude or redact those files before asking an assistant
+    to inspect broad project context.
+  - >-
+    MCP client transcripts, JetBrains logs, proxy logs, terminal output, and
+    debug traces may retain file paths, code snippets, command arguments, query
+    output, and operational details outside the IDE.
+  - >-
+    If external client or Docker access is enabled, network metadata and
+    project content can cross the local IDE boundary. Use private networks,
+    host firewalls, narrow ports, and per-project review before exposing the
+    server beyond localhost.
+tags:
+  - jetbrains
+  - intellij
+  - mcp
+  - ide
+  - debugger
+keywords:
+  - jetbrains mcp
+  - intellij mcp server
+  - pycharm mcp
+  - webstorm mcp
+  - jetbrains claude
+  - "@jetbrains/mcp-proxy"
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+JetBrains MCP Server lets Claude and other MCP-capable clients work with an
+open JetBrains IDE project through the IDE itself. Starting with JetBrains IDE
+version 2025.2, the MCP Server plugin is bundled into IntelliJ-based IDEs and
+can be enabled from Settings | Tools | MCP Server. The older
+`@jetbrains/mcp-proxy` package remains useful as a stdio compatibility bridge,
+but JetBrains now points users to the built-in IDE workflow as the primary
+setup path.
+
+This is most useful when Claude needs project-aware IDE context rather than
+plain filesystem access. The server can expose tools for inspections, build
+feedback, symbol lookup, file edits, run configurations, terminal commands,
+debugger sessions, and database tools depending on the IDE, installed plugins,
+and the user's exposed-tool settings.
+
+## Features
+
+- Official JetBrains MCP support bundled into IntelliJ-based IDEs starting with
+  version 2025.2.
+- Client auto-configuration for Claude Desktop, Claude Code, Cursor, Codex, VS
+  Code, Windsurf, and other supported clients from the IDE settings screen.
+- Manual client configuration for SSE, stdio, and HTTP Stream transports.
+- Project analysis tools for builds, file problems, dependencies, modules, and
+  IDE inspections.
+- Code insight tools for symbol information, code navigation, and
+  project-aware context.
+- File and editing tools for modifying project files through the open IDE.
+- Run configuration and terminal tools for supervised execution workflows.
+- Debugger toolset support for stepping, stack inspection, frame values,
+  expression evaluation, breakpoints, and runtime state when the debugger
+  plugin is available.
+- Optional database tools through JetBrains database plugins, including
+  connection inspection, schema metadata, recent queries, table previews, and
+  SQL execution.
+- Per-tool exposure controls under Settings | Tools | MCP Server | Exposed
+  Tools.
+- Optional command execution without confirmation for trusted local workflows
+  that intentionally need unattended runs.
+
+## Use Cases
+
+- Ask Claude to inspect IDE diagnostics before making a code change.
+- Build a project or compile selected files after edits and return the IDE's
+  error and warning output.
+- Navigate symbols, dependencies, modules, and project structure without
+  flattening the task into shell-only file search.
+- Apply small project edits through an IDE-aware workflow, then re-run build or
+  inspection tools.
+- Debug a failing test by combining breakpoints, stack frames, local variables,
+  and expression evaluation with Claude's reasoning.
+- Review database schemas or sample rows from a JetBrains data source using a
+  restricted database user.
+- Keep a Claude Desktop, Claude Code, Cursor, Codex, or VS Code workflow
+  connected to the same project state already open in IntelliJ IDEA, PyCharm,
+  WebStorm, or Android Studio.
+
+## Installation
+
+### Built-in IDE setup
+
+Use the built-in MCP Server plugin in a JetBrains IDE 2025.2 or later:
+
+1. Open the target project in the JetBrains IDE.
+2. Go to Settings | Tools | MCP Server.
+3. Click Enable MCP Server.
+4. Use Auto-Configure for supported clients, or copy the SSE, stdio, or HTTP
+   Stream configuration manually.
+5. Restart the MCP client so the new configuration is loaded.
+
+### Legacy stdio bridge
+
+For clients that need a stdio command, JetBrains' older proxy package can still
+bridge the client to the local IDE:
+
+```json
+{
+  "mcpServers": {
+    "jetbrains": {
+      "command": "npx",
+      "args": ["-y", "@jetbrains/mcp-proxy"]
+    }
+  }
+}
+```
+
+When multiple IDEs are running, set the IDE port explicitly:
+
+```json
+{
+  "mcpServers": {
+    "jetbrains": {
+      "command": "npx",
+      "args": ["-y", "@jetbrains/mcp-proxy"],
+      "env": {
+        "IDE_PORT": "63342",
+        "HOST": "127.0.0.1"
+      }
+    }
+  }
+}
+```
+
+Only configure a non-local host when you have intentionally enabled external
+IDE connections and reviewed the network exposure.
+
+## Source Notes
+
+- JetBrains documents the MCP Server as bundled into IntelliJ IDEA 2025.2 and
+  later, with setup under Settings | Tools | MCP Server.
+- JetBrains documents automatic setup for Claude Desktop, Claude Code, Cursor,
+  Codex, VS Code, and Windsurf, plus manual SSE, stdio, and HTTP Stream
+  configuration.
+- The `JetBrains/mcp-jetbrains` repository is an official JetBrains project but
+  is deprecated because the core functionality moved into the IDE.
+- The deprecated proxy repository remains relevant for historical stdio
+  examples and `@jetbrains/mcp-proxy` compatibility notes.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and live open PRs
+were checked for JetBrains, IntelliJ MCP, `mcp-jetbrains`,
+`@jetbrains/mcp-proxy`, the JetBrains MCP docs URL, and the official repository
+URL. No existing content entry or open PR covered this JetBrains MCP server.
+
+## Editorial Disclosure
+
+Submitted as a community content entry by `oktofeesh1`. This listing is based
+on JetBrains' official documentation and official repository metadata, with no
+paid placement or affiliate relationship.

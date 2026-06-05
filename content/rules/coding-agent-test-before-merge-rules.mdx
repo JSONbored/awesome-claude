@@ -1,0 +1,236 @@
+---
+title: Coding Agent Test-Before-Merge Rules
+slug: coding-agent-test-before-merge-rules
+category: rules
+description: >-
+  Source-backed rules for requiring coding agents to provide fresh, scoped, and
+  reviewer-visible test evidence before a pull request can be approved or
+  merged.
+cardDescription: >-
+  Require coding agents to run focused tests, report exact commands, protect
+  test data, and block merges when verification is stale or missing.
+seoTitle: Coding Agent Test-Before-Merge Rules
+seoDescription: >-
+  Practical test-before-merge rules for coding agents: focused test selection,
+  fresh CI status checks, exact command evidence, flaky-test handling, privacy
+  protection, and merge blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks"
+sourceUrls:
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks"
+  - "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"
+  - "https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output"
+  - "https://google.github.io/eng-practices/review/reviewer/looking-for.html"
+  - "https://docs.pytest.org/en/stable/how-to/usage.html"
+  - "https://jestjs.io/docs/cli"
+  - "https://vitest.dev/guide/cli"
+installable: false
+usageSnippet: >-
+  Apply these rules before merging a pull request authored or updated by a
+  coding agent, especially when the agent claims that tests passed, behavior is
+  unchanged, or CI is enough evidence.
+copySnippet: |-
+  You are deciding whether a coding-agent pull request has enough test evidence
+  to merge.
+
+  Rules:
+  1. Map every changed behavior to a focused test, CI check, or documented
+     manual verification step.
+  2. Require exact commands, environments, commit SHAs, and pass/fail results;
+     do not accept agent summaries as proof.
+  3. Re-run or refresh checks after rebases, force pushes, dependency changes,
+     generated artifacts, or test-fix commits.
+  4. Block merge when tests are skipped, stale, unrelated, flaky without
+     triage, or run against unsafe production-like targets.
+  5. Keep logs and fixtures privacy-safe before pasting evidence into public
+     pull request comments.
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, branch, or patch created or modified by a coding agent.
+  - Access to the repository's documented test commands, CI status checks, and branch-protection rules.
+  - Enough diff context to identify touched behavior, affected packages, generated files, and risky runtime paths.
+  - Permission to request changes or block merge when test evidence is stale, incomplete, unsafe, or unverifiable.
+safetyNotes:
+  - "Tests can mutate databases, send network requests, write files, consume cloud quota, or contact sandboxed services; coding agents must use isolated test environments and documented safe commands."
+  - "Passing one focused test does not prove unrelated risky paths are safe; require broader checks for auth, data deletion, payments, migrations, release automation, and generated artifacts."
+  - "Treat agent-generated test summaries as untrusted until the reviewer can inspect the exact command, status check, log, or reproducible manual verification evidence."
+privacyNotes:
+  - "Test logs, snapshots, fixtures, screenshots, coverage reports, and CI artifacts can expose secrets, customer data, internal hostnames, private package names, prompts, or file paths."
+  - "Do not paste raw private CI logs, database rows, browser traces, screenshots, or failing payloads into public PR comments without redaction."
+  - "When a test needs private credentials or data, record the approved internal verification channel rather than copying sensitive details into the public PR."
+tags:
+  - testing
+  - coding-agents
+  - pull-requests
+  - ci
+  - status-checks
+  - merge-safety
+keywords:
+  - coding agent test before merge rules
+  - AI coding agent test evidence
+  - pull request test gate rules
+  - fresh CI status check policy
+  - reviewer-visible test commands
+readingTime: 6
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when a coding agent opens, edits, or summarizes a pull request
+and the reviewer needs to decide whether the branch has enough test evidence to
+merge.
+
+The central rule is simple: a coding agent may propose the patch, but the pull
+request must contain reviewer-visible evidence that the changed behavior was
+verified on the reviewed commit. A confident agent summary is not a substitute
+for tests, CI checks, command output, or a documented manual verification path.
+
+## Evidence Classes
+
+Classify the needed evidence before approving the pull request.
+
+1. **Focused unit test.** Pure functions, parsers, validators, reducers, and
+   small business rules should have targeted tests that fail without the fix.
+2. **Integration test.** API handlers, database access, queues, permissions,
+   framework wiring, CLI commands, and third-party clients need tests across the
+   boundary that changed.
+3. **End-to-end or smoke test.** User flows, routing, auth, payments, browser
+   behavior, deployment wiring, and release paths need a higher-level check or
+   a clearly documented manual verification step.
+4. **Static check.** Type checking, linting, formatting, code scanning, and
+   generated-schema checks are useful evidence, but they do not replace runtime
+   tests for behavior changes.
+5. **Required status check.** CI status checks and protected-branch rules matter
+   only when they ran on the reviewed head commit and cover the affected code.
+6. **Manual verification.** Use manual checks only when automation is missing,
+   expensive, or impossible; record the exact environment, steps, result, and
+   reviewer who accepted the gap.
+
+If the PR changes multiple behavior classes, require evidence for each class
+instead of accepting a single broad "tests passed" statement.
+
+## Required Test Evidence
+
+A coding-agent PR should make test evidence easy to audit.
+
+- The PR names the exact commands, CI jobs, or manual verification steps used.
+- Test results are tied to the reviewed commit SHA, not an older push or local
+  state.
+- Focused tests cover the changed behavior, failing case, or regression that
+  motivated the patch.
+- CI status checks are current after rebases, force pushes, dependency updates,
+  generated-file changes, and test-only follow-up commits.
+- Skipped tests, quarantined tests, retries, and flaky failures have a written
+  explanation and owner decision.
+- Generated artifacts, lockfiles, migrations, clients, schemas, and snapshots
+  have a regeneration or validation command.
+- Manual verification avoids production data and records enough detail for a
+  reviewer to reproduce the result safely.
+
+Do not approve when the evidence is only a natural-language summary from the
+agent. Ask for the command, job link, log excerpt, or reviewer-owned manual
+verification note.
+
+## Agent Rules
+
+- Read the repository's test documentation before choosing commands.
+- Prefer focused commands first, then broader package or CI checks when the
+  touched behavior crosses boundaries.
+- Use framework-supported focused test options when available, such as pytest
+  node IDs, Jest related tests, or Vitest file/test-name filtering.
+- Report commands exactly as run, including package manager, workspace, flags,
+  environment name, and any skipped tests.
+- Stop and ask for review when tests require credentials, production-like data,
+  paid services, destructive fixtures, or non-isolated infrastructure.
+- Never invent passing results, hide failing output, or convert a failed test
+  into a "known issue" without maintainer approval.
+- Re-run relevant checks after every change that can alter behavior, generated
+  output, dependency resolution, or test selection.
+
+## Reviewer Rules
+
+- Start by mapping files changed to behavior changed.
+- Compare the agent's summary with the actual diff and status checks.
+- Confirm that required checks ran on the latest commit.
+- Require a focused regression test for bug fixes unless the project lacks a
+  practical test harness and the manual verification note explains why.
+- Ask for broader checks when the PR touches auth, data deletion, billing,
+  migrations, concurrency, dependency manifests, release automation, or public
+  API behavior.
+- Treat screenshots as supporting evidence, not proof that the underlying
+  behavior is tested.
+- Keep public PR evidence synthetic and redacted when logs or fixtures contain
+  private data.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the PR claims tests passed but does not name the command, CI job, or commit;
+- tests ran before a rebase, force push, dependency update, generated artifact,
+  or final patch commit;
+- the test command is unrelated to the changed package, path, or behavior;
+- a risky behavior change has only lint, formatting, or type-check evidence;
+- failing, skipped, quarantined, or flaky tests are not triaged;
+- manual verification uses production data, real payments, live credentials, or
+  destructive targets without explicit approval;
+- generated files, snapshots, schemas, clients, or migrations changed without a
+  regeneration or validation command;
+- logs, screenshots, traces, fixtures, or coverage artifacts expose private
+  user data or secrets.
+
+## Review Checklist
+
+- [ ] {"task": "Behavior mapped", "description": "Each meaningful code change is mapped to the behavior it can affect"}
+- [ ] {"task": "Commands exact", "description": "The PR names exact test commands, CI jobs, commit SHA, environment, and pass/fail results"}
+- [ ] {"task": "Checks are fresh", "description": "Tests and required status checks ran after the latest branch update"}
+- [ ] {"task": "Risk paths covered", "description": "Auth, data, payments, migrations, dependencies, release automation, and public API changes have focused evidence"}
+- [ ] {"task": "Failures triaged", "description": "Skipped, flaky, failed, or quarantined tests have an owner-approved explanation"}
+- [ ] {"task": "Privacy safe", "description": "Logs, fixtures, screenshots, and manual verification notes avoid secrets and private data"}
+
+## Troubleshooting
+
+- **The agent cannot run tests locally:** require current CI, a maintainer-run
+  command, or a manual verification note that explains the limitation.
+- **Only broad CI exists:** add a focused regression test when the change fixes
+  a bug or touches a risky path; otherwise document why broad CI is adequate.
+- **The test is flaky:** do not merge by retrying until green. Capture the flaky
+  signal, identify an owner, and decide whether the PR should fix or isolate it.
+- **The branch changed after approval:** refresh relevant checks and review the
+  delta before merging.
+- **Logs contain private data:** redact or move evidence to an approved private
+  channel and leave a minimal public note that verification occurred.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, hooks, commands, skills, open PRs, and closed
+PR history for test-before-merge rules, coding-agent test evidence, AI-generated
+code review, TDD rules, status checks, test-runner hooks, and CI validation.
+
+Adjacent content includes the AI-generated-code-before-merge guide, the
+test-driven-development enforcer rule, code-test-runner and Playwright test
+hooks, and high-risk code review escalation rules. This entry is distinct
+because it is a portable rules policy for coding-agent PRs: it decides what
+test evidence must exist before merge, how agents should report commands, when
+reviewers should refresh stale checks, and what privacy constraints apply to
+test logs and fixtures.
+
+## Sources
+
+- GitHub Docs: About status checks - https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/collaborating-on-repositories-with-code-quality-features/about-status-checks
+- GitHub Docs: About protected branches - https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
+- GitHub Docs: Review output from Copilot - https://docs.github.com/en/copilot/how-tos/copilot-on-github/use-copilot-agents/review-copilot-output
+- Google Engineering Practices: What to look for in a code review - https://google.github.io/eng-practices/review/reviewer/looking-for.html
+- pytest documentation: Usage and invocations - https://docs.pytest.org/en/stable/how-to/usage.html
+- Jest CLI options - https://jestjs.io/docs/cli
+- Vitest CLI guide - https://vitest.dev/guide/cli

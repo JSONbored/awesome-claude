@@ -43,8 +43,16 @@ import {
   upsertMarkerComment,
 } from "./github";
 import {
+  approvalReviewBody,
+  DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
   defaultManualDecision,
+  enforceAutoMergeConfidenceFloor,
+  GATE_COMMENT_FORMATTER_VERSION,
+  isRetryableGateDecision,
   markerComment,
+  normalizePrivateGateDecisionPayload,
+  privateReviewErrorDecision,
+  retryingReviewComment,
   type GateDecision,
   type GateVerdict,
 } from "./review";
@@ -91,6 +99,7 @@ type Env = {
   DISCORD_SUBMISSION_WEBHOOK_URL?: string;
   REQUIRED_VALIDATION_CHECKS?: string;
   REQUIRED_STATUS_CONTEXTS?: string;
+  AUTO_MERGE_CONFIDENCE_FLOOR?: string;
   SUBMISSION_GATE_DB: D1Database;
   SUBMISSION_GATE_AUDIT: R2Bucket;
   SUBMISSION_REVIEW_QUEUE: Queue<Record<string, unknown>>;
@@ -137,13 +146,6 @@ class SubmissionMergePendingError extends Error {
   }
 }
 
-const GATE_VERDICTS = new Set<GateVerdict>([
-  "merge",
-  "request_changes",
-  "close",
-  "manual",
-  "ignore",
-]);
 const TERMINAL_GATE_VERDICTS = new Set(["close", "manual", "ignore"]);
 const TERMINAL_PR_STATUSES = new Set(["merged", "closed", "manual", "ignored"]);
 const VALIDATION_REQUEUE_SECONDS = 90;
@@ -153,6 +155,9 @@ const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
 const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
+const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT = String(
+  DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
+);
 const SWEEP_LIMIT = 25;
 const OPEN_PR_DISCOVERY_LIMIT = 25;
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
@@ -355,6 +360,77 @@ function decisionStatus(verdict: GateVerdict) {
   return "closed";
 }
 
+function gateCheckStatus(status: string) {
+  const normalized = status.toLowerCase();
+  if (
+    ["passed", "pending", "failed", "neutral", "skipped", "unknown"].includes(
+      normalized,
+    )
+  ) {
+    return normalized as NonNullable<GateDecision["checks"]>[number]["status"];
+  }
+  return "unknown" as const;
+}
+
+function checksForDecision(
+  validation:
+    | {
+        checks?: Array<{ name: string; status: string; details?: string }>;
+      }
+    | null
+    | undefined,
+) {
+  return (validation?.checks || []).map((check) => ({
+    name: check.name,
+    status: gateCheckStatus(check.status),
+    details: check.details,
+  }));
+}
+
+function decisionWithReviewContext(
+  decision: GateDecision,
+  params: {
+    scope?: DirectContentScope | null;
+    validation?: {
+      checks?: Array<{ name: string; status: string; details?: string }>;
+    } | null;
+  } = {},
+): GateDecision {
+  return {
+    ...decision,
+    scope:
+      decision.scope ||
+      (params.scope
+        ? {
+            filePath: params.scope.filePath,
+            category: params.scope.category,
+            slug: params.scope.slug,
+            status: params.scope.status,
+          }
+        : undefined),
+    checks: decision.checks?.length
+      ? decision.checks
+      : checksForDecision(params.validation),
+  };
+}
+
+function decisionMetadata(
+  decision: GateDecision,
+  comment?: { id?: number; url?: string },
+  review?: { id?: number },
+) {
+  return {
+    commentId: comment?.id ?? null,
+    commentUrl: comment?.url || null,
+    reviewId: review?.id ?? null,
+    schemaVersion: decision.schemaVersion ?? 1,
+    formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
+    decisionId: decision.decisionId || crypto.randomUUID(),
+    confidence: decision.confidence ?? null,
+    sourceEvidenceHash: decision.sourceEvidenceHash ?? null,
+  };
+}
+
 function nextReviewForStatus(status: string) {
   if (status === "validation_pending") {
     return isoAfter(VALIDATION_REQUEUE_SECONDS);
@@ -401,28 +477,6 @@ function normalizeOneShotDecision(decision: GateDecision): GateDecision {
       "- Please resubmit a new focused one-file content PR after fixing the issue.",
     ].join("\n"),
   };
-}
-
-function isRetryablePrivateReviewerDecision(decision: GateDecision) {
-  if (decision.verdict !== "manual") return false;
-  const summary = decision.summary.toLowerCase();
-  return (
-    summary.includes("could not determine the github app installation") ||
-    summary.includes("private corpus review request failed") ||
-    summary.includes("private corpus review returned") ||
-    summary.includes("private corpus review returned an unexpected payload")
-  );
-}
-
-function retryingReviewComment(marker = DEFAULT_REVIEW_MARKER) {
-  return [
-    marker,
-    "Review retrying",
-    "",
-    "The public validation lane is green, but the private reviewer returned a retryable infrastructure result. The submission gate will retry automatically.",
-    "",
-    "No contributor action is needed yet.",
-  ].join("\n");
 }
 
 function allowedCorsOrigins(env: Env) {
@@ -859,6 +913,16 @@ function requiredValidationChecks(env: Env) {
 
 function requiredStatusContexts(env: Env) {
   return parseCsv(env.REQUIRED_STATUS_CONTEXTS);
+}
+
+function autoMergeConfidenceFloor(env: Env) {
+  const configured = Number(
+    env.AUTO_MERGE_CONFIDENCE_FLOOR || DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT,
+  );
+  if (Number.isFinite(configured) && configured >= 0 && configured <= 1) {
+    return configured;
+  }
+  return DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR;
 }
 
 function installationIdFromPayload(payload: Record<string, unknown>) {
@@ -1526,6 +1590,7 @@ function validationGateDecision(validation: {
       ].join("\n"),
       labels: [LABELS.close],
       close: true,
+      checks: checksForDecision(validation),
     };
   }
   return {
@@ -1543,6 +1608,7 @@ function validationGateDecision(validation: {
     ].join("\n"),
     labels: [LABELS.close],
     close: true,
+    checks: checksForDecision(validation),
   };
 }
 
@@ -1752,13 +1818,17 @@ async function applyTerminalGateDecision(params: {
       apiVersion: params.env.GITHUB_API_VERSION,
     });
   }
-  await upsertMarkerComment({
+  const displayDecision = decisionWithReviewContext(params.decision, {
+    scope: params.scope,
+    validation: params.validation,
+  });
+  const reportComment = await upsertMarkerComment({
     token: params.token,
     repo: params.repo,
     issueNumber: params.target.number,
     marker: params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
     body: markerComment(
-      params.decision,
+      displayDecision,
       params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
     ),
     apiVersion: params.env.GITHUB_API_VERSION,
@@ -1793,10 +1863,11 @@ async function applyTerminalGateDecision(params: {
     baseRef: params.target.baseRef || contentGateBaseRef(params.env),
     installationId: params.target.installationId,
     status: params.status,
-    verdict: params.decision.verdict,
-    verdictSummary: params.decision.summary,
+    verdict: displayDecision.verdict,
+    verdictSummary: displayDecision.summary,
     nextReviewAt: null,
     terminalAt: TERMINAL_PR_STATUSES.has(params.status) ? nowIso() : null,
+    ...decisionMetadata(displayDecision, reportComment),
   });
 }
 
@@ -1807,6 +1878,7 @@ async function mergeAcceptedPullRequest(params: {
   target: ReviewTarget;
   decision: GateDecision;
   scope: DirectContentScope;
+  reportCommentUrl?: string;
 }) {
   const expectedHeadSha = params.target.headSha || "";
   if (!expectedHeadSha) {
@@ -1820,18 +1892,11 @@ async function mergeAcceptedPullRequest(params: {
     expectedScope: params.scope,
     expectedHeadSha,
   });
-  const reviewBody = [
-    "Automated review by HeyClaude Maintainer Agent.",
-    "",
-    "This content-only PR passed content validation, Superagent, duplicate/history review, source/provenance review, category-fit review, and safety/privacy review.",
-    "",
-    "The agent is approving and merging this PR directly. Generated artifacts are produced during build/deploy and are not committed by contributors.",
-  ].join("\n");
-  await approvePullRequest({
+  const review = await approvePullRequest({
     token: params.token,
     repo: params.repo,
     number: params.target.number,
-    body: reviewBody,
+    body: approvalReviewBody(params.reportCommentUrl),
     apiVersion: params.env.GITHUB_API_VERSION,
   });
   const result = await mergePullRequest({
@@ -1852,7 +1917,7 @@ async function mergeAcceptedPullRequest(params: {
   if (result.merged === false) {
     throw new Error(result.message || "GitHub did not merge the pull request.");
   }
-  return result;
+  return { ...result, reviewId: review.id, reviewUrl: review.html_url };
 }
 
 async function fetchRawPullRequestFileContent(rawUrl: unknown) {
@@ -2522,29 +2587,32 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       signal: AbortSignal.timeout(PRIVATE_REVIEW_TIMEOUT_MS),
     });
   } catch {
-    return defaultManualDecision("Private corpus review request failed.");
+    return privateReviewErrorDecision(
+      "Private corpus review request failed.",
+      "private_reviewer_unavailable",
+    );
   }
   if (!response.ok) {
-    return defaultManualDecision(
+    return privateReviewErrorDecision(
       `Private corpus review returned ${response.status}.`,
+      "private_reviewer_unavailable",
     );
   }
-  const raw = (await response
-    .json()
-    .catch(() => null)) as Partial<GateDecision> | null;
-  if (!raw || !GATE_VERDICTS.has(raw.verdict as GateVerdict)) {
-    return defaultManualDecision(
-      "Private corpus review returned an unexpected payload.",
+  const raw = await response.json().catch(() => null);
+  const normalized = normalizePrivateGateDecisionPayload(raw);
+  if (normalized.error || !normalized.decision) {
+    const error = normalized.error || {
+      code: "invalid_private_response",
+      retryable: true,
+      message: "Private corpus review returned an unexpected payload.",
+    };
+    return privateReviewErrorDecision(
+      error.message || "Private corpus review returned an unexpected payload.",
+      error.code,
+      error.retryable !== false,
     );
   }
-  return {
-    verdict: raw.verdict as GateVerdict,
-    summary: typeof raw.summary === "string" ? raw.summary : "",
-    labels: Array.isArray(raw.labels)
-      ? raw.labels.filter((label): label is string => typeof label === "string")
-      : [],
-    close: raw.close === true,
-  };
+  return normalized.decision;
 }
 
 async function withSubmissionLock(
@@ -2942,7 +3010,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             nextReviewAt: nextReviewForStatus("validation_pending"),
             lastCheckSummary: validation.summary,
           });
-          await upsertMarkerComment({
+          const pendingComment = await upsertMarkerComment({
             token,
             repo,
             issueNumber: target.number,
@@ -2952,6 +3020,22 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
             ),
             apiVersion: env.GITHUB_API_VERSION,
+          });
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            headSha: target.headSha,
+            baseRef: target.baseRef || contentGateBaseRef(env),
+            installationId: target.installationId,
+            status: "validation_pending",
+            deliveryId: String(message.payload.deliveryId || ""),
+            nextReviewAt: nextReviewForStatus("validation_pending"),
+            lastCheckSummary: validation.summary,
+            commentId: pendingComment.id,
+            commentUrl: pendingComment.url,
+            formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
           });
           await insertAudit(env.SUBMISSION_GATE_DB, {
             id: crypto.randomUUID(),
@@ -3087,7 +3171,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             },
           },
         });
-        if (isRetryablePrivateReviewerDecision(decision)) {
+        if (isRetryableGateDecision(decision)) {
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
             number: target.number,
@@ -3103,7 +3187,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             clearVerdict: true,
             clearTerminal: true,
           });
-          await upsertMarkerComment({
+          const retryComment = await upsertMarkerComment({
             token,
             repo,
             issueNumber: target.number,
@@ -3112,6 +3196,24 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
             ),
             apiVersion: env.GITHUB_API_VERSION,
+          });
+          await upsertPrState(env.SUBMISSION_GATE_DB, {
+            repo: target.repoFullName,
+            number: target.number,
+            headRepo: target.headRepo,
+            headRef: target.headRef,
+            headSha: target.headSha,
+            baseRef: target.baseRef || contentGateBaseRef(env),
+            installationId: target.installationId,
+            status: "error_retryable",
+            nextReviewAt: nextReviewForStatus("error_retryable"),
+            commentId: retryComment.id,
+            commentUrl: retryComment.url,
+            schemaVersion: decision.schemaVersion ?? 1,
+            formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
+            decisionId: decision.decisionId || crypto.randomUUID(),
+            confidence: decision.confidence ?? null,
+            sourceEvidenceHash: decision.sourceEvidenceHash ?? null,
           });
           await insertAudit(env.SUBMISSION_GATE_DB, {
             id: crypto.randomUUID(),
@@ -3124,6 +3226,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         }
       }
       decision = normalizeOneShotDecision(decision);
+      decision = enforceAutoMergeConfidenceFloor(
+        decision,
+        autoMergeConfidenceFloor(env),
+      );
       if (decision.verdict === "merge" && !contentScopeForPrivateReview) {
         try {
           contentScopeForPrivateReview = await directContentScopeForPr({
@@ -3177,6 +3283,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
       }
       if (decision.verdict === "merge" && contentScopeForPrivateReview) {
         let mergeResult: Awaited<ReturnType<typeof mergeAcceptedPullRequest>>;
+        const acceptedDecision = decisionWithReviewContext(decision, {
+          scope: contentScopeForPrivateReview,
+          validation: validationForNotification,
+        });
+        let acceptedReport:
+          | Awaited<ReturnType<typeof upsertMarkerComment>>
+          | undefined;
         try {
           const latestPull = await getPullRequest({
             token,
@@ -3196,13 +3309,25 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           ) {
             return;
           }
+          acceptedReport = await upsertMarkerComment({
+            token,
+            repo,
+            issueNumber: target.number,
+            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            body: markerComment(
+              acceptedDecision,
+              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+            ),
+            apiVersion: env.GITHUB_API_VERSION,
+          });
           mergeResult = await mergeAcceptedPullRequest({
             env,
             token,
             repo,
             target,
-            decision,
+            decision: acceptedDecision,
             scope: contentScopeForPrivateReview,
+            reportCommentUrl: acceptedReport.url,
           });
         } catch (error) {
           if (isRetryableMergeError(error)) {
@@ -3228,6 +3353,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
               verdictSummary: pendingSummary,
               nextReviewAt: nextReviewForStatus("merge_pending"),
               lastError: error instanceof Error ? error.message : "unknown",
+              ...decisionMetadata(acceptedDecision, acceptedReport),
             });
             await insertAudit(env.SUBMISSION_GATE_DB, {
               id: crypto.randomUUID(),
@@ -3269,13 +3395,13 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           return;
         }
         const mergedSummary = [
-          decision.summary.trim(),
+          acceptedDecision.summary.trim(),
           "",
           "Merge Result:",
           `- Merged this PR directly at \`${mergeResult.sha || target.headSha || "unknown"}\`.`,
         ].join("\n");
         const mergedDecision: GateDecision = {
-          ...decision,
+          ...acceptedDecision,
           summary: mergedSummary,
           labels: [LABELS.merged, ...categoryLabels],
         };
@@ -3296,7 +3422,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           labels: [LABELS.merged, ...categoryLabels],
           apiVersion: env.GITHUB_API_VERSION,
         });
-        await upsertMarkerComment({
+        const mergedReport = await upsertMarkerComment({
           token,
           repo,
           issueNumber: target.number,
@@ -3336,6 +3462,9 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           verdictSummary: mergedSummary,
           nextReviewAt: null,
           terminalAt: nowIso(),
+          ...decisionMetadata(mergedDecision, mergedReport || acceptedReport, {
+            id: mergeResult.reviewId,
+          }),
         });
         return;
       }
@@ -3554,10 +3683,48 @@ async function queueStatusRoute(request: Request, env: Env) {
      GROUP BY status
      ORDER BY status ASC`,
   ).all<Record<string, unknown>>();
+  const retryReasons = await env.SUBMISSION_GATE_DB.prepare(
+    `SELECT COALESCE(last_error, 'unknown') AS reason, COUNT(*) AS count,
+        MIN(updated_at) AS oldestAt, MAX(updated_at) AS newestAt
+     FROM submission_prs
+     WHERE status = 'error_retryable'
+     GROUP BY COALESCE(last_error, 'unknown')
+     ORDER BY count DESC, oldestAt ASC
+     LIMIT 20`,
+  ).all<Record<string, unknown>>();
+  const staleStates = await env.SUBMISSION_GATE_DB.prepare(
+    `SELECT status, COUNT(*) AS count, MIN(updated_at) AS oldestAt
+     FROM submission_prs
+     WHERE terminal_at IS NULL
+       AND status IN ('queued', 'validation_pending', 'reviewing', 'merge_pending', 'error_retryable')
+       AND updated_at <= ?
+     GROUP BY status
+     ORDER BY oldestAt ASC`,
+  )
+    .bind(isoBefore(REVIEWING_STALE_SECONDS))
+    .all<Record<string, unknown>>();
+  const recentTerminal = await env.SUBMISSION_GATE_DB.prepare(
+    `SELECT status, verdict, COUNT(*) AS count, MAX(terminal_at) AS newestAt
+     FROM submission_prs
+     WHERE terminal_at IS NOT NULL
+       AND terminal_at >= ?
+     GROUP BY status, verdict
+     ORDER BY newestAt DESC`,
+  )
+    .bind(isoBefore(24 * 60 * 60))
+    .all<Record<string, unknown>>();
   const recent = await listRecentPrStates(env.SUBMISSION_GATE_DB, { limit });
   return json({
     ok: true,
     counts: counts.results || [],
+    retryReasons: retryReasons.results || [],
+    staleStates: staleStates.results || [],
+    recentTerminal: recentTerminal.results || [],
+    deadLetterQueue: {
+      available: false,
+      reason:
+        "Cloudflare Queue DLQ depth is not exposed through the Worker queue binding; use Cloudflare metrics for exact DLQ depth.",
+    },
     recent: (recent.results || []).map((row) => ({
       repo: row.repo,
       number: row.number,
@@ -3571,6 +3738,14 @@ async function queueStatusRoute(request: Request, env: Env) {
       attemptCount: row.attemptCount,
       lastError: truncateForQueue(row.lastError, 240),
       lastCheckSummary: truncateForQueue(row.lastCheckSummary, 240),
+      commentId: row.commentId,
+      commentUrl: row.commentUrl,
+      reviewId: row.reviewId,
+      schemaVersion: row.schemaVersion,
+      formatterVersion: row.formatterVersion,
+      decisionId: row.decisionId,
+      confidence: row.confidence,
+      sourceEvidenceHash: row.sourceEvidenceHash,
       terminalAt: row.terminalAt,
       updatedAt: row.updatedAt,
     })),

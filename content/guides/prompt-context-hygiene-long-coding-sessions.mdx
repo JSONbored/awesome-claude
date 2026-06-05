@@ -1,0 +1,216 @@
+---
+title: Manage Prompt and Context Hygiene in Long Coding Sessions
+slug: prompt-context-hygiene-long-coding-sessions
+category: guides
+description: >-
+  A practical guide for keeping Claude Code sessions focused during long coding
+  work with scoped prompts, checkpoints, durable memory boundaries, source
+  refreshes, and privacy-safe handoffs.
+cardDescription: Keep long Claude Code sessions focused and reviewable.
+seoTitle: Manage Prompt and Context Hygiene in Long Coding Sessions
+seoDescription: >-
+  Learn how to manage prompt and context hygiene in long Claude Code coding
+  sessions with session contracts, memory boundaries, checkpoints, slash
+  commands, settings, and safe summaries.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Start each long session with a narrow goal, keep durable project facts out of
+  throwaway prompts, checkpoint decisions, refresh stale sources, and end with a
+  privacy-safe handoff summary.
+prerequisites:
+  - A Claude Code project or repository with enough scope that work may span several prompts or sessions.
+  - Agreement on what belongs in durable memory, project instructions, slash commands, or temporary conversation context.
+  - A habit of validating source URLs, test results, and repository state before relying on old assumptions.
+  - A place to record handoff summaries, decisions, and unresolved risks without storing secrets.
+safetyNotes:
+  - Do not paste credentials, production secrets, private customer records, or unrelated proprietary files into prompts just to "fill context."
+  - Treat long-session conclusions as provisional when the repository, dependencies, docs, or issue state may have changed.
+  - "Keep implementation authority separate from analysis: ask for review before applying broad file edits, running risky commands, or changing public project state."
+privacyNotes:
+  - Long coding sessions can accumulate source code, file paths, stack traces, logs, issue details, usernames, and internal decisions.
+  - Durable memory and project instructions can persist sensitive details longer than an ordinary prompt, so store only stable, non-secret facts there.
+  - Handoff summaries should mention decisions and next steps without copying full private logs, tokens, customer reports, or unnecessary code excerpts.
+sourceUrls:
+  - "https://code.claude.com/docs/en/memory"
+  - "https://code.claude.com/docs/en/common-workflows"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/hooks"
+tags:
+  - claude-code
+  - context-management
+  - prompt-engineering
+  - memory
+  - slash-commands
+  - workflow-design
+keywords:
+  - prompt context hygiene
+  - claude code long sessions
+  - claude code memory hygiene
+  - coding session handoff
+  - claude code context management
+readingTime: 8
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Long coding sessions go better when context is intentionally managed. Start
+with a session contract, separate durable project facts from temporary task
+context, checkpoint decisions, refresh stale evidence, and close with a
+privacy-safe handoff. If a prompt has become a pile of old assumptions, pause
+and summarize what is still true before continuing.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Session goal is narrow", "description": "The next objective can be stated in one or two sentences"}
+- [ ] {"task": "Source of truth is known", "description": "Repository state, issue links, docs, and test commands are identified"}
+- [ ] {"task": "Durable memory boundary exists", "description": "Stable facts are separated from temporary scratch context"}
+- [ ] {"task": "Checkpoint habit is defined", "description": "Decisions, blockers, and changed files are summarized at natural pauses"}
+- [ ] {"task": "Privacy filter is active", "description": "Secrets, full private logs, and unrelated files stay out of prompts and summaries"}
+
+## Core Concepts Explained
+
+### Context is not the same as truth
+
+Conversation context is useful, but it can become stale. A long session may
+contain old branch state, outdated issue status, failing checks that later
+passed, or assumptions from before a rebase. Re-check live facts before making
+decisions that depend on current repository or documentation state.
+
+### Durable memory should stay boring
+
+Claude Code memory and project instructions are best for stable preferences,
+repository conventions, and repeated workflow notes. Avoid storing transient
+debug logs, secrets, private customer details, or one-time assumptions as
+durable memory.
+
+### Slash commands reduce prompt drift
+
+For repeated workflows, a slash command can keep the prompt shape consistent.
+Use this for recurring tasks such as review summaries, release notes, test
+plans, or handoff reports instead of rewriting a slightly different prompt each
+time.
+
+### Checkpoints keep the session navigable
+
+A checkpoint is a small summary of what changed, what was decided, what remains
+unknown, and what should happen next. It helps the next prompt start from a
+cleaner state without dragging every old detail forward.
+
+## Step-by-Step Workflow
+
+1. **Start with a session contract.** Write the objective, repository or issue
+   scope, constraints, and verification target. Keep this shorter than the task
+   itself.
+
+2. **Separate stable facts from scratch context.** Put stable project
+   conventions in project memory or instructions. Keep experiments, error
+   output, and partial theories in the active conversation only.
+
+3. **Feed the smallest useful evidence.** Prefer changed-file lists, focused
+   excerpts, source URLs, and relevant test output over full logs or whole
+   directories. Add more context only when the next decision needs it.
+
+4. **Refresh time-sensitive facts.** Re-check issue state, PR checks, package
+   docs, dependency versions, or remote branches when the answer depends on the
+   current state.
+
+5. **Use checkpoints at natural breaks.** Summarize after a rebase, failed test
+   investigation, design decision, merged PR, or switch to a new issue.
+
+6. **Name stale assumptions.** When something changes, explicitly say which old
+   assumption is no longer valid. This prevents later prompts from reviving it.
+
+7. **Turn repeatable prompts into slash commands.** If a workflow is used
+   repeatedly, make its instructions consistent and reviewable instead of
+   improvising a new version every time.
+
+8. **Use hooks only for narrow reminders.** Hooks can help with deterministic
+   reminders or summaries, but keep them scoped and privacy-reviewed because
+   they can run automatically around lifecycle events.
+
+9. **End with a handoff.** Record completed work, remaining files, validation
+   status, open risks, and exact next steps. Leave out secrets and unnecessary
+   private data.
+
+## What to Keep, Refresh, or Drop
+
+| Context type | Action | Reason |
+| --- | --- | --- |
+| Stable repo conventions | Keep in memory or project instructions | Useful across sessions |
+| Current issue or PR state | Refresh before action | GitHub state can change quickly |
+| Test output | Keep latest summary | Old failures may no longer matter |
+| Full logs | Drop after extracting evidence | Large logs add noise and may contain secrets |
+| Design decisions | Checkpoint | Helps future prompts understand why |
+| Temporary hypotheses | Drop or mark stale | Prevents old theories from becoming facts |
+| Secrets or credentials | Never include | Not needed for prompt quality |
+
+## Checkpoint Template
+
+```text
+Goal:
+- Current objective and issue/PR link
+
+Done:
+- Files changed, decisions made, checks run
+
+Still true:
+- Confirmed constraints and source URLs
+
+Needs refresh:
+- Anything time-sensitive, remote, or unresolved
+
+Next:
+- One to three concrete next actions
+
+Privacy:
+- Notes on omitted secrets, logs, or private data
+```
+
+## Review Checklist
+
+- [ ] {"task": "Prompt is scoped", "description": "The prompt asks for one job, not the whole project"}
+- [ ] {"task": "Evidence is current", "description": "Remote state, docs, tests, and issue status were refreshed when needed"}
+- [ ] {"task": "Memory is durable", "description": "Only stable non-secret facts are stored outside the conversation"}
+- [ ] {"task": "Old assumptions are labeled", "description": "Changed facts are called out explicitly"}
+- [ ] {"task": "Handoff is concise", "description": "The summary includes next steps without dumping raw private context"}
+- [ ] {"task": "Sensitive data is filtered", "description": "Credentials, private logs, and customer data are omitted or redacted"}
+
+## Troubleshooting
+
+- **Claude keeps following an outdated plan**: pause and write a fresh
+  checkpoint that lists which prior assumptions are stale.
+- **The prompt is getting too broad**: split the work into a decision prompt, an
+  implementation prompt, and a validation prompt.
+- **Important details keep getting lost**: promote stable conventions into
+  project memory or a reviewed slash command.
+- **The session contains too much private data**: extract only the relevant
+  finding, redact sensitive values, and continue from a smaller summary.
+- **A handoff is too long to use**: keep only goal, current state, validation,
+  blockers, and next actions.
+
+## Duplicate Check
+
+This guide focuses on managing prompt and context hygiene during long Claude
+Code coding sessions. Existing entries cover broad multi-directory workflows,
+slash command creation, hooks, and individual automation patterns, but they do
+not provide a source-backed guide for checkpoints, durable memory boundaries,
+stale-assumption review, and privacy-safe handoffs in long sessions.
+
+## References
+
+- Claude Code memory - https://code.claude.com/docs/en/memory
+- Claude Code common workflows - https://code.claude.com/docs/en/common-workflows
+- Claude Code slash commands - https://code.claude.com/docs/en/slash-commands
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
