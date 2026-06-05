@@ -22,7 +22,8 @@ jobs:
     if: ${{ github.event_name != 'push' || !startsWith(github.event.head_commit.message, 'docs(readme):') }}
     runs-on: ubuntu-latest
     concurrency:
-      group: refresh-readme-${{ github.ref }}
+      # Serialize all runs because each writes the shared automation/readme-refresh branch.
+      group: refresh-readme-automation-readme-refresh
       cancel-in-progress: true
 
     steps:
@@ -51,22 +52,64 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/build-readme-refresh-body.mjs --output "$RUNNER_TEMP/readme-refresh-body.md"
 
-      - name: Create README update PR
-        id: cpr
-        uses: peter-evans/create-pull-request@22a9089034f40e5a961c8808d113e2c98fb63676
-        with:
-          branch: automation/readme-refresh
-          title: "docs(readme): refresh generated catalog index"
-          commit-message: "docs(readme): refresh generated catalog index"
-          body-path: ${{ runner.temp }}/readme-refresh-body.md
-          labels: |
-            docs
-            automation
-          add-paths: |
-            README.md
+      - name: Publish README refresh branch
+        id: refresh_branch
+        env:
+          BRANCH_NAME: automation/readme-refresh
+        run: |
+          git fetch origin main
+          if git diff --quiet origin/main -- README.md; then
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          cp README.md "$RUNNER_TEMP/README.md"
+          git fetch origin "refs/heads/$BRANCH_NAME:refs/remotes/origin/$BRANCH_NAME" || true
+          git switch -C "$BRANCH_NAME" origin/main
+          cp "$RUNNER_TEMP/README.md" README.md
+
+          unexpected_files="$(git diff --name-only -- . ':!README.md')"
+          if [[ -n "$unexpected_files" ]]; then
+            echo "::error::README refresh branch has non-README changes:"
+            printf '%s\n' "$unexpected_files"
+            exit 1
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "docs(readme): refresh generated catalog index"
+          git push --force-with-lease origin "$BRANCH_NAME:$BRANCH_NAME"
+          echo "has-changes=true" >> "$GITHUB_OUTPUT"
+
+      - name: Create or update README refresh PR
+        id: readme_pr
+        if: ${{ steps.refresh_branch.outputs.has-changes == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH_NAME: automation/readme-refresh
+        run: |
+          pr_number="$(gh pr list --head "$BRANCH_NAME" --base main --state open --json number --jq '.[0].number // ""')"
+          if [[ -n "$pr_number" ]]; then
+            gh pr edit "$pr_number" \
+              --title "docs(readme): refresh generated catalog index" \
+              --body-file "$RUNNER_TEMP/readme-refresh-body.md" \
+              --add-label docs \
+              --add-label automation
+            pr_url="$(gh pr view "$pr_number" --json url --jq .url)"
+          else
+            pr_url="$(gh pr create \
+              --title "docs(readme): refresh generated catalog index" \
+              --body-file "$RUNNER_TEMP/readme-refresh-body.md" \
+              --base main \
+              --head "$BRANCH_NAME" \
+              --label docs \
+              --label automation)"
+          fi
+          echo "pull-request-url=$pr_url" >> "$GITHUB_OUTPUT"
 
       - name: Trigger content validation for README PR
-        if: ${{ steps.cpr.outputs.pull-request-url != '' }}
+        if: ${{ steps.readme_pr.outputs.pull-request-url != '' }}
         env:
           GH_TOKEN: ${{ github.token }}
           VALIDATION_REF: automation/readme-refresh

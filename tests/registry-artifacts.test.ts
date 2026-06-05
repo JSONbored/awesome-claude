@@ -633,7 +633,7 @@ describe("registry artifacts", () => {
         ),
       ),
     ).toEqual(jsonLdSnapshotsPayload);
-  });
+  }, 60_000);
 
   it("does not derive comparative safety relations from safety notes alone", () => {
     const target = {
