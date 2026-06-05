@@ -1,0 +1,123 @@
+---
+title: Subagents in Claude Agent SDK Applications
+slug: subagents-in-claude-agent-sdk-applications
+category: guides
+description: >-
+  A practical walkthrough of subagents in the Claude Agent SDK: defining them
+  programmatically with the agents option and AgentDefinition, context
+  isolation, parallelization, tool restrictions, invocation, and resuming.
+cardDescription: >-
+  Define subagents in the Claude Agent SDK with the agents option for context
+  isolation, parallel work, and tool-restricted specialists.
+seoTitle: Subagents in Claude Agent SDK Applications
+seoDescription: >-
+  How to define and invoke subagents in the Claude Agent SDK using the agents
+  option and AgentDefinition (description, prompt, tools, model), with context
+  isolation, parallelization, tool restrictions, and resuming.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/subagents"
+usageSnippet: "Use this guide to define subagents in a Claude Agent SDK app for context isolation, parallel subtasks, and tool-restricted specialists."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "Include Agent in allowedTools so subagent invocations are auto-approved."
+  - "Clear descriptions per subagent so Claude can match tasks to the right one."
+safetyNotes:
+  - "Restrict each subagent's tools via the tools field (for example read-only Read, Grep, Glob) so it cannot take unintended actions."
+  - "When the parent uses bypassPermissions, acceptEdits, or auto, subagents inherit that mode and it cannot be overridden per subagent; subagents may be less constrained, so inheriting bypassPermissions grants full autonomous access."
+  - "Subagents cannot spawn their own subagents; do not include Agent in a subagent's tools array."
+privacyNotes:
+  - "A subagent's context starts fresh; the only channel from parent is the Agent tool prompt, so pass only the context it needs and avoid leaking unrelated data."
+  - "The parent receives the subagent's final message; intermediate tool results stay in the subagent, which helps keep sensitive detail out of the main conversation."
+  - "Subagent transcripts persist within the session and are cleaned up per cleanupPeriodDays."
+tags:
+  - claude-agent-sdk
+  - subagents
+  - agents
+  - context-isolation
+  - developer-tools
+keywords:
+  - claude agent sdk subagents
+  - AgentDefinition
+  - agents option sdk
+  - subagent tool restrictions
+  - parallel subagents
+---
+
+## Overview
+
+Subagents are separate agent instances your main agent can spawn for focused
+subtasks. Use them to isolate context, run analyses in parallel, and apply
+specialized instructions without bloating the main prompt. The Agent SDK
+recommends defining them programmatically with the `agents` option.
+
+## Define subagents programmatically
+
+Each subagent is an `AgentDefinition` with a `description` (when to use it),
+`prompt` (its behavior), optional `tools`, and optional `model`. Include `Agent`
+in `allowedTools` so invocations auto-approve.
+
+```typescript
+for await (const message of query({
+  prompt: "Review the authentication module for security issues",
+  options: {
+    allowedTools: ["Read", "Grep", "Glob", "Agent"],
+    agents: {
+      "code-reviewer": {
+        description: "Expert code review specialist. Use for quality and security reviews.",
+        prompt: "You are a code review specialist...",
+        tools: ["Read", "Grep", "Glob"],
+        model: "sonnet",
+      },
+    },
+  },
+})) {
+  if ("result" in message) console.log(message.result);
+}
+```
+
+`AgentDefinition` also supports `disallowedTools`, `skills`, `mcpServers`,
+`maxTurns`, `effort`, `background`, and `permissionMode`.
+
+## Why subagents
+
+- **Context isolation**: each subagent runs in a fresh conversation; only its
+  final message returns to the parent.
+- **Parallelization**: independent subagents run concurrently.
+- **Specialization**: tailored system prompts and knowledge per subagent.
+- **Tool restriction**: limit a subagent to specific tools to reduce risk.
+
+## What a subagent inherits
+
+A subagent receives its own system prompt, the Agent tool's prompt string,
+project CLAUDE.md (via settingSources), and inherited tool definitions. It does
+**not** receive the parent's conversation history, system prompt, or preloaded
+skills (unless listed in `skills`). Put any file paths or context it needs into
+the prompt.
+
+## Invoke and detect
+
+Claude invokes subagents automatically based on `description`, or you can name one
+explicitly ("Use the code-reviewer agent to..."). Subagents run via the Agent
+tool; detect them by `tool_use` blocks named `Agent` (older SDKs used `Task`), and
+messages from inside a subagent carry `parent_tool_use_id`.
+
+## Resume
+
+When a subagent completes, the Agent tool result includes `agentId: <id>`.
+Capture the `session_id` and `agentId`, then resume with `resume: sessionId` and
+reference the agent id in the prompt to continue with full context.
+
+## Scale up
+
+For runs coordinating dozens to hundreds of agents, use the `Workflow` tool
+(TypeScript SDK), which moves orchestration into a script outside the conversation
+context.
+
+## Source
+
+- Subagents in the SDK: https://code.claude.com/docs/en/agent-sdk/subagents

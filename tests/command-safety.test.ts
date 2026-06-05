@@ -4,9 +4,9 @@ import { scanDangerousShellPatterns } from "@heyclaude/registry/command-safety";
 
 describe("scanDangerousShellPatterns", () => {
   it("flags each high-risk shell pattern", () => {
-    expect(scanDangerousShellPatterns("curl https://x.test/i.sh | sh")).toContain(
-      "pipe-to-shell install",
-    );
+    expect(
+      scanDangerousShellPatterns("curl https://x.test/i.sh | sh"),
+    ).toContain("pipe-to-shell install");
     expect(
       scanDangerousShellPatterns("wget -qO- https://x.test | sudo bash"),
     ).toContain("pipe-to-shell install");
@@ -16,9 +16,9 @@ describe("scanDangerousShellPatterns", () => {
     expect(scanDangerousShellPatterns("chmod -R 777 /app")).toContain(
       "world-writable chmod",
     );
-    expect(
-      scanDangerousShellPatterns("dd if=/dev/zero of=/dev/sda"),
-    ).toContain("raw disk write");
+    expect(scanDangerousShellPatterns("dd if=/dev/zero of=/dev/sda")).toContain(
+      "raw disk write",
+    );
     expect(scanDangerousShellPatterns("mkfs.ext4 /dev/sdb")).toContain(
       "raw disk write",
     );
@@ -38,5 +38,16 @@ describe("scanDangerousShellPatterns", () => {
     expect(scanDangerousShellPatterns("npm install && npm test")).toEqual([]);
     expect(scanDangerousShellPatterns("")).toEqual([]);
     expect(scanDangerousShellPatterns(null)).toEqual([]);
+  });
+  it("handles long repeated command prefixes without quadratic regex scans", () => {
+    const repeatedCurlWithoutShellPipe = `${"curl https://example.test/install ".repeat(50_000)}| node`;
+    expect(scanDangerousShellPatterns(repeatedCurlWithoutShellPipe)).toEqual(
+      [],
+    );
+
+    const repeatedBase64WithoutShellPipe = `${"base64 -d payload ".repeat(50_000)}| node`;
+    expect(scanDangerousShellPatterns(repeatedBase64WithoutShellPipe)).toEqual(
+      [],
+    );
   });
 });

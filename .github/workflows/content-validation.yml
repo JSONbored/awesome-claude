@@ -914,7 +914,7 @@ jobs:
     needs: classify-pr
     runs-on: ubuntu-latest
     concurrency:
-      group: deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}
+      group: deployment-artifacts-pr-preview-${{ github.repository }}
       cancel-in-progress: false
 
     steps:

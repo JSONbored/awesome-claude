@@ -1,0 +1,113 @@
+---
+title: Agent Skills in Claude Agent SDK Applications
+slug: agent-skills-in-claude-agent-sdk-applications
+category: guides
+description: >-
+  A practical walkthrough of using Agent Skills in the Claude Agent SDK: how
+  skills are discovered from the filesystem via settingSources, the skills option
+  to enable or filter them, tool access, and troubleshooting discovery.
+cardDescription: >-
+  Use Agent Skills in the Claude Agent SDK: filesystem discovery via
+  settingSources, the skills option to enable or filter, and tool access.
+seoTitle: Agent Skills in Claude Agent SDK Applications
+seoDescription: >-
+  How to use Agent Skills in the Claude Agent SDK: filesystem discovery via
+  settingSources/setting_sources, the skills option to enable all or filter by
+  name, tool access with allowedTools, and discovery troubleshooting.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/skills"
+usageSnippet: "Use this guide to make filesystem Agent Skills available to a Claude Agent SDK session and control which ones the model can invoke."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "SKILL.md files in .claude/skills/ (project) or ~/.claude/skills/ (user)."
+  - "A cwd that points at or below the directory containing .claude/skills/, within the same repository."
+safetyNotes:
+  - "The skills option is a context filter, not a sandbox: unlisted skills are hidden from the model but their files remain on disk and are reachable via Read and Bash."
+  - "Skills are model-invoked; pair them with a tight allowedTools list (and dontAsk where appropriate) so an invoked skill cannot use more tools than intended."
+  - "The allowed-tools frontmatter in SKILL.md does not apply through the SDK; control tool access with the main allowedTools option."
+privacyNotes:
+  - "Skill descriptions are loaded so the model can decide when to use them; keep sensitive workflow detail and secrets out of descriptions."
+  - "Skills sourced from outside your project run their instructions in your sessions; review them before enabling."
+  - "Skill content is sent to the model provider when a skill is invoked; treat it like any other prompt content."
+tags:
+  - claude-agent-sdk
+  - skills
+  - agents
+  - developer-tools
+  - configuration
+keywords:
+  - claude agent sdk skills
+  - settingSources skills
+  - sdk skills option
+  - agent skills sdk discovery
+  - model-invoked skills
+---
+
+## Overview
+
+Agent Skills extend Claude with specialized capabilities packaged as `SKILL.md`
+files that Claude invokes autonomously when relevant. In the Agent SDK, skills are
+filesystem artifacts discovered through setting sources; there is no programmatic
+API for registering them.
+
+## How discovery works
+
+Skills load from filesystem locations governed by `settingSources` (TypeScript) /
+`setting_sources` (Python). With default `query()` options, the SDK loads `user`
+and `project` sources, so skills in `~/.claude/skills/`, `<cwd>/.claude/skills/`,
+and `.claude/skills/` in parent directories up to the repo root are available. If
+you set `settingSources` explicitly, include `'user'` or `'project'` to keep
+discovery.
+
+## Enable and filter skills
+
+Use the `skills` option to control which skills are available. Omit it to enable
+discovered skills (matching CLI behavior), pass `"all"` for every discovered
+skill, a list of names to enable only those, or `[]` to disable all.
+
+```typescript
+for await (const message of query({
+  prompt: "Help me process this PDF document",
+  options: {
+    cwd: "/path/to/project",
+    settingSources: ["user", "project"],
+    skills: "all",
+    allowedTools: ["Read", "Write", "Bash"],
+  },
+})) { /* ... */ }
+```
+
+Enable specific skills by name (matching the `name` in SKILL.md or the directory
+name; use `plugin:skill` for plugin skills):
+
+```typescript
+const options = { skills: ["pdf", "docx"] };
+```
+
+When you set `skills`, the SDK adds the Skill tool to `allowedTools` automatically.
+If you also pass an explicit `tools` list, include `"Skill"`.
+
+## Tool access
+
+The `allowed-tools` frontmatter in SKILL.md is honored only by the CLI, not the
+SDK. Control tool access through the main `allowedTools` option; without a
+`canUseTool` callback, anything not listed is denied. Pair with
+`permissionMode: "dontAsk"` to deny anything outside the allow list.
+
+## Troubleshooting
+
+- **Skills not found**: confirm `settingSources` includes `user`/`project` (an
+  empty array disables discovery), and that `cwd` points at or below the directory
+  containing `.claude/skills/`.
+- **Skill not used**: confirm its name is in the `skills` list (an empty list
+  disables all) and that its description is specific.
+- Verify on disk with `ls .claude/skills/*/SKILL.md`.
+
+## Source
+
+- Agent Skills in the SDK: https://code.claude.com/docs/en/agent-sdk/skills

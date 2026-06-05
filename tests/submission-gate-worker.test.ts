@@ -31,6 +31,7 @@ import {
 import {
   approvalReviewBody,
   enforceAutoMergeConfidenceFloor,
+  isRetryableGateDecision,
   markerComment,
   normalizePrivateGateDecisionPayload,
   retryingReviewComment,
@@ -401,6 +402,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("REVIEWING_STALE_SECONDS");
     expect(source).toContain("QUEUED_STALE_SECONDS");
     expect(source).toContain("PRIVATE_REVIEW_TIMEOUT_MS = 45_000");
+    expect(source).toContain("INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3");
     expect(source).toContain("queuedStaleBeforeIso");
     expect(source).toContain("reviewingStaleBeforeIso");
     expect(source).toContain("lastCheckSummary: validation.summary");
@@ -409,8 +411,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("installationId: target.installationId");
     expect(source).toContain("normalizePrivateGateDecisionPayload(raw)");
     expect(source).toContain("isRetryableGateDecision(decision)");
+    expect(source).toContain(
+      "shouldStopRetryingInvalidPrivateResponse(decision, existing)",
+    );
+    expect(source).toContain('"private_review_contract_exhausted"');
     expect(source).toContain('"invalid_private_response"');
     expect(source).toContain('"private_reviewer_unavailable"');
+    expect(source).not.toContain("summary.includes");
+    expect(source).not.toContain(
+      "ai maintainer review returned an unexpected payload",
+    );
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
@@ -849,6 +859,33 @@ describe("Cloudflare submission gate helpers", () => {
       verdict: "request_changes",
       summary: "Temporary V1 fallback.",
     });
+  });
+
+  it("retries private review only from structured retry errors", () => {
+    expect(
+      isRetryableGateDecision({
+        verdict: "manual",
+        summary:
+          "Private corpus review request failed. A maintainer needs to review this.",
+        labels: ["submission-manual-review"],
+      }),
+    ).toBe(false);
+
+    expect(
+      isRetryableGateDecision({
+        verdict: "manual",
+        summary:
+          "Private corpus review returned an unexpected payload. A maintainer needs to review this.",
+        labels: ["submission-manual-review"],
+        errors: [
+          {
+            code: "invalid_private_response",
+            retryable: true,
+            message: "Private corpus review returned an unexpected payload.",
+          },
+        ],
+      }),
+    ).toBe(true);
   });
 
   it("keeps approval reviews short and links to the canonical report", () => {
@@ -1315,10 +1352,16 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
+    expect(storageSource).toContain(
+      "excluded.status NOT IN ('merged', 'closed', 'manual', 'ignored')",
+    );
+    expect(storageSource).toContain("THEN submission_prs.status");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("const shouldQueueReview");
     expect(enqueueBlock).toContain("!hasTerminalGateDecision(existing)");
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",

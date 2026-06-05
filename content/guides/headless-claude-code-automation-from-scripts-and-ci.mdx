@@ -1,0 +1,138 @@
+---
+title: Headless Claude Code Automation from Scripts and CI
+slug: headless-claude-code-automation-from-scripts-and-ci
+category: guides
+description: >-
+  A practical walkthrough of running Claude Code non-interactively with claude
+  -p: bare mode, output formats (text, json, stream-json), JSON schema output,
+  piping stdin, auto-approving tools, and authentication for scripts and CI.
+cardDescription: >-
+  Run Claude Code non-interactively with claude -p: bare mode, JSON output,
+  piping, tool auto-approval, and CI authentication.
+seoTitle: Headless Claude Code Automation from Scripts and CI
+seoDescription: >-
+  How to run Claude Code headlessly with claude -p: --bare mode, --output-format
+  json and stream-json, --json-schema, piping stdin, --allowedTools, permission
+  modes, and headless authentication for scripts and CI.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/headless"
+usageSnippet: "Use this guide to run Claude Code non-interactively from scripts and CI with claude -p, bare mode, structured JSON output, and pre-approved tools."
+prerequisites:
+  - "Claude Code installed in the environment where the script or CI job runs."
+  - "An authentication method that works headlessly: ANTHROPIC_API_KEY, a long-lived OAuth token, an apiKeyHelper, or a cloud provider's credentials."
+  - "jq or similar if you plan to parse JSON output in shell scripts."
+safetyNotes:
+  - "Headless runs act without a human present; scope tools tightly with --allowedTools or a locked-down permission mode (dontAsk) so the job cannot run more than intended."
+  - "Bare mode (--bare) skips auto-discovery of hooks, skills, plugins, MCP servers, and CLAUDE.md, giving reproducible runs; pass only the context you need with explicit flags."
+  - "Avoid broad Bash permissions in CI; prefer prefix-scoped rules like Bash(git diff *) and pipe data in so the agent does not need read permissions."
+  - "Constrain which branches and paths the automation can touch, and review its output before it gates merges or deploys."
+privacyNotes:
+  - "Headless runs send the prompt, piped stdin, and repository context to the model provider; review what a job exposes before running it on private code."
+  - "Bare mode skips OAuth and keychain reads, so authentication must come from ANTHROPIC_API_KEY or an apiKeyHelper; store these as CI secrets, never inline."
+  - "CI logs can capture command output and the JSON result (including cost metadata); avoid printing secrets and mask sensitive variables."
+tags:
+  - claude-code
+  - headless
+  - ci-cd
+  - automation
+  - scripting
+keywords:
+  - headless claude code
+  - claude -p
+  - claude code ci automation
+  - claude code output-format json
+  - claude code bare mode
+---
+
+## Overview
+
+Claude Code runs non-interactively when you pass `-p` (or `--print`) with a
+prompt. This headless mode is how you use Claude Code in scripts, build steps,
+and CI pipelines: pipe data in, get structured output back, and pre-approve the
+tools the job needs. It uses the same agent loop and tools as an interactive
+session.
+
+## Basic usage
+
+```bash
+claude -p "What does the auth module do?"
+```
+
+All CLI options work with `-p`, including `--continue`, `--allowedTools`, and
+`--output-format`.
+
+## Bare mode for reproducible runs
+
+`--bare` skips auto-discovery of hooks, skills, plugins, MCP servers, auto
+memory, and CLAUDE.md, so a job behaves the same on every machine. Pass only the
+context you need:
+
+```bash
+claude --bare -p "Summarize this file" --allowedTools "Read"
+```
+
+In bare mode, authentication must come from `ANTHROPIC_API_KEY` or an
+`apiKeyHelper` in `--settings`; it skips OAuth and keychain reads. Load extra
+context with flags like `--append-system-prompt`, `--settings`, `--mcp-config`,
+`--agents`, or `--plugin-dir`. Bare mode is the recommended mode for scripted
+calls.
+
+## Pipe data through Claude
+
+```bash
+cat build-error.txt | claude -p 'concisely explain the root cause of this build error' > output.txt
+```
+
+Piped stdin is capped at 10MB; for larger inputs, write to a file and reference
+its path in the prompt.
+
+## Structured output
+
+```bash
+# JSON with result, session id, and metadata (including total_cost_usd)
+claude -p "Summarize this project" --output-format json | jq -r '.result'
+
+# Conform to a schema
+claude -p "Extract the main function names from auth.py" \
+  --output-format json \
+  --json-schema '{"type":"object","properties":{"functions":{"type":"array","items":{"type":"string"}}},"required":["functions"]}' \
+  | jq '.structured_output'
+```
+
+Use `--output-format stream-json --verbose --include-partial-messages` for
+newline-delimited streaming events.
+
+## Auto-approve tools safely
+
+```bash
+claude --bare -p "Run the test suite and summarize any failures" \
+  --permission-mode dontAsk \
+  --allowedTools "Bash(npm test),Bash(git diff *)"
+```
+
+For a locked-down CI baseline, use `--bare` so repository-local instructions,
+hooks, skills, plugins, MCP servers, and CLAUDE.md cannot change the run. Pass a
+permission mode: `--permission-mode dontAsk` denies anything not in your allow
+rules or the read-only command set. `--allowedTools` uses permission-rule syntax,
+so `Bash(git diff *)` allows a prefix (note the space before `*`). Avoid broad
+rules such as `Bash,Read,Edit` in CI because they allow arbitrary shell commands
+and broad repository reads or edits.
+
+## Continue conversations
+
+```bash
+session_id=$(claude -p "Start a review" --output-format json | jq -r '.session_id')
+claude -p "Continue that review" --resume "$session_id"
+```
+
+Note: user-invoked skills like `/code-review` are interactive-only; in `-p` mode,
+describe the task directly.
+
+## Source
+
+- Run Claude Code programmatically: https://code.claude.com/docs/en/headless

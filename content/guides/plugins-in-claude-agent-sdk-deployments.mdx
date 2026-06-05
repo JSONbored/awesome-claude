@@ -1,0 +1,123 @@
+---
+title: Plugins in Claude Agent SDK Deployments
+slug: plugins-in-claude-agent-sdk-deployments
+category: guides
+description: >-
+  A practical walkthrough of loading local plugins in the Claude Agent SDK: the
+  plugins option with type local and a path, what plugins bundle (skills, agents,
+  hooks, MCP servers), verifying loads via the init message, and invoking
+  namespaced plugin skills.
+cardDescription: >-
+  Load local plugins in the Claude Agent SDK via the plugins option, verify them
+  in the init message, and invoke namespaced plugin skills.
+seoTitle: Plugins in Claude Agent SDK Deployments
+seoDescription: >-
+  How to load plugins in the Claude Agent SDK using the plugins option with type
+  local and a path, what they bundle, verifying loads via the system init
+  message, and invoking namespaced plugin skills.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/plugins"
+usageSnippet: "Use this guide to load local plugins into a Claude Agent SDK session so agents get bundled skills, agents, hooks, and MCP servers."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "One or more plugin directories on the local filesystem (the parent of skills/, agents/, hooks/, or .claude-plugin/)."
+  - "For marketplace plugins, the plugin downloaded locally so you can provide a path."
+safetyNotes:
+  - "The SDK only accepts type: local plugins; to use a marketplace plugin, download it first and point at the local directory."
+  - "Plugins can bundle hooks, MCP servers, and agents that run with your application's privileges; review a plugin's contents before loading it."
+  - "Check the system init message's plugin_errors to fail fast in CI when a plugin or a dependency version did not load."
+privacyNotes:
+  - "Bundled MCP servers and hooks can access local files and external services; confirm what a plugin's components reach before deploying it."
+  - "Plugin skills and commands are sent to the model as available capabilities; keep secrets out of plugin definitions."
+  - "Loading a plugin from a path you do not control is a supply-chain decision; prefer plugins you have reviewed and pinned."
+tags:
+  - claude-agent-sdk
+  - plugins
+  - deployment
+  - agents
+  - developer-tools
+keywords:
+  - claude agent sdk plugins
+  - sdk plugins option
+  - load local plugin sdk
+  - plugin namespaced skills
+  - agent sdk plugin init message
+---
+
+## Overview
+
+Plugins package Claude Code extensions (skills, agents, hooks, MCP servers) into
+a shareable unit. The Claude Agent SDK can load plugins from local directories so
+your agent sessions gain those capabilities programmatically.
+
+## Load plugins
+
+Provide local paths via the `plugins` option. The `type` must be `"local"` (the
+only value the SDK accepts); for a marketplace plugin, download it first and pass
+the local path.
+
+```typescript
+for await (const message of query({
+  prompt: "Hello",
+  options: {
+    plugins: [
+      { type: "local", path: "./my-plugin" },
+      { type: "local", path: "/absolute/path/to/another-plugin" },
+    ],
+  },
+})) { /* ... */ }
+```
+
+The path should point at the plugin root (the parent of `skills/`, `agents/`,
+`hooks/`, or `.claude-plugin/`), not a subdirectory. Relative paths resolve from
+the current working directory.
+
+## Verify the load
+
+When plugins load, they appear in the `system` `init` message. Check it (and its
+`plugin_errors`) to confirm loads and fail CI on errors:
+
+```typescript
+if (message.type === "system" && message.subtype === "init") {
+  console.log("Plugins:", message.plugins);          // [{ name, path }]
+  console.log("Skills:", message.skills);            // ["my-plugin:greet"]
+  console.log("Commands:", message.slash_commands);
+}
+```
+
+## Invoke plugin skills
+
+Plugin skills are namespaced with the plugin name to avoid conflicts. Invoke one
+directly by sending `/plugin-name:skill-name` as the prompt:
+
+```typescript
+for await (const message of query({
+  prompt: "/my-plugin:greet",
+  options: { plugins: [{ type: "local", path: "./my-plugin" }] },
+})) { /* ... */ }
+```
+
+CLI-installed plugins live under `~/.claude/plugins/`; point the SDK at that path
+to reuse them.
+
+## Common uses
+
+- Load a plugin during development without installing it globally.
+- Include project plugins in your repo for team-wide consistency.
+- Combine plugins from multiple local locations in one session.
+
+## Troubleshooting
+
+- If a plugin does not appear, check the path points at the plugin root, validate
+  any `plugin.json`, and confirm the directory is readable.
+- If skills do not work, invoke them with the `/plugin-name:skill-name` namespace
+  and confirm they appear in the init message's `skills` list.
+
+## Source
+
+- Plugins in the SDK: https://code.claude.com/docs/en/agent-sdk/plugins
