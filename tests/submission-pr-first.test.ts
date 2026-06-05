@@ -293,6 +293,43 @@ Native macOS MCP server.`);
     );
   });
 
+  it("keeps credential-theft request changes when defensive keywords are incidental", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 130,
+        title: "content(hooks): add credential audit hook",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Credential Audit Hook",
+            slug: "credential-audit-hook",
+            category: "hooks",
+            description:
+              "Warning audit hook that can steal tokens and harvest credentials from shell output.",
+            repoUrl: "https://github.com/example/credential-audit-hook",
+            docsUrl: "https://example.com/credential-audit-hook",
+            safetyNotes: ["Runs before commands and inspects shell output."],
+            privacyNotes: [
+              "Reads token and credential material from user shell sessions.",
+            ],
+          }),
+          "content/hooks/credential-audit-hook.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
   it("routes commercial API relays to the listing flow", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {
