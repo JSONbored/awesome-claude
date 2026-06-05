@@ -3,308 +3,156 @@ title: Stripe MCP Server for Claude
 slug: stripe-mcp-server
 category: mcp
 description: >-
-  Payment processing, subscription management, and financial transaction
-  handling
-cardDescription: >-
-  Payment processing, subscription management, and financial transaction
-  handling
+  Official Stripe Model Context Protocol server for connecting Claude, Cursor,
+  VS Code, ChatGPT, and other MCP clients to Stripe API tools and Stripe
+  knowledge-base search.
+cardDescription: Connect Claude to Stripe API tools, docs search, and OAuth-managed MCP sessions.
 seoTitle: Stripe MCP Server for Claude
 seoDescription: >-
-  Payment processing, subscription management, and financial transaction
-  handling Discover tools for AI development.
+  Use Stripe MCP Server with Claude Code to search Stripe documentation, inspect
+  Stripe resources, create customers, invoices, payment links, refunds, and
+  subscriptions with OAuth or restricted API-key access.
 author: Stripe
-dateAdded: "2025-09-18"
+authorProfileUrl: "https://stripe.com/"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+websiteUrl: "https://stripe.com/"
 documentationUrl: "https://docs.stripe.com/mcp"
-downloadUrl: /downloads/mcp/stripe-mcp-server.mcpb
-packageVerified: true
+repoUrl: "https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol"
+packageUrl: "https://www.npmjs.com/package/@stripe/mcp"
 installable: true
-installCommand: >-
-  claude mcp add --transport http stripe https://mcp.stripe.com && claude mcp
-  list
-usageSnippet: >-
-  claude mcp add --transport http stripe https://mcp.stripe.com && claude mcp
-  list
+installCommand: "claude mcp add --transport http stripe https://mcp.stripe.com/"
+usageSnippet: "Use Stripe MCP to inspect Stripe docs and resources, then require human confirmation before any payment, refund, subscription, invoice, coupon, or customer mutation."
 copySnippet: |-
   {
-    "stripe": {
-      "url": "https://mcp.stripe.com",
-      "transport": "http"
+    "mcpServers": {
+      "stripe": {
+        "url": "https://mcp.stripe.com"
+      }
     }
   }
 configSnippet: |-
   {
-    "stripe": {
-      "url": "https://mcp.stripe.com",
-      "transport": "http"
+    "mcpServers": {
+      "stripe": {
+        "url": "https://mcp.stripe.com"
+      }
     }
   }
-estimatedSetupTime: 1 minute
-difficulty: beginner
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
 prerequisites:
-  - Stripe account (free or paid plan)
-  - Stripe API key authentication (for mcp.stripe.com MCP connection)
-  - "Stripe secret API key (sk_test_ for test mode, sk_live_ for live mode)"
-  - "Network access to mcp.stripe.com (HTTPS required, HTTP transport)"
-  - >-
-    Understanding of Stripe payment concepts (payments, subscriptions, invoices,
-    customers)
-  - Stripe Dashboard access (for API key management and webhook configuration)
-  - Claude Desktop 0.7.0+ or Claude Code with MCP support
-  - Understanding of test mode vs live mode (completely separate object sets)
-  - "Understanding of Stripe rate limits (100 req/sec live, 25 req/sec test)"
-  - "Optional: Webhook endpoint setup (for real-time event processing)"
+  - Stripe account with MCP access enabled by an administrator where required.
+  - MCP-capable client such as Claude Code, Cursor, VS Code, ChatGPT, or another client that can connect to remote HTTP MCP servers.
+  - OAuth session through Stripe's MCP authorization flow, or a restricted API key supplied through approved secret handling when OAuth is not available.
+  - Separate sandbox and live-mode access decisions because Stripe documents MCP access as environment-specific.
+  - Human approval policy for any tool that creates, updates, cancels, refunds, invoices, discounts, or otherwise changes Stripe data.
+safetyNotes:
+  - The hosted Stripe MCP server can expose mutating tools such as creating customers, coupons, invoices, invoice items, payment links, products, prices, refunds, subscription updates, and subscription cancellation.
+  - Prefer OAuth sessions because Stripe documents OAuth as more secure and more granular than secret-key use for MCP clients.
+  - If a client cannot use OAuth, use a restricted API key with only the exact permissions the agent needs, store it in a secret manager or environment variable, and avoid embedding it in code.
+  - Enable human confirmation for Stripe MCP tools and be cautious when combining Stripe MCP with other servers, because prompt injection can turn retrieved context into unsafe payment or account actions.
+  - Keep sandbox and live-mode authorization separate. Test agent workflows in sandbox before granting any live-mode Stripe access.
+  - Revoke stale MCP OAuth sessions from Stripe Dashboard user settings when a client, laptop, workflow, or user no longer needs access.
+privacyNotes:
+  - Stripe MCP can expose account metadata, balances, customers, invoices, disputes, payment intents, products, prices, subscriptions, refunds, and documentation-search queries to the connected client.
+  - Tool calls and responses can include customer names, emails, payment metadata, invoice details, dispute context, product catalog data, subscription status, and internal integration assumptions.
+  - MCP client logs, assistant transcripts, screenshots, shell history, and support tickets can retain Stripe object IDs, customer data, API-key mistakes, and operational decisions outside Stripe.
+  - Documentation and resource-search queries can reveal planned payment flows, billing models, integration gaps, and business operations.
+sourceUrls:
+  - "https://docs.stripe.com/mcp"
+  - "https://docs.stripe.com/building-with-ai"
+  - "https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol"
+  - "https://www.npmjs.com/package/@stripe/mcp"
 tags:
-  - payments
   - stripe
-  - billing
-  - subscriptions
-  - commerce
-keywords:
-  - billing
-  - claude
-  - commerce
-  - development
   - mcp
-  - mcp servers
   - payments
-  - server
-  - stripe
-  - subscriptions
-  - tools
-readingTime: 1
-difficultyScore: 11
-hasTroubleshooting: true
-hasPrerequisites: false
-hasBreakingChanges: false
+  - billing
+  - oauth
+keywords:
+  - Stripe MCP Server
+  - Stripe MCP Claude
+  - stripe mcp add Claude Code
+  - mcp.stripe.com
+  - Stripe AI agent payments
 robotsIndex: true
 robotsFollow: true
 ---
 
 ## Content
 
-Integrate Stripe payment capabilities directly into Claude for payment processing and financial operations. Process payments and refunds, manage subscriptions and billing cycles, handle invoices, track customer payment methods, monitor transaction history, generate revenue analytics, and process webhook events—all through natural language commands. Supports API key authentication, PCI-compliant payment processing, and both test and live mode environments.
+Stripe MCP Server is the official Model Context Protocol surface for Stripe. It
+lets Claude Code and other MCP-capable clients search Stripe documentation,
+inspect Stripe resources, and call Stripe API tools through a hosted remote MCP
+server at `https://mcp.stripe.com`.
+
+The strongest default path is OAuth. Stripe documents OAuth sessions for MCP
+clients and lets users revoke authorized sessions from Dashboard user settings.
+When OAuth is unavailable, Stripe supports restricted API keys in the
+`Authorization` bearer header and strongly recommends limiting that key to the
+exact functionality the agent needs.
 
 ## Features
 
-- Process payments and refunds programmatically (secure payment processing)
-- Manage customer subscriptions and billing cycles (subscription lifecycle management)
-- View transaction history and payment analytics (financial reporting)
-- Handle billing operations and invoice generation (automated billing)
-- Monitor payment metrics and revenue data (business intelligence)
-- Manage customer payment methods and cards (payment method administration)
-- Handle webhook events and real-time notifications (event-driven architecture)
-- Process failed payments and retry logic (payment recovery)
-- Advanced Stripe payment and subscription management with customer billing, invoice generation, and financial reporting
-- Batch operations support for efficient bulk payment operations, subscription management, and financial processing with automatic rate limit handling and retry logic
-- Real-time payment synchronization capabilities with webhook integration support for monitoring Stripe events and triggering automated workflows
+- Official hosted remote MCP server at `https://mcp.stripe.com`.
+- Claude Code setup through `claude mcp add --transport http stripe https://mcp.stripe.com/`.
+- OAuth authorization flow for MCP clients that support it.
+- Restricted API-key fallback for clients or autonomous agent frameworks that
+  cannot use OAuth.
+- Local MCP server option through `npx -y @stripe/mcp@latest`.
+- Stripe documentation and knowledge-base search tools.
+- Stripe resource search and fetch tools.
+- API tools for account, balance, customers, coupons, disputes, invoices,
+  invoice items, payment links, payment intents, prices, products, refunds, and
+  subscriptions.
+- Dashboard controls for MCP access and OAuth session revocation.
 
 ## Use Cases
 
-- Process customer refunds quickly (refund management)
-- Update subscription plans for customers (subscription administration)
-- Generate billing reports and analytics (financial reporting)
-- Analyze payment trends and patterns (business intelligence)
-- Handle failed payments and retry logic (payment recovery)
-- Manage customer payment methods and cards (payment method administration)
-- Process webhook events and real-time notifications (event processing)
-- Monitor revenue metrics and payment health (financial monitoring)
-- Build automated payment processing workflows that sync external systems with Stripe for real-time transaction management and subscription billing
+- Ask Claude to look up current Stripe documentation while building a Checkout,
+  Billing, Connect, or API integration.
+- Search Stripe resources during support triage without pasting dashboard data
+  manually into a prompt.
+- Create sandbox payment links, products, prices, invoices, or customers during
+  supervised integration testing.
+- Review disputes, subscriptions, invoices, and payment intents with explicit
+  human approval before any write action.
+- Connect an autonomous agent to Stripe through a restricted API key that grants
+  only the minimum required tool surface.
 
 ## Installation
 
-### Claude Code
+### Claude Code hosted server
 
-1. Run: claude mcp add --transport http stripe https://mcp.stripe.com
-2. Verify installation: claude mcp list
-3. Test connection: claude mcp status stripe
-4. Configure your Stripe API key (sk*test* for test mode, sk*live* for live mode)
-5. Authenticate with your Stripe account
-
-### Claude Desktop
-
-1. Open Claude Desktop configuration file (see configPath below)
-2. Add the Stripe server configuration with HTTP transport and URL
-3. Restart Claude Desktop
-4. Configure your Stripe API key (sk*test* for test mode, sk*live* for live mode)
-5. Authenticate with your Stripe account
-6. Verify connection in Claude Desktop
-
-## Requirements
-
-- Stripe account (free or paid plan)
-- Stripe API key authentication (for mcp.stripe.com MCP connection)
-- Stripe secret API key (sk*test* for test mode, sk*live* for live mode)
-- Network access to mcp.stripe.com (HTTPS required, HTTP transport)
-- Understanding of Stripe payment concepts (payments, subscriptions, invoices, customers)
-- Stripe Dashboard access (for API key management and webhook configuration)
-- Claude Desktop 0.7.0+ or Claude Code with MCP support
-- Understanding of test mode vs live mode (completely separate object sets)
-- Understanding of Stripe rate limits (100 req/sec live, 25 req/sec test)
-- Optional: Webhook endpoint setup (for real-time event processing)
-
-## Configuration
-
-```json
-{
-  "stripe": {
-    "url": "https://mcp.stripe.com",
-    "transport": "http"
-  }
-}
+```sh
+claude mcp add --transport http stripe https://mcp.stripe.com/
 ```
 
-## Examples
+After adding the server, run `/mcp` in Claude Code and complete the Stripe
+authorization flow.
 
-### Processing Refunds
+### Local server
 
-Process full or partial refunds for payments. Include reasons and metadata for tracking. Stripe automatically handles failed payment recovery.
-
-```javascript
-// Full refund for a payment
-"Refund payment pi_1234567890 completely";
-
-// Partial refund with reason
-"Issue a $25 partial refund for payment pi_1234567890 with reason: customer_request";
-
-// Refund with metadata
-"Refund payment pi_1234567890 and add metadata: support_ticket=TICKET-123";
+```sh
+npx -y @stripe/mcp@latest --api-key=STRIPE_RESTRICTED_API_KEY
 ```
 
-### Subscription Management
+Use the local path when you need to run the server process yourself. Keep the
+API key restricted and do not commit it into MCP configuration, shell history,
+or source code.
 
-Manage customer subscriptions including upgrades, downgrades, and cancellations. Control billing cycles and proration settings.
+## Security Notes
 
-```javascript
-// List active subscriptions
-"Show all active subscriptions for customer cus_abc123";
+Stripe MCP is powerful because it can bridge an assistant to real payment and
+billing operations. Treat every mutating tool as a production action unless it
+is clearly scoped to a sandbox account. Require confirmation before creating,
+updating, canceling, refunding, invoicing, or otherwise changing Stripe state.
 
-// Update subscription plan
-"Upgrade customer cus_abc123 from price_basic to price_premium starting next billing cycle";
+## Related Resources
 
-// Cancel subscription
-"Cancel subscription sub_xyz at period end";
-```
-
-### Revenue and Analytics
-
-Generate revenue reports, analyze payment trends, and identify failed transactions. Essential for financial reporting and business intelligence.
-
-```javascript
-// Monthly revenue report
-"Show total revenue and transaction count for September 2024";
-
-// Revenue by product
-"Break down revenue by product for the last quarter";
-
-// Failed payment analysis
-"List all failed payments in the last 30 days with reasons";
-```
-
-### Customer and Invoice Management
-
-Manage invoices, send payment reminders, and track customer payment history. Automate billing workflows for B2B customers.
-
-```javascript
-// Create invoice
-"Create an invoice for customer cus_abc123 with items:
-- price_item1 x 2
-- price_item2 x 1
-Due in 14 days"
-
-// Send invoice reminder
-"Send payment reminder for invoice in_xyz to customer"
-
-// View customer payment history
-"Show all payments for customer cus_abc123 in the last 6 months"
-```
-
-### Payment Method Management
-
-Manage customer payment methods including cards, bank accounts, and wallets. Update default methods and clean up expired entries.
-
-```javascript
-// List customer payment methods
-"Show all payment methods for customer cus_abc123";
-
-// Set default payment method
-"Set payment method pm_xyz as default for customer cus_abc123";
-
-// Remove expired cards
-"List and remove all expired payment methods";
-```
-
-### Webhook and Event Handling
-
-Monitor webhook events, retry failed deliveries, and track integration health. Essential for maintaining reliable payment processing.
-
-```javascript
-// List recent events
-"Show recent webhook events for type payment_intent.succeeded";
-
-// Retry failed webhooks
-"Retry failed webhook deliveries from the last 24 hours";
-
-// Monitor webhook health
-"Show webhook endpoint health status and delivery success rate";
-```
-
-### Create Payment Intent
-
-Create a new Stripe payment intent with amount and currency
-
-```typescript
-// Create Stripe payment intent
-const paymentIntent = await stripe.paymentIntents.create({
-  amount: 2000,
-  currency: "usd",
-  payment_method_types: ["card"],
-  metadata: { order_id: "order_123" },
-});
-```
-
-## Security
-
-- API key authentication for secure access (sk*test* for test, sk*live* for production)
-- Test in Stripe test mode before production (safe testing environment)
-- Log all payment operations for audit trail (compliance and debugging)
-- Follow PCI compliance guidelines (secure payment handling)
-- Use restricted API keys for granular permissions (limit scope when possible)
-- Stripe API keys and secret keys must be securely stored and never exposed in client-side code or public repositories - use environment variables and secure credential management
-- Stripe secret keys should be scoped with minimal required permissions following the principle of least privilege - regularly audit API key permissions and remove unused keys
-- Stripe payment, customer, and charge IDs may expose financial data and customer information - ensure Stripe resource identifiers are kept private and not shared in public configurations
-- Rate limiting and API quota management are critical for Stripe MCP servers - implement proper rate limit handling, retry logic, and quota monitoring to prevent service disruption
-- Stripe webhook configurations and payloads may contain sensitive payment data and customer information - ensure webhook endpoints are properly secured with authentication and HTTPS encryption
-
-## Troubleshooting
-
-### Rate limit exceeded - 429 Too Many Requests error
-
-Stripe rate limits: 100 requests per second in live mode, 25 requests per second in test mode. Default endpoint limit is 25 req/sec (can be increased by Stripe). Check `RateLimit-Remaining` header in responses to monitor remaining capacity. Check `Stripe-Rate-Limited-Reason` header to identify which limit was exceeded. Implement exponential backoff with randomized jitter for retries (wait time increases with each retry). Use webhooks instead of polling to reduce API calls. Batch operations where possible. Stripe SDKs automatically retry 429s for lock timeouts. Contact Stripe Support if you see rising rate limit errors.
-
-### Test mode vs live mode object mismatch
-
-Stripe test mode and live mode use completely separate object sets. Test mode objects (created with `sk_test_` keys) cannot be accessed with live mode keys (`sk_live_`), and vice versa. Verify API key matches intended environment: `sk_test_` for test mode, `sk_live_` for production. Check Stripe Dashboard mode toggle matches your code environment. Ensure you're using the correct key for the environment you're testing in. Objects created in test mode will not appear in live mode and vice versa.
-
-### Webhook delivery failures or retry exhaustion
-
-Stripe webhook retry behavior: Live mode retries for up to 3 days with exponential backoff. Test mode retries 3 times over a few hours. Ensure webhook endpoint returns HTTP 200 status quickly (within reasonable time). Check webhook signing secret matches (`whsec_` prefix). Verify endpoint secret from Dashboard matches code (or CLI secret if testing locally with `stripe listen`). Review endpoint logs for errors. Ensure endpoint is publicly accessible (HTTPS required). Test webhook signature verification using official Stripe libraries. Roll endpoint secrets periodically for security.
-
-### Authentication failed or API key invalid
-
-Verify API key starts with correct prefix: `sk_test_` for test mode, `sk_live_` for live mode. Check key not revoked in Stripe Dashboard (API Keys section). Ensure correct publishable/secret key pair (publishable keys start with `pk_`, secret keys with `sk_`). Re-generate keys if compromised. Use restricted API keys for granular permissions (limit scope to specific operations). Note: Live mode secret keys can only be revealed once—store securely. All API requests must use HTTPS (plain HTTP fails). Never expose secret keys in client-side code or public repositories.
-
-### Stripe MCP server authentication errors with API keys
-
-Verify API key is valid and not expired. Check API key matches the correct environment (test vs live). Ensure API key format is correct (sk*test* or sk*live* prefix). For restricted keys, verify key permissions match required operations.
-
-### Stripe rate limit errors when processing multiple payment requests
-
-Implement exponential backoff retry logic with jitter. Use Stripe API rate limit headers to monitor usage. Reduce concurrent requests. Cache frequently accessed customer data. Stripe allows 100 requests per second per API key.
-
-### Stripe payment or customer access denied errors
-
-Verify API key has access to the payment or customer. Check account permissions and API key restrictions. Ensure API key has required permissions for target operations.
-
-### Stripe MCP server connection timeouts or network errors
-
-Check network connectivity and firewall settings. Verify Stripe API endpoints are accessible. Increase request timeout values. Implement connection pooling and retry mechanisms with exponential backoff.
+- Stripe MCP documentation - https://docs.stripe.com/mcp
+- Build on Stripe with AI - https://docs.stripe.com/building-with-ai
+- Local Stripe MCP source - https://github.com/stripe/ai/tree/main/tools/modelcontextprotocol
+- Stripe MCP npm package - https://www.npmjs.com/package/@stripe/mcp
