@@ -2341,28 +2341,28 @@ async function enqueueReviewTarget(
     String(existing?.status || "") === "closed" &&
     (isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
-  if (
+  const shouldQueueReview =
     !hasTerminalGateDecision(existing) ||
     shouldResetIgnoredScan ||
-    shouldResetClosedTerminal
-  ) {
-    await upsertPrState(env.SUBMISSION_GATE_DB, {
-      repo: target.repoFullName,
-      number: target.number,
-      headRepo: target.headRepo,
-      headRef: target.headRef,
-      headSha: target.headSha,
-      baseRef: target.baseRef || contentGateBaseRef(env),
-      installationId: target.installationId,
-      status: "queued",
-      deliveryId,
-      nextReviewAt: null,
-      incrementAttempt: true,
-      lastReviewKey: reviewScanKey || undefined,
-      clearVerdict: shouldResetIgnoredScan || shouldResetClosedTerminal,
-      clearTerminal: shouldResetIgnoredScan || shouldResetClosedTerminal,
-    });
-  }
+    shouldResetClosedTerminal;
+  if (!shouldQueueReview) return false;
+
+  await upsertPrState(env.SUBMISSION_GATE_DB, {
+    repo: target.repoFullName,
+    number: target.number,
+    headRepo: target.headRepo,
+    headRef: target.headRef,
+    headSha: target.headSha,
+    baseRef: target.baseRef || contentGateBaseRef(env),
+    installationId: target.installationId,
+    status: "queued",
+    deliveryId,
+    nextReviewAt: null,
+    incrementAttempt: true,
+    lastReviewKey: reviewScanKey || undefined,
+    clearVerdict: shouldResetIgnoredScan || shouldResetClosedTerminal,
+    clearTerminal: shouldResetIgnoredScan || shouldResetClosedTerminal,
+  });
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
     targetKey,

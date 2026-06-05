@@ -1352,10 +1352,16 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(storageSource).toContain("terminal_at IS NOT NULL");
     expect(storageSource).toContain("status = 'closed'");
+    expect(storageSource).toContain(
+      "excluded.status NOT IN ('merged', 'closed', 'manual', 'ignored')",
+    );
+    expect(storageSource).toContain("THEN submission_prs.status");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("const shouldQueueReview");
     expect(enqueueBlock).toContain("!hasTerminalGateDecision(existing)");
     expect(enqueueBlock).toContain("shouldResetIgnoredScan");
     expect(enqueueBlock).toContain("shouldResetClosedTerminal");
+    expect(enqueueBlock).toContain("if (!shouldQueueReview) return false");
     expect(reviewBlock).toContain("if (hasTerminalGateDecision(existing))");
     expect(enqueueBlock).not.toContain(
       "if (!forceRecheck && hasTerminalGateDecision(existing))",

@@ -257,7 +257,14 @@ export async function upsertPrState(
         head_sha = COALESCE(excluded.head_sha, submission_prs.head_sha),
         base_ref = excluded.base_ref,
         installation_id = COALESCE(excluded.installation_id, submission_prs.installation_id),
-        status = excluded.status,
+        status = CASE
+          WHEN ? = 0
+            AND submission_prs.terminal_at IS NOT NULL
+            AND excluded.terminal_at IS NULL
+            AND excluded.status NOT IN ('merged', 'closed', 'manual', 'ignored')
+          THEN submission_prs.status
+          ELSE excluded.status
+        END,
         verdict = CASE
           WHEN ? THEN NULL
           ELSE COALESCE(excluded.verdict, submission_prs.verdict)
@@ -322,6 +329,7 @@ export async function upsertPrState(
       params.sourceEvidenceHash ?? null,
       timestamp,
       timestamp,
+      params.clearTerminal ? 1 : 0,
       params.clearVerdict ? 1 : 0,
       params.clearVerdict ? 1 : 0,
       params.incrementAttempt ? 1 : 0,
