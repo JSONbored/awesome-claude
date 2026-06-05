@@ -3163,7 +3163,7 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
                 "rejected_history",
               ],
               strictDuplicatePolicy:
-                "Only same path, same category+slug, same category+canonical URL/repo, same category+title, or same category+normalized description should block as a duplicate.",
+                "Only same path, same category+slug, same category+canonical URL/repo, same category+title, or same category+normalized description should block as a duplicate. Shared official multi-entry catalog repositories, such as organization MCP catalogs that host multiple distinct servers, are related context rather than automatic duplicates when title, slug, package, documentation URL, and endpoint differ.",
               relatedContentPolicy:
                 "Cross-category source overlap, same ecosystem/project ownership, and collection-member overlap are related/complementary context, not automatic duplicates.",
               collectionPolicy:
