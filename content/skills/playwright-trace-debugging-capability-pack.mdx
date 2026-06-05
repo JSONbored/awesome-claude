@@ -1,0 +1,84 @@
+---
+title: Playwright Trace Debugging Capability Pack
+slug: playwright-trace-debugging-capability-pack
+category: skills
+description: >-
+  Reusable skill for debugging Playwright UI failures with trace archives,
+  action timelines, DOM snapshots, screenshots, console logs, and network
+  evidence.
+cardDescription: Debug Playwright failures from trace evidence instead of source-code guesses.
+seoTitle: Playwright Trace Debugging Capability Pack
+seoDescription: >-
+  Use this capability pack to inspect Playwright traces, identify the first
+  unexpected browser state, and produce a patch plus verification command.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://playwright.dev/docs/trace-viewer"
+downloadUrl: "https://github.com/microsoft/playwright/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npx playwright show-trace trace.zip"
+usageSnippet: "Use after a Playwright test fails and a trace.zip artifact is available."
+copySnippet: |-
+  # Playwright Trace Debugging Skill
+  Inspect the trace evidence first. Identify the earliest unexpected browser
+  state, cite the relevant action/snapshot/console/network evidence, propose a
+  minimal patch, and provide the exact Playwright command to verify it.
+skillType: capability-pack
+skillLevel: advanced
+verificationStatus: draft
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://playwright.dev/docs/trace-viewer"
+  - "https://playwright.dev/docs/debug"
+  - "https://github.com/microsoft/playwright"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Playwright
+prerequisites:
+  - A failing Playwright test with trace output.
+  - Access to screenshots, snapshots, console logs, and network details from the trace.
+safetyNotes:
+  - Trace archives can include screenshots, DOM text, request URLs, and form data.
+privacyNotes:
+  - Redact private user data and auth-bearing URLs before sharing trace details.
+tags:
+  - playwright
+  - traces
+  - debugging
+  - frontend
+keywords:
+  - Playwright trace debugging skill
+  - trace viewer capability pack
+  - AI frontend debugging skill
+readingTime: 5
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Usage
+
+Run this skill when a browser test has a trace artifact. The skill should avoid
+speculating from source first. It should read the trace evidence, identify the
+first bad state, and recommend the smallest patch and verification command.
+
+## Output Contract
+
+- Failure summary.
+- Earliest bad action or snapshot.
+- Console and network evidence.
+- Patch hypothesis.
+- Verification command.
+- Privacy redactions needed.
+
+## Retrieval Sources
+
+- https://playwright.dev/docs/trace-viewer
+- https://playwright.dev/docs/debug
+- https://github.com/microsoft/playwright
