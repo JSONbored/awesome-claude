@@ -201,15 +201,28 @@ describe("registry artifacts", () => {
 
   it("keeps public registry payloads within reviewable byte budgets", () => {
     const entryCount = contentEntries.length;
-    expect(artifactTreeSize(".")).toBeLessThan(20_000_000);
-    expect(artifactSize("directory-index.json")).toBeLessThan(1_000_000);
-    expect(artifactSize("search-index.json")).toBeLessThan(750_000);
-    expect(artifactSize("raycast-index.json")).toBeLessThan(500_000);
+    // These budgets are growth guards, not fixed caps. The public registry
+    // grows with curated content, so keep them per-entry to catch runaway
+    // artifact bloat without failing every normal catalog expansion.
+    expect(artifactTreeSize(".")).toBeLessThan(2_000_000 + entryCount * 38_500);
+    expect(artifactSize("directory-index.json")).toBeLessThan(
+      200_000 + entryCount * 2_000,
+    );
+    expect(artifactSize("search-index.json")).toBeLessThan(
+      125_000 + entryCount * 1_600,
+    );
+    expect(artifactSize("raycast-index.json")).toBeLessThan(
+      100_000 + entryCount * 1_100,
+    );
     expect(artifactSize("relation-graph.json")).toBeLessThan(
       150_000 + entryCount * 1_500,
     );
-    expect(artifactTreeSize("feeds/categories")).toBeLessThan(1_250_000);
-    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(1_500_000);
+    expect(artifactTreeSize("feeds/categories")).toBeLessThan(
+      150_000 + entryCount * 2_000,
+    );
+    expect(artifactTreeSize("feeds/platforms")).toBeLessThan(
+      150_000 + entryCount * 2_000,
+    );
     expect(artifactTreeSize("entries")).toBeLessThan(
       500_000 + entryCount * 17_500,
     );
