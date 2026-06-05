@@ -1,0 +1,123 @@
+---
+title: OpenAI Agents Trace to Eval Regression Guide
+slug: openai-agents-trace-to-eval-regression-guide
+category: guides
+description: >-
+  Source-backed guide for converting OpenAI Agents SDK traces into regression
+  eval cases, trace grades, tool-call assertions, and release checks for agentic
+  workflows.
+cardDescription: Turn OpenAI agent traces into repeatable regression evals.
+seoTitle: OpenAI Agents Trace to Eval Regression Guide
+seoDescription: >-
+  Learn how to review OpenAI Agents SDK traces, grade tool-call behavior, find
+  handoff and guardrail failures, and convert trace evidence into regression
+  evals before shipping agent workflows.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Use this workflow after an agent trace reveals wrong tool use, failed handoff,
+  missing guardrail behavior, or a final answer that needs repeatable eval
+  coverage.
+prerequisites:
+  - OpenAI Agents SDK workflow with tracing enabled or exported trace data.
+  - A task goal, expected answer, or acceptance criterion for the run.
+  - Permission to inspect tool inputs, outputs, handoffs, and guardrail events.
+safetyNotes:
+  - Traces can include private prompts, file paths, retrieved records, and tool outputs; redact before sharing outside the authorized review surface.
+  - Do not convert production user data into public eval fixtures.
+privacyNotes:
+  - Trace logs and eval cases can retain user identifiers, documents, API responses, account IDs, and tool arguments.
+  - Keep redacted fixtures separate from raw production traces.
+sourceUrls:
+  - "https://openai.github.io/openai-agents-python/tracing/"
+  - "https://openai.github.io/openai-agents-js/guides/tracing/"
+  - "https://platform.openai.com/docs/guides/trace-grading"
+  - "https://platform.openai.com/docs/guides/agent-evals"
+tags:
+  - openai-agents
+  - tracing
+  - evals
+  - regression-testing
+  - agent-quality
+keywords:
+  - OpenAI Agents trace eval
+  - trace grading regression workflow
+  - agent eval from trace
+  - OpenAI Agents SDK quality gate
+readingTime: 7
+difficultyScore: 68
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Why Trace Evidence Belongs In Evals
+
+An agent run can look successful while still hiding fragile behavior: repeated
+retrieval calls, the wrong tool chosen for the right reason, a handoff that loses
+state, or a guardrail that fires too late. Tracing gives reviewers the actual
+sequence of model decisions and tool events. Evals make that sequence repeatable.
+
+## Workflow
+
+1. **Name the user goal.** Write the exact task the run was supposed to complete.
+2. **Read the trace chronologically.** Separate model turns, tool calls,
+   handoffs, guardrails, and final response.
+3. **Mark critical events.** Record the events that determined success or failure.
+4. **Grade the run.** Use pass, partial, or fail based on observable trace evidence.
+5. **Convert failure into assertions.** A good eval checks the behavior that
+   failed, not just the final answer string.
+6. **Keep fixtures redacted.** Use synthetic or sanitized inputs before adding
+   the regression to CI.
+
+## Suggested Eval Shape
+
+- Input prompt or task fixture.
+- Expected behavior and unacceptable behavior.
+- Required tool calls or forbidden tool calls.
+- Handoff expectations when multiple agents are involved.
+- Guardrail events that should or should not trigger.
+- Final response criteria.
+
+## Common Trace Findings
+
+| Finding            | Regression assertion                                            |
+| ------------------ | --------------------------------------------------------------- |
+| Wrong tool chosen  | The run must call the source-of-truth tool before answering     |
+| Repeated retrieval | The run should complete within an event-count or latency budget |
+| Handoff lost state | The receiving agent must include required task context          |
+| Unsupported claim  | The final answer must cite retrieved evidence                   |
+| Guardrail missed   | Sensitive data must be rejected or redacted before tool output  |
+
+## Troubleshooting
+
+### The trace is incomplete
+
+Do not infer missing tool outputs. Mark confidence low and rerun with tracing or
+structured custom events enabled.
+
+### The run passes but uses too many steps
+
+Create a performance or path-quality eval. Agent quality is not only correctness;
+latency, cost, and unnecessary tool use matter in production.
+
+### The trace contains private data
+
+Create a synthetic fixture that preserves the failure mode without preserving the
+private content.
+
+## Duplicate Check
+
+Existing entries cover OpenAI docs and agent observability. This guide focuses on
+the specific trace-to-eval regression workflow for OpenAI Agents SDK runs.
+
+## References
+
+- OpenAI Agents Python tracing - https://openai.github.io/openai-agents-python/tracing/
+- OpenAI Agents JS tracing - https://openai.github.io/openai-agents-js/guides/tracing/
+- Trace grading - https://platform.openai.com/docs/guides/trace-grading
+- Agent evals - https://platform.openai.com/docs/guides/agent-evals
