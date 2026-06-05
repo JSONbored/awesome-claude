@@ -1,0 +1,317 @@
+---
+title: Environment Output Safety Reminder - Claude Code Hook
+slug: environment-output-safety-reminder-hook
+category: hooks
+description: >-
+  PreToolUse Bash hook that reminds Claude Code before broad environment output
+  commands or shell tracing can place environment-derived data into terminal
+  output, transcripts, or CI logs.
+cardDescription: >-
+  Warn before broad Bash environment output or shell tracing are run inside a
+  Claude Code session.
+seoTitle: Environment Output Safety Reminder Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code PreToolUse hook that warns before broad environment
+  output or shell tracing expose environment-derived data in logs.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://12factor.net/config"
+repoUrl: "https://github.com/OWASP/CheatSheetSeries"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/environment-output-safety-reminder.sh && chmod +x
+  .claude/hooks/environment-output-safety-reminder.sh
+usageSnippet: >-
+  Environment output safety reminder: command may print broad environment data.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-output-safety-reminder.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-output-safety-reminder.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Bash. It warns before broad environment
+  # output commands or shell tracing run inside a session. It inspects only the
+  # proposed command text and does not read or expand environment values.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$command_text" ]; then
+    exit 0
+  fi
+
+  if [ -n "${ENV_DUMP_REMINDER_ALLOWLIST:-}" ]; then
+    if printf '%s\n' "$command_text" | grep -Eq -- "$ENV_DUMP_REMINDER_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  sep='(^|[;&|[:space:]])'
+  end='([[:space:]]*$|[[:space:]]*[|>;])'
+  cmd_env='env'
+  cmd_print='printenv'
+  cmd_set='set'
+  cmd_export='export'
+  trace_flag='-[x]'
+  bulk_output_re="${sep}(${cmd_env}|${cmd_print}|${cmd_set}|${cmd_export})${end}"
+  trace_re="${sep}(set|bash|sh)[[:space:]]+${trace_flag}([[:space:]]|$)"
+
+  findings=""
+  add_finding() {
+    findings="${findings}${1}"$'\n'
+  }
+
+  if printf '%s\n' "$command_text" | grep -Eq -- "$bulk_output_re"; then
+    add_finding "broad environment output"
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eq -- "$trace_re"; then
+    add_finding "shell tracing may echo expanded command data"
+  fi
+
+  if [ -z "$findings" ]; then
+    exit 0
+  fi
+
+  echo "Environment output safety reminder: command may print broad environment data." >&2
+  printf '%s' "$findings" | sort -u | while IFS= read -r finding; do
+    [ -n "$finding" ] || continue
+    echo "  - $finding" >&2
+  done
+  echo "Prefer targeted diagnostics that print only the specific non-sensitive names or status checks needed." >&2
+  echo "Set ENV_DUMP_REMINDER_MODE=block to block instead of warn, or ENV_DUMP_REMINDER_ALLOWLIST for a reviewed local exception." >&2
+
+  if [ "${ENV_DUMP_REMINDER_MODE:-advisory}" = "block" ]; then
+    exit 2
+  fi
+
+  exit 0
+trigger: PreToolUse
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, jq, grep, sort, and a reviewed `.claude/settings.json` or user-level hook configuration."
+  - "A team policy for when broad environment diagnostics may appear in terminal output, transcripts, or CI logs."
+safetyNotes:
+  - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
+  - "Warns by default and exits 0 when the proposed command looks like broad environment output or shell tracing."
+  - "Set `ENV_DUMP_REMINDER_MODE=block` when the team wants matching commands to exit 2 and be blocked."
+  - "Does not expand environment values, read environment files, execute the command, call external services, or write files."
+  - "Text heuristics can miss aliases or multi-step shell construction; use this as a reminder layer, not proof of log safety."
+privacyNotes:
+  - "Runs locally and makes no network calls."
+  - "Does not print the full command or any environment value; it reports only finding categories."
+  - "The warning text, finding categories, mode variable, and allowlist pattern can still appear in terminal output, Claude Code transcripts, CI logs, or screenshots."
+  - "Even broad environment variable names can reveal infrastructure shape; prefer targeted diagnostics that avoid printing the whole process environment."
+sourceUrls:
+  - "https://12factor.net/config"
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+  - "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://github.com/OWASP/CheatSheetSeries"
+tags:
+  - security
+  - environment-variables
+  - logs
+  - bash
+  - hooks
+keywords:
+  - "environment variable leak warning hook"
+  - "environment output safety reminder"
+  - "Claude Code environment output warning"
+  - "Bash environment output reminder"
+  - "shell tracing environment warning"
+readingTime: 5
+difficultyScore: 29
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Environment variables are often used for runtime configuration values,
+feature flags, account selectors, and deployment metadata. Dumping the whole
+environment into a Claude Code session can put that data into places that are
+easy to retain: terminal scrollback, transcripts, CI logs, screenshots, or
+support bundles.
+
+This hook gives a lightweight reminder before Claude Code runs broad Bash
+environment diagnostics. It warns by default, and teams can switch it to block
+mode after they have reviewed common local workflows.
+
+## Features
+
+- Watches Bash tool calls through Claude Code `PreToolUse`.
+- Warns before broad environment-output commands when they are used for terminal
+  output.
+- Warns before shell tracing, which can echo expanded command data.
+- Does not expand variables, inspect the live environment, read files, or run
+  the proposed command.
+- Reports only finding categories, not the command text or values.
+- Supports advisory mode by default and optional block mode for stricter teams.
+
+## How It Works
+
+Claude Code passes the proposed Bash command to the hook on stdin. The script
+extracts `.tool_input.command`, checks for broad environment-output shapes or
+shell tracing flags, and prints a short reminder when a match appears.
+
+The hook intentionally stays narrow. It does not validate configuration files,
+scan for sensitive-value formats, or maintain a catalog of provider key names. That keeps
+the reminder focused on the user-visible output surface: broad environment data
+being sent to logs or transcripts.
+
+## Use Cases
+
+- Pause before a troubleshooting command prints the whole process environment.
+- Remind contributors to use targeted diagnostics instead of broad output.
+- Keep shell tracing from being enabled casually in a Claude Code transcript.
+- Start in advisory mode, then enable block mode for repositories with stricter
+  log-handling requirements.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/environment-output-safety-reminder.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/environment-output-safety-reminder.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-output-safety-reminder.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Script
+
+```bash
+#!/usr/bin/env bash
+# Paste the scriptBody from this entry into:
+# .claude/hooks/environment-output-safety-reminder.sh
+```
+
+## Configuration Options
+
+- `ENV_DUMP_REMINDER_MODE=block` changes matching reminders from exit `0` to
+  exit `2`.
+- `ENV_DUMP_REMINDER_ALLOWLIST` is an extended grep pattern checked against the
+  proposed Bash command. Use it only for documented, reviewed exceptions.
+
+## Expected Behavior
+
+- **Allowed:** Targeted checks that avoid broad environment output.
+- **Allowed:** Commands unrelated to environment diagnostics or shell tracing.
+- **Warned:** Broad environment-output commands.
+- **Warned:** Shell tracing flags.
+- **Blocked:** The same matches only when `ENV_DUMP_REMINDER_MODE=block` is set.
+
+## Limitations
+
+- The scanner is intentionally narrow and can miss aliases, functions, or
+  command strings assembled across multiple steps.
+- It does not decide whether any particular variable is sensitive.
+- It does not validate environment configuration files or required runtime
+  variables.
+- It only reviews Claude Code Bash tool calls, not commands typed manually in a
+  separate terminal.
+
+## Troubleshooting
+
+### The reminder appears for a safe command
+
+Use a targeted diagnostic that prints only the non-sensitive status you need, or
+add a narrow `ENV_DUMP_REMINDER_ALLOWLIST` pattern for a reviewed local command.
+
+### The team wants stronger enforcement
+
+Set `ENV_DUMP_REMINDER_MODE=block` in the hook environment after confirming the
+warning does not disrupt common local workflows.
+
+### The hook misses a project-specific workflow
+
+Extend the regex in the script for the workflow shape you want to catch, then
+test it in advisory mode before enabling block mode.
+
+## Duplicate Check
+
+Checked `content/hooks/` for `environment variable leak`, `env var`,
+`printenv`, `sensitive value scanner`, and `environment variables`. Existing entries
+include an environment-variable validator for configuration files and a
+pre-write secret scanner for content writes. This entry is different: it is a
+Bash PreToolUse reminder for broad environment-output and shell-tracing commands
+that can place environment-derived data into logs and transcripts.
+
+## Sources
+
+- [The Twelve-Factor App: Config](https://12factor.net/config)
+- [OWASP Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
+- [GitHub Actions secrets documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)
+- [Claude Code hooks documentation](https://code.claude.com/docs/en/hooks)
+- [OWASP Cheat Sheet Series repository](https://github.com/OWASP/CheatSheetSeries)
