@@ -1,0 +1,177 @@
+---
+title: MCP Toolbox for Databases
+slug: mcp-toolbox-for-databases
+category: mcp
+description: >-
+  Open source MCP server and tool framework from Google for connecting AI
+  agents, IDEs, and applications to databases through prebuilt or custom
+  database tools.
+cardDescription: >-
+  Connect MCP clients to databases with prebuilt tools, custom SQL tools,
+  integrated auth, connection pooling, and observability.
+seoTitle: MCP Toolbox for Databases for Claude
+seoDescription: >-
+  Configure MCP Toolbox for Databases with Claude Code, Codex, Gemini CLI, and
+  other MCP clients to inspect schemas, run database tools, and build safer
+  custom database access patterns.
+author: Google
+authorProfileUrl: "https://github.com/googleapis"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: MCP Toolbox for Databases
+brandDomain: mcp-toolbox.dev
+repoUrl: "https://github.com/googleapis/mcp-toolbox"
+documentationUrl: "https://mcp-toolbox.dev/documentation/introduction/"
+packageUrl: "https://www.npmjs.com/package/@toolbox-sdk/server"
+installable: true
+installCommand: "claude mcp add toolbox-postgres -- npx -y @toolbox-sdk/server --prebuilt=postgres --stdio"
+usageSnippet: "Use MCP Toolbox for Databases with least-privilege database credentials, prebuilt database tools, or a reviewed tools.yaml file that exposes only approved queries."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "toolbox-postgres": {
+        "command": "npx",
+        "args": ["-y", "@toolbox-sdk/server", "--prebuilt=postgres", "--stdio"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "toolbox-postgres": {
+        "command": "npx",
+        "args": ["-y", "@toolbox-sdk/server", "--prebuilt=postgres", "--stdio"]
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js and npx for the npm server path, or another documented Toolbox runtime.
+  - Database credentials scoped to the exact database, schema, and permissions needed.
+  - Environment variables or secret storage for database connection settings.
+  - A reviewed prebuilt database target or `tools.yaml` file before exposing tools to an agent.
+  - MCP client such as Claude Code, Codex, Gemini CLI, Google Antigravity, or another compatible host.
+safetyNotes:
+  - Database tools can expose sensitive schemas and data, and some custom tools can modify data if configured that way.
+  - Prefer least-privilege accounts, read-only roles for exploration, query limits, and approved toolsets.
+  - Review every `tools.yaml` statement, parameter, source, and toolset before giving it to an agent.
+  - Avoid broad `execute_sql` access in production; expose structured, parameterized tools where possible.
+  - Query loops can create high database load, unexpected cloud costs, lock contention, or noisy audit logs.
+privacyNotes:
+  - Schema names, table names, query text, query results, connection metadata, and business data may pass through the MCP server and AI client.
+  - Database passwords, IAM credentials, service account keys, and connection strings are secrets and should never be committed or pasted into prompts.
+  - Logs, traces, and metrics can include tool names, query metadata, error messages, and database identifiers.
+sourceUrls:
+  - "https://github.com/googleapis/mcp-toolbox"
+  - "https://mcp-toolbox.dev/documentation/introduction/"
+  - "https://mcp-toolbox.dev/documentation/configuration/prebuilt-configs/"
+  - "https://mcp-toolbox.dev/documentation/configuration/"
+  - "https://www.npmjs.com/package/@toolbox-sdk/server"
+tags:
+  - databases
+  - sql
+  - google
+  - mcp
+  - data
+keywords:
+  - MCP Toolbox for Databases
+  - mcp-toolbox Claude Code
+  - database MCP server
+  - toolbox-sdk server
+  - SQL MCP tools
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Toolbox for Databases is an open source MCP server and framework for
+database-backed tools. It can expose prebuilt database tools for MCP clients or
+serve custom tools defined in a `tools.yaml` file. The project documents support
+for Google Cloud databases and many other systems, including PostgreSQL, MySQL,
+SQL Server, Oracle, MongoDB, Redis, Elasticsearch, CockroachDB, ClickHouse,
+Couchbase, Neo4j, Snowflake, and Trino.
+
+Use it when an agent needs database context, schema exploration, or
+pre-approved database operations without hand-building an MCP server for each
+database.
+
+## Source Review
+
+- https://github.com/googleapis/mcp-toolbox
+- https://mcp-toolbox.dev/documentation/introduction/
+- https://mcp-toolbox.dev/documentation/configuration/prebuilt-configs/
+- https://mcp-toolbox.dev/documentation/configuration/
+- https://www.npmjs.com/package/@toolbox-sdk/server
+
+These sources were reviewed on **2026-06-05**. Prefer the live documentation for
+supported database lists, prebuilt tool names, runtime options, authentication
+support, and configuration schema.
+
+## Features
+
+- Prebuilt MCP tools for common database exploration and querying workflows.
+- Custom database tools defined through `tools.yaml`.
+- Support for parameterized SQL tools, toolsets, prompts, and source
+  definitions.
+- Integrated authentication patterns, connection pooling, and OpenTelemetry
+  observability.
+- Compatibility with MCP clients such as Claude Code, Codex, Gemini CLI, Google
+  Antigravity, and other MCP-capable hosts.
+- SDKs for application integration in Python, JavaScript/TypeScript, Go, and
+  Java.
+
+## Installation
+
+For a basic prebuilt PostgreSQL setup:
+
+```sh
+claude mcp add toolbox-postgres -- npx -y @toolbox-sdk/server --prebuilt=postgres --stdio
+```
+
+For JSON-based MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "toolbox-postgres": {
+      "command": "npx",
+      "args": ["-y", "@toolbox-sdk/server", "--prebuilt=postgres", "--stdio"]
+    }
+  }
+}
+```
+
+For custom tools, create a reviewed `tools.yaml` and run the server with:
+
+```sh
+npx @toolbox-sdk/server --config tools.yaml
+```
+
+## Use Cases
+
+- Let an agent inspect database schemas while generating data-aware application code.
+- Expose read-only SQL exploration in a development database.
+- Build production-ready, parameterized database tools instead of broad query access.
+- Add semantic search or structured data tools to an agent runtime.
+- Centralize database access patterns behind a reviewed MCP tool configuration.
+
+## Safety and Privacy
+
+Database MCP servers need explicit guardrails. Use least-privilege credentials,
+prefer read-only accounts for exploration, limit exposed toolsets, and keep
+production write operations behind reviewed custom tools. Avoid giving an agent
+unbounded query access to sensitive or expensive databases.
+
+Never commit database credentials, IAM secrets, service account keys, or
+connection strings. Treat schemas, row samples, query errors, and trace metadata
+as potentially sensitive.
+
+## Duplicate Check
+
+Existing entries cover specific database MCP servers such as BigQuery,
+PostgreSQL, MongoDB, Snowflake, ClickHouse, Redis, and Qdrant. This entry covers
+Google's broader MCP Toolbox for Databases project and its reusable server/tool
+framework.

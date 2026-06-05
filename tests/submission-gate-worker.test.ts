@@ -496,6 +496,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('"MEMBER"');
     expect(source).toContain('"COLLABORATOR"');
     expect(source).toContain("targetFromIssueCommentRecheck");
+    expect(source).toContain("shouldResetManualTerminal");
+    expect(source).toContain(
+      'forceRecheck === true && String(existing?.status || "") === "manual"',
+    );
     expect(issueCommentBlock).toContain("payload,\n      true,");
   });
 
@@ -1205,7 +1209,8 @@ describe("Cloudflare submission gate helpers", () => {
     );
     expect(source).toContain("existingReviewKey !== reviewScanKey");
     expect(source).toContain("shouldResetIgnoredScan");
-    expect(source).toContain("clearTerminal: shouldResetIgnoredScan");
+    expect(source).toContain("shouldResetManualTerminal");
+    expect(source).toContain("clearTerminal:");
     expect(source).toContain("lastReviewKey: reviewScanKey || undefined");
     expect(source).toContain('reason: "already_reviewed"');
     expect(pullRequestBlock).toContain('reviewability.kind === "ignore"');
