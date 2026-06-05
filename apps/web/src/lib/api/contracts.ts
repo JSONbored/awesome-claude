@@ -840,6 +840,22 @@ export const apiRouteDefinitions = {
       binding: "API_REGISTRY_RATE_LIMIT",
     },
   }),
+  "registry.tags": route({
+    id: "registry.tags",
+    method: "GET",
+    path: "/api/registry/tags",
+    summary: "Registry tag directory",
+    description:
+      "Lists registry tags with entry counts, per-category breakdown, and a canonical search URL for each tag.",
+    tags: ["Registry"],
+    originCheck: true,
+    rateLimit: {
+      scope: "registry-tags",
+      limit: 120,
+      windowMs: 60_000,
+      binding: "API_REGISTRY_RATE_LIMIT",
+    },
+  }),
   "registry.search": route({
     id: "registry.search",
     method: "GET",

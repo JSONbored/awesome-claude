@@ -245,6 +245,22 @@ const RESPONSE_EXAMPLES: Partial<Record<ApiRouteId, unknown>> = {
     count: 1,
     entries: [{ id: "mcp", label: "MCP servers", count: 42 }],
   },
+  "registry.tags": {
+    schemaVersion: 1,
+    generatedAt: "2026-05-29T00:00:00.000Z",
+    count: 1,
+    entries: [
+      {
+        tag: "github",
+        count: 7,
+        categories: [
+          { category: "mcp", count: 5 },
+          { category: "agents", count: 2 },
+        ],
+        searchUrl: "/api/registry/search?q=github",
+      },
+    ],
+  },
   "registry.search": {
     schemaVersion: 1,
     query: "mcp",

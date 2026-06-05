@@ -18,6 +18,7 @@ function findRouteFiles(directory: string): string[] {
 const apiRoutes = [
   "/api/registry/manifest",
   "/api/registry/categories",
+  "/api/registry/tags",
   "/api/registry/search",
   "/api/registry/feed",
   "/api/registry/trending",

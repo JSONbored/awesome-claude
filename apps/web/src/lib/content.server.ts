@@ -265,6 +265,50 @@ export const getCategorySummaries = cache(async (): Promise<CategorySummary[]> =
     .filter((entry) => entry.count > 0);
 });
 
+export type TagDirectoryEntry = {
+  tag: string;
+  count: number;
+  categories: Array<{ category: string; count: number }>;
+  searchUrl: string;
+};
+
+export const getTagDirectory = cache(async (): Promise<TagDirectoryEntry[]> => {
+  const entries = await loadSearchIndex();
+  const tagMap = new Map<string, { count: number; categories: Map<string, number> }>();
+
+  for (const entry of entries) {
+    const seen = new Set<string>();
+    for (const rawTag of entry.tags ?? []) {
+      const tag = String(rawTag ?? "")
+        .trim()
+        .toLowerCase();
+      if (!tag || seen.has(tag)) continue;
+      seen.add(tag);
+
+      let bucket = tagMap.get(tag);
+      if (!bucket) {
+        bucket = { count: 0, categories: new Map() };
+        tagMap.set(tag, bucket);
+      }
+      bucket.count += 1;
+      bucket.categories.set(entry.category, (bucket.categories.get(entry.category) ?? 0) + 1);
+    }
+  }
+
+  return [...tagMap.entries()]
+    .map(([tag, bucket]) => ({
+      tag,
+      count: bucket.count,
+      categories: [...bucket.categories.entries()]
+        .map(([category, count]) => ({ category, count }))
+        .sort(
+          (left, right) => right.count - left.count || left.category.localeCompare(right.category),
+        ),
+      searchUrl: `/api/registry/search?q=${encodeURIComponent(tag)}`,
+    }))
+    .sort((left, right) => right.count - left.count || left.tag.localeCompare(right.tag));
+});
+
 export async function getRecentEntries() {
   const entries = await getDirectoryEntries();
   return [...entries]
