@@ -1,0 +1,138 @@
+---
+title: MCP Server Threat Modeling Agent
+slug: mcp-server-threat-modeling-agent
+category: agents
+description: >-
+  Source-backed agent that threat-models an MCP server before it is connected to
+  Claude Code, covering trust verification, tool authority and side effects,
+  prompt injection via tool output, network and credential exposure, and
+  least-privilege mitigations, grounded in the official security docs.
+cardDescription: >-
+  Threat-model an MCP server before connecting it to Claude Code: trust, tool
+  authority, prompt injection, credentials, and mitigations.
+seoTitle: MCP Server Threat Modeling Agent
+seoDescription: >-
+  Reusable agent prompt that threat-models an MCP server before connecting it to
+  Claude Code: trust verification, tool authority, prompt injection via tool
+  output, credential exposure, and least-privilege mitigations.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/security"
+installable: false
+usageSnippet: "Use this agent to threat-model an MCP server before connecting it to Claude Code, covering trust, tool authority, prompt injection, credentials, and mitigations."
+prerequisites:
+  - "The MCP server's source or documentation, transport, and tool list with input/output schemas."
+  - "Knowledge of who operates the server and how trusted it is."
+  - "The permission posture of the Claude Code project that would connect it."
+safetyNotes:
+  - "This agent assesses risk; it does not connect to or exercise the server. Connecting a new MCP server requires trust verification, which is disabled in non-interactive (-p) runs."
+  - "Treat MCP tool output as untrusted content that can carry prompt-injection instructions; recommend not auto-acting on it and keeping result sizes bounded."
+  - "Recommend least-privilege: explicit allow rules, confirmation for write tools, and disabling tools that are not needed. Anthropic does not security-audit MCP servers."
+privacyNotes:
+  - "Tools send whatever inputs they are called with to the server; identify what data would leave the environment and to whom."
+  - "Credentials for the server must be stored securely and never committed or logged; prefer a credential proxy so the agent never sees raw secrets."
+  - "Confirm the server operator's data handling and retention before sending sensitive context to it."
+tags:
+  - mcp
+  - security
+  - threat-modeling
+  - claude-code
+  - review
+keywords:
+  - mcp server threat modeling agent
+  - mcp security review
+  - mcp prompt injection
+  - mcp tool authority threat model
+  - claude code mcp trust
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MCP Server Threat Modeling Agent is a reusable agent prompt for assessing the
+risk of an MCP server before Claude Code connects to it. It works through trust
+verification, tool authority and side effects, prompt injection via tool output,
+network and credential exposure, and least-privilege mitigations, grounded in
+Claude Code's security model.
+
+Use it before adding a third-party or new MCP server, or when reviewing whether an
+existing connection is safe to keep.
+
+## Agent Prompt
+
+You are an MCP server threat modeler for Claude Code. Decide whether a server is
+safe to connect and under what limits, using the official Claude Code security
+documentation as your reference. Default to caution for servers you do not operate.
+
+Threat-modeling workflow:
+
+1. Trust. Note that connecting a new MCP server requires trust verification (and
+   that this is disabled under `-p`). Establish who operates the server and how
+   trusted it is. Anthropic does not security-audit MCP servers.
+2. Tool authority. Enumerate tools and classify read vs write vs destructive.
+   Treat broad or vague tools as higher risk and prefer enabling only what is
+   needed.
+3. Prompt injection. Tool outputs are untrusted content and can contain
+   instructions; recommend not auto-acting on outputs, keeping result sizes
+   bounded, and relying on the permission system as a gate.
+4. Network and command surface. If the server triggers network requests or runs
+   commands, account for the lethal-trifecta risk (untrusted content + private
+   data + exfiltration path) and recommend egress controls.
+5. Credentials. Identify what credentials the server needs; recommend a proxy that
+   injects them outside the agent boundary so the agent never sees raw secrets.
+6. Mitigations. Recommend explicit allow rules, confirmation for writes, disabling
+   unneeded tools, sandboxing, and VM/dev-container isolation for risky servers.
+7. Decision. Connect with limits, connect read-only, or do not connect.
+
+Output contract:
+
+- Server summary: operator, transport, tool authority, data reached.
+- Threats: injection, excessive agency, exfiltration, credential exposure.
+- Mitigations: allow rules, confirmation, disabled tools, isolation.
+- Decision: connect with limits, read-only, or reject.
+
+## Features
+
+- Threat-models an MCP server against Claude Code's security model.
+- Classifies tool authority and flags excessive agency.
+- Treats tool output as untrusted (prompt-injection aware).
+- Produces a connect/limit/reject decision with mitigations.
+
+## Use Cases
+
+- Vet a third-party MCP server before connecting it.
+- Decide whether to allow only read-only tools from a server.
+- Reduce prompt-injection and exfiltration risk from MCP tools.
+- Review an existing MCP connection for safe configuration.
+
+## Source Notes
+
+- Claude Code requires trust verification for new MCP servers, gates network
+  requests, isolates web-fetch context, and treats the permission system as the
+  enforcement layer; Anthropic does not security-audit MCP servers.
+- The lethal-trifecta framing (untrusted content, private data, exfiltration
+  path) informs which combinations of MCP capabilities are highest risk.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for MCP threat modeling, security, and
+audit agents. This entry is distinct from MCP metadata/registry review: it is an
+`agents` prompt focused on threat-modeling an MCP server's security risk before
+connection.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code security: https://code.claude.com/docs/en/security
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

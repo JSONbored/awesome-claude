@@ -1,0 +1,103 @@
+---
+title: Crush
+slug: crush
+category: tools
+description: >-
+  Terminal-based agentic AI coding assistant from Charm that works with many LLM
+  providers, uses LSP and MCP for context, manages per-project sessions, and
+  asks permission before running tools by default.
+cardDescription: >-
+  Terminal-based AI coding agent from Charm with multi-model support, LSP and
+  MCP context, and permission prompts before running tools.
+seoTitle: Crush — Terminal AI Coding Agent from Charm
+seoDescription: >-
+  Crush is a terminal-based agentic AI coding assistant from Charm. Multi-model
+  support, LSP and MCP context, per-project sessions, and permission prompts
+  before running tools. Source-available under FSL-1.1-MIT.
+author: Charm
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://charm.land"
+repoUrl: "https://github.com/charmbracelet/crush"
+documentationUrl: "https://github.com/charmbracelet/crush"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "An API key from a supported LLM provider such as Anthropic, OpenAI, or a compatible API."
+  - "A supported terminal on macOS, Linux, Windows (PowerShell or WSL), or BSD."
+  - "On Linux/BSD, clipboard helpers (wl-copy/wl-paste for Wayland or xclip/xsel for X11) for clipboard features."
+safetyNotes:
+  - "Crush executes tools and commands; by default it asks for permission before each tool call."
+  - "The --yolo flag skips all permission prompts; the project warns to be very careful with it, so avoid it on untrusted work."
+  - "The crush.json config is trusted code — any $(...) in it runs at load time with your shell's privileges, so review config files before use."
+  - "LSP and MCP servers can read your codebase and influence agent behavior; only connect servers you trust."
+privacyNotes:
+  - "Your code context and prompts are transmitted to the LLM provider you configure."
+  - "API keys are read from environment variables or config files and sent to the configured provider; store them as secrets."
+  - "Crush records pseudonymous usage metrics tied to a device-specific hash; prompts and responses are never collected. Opt out with CRUSH_DISABLE_METRICS=1 or DO_NOT_TRACK=1."
+tags:
+  - ai-coding
+  - terminal
+  - cli
+  - mcp
+  - lsp
+  - developer-tools
+keywords:
+  - crush
+  - charm crush
+  - terminal ai coding agent
+  - agentic coding cli
+  - multi-model coding assistant
+  - mcp coding agent
+---
+
+## Overview
+
+Crush is a terminal-based agentic AI coding assistant from Charm — "glamourous
+agentic coding for all." It bridges your terminal, your code, and the LLM of
+your choice, analyzing your codebase, using LSP for context, and collaborating
+on coding tasks directly in the terminal.
+
+It is written in Go and released under the Functional Source License
+(FSL-1.1-MIT): the source is public and free to use, and converts to MIT over
+time. You bring your own LLM provider API key.
+
+## Features
+
+- Multi-model support: choose among many LLMs or integrate custom OpenAI- or
+  Anthropic-compatible APIs.
+- Per-project session management with preserved context.
+- LSP integration for additional code context.
+- MCP support over stdio, HTTP, and SSE transports.
+- Broad cross-platform terminal support, including Windows and BSD.
+- Agent Skills open-standard support for extending capabilities.
+
+## Use Cases
+
+- Drive an AI coding agent without leaving the terminal.
+- Use your preferred LLM provider or a self-hosted compatible API.
+- Extend the agent with MCP servers and LSP-backed context.
+- Keep separate sessions per project with retained context.
+
+## Installation
+
+```bash
+# Homebrew
+brew install charmbracelet/tap/crush
+
+# npm
+npm install -g @charmland/crush
+
+# Go
+go install github.com/charmbracelet/crush@latest
+```
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. Crush is
+source-available under FSL-1.1-MIT; using it requires your own paid or free LLM
+provider access.

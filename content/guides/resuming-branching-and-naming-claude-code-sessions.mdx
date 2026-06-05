@@ -1,0 +1,120 @@
+---
+title: Resuming, Branching, and Naming Claude Code Sessions
+slug: resuming-branching-and-naming-claude-code-sessions
+category: guides
+description: >-
+  A practical walkthrough of managing Claude Code sessions: resuming with
+  --continue, --resume, and --from-pr, naming sessions, using the session
+  picker, branching to try a different approach, and where transcripts are
+  stored.
+cardDescription: >-
+  Resume, name, branch, and switch between Claude Code sessions with --continue,
+  --resume, /rename, /branch, and the session picker.
+seoTitle: Resuming, Branching, and Naming Claude Code Sessions
+seoDescription: >-
+  How to manage Claude Code sessions: resume with --continue, --resume, and
+  --from-pr, name with -n and /rename, browse the session picker, branch with
+  /branch or --fork-session, and locate transcripts on disk.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/sessions"
+usageSnippet: "Use this guide to resume, name, branch, and switch between Claude Code sessions, and to find where transcripts are stored."
+prerequisites:
+  - "Claude Code installed and used in a project directory at least once so a session exists."
+  - "Familiarity with running claude from your terminal."
+  - "Optional: edit access to settings for cleanupPeriodDays and transcript location."
+safetyNotes:
+  - "Branching with /branch or --fork-session copies the conversation but permissions you approved with 'allow for this session' do not carry to the branch; re-approve as needed."
+  - "Resuming the same session in two terminals without forking interleaves messages into one transcript; fork to keep them separate."
+  - "Restoring or branching changes session state, not files on disk; use Git for permanent history."
+privacyNotes:
+  - "Transcripts are stored locally as JSONL at ~/.claude/projects/<project>/<session-id>.jsonl and removed after 30 days by default (cleanupPeriodDays)."
+  - "Set CLAUDE_CONFIG_DIR to relocate session storage, or CLAUDE_CODE_SKIP_PROMPT_HISTORY to suppress transcript writes."
+  - "Exported transcripts (/export) contain full messages and tool output; handle them like any sensitive log."
+tags:
+  - claude-code
+  - sessions
+  - workflow
+  - productivity
+  - cli
+keywords:
+  - claude code sessions
+  - claude code resume
+  - claude code branch session
+  - claude code rename session
+  - claude --continue --resume
+---
+
+## Overview
+
+A session is a saved conversation tied to a project directory. Claude Code stores
+it locally as you work, so you can resume where you left off, branch to try a
+different approach, or switch between tasks. This guide covers the CLI workflow.
+
+## Resume
+
+| Command | What it does |
+| --- | --- |
+| `claude --continue` | Resume the most recent session in this directory |
+| `claude --resume` | Open the session picker |
+| `claude --resume <name>` | Resume a named session directly |
+| `claude --from-pr <number>` | Resume the session linked to a pull request |
+| `/resume` | Switch conversations from inside a session |
+
+Sessions started with `claude -p` or the Agent SDK do not appear in the picker
+but can be resumed by passing their session ID to `claude --resume <id>`.
+
+## Name your sessions
+
+Descriptive names make sessions findable and resumable:
+
+- At startup: `claude -n auth-refactor`
+- During a session: `/rename auth-refactor`
+- From the picker: highlight and press `Ctrl+R`
+- On plan accept: the session is named from the plan content unless you already
+  set a name
+
+## Use the session picker
+
+Run `/resume` (or `claude --resume`) to open the picker. Navigate with arrows,
+`Space` to preview, `Ctrl+R` to rename, `Ctrl+A` to widen to all projects,
+`Ctrl+W` to widen to all worktrees, and `Ctrl+B` to filter to the current branch.
+You can paste a pull/merge request URL to find the session that created it.
+
+## Branch a session
+
+Branching copies the conversation so far and switches you into it, leaving the
+original intact:
+
+```text
+/branch try-streaming-approach
+```
+
+From the command line, combine resume with fork:
+
+```bash
+claude --continue --fork-session
+```
+
+Forked sessions are grouped under their root in the picker. To return to the
+original, resume it by ID or name.
+
+## Manage context within a session
+
+- `/clear` starts fresh with an empty context (the prior conversation is saved).
+- `/compact [instructions]` replaces history with a summary.
+- `/context` shows what is consuming context.
+
+## Where session data lives
+
+Transcripts are JSONL at `~/.claude/projects/<project>/<session-id>.jsonl`,
+removed after 30 days by default (`cleanupPeriodDays`). Use `/export` to copy or
+save a readable transcript. Set `CLAUDE_CONFIG_DIR` to relocate storage.
+
+## Source
+
+- Manage sessions: https://code.claude.com/docs/en/sessions

@@ -386,4 +386,117 @@ Example body.
       ]),
     );
   });
+
+  it("does not hard-fail defensive security hooks for secret-related wording alone", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Environment Leak Warning Hook
+category: hooks
+description: Defensive hook that warns before commands dump tokens or harvest credentials from shell output.
+sourceUrl: https://docs.anthropic.com/en/docs/claude-code/hooks
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Inspects command text before execution and blocks risky output patterns.
+privacyNotes:
+  - Does not read secret values or send command text to third parties.
+---
+
+This hook detects commands that dump tokens or harvest credentials and blocks
+them before they run. It is defensive guidance for preventing accidental leaks.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/hooks/environment-leak-warning-hook.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "malicious_data_theft_capability" }),
+      ]),
+    );
+  });
+
+  it("does not let broad defensive keywords bypass credential-theft blocking", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: Credential Audit Hook
+category: hooks
+description: Warning audit hook that can steal tokens and harvest credentials from shell output.
+sourceUrl: https://github.com/example/credential-audit-hook
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+safetyNotes:
+  - Runs before commands and inspects shell output.
+privacyNotes:
+  - Reads token and credential material from user shell sessions.
+---
+
+This audit hook can steal tokens and harvest credentials from shell output for review.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/hooks/credential-audit-hook.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.reviewFlags).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "malicious_data_theft_capability" }),
+      ]),
+    );
+    expect(output.requestChangesReasons.join("\n")).toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
+  it("routes commercial API relay submissions out of the free content queue", () => {
+    const tmpDir = fs.mkdtempSync(
+      path.join(os.tmpdir(), "heyclaude-content-policy-"),
+    );
+    const content = `---
+title: CoderPlan LLM API Relay
+category: tools
+description: Pay-per-use LLM API relay for routing paid model requests through a hosted API gateway.
+sourceUrl: https://example.com/coderplan
+websiteUrl: https://example.com/coderplan/pricing
+submittedBy: contributor
+submittedByUrl: https://github.com/contributor
+---
+
+This commercial API relay sells credits and billing-backed access to multiple
+LLM providers through a proxy gateway.
+`;
+
+    const result = runContentPolicy(tmpDir, content, "external_direct", [
+      {
+        filename: "content/tools/coderplan.mdx",
+        status: "added",
+        content,
+      },
+    ]);
+
+    expect(result.status).not.toBe(0);
+    const output = JSON.parse(fs.readFileSync(result.outputJson, "utf8"));
+    expect(output.failures).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("commercial_listing_route"),
+      ]),
+    );
+  });
 });

@@ -173,6 +173,7 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("Product or feature improvement");
+    expect(source).not.toContain("gittensor:feature");
     expect(source).toContain("id: quality_evidence");
     expect(source).toContain("desktop and mobile screenshots");
     expect(source).toContain("No visual impact");
@@ -211,6 +212,17 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+    );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
     expect(source).not.toContain("pnpm --filter web run deploy:dev");
@@ -358,8 +370,20 @@ describe("submission automation workflows", () => {
     expect(source).toContain("trunk check --ci --all");
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+    );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).not.toContain("--allow-missing");
     expect(source).toContain("pnpm validate:deployment-artifacts");
     expect(source).toContain("pnpm validate:mcp-endpoint");
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");

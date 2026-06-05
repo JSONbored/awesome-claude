@@ -1,3 +1,4 @@
+import { scanDangerousShellPatterns } from "@heyclaude/registry/command-safety";
 import {
   buildSubmissionPrDraft,
   normalizeSubmissionPayloadFields,
@@ -209,6 +210,14 @@ export function validateSkillPackageFiles(params: {
     }
     if (file.size > 2_000_000) {
       warnings.push(`Large package file: ${file.path}`);
+    }
+    // Advisory: surface high-risk shell patterns in the file body so a reviewer
+    // can triage destructive or remote-exec submissions before installing.
+    const riskyPatterns = scanDangerousShellPatterns(file.text);
+    if (riskyPatterns.length) {
+      warnings.push(
+        `High-risk shell pattern in ${file.path}: ${riskyPatterns.join(", ")}. Review before installing.`,
+      );
     }
   }
 

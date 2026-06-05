@@ -1,0 +1,133 @@
+---
+title: Claude Code Routine Designer Agent
+slug: claude-code-routine-designer-agent
+category: agents
+description: >-
+  Source-backed agent that designs safe recurring Claude Code routines, turning a
+  repeated task into a well-scoped, idempotent skill-driven workflow with clear
+  triggers, permissions, and reporting, grounded in the official Claude Code
+  skills docs.
+cardDescription: >-
+  Design safe recurring Claude Code routines: scoped, idempotent skill-driven
+  workflows with clear triggers, permissions, and reporting.
+seoTitle: Claude Code Routine Designer Agent
+seoDescription: >-
+  Reusable agent prompt that designs safe recurring Claude Code routines, turning
+  a repeated task into a scoped, idempotent skill-driven workflow with clear
+  triggers, permissions, and reporting, grounded in official Claude Code docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+installable: false
+usageSnippet: "Use this agent to design a safe recurring Claude Code routine from a repeated task: scope it, make it idempotent, define triggers and permissions, and decide what it reports."
+prerequisites:
+  - "A repeated task you want to run on a schedule or trigger with Claude Code."
+  - "Knowledge of the inputs, outputs, and side effects of that task."
+  - "Ability to author a skill and set the permissions the routine needs."
+safetyNotes:
+  - "This agent designs the routine; running it on a schedule means it acts without a human present, so scope it tightly."
+  - "Make routines idempotent and bounded so a repeated or retried run cannot cause cumulative damage."
+  - "Keep destructive or far-reaching steps out of unattended routines, or gate them behind explicit confirmation and least-privilege permissions."
+privacyNotes:
+  - "A recurring routine repeatedly sends its context to the model provider; confirm that is acceptable for the data involved."
+  - "Routine output and logs can accumulate; avoid writing secrets or sensitive data into them."
+  - "Scope the routine's tools and file access to only what the task requires."
+tags:
+  - claude-code
+  - routines
+  - automation
+  - skills
+  - scheduling
+keywords:
+  - claude code routine designer agent
+  - claude code recurring task
+  - claude code scheduled workflow
+  - idempotent automation
+  - claude code skill workflow
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Routine Designer Agent is a reusable agent prompt for turning a
+repeated task into a safe recurring routine. It scopes the task, makes it
+idempotent, defines triggers and least-privilege permissions, and decides what the
+routine reports, so unattended runs stay predictable and safe.
+
+Use it when you keep doing the same Claude Code task by hand and want to capture it
+as a dependable routine instead of an ad-hoc prompt.
+
+## Agent Prompt
+
+You are a routine designer for Claude Code. Turn a repeated task into a safe,
+bounded, recurring workflow. Use the official Claude Code skills documentation as
+your reference, and design for unattended execution.
+
+Design workflow:
+
+1. Capture the task. State the goal, inputs, outputs, and side effects of the
+   repeated task in plain terms.
+2. Scope it. Define exactly which files, repos, and tools the routine may touch.
+   Keep it narrow.
+3. Make it idempotent. Ensure that running it twice, or retrying after a failure,
+   does not cause cumulative or duplicate damage.
+4. Encode it. Capture the steps as a skill so the procedure is reusable and loads
+   on demand, rather than living in ad-hoc prompts.
+5. Triggers and permissions. Define when it runs and the least-privilege
+   permissions it needs. Keep destructive steps out or behind confirmation.
+6. Reporting. Decide what a run reports (success, changes made, anomalies) so an
+   absent human can review it later.
+7. Failure handling. Define what happens on error: stop, retry safely, or
+   escalate.
+
+Output contract:
+
+- Task definition: goal, inputs, outputs, side effects.
+- Scope and least-privilege permissions.
+- Idempotent step sequence captured as a skill.
+- Trigger, reporting, and failure-handling plan.
+
+## Features
+
+- Converts a repeated task into a scoped, idempotent routine.
+- Captures the procedure as a reusable skill.
+- Defines triggers, least-privilege permissions, and reporting.
+- Designs failure handling for unattended execution.
+
+## Use Cases
+
+- Turn a recurring maintenance task into a dependable routine.
+- Make an automated job idempotent so retries are safe.
+- Scope and permission a routine for unattended runs.
+- Define what a routine reports for later human review.
+
+## Source Notes
+
+- Claude Code skills capture repeatable procedures in SKILL.md that load on demand
+  and can be invoked or run automatically, which is the natural home for a routine.
+- Permission modes and allow/deny rules define least-privilege execution, which is
+  essential for routines that run without a human present.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for routine, recurring task, and
+scheduled workflow agents. No routine designer agent exists. This entry is
+distinct: it is an `agents` prompt focused on designing safe recurring Claude Code
+routines.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp

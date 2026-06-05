@@ -1,0 +1,113 @@
+---
+title: Building a Claude Code Plugin Marketplace
+slug: building-a-claude-code-plugin-marketplace
+category: guides
+description: >-
+  A practical walkthrough of creating and distributing a Claude Code plugin
+  marketplace: the marketplace.json catalog, hosting on a git repository, adding
+  it with /plugin marketplace add, private repositories, and how users install
+  and update plugins.
+cardDescription: >-
+  Create and distribute a Claude Code plugin marketplace with marketplace.json,
+  git hosting, private repos, and /plugin marketplace add.
+seoTitle: Building a Claude Code Plugin Marketplace
+seoDescription: >-
+  How to build and distribute a Claude Code plugin marketplace: define a
+  marketplace.json catalog, host it on a git repository, add it with /plugin
+  marketplace add, support private repos, and let users install and update.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/plugin-marketplaces"
+usageSnippet: "Use this guide to create a marketplace.json catalog, host it on git, and distribute Claude Code plugins to a team or community with /plugin marketplace add."
+prerequisites:
+  - "One or more Claude Code plugins you want to distribute."
+  - "A git host (GitHub, GitLab, or another) to host the marketplace repository."
+  - "Claude Code installed for testing the marketplace and installs."
+safetyNotes:
+  - "A marketplace distributes plugins that can bundle hooks, MCP servers, and bin executables that run with the user's privileges; document what each plugin does and review before sharing."
+  - "Encourage installers to review plugin source and pin versions; treat installing from an untrusted marketplace as a supply-chain decision."
+  - "For internal-only distribution, host the marketplace in a private repository rather than a public one."
+privacyNotes:
+  - "Do not bundle secrets, tokens, or private endpoints into plugins or the marketplace catalog; use environment variables or helpers."
+  - "Private marketplaces keep the catalog and plugin source within your access controls; public ones expose both."
+  - "Marketplace metadata (names, descriptions) is visible to anyone who can add the marketplace."
+tags:
+  - claude-code
+  - plugins
+  - marketplace
+  - distribution
+  - teams
+keywords:
+  - claude code plugin marketplace
+  - marketplace.json
+  - claude code distribute plugins
+  - /plugin marketplace add
+  - private plugin marketplace
+---
+
+## Overview
+
+A plugin marketplace is a catalog that distributes Claude Code plugins to others,
+with centralized discovery, version tracking, and updates. This guide covers
+creating a `marketplace.json`, hosting it on a git repository, and letting users
+add and install from it.
+
+## Steps
+
+1. **Create plugins**: build one or more plugins with skills, agents, hooks, MCP
+   servers, or LSP servers (see the plugin docs for authoring details).
+2. **Create the marketplace file**: define a `marketplace.json` that lists your
+   plugins and where to find each one.
+3. **Host it**: push the repository to GitHub, GitLab, or another git host.
+4. **Share**: users add your marketplace and install individual plugins.
+
+## Add and install
+
+Users add your marketplace and install from it:
+
+```text
+/plugin marketplace add your-org/your-marketplace-repo
+/plugin install your-plugin@your-marketplace
+```
+
+After pushing changes to the repository, users refresh their local copy:
+
+```text
+/plugin marketplace update your-marketplace
+```
+
+## Private marketplaces
+
+To keep distribution internal to a team, host the marketplace in a private
+repository. Only users with access to that repository can add the marketplace and
+install its plugins. This is the recommended approach for organization-internal
+plugins.
+
+## Versioning and updates
+
+Decide whether each plugin sets an explicit `version` in its manifest or relies on
+the git commit SHA. With an explicit version, users only receive updates when you
+bump it; without one, every commit counts as a new version. Choose a strategy
+that gives your users predictable updates.
+
+## Test before sharing
+
+- Validate locally with `claude plugin validate` before distribution.
+- Install your own marketplace and confirm plugins, skills, agents, and hooks load
+  as expected.
+- Have a teammate test the install flow on a clean machine.
+
+## Community marketplaces
+
+Anthropic maintains an official curated marketplace and a public community
+marketplace; submitting to the community marketplace runs an automated review and
+safety screening. For team-internal plugins, a private marketplace you host is the
+right path.
+
+## Source
+
+- Create and distribute a plugin marketplace: https://code.claude.com/docs/en/plugin-marketplaces

@@ -1,0 +1,134 @@
+---
+title: Adding Plugin Install Hints to Developer CLIs
+slug: adding-plugin-install-hints-to-developer-clis
+category: guides
+description: >-
+  A practical walkthrough of emitting the claude-code-hint marker from your CLI
+  so Claude Code prompts users to install your official plugin: the hint format,
+  gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
+cardDescription: >-
+  Emit the claude-code-hint marker from your CLI so Claude Code prompts users to
+  install your official plugin, gated on CLAUDECODE.
+seoTitle: Adding Plugin Install Hints to Developer CLIs
+seoDescription: >-
+  How to emit a claude-code-hint marker from your CLI so Claude Code prompts
+  users to install your official-marketplace plugin: hint format, gating on the
+  CLAUDECODE env var, where to emit, and requirements.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/plugin-hints"
+usageSnippet: "Use this guide if you maintain a CLI with a plugin in the official Anthropic marketplace and want Claude Code to prompt users to install it."
+prerequisites:
+  - "A CLI or SDK you maintain, plus a plugin listed in the official Anthropic marketplace (claude-plugins-official)."
+  - "The ability to write a line to stderr (or stdout) from your CLI."
+  - "Knowledge of your plugin's identifier in name@marketplace form."
+safetyNotes:
+  - "The hint never auto-installs anything; Claude Code only shows a one-time prompt and the user always confirms."
+  - "Gate emission on the CLAUDECODE environment variable so the marker never appears in a human user's terminal or in normal pipelines."
+  - "Hints are only acted on for plugins in an official Anthropic marketplace; pointers to other marketplaces are silently dropped."
+privacyNotes:
+  - "Claude Code strips the hint line before output reaches the model, so it is not counted toward token usage and does not enter the conversation."
+  - "Write the tag to stderr to keep it out of shell pipelines like `your-cli deploy | jq`; do not embed it mid-line in logs."
+  - "The hint carries only your plugin identifier; do not append user data or secrets to the marker line."
+tags:
+  - claude-code
+  - plugins
+  - cli
+  - distribution
+  - developer-tools
+keywords:
+  - claude code plugin hint
+  - claude-code-hint marker
+  - recommend plugin from cli
+  - CLAUDECODE env var
+  - claude code plugin install prompt
+---
+
+## Overview
+
+If you maintain a CLI or SDK and have a plugin in the official Anthropic
+marketplace, your tool can prompt Claude Code users to install it. Your CLI
+writes a one-line marker to stderr when it detects it is running inside Claude
+Code; Claude Code reads the marker, strips it from the output, and shows a
+one-time install prompt. The user always confirms; nothing installs
+automatically.
+
+## How it works
+
+Claude Code sets the `CLAUDECODE` environment variable to `1` for commands it runs
+through the Bash and PowerShell tools. When your CLI sees that variable, it writes
+a self-closing `<claude-code-hint />` tag to stderr. Claude Code then:
+
+1. Scans for hint lines and removes them before output reaches the model.
+2. Checks the hint targets a plugin in an official Anthropic marketplace.
+3. Checks the plugin is not already installed and has not been prompted before.
+4. Shows an install prompt naming the command that emitted the hint.
+
+## Emit the hint
+
+Gate on `CLAUDECODE` and write the tag on its own line:
+
+```javascript
+// Node.js
+if (process.env.CLAUDECODE) {
+  process.stderr.write(
+    '<claude-code-hint v="1" type="plugin" value="example-cli@claude-plugins-official" />\n',
+  )
+}
+```
+
+```python
+# Python
+import os, sys
+if os.environ.get("CLAUDECODE"):
+    print(
+        '<claude-code-hint v="1" type="plugin" value="example-cli@claude-plugins-official" />',
+        file=sys.stderr,
+    )
+```
+
+Replace `example-cli` with your plugin's name in the official marketplace.
+
+## Hint format
+
+```text
+<claude-code-hint v="1" type="plugin" value="name@marketplace" />
+```
+
+| Attribute | Required | Description |
+| --- | --- | --- |
+| `v` | Yes | Protocol version; `1` is the only supported value. |
+| `type` | Yes | Hint kind; `plugin` is the only supported value. |
+| `value` | Yes | Plugin identifier in `name@marketplace` form. |
+
+## Where to emit
+
+Claude Code deduplicates by plugin, so emitting on every invocation is fine. Good
+touchpoints: `--help` output, unknown-subcommand errors, login/auth success, and
+first-run welcome messages.
+
+## What the user sees
+
+Claude Code shows a one-time prompt naming the command, with options to install,
+decline, or disable future hints. Frequency is bounded: once per plugin, and at
+most one hint prompt per Claude Code session across all CLIs. If there is no
+response within 30 seconds, it dismisses as No.
+
+## Requirements
+
+- The tag must occupy its own line; mid-line tags are ignored.
+- The `value` must reference a plugin in an official Anthropic marketplace such as
+  `claude-plugins-official`; other marketplaces are silently dropped.
+- Recommended: write to stderr and gate on `CLAUDECODE`.
+
+The hint protocol only takes effect for plugins listed in the official Anthropic
+marketplace, which Anthropic curates at its discretion. The community-marketplace
+submission form does not enable the hint protocol.
+
+## Source
+
+- Recommend your plugin from your CLI: https://code.claude.com/docs/en/plugin-hints
