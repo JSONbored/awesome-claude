@@ -353,6 +353,61 @@ function looksLikeGenericSafetyClose(summary: string) {
   );
 }
 
+function extractJsonFromText(value: string): unknown {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const fenced = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/i);
+  const candidates = fenced ? [fenced[1].trim(), trimmed] : [trimmed];
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      continue;
+    }
+  }
+  return value;
+}
+
+function unwrapPrivateGatePayload(raw: unknown, depth = 0): unknown {
+  if (depth > 3) return raw;
+  if (typeof raw === "string") {
+    const parsed = extractJsonFromText(raw);
+    return parsed === raw ? raw : unwrapPrivateGatePayload(parsed, depth + 1);
+  }
+  if (!isRecord(raw)) return raw;
+  for (const key of ["decision", "gateDecision", "result", "review"]) {
+    if (raw[key] !== undefined) {
+      return unwrapPrivateGatePayload(raw[key], depth + 1);
+    }
+  }
+  return raw;
+}
+
+export function parsePrivateGateDecisionResponseBody(body: string) {
+  return unwrapPrivateGatePayload(body);
+}
+
+function looksLikePrivateReviewInfrastructureManual(params: {
+  verdict: GateDecisionV2Verdict;
+  summary: string;
+  sections: GateDecisionSection[] | null;
+  errors?: GateDecisionError[];
+}) {
+  if (params.verdict !== "manual" || params.errors?.length) return false;
+  const text = [
+    params.summary,
+    ...(params.sections || []).flatMap((section) => [
+      section.title || section.id,
+      ...section.bullets,
+    ]),
+  ].join("\n");
+  return /(?:AI maintainer review returned an unexpected payload|private .*review.*unexpected payload|unexpected payload|invalid GateDecision|malformed private|could not parse|parse failure)/i.test(
+    text,
+  );
+}
+
 export function privateReviewErrorDecision(
   reason: string,
   code: string,
@@ -375,6 +430,9 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
   decision?: GateDecision;
   error?: GateDecisionError;
 } {
+  const unwrapped = unwrapPrivateGatePayload(raw);
+  if (unwrapped !== raw) return normalizePrivateGateDecisionPayload(unwrapped);
+
   if (!isRecord(raw)) {
     return {
       error: {
@@ -400,6 +458,11 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           .map(normalizeSection)
           .filter((section): section is GateDecisionSection => Boolean(section))
       : null;
+    const errors = Array.isArray(raw.errors)
+      ? raw.errors
+          .map(normalizeError)
+          .filter((error): error is GateDecisionError => Boolean(error))
+      : undefined;
     const reasonCode = normalizeReasonCode(raw.reasonCode);
     const evidence = Array.isArray(raw.evidence)
       ? raw.evidence
@@ -420,6 +483,23 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           retryable: true,
           message:
             "Private corpus review returned an invalid GateDecisionV2 payload.",
+        },
+      };
+    }
+    if (
+      looksLikePrivateReviewInfrastructureManual({
+        verdict,
+        summary,
+        sections,
+        errors,
+      })
+    ) {
+      return {
+        error: {
+          code: "invalid_private_response",
+          retryable: true,
+          message:
+            "Private corpus review surfaced an internal payload parsing failure.",
         },
       };
     }
@@ -444,11 +524,6 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           slug: cleanText(raw.scope.slug) || undefined,
           status: cleanText(raw.scope.status) || undefined,
         }
-      : undefined;
-    const errors = Array.isArray(raw.errors)
-      ? raw.errors
-          .map(normalizeError)
-          .filter((error): error is GateDecisionError => Boolean(error))
       : undefined;
 
     return {

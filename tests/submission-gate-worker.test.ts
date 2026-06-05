@@ -35,6 +35,7 @@ import {
   isRetryableGateDecision,
   markerComment,
   normalizePrivateGateDecisionPayload,
+  parsePrivateGateDecisionResponseBody,
   retryingReviewComment,
   supersededReviewComment,
   validationFailedDecision,
@@ -411,7 +412,12 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("target: {");
     expect(source).toContain("installationId: target.installationId");
     expect(source).toContain("normalizePrivateGateDecisionPayload(raw)");
+    expect(source).toContain("parsePrivateGateDecisionResponseBody(");
     expect(source).toContain("isRetryableGateDecision(decision)");
+    expect(source).toContain("function persistRetryableGateDecision");
+    expect(source).toContain("retryablePrecheckDecision(error)");
+    expect(source).toContain('"deterministic_precheck_retryable"');
+    expect(source).toContain('"source_evidence_timeout"');
     expect(source).toContain(
       "shouldStopRetryingInvalidPrivateResponse(decision, existing)",
     );
@@ -706,33 +712,78 @@ describe("Cloudflare submission gate helpers", () => {
   });
 
   it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
-    expect(
-      normalizePrivateGateDecisionPayload({
-        schemaVersion: 2,
-        verdict: "merge",
-        confidence: 0.91,
-        summary: ["Summary:", "- Looks good."],
-        labels: ["submission-merged-by-gate"],
-        scope: {
-          filePath: "content/mcp/example.mdx",
-          category: "mcp",
-          slug: "example",
-          status: "added",
+    const validMergeDecision = {
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.91,
+      summary: ["Summary:", "- Looks good."],
+      labels: ["submission-merged-by-gate"],
+      scope: {
+        filePath: "content/mcp/example.mdx",
+        category: "mcp",
+        slug: "example",
+        status: "added",
+      },
+      checks: [{ name: "validate-content", status: "passed" }],
+      sections: [
+        {
+          id: "recommended_action",
+          status: "pass",
+          bullets: ["Merge this PR."],
         },
-        checks: [{ name: "validate-content", status: "passed" }],
-        sections: [
-          {
-            id: "recommended_action",
-            status: "pass",
-            bullets: ["Merge this PR."],
-          },
-        ],
-      }).decision,
+      ],
+    };
+
+    expect(
+      normalizePrivateGateDecisionPayload(validMergeDecision).decision,
     ).toMatchObject({
       schemaVersion: 2,
       verdict: "merge",
       confidence: 0.91,
       checks: [{ name: "validate-content", status: "passed" }],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        decision: validMergeDecision,
+      }).decision,
+    ).toMatchObject({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.91,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload(
+        parsePrivateGateDecisionResponseBody(
+          `\`\`\`json\n${JSON.stringify(validMergeDecision)}\n\`\`\``,
+        ),
+      ).decision,
+    ).toMatchObject({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.91,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "manual",
+        confidence: 0.66,
+        summary: "AI maintainer review returned an unexpected payload.",
+        labels: ["submission-manual-review"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "summary",
+            status: "warn",
+            bullets: ["AI maintainer review returned an unexpected payload."],
+          },
+        ],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
     });
 
     expect(
