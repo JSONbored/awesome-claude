@@ -1,0 +1,241 @@
+---
+title: TanStack Query Data Fetching Skill
+slug: tanstack-query-data-fetching
+category: skills
+description: >-
+  Build React server-state workflows with TanStack Query v5, including query
+  keys, QueryClient setup, cache defaults, mutations, invalidation, hydration,
+  retries, and privacy-aware data handling.
+cardDescription: >-
+  Build React server-state workflows with TanStack Query, cache defaults,
+  mutations, invalidation, hydration, and safe data handling.
+seoTitle: TanStack Query Data Fetching Skill
+seoDescription: >-
+  Reusable AI skill for integrating TanStack Query React with QueryClient,
+  QueryClientProvider, useQuery, useMutation, query invalidation, important
+  defaults, SSR hydration, retries, and privacy-aware server-state caching.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/TanStack/query"
+documentationUrl: "https://tanstack.com/query/latest/docs/framework/react/overview"
+downloadUrl: "https://github.com/TanStack/query/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add @tanstack/react-query"
+usageSnippet: >-
+  Use this skill when a React app needs reliable server-state fetching,
+  background refetching, mutation flows, query invalidation, pagination, or
+  SSR/hydration planning with TanStack Query.
+copySnippet: |-
+  # Trigger
+  "Apply the TanStack Query data fetching skill to this React app."
+
+  # Required output
+  1) Server-state surface and current fetching inventory
+  2) QueryClient, provider, query key, and cache-default plan
+  3) useQuery/useMutation/invalidation implementation steps
+  4) Retry, hydration, devtools, and privacy/safety checks
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://tanstack.com/query/latest/docs/framework/react/overview"
+  - "https://tanstack.com/query/latest/docs/framework/react/quick-start"
+  - "https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults"
+  - "https://github.com/TanStack/query"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "React application or framework route that fetches remote server state."
+  - "Package manager access to install `@tanstack/react-query`."
+  - "Inventory of API endpoints, auth requirements, response shapes, mutation side effects, and loading/error UX requirements."
+  - "Decision on client-only fetching, server rendering, hydration, or router-level prefetching."
+  - "Approved handling plan for user-specific, tenant-specific, or regulated response data."
+safetyNotes:
+  - "The download URL is TanStack Query's external source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "TanStack Query defaults can refetch stale data on mount, reconnect, and window focus; tune `staleTime`, refetch behavior, and polling for expensive or rate-limited APIs."
+  - "Failed queries retry by default before surfacing errors. Disable or reduce retries for non-idempotent, quota-sensitive, auth-sensitive, or expensive requests."
+  - "Mutations can write production data. Require explicit mutation functions, optimistic update rollback logic, and post-success invalidation before trusting assistant-generated changes."
+  - "Do not put access tokens, raw secrets, full emails, tenant secrets, or large private objects in query keys, console logs, devtools screenshots, or cache persistence keys."
+  - "Hydration and prefetching can leak user-specific data if caches are shared across requests or serialized into pages without per-user boundaries."
+privacyNotes:
+  - "TanStack Query caches API responses in memory by default and can persist or broadcast cache data when optional persistence plugins are used."
+  - "Query data can include user records, account IDs, billing details, internal tickets, feature flags, or tenant-scoped objects depending on the API being fetched."
+  - "React Query Devtools, browser memory snapshots, logs, error reporting, screenshots, and AI transcripts can expose cached response data and query keys."
+  - "Server-rendered dehydration payloads may serialize cached data into HTML or route payloads; only prefetch data that is safe for that user and request."
+  - "Redact payload examples before sharing prompts, PR notes, support tickets, or bug reports that involve real query responses."
+tags:
+  - tanstack-query
+  - react-query
+  - react
+  - server-state
+  - data-fetching
+keywords:
+  - "TanStack Query"
+  - "React Query"
+  - "@tanstack/react-query"
+  - "QueryClientProvider"
+  - "useQuery"
+  - "useMutation"
+  - "query invalidation"
+  - "server state caching"
+readingTime: 8
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on TanStack Query React v5 docs and the official
+`TanStack/query` repository reviewed on **2026-06-04**. The current React docs
+describe TanStack Query as a library for fetching, caching, synchronizing, and
+updating server state, with core React setup through `QueryClient`,
+`QueryClientProvider`, `useQuery`, `useMutation`, and query invalidation.
+
+## Retrieval Sources
+
+- https://tanstack.com/query/latest/docs/framework/react/overview
+- https://tanstack.com/query/latest/docs/framework/react/quick-start
+- https://tanstack.com/query/latest/docs/framework/react/guides/important-defaults
+- https://github.com/TanStack/query
+
+Prefer the live TanStack Query docs and official repository over model memory
+for package names, v5 API details, default cache behavior, retry behavior,
+hydration APIs, devtools, and framework-specific guidance.
+
+## Scope Note
+
+Use this skill for React applications that need client-side or hydrated
+server-state management with TanStack Query. It is not a replacement for API
+design, authorization policy, database transactions, or backend data-consistency
+review.
+
+## Core Workflow
+
+1. Inventory existing data fetching: route loaders, server components, effects,
+   custom hooks, global stores, tRPC hooks, REST clients, GraphQL clients, and
+   mutation paths.
+2. Separate server state from client state. Use TanStack Query for remote,
+   asynchronous, shareable, cacheable data; keep local UI state outside query
+   cache unless it is derived from server responses.
+3. Install `@tanstack/react-query` and add one stable `QueryClient` plus
+   `QueryClientProvider` at the correct app boundary.
+4. Define query keys as stable arrays that identify data scope without exposing
+   secrets or unnecessary personal data.
+5. Wrap each fetch path in a typed query function with explicit error handling,
+   request cancellation behavior where relevant, and authentication assumptions
+   documented.
+6. Tune important defaults before broad rollout: `staleTime`, `gcTime`,
+   retries, refetch-on-window-focus, refetch-on-reconnect, and polling.
+7. Convert writes to `useMutation` with explicit mutation functions,
+   invalidation, optimistic updates only when rollback is clear, and user-facing
+   error states.
+8. Plan pagination, infinite queries, dependent queries, and prefetching only
+   after the base query key and cache invalidation model are stable.
+9. For SSR, streaming, or framework prefetching, confirm per-request cache
+   isolation and only dehydrate data that is safe for the current user.
+10. Add validation evidence: loading state, error state, cache hit behavior,
+    invalidation after mutation, retry behavior, and privacy review.
+
+## Required Inputs
+
+- React framework, routing layer, package manager, and render mode.
+- API endpoints, request clients, auth/session model, and response schemas.
+- Query candidates with owner, scope, freshness requirements, and expected
+  invalidation triggers.
+- Mutation paths, side effects, rollback expectations, and user notification
+  requirements.
+- SSR/hydration/prefetch requirements and data that must never be serialized
+  into HTML or shared caches.
+- Rate limits, API quotas, and retry tolerance for each remote service.
+
+## Production Rules
+
+- Do not use TanStack Query as a catch-all global store. Keep it focused on
+  server state.
+- Make query keys stable, scoped, and non-secret. Treat them as observable
+  application metadata.
+- Set `staleTime` deliberately for expensive, slow, or rate-limited endpoints.
+- Review retry defaults for every endpoint that can trigger noisy logs, quota
+  burn, lockouts, or repeated auth failures.
+- Use invalidation after mutations instead of hoping cached lists refresh by
+  accident.
+- Do not use optimistic updates unless there is a clear rollback path and a
+  user-visible failure state.
+- Keep Devtools out of production unless intentionally enabled and reviewed.
+- Isolate per-request query clients for server rendering and hydration.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for React data
+  fetching implementation and review.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions while
+  editing React, Next.js, Remix, TanStack Router, Vite, or SPA codebases.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the workflow,
+  production rules, and output contract into project-level frontend rules.
+
+## Output Contract
+
+1. Source evidence: TanStack Query docs and repository reviewed, with date.
+2. Data inventory: existing fetches, query candidates, mutations, response
+   sensitivity, and render mode.
+3. Implementation plan: `QueryClient`, provider placement, query keys, query
+   functions, mutations, invalidation, and cache defaults.
+4. Safety/privacy review: query keys, retries, devtools, persistence,
+   hydration, logs, and real-user data handling.
+5. Validation checklist: loading, error, success, cache hit, background refetch,
+   mutation invalidation, retry behavior, and SSR/hydration boundaries.
+
+## Duplicate And Source Review
+
+Current HeyClaude content mentions React Query inside adjacent tRPC, React, and
+rule entries, and the web app itself uses `@tanstack/react-query`, but there is
+no dedicated TanStack Query or React Query skill entry. This skill is scoped to
+the official TanStack Query React workflow and is backed by the current
+TanStack docs and official repository.
+
+## Troubleshooting
+
+**Issue:** The same request fires repeatedly
+
+**Fix:** Check query key stability, component remounting, `staleTime`,
+refetch-on-window-focus, polling, and whether the query function is recreated
+with unstable inputs.
+
+**Issue:** A mutation succeeds but the UI still shows old data
+
+**Fix:** Invalidate or update the exact affected query keys in `onSuccess`.
+Confirm the list/detail keys use the same scope and tenant identifiers.
+
+**Issue:** Sensitive user data appears in Devtools or screenshots
+
+**Fix:** Disable Devtools for shared environments, redact query data before
+reporting issues, and keep secrets or private payloads out of query keys.
+
+**Issue:** SSR output leaks another user's data
+
+**Fix:** Create a per-request `QueryClient`, avoid cross-request cache reuse,
+and only dehydrate data that belongs to the current authenticated user.
+
+**Issue:** Failed requests burn API quota
+
+**Fix:** Reduce `retry`, customize `retryDelay`, avoid polling for the endpoint,
+and surface auth/rate-limit failures quickly instead of silently retrying them.

@@ -1,0 +1,241 @@
+---
+title: Clerk Next.js Authentication Skill
+slug: clerk-nextjs-authentication
+category: skills
+description: >-
+  Add Clerk authentication to a Next.js App Router project with middleware,
+  route protection, session-aware UI, environment hygiene, and production auth
+  safety checks.
+cardDescription: >-
+  Add Clerk auth to Next.js with middleware, protected routes, session UI, and
+  production safety checks.
+seoTitle: Clerk Next.js Authentication Skill
+seoDescription: >-
+  Reusable AI skill for integrating Clerk authentication into Next.js App Router
+  apps with @clerk/nextjs, clerkMiddleware, route protection, session UI,
+  environment variables, and privacy-aware production checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/clerk/javascript"
+documentationUrl: "https://clerk.com/docs/nextjs/getting-started/quickstart"
+downloadUrl: "https://github.com/clerk/javascript/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add @clerk/nextjs"
+usageSnippet: >-
+  Use this skill when a Next.js App Router project needs Clerk sign-in,
+  sign-up, protected routes, user-aware UI, or organization-aware access checks.
+copySnippet: |-
+  # Trigger
+  "Apply the Clerk Next.js authentication skill to this app."
+
+  # Required output
+  1) Current app/router/auth surface inventory
+  2) Clerk package, env, provider, and middleware changes
+  3) Protected route and UI component plan
+  4) Safety, privacy, webhook, and production redirect checks
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://clerk.com/docs/nextjs/getting-started/quickstart"
+  - "https://clerk.com/docs/reference/nextjs/clerk-middleware"
+  - "https://github.com/clerk/javascript"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js App Router project or migration branch."
+  - "Clerk account and application for the target environment."
+  - "`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` available through local and deployment environment configuration."
+  - "Route map that separates public pages, protected app pages, API routes, and admin or organization-scoped areas."
+  - "Decision on whether to use Clerk hosted Account Portal pages, custom sign-in/sign-up pages, or both."
+  - "Production domain, redirect URL, callback URL, and allowed origin plan."
+safetyNotes:
+  - "The download URL is Clerk's external JavaScript SDK source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Clerk middleware does not protect routes by default; require an explicit protected-route matcher before assuming a page, API route, or tRPC endpoint is private."
+  - "Do not commit `CLERK_SECRET_KEY`, webhook signing secrets, OAuth provider secrets, or copied dashboard values to source control, issue comments, screenshots, or chat transcripts."
+  - "Review middleware matchers carefully. A broad matcher can affect static assets and public routes, while a narrow matcher can leave sensitive routes unauthenticated."
+  - "Treat organization roles, custom permissions, and metadata checks as authorization logic that needs tests, not just UI hiding."
+  - "Webhook handlers can mutate user, membership, subscription, and organization state. Make handlers idempotent and verify signatures before processing events."
+  - "Confirm production domains and redirect URLs before deploy; wrong origins can break sign-in, leak users into the wrong environment, or create confusing callback loops."
+privacyNotes:
+  - "Clerk processes user identity, email addresses, sessions, cookies, authentication factors, OAuth profile data, organization membership, and optional user metadata."
+  - "Application logs, error reports, webhook payloads, request traces, and AI chat transcripts can retain user IDs, email addresses, session state, redirect URLs, or organization names."
+  - "Keep public examples synthetic. Do not paste real Clerk keys, dashboard screenshots, webhook payloads, user records, or organization metadata into prompts or PRs."
+  - "Review Clerk, deployment-provider, analytics, and AI-assistant retention policies before using real customer identity data in troubleshooting sessions."
+  - "If custom metadata stores roles, billing flags, internal account IDs, or entitlement data, treat it as sensitive authorization data and avoid exposing it client-side unless intended."
+tags:
+  - clerk
+  - nextjs
+  - authentication
+  - app-router
+  - user-management
+keywords:
+  - "Clerk Next.js authentication"
+  - "@clerk/nextjs"
+  - "clerkMiddleware"
+  - "Next.js App Router auth"
+  - "Clerk protected routes"
+  - "Clerk UserButton"
+  - "Clerk organization roles"
+readingTime: 7
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Clerk's Next.js quickstart and `clerkMiddleware()`
+reference reviewed on **2026-06-04**. The quickstart currently installs
+`@clerk/nextjs`, adds `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and
+`CLERK_SECRET_KEY`, configures `clerkMiddleware()`, wraps the app with
+`<ClerkProvider>`, and uses Clerk UI helpers such as `<SignInButton>`,
+`<SignUpButton>`, and `<UserButton>`.
+
+## Retrieval Sources
+
+- https://clerk.com/docs/nextjs/getting-started/quickstart
+- https://clerk.com/docs/reference/nextjs/clerk-middleware
+- https://github.com/clerk/javascript
+
+Prefer the live Clerk docs and `clerk/javascript` repository over model memory
+for package names, middleware filenames, route matcher examples, and SDK
+changes.
+
+## Scope Note
+
+Use this skill for Clerk-backed authentication in a Next.js App Router project.
+It is not a generic auth architecture guide and it should not replace a product
+security review for high-risk admin, healthcare, finance, education, or
+enterprise identity workflows.
+
+## Core Workflow
+
+1. Inventory the existing Next.js structure, router type, `/src` usage, public
+   pages, protected pages, API routes, tRPC routes, admin areas, and organization
+   boundaries.
+2. Confirm the target Clerk application, environment, domain, allowed origins,
+   sign-in/sign-up strategy, and whether users will rely on hosted Account
+   Portal pages or custom pages.
+3. Add `@clerk/nextjs` with the project's package manager and document the
+   required local, preview, staging, and production environment variables.
+4. Add Clerk middleware in the correct root or `src` location for the current
+   Next.js version, then keep the matcher explicit enough to avoid accidental
+   static-asset or public-route side effects.
+5. Build the protected-route matcher from the route inventory instead of
+   guessing. Include app pages, API routes, and tRPC paths that require auth.
+6. Wrap the root layout with `<ClerkProvider>` and add signed-in and signed-out
+   UI states using Clerk components or project-specific wrappers.
+7. Add server-side user/session access only where needed, and keep authorization
+   checks close to the data or action being protected.
+8. Review organization roles, custom permissions, metadata reads, and billing or
+   entitlement checks as authorization logic that needs test coverage.
+9. If webhooks are used, verify event signatures, make processing idempotent,
+   and store only the user or organization fields the app actually needs.
+10. Produce a rollout plan with local sign-up, sign-in, sign-out, protected
+    route, API-route, organization, and production redirect checks.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, and whether the project uses
+  a `/src` directory.
+- List of public routes, authenticated user routes, admin routes, API routes,
+  and organization-scoped routes.
+- Clerk application/environment name and approved local, preview, staging, and
+  production domains.
+- Sign-in/sign-up page decision: Account Portal, custom pages, or a hybrid.
+- User data model, metadata fields, organization roles, custom permissions, and
+  webhook event requirements.
+- Deployment platform and secret-management path.
+
+## Production Rules
+
+- Do not assume middleware protects anything until the protected matcher and a
+  negative unauthenticated test prove it.
+- Keep `CLERK_SECRET_KEY` server-only. Only `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+  belongs in client-exposed configuration.
+- Avoid UI-only access control. Protect server actions, API handlers, tRPC
+  procedures, loaders, and database writes at the server boundary.
+- Keep authorization policy explicit when roles or organization membership
+  influence access. Hidden buttons are not permission checks.
+- Use synthetic users for demos, screenshots, bug reports, and AI prompts.
+- Treat Clerk dashboard changes as production configuration changes and record
+  them alongside code deploys.
+- Confirm redirect URLs and allowed origins for every deployment environment
+  before merging auth changes.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for auth integration
+  planning, route review, and implementation guidance.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js apps and reviewing Clerk auth changes.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, and output contract into repository-level auth rules.
+
+## Output Contract
+
+1. Source evidence: Clerk docs and SDK repo URLs reviewed, with date.
+2. App inventory: router, routes, API boundaries, auth gaps, and deployment
+   environments.
+3. Implementation plan: package install, environment variables, provider,
+   middleware, protected matchers, UI components, and server-side checks.
+4. Safety and privacy review: secrets, webhook signatures, route protection,
+   metadata exposure, logs, and real-user data handling.
+5. Validation checklist: sign-up, sign-in, sign-out, protected page, protected
+   API route, organization access, redirect URLs, and production smoke checks.
+
+## Duplicate And Source Review
+
+Current HeyClaude content already mentions Clerk inside a generic subagent
+factory example, but there is no dedicated Clerk, `@clerk/nextjs`, or
+`clerk/javascript` content entry. This skill is specifically scoped to the
+official Clerk Next.js SDK workflow and is source-backed by Clerk's current docs
+and official JavaScript SDK repository.
+
+## Troubleshooting
+
+**Issue:** A protected page is still public
+
+**Fix:** Check that the route is included in the protected matcher and that the
+middleware file is in the correct root or `src` location for the app.
+
+**Issue:** Static assets, images, or public pages behave strangely after adding
+middleware
+
+**Fix:** Revisit the matcher. Skip Next.js internals and static files while
+still including API and auth-related routes that need Clerk state.
+
+**Issue:** Sign-in works locally but fails in preview or production
+
+**Fix:** Compare Clerk dashboard domains, callback URLs, allowed origins,
+environment variables, and deployment-provider secret names for that exact
+environment.
+
+**Issue:** Users can see UI for actions they cannot perform
+
+**Fix:** Move the authorization check to the server action, API handler, tRPC
+procedure, or database write path, then keep UI hiding as a convenience only.
+
+**Issue:** Webhook processing creates duplicate rows or stale user state
+
+**Fix:** Verify signatures, store event IDs or idempotency keys, and make
+handlers safe to replay before processing production events.

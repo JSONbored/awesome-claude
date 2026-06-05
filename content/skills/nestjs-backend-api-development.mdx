@@ -1,0 +1,284 @@
+---
+title: NestJS Backend API Development Skill
+slug: nestjs-backend-api-development
+category: skills
+description: >-
+  Build and maintain NestJS backend APIs with modules, controllers, providers,
+  dependency injection, configuration, validation pipes, guards, interceptors,
+  exception filters, OpenAPI docs, testing, and production safety review.
+cardDescription: >-
+  Build NestJS APIs with modules, controllers, providers, DI, validation,
+  guards, OpenAPI docs, testing, and deployment review.
+seoTitle: NestJS Backend API Development Skill
+seoDescription: >-
+  Reusable AI skill for building and maintaining NestJS backend APIs with
+  TypeScript, modules, controllers, providers, dependency injection,
+  configuration, validation pipes, guards, interceptors, exception filters,
+  OpenAPI documentation, testing, and production readiness checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://nestjs.com"
+repoUrl: "https://github.com/nestjs/nest"
+documentationUrl: "https://docs.nestjs.com/"
+downloadUrl: "https://github.com/nestjs/nest/archive/refs/heads/master.zip"
+installable: true
+installCommand: "pnpm add @nestjs/core @nestjs/common @nestjs/platform-express reflect-metadata rxjs"
+usageSnippet: >-
+  Use this skill when a TypeScript backend needs a NestJS module, controller,
+  provider, validation, guard, OpenAPI, testing, or production-readiness plan.
+copySnippet: |-
+  # Trigger
+  "Apply the NestJS backend API development skill to this service."
+
+  # Required output
+  1) Current NestJS, TypeScript, package manager, module, transport, and runtime inventory
+  2) Module, controller, provider, DTO, pipe, guard, interceptor, and filter plan
+  3) Config, validation, OpenAPI, testing, observability, and deployment checklist
+  4) Safety, privacy, migration, rollback, and secret-handling notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://docs.nestjs.com/"
+  - "https://docs.nestjs.com/first-steps"
+  - "https://docs.nestjs.com/controllers"
+  - "https://docs.nestjs.com/providers"
+  - "https://docs.nestjs.com/techniques/configuration"
+  - "https://github.com/nestjs/nest"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "TypeScript backend project or planned service boundary where NestJS is the intended framework."
+  - "Known package manager, Node.js runtime target, deployment target, module format, and build pipeline."
+  - "Decision on HTTP adapter, usually Express through `@nestjs/platform-express` unless the app is explicitly using Fastify."
+  - "API surface inventory covering controllers, routes, request bodies, query parameters, response shapes, errors, authentication, authorization, and versioning."
+  - "Configuration and secret plan for environment variables, validation, local development, staging, production, CI, and deployment providers."
+  - "DTO and validation strategy using Nest pipes and class-based validation or another explicitly chosen validation library."
+  - "Testing plan covering unit tests for providers, integration tests for modules, e2e tests for HTTP behavior, and database or external-service boundaries."
+safetyNotes:
+  - "The download URL is the external `nestjs/nest` source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "NestJS changes can alter route behavior, dependency-injection graph, middleware order, guards, authentication, authorization, validation, error handling, and request/response contracts."
+  - "Do not commit `.env` files, database URLs, JWT secrets, API keys, OAuth credentials, cloud credentials, service tokens, private certificates, or copied production config."
+  - "Global pipes, filters, guards, interceptors, and middleware affect every matching request. Review denial paths, public routes, admin routes, and backward compatibility before enabling them globally."
+  - "DTO validation and transformation can silently coerce input. Check `whitelist`, `forbidNonWhitelisted`, transform behavior, nested objects, arrays, and optional fields before trusting sanitized payloads."
+  - "Provider constructors, module imports, dynamic modules, lifecycle hooks, and request-scoped providers can create startup failures or performance regressions when used casually."
+  - "Database migrations, message handlers, cron jobs, queues, webhooks, and external-service calls should have explicit retry, idempotency, timeout, and rollback behavior."
+  - "OpenAPI docs can expose internal DTO fields, route names, auth scheme details, admin endpoints, examples, and deprecated surfaces if generated without review."
+privacyNotes:
+  - "NestJS logs, exception filters, validation errors, request IDs, OpenAPI examples, test fixtures, and AI prompts can expose request payloads, headers, cookies, JWT claims, user IDs, emails, tenant IDs, and internal service names."
+  - "Avoid pasting raw production requests, access tokens, cookies, stack traces with sensitive values, database records, or private OpenAPI exports into prompts or public issues."
+  - "Use synthetic request data and non-production credentials for examples, tests, screenshots, generated docs, and AI-assisted troubleshooting."
+  - "Review logging, telemetry, error reporting, audit events, and model-provider retention before routing customer data through AI-assisted debugging or generated diagnostics."
+tags:
+  - nestjs
+  - typescript
+  - backend
+  - api
+  - dependency-injection
+keywords:
+  - "NestJS backend API"
+  - "NestJS modules controllers providers"
+  - "NestJS dependency injection"
+  - "NestJS validation pipes"
+  - "NestJS guards interceptors filters"
+  - "NestJS OpenAPI"
+  - "@nestjs/core"
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on the NestJS documentation homepage, first steps guide,
+controllers guide, providers guide, configuration technique guide, and
+`nestjs/nest` repository reviewed on **2026-06-04**. The official
+`@nestjs/core` package metadata was also checked on the same date and reported
+version `11.1.24`, MIT licensing, and the canonical `nestjs/nest` repository.
+
+Prefer the live NestJS docs and official repository over model memory for
+current CLI commands, package names, module conventions, HTTP adapter behavior,
+dependency-injection rules, testing helpers, configuration patterns, validation
+guidance, and migration notes.
+
+## Retrieval Sources
+
+- https://docs.nestjs.com/
+- https://docs.nestjs.com/first-steps
+- https://docs.nestjs.com/controllers
+- https://docs.nestjs.com/providers
+- https://docs.nestjs.com/techniques/configuration
+- https://github.com/nestjs/nest
+
+## Scope Note
+
+Use this skill for NestJS backend API work: module design, controllers,
+providers, dependency injection, configuration, request validation, guards,
+interceptors, filters, testing, OpenAPI docs, and production review. It is not
+a generic Node.js API guide, not a Hono edge API skill, not a FastAPI skill, and
+not a database-specific ORM guide.
+
+## Core Workflow
+
+1. Inventory the service: NestJS version, Node.js version, package manager,
+   TypeScript config, app entry point, HTTP adapter, deployment target, module
+   layout, test runner, and existing global pipes, guards, interceptors, and
+   filters.
+2. Confirm the intended service boundary. Identify whether the work is a new
+   app, feature module, controller addition, provider refactor, migration from
+   Express/Fastify, or production-hardening pass.
+3. Map the API contract before coding: routes, methods, params, query strings,
+   request bodies, response DTOs, error shapes, auth requirements, versioning,
+   rate limits, idempotency needs, and backward-compatibility constraints.
+4. Design modules deliberately. Keep imports, exports, providers, dynamic
+   modules, and shared modules explicit so the dependency graph remains clear.
+5. Add or update controllers with thin request handling. Keep transport-specific
+   parsing, auth decisions, DTO validation, and response mapping close to the
+   controller, but move business behavior into providers.
+6. Add providers for application logic and integration boundaries. Prefer
+   constructor injection, explicit interfaces where useful, and testable
+   service methods over hidden globals.
+7. Define DTOs and validation rules. Review required fields, optional fields,
+   nested objects, arrays, enum behavior, transforms, defaults, and how invalid
+   payloads are reported.
+8. Configure validation pipes intentionally. For global pipes, review
+   `whitelist`, `forbidNonWhitelisted`, `transform`, nested validation, and
+   compatibility with existing clients.
+9. Add guards, interceptors, filters, and middleware only where their scope is
+   clear. Confirm route matching, public-route exceptions, admin boundaries,
+   error mapping, logging behavior, and performance impact.
+10. Wire configuration through approved environment handling. Validate required
+    values at startup, avoid client-exposed secrets, and document local,
+    staging, CI, and production differences.
+11. Add OpenAPI docs when useful. Review generated schemas, auth schemes,
+    examples, deprecated routes, and hidden/internal fields before publishing
+    documentation.
+12. Test the module. Cover provider unit tests, controller or module integration
+    tests, e2e HTTP flows, failure cases, validation failures, auth denials,
+    and external-service boundaries with mocks or test doubles.
+13. Review production behavior: startup errors, graceful shutdown, health
+    checks, structured logging, tracing, timeouts, retries, database
+    transactions, message handlers, cron jobs, queues, and rollback.
+14. Produce a concise implementation summary with changed files, API contract
+    changes, validation behavior, auth impact, test coverage, deployment notes,
+    and remaining risks.
+
+## Required Inputs
+
+- NestJS version, Node.js version, package manager, TypeScript settings, app
+  entry point, HTTP adapter, deployment provider, and build command.
+- Existing module tree, controller routes, providers, middleware, global pipes,
+  guards, interceptors, filters, and test setup.
+- API contract requirements: route paths, methods, request DTOs, response DTOs,
+  error shape, auth model, versioning, client compatibility, and OpenAPI needs.
+- Configuration model for environment variables, secrets, validation, local
+  development, CI, preview, staging, and production.
+- External dependencies such as databases, queues, caches, webhooks, OAuth
+  providers, third-party APIs, observability, and feature flags.
+- Migration or rollback constraints for existing routes, clients, database
+  schema, deployed workers, background jobs, and scheduled tasks.
+
+## Production Rules
+
+- Keep controllers thin and providers testable. When a controller starts
+  owning business logic, move that behavior into a provider and test it there.
+- Treat module imports and provider exports as an API. Avoid broad shared
+  modules that hide coupling or make circular dependencies harder to detect.
+- Do not make validation global until existing clients and error handling have
+  been checked. Stricter DTO rules can break integrations that send extra or
+  loosely typed fields.
+- Treat guards and interceptors as security-sensitive. Every public route,
+  admin route, webhook route, and machine-to-machine endpoint needs an explicit
+  expected outcome.
+- Never log secrets, bearer tokens, cookies, raw passwords, refresh tokens,
+  full OAuth payloads, or complete customer request bodies.
+- Review OpenAPI output before publishing it. Generated schemas can expose
+  internal fields, examples, route names, auth details, or undocumented admin
+  surfaces.
+- Prefer explicit timeout, retry, and idempotency behavior around external
+  calls, queues, cron jobs, and webhooks. A provider method that works locally
+  can still duplicate work under retry or deployment restarts.
+- Use e2e tests for the real HTTP behavior that clients rely on: route
+  matching, validation errors, auth denials, response shapes, headers, and
+  status codes.
+
+## Validation Checklist
+
+- Package install and build commands match the project package manager.
+- `main.ts` bootstraps the intended app module and applies reviewed global
+  pipes, filters, guards, interceptors, and middleware.
+- Modules import and export only what downstream modules require.
+- Controllers declare route paths, methods, DTOs, status codes, and exception
+  behavior deliberately.
+- Providers isolate business logic and external-service access behind testable
+  methods.
+- DTO validation covers required fields, optional fields, nested objects,
+  arrays, enums, transforms, and rejected unknown fields.
+- Configuration fails fast for missing required values without printing secrets.
+- OpenAPI docs hide internal fields and accurately describe auth, request, and
+  response behavior.
+- Unit, integration, and e2e tests cover happy paths, validation failures,
+  authorization failures, and representative external-service errors.
+- Deployment notes cover environment variables, health checks, graceful
+  shutdown, migrations, observability, rollback, and incident recovery.
+
+## Troubleshooting
+
+### Dependency injection error at startup
+
+Inspect the failing provider token, module imports, module exports, circular
+dependencies, and dynamic module configuration. Confirm the provider is declared
+in the module that owns it and exported only when another module needs it.
+
+### Validation accepts or rejects the wrong payload
+
+Check DTO decorators, optional fields, nested validation setup, arrays,
+transform behavior, `whitelist`, `forbidNonWhitelisted`, and whether a global
+pipe is overriding route-level expectations.
+
+### Guard blocks a public route
+
+Review the guard scope, route metadata, public-route decorator, global guard
+registration, controller inheritance, and test coverage for public, private,
+admin, and webhook routes.
+
+### OpenAPI docs show internal fields
+
+Review DTO classes, example values, hidden properties, response decorators,
+auth decorators, route grouping, and whether internal admin controllers are
+included in the published document.
+
+### E2E tests pass locally but fail in CI
+
+Check environment variables, database lifecycle, port binding, test app module
+configuration, external-service mocks, timeouts, fake timers, and whether tests
+share mutable state across files.
+
+## Duplicate Check
+
+This entry was checked against the current `upstream/main` content tree and
+open pull requests before drafting. Existing content only mentions NestJS in a
+backend collection and a command example; no dedicated `content/skills`,
+`content/agents`, `content/hooks`, or `content/mcp` entry matches NestJS,
+`@nestjs/core`, `docs.nestjs.com`, or `nestjs/nest`.
+
+## Editorial Disclosure
+
+This is an independent, source-backed HeyClaude content entry submitted by
+`oktofeesh1`. It is not sponsored by NestJS, the NestJS maintainers, or
+OpenJS-style ecosystem projects. The linked source archive is the official
+upstream repository archive and is not repackaged or verified by HeyClaude.

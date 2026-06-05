@@ -1,0 +1,250 @@
+---
+title: PlanetScale MCP Server for Claude
+slug: planetscale-mcp-server
+category: mcp
+description: >-
+  Connect Claude to PlanetScale's official hosted MCP server for organizations,
+  databases, branches, schemas, Insights, documentation search, and scoped SQL
+  query workflows.
+cardDescription: >-
+  Official PlanetScale hosted MCP server for database inspection, Insights, and
+  guarded query execution from Claude.
+seoTitle: PlanetScale MCP Server for Claude
+seoDescription: >-
+  Use PlanetScale MCP Server with Claude to inspect PlanetScale organizations,
+  databases, branches, schemas, Insights, invoices, regions, and SQL query
+  results through OAuth-scoped hosted MCP access.
+author: PlanetScale
+authorProfileUrl: "https://planetscale.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://planetscale.com/"
+documentationUrl: "https://planetscale.com/docs/connect/mcp"
+repoUrl: "https://github.com/planetscale/mcp-server"
+installable: true
+installCommand: 'claude mcp add --transport http "planetscale" https://mcp.pscale.dev/mcp/planetscale'
+usageSnippet: "Ask Claude to use PlanetScale MCP to inspect a branch schema and recent query Insights before drafting an index recommendation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "planetscale": {
+        "transport": "http",
+        "url": "https://mcp.pscale.dev/mcp/planetscale"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "planetscale": {
+        "transport": "http",
+        "url": "https://mcp.pscale.dev/mcp/planetscale"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - PlanetScale account with access to the organizations, databases, and branches you want Claude to inspect.
+  - MCP-capable client with remote HTTP server support, such as Claude, Claude Code, Cursor, VS Code, Codex, Gemini CLI, Amp, OpenCode, Notion, or another compatible client.
+  - Browser access for the PlanetScale OAuth authorization flow when the MCP client connects.
+  - Decision on whether the assistant needs no database access, read-only database access, full database access, or Insights-only access.
+  - Approval from the database owner before enabling write queries, DDL assistance, invoice visibility, or production database access.
+  - A written target organization, database, and branch for each workflow so the assistant does not browse unrelated PlanetScale resources.
+safetyNotes:
+  - >-
+    PlanetScale's hosted MCP server is controlled by OAuth scopes. Choose no
+    access or read-only access unless the task explicitly requires write
+    queries or broader database permissions.
+  - >-
+    Use the Insights-only endpoint at
+    `https://mcp.pscale.dev/mcp/planetscale-insights-only` when Claude only
+    needs Insights data and should not receive SQL query execution tools.
+  - >-
+    Write query access can affect live production data. PlanetScale documents
+    safeguards for blocking `UPDATE` or `DELETE` without `WHERE`, blocking
+    `TRUNCATE`, and prompting for DDL confirmation, but those safeguards do not
+    replace review, least privilege, backups, or change-control approval.
+  - >-
+    Confirm the organization, database, branch, and database engine before
+    approving any query. For PostgreSQL databases, provide the intended
+    `postgres_database_name` when using query tools.
+  - >-
+    Broad read queries, schema scans, and repeated Insights searches can still
+    affect cost, privacy, and operational load. Limit row counts, date ranges,
+    branch scope, and prompt loops.
+  - >-
+    PlanetScale says MCP queries are tagged with `source=planetscale-mcp`.
+    Review those entries in Insights when auditing assistant-driven database
+    activity.
+privacyNotes:
+  - >-
+    PlanetScale MCP can return organization names, database names, branch names,
+    schema details, Insights data, query text, query performance, invoice
+    details, region information, cluster size SKUs, and documentation search
+    results into the model conversation.
+  - >-
+    PlanetScale documents that query execution uses short-lived ephemeral
+    credentials that are created on demand and deleted immediately after the
+    query. Treat MCP outputs, prompts, transcripts, screenshots, and client logs
+    as separate records that may persist outside PlanetScale.
+  - >-
+    Do not paste service tokens, connection strings, passwords, production row
+    exports, customer data, secrets, invoice PDFs, private schema names, or raw
+    incident data into prompts, tickets, issue comments, or PR descriptions.
+  - >-
+    If the MCP client stores chat history or tool results, confirm that its
+    retention and sharing settings are acceptable before connecting production
+    PlanetScale databases.
+tags:
+  - planetscale
+  - database
+  - sql
+  - insights
+  - mcp
+keywords:
+  - PlanetScale MCP Server
+  - PlanetScale Claude MCP
+  - mcp.pscale.dev
+  - PlanetScale Insights MCP
+  - planetscale-mcp
+  - PlanetScale database MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PlanetScale MCP Server is PlanetScale's official hosted Model Context Protocol
+server for connecting Claude and other MCP-capable clients to PlanetScale
+organizations, databases, branches, schemas, Insights, documentation search, and
+selected account operations. It runs as a remote HTTP server at
+`https://mcp.pscale.dev/mcp/planetscale` and uses PlanetScale OAuth to grant the
+client configurable permissions.
+
+Use it when Claude needs current database context while planning migrations,
+debugging query performance, inspecting branches, reviewing schema changes, or
+drafting database recommendations. Start with read-only or Insights-only access
+for analysis tasks, and enable write query access only for a specific approved
+workflow.
+
+## Features
+
+- Official PlanetScale documentation page for MCP setup, client instructions,
+  OAuth permissions, query handling, tools, and troubleshooting.
+- Hosted remote HTTP MCP server at `https://mcp.pscale.dev/mcp/planetscale`.
+- Insights-only hosted endpoint at
+  `https://mcp.pscale.dev/mcp/planetscale-insights-only`.
+- Claude connector listing and custom connector setup.
+- Claude Code plugin setup through the PlanetScale Claude plugin marketplace.
+- Direct Claude Code, Cursor, VS Code, Codex CLI, Gemini CLI, OpenCode, Amp,
+  Notion, and other MCP client setup paths.
+- OAuth-scoped access with no access, read-only access, or full access at the
+  organization or per-database level.
+- Short-lived ephemeral database credentials for query execution.
+- Read query routing to a replica when a replica is configured.
+- Query attribution with `source=planetscale-mcp` comments visible in Insights.
+- Public TypeScript source repository for the direct tools and shared helpers.
+- Additional hosted tools generated from PlanetScale's OpenAPI specification.
+
+## Tool Surface
+
+PlanetScale documents tools for listing and inspecting organizations,
+databases, branches, branch schemas, regions, cluster size SKUs, invoices,
+invoice line items, Insights, documentation search, and schema recommendations.
+The hosted server can also expose SQL tools for read queries and write queries
+when the selected OAuth permissions allow them.
+
+The open source repository contains direct TypeScript tool implementations and
+shared helpers. PlanetScale notes that the full hosted server also includes
+additional tools generated from its OpenAPI specification, so the hosted server
+can have a broader tool surface than the repository alone.
+
+## Installation
+
+### Claude Code
+
+Install PlanetScale's Claude Code plugin:
+
+```bash
+/plugin marketplace add planetscale/claude-plugin
+/plugin install planetscale@planetscale
+```
+
+Or add the hosted server directly:
+
+```bash
+claude mcp add --transport http "planetscale" https://mcp.pscale.dev/mcp/planetscale
+```
+
+After connecting, authorize PlanetScale in the browser and choose the narrowest
+OAuth permissions that match the task.
+
+### Manual MCP Config
+
+Use this remote HTTP configuration for clients that accept MCP JSON
+configuration:
+
+```json
+{
+  "mcpServers": {
+    "planetscale": {
+      "transport": "http",
+      "url": "https://mcp.pscale.dev/mcp/planetscale"
+    }
+  }
+}
+```
+
+For an analysis-only workflow that should not expose SQL query execution tools,
+use the Insights-only server URL:
+
+```text
+https://mcp.pscale.dev/mcp/planetscale-insights-only
+```
+
+For Codex CLI, PlanetScale documents:
+
+```bash
+codex mcp add planetscale --url https://mcp.pscale.dev/mcp/planetscale
+```
+
+## Use Cases
+
+- Ask Claude to inspect the schema for a branch before drafting migration notes.
+- Review query Insights and schema recommendations while investigating slow
+  queries.
+- Compare branches before summarizing a deploy request or database change plan.
+- Search PlanetScale documentation from the same MCP client while designing a
+  database workflow.
+- List available regions or cluster size SKUs before writing an infrastructure
+  change proposal.
+- Use the Insights-only endpoint to summarize query performance without giving
+  Claude SQL execution tools.
+- Run a narrow read query after confirming the organization, database, branch,
+  table, filters, and row limit.
+- Draft a write query for manual review before executing it through an approved
+  deployment or database-change process.
+
+## Safety Checklist
+
+- Start with no database access, read-only access, or the Insights-only endpoint
+  whenever possible.
+- Record the intended organization, database, and branch in the project prompt
+  or `AGENTS.md` before connecting.
+- Keep MCP client approval prompts enabled for query execution and any
+  account-level operation.
+- Review every generated SQL statement before approving it.
+- Avoid write query access for production databases unless an owner has approved
+  the exact task.
+- Add row limits, time windows, and branch filters to exploratory queries.
+- Check Insights for `source=planetscale-mcp` when auditing MCP activity.
+- Revoke or reduce OAuth authorization when the temporary workflow is complete.
+
+## Source Links
+
+- PlanetScale MCP docs: https://planetscale.com/docs/connect/mcp
+- Source repository: https://github.com/planetscale/mcp-server
+- PlanetScale OpenAPI specification docs: https://planetscale.com/docs/api/openapi-spec
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/

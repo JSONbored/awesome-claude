@@ -1,0 +1,274 @@
+---
+title: Better Auth Next.js Authentication Skill
+slug: better-auth-nextjs-authentication
+category: skills
+description: >-
+  Add Better Auth to a Next.js App Router project with API route handlers,
+  database-backed sessions, client helpers, protected route checks, and
+  production auth safety review.
+cardDescription: >-
+  Add Better Auth to Next.js with route handlers, sessions, client helpers, and
+  production auth safety checks.
+seoTitle: Better Auth Next.js Authentication Skill
+seoDescription: >-
+  Reusable AI skill for integrating Better Auth into Next.js apps with
+  better-auth, toNextJsHandler, auth clients, database adapters, route
+  protection, secrets, cookies, and privacy-aware production checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/better-auth/better-auth"
+documentationUrl: "https://better-auth.com/docs/integrations/next"
+downloadUrl: "https://github.com/better-auth/better-auth/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add better-auth"
+usageSnippet: >-
+  Use this skill when a Next.js project needs Better Auth email/password,
+  social sign-in, database-backed sessions, server actions, protected routes,
+  or a migration from ad hoc auth patterns.
+copySnippet: |-
+  # Trigger
+  "Apply the Better Auth Next.js authentication skill to this app."
+
+  # Required output
+  1) Current auth, route, database, and cookie/session inventory
+  2) Better Auth package, env, adapter, route handler, and client plan
+  3) Protected route, server action, and API authorization checklist
+  4) Production safety, privacy, secret, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://better-auth.com/docs/integrations/next"
+  - "https://better-auth.com/docs/installation"
+  - "https://better-auth.com/"
+  - "https://github.com/better-auth/better-auth"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js App Router project or migration branch with a known package manager."
+  - "Database choice and adapter plan, such as Drizzle, Prisma, MongoDB, or Better Auth's built-in Kysely-backed flow."
+  - "Local, preview, staging, and production secret-management path for Better Auth secrets, OAuth client IDs, and OAuth client secrets."
+  - "Route map that separates public pages, authenticated pages, API routes, server actions, admin routes, and organization-scoped areas."
+  - "Decision on email/password, social providers, passkeys, magic links, organization support, API keys, or other Better Auth plugins."
+  - "Production base URL, trusted origins, cookie domain, callback URL, and redirect URL plan."
+safetyNotes:
+  - "The download URL is Better Auth's external source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Do not commit Better Auth secrets, OAuth provider secrets, database URLs, email-provider credentials, API-key plugin secrets, or copied dashboard values."
+  - "Run schema generation or migrations only against the intended database environment; auth tables, sessions, accounts, and verification records are production-critical."
+  - "Treat route protection as server-side authorization work. UI hiding, optimistic middleware redirects, or cookie existence checks are not full access control."
+  - "Review `proxy.ts` or `middleware.ts` behavior by Next.js version before relying on database-backed session checks inside request middleware."
+  - "Keep OAuth callback URLs, base URLs, trusted origins, and cookie settings environment-specific to avoid broken login loops or cross-environment session confusion."
+  - "Track Better Auth release notes and security advisories before introducing auth flows or enabling advanced plugins in production."
+  - "Add rollback steps before replacing an existing auth provider because user, account, session, and verification tables can affect active logins."
+privacyNotes:
+  - "Better Auth handles user identity, email addresses, password-auth state, OAuth profile data, sessions, cookies, accounts, verification tokens, and plugin-specific user data."
+  - "Application logs, error trackers, request traces, AI prompts, and screenshots can retain user IDs, emails, callback URLs, cookies, session state, or OAuth provider details."
+  - "Use synthetic users and test OAuth applications for examples, demos, issue reports, screenshots, and AI-assisted troubleshooting."
+  - "If organization, API key, two-factor, passkey, or SSO plugins are enabled, treat membership, roles, credentials, and device metadata as sensitive authorization data."
+  - "Review Better Auth, database, deployment-provider, analytics, email-provider, and AI-assistant retention policies before using real customer identity data."
+tags:
+  - better-auth
+  - nextjs
+  - authentication
+  - app-router
+  - session-management
+keywords:
+  - "Better Auth Next.js authentication"
+  - "better-auth"
+  - "toNextJsHandler"
+  - "Next.js App Router auth"
+  - "Better Auth route handler"
+  - "Better Auth protected routes"
+  - "Better Auth database adapter"
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Better Auth's official website, installation docs, Next.js
+integration docs, and `better-auth/better-auth` repository reviewed on
+**2026-06-04**. The current Next.js guide mounts Better Auth at
+`app/api/auth/[...all]/route.ts` with `toNextJsHandler(auth)`, creates a client
+with `createAuthClient()` from `better-auth/react`, and documents server action
+cookie handling, `proxy.ts`/`middleware.ts` route protection, and Next.js 16
+proxy compatibility.
+
+## Retrieval Sources
+
+- https://better-auth.com/docs/integrations/next
+- https://better-auth.com/docs/installation
+- https://better-auth.com/
+- https://github.com/better-auth/better-auth
+
+Prefer the live Better Auth docs and official repository over model memory for
+package imports, route filenames, adapter examples, cookie helpers, plugin
+names, migration commands, and Next.js runtime guidance.
+
+## Scope Note
+
+Use this skill for Better Auth-backed authentication in a Next.js application.
+It is not a generic authentication architecture guide, a replacement for threat
+modeling, or a shortcut around product security review for finance, healthcare,
+education, admin, enterprise identity, or high-risk multi-tenant systems.
+
+## Core Workflow
+
+1. Inventory the current app structure, Next.js version, router mode, package
+   manager, `/src` usage, public pages, authenticated pages, API handlers,
+   server actions, admin routes, and organization boundaries.
+2. Identify existing auth code, session stores, cookie names, middleware,
+   authorization helpers, user tables, OAuth callbacks, and environment
+   variables before adding Better Auth.
+3. Confirm the target Better Auth feature set: email/password, social providers,
+   passkeys, magic links, organizations, API keys, two-factor authentication,
+   SSO, or other plugins.
+4. Add `better-auth` with the project package manager and document the required
+   secret variables for local, preview, staging, and production environments.
+5. Create the Better Auth server instance in a stable server-only module and
+   choose the database adapter deliberately instead of accepting an accidental
+   local-only default.
+6. Generate or plan the required auth schema and migrations, then review the
+   target database before applying any migration that creates or changes user,
+   session, account, or verification tables.
+7. Mount the API route handler at the documented catch-all route with
+   `toNextJsHandler(auth)` for App Router projects.
+8. Add a typed auth client with `createAuthClient()` and keep client-side auth UI
+   separate from server-side authorization checks.
+9. Handle server actions that set cookies with the documented Better Auth
+   Next.js helper path, keeping cookie behavior explicit in tests.
+10. Protect routes and server actions from the route inventory. Do not assume a
+    cookie-only redirect is enough for data access or write operations.
+11. Review OAuth provider settings, callback URLs, trusted origins, base URL,
+    cookie domain, HTTPS behavior, and deployment preview domains before merge.
+12. Produce validation notes for sign-up, sign-in, sign-out, session refresh,
+    protected page access, protected API access, server action auth, OAuth
+    callback handling, and rollback.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, and whether the app uses a
+  `/src` directory.
+- Existing auth provider or custom auth implementation, including tables,
+  cookies, middleware, session helpers, and route guards.
+- Database provider, ORM or adapter, migration workflow, and target environment
+  for schema changes.
+- List of public, authenticated, admin, API, server action, organization, and
+  webhook routes.
+- Desired Better Auth methods and plugins, including email/password, social
+  sign-in, passkeys, magic links, organizations, API keys, 2FA, SSO, or
+  one-time tokens.
+- Local, preview, staging, and production values for base URL, trusted origins,
+  callback URLs, cookie domain, and secret management.
+- Deployment provider and rollback plan for restoring the previous auth flow if
+  production login breaks.
+
+## Production Rules
+
+- Keep Better Auth server configuration in server-only code. Do not expose
+  secrets, database URLs, OAuth client secrets, email-provider credentials, or
+  API-key plugin secrets to client bundles.
+- Treat the auth schema as critical application data. Review generated SQL or
+  ORM migrations before applying them, and back up production data before
+  replacing an existing auth provider.
+- Protect server actions, route handlers, tRPC procedures, loaders, background
+  jobs, webhooks, and direct database writes at the server boundary.
+- Use route middleware or proxy checks for redirects and fast rejection, but
+  keep full authorization checks near the protected data or mutation.
+- Test unauthenticated access to every protected page and API route. Include at
+  least one negative test where the UI is bypassed and the server endpoint is
+  called directly.
+- Keep OAuth callback URLs and trusted origins specific to each environment.
+  Preview domains should not silently reuse production credentials unless that
+  is an intentional and documented deployment decision.
+- Use synthetic users, test OAuth applications, and non-production email
+  providers for demos, screenshots, bug reports, and AI prompts.
+- Review Better Auth releases and security notes before enabling new plugins or
+  shipping auth changes to production.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for authentication
+  planning, migration review, implementation guidance, and production auth
+  checklists.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js apps or reviewing Better Auth changes.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for auth work.
+
+## Output Contract
+
+1. Source evidence: Better Auth docs, website, and repository URLs reviewed,
+   with date.
+2. App inventory: router, routes, existing auth code, database, cookies,
+   session helpers, API boundaries, and deployment environments.
+3. Implementation plan: package install, auth server instance, database adapter,
+   schema/migration path, route handler, auth client, cookie handling, protected
+   routes, and plugin configuration.
+4. Safety and privacy review: secrets, OAuth credentials, database migrations,
+   cookies, trusted origins, logs, prompts, and real-user data handling.
+5. Validation checklist: sign-up, sign-in, sign-out, session read, protected
+   page, protected API route, server action auth, OAuth callback, preview
+   deploy, production smoke test, and rollback.
+
+## Duplicate And Source Review
+
+Current HeyClaude content mentions Better Auth inside generic agent, command,
+and Windsurf collaboration examples, but there is no dedicated Better Auth,
+`better-auth`, `toNextJsHandler`, or `better-auth/better-auth` content entry.
+This skill is specifically scoped to the official Better Auth Next.js workflow
+and is source-backed by the current Better Auth docs and repository.
+
+## Troubleshooting
+
+**Issue:** The API route returns 404 or the auth client cannot reach Better Auth
+
+**Fix:** Confirm the catch-all route path matches the current router mode. For
+App Router projects, the documented route is `app/api/auth/[...all]/route.ts`
+with `toNextJsHandler(auth)`.
+
+**Issue:** Sign-in works locally but fails on preview or production
+
+**Fix:** Check the environment-specific base URL, trusted origins, OAuth
+callback URLs, HTTPS configuration, and cookie domain. Do not reuse local
+callback assumptions for deployed environments.
+
+**Issue:** A protected page redirects correctly, but a direct API call still
+returns sensitive data
+
+**Fix:** Add server-side session and authorization checks inside the API route,
+server action, loader, tRPC procedure, or data-access layer. Redirect middleware
+is not enough for write or data access protection.
+
+**Issue:** Server actions sign users in but cookies are not persisted
+
+**Fix:** Re-check Better Auth's current Next.js server action cookie guidance
+and plugin ordering. Make cookie behavior part of the local validation checklist
+instead of assuming the browser session was established.
+
+**Issue:** Migration creates unexpected auth tables or columns
+
+**Fix:** Stop before applying the migration to shared data. Review the adapter,
+provider option, generated schema, target database URL, and rollback plan, then
+rerun against a disposable database first.

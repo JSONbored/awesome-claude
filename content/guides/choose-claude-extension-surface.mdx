@@ -1,0 +1,206 @@
+---
+title: Choose the Right Claude Extension Surface
+slug: choose-claude-extension-surface
+category: guides
+description: >-
+  A practical decision guide for choosing between Claude Code subagents, skills,
+  slash commands, hooks, settings, and MCP servers. Pick the smallest extension
+  surface that matches the workflow, risk, and sharing model.
+cardDescription: Decide when to use Claude subagents, skills, commands, hooks, or MCP.
+seoTitle: Choose the Right Claude Extension Surface
+seoDescription: >-
+  Compare Claude Code subagents, skills, slash commands, hooks, settings, and
+  MCP servers so teams can choose the right extension surface for reusable
+  expertise, workflow shortcuts, automation, and live tool integrations.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Use skills for reusable expertise, slash commands for user-triggered prompt
+  workflows, hooks for deterministic lifecycle automation, subagents for
+  delegated specialist work, settings for project policy, and MCP when Claude
+  needs live tools or resources.
+prerequisites:
+  - A Claude Code workflow you want to make repeatable, safer, or more capable.
+  - Agreement on whether the extension is personal, project-level, team-shared, or environment-specific.
+  - A list of data, tools, commands, or external systems the workflow may touch.
+  - Permission to add project files or configure Claude Code for the target repository.
+safetyNotes:
+  - Choose the smallest surface that solves the workflow; avoid giving a workflow live tools or lifecycle automation when a prompt template is enough.
+  - Review hooks and MCP servers more carefully than static prompts because they can interact with local commands, files, tools, or external services.
+  - Keep project-shared extensions documented so teammates know what runs automatically and what Claude can access.
+privacyNotes:
+  - Skills, slash commands, settings, hooks, subagents, and MCP configuration can contain project names, file paths, prompts, tool descriptions, and workflow policy.
+  - MCP tools and hooks may process local files, command output, API responses, logs, or other repository context depending on configuration.
+  - Keep personal credentials out of shared project extensions and prefer environment-specific configuration for sensitive access.
+sourceUrls:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/skills"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/settings"
+tags:
+  - claude-code
+  - subagents
+  - skills
+  - slash-commands
+  - hooks
+  - mcp
+  - workflow-design
+keywords:
+  - claude extension surface
+  - claude code subagents skills commands hooks mcp
+  - choose claude code extension
+  - claude code workflow design
+  - claude code mcp vs hooks
+readingTime: 8
+difficultyScore: 54
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Use the smallest Claude extension surface that fits the job:
+
+- **Skill**: reusable expertise, standards, or process knowledge.
+- **Slash command**: a user-triggered workflow shortcut.
+- **Hook**: deterministic automation around a Claude Code lifecycle event.
+- **Subagent**: delegated specialist work with its own focus and context.
+- **MCP server**: live tools, resources, or external systems.
+- **Settings**: project or user policy that should apply consistently.
+
+When two surfaces could work, choose the one with less runtime authority. A
+static skill or slash command is usually easier to review than a hook or MCP
+server because it does not add live access by itself.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Workflow is named", "description": "You can describe the repeated task in one sentence"}
+- [ ] {"task": "Sharing scope is known", "description": "The extension is personal, project-local, team-shared, or organization-managed"}
+- [ ] {"task": "Access needs are mapped", "description": "You know whether the workflow needs prompts only, repository files, commands, or external systems"}
+- [ ] {"task": "Risk is understood", "description": "You know whether the workflow can read data, write files, call tools, or run automatically"}
+
+## Core Concepts Explained
+
+### Skills package reusable expertise
+
+Choose a skill when Claude needs durable guidance: domain conventions, review
+criteria, migration steps, testing heuristics, or a playbook that should travel
+between sessions. Skills are a good fit when the main value is knowledge and
+instructions rather than a live integration.
+
+### Slash commands package repeatable prompts
+
+Choose a slash command when a human should intentionally start a workflow with a
+short command. They are useful for recurring tasks such as review checklists,
+release notes, triage prompts, migration planning, or issue analysis.
+
+### Hooks package deterministic automation
+
+Choose a hook when something should happen at a lifecycle point without a user
+typing a prompt each time. Hooks are best for narrow, predictable automation:
+notifications, formatting checks, logging, guardrails, or context reminders.
+
+### Subagents package delegated specialist work
+
+Choose a subagent when Claude should hand a task to a focused specialist. A
+subagent can carry a narrower role, review lens, or domain focus than the main
+conversation. Use this when separation of attention matters.
+
+### MCP packages live capability
+
+Choose MCP when Claude needs to interact with tools, resources, APIs, databases,
+files, or services through a protocol boundary. MCP is the right surface for
+live data and actions, but it also deserves the most access review.
+
+### Settings package policy
+
+Choose settings for behavior that should apply consistently across the user or
+project environment: allowed tools, model preferences, permissions, or team
+defaults. Settings are not a workflow by themselves; they shape the environment
+where workflows run.
+
+## Step-by-Step Decision Guide
+
+1. **Start with the output.** If the workflow produces advice, a checklist, a
+   review, or a plan, start with a skill or slash command. If it must interact
+   with live systems, consider MCP.
+
+2. **Decide who starts it.** If a human should opt in each time, use a slash
+   command. If the behavior should apply automatically at a lifecycle point,
+   use a hook.
+
+3. **Decide whether expertise should travel.** If the workflow is mostly
+   reusable know-how, package it as a skill. A skill can include process,
+   examples, rubrics, and references without creating a live integration.
+
+4. **Decide whether work needs delegation.** If the task benefits from a
+   specialist role or separate focus, use a subagent. This is useful for code
+   review, test planning, security triage, documentation review, or domain
+   analysis.
+
+5. **Decide whether Claude needs live capabilities.** If Claude must read a
+   resource, call an API, query a database, inspect an issue tracker, or invoke
+   a tool, use MCP and review the exposed tools/resources.
+
+6. **Put policy in settings.** If the question is "what should Claude be allowed
+   to do here?" instead of "what workflow should Claude run?", use settings.
+
+7. **Combine surfaces only when needed.** A slash command can call on a skill; a
+   subagent can use MCP tools; a hook can remind Claude about policy. Keep each
+   layer small enough that a teammate can review it.
+
+## Decision Matrix
+
+| Need | Best surface | Why |
+| --- | --- | --- |
+| Reusable domain guidance | Skill | Durable instructions and examples without live access |
+| Repeatable manual workflow | Slash command | Human-triggered and easy to discover |
+| Automatic lifecycle behavior | Hook | Runs at a defined event instead of relying on memory |
+| Focused delegated analysis | Subagent | Keeps a specialist role and context separate |
+| Live tools or external data | MCP | Standard surface for tools/resources/services |
+| Consistent project policy | Settings | Applies defaults and permission boundaries |
+
+## Review Checklist
+
+- [ ] {"task": "Smallest surface", "description": "The extension does not add automation or live access unless needed"}
+- [ ] {"task": "Clear owner", "description": "A person or team owns updates and review"}
+- [ ] {"task": "Sharing scope", "description": "Personal, project, team, or organization scope is documented"}
+- [ ] {"task": "Access review", "description": "Hooks and MCP tools are reviewed for files, commands, services, and side effects"}
+- [ ] {"task": "Discoverability", "description": "Teammates can find and understand the extension"}
+- [ ] {"task": "Rollback path", "description": "The extension can be disabled, removed, or replaced safely"}
+
+## Troubleshooting
+
+- **The workflow is becoming too broad**: split it into a skill for reusable
+  knowledge plus a slash command for the entry point.
+- **A hook is doing too much**: move judgment-heavy work into a command or skill
+  and keep the hook deterministic.
+- **An MCP server is used only for static text**: replace it with a skill or
+  command unless live resources are actually required.
+- **Subagents overlap heavily**: merge roles or define sharper handoff criteria.
+- **Settings hide project behavior**: document the policy in the repository so
+  teammates understand what applies automatically.
+
+## Duplicate Check
+
+This guide is a decision framework for choosing between Claude Code extension
+surfaces. Existing entries cover individual commands, hooks, agents, skills, and
+MCP servers, but they do not provide a source-backed comparison that helps teams
+choose the smallest appropriate surface for a workflow.
+
+## References
+
+- Claude Code subagents - https://code.claude.com/docs/en/sub-agents
+- Claude Code skills - https://code.claude.com/docs/en/skills
+- Claude Code slash commands - https://code.claude.com/docs/en/slash-commands
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code settings - https://code.claude.com/docs/en/settings

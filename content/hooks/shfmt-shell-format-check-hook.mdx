@@ -1,0 +1,335 @@
+---
+title: shfmt Shell Format Check Hook for Claude Code
+slug: shfmt-shell-format-check-hook
+category: hooks
+description: >-
+  Read-only Claude Code PostToolUse hook that runs shfmt diff checks after
+  Claude writes or edits shell scripts, surfacing POSIX shell, Bash, Zsh, and
+  mksh formatting drift without rewriting files or executing scripts.
+cardDescription: >-
+  Run read-only shfmt formatting diffs after Claude edits shell scripts, without
+  auto-installing tools, rewriting files, or running the edited script.
+seoTitle: shfmt Shell Format Check Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for running shfmt after shell script edits
+  using an installed shfmt binary, safe shell-file matching, read-only diff
+  output, and privacy guidance for source excerpts, paths, and comments.
+author: shfmt
+authorProfileUrl: "https://github.com/mvdan/sh"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://pkg.go.dev/mvdan.cc/sh/v3/cmd/shfmt"
+documentationUrl: "https://github.com/mvdan/sh/blob/master/README.md"
+repoUrl: "https://github.com/mvdan/sh"
+brandName: shfmt
+brandDomain: mvdan.cc
+brandAssetSource: manual
+brandVerifiedAt: "2026-06-04"
+installable: true
+installCommand: "mkdir -p .claude/hooks && touch .claude/hooks/shfmt-shell-format-check.sh && chmod +x .claude/hooks/shfmt-shell-format-check.sh"
+usageSnippet: >-
+  Install shfmt locally, save the script as
+  `.claude/hooks/shfmt-shell-format-check.sh`, and configure it as a PostToolUse
+  hook for Write, Edit, and MultiEdit.
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/shfmt-shell-format-check.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/shfmt-shell-format-check.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "shfmt hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+    exit 0
+  fi
+
+  case "$file_path" in
+    *.sh|*.bash|*.bats|*.ksh|*.zsh) ;;
+    *)
+      first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+      case "$first_line" in
+        '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*|'#!'*' zsh'*|'#!'*'/zsh'*) ;;
+        *) exit 0 ;;
+      esac
+      ;;
+  esac
+
+  if ! command -v shfmt >/dev/null 2>&1; then
+    echo "shfmt hook skipped: install shfmt to enable shell formatting checks." >&2
+    exit 0
+  fi
+
+  echo "shfmt hook: checking $file_path" >&2
+  shfmt -d "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "shfmt hook: formatting drift found. Review the diff or run shfmt intentionally before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code project where hooks are allowed by user or project policy."
+  - "shfmt installed locally and available on `PATH`, for example through Go install, Homebrew, a system package, or another official release path."
+  - "`jq` available on the machine to parse Claude Code hook input."
+  - "A reviewed `.claude/settings.json` or user settings hook configuration for `Write`, `Edit`, and `MultiEdit`."
+  - "Agreement that shell formatting diffs should be blocking or interrupting when shfmt reports drift."
+safetyNotes:
+  - "This hook runs `shfmt -d` only. It does not pass `-w`, rewrite files, run scripts, install tools, invoke Docker, or execute code from the edited file."
+  - "The hook exits non-zero when shfmt prints a diff or reports a parse error. Depending on Claude Code settings, this can interrupt the workflow until a human reviews the output."
+  - "Keep the hook scoped to write/edit tools. Running shfmt after every tool call can add noise and slow down shell-heavy projects."
+  - "Formatting diffs are style feedback, not a security review. Pair this with ShellCheck, tests, and human review for command safety."
+  - "shfmt supports POSIX shell, Bash, Zsh, and mksh syntax, but project-specific style choices may still require a team policy."
+  - "Do not enable automatic rewriting until the team has agreed on shfmt style and reviewed the effect on existing scripts."
+privacyNotes:
+  - "shfmt diffs can include file paths, comments, commands, variable names, hostnames, internal paths, and source snippets from edited shell scripts."
+  - "Hook output can be retained in Claude Code logs, terminal scrollback, screenshots, support tickets, issue comments, or AI transcripts."
+  - "Avoid pasting proprietary deployment scripts, customer paths, secret variable names, generated tokens, hostnames, or production command output into public comments or prompts."
+  - "Use synthetic examples when sharing shfmt findings publicly, and review diff output before exposing private repository structure."
+sourceUrls:
+  - "https://github.com/mvdan/sh"
+  - "https://github.com/mvdan/sh/blob/master/README.md"
+  - "https://raw.githubusercontent.com/mvdan/sh/master/README.md"
+  - "https://pkg.go.dev/mvdan.cc/sh/v3/cmd/shfmt"
+tags:
+  - shfmt
+  - shell
+  - bash
+  - claude-code
+  - hooks
+keywords:
+  - "shfmt hook"
+  - "Claude Code shfmt hook"
+  - "shell formatting hook"
+  - "PostToolUse shell format"
+  - "bash formatting check"
+  - "shell script formatting diff"
+readingTime: 7
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook runs shfmt after Claude Code writes or edits a shell-like file. It is
+intentionally read-only: it reports formatting diffs and parse errors, but it
+does not rewrite files, run scripts, install packages, invoke Docker, or execute
+commands from the edited file.
+
+Use it when a project contains shell scripts and you want immediate feedback on
+consistent shell formatting after Claude edits a file. It complements
+ShellCheck-style diagnostics by focusing on formatting and parser-supported
+syntax consistency rather than command-safety findings.
+
+## Source Review
+
+- https://github.com/mvdan/sh
+- https://github.com/mvdan/sh/blob/master/README.md
+- https://raw.githubusercontent.com/mvdan/sh/master/README.md
+- https://pkg.go.dev/mvdan.cc/sh/v3/cmd/shfmt
+
+These sources were reviewed on **2026-06-04**. The official `mvdan/sh` README
+describes `shfmt` as the formatter included with the shell parser, formatter,
+and interpreter project. It documents support for POSIX shell, Bash, Zsh, and
+mksh, installation through `go install mvdan.cc/sh/v3/cmd/shfmt@latest`, package
+availability across common systems, default formatting style, and Docker image
+availability. This hook intentionally uses a local binary and read-only diff
+mode.
+
+## Installation
+
+1. Install shfmt locally through Go install, Homebrew, a system package, or
+   another reviewed installation path.
+2. Confirm `shfmt --help` works in the same environment Claude Code uses.
+3. Confirm `jq` is available.
+4. Save the script as `.claude/hooks/shfmt-shell-format-check.sh`.
+5. Make it executable.
+6. Add the hook configuration to `.claude/settings.json` or user settings after
+   reviewing the behavior with your team.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/shfmt-shell-format-check.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Hook Script
+
+Save this as `.claude/hooks/shfmt-shell-format-check.sh` and make it executable:
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+input="$(cat)"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "shfmt hook skipped: jq is required to parse Claude Code hook input." >&2
+  exit 0
+fi
+
+tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+case "$tool_name" in
+  Write|Edit|MultiEdit|write|edit|multiedit) ;;
+  *) exit 0 ;;
+esac
+
+if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+  exit 0
+fi
+
+case "$file_path" in
+  *.sh|*.bash|*.bats|*.ksh|*.zsh) ;;
+  *)
+    first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+    case "$first_line" in
+      '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*|'#!'*' zsh'*|'#!'*'/zsh'*) ;;
+      *) exit 0 ;;
+    esac
+    ;;
+esac
+
+if ! command -v shfmt >/dev/null 2>&1; then
+  echo "shfmt hook skipped: install shfmt to enable shell formatting checks." >&2
+  exit 0
+fi
+
+echo "shfmt hook: checking $file_path" >&2
+shfmt -d "$file_path"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo "shfmt hook: formatting drift found. Review the diff or run shfmt intentionally before asking Claude to continue." >&2
+fi
+
+exit "$status"
+```
+
+## What It Checks
+
+- Shell-like file extensions such as `.sh`, `.bash`, `.bats`, `.ksh`, and `.zsh`.
+- Executable or extensionless files with common shell shebangs.
+- Formatting drift reported by `shfmt -d`.
+- Parse errors reported by shfmt for the supported shell dialects.
+
+## What It Does Not Do
+
+- It does not rewrite files.
+- It does not run shell scripts.
+- It does not install shfmt.
+- It does not invoke Docker or use shfmt container images.
+- It does not lint command safety, quoting, or portability beyond parser and
+  formatting behavior.
+- It does not replace ShellCheck, tests, code review, or deployment safeguards.
+
+## Troubleshooting
+
+### Hook says shfmt is missing
+
+Install shfmt through Go install, Homebrew, a system package, or another
+reviewed local installation path. Confirm `command -v shfmt` works in the same
+shell environment Claude Code uses.
+
+### Hook does not run for an extensionless script
+
+The script checks the first line for common shell shebangs. Confirm the file is
+readable and starts with a shell shebang such as `#!/usr/bin/env bash` or
+`#!/bin/sh`.
+
+### shfmt reports a diff but the team prefers the current style
+
+Decide on team formatting policy before making the hook blocking. If the team
+needs a different shfmt style, adapt the command flags deliberately and document
+them next to the hook.
+
+### shfmt passes but ShellCheck still fails
+
+That is expected. shfmt is a formatter and parser. Keep ShellCheck or another
+shell static analyzer in the workflow for quoting, expansion, portability, and
+command-safety diagnostics.
+
+## Duplicate Check
+
+No existing `content/hooks`, `content/skills`, `content/agents`,
+`content/mcp`, or `content/tools` entry in this checkout matches shfmt,
+`mvdan/sh`, `mvdan.cc/sh`, or a shell formatting check hook. Open PR titles,
+branch names, changed files, issue titles, issue bodies, and source URLs were
+also checked before drafting this entry.
+
+This entry is distinct from the existing ShellCheck hook and Hadolint hook.
+ShellCheck reports shell diagnostics, Hadolint reports Dockerfile diagnostics,
+and this hook reports shell formatting diffs through shfmt.
+
+## Editorial Disclosure
+
+This is an independent, source-backed HeyClaude content entry submitted by
+`oktofeesh1`. It is not sponsored by shfmt, `mvdan/sh`, or the project
+maintainers. The hook expects a user-installed shfmt binary and does not package,
+redistribute, or verify a shfmt release artifact.

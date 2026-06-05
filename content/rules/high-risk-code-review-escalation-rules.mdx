@@ -1,0 +1,227 @@
+---
+title: High-Risk Code Review Escalation Rules
+slug: high-risk-code-review-escalation-rules
+category: rules
+description: >-
+  Source-backed rules for deciding when an AI-assisted code review must
+  escalate high-risk changes to security, infrastructure, data, release, or
+  domain owners before merge.
+cardDescription: >-
+  Escalate high-risk code changes with clear triggers, owner signoff, fresh
+  checks, rollback evidence, and privacy-safe review notes.
+seoTitle: High-Risk Code Review Escalation Rules
+seoDescription: >-
+  Practical high-risk code review escalation rules for AI-assisted PR review:
+  risk triggers, owner signoff, branch protection, security review, rollback
+  evidence, and merge blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://google.github.io/eng-practices/review/reviewer/looking-for.html"
+sourceUrls:
+  - "https://google.github.io/eng-practices/review/reviewer/looking-for.html"
+  - "https://owasp.org/www-project-code-review-guide/"
+  - "https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches"
+  - "https://slsa.dev/spec/v1.1/requirements"
+installable: false
+usageSnippet: >-
+  Apply these rules before approving an AI-assisted pull request that changes
+  security boundaries, production infrastructure, data handling, release
+  automation, dependency provenance, generated code, or public API behavior.
+copySnippet: |-
+  You are reviewing whether a high-risk code change can merge.
+
+  Rules:
+  1. Classify the risk before reviewing style or convenience fixes.
+  2. Escalate security, data, infrastructure, dependency, release, and API
+     boundary changes to named owners.
+  3. Require fresh checks, threat notes, rollback evidence, and reviewer
+     context before approval.
+  4. Do not let AI-generated summaries replace source diffs, CI logs, policy
+     evidence, or owner signoff.
+  5. Block merge when a risky change lacks reproducible tests, branch
+     protection, audit trail, or privacy-safe review notes.
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - A pull request, patch, or generated code change with enough diff context to classify the risk.
+  - A repository policy that names security, infrastructure, data, API, dependency, and release owners or escalation channels.
+  - Access to current CI results, required checks, deployment plan, rollback plan, and affected service ownership.
+  - Permission to block approval when the risk class, source evidence, or owner signoff is incomplete.
+safetyNotes:
+  - "High-risk changes can alter auth, authorization, secrets, production data, network exposure, infrastructure, release automation, or dependency trust; escalate before merge instead of relying on a single reviewer."
+  - "Treat AI-generated patches, summaries, migrations, policy edits, generated clients, and workflow changes as untrusted until the source diff and checks are reviewed."
+  - "Require a rollback or disablement path for production-facing changes, especially when the blast radius includes customer data, credentials, deployments, billing, or public APIs."
+privacyNotes:
+  - "Escalation notes can expose private incident context, customer identifiers, secrets, account IDs, internal topology, or vulnerability details if copied into public PR comments."
+  - "Use private security channels for embargoed vulnerabilities, secrets, regulated data, and exploit details; keep public PR notes synthetic and minimally revealing."
+  - "Do not paste raw logs, traces, prompts, database rows, screenshots, or security scan output into review notes unless they have been redacted."
+tags:
+  - code-review
+  - escalation
+  - high-risk-changes
+  - security-review
+  - branch-protection
+  - release-safety
+keywords:
+  - high-risk code review escalation rules
+  - AI-assisted pull request risk review
+  - security owner signoff rules
+  - branch protection review checklist
+  - production change escalation
+readingTime: 6
+difficultyScore: 42
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant, maintainer bot, or human reviewer
+is asked to approve a change that could affect production safety, user data,
+security boundaries, public APIs, dependency trust, or release automation.
+
+The goal is not to slow every PR. The goal is to identify the small set of
+changes that need a named owner, fresher evidence, and an explicit merge
+decision before they become production behavior.
+
+## Escalation Triggers
+
+Escalate a review when the change touches any of these areas.
+
+1. **Authentication or authorization.** Login, sessions, tokens, cookies,
+   OAuth, SSO, permissions, tenant isolation, admin checks, or access policy.
+2. **Secrets and credentials.** Secret storage, environment variables, key
+   rotation, CI secrets, cloud credentials, webhook tokens, signing keys, or
+   generated config that can reveal secrets.
+3. **Production infrastructure.** Terraform, Kubernetes, network policy, DNS,
+   storage buckets, queues, databases, caches, deployment workflows, or
+   autoscaling.
+4. **Data handling.** PII, payment data, customer records, logs, analytics,
+   prompts, embeddings, retention, deletion, exports, backups, or migrations.
+5. **Dependency and build trust.** Package updates, lockfiles, generated
+   clients, build scripts, provenance, artifact signing, publish workflows, or
+   install-time scripts.
+6. **Public contracts.** API schemas, GraphQL types, event payloads, database
+   migrations, CLI flags, file formats, webhooks, or backward compatibility.
+7. **Release gates.** Branch protection, required checks, CI bypasses,
+   deployment approvals, feature flags, rollback tooling, or incident response
+   paths.
+
+If the risk class is unclear, escalate for classification before reviewing
+style, naming, or convenience improvements.
+
+## Required Evidence
+
+A high-risk review should have enough evidence for another reviewer to
+understand the decision later.
+
+- The affected owner or domain reviewer is named.
+- Required checks are current for the reviewed head commit.
+- Tests cover the risky behavior, not only formatting or snapshots.
+- Security-sensitive diffs are reviewed from source, not only from summaries.
+- Generated files are tied to a reviewed source input and regeneration command.
+- Rollback, disablement, migration backout, or incident response path is stated.
+- Public API, schema, or data model changes name compatibility expectations.
+- Privacy-sensitive examples, logs, and screenshots are redacted or avoided.
+
+Do not approve a high-risk PR when the evidence is stale, detached from the
+current head commit, or hidden in private context that future maintainers cannot
+audit.
+
+## Reviewer Rules
+
+- Start with risk classification, then review correctness, tests, and design.
+- Ask who owns the affected system before approving cross-boundary changes.
+- Require a second reviewer for auth, data, infrastructure, release, and
+  dependency trust changes.
+- Treat CI configuration changes as production changes when they can weaken
+  required checks, publish artifacts, expose secrets, or deploy code.
+- Compare generated code, lockfiles, schema outputs, and migrations against the
+  source change that produced them.
+- Verify that branch protection or required checks still apply to the merge
+  path.
+- Separate "needs author fix" from "needs owner escalation" so risky PRs do not
+  pass because all inline comments were resolved.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the PR changes auth, data, infrastructure, dependencies, or release gates
+  without owner review;
+- required checks are skipped, stale, failing, or not tied to the current head;
+- a generated artifact changed but the source file, generator, or command is
+  missing;
+- a migration, deployment, or feature flag has no rollback or disablement path;
+- a security or privacy claim is based on AI summary text rather than source
+  evidence;
+- logs, screenshots, fixtures, prompts, or review notes reveal secrets or
+  private user data;
+- the PR weakens branch protection, bypasses CI, or changes publish credentials
+  without explicit release-owner approval.
+
+## Review Checklist
+
+- [ ] {"task": "Risk class named", "description": "The reviewer classified whether the PR touches security, data, infrastructure, dependencies, contracts, or release gates"}
+- [ ] {"task": "Owner review present", "description": "A named owner or domain reviewer approved the affected risk area"}
+- [ ] {"task": "Checks are fresh", "description": "Required checks ran on the reviewed head commit and cover the risky behavior"}
+- [ ] {"task": "Rollback is clear", "description": "The PR explains rollback, disablement, backout, or incident response for production-facing changes"}
+- [ ] {"task": "Generated output traced", "description": "Generated code, lockfiles, schemas, clients, or migrations are tied to reviewed source inputs"}
+- [ ] {"task": "Privacy notes safe", "description": "Review notes avoid secrets, raw customer data, exploit details, and private operational context"}
+
+## AI Review Rules
+
+AI reviewers can help find risk signals, but they should not be the final
+authority for high-risk merge decisions.
+
+- Ask the assistant to classify touched risk areas before asking for style
+  feedback.
+- Require file paths, line references, and check names for every blocking
+  recommendation.
+- Have the assistant list unknowns separately from confirmed findings.
+- Do not accept "looks safe" when the assistant could not inspect CI output,
+  branch protection, source docs, or owner policy.
+- Re-run review after rebases or force pushes that change the head commit.
+
+## Troubleshooting
+
+- **The PR is mostly generated:** review the source input and generator first;
+  block merge if reviewers cannot reproduce or explain the generated diff.
+- **The author says checks passed locally:** require current CI or reproducible
+  command output tied to the reviewed commit.
+- **The risk owner is unavailable:** defer merge or split the risky portion into
+  a separate PR rather than approving by silence.
+- **The change is urgent:** record the emergency owner, time-bound approval,
+  rollback path, and follow-up review issue.
+- **Security details cannot be public:** keep sensitive evidence in the private
+  security channel and leave a minimal public note that owner review occurred.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, collections, hooks, agents, skills, commands,
+open PRs, and closed PR history for high-risk review escalation, code review
+escalation, branch protection review, security owner signoff, production change
+review, and AI-assisted PR risk review.
+
+Adjacent content includes a general code review expert rule, production
+codebase auditor rule, review-AI-generated-code guide, secure workflow guide,
+dependency risk command, and API contract review collection. This entry is
+distinct because it is a portable escalation policy for deciding when a risky
+PR needs owner signoff, fresh checks, rollback evidence, and privacy-safe review
+notes before merge.
+
+The previously closed PR for this slot was closed for branch shape because it
+included generated/output churn and no canonical source MDX file for the
+submitted item. This submission adds exactly one source rules file.
+
+## References
+
+- Google Engineering Practices code review guidance: https://google.github.io/eng-practices/review/reviewer/looking-for.html
+- OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/
+- GitHub protected branches documentation: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches
+- SLSA requirements: https://slsa.dev/spec/v1.1/requirements

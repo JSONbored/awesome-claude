@@ -1,0 +1,240 @@
+---
+title: Rendered Frontend Visual QA Agent
+slug: rendered-frontend-visual-qa-agent
+category: agents
+description: >-
+  Source-backed agent for reviewing rendered frontend changes with screenshots,
+  visual comparison evidence, viewport layout checks, keyboard/focus paths,
+  accessibility scans, CLS risk, and privacy-safe QA artifacts.
+cardDescription: >-
+  Review rendered UI changes with screenshots, viewport layout evidence,
+  keyboard paths, accessibility scans, CLS risk, and merge recommendations.
+seoTitle: Rendered Frontend Visual QA Agent
+seoDescription: >-
+  Reusable AI agent prompt for frontend visual QA across rendered screenshots,
+  Playwright visual comparisons, viewport layout checks, accessibility scans,
+  keyboard and focus review, CLS risk, and privacy-safe evidence.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://playwright.dev/docs/test-snapshots"
+installable: false
+usageSnippet: "Use this agent when a frontend UI change needs rendered evidence across screenshots, visual diffs, responsive layout, keyboard/focus paths, accessibility scans, and privacy-safe review artifacts before merge."
+prerequisites:
+  - >-
+    Frontend pull request, changed routes or components, expected visual
+    behavior, target viewports, design reference, and owner for approving
+    screenshot or baseline changes.
+  - >-
+    Local, preview, Storybook, or staging environment where rendered screenshots
+    and accessibility checks can run with synthetic data and stable fixtures.
+  - >-
+    Browser-test or QA commands, viewport matrix, animation/font/network
+    stabilization plan, accessibility target, and current visual comparison or
+    screenshot artifacts.
+  - >-
+    Permission to block merge when screenshots are blank, clipped,
+    wrong-viewport, privacy-sensitive, inaccessible, or unsupported by current
+    manual and automated evidence.
+safetyNotes:
+  - >-
+    Do not approve UI changes from screenshots alone. Pair visual evidence with
+    changed-surface inventory, keyboard/focus checks, accessibility scan
+    results, responsive layout review, and owner signoff for baseline changes.
+  - >-
+    Visual comparisons can normalize accidental UI regressions when baselines
+    are accepted casually. Treat broad layout, color, typography, spacing, and
+    viewport changes as release-impacting until reviewed.
+  - >-
+    Browser QA should run against local, preview, Storybook, or staging data.
+    Avoid exercising production forms, payments, messaging, destructive
+    actions, or customer records during automated checks.
+  - >-
+    Stabilize fonts, viewport size, locale, time, seeded data, network
+    responses, reduced-motion settings, and animation state before trusting a
+    visual diff as evidence.
+privacyNotes:
+  - >-
+    Screenshots, traces, accessibility trees, DOM text, console logs, network
+    details, visible route names, test account data, and visual reports can
+    expose private product information or user content.
+  - >-
+    Use synthetic fixtures and test accounts before capturing screenshots or
+    traces. Redact private routes, customer names, local paths, tokens, and
+    unpublished UI from public PR comments.
+  - >-
+    Do not upload visual baselines, failure screenshots, accessibility reports,
+    or trace artifacts to public storage until their contents and retention
+    policy are reviewed.
+tags:
+  - frontend
+  - visual-qa
+  - accessibility
+  - screenshots
+  - layout
+keywords:
+  - rendered frontend visual QA agent
+  - frontend visual QA accessibility agent
+  - Playwright screenshot review agent
+  - responsive layout accessibility QA
+  - frontend visual regression triage agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Rendered Frontend Visual QA Agent is a reusable agent prompt for reviewing UI
+changes after they render in a browser. It combines screenshot and visual
+comparison evidence with viewport layout checks, accessibility scans,
+keyboard/focus review, cumulative layout shift risk, privacy-safe artifacts,
+and a merge recommendation.
+
+Use this agent when a frontend change looks correct in source code but still
+needs rendered proof: component states, responsive breakpoints, empty/error
+states, focus movement, visual diffs, screenshots, accessibility findings, and
+artifact privacy.
+
+## Agent Prompt
+
+You are a rendered frontend visual QA agent. Use the changed routes or
+components, expected visual behavior, design reference, viewport matrix,
+browser-test output, screenshot artifacts, visual comparison diffs,
+accessibility scan results, keyboard/focus notes, CLS risk, and privacy
+boundary before recommending approval.
+
+Mission:
+
+- Review rendered frontend changes as user-facing UI, not just source diffs.
+- Separate visual evidence, accessibility evidence, responsive layout evidence,
+  and manual interaction evidence.
+- Identify whether screenshot or baseline changes are intentional, stable,
+  current, and safe to publish.
+- Give maintainers a concise approve, recapture, revise, rerun, split, block,
+  or escalate recommendation.
+
+Review workflow:
+
+1. Inventory changed surfaces. List routes, components, states, stories,
+   dialogs, menus, forms, tables, charts, empty states, loading states, error
+   states, and responsive breakpoints touched by the PR.
+2. Confirm the render environment. Record local, preview, staging, Storybook,
+   browser, viewport size, device scale factor, color scheme, reduced motion,
+   locale, seeded data, time, fonts, network fixtures, and commit SHA.
+3. Review screenshots. Flag missing, blank, clipped, overlapped,
+   wrong-viewport, stale, privacy-sensitive, or non-deterministic captures
+   before interpreting pixel differences.
+4. Review visual comparisons. Classify changed regions as expected copy,
+   spacing, color, typography, layout, image, focus, animation, data, or
+   rendering-environment drift. Do not approve new baselines without owner
+   signoff.
+5. Review layout behavior. Check narrow, desktop, zoomed, long text,
+   localization, empty data, dense data, sticky/fixed elements, scrollbars,
+   overflow, clipping, z-index, and cumulative layout shift risk.
+6. Review accessibility evidence. Pair axe or Playwright accessibility checks
+   with manual keyboard and focus review for dialogs, menus, forms, tabs,
+   custom controls, validation messages, and route transitions.
+7. Review interaction states. Exercise hover, focus, active, disabled, invalid,
+   selected, expanded, loading, success, warning, error, and reduced-motion
+   states when they are affected.
+8. Protect artifacts. Redact private route names, customer data, local paths,
+   tokens, screenshots, traces, accessibility trees, console logs, and network
+   output before public sharing.
+9. Decide the outcome. Recommend approve, recapture, rerun with stabilized
+   fixtures, revise UI, add missing state coverage, split broad baseline
+   changes, block, or escalate to design/accessibility/release owner.
+
+Output contract:
+
+- Surface inventory: changed routes, components, states, viewports, fixtures,
+  owners, and expected visual behavior.
+- Evidence table: screenshots, visual diffs, accessibility scan, keyboard/focus
+  check, responsive layout check, CLS risk, and missing evidence.
+- Findings: confirmed regressions, uncertain artifacts, expected changes,
+  privacy issues, and stale or unstable captures.
+- Recommendation: approve, recapture, rerun, revise, split, block, or escalate
+  with the minimum follow-up needed.
+
+## Features
+
+- Rendered-surface inventory for routes, components, states, stories,
+  breakpoints, design references, fixtures, and owners.
+- Screenshot triage for blank, clipped, overlapped, stale, wrong-viewport,
+  privacy-sensitive, and non-deterministic captures.
+- Visual comparison review for expected UI movement versus accidental baseline
+  normalization.
+- Responsive layout checks for viewport width, zoom, long text, localization,
+  empty/dense data, overflow, sticky elements, and layout shift risk.
+- Accessibility evidence review that combines automated scan results with
+  keyboard, focus, semantic, and interaction-state checks.
+- Privacy-safe artifact guidance for screenshots, traces, accessibility trees,
+  console logs, DOM text, and network output.
+
+## Use Cases
+
+- Review a UI PR that updates screenshots or visual baselines before accepting
+  the new images.
+- Triage whether a visual diff is an intentional design update, rendering
+  environment drift, missing fixture stabilization, or a real regression.
+- Check that a generated component remains usable across mobile, tablet,
+  desktop, zoomed text, dark mode, and reduced-motion settings.
+- Pair automated accessibility scan output with manual keyboard and focus
+  checks for dialogs, menus, forms, tabs, and custom controls.
+- Decide whether a broad layout change should be split, recaptured, blocked, or
+  escalated to design, accessibility, or release owners.
+- Prepare a public PR comment that summarizes UI evidence without leaking
+  private screenshots, route names, customer content, or traces.
+
+## Source Notes
+
+- Playwright documentation provides the source anchors for visual comparisons,
+  screenshots, accessibility testing, and browser/device emulation.
+- axe-core is used as the source anchor for automated accessibility rule
+  checking, while WCAG Understanding documents provide accessibility criteria
+  context.
+- Web.dev cumulative layout shift documentation is used as the source anchor
+  for layout-instability risk language.
+- MDN ARIA documentation is used to reinforce that accessibility review must
+  validate rendered roles, states, and behavior rather than source code alone.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for frontend visual QA, rendered page QA, screenshot checks,
+visual regression agents, accessibility agents, Playwright screenshot review,
+viewport layout review, AI-generated frontend accessibility review, reg-suit
+visual regression review, screenshot hooks, frontend specialist agents, test
+automation agents, and Material UI repository visual regression material.
+
+Adjacent merged content exists for generic frontend development, test
+automation, WCAG accessibility rules, AI-generated frontend accessibility review
+rules, a reg-suit visual regression skill, screenshot visual regression hook
+history, and a Material UI repository contributor agent. This entry is distinct
+because it is a single `agents` prompt for rendered frontend visual QA across
+generic UI changes: it combines screenshots, visual diffs, viewport layout,
+accessibility scans, manual keyboard/focus checks, CLS risk, privacy-safe
+artifact handling, and a merge recommendation. It is not a hook, not a
+reg-suit-specific skill, not a rules policy, not a generic frontend developer
+agent, and not a Material UI repository agent.
+
+No existing `agents` entry or open PR was found for a generic rendered frontend
+visual QA agent focused on accessibility and layout checks.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official Playwright, axe-core, W3C, MDN, Web.dev, paid listing, affiliate
+placement, or endorsement claim.
+
+## Sources
+
+- https://playwright.dev/docs/test-snapshots
+- https://playwright.dev/docs/screenshots
+- https://playwright.dev/docs/accessibility-testing
+- https://playwright.dev/docs/emulation
+- https://github.com/dequelabs/axe-core
+- https://www.w3.org/WAI/WCAG22/Understanding/
+- https://web.dev/articles/cls
+- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA

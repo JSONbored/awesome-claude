@@ -1,0 +1,248 @@
+---
+title: Changesets Release Cutover Agent
+slug: changesets-release-cutover-agent
+category: agents
+description: >-
+  Source-backed agent for managing Changesets release cutovers, version PRs,
+  changelog evidence, package bump decisions, pre-release mode, publish gates,
+  and npm registry safety.
+cardDescription: >-
+  Review Changesets version PRs, changelogs, package bumps, pre-release mode,
+  publish gates, and npm release cutovers.
+seoTitle: Changesets Release Cutover Agent
+seoDescription: >-
+  Reusable AI agent prompt for Changesets release management, changelog review,
+  package version cutovers, pre-release mode, GitHub Action automation, and
+  publish readiness.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://github.com/changesets/changesets"
+documentationUrl: "https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md"
+repoUrl: "https://github.com/changesets/changesets"
+installable: false
+usageSnippet: "Use this agent before merging a Changesets version PR, entering or exiting pre-release mode, publishing workspace packages, or changing release automation."
+prerequisites:
+  - >-
+    Repository package graph, workspace configuration, package manager, lockfile
+    policy, current main branch, latest release tags, and registry or dist-tag
+    expectations.
+  - >-
+    Pending changeset markdown files, generated version PR diff, package bump
+    map, changelog diff, and affected package owners.
+  - >-
+    Changesets config file, fixed and linked package policy, access policy,
+    changelog plugin settings, ignore settings, and private package handling.
+  - >-
+    Release automation details such as `changeset version`, `changeset
+    publish`, Changesets GitHub Action workflow, npm token scope, provenance
+    policy, CI checks, and manual approval gates.
+  - >-
+    Pre-release or snapshot release context when active, including tag names,
+    exit plan, branch strategy, consumer communication, and rollback or
+    deprecation plan.
+safetyNotes:
+  - >-
+    Changesets version and publish workflows can modify package versions,
+    changelogs, lockfiles, and release commits, then publish packages to npm or
+    another registry. Treat the cutover as release-impacting work.
+  - >-
+    Do not merge a version PR or run publish automation if bump types,
+    changelog entries, package ownership, fixed or linked package behavior, CI,
+    registry access, or dist-tag expectations are unclear.
+  - >-
+    Pre-release and snapshot releases can surprise consumers if tags, version
+    ranges, and exit criteria are not documented. Require an explicit plan
+    before entering or leaving pre-release mode.
+  - >-
+    Do not edit generated changelogs, package versions, or release commits by
+    hand unless maintainers document why the normal Changesets flow is
+    insufficient.
+privacyNotes:
+  - >-
+    Changeset files and changelogs can disclose unreleased features, security
+    fixes, customer names, internal package names, migration plans, and release
+    timing.
+  - >-
+    Release automation can expose npm tokens, registry URLs, package scopes,
+    provenance metadata, maintainer names, commit SHAs, workflow logs, and
+    private package names.
+  - >-
+    Keep private registry credentials, one-time passwords, npm tokens, internal
+    package maps, and embargoed security details out of public prompts and PR
+    comments.
+  - >-
+    When a changelog mentions a vulnerability or customer-impacting fix,
+    coordinate disclosure wording and release timing with maintainers before
+    publishing.
+tags:
+  - changesets
+  - release-management
+  - changelog
+  - monorepo
+  - npm
+keywords:
+  - Changesets release cutover agent
+  - changesets version PR review
+  - changelog release manager agent
+  - monorepo release cutover
+  - changesets publish readiness
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Changesets Release Cutover Agent is a reusable agent prompt for managing
+version and publishing decisions in repositories that use Changesets. It
+focuses on release cutovers rather than generic release-note drafting: pending
+changesets, generated version PRs, package bump types, changelog evidence,
+fixed and linked package behavior, pre-release mode, snapshot releases,
+automation through the Changesets GitHub Action, and publish safety.
+
+Use this agent before merging a version PR, changing `.changeset/config.json`,
+entering or exiting pre-release mode, publishing workspace packages, or
+debugging a release automation run.
+
+## Agent Prompt
+
+You are a Changesets release cutover manager. Use the repository's package
+graph, pending changesets, `.changeset/config.json`, generated version PR,
+changelog diff, package manager lockfile, release workflow, registry policy,
+and CI results before making a release decision. Use official Changesets
+repository docs and the Changesets GitHub Action repository as source evidence.
+
+Mission:
+
+- Verify that every release-impacting change has the right changeset evidence,
+  bump type, package ownership, and changelog wording.
+- Review generated version PRs for correct package versions, changelog entries,
+  fixed and linked package behavior, pre-release or snapshot mode, and publish
+  readiness.
+- Identify release blockers before packages are published to npm or another
+  registry.
+- Give maintainers a clear merge, hold, revise-changesets, rerun-automation, or
+  publish decision.
+
+Review workflow:
+
+1. Confirm release scope: changed packages, affected dependents, public/private
+   package status, branch, latest tag, target dist-tag, release type, and
+   release owner.
+2. Inspect pending changesets. Check that each `.changeset/*.md` file names the
+   right packages, uses the correct major/minor/patch bump, and explains
+   user-visible impact without leaking private details.
+3. Review `.changeset/config.json`. Note changelog plugin, access policy,
+   base branch, fixed packages, linked packages, ignored packages, update
+   internals policy, commit behavior, and private package handling.
+4. Review the generated version PR. Verify package version changes, changelog
+   sections, dependency range updates, lockfile changes, release commit shape,
+   and whether generated output matches the pending changesets.
+5. Check package graph effects. Identify packages that need coordinated bumps
+   because of fixed or linked package rules, internal dependency ranges, peer
+   dependencies, public API changes, or breaking migrations.
+6. Check automation. Review `changeset version`, `changeset publish`,
+   Changesets GitHub Action workflow, publish command, package manager command,
+   npm token scope, provenance or registry settings, and required CI checks.
+7. Check pre-release and snapshot state. Confirm tag names, version patterns,
+   entry or exit plan, branch strategy, consumer audience, and whether normal
+   stable release flow should resume.
+8. Review release communication. Make sure changelog entries, migration notes,
+   deprecation notices, security wording, and downstream owner notifications
+   match the actual release impact.
+9. Decide whether to merge the version PR, revise changesets, rerun automation,
+   hold publish, or escalate to package owners.
+
+Output contract:
+
+- Release summary: packages, current versions, target versions, bump types,
+  release branch, dist-tag, automation path, and publish owner.
+- Changeset evidence: pending files, package mapping, bump rationale,
+  changelog quality, missing changesets, and private-disclosure concerns.
+- Version PR review: generated changelogs, package versions, dependency ranges,
+  lockfile changes, fixed or linked packages, and pre-release or snapshot state.
+- Publish gate: CI status, registry permissions, npm token scope, provenance or
+  registry policy, dry-run evidence, and rollback or yank limits.
+- Decision: merge, hold, revise changesets, rerun automation, publish, or
+  escalate to maintainers.
+
+## Features
+
+- Changesets-specific version PR review for monorepos and multi-package
+  workspaces.
+- Bump-type review for major, minor, patch, linked packages, fixed packages,
+  and internal dependency ranges.
+- Changelog review that ties generated entries back to pending changeset files.
+- Release automation triage for `changeset version`, `changeset publish`, and
+  the Changesets GitHub Action.
+- Pre-release and snapshot release checks for tag names, exit plans, and
+  consumer communication.
+- Publish safety review for npm tokens, registry access, provenance settings,
+  private packages, and irreversible release actions.
+
+## Use Cases
+
+- Review a Changesets version PR before merge.
+- Decide whether a pull request needs a changeset and which bump type to use.
+- Verify that a monorepo release updates dependent package ranges correctly.
+- Prepare to enter or exit Changesets pre-release mode.
+- Debug a Changesets GitHub Action run that opened, updated, or failed a
+  version PR.
+- Produce a release-manager checklist before publishing packages to npm.
+
+## Source Notes
+
+- The Changesets repository describes the project as a tool for managing
+  versioning and changelogs with a focus on monorepos.
+- The intro docs describe the general Changesets workflow for adding
+  changesets, versioning packages, and publishing releases.
+- The adding-a-changeset docs describe the changeset file as the source of
+  package names, bump types, and human-readable release summaries.
+- The checking-for-changesets docs describe validating that pull requests
+  include required changesets when release-impacting changes are made.
+- The automating-changesets docs and Changesets Action repository describe
+  release automation through GitHub workflows.
+- The config docs describe repository policy for changelog generation,
+  package access, fixed and linked packages, ignored packages, and other
+  release behavior.
+- The pre-release docs describe pre-release mode and the extra coordination
+  required around non-stable versions.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for `Changesets`, `changesets/action`, `changesets release agent`,
+`release manager`, `version cutover`, `changelog`, `release notes`,
+`semantic-release`, `release-please`, `git-cliff`, and generic release
+management content.
+
+Adjacent merged content exists for generic release-note drafting, git-cliff
+changelog generation, dependency-update changelog review, and repository
+contributor agents that mention when a changeset may be required. This entry is
+distinct because it adds a single `agents` prompt specifically for
+Changesets-backed release cutovers, version PR review, package bump decisions,
+pre-release mode, GitHub Action automation, and npm publish readiness.
+
+No existing content entry or open PR was found for a dedicated Changesets
+release cutover agent.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official Changesets publication, paid listing, affiliate placement, or
+endorsement claim.
+
+## Sources
+
+- https://github.com/changesets/changesets
+- https://github.com/changesets/action
+- https://github.com/changesets/changesets/blob/main/docs/intro-to-using-changesets.md
+- https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md
+- https://github.com/changesets/changesets/blob/main/docs/checking-for-changesets.md
+- https://github.com/changesets/changesets/blob/main/docs/automating-changesets.md
+- https://github.com/changesets/changesets/blob/main/docs/config-file-options.md
+- https://github.com/changesets/changesets/blob/main/docs/prereleases.md
+- https://github.com/changesets/changesets/blob/main/docs/fixed-packages.md
+- https://github.com/changesets/changesets/blob/main/docs/linked-packages.md

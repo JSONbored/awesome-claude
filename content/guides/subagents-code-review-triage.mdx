@@ -1,0 +1,212 @@
+---
+title: Use Subagents for Code Review and Triage
+slug: subagents-code-review-triage
+category: guides
+description: >-
+  A practical guide to using Claude Code subagents as focused review and triage
+  specialists for pull requests, issues, risks, tests, documentation, and
+  follow-up planning.
+cardDescription: Use focused Claude subagents for PR review and issue triage.
+seoTitle: Use Subagents for Code Review and Triage
+seoDescription: >-
+  Configure Claude Code subagents for code review and issue triage workflows
+  with scoped tools, evidence-based outputs, safety checks, and GitHub review
+  references.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Create read-only review and triage subagents, give each one a narrow lens,
+  ask for evidence-backed findings, then let the main Claude session reconcile
+  disagreements before a human posts comments or changes labels.
+prerequisites:
+  - A Claude Code project where subagents are available.
+  - A pull request, issue queue, or review workflow with clear human owners.
+  - Agreement on which tools each subagent may use, especially for repository, issue tracker, and command access.
+  - A review policy for severity, evidence, labels, ownership, and when humans must approve actions.
+safetyNotes:
+  - Start review and triage subagents with read-only access; only add write access when a human-reviewed workflow truly needs it.
+  - Require file paths, line references, issue links, or quoted evidence for blocking findings so speculative output does not become merge policy.
+  - Keep final comments, label changes, assignments, and close/reopen decisions human-approved unless your team has a separate automation policy.
+privacyNotes:
+  - Review and triage prompts can include proprietary source code, diffs, stack traces, customer reports, labels, usernames, and internal project names.
+  - Subagent transcripts may preserve issue details and reviewer reasoning; avoid pasting secrets, private customer data, or credentials into prompts.
+  - External tools exposed through MCP or repository integrations can reveal additional metadata, so document what each subagent can read.
+sourceUrls:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request"
+  - "https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/filtering-and-searching-issues-and-pull-requests"
+tags:
+  - claude-code
+  - subagents
+  - code-review
+  - issue-triage
+  - pull-requests
+  - workflow-design
+keywords:
+  - claude code subagents review
+  - subagents code review triage
+  - claude issue triage workflow
+  - ai code review subagents
+  - claude pull request review
+readingTime: 8
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Use subagents when review or triage work benefits from separate specialist
+attention. Give each subagent a narrow lens, minimal tools, and a strict output
+contract. The main Claude session should combine the results, remove duplicate
+or low-confidence findings, and keep a human in control of public comments,
+labels, assignments, and merge decisions.
+
+This guide is about review and triage operations after you have already chosen
+subagents as the right Claude Code extension surface.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Review target is defined", "description": "The workflow points to a pull request, issue search, release branch, or incident queue"}
+- [ ] {"task": "Subagent roles are narrow", "description": "Each role has one review lens such as security, tests, docs, release risk, or issue routing"}
+- [ ] {"task": "Tool scope is reviewed", "description": "Read-only access is used by default and write-capable tools require approval"}
+- [ ] {"task": "Output contract is documented", "description": "Findings include evidence, severity, confidence, and recommended next action"}
+- [ ] {"task": "Human owner is known", "description": "A maintainer decides what gets posted, labeled, assigned, or merged"}
+
+## Core Concepts Explained
+
+### Subagents isolate review attention
+
+Claude Code subagents are useful when a task deserves its own role,
+instructions, and context. For code review and triage, that separation helps
+avoid one large prompt trying to be a security reviewer, test planner, docs
+reviewer, and issue router at the same time.
+
+### Review subagents should be evidence-first
+
+A review subagent should not only say "this might be risky." Ask it to cite the
+file, line, diff hunk, test failure, documentation gap, issue link, or external
+source that supports the finding. This keeps the final review actionable and
+prevents low-confidence comments from crowding out real blockers.
+
+### Triage subagents classify instead of deciding alone
+
+Issue triage often involves labels, ownership, severity, reproducibility, and
+duplicate detection. A subagent can prepare a recommendation, but final action
+should stay with a human owner unless the team has explicit automation rules.
+
+### The main session is the editor
+
+The main Claude session should reconcile subagent outputs before anything is
+posted. It can merge duplicate findings, discard unsupported claims, rank the
+remaining risks, and turn several specialist reports into one clear review.
+
+## Step-by-Step Workflow
+
+1. **Choose the review lanes.** Pick two to five focused lenses instead of one
+   giant reviewer. Common lanes are security, correctness, tests, docs, release
+   risk, dependency impact, and issue routing.
+
+2. **Write narrow subagent prompts.** Each prompt should describe the exact job,
+   what evidence counts, what to ignore, and what output format to return. Avoid
+   broad mandates such as "review everything."
+
+3. **Scope tools to the lane.** A docs reviewer may only need repository reads.
+   A test planner may need file reads and existing test output. A triage
+   reviewer may need issue and pull request metadata. Start read-only.
+
+4. **Give structured inputs.** Provide the pull request summary, changed files,
+   relevant issue links, failing checks, or filtered issue search. Small,
+   relevant packets produce better reports than a raw context dump.
+
+5. **Ask for confidence and evidence.** Require each finding to include
+   evidence, severity, confidence, and a concrete next step. Ask subagents to
+   say "no finding" when evidence is insufficient.
+
+6. **Reconcile in the main session.** Combine reports, remove duplicates, check
+   contradictions, and keep only findings that a maintainer could verify.
+
+7. **Human-review outward actions.** A human should approve public comments,
+   labels, assignments, close/reopen decisions, and merge blockers before they
+   leave the Claude session.
+
+## Useful Subagent Roles
+
+| Role | Best input | Output |
+| --- | --- | --- |
+| PR risk mapper | PR summary, diff, changed files | Risk-ranked findings with evidence |
+| Test planner | Diff, existing tests, failing checks | Missing test cases and commands to run |
+| Docs reviewer | Diff, docs pages, changelog policy | Required docs updates and user-facing gaps |
+| Issue triager | Filtered issue list, templates, labels | Label, owner, duplicate, and priority recommendations |
+| Release reviewer | Diff, release notes, compatibility policy | Breaking-change and rollout concerns |
+
+## Prompt Shape
+
+Use a compact prompt contract for each subagent:
+
+```text
+Role: Review this pull request for test coverage gaps only.
+Inputs: PR summary, changed files, existing test output, linked issue.
+Ignore: style-only comments and product decisions outside the diff.
+Return:
+- Findings with file/path evidence
+- Missing tests ranked by user impact
+- Confidence: high, medium, or low
+- Suggested validation command, if one is already documented
+```
+
+For issue triage:
+
+```text
+Role: Triage this filtered issue list for duplicates and ownership.
+Inputs: issue titles, bodies, labels, assignees, links, recent comments.
+Return:
+- Likely duplicates with evidence
+- Suggested label changes with reason
+- Suggested owner or team, if clear
+- Items that need human clarification
+```
+
+## Review Checklist
+
+- [ ] {"task": "One lens per subagent", "description": "No subagent tries to review every dimension at once"}
+- [ ] {"task": "Evidence required", "description": "Findings cite files, lines, check output, issue links, or quoted context"}
+- [ ] {"task": "Read-only default", "description": "Subagents cannot post comments, mutate labels, or push changes by default"}
+- [ ] {"task": "False-positive filter", "description": "The main session drops unsupported or duplicate findings"}
+- [ ] {"task": "Human approval", "description": "Maintainers approve public comments and workflow actions"}
+- [ ] {"task": "Privacy review", "description": "Sensitive reports, credentials, and customer data stay out of prompts"}
+
+## Troubleshooting
+
+- **Subagents return overlapping findings**: make the roles narrower and add an
+  "ignore" list to each prompt.
+- **Findings are too vague**: require direct evidence and ask for "no finding"
+  when the evidence is weak.
+- **Triage suggestions are too aggressive**: separate recommendations from
+  actions, and keep labels or closure decisions human-approved.
+- **The workflow uses too much context**: provide a PR summary, changed-file
+  list, and focused excerpts before sending full logs or issue histories.
+- **A subagent wants write access**: first ask whether the same result can be
+  achieved by returning a recommendation to the main session.
+
+## Duplicate Check
+
+This guide is specifically about using Claude Code subagents as review and
+triage specialists. Existing entries cover broad agent development, parallel
+subagent distribution, subagent creation commands, and local code review skills,
+but they do not provide a source-backed guide for evidence-based review and
+issue-triage workflows with subagents.
+
+## References
+
+- Claude Code subagents - https://code.claude.com/docs/en/sub-agents
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- GitHub pull request review docs - https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request
+- GitHub issue and pull request search docs - https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/filtering-and-searching-issues-and-pull-requests

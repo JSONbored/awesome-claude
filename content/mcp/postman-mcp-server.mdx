@@ -1,0 +1,363 @@
+---
+title: Postman MCP Server for Claude
+slug: postman-mcp-server
+category: mcp
+description: >-
+  Official Postman MCP Server for connecting Claude, Codex, Cursor, VS Code,
+  Gemini CLI, and other MCP clients to Postman workspaces, collections,
+  specifications, mocks, monitors, environments, API definitions, and code
+  generation workflows.
+cardDescription: >-
+  Connect Claude to Postman resources for collection management, API specs,
+  workspaces, mocks, monitors, environments, and code-generation workflows.
+seoTitle: Postman MCP Server for Claude
+seoDescription: >-
+  Use Postman MCP Server with Claude, Codex, Cursor, VS Code, Gemini CLI, and
+  other MCP clients to manage Postman workspaces, collections, specifications,
+  mocks, monitors, environments, and API workflow automation.
+author: Postman
+authorProfileUrl: "https://www.postman.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.postman.com/"
+documentationUrl: "https://learning.postman.com/docs/reference/postman-api/postman-mcp-server/overview"
+repoUrl: "https://github.com/postmanlabs/postman-mcp-server"
+packageUrl: "https://www.npmjs.com/package/@postman/postman-mcp-server"
+installable: true
+installCommand: "claude mcp add --transport http postman https://mcp.postman.com/minimal"
+usageSnippet: "Ask Claude to use Postman MCP to inspect or update a specific workspace, collection, environment, spec, mock, or monitor after you provide the resource ID."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "postman": {
+        "type": "http",
+        "url": "https://mcp.postman.com/minimal"
+      }
+    }
+  }
+configSnippet: |-
+  [mcp_servers.postman-mcp-server]
+  command = "npx"
+  args = ["-y", "@postman/postman-mcp-server@2.8.9", "--minimal"]
+
+  [mcp_servers.postman-mcp-server.env]
+  POSTMAN_API_KEY = "<POSTMAN_API_KEY>"
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Postman account with access to the workspaces, collections, specifications, mocks, monitors, and environments the assistant should inspect or manage.
+  - MCP-capable client such as Claude Code, Claude Desktop, Codex CLI, Cursor, VS Code, Windsurf, Gemini CLI, Kiro, or another compatible environment.
+  - >-
+    Authentication choice: OAuth for the US remote server when the MCP client
+    supports it, or a Postman API key for EU remote, local stdio, Docker, or
+    API-key fallback setup.
+  - >-
+    Tool-mode choice: `minimal` for essential Postman operations, `code` for
+    API-definition search and client-code generation, or `full` for the
+    complete Postman API tool surface.
+  - >-
+    Region choice: US endpoints under `mcp.postman.com`, EU endpoints under
+    `mcp.eu.postman.com`, or local stdio with `--region eu` /
+    `POSTMAN_API_BASE_URL`.
+  - Resource IDs, workspace names, collection names, environment names, or spec names ready when the task needs precise changes.
+safetyNotes:
+  - >-
+    Postman MCP can operate on real Postman resources. Treat collection edits,
+    workspace changes, environment updates, monitor changes, mock changes,
+    specification creation, documentation updates, and generated code as
+    review-required operations.
+  - >-
+    Start with the `minimal` remote endpoint when the task only needs basic
+    Postman operations. Use `code` or `full` only after reviewing the broader
+    tool surface and the resources exposed to the assistant.
+  - >-
+    The `full` configuration exposes all available Postman API tools, which
+    Postman documents as 100+ tools. Do not use it by default for exploratory
+    chats or untrusted repositories.
+  - >-
+    Postman recommends reviewing and confirming operations that make changes or
+    are destructive. Require a human check before accepting assistant-generated
+    deletes, bulk updates, monitor edits, mock edits, documentation rewrites,
+    collection rewrites, or spec-to-code changes.
+  - >-
+    Pass specific resource IDs when possible. Postman notes this reduces extra
+    API calls and helps avoid the assistant selecting the wrong workspace,
+    collection, environment, monitor, mock, or specification by name.
+  - >-
+    Local stdio and Docker modes run the Postman MCP server on the user's
+    machine and require a Postman API key. Pin the npm package version or
+    Docker image when reproducibility matters, and keep credentials out of
+    committed MCP configs.
+  - >-
+    EU remote endpoints do not support OAuth according to Postman's docs; use
+    API-key authentication there and verify the region before connecting
+    customer or regulated API assets.
+privacyNotes:
+  - >-
+    Tool calls can expose Postman workspace metadata, collection names,
+    request URLs, headers, examples, documentation, comments, environments,
+    variable names, API specifications, mocks, monitors, and generated code
+    context to the connected AI client.
+  - >-
+    Environment variables and collection variables may contain credentials,
+    internal hostnames, customer identifiers, test tokens, bearer tokens,
+    session cookies, webhook URLs, or staging API details. Scrub secrets before
+    pasting raw Postman data into prompts, issues, tickets, or chat tools.
+  - >-
+    OAuth grants and Postman API keys represent a real Postman identity. Rotate
+    exposed API keys, remove stale MCP configs, and audit workspace membership
+    when a project or assistant no longer needs access.
+  - >-
+    Claude, Codex, IDE logs, MCP client transcripts, terminal history,
+    screenshots, generated code, and support bundles can retain Postman-derived
+    API details outside Postman's normal access controls.
+  - >-
+    The remote server sends MCP requests to Postman-hosted endpoints. Local
+    stdio and Docker modes still call Postman APIs with the configured API key
+    when managing cloud-hosted Postman resources.
+tags:
+  - postman
+  - api
+  - mcp
+  - collections
+  - openapi
+keywords:
+  - Postman MCP Server
+  - Postman Claude MCP
+  - Postman Codex MCP
+  - Postman remote MCP
+  - Postman API agents
+  - Postman collection MCP
+  - Postman OpenAPI MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Postman MCP Server is Postman's official Model Context Protocol server for
+letting AI agents work with Postman resources. It connects MCP clients such as
+Claude, Codex, Cursor, VS Code, Gemini CLI, Windsurf, Kiro, and GitHub Copilot
+CLI to Postman workspaces, collections, specifications, mocks, monitors,
+environments, API definitions, and code-generation workflows.
+
+The safest starting point is the remote `minimal` endpoint with OAuth in a US
+Postman account. Move to the `code` endpoint when the task is API-definition
+search or client-code generation, and use `full` only when the assistant truly
+needs the complete Postman API tool surface. For EU accounts, local stdio, or
+API-key fallback, keep the Postman API key out of committed configuration and
+review every write operation before accepting it.
+
+## Features
+
+- Official Postman MCP Server documented by Postman.
+- Remote streamable HTTP server hosted by Postman.
+- Local stdio server available through the Postman MCP Server GitHub
+  repository, npm package, and Docker image.
+- US remote endpoints with OAuth support for clients that implement the MCP
+  authorization flow.
+- EU remote endpoints with API-key authentication.
+- Tool configurations for `minimal`, `code`, and `full` modes.
+- Full mode with 100+ available Postman API tools.
+- Code mode for searching public and internal API definitions and generating
+  client code.
+- Minimal mode for essential Postman operations with smaller context and faster
+  setup.
+- Client setup docs for Claude Code, Codex, Cursor, VS Code, Windsurf,
+  Antigravity, GitHub Copilot CLI, Gemini CLI, and Kiro.
+- Best-practice guidance for using explicit resource IDs, confirming
+  destructive changes, and telling the assistant to use Postman MCP instead of
+  curl or the Postman CLI.
+
+## Use Cases
+
+- Ask Claude to inspect a Postman workspace, list collections, and summarize
+  API documentation gaps before a release review.
+- Create or update Postman Collections from an API specification, then review
+  the generated collection before publishing it.
+- Keep code and Postman specifications synchronized by asking the assistant to
+  compare repository changes with a named Postman spec.
+- Update collection documentation, request examples, or comments after an API
+  endpoint changes.
+- Create or update environments and variables for local, staging, or test API
+  workflows after a human approves the exact values.
+- Use Code mode to search API definitions and generate client code from public
+  or internal APIs.
+- Review monitors and mocks attached to a workspace before changing API test or
+  mock behavior.
+
+## Installation
+
+### Claude Code
+
+For the US remote server with OAuth, start with Minimal mode:
+
+```bash
+claude mcp add --transport http postman https://mcp.postman.com/minimal
+```
+
+Use Code or Full mode only when needed:
+
+```bash
+claude mcp add --transport http postman https://mcp.postman.com/code
+claude mcp add --transport http postman https://mcp.postman.com/mcp
+```
+
+For API-key setup, including EU endpoints, pass a bearer token header and keep
+the key out of committed shell history and project files:
+
+```bash
+claude mcp add --transport http postman https://mcp.eu.postman.com/minimal --header "Authorization: Bearer <POSTMAN_API_KEY>"
+```
+
+### Codex
+
+For OAuth on the US remote server:
+
+```bash
+codex mcp add postman --remote-url https://mcp.postman.com/minimal
+```
+
+For API-key or local stdio setup, pin the package version after checking the
+current Postman docs and npm metadata:
+
+```bash
+codex mcp add postman --env POSTMAN_API_KEY=<POSTMAN_API_KEY> -- npx -y @postman/postman-mcp-server@2.8.9 --minimal
+```
+
+Manual Codex config:
+
+```toml
+[mcp_servers.postman-mcp-server]
+command = "npx"
+args = ["-y", "@postman/postman-mcp-server@2.8.9", "--minimal"]
+
+[mcp_servers.postman-mcp-server.env]
+POSTMAN_API_KEY = "<POSTMAN_API_KEY>"
+```
+
+### VS Code
+
+For OAuth with a remote server:
+
+```json
+{
+  "servers": {
+    "postman": {
+      "type": "http",
+      "url": "https://mcp.postman.com/minimal"
+    }
+  }
+}
+```
+
+For API-key authentication:
+
+```json
+{
+  "servers": {
+    "postman": {
+      "type": "http",
+      "url": "https://mcp.postman.com/minimal",
+      "headers": {
+        "Authorization": "Bearer ${input:postman-api-key}"
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "postman-api-key",
+      "type": "promptString",
+      "description": "Enter your Postman API key"
+    }
+  ]
+}
+```
+
+## Tool Modes
+
+- `minimal`: default remote mode for essential Postman operations.
+- `code`: API-definition search and client-code generation.
+- `full`: complete Postman API tool surface, documented by Postman as 100+
+  tools.
+- `quiet`: local stdio option that suppresses debug and info logs; Postman
+  documents it as useful for avoiding a Windows Windsurf startup timeout.
+
+Remote US endpoints:
+
+- `https://mcp.postman.com/minimal`
+- `https://mcp.postman.com/code`
+- `https://mcp.postman.com/mcp`
+
+Remote EU endpoints:
+
+- `https://mcp.eu.postman.com/minimal`
+- `https://mcp.eu.postman.com/code`
+- `https://mcp.eu.postman.com/mcp`
+
+## Examples
+
+### Inspect a workspace
+
+```plaintext
+When interacting with Postman resources, use the Postman MCP server. List collections in workspace <WORKSPACE_ID> and summarize stale documentation without making changes.
+```
+
+### Update collection docs
+
+```plaintext
+Use Postman MCP to draft documentation updates for collection <COLLECTION_ID>. Show the proposed diff and wait for approval before applying it.
+```
+
+### Sync a specification
+
+```plaintext
+Compare the OpenAPI changes in this branch with Postman spec <SPEC_ID>. Tell me what would change in the generated collection before updating anything.
+```
+
+### Generate client code
+
+```plaintext
+Use Postman MCP Code mode to find the API definition for this endpoint and generate a TypeScript client example. Do not modify Postman resources.
+```
+
+## Source Notes
+
+- Postman's overview describes the Postman MCP Server as a way for AI agents
+  such as Claude, Cursor, and VS Code to manage Postman workspaces,
+  collections, specifications, mocks, and monitors.
+- Postman's overview links the official Postman MCP Server GitHub repository
+  and the Postman MCP Server collection.
+- Postman's remote setup guide documents streamable HTTP endpoints, OAuth for
+  the US remote server, API-key fallback, EU API-key-only behavior, and Minimal,
+  Code, and Full tool configurations.
+- Postman's local setup guide documents stdio transport, API-key-only local
+  authentication, npm package, Docker image, region selection, Minimal, Code,
+  Full, and Quiet modes.
+- Postman's best-practices page recommends telling the assistant to use Postman
+  MCP, reviewing destructive operations, and passing resource IDs to reduce API
+  calls and avoid ambiguous resource selection.
+- The npm package metadata checked at submission time showed
+  `@postman/postman-mcp-server@2.8.9`, Node.js `>=20.0.0`, MCP package name
+  `com.postman/postman-mcp-server`, and repository
+  `https://github.com/postmanlabs/postman-mcp-server`.
+
+## Duplicate Check
+
+Checked current `upstream/main`, open PR titles, open PR changed files, source
+URLs, and content files for `Postman MCP`, `postman-mcp-server`,
+`mcp.postman.com`, `mcp.eu.postman.com`, `@postman/postman-mcp-server`,
+`postmanlabs/postman-mcp-server`, `getmcp`, and the Postman MCP docs and
+collection URLs. Existing content only contains generic `mcpServers` code
+variable names in a GitHub Copilot interoperability entry; no dedicated
+Postman MCP Server entry, Postman MCP source URL duplicate, or open content PR
+for this server was found.
+
+## Editorial Disclosure
+
+Postman is a commercial API platform, but this listing is not sponsored, paid,
+affiliate-backed, or submitted by Postman. Use Postman's current docs, package
+metadata, account permissions, region requirements, privacy terms, and
+workspace policies as the source of truth before connecting API assets to any
+AI client.

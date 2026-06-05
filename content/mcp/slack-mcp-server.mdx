@@ -1,0 +1,303 @@
+---
+title: Slack MCP Server for Claude
+slug: slack-mcp-server
+category: mcp
+description: >-
+  Official Slack remote MCP server that connects Claude and other MCP clients to
+  Slack search, messages, channels, threads, canvases, reactions, users, and
+  workspace context through OAuth-backed Streamable HTTP.
+cardDescription: >-
+  Connect Claude to Slack search, messages, channels, threads, canvases,
+  reactions, users, and workspace context.
+seoTitle: Slack MCP Server for Claude
+seoDescription: >-
+  Use Slack MCP Server with Claude to search Slack, read channels and threads,
+  send or draft messages, manage canvases, add reactions, inspect users, and
+  work with Slack context through OAuth-backed remote MCP.
+author: Slack
+authorProfileUrl: "https://slack.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.slack.dev/ai/slack-mcp-server/"
+installable: true
+installCommand: "claude mcp add --transport http slack https://mcp.slack.com/mcp"
+usageSnippet: "claude mcp add --transport http slack https://mcp.slack.com/mcp"
+copySnippet: |-
+  {
+    "slack": {
+      "url": "https://mcp.slack.com/mcp",
+      "transport": "http"
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "slack": {
+        "url": "https://mcp.slack.com/mcp",
+        "transport": "http"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Slack workspace with permission to connect MCP clients or request workspace-admin approval.
+  - MCP-capable client that supports remote HTTP MCP and Slack's OAuth flow, such as Claude.ai, Claude Code, Cursor, Perplexity, or another compatible client.
+  - Network access to `https://mcp.slack.com/mcp` using JSON-RPC 2.0 over Streamable HTTP.
+  - Slack app identity or partner-client path that satisfies Slack's MCP app requirements.
+  - OAuth approval plan for user-token scopes such as search, files, chat, channel history, group history, IM history, reactions, canvases, and user profile access.
+  - Workspace policy for whether the connected assistant may read public channels, private channels, DMs, multi-party DMs, files, canvases, user profiles, or message history.
+  - Human approval path for write actions such as sending messages, creating conversations, adding reactions, and creating or updating canvases.
+safetyNotes:
+  - >-
+    Slack's official MCP server is a remote server at `https://mcp.slack.com/mcp`
+    using Streamable HTTP. It is not an npm package or HeyClaude-hosted
+    artifact.
+  - >-
+    Slack documents that MCP clients must be backed by an approved Slack app
+    identity, and only directory-published apps or internal apps may use MCP.
+    Unlisted apps are not allowed for this flow.
+  - >-
+    Workspace admins can approve and manage MCP client integrations. Do not
+    bypass workspace approval, legal, security, or data-governance rules for AI
+    access to Slack.
+  - >-
+    The server can perform write actions when scopes allow it, including sending
+    messages, drafting messages, creating channels or conversations, adding
+    reactions, and creating or updating canvases.
+  - >-
+    Read tools can expose public channels, private channels, DMs, multi-party
+    DMs, files, canvases, user profiles, custom profile fields, user status,
+    channel metadata, message history, and thread history depending on scopes.
+  - >-
+    Do not connect Slack MCP alongside broad file, browser, shell, database, or
+    ticketing MCP servers unless cross-tool data movement has been reviewed.
+  - >-
+    Slack MCP tools are subject to Slack Web API rate limits by tool/action
+    type. Avoid unbounded searches, channel-history sweeps, message-posting
+    loops, and repeated canvas updates.
+  - >-
+    Require human review before posting to real channels, messaging users,
+    creating conversations, adding reactions in sensitive threads, or editing
+    shared canvases.
+privacyNotes:
+  - >-
+    Tool results can expose Slack messages, files, channel names, private
+    channel metadata, DMs, thread context, canvases, user profiles, email
+    addresses, custom profile fields, user statuses, emoji, and workspace
+    history.
+  - >-
+    OAuth user tokens and client secrets are sensitive credentials. Keep them
+    out of prompts, screenshots, shared MCP configs, logs, shell history,
+    issue comments, and repository files.
+  - >-
+    Search results and message history can contain customer data, credentials,
+    incident details, HR/legal discussions, security reports, unreleased product
+    plans, support escalations, and other confidential workspace content.
+  - >-
+    AI transcripts, MCP client logs, debug output, local caches, and downstream
+    tools may retain Slack content outside Slack's own retention controls.
+  - >-
+    Use test workspaces, limited channels, synthetic data, or narrow OAuth
+    scopes for demos, screenshots, development, and AI-assisted troubleshooting.
+  - >-
+    Review Slack, Salesforce, MCP client, AI-provider, and connected-tool
+    retention policies before giving an assistant access to real workspace
+    history or private conversations.
+tags:
+  - slack
+  - mcp
+  - collaboration
+  - messaging
+  - oauth
+keywords:
+  - slack mcp
+  - slack mcp server
+  - mcp.slack.com
+  - slack claude
+  - slack ai agent
+  - slack streamable http mcp
+  - slack oauth mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Slack MCP Server is Slack's official remote Model Context Protocol server. It
+lets Claude and other compatible MCP clients search Slack, retrieve messages,
+read channels and threads, send or draft messages, create conversations, add
+reactions, manage canvases, and inspect users through Slack-managed OAuth and
+workspace-admin approval.
+
+Slack documents the transport endpoint as:
+
+```text
+https://mcp.slack.com/mcp
+```
+
+The server uses JSON-RPC 2.0 over Streamable HTTP. Slack's docs explicitly note
+that SSE-based connections and Dynamic Client Registration are not supported at
+this time, so use a client that supports Slack's current remote MCP/OAuth path.
+
+## Source Review
+
+- https://docs.slack.dev/ai/slack-mcp-server/
+- https://slack.com/help/articles/48855576908307-Guide-to-the-Slack-MCP-server
+- https://docs.slack.dev/changelog/2026/05/13/new-mcp-tools/
+
+These sources were reviewed on **2026-06-04**. Prefer the live Slack docs over
+model memory for endpoint behavior, OAuth metadata, available clients, app
+identity requirements, scopes, rate limits, and tool coverage.
+
+## Features
+
+- Official Slack-hosted MCP server at `https://mcp.slack.com/mcp`.
+- Streamable HTTP transport with JSON-RPC 2.0.
+- OAuth-backed user-token flow using Slack OAuth endpoints and client-specific
+  authorization UX.
+- Workspace-admin managed approval for MCP client integrations.
+- Search tools for messages, files, users, public channels, private channels,
+  channel descriptions, and emoji.
+- Message tools for reading channels, reading threads, sending messages,
+  drafting messages, creating conversations, and adding reactions.
+- Canvas tools for creating, updating, reading, and exporting canvases as
+  markdown.
+- User tools for reading complete user profile information, custom profile
+  fields, statuses, and channel membership.
+- Slack Web API rate-limit behavior by MCP tool/action type.
+- Support path through partner-built clients such as Claude.ai, Claude Code,
+  Perplexity, and Cursor as listed by Slack.
+
+## Use Cases
+
+- Ask Claude to find prior decisions, release context, customer feedback, or
+  incident history across approved Slack channels.
+- Summarize long channels or threads before a follow-up meeting.
+- Draft a status update, release note, incident note, or team announcement for
+  human review before posting.
+- Create a project channel or group conversation after a human confirms the
+  audience and name.
+- Add reactions to acknowledge specific workflow events in low-risk channels.
+- Create or update canvases that summarize research, sprint plans, runbooks, or
+  project notes.
+- Inspect user profiles or channel membership when routing questions to the
+  right team.
+- Combine Slack context with other read-only tools after reviewing cross-tool
+  data movement.
+
+## Installation
+
+### Claude Code
+
+Add the remote MCP server with HTTP transport:
+
+```bash
+claude mcp add --transport http slack https://mcp.slack.com/mcp
+```
+
+Then follow your client's Slack OAuth flow and any workspace-admin approval
+steps. Verify the server appears in the MCP list:
+
+```bash
+claude mcp list
+```
+
+### Claude Desktop or Other MCP Clients
+
+Use the client-specific remote HTTP MCP configuration format. A generic shape is:
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "url": "https://mcp.slack.com/mcp",
+      "transport": "http"
+    }
+  }
+}
+```
+
+Restart or reconnect the client, complete Slack OAuth, and verify the scopes and
+workspace approval status before asking the assistant to read or write Slack
+content.
+
+## Requirements
+
+- Slack workspace and user account.
+- Admin-approved MCP client integration or permission to request approval.
+- Supported MCP client with remote HTTP transport and Slack OAuth support.
+- OAuth client/app identity path that satisfies Slack's fixed app ID
+  requirements.
+- User-token scopes matching the tools you intend to use.
+- Network access to `https://mcp.slack.com/mcp`.
+- Workspace data-governance policy covering AI access to public channels,
+  private channels, DMs, files, canvases, and user profiles.
+- Rate-limit and human-review policy for searches, message writes, reactions,
+  conversation creation, and canvas changes.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "slack": {
+      "url": "https://mcp.slack.com/mcp",
+      "transport": "http"
+    }
+  }
+}
+```
+
+For managed workspaces, confirm with Slack admins which app/client is approved,
+which scopes are enabled, and whether audit logs are being reviewed for MCP
+activity.
+
+## Security And Privacy Review
+
+- Start with the smallest scopes that satisfy the workflow. Avoid granting DMs,
+  private channels, files, canvases, user email, or write scopes until the use
+  case requires them.
+- Treat message posting and canvas edits as production writes. Ask the assistant
+  to draft first, then require a human to approve the exact target conversation
+  and message.
+- Avoid prompts that ask the assistant to sweep all channels, enumerate private
+  spaces, or summarize unrelated personal conversations.
+- Use Slack audit logs and app-management views to review MCP activity where
+  your plan supports it.
+- Keep Slack context out of public issues, PR bodies, screenshots, logs, and
+  downstream tools unless the content owner approved sharing.
+- Review cross-server flows before combining Slack with GitHub, Jira, Linear,
+  databases, browsers, filesystems, or shell tools.
+
+## Troubleshooting
+
+- **OAuth fails**: verify that the MCP client supports Slack's current OAuth
+  flow, the app/client is approved for the workspace, and the user has access to
+  the requested scopes.
+- **Client cannot connect**: confirm it supports Streamable HTTP MCP and is
+  configured with `https://mcp.slack.com/mcp`, not an SSE endpoint.
+- **Tool is missing or denied**: check the OAuth scopes enabled for the user
+  token and whether the workspace admin approved that capability.
+- **Search returns too little**: confirm channel membership, private-channel
+  access, search scopes, and date/user/content filters.
+- **Writes are unexpectedly broad**: require draft-first workflows and verify
+  channel, DM, canvas, or conversation targets before execution.
+- **Rate limits appear**: narrow the search, batch requests intentionally, and
+  avoid repeated autonomous loops over channels or threads.
+
+## Duplicate Check
+
+- No existing upstream content file uses the `slack-mcp-server` slug, Slack MCP
+  endpoint, or official Slack MCP documentation URLs.
+- Existing Slack notifier hooks and generic Slack mentions remain distinct
+  because this entry covers Slack's official remote MCP server, OAuth scopes,
+  Streamable HTTP endpoint, Slack tools, admin approval, and Slack-specific data
+  governance.
+
+## Editorial Disclosure
+
+This is a source-backed community content entry submitted by `oktofeesh1`.
+There is no paid placement, affiliate link, sponsorship, or maintainer-verified
+package artifact attached to this listing.

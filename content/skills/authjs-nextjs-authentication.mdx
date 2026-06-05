@@ -1,0 +1,307 @@
+---
+title: Auth.js Next.js Authentication Skill
+slug: authjs-nextjs-authentication
+category: skills
+description: >-
+  Add or maintain Auth.js authentication in a Next.js app with next-auth,
+  auth.ts, route handlers, providers, sessions, adapters, protected resources,
+  proxy or middleware behavior, deployment configuration, and migration review.
+cardDescription: >-
+  Add or maintain Auth.js in Next.js with providers, sessions, adapters,
+  protected routes, deployment settings, and migration checks.
+seoTitle: Auth.js Next.js Authentication Skill
+seoDescription: >-
+  Reusable AI skill for integrating and maintaining Auth.js or NextAuth.js in
+  Next.js apps using next-auth, auth.ts, providers, sessions, adapters,
+  protected resources, proxy or middleware, deployment config, and safety review.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://authjs.dev/"
+repoUrl: "https://github.com/nextauthjs/next-auth"
+documentationUrl: "https://authjs.dev/getting-started/installation?framework=next-js"
+downloadUrl: "https://github.com/nextauthjs/next-auth/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add next-auth@beta"
+usageSnippet: >-
+  Use this skill when a Next.js project needs Auth.js or NextAuth.js provider
+  setup, session access, route protection, adapter configuration, deployment
+  review, or v4/v5 migration planning.
+copySnippet: |-
+  # Trigger
+  "Apply the Auth.js Next.js authentication skill to this app."
+
+  # Required output
+  1) Current Next.js, Auth.js/NextAuth, provider, adapter, and session inventory
+  2) auth.ts, route handler, provider, session, and protection plan
+  3) OAuth callback, cookie, proxy/middleware, adapter, and deployment checklist
+  4) Safety, privacy, migration, secret, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://authjs.dev/"
+  - "https://authjs.dev/getting-started/installation?framework=next-js"
+  - "https://authjs.dev/getting-started/session-management/login"
+  - "https://authjs.dev/getting-started/session-management/protecting"
+  - "https://authjs.dev/getting-started/deployment"
+  - "https://authjs.dev/guides/edge-compatibility"
+  - "https://github.com/nextauthjs/next-auth"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js application with known App Router or Pages Router usage, package manager, deployment provider, and runtime targets."
+  - "Decision that Auth.js or NextAuth.js is the right fit for this app, especially when maintaining an existing install or requiring Auth.js-specific session behavior."
+  - "OAuth provider, credentials, callback URL, allowed redirect URL, domain, and local/preview/staging/production environment plan."
+  - "`AUTH_SECRET`, provider client IDs/secrets, adapter credentials, email provider credentials, and deployment secrets managed outside source control."
+  - "Session strategy decision covering database sessions, JWT sessions, stateless requirements, callback customization, token lifetime, and logout behavior."
+  - "Adapter and database plan if persistent users, accounts, sessions, verification tokens, or WebAuthn/passkey data are required."
+  - "Route protection plan for pages, route handlers, server components, API routes, proxy or middleware, and resource-level authorization close to data access."
+safetyNotes:
+  - "The download URL is the external `nextauthjs/next-auth` source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Auth.js is now part of Better Auth, and the official README recommends Better Auth for many new projects. Confirm why Auth.js remains the intended choice before adding it to a greenfield app."
+  - "Do not commit `AUTH_SECRET`, OAuth client secrets, adapter connection strings, email SMTP credentials, WebAuthn secrets, session tokens, cookies, or copied dashboard values."
+  - "Authentication changes can alter sign-in, sign-out, callback URLs, cookie names, session lifetime, authorization behavior, provider access, and account-linking semantics."
+  - "Proxy or middleware protection is not a substitute for checking authorization close to data access. Server actions, route handlers, loaders, and database queries still need session and permission checks."
+  - "Provider callbacks, JWT/session callbacks, adapter customizations, and account-linking rules can create authorization bypasses or identity confusion if reviewed only through the UI happy path."
+  - "Edge runtime, proxy, middleware, database adapters, and provider SDKs have compatibility constraints. Verify runtime support before moving auth code into edge-executed paths."
+  - "Test OAuth in non-production first. Callback URL mismatches, domain changes, preview deployments, and secret rotation can lock users out or route tokens to the wrong environment."
+privacyNotes:
+  - "Auth.js can process user profile data, email addresses, OAuth account IDs, provider tokens, refresh tokens, session tokens, cookies, adapter records, verification tokens, WebAuthn data, and callback payloads."
+  - "Auth callbacks, debug logs, server logs, failed sign-in logs, screenshots, issue reports, and AI prompts can expose provider IDs, token claims, user metadata, cookies, callback URLs, or database identifiers."
+  - "Use synthetic accounts and non-production providers for demos, public examples, screenshots, and AI-assisted troubleshooting."
+  - "Avoid pasting raw OAuth payloads, cookies, JWTs, session objects, adapter rows, production user records, or provider dashboard screenshots into prompts or public issues."
+  - "Review Auth.js, provider, database, deployment-platform, email-provider, analytics, and AI-assistant retention behavior before using real customer identity data in troubleshooting."
+tags:
+  - authjs
+  - nextauth
+  - nextjs
+  - authentication
+  - oauth
+keywords:
+  - "Auth.js Next.js authentication"
+  - "NextAuth.js Next.js"
+  - "next-auth"
+  - "Auth.js auth.ts"
+  - "Next.js OAuth providers"
+  - "Auth.js protected resources"
+  - "Auth.js migration"
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on the Auth.js homepage, Next.js installation guide,
+session login guide, protecting resources guide, deployment guide, edge
+compatibility guide, and `nextauthjs/next-auth` repository reviewed on
+**2026-06-04**. The current Auth.js docs show the Next.js package as
+`next-auth@beta`, recommend an `auth.ts` file that exports `handlers`,
+`signIn`, `signOut`, and `auth`, and document route handlers, session access,
+protected resources, provider setup, deployment environment variables, and edge
+compatibility considerations.
+
+The official project now states that Auth.js is part of Better Auth and that
+many new projects should consider Better Auth first. Keep that source fact in
+the recommendation instead of treating Auth.js and Better Auth as identical
+choices.
+
+## Retrieval Sources
+
+- https://authjs.dev/
+- https://authjs.dev/getting-started/installation?framework=next-js
+- https://authjs.dev/getting-started/session-management/login
+- https://authjs.dev/getting-started/session-management/protecting
+- https://authjs.dev/getting-started/deployment
+- https://authjs.dev/guides/edge-compatibility
+- https://github.com/nextauthjs/next-auth
+
+Prefer the live Auth.js docs and official repository over model memory for
+package names, provider APIs, route-handler exports, proxy or middleware
+guidance, adapter behavior, environment variables, deployment behavior, and
+migration guidance.
+
+## Scope Note
+
+Use this skill for Auth.js or NextAuth.js work in Next.js applications,
+especially existing apps, v4-to-v5 migration planning, provider additions,
+adapter review, session strategy changes, and resource-protection audits. It is
+not a generic authentication comparison, not a Clerk integration, and not a
+Better Auth setup guide.
+
+## Core Workflow
+
+1. Inventory the app: Next.js version, router mode, package manager, runtime
+   targets, deployment provider, `/src` layout, existing auth files, provider
+   usage, session strategy, adapter, protected routes, and environment files.
+2. Confirm why Auth.js or NextAuth.js is being used. For greenfield work,
+   explicitly compare the official Auth.js guidance about Better Auth before
+   proceeding.
+3. Identify the installed package and migration state: legacy `next-auth` v4,
+   Auth.js v5 beta, mixed docs, Pages Router examples, App Router examples, or
+   an adapter/provider upgrade.
+4. Add or update the framework package with the project package manager. For
+   current Auth.js Next.js docs, review `next-auth@beta` before applying it.
+5. Create or update `auth.ts` in the chosen project location. Export the route
+   handlers, `auth`, and sign-in/sign-out helpers needed by the app.
+6. Wire `app/api/auth/[...nextauth]/route.ts` or the equivalent route handler
+   to the exported `handlers` without duplicating provider configuration.
+7. Configure providers deliberately. Review OAuth app settings, callback URLs,
+   scopes, profile mapping, account linking, domain restrictions, local/preview
+   URLs, and production redirect URLs.
+8. Add `AUTH_SECRET` and provider secrets through local and deployment
+   environment configuration. Never place them in client bundles, examples, or
+   repository files.
+9. Choose session behavior. Document database sessions versus JWT sessions,
+   callback customization, refresh behavior, expiration, logout/reset behavior,
+   tenant or organization claims, and what must never be stored in the session.
+10. If an adapter is used, review schema ownership, migrations, database
+    connectivity, transaction behavior, indexes, user/account/session tables,
+    and production backup/rollback path.
+11. Protect resources at the right layer. Use `auth()` in server components,
+    route handlers, server actions, loaders, and data access paths instead of
+    relying only on navigation guards.
+12. Review proxy or middleware protection separately. Matchers should avoid
+    static assets and public auth routes, and authorization should still be
+    checked near sensitive data reads and writes.
+13. Check runtime compatibility before using edge, proxy, middleware, adapter,
+    provider SDK, crypto, or database code in constrained runtimes.
+14. Produce a validation plan covering sign-in, sign-out, callback URLs,
+    session reads, protected routes, unauthorized requests, adapter writes,
+    preview deployments, secret rotation, and rollback.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, deployment provider, and
+  runtime targets.
+- Current Auth.js or NextAuth.js version, package name, config location, route
+  handlers, provider list, adapter, and migration state.
+- OAuth provider dashboard settings, allowed callbacks, local URLs, preview
+  URLs, production domains, scopes, and ownership.
+- Session strategy, callback requirements, token lifetime, cookie behavior,
+  logout behavior, and tenant or role claims.
+- Database or adapter plan, migrations, backup/rollback path, and production
+  access model if persistent auth data is stored.
+- Route inventory covering public pages, authenticated pages, admin pages, API
+  routes, server actions, webhooks, background jobs, and data access paths.
+- Security and privacy requirements for user identity data, provider tokens,
+  logs, prompts, retention, and access control.
+
+## Production Rules
+
+- Never ship Auth.js changes without validating every provider callback URL in
+  local, preview, staging, and production. One wrong URL can break login or
+  send users through the wrong OAuth application.
+- Keep `AUTH_SECRET`, OAuth secrets, adapter credentials, SMTP credentials,
+  refresh tokens, cookies, session tokens, and dashboard exports out of source
+  control and prompts.
+- Do not store raw access tokens, refresh tokens, unnecessary profile payloads,
+  permissions, customer data, or provider responses in client-visible sessions.
+- Treat callbacks as security-sensitive code. Review `authorized`, JWT,
+  session, sign-in, redirect, and account-linking callbacks for denial cases,
+  tenant boundaries, and confused identity behavior.
+- Protect sensitive reads and writes close to the data access layer. Proxy or
+  middleware redirects are useful, but they are not enough for authorization.
+- Review adapter schema changes before applying them in production. Auth tables
+  often hold the records needed for account recovery and incident response.
+- Keep examples synthetic. Do not paste production session objects, provider
+  payloads, cookies, database rows, email addresses, or dashboard screenshots
+  into public issues or AI prompts.
+- Include a lockout recovery plan before rotating secrets, changing provider
+  IDs, moving domains, switching session strategy, or changing adapters.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for adding,
+  migrating, reviewing, and operating Auth.js or NextAuth.js in Next.js apps.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js codebases that touch `auth.ts`, route handlers, providers, sessions,
+  adapters, proxy or middleware, and deployment auth configuration.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for Auth.js and NextAuth.js maintenance.
+
+## Output Contract
+
+1. Source evidence: Auth.js docs and repository URLs reviewed, with date.
+2. Inventory: Next.js version, router mode, package version, auth config,
+   providers, adapter, sessions, protected resources, runtimes, and deployment.
+3. Recommendation: continue with Auth.js, migrate within Auth.js, migrate from
+   legacy NextAuth, or evaluate Better Auth for greenfield work.
+4. Implementation plan: package, `auth.ts`, route handlers, providers,
+   callbacks, sessions, adapter, protection points, proxy or middleware, and
+   environment variables.
+5. Safety and privacy review: secrets, cookies, provider tokens, callbacks,
+   adapters, logs, prompts, screenshots, user records, and retention.
+6. Validation checklist: login, logout, callback URLs, session reads,
+   unauthorized requests, protected routes, adapter writes, preview deploys,
+   edge/runtime behavior, and rollback.
+
+## Troubleshooting
+
+**Issue:** OAuth login redirects to the wrong environment
+
+**Fix:** Compare the provider dashboard callback URLs, `AUTH_URL` or inferred
+host behavior, deployment preview URL policy, reverse proxy headers, and the
+domain used by the browser during the callback.
+
+**Issue:** Session exists in one route but not another
+
+**Fix:** Check whether the route uses App Router or Pages Router, whether
+`auth()` is imported from the shared `auth.ts`, whether cookies are scoped to
+the current domain, and whether server/client session access is mixed.
+
+**Issue:** Protected pages are visible after adding proxy or middleware
+
+**Fix:** Review matcher patterns, static asset exclusions, public auth routes,
+and the `authorized` callback. Add server-side checks near the protected data
+read instead of relying only on redirects.
+
+**Issue:** Edge or proxy code fails after adding an adapter
+
+**Fix:** Review Auth.js edge compatibility guidance, database client runtime
+support, provider SDK dependencies, Node.js APIs, crypto usage, and whether the
+auth path must run in a Node.js runtime instead.
+
+**Issue:** Users get linked to the wrong account
+
+**Fix:** Audit provider IDs, email verification behavior, account-linking
+callbacks, sign-in callbacks, adapter rows, tenant claims, and any custom
+profile mapping before allowing account merge or login.
+
+## Duplicate And Source Review
+
+Current HeyClaude content includes dedicated Better Auth and Clerk Next.js
+skills, plus generic examples that mention NextAuth/Auth.js inside broader
+agents and tRPC workflows. There is no dedicated Auth.js, NextAuth.js,
+`nextauthjs/next-auth`, `next-auth@beta`, or Auth.js Next.js content entry.
+This skill is scoped to Auth.js/NextAuth.js installation, maintenance,
+providers, sessions, adapters, protected resources, deployment behavior, edge
+compatibility, and migration review, with an explicit note that Better Auth is a
+separate existing skill and the current Auth.js docs should guide greenfield
+decisions.
+
+## Editorial Disclosure
+
+This is a source-backed community content entry submitted by `oktofeesh1`.
+There is no paid placement, affiliate link, sponsorship, or maintainer-verified
+package artifact attached to this listing.

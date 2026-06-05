@@ -1,0 +1,196 @@
+---
+title: Migrate Cursor-Style Workflows to Claude Code
+slug: migrate-cursor-workflows-to-claude-code
+category: guides
+description: >-
+  A practical migration guide for moving Cursor-style rules, prompts, MCP
+  configuration, and team workflows into Claude Code memory, slash commands,
+  MCP, settings, and reviewable project conventions.
+cardDescription: Move Cursor-style AI coding workflows into Claude Code.
+seoTitle: Migrate Cursor-Style Workflows to Claude Code
+seoDescription: >-
+  Map Cursor project rules, user rules, MCP configuration, and repeated prompts
+  to Claude Code memory, slash commands, MCP, settings, and common terminal
+  workflows without copying stale context or secrets.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Inventory Cursor rules and MCP config, split durable guidance from temporary
+  prompts, move repeatable workflows into Claude Code slash commands, migrate
+  MCP access with least privilege, and pilot the result on one repository.
+prerequisites:
+  - A repository that already uses Cursor rules, prompt templates, MCP configuration, or editor-specific AI workflow conventions.
+  - Claude Code access in the target development environment.
+  - A list of team conventions that should remain durable after migration.
+  - Permission to review and move any MCP credentials, local tool access, or project instructions.
+safetyNotes:
+  - Do not copy old Cursor rules or MCP configuration wholesale. Review each item for stale instructions, broad tool access, embedded secrets, and editor-specific assumptions.
+  - Start migrated Claude Code workflows with read-only or advisory behavior before allowing tools to write files, run commands, or call external systems.
+  - Keep human review around public comments, issue actions, commits, and other repository state changes until the migrated workflow is proven stable.
+privacyNotes:
+  - Cursor rules, memories, prompts, and MCP files can contain internal architecture details, file paths, private package names, issue links, and credentials-adjacent configuration.
+  - Claude Code memory, slash commands, and MCP configuration may preserve or replay those details across sessions if they are copied without filtering.
+  - Remove secrets, customer data, private incident details, and local-only paths before putting migration output in shared project files.
+sourceUrls:
+  - "https://docs.cursor.com/context/rules"
+  - "https://docs.cursor.com/context/model-context-protocol"
+  - "https://code.claude.com/docs/en/memory"
+  - "https://code.claude.com/docs/en/slash-commands"
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/settings"
+  - "https://code.claude.com/docs/en/common-workflows"
+tags:
+  - claude-code
+  - cursor
+  - migration
+  - mcp
+  - slash-commands
+  - workflow-design
+keywords:
+  - migrate Cursor to Claude Code
+  - Cursor rules to Claude Code memory
+  - Cursor MCP to Claude Code MCP
+  - Claude Code migration guide
+  - Cursor-style workflow migration
+readingTime: 8
+difficultyScore: 55
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Migrating from Cursor-style workflows to Claude Code works best as a mapping
+exercise. Inventory the rules, prompts, MCP servers, and team habits you
+actually use. Keep durable project guidance in Claude Code memory or project
+instructions, move repeated prompts into slash commands, configure MCP with
+least privilege, and pilot the migration on one repository before broad rollout.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Inventory exists", "description": "Cursor rules, prompts, MCP configuration, and repeated workflows are listed"}
+- [ ] {"task": "Scope is chosen", "description": "The migration targets one repository or team workflow first"}
+- [ ] {"task": "Secrets are separated", "description": "Credentials and private local paths are not copied into shared files"}
+- [ ] {"task": "Claude Code surfaces are selected", "description": "Memory, slash commands, MCP, settings, or ordinary prompts are mapped deliberately"}
+- [ ] {"task": "Pilot plan exists", "description": "A maintainer can test the migrated workflow before team-wide adoption"}
+
+## Core Concepts Explained
+
+### Cursor rules are persistent prompt context
+
+Cursor project rules and user rules encode reusable guidance for the editor
+agent. During migration, treat each rule as a candidate for Claude Code project
+memory, user memory, a slash command, or ordinary documentation depending on
+how durable and reusable it is.
+
+### Not every rule should become memory
+
+Durable conventions belong in memory or project instructions. One-time
+debugging notes, stale decisions, generated summaries, and editor-specific UI
+instructions should be dropped or rewritten before migration.
+
+### Repeated prompts become slash commands
+
+If a Cursor workflow is really a repeatable prompt template, migrate it to a
+Claude Code slash command instead of burying it in broad project memory. This
+keeps invocation explicit and easier to review.
+
+### MCP access needs a fresh review
+
+Cursor and Claude Code both support MCP-style tool access, but credentials,
+transport, server scope, and tool permissions should be reviewed again during
+migration. Do not assume an MCP server is safe in a new client just because it
+worked in the old workflow.
+
+## Step-by-Step Migration
+
+1. **Inventory the current workflow.** List Cursor project rules, user rules,
+   legacy rule files, MCP configuration, repeated chat prompts, review
+   checklists, and team-specific conventions.
+
+2. **Classify each item.** Mark each item as durable guidance, repeated prompt,
+   live tool access, personal preference, temporary note, or stale instruction.
+
+3. **Map durable guidance to memory.** Move stable repository conventions into
+   Claude Code memory or project instructions. Keep them concise and remove
+   editor-specific wording.
+
+4. **Map repeated prompts to slash commands.** Convert recurring workflows such
+   as review summaries, release notes, triage prompts, or migration plans into
+   explicit Claude Code slash commands.
+
+5. **Map MCP servers deliberately.** Recreate MCP configuration from current
+   docs and secrets policy, not by blindly copying old JSON. Start with the
+   smallest tool set and least-privilege credentials.
+
+6. **Use settings for policy.** Put permission and environment policy in Claude
+   Code settings when the question is what Claude should be allowed to do, not
+   what prompt it should run.
+
+7. **Drop stale context.** Remove old issue status, obsolete branch names,
+   one-off debugging theories, and local-only paths before committing shared
+   migration files.
+
+8. **Pilot on one repository.** Ask Claude Code to perform a small representative
+   workflow, compare output with the old workflow, and adjust only the smallest
+   unclear rule or command.
+
+9. **Document the handoff.** Record what moved, what was intentionally dropped,
+   what MCP access remains disabled, and who owns future updates.
+
+## Migration Matrix
+
+| Cursor-style artifact | Claude Code destination | Review question |
+| --- | --- | --- |
+| Project rule | Project memory or instructions | Is it durable and repo-wide? |
+| User rule | User memory or settings | Is it personal rather than team policy? |
+| Repeated prompt | Slash command | Should a human invoke it explicitly? |
+| MCP server config | Claude Code MCP configuration | Are tools and credentials still least-privilege? |
+| Editor UI habit | Common workflow or docs | Does it still matter in a terminal workflow? |
+| Temporary chat memory | Drop or summarize | Is it still true and safe to keep? |
+
+## Review Checklist
+
+- [ ] {"task": "Rules are rewritten", "description": "Migrated guidance is concise, current, and not editor-specific"}
+- [ ] {"task": "Commands are explicit", "description": "Repeatable workflows live in slash commands instead of global memory"}
+- [ ] {"task": "MCP is least privilege", "description": "Servers expose only the tools and credentials needed for the workflow"}
+- [ ] {"task": "Secrets are omitted", "description": "No private token, local path, or customer data is copied into shared files"}
+- [ ] {"task": "Pilot is narrow", "description": "The first migrated workflow is tested on one repository or task type"}
+- [ ] {"task": "Rollback is clear", "description": "Team members know how to disable or replace the migrated surface"}
+
+## Troubleshooting
+
+- **Claude Code ignores migrated guidance**: check whether the guidance belongs
+  in memory, a project instruction, or an explicit slash command.
+- **The migrated workflow is too broad**: split durable conventions from
+  task-specific prompt steps.
+- **MCP tools expose too much**: disable the server, reduce exposed tools, and
+  reintroduce access only after a permission review.
+- **The team misses editor-specific behavior**: document the terminal equivalent
+  or keep the behavior as an explicit command instead of hidden context.
+- **The old rules contradict the current codebase**: drop stale rules and write
+  fresh guidance from current files and docs.
+
+## Duplicate Check
+
+This guide is a migration runbook from Cursor-style workflows to Claude Code.
+Existing entries cover Cursor as a tool, Claude Code as a tool, Claude-vs-Cursor
+comparisons, Cursor rule packs, and individual Claude Code surfaces. They do not
+provide a source-backed workflow for mapping Cursor rules, prompts, MCP config,
+and team habits into Claude Code memory, slash commands, MCP, and settings.
+
+## References
+
+- Cursor rules - https://docs.cursor.com/context/rules
+- Cursor MCP - https://docs.cursor.com/context/model-context-protocol
+- Claude Code memory - https://code.claude.com/docs/en/memory
+- Claude Code slash commands - https://code.claude.com/docs/en/slash-commands
+- Claude Code MCP - https://code.claude.com/docs/en/mcp
+- Claude Code settings - https://code.claude.com/docs/en/settings
+- Claude Code common workflows - https://code.claude.com/docs/en/common-workflows

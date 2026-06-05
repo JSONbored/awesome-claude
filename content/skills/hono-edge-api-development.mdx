@@ -1,0 +1,301 @@
+---
+title: Hono Edge API Development Skill
+slug: hono-edge-api-development
+category: skills
+description: >-
+  Build and review Hono TypeScript APIs for Cloudflare Workers, Bun, Deno,
+  Node.js, Vercel, Netlify, and other Web Standards runtimes with routing,
+  middleware, validation, RPC clients, OpenAPI generation, deployment checks,
+  and production safety review.
+cardDescription: >-
+  Build Hono TypeScript APIs with routes, middleware, validation, RPC clients,
+  OpenAPI contracts, and edge deployment checks.
+seoTitle: Hono Edge API Development Skill
+seoDescription: >-
+  Reusable AI skill for building and reviewing Hono APIs with TypeScript,
+  Web Standards Request/Response APIs, Cloudflare Workers, Bun, Deno, Node.js,
+  middleware, Zod validation, RPC clients, OpenAPI contracts, and deployment
+  safety checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://hono.dev"
+repoUrl: "https://github.com/honojs/hono"
+documentationUrl: "https://hono.dev/docs/"
+downloadUrl: "https://github.com/honojs/hono/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm create hono@latest"
+usageSnippet: >-
+  Use this skill when a TypeScript project needs a Hono API, route refactor,
+  Cloudflare Workers deployment, middleware stack, validation layer, RPC client,
+  OpenAPI contract, or production-readiness review.
+copySnippet: |-
+  # Trigger
+  "Apply the Hono edge API development skill to this service."
+
+  # Required output
+  1) Runtime, router, middleware, validation, auth, and deployment inventory
+  2) Hono route, app structure, validator, RPC/OpenAPI, and adapter plan
+  3) Production checklist for secrets, bindings, CORS, logs, errors, and tests
+  4) Safety, privacy, rollout, rollback, and compatibility notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://hono.dev/docs/"
+  - "https://hono.dev/docs/getting-started/cloudflare-workers"
+  - "https://hono.dev/docs/guides/validation"
+  - "https://hono.dev/docs/guides/rpc"
+  - "https://hono.dev/examples/zod-openapi"
+  - "https://github.com/honojs/hono"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "TypeScript project or new service with a selected runtime target, such as Cloudflare Workers, Bun, Deno, Node.js, Vercel, Netlify, or another Web Standards-compatible platform."
+  - "Decision to use Hono for HTTP routing, middleware composition, and runtime-portable Request/Response handling rather than a heavier framework."
+  - "Package manager, module format, TypeScript strictness, lint/test setup, and deployment provider identified before code generation."
+  - "Route inventory covering public routes, authenticated routes, webhooks, health checks, static assets, RPC endpoints, and admin-only operations."
+  - "Validation strategy for params, queries, headers, cookies, request bodies, responses, and shared schemas."
+  - "Auth, CORS, CSRF, rate-limit, logging, tracing, error-handling, and secret-management policy for the target runtime."
+  - "Platform binding plan for resources such as D1, KV, R2, Durable Objects, Queues, databases, caches, or external APIs when the service runs on an edge platform."
+safetyNotes:
+  - "The download URL is the external `honojs/hono` source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "`pnpm create hono@latest` or similar scaffolding commands create project files and may prompt for runtime/framework choices. Confirm the target directory and runtime before running them in an existing repo."
+  - "Hono apps often run at the edge where secrets, environment bindings, request metadata, body limits, streaming support, and Node.js API compatibility vary by platform."
+  - "Auth, CORS, cookie, CSRF, JWT, bearer-token, and middleware order mistakes can expose APIs or make browser clients fail in production."
+  - "Validation middleware can reject, coerce, or transform user input. Review schemas, defaults, unknown-key behavior, async validation, and error responses before shipping."
+  - "Generated OpenAPI documents and RPC clients become contracts. Review public route visibility, auth requirements, response schemas, and breaking-change impact before publishing them."
+  - "Webhooks, admin routes, background callbacks, and internal endpoints need explicit verification, idempotency, replay protection, and least-privilege secret handling."
+  - "Cloudflare Workers, Bun, Deno, Node.js, Vercel, and Netlify adapters do not expose identical runtime behavior. Test the exact adapter and deployment target instead of assuming local parity."
+privacyNotes:
+  - "Hono APIs can process request bodies, headers, cookies, JWT claims, bearer tokens, IP addresses, Cloudflare metadata, logs, traces, validation errors, database records, and webhook payloads."
+  - "Error handlers, request logs, access logs, debug middleware, AI prompts, screenshots, and issue reports can leak Authorization headers, cookies, session IDs, API keys, user records, and payload samples."
+  - "OpenAPI schemas, example responses, and RPC types may reveal internal route names, data models, tenant identifiers, admin endpoints, or unreleased API behavior."
+  - "Use synthetic payloads, fixture data, local test projects, and redacted logs for demos, bug reports, screenshots, and AI-assisted troubleshooting."
+  - "Review runtime-provider, database, logging, tracing, analytics, and AI-assistant retention policies before exposing real customer traffic or production logs to tooling."
+tags:
+  - hono
+  - api
+  - edge
+  - typescript
+  - cloudflare
+keywords:
+  - "Hono API development"
+  - "Hono edge API"
+  - "Hono Cloudflare Workers"
+  - "Hono TypeScript routes"
+  - "Hono Zod validation"
+  - "Hono RPC client"
+  - "Hono OpenAPI"
+readingTime: 8
+difficultyScore: 74
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on the Hono documentation hub, Cloudflare Workers getting
+started guide, validation guide, RPC guide, Zod OpenAPI example, official
+`honojs/hono` repository, and current npm metadata for `hono`,
+`@hono/zod-validator`, and `@hono/zod-openapi` reviewed on **2026-06-04**.
+The official project describes Hono as a web framework built on Web Standards,
+with deployment targets that include Cloudflare Workers, Bun, Deno, Node.js,
+Vercel, Netlify, Fastly, and other compatible runtimes.
+
+## Retrieval Sources
+
+- https://hono.dev/docs/
+- https://hono.dev/docs/getting-started/cloudflare-workers
+- https://hono.dev/docs/guides/validation
+- https://hono.dev/docs/guides/rpc
+- https://hono.dev/examples/zod-openapi
+- https://github.com/honojs/hono
+
+Prefer the live Hono docs and official repository over model memory for current
+scaffolding commands, runtime adapters, middleware APIs, validation packages,
+RPC client patterns, OpenAPI examples, and deployment behavior.
+
+## Scope Note
+
+Use this skill for Hono services, edge APIs, route migrations, middleware
+review, validation layers, typed RPC clients, OpenAPI contracts, and deployment
+readiness. It is not a generic backend-architecture agent, not the Cloudflare
+Workers AI skill, not a tRPC workflow, and not a replacement for
+runtime-specific security review.
+
+## Core Workflow
+
+1. Inventory the target runtime, package manager, TypeScript version, module
+   format, deployment provider, local dev command, test runner, and current API
+   framework.
+2. Confirm whether this is a new Hono app, an existing Hono service, or a
+   migration from Express, Fastify, Next.js route handlers, serverless
+   functions, or another router.
+3. Select the runtime adapter deliberately. Record whether the service will run
+   on Cloudflare Workers, Bun, Deno, Node.js, Vercel, Netlify, or another Hono
+   deployment target.
+4. Scaffold or update the Hono app structure without overwriting existing
+   routing, environment, test, or deployment files.
+5. Define route groups, base paths, health checks, webhooks, admin routes,
+   public routes, authenticated routes, and versioned APIs before writing
+   handlers.
+6. Add middleware in a reviewed order: error handling, request ID, logging,
+   security headers, CORS, auth, rate limiting, compression, validation, and
+   route-specific policies.
+7. Validate inputs at the boundary. Cover route params, query strings, headers,
+   cookies, JSON bodies, form data, and multipart uploads where applicable.
+8. Use `@hono/zod-validator` or another documented validator only after
+   confirming schema ownership, unknown-key behavior, coercion, defaults, and
+   error-response shape.
+9. Keep response contracts explicit. For public or client-consumed APIs,
+   document status codes, success shapes, error shapes, pagination, and
+   authentication requirements.
+10. If using Hono RPC, confirm client/server type sharing, route exports,
+    deployment URL handling, error behavior, and whether the public API contract
+    should remain stable.
+11. If publishing OpenAPI, use the documented `@hono/zod-openapi` path or a
+    project-approved equivalent, then review generated schemas for private
+    routes, auth requirements, examples, and breaking changes.
+12. Wire runtime bindings and secrets through the deployment platform rather
+    than hardcoding them in code or examples.
+13. Add tests that exercise route matching, validation failures, auth failures,
+    CORS behavior, webhooks, errors, and representative runtime bindings.
+14. Produce a rollout plan covering local smoke tests, preview deployment,
+    contract review, observability, rate limits, rollback, and migration
+    compatibility.
+
+## Required Inputs
+
+- Runtime target, deployment provider, package manager, TypeScript settings,
+  and whether the project is an app, API package, worker, or monorepo service.
+- Current API framework, route inventory, middleware inventory, auth model,
+  validation approach, and client contract requirements.
+- Platform bindings, databases, caches, queues, object storage, secrets,
+  environment names, and local emulation constraints.
+- Public API consumers, generated clients, OpenAPI consumers, webhooks,
+  internal clients, and compatibility requirements.
+- Error, logging, tracing, metrics, sampling, PII redaction, and data-retention
+  expectations.
+- Migration constraints, rollout window, fallback plan, and routes that must
+  remain backward compatible.
+
+## Production Rules
+
+- Do not assume Node.js APIs exist in edge runtimes. Check the selected Hono
+  adapter, runtime compatibility, and dependency behavior before adding
+  packages.
+- Keep secrets in platform secret stores. Never commit tokens, database URLs,
+  JWT secrets, webhook secrets, session cookies, or dashboard exports.
+- Put auth and authorization close to the route or business operation. Global
+  middleware can help, but admin, tenant, and resource-level checks still need
+  explicit review.
+- Treat CORS as a security and product compatibility setting. Avoid wildcard
+  origins for authenticated browser APIs unless the tradeoff is intentional and
+  documented.
+- Validate every untrusted input boundary and return predictable error shapes.
+  Do not leak raw validator errors that include private values.
+- Make webhook handlers idempotent and replay-resistant. Verify signatures
+  before parsing sensitive payloads when the provider supports it.
+- Review middleware order after every auth, CORS, body parsing, logging,
+  compression, or error-handling change.
+- For generated RPC or OpenAPI clients, document breaking-change policy and
+  test client compatibility before release.
+- Use synthetic request payloads and redacted logs in prompts, examples, issue
+  reports, PRs, and screenshots.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for Hono app
+  creation, route refactoring, middleware review, validation, RPC/OpenAPI
+  contracts, and deployment checks.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  TypeScript Hono services and edge APIs.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for Hono API work.
+
+## Output Contract
+
+1. Source evidence: Hono docs, examples, package metadata, and repository URLs
+   reviewed, with date.
+2. Service inventory: runtime, adapter, routes, middleware, auth, validation,
+   bindings, deployment environments, consumers, and tests.
+3. Implementation plan: Hono app structure, route groups, middleware order,
+   validators, error handling, RPC/OpenAPI choices, and deployment wiring.
+4. Safety and privacy review: secrets, logs, headers, cookies, PII,
+   cross-origin behavior, webhook verification, and retention risks.
+5. Validation plan: local tests, route smoke tests, runtime-adapter checks,
+   contract tests, preview deployment, rollback, and monitoring.
+
+## Troubleshooting
+
+### Route Works Locally But Fails After Deploy
+
+Check the selected adapter, runtime-specific exports, module format, route base
+path, environment bindings, and platform logs. Edge runtimes often differ from
+local Node.js behavior.
+
+### CORS Requests Fail In Browsers
+
+Review allowed origins, credentials mode, preflight headers, methods, and
+middleware order. Authenticated browser requests usually need a narrower CORS
+policy than public read-only APIs.
+
+### Validator Rejects Expected Requests
+
+Inspect route params, content type, request body shape, coercion rules,
+unknown-key behavior, async refinements, and whether the client sends JSON,
+form data, or multipart data.
+
+### RPC Client Types Are Wrong
+
+Confirm the app routes are exported in the documented pattern, the client uses
+the correct app type, the server and client packages resolve the same route
+definitions, and deployment URL configuration matches the runtime.
+
+### OpenAPI Output Exposes Internal Routes
+
+Review which routes are registered with OpenAPI metadata, remove internal or
+admin-only examples, mark auth requirements, and avoid real payload samples.
+
+## Prompt Starters
+
+- "Create a Hono API for this TypeScript service with route groups, validation,
+  CORS, error handling, and a Cloudflare Workers deployment checklist."
+- "Review this Hono app for middleware order, auth gaps, validation coverage,
+  runtime compatibility, and production logging risks."
+- "Add Hono RPC to this API and produce a client contract review with breaking
+  change risks."
+- "Generate an OpenAPI contract for these Hono routes using documented Hono
+  patterns, then flag any internal fields or private examples."
+
+## Duplicate Check
+
+This entry is scoped to Hono's official framework, docs, repository, validator
+middleware, RPC workflow, and OpenAPI example path. It is distinct from the
+Cloudflare Workers AI Edge Functions skill, generic backend agents, tRPC API
+skill, Zod Schema Validation skill, and broad frontend/full-stack agents.
+
+## Editorial Disclosure
+
+This catalog entry was drafted from official Hono documentation, official Hono
+repository metadata, and current npm package metadata. It is not an affiliate
+listing, paid placement, or maintainer-verified package bundle.

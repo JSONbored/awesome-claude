@@ -1,0 +1,223 @@
+---
+title: MCP Local Tool Access Rules
+slug: mcp-local-tool-access-rules
+category: rules
+description: >-
+  Source-backed rules for safely connecting MCP servers that expose local tools,
+  resources, prompts, roots, transports, credentials, files, and logs to AI
+  clients during active development sessions.
+cardDescription: >-
+  Keep MCP local tool access bounded with tool inventories, root limits,
+  transport checks, approval gates, credential separation, and privacy-safe logs.
+seoTitle: MCP Local Tool Access Rules
+seoDescription: >-
+  Practical MCP server safety rules for local tool access: tool inventories,
+  resource and prompt review, roots, transports, credentials, approvals,
+  logging, privacy, and merge blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/tools"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/resources"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/server/prompts"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/client/roots"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+installable: false
+usageSnippet: >-
+  Apply these rules before enabling, reviewing, or keeping an MCP server that
+  gives an AI client access to local files, commands, resources, prompts,
+  credentials, browser state, databases, or networked services.
+copySnippet: |-
+  You are reviewing MCP local tool access.
+
+  Rules:
+  1. Inventory tools, resources, prompts, roots, transports, credentials, logs,
+     and side effects before enabling the server.
+  2. Default to read-only and least privilege; allow writes, shell commands,
+     browser control, database mutations, and cloud actions only with explicit
+     approval.
+  3. Limit roots and environment variables to the smallest workspace needed for
+     the current task.
+  4. Treat stdio, HTTP, and remote transports as different trust boundaries;
+     do not expose local servers on a public interface without auth and review.
+  5. Disable or remove MCP access when the task ends, the server changes, or
+     the owner cannot explain what the tools can read and change.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - An MCP-capable client and the exact server configuration, command, package, repository, or endpoint being reviewed.
+  - A list of exposed tools, resource templates, prompts, roots, environment variables, credentials, and transport mode.
+  - Permission to disable the server, narrow roots, remove credentials, or require approval before risky tool calls.
+  - A safe local test workspace that excludes production credentials, customer data, private keys, and destructive targets.
+safetyNotes:
+  - "MCP tools are model-callable actions; a local server can read files, run commands, mutate databases, call APIs, control browsers, or write logs depending on its implementation."
+  - "Roots and transport settings are trust boundaries. Broad filesystem roots, public HTTP listeners, shared tokens, or remote endpoints can expand access beyond the intended task."
+  - "Disable risky tools or require explicit approval for writes, deletes, shell execution, browser automation, cloud actions, database mutations, and production-facing network calls."
+privacyNotes:
+  - "MCP resources, tool arguments, tool outputs, prompts, logs, traces, environment variables, file paths, package names, and retrieved records can enter the model context or local artifacts."
+  - "Do not connect an MCP server to secrets, customer data, private repositories, browsers, emails, calendars, cloud accounts, or production systems unless the data flow and retention policy are approved."
+  - "Redact logs and avoid storing raw tool outputs when they may contain credentials, proprietary code, user records, or private operational details."
+tags:
+  - mcp
+  - tool-access
+  - local-development
+  - least-privilege
+  - security
+  - privacy
+keywords:
+  - MCP local tool access rules
+  - MCP server safety rules
+  - Model Context Protocol least privilege
+  - MCP roots transport safety
+  - AI client local tool policy
+readingTime: 6
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI client connects to an MCP server that can expose
+local tools, resources, prompts, roots, credentials, or networked services.
+
+This is a runtime access policy. It is not only about whether a server is safe
+to install. It is about whether the server should remain enabled for the
+current task, with the current roots, transport, credentials, and approval
+rules.
+
+## Access Inventory
+
+Before enabling an MCP server, record what the client can see and what the
+server can do.
+
+1. **Tools.** List every model-callable action, its parameters, side effects,
+   timeout behavior, and whether it can read, write, delete, execute, or call
+   external services.
+2. **Resources.** List resource URI patterns, templates, cached data, dynamic
+   data sources, and whether resource contents can include secrets or private
+   records.
+3. **Prompts.** Review prompt templates for hidden instructions, stale project
+   policy, sensitive examples, or actions that encourage unsafe tool calls.
+4. **Roots.** Name the filesystem or workspace roots the client exposes and
+   why each root is needed for the task.
+5. **Transport.** Record whether the server uses stdio, local HTTP, streamable
+   HTTP, SSE, or a remote endpoint, and who can reach that channel.
+6. **Credentials.** List environment variables, tokens, config files, cookies,
+   browser profiles, SSH keys, cloud credentials, and service accounts the
+   server can access.
+7. **Logs and artifacts.** Identify where tool calls, prompts, outputs, traces,
+   and errors are stored.
+
+If any item is unknown, keep the server disabled or run it in a disposable test
+workspace until the owner can explain the access boundary.
+
+## Local Access Rules
+
+- Enable one MCP server for one clear job; avoid broad "utility" servers that
+  expose unrelated tools.
+- Default tools to read-only where possible.
+- Require explicit approval before writes, deletes, command execution, browser
+  automation, payments, emails, calendar changes, cloud mutations, database
+  changes, or production network calls.
+- Limit roots to the smallest directories needed for the task.
+- Do not expose home directories, credential folders, cloud config, browser
+  profiles, mail stores, password-manager exports, or production data by
+  default.
+- Separate development, staging, and production credentials; never pass broad
+  personal tokens when a scoped test token will work.
+- Treat public HTTP listeners, remote transports, and shared workstations as
+  higher risk than local stdio servers.
+- Review prompts and resources with the same care as tools because they can
+  inject instructions or reveal private context.
+- Disable the server when the task ends, when the package updates, or when the
+  server's exposed tool list changes.
+
+## Approval Gates
+
+Require a human approval gate before allowing MCP tool calls that can:
+
+- modify files outside the current worktree;
+- run shell commands, scripts, package managers, or interpreters;
+- connect to production systems or private customer data;
+- use browser, email, calendar, messaging, clipboard, screen, or accessibility
+  automation;
+- write to databases, queues, cloud storage, SaaS APIs, or billing systems;
+- change repository settings, secrets, CI, deployments, DNS, or release
+  automation;
+- export large tool outputs, logs, traces, or resource snapshots into the model
+  context.
+
+Approval should name the tool, target, expected side effect, rollback plan, and
+maximum scope. Do not approve a vague request such as "let the MCP server fix
+it" when the actual tool call can mutate local or remote state.
+
+## Merge Or Config Blockers
+
+Block enabling or merging MCP configuration until resolved when:
+
+- the exposed tools, resources, prompts, roots, or transport are not inventoried;
+- a server can write, delete, execute commands, or mutate external services
+  without an approval gate;
+- roots include sensitive directories that are not needed for the task;
+- credentials are broad, personal, unscoped, production-facing, or hard-coded;
+- a local HTTP server is reachable from untrusted networks;
+- logs or traces store raw secrets, customer records, prompts, or tool outputs;
+- package updates changed tool behavior but the server was not reviewed again;
+- the server owner cannot explain how to disable, revoke, or rotate access.
+
+## Review Checklist
+
+- [ ] {"task": "Tools inventoried", "description": "Every exposed MCP tool has a known purpose, parameter shape, side effect, and approval requirement"}
+- [ ] {"task": "Resources reviewed", "description": "Resource templates and returned data are checked for secrets, private records, and unnecessary breadth"}
+- [ ] {"task": "Prompts safe", "description": "Prompt templates do not smuggle unsafe instructions, stale policy, or sensitive examples"}
+- [ ] {"task": "Roots minimal", "description": "Filesystem roots are limited to the task workspace and exclude sensitive directories"}
+- [ ] {"task": "Transport bounded", "description": "stdio, local HTTP, remote HTTP, or SSE access is matched to the trust boundary and network exposure"}
+- [ ] {"task": "Credentials scoped", "description": "Tokens and environment variables are least-privilege, revocable, and separate from production credentials"}
+- [ ] {"task": "Logs redacted", "description": "Tool outputs, traces, errors, and prompt artifacts avoid raw secrets and private user data"}
+
+## Troubleshooting
+
+- **The tool list is too broad:** disable the server and re-enable only the
+  specific server or profile needed for the current task.
+- **The client needs a whole repository root:** exclude credential folders,
+  generated secrets, private data dumps, and unrelated sibling projects before
+  exposing the root.
+- **A server update changed behavior:** treat it as a new access review; compare
+  the tool list, prompts, resources, transport, and credential requirements.
+- **A tool call needs production access:** use a break-glass approval path,
+  time-bound credentials, dry-run output, and rollback notes.
+- **Logs contain private data:** stop sharing the log, rotate exposed secrets if
+  needed, and configure redaction before reconnecting the server.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, hooks, skills, MCP entries, open PRs, and closed
+PR history for MCP safety, local tool access, server threat modeling, MCP roots,
+tools, resources, prompts, transports, authorization, and least privilege.
+
+Adjacent content includes the pre-installation MCP threat-modeling guide, the
+MCP server auth and least-privilege build guide, MCP server hardening skills,
+FastMCP review skills, and local-first AI dev stack guidance. This entry is
+distinct because it is a portable rules policy for active local MCP tool access:
+what to inventory, what to approve, how to bound roots and transports, when to
+disable access, and how to keep tool outputs and logs privacy-safe during an
+AI-client session.
+
+## Sources
+
+- Model Context Protocol specification - https://modelcontextprotocol.io/specification/2025-06-18
+- MCP tools specification - https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- MCP resources specification - https://modelcontextprotocol.io/specification/2025-06-18/server/resources
+- MCP prompts specification - https://modelcontextprotocol.io/specification/2025-06-18/server/prompts
+- MCP roots specification - https://modelcontextprotocol.io/specification/2025-06-18/client/roots
+- MCP transports specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/transports
+- MCP security best practices - https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices

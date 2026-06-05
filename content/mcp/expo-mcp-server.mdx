@@ -1,0 +1,274 @@
+---
+title: Expo MCP Server for Claude
+slug: expo-mcp-server
+category: mcp
+description: >-
+  Official Expo-hosted remote MCP server for connecting Claude and other MCP
+  clients to Expo documentation, Expo SDK guidance, EAS builds, EAS workflows,
+  TestFlight crash and feedback data, React Native DevTools, and simulator
+  automation for Expo projects.
+cardDescription: >-
+  Connect Claude to Expo docs, EAS builds, EAS workflows, TestFlight context,
+  React Native DevTools, and simulator automation.
+seoTitle: Expo MCP Server for Claude
+seoDescription: >-
+  Use the official Expo MCP Server with Claude Code, Codex, Cursor, VS Code, or
+  other remote MCP clients to search Expo docs, manage compatible dependencies,
+  inspect and trigger EAS builds, run EAS workflows, review TestFlight crashes,
+  and automate local simulator checks.
+author: Expo
+authorProfileUrl: "https://expo.dev"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://expo.dev"
+documentationUrl: "https://docs.expo.dev/eas/ai/mcp/"
+repoUrl: "https://github.com/expo/expo"
+installable: true
+installCommand: "claude mcp add --transport http expo https://mcp.expo.dev/mcp"
+usageSnippet: "Ask Claude to use Expo MCP to inspect the latest failed EAS iOS build, summarize the relevant logs, and suggest the smallest safe fix before rerunning anything."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "expo": {
+        "url": "https://mcp.expo.dev/mcp",
+        "transport": "http"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "expo": {
+        "url": "https://mcp.expo.dev/mcp",
+        "transport": "http"
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Expo account that can authenticate to the projects, builds, workflows, and EAS resources the assistant should access.
+  - Expo project on the latest supported Expo SDK, or a plan to upgrade before relying on current MCP capabilities.
+  - MCP-capable client with remote Streamable HTTP support, such as Claude Code, Codex, Cursor, VS Code, or another compatible client.
+  - OAuth or Expo access-token authentication path approved for the project and organization.
+  - EAS project identifier or app full name for build and workflow tools.
+  - Connected GitHub repository and valid EAS workflow files before asking the assistant to trigger builds or workflows.
+  - Optional local capability setup with Expo SDK 54 or later, `expo-mcp` installed as a dev dependency, Expo CLI login, and a running Expo dev server.
+  - macOS host and iOS simulator when using iOS local automation capabilities.
+  - Human approval policy for dependency installs, workflow file changes, build triggers, build cancellations, app-store submissions, and simulator automation.
+safetyNotes:
+  - >-
+    Expo MCP Server is an official remote MCP server hosted at
+    `https://mcp.expo.dev/mcp`. It is not a HeyClaude-hosted package.
+  - >-
+    The remote server uses OAuth-backed authentication. Do not paste Expo
+    access tokens, usernames, passwords, or OAuth callback material into
+    prompts, screenshots, public MCP configs, shell history, issue comments, or
+    committed files.
+  - >-
+    Build and workflow tools can trigger, cancel, inspect, validate, and submit
+    EAS operations when the authenticated account has permission. Treat those
+    as production-impacting actions for real apps.
+  - >-
+    `build_submit` can submit finished builds to app stores when the project is
+    configured for that path. Require explicit human confirmation before any
+    store submission, release-channel change, or production distribution step.
+  - >-
+    The dependency helper uses Expo's recommended install path for compatible
+    package versions. Review generated dependency changes before committing or
+    running the app.
+  - >-
+    Local capabilities require installing `expo-mcp`, logging into Expo CLI,
+    and starting the dev server with `EXPO_UNSTABLE_MCP_SERVER=1`. Review this
+    environment before enabling local automation in shared machines, CI, or
+    sensitive app projects.
+  - >-
+    Simulator automation tools can tap screens, inspect views, take
+    screenshots, collect logs, and open React Native DevTools. Keep them scoped
+    to test apps, local simulators, or approved debugging sessions.
+  - >-
+    Expo documents current local limitations, including one development server
+    connection at a time, iOS local capability support limited to simulators,
+    and iOS local capability support on macOS hosts.
+privacyNotes:
+  - >-
+    Tool results can expose Expo account data, project identifiers, app names,
+    build history, workflow runs, workflow logs, build logs, artifacts,
+    TestFlight crash reports, TestFlight feedback, simulator screenshots,
+    device logs, route maps, and source-derived app structure.
+  - >-
+    Expo states that data sent to Expo MCP Server is not used to train AI
+    models and that the server does not run an AI model itself, but connected
+    MCP clients and model providers may have separate retention and training
+    policies.
+  - >-
+    Local capabilities can proxy data from the development machine through
+    Expo MCP Server before returning it to the connected MCP client, including
+    screenshots and simulator-derived state.
+  - >-
+    Build logs, workflow logs, crash data, and app feedback may contain
+    customer data, user identifiers, stack traces, API endpoints, environment
+    names, release metadata, screenshots, or secrets accidentally printed by
+    the app.
+  - >-
+    Expo access tokens, generated credentials, app-store metadata, signing
+    setup, and project secrets should stay in secret managers or approved MCP
+    client credential stores, not prompts or repository files.
+  - >-
+    Use demo apps, synthetic accounts, simulator data, and non-production EAS
+    projects for screenshots, examples, validation, and AI-assisted
+    troubleshooting.
+tags:
+  - expo
+  - mcp
+  - eas
+  - react-native
+  - mobile
+keywords:
+  - Expo MCP
+  - Expo MCP Server
+  - mcp.expo.dev
+  - Expo Claude Code
+  - Expo Codex MCP
+  - EAS build MCP
+  - React Native DevTools MCP
+  - Expo simulator automation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Expo MCP Server is Expo's official remote Model Context Protocol server for AI
+development workflows around Expo and React Native apps. It lets Claude and
+other MCP-capable clients fetch current Expo documentation, install
+Expo-compatible libraries, inspect and operate EAS builds and workflows, review
+TestFlight crash or feedback context, and, when local capabilities are enabled,
+interact with an Expo app running in a simulator.
+
+Expo documents the remote server endpoint as:
+
+```text
+https://mcp.expo.dev/mcp
+```
+
+Use it as a remote Streamable HTTP MCP server with OAuth, then add local
+capabilities only for projects where simulator automation and local development
+state are appropriate.
+
+## Source Review
+
+- https://docs.expo.dev/eas/ai/mcp/
+- https://expo.dev/changelog/mcp-build-and-workflows
+- https://github.com/expo/expo
+- https://www.npmjs.com/package/expo-mcp
+
+These sources were reviewed on **2026-06-04**. Prefer the live Expo docs over
+model memory for the current endpoint, authentication flow, available tools,
+plan requirements, local capability setup, SDK requirements, and limitations.
+
+## Features
+
+- Official Expo-hosted remote MCP server at `https://mcp.expo.dev/mcp`.
+- Streamable HTTP setup for Claude Code, Codex, Cursor, VS Code, and other MCP
+  clients with remote MCP support.
+- OAuth authentication using Expo account credentials or an Expo personal
+  access token through the client flow.
+- Expo documentation search and page-reading tools for current SDK, Expo
+  Router, CNG, deep linking, libraries, workflows, and platform guidance.
+- Dependency helper that uses `npx expo install` semantics for known
+  Expo-compatible package versions.
+- EAS Workflow tools for creating workflow files, validating workflow YAML,
+  listing runs, inspecting run status, fetching logs, triggering runs, and
+  cancelling running workflows.
+- EAS Build tools for listing builds, checking build status, fetching build
+  logs, triggering builds, cancelling queued or running builds, and submitting
+  finished builds to app stores.
+- TestFlight crash and feedback tools for debugging recent iOS beta reports.
+- Optional local capabilities through the `expo-mcp` dev dependency and an Expo
+  dev server started with `EXPO_UNSTABLE_MCP_SERVER=1`.
+- Local tools for screenshots, view lookup by React Native testID, tap
+  automation, app log collection, React Native DevTools, and Expo Router
+  sitemap introspection.
+
+## Use Cases
+
+- Ask Claude to search current Expo docs before changing Expo Router, deep
+  linking, native modules, push notifications, camera, SQLite, or CNG setup.
+- Add an Expo library with compatible dependency versions and review the patch
+  before committing it.
+- Investigate a failed EAS build by listing recent builds, fetching the failed
+  build logs, and summarizing the smallest likely fix.
+- Create or validate an EAS Workflow file before committing it under
+  `.eas/workflows/`.
+- Trigger a known EAS workflow from an approved git ref after a human confirms
+  the workflow name, app identifier, and release impact.
+- Review TestFlight crash reports or screenshot feedback during mobile QA.
+- Use simulator screenshots and tap automation to verify a UI fix in an Expo
+  development build.
+- Inspect an Expo Router sitemap to confirm the app's route tree before
+  changing navigation, linking, or auth boundaries.
+
+## Installation
+
+### Claude Code
+
+Add the remote MCP server with HTTP transport:
+
+```bash
+claude mcp add --transport http expo https://mcp.expo.dev/mcp
+```
+
+Then run `/mcp` in Claude Code and complete Expo authentication.
+
+### Codex
+
+Add the server to Codex with the Expo-documented remote endpoint:
+
+```bash
+codex mcp add expo --url https://mcp.expo.dev/mcp
+```
+
+Complete the OAuth flow with the Expo account or access token that has the
+least privilege needed for the project.
+
+### Optional Local Capabilities
+
+For local simulator and React Native DevTools capabilities, install the local
+capability provider in an Expo SDK 54+ project and start the dev server with
+MCP enabled:
+
+```bash
+npx expo install expo-mcp --dev
+npx expo whoami || npx expo login
+EXPO_UNSTABLE_MCP_SERVER=1 npx expo start
+```
+
+Restart or reconnect the MCP server after starting or stopping the development
+server so your client sees the refreshed local tools.
+
+## Verification Checklist
+
+- Confirm the MCP client lists the `expo` server after authentication.
+- Ask the server to search or read an Expo documentation page before making a
+  code change.
+- Use a non-production project to test build, workflow, and TestFlight queries.
+- Require human confirmation before any `build_run`, `build_cancel`,
+  `build_submit`, `workflow_run`, or `workflow_cancel` request.
+- For local automation, run against a simulator or demo project first and
+  inspect screenshots, tap targets, and collected logs before sharing them.
+- Review generated dependency, workflow, and app-code changes before commit.
+
+## Duplicate Check
+
+This entry is scoped to Expo's official remote MCP server and optional official
+local capability provider. It is distinct from generic mobile app developer
+rules, React Native guidance, Playwright browser automation, Storybook MCP, and
+third-party Expo documentation MCP wrappers.
+
+## Editorial Disclosure
+
+This catalog entry was drafted from Expo's official documentation, Expo's
+official changelog, and official package/repository metadata. It is not an
+affiliate listing, paid placement, or maintainer-verified package bundle.

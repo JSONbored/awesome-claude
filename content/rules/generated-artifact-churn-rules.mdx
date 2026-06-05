@@ -1,0 +1,224 @@
+---
+title: Generated Artifact Churn Rules for Registry Repositories
+slug: generated-artifact-churn-rules
+category: rules
+description: >-
+  Source-backed rules for registry repositories that must keep contributor PRs
+  focused on source files while generated indexes, feeds, downloads, search
+  data, README output, and previews are rebuilt by trusted automation.
+cardDescription: >-
+  Prevent generated artifact churn by requiring source-only PRs, reproducible
+  generation, generated-file marking, diff triage, and maintainer-owned rebuilds.
+seoTitle: Generated Artifact Churn Rules for Registry Repositories
+seoDescription: >-
+  Practical generated artifact churn rules for registry repositories: source-only
+  submissions, generated-file marking, reproducible rebuilds, maintainer
+  automation, noisy diff triage, and privacy-safe artifacts.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://git-scm.com/docs/gitattributes"
+sourceUrls:
+  - "https://git-scm.com/docs/gitattributes"
+  - "https://github.com/github-linguist/linguist/blob/main/docs/overrides.md"
+  - "https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github"
+  - "https://reproducible-builds.org/docs/definition/"
+installable: false
+usageSnippet: >-
+  Apply these rules before accepting a registry PR that modifies generated
+  indexes, public data feeds, search manifests, README output, package bundles,
+  downloads, previews, or other artifacts derived from raw source entries.
+copySnippet: |-
+  You are reviewing generated artifact churn in a registry repository.
+
+  Rules:
+  1. Contributor PRs should change the raw source entry, not generated indexes,
+     feeds, downloads, README output, or previews.
+  2. Generated artifacts need a reviewed source input, a deterministic command,
+     and a trusted automation path.
+  3. Mark generated files so reviewers can distinguish source intent from build
+     output noise.
+  4. Block merge when generated output changes without the source file or
+     generator change that explains it.
+  5. Rebuild artifacts after merge in maintainer automation unless the project
+     explicitly asks contributors to include them.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A registry repository with raw source entries and derived artifacts such as feeds, indexes, README sections, previews, search data, downloads, or public JSON.
+  - A documented generation command, build job, or maintainer workflow that can reproduce generated outputs from source.
+  - A file-classification convention such as `.gitattributes`, comments, path naming, or review labels for generated files.
+  - Permission to request a source-only resubmission when generated artifact churn hides the actual content change.
+safetyNotes:
+  - "Generated artifacts can hide unrelated rewrites, stale data, broken provenance, checksum drift, or accidental inclusion of private metadata."
+  - "Do not trust a generated diff unless the reviewed source input, generator version, and command or workflow are known."
+  - "Block PRs that mix raw content changes with broad generated output churn unless repository policy explicitly requires contributor-generated artifacts."
+privacyNotes:
+  - "Generated registry artifacts can copy private source paths, timestamps, account names, API responses, prompt excerpts, logs, screenshots, package metadata, or reviewer notes into public files."
+  - "Review generated output for accidental disclosure before publishing downloads, search indexes, README sections, feeds, or previews."
+  - "Prefer synthetic examples and public metadata in source entries so downstream generated files do not amplify private context."
+tags:
+  - generated-artifacts
+  - registry-quality
+  - source-only-prs
+  - reproducible-generation
+  - gitattributes
+  - review-churn
+keywords:
+  - generated artifact churn rules
+  - registry repository source only PRs
+  - generated files review checklist
+  - maintainer generated artifacts
+  - reproducible registry outputs
+readingTime: 6
+difficultyScore: 37
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when reviewing a registry repository where raw source entries
+produce many derived files. Examples include public data feeds, category
+indexes, search manifests, README sections, Raycast or plugin exports, package
+bundles, generated previews, and static-site data.
+
+Generated artifacts are useful, but they are a poor place to review contributor
+intent. The source entry should explain what changed. Generated output should be
+reproducible from that source and rebuilt by the trusted path the project
+expects.
+
+## Artifact Classification
+
+Classify a changed file before reviewing content.
+
+1. **Source file.** The human-authored entry, config, rules, guide, command, or
+   source document that reviewers should inspect for intent.
+2. **Generator code.** The script, package, workflow, or template that turns
+   source files into derived artifacts.
+3. **Generated artifact.** A file rebuilt from source or generator code, such as
+   indexes, feeds, bundles, generated docs, snapshots, registry JSON, or README
+   sections.
+4. **Build cache or transient output.** Local output that should not be
+   committed unless the repository explicitly tracks it.
+
+When the category is unclear, ask the contributor or maintainer to identify the
+source of truth before approving the diff.
+
+## Source-Only Rules
+
+- Contributor content PRs should add or update exactly the raw source files the
+  issue asks for.
+- Generated artifacts should stay out of contributor PRs unless the repository
+  explicitly requires them.
+- A generated file change without a source input change is a merge blocker until
+  the generator or source explanation is found.
+- A source file change that causes massive generated churn should be reviewed as
+  a source change first, then rebuilt in maintainer automation.
+- Do not accept "I ran the build" as enough evidence when the repository policy
+  says generated output is maintainer-owned.
+
+## Generated File Marking
+
+Generated files should be easy for reviewers and platforms to recognize.
+
+- Use `.gitattributes` or repository conventions to mark generated paths when
+  appropriate.
+- Keep generated paths predictable, such as `public/data/**`, `dist/**`,
+  `generated/**`, `snapshots/**`, or repository-specific output directories.
+- Add a short generated-file header only when the file format and project policy
+  support it.
+- Keep source and generated files in separate paths so reviewers can filter
+  noisy output.
+- Update file classification when a generated path becomes hand-authored source
+  or vice versa.
+
+## Reproducibility Rules
+
+Generated artifacts are reviewable only when their provenance is clear.
+
+- Name the command, workflow, or build job that regenerates the artifact.
+- Record the source input path or generator code path that explains the output.
+- Avoid machine-local timestamps, absolute paths, random ordering, host-specific
+  metadata, and environment-dependent output when possible.
+- Pin or document generator versions when output format matters.
+- If generation is intentionally non-deterministic, keep it out of routine
+  contributor PRs and let maintainers publish it through a controlled path.
+
+## Reviewer Rules
+
+- Review raw source first, generated output second.
+- Compare generated artifact changes against the source input that produced
+  them.
+- Ask for a source-only resubmission when generated churn hides a small content
+  change.
+- Treat generator or workflow changes as code changes, not content-only
+  submissions.
+- Confirm that generated artifacts do not include private metadata, local paths,
+  credentials, timestamps, or stale source URLs.
+- Do not merge broad generated rewrites to fix unrelated lint, formatting,
+  ordering, or timestamp changes in a content PR.
+
+## Do Not Merge When
+
+- the PR includes README output, registry feeds, search data, package bundles,
+  previews, or generated JSON when the issue asks for one source file;
+- generated artifacts changed but the source entry, generator code, or command
+  is missing;
+- generated output includes local paths, private identifiers, secret-like
+  values, prompt excerpts, internal reviewer notes, or stale source metadata;
+- the generated diff is mostly timestamp, ordering, formatting, or checksum
+  churn that reviewers cannot reproduce;
+- the contributor changed generator code and content in one PR without explicit
+  maintainer approval;
+- a closed one-shot submission is retried by force-pushing generated fixes
+  instead of opening a clean source-only PR.
+
+## Review Checklist
+
+- [ ] {"task": "Source changed", "description": "The PR changes the raw source entry or source input requested by the issue"}
+- [ ] {"task": "Generated output excluded", "description": "Generated feeds, indexes, README output, previews, bundles, and snapshots are absent unless project policy requires them"}
+- [ ] {"task": "Generator known", "description": "Any generated artifact has a named command, workflow, or generator path"}
+- [ ] {"task": "Diff is reproducible", "description": "Generated output avoids unexplained timestamps, random ordering, local paths, and environment-specific metadata"}
+- [ ] {"task": "Files are classified", "description": "Generated paths are marked or conventionally separated so reviewers can filter churn"}
+- [ ] {"task": "Privacy checked", "description": "Generated files do not expose secrets, private paths, prompts, logs, account IDs, or reviewer notes"}
+
+## Troubleshooting
+
+- **The project requires generated files:** include the generation command,
+  source input, generator version, and a note that repository policy requires
+  the artifacts.
+- **The generated diff is huge:** split source changes from generator changes,
+  then let maintainers rebuild artifacts in a separate automation run.
+- **The source entry looks correct but generated data is stale:** merge the
+  source-only PR only if project policy says generated data is rebuilt after
+  merge.
+- **The artifact order changes every run:** stabilize sorting or keep the output
+  out of contributor PRs until the generator is deterministic.
+- **A generated file contains private data:** stop normal review, remove the
+  value at the source, rebuild, and check secondary artifacts before publishing.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, hooks, skills, commands, registry
+quality code, submission gate code, open PRs, and closed PR history for
+generated artifact churn, source-only PRs, generated file review, registry
+artifact policy, large generated diffs, README refresh output, and source-backed
+content submissions.
+
+Adjacent content includes a source-backed content PR guide, documentation
+freshness rules, generated-diff hooks, and submission gate code that enforces
+single-source-file shape. This rules entry is distinct because it gives portable
+do/don't behavior for reviewers and contributors deciding when generated
+artifact churn should block or be moved to maintainer automation.
+
+## References
+
+- Git gitattributes documentation: https://git-scm.com/docs/gitattributes
+- GitHub Linguist overrides: https://github.com/github-linguist/linguist/blob/main/docs/overrides.md
+- GitHub changed-file display customization: https://docs.github.com/en/repositories/working-with-files/managing-files/customizing-how-changed-files-appear-on-github
+- Reproducible Builds definition: https://reproducible-builds.org/docs/definition/

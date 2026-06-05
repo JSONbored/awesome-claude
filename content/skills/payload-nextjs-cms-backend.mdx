@@ -1,0 +1,278 @@
+---
+title: Payload Next.js CMS Backend Skill
+slug: payload-nextjs-cms-backend
+category: skills
+description: >-
+  Add Payload to a Next.js app with code-first collections, admin UI, database
+  adapters, access control, Local API usage, uploads, migrations, and production
+  CMS safety review.
+cardDescription: >-
+  Add Payload to Next.js with collections, admin UI, database adapters, access
+  control, Local API usage, and production checks.
+seoTitle: Payload Next.js CMS Backend Skill
+seoDescription: >-
+  Reusable AI skill for integrating Payload CMS with Next.js using payload,
+  @payloadcms/next, payload.config.ts, database adapters, Local API, REST,
+  GraphQL, auth, access control, uploads, migrations, and deployment review.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/payloadcms/payload"
+documentationUrl: "https://payloadcms.com/docs/getting-started/installation"
+downloadUrl: "https://github.com/payloadcms/payload/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm i payload @payloadcms/next"
+usageSnippet: >-
+  Use this skill when a Next.js project needs Payload collections, admin panel,
+  content APIs, auth, access control, uploads, database adapters, migrations, or
+  Local API usage from React Server Components.
+copySnippet: |-
+  # Trigger
+  "Apply the Payload Next.js CMS backend skill to this app."
+
+  # Required output
+  1) Current Next.js, database, content model, auth, and file-storage inventory
+  2) Payload package, app route group, config, collection, adapter, and API plan
+  3) Access control, Local API, upload, migration, and deployment checklist
+  4) Safety, privacy, editor-data, secret, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://payloadcms.com/docs/getting-started/what-is-payload"
+  - "https://payloadcms.com/docs/getting-started/installation"
+  - "https://payloadcms.com/docs/configuration/overview"
+  - "https://payloadcms.com/docs/local-api/overview"
+  - "https://github.com/payloadcms/payload"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js application or migration branch with a supported Next.js version, Node.js runtime, and package manager."
+  - "Database adapter decision for MongoDB, Postgres, SQLite, or another currently supported Payload adapter."
+  - "Content model plan for collections, globals, fields, relationships, drafts, versions, localization, and editor workflows."
+  - "`PAYLOAD_SECRET`, database connection strings, storage credentials, email credentials, and deployment secrets managed through local, preview, staging, and production configuration."
+  - "Admin panel route, public site route group, API route, REST/GraphQL exposure, and Local API usage plan."
+  - "Access control, authentication, role, tenant, editor, preview, and publishing-workflow requirements."
+  - "File upload, image processing, media storage, migration, backup, and rollback plan for production content."
+safetyNotes:
+  - "The download URL is Payload's external source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Payload installation can add backend routes, an admin panel, database adapters, generated types, migrations, REST/GraphQL APIs, uploads, and auth surfaces; review the resulting route map before merging."
+  - "Do not commit `PAYLOAD_SECRET`, database URLs, S3-compatible storage keys, email provider credentials, webhook secrets, OAuth secrets, or copied dashboard values."
+  - "Run migrations, schema changes, seed scripts, collection rewrites, file moves, and adapter changes only against the intended environment after backup and rollback review."
+  - "The Payload Local API can bypass network boundaries and has access-control options that must be set deliberately; do not use `overrideAccess` casually in user-facing routes."
+  - "Admin users, access rules, field visibility, upload permissions, live preview URLs, and draft/publish workflows are authorization surfaces that need tests."
+  - "If GraphQL or REST APIs are exposed, review depth, select/populate behavior, relationship traversal, hidden fields, rate limits, and authentication before production use."
+  - "Uploads and image processing can read local files, write object storage, generate derivatives, and expose media URLs; validate file types, sizes, access rules, and storage retention."
+privacyNotes:
+  - "Payload can store editor accounts, customer content, drafts, versions, media files, metadata, auth records, access-control context, API responses, and admin activity."
+  - "Local API calls, seed scripts, build logs, migration logs, previews, screenshots, issue reports, and AI prompts can expose private content, hidden fields, user records, upload paths, or database details."
+  - "Use synthetic content, fake users, and non-production media for examples, demos, bug reports, screenshots, and AI-assisted troubleshooting."
+  - "Avoid sending full documents, unpublished drafts, user records, media binaries, access tokens, object-storage keys, or production exports into prompts or public issues."
+  - "Review Payload, database, storage, deployment, analytics, email-provider, and AI-assistant retention policies before using real editor or customer content."
+tags:
+  - payload
+  - nextjs
+  - cms
+  - admin-panel
+  - backend
+keywords:
+  - "Payload Next.js CMS"
+  - "Payload CMS backend"
+  - "@payloadcms/next"
+  - "payload.config.ts"
+  - "Payload Local API"
+  - "Payload access control"
+  - "Payload database adapter"
+readingTime: 8
+difficultyScore: 80
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Payload's official overview, installation docs,
+configuration docs, Local API docs, and `payloadcms/payload` repository reviewed
+on **2026-06-04**. The current docs describe Payload as a Next.js full-stack
+framework with a code-first config, React admin panel, automatic database
+schema, REST and GraphQL APIs, Local API access, auth, access control, uploads,
+live preview, and migrations. The installation docs currently show
+`payload @payloadcms/next`, optional rich-text/image/GraphQL packages, and
+database adapters such as MongoDB, Postgres, and SQLite.
+
+## Retrieval Sources
+
+- https://payloadcms.com/docs/getting-started/what-is-payload
+- https://payloadcms.com/docs/getting-started/installation
+- https://payloadcms.com/docs/configuration/overview
+- https://payloadcms.com/docs/local-api/overview
+- https://github.com/payloadcms/payload
+
+Prefer the live Payload docs and official repository over model memory for
+supported Next.js versions, Node.js requirements, adapter packages, route group
+structure, config options, migration behavior, Local API defaults, and
+deployment guidance.
+
+## Scope Note
+
+Use this skill for Payload-backed content, admin, media, and backend work inside
+Next.js applications. It is not a generic CMS comparison, not a replacement for
+content governance, and not permission to expose editor data, admin routes, or
+production media without explicit access-control review.
+
+## Core Workflow
+
+1. Inventory the current Next.js version, Node.js runtime, package manager,
+   router structure, `/src` usage, app route groups, existing CMS/data layer,
+   auth provider, file storage, API routes, and deployment platform.
+2. Confirm whether Payload is being added to an existing Next.js app, scaffolded
+   with `create-payload-app`, or migrated from another CMS or internal admin
+   backend.
+3. Check the current Payload installation requirements for supported Next.js
+   versions, Node.js version, package manager support, database compatibility,
+   and any cache-component limitations before editing the app.
+4. Add `payload` and `@payloadcms/next` with the project package manager, then
+   select only the needed optional packages such as rich text, image
+   processing, GraphQL, or upload-related dependencies.
+5. Choose the database adapter deliberately. Document MongoDB, Postgres, SQLite,
+   or another adapter package, connection string handling, migration workflow,
+   local/preview/staging/production separation, and backup path.
+6. Add or review the Payload route group and required app files without
+   overwriting unrelated frontend routes. Keep the public app route group,
+   Payload admin/API route group, layouts, middleware, and route handlers clear.
+7. Create or review `payload.config.ts` with collections, globals, fields,
+   database adapter, auth collections, upload collections, admin settings,
+   access rules, hooks, plugins, localization, and TypeScript output paths.
+8. Model content from real editorial workflows: drafts, versions, slugs,
+   relationships, localization, media, redirects, SEO fields, preview URLs,
+   publishing approvals, and migration needs.
+9. Review access control at collection, field, operation, tenant, role, and
+   preview boundaries. Treat editor roles and admin permissions as production
+   authorization logic, not UI configuration.
+10. Use the Local API deliberately from React Server Components, route handlers,
+    seed scripts, hooks, and access-control functions. Pass request context when
+    transactions or access checks require it.
+11. Review `overrideAccess`, `showHiddenFields`, `depth`, `select`, `populate`,
+    pagination, document locks, and file upload options before using Local API
+    calls in user-facing paths.
+12. Produce a rollout plan covering migrations, generated types, seeds,
+    admin-user setup, uploads, storage, preview URLs, REST/GraphQL exposure,
+    backups, rollback, monitoring, and editor smoke tests.
+
+## Required Inputs
+
+- Next.js version, Node.js version, package manager, router structure, and
+  deployment provider.
+- Current CMS, admin panel, database, auth, media storage, and API architecture.
+- Payload setup path: new scaffold, existing app integration, migration, or
+  template adaptation.
+- Database adapter, connection strings, migration ownership, backup plan, and
+  environment separation.
+- Content model: collections, globals, fields, relationships, drafts, versions,
+  uploads, localization, editor workflows, and preview behavior.
+- Access model: admin users, public readers, editors, publishers, tenant roles,
+  hidden fields, protected media, and API permissions.
+- API exposure plan for Local API, REST, GraphQL, custom route handlers, hooks,
+  webhooks, and background jobs.
+
+## Production Rules
+
+- Never add Payload routes without reviewing the full route map. Admin, REST,
+  GraphQL, upload, preview, and custom route handlers must have intentional
+  auth and access behavior.
+- Keep `PAYLOAD_SECRET`, database credentials, storage keys, email credentials,
+  webhook secrets, and auth provider credentials out of source control and
+  client bundles.
+- Treat Payload access control as security-critical code. Test positive and
+  negative cases for public reads, editor writes, admin-only actions, tenant
+  isolation, field-level visibility, and hidden fields.
+- Use the Local API with explicit access decisions. The default server-side
+  power is useful, but user-facing calls should not bypass access checks by
+  accident.
+- Review generated migrations, generated types, seed scripts, and adapter
+  changes before applying them to staging or production.
+- Validate upload collections for MIME type, file size, image processing,
+  storage bucket, derivative generation, filename behavior, public URL exposure,
+  and delete/retention rules.
+- Keep examples and AI prompts synthetic. Do not paste unpublished content,
+  admin screenshots, media URLs, user records, database exports, or production
+  migration logs into public channels.
+- Include rollback limits honestly. Some content/schema/media changes require a
+  restore from backup or a forward-fix migration rather than a clean revert.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for planning,
+  implementing, reviewing, and operating Payload-backed Next.js CMS/admin
+  features.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js codebases that add Payload config, collections, adapters, admin UI,
+  uploads, or content APIs.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for Payload CMS and admin-backend work.
+
+## Output Contract
+
+1. Source evidence: Payload docs and repository URLs reviewed, with date.
+2. Inventory: Next.js/runtime versions, route groups, CMS/data layer, auth,
+   storage, APIs, deployment, and current content model.
+3. Implementation plan: packages, app files, route groups, config, collections,
+   database adapter, generated types, migrations, uploads, and APIs.
+4. Safety and privacy review: secrets, admin routes, access control, Local API
+   defaults, hidden fields, uploads, logs, prompts, and retention.
+5. Validation plan: local build, admin login, collection CRUD, access-control
+   negative tests, Local API behavior, upload behavior, migration checks, and
+   deployment smoke tests.
+6. Rollout plan: environment separation, backup, migration/apply order, editor
+   testing, monitoring, rollback, and content-owner sign-off.
+
+## Troubleshooting
+
+- **Payload install fails**: verify Node.js, supported Next.js version range,
+  package manager, peer dependency guidance, and database adapter package.
+- **Admin routes conflict with the app**: inspect route groups, layouts,
+  middleware, and copied Payload app files before moving public frontend routes.
+- **Local API exposes hidden or unauthorized data**: review `overrideAccess`,
+  `showHiddenFields`, `select`, `populate`, `depth`, `user`, and request
+  context for the call site.
+- **Migrations or generated types drift**: regenerate from the current config,
+  review generated SQL or artifacts, and confirm whether the repo treats them
+  as source-owned or generated output.
+- **Uploads work locally but fail in production**: verify storage adapter,
+  bucket credentials, file-size limits, MIME allowlists, image processing,
+  public URL configuration, and deletion/retention behavior.
+- **Preview or draft content leaks**: review preview URL signing, draft access,
+  published filters, role checks, CDN caching, and screenshot/log handling.
+
+## Duplicate Check
+
+- No existing upstream content file uses the `payload-nextjs-cms-backend` slug
+  or official Payload documentation/repository URLs.
+- Existing Next.js, database, auth, upload, and generic admin/backend entries
+  remain distinct because this skill is specifically scoped to Payload's
+  Next.js integration, Payload config, database adapters, Local API, admin
+  panel, uploads, access control, and CMS rollout safety.
+
+## Editorial Disclosure
+
+This is a source-backed community content entry submitted by `oktofeesh1`.
+There is no paid placement, affiliate link, sponsorship, or maintainer-verified
+package artifact attached to this listing.

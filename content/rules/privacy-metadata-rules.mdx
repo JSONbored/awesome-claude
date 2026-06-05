@@ -1,0 +1,203 @@
+---
+title: Privacy Metadata Rules
+slug: privacy-metadata-rules
+category: rules
+description: >-
+  Source-backed rules for AI workflow directories that need consistent privacy
+  metadata before accepting entries that touch prompts, files, local tools,
+  hosted services, telemetry, generated artifacts, or personal data.
+cardDescription: >-
+  Review AI workflow directory entries for complete privacy metadata: data
+  touched, execution surface, retention, sharing, provenance, and reviewer notes.
+seoTitle: Privacy Metadata Rules for AI Workflow Directories
+seoDescription: >-
+  Practical privacy metadata rules for AI workflow directories: disclose data
+  touched, local and hosted execution surfaces, retention, sharing, provenance,
+  and reviewer-visible privacy notes.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://w3c.github.io/dpv/2.3/dpv/"
+sourceUrls:
+  - "https://w3c.github.io/dpv/2.3/dpv/"
+  - "https://www.w3.org/TR/vocab-dcat-3/"
+  - "https://www.w3.org/TR/vocab-duv/"
+  - "https://www.w3.org/TR/prov-o/"
+  - "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/"
+installable: false
+usageSnippet: >-
+  Apply these rules before accepting an AI workflow directory entry that reads
+  prompts, code, files, browser state, tickets, logs, datasets, credentials,
+  telemetry, hosted services, generated artifacts, or personal data.
+copySnippet: |-
+  You are reviewing privacy metadata for an AI workflow directory entry.
+
+  Rules:
+  1. Identify the data touched before judging usefulness.
+  2. Record whether the workflow runs locally, in a hosted service, through an
+     MCP server, through a browser, or through a third-party API.
+  3. Name what may be retained, logged, exported, shared, or generated.
+  4. Require privacy notes when prompts, files, secrets, personal data, logs,
+     telemetry, or customer-like examples can be exposed.
+  5. Do not merge entries with vague "no privacy risk" claims when the workflow
+     reads private context or sends data to another service.
+  6. Keep provenance and review dates visible so users know how fresh the
+     privacy metadata is.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A directory entry or submission that describes an AI workflow, tool, MCP server, hook, skill, command, collection, guide, or hosted service.
+  - Permission to request edits when privacy notes, source links, data categories, or execution surfaces are missing.
+  - Access to source documentation for the tool or workflow, including where it runs and what data it reads or transmits.
+  - A review place for recording privacy-relevant assumptions, unknowns, and last-checked dates.
+safetyNotes:
+  - "Privacy metadata is a reviewer aid, not proof that a workflow is safe or compliant for every jurisdiction or organization."
+  - "Escalate entries that touch regulated data, customer records, credentials, browser state, production systems, or private repositories."
+  - "Do not let generated descriptions replace source-backed privacy notes; require the submitter to identify actual data paths."
+privacyNotes:
+  - "The review itself can expose private repo names, tool config, prompt examples, customer-like fixtures, logs, screenshots, or vendor account details."
+  - "Avoid copying secrets, private prompts, personal data, or proprietary datasets into public metadata examples."
+  - "Record unknowns honestly instead of filling gaps with guessed retention, sharing, or telemetry behavior."
+tags:
+  - privacy-metadata
+  - directory-review
+  - data-provenance
+  - ai-workflows
+  - source-backed-review
+  - disclosure
+keywords:
+  - privacy metadata rules
+  - AI workflow directory privacy notes
+  - source-backed privacy metadata
+  - data touched review checklist
+  - AI tool retention disclosure
+readingTime: 6
+difficultyScore: 36
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when reviewing privacy metadata for an AI workflow directory
+entry. The goal is to make privacy-relevant facts visible before users install,
+copy, run, recommend, or submit a workflow.
+
+This is not a legal compliance checklist. It is an editorial rule set for
+directory maintainers and contributors: name the data touched, name where it
+goes, name what is retained or unknown, and keep the evidence fresh.
+
+## Required Metadata
+
+Every entry that can touch private context should answer these questions.
+
+1. **What data is touched?** Prompts, source files, generated files, logs,
+   tickets, browser state, clipboard content, secrets, embeddings, telemetry,
+   datasets, screenshots, transcripts, model outputs, or customer-like examples.
+2. **Where does it run?** Local shell, local app, browser extension, MCP server,
+   hosted API, cloud worker, SaaS integration, CI job, notebook, or background
+   automation.
+3. **Where can data go?** Model provider, tool vendor, third-party API, local
+   disk, logs, vector store, issue tracker, pull request, metrics backend,
+   public artifact, or generated documentation.
+4. **What is retained?** Nothing known, local files only, request logs,
+   transcripts, analytics, cache entries, uploaded files, embeddings, traces, or
+   unknown retention.
+5. **Who controls access?** The local user, project workspace, organization
+   account, vendor account, shared team space, public repository, or downstream
+   service.
+6. **What evidence supports this?** Documentation, source code, package metadata,
+   configuration examples, policy pages, changelog notes, or maintainer review.
+
+If a field is unknown, write "unknown" with the reason. Do not silently omit it.
+
+## Review Rules
+
+- Require privacy notes when the workflow reads or writes private context.
+- Distinguish local execution from hosted processing.
+- Distinguish user-controlled storage from vendor-controlled retention.
+- Describe generated artifacts that can leak private data, such as summaries,
+  screenshots, traces, notebooks, reports, indexes, embeddings, or README output.
+- Record provenance for privacy claims: source URL, reviewed file, policy page,
+  or maintainer note.
+- Include a last-reviewed date or freshness note when privacy behavior depends
+  on external documentation.
+- Keep examples synthetic. Do not use real secrets, account IDs, customer names,
+  private repository names, or production incidents as sample metadata.
+
+## Privacy Note Patterns
+
+Use direct, observable wording. Good privacy notes say what may be exposed and
+where.
+
+- "This workflow reads local source files and sends selected snippets to a
+  hosted model provider."
+- "The command writes generated reports to the repository; review them before
+  committing because they may include private file paths or excerpts."
+- "The MCP server can access issue titles and comments through the configured
+  account permissions."
+- "Retention behavior is not documented in the source material; treat uploaded
+  prompts and files as vendor-processed until confirmed."
+- "Telemetry can include command names, timestamps, project identifiers, or
+  anonymized usage counts; do not include secrets in labels or run names."
+
+Avoid vague notes such as "privacy safe," "no risk," "secure by default," or
+"does not store data" unless the source evidence says exactly what is not stored.
+
+## Directory Entry Checklist
+
+- [ ] {"task": "Data touched", "description": "The entry names prompts, files, logs, browser state, secrets, telemetry, generated artifacts, or personal data it may touch"}
+- [ ] {"task": "Execution surface", "description": "The entry says whether processing is local, hosted, browser-based, MCP-based, CI-based, or third-party API-based"}
+- [ ] {"task": "Data movement", "description": "The entry names where data can be sent, stored, logged, cached, exported, or published"}
+- [ ] {"task": "Retention known", "description": "Retention, logging, cache, transcript, trace, artifact, or unknown behavior is stated plainly"}
+- [ ] {"task": "Source evidence", "description": "Privacy claims are backed by current docs, source code, package metadata, policy pages, or maintainer review"}
+- [ ] {"task": "Freshness noted", "description": "The reviewer can tell when the privacy metadata was last checked or why it is still current"}
+
+## Do Not Merge When
+
+- the entry says "no privacy impact" but reads prompts, files, logs, browser
+  state, secrets, customer-like examples, or generated artifacts;
+- hosted processing is described as local-only;
+- telemetry, retention, uploads, caches, traces, or generated reports are
+  omitted even though the workflow can create them;
+- private examples are copied into public metadata;
+- vendor claims about privacy are repeated without a source URL or reviewed
+  source file;
+- unknown retention or sharing behavior is hidden instead of disclosed.
+
+## Troubleshooting
+
+- **The docs do not mention retention:** say retention is unknown and require a
+  maintainer review before presenting the workflow as privacy-preserving.
+- **A tool runs locally but calls a hosted model:** describe both surfaces.
+- **The entry has privacy notes but no source evidence:** ask for the policy,
+  repo file, package docs, or configuration page that supports the notes.
+- **Generated artifacts may include private data:** require a review step before
+  committing or publishing those artifacts.
+- **The submitter wants to keep metadata short:** keep the card short, but put
+  the privacy facts in the entry body where users can inspect them.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, hooks, skills, MCP entries,
+statuslines, registry quality code, submission policy code, and recent PRs for
+privacy metadata rules, privacy notes, data touched review, retention metadata,
+privacy policy routing, data provenance, and AI workflow directory privacy.
+
+Adjacent content includes a privacy-first research collection and registry
+quality helpers that score privacy metadata. This rules entry is distinct
+because it gives portable do/don't behavior for contributors and reviewers who
+must decide whether any AI workflow directory entry has enough privacy metadata
+to merge.
+
+## References
+
+- W3C Data Privacy Vocabulary: https://w3c.github.io/dpv/2.3/dpv/
+- W3C Data Catalog Vocabulary: https://www.w3.org/TR/vocab-dcat-3/
+- W3C Dataset Usage Vocabulary: https://www.w3.org/TR/vocab-duv/
+- W3C PROV-O provenance ontology: https://www.w3.org/TR/prov-o/
+- Dublin Core DCMI Metadata Terms: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/

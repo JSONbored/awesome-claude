@@ -1,0 +1,396 @@
+---
+title: ShellCheck Static Analysis Hook for Claude Code
+slug: shellcheck-static-analysis-hook
+category: hooks
+description: >-
+  Read-only Claude Code PostToolUse hook that runs ShellCheck diagnostics after
+  Claude writes or edits shell scripts, reporting shell portability, quoting,
+  expansion, error-handling, and command-safety issues without modifying files.
+cardDescription: >-
+  Run read-only ShellCheck diagnostics after Claude edits shell scripts, without
+  auto-installing tools or rewriting files.
+seoTitle: ShellCheck Static Analysis Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code hook for running ShellCheck after shell script edits
+  using an installed ShellCheck binary, safe matcher scope, read-only
+  diagnostics, and explicit privacy guidance for source excerpts and file paths.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://www.shellcheck.net/"
+documentationUrl: "https://github.com/koalaman/shellcheck/wiki"
+repoUrl: "https://github.com/koalaman/shellcheck"
+installable: true
+installCommand: |-
+  mkdir -p .claude/hooks
+  hook_path=.claude/hooks/shellcheck-static-analysis.sh
+  tmp_path="$(mktemp "${hook_path}.tmp.XXXXXX")" || exit 1
+  cat > "$tmp_path" <<'SHELLCHECK_STATIC_ANALYSIS_HOOK'
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+    exit 0
+  fi
+
+  case "$file_path" in
+    *.sh|*.bash|*.bats|*.ksh) ;;
+    *)
+      first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+      case "$first_line" in
+        '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*) ;;
+        *) exit 0 ;;
+      esac
+      ;;
+  esac
+
+  if ! command -v shellcheck >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: install shellcheck to enable shell diagnostics." >&2
+    exit 0
+  fi
+
+  echo "ShellCheck hook: checking $file_path" >&2
+  shellcheck --format=gcc "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "ShellCheck hook: diagnostics found. Review quoting, expansion, portability, and error-handling issues before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+  SHELLCHECK_STATIC_ANALYSIS_HOOK
+  chmod 755 "$tmp_path"
+  rm -f -- "$hook_path"
+  mv -- "$tmp_path" "$hook_path"
+usageSnippet: >-
+  Install ShellCheck locally, save the script as
+  `.claude/hooks/shellcheck-static-analysis.sh`, and configure it as a
+  PostToolUse hook for Write, Edit, and MultiEdit.
+copySnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/shellcheck-static-analysis.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PostToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "./.claude/hooks/shellcheck-static-analysis.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -uo pipefail
+
+  input="$(cat)"
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: jq is required to parse Claude Code hook input." >&2
+    exit 0
+  fi
+
+  tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+  file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+    exit 0
+  fi
+
+  case "$file_path" in
+    *.sh|*.bash|*.bats|*.ksh) ;;
+    *)
+      first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+      case "$first_line" in
+        '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*) ;;
+        *) exit 0 ;;
+      esac
+      ;;
+  esac
+
+  if ! command -v shellcheck >/dev/null 2>&1; then
+    echo "ShellCheck hook skipped: install shellcheck to enable shell diagnostics." >&2
+    exit 0
+  fi
+
+  echo "ShellCheck hook: checking $file_path" >&2
+  shellcheck --format=gcc "$file_path"
+  status=$?
+
+  if [ "$status" -ne 0 ]; then
+    echo "ShellCheck hook: diagnostics found. Review quoting, expansion, portability, and error-handling issues before asking Claude to continue." >&2
+  fi
+
+  exit "$status"
+trigger: PostToolUse
+prerequisites:
+  - "Claude Code project where hooks are allowed by user or project policy."
+  - "ShellCheck installed on the machine, for example through the operating system package manager or the official ShellCheck release path."
+  - "`jq` available on the machine to parse Claude Code hook input."
+  - "A reviewed `.claude/settings.json` or user settings hook configuration for `Write`, `Edit`, and `MultiEdit`."
+  - "Agreement that shell diagnostics should be blocking or interrupting when ShellCheck reports issues."
+safetyNotes:
+  - "This hook runs `shellcheck --format=gcc` only. It does not add `--external-sources`, install dependencies, rewrite files, run scripts, source scripts, or execute commands from the edited file."
+  - "The hook exits non-zero when ShellCheck reports diagnostics. Depending on Claude Code settings, this can interrupt the workflow until a human reviews the output."
+  - "Keep the hook scoped to write/edit tools. Running ShellCheck after every tool call can add noise and slow down shell-heavy projects."
+  - "ShellCheck warnings are static-analysis findings, not proof that a script is safe. Review command execution, permissions, inputs, secrets, paths, and deployment context separately."
+  - "ShellCheck can follow sourced files when configured to do so. This script avoids `--external-sources` by default so it does not traverse additional project files unexpectedly."
+  - "Do not use this hook as a blanket command blocker. It is intended to surface diagnostics after Claude edits shell files, not to approve or deny arbitrary terminal commands."
+privacyNotes:
+  - "ShellCheck diagnostics can include file paths, line numbers, command names, variable names, comments, and source snippets from edited shell scripts."
+  - "Hook output can be retained in Claude Code logs, terminal scrollback, screenshots, support tickets, issue comments, or AI transcripts."
+  - "Avoid pasting proprietary deployment scripts, customer paths, secret variable names, generated tokens, hostnames, or production command output into public comments or prompts."
+  - "Use synthetic examples when sharing ShellCheck findings publicly, and review diagnostics before exposing private repository structure."
+sourceUrls:
+  - "https://www.shellcheck.net/"
+  - "https://github.com/koalaman/shellcheck"
+  - "https://github.com/koalaman/shellcheck/wiki"
+  - "https://github.com/koalaman/shellcheck/wiki/Directive"
+tags:
+  - shellcheck
+  - shell
+  - bash
+  - claude-code
+  - hooks
+keywords:
+  - "ShellCheck hook"
+  - "Claude Code ShellCheck hook"
+  - "shellcheck static analysis"
+  - "PostToolUse shell lint"
+  - "bash diagnostics hook"
+  - "shell script safety hook"
+readingTime: 7
+difficultyScore: 61
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+This hook runs ShellCheck after Claude Code writes or edits a shell-like file.
+It is intentionally read-only: it reports diagnostics and exits non-zero when
+ShellCheck finds issues, but it does not run the edited script, install
+packages, source files, rewrite files, or enable external-source traversal.
+
+Use it when a project contains shell scripts and you want immediate feedback on
+quoting, command substitution, globbing, portability, error handling, variable
+expansion, unsafe patterns, and common shell mistakes after Claude edits a file.
+
+## Source Review
+
+- https://www.shellcheck.net/
+- https://github.com/koalaman/shellcheck
+- https://github.com/koalaman/shellcheck/wiki
+- https://github.com/koalaman/shellcheck/wiki/Directive
+
+These sources were reviewed on **2026-06-04**. Prefer the live ShellCheck site,
+wiki, and repository over model memory for current installation options,
+supported shells, directives, diagnostic behavior, rule explanations, and
+configuration guidance.
+
+## Requirements
+
+- Claude Code hooks enabled in user or project settings.
+- ShellCheck installed locally and available on `PATH`.
+- `jq` installed locally so the script can read Claude Code hook input.
+- A reviewed hook configuration scoped to `Write`, `Edit`, and `MultiEdit`.
+
+## Hook Configuration
+
+Add the hook command to `.claude/settings.json` or the appropriate user-level
+Claude Code settings file:
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/shellcheck-static-analysis.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Hook Script
+
+Save this as `.claude/hooks/shellcheck-static-analysis.sh` and make it
+executable:
+
+```bash
+#!/usr/bin/env bash
+set -uo pipefail
+
+input="$(cat)"
+
+if ! command -v jq >/dev/null 2>&1; then
+  echo "ShellCheck hook skipped: jq is required to parse Claude Code hook input." >&2
+  exit 0
+fi
+
+tool_name="$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')"
+file_path="$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // .toolInput.file_path // .toolInput.path // empty')"
+
+case "$tool_name" in
+  Write|Edit|MultiEdit|write|edit|multiedit) ;;
+  *) exit 0 ;;
+esac
+
+if [ -z "$file_path" ] || [ ! -f "$file_path" ] || [ ! -r "$file_path" ]; then
+  exit 0
+fi
+
+case "$file_path" in
+  *.sh|*.bash|*.bats|*.ksh) ;;
+  *)
+    first_line="$(LC_ALL=C sed -n '1p' "$file_path" 2>/dev/null || true)"
+    case "$first_line" in
+      '#!'*'/sh'*|'#!'*' bash'*|'#!'*'/bash'*|'#!'*' dash'*|'#!'*'/dash'*|'#!'*' ksh'*|'#!'*'/ksh'*) ;;
+      *) exit 0 ;;
+    esac
+    ;;
+esac
+
+if ! command -v shellcheck >/dev/null 2>&1; then
+  echo "ShellCheck hook skipped: install shellcheck to enable shell diagnostics." >&2
+  exit 0
+fi
+
+echo "ShellCheck hook: checking $file_path" >&2
+shellcheck --format=gcc "$file_path"
+status=$?
+
+if [ "$status" -ne 0 ]; then
+  echo "ShellCheck hook: diagnostics found. Review quoting, expansion, portability, and error-handling issues before asking Claude to continue." >&2
+fi
+
+exit "$status"
+```
+
+## What It Checks
+
+- Files ending in `.sh`, `.bash`, `.bats`, or `.ksh`.
+- Extensionless files with a shell-like shebang for `sh`, `bash`, `dash`, or
+  `ksh`.
+- Only files touched by `Write`, `Edit`, or `MultiEdit`.
+- Only files that exist and are readable at the time the hook runs.
+- Only the edited file, without enabling ShellCheck external-source traversal.
+
+## Use Cases
+
+- Catch unquoted variables, unsafe globbing, word splitting, and command
+  substitution mistakes immediately after Claude edits a script.
+- Review shell portability before committing scripts used by CI, release,
+  deployment, Docker, or local developer workflows.
+- Surface failing diagnostics before a user runs a changed shell script.
+- Keep hook behavior read-only so Claude can fix scripts with explicit follow-up
+  edits rather than automatic rewrites.
+
+## Safety Review
+
+ShellCheck is a static analyzer. This hook invokes it against the edited file
+and returns the diagnostics to Claude Code. It does not execute the script being
+checked, does not source project files, does not install ShellCheck, and does
+not mutate repository files.
+
+Treat any follow-up fix as a normal code change. Shell diagnostics can point to
+real defects, but they do not replace review of command intent, input trust,
+filesystem effects, network calls, secret handling, and deployment impact.
+
+## Troubleshooting
+
+### Hook says ShellCheck is missing
+
+Install ShellCheck through the operating system package manager or official
+release path, then confirm `command -v shellcheck` works in the same shell that
+Claude Code uses.
+
+### Hook never runs
+
+Confirm the hook is configured under `PostToolUse`, the matcher includes
+`Write`, `Edit`, or `MultiEdit`, and the command path points to the executable
+script.
+
+### Extensionless script is skipped
+
+Add a supported shell shebang to the first line, such as `#!/usr/bin/env bash`,
+or rename the file with a supported extension.
+
+### Diagnostics are too noisy
+
+Prefer fixing the script or adding reviewed ShellCheck directives near the
+specific line. Avoid blanket disabling rules in the hook command because that
+can hide real issues across the project.
+
+### Hook blocks the workflow
+
+This script exits non-zero when ShellCheck reports diagnostics. If the team
+wants non-blocking behavior, adjust the project hook policy explicitly rather
+than silently swallowing diagnostics.
+
+## Duplicate Check
+
+This entry was checked against the current `upstream/main` content tree, open
+pull requests, and existing source URLs before drafting. No existing
+`content/hooks`, `content/skills`, `content/agents`, or `content/mcp` entry
+matches ShellCheck, `koalaman/shellcheck`, `shellcheck.net`, or a dedicated
+read-only ShellCheck PostToolUse hook.
+
+## Editorial Disclosure
+
+This is an independent, source-backed HeyClaude content entry submitted by
+`oktofeesh1`. It is not sponsored by ShellCheck or the ShellCheck maintainers.
+The hook expects a user-installed ShellCheck binary and does not package,
+redistribute, or verify a ShellCheck release artifact.

@@ -1,0 +1,249 @@
+---
+title: Production Database Migration Safety Rules
+slug: production-database-migration-safety-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing production database migrations before merge
+  with lock-risk checks, expand-contract rollout, backfill controls, rollback
+  limits, and privacy-safe migration evidence.
+cardDescription: >-
+  Review production database migrations with lock-risk checks, staged rollout,
+  backfill controls, rollback limits, and privacy-safe evidence.
+seoTitle: Production Database Migration Safety Rules
+seoDescription: >-
+  Practical production database migration safety rules for AI-assisted reviews:
+  expand-contract rollout, PostgreSQL lock risk, concurrent indexes, backfills,
+  rollback plans, staging evidence, and merge blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.gitlab.com/development/database/avoiding_downtime_in_migrations/"
+sourceUrls:
+  - "https://docs.gitlab.com/development/database/avoiding_downtime_in_migrations/"
+  - "https://www.postgresql.org/docs/current/sql-altertable.html"
+  - "https://www.postgresql.org/docs/current/sql-createindex.html"
+  - "https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-production"
+  - "https://guides.rubyonrails.org/active_record_migrations.html"
+installable: false
+usageSnippet: >-
+  Apply these rules before approving a pull request that creates, edits, runs,
+  or schedules a production database migration.
+copySnippet: |-
+  You are reviewing a production database migration.
+
+  Rules:
+  1. Classify the migration by lock risk, data-loss risk, deploy-order risk,
+     backfill size, and rollback limits before approving.
+  2. Prefer expand-contract changes for renames, type changes, required fields,
+     and data backfills; split schema, code, and cleanup steps when needed.
+  3. Require staging or dry-run evidence, owner review, fresh tests, backup or
+     restore notes, and a monitored rollout plan.
+  4. Block merge when the migration can rewrite large tables, lock writes, drop
+     data, expose private rows, or break old application versions without an
+     explicit mitigation.
+  5. Keep table names, row samples, migration logs, production metrics, and
+     rollback notes privacy-safe in public review channels.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A migration pull request, SQL patch, ORM migration, release plan, or generated schema diff that may run against a shared or production database.
+  - Access to the target database engine documentation, migration tool behavior, current CI status, staging or dry-run result, and affected service owner.
+  - A documented deployment order for application code, background jobs, migrations, backfills, cleanup migrations, and rollback or forward-fix steps.
+  - Permission to block merge when the migration risk, owner review, test evidence, or privacy handling is incomplete.
+safetyNotes:
+  - "Production migrations can lock tables, rewrite rows, drop data, invalidate indexes, break old application versions, delay deploys, or require backup restore instead of a simple revert."
+  - "Generated ORM migrations should be reviewed as SQL or engine-specific operations; do not assume type-safe schema code is operationally safe."
+  - "Backfills, constraint validation, index builds, and cleanup migrations should run with batching, monitoring, retry behavior, and stop conditions appropriate to the production workload."
+privacyNotes:
+  - "Migration diffs, dry-run logs, explain plans, table names, column names, row counts, sample rows, tenant IDs, and rollback notes can expose sensitive product or customer information."
+  - "Do not paste production rows, unredacted schema snapshots, connection strings, database hostnames, backup locations, or incident-specific migration logs into public PR comments."
+  - "When evidence must stay private, leave a minimal public note that names the verification class and owner without exposing database contents or operational secrets."
+tags:
+  - database
+  - migrations
+  - production-safety
+  - schema-changes
+  - backfills
+  - code-review
+keywords:
+  - production database migration safety rules
+  - database migration review checklist
+  - expand contract migration rules
+  - zero downtime migration review
+  - safe schema change policy
+readingTime: 6
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant, ORM generator, migration tool, or
+human contributor proposes a database schema or data migration that may reach a
+shared environment.
+
+The goal is to make risky migrations boring to review. A migration should name
+the operational risk, prove that old and new application versions can coexist,
+show how the team tested the path, and explain what rollback really means for
+the affected data.
+
+## Migration Risk Classes
+
+Classify the migration before reviewing style or generated-file formatting.
+
+1. **Additive schema change.** Adds nullable columns, tables, indexes,
+   constraints marked for later validation, or compatibility fields.
+2. **Backfill or data rewrite.** Updates existing rows, copies data between
+   columns, changes data shape, or runs an application job that touches many
+   records.
+3. **Constraint or index change.** Adds uniqueness, foreign keys, not-null
+   requirements, check constraints, partial indexes, or generated columns.
+4. **Destructive cleanup.** Drops columns, tables, indexes, values, or old
+   compatibility paths after a release has already stopped using them.
+5. **Rename or type change.** Renames objects, changes enum semantics, changes
+   column types, or rewrites application assumptions about stored values.
+6. **Operational migration.** Changes replication, partitions, extensions,
+   permissions, database roles, retention, archives, triggers, or scheduled
+   jobs.
+
+If the class is unclear, treat the migration as high risk until the submitter
+can show the SQL or engine behavior that will actually run.
+
+## Required Evidence
+
+A production migration PR should include enough evidence for a reviewer to
+understand the release decision later.
+
+- The target environment, database engine, migration tool, and reviewed SQL or
+  generated diff are named.
+- The migration is tied to the application deploy order, including whether old
+  and new app versions can read and write during rollout.
+- Lock risk, table rewrite risk, index-build behavior, and long-transaction
+  behavior are checked against the target engine documentation.
+- Staging, dry-run, shadow database, or equivalent validation ran after the
+  latest migration change.
+- Backfills have batching, retry, idempotency, progress monitoring, stop
+  conditions, and ownership.
+- Backup, restore, rollback, or forward-fix limits are stated honestly,
+  especially when data loss or irreversible cleanup is possible.
+- Privacy-sensitive logs, row samples, metrics, explain plans, and schema
+  details are redacted before public review.
+
+Do not approve a production migration when the PR only says that the ORM
+generated it successfully. The reviewer needs operational evidence, not only a
+schema diff.
+
+## Safe Rollout Rules
+
+- Prefer expand-contract rollout for required fields, renames, type changes,
+  and data moves: add the new shape, deploy compatible code, backfill, switch
+  reads and writes, then clean up later.
+- Keep destructive cleanup in a separate PR or later migration after production
+  code no longer depends on the old object.
+- Build large indexes with the database engine's non-blocking option when
+  available and document any remaining write-lock window.
+- Add constraints in a way that avoids surprising table scans or long blocking
+  locks, then validate after data is known to satisfy the rule.
+- Split large data backfills from schema changes when a failure would require
+  retry logic, progress tracking, throttling, or operator intervention.
+- Avoid application startup migrations in production unless the deployment
+  platform, lock behavior, concurrency, and rollback path are explicit.
+- Review generated ORM migrations before apply, especially drops, renames,
+  not-null changes, enum changes, default changes, and implicit data rewrites.
+
+## Reviewer Rules
+
+- Start by asking what SQL or engine operation will run, not what the ORM model
+  looked like before generation.
+- Confirm that the migration can run safely while old and new application
+  versions overlap during rolling deploys.
+- Require a data owner or service owner for migrations that touch customer
+  records, tenant boundaries, billing, auth, audit logs, or retention policy.
+- Re-check risk after rebases, regenerated migrations, dependency upgrades, or
+  framework-version changes that can alter generated SQL.
+- Treat migration credentials, backup locations, table samples, row counts, and
+  production metrics as sensitive review material.
+- Ask for a forward-fix plan when rollback cannot restore the previous data
+  shape without backup restore.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the migration drops, truncates, renames, rewrites, or changes required data
+  without an expand-contract or cleanup-window explanation;
+- generated SQL, migration tool output, or database-engine behavior is not
+  visible to reviewers;
+- the PR can lock writes, scan large tables, rebuild indexes, or hold long
+  transactions without mitigation;
+- old and new application versions cannot coexist during the deployment order;
+- a backfill lacks batching, idempotency, monitoring, retry, or stop criteria;
+- tests or dry-run evidence are stale after the latest migration edit;
+- rollback claims ignore irreversible data loss, constraint side effects, or
+  backup restore requirements;
+- public comments include production rows, raw logs, connection strings,
+  hostnames, tenant identifiers, or private schema details.
+
+## Review Checklist
+
+- [ ] {"task": "Risk class named", "description": "The PR classifies additive, backfill, constraint, destructive, rename, type, or operational migration risk"}
+- [ ] {"task": "SQL reviewed", "description": "Reviewers can inspect the SQL, engine operation, or generated migration diff that will run"}
+- [ ] {"task": "Deploy order safe", "description": "Old and new application versions can coexist, or the rollout window and owner exception are explicit"}
+- [ ] {"task": "Lock risk checked", "description": "Table locks, scans, index builds, long transactions, and constraint validation are reviewed against the target engine"}
+- [ ] {"task": "Backfill controlled", "description": "Large data changes have batching, idempotency, progress monitoring, retry behavior, and stop conditions"}
+- [ ] {"task": "Privacy protected", "description": "Logs, samples, row counts, hostnames, backup paths, and schema details are redacted or kept in approved private channels"}
+
+## AI Review Rules
+
+AI assistants can help classify a migration, but they should not invent
+operational certainty.
+
+- Ask the assistant to list risky SQL operations and unknowns separately.
+- Require file paths, migration names, and engine-specific behavior for each
+  warning.
+- Have the assistant compare generated migrations against model changes rather
+  than trusting either side alone.
+- Do not let the assistant run production migration commands, connect to live
+  databases, or inspect real rows without explicit operator approval.
+- Re-run the review after generation, rebase, or manual SQL edits.
+
+## Troubleshooting
+
+- **A rename is needed:** add the new object, dual-write or copy data, switch
+  reads, then remove the old object after compatible code has shipped.
+- **A not-null constraint is needed:** backfill first, enforce application
+  writes, then add or validate the constraint with engine-aware locking review.
+- **An index build is slow:** choose the non-blocking index path supported by
+  the engine, monitor progress, and document the write-lock tradeoff.
+- **The rollback is not reversible:** say so. Use backup restore, forward-fix,
+  or delayed cleanup instead of promising a simple revert.
+- **Logs contain real data:** move evidence to a private channel, redact public
+  notes, and leave only the verification class, owner, and result in the PR.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, agents, skills, guides, collections, open PRs,
+and closed PR history for database migration safety, production schema-change
+rules, zero-downtime migration review, backfill review, safe migration hooks,
+and ORM migration workflows.
+
+Adjacent content includes a database migration safety hook, a database migration
+runner hook, database expert agents, Drizzle migration skill content, and a
+high-risk code review escalation rule. This entry is distinct because it is a
+portable rules policy for merge review: it decides what production migration
+evidence must exist, when expand-contract rollout is required, how reviewers
+classify lock and data-loss risk, and what privacy constraints apply to
+migration evidence.
+
+## Sources
+
+- GitLab Docs: Avoiding downtime in migrations - https://docs.gitlab.com/development/database/avoiding_downtime_in_migrations/
+- PostgreSQL Docs: ALTER TABLE - https://www.postgresql.org/docs/current/sql-altertable.html
+- PostgreSQL Docs: CREATE INDEX - https://www.postgresql.org/docs/current/sql-createindex.html
+- Prisma Migrate: Development and production - https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-production
+- Rails Guides: Active Record Migrations - https://guides.rubyonrails.org/active_record_migrations.html
