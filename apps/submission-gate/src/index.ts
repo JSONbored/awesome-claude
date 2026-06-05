@@ -2369,10 +2369,13 @@ async function enqueueReviewTarget(
     String(existing?.status || "") === "closed" &&
     (isReopenedPullRequestEvent(eventName, webhook) ||
       eventName === "scheduled");
+  const shouldResetManualTerminal =
+    forceRecheck === true && String(existing?.status || "") === "manual";
   const shouldQueueReview =
     !hasTerminalGateDecision(existing) ||
     shouldResetIgnoredScan ||
-    shouldResetClosedTerminal;
+    shouldResetClosedTerminal ||
+    shouldResetManualTerminal;
   if (!shouldQueueReview) return false;
 
   await upsertPrState(env.SUBMISSION_GATE_DB, {
@@ -2388,8 +2391,14 @@ async function enqueueReviewTarget(
     nextReviewAt: null,
     incrementAttempt: true,
     lastReviewKey: reviewScanKey || undefined,
-    clearVerdict: shouldResetIgnoredScan || shouldResetClosedTerminal,
-    clearTerminal: shouldResetIgnoredScan || shouldResetClosedTerminal,
+    clearVerdict:
+      shouldResetIgnoredScan ||
+      shouldResetClosedTerminal ||
+      shouldResetManualTerminal,
+    clearTerminal:
+      shouldResetIgnoredScan ||
+      shouldResetClosedTerminal ||
+      shouldResetManualTerminal,
   });
   await env.SUBMISSION_REVIEW_QUEUE.send({
     kind: "review_pr",
