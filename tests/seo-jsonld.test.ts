@@ -267,4 +267,44 @@ describe("SEO JSON-LD policy", () => {
       ),
     ).toBeNull();
   });
+
+  it("shares a 'k' unit across a shorthand salary range", () => {
+    const jsonLd = buildJobPostingJsonLd(
+      {
+        slug: "shorthand-comp",
+        title: "AI Engineer",
+        company: "Example",
+        description:
+          "Build Claude workflow systems for a verified employer listing with production AI integrations, source-backed role details, and developer-facing infrastructure ownership.",
+        descriptionMd:
+          "## Role brief\n\nOwn integrations across Claude workflow systems and developer-facing AI infrastructure for a team shipping production agent and MCP surfaces. The reviewed detail gives candidates enough context about responsibilities, requirements, source verification, and the employer-owned application path before they continue.",
+        postedAt: "2026-04-26",
+        expiresAt: "2026-05-26",
+        applyUrl: "https://example.com/jobs/ai-engineer",
+        sourceUrl: "https://example.com/jobs/ai-engineer",
+        sourceCheckedAt: "2026-04-26",
+        // Unit written once, on the max endpoint — must apply to both.
+        compensation: "$120 – 150k",
+        responsibilities: [
+          "Ship Claude integrations",
+          "Maintain source-verified role detail",
+        ],
+        requirements: [
+          "TypeScript experience",
+          "Comfort with LLM developer tooling",
+        ],
+      },
+      { siteUrl: "https://heyclau.de" },
+    );
+    expect(jsonLd?.baseSalary).toMatchObject({
+      "@type": "MonetaryAmount",
+      currency: "USD",
+      value: {
+        "@type": "QuantitativeValue",
+        minValue: 120000,
+        maxValue: 150000,
+        unitText: "YEAR",
+      },
+    });
+  });
 });

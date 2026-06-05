@@ -423,9 +423,16 @@ function parseJobCompensation(value) {
     );
   };
 
-  const minSuffix = amounts[0].toLowerCase().endsWith("k") ? "k" : "";
-  const minValue = parseAmount(amounts[0]);
-  const maxValue = parseAmount(amounts[1], minSuffix);
+  // A "k" unit is commonly written once for the whole range ("$120-150k"),
+  // and on either endpoint. Share it across both so the unit-less endpoint
+  // isn't read at face value (e.g. "$120-150k" -> 120000..150000, not 120..150000).
+  const sharedSuffix =
+    amounts[0].toLowerCase().endsWith("k") ||
+    amounts[1].toLowerCase().endsWith("k")
+      ? "k"
+      : "";
+  const minValue = parseAmount(amounts[0], sharedSuffix);
+  const maxValue = parseAmount(amounts[1], sharedSuffix);
   if (!minValue || !maxValue) return undefined;
 
   return {
