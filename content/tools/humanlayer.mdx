@@ -1,0 +1,93 @@
+---
+title: HumanLayer
+slug: humanlayer
+category: tools
+description: >-
+  Open-source project behind CodeLayer, an IDE for orchestrating AI coding
+  agents built on Claude Code, with keyboard-first workflows, team context
+  engineering, and parallel Claude Code sessions across worktrees and cloud
+  workers.
+cardDescription: >-
+  Open-source IDE for orchestrating AI coding agents, built on Claude Code, with
+  parallel sessions, worktrees, and team context engineering.
+seoTitle: HumanLayer — Orchestrate AI Coding Agents with CodeLayer
+seoDescription: >-
+  HumanLayer is the Apache-2.0 project behind CodeLayer, an IDE for orchestrating
+  AI coding agents on Claude Code. Keyboard-first workflows, team context
+  engineering, and parallel Claude Code sessions across worktrees and cloud
+  workers.
+author: HumanLayer
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://www.humanlayer.dev"
+repoUrl: "https://github.com/humanlayer/humanlayer"
+documentationUrl: "https://www.humanlayer.dev/code"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "Claude Code, since CodeLayer is built on top of it and orchestrates Claude Code sessions."
+  - "An Anthropic account or API access for the underlying Claude Code agent."
+  - "A recent CodeLayer build from the project's GitHub releases or the waitlist for early access."
+  - "Git, since parallel-session workflows rely on worktrees."
+safetyNotes:
+  - "CodeLayer orchestrates AI coding agents that edit files and run commands in your repositories, so it inherits the execution risks of the underlying Claude Code agent."
+  - "MultiClaude runs multiple Claude Code sessions in parallel across git worktrees; review changes per worktree before merging to avoid conflicting or unreviewed edits."
+  - "Remote cloud workers can run agent sessions on external infrastructure; understand where code executes before enabling them."
+  - "Scaling agent workflows to a whole team increases the blast radius of automated edits, so keep human review and branch protections in place."
+privacyNotes:
+  - "Because it builds on Claude Code, repository code and context are sent to Anthropic's API to power the agent."
+  - "Remote cloud workers process your code and context on external infrastructure; review the provider's terms before sending private code."
+  - "Any API keys or credentials used by Claude Code and CodeLayer should be stored as secrets, not committed to source control."
+  - "Team and context-engineering features can share prompts, context, and workflow data across collaborators, so avoid placing secrets in shared context."
+tags:
+  - claude-code
+  - ai-agents
+  - ide
+  - developer-tools
+  - open-source
+  - orchestration
+keywords:
+  - humanlayer
+  - codelayer
+  - ai coding agent ide
+  - orchestrate claude code
+  - parallel claude code sessions
+  - multiclaude
+  - agent orchestration
+---
+
+## Overview
+
+HumanLayer is the open-source project behind CodeLayer, an IDE for orchestrating
+AI coding agents. It is built on Claude Code and aims to help builders and teams
+get AI coding agents to solve hard problems in large, complex codebases — from a
+single laptop up to an entire team.
+
+The project is released under Apache-2.0. CodeLayer focuses on keyboard-first
+workflows, context engineering for scaling AI-first development across a team,
+and running Claude Code sessions in parallel.
+
+## Features
+
+- Keyboard-first workflows designed for speed and control.
+- Context engineering to scale AI-first development across a team.
+- MultiClaude: run multiple Claude Code sessions in parallel, including across
+  git worktrees and remote cloud workers.
+- Built on Claude Code, so it reuses the underlying agent and its tooling.
+- Open-source under Apache-2.0, with team and consulting services available.
+
+## Use Cases
+
+- Drive several Claude Code sessions at once across isolated worktrees.
+- Standardize AI-assisted development context and workflows across a team.
+- Tackle large-codebase tasks that need orchestration beyond a single session.
+- Offload agent sessions to remote cloud workers when local resources are tight.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. CodeLayer is
+open source (Apache-2.0); HumanLayer also offers team and consulting services.

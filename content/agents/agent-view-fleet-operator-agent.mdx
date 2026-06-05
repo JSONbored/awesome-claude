@@ -1,0 +1,132 @@
+---
+title: Agent View Fleet Operator Agent
+slug: agent-view-fleet-operator-agent
+category: agents
+description: >-
+  Source-backed agent that operates a fleet of Claude Code background sessions
+  through agent view, triaging which sessions need input, which are working, and
+  which are done, and deciding what to dispatch, answer, or stop, grounded in the
+  official Claude Code agent view docs.
+cardDescription: >-
+  Operate a fleet of Claude Code background sessions via agent view: triage needs-
+  input, working, and completed, and dispatch or stop.
+seoTitle: Agent View Fleet Operator Agent for Claude Code
+seoDescription: >-
+  Reusable agent prompt that operates a fleet of Claude Code background sessions
+  through agent view, triaging needs-input, working, and completed sessions and
+  deciding what to dispatch, answer, or stop, grounded in official docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-view"
+installable: false
+usageSnippet: "Use this agent to operate a fleet of Claude Code background sessions through agent view: triage which need input, which are working, and which are done, and decide what to dispatch, answer, or stop."
+prerequisites:
+  - "Claude Code with agent view available (opened with the agents command) and one or more background sessions."
+  - "A queue of tasks suitable for background dispatch."
+  - "Knowledge of which tasks are safe to run in parallel and which need close attention."
+safetyNotes:
+  - "This agent prioritizes and routes attention across sessions; it does not bypass each session's own permissions."
+  - "Background sessions keep running without a terminal attached; ensure each was dispatched with appropriate scope and permissions."
+  - "Prefer answering or stopping a stuck session over force actions, and review completed sessions before merging their work."
+privacyNotes:
+  - "Agent view shows live session activity and working directories; restrict who can view and dispatch sessions."
+  - "Each session sends its own context to the model provider; dispatch only tasks whose context is acceptable to share."
+  - "Background sessions may isolate file edits in worktrees; review their diffs before integrating."
+tags:
+  - claude-code
+  - agent-view
+  - fleet-operations
+  - background-sessions
+  - orchestration
+keywords:
+  - agent view fleet operator agent
+  - claude code agent view
+  - claude code background sessions
+  - dispatch claude sessions
+  - manage multiple claude agents
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent View Fleet Operator Agent is a reusable agent prompt for running many Claude
+Code background sessions from one screen. Using agent view, it triages which
+sessions need input, which are working, and which are completed, and decides what
+to dispatch next, what to answer, and what to stop, so a fleet of agents stays
+productive without constant babysitting.
+
+Use it when you dispatch multiple background sessions and need a consistent way to
+prioritize attention across them.
+
+## Agent Prompt
+
+You are a fleet operator for Claude Code background sessions, working through
+agent view. Keep the fleet moving by directing attention where it is needed. Use
+the official Claude Code agent view documentation as your reference.
+
+Operating workflow:
+
+1. Survey. Read the agent view groups: sessions that need input, sessions that are
+   working, and sessions that are completed.
+2. Prioritize needs-input. Answer or unblock sessions waiting on input first,
+   since they are idle until you respond.
+3. Watch working sessions. Spot ones that look stuck or off-track; decide whether
+   to answer, redirect, or stop them.
+4. Review completed. Check finished sessions and their diffs before integrating
+   their work.
+5. Dispatch. Add new background sessions for queued tasks that are safe to run in
+   parallel, with appropriate scope.
+6. Keep load sane. Avoid dispatching more sessions than you can review; stop or
+   pause ones that are no longer needed.
+
+Output contract:
+
+- Fleet snapshot: counts by needs-input, working, completed.
+- Prioritized actions: which sessions to answer, redirect, stop, or integrate.
+- Dispatch plan: new sessions to start and their scope.
+- Notes on any stuck or risky sessions.
+
+## Features
+
+- Triages background sessions by needs-input, working, and completed.
+- Prioritizes unblocking idle sessions waiting on input.
+- Decides when to answer, redirect, stop, or integrate a session.
+- Plans new dispatches without overloading review capacity.
+
+## Use Cases
+
+- Run and manage many Claude Code background sessions at once.
+- Quickly unblock sessions that are waiting on input.
+- Spot and stop stuck or off-track sessions.
+- Review completed sessions before integrating their changes.
+
+## Source Notes
+
+- Agent view, opened with the agents command, shows background sessions grouped by
+  needs input, working, and completed, and lets you dispatch new sessions.
+- Each background session is a full Claude Code conversation that keeps running
+  without a terminal attached, and file edits can be isolated per session.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for agent view, fleet, and background
+session agents. No agent view fleet operator exists. This entry is distinct: it is
+an `agents` prompt focused on operating a fleet of Claude Code background sessions
+through agent view.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code agent view documentation: https://code.claude.com/docs/en/agent-view
+- Claude Code worktrees documentation: https://code.claude.com/docs/en/worktrees
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

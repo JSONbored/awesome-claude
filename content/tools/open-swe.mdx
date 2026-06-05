@@ -1,0 +1,99 @@
+---
+title: Open SWE
+slug: open-swe
+category: tools
+description: >-
+  Open-source framework for building internal coding agents that accept tasks
+  via Slack, Linear, or GitHub, execute code changes in isolated cloud
+  sandboxes, and open draft pull requests automatically.
+cardDescription: >-
+  Self-hosted coding agent framework built on LangGraph — trigger via Slack,
+  Linear, or GitHub and get automatic PRs from isolated sandboxes.
+seoTitle: Open SWE — Open-Source Internal Coding Agent Framework
+seoDescription: >-
+  Open SWE is an MIT-licensed framework for building internal coding agents on
+  LangGraph. Accepts tasks from Slack, Linear, and GitHub; runs in isolated
+  cloud sandboxes; opens PRs automatically.
+author: LangChain
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://github.com/langchain-ai/open-swe"
+repoUrl: "https://github.com/langchain-ai/open-swe"
+documentationUrl: "https://github.com/langchain-ai/open-swe"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "GitHub account with OAuth access for repository operations."
+  - "A model API key (Anthropic, OpenAI, or compatible provider)."
+  - "A LangSmith API key when using LangSmith as the sandbox provider."
+  - "Slack workspace, Linear workspace, or GitHub repository access for the desired trigger integrations."
+  - "Python 3.10+ and Node.js for local development."
+safetyNotes:
+  - "Each task runs in an isolated cloud Linux sandbox (Modal, Daytona, Runloop, or LangSmith) to prevent production impact."
+  - "The agent executes shell commands, file operations, web fetches, and HTTP requests inside the sandbox without confirmation prompts — review sandbox provider permissions before deployment."
+  - "GitHub operations are performed through a GH_TOKEN proxy; scope token permissions to the minimum required repositories."
+  - "Subagent orchestration can spawn parallel child agents — set appropriate step limits and monitor LangSmith traces to prevent runaway execution."
+  - "AGENTS.md or CLAUDE.md at the repository root is injected into the system prompt; review this file to control agent behavior and conventions."
+privacyNotes:
+  - "Repository code, Linear issue history, and Slack thread history are sent to the configured model provider API."
+  - "Sandbox providers (Modal, Daytona, Runloop, LangSmith) process task execution data according to their own privacy policies."
+  - "LangSmith tracing, when enabled, logs full agent traces including tool inputs and outputs — configure retention and access controls in your LangSmith organization."
+  - "GitHub OAuth tokens and model API keys should be stored as secrets and never committed to the repository."
+tags:
+  - coding-agent
+  - automation
+  - langgraph
+  - sandboxed-execution
+  - open-source
+  - github-automation
+  - slack-integration
+  - linear-integration
+keywords:
+  - open swe
+  - internal coding agent
+  - langgraph coding agent
+  - self-hosted coding agent
+  - automated pull requests
+  - sandboxed code execution
+  - ai software engineer
+---
+
+## Overview
+
+Open SWE is a practical reference implementation for teams that want to run
+coding agents against their own repositories without building the orchestration
+layer from scratch. It mirrors patterns used by engineering teams at Stripe,
+Ramp, and Coinbase for internal coding agents.
+
+The framework composes on LangGraph and the Deep Agents harness. Each task
+runs in a dedicated cloud sandbox (Modal, Daytona, Runloop, or LangSmith),
+executes the agent loop with roughly fifteen curated tools, and opens a draft
+PR on completion. Parallel tasks get separate sandboxes with no queuing.
+
+## Features
+
+- Multi-platform invocation through Slack mentions, Linear comments with
+  `@openswe`, and GitHub PR comment replies.
+- Isolated, reusable cloud sandboxes per task thread with pluggable providers
+  (Modal, Daytona, Runloop, LangSmith).
+- Automatic draft pull request creation and linking back to the source task.
+- Subagent orchestration for parallel subtasks via the `task` tool.
+- Configurable model support and a curated tool set covering shell execution,
+  file operations, web fetches, and API requests.
+- A web dashboard for authentication, team settings, and direct agent chat.
+
+## Use Cases
+
+- Triage and resolve routine engineering tasks raised in Linear or Slack.
+- Stand up an internal coding agent that respects organization conventions via
+  an `AGENTS.md` or `CLAUDE.md` context file.
+- Run multiple coding tasks in parallel without manual environment setup.
+- Prototype a customizable, self-hosted alternative to closed coding agents.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship.

@@ -1,0 +1,158 @@
+---
+title: NanoClaw Container Isolation Review Agent
+slug: nanoclaw-container-isolation-review-agent
+category: agents
+description: >-
+  Source-backed agent that reviews the container isolation posture of a NanoClaw
+  deployment, checking filesystem mounts, per-agent scoping, credential vault
+  routing, messaging channel permissions, and scheduled tasks before agents run
+  with real access.
+cardDescription: >-
+  Review a NanoClaw deployment's container isolation: mounts, per-agent scope,
+  vaulted credentials, channel permissions, and scheduled tasks.
+seoTitle: NanoClaw Container Isolation Review Agent
+seoDescription: >-
+  Reusable agent prompt for reviewing NanoClaw container isolation — filesystem
+  mounts, per-agent containers, vaulted credentials, messaging channel scope,
+  and scheduled tasks — before Claude agents run with real access.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://docs.nanoclaw.dev"
+installable: false
+usageSnippet: "Use this agent before enabling a NanoClaw agent group, channel, or scheduled task, to verify container isolation, mounts, credential routing, and messaging scope match the access the agent actually needs."
+prerequisites:
+  - "A NanoClaw deployment with its agent-group configuration, container mounts, and channel setup available for review."
+  - "Knowledge of which directories are mounted, which channels are installed, and which scheduled tasks are enabled."
+  - "Access to the credential/vault configuration so token routing can be verified."
+safetyNotes:
+  - "This agent reviews isolation configuration; it does not itself sandbox anything, and a weak review cannot make an over-mounted container safe."
+  - "Confirm bash commands execute inside the Docker or Apple Container sandbox and never on the host, and that filesystem mounts are explicit and minimal."
+  - "Treat scheduled tasks and outbound messaging channels as autonomous write surfaces; verify each is scoped to the intended agent group and recipients."
+  - "Verify API keys never enter containers and that outbound requests route through the credential vault with per-agent policies and rate limits."
+privacyNotes:
+  - "Each agent group should only access explicitly mounted directories and its own CLAUDE.md memory; flag any broad or home-directory mounts."
+  - "Messages flow through inbound/outbound SQLite databases; confirm channel mode (per-channel, separate conversations, or shared session) matches the intended privacy boundary."
+  - "Running Claude through the Anthropic Agent SDK sends conversation context to Anthropic's API; keep secrets out of agent memory and prompts."
+tags:
+  - nanoclaw
+  - container-isolation
+  - security-review
+  - claude
+  - agents
+keywords:
+  - nanoclaw container isolation review agent
+  - nanoclaw security review
+  - container isolation review
+  - agent sandbox review
+  - claude agent isolation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+NanoClaw Container Isolation Review Agent is a reusable agent prompt for checking
+that a NanoClaw deployment actually isolates its Claude agents the way it claims
+to. NanoClaw runs per-session agent containers, routes messages through SQLite
+databases, and keeps API keys out of containers via a credential vault — but the
+safety of any given deployment depends on how mounts, channels, and schedules are
+configured.
+
+Use this agent before enabling a new agent group, connecting a messaging channel,
+or turning on a scheduled task, so the container's real access matches the
+intended boundary.
+
+## Agent Prompt
+
+You are a container isolation reviewer for NanoClaw deployments. Your goal is to
+confirm that each agent group runs with the least access it needs and that no
+configuration quietly breaks isolation. Use the NanoClaw documentation and the
+deployment's own configuration as evidence.
+
+Isolation model to apply:
+
+- Agents run in OS-level containers (Docker, or Apple Container on macOS) with
+  explicit filesystem mounts; bash commands execute inside the container, not on
+  the host.
+- Each agent group has its own container, isolated `CLAUDE.md` memory, and
+  selective mounts.
+- API keys never enter containers; outbound requests route through the credential
+  vault, which enforces per-agent policies and rate limits.
+- Messages flow through inbound/outbound SQLite databases rather than shared
+  memory.
+- Scheduled tasks can run Claude on a recurring basis and message users.
+
+Review workflow:
+
+1. Enumerate mounts for the agent group. Flag broad mounts (home directory,
+   whole repos, secrets directories) and recommend the narrowest set that still
+   works.
+2. Confirm command execution is contained: bash runs inside the container, with
+   no host escape via mounts, sockets, or privileged flags.
+3. Verify credential handling: no raw keys inside the container, vault routing
+   enabled, per-agent policy and rate limits set.
+4. Review messaging channels: which are installed, who can message in, and
+   whether outbound replies are scoped to the right recipients.
+5. Review the channel privacy mode (separate agent per channel, unified memory
+   with separate conversations, or a single shared session) against the intended
+   privacy boundary.
+6. Review scheduled tasks: cadence, what they can do, and whether they can message
+   users without oversight.
+7. Summarize residual risk and whether the deployment is safe to enable.
+
+Output contract:
+
+- Isolation summary: containers, mounts, execution boundary, vault routing.
+- Findings: over-broad mounts, host-exposure risks, raw credentials, over-scoped
+  channels, or unsupervised scheduled tasks.
+- Required changes: narrower mounts, vault enforcement, channel scoping, schedule
+  limits.
+- Decision: safe to enable, enable with changes, or block until fixed.
+
+## Features
+
+- Applies NanoClaw's documented isolation model (containers, mounts, vault,
+  SQLite message flow).
+- Focuses on least-access mounts and host-escape prevention.
+- Reviews messaging channel scope and privacy modes.
+- Treats scheduled tasks as autonomous write surfaces needing explicit limits.
+
+## Use Cases
+
+- Vet a new NanoClaw agent group before giving it real access.
+- Confirm a messaging channel only reaches intended recipients.
+- Catch over-broad mounts or raw credentials before enabling an agent.
+- Review scheduled tasks that can run Claude and message users automatically.
+
+## Source Notes
+
+- NanoClaw runs per-session agent containers with OS-level isolation and explicit
+  filesystem mounts, executing bash inside the container rather than on the host.
+- Credentials are kept out of containers and routed through a vault that enforces
+  per-agent policies and rate limits.
+- Messages move through inbound/outbound SQLite databases, and channels can be
+  configured for per-channel, separate-conversation, or shared-session privacy.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for NanoClaw, container isolation,
+sandbox review, and agent-isolation entries. No NanoClaw entry exists yet. This
+entry is distinct: it is an `agents` prompt for reviewing the container isolation
+posture of a NanoClaw deployment, separate from the NanoClaw tool listing itself.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public NanoClaw documentation and Claude Code documentation. No paid placement,
+referral, or affiliate relationship.
+
+## Sources
+
+- NanoClaw repository: https://github.com/nanocoai/nanoclaw
+- NanoClaw documentation: https://docs.nanoclaw.dev
+- Claude Code MCP documentation: https://code.claude.com/docs/en/mcp
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
