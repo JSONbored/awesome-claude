@@ -1,0 +1,88 @@
+---
+title: CoderPlan
+slug: coderplan
+category: tools
+description: >-
+  OpenAI-compatible LLM API relay for Claude Code, Codex CLI, and Gemini CLI.
+  Pay-per-use with no monthly fees. Optimized for developers in China.
+cardDescription: OpenAI-compatible LLM API relay for Claude Code and Codex CLI.
+seoTitle: CoderPlan LLM API Relay for Claude Code
+seoDescription: >-
+  CoderPlan is an OpenAI-compatible LLM API relay supporting Claude, GPT,
+  Gemini, DeepSeek, and Grok models. Pay-per-use, no monthly fees, Alipay and
+  WeChat payments.
+author: CoderPlan
+submittedBy: coderplan-ai
+submittedByUrl: "https://github.com/coderplan-ai"
+dateAdded: "2026-06-05"
+websiteUrl: "https://coderplan.ai"
+documentationUrl: "https://coderplan.ai/docs"
+pricingModel: pay-per-use
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+installable: true
+installCommand: "export OPENAI_API_KEY=<your-key> OPENAI_BASE_URL=https://api.coderplan.ai/v1"
+usageSnippet: "claude --api-key <your-key> --api-url https://api.coderplan.ai/v1"
+prerequisites:
+  - An API key from coderplan.ai (free tier available with trial credits).
+  - A Claude Code, Codex CLI, or Gemini CLI installation.
+  - For users in China: Alipay or WeChat for account top-up (minimum 10 CNY).
+safetyNotes:
+  - "API requests are relayed through CoderPlan servers to upstream model providers. Review the privacy policy before sending sensitive prompts."
+  - "Relay endpoints should be treated as a third-party proxy. Avoid sending highly confidential data without reviewing data handling practices."
+privacyNotes:
+  - "Prompts and responses pass through CoderPlan relay servers before reaching the configured upstream model provider."
+  - "Usage logs record model, token counts, and cache savings per request for billing transparency."
+  - "Payment processing is handled by Alipay and WeChat; CoderPlan does not store full payment credentials."
+tags:
+  - api-relay
+  - llm-gateway
+  - claude-code
+  - codex-cli
+  - openai-compatible
+keywords:
+  - CoderPlan
+  - LLM API relay
+  - Claude Code API
+  - OpenAI compatible proxy
+  - AI gateway for developers
+robotsIndex: true
+robotsFollow: true
+---
+
+## Editorial notes
+
+CoderPlan provides an OpenAI-compatible API relay that lets developers connect
+Claude Code, Codex CLI, and Gemini CLI through a single endpoint. It targets
+developers in China who face access and payment barriers with direct API
+providers. The relay supports Claude, GPT, Gemini, DeepSeek, and Grok model
+families with pay-per-use billing and no monthly commitment.
+
+## Why it belongs
+
+- Solves a concrete access problem for Claude Code users in regions where
+  direct Anthropic API access requires workarounds.
+- OpenAI-compatible interface means zero code changes for existing tooling.
+- Transparent per-request billing with model, token, and cache-savings logging
+  is useful for cost-aware agent workflows.
+- Supports the full Claude model family (Opus, Sonnet, Haiku) alongside GPT,
+  Gemini, DeepSeek, and Grok in a single endpoint.
+
+## Review guidance
+
+CoderPlan is a commercial API relay service, not an open-source tool. It is
+listed because it directly serves Claude Code and Codex CLI users who need an
+alternative API endpoint. The pay-per-use model with a low minimum top-up
+(10 CNY) and trial credits lowers the barrier for evaluation. Users should
+review the privacy implications of routing prompts through a third-party relay
+before using it for sensitive workloads.
+
+## References
+
+- CoderPlan website - https://coderplan.ai
+- CoderPlan API endpoint - https://api.coderplan.ai/v1
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used.
