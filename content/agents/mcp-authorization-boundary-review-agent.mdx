@@ -1,0 +1,95 @@
+---
+title: MCP Authorization Boundary Review Agent
+slug: mcp-authorization-boundary-review-agent
+category: agents
+description: >-
+  Source-backed specialist agent for reviewing remote MCP authorization
+  boundaries, protected resource metadata, resource indicators, token audience
+  validation, token passthrough risk, and least-privilege scopes.
+cardDescription: Review MCP OAuth boundaries, resource metadata, token audiences, and passthrough risk.
+seoTitle: MCP Authorization Boundary Review Agent
+seoDescription: >-
+  Reusable AI agent prompt for MCP OAuth authorization review, protected
+  resource metadata checks, resource indicators, audience validation, and remote
+  server risk triage.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+websiteUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+installable: false
+usageSnippet: >-
+  Use this agent before approving a remote MCP server that requires OAuth,
+  exposes user data, or proxies to downstream APIs.
+copySnippet: |-
+  You are an MCP Authorization Boundary Review Agent.
+
+  Review the remote MCP server against the official MCP authorization
+  specification, OAuth resource indicators, and protected resource metadata.
+
+  Workflow:
+  1. Identify the MCP server canonical resource URI and transport.
+  2. Confirm protected resource metadata discovery and authorization server metadata.
+  3. Verify that authorization and token requests include the intended resource.
+  4. Check token audience validation and wrong-audience rejection.
+  5. Look for token passthrough to downstream APIs.
+  6. Review scopes, redirect behavior, dynamic client registration, and error handling.
+  7. Separate public-safe findings from private token or tenant evidence.
+
+  Output:
+  - Boundary summary
+  - Evidence reviewed
+  - Release blockers
+  - Non-blocking improvements
+  - Privacy notes
+  - Decision: safe, safe with limits, or block
+prerequisites:
+  - Remote MCP server URL, intended client, and expected authorization model.
+  - Access to metadata responses, staging token-flow evidence, and scope documentation.
+  - Permission to review private token claims only in a controlled environment.
+safetyNotes:
+  - "A remote MCP server can expose tools backed by user accounts, tenant data, third-party APIs, or write-capable integrations."
+  - "Block approval when a server accepts wrong-audience tokens, forwards incoming tokens, or cannot show protected resource metadata."
+privacyNotes:
+  - "OAuth metadata, redirect URLs, scopes, tenant IDs, token claims, and tool results may contain private account structure."
+  - "Public reports should summarize authorization behavior without pasting tokens, claims, or internal identity-provider details."
+tags:
+  - mcp
+  - oauth
+  - authorization
+  - security-review
+  - remote-mcp
+keywords:
+  - MCP authorization review agent
+  - MCP OAuth boundary review
+  - token audience validation agent
+  - remote MCP security agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+This agent is meant for reviewers who need to decide whether a remote MCP server
+is safe to connect to a real account. It focuses on the authorization boundary,
+not the product pitch. A server that can log in successfully can still be unsafe
+if it accepts tokens for the wrong audience, omits protected resource metadata,
+or forwards a user token to another API.
+
+## Review checklist
+
+- Protected resource metadata exists and points to the expected authorization server.
+- The client uses the MCP server URI as the OAuth resource indicator.
+- Wrong-audience tokens are rejected.
+- Incoming bearer tokens are not forwarded to downstream APIs.
+- Scopes are documented and can be restricted for read-only use.
+- 401 and 403 errors do not leak tokens or private claims.
+- Public findings avoid raw token, tenant, and identity-provider evidence.
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- OAuth Resource Indicators - https://www.rfc-editor.org/rfc/rfc8707
+- OAuth Protected Resource Metadata - https://www.rfc-editor.org/rfc/rfc9728
