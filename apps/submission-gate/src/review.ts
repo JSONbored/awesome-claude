@@ -1,7 +1,7 @@
 import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
 export const GATE_DECISION_SCHEMA_VERSION = 2;
-export const GATE_COMMENT_FORMATTER_VERSION = 4;
+export const GATE_COMMENT_FORMATTER_VERSION = 5;
 export const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR = 0.85;
 const HEYCLAUDE_SITE_URL = "https://heyclau.de";
 const HEYCLAUDE_REPO_URL = "https://github.com/JSONbored/awesome-claude";
@@ -463,8 +463,21 @@ function bulletsMarkdown(bullets: string[]) {
 
 function confidenceText(value: number | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value))
-    return "not provided";
+    return "not applicable";
   return `${Math.round(value * 100)}%`;
+}
+
+function decisionConfidenceText(decision: GateDecision) {
+  if (
+    typeof decision.confidence === "number" &&
+    Number.isFinite(decision.confidence)
+  ) {
+    return confidenceText(decision.confidence);
+  }
+  if (decision.verdict === "close" || decision.verdict === "request_changes") {
+    return "rule-based";
+  }
+  return "not applicable";
 }
 
 function scopeText(scope?: GateDecisionScope) {
@@ -527,7 +540,7 @@ function checkStatusLabel(status: GateDecisionCheck["status"]) {
 }
 
 function confidenceStatusLabel(value: number | undefined) {
-  if (typeof value !== "number" || !Number.isFinite(value)) return "⚠️";
+  if (typeof value !== "number" || !Number.isFinite(value)) return "ℹ️";
   if (value >= DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR) return "✅";
   return "⚠️";
 }
@@ -563,11 +576,13 @@ function renderAlertCard(
 }
 
 function renderDetails(section: GateDecisionSection) {
+  const bullets = cleanSectionBullets(section);
+  if (!bullets.length) return "";
   return [
     "<details>",
     `<summary><strong>${sectionStatusLabel(section.status)} · ${sectionTitle(section.id, section.title)}</strong></summary>`,
     "",
-    bulletsMarkdown(section.bullets),
+    bulletsMarkdown(bullets),
     "",
     "</details>",
   ].join("\n");
@@ -623,17 +638,72 @@ function renderAttributionFooter() {
   ].join("\n");
 }
 
+function stripBulletMarker(value: string) {
+  return value
+    .trim()
+    .replace(/^[-*]\s+/, "")
+    .replace(/^\d+[.)]\s+/, "")
+    .trim();
+}
+
+function normalizedBulletKey(value: string) {
+  return stripBulletMarker(value)
+    .replace(/^#{1,6}\s+/, "")
+    .replace(/\*\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function isSectionLabelBullet(value: string, section?: GateDecisionSection) {
+  const key = normalizedBulletKey(value).replace(/:$/, "");
+  if (!key) return true;
+  const id = sectionId(key);
+  if (section && id === section.id) return true;
+  return Boolean(SECTION_TITLES[id]);
+}
+
+function isDanglingLeadInBullet(value: string) {
+  const key = normalizedBulletKey(value);
+  return key.endsWith(":") && !key.includes("`") && key.length <= 80;
+}
+
+function isPreviewNoiseBullet(value: string) {
+  const text = stripBulletMarker(value);
+  return isDanglingLeadInBullet(value) || /^`[^`]+`$/.test(text);
+}
+
+function cleanSectionBullets(section: GateDecisionSection) {
+  return section.bullets.filter(
+    (bullet) => !isSectionLabelBullet(bullet, section),
+  );
+}
+
 function sectionPreview(
   section: GateDecisionSection | undefined,
   limit: number,
 ) {
-  return (section?.bullets || []).slice(0, limit);
+  if (!section) return [];
+  return cleanSectionBullets(section)
+    .filter((bullet) => !isPreviewNoiseBullet(bullet))
+    .slice(0, limit);
+}
+
+function detailRemainderBullets(
+  section: GateDecisionSection | undefined,
+  preview: string[],
+) {
+  if (!section) return [];
+  const previewKeys = new Set(preview.map(normalizedBulletKey));
+  return cleanSectionBullets(section).filter(
+    (bullet) => !previewKeys.has(normalizedBulletKey(bullet)),
+  );
 }
 
 function reviewMetadataBullets(decision: GateDecision) {
   return [
     `${verdictStatusLabel(decision.verdict)} **Verdict:** \`${decision.verdict}\``,
-    `${confidenceStatusLabel(decision.confidence)} **Confidence:** ${confidenceText(decision.confidence)}`,
+    `${confidenceStatusLabel(decision.confidence)} **Confidence:** ${decisionConfidenceText(decision)}`,
     `ℹ️ **Scope:** ${scopeText(decision.scope)}`,
     `ℹ️ **Formatter:** \`gate-comment-v${GATE_COMMENT_FORMATTER_VERSION}\``,
   ];
@@ -677,7 +747,7 @@ function renderDecisionComment(decision: GateDecision, marker: string) {
 
   if (summaryPreview.length) {
     card.push("**Summary**", "", bulletsMarkdown(summaryPreview), "");
-    if ((summary?.bullets.length || 0) > summaryPreview.length) {
+    if (detailRemainderBullets(summary, summaryPreview).length) {
       card.push(
         "- More review detail is collapsed below for maintainers and contributors who want the full evidence.",
         "",
@@ -694,19 +764,36 @@ function renderDecisionComment(decision: GateDecision, marker: string) {
     );
   }
 
-  card.push(
-    renderDetailsBlock("Review metadata", reviewMetadataBullets(decision)),
-    "",
-  );
-
-  if (summary && summary.bullets.length > summaryPreview.length) {
-    card.push(renderDetails(summary), "");
+  const summaryRemainder = detailRemainderBullets(summary, summaryPreview);
+  if (summary && summaryRemainder.length) {
+    card.push(
+      renderDetails({
+        ...summary,
+        title: "More Summary Detail",
+        bullets: summaryRemainder,
+      }),
+      "",
+    );
   }
   if (recommended && recommended.bullets.length > recommendedPreview.length) {
-    card.push(renderDetails(recommended), "");
+    const recommendedRemainder = detailRemainderBullets(
+      recommended,
+      recommendedPreview,
+    );
+    if (recommendedRemainder.length) {
+      card.push(
+        renderDetails({
+          ...recommended,
+          title: "More Recommended Action Detail",
+          bullets: recommendedRemainder,
+        }),
+        "",
+      );
+    }
   }
   for (const section of detailSections) {
-    card.push(renderDetails(section), "");
+    const rendered = renderDetails(section);
+    if (rendered) card.push(rendered, "");
   }
 
   const footer = singleShotFooter(decision.verdict);

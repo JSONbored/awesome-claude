@@ -487,10 +487,11 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(body).toContain("<!-- heyclaude-submission-gate -->\n> [!WARNING]");
     expect(body).toContain("> ## ❌ Needs changes");
-    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v4`");
+    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v5`");
     expect(body).toContain("> **Summary**");
     expect(body).toContain("<summary><strong>ℹ️ info · Source Review</strong>");
     expect(body).toContain("> **Recommended action**");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
     expect(body).toContain("single-shot submission review");
     expect(body).toContain("Thanks for using [HeyClaude](https://heyclau.de)");
     expect(body).toContain("<summary><strong>❤️ Share</strong></summary>");
@@ -519,13 +520,56 @@ describe("Cloudflare submission gate helpers", () => {
     expect(body).toContain("> ## ✅ Accepted and merged");
     expect(body).toContain("> ✅ **Confidence:** 92%");
     expect(body).toContain("`content/mcp/example.mdx`");
-    expect(body).toContain("<summary><strong>Review metadata</strong>");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
     expect(body).toContain(
       "passed content validation, Superagent, and private review",
     );
     expect(body).toContain("merges accepted source PRs directly");
     expect(body).toContain("JSONbored/awesome-claude");
     expect(body).toContain("Fork HeyClaude");
+  });
+
+  it("renders deterministic closures without confidence noise or duplicate summary text", () => {
+    const body = markerComment({
+      verdict: "close",
+      summary: [
+        "Summary:",
+        "- This PR edits protected content identity, provenance, review, disclosure, source, or verification metadata.",
+        "- HeyClaude allows one-file content edits through this gate only when they avoid protected fields and keep the entry identity intact.",
+        "- Protected fields changed:",
+        "- `dateAdded`",
+        "- `packageVerified`",
+        "",
+        "Recommended Action:",
+        "- Close this PR.",
+      ].join("\n"),
+      labels: ["submission-closed-by-gate"],
+      close: true,
+      scope: {
+        filePath: "content/mcp/example.mdx",
+        category: "mcp",
+        slug: "example",
+        status: "modified",
+      },
+      checks: [
+        { name: "validate-content", status: "passed" },
+        { name: "Superagent Security Scan", status: "passed" },
+      ],
+    });
+
+    expect(body).toContain("> ℹ️ **Confidence:** rule-based");
+    expect(body).not.toContain("Confidence:** not provided");
+    const visibleBody = body.slice(0, body.indexOf("<details>"));
+    expect(visibleBody).not.toContain("Protected fields changed");
+    expect(visibleBody).not.toContain("`dateAdded`");
+    expect(body).toContain(
+      "<summary><strong>ℹ️ info · More Summary Detail</strong>",
+    );
+    expect(body).toContain("> - `dateAdded`");
+    expect(body).toContain("> - `packageVerified`");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
+    expect((body.match(/This PR edits protected/g) || []).length).toBe(1);
+    expect((body.match(/✅ `passed` validate-content/g) || []).length).toBe(1);
   });
 
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
