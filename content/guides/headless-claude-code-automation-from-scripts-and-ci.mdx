@@ -110,13 +110,18 @@ newline-delimited streaming events.
 ## Auto-approve tools safely
 
 ```bash
-claude -p "Run the test suite and fix any failures" --allowedTools "Bash,Read,Edit"
+claude --bare -p "Run the test suite and summarize any failures" \
+  --permission-mode dontAsk \
+  --allowedTools "Bash(npm test),Bash(git diff *)"
 ```
 
-For a locked-down baseline, pass a permission mode: `--permission-mode dontAsk`
-denies anything not in your allow rules or the read-only command set, which suits
-CI. `--allowedTools` uses permission-rule syntax, so `Bash(git diff *)` allows a
-prefix (note the space before `*`).
+For a locked-down CI baseline, use `--bare` so repository-local instructions,
+hooks, skills, plugins, MCP servers, and CLAUDE.md cannot change the run. Pass a
+permission mode: `--permission-mode dontAsk` denies anything not in your allow
+rules or the read-only command set. `--allowedTools` uses permission-rule syntax,
+so `Bash(git diff *)` allows a prefix (note the space before `*`). Avoid broad
+rules such as `Bash,Read,Edit` in CI because they allow arbitrary shell commands
+and broad repository reads or edits.
 
 ## Continue conversations
 
