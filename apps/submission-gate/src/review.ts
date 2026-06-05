@@ -49,11 +49,37 @@ export type GateDecisionError = {
   message?: string;
 };
 
+export type GateDecisionReasonCode =
+  | "scope_failure"
+  | "validation_failure"
+  | "provenance_failure"
+  | "protected_metadata_edit"
+  | "strict_duplicate"
+  | "source_hard_failure"
+  | "commercial_listing_route"
+  | "embedded_secret"
+  | "unsafe_install_pipeline"
+  | "malicious_data_theft"
+  | "prohibited_content"
+  | "policy_fit_failure";
+
+export type GateDecisionEvidence = {
+  ruleId?: string;
+  snippet?: string;
+  behavior?: string;
+  policy?: string;
+  source?: string;
+  fix?: string;
+  whyNotDefensive?: string;
+};
+
 export type GateDecision = {
   verdict: GateVerdict;
   summary: string;
   labels: string[];
   close?: boolean;
+  reasonCode?: GateDecisionReasonCode;
+  evidence?: GateDecisionEvidence[];
   schemaVersion?: typeof GATE_DECISION_SCHEMA_VERSION;
   confidence?: number;
   scope?: GateDecisionScope;
@@ -84,6 +110,26 @@ const V2_GATE_VERDICTS = new Set<GateDecisionV2Verdict>([
   "close",
   "manual",
   "ignore",
+]);
+const CLOSE_REASON_CODES = new Set<GateDecisionReasonCode>([
+  "scope_failure",
+  "validation_failure",
+  "provenance_failure",
+  "protected_metadata_edit",
+  "strict_duplicate",
+  "source_hard_failure",
+  "commercial_listing_route",
+  "embedded_secret",
+  "unsafe_install_pipeline",
+  "malicious_data_theft",
+  "prohibited_content",
+  "policy_fit_failure",
+]);
+const SAFETY_CLOSE_REASON_CODES = new Set<GateDecisionReasonCode>([
+  "embedded_secret",
+  "unsafe_install_pipeline",
+  "malicious_data_theft",
+  "prohibited_content",
 ]);
 
 const RETRYABLE_PRIVATE_REVIEW_CODES = new Set([
@@ -137,6 +183,7 @@ const SECTION_TITLES: Record<string, string> = {
   required_shape: "Required Shape",
   merge_result: "Merge Result",
   one_shot_review: "One-shot Review",
+  decision_evidence: "Decision Evidence",
   raw_evidence: "Raw Evidence",
 };
 
@@ -153,6 +200,7 @@ const DETAILS_SECTION_ORDER = [
   "required_shape",
   "merge_result",
   "one_shot_review",
+  "decision_evidence",
   "raw_evidence",
 ];
 
@@ -235,6 +283,76 @@ function normalizeError(value: unknown): GateDecisionError | null {
   };
 }
 
+function normalizeReasonCode(
+  value: unknown,
+): GateDecisionReasonCode | undefined {
+  const code = cleanText(value) as GateDecisionReasonCode;
+  return CLOSE_REASON_CODES.has(code) ? code : undefined;
+}
+
+function normalizeEvidence(value: unknown): GateDecisionEvidence | null {
+  if (!isRecord(value)) return null;
+  const evidence: GateDecisionEvidence = {
+    ruleId: cleanText(value.ruleId) || undefined,
+    snippet: cleanText(value.snippet) || undefined,
+    behavior: cleanText(value.behavior) || undefined,
+    policy: cleanText(value.policy) || undefined,
+    source: cleanText(value.source) || undefined,
+    fix: cleanText(value.fix) || undefined,
+    whyNotDefensive: cleanText(value.whyNotDefensive) || undefined,
+  };
+  return Object.values(evidence).some(Boolean) ? evidence : null;
+}
+
+function evidenceHasConcreteDetail(evidence: GateDecisionEvidence[]) {
+  return evidence.some((item) =>
+    [
+      item.snippet,
+      item.behavior,
+      item.policy,
+      item.source,
+      item.fix,
+      item.whyNotDefensive,
+    ].some(Boolean),
+  );
+}
+
+function closeEvidenceContractError(params: {
+  reasonCode?: GateDecisionReasonCode;
+  evidence?: GateDecisionEvidence[];
+}) {
+  if (!params.reasonCode) {
+    return "Private close decisions must include a supported reasonCode.";
+  }
+  const evidence = params.evidence || [];
+  if (!evidence.length || !evidenceHasConcreteDetail(evidence)) {
+    return "Private close decisions must include public-safe evidence.";
+  }
+  if (SAFETY_CLOSE_REASON_CODES.has(params.reasonCode)) {
+    const hasRule = evidence.some((item) => item.ruleId);
+    const hasMatchedBehavior = evidence.some(
+      (item) => item.snippet || item.behavior,
+    );
+    const hasDefensiveAssessment = evidence.some(
+      (item) => item.whyNotDefensive,
+    );
+    if (!hasRule || !hasMatchedBehavior || !hasDefensiveAssessment) {
+      return "Private safety close decisions must include ruleId, matched behavior, and whyNotDefensive evidence.";
+    }
+  }
+  return "";
+}
+
+function looksLikeGenericSafetyClose(summary: string) {
+  return (
+    /\bhard safety\b/i.test(summary) ||
+    /\bsecret, package, or abuse gate\b/i.test(summary) ||
+    /\bcontains patterns that cannot be accepted\b/i.test(summary) ||
+    /\bcredential-theft,? or malware\/abuse pattern\b/i.test(summary) ||
+    /\bmatched pattern is concrete enough\b/i.test(summary)
+  );
+}
+
 export function privateReviewErrorDecision(
   reason: string,
   code: string,
@@ -292,6 +410,12 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           .map(normalizeSection)
           .filter((section): section is GateDecisionSection => Boolean(section))
       : null;
+    const reasonCode = normalizeReasonCode(raw.reasonCode);
+    const evidence = Array.isArray(raw.evidence)
+      ? raw.evidence
+          .map(normalizeEvidence)
+          .filter((item): item is GateDecisionEvidence => Boolean(item))
+      : undefined;
 
     if (
       !V2_GATE_VERDICTS.has(verdict) ||
@@ -306,6 +430,19 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
           retryable: true,
           message:
             "Private corpus review returned an invalid GateDecisionV2 payload.",
+        },
+      };
+    }
+    const closeContractError =
+      verdict === "close"
+        ? closeEvidenceContractError({ reasonCode, evidence })
+        : "";
+    if (closeContractError) {
+      return {
+        error: {
+          code: "invalid_private_response",
+          retryable: true,
+          message: closeContractError,
         },
       };
     }
@@ -332,6 +469,8 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
         summary,
         labels,
         close: raw.close === true,
+        reasonCode,
+        evidence,
         checks,
         sections,
         scope,
@@ -363,12 +502,36 @@ export function normalizePrivateGateDecisionPayload(raw: unknown): {
       },
     };
   }
+  const summary = normalizeSummary(raw.summary);
+  const reasonCode = normalizeReasonCode(raw.reasonCode);
+  const evidence = Array.isArray(raw.evidence)
+    ? raw.evidence
+        .map(normalizeEvidence)
+        .filter((item): item is GateDecisionEvidence => Boolean(item))
+    : undefined;
+  if (
+    verdict === "close" &&
+    !reasonCode &&
+    !evidence?.length &&
+    looksLikeGenericSafetyClose(summary)
+  ) {
+    return {
+      error: {
+        code: "invalid_private_response",
+        retryable: true,
+        message:
+          "Private safety close decisions must include public-safe evidence.",
+      },
+    };
+  }
   return {
     decision: {
       verdict,
-      summary: normalizeSummary(raw.summary),
+      summary,
       labels: normalizeLabels(raw.labels),
       close: raw.close === true,
+      reasonCode,
+      evidence,
       confidence: normalizeConfidence(raw.confidence) ?? undefined,
       sourceEvidenceHash: cleanText(raw.sourceEvidenceHash) || undefined,
     },
@@ -574,6 +737,40 @@ function checksSection(decision: GateDecision): GateDecisionSection | null {
   };
 }
 
+function decisionEvidenceSection(
+  decision: GateDecision,
+): GateDecisionSection | null {
+  const evidence = decision.evidence || [];
+  if (!evidence.length) return null;
+  const bullets = evidence
+    .map((item) =>
+      [
+        item.ruleId ? `rule: \`${item.ruleId}\`` : "",
+        item.policy ? `policy: ${item.policy}` : "",
+        item.behavior ? `behavior: ${item.behavior}` : "",
+        item.snippet ? `snippet: \`${item.snippet}\`` : "",
+        item.source ? `source: ${item.source}` : "",
+        item.fix ? `fix: ${item.fix}` : "",
+        item.whyNotDefensive
+          ? `why not defensive: ${item.whyNotDefensive}`
+          : "",
+      ]
+        .filter(Boolean)
+        .join("; "),
+    )
+    .filter(Boolean);
+  if (!bullets.length) return null;
+  return {
+    id: "decision_evidence",
+    title: "Decision Evidence",
+    status:
+      decision.verdict === "close" || decision.verdict === "request_changes"
+        ? "fail"
+        : "info",
+    bullets,
+  };
+}
+
 function sectionStatusLabel(status?: GateDecisionSectionStatus) {
   switch (status) {
     case "pass":
@@ -768,9 +965,10 @@ function reviewMetadataBullets(decision: GateDecision) {
   return [
     `${verdictStatusLabel(decision.verdict)} **Verdict:** \`${decision.verdict}\``,
     `${confidenceStatusLabel(decision.confidence)} **Confidence:** ${decisionConfidenceText(decision)}`,
+    decision.reasonCode ? `ℹ️ **Reason:** \`${decision.reasonCode}\`` : "",
     `ℹ️ **Scope:** ${scopeText(decision.scope)}`,
     `ℹ️ **Formatter:** \`gate-comment-v${GATE_COMMENT_FORMATTER_VERSION}\``,
-  ];
+  ].filter(Boolean);
 }
 
 function renderDecisionComment(decision: GateDecision, marker: string) {
@@ -780,8 +978,10 @@ function renderDecisionComment(decision: GateDecision, marker: string) {
     (section) => section.id === "recommended_action",
   );
   const checks = checksSection(decision);
+  const evidence = decisionEvidenceSection(decision);
   const detailSections = [
     ...(checks ? [checks] : []),
+    ...(evidence ? [evidence] : []),
     ...sections.filter(
       (section) =>
         section.id !== "summary" &&
@@ -1048,6 +1248,14 @@ export function enforceAutoMergeConfidenceFloor(
 export function validationFailedDecision(summary: string): GateDecision {
   return {
     verdict: "close" as const,
+    reasonCode: "validation_failure",
+    evidence: [
+      {
+        ruleId: "validation_failure",
+        behavior: summary,
+        fix: "Fix public validation failures before private review can run.",
+      },
+    ],
     summary: `${summary} The private content review will run after the public validation lane is green.`,
     labels: [LABELS.close],
     close: true,

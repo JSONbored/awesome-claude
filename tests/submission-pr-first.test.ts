@@ -254,6 +254,79 @@ Native macOS MCP server.`);
     );
   });
 
+  it("keeps defensive security submissions out of credential-theft hard-close risk", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 129,
+        title: "content(hooks): add environment leak warning hook",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Environment Leak Warning Hook",
+            slug: "environment-leak-warning-hook",
+            category: "hooks",
+            description:
+              "Defensive hook that warns before commands dump tokens or harvest credentials from shell output.",
+            repoUrl: "https://github.com/example/environment-leak-warning-hook",
+            docsUrl: "https://docs.anthropic.com/en/docs/claude-code/hooks",
+            safetyNotes: [
+              "Inspects command text and blocks risky output patterns before execution.",
+            ],
+            privacyNotes: [
+              "Does not read secret values or send command text to third parties.",
+            ],
+          }),
+          "content/hooks/environment-leak-warning-hook.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "malicious_data_theft_capability",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).not.toContain(
+      "credential, token, session, or wallet theft",
+    );
+  });
+
+  it("routes commercial API relays to the listing flow", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 130,
+        title: "content(tools): add CoderPlan",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "CoderPlan LLM API Relay",
+            slug: "coderplan",
+            category: "tools",
+            description:
+              "Pay-per-use LLM API relay for routing paid model requests through a hosted API gateway.",
+            repoUrl: "https://github.com/example/coderplan",
+            docsUrl: "https://example.com/coderplan",
+            pricingModel: "paid credits",
+          }),
+          "content/tools/coderplan.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "commercial_listing_route",
+    );
+    expect(directContentRequestChangesReasons(report).join("\n")).toContain(
+      "commercial_listing_route",
+    );
+  });
+
   it("still flags wallet and on-chain attestations as identity-sensitive", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {

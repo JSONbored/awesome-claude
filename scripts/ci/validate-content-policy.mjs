@@ -55,6 +55,10 @@ const PRIVACY_NOTE_REQUIRED_FLAGS = new Set([
 
 const UNSAFE_FRONTMATTER_LANGUAGE_ERROR =
   "Executable JavaScript frontmatter is not allowed in content policy validation";
+const DEFENSIVE_SECURITY_CONTEXT_PATTERN =
+  /\b(prevent|protect|warn|warning|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
+const ABUSE_ENABLEMENT_PATTERN =
+  /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
 
 const SAFE_MATTER_OPTIONS = {
   engines: {
@@ -87,6 +91,41 @@ function normalizeText(value) {
 
 function normalizeRepo(value) {
   return normalizeText(value).toLowerCase();
+}
+
+function hasDefensiveSecuritySafeHarbor(text) {
+  return (
+    DEFENSIVE_SECURITY_CONTEXT_PATTERN.test(text) &&
+    !ABUSE_ENABLEMENT_PATTERN.test(text)
+  );
+}
+
+function lower(value) {
+  return normalizeText(value).toLowerCase();
+}
+
+function looksLikeCommercialApiRelay(fields, text) {
+  const body = lower(
+    [
+      text,
+      fields.title,
+      fields.description,
+      fields.pricing_model,
+      fields.pricingModel,
+      fields.disclosure,
+      fields.website_url,
+      fields.websiteUrl,
+    ].join("\n"),
+  );
+  const relaySignal =
+    /\b(api relay|api proxy|llm api relay|llm proxy|model gateway|api gateway)\b/i.test(
+      body,
+    );
+  const commercialSignal =
+    /\b(pay[- ]?per[- ]?use|paid|pricing|credits?|billing|subscription|commercial|monetiz(?:e|ation))\b/i.test(
+      body,
+    );
+  return relaySignal && commercialSignal;
 }
 
 function annotationText(value) {
@@ -539,6 +578,16 @@ function addContentRiskSignals(report, fields, content) {
     fields.affiliate_url,
   ].filter(Boolean);
 
+  if (looksLikeCommercialApiRelay(fields, text)) {
+    addFlag(
+      report,
+      "high",
+      "commercial_listing_route",
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow",
+      "Use the commercial listing route instead of the free content queue",
+    );
+  }
+
   if (submittedSourceUrls.some(isLikelyAffiliateUrl)) {
     addFlag(
       report,
@@ -615,12 +664,13 @@ function addContentRiskSignals(report, fields, content) {
   }
 
   if (
-    /\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
+    !hasDefensiveSecuritySafeHarbor(text) &&
+    (/\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
       text,
     ) ||
-    /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
-      text,
-    )
+      /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
+        text,
+      ))
   ) {
     addFlag(
       report,
@@ -875,6 +925,8 @@ function directContentRequestChangesReasons(report = {}) {
       "Content file could not be read through the GitHub API.",
     community_local_download_request:
       "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    commercial_listing_route:
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow.",
     affiliate_referral_url:
       "Contributor content cannot include affiliate or referral URL parameters.",
     non_https_executable_source:

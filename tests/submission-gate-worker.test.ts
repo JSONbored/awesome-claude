@@ -423,6 +423,8 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain(
       "Do not close a submission merely because it defensively discusses OAuth",
     );
+    expect(source).toContain("closeEvidenceContract:");
+    expect(source).toContain("Every close verdict must include reasonCode");
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -443,12 +445,20 @@ describe("Cloudflare submission gate helpers", () => {
   });
 
   it("closes public validation failures instead of requesting changes", () => {
-    expect(validationFailedDecision("Required validation failed.")).toEqual({
+    expect(
+      validationFailedDecision("Required validation failed."),
+    ).toMatchObject({
       verdict: "close",
+      reasonCode: "validation_failure",
       summary:
         "Required validation failed. The private content review will run after the public validation lane is green.",
       labels: ["submission-closed-by-gate"],
       close: true,
+      evidence: [
+        {
+          ruleId: "validation_failure",
+        },
+      ],
     });
   });
 
@@ -576,6 +586,31 @@ describe("Cloudflare submission gate helpers", () => {
     expect((body.match(/✅ `passed` validate-content/g) || []).length).toBe(1);
   });
 
+  it("renders close reason codes and concrete evidence in collapsed detail", () => {
+    const body = markerComment({
+      verdict: "close",
+      reasonCode: "source_hard_failure",
+      evidence: [
+        {
+          ruleId: "source_url_reachability",
+          source: "https://example.com/docs",
+          behavior: "documentationUrl returned 404",
+          fix: "Replace or remove the dead documentationUrl.",
+        },
+      ],
+      summary:
+        "Summary:\n- The entry is otherwise viable, but documentationUrl returned 404.",
+      labels: ["submission-closed-by-gate"],
+      close: true,
+      confidence: 0.86,
+    });
+
+    expect(body).toContain("> ℹ️ **Reason:** `source_hard_failure`");
+    expect(body).toContain("Decision Evidence");
+    expect(body).toContain("source_url_reachability");
+    expect(body).toContain("documentationUrl returned 404");
+  });
+
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
     expect(markerComment()).toContain("> ## ℹ️ Public validation running");
     expect(markerComment()).toContain(
@@ -698,6 +733,106 @@ describe("Cloudflare submission gate helpers", () => {
         labels: [],
         checks: [],
         sections: [],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.9,
+        reasonCode: "malicious_data_theft",
+        evidence: [
+          {
+            ruleId: "malicious_data_theft_capability",
+            snippet: "harvest cookies from browser sessions",
+            behavior:
+              "The submission instructs users to collect session cookies.",
+            whyNotDefensive:
+              "The content enables collection instead of warning, blocking, or redacting it.",
+          },
+        ],
+        summary: "Summary:\n- Concrete credential-theft behavior is present.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "safety_privacy",
+            status: "fail",
+            bullets: ["Concrete credential-theft behavior is present."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      verdict: "close",
+      reasonCode: "malicious_data_theft",
+      evidence: [
+        {
+          ruleId: "malicious_data_theft_capability",
+        },
+      ],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.86,
+        summary:
+          "Summary:\n- Matches an explicit secret, credential-theft, or malware/abuse pattern.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "safety_privacy",
+            status: "fail",
+            bullets: ["The matched pattern is concrete enough to close."],
+          },
+        ],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "close",
+        confidence: 0.86,
+        reasonCode: "malicious_data_theft",
+        evidence: [
+          {
+            ruleId: "malicious_data_theft_capability",
+            behavior: "A keyword pattern matched.",
+          },
+        ],
+        summary: "Summary:\n- A safety keyword pattern matched.",
+        labels: ["submission-closed-by-gate"],
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "safety_privacy",
+            status: "fail",
+            bullets: ["A safety keyword pattern matched."],
+          },
+        ],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        verdict: "close",
+        summary:
+          "Summary:\n- content/hooks/example.mdx fails a hard safety, secret, package, or abuse gate.\n\nSafety / Privacy:\n- The submission contains patterns that cannot be accepted through automatic content intake.",
+        labels: ["submission-closed-by-gate"],
+        close: true,
       }).error,
     ).toMatchObject({
       code: "invalid_private_response",
@@ -1645,7 +1780,7 @@ websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
     );
   });
 
-  it("treats same canonical repository as a strict duplicate", () => {
+  it("treats same canonical repository and same purpose as a strict duplicate", () => {
     const existing = extractContentDuplicateSignals({
       filePath: "content/mcp/playwright-mcp-server.mdx",
       content: `---
@@ -1663,7 +1798,7 @@ repoUrl: "https://github.com/microsoft/playwright-mcp"
 title: Browser Automation MCP
 slug: browser-automation-mcp
 category: mcp
-description: Browser automation MCP server for Claude.
+description: MCP server for browser automation through Playwright.
 repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
 ---
 `,
@@ -1676,6 +1811,124 @@ repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
         expect.stringContaining("same canonical source URL"),
       ]),
     });
+  });
+
+  it("treats shared safety doctrine as related context unless purpose also matches", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/hooks/environment-variable-validator.mdx",
+      content: `---
+title: Environment Variable Validator Hook
+slug: environment-variable-validator
+category: hooks
+description: PostToolUse hook that checks environment configuration file edits.
+sourceUrl: "https://12factor.net/config"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/hooks/environment-output-safety-reminder-hook.mdx",
+      content: `---
+title: Environment Output Safety Reminder Hook
+slug: environment-output-safety-reminder-hook
+category: hooks
+description: PreToolUse hook that warns before shell commands print broad environment output.
+sourceUrl: "https://12factor.net/config"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://12factor.net/config in hooks",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats shared Claude Code skills docs as related context for distinct agent prompts", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/agents/agent-skills-enterprise-librarian-agent.mdx",
+      content: `---
+title: Agent Skills Enterprise Librarian Agent
+slug: agent-skills-enterprise-librarian-agent
+category: agents
+description: Source-backed agent that curates an organization's Agent Skills library.
+documentationUrl: "https://code.claude.com/docs/en/skills"
+---
+`,
+      label:
+        "accepted entry content/agents/agent-skills-enterprise-librarian-agent.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/agents/ai-agent-cost-governance-analyst-agent.mdx",
+      content: `---
+title: AI Agent Cost Governance Analyst Agent
+slug: ai-agent-cost-governance-analyst-agent
+category: agents
+description: Source-backed agent that analyzes and governs Claude Code spend from OpenTelemetry data.
+documentationUrl: "https://code.claude.com/docs/en/skills"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://code.claude.com/docs/en/skills in agents",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats shared Claude Code MCP docs as related context for distinct MCP agent prompts", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/agents/mcp-tool-result-budget-review-agent.mdx",
+      content: `---
+title: MCP Tool Result Budget Review Agent
+slug: mcp-tool-result-budget-review-agent
+category: agents
+description: Source-backed agent that reviews MCP tool result payload size and budget policy.
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+---
+`,
+      label:
+        "accepted entry content/agents/mcp-tool-result-budget-review-agent.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/agents/mcp-oauth-integration-reviewer-agent.mdx",
+      content: `---
+title: MCP OAuth Integration Reviewer Agent
+slug: mcp-oauth-integration-reviewer-agent
+category: agents
+description: Source-backed agent that reviews OAuth-based MCP server integrations in Claude Code.
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same canonical source URL https://code.claude.com/docs/en/mcp in agents",
+            ),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it("treats shared multi-entry MCP catalogs as related context", () => {
@@ -1789,7 +2042,7 @@ websiteUrl: "https://www.w3.org/WAI/test-evaluate/"
       findStrictContentDuplicateMatch(repeatedCollection, [existingCollection]),
     ).toMatchObject({
       reasons: expect.arrayContaining([
-        expect.stringContaining("same canonical source URL"),
+        expect.stringContaining("same collection source set"),
       ]),
     });
   });

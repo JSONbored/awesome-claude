@@ -53,6 +53,10 @@ const IDENTITY_ATTESTATION_PATTERN =
   /\battestations?\b[\s\S]{0,120}\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b/i;
 const IDENTITY_ATTESTATION_REVERSE_PATTERN =
   /\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b[\s\S]{0,120}\battestations?\b/i;
+const DEFENSIVE_SECURITY_CONTEXT_PATTERN =
+  /\b(prevent|protect|warn|warning|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
+const ABUSE_ENABLEMENT_PATTERN =
+  /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
 
 // Keep these Markdown/login helpers in sync with CI policy reporting so issue
 // and PR review summaries escape contributor-controlled text consistently.
@@ -103,6 +107,37 @@ function hasFinancialOrIdentitySensitiveSignal(text) {
     IDENTITY_ATTESTATION_PATTERN.test(text) ||
     IDENTITY_ATTESTATION_REVERSE_PATTERN.test(text)
   );
+}
+
+function hasDefensiveSecuritySafeHarbor(text) {
+  return (
+    DEFENSIVE_SECURITY_CONTEXT_PATTERN.test(text) &&
+    !ABUSE_ENABLEMENT_PATTERN.test(text)
+  );
+}
+
+function looksLikeCommercialApiRelay(fields, text) {
+  const body = lower(
+    [
+      text,
+      fields.title,
+      fields.description,
+      fields.pricing_model,
+      fields.pricingModel,
+      fields.disclosure,
+      fields.website_url,
+      fields.websiteUrl,
+    ].join("\n"),
+  );
+  const relaySignal =
+    /\b(api relay|api proxy|llm api relay|llm proxy|model gateway|api gateway)\b/i.test(
+      body,
+    );
+  const commercialSignal =
+    /\b(pay[- ]?per[- ]?use|paid|pricing|credits?|billing|subscription|commercial|monetiz(?:e|ation))\b/i.test(
+      body,
+    );
+  return relaySignal && commercialSignal;
 }
 
 function lower(value) {
@@ -501,6 +536,7 @@ const CAPABILITY_BUCKET_BY_FLAG = {
   embedded_secret: "unsafe_install_or_secret",
   community_local_download_request: "package_policy",
   community_archive_download: "package_policy",
+  commercial_listing_route: "commercial_or_listing_route",
   non_https_executable_source: "unsafe_install_or_secret",
   unsafe_install_pipeline: "unsafe_install_or_secret",
   malicious_data_theft_capability: "abuse_or_malware",
@@ -770,6 +806,16 @@ function addContentRiskSignals(report, fields, text) {
   );
   const executableSourceUrls = collectUrls(installText);
 
+  if (looksLikeCommercialApiRelay(fields, text)) {
+    addFlag(
+      report,
+      "high",
+      "commercial_listing_route",
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow",
+      "Use the commercial listing route instead of the free content queue",
+    );
+  }
+
   if (
     /\b(ghp_[a-z0-9_]{20,}|github_pat_[a-z0-9_]{40,}|sk-[a-z0-9]{20,}|akia[0-9a-z]{16}|xq_[a-f0-9]{40,})\b/i.test(
       text,
@@ -836,12 +882,13 @@ function addContentRiskSignals(report, fields, text) {
   }
 
   if (
-    /\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
+    !hasDefensiveSecuritySafeHarbor(text) &&
+    (/\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
       text,
     ) ||
-    /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
-      text,
-    )
+      /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
+        text,
+      ))
   ) {
     addFlag(
       report,
@@ -1237,6 +1284,8 @@ export function directContentRequestChangesReasons(report = {}) {
       "Content file could not be read through the GitHub API.",
     community_local_download_request:
       "Community PRs cannot request HeyClaude-hosted /downloads package URLs.",
+    commercial_listing_route:
+      "Commercial API relays, paid gateways, and pay-per-use proxy services belong in the tools/listing flow.",
     non_https_executable_source:
       "Install or usage instructions fetch executable content from a non-HTTPS URL.",
     unsafe_install_pipeline:
