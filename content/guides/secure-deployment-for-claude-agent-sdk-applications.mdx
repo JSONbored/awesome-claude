@@ -1,0 +1,319 @@
+---
+title: Secure Deployment For Claude Agent SDK Applications
+slug: secure-deployment-for-claude-agent-sdk-applications
+category: guides
+description: >-
+  A practical guide to securely deploying applications built with the Claude
+  Agent SDK. Covers credential management, network isolation, least-privilege
+  tool scoping, audit logging, and production hardening for autonomous agents.
+cardDescription: >-
+  Secure deployment practices for Claude Agent SDK apps: secrets, isolation,
+  least-privilege tools, and audit logging.
+seoTitle: Secure Deployment For Claude Agent SDK Applications
+seoDescription: >-
+  Learn how to securely deploy Claude Agent SDK applications in production.
+  Covers API key management, network isolation, tool scoping, audit logging,
+  and container hardening.
+author: dale053
+authorProfileUrl: "https://github.com/dale053"
+dateAdded: "2026-06-05"
+submissionIssueNumber: 1400
+submissionIssueUrl: "https://github.com/JSONbored/awesome-claude/issues/1400"
+installable: false
+prerequisites:
+  - Claude API key with appropriate tier for your workload
+  - Familiarity with the Claude Agent SDK (agents, subagents, tool definitions)
+  - A container runtime or cloud deployment target (Docker, Kubernetes, AWS ECS, etc.)
+  - Basic understanding of secrets management (environment variables, vaults)
+safetyNotes:
+  - Never embed API keys or secrets directly in source code or Docker images; use a secrets manager or injected environment variables at runtime.
+  - Agents with write-capable tools (file system, shell, database) can cause irreversible changes; apply least-privilege scoping and require human-in-the-loop confirmation for destructive actions.
+  - Subagents inherit the tool set of their orchestrator unless explicitly scoped; always define per-agent tool allowlists.
+  - MCP server connections expand the agent's attack surface; only connect to servers you control or have audited, and use bearer-token auth on all MCP endpoints.
+  - Background worker agents that run unattended should have rate limits and budget caps configured to prevent runaway token consumption or unintended side effects.
+privacyNotes:
+  - Prompt content, including any user data injected into agent context, is sent to Anthropic's API; review Anthropic's data handling and retention policies before processing PII or confidential data.
+  - Avoid logging full prompt and completion text in production; log only structured metadata (model, token counts, tool names, latency) to reduce data exposure in log pipelines.
+  - If agents read local files or environment variables, ensure those paths do not contain credentials or personal data that could be captured in traces or error messages.
+  - For regulated industries (healthcare, finance), establish a Business Associate Agreement or equivalent with Anthropic before passing sensitive records through agent contexts.
+usageSnippet: >-
+  This guide walks through the key security controls required before taking a
+  Claude Agent SDK application to production: securing credentials, isolating
+  the network boundary, scoping agent tools to least privilege, enabling
+  structured audit logs, and hardening the container or cloud runtime.
+tags:
+  - security
+  - deployment
+  - agent-sdk
+  - production
+  - enterprise
+keywords:
+  - claude agent sdk secure deployment
+  - claude agent security
+  - anthropic agent sdk production
+  - secure ai agent deployment
+readingTime: 7
+difficultyScore: 62
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Deploying a Claude Agent SDK application to production requires more than wiring up an API key and shipping a container. Autonomous agents can read files, call external APIs, execute shell commands, and spawn subagents — each of these capabilities is a potential security surface. This guide covers the five controls that matter most: credential isolation, network boundary enforcement, least-privilege tool scoping, structured audit logging, and runtime hardening.
+
+**Key Points:**
+
+- Store API keys in a secrets manager and inject them at runtime — never bake them into images or source code
+- Define explicit tool allowlists per agent; subagents must not silently inherit orchestrator permissions
+- Enforce MCP bearer-token authentication and restrict outbound network access to known endpoints
+- Emit structured audit logs (tool name, input hash, output hash, token counts) without logging raw prompt text
+- Set hard budget caps and rate limits on background agents to prevent runaway consumption
+
+## Prerequisites
+
+Before following this guide, you need:
+
+- A Claude API key (Anthropic Console → API Keys)
+- The Claude Agent SDK installed (`npm install @anthropic-ai/agent-sdk` or the Python equivalent)
+- A container runtime or cloud deployment target
+- A secrets manager: AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager, or at minimum OS-level environment variable injection
+
+## 1. Credential Management
+
+**Never put your Anthropic API key in source code.** This is the most common and most damaging mistake. Keys committed to version control or baked into Docker images are routinely harvested by automated scanners.
+
+**Recommended pattern — runtime injection via secrets manager:**
+
+```python
+import os
+import boto3  # example: AWS Secrets Manager
+
+def get_api_key() -> str:
+    client = boto3.client("secretsmanager", region_name="us-east-1")
+    secret = client.get_secret_value(SecretId="prod/anthropic/api-key")
+    return secret["SecretString"]
+
+# Pass to the SDK at startup, not at import time
+api_key = get_api_key()
+```
+
+**Environment variable fallback (acceptable for local dev, not production):**
+
+```bash
+# .env — never commit this file
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+**Controls to enforce:**
+
+- Rotate API keys on a schedule (quarterly minimum) and immediately on suspected exposure
+- Use separate keys per environment (dev, staging, prod) with different rate-limit tiers
+- Grant only the IAM/vault role that runs your agent access to the secret — not the CI pipeline, not developer workstations
+- Enable Anthropic Console alerts for unusual spend spikes, which can indicate key leakage
+
+## 2. Network Isolation
+
+Agents that can reach arbitrary internet endpoints are harder to audit and easier to abuse. Restrict outbound traffic to the minimum required set.
+
+**Allowlist-based egress (Docker / Kubernetes example):**
+
+```yaml
+# Kubernetes NetworkPolicy — deny all egress except Anthropic API and your own services
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: agent-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: claude-agent
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
+```
+
+For MCP servers: run them inside the same private network as your agent and enforce mutual TLS or bearer-token authentication on every connection. Do not expose MCP endpoints publicly.
+
+## 3. Least-Privilege Tool Scoping
+
+The Agent SDK lets you define the tools each agent (and each subagent) can call. Default to denying everything and explicitly allowing only what is needed.
+
+**Tool definition with scoped permissions:**
+
+```python
+from anthropic import Anthropic
+from anthropic.types.agent import Tool
+
+# Only expose the tools this agent actually needs
+read_only_tools = [
+    Tool(
+        name="read_file",
+        description="Read a file from the allowed directory",
+        input_schema={
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "description": "Path within /data/readonly/ only"
+                }
+            },
+            "required": ["path"]
+        }
+    )
+]
+
+# Subagents must receive their own explicit tool list
+subagent_config = {
+    "tools": read_only_tools,  # do NOT pass parent agent's full tool set
+    "max_tokens": 4096
+}
+```
+
+**Rules to enforce:**
+
+- Write-capable tools (shell exec, file write, DB mutations, HTTP POST) require explicit justification and ideally a human-approval step
+- Subagents spawned by an orchestrator must define their own tool allowlist — they should never inherit the full parent scope by default
+- Validate tool inputs server-side before execution; treat agent-generated inputs as untrusted
+
+## 4. Structured Audit Logging
+
+You need a log trail that answers: which tool did the agent call, with what inputs, and what did it return — without storing raw user data or prompt content.
+
+**Structured log schema (JSON Lines):**
+
+```json
+{
+  "ts": "2026-06-05T14:23:01Z",
+  "run_id": "run_abc123",
+  "agent_id": "orchestrator",
+  "event": "tool_call",
+  "tool_name": "read_file",
+  "input_hash": "sha256:e3b0c44...",
+  "output_hash": "sha256:a87ff6...",
+  "input_tokens": 1204,
+  "output_tokens": 312,
+  "latency_ms": 840,
+  "model": "claude-sonnet-4-6"
+}
+```
+
+**What to log:**
+
+- Tool name, input/output content hashes (not plaintext), token counts, latency, model ID
+- Agent and subagent IDs, run IDs for trace correlation
+- Error types and HTTP status codes from tool calls
+
+**What NOT to log:**
+
+- Raw prompt text or completion text (may contain PII or confidential data)
+- API keys, credentials, or file contents returned by tools
+- Full stack traces that include user-supplied input
+
+Ship logs to a centralised platform (CloudWatch, Datadog, Splunk) with a retention policy aligned to your compliance requirements.
+
+## 5. Runtime Hardening
+
+**Container security baseline:**
+
+```dockerfile
+FROM python:3.12-slim
+
+# Run as non-root
+RUN useradd --create-home --shell /bin/bash agent
+USER agent
+WORKDIR /home/agent/app
+
+COPY --chown=agent:agent requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY --chown=agent:agent . .
+
+# No ANTHROPIC_API_KEY in the image — injected at runtime
+CMD ["python", "-m", "agent.main"]
+```
+
+```bash
+docker run \
+  --read-only \
+  --tmpfs /tmp \
+  --cap-drop ALL \
+  --security-opt no-new-privileges \
+  -e ANTHROPIC_API_KEY="$(vault kv get -field=key secret/prod/anthropic)" \
+  my-claude-agent:latest
+```
+
+**Budget and rate-limit controls:**
+
+```python
+from anthropic import Anthropic
+
+client = Anthropic(api_key=api_key)
+
+# Set a hard token budget per run to prevent runaway consumption
+response = client.beta.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=8192,
+    system="You are a helpful agent.",
+    messages=[{"role": "user", "content": user_input}],
+    # Use thinking budget for extended thinking models
+    # betas=["interleaved-thinking-2025-05-14"],
+)
+```
+
+At the infrastructure level, configure API rate limits in the Anthropic Console and set spend alerts at 50% and 90% of your monthly budget.
+
+## Troubleshooting Guide
+
+> **Common Issues**
+>
+> **Issue: Agent hits 401 Unauthorized after deployment**
+> **Solution:** The API key is not being injected correctly at runtime. Confirm the secret name, the IAM role attached to the container task, and that the secret value does not include trailing whitespace or newlines.
+>
+> **Issue: Subagent calls a tool the orchestrator should not have delegated**
+> **Solution:** Explicitly pass a scoped `tools` list when spawning subagents. If you are passing `tools=parent_agent.tools`, the subagent inherits everything — replace with an explicit allowlist.
+>
+> **Issue: MCP connection refused inside the cluster**
+> **Solution:** Confirm the MCP server is in the same namespace/VPC and that the NetworkPolicy allows egress from the agent pod to the MCP service port. Check that the bearer token header is being sent correctly.
+>
+> **Issue: Spend spike detected on Anthropic Console**
+> **Solution:** Check audit logs for run IDs with unusually high token counts. Common causes: a looping orchestrator spawning unbounded subagents, or a prompt injection in a tool response causing the agent to repeat work. Add per-run token budget caps and input sanitisation on tool outputs.
+
+## Quick Reference Checklist
+
+Before going to production, verify:
+
+- [ ] API key stored in secrets manager, not in source or image
+- [ ] Separate keys per environment with independent rate limits
+- [ ] Egress restricted to Anthropic API + known internal services
+- [ ] MCP endpoints behind authentication, not publicly exposed
+- [ ] Each agent has an explicit tool allowlist
+- [ ] Subagents do not inherit the orchestrator's full tool set
+- [ ] Write-capable tools require input validation before execution
+- [ ] Structured audit logs shipping to centralised platform
+- [ ] Raw prompt/completion text excluded from logs
+- [ ] Container running as non-root with read-only root filesystem
+- [ ] Spend alerts configured at 50% and 90% of monthly budget
+- [ ] Per-run token budget caps set on all agent runs
+
+## Related Resources
+
+- [Anthropic Agent SDK Documentation](https://docs.anthropic.com/en/agent-sdk)
+- [Anthropic API Security Best Practices](https://docs.anthropic.com/en/api/getting-started)
+- [Model Context Protocol (MCP) Specification](https://modelcontextprotocol.io)
+- [Anthropic Console — API Keys & Spend Limits](https://console.anthropic.com)
+
+_Last updated: June 2026_
