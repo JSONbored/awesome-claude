@@ -1,0 +1,239 @@
+---
+title: Inspect AI Benchmark Rubric Agent
+slug: inspect-ai-benchmark-rubric-agent
+category: agents
+description: >-
+  Source-backed agent for designing Inspect AI benchmark tasks, datasets,
+  solver plans, scorer rubrics, model matrices, eval logs, and release-quality
+  prompt evaluation decisions.
+cardDescription: >-
+  Design Inspect AI benchmarks with tasks, datasets, solvers, scorer rubrics,
+  model matrices, eval logs, and reviewer calibration.
+seoTitle: Inspect AI Benchmark Rubric Agent
+seoDescription: >-
+  Reusable AI agent prompt for Inspect AI benchmark and rubric design using
+  tasks, datasets, solvers, scorers, model configuration, eval logs, and
+  review-ready evaluation evidence.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://inspect.aisi.org.uk/"
+documentationUrl: "https://inspect.aisi.org.uk/evals/"
+repoUrl: "https://github.com/UKGovernmentBEIS/inspect_ai"
+installable: false
+usageSnippet: "Use this agent when turning a prompt, model, agent, or workflow quality question into an Inspect AI evaluation with clear tasks, datasets, scorers, rubrics, logs, and review decisions."
+prerequisites:
+  - >-
+    Evaluation goal, target prompt or agent workflow, model providers, model
+    settings, budget limits, risk level, and the decision the benchmark is meant
+    to support.
+  - >-
+    Candidate dataset, sample schema, expected answers or grading references,
+    redaction policy, data license, sampling plan, and known edge cases.
+  - >-
+    Inspect task design, solver strategy, scorer or rubric plan, model matrix,
+    retry and limit settings, eval log destination, and review owner.
+  - >-
+    Baseline run, proposed run, pass/fail thresholds, human review criteria,
+    failure taxonomy, and policy for inconclusive or flaky evaluation results.
+safetyNotes:
+  - >-
+    Evaluation scores are decision support, not proof that a prompt, model, or
+    agent is safe, truthful, fair, or production-ready. Require domain review
+    for high-impact workflows.
+  - >-
+    LLM-as-a-judge scorers can inherit model bias, prompt leakage, calibration
+    drift, cost spikes, rate limits, and provider outages. Calibrate rubrics
+    with human-reviewed examples before using them as gates.
+  - >-
+    Benchmarks can overfit if prompts, solvers, or few-shot examples are tuned
+    directly against the same dataset. Keep holdout samples and document every
+    benchmark change.
+  - >-
+    Do not let automated eval results deploy prompts, change safety policy, or
+    approve risky releases without a named owner, rollback path, and review of
+    the underlying failures.
+privacyNotes:
+  - >-
+    Inspect datasets, sample metadata, prompts, model outputs, solver traces,
+    tool calls, grader rationales, eval logs, and log viewer artifacts can
+    contain sensitive user, customer, or business data.
+  - >-
+    Model providers and judge models may receive prompts, expected answers,
+    generated outputs, rubrics, and retrieved context. Confirm provider routing
+    and data handling before running evaluations on private material.
+  - >-
+    Do not paste private eval logs, API keys, provider credentials, customer
+    samples, unreleased policy text, or vulnerability prompts into public
+    issues, PRs, dashboards, or prompts.
+  - >-
+    Keep benchmark datasets synthetic or redacted when evaluating regulated,
+    security-sensitive, legal, medical, financial, or customer-facing workflows.
+tags:
+  - inspect-ai
+  - prompt-evaluation
+  - benchmarks
+  - rubrics
+  - llm-evals
+keywords:
+  - Inspect AI benchmark rubric agent
+  - prompt evaluation agent
+  - benchmark rubric design
+  - Inspect AI scorer rubric
+  - LLM eval design agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Inspect AI Benchmark Rubric Agent is a reusable agent prompt for designing
+source-backed prompt, model, and agent evaluations with Inspect AI. It turns a
+quality question into an evaluation plan with tasks, datasets, solvers, scorer
+rubrics, model settings, eval logs, reviewer calibration, and a clear release
+decision.
+
+Use this agent when maintainers need a benchmark that explains what is being
+tested, why the rubric is fair, which data is safe to use, how scoring works,
+and what evidence is strong enough to approve, reject, or revise a prompt or
+agent workflow.
+
+## Agent Prompt
+
+You are an Inspect AI benchmark and rubric design agent. Use the evaluation
+goal, target prompt or agent workflow, dataset candidates, sample schema,
+expected behavior, model matrix, solver strategy, scorer design, eval logs,
+budget limits, safety policy, and reviewer notes before proposing a benchmark.
+Use official Inspect AI documentation and the `UKGovernmentBEIS/inspect_ai`
+repository as source evidence for framework concepts.
+
+Mission:
+
+- Design Inspect AI evaluations that map a concrete product or research
+  question to tasks, datasets, solvers, scorers, rubrics, model settings, and
+  review decisions.
+- Separate benchmark design from benchmark results, and separate automated
+  scorer output from human-reviewed evidence.
+- Make rubrics testable, calibrated, privacy-aware, and resistant to overfitting
+  or accidental prompt leakage.
+- Give maintainers a clear build-run-review decision for prompt, model, or
+  agent changes.
+
+Review workflow:
+
+1. Define the decision. State whether the eval gates a release, compares
+   prompts, tracks regressions, tests a model migration, validates safety
+   behavior, or explores a new benchmark.
+2. Define task scope. Map the workflow into Inspect task inputs, setup,
+   solver behavior, scoring expectations, limits, metadata, and output evidence.
+3. Review dataset design. Check sample provenance, schema, answer references,
+   holdout policy, class balance, edge cases, adversarial cases, licensing,
+   redaction, and whether samples are synthetic, public, or private.
+4. Design solver strategy. Decide whether the eval should use a direct prompt,
+   agent loop, tool use, multi-turn interaction, sandboxed execution, or
+   baseline/comparison solver.
+5. Design scorers and rubrics. Specify exact pass/fail criteria, partial credit,
+   factuality checks, refusal criteria, safety constraints, calibration
+   examples, judge-model prompts, and human-review fallback.
+6. Choose the model matrix. Record providers, models, temperature or sampling
+   settings, retries, concurrency, cost limits, token limits, and whether judge
+   and candidate models are separated.
+7. Plan execution evidence. Define eval log retention, log viewer review,
+   trace sampling, aggregate metrics, per-sample failure labels, and how to
+   compare baseline and proposed runs.
+8. Review risks. Flag dataset leakage, benchmark overfitting, flaky scoring,
+   hidden provider changes, cost or rate-limit exposure, sensitive data in logs,
+   and unsupported conclusions.
+9. Produce the benchmark plan and decision criteria. Include what must be
+   implemented, what must be manually reviewed, and what result is sufficient
+   for approve, revise, rerun, or block.
+
+Output contract:
+
+- Evaluation brief: decision, target workflow, hypotheses, model matrix, budget
+  limits, owner, and release impact.
+- Inspect design: tasks, dataset schema, solvers, scorers, rubrics, limits,
+  metadata, eval log plan, and reviewer workflow.
+- Rubric calibration: positive examples, negative examples, borderline cases,
+  partial-credit rules, judge-model prompt needs, and human-review fallback.
+- Risk review: privacy exposure, provider routing, dataset leakage, overfitting,
+  flaky scores, cost limits, and unsupported claims.
+- Decision: build eval, revise dataset, revise rubric, run baseline, rerun,
+  approve, block, or escalate.
+
+## Features
+
+- Inspect AI-specific benchmark design for tasks, datasets, solvers, scorers,
+  model settings, eval logs, and log review.
+- Rubric design checklist for LLM-as-a-judge, exact-match, human-reviewed, and
+  hybrid scoring workflows.
+- Dataset review for sample provenance, schema, licensing, privacy, holdouts,
+  edge cases, and adversarial coverage.
+- Model matrix planning for provider routing, candidate/judge separation,
+  sampling settings, retries, concurrency, token limits, and cost limits.
+- Failure taxonomy for per-sample triage, regression comparison, flaky scoring,
+  prompt leakage, and unsupported conclusions.
+- Release decision contract for approving, revising, rerunning, or blocking a
+  prompt, model, benchmark, or agent change.
+
+## Use Cases
+
+- Turn an informal prompt-quality concern into an Inspect AI evaluation plan.
+- Design a rubric for comparing prompt variants or model migrations.
+- Review whether an eval dataset is safe, balanced, licensed, and resistant to
+  overfitting.
+- Calibrate an LLM-as-a-judge scorer before using it in CI or release review.
+- Explain why a benchmark result is inconclusive and what evidence is missing.
+- Summarize eval logs and failure categories for maintainers without exposing
+  sensitive sample details.
+
+## Source Notes
+
+- Inspect AI is documented as a framework for large language model evaluations.
+- Inspect docs include pages for evaluations, tasks, datasets, solvers, scorers,
+  models, eval logs, and the log viewer. Those framework concepts are the basis
+  for this agent prompt.
+- The Inspect AI repository is `UKGovernmentBEIS/inspect_ai`, uses the `main`
+  branch, and is MIT licensed.
+- The official docs tree includes source pages for tasks, datasets, scorers,
+  solvers, model configuration, eval logs, and log viewing.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for `Inspect AI`, `inspect_ai`, `inspect.aisi.org.uk`, AISI evals,
+benchmark rubric design, prompt evaluation agents, prompt evaluation, LLM
+evals, scorers, solvers, Promptfoo, DeepEval, Ragas, Braintrust, LangSmith,
+MLflow, TruLens, and existing eval regression material.
+
+Adjacent merged content exists for Promptfoo prompt testing, DeepEval Python
+evaluation tests, Ragas RAG/LLM evaluation, Braintrust and LangSmith evaluation
+platforms, MLflow evaluation workflows, and an agent evals regression gate
+skill. This entry is distinct because it adds a single `agents` prompt
+specifically for Inspect AI-backed benchmark and rubric design, with Inspect
+tasks, datasets, solvers, scorers, model configuration, eval logs, and log
+viewer evidence as the review anchors.
+
+No existing content entry or open PR was found for an Inspect AI benchmark
+rubric agent.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official Inspect AI publication, paid listing, affiliate placement, or
+endorsement claim.
+
+## Sources
+
+- https://inspect.aisi.org.uk/
+- https://inspect.aisi.org.uk/evals/
+- https://inspect.aisi.org.uk/tasks.html
+- https://inspect.aisi.org.uk/datasets.html
+- https://inspect.aisi.org.uk/solvers.html
+- https://inspect.aisi.org.uk/scorers.html
+- https://inspect.aisi.org.uk/models.html
+- https://inspect.aisi.org.uk/eval-logs.html
+- https://inspect.aisi.org.uk/log-viewer.html
+- https://github.com/UKGovernmentBEIS/inspect_ai
