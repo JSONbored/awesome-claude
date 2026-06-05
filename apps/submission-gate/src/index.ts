@@ -51,6 +51,7 @@ import {
   isRetryableGateDecision,
   markerComment,
   normalizePrivateGateDecisionPayload,
+  parsePrivateGateDecisionResponseBody,
   privateReviewErrorDecision,
   retryingReviewComment,
   type GateDecision,
@@ -454,6 +455,33 @@ function retryDelayForError(error: unknown) {
 
 function nextReviewForError(error: unknown) {
   return isoAfter(retryDelayForError(error));
+}
+
+function isTimeoutError(error: unknown) {
+  if (!(error instanceof Error)) return false;
+  return (
+    error.name === "AbortError" ||
+    error.name === "TimeoutError" ||
+    /(?:operation was aborted due to timeout|aborted due to timeout|timed out|timeout)/i.test(
+      error.message,
+    )
+  );
+}
+
+function retryablePrecheckDecision(error: unknown) {
+  if (isGitHubRateLimitError(error)) {
+    return privateReviewErrorDecision(
+      "Submission gate deterministic duplicate/edit review hit a GitHub rate limit.",
+      "github_rate_limited",
+    );
+  }
+  if (isTimeoutError(error)) {
+    return privateReviewErrorDecision(
+      "Submission gate deterministic duplicate/edit review timed out while reading source or duplicate evidence.",
+      "source_evidence_timeout",
+    );
+  }
+  return null;
 }
 
 function normalizeOneShotDecision(decision: GateDecision): GateDecision {
@@ -2702,7 +2730,9 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
       "private_reviewer_unavailable",
     );
   }
-  const raw = await response.json().catch(() => null);
+  const raw = parsePrivateGateDecisionResponseBody(
+    await response.text().catch(() => ""),
+  );
   const normalized = normalizePrivateGateDecisionPayload(raw);
   if (normalized.error || !normalized.decision) {
     const error = normalized.error || {
@@ -2717,6 +2747,61 @@ async function reviewWithPrivateGate(env: Env, message: QueueMessage) {
     );
   }
   return normalized.decision;
+}
+
+async function persistRetryableGateDecision(params: {
+  env: Env;
+  token: string;
+  repo: ReturnType<typeof parseRepo>;
+  target: ReviewTarget;
+  message: QueueMessage;
+  decision: GateDecision;
+  auditDecision: string;
+}) {
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.target.headRepo,
+    headRef: params.target.headRef,
+    headSha: params.target.headSha,
+    baseRef: params.target.baseRef || contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status: "error_retryable",
+    nextReviewAt: nextReviewForStatus("error_retryable"),
+    lastError: truncateForQueue(params.decision.summary),
+    deliveryId: String(params.message.payload.deliveryId || ""),
+    clearVerdict: true,
+    clearTerminal: true,
+  });
+  const retryComment = await upsertMarkerComment({
+    token: params.token,
+    repo: params.repo,
+    issueNumber: params.target.number,
+    marker: params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    body: retryingReviewComment(
+      params.env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
+    ),
+    apiVersion: params.env.GITHUB_API_VERSION,
+  });
+  await upsertPrState(params.env.SUBMISSION_GATE_DB, {
+    repo: params.target.repoFullName,
+    number: params.target.number,
+    headRepo: params.target.headRepo,
+    headRef: params.target.headRef,
+    headSha: params.target.headSha,
+    baseRef: params.target.baseRef || contentGateBaseRef(params.env),
+    installationId: params.target.installationId,
+    status: "error_retryable",
+    nextReviewAt: nextReviewForStatus("error_retryable"),
+    ...decisionMetadata(params.decision, retryComment),
+  });
+  await insertAudit(params.env.SUBMISSION_GATE_DB, {
+    id: crypto.randomUUID(),
+    targetKey: params.message.targetKey,
+    eventType: params.message.kind,
+    decision: params.auditDecision,
+    summary: params.decision.summary,
+  });
 }
 
 async function withSubmissionLock(
@@ -3222,6 +3307,19 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             };
           }
         } catch (error) {
+          const retryableDecision = retryablePrecheckDecision(error);
+          if (retryableDecision) {
+            await persistRetryableGateDecision({
+              env,
+              token,
+              repo,
+              target,
+              message,
+              decision: retryableDecision,
+              auditDecision: "deterministic_precheck_retryable",
+            });
+            return;
+          }
           decision = defaultManualDecision(
             `Submission gate could not complete deterministic duplicate/edit review: ${
               error instanceof Error ? error.message : "unknown error"
@@ -3289,55 +3387,14 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
           );
         }
         if (isRetryableGateDecision(decision)) {
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || contentGateBaseRef(env),
-            installationId: target.installationId,
-            status: "error_retryable",
-            nextReviewAt: nextReviewForStatus("error_retryable"),
-            lastError: truncateForQueue(decision.summary),
-            deliveryId: String(message.payload.deliveryId || ""),
-            clearVerdict: true,
-            clearTerminal: true,
-          });
-          const retryComment = await upsertMarkerComment({
+          await persistRetryableGateDecision({
+            env,
             token,
             repo,
-            issueNumber: target.number,
-            marker: env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            body: retryingReviewComment(
-              env.REVIEW_MARKER || DEFAULT_REVIEW_MARKER,
-            ),
-            apiVersion: env.GITHUB_API_VERSION,
-          });
-          await upsertPrState(env.SUBMISSION_GATE_DB, {
-            repo: target.repoFullName,
-            number: target.number,
-            headRepo: target.headRepo,
-            headRef: target.headRef,
-            headSha: target.headSha,
-            baseRef: target.baseRef || contentGateBaseRef(env),
-            installationId: target.installationId,
-            status: "error_retryable",
-            nextReviewAt: nextReviewForStatus("error_retryable"),
-            commentId: retryComment.id,
-            commentUrl: retryComment.url,
-            schemaVersion: decision.schemaVersion ?? 1,
-            formatterVersion: GATE_COMMENT_FORMATTER_VERSION,
-            decisionId: decision.decisionId || crypto.randomUUID(),
-            confidence: decision.confidence ?? null,
-            sourceEvidenceHash: decision.sourceEvidenceHash ?? null,
-          });
-          await insertAudit(env.SUBMISSION_GATE_DB, {
-            id: crypto.randomUUID(),
-            targetKey: message.targetKey,
-            eventType: message.kind,
-            decision: "private_review_retryable",
-            summary: decision.summary,
+            target,
+            message,
+            decision,
+            auditDecision: "private_review_retryable",
           });
           return;
         }
