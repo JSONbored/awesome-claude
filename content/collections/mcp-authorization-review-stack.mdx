@@ -1,0 +1,124 @@
+---
+title: MCP Authorization Review Stack
+slug: mcp-authorization-review-stack
+category: collections
+description: >-
+  Source-backed collection for reviewing OAuth-backed and remote MCP servers:
+  protected resource metadata, token audience checks, least-privilege scopes,
+  config privacy, local tool access, and interactive server inspection.
+cardDescription: Review remote MCP auth boundaries with guides, commands, agents, rules, and tooling.
+seoTitle: MCP Authorization Review Stack
+seoDescription: >-
+  Curated HeyClaude collection for MCP authorization review using protected
+  resource metadata checks, token audience guidance, local tool access rules,
+  server hardening, and MCP Inspector debugging.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://www.rfc-editor.org/rfc/rfc8707"
+  - "https://www.rfc-editor.org/rfc/rfc9728"
+installable: false
+usageSnippet: >-
+  Start with protected resource metadata, run an auth audit prompt, inspect the
+  server surface, then apply local access and hardening rules before approval.
+items:
+  - slug: mcp-protected-resource-metadata-verification-guide
+    category: guides
+  - slug: mcp-oauth-token-audience-checklist
+    category: guides
+  - slug: mcp-authorization-boundary-review-agent
+    category: agents
+  - slug: mcp-auth-audit
+    category: commands
+  - slug: mcp-local-tool-access-rules
+    category: rules
+  - slug: mcp-server-security-hardening
+    category: skills
+  - slug: mcp-inspector
+    category: tools
+installationOrder:
+  - mcp-protected-resource-metadata-verification-guide
+  - mcp-oauth-token-audience-checklist
+  - mcp-authorization-boundary-review-agent
+  - mcp-auth-audit
+  - mcp-local-tool-access-rules
+  - mcp-server-security-hardening
+  - mcp-inspector
+estimatedSetupTime: 60 minutes
+difficulty: intermediate
+prerequisites:
+  - Remote or local MCP server endpoint, transport, authorization mode, and source repository.
+  - Scope map for account-backed tools and a list of write-capable operations.
+  - Test account or sandbox environment for inspection when the server can mutate data.
+safetyNotes:
+  - "This collection is a review workflow, not a guarantee that a remote MCP server is safe to connect to production accounts."
+  - "Run write-capable, billing-capable, or deletion-capable MCP tools only in sandboxed accounts until scopes and confirmations are reviewed."
+  - "Keep dynamic server inspection separate from source review; both can miss different failure modes."
+privacyNotes:
+  - "Authorization metadata, issuer URLs, scopes, endpoint domains, tool names, and inspection traces can expose account architecture."
+  - "Do not publish tokens, client secrets, refresh tokens, tenant identifiers, private endpoint URLs, or captured tool responses."
+tags:
+  - mcp
+  - oauth
+  - security
+  - authorization
+  - review-workflow
+keywords:
+  - MCP authorization review collection
+  - remote MCP security workflow
+  - MCP OAuth review stack
+  - protected resource metadata MCP review
+robotsIndex: true
+robotsFollow: true
+---
+
+## What this collection covers
+
+This stack gives maintainers and AI coding agents a repeatable path for MCP
+authorization review. It combines source-backed guides, a review agent, an audit
+command, local access rules, hardening guidance, and an official inspection tool.
+
+The collection is intentionally review-first. It does not say a server is safe
+because it has OAuth. It asks whether the OAuth boundary is specific, narrow,
+discoverable, and aligned with the MCP tools exposed to the user.
+
+## Review order
+
+1. Use the protected resource metadata guide to identify the MCP resource,
+   authorization server, and advertised metadata.
+2. Apply the token audience checklist to confirm tokens are minted for the
+   expected MCP resource and not reused across unrelated services.
+3. Ask the authorization boundary review agent for a concise accept, close, or
+   manual-review recommendation.
+4. Run the MCP auth audit command against source, docs, and config snippets.
+5. Apply local tool access rules to decide whether file, shell, browser, or
+   credential behavior is acceptable.
+6. Use MCP server security hardening guidance for runtime isolation and least
+   privilege.
+7. Inspect the server with MCP Inspector only in a sandboxed environment when
+   dynamic behavior needs confirmation.
+
+## Good fit
+
+- Remote MCP servers with OAuth-backed account access.
+- Local MCP servers that proxy to third-party APIs.
+- Tool surfaces that include write, publish, delete, billing, or admin actions.
+- Review workflows where public source evidence and private credential details
+  need to stay separate.
+
+## Not enough by itself
+
+- Malware scanning, dependency review, or binary/package trust.
+- Legal review of third-party data-processing terms.
+- Production incident response for an already-connected MCP server.
+- Approval of broad account scopes without sandbox testing.
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- OAuth 2.0 Resource Indicators - https://www.rfc-editor.org/rfc/rfc8707
+- OAuth 2.0 Protected Resource Metadata - https://www.rfc-editor.org/rfc/rfc9728
