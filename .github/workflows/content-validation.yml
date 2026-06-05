@@ -910,13 +910,11 @@ jobs:
 
   validate-pr-preview:
     name: validate-pr-preview
-    if: ${{ github.event_name == 'pull_request' && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && (needs.classify-pr.outputs.web == 'true' || needs.classify-pr.outputs.registry == 'true' || needs.classify-pr.outputs.mcp == 'true') }}
     needs: classify-pr
     runs-on: ubuntu-latest
-    env:
-      REQUIRE_PR_PREVIEW: ${{ github.event.pull_request.head.repo.full_name == github.repository && 'true' || 'false' }}
     concurrency:
-      group: deployment-artifacts-pr-preview-${{ github.repository }}
+      group: deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}
       cancel-in-progress: false
 
     steps:
@@ -941,15 +939,11 @@ jobs:
       - name: Resolve PR preview URL
         id: preview-url
         env:
-          ALLOW_SHARED_DEV_WORKER_PREVIEW: ${{ github.event.pull_request.head.repo.full_name == github.repository && '1' || '0' }}
+          ALLOW_SHARED_DEV_WORKER_PREVIEW: "1"
           CLOUDFLARE_DEV_WORKER_URL: https://heyclaude-dev.zeronode.workers.dev
           GITHUB_TOKEN: ${{ github.token }}
         run: |
-          args=(--wait-seconds 600 --poll-seconds 15)
-          if [ "$REQUIRE_PR_PREVIEW" != "true" ]; then
-            args=(--allow-missing --wait-seconds 0)
-          fi
-          node scripts/resolve-pr-preview-url.mjs "${args[@]}"
+          node scripts/resolve-pr-preview-url.mjs --wait-seconds 600 --poll-seconds 15
 
       - name: Validate deployed artifact contract
         if: ${{ steps.preview-url.outputs.base-url != '' }}
