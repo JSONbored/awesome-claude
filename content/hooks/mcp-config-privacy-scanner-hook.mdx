@@ -1,0 +1,400 @@
+---
+title: MCP Config Privacy Scanner - Claude Code Hook
+slug: mcp-config-privacy-scanner-hook
+category: hooks
+description: >-
+  PreToolUse hook that reviews proposed writes to MCP configuration files and
+  blocks inline credential values, credential-bearing URLs, and broad filesystem
+  roots before they are saved.
+cardDescription: >-
+  Scan MCP config edits for literal secrets, tokenized URLs, and overly broad
+  filesystem exposure.
+seoTitle: MCP Config Privacy Scanner Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code PreToolUse hook that scans MCP configuration edits
+  for privacy-sensitive credentials, URLs, and filesystem roots before write.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/mcp"
+repoUrl: "https://github.com/modelcontextprotocol/modelcontextprotocol"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/mcp-config-privacy-scanner.sh && chmod +x
+  .claude/hooks/mcp-config-privacy-scanner.sh
+usageSnippet: >-
+  MCP config privacy scanner: inline credential value found in MCP config edit.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Write/Edit/MultiEdit. It scans proposed
+  # changes to MCP configuration files before they reach disk. It reads only the
+  # pending tool input and never contacts an MCP server.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .toolInput.file_path // .tool_input.path // .toolInput.path // empty')
+  content=$(printf '%s' "$input" | jq -r '
+    [ .tool_input.content,
+      .toolInput.content,
+      .tool_input.new_string,
+      .toolInput.new_string,
+      (.tool_input.edits[]?.new_string),
+      (.toolInput.edits[]?.new_string) ]
+    | map(select(. != null)) | join("\n")
+  ')
+
+  if [ -z "$content" ]; then
+    exit 0
+  fi
+
+  is_mcp_target=0
+  case "$file_path" in
+    .mcp.json|*/.mcp.json|mcp.json|*/mcp.json|*/managed-mcp.json|*claude_desktop_config.json|*/.vscode/mcp.json|*/.cursor/mcp.json|*/.windsurf/mcp_config.json)
+      is_mcp_target=1
+      ;;
+  esac
+
+  if printf '%s\n' "$content" | grep -Eq '"mcpServers"[[:space:]]*:'; then
+    is_mcp_target=1
+  fi
+
+  if [ "$is_mcp_target" -ne 1 ]; then
+    exit 0
+  fi
+
+  if [ -n "${MCP_CONFIG_PRIVACY_ALLOWLIST:-}" ]; then
+    if printf '%s\n%s\n' "$file_path" "$content" | grep -Eq -- "$MCP_CONFIG_PRIVACY_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  findings=""
+  add_finding() {
+    findings="${findings}${1}"$'\n'
+  }
+
+  if printf '%s' "$content" | jq -e . >/dev/null 2>&1; then
+    inline_keys=$(printf '%s' "$content" | jq -r '
+      .. | objects
+      | [(.env? // {}), (.headers? // {})]
+      | .[]
+      | objects
+      | to_entries[]?
+      | select(
+          (.key | test("(TOKEN|KEY|SECRET|PASSWORD|PAT|COOKIE|SESSION|PRIVATE|CREDENTIAL|AUTHORIZATION)"; "i"))
+          and (.value | type == "string")
+          and ((.value | test("^(Bearer\\s+)?\\$\\{?[A-Za-z_][A-Za-z0-9_]*(:-[^}]*)?\\}?$|^<[^>]+>$|^$|^REPLACE_|^your-|^example"; "i")) | not)
+        )
+      | .key
+    ' 2>/dev/null | sort -u)
+
+    if [ -n "$inline_keys" ]; then
+      add_finding "inline credential value in env or headers"
+    fi
+
+    credential_urls=$(printf '%s' "$content" | jq -r '
+      .. | strings
+      | select(test("https?://[^[:space:]\"<>]+[?&](access_token|api_key|token|password|client_secret)="; "i"))
+    ' 2>/dev/null | head -n 1)
+
+    if [ -n "$credential_urls" ]; then
+      add_finding "credential-bearing URL in MCP config"
+    fi
+
+    broad_roots=$(printf '%s' "$content" | jq -r '
+      .. | objects
+      | select((.command? // "" | tostring | test("filesystem|server-filesystem|@modelcontextprotocol/server-filesystem"; "i")))
+      | [.args[]?]
+      | map(tostring)[]
+      | select(test("^(~|/|/Users|/home|/root|[A-Za-z]:\\\\Users)(/)?$"))
+    ' 2>/dev/null | head -n 1)
+
+    if [ -n "$broad_roots" ]; then
+      add_finding "broad filesystem root exposed to filesystem MCP server"
+    fi
+  fi
+
+  secret_name_re='(TOKEN|KEY|SECRET|PASSWORD|PAT|COOKIE|SESSION|PRIVATE|CREDENTIAL|AUTHORIZATION)'
+  literal_secret_re="\"[A-Za-z0-9_ -]*${secret_name_re}[A-Za-z0-9_ -]*\"[[:space:]]*:[[:space:]]*\"(Bearer[[:space:]]+)?[^\"\\$<{][^\"]{8,}\""
+  credential_url_re='https?://[^[:space:]"<>]+[?&](access_token|api_key|token|password|client_secret)='
+
+  if printf '%s\n' "$content" | grep -Eiq -- "$literal_secret_re"; then
+    add_finding "inline credential value in env or headers"
+  fi
+
+  if printf '%s\n' "$content" | grep -Eiq -- "$credential_url_re"; then
+    add_finding "credential-bearing URL in MCP config"
+  fi
+
+  if printf '%s\n' "$content" | grep -Eiq 'server-filesystem|@modelcontextprotocol/server-filesystem|filesystem'; then
+    if printf '%s\n' "$content" | grep -Eq '"(~|/|/Users|/home|/root|[A-Za-z]:\\Users)"'; then
+      add_finding "broad filesystem root exposed to filesystem MCP server"
+    fi
+  fi
+
+  if [ -z "$findings" ]; then
+    exit 0
+  fi
+
+  echo "MCP config privacy scanner: risky MCP configuration edit detected." >&2
+  printf '%s' "$findings" | sort -u | while IFS= read -r finding; do
+    [ -n "$finding" ] || continue
+    echo "  - $finding" >&2
+  done
+  echo "Use environment-variable expansion, remove credential query strings, or narrow filesystem roots before writing the config." >&2
+  echo "Set MCP_CONFIG_PRIVACY_MODE=advisory to warn without blocking, or MCP_CONFIG_PRIVACY_ALLOWLIST for a reviewed local exception." >&2
+
+  if [ "${MCP_CONFIG_PRIVACY_MODE:-block}" = "advisory" ]; then
+    exit 0
+  fi
+
+  exit 2
+trigger: PreToolUse
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, jq, grep, sort, and a reviewed `.claude/settings.json` or user-level hook configuration."
+  - "A team MCP policy for approved servers, credential storage, filesystem scopes, and remote transports."
+safetyNotes:
+  - "Runs before Write, Edit, and MultiEdit tool calls and reads only the pending file path plus proposed new text."
+  - "Blocks matching MCP configuration edits with exit code 2 when it finds inline credential values, credential-bearing URLs, or broad filesystem roots for filesystem MCP servers."
+  - "Does not start MCP servers, contact remote MCP endpoints, edit files, delete files, or inspect existing config beyond the proposed tool input."
+  - "Text and JSON heuristics can miss unusual config shapes or flag reviewed local setups; use `MCP_CONFIG_PRIVACY_ALLOWLIST` only for documented exceptions."
+  - "Set `MCP_CONFIG_PRIVACY_MODE=advisory` to warn without blocking while a team tunes its MCP policy."
+privacyNotes:
+  - "Runs locally and makes no network calls."
+  - "Does not print credential values, URLs, or full config content; it reports only finding categories."
+  - "The target file path, finding category, allowlist pattern, and mode variable can still appear in terminal output, Claude Code transcripts, CI logs, or screenshots."
+  - "Use environment-variable expansion or a secret manager for MCP credentials so private tokens are not committed to project-scoped config files."
+sourceUrls:
+  - "https://code.claude.com/docs/en/mcp"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://code.claude.com/docs/en/managed-mcp"
+  - "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://github.com/modelcontextprotocol/modelcontextprotocol"
+tags:
+  - mcp
+  - privacy
+  - configuration
+  - secrets
+  - hooks
+keywords:
+  - "MCP config privacy scanner hook"
+  - "Claude Code MCP config hook"
+  - "MCP credential config scanner"
+  - "mcpServers privacy guard"
+  - "Claude Code .mcp.json scanner"
+readingTime: 6
+difficultyScore: 39
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+MCP configuration can quietly expand what a Claude session can see. A project
+`.mcp.json`, desktop config, or managed MCP policy can add servers with
+credentials, remote endpoints, and filesystem paths. That is useful when
+intentional, but risky when a generated edit saves literal tokens or hands a
+filesystem server a broad root.
+
+This PreToolUse hook runs before Claude Code writes MCP-related configuration.
+It scans the proposed content locally and blocks three concrete privacy risks:
+inline credential values in `env` or `headers`, URLs that carry credential query
+parameters, and broad filesystem roots for filesystem MCP servers.
+
+## Features
+
+- Watches `Write`, `Edit`, and `MultiEdit` calls for `.mcp.json`,
+  `managed-mcp.json`, `mcp.json`, `claude_desktop_config.json`, and content
+  that contains an `mcpServers` object.
+- Parses complete JSON when available, then falls back to text heuristics for
+  partial edits.
+- Flags literal credential-like values in MCP `env` or `headers` objects while
+  allowing environment-variable references such as `${MCP_TOKEN}`.
+- Flags credential-bearing remote URLs that include token-like query
+  parameters.
+- Flags filesystem MCP server configs that expose broad roots such as `/`,
+  `~`, `/home`, `/Users`, `/root`, or a Windows user root.
+- Reports finding categories only, without echoing the secret value, URL, or
+  full config.
+
+## How It Works
+
+Claude Code sends the pending tool call to the hook on stdin. The script
+extracts the tool name, target path, and new text from the Write/Edit/MultiEdit
+payload. It scans only MCP-looking targets: known MCP config filenames or
+content containing an `mcpServers` key.
+
+When the proposed text is valid JSON, the hook uses `jq` to inspect `env`,
+`headers`, string URLs, and filesystem server arguments. For partial edits, it
+uses conservative grep patterns so a changed line can still be caught before it
+is saved. If any risky pattern is found, the hook exits `2`, which blocks the
+write and returns the reason to Claude Code.
+
+## Use Cases
+
+- Stop project-scoped `.mcp.json` changes from committing literal service
+  tokens.
+- Review remote MCP server URLs before a bearer token, API key, or password is
+  embedded in a query string.
+- Keep generated filesystem server configs from exposing an entire home
+  directory or root filesystem.
+- Run the guard in advisory mode while a team inventories approved MCP servers
+  and credential handling.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/mcp-config-privacy-scanner.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/mcp-config-privacy-scanner.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-config-privacy-scanner.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Script
+
+```bash
+#!/usr/bin/env bash
+# Paste the scriptBody from this entry into:
+# .claude/hooks/mcp-config-privacy-scanner.sh
+```
+
+## Configuration Options
+
+- `MCP_CONFIG_PRIVACY_MODE=advisory` prints warnings but exits `0`.
+- `MCP_CONFIG_PRIVACY_ALLOWLIST` is an extended grep pattern checked against the
+  target path and proposed content. Use it only for reviewed local exceptions.
+
+## Expected Behavior
+
+- **Allowed:** MCP config that references credentials with environment-variable
+  expansion.
+- **Blocked:** MCP config that places a literal credential-like value in an
+  `env` or `headers` object.
+- **Blocked:** Remote MCP URL strings that include credential-style query
+  parameters.
+- **Blocked:** Filesystem MCP server arguments that expose an entire home or
+  root directory.
+
+## Limitations
+
+- The hook is a local pre-write scanner. It does not prove an MCP server is
+  safe, authenticated correctly, or least-privilege at runtime.
+- Regex and JSON heuristics can miss obfuscated secrets or unusual config
+  layouts.
+- Partial edits may not contain enough JSON context to identify every server
+  type.
+- A project can still add risky MCP config through another editor unless the
+  same policy is enforced in review or CI.
+
+## Troubleshooting
+
+### The hook does not run
+
+Confirm the file is executable and that the hook config is in the active Claude
+Code settings file. Then run `/hooks` or the relevant Claude Code config
+diagnostic command to confirm the PreToolUse hook is loaded.
+
+### A placeholder was blocked
+
+Use environment-variable expansion for credential values or set advisory mode
+while tuning the policy. Avoid realistic-looking token placeholders in shared
+MCP config.
+
+### A reviewed filesystem server was blocked
+
+Narrow the path to the minimum directory the MCP server needs. If a broad path
+is truly required, document the reason and add a local allowlist pattern.
+
+## Duplicate Check
+
+Checked `content/hooks/` for `MCP config`, `mcpServers`, `privacy scanner`,
+`environment variable leak`, `secret scanner`, and `prompt injection`. Existing
+hook content includes a pre-write secret scanner and package/download guards,
+but no existing hook focuses on MCP configuration privacy, credential-bearing
+MCP URLs, and filesystem MCP root exposure before config writes.
+
+## Sources
+
+- [Claude Code MCP documentation](https://code.claude.com/docs/en/mcp)
+- [Claude Code hooks documentation](https://code.claude.com/docs/en/hooks)
+- [Claude Code managed MCP documentation](https://code.claude.com/docs/en/managed-mcp)
+- [MCP security best practices](https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices)
+- [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization)
+- [Model Context Protocol repository](https://github.com/modelcontextprotocol/modelcontextprotocol)
