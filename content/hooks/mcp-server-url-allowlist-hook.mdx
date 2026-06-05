@@ -1,0 +1,134 @@
+---
+title: MCP Server URL Allowlist - Claude Code Hook
+slug: mcp-server-url-allowlist-hook
+category: hooks
+description: >-
+  PreToolUse hook that blocks edits adding remote MCP server URLs unless their
+  host appears in an explicit allowlist, reducing accidental connection to
+  unreviewed OAuth, SSE, or Streamable HTTP MCP endpoints.
+cardDescription: Block unreviewed remote MCP URLs before they are written into config.
+seoTitle: MCP Server URL Allowlist Claude Code Hook
+seoDescription: >-
+  Claude Code PreToolUse hook for blocking unapproved remote MCP server URLs in
+  configuration edits before they reach disk.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/hooks"
+repoUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch .claude/hooks/mcp-server-url-allowlist.sh && chmod +x .claude/hooks/mcp-server-url-allowlist.sh
+usageSnippet: "Blocked remote MCP URL: host is not in ALLOWED_MCP_HOSTS."
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-server-url-allowlist.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/mcp-server-url-allowlist.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  file=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .tool_input.path // ""')
+  text=$(printf '%s' "$input" | jq -r '[.tool_input.content, .tool_input.new_string, (.tool_input.edits[]?.new_string)] | map(select(. != null)) | join(" ")')
+
+  case "$file" in
+    *mcp*.json|*.mcp.json|*.claude/settings.json|*/settings.json) ;;
+    *) exit 0 ;;
+  esac
+
+  hosts=$(printf '%s' "$text" | grep -Eo 'https?://[^"[:space:]]+' | awk -F/ '{print $3}' | sort -u)
+  [ -z "$hosts" ] && exit 0
+
+  allowlist=$(printf '%s' "$ALLOWED_MCP_HOSTS" | tr ',' ' ')
+  for host in $hosts; do
+    case " $allowlist " in
+      *" $host "*) ;;
+      *)
+        echo "Blocked remote MCP URL: $host is not in ALLOWED_MCP_HOSTS." >&2
+        exit 2
+        ;;
+    esac
+  done
+
+  exit 0
+trigger: PreToolUse
+prerequisites:
+  - Claude Code CLI with hooks enabled.
+  - bash, jq, grep, awk, and sed available locally.
+  - ALLOWED_MCP_HOSTS set to a comma-separated list of reviewed remote MCP hosts.
+safetyNotes:
+  - "This hook blocks unreviewed remote hosts in MCP-related config edits; it does not prove an allowed host is safe."
+  - "Run a separate authorization and source review before adding a new host to the allowlist."
+  - "The hook fails open when jq is unavailable, so CI or pre-commit checks should cover high-assurance environments."
+privacyNotes:
+  - "The hook reads pending config text from Claude Code tool input but does not write files or call the network."
+  - "Blocked hostnames are printed to stderr and may reveal internal MCP endpoints in the local terminal."
+tags:
+  - mcp
+  - hooks
+  - allowlist
+  - security
+  - remote-mcp
+keywords:
+  - MCP URL allowlist hook
+  - Claude Code MCP config guard
+  - remote MCP host allowlist
+  - MCP authorization guard hook
+robotsIndex: true
+robotsFollow: true
+---
+
+## Features
+
+- Watches Write, Edit, and MultiEdit calls before MCP-related config reaches disk.
+- Extracts HTTP and HTTPS hosts from pending text.
+- Blocks hosts not listed in ALLOWED_MCP_HOSTS.
+- Makes remote MCP additions intentional and reviewable.
+- Runs locally with bash and jq.
+
+## Why use it
+
+Remote MCP servers can sit behind OAuth and expose account data or write-capable
+tools. This hook adds a small local control: Claude cannot casually paste a new
+remote endpoint into config unless that host has already been reviewed and added
+to the local allowlist.
+
+## References
+
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
