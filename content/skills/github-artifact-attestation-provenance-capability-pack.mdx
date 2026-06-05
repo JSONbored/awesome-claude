@@ -1,0 +1,151 @@
+---
+title: GitHub Artifact Attestation Provenance Capability Pack Skill
+slug: github-artifact-attestation-provenance-capability-pack
+category: skills
+description: >-
+  Expert skill for reviewing GitHub Artifact Attestations, release artifact
+  digests, workflow provenance, OIDC boundaries, and public release evidence
+  before an AI agent recommends or publishes build outputs.
+cardDescription: Review GitHub artifact attestations, workflow provenance, digests, and release evidence.
+seoTitle: GitHub Artifact Attestation Provenance Capability Pack Skill
+seoDescription: >-
+  Advanced AI skill for GitHub Artifact Attestation review, release provenance,
+  verification, workflow identity checks, and supply-chain release notes.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+repoUrl: "https://github.com/github/docs"
+documentationUrl: "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+downloadUrl: "https://github.com/github/docs/archive/refs/heads/main.zip"
+installable: true
+installCommand: "gh --version"
+usageSnippet: >-
+  Use this skill before publishing or endorsing release artifacts that should
+  be tied to GitHub Actions provenance.
+copySnippet: |-
+  # Trigger
+  "Apply the GitHub artifact attestation provenance capability pack to this release."
+
+  # Required output
+  1) Artifact, digest, workflow, repository, and commit inventory
+  2) Attestation verification result and provenance summary
+  3) Release-blocking gaps or mismatches
+  4) Public-safe release evidence wording
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds"
+  - "https://docs.github.com/en/actions/reference/security/oidc"
+  - "https://github.com/github/docs"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Release artifact, checksum, repository, workflow run, and commit SHA under review.
+  - GitHub CLI available with access to verify attestations for the target repository.
+  - Release policy that defines which artifacts require provenance evidence.
+safetyNotes:
+  - "Artifact attestation verification confirms provenance for a digest, not malware safety, runtime behavior, dependency health, or install trust."
+  - "Do not approve a release when the verified repository, workflow, ref, subject digest, or commit does not match the artifact being distributed."
+  - "Keep OIDC and workflow-permission review separate from ordinary release-note editing."
+privacyNotes:
+  - "Verification evidence can expose repository names, workflow names, internal release timing, commit SHAs, artifact names, and runner metadata."
+  - "Public comments should summarize verification without pasting private URLs, unpublished release notes, or internal environment details."
+tags:
+  - github-actions
+  - artifact-attestations
+  - provenance
+  - release-security
+  - supply-chain
+keywords:
+  - GitHub artifact attestation skill
+  - release provenance review
+  - AI release review provenance
+  - supply chain artifact attestation
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is based on GitHub Artifact Attestation and OIDC
+documentation checked on 2026-06-05. Use the current GitHub docs and CLI help for
+command syntax, supported artifact types, and policy behavior.
+
+## Retrieval Sources
+
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+- https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds
+- https://docs.github.com/en/actions/reference/security/oidc
+- https://github.com/github/docs
+
+## Core Workflow
+
+1. Inventory the release artifact, package, checksum, repository, workflow run,
+   commit SHA, ref, release tag, and distribution channel.
+2. Confirm the build workflow generated the artifact and attestation in a
+   trusted GitHub Actions context.
+3. Verify the artifact with the expected owner and repository using GitHub CLI.
+4. Compare the verification output to the release evidence: subject digest,
+   builder identity, workflow, repository, commit, and ref.
+5. Check for mismatches: renamed artifacts, local rebuilds, copied binaries,
+   wrong repository, untrusted fork workflow, or stale release notes.
+6. Produce a public-safe provenance summary and a private maintainer note for
+   anything that should not be disclosed.
+7. Block release recommendation when provenance is missing, mismatched, or only
+   asserted in prose.
+
+## Capability Scope
+
+- GitHub Artifact Attestation evidence review
+- Release artifact digest and filename verification
+- Workflow provenance and OIDC boundary review
+- Release-note provenance wording
+- AI-assisted release recommendation guardrails
+- Privacy-safe summary of verification results
+
+## Compatibility
+
+### Native
+
+- Claude Code and Claude: use as a release review skill before publishing notes.
+- Codex: use when checking PRs, release branches, or package publication work.
+
+### Manual Adaptation
+
+- Generic AGENTS files: convert the workflow into a release provenance checklist.
+- Cursor and Windsurf: use the output contract for artifact review prompts.
+
+## Required Inputs
+
+- Artifact path and digest
+- Repository owner/name and expected release tag
+- Workflow run or build provenance evidence
+- Commit SHA and ref
+- Local or remote artifact location used for verification
+
+## Production Rules
+
+- Do not treat a filename, release note, or maintainer claim as proof of provenance.
+- Do not verify a different artifact from the one users download.
+- Do not ignore a repository, workflow, digest, commit, or ref mismatch.
+- Do not paste private verification logs into public comments.
+- Keep vulnerability scanning, malware review, and install trust as separate gates.
+- Require exact commands or reproducible evidence for the final release decision.
+
+## Output Contract
+
+1. Artifact inventory and digest.
+2. Verification command and result.
+3. Provenance fields: repository, workflow, ref, commit, subject digest.
+4. Blocking mismatches or missing evidence.
+5. Public-safe release wording.
+6. Follow-up checks outside attestation scope.
