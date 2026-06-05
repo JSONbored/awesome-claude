@@ -1,7 +1,8 @@
 import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
 export const GATE_DECISION_SCHEMA_VERSION = 2;
-export const GATE_COMMENT_FORMATTER_VERSION = 2;
+export const GATE_COMMENT_FORMATTER_VERSION = 3;
+export const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR = 0.85;
 
 export type GateVerdict =
   | "merge"
@@ -112,6 +113,7 @@ const VERDICT_ACTIONS: Record<GateVerdict, string> = {
 const SECTION_TITLES: Record<string, string> = {
   summary: "Summary",
   recommended_action: "Recommended Action",
+  confidence_review: "Confidence Review",
   ci: "CI",
   scope: "Scope",
   source_review: "Source Review",
@@ -131,6 +133,7 @@ const SECTION_TITLES: Record<string, string> = {
 };
 
 const DETAILS_SECTION_ORDER = [
+  "confidence_review",
   "source_review",
   "duplicate_history",
   "safety_privacy",
@@ -451,14 +454,6 @@ function bulletsMarkdown(bullets: string[]) {
     .join("\n");
 }
 
-function escapeTableCell(value: unknown) {
-  return String(value || "")
-    .replace(/\\/g, "\\\\")
-    .replace(/\|/g, "\\|")
-    .replace(/\r?\n/g, " ")
-    .trim();
-}
-
 function confidenceText(value: number | undefined) {
   if (typeof value !== "number" || !Number.isFinite(value))
     return "not provided";
@@ -486,7 +481,7 @@ function checksSection(decision: GateDecision): GateDecisionSection | null {
         : "pass",
     bullets: decision.checks.map((check) =>
       [
-        `\`${check.status}\` ${check.name}`,
+        `${checkStatusLabel(check.status)} \`${check.status}\` ${check.name}`,
         check.details ? `- ${check.details}` : "",
       ]
         .filter(Boolean)
@@ -495,15 +490,107 @@ function checksSection(decision: GateDecision): GateDecisionSection | null {
   };
 }
 
+function sectionStatusLabel(status?: GateDecisionSectionStatus) {
+  switch (status) {
+    case "pass":
+      return "✅ pass";
+    case "warn":
+      return "⚠️ review";
+    case "fail":
+      return "❌ blocked";
+    default:
+      return "ℹ️ info";
+  }
+}
+
+function checkStatusLabel(status: GateDecisionCheck["status"]) {
+  switch (status) {
+    case "passed":
+      return "✅";
+    case "failed":
+      return "❌";
+    case "pending":
+      return "⏳";
+    case "neutral":
+    case "skipped":
+      return "⚠️";
+    default:
+      return "ℹ️";
+  }
+}
+
+function confidenceStatusLabel(value: number | undefined) {
+  if (typeof value !== "number" || !Number.isFinite(value)) return "⚠️";
+  if (value >= DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR) return "✅";
+  return "⚠️";
+}
+
+function verdictStatusLabel(verdict: GateVerdict) {
+  switch (verdict) {
+    case "merge":
+      return "✅";
+    case "close":
+    case "request_changes":
+      return "❌";
+    case "manual":
+      return "⚠️";
+    default:
+      return "ℹ️";
+  }
+}
+
+function blockquote(text: string) {
+  return text
+    .split("\n")
+    .map((line) => (line ? `> ${line}` : ">"))
+    .join("\n");
+}
+
+function renderAlertCard(
+  marker: string,
+  alert: string,
+  body: string[] | string,
+) {
+  const cardBody = Array.isArray(body) ? body.join("\n") : body;
+  return [marker, `> [!${alert}]`, blockquote(cardBody)].join("\n").trim();
+}
+
 function renderDetails(section: GateDecisionSection) {
   return [
     "<details>",
-    `<summary><strong>${sectionTitle(section.id, section.title)}</strong> · ${section.status || "info"}</summary>`,
+    `<summary><strong>${sectionStatusLabel(section.status)} · ${sectionTitle(section.id, section.title)}</strong></summary>`,
     "",
     bulletsMarkdown(section.bullets),
     "",
     "</details>",
   ].join("\n");
+}
+
+function renderDetailsBlock(title: string, bullets: string[]) {
+  return [
+    "<details>",
+    `<summary><strong>${title}</strong></summary>`,
+    "",
+    bulletsMarkdown(bullets),
+    "",
+    "</details>",
+  ].join("\n");
+}
+
+function sectionPreview(
+  section: GateDecisionSection | undefined,
+  limit: number,
+) {
+  return (section?.bullets || []).slice(0, limit);
+}
+
+function reviewMetadataBullets(decision: GateDecision) {
+  return [
+    `${verdictStatusLabel(decision.verdict)} **Verdict:** \`${decision.verdict}\``,
+    `${confidenceStatusLabel(decision.confidence)} **Confidence:** ${confidenceText(decision.confidence)}`,
+    `ℹ️ **Scope:** ${scopeText(decision.scope)}`,
+    `ℹ️ **Formatter:** \`gate-comment-v${GATE_COMMENT_FORMATTER_VERSION}\``,
+  ];
 }
 
 function renderDecisionComment(decision: GateDecision, marker: string) {
@@ -530,39 +617,60 @@ function renderDecisionComment(decision: GateDecision, marker: string) {
     );
   });
 
-  const parts = [
-    marker,
-    `> [!${VERDICT_ALERTS[decision.verdict]}]`,
-    `> **${VERDICT_HEADLINES[decision.verdict]}**`,
-    `> ${VERDICT_ACTIONS[decision.verdict]}`,
+  const summaryPreview = sectionPreview(summary, 3);
+  const recommendedPreview = sectionPreview(recommended, 2);
+  const card = [
+    `## ${verdictStatusLabel(decision.verdict)} ${VERDICT_HEADLINES[decision.verdict]}`,
+    VERDICT_ACTIONS[decision.verdict],
     "",
-    "| Field | Result |",
-    "| --- | --- |",
-    `| Verdict | \`${escapeTableCell(decision.verdict)}\` |`,
-    `| Confidence | ${escapeTableCell(confidenceText(decision.confidence))} |`,
-    `| Scope | ${escapeTableCell(scopeText(decision.scope))} |`,
-    `| Formatter | \`gate-comment-v${GATE_COMMENT_FORMATTER_VERSION}\` |`,
+    "**Status**",
+    "",
+    ...reviewMetadataBullets(decision),
     "",
   ];
 
-  if (summary?.bullets.length) {
-    parts.push("## Summary", "", bulletsMarkdown(summary.bullets), "");
+  if (summaryPreview.length) {
+    card.push("**Summary**", "", bulletsMarkdown(summaryPreview), "");
+    if ((summary?.bullets.length || 0) > summaryPreview.length) {
+      card.push(
+        "- More review detail is collapsed below for maintainers and contributors who want the full evidence.",
+        "",
+      );
+    }
   }
-  if (recommended?.bullets.length) {
-    parts.push(
-      "## Recommended Action",
+
+  if (recommendedPreview.length) {
+    card.push(
+      "**Recommended action**",
       "",
-      bulletsMarkdown(recommended.bullets),
+      bulletsMarkdown(recommendedPreview),
       "",
     );
   }
+
+  card.push(
+    renderDetailsBlock("Review metadata", reviewMetadataBullets(decision)),
+    "",
+  );
+
+  if (summary && summary.bullets.length > summaryPreview.length) {
+    card.push(renderDetails(summary), "");
+  }
+  if (recommended && recommended.bullets.length > recommendedPreview.length) {
+    card.push(renderDetails(recommended), "");
+  }
   for (const section of detailSections) {
-    parts.push(renderDetails(section), "");
+    card.push(renderDetails(section), "");
   }
 
   const footer = singleShotFooter(decision.verdict);
-  if (footer) parts.push("---", footer);
-  return parts.join("\n").trim();
+  if (footer) {
+    card.push(
+      "---",
+      renderDetailsBlock("Automation notes", footer.split(/\r?\n/)),
+    );
+  }
+  return renderAlertCard(marker, VERDICT_ALERTS[decision.verdict], card);
 }
 
 function singleShotFooter(verdict: GateVerdict) {
@@ -572,6 +680,13 @@ function singleShotFooter(verdict: GateVerdict) {
       "Automated review by HeyClaude Maintainer Agent.",
       "",
       "This content-only PR passed content validation, Superagent, and private review. HeyClaude merges accepted source PRs directly; generated artifacts are produced at build/deploy time.",
+    ].join("\n");
+  }
+  if (verdict === "manual") {
+    return [
+      "Automated review by HeyClaude Maintainer Agent.",
+      "",
+      "This content-only PR needs maintainer judgment before automation continues. Manual review can approve, merge, close, or recheck the submission.",
     ].join("\n");
   }
   return [
@@ -586,16 +701,14 @@ export function markerComment(
   marker = DEFAULT_REVIEW_MARKER,
 ) {
   if (!decision) {
-    return [
-      marker,
-      "> [!NOTE]",
-      "> **Public validation running**",
-      "> HeyClaude is checking this direct content submission before private review.",
+    return renderAlertCard(marker, "NOTE", [
+      "## ℹ️ Public validation running",
+      "HeyClaude is checking this direct content submission before private review.",
       "",
-      "| Stage | Status |",
-      "| --- | --- |",
-      "| Public validation | `pending` |",
-      "| Private maintainer gate | `waiting` |",
+      "**Progress**",
+      "",
+      "- ⏳ **Public validation:** `running`",
+      "- ⏸️ **Private maintainer gate:** `waiting`",
       "",
       "<details>",
       "<summary><strong>What happens next</strong></summary>",
@@ -605,23 +718,21 @@ export function markerComment(
       "- No contributor action is needed unless the gate posts a terminal decision.",
       "",
       "</details>",
-    ].join("\n");
+    ]);
   }
 
   return renderDecisionComment(decision, marker);
 }
 
 export function retryingReviewComment(marker = DEFAULT_REVIEW_MARKER) {
-  return [
-    marker,
-    "> [!IMPORTANT]",
-    "> **Review retrying**",
-    "> Public validation is green, but the private reviewer returned a retryable infrastructure result.",
+  return renderAlertCard(marker, "IMPORTANT", [
+    "## ⚠️ Review retrying",
+    "Public validation is green, but the private reviewer returned a retryable infrastructure result.",
     "",
-    "| Stage | Status |",
-    "| --- | --- |",
-    "| Public validation | `passed` |",
-    "| Private maintainer gate | `retrying` |",
+    "**Progress**",
+    "",
+    "- ✅ **Public validation:** `passed`",
+    "- ⚠️ **Private maintainer gate:** `retrying`",
     "",
     "<details>",
     "<summary><strong>Contributor action</strong></summary>",
@@ -630,23 +741,21 @@ export function retryingReviewComment(marker = DEFAULT_REVIEW_MARKER) {
     "- The submission gate will retry automatically.",
     "",
     "</details>",
-  ].join("\n");
+  ]);
 }
 
 export function supersededReviewComment(
   marker = DEFAULT_REVIEW_MARKER,
   canonicalUrl?: string,
 ) {
-  return [
-    marker,
-    "> [!NOTE]",
-    "> **Superseded gate report**",
-    "> A newer canonical HeyClaude maintainer-gate report replaced this comment.",
+  return renderAlertCard(marker, "NOTE", [
+    "## ℹ️ Superseded gate report",
+    "A newer canonical HeyClaude maintainer-gate report replaced this comment.",
     "",
     canonicalUrl
       ? `Current report: ${canonicalUrl}`
       : "Current report: see the newest HeyClaude maintainer-gate comment on this PR.",
-  ].join("\n");
+  ]);
 }
 
 export function approvalReviewBody(reportUrl?: string) {
@@ -668,6 +777,72 @@ export function defaultManualDecision(
     summary: `${reason} A maintainer needs to review category fit, source of truth, duplicate history, safety/privacy notes, and provenance before merge.`,
     labels: [LABELS.manual],
     errors: error ? [error] : undefined,
+  };
+}
+
+export function enforceAutoMergeConfidenceFloor(
+  decision: GateDecision,
+  floor = DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
+): GateDecision {
+  if (decision.verdict !== "merge") return decision;
+  const normalizedFloor =
+    typeof floor === "number" && Number.isFinite(floor) && floor >= 0
+      ? Math.min(floor, 1)
+      : DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR;
+  if (
+    typeof decision.confidence === "number" &&
+    Number.isFinite(decision.confidence) &&
+    decision.confidence >= normalizedFloor
+  ) {
+    return decision;
+  }
+
+  const confidenceSummary = [
+    `Private reviewer confidence was ${confidenceText(decision.confidence)}; unattended merge floor is ${confidenceText(normalizedFloor)}.`,
+    "Manual maintainer review is required before merge.",
+  ];
+  const confidenceSection: GateDecisionSection = {
+    id: "confidence_review",
+    title: "Confidence Review",
+    status: "warn",
+    bullets: confidenceSummary,
+  };
+  const summary = [
+    decision.summary.trim(),
+    "",
+    "Confidence Review:",
+    ...confidenceSummary.map((item) => `- ${item}`),
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return {
+    ...decision,
+    verdict: "manual",
+    summary,
+    labels: [
+      ...new Set([
+        ...decision.labels.filter(
+          (label) => label !== LABELS.merged && label !== LABELS.close,
+        ),
+        LABELS.manual,
+      ]),
+    ],
+    close: false,
+    sections: [
+      confidenceSection,
+      ...(decision.sections || []).filter(
+        (section) => section.id !== "confidence_review",
+      ),
+    ],
+    errors: [
+      ...(decision.errors || []),
+      {
+        code: "low_private_review_confidence",
+        retryable: false,
+        message: confidenceSummary[0],
+      },
+    ],
   };
 }
 

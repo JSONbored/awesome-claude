@@ -44,7 +44,9 @@ import {
 } from "./github";
 import {
   approvalReviewBody,
+  DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
   defaultManualDecision,
+  enforceAutoMergeConfidenceFloor,
   GATE_COMMENT_FORMATTER_VERSION,
   isRetryableGateDecision,
   markerComment,
@@ -97,6 +99,7 @@ type Env = {
   DISCORD_SUBMISSION_WEBHOOK_URL?: string;
   REQUIRED_VALIDATION_CHECKS?: string;
   REQUIRED_STATUS_CONTEXTS?: string;
+  AUTO_MERGE_CONFIDENCE_FLOOR?: string;
   SUBMISSION_GATE_DB: D1Database;
   SUBMISSION_GATE_AUDIT: R2Bucket;
   SUBMISSION_REVIEW_QUEUE: Queue<Record<string, unknown>>;
@@ -152,6 +155,9 @@ const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
 const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
+const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT = String(
+  DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
+);
 const SWEEP_LIMIT = 25;
 const OPEN_PR_DISCOVERY_LIMIT = 25;
 const SUPPORTED_CONTENT_CATEGORIES = new Set([
@@ -907,6 +913,16 @@ function requiredValidationChecks(env: Env) {
 
 function requiredStatusContexts(env: Env) {
   return parseCsv(env.REQUIRED_STATUS_CONTEXTS);
+}
+
+function autoMergeConfidenceFloor(env: Env) {
+  const configured = Number(
+    env.AUTO_MERGE_CONFIDENCE_FLOOR || DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT,
+  );
+  if (Number.isFinite(configured) && configured >= 0 && configured <= 1) {
+    return configured;
+  }
+  return DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR;
 }
 
 function installationIdFromPayload(payload: Record<string, unknown>) {
@@ -3210,6 +3226,10 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
         }
       }
       decision = normalizeOneShotDecision(decision);
+      decision = enforceAutoMergeConfidenceFloor(
+        decision,
+        autoMergeConfidenceFloor(env),
+      );
       if (decision.verdict === "merge" && !contentScopeForPrivateReview) {
         try {
           contentScopeForPrivateReview = await directContentScopeForPr({

@@ -30,6 +30,7 @@ import {
 } from "../apps/submission-gate/src/duplicates";
 import {
   approvalReviewBody,
+  enforceAutoMergeConfidenceFloor,
   markerComment,
   normalizePrivateGateDecisionPayload,
   retryingReviewComment,
@@ -485,11 +486,11 @@ describe("Cloudflare submission gate helpers", () => {
     });
 
     expect(body).toContain("<!-- heyclaude-submission-gate -->\n> [!WARNING]");
-    expect(body).toContain("**Needs changes**");
-    expect(body).toContain("| Formatter | `gate-comment-v2` |");
-    expect(body).toContain("## Summary");
-    expect(body).toContain("<summary><strong>Source Review</strong>");
-    expect(body).toContain("## Recommended Action");
+    expect(body).toContain("> ## ❌ Needs changes");
+    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v3`");
+    expect(body).toContain("> **Summary**");
+    expect(body).toContain("<summary><strong>ℹ️ info · Source Review</strong>");
+    expect(body).toContain("> **Recommended action**");
     expect(body).toContain("single-shot submission review");
   });
 
@@ -509,9 +510,10 @@ describe("Cloudflare submission gate helpers", () => {
     });
 
     expect(body).toContain("> [!TIP]");
-    expect(body).toContain("**Accepted and merged**");
-    expect(body).toContain("| Confidence | 92% |");
+    expect(body).toContain("> ## ✅ Accepted and merged");
+    expect(body).toContain("> ✅ **Confidence:** 92%");
     expect(body).toContain("`content/mcp/example.mdx`");
+    expect(body).toContain("<summary><strong>Review metadata</strong>");
     expect(body).toContain(
       "passed content validation, Superagent, and private review",
     );
@@ -519,20 +521,60 @@ describe("Cloudflare submission gate helpers", () => {
   });
 
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
-    expect(markerComment()).toContain("**Public validation running**");
+    expect(markerComment()).toContain("> ## ℹ️ Public validation running");
     expect(markerComment()).toContain(
-      "| Private maintainer gate | `waiting` |",
+      "> - ⏳ **Public validation:** `running`",
     );
-    expect(retryingReviewComment()).toContain("**Review retrying**");
+    expect(markerComment()).toContain(
+      "> - ⏸️ **Private maintainer gate:** `waiting`",
+    );
+    expect(retryingReviewComment()).toContain("> ## ⚠️ Review retrying");
     expect(retryingReviewComment()).toContain(
-      "| Private maintainer gate | `retrying` |",
+      "> - ⚠️ **Private maintainer gate:** `retrying`",
     );
     expect(
       supersededReviewComment(
         "<!-- heyclaude-submission-gate -->",
         "https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
       ),
-    ).toContain("**Superseded gate report**");
+    ).toContain("> ## ℹ️ Superseded gate report");
+  });
+
+  it("routes low-confidence private merge verdicts to manual review", () => {
+    const decision = enforceAutoMergeConfidenceFloor({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.76,
+      summary:
+        "Summary:\n- Content appears useful, but evidence is not strong enough.",
+      labels: ["submission-merged-by-gate"],
+      checks: [{ name: "validate-content", status: "passed" }],
+      sections: [
+        {
+          id: "source_review",
+          status: "pass",
+          bullets: ["Primary source is reachable."],
+        },
+      ],
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      confidence: 0.76,
+      labels: ["submission-manual-review"],
+      errors: [
+        {
+          code: "low_private_review_confidence",
+          retryable: false,
+        },
+      ],
+    });
+    expect(decision.summary).toContain("unattended merge floor is 85%");
+    expect(markerComment(decision)).toContain("> [!IMPORTANT]");
+    expect(markerComment(decision)).toContain("Confidence Review");
+    expect(markerComment(decision)).toContain(
+      "needs maintainer judgment before automation continues",
+    );
   });
 
   it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
@@ -924,6 +966,14 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
     expect(source).toContain("message.retry({ delaySeconds: 30 })");
+    expect(source).toContain("AUTO_MERGE_CONFIDENCE_FLOOR");
+    expect(source).toContain("enforceAutoMergeConfidenceFloor(");
+    expect(source.indexOf("normalizeOneShotDecision(decision)")).toBeLessThan(
+      source.indexOf("enforceAutoMergeConfidenceFloor("),
+    );
+    expect(source.indexOf("enforceAutoMergeConfidenceFloor(")).toBeLessThan(
+      source.indexOf("const status = decisionStatus(decision.verdict)"),
+    );
   });
 
   it("closes direct content PRs when required validation fails", () => {

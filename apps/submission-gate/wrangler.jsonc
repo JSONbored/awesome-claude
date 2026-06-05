@@ -28,6 +28,7 @@
     "REVIEW_MARKER": "<!-- heyclaude-submission-gate -->",
     "REQUIRED_VALIDATION_CHECKS": "validate-content,Superagent Security Scan",
     "REQUIRED_STATUS_CONTEXTS": "",
+    "AUTO_MERGE_CONFIDENCE_FLOOR": "0.85",
   },
   "ratelimits": [
     {
