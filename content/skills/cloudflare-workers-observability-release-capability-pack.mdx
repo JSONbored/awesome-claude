@@ -1,0 +1,155 @@
+---
+title: Cloudflare Workers Observability Release Capability Pack Skill
+slug: cloudflare-workers-observability-release-capability-pack
+category: skills
+description: >-
+  Expert skill for reviewing Cloudflare Workers observability before release,
+  including Workers Logs, query coverage, tracing, Tail Workers, Logpush,
+  sampling, privacy, and rollback diagnostics.
+cardDescription: Review Workers logs, traces, sampling, Tail Workers, Logpush, and release diagnostics.
+seoTitle: Cloudflare Workers Observability Release Capability Pack Skill
+seoDescription: >-
+  Advanced AI skill for Cloudflare Workers observability release review,
+  Workers Logs, traces, Tail Workers, Logpush, sampling, and privacy-safe
+  debugging evidence.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+repoUrl: "https://github.com/cloudflare/workers-sdk"
+documentationUrl: "https://developers.cloudflare.com/workers/observability/"
+downloadUrl: "https://github.com/cloudflare/workers-sdk/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npm install -D wrangler"
+usageSnippet: >-
+  Use this skill before deploying a Worker that needs logs, traces, sampling,
+  error investigation, or privacy-safe production debugging.
+copySnippet: |-
+  # Trigger
+  "Apply the Cloudflare Workers observability release capability pack to this Worker deployment."
+
+  # Required output
+  1) Observability surfaces enabled and gaps
+  2) Release-blocking diagnostics risks
+  3) Privacy and retention notes
+  4) Smoke checks and rollback evidence
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://developers.cloudflare.com/workers/observability/"
+  - "https://developers.cloudflare.com/workers/observability/logs/workers-logs/"
+  - "https://developers.cloudflare.com/workers/observability/logs/tail-workers/"
+  - "https://developers.cloudflare.com/workers/observability/query-builder"
+  - "https://github.com/cloudflare/workers-sdk"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - Cloudflare Worker, Wrangler project, deployment target, and release branch under review.
+  - Access to Wrangler config, observability settings, logs, traces, alerts, and rollback plan.
+  - Policy for which request fields, headers, bodies, and identifiers may be logged.
+safetyNotes:
+  - "Observability cannot compensate for unsafe deploy behavior; deployment permissions, secrets, and rollback controls still need separate review."
+  - "Sampling and log retention choices affect incident response quality, cost, and privacy exposure."
+  - "Tail Workers, Logpush, and external sinks can move production telemetry into additional systems that need access control."
+privacyNotes:
+  - "Worker logs and traces can include URLs, headers, IP-derived metadata, account IDs, request payload snippets, errors, console output, and internal route names."
+  - "Public incident comments should summarize findings without dumping raw logs, trace IDs tied to users, secrets, or private endpoint paths."
+tags:
+  - cloudflare-workers
+  - observability
+  - workers-logs
+  - tracing
+  - wrangler
+keywords:
+  - Cloudflare Workers observability review
+  - Workers Logs release checklist
+  - Cloudflare Worker tracing skill
+  - Tail Worker Logpush diagnostics
+  - Wrangler observability release
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in Cloudflare Workers Observability, Workers
+Logs, Tail Workers, Query Builder, and Workers SDK documentation checked on
+2026-06-05. Prefer current Cloudflare docs and Wrangler behavior over memory for
+field names, configuration, and product limits.
+
+## Retrieval Sources
+
+- https://developers.cloudflare.com/workers/observability/
+- https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+- https://developers.cloudflare.com/workers/observability/logs/tail-workers/
+- https://developers.cloudflare.com/workers/observability/query-builder
+- https://github.com/cloudflare/workers-sdk
+
+## Core Workflow
+
+1. Identify the Worker, environment, deployment method, Wrangler config, and
+   rollback target.
+2. Inventory observability surfaces: Workers Logs, Query Builder, traces,
+   metrics, Tail Workers, Logpush, dashboard alerts, and external sinks.
+3. Check whether logs are enabled in the right environment and whether sampling
+   is appropriate for expected traffic and incident response needs.
+4. Review what gets logged: request paths, headers, bodies, account IDs,
+   exceptions, console output, and tool-generated diagnostic text.
+5. Confirm that privacy-sensitive fields are redacted before logs leave the
+   Worker or reach a third-party sink.
+6. Define release smoke checks: deploy, generate a known request, locate logs,
+   query an error condition, and verify rollback evidence remains visible.
+7. Produce blockers, caveats, and a public-safe summary of diagnostic readiness.
+
+## Capability Scope
+
+- Workers Logs and Query Builder readiness
+- Tracing and request lifecycle visibility
+- Tail Workers and Logpush export review
+- Sampling, retention, and cost tradeoffs
+- Privacy-safe log and trace handling
+- Release smoke checks and rollback diagnostics
+
+## Compatibility
+
+### Native
+
+- Claude Code and Claude: use as a deployment review skill for Workers projects.
+- Codex: use before merging Worker changes or publishing deploy automation.
+
+### Manual Adaptation
+
+- Generic AGENTS files: convert the workflow into a Cloudflare release checklist.
+- Cursor and Windsurf: use the output contract when reviewing Worker PRs.
+
+## Required Inputs
+
+- Wrangler config and deployment target
+- Worker route or custom domain
+- Observability settings and log retention policy
+- Expected traffic and incident response needs
+- External telemetry destinations, if any
+
+## Production Rules
+
+- Do not approve a Worker release when maintainers cannot find logs for a known smoke request.
+- Do not log secrets, bearer tokens, cookies, full request bodies, or private identifiers by default.
+- Do not send telemetry to a new external sink without owner approval and access-control review.
+- Keep sampling tradeoffs explicit; too little sampling can make incidents untriageable.
+- Require a rollback path and a way to confirm rollback behavior from telemetry.
+
+## Output Contract
+
+1. Observability inventory and gaps.
+2. Release blockers and non-blocking improvements.
+3. Privacy and retention risks.
+4. Smoke-check commands or dashboard steps.
+5. Rollback diagnostics plan.
+6. Public-safe summary for PR or incident comments.
