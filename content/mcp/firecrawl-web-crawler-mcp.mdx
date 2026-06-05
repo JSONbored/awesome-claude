@@ -1,0 +1,51 @@
+---
+title: Firecrawl Web Crawler MCP Server
+slug: firecrawl-web-crawler-mcp
+category: mcp
+description: Firecrawl MCP server for scraping, crawling, mapping, searching, and extracting web pages from Claude.
+cardDescription: Firecrawl MCP web crawler integration for Claude.
+author: Firecrawl
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://github.com/firecrawl/firecrawl-docs/blob/main/mcp-server.mdx"
+repoUrl: "https://github.com/firecrawl/firecrawl-mcp-server"
+installable: true
+installCommand: "claude mcp add firecrawl -e FIRECRAWL_API_KEY=your-api-key -- npx -y firecrawl-mcp"
+usageSnippet: "Use Firecrawl MCP for scrape, crawl, map, search, and extract tools."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "firecrawl": {
+        "command": "npx",
+        "args": ["-y", "firecrawl-mcp"],
+        "env": { "FIRECRAWL_API_KEY": "YOUR_API_KEY" }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "firecrawl": {
+        "command": "npx",
+        "args": ["-y", "firecrawl-mcp"],
+        "env": { "FIRECRAWL_API_KEY": "YOUR_API_KEY" }
+      }
+    }
+  }
+sourceUrls:
+  - "https://github.com/firecrawl/firecrawl-docs/blob/main/mcp-server.mdx"
+tags:
+  - firecrawl
+  - mcp
+keywords:
+  - Firecrawl web crawler MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+This is a second Firecrawl MCP listing that points to the same official source as
+the existing Firecrawl MCP entry. It intentionally duplicates the same project
+under a different slug.
