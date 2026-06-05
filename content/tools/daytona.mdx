@@ -1,0 +1,98 @@
+---
+title: Daytona
+slug: daytona
+category: tools
+description: >-
+  Open-source infrastructure for securely running AI-generated code in isolated
+  sandboxes that start in milliseconds, with SDKs for Python, TypeScript, and
+  other languages, persistent snapshots, and an optional managed cloud.
+cardDescription: >-
+  Open-source sandbox infrastructure for executing AI-generated code in isolated
+  environments, with SDKs, snapshots, and an optional managed cloud.
+seoTitle: Daytona — Secure Sandbox Infrastructure for AI Code Execution
+seoDescription: >-
+  Daytona is AGPL-3.0 infrastructure for running AI-generated code in isolated,
+  millisecond-start sandboxes. SDKs for Python and TypeScript, persistent
+  snapshots, MCP integration, and an optional usage-based managed cloud.
+author: Daytona
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://www.daytona.io"
+repoUrl: "https://github.com/daytonaio/daytona"
+documentationUrl: "https://www.daytona.io/docs"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "A Daytona Cloud account and API key for the managed service, or self-hosted infrastructure for the open-source platform."
+  - "Python 3.8+ for the `daytona` SDK or Node.js 18+ for the `@daytona/sdk` TypeScript SDK."
+  - "Docker and Docker Compose to run supporting services (PostgreSQL, Redis) when self-hosting."
+  - "Nix with flakes enabled or a devcontainer-compatible editor for local development of the platform itself."
+safetyNotes:
+  - "Daytona is purpose-built to execute arbitrary, AI-generated code; only run untrusted code inside its isolated sandboxes, never on the host."
+  - "Each sandbox has its own kernel, filesystem, and network stack, but sandboxes can make outbound network requests unless network limits are configured."
+  - "Sandboxes support computer use, Git operations, and command execution; scope what an agent can do and review declarative builder configurations before use."
+  - "Self-hosting runs runner compute nodes and Docker services that need elevated host privileges; isolate the deployment from production systems."
+  - "Persistent snapshots retain sandbox filesystem state across sessions, which can preserve secrets or sensitive files written during execution."
+privacyNotes:
+  - "Using the managed cloud sends your code, files, and execution data to Daytona-operated infrastructure; review their terms before processing sensitive data."
+  - "The platform emits OpenTelemetry metrics, log streaming, and audit logs that can capture command output and activity."
+  - "API keys grant access to your sandboxes and organization; store them as secrets and never commit them to source control."
+  - "Self-hosting keeps execution data on your own infrastructure but you become responsible for log retention, access control, and isolation."
+tags:
+  - sandbox
+  - code-execution
+  - ai-agents
+  - infrastructure
+  - open-source
+  - developer-tools
+keywords:
+  - daytona
+  - ai code sandbox
+  - secure code execution
+  - agent sandbox infrastructure
+  - isolated code execution
+  - daytona sdk
+  - self-hosted sandbox
+---
+
+## Overview
+
+Daytona is open-source infrastructure for securely executing AI-generated code.
+It provides sandboxes described as full composable computers with complete
+isolation — a dedicated kernel, filesystem, network stack, and allocated vCPU,
+RAM, and disk — that spin up in well under a second.
+
+It is aimed at agent builders who need a safe place to run untrusted or
+model-generated code at scale. You interact with sandboxes through SDKs, a REST
+API, and a CLI, and with humans through a dashboard, web terminal, SSH, and VNC.
+Daytona is released under AGPL-3.0; a managed cloud with usage-based pricing is
+also available for teams that do not want to self-host.
+
+## Features
+
+- Isolated sandboxes with millisecond start times and per-sandbox kernel,
+  filesystem, and network stack.
+- Persistent snapshots for stateful agent operations across sessions.
+- SDKs for Python (`pip install daytona`) and TypeScript
+  (`npm install @daytona/sdk`), plus Ruby and Go.
+- REST API and CLI for programmatic and scripted control.
+- Built-in Git operations, LSP support, computer use, and MCP server
+  integration.
+- Organization governance: API keys, audit logs, and billing controls.
+
+## Use Cases
+
+- Give a coding agent a safe sandbox to run and test generated code.
+- Execute untrusted user-submitted code without exposing host systems.
+- Provide reproducible, snapshot-backed environments for long-running agents.
+- Self-host execution infrastructure to keep code and data on your own systems.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. Daytona's core
+platform is open source (AGPL-3.0); the managed cloud is a separate paid,
+usage-based service.

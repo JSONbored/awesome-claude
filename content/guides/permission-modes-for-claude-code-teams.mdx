@@ -1,0 +1,135 @@
+---
+title: Permission Modes for Claude Code Teams
+slug: permission-modes-for-claude-code-teams
+category: guides
+description: >-
+  A practical walkthrough of Claude Code permission modes for teams: what each
+  mode allows, how to switch and default them, protected paths, and how
+  administrators enforce or lock modes with managed settings.
+cardDescription: >-
+  Understand and govern Claude Code permission modes across a team, from default
+  to auto and bypass, with managed-settings controls.
+seoTitle: Permission Modes for Claude Code Teams
+seoDescription: >-
+  How Claude Code permission modes work for teams: default, acceptEdits, plan,
+  auto, dontAsk, and bypassPermissions, how to set defaults, protected paths,
+  and how admins enforce or disable modes with managed settings.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/permission-modes"
+usageSnippet: "Use this guide to choose, default, and govern Claude Code permission modes across a team, including how administrators enforce or lock modes with managed settings."
+prerequisites:
+  - "Claude Code installed for each team member."
+  - "Access to user settings (~/.claude/settings.json) and, for org enforcement, managed settings."
+  - "A shared understanding of which work is sensitive enough to require manual review."
+safetyNotes:
+  - "bypassPermissions skips permission prompts and safety checks and should only run in isolated containers or VMs, never on a developer's primary machine."
+  - "auto mode reduces prompts via a background classifier but is a research preview and is not a guarantee of safety; keep review on sensitive operations."
+  - "Protected paths (such as .git, .claude, and shell config files) are never auto-approved except under bypassPermissions; preserve that boundary."
+  - "Administrators can disable auto mode and bypassPermissions with managed settings (disableAutoMode, disableBypassPermissionsMode) so individuals cannot enable them."
+privacyNotes:
+  - "Permission modes govern tool execution, not data flow; code and context are still sent to the model provider regardless of mode."
+  - "Looser modes let Claude run more commands unattended, widening what could touch local files or credentials; scope accordingly."
+  - "Managed settings are the place to enforce mode policy centrally without exposing individual developer configuration."
+tags:
+  - claude-code
+  - permissions
+  - team
+  - governance
+  - security
+keywords:
+  - claude code permission modes
+  - claude code acceptEdits
+  - claude code plan mode
+  - claude code auto mode
+  - bypassPermissions
+  - claude code managed settings
+---
+
+## Overview
+
+Permission modes control how often Claude Code pauses to ask before it edits a
+file, runs a command, or makes a network request. For a team, the mode policy is
+the main lever between fast, uninterrupted work and careful oversight. This guide
+explains each mode, how to switch and default them, what protected paths
+guarantee, and how administrators enforce policy.
+
+## The modes
+
+| Mode | Runs without asking | Best for |
+| --- | --- | --- |
+| `default` | Reads only | Getting started, sensitive work |
+| `acceptEdits` | Reads, file edits, common filesystem commands | Iterating on code you review afterward |
+| `plan` | Reads only (proposes changes) | Exploring before changing |
+| `auto` | Everything, with background safety checks | Long tasks, fewer prompts |
+| `dontAsk` | Only pre-approved tools | Locked-down CI and scripts |
+| `bypassPermissions` | Everything | Isolated containers and VMs only |
+
+In every mode except `bypassPermissions`, writes to protected paths are never
+auto-approved.
+
+## Switch modes
+
+- During a session, press `Shift+Tab` to cycle `default` -> `acceptEdits` ->
+  `plan`. The current mode shows in the status bar.
+- At startup, pass a flag: `claude --permission-mode plan`.
+- As a default, set `defaultMode` in settings:
+
+```json
+{
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  }
+}
+```
+
+`auto`, `dontAsk`, and `bypassPermissions` are not in the default cycle; they are
+enabled with their own flags or settings.
+
+## Layer permission rules
+
+Modes set the baseline. Layer `allow`, `ask`, and `deny` permission rules on top
+to pre-approve or block specific tools in any mode except `bypassPermissions`.
+For an action that must never run, an explicit `deny` rule is stronger than any
+mode.
+
+## Protected paths
+
+Writes to `.git`, `.claude` (except its worktrees directory), `.vscode`, shell
+config files, package-manager config, and similar are never auto-approved unless
+you are in `bypassPermissions`. This guards repository state and Claude Code's
+own configuration from accidental corruption.
+
+## Governing modes across a team
+
+- **Default policy**: set `permissions.defaultMode` in user settings for
+  individuals, or in managed settings for the organization.
+- **auto mode**: an admin must enable it on Team and Enterprise before users can
+  turn it on, and it can be locked off with `permissions.disableAutoMode` set to
+  `"disable"` in managed settings. Note `defaultMode: "auto"` is ignored from
+  project and local settings so a repository cannot grant itself auto mode.
+- **bypassPermissions**: block it with `permissions.disableBypassPermissionsMode`
+  set to `"disable"` in managed settings, and reserve it for disposable
+  containers.
+
+## Recommended team posture
+
+1. Default new repositories to `default` or `plan`.
+2. Use `acceptEdits` for active, reviewed iteration where you check diffs after.
+3. Reserve `auto` for trusted, well-scoped tasks, and keep deny rules in place.
+4. Disallow `bypassPermissions` on developer machines via managed settings.
+
+## Troubleshooting
+
+- If `auto` does not appear, the account or provider may not meet its
+  requirements, or an admin has disabled it.
+- If `defaultMode: "auto"` seems ignored, it is likely in project/local settings;
+  move it to user or managed settings.
+
+## Source
+
+- Claude Code permission modes: https://code.claude.com/docs/en/permission-modes

@@ -1,0 +1,137 @@
+---
+title: Sandbox Boundary Review Agent
+slug: sandbox-boundary-review-agent
+category: agents
+description: >-
+  Source-backed agent that reviews Claude Code's sandboxed Bash configuration for
+  safe boundaries, checking filesystem allow/deny paths, network allowlists,
+  unsandboxed escape hatches, excluded commands, and credential read scope,
+  grounded in the official Claude Code sandboxing docs.
+cardDescription: >-
+  Review Claude Code sandbox boundaries: filesystem allow/deny, network
+  allowlists, escape hatches, excluded commands, and credential reads.
+seoTitle: Sandbox Boundary Review Agent for Claude Code
+seoDescription: >-
+  Reusable agent prompt that reviews Claude Code's sandboxed Bash configuration,
+  checking filesystem allow/deny paths, network allowlists, unsandboxed escape
+  hatches, excluded commands, and credential read scope, grounded in official docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/sandboxing"
+installable: false
+usageSnippet: "Use this agent to review Claude Code's sandboxed Bash configuration for safe boundaries: filesystem allow/deny paths, network allowlists, escape hatches, excluded commands, and credential reads."
+prerequisites:
+  - "A Claude Code project with the Bash sandbox enabled, on macOS, Linux, or WSL2."
+  - "Access to the sandbox settings (filesystem, network, excludedCommands) across scopes."
+  - "Knowledge of which paths and network domains commands legitimately need."
+safetyNotes:
+  - "This agent reviews sandbox configuration; it does not disable or weaken the sandbox itself."
+  - "Flag broad allowWrite paths (PATH dirs, shell config), broad allowedDomains, and excludedCommands that undo isolation."
+  - "Note that the default read policy can still read credential files like ~/.aws and ~/.ssh unless added to denyRead."
+privacyNotes:
+  - "The sandbox proxy does not inspect TLS, so a broad domain allowlist can enable exfiltration; recommend narrow domains."
+  - "Recommend denyRead for credential directories and consider scrubbing provider credentials from subprocess environments."
+  - "allowing the docker socket or broad unix sockets can grant host access; flag such exceptions."
+tags:
+  - claude-code
+  - sandboxing
+  - security
+  - bash
+  - review
+keywords:
+  - sandbox boundary review agent
+  - claude code sandbox
+  - bash sandbox security
+  - sandbox allowlist review
+  - claude code filesystem network isolation
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Sandbox Boundary Review Agent is a reusable agent prompt for reviewing Claude
+Code's sandboxed Bash configuration so its boundaries are actually safe. It checks
+filesystem allow/deny paths, the network allowlist, unsandboxed escape hatches,
+excluded commands, and credential read scope, and flags settings that quietly
+weaken isolation.
+
+Use it when enabling the Bash sandbox or hardening it for autonomous runs and
+managed deployments.
+
+## Agent Prompt
+
+You are a sandbox boundary reviewer for Claude Code's sandboxed Bash tool. Confirm
+the filesystem and network boundaries are sound and flag anything that weakens
+them. Use the official Claude Code sandboxing documentation as your reference.
+
+Review workflow:
+
+1. Filesystem write. Review `allowWrite` paths. Flag writes to directories with
+   executables on PATH, system config, or shell config files, which enable
+   privilege escalation.
+2. Filesystem read. Note the default read policy can still read credential
+   directories; recommend `denyRead` for `~/.aws`, `~/.ssh`, and similar.
+3. Network. Review `allowedDomains`. Because the proxy does not inspect TLS, broad
+   domains can enable exfiltration; recommend the narrowest set.
+4. Escape hatches. Check whether unsandboxed retries are allowed and whether
+   `excludedCommands` removes important tools from the sandbox.
+5. Managed lockdown. For organizations, recommend enforcing the sandbox, failing
+   closed when unavailable, and managed-only read/domain lists.
+6. Scope. Remember built-in file tools and computer use are outside the sandbox,
+   and subagents share the parent sandbox config.
+7. Decision. Boundaries sound, tighten, or block autonomous use.
+
+Output contract:
+
+- Boundary summary: filesystem allow/deny, network allowlist, exclusions.
+- Findings: privilege-escalation paths, broad domains, weakening exceptions,
+  credential read exposure.
+- Required changes: narrower paths/domains, denyRead for credentials, managed
+  lockdown.
+- Decision and any cautions for unattended runs.
+
+## Features
+
+- Reviews sandbox filesystem allow/deny and network allowlists.
+- Flags privilege-escalation write paths and broad domains.
+- Checks escape hatches and excluded commands that weaken isolation.
+- Recommends managed lockdown and credential-read denials.
+
+## Use Cases
+
+- Harden the Bash sandbox before autonomous or CI runs.
+- Review a managed sandbox policy for an organization.
+- Catch broad allowWrite or allowedDomains that undermine isolation.
+- Deny credential-directory reads the default policy still allows.
+
+## Source Notes
+
+- Claude Code's sandbox restricts filesystem writes to the working directory by
+  default and controls network access through a proxy and an allowlist with no
+  domains pre-allowed, enforced via Seatbelt on macOS and bubblewrap on Linux/WSL2.
+- The proxy does not inspect TLS, the default read policy still allows credential
+  directories unless denied, and `excludedCommands` plus unsandboxed retries can
+  weaken the boundary.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for sandbox, isolation, and boundary
+review agents. No sandbox boundary review agent exists. This entry is distinct: it
+is an `agents` prompt focused on reviewing Claude Code's sandboxed Bash boundaries.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code sandboxing documentation: https://code.claude.com/docs/en/sandboxing
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

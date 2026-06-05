@@ -1,0 +1,116 @@
+---
+title: Permission Design for Claude Agent SDK Agents
+slug: permission-design-for-claude-agent-sdk-agents
+category: guides
+description: >-
+  A practical walkthrough of permission design in the Claude Agent SDK: the
+  evaluation order (hooks, deny, mode, allow, canUseTool), allow/deny rules,
+  permission modes, the canUseTool callback, and locking down an agent.
+cardDescription: >-
+  Design permissions for Claude Agent SDK agents: evaluation order, allow/deny
+  rules, permission modes, and the canUseTool callback.
+seoTitle: Permission Design for Claude Agent SDK Agents
+seoDescription: >-
+  How to design permissions in the Claude Agent SDK: the hooks, deny, mode,
+  allow, canUseTool evaluation order, allowedTools/disallowedTools rules,
+  permission modes, and locking down an agent with dontAsk.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/permissions"
+usageSnippet: "Use this guide to design least-privilege permissions for a Claude Agent SDK agent: allow/deny rules, permission modes, and the canUseTool callback."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "Knowledge of which tools and command patterns the agent legitimately needs."
+  - "For settings-based rules, the project setting source enabled (default)."
+safetyNotes:
+  - "allowedTools only pre-approves tools; it does NOT constrain bypassPermissions, where every tool runs. To block tools under bypass, use disallowedTools or scoped deny rules."
+  - "Deny rules (for example Bash(rm *)) are enforced in every mode, including bypassPermissions; a bare-name deny removes the tool from context entirely."
+  - "When the parent uses bypassPermissions, acceptEdits, or auto, subagents inherit it and cannot override per-subagent; prefer the least permissive mode that works."
+privacyNotes:
+  - "Permissions govern tool execution, not data flow; code and context still go to the model provider regardless of mode."
+  - "The canUseTool callback sees tool inputs at runtime; avoid logging sensitive arguments from it."
+  - "Settings-based allow/deny rules live in .claude/settings.json; keep secrets out of rule patterns."
+tags:
+  - claude-agent-sdk
+  - permissions
+  - security
+  - agents
+  - developer-tools
+keywords:
+  - claude agent sdk permissions
+  - canUseTool callback
+  - permissionMode dontAsk
+  - allowedTools disallowedTools
+  - least privilege agent sdk
+---
+
+## Overview
+
+The Agent SDK controls tool use through permission modes, declarative allow/deny
+rules, hooks, and the `canUseTool` callback. Designing these well is how you get a
+least-privilege agent that runs autonomously where it is safe and asks (or is
+denied) where it is not.
+
+## Evaluation order
+
+When Claude requests a tool, the SDK checks, in order:
+
+1. **Hooks** - can deny outright or pass on (a hook `allow` does not skip later
+   deny/ask rules).
+2. **Deny rules** - from `disallowedTools` and settings; a match blocks the tool
+   even in `bypassPermissions`.
+3. **Permission mode** - `bypassPermissions` approves; `acceptEdits` approves file
+   ops; others fall through.
+4. **Allow rules** - from `allowedTools` and settings; a match approves.
+5. **canUseTool callback** - decides anything unresolved (skipped in `dontAsk`,
+   which denies).
+
+## Allow and deny rules
+
+- `allowedTools: ["Read", "Grep"]` - auto-approves those; unlisted tools fall
+  through to the mode.
+- `disallowedTools: ["Bash"]` - removes the tool from context entirely.
+- `disallowedTools: ["Bash(rm *)"]` - keeps Bash but denies matching calls in
+  every mode.
+
+Critically, `allowedTools` does **not** constrain `bypassPermissions`; to block
+specific tools there, use `disallowedTools`.
+
+## Permission modes
+
+| Mode | Behavior |
+| --- | --- |
+| `default` | No auto-approvals; unmatched tools hit canUseTool. |
+| `dontAsk` | Anything not pre-approved is denied; canUseTool never called. |
+| `acceptEdits` | Auto-approves file edits and filesystem commands in scope. |
+| `bypassPermissions` | Approves everything (hooks/deny still apply); use with caution. |
+| `plan` | Read-only; Claude plans without editing. |
+| `auto` (TS) | A model classifier approves or denies each call. |
+
+Set it with `permissionMode` at query time, or change it mid-session with
+`setPermissionMode()` / `set_permission_mode()`.
+
+## Lock down an agent
+
+For a headless, fixed tool surface, pair an allow list with `dontAsk`:
+
+```typescript
+const options = { allowedTools: ["Read", "Glob", "Grep"], permissionMode: "dontAsk" };
+```
+
+Listed tools are approved; anything else is denied outright rather than prompting.
+
+## Interactive approvals
+
+For runtime approval flows, implement the `canUseTool` callback (returns allow or
+deny). For deterministic guardrails, use hooks. Declarative allow/ask/deny rules
+can also live in `.claude/settings.json` when the project setting source is
+enabled.
+
+## Source
+
+- Configure permissions: https://code.claude.com/docs/en/agent-sdk/permissions

@@ -1,0 +1,162 @@
+---
+title: Playwright Trace Failure Triage Capability Pack Skill
+slug: playwright-trace-failure-triage-capability-pack
+category: skills
+description: >-
+  Expert skill for reviewing Playwright trace artifacts, screenshots, action
+  timelines, network events, retries, and CI evidence to classify flaky browser
+  test failures without guessing from logs alone.
+cardDescription: Triage Playwright failures from traces, action timelines, screenshots, network events, and CI context.
+seoTitle: Playwright Trace Failure Triage Capability Pack Skill
+seoDescription: >-
+  Advanced AI skill for Playwright trace viewer failure triage, flaky test
+  classification, CI artifact review, locator diagnosis, and reproducible
+  browser test fixes.
+author: JSONbored
+authorProfileUrl: "https://github.com/JSONbored"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+repoUrl: "https://github.com/microsoft/playwright"
+documentationUrl: "https://playwright.dev/docs/trace-viewer-intro"
+downloadUrl: "https://github.com/microsoft/playwright/archive/refs/heads/main.zip"
+installable: true
+installCommand: "npm init playwright@latest"
+usageSnippet: >-
+  Use this skill when a Playwright failure includes trace artifacts,
+  screenshots, video, retries, test output, or CI artifacts that need
+  evidence-based triage.
+copySnippet: |-
+  # Trigger
+  "Apply the Playwright trace failure triage capability pack to this failed test."
+
+  # Required output
+  1) Artifact inventory and Playwright version evidence
+  2) Failure classification from trace actions, DOM snapshots, network, console, and retries
+  3) Root-cause hypothesis with supporting trace evidence
+  4) Smallest safe fix and regression validation plan
+skillType: capability-pack
+skillLevel: expert
+verificationStatus: validated
+verifiedAt: "2026-06-05"
+retrievalSources:
+  - "https://playwright.dev/docs/trace-viewer-intro"
+  - "https://playwright.dev/docs/debug"
+  - "https://playwright.dev/docs/test-configuration"
+  - "https://playwright.dev/docs/test-reporters"
+  - "https://github.com/microsoft/playwright"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Cursor
+  - Windsurf
+  - Generic AGENTS
+prerequisites:
+  - Playwright test failure, trace artifact, test report, or CI run under review.
+  - Access to test source, Playwright config, browser/project name, retry settings, and relevant artifacts.
+  - Permission to inspect screenshots, DOM snapshots, console logs, network events, and request/response metadata.
+safetyNotes:
+  - "Trace artifacts can include screenshots, DOM text, URLs, request metadata, console output, and application state; review them before sharing publicly."
+  - "Do not fix a trace-only symptom by adding broad waits, retries, or timeouts unless the trace evidence supports that change."
+  - "Keep destructive browser actions and production-like credentials out of replayed failure reproduction."
+privacyNotes:
+  - "Playwright traces can expose user names, emails, tokens in URLs, internal hostnames, test data, screenshots, and API payload fragments."
+  - "Public PR comments should summarize trace evidence without uploading private trace files or pasting sensitive network details."
+tags:
+  - playwright
+  - trace-viewer
+  - testing
+  - browser-automation
+  - flaky-tests
+keywords:
+  - Playwright trace triage
+  - Playwright flaky test review
+  - trace viewer debugging skill
+  - browser test CI artifact review
+  - Playwright failure root cause
+readingTime: 9
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This capability pack is grounded in the current Playwright Trace Viewer,
+debugging, test configuration, and reporter documentation checked on
+2026-06-05. Prefer the official Playwright docs and repository over remembered
+behavior when reviewing trace retention, report fields, or CLI commands.
+
+## Retrieval Sources
+
+- https://playwright.dev/docs/trace-viewer-intro
+- https://playwright.dev/docs/debug
+- https://playwright.dev/docs/test-configuration
+- https://playwright.dev/docs/test-reporters
+- https://github.com/microsoft/playwright
+
+## Core Workflow
+
+1. Identify the failed test, browser project, Playwright version, retry count,
+   trace retention setting, and CI environment.
+2. Inventory artifacts: trace, report, screenshots, video, console output,
+   network events, test stdout, and any attached application logs.
+3. Open the trace timeline and find the first user-visible failure, not only the
+   final assertion message.
+4. Compare action snapshots before and after the failing step. Classify whether
+   the failure is locator ambiguity, timing, navigation, network, auth, data,
+   accessibility role mismatch, animation, browser-specific behavior, or product
+   regression.
+5. Check retries. A pass-on-retry usually needs flake classification and a
+   deterministic reproduction attempt, not an automatic merge.
+6. Recommend the smallest fix: stable locator, fixture setup, route mock,
+   assertion change, app bug fix, or test isolation change.
+7. Provide a validation plan with the exact Playwright command, browser project,
+   retry setting, and artifact retention expected after the fix.
+
+## Capability Scope
+
+- Trace viewer evidence review
+- Timeline/action classification
+- DOM snapshot and screenshot comparison
+- Console and network event triage
+- Retry and CI artifact interpretation
+- Locator, assertion, fixture, and isolation recommendations
+- Privacy-safe public summary of trace evidence
+
+## Compatibility
+
+### Native
+
+- Claude Code and Claude: use as a reusable skill for Playwright failure review.
+- Codex workflows: use for PR review and CI failure triage where artifacts are available.
+
+### Manual Adaptation
+
+- Generic AGENTS files: convert the workflow into a browser-test failure review checklist.
+- Cursor and Windsurf: use the output contract when reviewing trace artifacts from CI.
+
+## Required Inputs
+
+- Failed test name, file, browser project, and retry number
+- Playwright config and trace retention setting
+- Trace artifact or report link
+- Relevant test source and fixture setup
+- Expected product behavior and environment details
+
+## Production Rules
+
+- Do not approve a change only because the test passed on retry.
+- Do not suggest arbitrary waits without trace evidence that the application was still legitimately loading.
+- Do not expose screenshots, URLs, request payloads, or DOM text from private traces in public comments.
+- Prefer role-based or user-visible locator fixes when the trace shows selector brittleness.
+- Keep app regressions separate from test bugs; a failing trace can prove the product is wrong.
+- Require a rerun of the affected browser project after the fix.
+
+## Output Contract
+
+1. Artifact inventory and confidence in the available evidence.
+2. Failure classification with trace-backed observations.
+3. Root cause hypothesis and alternatives ruled out.
+4. Minimal fix recommendation.
+5. Validation commands and artifact expectations.
+6. Privacy notes for anything that should not be pasted publicly.

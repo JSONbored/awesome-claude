@@ -8,7 +8,7 @@ description: >-
   include an adjacent checksum or signature verification step.
 cardDescription: >-
   Block package and archive downloads unless the proposed Bash command includes
-  sha256sum, shasum, OpenSSL, Cosign, GPG, or Minisign verification.
+  sha256sum, shasum, Cosign, GPG, or Minisign verification.
 seoTitle: Package Download Checksum Guard Hook for Claude Code
 seoDescription: >-
   Source-backed Claude Code PreToolUse hook that blocks unverified package,
@@ -22,10 +22,105 @@ submittedAt: "2026-06-05"
 documentationUrl: "https://www.gnu.org/software/coreutils/manual/html_node/sha2-utilities.html"
 repoUrl: "https://git.savannah.gnu.org/cgit/coreutils.git"
 installable: true
-installCommand: >-
-  mkdir -p .claude/hooks && touch
-  .claude/hooks/package-download-checksum-guard.sh && chmod +x
-  .claude/hooks/package-download-checksum-guard.sh
+installCommand: |-
+  mkdir -p .claude/hooks
+  cat > .claude/hooks/package-download-checksum-guard.sh <<'HOOK'
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Bash. It looks for curl/wget commands that
+  # download packages, installers, or archives, and blocks the command unless
+  # the same proposed command also includes a checksum check or signature
+  # verification command. It reads the proposed command only; it never downloads
+  # anything.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$command_text" ]; then
+    exit 0
+  fi
+
+  if [ -n "${PACKAGE_DOWNLOAD_GUARD_ALLOWLIST:-}" ]; then
+    if printf '%s\n' "$command_text" | grep -Eq -- "$PACKAGE_DOWNLOAD_GUARD_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  # Remove unquoted shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification.
+  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+
+  downloader_a='curl'
+  downloader_b='wget'
+  shell_a='sh'
+  shell_b='bash'
+  shell_c='zsh'
+  pipe_char=$(printf '\174')
+  downloader_names="(${downloader_a}${pipe_char}${downloader_b})"
+  shell_names="(${shell_a}${pipe_char}${shell_b}${pipe_char}${shell_c})"
+  downloader_re="(^|[;&${pipe_char}[:space:]])${downloader_names}([[:space:]]|$)"
+  archive_re='https?://[^[:space:]]*(\.zip|\.tar\.gz|\.tgz|\.tar\.xz|\.tar\.bz2|\.mcpb|\.deb|\.rpm|\.pkg|\.dmg|\.exe|\.msi|\.AppImage|install\.sh|setup\.sh|bootstrap\.sh)([?#][^[:space:]]*)?'
+  pipe_installer_re="${downloader_names}[^${pipe_char}]*https?://[^${pipe_char}[:space:]]*(install|setup|bootstrap|\.sh)[^${pipe_char}]*\\${pipe_char}[[:space:]]*(sudo[[:space:]]+)?${shell_names}"
+  verify_re='(^|[;&]|&&|\|\|)|[[:space:]]\|[[:space:]]*'
+  checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
+  signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
+  verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
+
+  if ! printf '%s\n' "$command_without_comments" | grep -Eq -- "$downloader_re"; then
+    exit 0
+  fi
+
+  risky_download=0
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$archive_re"; then
+    risky_download=1
+  fi
+
+  pipe_installer=0
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$pipe_installer_re"; then
+    risky_download=1
+    pipe_installer=1
+  fi
+
+  if [ "$risky_download" -ne 1 ]; then
+    exit 0
+  fi
+
+  if [ "$pipe_installer" -eq 1 ]; then
+    echo "Package download checksum guard: downloader-to-shell installer pipelines must be downloaded, verified, and run as separate steps." >&2
+    echo "Download the script to a file, verify it with 'sha256sum -c', 'shasum -a 256 -c', 'cosign verify-blob', 'gpg --verify', or 'minisign -V', then run the reviewed file." >&2
+    echo "Set PACKAGE_DOWNLOAD_GUARD_MODE=advisory to warn without blocking, or PACKAGE_DOWNLOAD_GUARD_ALLOWLIST to allow a reviewed command pattern." >&2
+    if [ "${PACKAGE_DOWNLOAD_GUARD_MODE:-block}" = "advisory" ]; then
+      exit 0
+    fi
+    exit 2
+  fi
+
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$verification_command_re"; then
+    exit 0
+  fi
+
+  echo "Package download checksum guard: archive or installer download has no checksum/signature verification step." >&2
+  echo "Add verification such as 'sha256sum -c', 'shasum -a 256 -c', 'cosign verify-blob', 'gpg --verify', or 'minisign -V' before using the downloaded artifact." >&2
+  echo "Set PACKAGE_DOWNLOAD_GUARD_MODE=advisory to warn without blocking, or PACKAGE_DOWNLOAD_GUARD_ALLOWLIST to allow a reviewed command pattern." >&2
+
+  if [ "${PACKAGE_DOWNLOAD_GUARD_MODE:-block}" = "advisory" ]; then
+    exit 0
+  fi
+
+  exit 2
+  HOOK
+  chmod +x .claude/hooks/package-download-checksum-guard.sh
 usageSnippet: >-
   Package download checksum guard: archive or installer download has no
   checksum/signature verification step.
@@ -68,8 +163,9 @@ scriptBody: |-
 
   # Claude Code PreToolUse hook for Bash. It looks for curl/wget commands that
   # download packages, installers, or archives, and blocks the command unless
-  # the same proposed command also includes a checksum or signature verification
-  # step. It reads the proposed command only; it never downloads anything.
+  # the same proposed command also includes a checksum check or signature
+  # verification command. It reads the proposed command only; it never downloads
+  # anything.
 
   if ! command -v jq >/dev/null 2>&1; then
     exit 0
@@ -94,6 +190,10 @@ scriptBody: |-
     fi
   fi
 
+  # Remove unquoted shell comments before matching policy tokens. This keeps a
+  # comment such as `# sha256sum -c` from being treated as verification.
+  command_without_comments=$(printf '%s\n' "$command_text" | sed -E 's/(^|[[:space:]])#.*$/\1/')
+
   downloader_a='curl'
   downloader_b='wget'
   shell_a='sh'
@@ -105,31 +205,46 @@ scriptBody: |-
   downloader_re="(^|[;&${pipe_char}[:space:]])${downloader_names}([[:space:]]|$)"
   archive_re='https?://[^[:space:]]*(\.zip|\.tar\.gz|\.tgz|\.tar\.xz|\.tar\.bz2|\.mcpb|\.deb|\.rpm|\.pkg|\.dmg|\.exe|\.msi|\.AppImage|install\.sh|setup\.sh|bootstrap\.sh)([?#][^[:space:]]*)?'
   pipe_installer_re="${downloader_names}[^${pipe_char}]*https?://[^${pipe_char}[:space:]]*(install|setup|bootstrap|\.sh)[^${pipe_char}]*\\${pipe_char}[[:space:]]*(sudo[[:space:]]+)?${shell_names}"
-  verify_re='(sha256sum[[:space:]].*(-c|--check)|shasum[[:space:]]+-a[[:space:]]+256|openssl[[:space:]]+(dgst[[:space:]])?-sha256|cosign[[:space:]]+verify-blob|gpg[[:space:]]+--verify|minisign[[:space:]]+-V)'
+  verify_re='(^|[;&]|&&|\|\|)|[[:space:]]\|[[:space:]]*'
+  checksum_re='(sha256sum[[:space:]][^;&|#]*(--check|-c)|shasum[[:space:]][^;&|#]*(-a[[:space:]]+256|--algorithm([=[:space:]]+)256)[^;&|#]*(--check|-c))'
+  signature_re='(cosign[[:space:]]+verify-blob|gpg[[:space:]][^;&|#]*--verify|minisign[[:space:]][^;&|#]*-V)'
+  verification_command_re="(${verify_re})[[:space:]]*(${checksum_re}|${signature_re})([[:space:]]|$)"
 
-  if ! printf '%s\n' "$command_text" | grep -Eq -- "$downloader_re"; then
+  if ! printf '%s\n' "$command_without_comments" | grep -Eq -- "$downloader_re"; then
     exit 0
   fi
 
   risky_download=0
-  if printf '%s\n' "$command_text" | grep -Eq -- "$archive_re"; then
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$archive_re"; then
     risky_download=1
   fi
 
-  if printf '%s\n' "$command_text" | grep -Eq -- "$pipe_installer_re"; then
+  pipe_installer=0
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$pipe_installer_re"; then
     risky_download=1
+    pipe_installer=1
   fi
 
   if [ "$risky_download" -ne 1 ]; then
     exit 0
   fi
 
-  if printf '%s\n' "$command_text" | grep -Eq -- "$verify_re"; then
+  if [ "$pipe_installer" -eq 1 ]; then
+    echo "Package download checksum guard: downloader-to-shell installer pipelines must be downloaded, verified, and run as separate steps." >&2
+    echo "Download the script to a file, verify it with 'sha256sum -c', 'shasum -a 256 -c', 'cosign verify-blob', 'gpg --verify', or 'minisign -V', then run the reviewed file." >&2
+    echo "Set PACKAGE_DOWNLOAD_GUARD_MODE=advisory to warn without blocking, or PACKAGE_DOWNLOAD_GUARD_ALLOWLIST to allow a reviewed command pattern." >&2
+    if [ "${PACKAGE_DOWNLOAD_GUARD_MODE:-block}" = "advisory" ]; then
+      exit 0
+    fi
+    exit 2
+  fi
+
+  if printf '%s\n' "$command_without_comments" | grep -Eq -- "$verification_command_re"; then
     exit 0
   fi
 
   echo "Package download checksum guard: archive or installer download has no checksum/signature verification step." >&2
-  echo "Add verification such as 'sha256sum -c', 'shasum -a 256', 'openssl dgst -sha256', 'cosign verify-blob', 'gpg --verify', or 'minisign -V' before running the download command." >&2
+  echo "Add verification such as 'sha256sum -c', 'shasum -a 256 -c', 'cosign verify-blob', 'gpg --verify', or 'minisign -V' before using the downloaded artifact." >&2
   echo "Set PACKAGE_DOWNLOAD_GUARD_MODE=advisory to warn without blocking, or PACKAGE_DOWNLOAD_GUARD_ALLOWLIST to allow a reviewed command pattern." >&2
 
   if [ "${PACKAGE_DOWNLOAD_GUARD_MODE:-block}" = "advisory" ]; then
@@ -146,9 +261,9 @@ prerequisites:
   - "A team policy for when package, installer, or archive downloads require checksums, signatures, pinned releases, or manual source review."
 safetyNotes:
   - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
-  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless the command includes a verification step such as `sha256sum -c`, `shasum -a 256`, `openssl dgst -sha256`, `cosign verify-blob`, `gpg --verify`, or `minisign -V`."
+  - "Blocks matching curl/wget package or archive downloads with exit code 2 unless the command includes an executable verification step such as `sha256sum -c`, `shasum -a 256 -c`, `cosign verify-blob`, `gpg --verify`, or `minisign -V`; downloader-to-shell installer pipelines are blocked unless allowlisted."
   - "Does not download, execute, hash, delete, install, or modify files; it is a pre-execution guard around the proposed command text."
-  - "Regex matching can miss unusual shell constructs or flag legitimate internal download workflows; use `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` for reviewed patterns."
+  - "Regex matching can miss unusual shell constructs or flag legitimate internal download workflows; comments and digest-print-only commands are not accepted as verification, and `PACKAGE_DOWNLOAD_GUARD_ALLOWLIST` is available for reviewed patterns."
   - "Set `PACKAGE_DOWNLOAD_GUARD_MODE=advisory` to warn without blocking while a team tunes the policy."
 privacyNotes:
   - "Reads the proposed Bash command text locally; it makes no network calls and writes no logs."
@@ -191,8 +306,8 @@ using them without verifying the artifact.
 It runs before Claude Code executes a Bash command. If the proposed command uses
 `curl` or `wget` to fetch a package-like artifact, installer script, or archive,
 the hook expects the same command to include an adjacent verification step such
-as `sha256sum -c`, `shasum -a 256`, `openssl dgst -sha256`, `cosign
-verify-blob`, `gpg --verify`, or `minisign -V`.
+as `sha256sum -c`, `shasum -a 256 -c`, `cosign verify-blob`,
+`gpg --verify`, or `minisign -V`.
 
 ## Features
 
@@ -212,19 +327,23 @@ verify-blob`, `gpg --verify`, or `minisign -V`.
 Claude Code passes the pending Bash tool call to the hook on stdin. The script
 extracts `.tool_input.command`, checks for `curl` or `wget`, and then looks for
 package/archive URL shapes or installer pipes. If a risky download is found, it
-requires a verification token in the same proposed command. Without that token,
-it exits `2`, which tells Claude Code to block the Bash call.
+requires an executable checksum-check or signature-verification command in the
+same proposed command. Without that command, it exits `2`, which tells Claude
+Code to block the Bash call.
 
-The guard is intentionally text-based. It does not claim to verify the checksum
-itself. Its job is to stop the session long enough for a human or agent to add
-the reviewed verification step before the download runs.
+The guard is intentionally text-based. It strips shell comments before looking
+for verification commands and blocks downloader-to-shell installer pipelines so
+comment-only or digest-print-only snippets do not count as verification. It does
+not claim to verify the checksum itself; its job is to stop the session long
+enough for a human or agent to add the reviewed verification step before using
+the downloaded artifact.
 
 ## Use Cases
 
 - Stop an agent from fetching a release archive and unpacking it without first
-  checking a digest.
-- Nudge package bootstrap snippets toward `sha256sum -c` or signed-release
-  verification before installation.
+  checking a digest or signature.
+- Nudge package bootstrap snippets toward `sha256sum -c`, `shasum -a 256 -c`,
+  or signed-release verification before installation.
 - Keep unverified external source archives from becoming normal in project
   setup docs, skills, CI helpers, and local scripts.
 - Roll out a lightweight local guard before stricter CI supply-chain policy.
@@ -232,9 +351,9 @@ the reviewed verification step before the download runs.
 ## Installation
 
 1. Create the hooks directory: `mkdir -p .claude/hooks`
-2. Create the hook file:
-   `touch .claude/hooks/package-download-checksum-guard.sh`
-3. Paste the script body into that file and make it executable:
+2. Install the hook script with the install command above, or paste the script
+   body into `.claude/hooks/package-download-checksum-guard.sh`.
+3. Make the hook executable:
    `chmod +x .claude/hooks/package-download-checksum-guard.sh`
 4. Add the configuration below to `.claude/settings.json` for a project hook or
    `~/.claude/settings.json` for a user hook.
@@ -275,7 +394,8 @@ the reviewed verification step before the download runs.
   instead of manual archive checks. Tune the allowlist for those workflows.
 - Verification commands can be present but wrong. Review the expected digest,
   signing identity, release source, and pinned version before trusting the
-  artifact.
+  artifact. Digest-print-only commands such as `openssl dgst -sha256 file` do
+  not satisfy the guard because they do not compare against a trusted value.
 
 ## Duplicate And History Check
 

@@ -53,8 +53,11 @@ describe("submission automation workflows", () => {
         env: {
           ...process.env,
           BASE_SHA: baseSha,
+          BASE_REF: "",
           FORCE_FULL_VALIDATION: "0",
+          GITHUB_BASE_REF: "",
           GITHUB_EVENT_NAME: "pull_request",
+          HEAD_SHA: "",
           GITHUB_OUTPUT: outputPath,
           GITHUB_HEAD_REF: "contributor/source-entry",
           HEAD_REF: "contributor/source-entry",
@@ -170,6 +173,7 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("Product or feature improvement");
+    expect(source).not.toContain("gittensor:feature");
     expect(source).toContain("id: quality_evidence");
     expect(source).toContain("desktop and mobile screenshots");
     expect(source).toContain("No visual impact");
@@ -208,6 +212,17 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+    );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
     expect(source).not.toContain("pnpm --filter web run deploy:dev");
@@ -342,15 +357,33 @@ describe("submission automation workflows", () => {
     expect(source).toContain("required-pr-gate:");
     expect(source).toContain("validate-content-${{ matrix.category }}");
     expect(source).toContain(
+      "always() && needs.classify-pr.outputs.content == 'true'",
+    );
+    expect(source).toContain(
       "fromJson(needs.classify-pr.outputs.content_categories_json)",
+    );
+    expect(source).toContain(
+      "changed_files_json: ${{ steps.classify.outputs.changed_files_json }}",
     );
     expect(source).toContain("Summarize required PR validation");
     expect(source).toContain('trunk check --ci --upstream "$BASE_SHA"');
     expect(source).toContain("trunk check --ci --all");
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
+    );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).not.toContain("--allow-missing");
     expect(source).toContain("pnpm validate:deployment-artifacts");
     expect(source).toContain("pnpm validate:mcp-endpoint");
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");
@@ -376,6 +409,8 @@ describe("submission automation workflows", () => {
     expect(source).toContain("trusted_policy");
     expect(source).toContain("trusted_policy_dir");
     expect(source).toContain("runtime_lock_path");
+    expect(source).toContain("CHANGED_FILES_JSON:");
+    expect(source).toContain('--files-json "$changed_files_json_path"');
     expect(source).toContain(
       "scripts/ci/content-policy-runtime/package-lock.json",
     );

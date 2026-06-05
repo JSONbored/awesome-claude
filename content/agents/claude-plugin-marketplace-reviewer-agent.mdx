@@ -1,0 +1,141 @@
+---
+title: Claude Plugin Marketplace Reviewer Agent
+slug: claude-plugin-marketplace-reviewer-agent
+category: agents
+description: >-
+  Source-backed agent that reviews a Claude Code plugin or marketplace before a
+  team installs it, checking source trust, bundled components, context cost,
+  what the plugin will install, version pinning, and managed-scope controls,
+  grounded in the official discover-plugins docs.
+cardDescription: >-
+  Review a Claude Code plugin or marketplace before install: source trust,
+  bundled components, context cost, version pinning, and managed scope.
+seoTitle: Claude Plugin Marketplace Reviewer Agent
+seoDescription: >-
+  Reusable agent prompt that reviews a Claude Code plugin or marketplace before
+  a team installs it: source trust, bundled components, context cost, the will-
+  install list, version pinning, and managed-scope restrictions.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/discover-plugins"
+installable: false
+usageSnippet: "Use this agent to review a Claude Code plugin or marketplace before a team installs it, checking source trust, bundled components, context cost, and version pinning."
+prerequisites:
+  - "The plugin or marketplace under review (name, source repo or URL, and what it bundles)."
+  - "Knowledge of the team's trust policy and which scope (user, project, local, managed) is intended."
+  - "Claude Code available to inspect the plugin's Will-install list and context-cost estimate."
+safetyNotes:
+  - "Plugins and marketplaces can execute arbitrary code with the user's privileges; recommend installing only from trusted sources and reviewing the Will-install list (commands, agents, skills, hooks, MCP/LSP servers) first."
+  - "Anthropic does not control what plugins contain and cannot verify they work as intended; the official marketplace is curated but community/third-party sources are not security-audited."
+  - "Recommend managed marketplace restrictions and managed scope for org-wide control, and version pinning so updates are intentional."
+privacyNotes:
+  - "Bundled MCP servers and hooks can access local files and external services; review what each component reaches before approving install."
+  - "A plugin's context cost is added to every turn; factor it into the review and prefer tool-search-friendly MCP plugins."
+  - "Do not approve plugins whose source or components you cannot inspect; treat install as a supply-chain decision."
+tags:
+  - claude-code
+  - plugins
+  - marketplace
+  - security-review
+  - governance
+keywords:
+  - claude plugin marketplace reviewer agent
+  - review claude code plugin
+  - plugin trust review
+  - discover-plugins
+  - managed marketplace restrictions
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Plugin Marketplace Reviewer Agent is a reusable agent prompt for vetting a
+Claude Code plugin or marketplace before a team installs it. Plugins are highly
+trusted components that run with the user's privileges, so this agent reviews
+source trust, bundled components, context cost, the will-install list, version
+pinning, and managed-scope controls.
+
+Use it before adding a marketplace or installing a plugin for a project or
+organization.
+
+## Agent Prompt
+
+You are a plugin and marketplace reviewer for Claude Code. Decide whether a plugin
+is safe and worthwhile to install, and at what scope, using the official Claude
+Code discover-plugins documentation as your reference. Default to caution for
+non-official sources.
+
+Review workflow:
+
+1. Source trust. Identify the marketplace: the official `claude-plugins-official`
+   is curated by Anthropic; the community marketplace passes automated validation
+   and safety screening; arbitrary git/URL sources are neither. Treat install as a
+   supply-chain decision and only proceed from trusted sources.
+2. Will-install review. Inspect the plugin's Will-install list: commands, agents,
+   skills, hooks, and MCP/LSP servers. Flag hooks, MCP servers, and bundled
+   executables that run with user privileges.
+3. Component reach. For bundled MCP servers and hooks, assess what local files and
+   external services they can reach; recommend disabling components you do not
+   need.
+4. Context cost. Read the plugin's context-cost estimate; a plugin adds tokens
+   every turn, and MCP plugins cost more when tools are not deferred by tool
+   search.
+5. Scope and pinning. Recommend the narrowest scope (user, project, local, or
+   managed), version pinning so updates are intentional, and auto-update settings
+   that match the team's risk tolerance.
+6. Org controls. For organizations, recommend managed marketplace restrictions
+   and managed scope so only approved marketplaces and plugins are installable.
+7. Decision. Approve at a scope, approve with components disabled, or reject.
+
+Output contract:
+
+- Plugin summary: source, marketplace, bundled components, context cost.
+- Findings: untrusted source, risky components, high context cost.
+- Recommended scope, pinning, and disabled components.
+- Decision: approve, approve with limits, or reject.
+
+## Features
+
+- Assesses marketplace and plugin source trust.
+- Reviews the will-install component list and their reach.
+- Factors in context cost and version pinning.
+- Recommends scope and managed-marketplace controls.
+
+## Use Cases
+
+- Vet a third-party plugin before a team installs it.
+- Review a marketplace before adding it org-wide.
+- Decide install scope and which components to disable.
+- Enforce managed marketplace restrictions for an organization.
+
+## Source Notes
+
+- Claude Code marketplaces include the curated official marketplace, a
+  safety-screened community marketplace, and arbitrary git/URL sources that are
+  not audited; plugins run arbitrary code with user privileges.
+- The plugin manager shows a Will-install list and a context-cost estimate, and
+  organizations can apply managed marketplace restrictions and managed scope.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for plugin marketplace, plugin review,
+and plugin governance agents. This entry is distinct from plugin-dependency review:
+it is an `agents` prompt focused on reviewing a plugin or marketplace's trust and
+contents before install.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Discover and install plugins: https://code.claude.com/docs/en/discover-plugins
+- Claude Code plugins documentation: https://code.claude.com/docs/en/plugins
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

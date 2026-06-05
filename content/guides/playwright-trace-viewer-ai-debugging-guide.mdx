@@ -1,0 +1,102 @@
+---
+title: Playwright Trace Viewer AI Debugging Guide
+slug: playwright-trace-viewer-ai-debugging-guide
+category: guides
+description: >-
+  Source-backed guide for using Playwright traces, screenshots, snapshots,
+  network events, console logs, and action timelines as evidence for AI-assisted
+  frontend debugging.
+cardDescription: Use Playwright Trace Viewer evidence instead of guesswork when debugging UI failures with AI.
+seoTitle: Playwright Trace Viewer AI Debugging Guide
+seoDescription: >-
+  Learn how to collect Playwright traces and feed AI assistants high-signal
+  evidence from action timelines, DOM snapshots, screenshots, network requests,
+  and console logs.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Run Playwright with tracing on first retry, inspect the Trace Viewer, and give
+  the AI only the failure step, console/network evidence, and expected behavior.
+prerequisites:
+  - Playwright test suite or reproducible browser script.
+  - Ability to capture traces for failing UI flows.
+  - Local or CI access to trace archives.
+safetyNotes:
+  - Browser traces can contain form inputs, cookies, URLs, screenshots, DOM text, and request metadata.
+  - Do not collect traces from production accounts unless test data and retention are approved.
+privacyNotes:
+  - Redact screenshots, network payloads, auth tokens, private URLs, and user content before sharing traces externally.
+sourceUrls:
+  - "https://playwright.dev/docs/trace-viewer"
+  - "https://playwright.dev/docs/debug"
+  - "https://playwright.dev/docs/test-configuration"
+tags:
+  - playwright
+  - debugging
+  - frontend
+  - traces
+  - ai-assisted-development
+keywords:
+  - Playwright trace viewer AI debugging
+  - frontend trace debugging with Claude
+  - Playwright trace evidence
+  - browser automation failure analysis
+readingTime: 6
+difficultyScore: 49
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Why Traces Beat Guesses
+
+When an AI assistant sees only source code, it has to infer browser state. A
+Playwright trace records the actual run: actions, snapshots, screenshots, console
+messages, network events, and timing. That makes the debugging question much
+smaller and more factual.
+
+## Capture Pattern
+
+1. Enable tracing on retry or for the failing project.
+2. Reproduce the failure in CI or locally.
+3. Open Trace Viewer and identify the first unexpected state.
+4. Extract only the relevant step, screenshot, console entry, network event, and
+   assertion failure.
+5. Ask the AI to propose a patch and a verification command.
+6. Re-run the failing test before trusting the explanation.
+
+## What To Hand The AI
+
+- Test name and expected user behavior.
+- Failing assertion and step number.
+- Screenshot or DOM snapshot description.
+- Console errors and relevant warnings.
+- Network failures, status codes, or missing requests.
+- Any timing or actionability signal from the trace.
+
+## Troubleshooting
+
+### The trace is too large
+
+Do not paste everything. Use the trace to select the earliest incorrect state,
+then provide a small evidence packet.
+
+### The failure only happens in CI
+
+Compare CI trace video/screenshots with local traces. Device scale factor,
+viewport, locale, timezone, and missing seed data are common differences.
+
+## Duplicate Check
+
+Existing entries cover Playwright testing and MCP browser automation. This guide
+focuses on Trace Viewer evidence packets for AI-assisted debugging.
+
+## References
+
+- Trace Viewer - https://playwright.dev/docs/trace-viewer
+- Debugging tests - https://playwright.dev/docs/debug
+- Test configuration - https://playwright.dev/docs/test-configuration
