@@ -220,10 +220,77 @@ Native macOS MCP server.`);
     );
   });
 
+  it("does not classify GitHub artifact attestations as identity-sensitive", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 126,
+        title: "content(guides): add artifact attestation checklist",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "GitHub Artifact Attestation Checklist",
+            slug: "github-artifact-attestation-checklist",
+            category: "guides",
+            description:
+              "Source-backed guide for verifying GitHub Artifact Attestations, release artifact provenance, build workflow identity, and digest evidence.",
+            repoUrl: "https://github.com/github/docs",
+            docsUrl:
+              "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
+            safetyNotes: [
+              "Attestations prove artifact provenance, not malware safety or runtime behavior.",
+            ],
+          }),
+          "content/guides/github-artifact-attestation-checklist.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).not.toContain(
+      "financial_or_identity_sensitive",
+    );
+  });
+
+  it("still flags wallet and on-chain attestations as identity-sensitive", () => {
+    const report = analyzeDirectContentRisk({
+      pullRequest: {
+        number: 127,
+        title: "content(mcp): add wallet attestation mcp",
+        user: { login: "contributor" },
+        head: { repo: { full_name: "contributor/awesome-claude" } },
+        base: { repo: { full_name: "JSONbored/awesome-claude" } },
+      },
+      files: [
+        sourceFile(
+          validMcpMdx({
+            title: "Wallet Attestation MCP",
+            slug: "wallet-attestation-mcp",
+            description:
+              "MCP server for wallet attestations, KYC review, and on-chain identity workflows.",
+            safetyNotes: [
+              "Requires explicit user approval before reading wallet or identity data.",
+            ],
+            privacyNotes: [
+              "Can process wallet, KYC, and on-chain identity records.",
+            ],
+          }),
+          "content/mcp/wallet-attestation-mcp.mdx",
+        ),
+      ],
+    });
+
+    expect(report.reviewFlags.map((flag) => flag.id)).toContain(
+      "financial_or_identity_sensitive",
+    );
+  });
+
   it("formats risk reports without exposing private reviewer internals", () => {
     const report = analyzeDirectContentRisk({
       pullRequest: {
-        number: 125,
+        number: 128,
         title: "content(mcp): add sample mcp",
         user: { login: "contributor" },
         head: { repo: { full_name: "contributor/awesome-claude" } },

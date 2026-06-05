@@ -31,6 +31,7 @@ jobs:
       ci: ${{ steps.classify.outputs.ci }}
       docs: ${{ steps.classify.outputs.docs }}
       full: ${{ steps.classify.outputs.full }}
+      changed_files_json: ${{ steps.classify.outputs.changed_files_json }}
     concurrency:
       group: pr-classify-${{ github.ref }}
       cancel-in-progress: true
@@ -46,6 +47,8 @@ jobs:
         id: classify
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || '' }}
+          BASE_REF: ${{ github.event.pull_request.base.ref || '' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || '' }}
           FORCE_FULL_VALIDATION: ${{ github.event_name != 'pull_request' && '1' || '0' }}
           EVENT_NAME: ${{ github.event_name }}
           HEAD_REF: ${{ github.event.pull_request.head.ref || '' }}
@@ -75,6 +78,9 @@ jobs:
           fi
           if ! grep -q '^content_categories_json=' "$GITHUB_OUTPUT"; then
             echo "content_categories_json=[]" >> "$GITHUB_OUTPUT"
+          fi
+          if ! grep -q '^changed_files_json=' "$GITHUB_OUTPUT"; then
+            echo "changed_files_json=[]" >> "$GITHUB_OUTPUT"
           fi
           if ! grep -q '^submission_gate=' "$GITHUB_OUTPUT"; then
             if [ "$EVENT_NAME" = "pull_request" ] && [ -n "$BASE_SHA" ] && git diff --name-only "$BASE_SHA"...HEAD | grep -Eq '^(apps/submission-gate/.*|tests/submission-gate-.*|package\.json$|pnpm-lock\.yaml$|pnpm-workspace\.yaml$)'; then
@@ -245,6 +251,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
+          CHANGED_FILES_JSON: ${{ needs.classify-pr.outputs.changed_files_json }}
         run: |
           set -euo pipefail
           policy_path="scripts/ci/validate-content-policy.mjs"
@@ -252,8 +259,10 @@ jobs:
           runtime_lock_path="scripts/ci/content-policy-runtime/package-lock.json"
           trusted_policy_dir="${RUNNER_TEMP:-.}/trusted-content-policy"
           trusted_policy="$trusted_policy_dir/validate-content-policy.mjs"
+          changed_files_json_path="$trusted_policy_dir/changed-files.json"
           rm -rf "$trusted_policy_dir"
           mkdir -p "$trusted_policy_dir"
+          printf '%s\n' "${CHANGED_FILES_JSON:-[]}" > "$changed_files_json_path"
 
           if git cat-file -e "$BASE_SHA:$runtime_manifest_path" 2>/dev/null && git cat-file -e "$BASE_SHA:$runtime_lock_path" 2>/dev/null; then
             git show "$BASE_SHA:$runtime_manifest_path" > "$trusted_policy_dir/package.json"
@@ -274,7 +283,7 @@ jobs:
             exit 1
           fi
 
-          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE"
+          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE" --files-json "$changed_files_json_path"
 
   validate-submission-source:
     name: validate-submission-source
@@ -323,6 +332,7 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           PR_TITLE: ${{ github.event.pull_request.title }}
           PR_URL: ${{ github.event.pull_request.html_url }}
+          CHANGED_FILES_JSON: ${{ needs.classify-pr.outputs.changed_files_json }}
         run: |
           set -euo pipefail
           policy_path="scripts/ci/validate-content-policy.mjs"
@@ -330,8 +340,10 @@ jobs:
           runtime_lock_path="scripts/ci/content-policy-runtime/package-lock.json"
           trusted_policy_dir="${RUNNER_TEMP:-.}/trusted-content-policy"
           trusted_policy="$trusted_policy_dir/validate-content-policy.mjs"
+          changed_files_json_path="$trusted_policy_dir/changed-files.json"
           rm -rf "$trusted_policy_dir"
           mkdir -p "$trusted_policy_dir"
+          printf '%s\n' "${CHANGED_FILES_JSON:-[]}" > "$changed_files_json_path"
 
           if git cat-file -e "$BASE_SHA:$runtime_manifest_path" 2>/dev/null && git cat-file -e "$BASE_SHA:$runtime_lock_path" 2>/dev/null; then
             git show "$BASE_SHA:$runtime_manifest_path" > "$trusted_policy_dir/package.json"
@@ -352,7 +364,7 @@ jobs:
             exit 1
           fi
 
-          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE"
+          node "$trusted_policy" --repo-root "$GITHUB_WORKSPACE" --files-json "$changed_files_json_path"
 
       - name: Check submitted source whitespace
         env:
@@ -403,7 +415,7 @@ jobs:
       - validate-content-policy
       - validate-submission-source
       - validate-content-config
-    if: ${{ always() }}
+    if: ${{ always() && needs.classify-pr.outputs.content == 'true' }}
     runs-on: ubuntu-latest
     concurrency:
       group: pr-validate-content-${{ github.ref }}
