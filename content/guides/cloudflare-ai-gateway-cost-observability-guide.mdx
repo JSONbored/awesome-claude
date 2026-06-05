@@ -1,0 +1,101 @@
+---
+title: Cloudflare AI Gateway Cost Observability Guide
+slug: cloudflare-ai-gateway-cost-observability-guide
+category: guides
+description: >-
+  Practical guide for routing agent and LLM traffic through Cloudflare AI
+  Gateway to track requests, errors, caching, providers, costs, and operational
+  signals before scaling AI workflows.
+cardDescription: Track LLM traffic, cost, errors, caching, and providers through Cloudflare AI Gateway.
+seoTitle: Cloudflare AI Gateway Cost Observability Guide
+seoDescription: >-
+  Learn how to use Cloudflare AI Gateway as an observability layer for AI agents,
+  including provider routing, request logs, caching signals, errors, and cost
+  tracking.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Add AI Gateway in front of an agent workflow before high-volume testing so
+  request counts, providers, errors, cache behavior, and spend are visible.
+prerequisites:
+  - Cloudflare account with AI Gateway access.
+  - One or more LLM provider keys or Workers AI usage.
+  - Application code where base URLs or provider clients can be configured.
+safetyNotes:
+  - Gateway observability does not make unsafe prompts or tool use safe; it gives operators visibility into traffic and failures.
+  - Avoid logging sensitive prompts unless retention and access controls are acceptable.
+privacyNotes:
+  - LLM prompts, responses, metadata, provider names, and request identifiers may be visible in gateway logs depending on configuration.
+sourceUrls:
+  - "https://developers.cloudflare.com/ai-gateway/"
+  - "https://developers.cloudflare.com/ai-gateway/get-started/"
+  - "https://developers.cloudflare.com/ai-gateway/features/observability/"
+tags:
+  - cloudflare
+  - ai-gateway
+  - observability
+  - cost-tracking
+  - llm-ops
+keywords:
+  - Cloudflare AI Gateway observability
+  - LLM cost tracking gateway
+  - AI Gateway agent monitoring
+  - Cloudflare AI provider routing
+readingTime: 6
+difficultyScore: 52
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## What AI Gateway Adds
+
+AI Gateway gives agent operators a control point between application code and LLM
+providers. That control point can surface request volume, provider behavior,
+errors, caching, logs, and routing decisions before an experimental workflow
+becomes a production cost problem.
+
+## Setup Pattern
+
+1. Create a gateway and pick a naming convention per environment.
+2. Route one non-production agent through the gateway first.
+3. Verify request logs, provider names, errors, and status codes.
+4. Add cache or fallback behavior only after baseline visibility exists.
+5. Track cost and latency by workflow, model, provider, and environment.
+6. Decide what prompt or response logging is allowed before sending private data.
+
+## Review Checklist
+
+- Gateway URL is environment-specific.
+- Provider keys are stored in secrets, not source files.
+- Logs are access-controlled and retention is understood.
+- Cost, error, and rate-limit signals are reviewed after load tests.
+- The team knows which prompts/responses may be logged.
+
+## Troubleshooting
+
+### Requests bypass the gateway
+
+Search code for direct provider base URLs and SDK defaults. Some clients require
+an explicit base URL override per provider.
+
+### Logs show too much content
+
+Reduce logged payload detail, separate sensitive workloads, or disable prompt and
+response logging where policy requires it.
+
+## Duplicate Check
+
+Existing content covers Workers AI agents and general LLM observability. This
+guide focuses specifically on Cloudflare AI Gateway as a traffic and cost
+observability layer.
+
+## References
+
+- AI Gateway docs - https://developers.cloudflare.com/ai-gateway/
+- Get started - https://developers.cloudflare.com/ai-gateway/get-started/
+- Observability - https://developers.cloudflare.com/ai-gateway/features/observability/
