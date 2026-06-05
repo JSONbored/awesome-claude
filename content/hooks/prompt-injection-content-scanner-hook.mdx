@@ -1,0 +1,371 @@
+---
+title: Prompt-Injection Content Scanner - Claude Code Hook
+slug: prompt-injection-content-scanner-hook
+category: hooks
+description: >-
+  PreToolUse hook that scans proposed writes to prompt, agent, rule, markdown,
+  and context files for common prompt-injection phrases before the content is
+  saved into an AI-readable surface.
+cardDescription: >-
+  Warn or block when generated prompt/context files contain common
+  instruction-override, secret-exfiltration, or hidden-command patterns.
+seoTitle: Prompt-Injection Content Scanner Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code PreToolUse hook that scans prompt and context file
+  edits for prompt-injection patterns before they are written.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+repoUrl: "https://github.com/OWASP/www-project-top-10-for-large-language-model-applications"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/prompt-injection-content-scanner.sh && chmod +x
+  .claude/hooks/prompt-injection-content-scanner.sh
+usageSnippet: >-
+  Prompt-injection content scanner: generated context contains an
+  instruction-override pattern.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-injection-content-scanner.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Write|Edit|MultiEdit",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-injection-content-scanner.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Write/Edit/MultiEdit. It scans proposed
+  # writes to AI-readable prompt, agent, rule, markdown, and context files for
+  # common prompt-injection patterns. It does not send content to a model or
+  # network service.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+
+  case "$tool_name" in
+    Write|Edit|MultiEdit|write|edit|multiedit) ;;
+    *) exit 0 ;;
+  esac
+
+  file_path=$(printf '%s' "$input" | jq -r '.tool_input.file_path // .toolInput.file_path // .tool_input.path // .toolInput.path // empty')
+  content=$(printf '%s' "$input" | jq -r '
+    [ .tool_input.content,
+      .toolInput.content,
+      .tool_input.new_string,
+      .toolInput.new_string,
+      (.tool_input.edits[]?.new_string),
+      (.toolInput.edits[]?.new_string) ]
+    | map(select(. != null)) | join("\n")
+  ')
+
+  if [ -z "$content" ]; then
+    exit 0
+  fi
+
+  scan_target=0
+  lower_path=$(printf '%s' "$file_path" | tr '[:upper:]' '[:lower:]')
+  case "$lower_path" in
+    *claude.md|*agents.md|*/.claude/agents/*.md|*/.claude/commands/*.md|*/.cursor/rules/*|*/.windsurf/rules/*|*/prompts/*|*/prompt/*|*/instructions/*|*/context/*|*/knowledge/*|*.prompt|*.prompty|*.md|*.mdx|*.txt)
+      scan_target=1
+      ;;
+  esac
+
+  if [ "${PROMPT_INJECTION_SCANNER_SCOPE:-context}" = "all" ]; then
+    scan_target=1
+  fi
+
+  if [ "$scan_target" -ne 1 ]; then
+    exit 0
+  fi
+
+  if [ -n "${PROMPT_INJECTION_SCANNER_ALLOWLIST:-}" ]; then
+    if printf '%s\n%s\n' "$file_path" "$content" | grep -Eq -- "$PROMPT_INJECTION_SCANNER_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  normalized=$(printf '%s' "$content" | tr '\r\n\t' '    ' | tr '[:upper:]' '[:lower:]')
+  gap='[[:space:][:punct:]]{0,40}'
+  short_gap='[[:space:][:punct:]]{0,20}'
+
+  override_verbs='(ignore|disregard|forget|bypass|override|supersede)'
+  instruction_refs='(previous|prior|above|earlier|system|developer|hidden)'
+  instruction_terms='(instruction|instructions|rule|rules|message|messages|prompt|policy|policies)'
+  override_re="${override_verbs}${gap}${instruction_refs}${gap}${instruction_terms}"
+  leak_re="(reveal|print|show|dump|exfiltrate|send)${gap}(system[[:space:]-]*(prompt|message)|developer[[:space:]-]*(message|instructions)|hidden[[:space:]-]*(instructions|prompt)|secret|secrets|environment[[:space:]-]*(variables|vars)|api[[:space:]-]*keys?)"
+  role_re="(you${short_gap}are${short_gap}now|act${short_gap}as)${short_gap}(system|developer|admin|root|jailbreak)"
+  conceal_re="(do${short_gap}not${short_gap}(tell|mention|disclose)|secret[[:space:]-]*instruction|hidden[[:space:]-]*instruction|invisible[[:space:]-]*instruction)"
+  tool_re="(run|execute|call)${gap}(bash|shell|powershell|curl|wget|python)${gap}(silently|secretly|without[[:space:]-]*(asking|approval|permission))"
+
+  findings=""
+  add_finding() {
+    findings="${findings}${1}"$'\n'
+  }
+
+  if printf '%s\n' "$normalized" | grep -Eq -- "$override_re"; then
+    add_finding "instruction-override pattern"
+  fi
+
+  if printf '%s\n' "$normalized" | grep -Eq -- "$leak_re"; then
+    add_finding "secret or system-prompt disclosure pattern"
+  fi
+
+  if printf '%s\n' "$normalized" | grep -Eq -- "$role_re"; then
+    add_finding "role-confusion or jailbreak-role pattern"
+  fi
+
+  if printf '%s\n' "$normalized" | grep -Eq -- "$conceal_re"; then
+    add_finding "hidden-instruction or concealment pattern"
+  fi
+
+  if printf '%s\n' "$normalized" | grep -Eq -- "$tool_re"; then
+    add_finding "silent tool-execution pattern"
+  fi
+
+  if [ -z "$findings" ]; then
+    exit 0
+  fi
+
+  echo "Prompt-injection content scanner: generated context contains suspicious instruction text." >&2
+  printf '%s' "$findings" | sort -u | while IFS= read -r finding; do
+    [ -n "$finding" ] || continue
+    echo "  - $finding" >&2
+  done
+  echo "Review the content as untrusted data, quote or redact attack examples, or move them outside files that Claude reads as instructions." >&2
+  echo "Set PROMPT_INJECTION_SCANNER_MODE=advisory to warn without blocking, or PROMPT_INJECTION_SCANNER_ALLOWLIST for a reviewed exception." >&2
+
+  if [ "${PROMPT_INJECTION_SCANNER_MODE:-block}" = "advisory" ]; then
+    exit 0
+  fi
+
+  exit 2
+trigger: PreToolUse
+estimatedSetupTime: 5 minutes
+difficulty: intermediate
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, jq, grep, sort, tr, and a reviewed `.claude/settings.json` or user-level hook configuration."
+  - "A team policy for which prompt, rule, agent, documentation, and context files are read as instructions by AI tools."
+safetyNotes:
+  - "Runs before Write, Edit, and MultiEdit calls and reads only the proposed target path plus new text from Claude Code hook input."
+  - "Blocks with exit code 2 when context-like files contain common instruction-override, disclosure, role-confusion, concealment, or silent tool-execution patterns."
+  - "Does not send text to a model, call an API, read existing files, start tools, execute generated content, or modify files itself."
+  - "Pattern matching can miss obfuscated attacks and can flag legitimate security documentation; use advisory mode while tuning the file scope."
+  - "Set `PROMPT_INJECTION_SCANNER_SCOPE=all` only when the team wants every Write/Edit/MultiEdit payload scanned."
+privacyNotes:
+  - "Runs locally and makes no network calls."
+  - "Does not print the matched text; it reports only finding categories and generic remediation guidance."
+  - "The target path, finding categories, mode variable, and allowlist pattern can still appear in terminal output, Claude Code transcripts, CI logs, or screenshots."
+  - "When documenting prompt-injection examples, quote or redact them so attack text does not become active instruction material in prompt or agent files."
+sourceUrls:
+  - "https://genai.owasp.org/llmrisk/llm01-prompt-injection/"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter-prompt-shields"
+  - "https://www.ncsc.gov.uk/blog-post/prompt-injection-is-not-sql-injection"
+  - "https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-2e2023.pdf"
+tags:
+  - security
+  - prompt-injection
+  - guardrails
+  - content-safety
+  - hooks
+keywords:
+  - "prompt-injection content scanner hook"
+  - "Claude Code prompt injection hook"
+  - "AI context prompt injection scanner"
+  - "prompt file injection guard"
+  - "agent instruction scanner hook"
+readingTime: 6
+difficultyScore: 40
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Prompt-injection text becomes more dangerous when it lands in files that an AI
+assistant later treats as instructions: `CLAUDE.md`, agent definitions, prompt
+templates, rule files, context snippets, or markdown copied from external
+sources.
+
+This hook gives Claude Code a local pre-write checkpoint. It scans proposed
+Write/Edit/MultiEdit content for common prompt-injection pattern categories
+before the text is saved into an AI-readable surface. When a match is found, it
+blocks the write by default and tells the user which category needs review
+without echoing the suspicious text back into logs.
+
+## Features
+
+- Watches prompt, agent, rule, context, markdown, text, and instruction-like
+  file paths by default.
+- Extracts pending Write/Edit/MultiEdit content from Claude Code hook JSON.
+- Detects instruction-override, secret-disclosure, role-confusion,
+  hidden-instruction, and silent-tool-execution pattern categories.
+- Reports categories only, reducing the chance that attack text is copied into
+  terminal logs or CI transcripts.
+- Supports `PROMPT_INJECTION_SCANNER_MODE=advisory` for warning-only rollout.
+- Supports `PROMPT_INJECTION_SCANNER_SCOPE=all` when teams want every write
+  payload scanned.
+
+## How It Works
+
+Claude Code passes the pending tool call to the hook on stdin. The script reads
+the target path and new text, then decides whether the file is likely to be an
+AI-readable context surface. It normalizes whitespace and casing, applies a
+small set of regex categories, and exits `2` when a category matches.
+
+The hook is intentionally a review trigger, not a proof of safety. OWASP, NIST,
+Microsoft, and NCSC all describe prompt injection as a persistent risk where
+filters can help, but cannot fully remove the need for least privilege, trusted
+data boundaries, and human review of untrusted instructions.
+
+## Use Cases
+
+- Catch copied external text before it becomes part of `CLAUDE.md`, an agent
+  file, or a prompt template.
+- Warn when a generated markdown note contains text that asks an assistant to
+  reveal hidden instructions, secrets, or environment variables.
+- Keep red-team examples from being saved as active instruction material without
+  review or redaction.
+- Add a local checkpoint before stricter CI review of AI-facing documentation.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/prompt-injection-content-scanner.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/prompt-injection-content-scanner.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/prompt-injection-content-scanner.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Script
+
+```bash
+#!/usr/bin/env bash
+# Paste the scriptBody from this entry into:
+# .claude/hooks/prompt-injection-content-scanner.sh
+```
+
+## Configuration Options
+
+- `PROMPT_INJECTION_SCANNER_MODE=advisory` prints warnings but exits `0`.
+- `PROMPT_INJECTION_SCANNER_SCOPE=all` scans every Write/Edit/MultiEdit payload
+  instead of only context-like file paths.
+- `PROMPT_INJECTION_SCANNER_ALLOWLIST` is an extended grep pattern checked
+  against the target path and proposed content. Use it only for reviewed
+  exceptions.
+
+## Expected Behavior
+
+- **Allowed:** Ordinary markdown, agent, prompt, and context edits that do not
+  match the scanner categories.
+- **Blocked:** Context files containing instruction-override wording.
+- **Blocked:** Prompt files containing requests to reveal hidden instructions,
+  system prompts, secrets, environment variables, or API keys.
+- **Blocked:** Agent/rule files containing concealment or silent tool-execution
+  wording.
+
+## Limitations
+
+- Regex matching cannot detect every direct or indirect prompt injection.
+- Legitimate security documentation can trigger the hook; use advisory mode or
+  quote/redact examples in files that are not active AI instructions.
+- The hook scans new write payloads, not already committed files.
+- It does not replace source trust review, least-privilege tool permissions, or
+  runtime isolation for agentic workflows.
+
+## Troubleshooting
+
+### The hook blocks security documentation
+
+Move examples into a dedicated research note that is not loaded as instructions,
+quote or redact the attack wording, or temporarily use advisory mode while a
+human reviews the content.
+
+### The hook misses an obvious attack phrase
+
+Add a project-specific pattern by editing the script, then test it against
+representative prompt files before enabling block mode.
+
+### Too many files are being scanned
+
+Keep the default `context` scope and move general notes outside prompt,
+instruction, context, and agent directories. Use `PROMPT_INJECTION_SCANNER_SCOPE=all`
+only when broad scanning is intentional.
+
+## Duplicate Check
+
+Checked `content/hooks/` for `prompt injection`, `prompt-injection`,
+`instruction override`, `environment variable leak`, `secret scanner`, `MCP
+config`, and `unsafe shell command`. Existing hooks cover pre-write secret
+formats, MCP config privacy, package download verification, and other local
+guards, but no existing hook focuses on prompt-injection text entering
+AI-readable prompt, agent, rule, markdown, and context files before a write.
+
+## Sources
+
+- [OWASP LLM01:2025 Prompt Injection](https://genai.owasp.org/llmrisk/llm01-prompt-injection/)
+- [Claude Code hooks documentation](https://code.claude.com/docs/en/hooks)
+- [Microsoft Prompt Shields documentation](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/content-filter-prompt-shields)
+- [NCSC prompt-injection guidance](https://www.ncsc.gov.uk/blog-post/prompt-injection-is-not-sql-injection)
+- [NIST adversarial machine learning taxonomy](https://nvlpubs.nist.gov/nistpubs/ai/NIST.AI.100-2e2023.pdf)
