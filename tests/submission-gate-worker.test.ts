@@ -592,13 +592,13 @@ describe("Cloudflare submission gate helpers", () => {
     ).toContain("> ## ℹ️ Superseded gate report");
   });
 
-  it("routes low-confidence private merge verdicts to manual review", () => {
+  it("keeps clean default-confidence merge verdicts on the merge path", () => {
     const decision = enforceAutoMergeConfidenceFloor({
       schemaVersion: 2,
       verdict: "merge",
       confidence: 0.76,
       summary:
-        "Summary:\n- Content appears useful, but evidence is not strong enough.",
+        "Summary:\n- No blocking issues detected.\n- The PR meets all repository policies and can be merged directly.\nRecommended Action:\n- Recommend direct merge.",
       labels: ["submission-merged-by-gate"],
       checks: [{ name: "validate-content", status: "passed" }],
       sections: [
@@ -611,8 +611,34 @@ describe("Cloudflare submission gate helpers", () => {
     });
 
     expect(decision).toMatchObject({
-      verdict: "manual",
+      verdict: "merge",
       confidence: 0.76,
+      labels: ["submission-merged-by-gate"],
+    });
+    expect(decision.errors).toBeUndefined();
+  });
+
+  it("routes ambiguous low-confidence private merge verdicts to manual review", () => {
+    const decision = enforceAutoMergeConfidenceFloor({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.7,
+      summary:
+        "Summary:\n- Content appears useful, but evidence is not strong enough and the source claims could not be verified.",
+      labels: ["submission-merged-by-gate"],
+      checks: [{ name: "validate-content", status: "passed" }],
+      sections: [
+        {
+          id: "source_review",
+          status: "warn",
+          bullets: ["Source evidence is ambiguous."],
+        },
+      ],
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      confidence: 0.7,
       labels: ["submission-manual-review"],
       errors: [
         {
