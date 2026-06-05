@@ -58,6 +58,7 @@
     "generate:readme": "node scripts/generate-readme.mjs",
     "validate:readme": "node scripts/generate-readme.mjs --check",
     "audit:content": "node scripts/audit-content.mjs",
+    "report:trust-coverage": "node scripts/report-trust-coverage.mjs",
     "sync:votes:d1": "node scripts/sync-votes-to-d1.mjs --mode=both",
     "verify:votes:d1": "node scripts/verify-d1-votes.mjs --mode=both",
     "jobs:admin": "node scripts/manage-d1-jobs.mjs",
