@@ -1674,6 +1674,49 @@ repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
     });
   });
 
+  it("treats shared multi-entry MCP catalogs as related context", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/azure-mcp-server.mdx",
+      content: `---
+title: Azure MCP Server
+slug: azure-mcp-server
+category: mcp
+description: Official Microsoft Azure MCP server for Azure resource workflows.
+documentationUrl: "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+packageUrl: "https://www.npmjs.com/package/@azure/mcp"
+---
+`,
+      label: "accepted entry content/mcp/azure-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/microsoft-learn-mcp-server.mdx",
+      content: `---
+title: Microsoft Learn MCP Server
+slug: microsoft-learn-mcp-server
+category: mcp
+description: Official Microsoft Learn remote MCP server for documentation search.
+documentationUrl: "https://devblogs.microsoft.com/engineering-at-microsoft/how-we-built-the-microsoft-learn-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+sourceUrl: "https://learn.microsoft.com/api/mcp"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://github.com/microsoft/mcp in mcp",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
   it("treats repeated same-scope collections as strict duplicates", () => {
     const existingCollection = extractContentDuplicateSignals({
       filePath: "content/collections/frontend-a11y-browser-qa.mdx",

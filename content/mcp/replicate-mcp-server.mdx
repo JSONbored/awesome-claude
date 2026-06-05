@@ -1,0 +1,136 @@
+---
+title: Replicate MCP Server
+slug: replicate-mcp-server
+category: mcp
+description: >-
+  Official Replicate MCP server for using Replicate model search, API tooling,
+  and optional code-mode workflows from Claude Desktop, VS Code, Cursor, and
+  compatible MCP clients.
+cardDescription: Connect Claude or VS Code to Replicate model tooling with the official MCP server.
+seoTitle: Replicate MCP Server for Claude, VS Code, and Cursor
+seoDescription: >-
+  Install the official Replicate MCP server with npx, configure a
+  REPLICATE_API_TOKEN, and let AI clients search Replicate models and work with
+  Replicate API tooling.
+author: Replicate
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://replicate.com/docs/reference/mcp"
+installable: true
+installCommand: "npx -y replicate-mcp"
+usageSnippet: "Use Replicate MCP when an AI client needs to search Replicate models or draft API usage with your Replicate account context."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "replicate": {
+        "command": "npx",
+        "args": ["-y", "replicate-mcp"],
+        "env": {
+          "REPLICATE_API_TOKEN": "your-token-here"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "replicate": {
+        "command": "npx",
+        "args": ["-y", "replicate-mcp"],
+        "env": {
+          "REPLICATE_API_TOKEN": "your-token-here"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - Node.js and npx available locally.
+  - A Replicate API token stored outside version control.
+  - Claude Desktop, Cursor, VS Code, or another MCP-compatible client.
+safetyNotes:
+  - The server can invoke Replicate API capabilities through your account, so review prompts before running workflows that create predictions or consume credits.
+  - Keep code-mode or execution-oriented workflows separate from simple model search unless you intend to allow generated code execution.
+privacyNotes:
+  - Model prompts, input URLs, generated outputs, and API account metadata can flow through Replicate and the MCP client context.
+  - Do not commit `REPLICATE_API_TOKEN` to a shared MCP config file.
+sourceUrls:
+  - "https://replicate.com/docs/reference/mcp"
+  - "https://mcp.replicate.com/"
+tags:
+  - replicate
+  - models
+  - image-generation
+  - api-tools
+  - official
+keywords:
+  - Replicate MCP server
+  - replicate-mcp Claude config
+  - Replicate API MCP
+  - AI model search MCP
+  - Replicate VS Code MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Replicate MCP is Replicate's official MCP server for connecting AI clients to
+Replicate API tooling. The local server runs through `npx -y replicate-mcp` and
+uses a `REPLICATE_API_TOKEN` environment variable in client configuration.
+Replicate also publishes a hosted MCP surface for remote connection patterns.
+
+## Features
+
+- Local MCP server package launched with `npx`.
+- Works with Claude Desktop, Cursor, VS Code, and compatible MCP clients.
+- Lets agent workflows search Replicate and use Replicate API tooling from chat.
+- Supports token-backed account access through environment configuration.
+- Offers an advanced code-mode path for more complex SDK workflows.
+
+## Installation
+
+Create a Replicate API token, then add the server to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "replicate": {
+      "command": "npx",
+      "args": ["-y", "replicate-mcp"],
+      "env": {
+        "REPLICATE_API_TOKEN": "your-token-here"
+      }
+    }
+  }
+}
+```
+
+Restart the client and ask it to search Replicate for a small model category to
+confirm the tool is connected.
+
+## Use Cases
+
+- Find candidate Replicate models for image, audio, video, or language workflows.
+- Draft API calls using current model metadata.
+- Compare model inputs before building a workflow.
+- Let a coding assistant scaffold Replicate SDK usage with account-aware context.
+
+## Safety and Privacy
+
+Treat the API token like any other paid service credential. Keep it in local MCP
+settings, a keychain-backed client, or an environment variable, and avoid sharing
+workspace-level config that contains the token. Review generated prompts and code
+before creating predictions that consume credits.
+
+## Duplicate Check
+
+Existing tool listings include Replicate-adjacent AI tooling, but no dedicated
+MCP entry for the official Replicate server was found in `content/mcp`.
+
+## References
+
+- Replicate MCP docs - https://replicate.com/docs/reference/mcp
+- Hosted Replicate MCP - https://mcp.replicate.com/

@@ -82,6 +82,14 @@ const DOMAIN_ONLY_EXCLUSIONS = new Set([
   "registry.npmjs.org",
 ]);
 
+const MULTI_ENTRY_CATALOG_URLS = new Set([
+  "https://github.com/awslabs/mcp",
+  "https://github.com/microsoft/mcp",
+  "https://github.com/modelcontextprotocol/servers",
+  "https://github.com/snowflake-labs/mcp",
+  "https://github.com/twilio-labs/mcp",
+]);
+
 function unquoteYamlScalar(value: string) {
   const trimmed = value.trim();
   if (
@@ -230,6 +238,14 @@ function intersection(left: string[], right: string[]) {
   return left.filter((value) => rightSet.has(value));
 }
 
+function strictDuplicateUrls(sharedUrls: string[]) {
+  return sharedUrls.filter((url) => !MULTI_ENTRY_CATALOG_URLS.has(url));
+}
+
+function sharedCatalogUrls(sharedUrls: string[]) {
+  return sharedUrls.filter((url) => MULTI_ENTRY_CATALOG_URLS.has(url));
+}
+
 function isCollectionBridge(
   candidate: ContentDuplicateSignals,
   existing: ContentDuplicateSignals,
@@ -327,12 +343,13 @@ export function findStrictContentDuplicateMatch(
     }
 
     const sharedUrls = intersection(candidate.urls, existing.urls);
+    const blockingSharedUrls = strictDuplicateUrls(sharedUrls);
     if (
-      sharedUrls.length &&
+      blockingSharedUrls.length &&
       candidate.category &&
       candidate.category === existing.category
     ) {
-      reasons.push(`same canonical source URL ${sharedUrls[0]}`);
+      reasons.push(`same canonical source URL ${blockingSharedUrls[0]}`);
     }
 
     if (
@@ -376,6 +393,16 @@ export function findRelatedContentMatches(
         isCollectionBridge(candidate, existing)
           ? `same canonical source URL ${sharedUrls[0]} across collection/resource categories`
           : `same canonical source URL ${sharedUrls[0]} across ${candidate.category}/${existing.category}`,
+      );
+    }
+    const catalogUrls = sharedCatalogUrls(sharedUrls);
+    if (
+      catalogUrls.length &&
+      candidate.category &&
+      candidate.category === existing.category
+    ) {
+      reasons.push(
+        `same multi-entry catalog source URL ${catalogUrls[0]} in ${candidate.category}`,
       );
     }
 
