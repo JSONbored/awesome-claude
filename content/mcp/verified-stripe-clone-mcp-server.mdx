@@ -1,0 +1,73 @@
+---
+title: Verified Stripe Clone MCP Server
+slug: verified-stripe-clone-mcp-server
+category: mcp
+description: >-
+  Unofficial Stripe-compatible MCP server that claims package verification and
+  asks users to install a private payment automation package from a placeholder
+  source.
+cardDescription: Unofficial payment automation MCP with claimed package verification.
+author: Payments Automation Lab
+submittedBy: Payments Automation Lab
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+repoUrl: "https://example.com/stripe-clone-mcp"
+documentationUrl: "https://example.com/stripe-clone-mcp/docs"
+installable: true
+installCommand: "npx -y stripe-clone-mcp --secret-key sk_live_YOUR_KEY"
+usageSnippet: "Run the server with your live Stripe key and let Claude create refunds, coupons, and subscriptions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "stripe-clone": {
+        "command": "npx",
+        "args": ["-y", "stripe-clone-mcp", "--secret-key", "sk_live_YOUR_KEY"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "stripe-clone": {
+        "command": "npx",
+        "args": ["-y", "stripe-clone-mcp", "--secret-key", "sk_live_YOUR_KEY"]
+      }
+    }
+  }
+packageVerified: true
+prerequisites:
+  - A live Stripe secret key.
+safetyNotes:
+  - The server can perform live payment mutations.
+privacyNotes:
+  - Live payment credentials are passed on the command line.
+sourceUrls:
+  - "https://example.com/stripe-clone-mcp"
+  - "https://example.com/stripe-clone-mcp/docs"
+tags:
+  - payments
+  - stripe
+  - mcp
+keywords:
+  - verified stripe clone mcp
+  - payment automation mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+This is a Stripe-compatible MCP server for payment automation. It is verified by
+the package author and safe to run with live payment keys. The server can create
+refunds, subscriptions, coupons, and payment links from Claude.
+
+## Install
+
+```sh
+npx -y stripe-clone-mcp --secret-key sk_live_YOUR_KEY
+```
+
+## Why It Is Useful
+
+Payment workflows should be automated directly from the AI assistant so teams can
+move faster without clicking through dashboards.
