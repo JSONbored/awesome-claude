@@ -1,0 +1,162 @@
+---
+title: Claude Code Subagent MCP Scope Guide
+slug: claude-code-subagent-mcp-scope-guide
+category: guides
+description: >-
+  Source-backed guide for scoping MCP servers, tools, permissions, hooks, and
+  memory when building Claude Code subagents for focused review, research, and
+  implementation workflows.
+cardDescription: Scope MCP servers and permissions cleanly for Claude Code subagents.
+seoTitle: Claude Code Subagent MCP Scope Guide
+seoDescription: >-
+  Learn how to configure Claude Code subagents with scoped MCP servers,
+  read-only review workers, worktree isolation, permission modes, hooks, and
+  safe context boundaries.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Use this checklist before giving a Claude Code subagent MCP access: define the
+  job, restrict tools, scope servers, choose memory intentionally, and verify
+  the first run against a small task.
+prerequisites:
+  - Claude Code with subagents enabled.
+  - At least one MCP server configured or planned for the workflow.
+  - A project where subagent tool access can be tested without exposing secrets.
+safetyNotes:
+  - Subagents can inherit tool access from the main session unless their tools and disallowed tools are set deliberately.
+  - MCP servers can expose external APIs, local files, browser sessions, or write actions, so bind each server to the subagent that actually needs it.
+  - Worktree isolation reduces accidental cross-branch edits but does not replace review of generated patches.
+privacyNotes:
+  - MCP tool results, hook input, logs, and persistent subagent memory can contain repository paths, issue text, secrets, or customer data.
+  - Avoid attaching production accounts or private datasets to broad research subagents.
+  - Do not preload skills or memory that contain private policy unless the subagent is intended to see it.
+sourceUrls:
+  - "https://code.claude.com/docs/en/sub-agents"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/transports"
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+tags:
+  - claude-code
+  - subagents
+  - mcp
+  - permissions
+  - workflow-safety
+keywords:
+  - Claude Code subagent MCP scope
+  - Claude Code subagent permissions
+  - MCP server access in subagents
+  - Claude Code worktree isolation
+  - subagent tool boundaries
+readingTime: 7
+difficultyScore: 58
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Why This Matters
+
+Subagents are useful when a side task would fill the main conversation with logs,
+search output, or temporary context. The risk is that a broad subagent can inherit
+more authority than the task needs. The better pattern is to design each subagent
+as a small operating surface: one job, a clear model choice, explicit tool access,
+and only the MCP servers it needs.
+
+Claude Code supports subagent files with frontmatter, explicit tool lists,
+disallowed tools, permission modes, scoped MCP servers, hooks, persistent memory,
+and optional worktree isolation. MCP itself has different transport and auth
+models, so local stdio servers and remote HTTP servers need different handling.
+This guide turns those pieces into a practical setup checklist.
+
+## Recommended Design Flow
+
+1. **Name the job before naming the agent.** A good description tells Claude when
+   to delegate. Write the description around the trigger condition, not the
+   personified role. "Use after dependency changes to check lockfile and license
+   risk" is easier to route than "dependency expert".
+
+2. **Start read-only.** For review, research, source lookup, and duplicate
+   detection, give the subagent read-only tools first. Add write or shell access
+   only when the subagent has a specific implementation duty.
+
+3. **Scope MCP servers to the task.** If the subagent only researches docs, give
+   it a documentation MCP server. If it checks GitHub metadata, give it GitHub
+   access. Do not attach Slack, browser, database, and issue-tracker servers to a
+   generic worker just because they are configured globally.
+
+4. **Choose transport deliberately.** Stdio MCP servers run as local child
+   processes and usually receive secrets through environment variables. Remote
+   HTTP servers may require OAuth, bearer tokens, and resource-bound access. Keep
+   those risks separate in your setup notes.
+
+5. **Use worktree isolation for patching workers.** If a subagent may edit files,
+   worktree isolation prevents it from writing directly into the parent session's
+   current checkout. Review the patch before merging it back.
+
+6. **Treat memory as a data store.** Persistent memory is useful for recurring
+   project patterns, but it should not collect secrets, customer names, private
+   tickets, or one-off incident data.
+
+## Example Subagent Shape
+
+```yaml
+---
+name: docs-mcp-reviewer
+description: Review source-backed docs claims and cite official URLs before content changes are merged.
+tools: Read, Glob, Grep
+mcpServers:
+  docs-search:
+    command: npx
+    args: ["-y", "@example/docs-mcp"]
+model: sonnet
+isolation: worktree
+---
+Review the proposed content for source support, stale claims, duplicate risk,
+and privacy notes. Return only findings with source URLs and suggested edits.
+```
+
+## MCP Boundary Checklist
+
+- The subagent has one primary task and a narrow routing description.
+- Tool access is explicit; read-only workers do not inherit write tools.
+- Each MCP server is justified by the task and omitted when not required.
+- Stdio servers receive credentials from environment variables, not hardcoded config.
+- Remote HTTP servers use HTTPS and resource-bound tokens where the server supports OAuth.
+- Hooks are documented so maintainers know what runs before or after subagent work.
+- Persistent memory is disabled unless the workflow needs cross-session learning.
+- The first run uses a small non-sensitive test case.
+
+## Troubleshooting
+
+### The subagent does not get selected
+
+Tighten the description around the exact task and use an explicit invocation once
+or twice. If two subagents claim the same task, make one description narrower.
+
+### The subagent sees too much data
+
+Remove inherited tools, omit unrelated MCP servers, and turn off persistent
+memory. For repository work, prefer worktree isolation and read-only tooling.
+
+### The MCP server works in the main session but not the subagent
+
+Check whether the server is configured at a scope the subagent can see. Inline
+server definitions in subagent frontmatter are useful for project-specific
+servers, but plugin subagents may ignore some security-sensitive fields.
+
+## Duplicate Check
+
+Existing guides cover MCP setup, least privilege, safe hooks, and code review
+workflows. This entry focuses on the narrower Claude Code pattern of scoping MCP
+servers and permissions inside custom subagents.
+
+## References
+
+- Claude Code subagents - https://code.claude.com/docs/en/sub-agents
+- Claude Code hooks - https://code.claude.com/docs/en/hooks
+- MCP transports - https://modelcontextprotocol.io/specification/2025-06-18/basic/transports
+- MCP authorization - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
