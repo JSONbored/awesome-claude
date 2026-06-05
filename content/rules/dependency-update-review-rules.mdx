@@ -1,0 +1,238 @@
+---
+title: Dependency Update Review Rules
+slug: dependency-update-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing dependency update pull requests with
+  supply-chain context, lockfile discipline, advisory checks, compatibility
+  evidence, and privacy-safe metadata handling.
+cardDescription: >-
+  Review dependency updates with changelog evidence, lockfile checks,
+  vulnerability triage, compatibility tests, and supply-chain risk notes.
+seoTitle: Dependency Update Review Rules
+seoDescription: >-
+  Practical dependency update review rules for supply-chain-aware projects:
+  SemVer risk, Dependabot updates, dependency review, OSV advisories, lockfile
+  provenance, CI evidence, and merge blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review"
+sourceUrls:
+  - "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review"
+  - "https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates"
+  - "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependabot-security-updates"
+  - "https://semver.org/"
+  - "https://google.github.io/osv.dev/"
+installable: false
+usageSnippet: >-
+  Apply these rules before approving dependency update pull requests,
+  especially updates that change lockfiles, build tooling, runtime libraries,
+  transitive dependency trees, or security-sensitive packages.
+copySnippet: |-
+  You are reviewing a dependency update pull request.
+
+  Rules:
+  1. Classify the update by security urgency, SemVer range, runtime surface,
+     and maintainer trust before approving.
+  2. Require a lockfile diff, changelog or release-note evidence, dependency
+     review output, advisory triage, and relevant tests.
+  3. Split unrelated major upgrades, build-tool changes, and security fixes
+     unless the maintainer explicitly accepts the combined risk.
+  4. Do not run public advisory or package-health lookups for private package
+     names, private registries, or internal repository URLs without approval.
+  5. Block merge when provenance, compatibility, lockfile integrity, or
+     rollback evidence is missing.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A dependency update pull request with manifest, lockfile, and package-manager context.
+  - Access to current CI, test results, dependency review output, advisory alerts, and release notes or changelogs for the updated packages.
+  - A project policy for supported runtimes, package managers, registries, license constraints, and emergency security updates.
+  - Permission to split, defer, or block dependency updates when provenance, compatibility, or privacy evidence is incomplete.
+safetyNotes:
+  - "Dependency updates can change runtime code, install scripts, build plugins, transitive packages, lockfile integrity hashes, generated clients, and deployment behavior."
+  - "Security updates should be prioritized, but they still need compatibility evidence, a rollback path, and review of newly introduced transitive dependencies."
+  - "Treat major version upgrades, package-manager changes, new registries, git dependencies, postinstall scripts, and build-tool updates as high-risk until reviewed."
+privacyNotes:
+  - "Dependency names, versions, private registry hosts, scoped package names, repository URLs, and advisory matches can reveal proprietary architecture or unreleased product plans."
+  - "Do not paste full private lockfiles, internal package metadata, paid registry URLs, or vulnerability details into public PR comments."
+  - "External advisory and package-health services should only receive public package identifiers, or private identifiers after explicit approval."
+tags:
+  - dependencies
+  - supply-chain
+  - dependency-review
+  - lockfiles
+  - security-updates
+  - semver
+keywords:
+  - dependency update review rules
+  - supply chain dependency PR checklist
+  - safe dependency upgrade policy
+  - lockfile review rules
+  - Dependabot review workflow
+readingTime: 6
+difficultyScore: 41
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant, dependency bot, or human
+maintainer proposes package updates. The goal is to keep routine patch updates
+fast while forcing risky dependency changes through a source-backed review.
+
+Dependency updates are code changes. A one-line manifest bump can alter
+runtime behavior, build output, install-time scripts, native extensions,
+transitive dependency trees, licenses, and vulnerability exposure.
+
+## Update Classification
+
+Classify the update before reviewing style or merge convenience.
+
+1. **Security fix.** An advisory, CVE, Dependabot security alert, or OSV match
+   says the installed version is vulnerable.
+2. **Patch or minor update.** SemVer suggests backward compatibility, but
+   changelogs and lockfiles still need review.
+3. **Major update.** The package declares breaking-change risk or shifts
+   public APIs, runtime support, configuration, or generated output.
+4. **Build or release tooling.** Bundlers, compilers, test runners, linters,
+   package managers, CI actions, Docker bases, and publishing tools can affect
+   every artifact even when application code is unchanged.
+5. **New dependency or registry source.** A newly introduced package, git URL,
+   tarball URL, private registry, alternate registry, or postinstall script
+   needs provenance review before merge.
+6. **Transitive churn.** A small direct update may replace many nested
+   packages; review the lockfile and security impact before accepting it.
+
+When the class is unclear, treat the update as high risk until release notes,
+dependency-review output, or package-manager evidence explains the change.
+
+## Required Evidence
+
+A dependency update PR should include enough evidence for a reviewer to
+understand what changed and why.
+
+- Manifest and lockfile changes are present together when the package manager
+  expects a lockfile.
+- Release notes, changelog entries, advisory records, or migration notes cover
+  every direct dependency update.
+- Dependency review, advisory scanning, or an equivalent local report is clean
+  or has documented exceptions.
+- CI ran on the reviewed head commit with tests that exercise affected runtime,
+  build, and integration paths.
+- New packages have source, license, maintainer, install-script, and registry
+  provenance reviewed.
+- Major upgrades name the breaking-change surface and the migration evidence.
+- Security updates name the vulnerable package, affected range, fixed range,
+  and why the selected version is sufficient.
+- Rollback, pinning, or emergency revert steps are clear for production-facing
+  updates.
+
+Do not accept "the bot opened it" or "tests passed locally" as enough evidence
+for a dependency update that changes runtime, build, deploy, or security
+behavior.
+
+## Review Rules
+
+- Review the lockfile first; it reveals transitive churn that the manifest may
+  hide.
+- Split security fixes from broad modernization work unless the fix cannot be
+  applied without the larger upgrade.
+- Split unrelated major version updates into separate PRs so failures can be
+  bisected and reverted.
+- Prefer the smallest fixed version that resolves a security advisory when a
+  broader upgrade would increase compatibility risk.
+- Confirm that package-manager commands were run from the expected workspace,
+  with the expected package-manager version and registry configuration.
+- Require tests around affected imports, generated clients, browser bundles,
+  migrations, CLIs, server startup, or plugin loading paths.
+- Re-check dependency-review output after a rebase or force push because the
+  base branch can change the lockfile and advisory diff.
+- Treat install scripts, native binaries, code generation, and release tooling
+  as privileged execution paths.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the manifest changed without the expected lockfile update;
+- the lockfile changed without a matching source change or explanation;
+- a dependency points to a new registry, tarball, git URL, fork, or unpinned
+  source without provenance review;
+- dependency review, advisory scanning, or CI reports a new high-severity
+  issue that is not triaged;
+- a major upgrade lacks migration notes, compatibility tests, or owner review;
+- security-advisory details are copied into public comments with private
+  package names or exploit context;
+- generated artifacts changed but the generator version, command, or source
+  input is missing;
+- the update changes package-manager behavior, publish automation, CI actions,
+  or build tooling without release-owner review.
+
+## Review Checklist
+
+- [ ] {"task": "Update class named", "description": "The PR explains whether this is a security, patch, minor, major, build-tool, new-dependency, or transitive update"}
+- [ ] {"task": "Source evidence linked", "description": "Release notes, changelog entries, advisory records, or migration notes cover the direct updates"}
+- [ ] {"task": "Lockfile reviewed", "description": "Manifest and lockfile changes match the package-manager expectations, and transitive churn is understood"}
+- [ ] {"task": "Scanners triaged", "description": "Dependency review, advisory checks, or equivalent local reports are clean or have documented exceptions"}
+- [ ] {"task": "Compatibility tested", "description": "CI and targeted tests cover the runtime, build, integration, or generated-code paths touched by the update"}
+- [ ] {"task": "Privacy protected", "description": "Private package names, registries, advisory details, and full lockfile contents are not exposed publicly"}
+
+## AI Review Rules
+
+AI assistants can help summarize dependency diffs, but reviewers should require
+source evidence and current check results.
+
+- Ask the assistant to classify the update before asking for an approval
+  recommendation.
+- Require the assistant to list every changed direct dependency and summarize
+  transitive churn separately.
+- Have the assistant quote package names and versions from the manifest or
+  lockfile rather than relying on PR titles.
+- Keep private dependency metadata out of public lookups unless explicitly
+  approved.
+- Re-run the review after rebases, force pushes, or package-manager lockfile
+  regeneration.
+
+## Troubleshooting
+
+- **Patch update breaks tests:** inspect transitive dependency changes and
+  generated artifacts before assuming the direct package broke compatibility.
+- **Security update requires a major version:** isolate the security fix, name
+  the breaking changes, and require owner review for the migration.
+- **Dependency review shows a new advisory:** confirm whether the selected
+  version is affected, whether a fixed range exists, and whether a temporary
+  pin or replacement is safer.
+- **Lockfile is noisy:** regenerate with the repository's documented package
+  manager and version; avoid mixing npm, pnpm, Yarn, Poetry, Cargo, or Go
+  module behavior in one PR.
+- **Private packages are involved:** keep package names, versions, advisory
+  details, and registry URLs in private review channels.
+
+## Duplicate And History Check
+
+Checked existing rules, guides, hooks, commands, skills, open PRs, and closed
+PR history for dependency update rules, supply-chain dependency review,
+Dependabot review, lockfile review, OSV advisory review, dependency-security
+hooks, and Scorecard-based dependency risk review.
+
+Adjacent content includes the `/dependency-risk-review` command, dependency
+update checker hook, dependency security scanner hook, lockfile provenance
+checker hook, review-AI-generated-code guide, and high-risk code review
+escalation rules. This entry is distinct because it is a portable rules policy
+for deciding when dependency update PRs have enough source evidence, lockfile
+integrity, compatibility testing, and privacy-safe advisory handling to merge.
+
+## Sources
+
+- GitHub Docs: About dependency review - https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review
+- GitHub Docs: Configure Dependabot version updates - https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configuring-dependabot-version-updates
+- GitHub Docs: About Dependabot security updates - https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependabot-security-updates
+- Semantic Versioning - https://semver.org/
+- OSV documentation - https://google.github.io/osv.dev/

@@ -1,0 +1,262 @@
+---
+title: Twilio MCP Server for Claude
+slug: twilio-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Twilio's hosted MCP server for read-only search and
+  retrieval across public Twilio API specifications, Twilio Docs, SendGrid Docs,
+  Segment Docs, and support articles.
+cardDescription: >-
+  Hosted Twilio MCP server for searching public Twilio, SendGrid, and Segment
+  API docs and retrieving focused endpoint schemas.
+seoTitle: Twilio MCP Server for Claude
+seoDescription: >-
+  Use Twilio's hosted MCP server with Claude to search public Twilio API
+  specifications, docs, support articles, SendGrid docs, and Segment docs
+  without giving the model Twilio account credentials.
+author: Twilio
+authorProfileUrl: "https://github.com/twilio-labs"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://www.twilio.com/docs/ai/mcp"
+repoUrl: "https://github.com/twilio-labs/mcp"
+installable: true
+installCommand: >-
+  claude mcp add --transport http twilio-docs
+  https://mcp.twilio.com/docs
+usageSnippet: >-
+  claude mcp add --transport http twilio-docs
+  https://mcp.twilio.com/docs
+copySnippet: |-
+  {
+    "mcpServers": {
+      "twilio-docs": {
+        "transport": "http",
+        "url": "https://mcp.twilio.com/docs"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "twilio-docs": {
+        "transport": "http",
+        "url": "https://mcp.twilio.com/docs"
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - MCP-capable client with remote HTTP transport support, such as Claude Code, Claude Desktop connector support, Cursor, OpenCode, Codex, or another compatible client
+  - Network access to `https://mcp.twilio.com/docs`
+  - Agreement that the current hosted Twilio MCP server should receive the Twilio, SendGrid, or Segment documentation questions your team asks through the MCP client
+  - Separate Twilio, SendGrid, or Segment account credentials only when you later write or run application code outside this read-only MCP server
+safetyNotes:
+  - >-
+    Twilio describes the current hosted MCP server as a Public Beta. Treat tool
+    behavior, indexed coverage, and connection instructions as changeable until
+    Twilio declares general availability.
+  - >-
+    The current hosted server is read-only and exposes search/retrieve tools for
+    public API specifications and documentation. It does not execute Twilio API
+    calls or send messages on your behalf.
+  - >-
+    Do not confuse documentation retrieval with production readiness. Review
+    generated Messaging, Voice, Verify, SendGrid, Segment, or other Twilio code
+    against the canonical docs, product limits, regulatory requirements, and
+    your normal approval process before running it.
+  - >-
+    Future Twilio MCP releases may add OAuth-authenticated execute-ready tools.
+    Re-review permissions, approval prompts, audit logging, and data handling
+    before enabling any tool that can call live APIs.
+  - >-
+    Keep MCP client approval settings enabled for prompts that might transform
+    retrieved API schemas into runnable code, migration scripts, webhook
+    handlers, message sends, or account-management actions.
+privacyNotes:
+  - >-
+    The hosted endpoint can receive your natural-language search queries,
+    requested API IDs, product interests, integration plans, and troubleshooting
+    topics through the MCP client.
+  - >-
+    Returned documentation can enter the model conversation alongside your
+    prompt, code, route names, environment names, webhook examples, or product
+    decisions.
+  - >-
+    Do not paste Twilio Account SIDs, Auth Tokens, API keys, SendGrid keys,
+    Segment write keys, phone numbers, customer identifiers, message bodies,
+    call recordings, transcripts, or production webhook payloads into prompts
+    while using the public docs server.
+  - >-
+    Use synthetic examples when asking Claude to draft Messaging, Voice, Verify,
+    SendGrid, Segment, or support workflows from retrieved docs.
+tags:
+  - twilio
+  - sendgrid
+  - segment
+  - api-docs
+  - openapi
+  - mcp
+keywords:
+  - twilio mcp server
+  - twilio docs mcp
+  - twilio claude mcp
+  - sendgrid mcp docs
+  - segment mcp docs
+  - twilio api search mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Twilio MCP Server is Twilio's hosted Model Context Protocol server for API
+documentation discovery. It connects Claude and other MCP-capable clients to a
+read-only search and retrieval workflow over public Twilio OpenAPI
+specifications, Twilio Docs, Twilio Support articles, SendGrid Docs, SendGrid
+Support articles, and Segment Docs.
+
+The safest way to think about this server is "current Twilio documentation in a
+tool." It helps Claude find the relevant API operation or article, then retrieve
+focused parameter and response schema details. It should not be treated as a
+live Twilio account operator because the documented hosted server does not
+execute API calls or require Twilio credentials.
+
+## Features
+
+- Hosted HTTP MCP endpoint at `https://mcp.twilio.com/docs`.
+- Official Twilio documentation page for setup, capabilities, limitations, and
+  supported clients.
+- Public source repository in `twilio-labs/mcp`.
+- Read-only access to public Twilio API specifications, Twilio Docs, Twilio
+  Support articles, SendGrid Docs, SendGrid Support articles, and Segment Docs.
+- Two-step workflow that searches first, then retrieves full details only for
+  selected API or documentation results.
+- Claude Code CLI setup with remote HTTP transport.
+- Connector or marketplace setup paths documented for Claude, Cursor, OpenCode,
+  Codex, and Figma Make.
+- No Twilio account, API key, or OAuth flow required for the current hosted
+  docs endpoint.
+- Public Beta status disclosed by Twilio.
+
+## Tools
+
+### `twilio__search`
+
+Use this first. It accepts a natural-language query and returns ranked matching
+API operations, documentation articles, and result IDs.
+
+### `twilio__retrieve`
+
+Use this after search. It accepts one or more IDs from search results and
+returns focused parameter schemas, response schemas, and documentation details.
+
+This search-then-retrieve flow helps keep model context smaller than pasting a
+large OpenAPI specification or documentation page into chat.
+
+## Installation
+
+### Claude Code
+
+Add the hosted Twilio MCP endpoint:
+
+```bash
+claude mcp add --transport http twilio-docs https://mcp.twilio.com/docs
+```
+
+Then verify the server is configured:
+
+```bash
+claude mcp list
+```
+
+Ask a documentation question that should use the MCP server:
+
+```text
+Use the Twilio MCP server to find the current API parameters for sending an SMS, then retrieve the endpoint schema before drafting code.
+```
+
+### MCP Client Config
+
+Use remote HTTP transport in clients that support it:
+
+```json
+{
+  "mcpServers": {
+    "twilio-docs": {
+      "transport": "http",
+      "url": "https://mcp.twilio.com/docs"
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Look up current Twilio Messaging, Voice, Verify, Conversations, Video, Flex,
+  Serverless, Studio, Sync, TaskRouter, Events, Monitor, or Lookup API details.
+- Retrieve exact request parameters and response schemas before writing Twilio
+  integration code.
+- Ask Claude to compare newer Twilio products or API versions that may not be
+  well represented in model training data.
+- Search SendGrid or Segment documentation from the same MCP workflow when an
+  integration crosses Twilio product boundaries.
+- Draft code or runbook notes from current docs while keeping API credentials
+  out of the MCP server.
+- Review generated Twilio integration code against focused endpoint schemas
+  instead of a broad documentation summary.
+
+## Safety Checklist
+
+- Confirm the MCP client points to `https://mcp.twilio.com/docs`.
+- Treat the server as read-only documentation retrieval, not live account
+  access.
+- Keep Twilio, SendGrid, and Segment credentials out of prompts and MCP config.
+- Review generated code before running anything that sends messages, places
+  calls, verifies users, modifies webhooks, or touches production contacts.
+- Check product-specific compliance, consent, sender registration, rate limits,
+  and regional requirements before using generated Messaging or Voice code.
+- Revisit the setup if Twilio adds OAuth-authenticated execute tools in a future
+  release.
+
+## Troubleshooting
+
+### The MCP server is not listed
+
+Run `claude mcp list` and confirm that the `twilio-docs` server uses HTTP
+transport with `https://mcp.twilio.com/docs`.
+
+### Results are too broad
+
+Start with a product name and action, such as "Twilio Verify create
+verification" or "SendGrid send email dynamic template", then retrieve only the
+specific result IDs you need.
+
+### The answer lacks endpoint details
+
+Ask Claude to run `twilio__retrieve` on the best search result before drafting
+code. Search results are summaries; retrieve returns the focused details.
+
+### You need to call a live Twilio API
+
+Use the retrieved docs to write or review code, then run that code through your
+normal local or CI workflow with approved credentials. Do not paste production
+credentials into the MCP conversation.
+
+## Duplicate And History Check
+
+Checked current `content/mcp/`, collections, skills, commands, tools, hooks,
+open PRs, closed PRs, and issue history for `Twilio`, `twilio-labs/mcp`,
+`mcp.twilio.com`, `SendGrid MCP`, `Segment MCP`, and Twilio API docs. Existing
+content only mentions Twilio incidentally as a notification provider example.
+No dedicated Twilio MCP server entry, duplicate source URL, or prior rejected
+Twilio MCP PR was found.
+
+## Sources
+
+- [Twilio MCP server docs](https://www.twilio.com/docs/ai/mcp)
+- [Twilio MCP source repository](https://github.com/twilio-labs/mcp)
+- [Model Context Protocol specification](https://modelcontextprotocol.io/specification/2025-06-18)
+- [Claude Code MCP docs](https://code.claude.com/docs/en/mcp)

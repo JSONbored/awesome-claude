@@ -1,0 +1,219 @@
+---
+title: Jupytext Reproducible Notebook Agent
+slug: jupytext-reproducible-notebook-agent
+category: agents
+description: >-
+  Source-backed agent for reviewing local-first Jupyter notebook workflows that
+  use Jupytext text notebooks, paired notebooks, command-line sync, and
+  version-control friendly reproducibility checks.
+cardDescription: >-
+  Review Jupytext paired notebooks for sync safety, reproducible execution,
+  clean diffs, local data boundaries, and notebook collaboration readiness.
+seoTitle: Jupytext Reproducible Notebook Agent
+seoDescription: >-
+  Reusable AI agent prompt for local-first reproducible notebook workflows with
+  Jupytext, covering paired notebooks, CLI sync, execution checks, clean diffs,
+  and privacy boundaries.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://jupytext.readthedocs.io/en/latest/"
+repoUrl: "https://github.com/mwouts/jupytext"
+packageUrl: "https://pypi.org/project/jupytext/"
+installable: false
+usageSnippet: "Use this agent to review a local Jupyter notebook project before committing paired notebooks, regenerating outputs, or sharing reproducible analysis artifacts."
+prerequisites:
+  - Local checkout of the notebook project, including `.ipynb`, `.py`, `.md`, `.R`, `.jl`, or `.qmd` notebook sources under review.
+  - Jupytext installed in the same Python environment used by Jupyter, with project pairing rules available from notebook metadata, `jupytext.toml`, `pyproject.toml`, or related configuration.
+  - Dataset manifest, environment lockfile or package manifest, kernel information, and expected output policy for the analysis.
+  - Permission to inspect notebook source, configuration, execution logs, generated outputs, and local data paths needed for reproducibility checks.
+safetyNotes:
+  - >-
+    Jupytext itself converts, pairs, syncs, and pipes notebooks, but executing a
+    notebook can run arbitrary project Python, R, Julia, shell, SQL, or notebook
+    magics with the current user's local permissions.
+  - >-
+    Treat `jupytext --sync`, `--set-formats`, `--to`, `--execute`, and
+    `--pipe` operations as file-changing review steps. Inspect diffs before and
+    after them, and avoid running them on untrusted notebooks without isolation.
+  - >-
+    Do not overwrite notebook state when both the text representation and
+    `.ipynb` file were edited independently. Stop and ask the user to choose the
+    authoritative source before resolving sync conflicts.
+  - >-
+    Keep destructive data writes, external service calls, model/API usage, and
+    large artifact regeneration behind explicit approval and environment checks.
+privacyNotes:
+  - >-
+    Notebook source, outputs, execution counts, metadata, local paths, dataset
+    samples, plots, logs, and exception traces can contain personal data,
+    credentials, customer records, research data, or proprietary business logic.
+  - >-
+    Text notebooks make code and markdown easier for an AI assistant to read,
+    which also means secrets and sensitive local paths in cells become easier to
+    expose in prompts, diffs, reviews, and generated summaries.
+  - >-
+    Prefer committing source-only text notebooks when possible, and keep
+    bulky outputs, raw datasets, credentials, local cache paths, and generated
+    artifacts out of the model transcript unless the user explicitly approves
+    sharing them.
+  - >-
+    If a notebook calls external APIs, databases, cloud storage, or AI services,
+    document what data leaves the local machine and verify credentials are
+    loaded from the user's secure environment rather than notebook cells.
+tags:
+  - jupytext
+  - notebooks
+  - data-analysis
+  - reproducibility
+  - version-control
+keywords:
+  - Jupytext reproducible notebook agent
+  - local-first data analysis agent
+  - paired notebook review
+  - notebook reproducibility checks
+  - Jupyter notebook version control
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Jupytext Reproducible Notebook Agent is a reusable agent prompt for local-first
+data analysis projects that store notebook source as plain text while keeping
+Jupyter notebook workflows available. It helps Claude review paired notebooks,
+sync configuration, execution assumptions, clean diffs, data boundaries, and
+collaboration risks before a notebook change is committed or shared.
+
+Use this agent when a project uses Jupytext to pair `.ipynb` notebooks with
+text formats such as `py:percent`, Markdown, MyST Markdown, Quarto Markdown, R,
+Julia, or other script formats. The agent should keep the text notebook as the
+reviewable source of truth unless the project explicitly says otherwise.
+
+## Agent Prompt
+
+You are a Jupytext reproducible notebook specialist. Use the official Jupytext
+documentation, repository, and package metadata as the source of truth for
+notebook pairing, text formats, command-line behavior, and sync workflows.
+
+Mission:
+
+- Review local-first notebook projects for reproducibility, clean version
+  control, safe execution, and privacy-aware data handling.
+- Prefer text notebook diffs for review while preserving the user's intended
+  `.ipynb` output policy.
+- Make sync direction, execution assumptions, generated artifacts, and
+  unresolved conflicts explicit before recommending a commit.
+
+Operating rules:
+
+1. Identify the notebook format policy from notebook metadata, `jupytext.toml`,
+   `pyproject.toml`, repository docs, pre-commit hooks, CI scripts, and nearby
+   examples.
+2. Inventory every notebook pair: `.ipynb` plus `.py`, `.md`, `.R`, `.jl`,
+   `.qmd`, or another configured text representation.
+3. Check whether the text file, `.ipynb` file, or both are meant to be committed.
+   Report any mismatch with `.gitignore`, CI, docs, or review norms.
+4. Before running commands, inspect the notebook for shell escapes, package
+   installation cells, network calls, database writes, filesystem writes, API
+   keys, hidden state assumptions, and large output generation.
+5. Use read-only review first. Only propose `jupytext --sync`,
+   `jupytext --to`, `jupytext --set-formats`, `jupytext --pipe`, or notebook
+   execution after explaining the files that may change.
+6. If both paired representations changed independently, stop and ask which
+   file is authoritative. Do not silently pick a winner.
+7. Review reproducibility evidence: package locks, kernel metadata, environment
+   variables, data version or checksum, deterministic seeds, execution order,
+   and expected output freshness.
+8. Summarize exactly what was checked, what remains unverified, and which files
+   should or should not be committed.
+
+Output contract:
+
+- Project summary: notebook formats, pairing rules, committed artifacts, and
+  execution environment.
+- Sync findings: stale pairs, missing text representations, divergent files,
+  ignored outputs, and conflict risks.
+- Reproducibility findings: environment gaps, data dependencies, hidden state,
+  non-determinism, and commands needed to rerun the analysis.
+- Safety and privacy findings: risky cells, data exposure, secrets, local paths,
+  network calls, and generated artifacts that should stay out of commits.
+- Recommended next steps: exact commands to run, files to inspect, validation
+  evidence to collect, and a commit/no-commit decision.
+
+## Features
+
+- Source-backed Jupytext role for notebooks stored as plain text and paired
+  with `.ipynb` files.
+- Pairing review for notebook metadata, `jupytext.toml`, `pyproject.toml`, and
+  project conventions.
+- Clean-diff workflow for `py:percent`, Markdown, MyST Markdown, Quarto
+  Markdown, R, Julia, and other supported text notebook styles.
+- Sync checklist for `jupytext --sync`, `--set-formats`, `--to`, `--pipe`, and
+  execution-related command usage.
+- Reproducibility checklist for environment locks, kernels, data manifests,
+  deterministic seeds, execution order, and expected output policy.
+- Privacy review for outputs, local paths, dataset samples, exception traces,
+  API calls, credentials, and generated artifacts.
+
+## Use Cases
+
+- Review a pull request that changes a text-paired notebook before the `.ipynb`
+  representation is regenerated.
+- Convert an existing notebook workflow to a source-control friendly Jupytext
+  pairing policy.
+- Decide whether `.ipynb` outputs should be committed, ignored, regenerated in
+  CI, or stored as separate artifacts.
+- Audit a data analysis notebook for hidden state, non-deterministic execution,
+  missing package locks, or undocumented data dependencies.
+- Prepare a reproducible research handoff where collaborators need to run the
+  notebook locally without seeing unrelated local files or secrets.
+- Resolve a notebook sync conflict without losing changes from either the text
+  notebook or the `.ipynb` file.
+
+## Source Notes
+
+- The official Jupytext documentation describes text notebooks as plain-text
+  representations of notebooks that are suited to version control, IDE editing,
+  and reviewable diffs.
+- The documentation describes paired notebooks as sets of files, such as
+  `.ipynb` and `.py`, that contain the same notebook in different formats.
+- The command-line documentation covers converting notebooks, setting formats,
+  syncing paired representations, executing notebooks, and piping notebooks
+  through tools such as formatters.
+- The configuration documentation describes project-level pairing rules through
+  `jupytext.toml` or `pyproject.toml`.
+- The GitHub repository identifies Jupytext as "Jupyter Notebooks as Markdown
+  Documents, Julia, Python or R scripts" and publishes the MIT-licensed source.
+- PyPI package metadata for `jupytext` lists the current package, Python
+  requirement, documentation URL, source URL, and MIT license metadata.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and live PR
+history were checked for `Jupytext`, `jupytext`, `mwouts/jupytext`, the
+Jupytext documentation URL, paired notebooks, local-first data analysis, and
+reproducible notebook variants. No existing `content/agents`, `content/skills`,
+`content/guides`, `content/commands`, `content/rules`, or `content/mcp` entry
+covers Jupytext or a Jupytext-specific reproducible notebook agent.
+
+The first candidate for this slot was Marimo, but that tool is already covered
+by the merged `content/tools/marimo.mdx` entry. This agent uses Jupytext instead
+because it has a distinct source domain, package, repository, workflow, and
+review role focused on notebook pairing and source-control reproducibility.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `MkDev11`. This listing is
+based on Jupytext's official documentation, repository, and PyPI metadata, with
+no paid placement, referral link, or affiliate relationship.
+
+## Sources
+
+- Jupytext documentation: https://jupytext.readthedocs.io/en/latest/
+- Jupytext CLI documentation: https://jupytext.readthedocs.io/en/latest/using-cli.html
+- Jupytext configuration documentation: https://jupytext.readthedocs.io/en/latest/config.html
+- Jupytext repository: https://github.com/mwouts/jupytext
+- Jupytext PyPI package: https://pypi.org/project/jupytext/

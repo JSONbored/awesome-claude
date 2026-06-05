@@ -1,0 +1,110 @@
+---
+title: MCP Protected Resource Metadata Verification Guide
+slug: mcp-protected-resource-metadata-verification-guide
+category: guides
+description: >-
+  Practical guide for checking MCP protected resource metadata, authorization
+  server discovery, resource indicators, token audience binding, and 401
+  challenge behavior before trusting a remote MCP server.
+cardDescription: Verify MCP resource metadata and token audience handling before connecting remote servers.
+seoTitle: MCP Protected Resource Metadata Verification Guide
+seoDescription: >-
+  Verify MCP OAuth protected resource metadata, authorization server discovery,
+  resource indicators, and token audience binding before connecting Claude or
+  other AI clients.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+sourceUrls:
+  - "https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization"
+  - "https://www.rfc-editor.org/rfc/rfc8707"
+  - "https://www.rfc-editor.org/rfc/rfc9728"
+installable: false
+usageSnippet: >-
+  Use this guide when reviewing a remote MCP server that asks Claude, Cursor,
+  or another client to authenticate through OAuth.
+estimatedSetupTime: 30 minutes
+difficulty: advanced
+prerequisites:
+  - Remote MCP server URL and expected canonical resource URI.
+  - OAuth authorization server metadata or discovery endpoint.
+  - Test account or staging credentials approved for metadata and token-flow checks.
+  - Ability to inspect HTTP 401 responses, WWW-Authenticate headers, and token request parameters.
+safetyNotes:
+  - "Never send a production user token to an MCP server until the resource metadata and token audience have been verified."
+  - "Treat token passthrough, missing resource indicators, or acceptance of tokens issued for another resource as release-blocking."
+  - "Do not paste bearer tokens into prompts, PR comments, issue comments, screenshots, or public logs while debugging MCP auth."
+privacyNotes:
+  - "Authorization metadata can reveal tenant URLs, identity providers, scopes, client registration behavior, and internal endpoint names."
+  - "Verification traces may include redirect URLs, state parameters, token claims, account IDs, or workspace identifiers; redact them before public sharing."
+tags:
+  - mcp
+  - oauth
+  - authorization
+  - resource-metadata
+  - token-audience
+keywords:
+  - MCP protected resource metadata
+  - MCP OAuth resource indicator
+  - MCP token audience validation
+  - remote MCP authorization review
+  - OAuth RFC 9728 MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## What to verify
+
+The MCP authorization specification says protected HTTP MCP servers use OAuth at
+the transport layer. The important review point is not just whether a login flow
+appears. The server must advertise protected resource metadata, direct clients
+to the right authorization server, require a resource indicator, and validate
+that presented access tokens were issued for that MCP server.
+
+## Review workflow
+
+1. Start unauthenticated and capture the server 401 Unauthorized response.
+2. Confirm the WWW-Authenticate challenge points to protected resource metadata
+   for the MCP server.
+3. Fetch the protected resource metadata document and record the
+   authorization_servers value.
+4. Fetch authorization server metadata from the advertised authorization server.
+5. Check whether the client sends the MCP server URI as the OAuth resource
+   parameter during authorization and token requests.
+6. Inspect a staging token only in a private environment. The audience or
+   equivalent resource binding should match the MCP server, not a generic API or
+   another downstream service.
+7. Test a wrong-audience token. The MCP server should reject it instead of
+   accepting or forwarding it.
+8. Test insufficient scopes. The server should return an authorization error,
+   not expose partial tool results.
+
+## Red flags
+
+- The server accepts bearer tokens in query strings.
+- The server accepts tokens issued for another service.
+- The metadata document has no authorization server or a surprising identity
+  provider.
+- The client never sends the resource parameter.
+- A proxy MCP server forwards the incoming token directly to a downstream API.
+- Error messages echo tokens, claims, or identity-provider responses.
+
+## Reviewer output
+
+A useful review should include:
+
+- MCP server URL and canonical resource URI reviewed.
+- Metadata endpoints checked and whether they matched expectations.
+- Authorization server used and whether discovery worked.
+- Resource indicator evidence from authorization and token requests.
+- Token audience validation result, including wrong-audience rejection.
+- Scope behavior and least-privilege recommendation.
+- Final decision: safe to connect, connect with limitations, or block.
+
+## References
+
+- MCP authorization specification - https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+- OAuth 2.0 Resource Indicators - https://www.rfc-editor.org/rfc/rfc8707
+- OAuth 2.0 Protected Resource Metadata - https://www.rfc-editor.org/rfc/rfc9728

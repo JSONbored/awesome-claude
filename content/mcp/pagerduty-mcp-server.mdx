@@ -1,0 +1,331 @@
+---
+title: PagerDuty MCP Server for Claude
+slug: pagerduty-mcp-server
+category: mcp
+description: >-
+  Official PagerDuty MCP Server for connecting Claude, Cursor, VS Code, and
+  other MCP clients to PagerDuty incidents, services, schedules, on-call
+  rotations, escalation policies, teams, event orchestrations, status pages,
+  and incident-response workflows.
+cardDescription: >-
+  Connect Claude to PagerDuty incidents, on-call schedules, services, teams,
+  event orchestrations, and status pages through PagerDuty's official MCP
+  server.
+seoTitle: PagerDuty MCP Server for Claude
+seoDescription: >-
+  Use PagerDuty MCP Server with Claude, Cursor, VS Code, and other MCP clients
+  to inspect incidents, services, schedules, teams, event orchestrations, status
+  pages, and on-call context with read-only defaults and explicit write-tool
+  opt-in.
+author: PagerDuty
+authorProfileUrl: "https://www.pagerduty.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.pagerduty.com/"
+documentationUrl: "https://support.pagerduty.com/main/docs/pagerduty-mcp-server"
+repoUrl: "https://github.com/PagerDuty/pagerduty-mcp-server"
+packageUrl: "https://pypi.org/project/pagerduty-mcp/"
+installable: true
+installCommand: "claude mcp add --transport http pagerduty https://mcp.pagerduty.com/mcp"
+usageSnippet: "Ask Claude to use PagerDuty MCP to inspect the latest incidents, on-call schedules, escalation policies, or service context before proposing response actions."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "pagerduty": {
+        "type": "http",
+        "url": "https://mcp.pagerduty.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  [mcp_servers.pagerduty-mcp-server]
+  command = "uvx"
+  args = ["pagerduty-mcp==0.17.0"]
+
+  [mcp_servers.pagerduty-mcp-server.env]
+  PAGERDUTY_USER_API_KEY = "<PAGERDUTY_USER_API_KEY>"
+  PAGERDUTY_API_HOST = "https://api.pagerduty.com"
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - PagerDuty account with permission to inspect the incidents, services, schedules, teams, escalation policies, event orchestrations, and status pages the assistant should use.
+  - >-
+    Authentication choice: PagerDuty API key, user API token, or OAuth client
+    depending on whether you use the hosted remote server, local stdio server,
+    or your MCP client's authorization flow.
+  - MCP-capable client such as Claude Code, Claude Desktop, Cursor, VS Code, or another client that supports local stdio or remote HTTP MCP servers.
+  - >-
+    For local setup, Python 3.12 and `uvx` / `uv`, or Docker when you build and
+    run the official repository image.
+  - >-
+    Region choice: `https://mcp.pagerduty.com/mcp` and
+    `https://api.pagerduty.com` for standard accounts, or
+    `https://mcp.eu.pagerduty.com/mcp` and `https://api.eu.pagerduty.com` for
+    EU region accounts.
+  - Incident IDs, service IDs, schedule IDs, escalation policy IDs, status page IDs, team names, or time windows ready when the assistant needs precise context.
+safetyNotes:
+  - >-
+    PagerDuty MCP connects an AI assistant to a real incident-management
+    account. Treat every incident, schedule, service, team, escalation policy,
+    event orchestration, and status-page action as operationally meaningful.
+  - >-
+    The local server exposes read-only tools by default. Write tools require
+    starting the server with `--enable-write-tools`; do not enable that flag
+    unless the workflow explicitly needs controlled writes.
+  - >-
+    Write tools can create incidents, update incident status or assignment, add
+    responders, add notes, start incident workflows, create schedule overrides,
+    change teams, update services, edit event orchestration routing, and create
+    status-page posts or updates.
+  - >-
+    Use a least-privilege PagerDuty identity. Do not connect an all-powerful
+    administrator token to exploratory chats, untrusted repositories, shared
+    workstations, or broad automation loops.
+  - >-
+    Require human approval before accepting assistant-proposed acknowledgements,
+    resolutions, escalations, responder additions, schedule overrides, service
+    updates, event-orchestration changes, or status-page communications.
+  - >-
+    Tool filtering through `mcp-proxy` is documented for local subprocess
+    setups only. For the remote server, constrain access through the PagerDuty
+    identity, API key, OAuth client, and account permissions instead.
+  - >-
+    PagerDuty's hosted remote server sends tool calls to PagerDuty-hosted MCP
+    infrastructure. Local stdio and Docker modes run locally but still call
+    PagerDuty APIs with the configured credential.
+privacyNotes:
+  - >-
+    PagerDuty MCP can expose incident titles, descriptions, notes, alerts,
+    change events, log entries, service names, team names, user profiles,
+    on-call schedules, escalation policies, status-page content, and event
+    orchestration rules to the connected AI client.
+  - >-
+    Incident and alert data can contain customer names, infrastructure details,
+    internal hostnames, service dependencies, change records, remediation
+    notes, phone or email contact data, and post-incident context.
+  - >-
+    Store PagerDuty API keys, user API tokens, OAuth client secrets, and MCP
+    config files in approved secret-management locations. Do not paste them
+    into prompts, issues, tickets, screenshots, shell history, or committed
+    repository files.
+  - >-
+    Claude, Codex, IDE logs, MCP client transcripts, terminal history,
+    screenshots, incident summaries, and support bundles can retain PagerDuty
+    data outside PagerDuty's normal audit, retention, and access-control
+    boundaries.
+  - >-
+    The EU service region requires EU-specific MCP and API hosts. Verify region
+    selection before connecting regulated incident data, customer-impacting
+    status pages, or accounts with residency requirements.
+tags:
+  - pagerduty
+  - mcp
+  - incident-response
+  - on-call
+  - sre
+keywords:
+  - PagerDuty MCP Server
+  - PagerDuty Claude MCP
+  - PagerDuty remote MCP
+  - PagerDuty incident response
+  - PagerDuty on-call MCP
+  - PagerDuty status pages MCP
+  - PagerDuty event orchestrations
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+PagerDuty MCP Server is PagerDuty's official Model Context Protocol server for
+connecting AI assistants to PagerDuty operational data. It gives Claude, Cursor,
+VS Code, and other MCP clients a structured way to inspect incident context,
+on-call schedules, services, teams, escalation policies, event orchestrations,
+log entries, status pages, and related incident-response resources.
+
+Use it as an incident-response and SRE context bridge, not as an unattended
+automation bot. Start with the hosted remote endpoint or the local server's
+default read-only mode, keep the connected identity narrow, and enable write
+tools only for workflows where a human will review proposed operational changes
+before they land in PagerDuty.
+
+## Features
+
+- Official PagerDuty MCP Server documented by PagerDuty.
+- PagerDuty-hosted remote HTTP endpoint at `https://mcp.pagerduty.com/mcp`.
+- EU hosted endpoint at `https://mcp.eu.pagerduty.com/mcp`.
+- Local stdio server available through the official GitHub repository and
+  `uvx pagerduty-mcp`.
+- Docker option for running the local server as a container.
+- Authentication support for PagerDuty API keys, user API tokens, and OAuth
+  flows depending on the chosen server and client.
+- Read-only default for local setup, with write tools gated behind
+  `--enable-write-tools`.
+- Tools for incidents, alerts, schedules, on-call assignments, services, teams,
+  users, escalation policies, change events, log entries, incident workflows,
+  event orchestrations, alert grouping, and status pages.
+- Tool filtering guidance for local setups through `mcp-proxy`.
+- Embedded MCP apps in the official repository for incident command, on-call
+  management, compensation reporting, service dependency graphs, and onboarding
+  experiments.
+
+## Use Cases
+
+- Ask Claude to summarize active incidents, affected services, notes, alerts,
+  and recent changes before an incident handoff.
+- Check who is currently on call for a service or schedule before paging or
+  escalating a response plan.
+- Review escalation policies, responder context, and service ownership during
+  production triage.
+- Compare a service's incident history, related incidents, change events, and
+  log entries while debugging a recurring outage.
+- Draft a status-page update from incident context, then require a human to
+  review and publish it.
+- Use local tool filtering to expose only incident, on-call, or service-health
+  tools for a focused SRE workflow.
+- Inspect event orchestration rules before proposing routing changes for noisy
+  alerts.
+
+## Installation
+
+### Claude Code remote
+
+For the PagerDuty-hosted remote server:
+
+```bash
+claude mcp add --transport http pagerduty https://mcp.pagerduty.com/mcp
+```
+
+For an EU region account:
+
+```bash
+claude mcp add --transport http pagerduty https://mcp.eu.pagerduty.com/mcp
+```
+
+If using an API key instead of OAuth, pass the token through your client's
+approved secret flow. PagerDuty's remote setup examples use a token header:
+
+```bash
+PAGERDUTY_API_KEY=<PAGERDUTY_API_KEY> claude mcp add-json pagerduty '{"type":"http","url":"https://mcp.pagerduty.com/mcp","headers":{"Authorization":"Token token=${PAGERDUTY_API_KEY}"}}'
+```
+
+### Codex local stdio
+
+For local stdio setup, pin the package version after checking the current
+PagerDuty docs and package metadata:
+
+```toml
+[mcp_servers.pagerduty-mcp-server]
+command = "uvx"
+args = ["pagerduty-mcp==0.17.0"]
+
+[mcp_servers.pagerduty-mcp-server.env]
+PAGERDUTY_USER_API_KEY = "<PAGERDUTY_USER_API_KEY>"
+PAGERDUTY_API_HOST = "https://api.pagerduty.com"
+```
+
+For EU accounts, set `PAGERDUTY_API_HOST` to
+`https://api.eu.pagerduty.com`.
+
+### Local write tools
+
+Only add `--enable-write-tools` after reviewing the write surface and approval
+flow:
+
+```json
+{
+  "mcpServers": {
+    "pagerduty-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["pagerduty-mcp==0.17.0", "--enable-write-tools"],
+      "env": {
+        "PAGERDUTY_USER_API_KEY": "<PAGERDUTY_USER_API_KEY>",
+        "PAGERDUTY_API_HOST": "https://api.pagerduty.com"
+      }
+    }
+  }
+}
+```
+
+## Tool Surface
+
+The current PagerDuty tools reference documents 64 tools across 14 domains:
+42 read-only tools and 22 write tools. Read-only tools cover incident lookup,
+alert lookup, service lookup, schedules, current on-call assignments, teams,
+users, escalation policies, event orchestrations, change events, log entries,
+incident workflows, alert grouping, and status pages.
+
+Write tools are intentionally opt-in for the local server. They include
+incident creation and management, responder additions, incident notes, incident
+workflow starts, service updates, team changes, schedule overrides, event
+orchestration routing changes, alert grouping changes, and status-page posts or
+updates.
+
+## Examples
+
+### Incident handoff
+
+```plaintext
+Use PagerDuty MCP in read-only mode. Summarize active incidents for service <SERVICE_ID>, including severity, current assignee, notes, recent alerts, and related change events.
+```
+
+### On-call context
+
+```plaintext
+List the current on-call responders for schedule <SCHEDULE_ID> and show the next escalation policy step. Do not page or reassign anyone.
+```
+
+### Status update draft
+
+```plaintext
+Draft a customer-facing status-page update for incident <INCIDENT_ID> from PagerDuty context. Show the text for approval before using any write tool.
+```
+
+### Event orchestration review
+
+```plaintext
+Inspect event orchestration <ORCHESTRATION_ID> and explain which rules are likely routing noisy alerts. Do not change routing rules.
+```
+
+## Source Notes
+
+- PagerDuty's knowledge-base page describes the PagerDuty MCP Server as an
+  open standard that lets AI assistants such as Claude Desktop, Cursor, and VS
+  Code interact securely with a PagerDuty account.
+- PagerDuty documents two integration options: a PagerDuty-hosted service at
+  `mcp.pagerduty.com/mcp` and a self-hosted open-source implementation.
+- PagerDuty documents EU hosted configuration at
+  `https://mcp.eu.pagerduty.com/mcp` and EU API host configuration through
+  `https://api.eu.pagerduty.com`.
+- The official developer docs describe remote setup with API-key and OAuth
+  authorization, Cursor, VS Code, and Claude examples, and no local Python or
+  `uvx` requirement for the hosted remote server.
+- The official tools reference documents 64 tools across 14 domains, with 42
+  read-only tools available by default and 22 write tools requiring
+  `--enable-write-tools` for local setup.
+- PagerDuty's official GitHub repository describes the local MCP server,
+  client setup, Docker setup, read-only defaults, write-tool flag, embedded MCP
+  apps, and support through GitHub issues or the PagerDuty community forum.
+- The PyPI package metadata checked at submission time showed
+  `pagerduty-mcp==0.17.0`, package name `io.github.PagerDuty/pagerduty-mcp`,
+  and Python requirement `~=3.12.0`.
+
+## Duplicate Check
+
+Checked current `upstream/main`, open PR titles, open PR changed files, source
+URLs, and content files for `PagerDuty`, `PagerDuty MCP`,
+`pagerduty-mcp-server`, `pagerduty-mcp`, `mcp.pagerduty.com`,
+`mcp.eu.pagerduty.com`, `api.pagerduty.com`, `PagerDuty/pagerduty-mcp-server`,
+and `support.pagerduty.com/main/docs/pagerduty-mcp-server`. No dedicated
+PagerDuty MCP Server entry, PagerDuty source URL duplicate, or open content PR
+for this server was found.
+
+## Editorial Disclosure
+
+PagerDuty is a commercial incident-management and operations platform, but this
+listing is not sponsored, paid, affiliate-backed, or submitted by PagerDuty.
+Use PagerDuty's current docs, package metadata, account permissions, region
+requirements, privacy terms, and incident-management policies as the source of
+truth before connecting operational data to any AI client.

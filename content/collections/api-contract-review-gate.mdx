@@ -1,0 +1,163 @@
+---
+title: API Contract Review Gate
+slug: api-contract-review-gate
+category: collections
+description: >-
+  A source-backed collection for reviewing API contracts before release:
+  OpenAPI drift detection, JSON Schema validation, GraphQL schema checks,
+  Spectral lint review, Pact consumer contract verification, and generated
+  clients or stubs from approved specs.
+cardDescription: >-
+  Contract-review bundle for OpenAPI drift, JSON Schema, GraphQL schemas,
+  Spectral audits, Pact verification, and reviewed code generation.
+seoTitle: API Contract Review Gate Collection
+seoDescription: >-
+  Review API compatibility with OpenAPI drift detection, JSON Schema validation,
+  GraphQL schema checks, Spectral OpenAPI audits, Pact verification, and
+  OpenAPI Generator.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://spec.openapis.org/oas/latest.html"
+sourceUrls:
+  - "https://spec.openapis.org/oas/latest.html"
+  - "https://github.com/stoplightio/spectral/blob/v6.15.0/README.md"
+  - "https://docs.pact.io/"
+  - "https://openapi-generator.tech/docs/installation/"
+  - "https://json-schema.org/draft/2020-12/json-schema-core"
+  - "https://ajv.js.org/"
+  - "https://spec.graphql.org/October2021/"
+installable: false
+usageSnippet: >-
+  Detect local schema drift first, validate JSON and GraphQL contracts, review
+  OpenAPI lint findings, verify Pact consumer expectations, then regenerate
+  clients or stubs only from the approved contract.
+items:
+  - slug: api-schema-drift-detector
+    category: hooks
+  - slug: json-schema-validator
+    category: hooks
+  - slug: graphql-schema-validator
+    category: hooks
+  - slug: spectral-openapi-contract-audit-capability-pack
+    category: skills
+  - slug: api-contract-check
+    category: commands
+  - slug: openapi-generator
+    category: tools
+installationOrder:
+  - api-schema-drift-detector
+  - json-schema-validator
+  - graphql-schema-validator
+  - spectral-openapi-contract-audit-capability-pack
+  - api-contract-check
+  - openapi-generator
+estimatedSetupTime: 70 minutes
+difficulty: advanced
+prerequisites:
+  - A named API contract source of truth, such as OpenAPI, JSON Schema, GraphQL SDL, or Pact consumer contracts, with an owner and compatibility policy.
+  - A repository baseline for committed schemas so drift checks can compare proposed changes against the current version.
+  - Local or CI access to required validation tools such as git, jq, Node/npm, AJV, GraphQL Inspector, Spectral, Pact, and OpenAPI Generator as applicable.
+  - Test data policy for request examples, response examples, provider states, schema fixtures, generated clients, and public documentation.
+  - Release policy for breaking changes, deprecations, major-version bumps, generated code diffs, and consumer communication.
+safetyNotes:
+  - Schema validators, GraphQL validators, Pact verification, Spectral, and OpenAPI Generator can read large contract files and run project-defined commands; review tool configuration before running them in CI.
+  - GraphQL schema validation can create local backup files, and generated clients or stubs can overwrite broad output trees, so run in version control and review generated diffs before committing.
+  - Pact provider verification may start the provider or a stub and replay requests; confirm that the verify task cannot mutate production data or call live destructive endpoints.
+  - Ruleset changes, ignored schema drift, weakened fail thresholds, and regenerated client defaults should be treated as release-impacting until reviewed by an API owner.
+privacyNotes:
+  - API contracts can expose endpoint names, object models, request examples, response examples, auth schemes, internal hostnames, provider states, enum values, and planned features.
+  - Validation output can include file paths, schema paths, rule IDs, line numbers, snippets, sample payloads, and consumer names that should be redacted before public issue or PR comments.
+  - Pact brokers, remote specs, package managers, Docker pulls, hosted docs, and CI artifacts may disclose contract metadata or examples outside the local repository.
+tags:
+  - api-contracts
+  - openapi
+  - json-schema
+  - graphql
+  - pact
+  - compatibility
+  - codegen
+keywords:
+  - API contract review gate
+  - OpenAPI Spectral Pact collection
+  - API schema drift workflow
+  - JSON Schema GraphQL contract review
+  - API compatibility release gate
+---
+
+## What this collection sets up
+
+This collection gives API teams a contract-review gate before release. It is
+not a starter kit for building endpoints. It focuses on compatibility evidence:
+what changed in the contract, whether schemas still validate, whether GraphQL
+changes are breaking, whether OpenAPI lint results are release-blocking, whether
+consumer Pact expectations still pass, and whether generated clients or server
+stubs reflect the approved contract.
+
+## Layers
+
+### 1. Local drift and schema checks
+
+- **api-schema-drift-detector** warns when an edited OpenAPI or JSON Schema file
+  removes paths or required fields compared with the committed version.
+- **json-schema-validator** validates JSON files against discovered schemas and
+  catches syntax, shape, and integrity problems during edits.
+- **graphql-schema-validator** validates GraphQL schema files and flags possible
+  breaking changes before they reach review.
+
+### 2. Contract audit and consumer verification
+
+- **spectral-openapi-contract-audit-capability-pack** reviews OpenAPI contracts,
+  Spectral rulesets, lint output, schema drift, CI gates, and API release
+  readiness.
+- **api-contract-check** runs Pact consumer-driven provider verification so real
+  recorded consumer expectations are checked before a provider change ships.
+
+### 3. Generation after approval
+
+- **openapi-generator** creates clients, server stubs, documentation, schemas,
+  and configuration from OpenAPI specs after the source contract has passed
+  review.
+
+## Suggested order
+
+Install the local drift and schema hooks first so breaking changes surface while
+contracts are being edited. Add the Spectral audit skill to review OpenAPI
+rulesets, lint results, references, and release impact. Run the Pact contract
+check when consumers publish contracts or when a provider change might break
+recorded interactions. Use OpenAPI Generator last, after the source contract has
+been approved, and review the generated diff as application code.
+
+## Review checklist
+
+- [ ] {"task": "Source of truth is named", "description": "The reviewed OpenAPI, JSON Schema, GraphQL, or Pact contract has an owner and compatibility policy"}
+- [ ] {"task": "Breaking changes are classified", "description": "Removed paths, removed required fields, enum changes, type removals, and response-shape changes are reviewed"}
+- [ ] {"task": "Validator output is reproducible", "description": "Spectral, AJV, GraphQL, Pact, and generator versions or commands are recorded"}
+- [ ] {"task": "Examples are safe", "description": "Request, response, and provider-state examples do not expose secrets or customer data"}
+- [ ] {"task": "Generated output is reviewed", "description": "Clients, stubs, docs, and schema artifacts are checked for auth, retries, validation, and destructive operations"}
+- [ ] {"task": "Consumers are accounted for", "description": "Known clients, SDKs, downstream teams, and deprecation paths are covered before release"}
+
+## Source and references
+
+- OpenAPI Specification: https://spec.openapis.org/oas/latest.html
+- Stoplight Spectral source: https://github.com/stoplightio/spectral/blob/v6.15.0/README.md
+- Pact documentation: https://docs.pact.io/
+- OpenAPI Generator installation docs: https://openapi-generator.tech/docs/installation/
+- JSON Schema core specification: https://json-schema.org/draft/2020-12/json-schema-core
+- AJV documentation: https://ajv.js.org/
+- GraphQL specification: https://spec.graphql.org/October2021/
+
+## Duplicate check
+
+Checked existing collections, commands, hooks, skills, tools, open PRs, closed
+PRs, and issue history for `api-contract-review-gate`, API contract review, API
+contract gate, OpenAPI drift, Spectral, Pact, JSON Schema, GraphQL schema,
+OpenAPI Generator, and schema compatibility. `api-development-starter-kit` is a
+broad beginner-oriented API building and documentation collection. This entry is
+narrower and release-focused: it bundles contract validation, compatibility
+review, consumer verification, and generation from approved specs.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.

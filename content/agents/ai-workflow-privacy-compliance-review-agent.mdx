@@ -1,0 +1,235 @@
+---
+title: AI Workflow Privacy Compliance Review Agent
+slug: ai-workflow-privacy-compliance-review-agent
+category: agents
+description: >-
+  Source-backed agent for reviewing AI workflow submissions before publication
+  with data-flow mapping, privacy metadata, governance evidence, MCP/tool
+  authority checks, retention disclosure, and compliance escalation gates.
+cardDescription: >-
+  Review AI workflow submissions for privacy metadata, data flows, retention,
+  tool authority, governance evidence, and compliance escalation.
+seoTitle: AI Workflow Privacy Compliance Review Agent
+seoDescription: >-
+  Reusable AI agent prompt for privacy and compliance review of AI workflow
+  submissions, covering data minimization, retention, provenance, MCP/tool
+  access, OWASP LLM risks, and NIST-aligned escalation gates.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://www.nist.gov/itl/ai-risk-management-framework"
+installable: false
+usageSnippet: "Use this agent before publishing or accepting an AI workflow submission that touches prompts, files, tools, MCP servers, hosted services, telemetry, generated artifacts, customer-like data, or regulated context."
+prerequisites:
+  - AI workflow submission draft, source URLs, install/runtime instructions, category, privacy notes, safety notes, and reviewer-visible provenance.
+  - Data-flow context for prompts, files, tool calls, MCP servers, hosted APIs, logs, telemetry, generated artifacts, caches, exports, and human reviewers.
+  - Repository or registry policy for privacy metadata, prohibited content, source freshness, regulated data escalation, and public disclosure boundaries.
+  - Owner who can request changes, block publication, or route legal/compliance questions to the correct human review process.
+safetyNotes:
+  - >-
+    This agent supports editorial privacy and compliance triage. It does not
+    provide legal advice and should escalate jurisdiction-specific, contractual,
+    regulated-data, employment, healthcare, finance, education, biometric, or
+    child-safety questions to qualified human reviewers.
+  - >-
+    Treat MCP tools, hooks, browser extensions, CI jobs, hosted APIs, notebooks,
+    and local shell commands as execution surfaces that can read, transform,
+    retain, or publish data beyond the visible prompt.
+  - >-
+    Block publication when a submission hides data movement, overstates privacy
+    guarantees, lacks source evidence, exposes secrets, or asks users to share
+    personal/customer data without a documented purpose and control path.
+  - >-
+    Require explicit owner acceptance before publishing entries that involve
+    production systems, customer records, credentials, audit logs, biometric
+    data, health data, payment data, legal records, or security findings.
+privacyNotes:
+  - >-
+    The review packet can contain private repository names, prompts, workflow
+    configs, tool schemas, screenshots, logs, telemetry labels, user examples,
+    customer-like fixtures, source snippets, and vendor account details.
+  - >-
+    Do not paste secrets, access tokens, private prompts, customer records,
+    internal package names, unreleased roadmap notes, or unredacted screenshots
+    into public review comments or model prompts.
+  - >-
+    Keep privacy claims tied to current source evidence. If retention,
+    telemetry, training use, logging, or onward sharing is unknown, say
+    "unknown" and require a maintainer decision instead of guessing.
+  - >-
+    Public summaries should describe risk classes and required changes without
+    exposing the private data that triggered the concern.
+tags:
+  - privacy
+  - compliance
+  - ai-workflows
+  - governance
+  - submissions
+keywords:
+  - AI workflow privacy compliance review agent
+  - AI workflow submission privacy review
+  - privacy metadata review agent
+  - NIST AI RMF workflow review
+  - AI governance submission checklist
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+AI Workflow Privacy Compliance Review Agent is a reusable agent prompt for
+reviewing AI workflow submissions before they are published, merged, or
+recommended. It helps maintainers decide whether a submitted agent, command,
+hook, skill, MCP server, tool, guide, collection, or workflow has enough
+privacy, provenance, and governance evidence for users to understand the data
+risk.
+
+Use this agent when a submission touches prompts, source files, local tools,
+hosted APIs, MCP servers, browser state, generated artifacts, telemetry,
+screenshots, embeddings, logs, customer-like examples, or regulated context.
+The agent is meant to request changes and escalation, not to certify legal
+compliance.
+
+## Agent Prompt
+
+You are an AI workflow privacy and compliance review specialist. Review
+submitted AI workflow content before publication. Use source documentation,
+repository files, registry policy, NIST AI Risk Management Framework, NIST
+Privacy Framework, W3C privacy/provenance vocabularies, OWASP LLM application
+risk guidance, and MCP security guidance as evidence anchors.
+
+Mission:
+
+- Make data movement visible before users run, copy, install, or recommend an
+  AI workflow.
+- Separate verifiable privacy facts from marketing claims, generated summaries,
+  legal conclusions, and unknowns.
+- Identify when a workflow requires human privacy, security, legal, or
+  compliance review before publication.
+- Give maintainers a clear approve/request-changes/block decision.
+
+Review workflow:
+
+1. Confirm the submission category and execution surface: static prompt,
+   agent, command, hook, skill, MCP server, hosted tool, browser extension,
+   notebook, CI job, or mixed workflow.
+2. Inventory data touched: prompts, source files, generated files, logs,
+   tickets, screenshots, clipboard content, browser state, secrets, telemetry,
+   package metadata, embeddings, datasets, transcripts, model outputs, and
+   customer-like examples.
+3. Map data movement: local process, MCP server, model provider, hosted vendor,
+   third-party API, CI artifact, public pull request, issue tracker, vector
+   store, observability tool, cache, export, or generated documentation.
+4. Check purpose and minimization. Ask whether every data category is necessary
+   for the workflow and whether less sensitive input would produce the same
+   useful result.
+5. Check provenance and freshness. Tie privacy claims to current docs, source
+   files, package metadata, policy pages, changelogs, or maintainer notes.
+6. Check MCP/tool authority. For model-callable tools, list read/write scope,
+   side effects, input schema, output exposure, confirmation requirements, and
+   audit/log expectations.
+7. Check retention and sharing. Identify documented, unknown, local-only,
+   vendor-controlled, telemetry, cache, transcript, training, analytics, and
+   generated-artifact retention behavior.
+8. Check sensitive-context triggers. Escalate when the workflow can touch
+   credentials, production systems, regulated data, customer records, health or
+   payment data, minors' data, biometrics, security findings, employee records,
+   legal matters, or private repositories.
+9. Review public wording. Remove unverifiable claims such as "privacy safe,"
+   "compliant," "zero risk," or "no data stored" unless source evidence states
+   the exact behavior.
+
+Output contract:
+
+- Submission summary: category, source URLs, execution surfaces, owner, and
+  reviewed evidence.
+- Data map: data touched, destinations, retention/logging behavior, generated
+  artifacts, and unknowns.
+- Risk findings: privacy, security, compliance, MCP/tool authority, retention,
+  telemetry, provenance, or public-disclosure issues.
+- Required changes: metadata edits, redactions, source links, safety/privacy
+  notes, permission narrowing, retention disclosure, or human escalation.
+- Decision: approve, approve with caveats, request changes, block publication,
+  or escalate for specialist review.
+
+## Features
+
+- NIST-aligned workflow review for governance, data mapping, risk measurement,
+  and risk management evidence.
+- Privacy metadata review for data touched, execution surface, data movement,
+  retention, provenance, freshness, and unknowns.
+- MCP/tool authority checklist for model-callable actions, resources, prompts,
+  confirmation, logging, access control, and output sanitization.
+- OWASP LLM risk lens for sensitive information disclosure, prompt injection,
+  excessive agency, insecure output handling, and supply-chain concerns.
+- Public disclosure guardrails for PR bodies, issue comments, screenshots,
+  examples, logs, prompts, and generated artifacts.
+- Clear maintainer decisions that distinguish editorial readiness from legal
+  compliance certification.
+
+## Use Cases
+
+- Review a submitted AI workflow entry before merging it into a public
+  directory.
+- Decide whether a workflow's privacy notes are specific enough for users to
+  understand data movement.
+- Check whether an MCP server submission exposes broad tools, resources,
+  prompts, credentials, or logs without a least-privilege story.
+- Rewrite public review comments so they identify risk without exposing private
+  examples, screenshots, prompts, or logs.
+- Escalate submissions that touch regulated data, customer records, production
+  systems, secrets, or security findings.
+- Compare source docs with a submitter's claim about retention, telemetry,
+  training use, or local-only execution.
+
+## Source Notes
+
+- NIST AI RMF describes voluntary AI risk management for risks to individuals,
+  organizations, and society and provides a governance-oriented anchor for AI
+  workflow review.
+- NIST Privacy Framework describes a voluntary tool for identifying and
+  managing privacy risk while protecting individuals' privacy.
+- W3C Data Privacy Vocabulary provides concepts for describing personal data,
+  processing, purposes, recipients, risk, and rights-related metadata.
+- W3C PROV-O and DCAT provide useful provenance and catalog vocabulary anchors
+  for source evidence, review dates, datasets, and public registry metadata.
+- OWASP LLM application guidance is relevant to workflow submissions that can
+  leak sensitive information, process untrusted prompts, call tools, or expose
+  supply-chain and agentic-action risks.
+- MCP tool and security docs treat tools as model-callable external-system
+  actions and recommend access control, output sanitization, confirmation, and
+  audit-aware handling for sensitive operations.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for privacy/compliance review agents, AI workflow submission
+privacy, privacy metadata, NIST AI RMF, W3C DPV, OWASP LLM risks, MCP security,
+retention disclosure, and submission privacy terms.
+
+Adjacent merged content includes `privacy-metadata-rules`, security audit
+commands, AI-generated-code review guidance, MCP security guides, and
+privacy-aware skill entries. This entry is distinct because it adds a reusable
+`agents` prompt for pre-publication review of AI workflow submissions. It
+combines data-flow mapping, source evidence, MCP/tool authority, retention
+disclosure, public-comment redaction, and compliance escalation into a
+maintainer-facing role with a decision output.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `MkDev11`. This listing is
+based on public standards, framework documentation, and protocol security
+guidance, with no paid placement, referral link, or affiliate relationship.
+
+## Sources
+
+- NIST AI Risk Management Framework: https://www.nist.gov/itl/ai-risk-management-framework
+- NIST Privacy Framework: https://www.nist.gov/privacy-framework
+- W3C Data Privacy Vocabulary: https://w3c.github.io/dpv/2.3/dpv/
+- W3C PROV-O provenance ontology: https://www.w3.org/TR/prov-o/
+- W3C Data Catalog Vocabulary: https://www.w3.org/TR/vocab-dcat-3/
+- OWASP Top 10 for Large Language Model Applications: https://owasp.org/www-project-top-10-for-large-language-model-applications/
+- MCP tools specification: https://modelcontextprotocol.io/specification/2025-06-18/server/tools
+- MCP security best practices: https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices

@@ -1,0 +1,218 @@
+---
+title: Vale Documentation Maintenance Agent
+slug: vale-documentation-maintenance-agent
+category: agents
+description: >-
+  Source-backed agent for maintaining docs-as-code repositories with Vale prose
+  linting, style rules, vocabulary checks, stale example review, broken source
+  evidence, and contributor-safe documentation updates.
+cardDescription: >-
+  Maintain docs-as-code repositories with Vale style checks, vocabulary review,
+  stale example detection, source evidence, and safe documentation patches.
+seoTitle: Vale Documentation Maintenance Agent
+seoDescription: >-
+  Reusable AI agent prompt for documentation maintenance with Vale, covering
+  prose linting, style rules, vocabularies, stale examples, source evidence,
+  privacy review, and docs-as-code validation.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://vale.sh"
+documentationUrl: "https://vale.sh/docs/"
+repoUrl: "https://github.com/vale-cli/vale"
+installable: false
+usageSnippet: "Use this agent to review a docs-as-code change for Vale lint findings, stale examples, source evidence, terminology drift, and privacy-safe documentation updates."
+prerequisites:
+  - Docs-as-code repository or documentation change set with Markdown, AsciiDoc, reStructuredText, HTML, XML, Org, or another Vale-supported source format.
+  - Existing Vale configuration, style packages, vocabulary files, style guide links, and repository documentation contribution rules.
+  - Access to canonical product docs, source code, CLI help, API schemas, release notes, package metadata, or changelogs needed to verify examples.
+  - Permission scope for the task, such as read-only review, patch proposal, or approved documentation edits.
+safetyNotes:
+  - >-
+    Vale reports style, spelling, terminology, and prose consistency findings;
+    it does not prove examples, commands, API calls, screenshots, or product
+    claims are correct. Verify stale examples against canonical sources before
+    editing them.
+  - >-
+    Treat automatic fixes, mass formatting, generated snippets, link rewrites,
+    and vocabulary changes as reviewable patches. Inspect diffs before
+    committing because docs changes can alter user-facing product guidance.
+  - >-
+    Do not silence rules, add accepted vocabulary, or lower severity only to
+    make CI pass. Explain the rule, source evidence, and maintainer tradeoff.
+  - >-
+    When examples involve commands, cloud resources, credentials, payments,
+    database writes, deployments, or destructive operations, keep validation
+    dry-run or read-only unless the user explicitly approves execution.
+privacyNotes:
+  - >-
+    Documentation examples, screenshots, logs, sample API responses, config
+    snippets, URLs, issue links, and release notes can expose tokens, customer
+    names, internal hostnames, email addresses, account IDs, or unreleased
+    product details.
+  - >-
+    Vale output and documentation review reports may include matched sensitive
+    text. Redact secrets and private identifiers before pasting findings into
+    public issues, pull requests, or model prompts.
+  - >-
+    Prefer synthetic examples and public-safe placeholders unless the
+    repository's source material already contains the exact public example.
+  - >-
+    Keep internal style-guide rationale, private roadmap context, and support
+    incident details out of public documentation comments unless the maintainer
+    has approved publication.
+tags:
+  - vale
+  - documentation
+  - docs-as-code
+  - style-guide
+  - maintenance
+keywords:
+  - Vale documentation maintenance agent
+  - docs-as-code maintenance
+  - stale documentation examples
+  - prose linting agent
+  - documentation style guide review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Vale Documentation Maintenance Agent is a reusable agent prompt for keeping
+docs-as-code repositories current, consistent, and safe to publish. It uses Vale
+as the source-backed prose-linting anchor, then layers documentation maintenance
+work around stale examples, source evidence, terminology drift, privacy review,
+and contributor-safe patch planning.
+
+Use this agent when a documentation pull request needs more than copyediting:
+changed commands need source verification, snippets may be stale, screenshots
+or logs may expose private details, terminology must match a style guide, and
+Vale findings need to be triaged instead of blindly accepted.
+
+## Agent Prompt
+
+You are a Vale documentation maintenance specialist. Use the repository's own
+documentation contribution guide, style guide, Vale configuration, vocabulary
+files, and canonical product sources first. Use the official Vale documentation
+and repository as the source of truth for Vale behavior, styles, rules,
+vocabularies, package sync, and prose-linting limits.
+
+Mission:
+
+- Review documentation changes for stale examples, broken source evidence,
+  terminology drift, Vale lint findings, and privacy-safe public wording.
+- Separate prose/style findings from factual correctness, product behavior,
+  release timing, and example validity.
+- Produce small, reviewable documentation patches with clear source evidence.
+- Avoid hiding legitimate style or vocabulary findings just to pass CI.
+
+Review workflow:
+
+1. Inventory the docs system: source format, build tool, style guide, Vale
+   config, style packages, vocabulary files, docs tests, link checks, and
+   publishing branch.
+2. Read the changed documentation and identify commands, APIs, config fields,
+   code snippets, screenshots, diagrams, links, product names, version claims,
+   release notes, and generated output.
+3. Run or inspect Vale findings when available. Classify each finding as fix,
+   false positive, vocabulary candidate, style-guide question, or out-of-scope
+   prose preference.
+4. Verify stale examples against canonical sources: source code, CLI help,
+   OpenAPI or schema files, package metadata, release notes, official docs, or
+   tests.
+5. Check privacy and publication risk: secrets, real customer data, internal
+   hostnames, incident details, private roadmap terms, unreleased features, and
+   overly specific account identifiers.
+6. Propose the smallest documentation patch that fixes confirmed issues and
+   preserves the repository's voice.
+7. For rule or vocabulary changes, explain the exact Vale rule, affected docs,
+   accepted/rejected terms, source evidence, and expected CI impact.
+8. Summarize validation: Vale command or report reviewed, docs build or link
+   checks available, source references checked, and any examples left
+   unverified.
+
+Output contract:
+
+- Maintenance summary: changed docs, source formats, Vale configuration, and
+  validation commands or reports.
+- Findings by type: stale example, factual mismatch, style lint, terminology,
+  broken link, privacy risk, accessibility/readability, and unresolved question.
+- Patch plan: exact files or sections to edit, source evidence, and whether the
+  change is prose-only or behavior-sensitive.
+- Vale triage: findings to fix, findings to suppress with justification,
+  vocabulary updates to propose, and style-guide questions for maintainers.
+- Publication decision: approve, approve with caveats, request changes, or block
+  publication until source evidence is available.
+
+## Features
+
+- Source-backed Vale prose-lint review for docs-as-code projects.
+- Style rule and vocabulary triage instead of automatic rule suppression.
+- Stale example review against canonical docs, source code, CLI help, schemas,
+  release notes, package metadata, and tests.
+- Privacy checks for examples, screenshots, logs, URLs, account identifiers, and
+  private roadmap or incident context.
+- Contributor-safe output with patch plans, source evidence, validation notes,
+  and publication decisions.
+- Explicit boundary between prose consistency and factual correctness.
+
+## Use Cases
+
+- Review a documentation pull request that changes commands, configuration, or
+  API examples.
+- Triage Vale CI failures and decide which findings need prose fixes,
+  vocabulary updates, or maintainer review.
+- Update stale snippets after a product release without inventing behavior from
+  memory.
+- Prepare docs patches that keep examples synthetic and public-safe.
+- Audit documentation for old links, deprecated product names, and outdated
+  screenshots before a release.
+- Explain why a proposed Vale rule or vocabulary change should be accepted or
+  rejected.
+
+## Source Notes
+
+- The official Vale docs describe Vale as a command-line tool for code-like
+  prose linting that is cross-platform, written in Go, and available on GitHub.
+- Vale's styles documentation describes styles as collections of YAML rule
+  files, with rule headers such as `extends`, `message`, `level`, `scope`,
+  `link`, `limit`, and vocabulary behavior.
+- Vale's built-in checks include patterns such as existence, substitution,
+  occurrence, consistency, capitalization, spelling, and metric-related checks.
+- Vale package configuration supports style packages and sync workflows through
+  the configured `StylesPath`.
+- The `vale-cli/vale` repository describes Vale as a markup-aware prose linter
+  built for speed and extensibility and publishes MIT-licensed source.
+- The latest GitHub release checked before drafting was `v3.14.2`, published on
+  2026-05-15.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for `Vale`, `vale-cli/vale`, `vale.sh`, `documentation
+maintenance`, `stale docs`, `docs lint`, `documentation style guide`, and
+related source URLs. No existing content entry or open PR covers Vale or a
+Vale-specific documentation maintenance agent.
+
+The existing `documentation-freshness-rules` entry covers source freshness
+rules for public AI workflow registry content. This entry is distinct: it is a
+reusable `agents` prompt for docs-as-code maintenance using Vale style rules,
+vocabularies, stale example review, privacy checks, and source-backed patch
+planning.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `MkDev11`. This listing is
+based on Vale's official documentation and repository metadata, with no paid
+placement, referral link, or affiliate relationship.
+
+## Sources
+
+- Vale documentation: https://vale.sh/docs/
+- Vale styles documentation: https://vale.sh/docs/styles
+- Vale package configuration: https://vale.sh/docs/keys/packages
+- Vale repository: https://github.com/vale-cli/vale
+- Vale latest release checked: https://github.com/vale-cli/vale/releases/tag/v3.14.2

@@ -1,0 +1,370 @@
+---
+title: Resend MCP Server for Claude
+slug: resend-mcp-server
+category: mcp
+description: >-
+  Official Resend MCP server for giving Claude and other MCP clients controlled
+  access to email sending, received email, contacts, broadcasts, domains,
+  segments, topics, API keys, and webhooks through stdio or Streamable HTTP.
+cardDescription: >-
+  Connect Claude to Resend email workflows, contacts, broadcasts, domains,
+  webhooks, and received messages.
+seoTitle: Resend MCP Server for Claude
+seoDescription: >-
+  Use the official Resend MCP server with Claude, Codex, Cursor, Claude
+  Desktop, Copilot, Gemini CLI, OpenCode, Windsurf, or Devin to send emails,
+  manage contacts, configure domains, inspect received mail, and automate
+  Resend workflows with API-key guarded MCP tools.
+author: Resend
+authorProfileUrl: "https://resend.com"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://resend.com"
+documentationUrl: "https://resend.com/docs/mcp-server"
+repoUrl: "https://github.com/resend/resend-mcp"
+packageUrl: "https://www.npmjs.com/package/resend-mcp"
+installable: true
+installCommand: "claude mcp add resend -e RESEND_API_KEY=re_xxxxxxxxx -- npx -y resend-mcp"
+usageSnippet: "Ask Claude to use Resend MCP to draft or send an email only after you provide the intended sender, recipients, subject, body, and approval policy."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "resend": {
+        "command": "npx",
+        "args": ["-y", "resend-mcp"],
+        "env": {
+          "RESEND_API_KEY": "re_xxxxxxxxx"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "resend": {
+        "command": "npx",
+        "args": ["-y", "resend-mcp"],
+        "env": {
+          "RESEND_API_KEY": "re_xxxxxxxxx",
+          "SENDER_EMAIL_ADDRESS": "updates@example.com"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Resend account with permission to create API keys and access the email resources the assistant should manage.
+  - Verified sending domain or subdomain for production email workflows.
+  - Resend API key scoped to the least privilege that covers the intended MCP tools.
+  - MCP-capable client such as Claude Code, Codex, Cursor, Claude Desktop, Copilot, Gemini CLI, OpenCode, Windsurf, Devin, or another compatible client.
+  - Sender address, reply-to address, topic/subscription policy, and audience-management rules before enabling contact, broadcast, or campaign workflows.
+  - Human approval policy for sending email, batch email, broadcasts, contact changes, domain configuration, API-key changes, webhook changes, and attachment handling.
+  - Test recipients, sandbox workflows, or non-production domains for validation before sending to real customers.
+safetyNotes:
+  - >-
+    Resend MCP is an executable npm package launched with `npx`, not a
+    HeyClaude-hosted package. Review the official repository and npm package
+    metadata before running it in privileged environments.
+  - >-
+    The server can send, schedule, update, cancel, and batch send emails when
+    the configured API key allows it. Treat every outbound email as a production
+    write unless you are using a controlled test recipient.
+  - >-
+    Tools can manage contacts, segments, topics, broadcasts, domains, webhooks,
+    contact properties, API keys, and received emails. Do not expose broad
+    account-management tools to an autonomous agent without human review.
+  - >-
+    Do not paste real `re_` API keys into prompts, issue comments, screenshots,
+    public MCP configs, shell history, or committed files. Use environment
+    variables or your client's secret handling.
+  - >-
+    For stdio mode, the docs use `RESEND_API_KEY` in the launched process
+    environment. For HTTP mode, each client authenticates with a Bearer token in
+    the `Authorization` header.
+  - >-
+    If reproducibility matters, pin the npm package version after checking the
+    current Resend docs and release metadata instead of relying on the latest
+    `npx -y resend-mcp` package.
+  - >-
+    Attachments can be provided from local paths, URLs, or base64 content. Do
+    not allow the assistant to attach arbitrary local files or downloaded
+    content without reviewing file path, size, type, and recipient.
+  - >-
+    Domain, tracking, TLS, webhook, API-key, and audience changes can affect
+    deliverability, compliance, and production email behavior. Require explicit
+    human approval for those operations.
+privacyNotes:
+  - >-
+    Tool results and prompts can expose email addresses, names, recipient lists,
+    message bodies, subject lines, attachments, contact properties, segments,
+    topics, unsubscribe state, domain names, webhook URLs, logs, and inbound
+    email content.
+  - >-
+    Received emails and attachments can include customer support requests,
+    order confirmations, account details, personal data, credentials, invoices,
+    contracts, or regulated information.
+  - >-
+    Outbound email drafts can leak private customer data if generated from
+    tickets, Slack messages, databases, logs, or other MCP servers without a
+    data-sharing review.
+  - >-
+    MCP client transcripts, terminal logs, debug output, shell history, AI
+    provider logs, screenshots, and issue reports may retain email content or
+    recipient data outside Resend's access controls.
+  - >-
+    Keep marketing audiences, segments, broadcast lists, custom properties, and
+    suppression/unsubscribe data out of prompts unless the workflow owner
+    approved the data handling.
+  - >-
+    Use synthetic recipients, test domains, and non-production content for
+    demos, screenshots, validation, and AI-assisted troubleshooting.
+tags:
+  - resend
+  - mcp
+  - email
+  - contacts
+  - automation
+keywords:
+  - Resend MCP
+  - Resend MCP Server
+  - resend-mcp
+  - Resend Claude
+  - Resend Codex MCP
+  - email automation MCP
+  - Resend Streamable HTTP MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Resend MCP Server is Resend's official Model Context Protocol server for
+connecting AI clients to Resend email infrastructure. It lets Claude and other
+MCP-capable tools send email, inspect received messages, manage contacts,
+create and schedule broadcasts, configure domains, manage segments and topics,
+handle contact properties, work with API keys, and manage webhooks through a
+single MCP integration.
+
+The Resend docs describe two supported transport modes:
+
+- Stdio transport, launched locally with `npx -y resend-mcp`.
+- Streamable HTTP transport, started locally with `npx -y resend-mcp --http`
+  and exposed at `/mcp`.
+
+Start with stdio transport and a narrow Resend API key for local assistant
+workflows. Use HTTP mode only when you have reviewed how clients will pass
+Bearer tokens, where the local server listens, and who can reach it.
+
+## Source Review
+
+- https://resend.com/docs/mcp-server
+- https://resend.com/changelog/mcp
+- https://github.com/resend/resend-mcp
+- https://www.npmjs.com/package/resend-mcp
+
+These sources were reviewed on **2026-06-04**. Prefer the live Resend docs and
+official repository over model memory for supported clients, transport modes,
+tool coverage, package commands, environment variables, HTTP headers, and local
+development instructions.
+
+## Features
+
+- Official Resend MCP server published by Resend.
+- Local stdio transport using `npx -y resend-mcp`.
+- Streamable HTTP mode using `npx -y resend-mcp --http --port 3000`.
+- Streamable HTTP endpoint exposed at `/mcp` on the configured local port in
+  documented HTTP mode.
+- Stdio support for Claude Code, Codex, Cursor, Claude Desktop, Copilot,
+  Gemini CLI, OpenCode, Windsurf, Devin, and other MCP clients.
+- Email tools for sending, listing, retrieving, cancelling, updating, and batch
+  sending messages.
+- Email support for HTML, plain text, attachments, CC, BCC, reply-to,
+  scheduling, tags, and topic-based sending.
+- Received email tools for listing and reading inbound email and downloading
+  received email attachments.
+- Contact, segment, topic, and contact-property tools for audience management.
+- Broadcast tools for creating, sending, scheduling, listing, updating, and
+  removing campaigns.
+- Domain tools for creating, listing, verifying, updating, and removing sender
+  domains, plus tracking and TLS configuration.
+- API-key and webhook tools for managing integration credentials and event
+  notifications when the configured Resend key allows it.
+
+## Use Cases
+
+- Draft and send transactional emails from a controlled sender after a human
+  approves recipients, subject, body, and attachments.
+- Ask Claude to inspect delivery state or retrieve a known sent email by ID
+  during support triage.
+- Process inbound support or notification emails in a limited mailbox workflow.
+- Create a draft broadcast campaign from approved copy and wait for human
+  review before sending or scheduling.
+- Update contacts, segments, or topics for a tightly scoped audience operation.
+- Verify a domain or review sending-domain configuration before a launch.
+- Create or update Resend webhooks after a human confirms the target endpoint,
+  events, and signing/verification plan.
+
+## Installation
+
+### Claude Code
+
+Create a Resend API key with the minimum permissions needed, then add the MCP
+server with stdio transport:
+
+```bash
+claude mcp add resend -e RESEND_API_KEY=re_xxxxxxxxx -- npx -y resend-mcp
+```
+
+Optionally provide a default sender from a verified domain:
+
+```bash
+claude mcp add resend -e RESEND_API_KEY=re_xxxxxxxxx -e SENDER_EMAIL_ADDRESS=updates@example.com -- npx -y resend-mcp
+```
+
+Confirm the server is available before asking Claude to send anything:
+
+```bash
+claude mcp list
+```
+
+### Codex
+
+Add the stdio server with an environment variable:
+
+```bash
+codex mcp add resend \
+  --env RESEND_API_KEY=re_xxxxxxxxx \
+  -- npx -y resend-mcp
+```
+
+### Claude Desktop or Cursor
+
+Use the documented local stdio shape:
+
+```json
+{
+  "mcpServers": {
+    "resend": {
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "env": {
+        "RESEND_API_KEY": "re_xxxxxxxxx"
+      }
+    }
+  }
+}
+```
+
+### Streamable HTTP
+
+Start the local HTTP server:
+
+```bash
+npx -y resend-mcp --http --port 3000
+```
+
+Connect a supported client to the local `/mcp` endpoint with a Bearer token
+using that client's configuration UI. Only expose this local HTTP endpoint to
+trusted clients. Do not bind it to a public interface or tunnel it without a
+security review.
+
+## Configuration
+
+Basic stdio config:
+
+```json
+{
+  "mcpServers": {
+    "resend": {
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "env": {
+        "RESEND_API_KEY": "re_xxxxxxxxx"
+      }
+    }
+  }
+}
+```
+
+With default sender and reply-to values:
+
+```json
+{
+  "mcpServers": {
+    "resend": {
+      "command": "npx",
+      "args": ["-y", "resend-mcp"],
+      "env": {
+        "RESEND_API_KEY": "re_xxxxxxxxx",
+        "SENDER_EMAIL_ADDRESS": "updates@example.com",
+        "REPLY_TO_EMAIL_ADDRESSES": "support@example.com"
+      }
+    }
+  }
+}
+```
+
+The docs also list command-line options:
+
+- `--key` for stdio API key configuration.
+- `--sender` for a default sender address.
+- `--reply-to` for default reply-to addresses.
+- `--http` to use Streamable HTTP transport.
+- `--port` for the HTTP port.
+
+## Security And Privacy Review
+
+- Start with a narrowly scoped Resend API key and rotate it if it appears in a
+  prompt, shell history, screenshot, transcript, or repository file.
+- Prefer a verified subdomain for agent-driven workflows so deliverability and
+  reputation are isolated from primary mail domains.
+- Require draft-first workflows for real recipients. The assistant should show
+  recipients, subject, body, sender, reply-to, tags, schedule, and attachments
+  before any send call.
+- Treat broadcasts, contact updates, segment changes, topic changes, domain
+  changes, API-key changes, and webhook changes as production configuration
+  writes.
+- Never let the assistant attach arbitrary local files. Review attachment paths,
+  URLs, sizes, MIME types, and customer data before sending.
+- Keep unsubscribe, topic, audience, and suppression data consistent with the
+  product's email policy and consent records.
+- Do not combine Resend MCP with broad Slack, database, filesystem, browser, or
+  ticketing MCP access unless the data flow from source system to outbound
+  email has been reviewed.
+
+## Troubleshooting
+
+- **Authentication fails**: confirm the API key is valid, not revoked, and
+  available to the launched process as `RESEND_API_KEY` or to HTTP clients as a
+  Bearer token.
+- **Sender is rejected**: verify the sending domain or subdomain in Resend and
+  confirm the `from` address matches that domain.
+- **Email reaches the wrong recipient**: stop the workflow, rotate any exposed
+  test data, and require explicit recipient review before retrying.
+- **HTTP client cannot connect**: verify `resend-mcp --http` is running,
+  listening on the expected port, and that the client URL ends in `/mcp`.
+- **Attachment sends unexpected data**: disable attachment use for the workflow,
+  review the file path or URL, and re-run with synthetic files first.
+- **Broadcast or contact tools are too broad**: use a narrower API key, remove
+  unnecessary tools from the workflow, and require human approval for audience
+  mutations.
+
+## Duplicate Check
+
+- No existing upstream content file uses the `resend-mcp-server` slug,
+  `resend-mcp` package name, Resend MCP documentation URL, Resend MCP changelog
+  URL, or `resend/resend-mcp` repository URL.
+- Existing Resend mentions are incidental references in broader Supabase,
+  zero-budget SaaS, and Authsome content. They remain distinct because this
+  entry covers Resend's official MCP server, transports, package, tool groups,
+  setup commands, and email-specific safety/privacy review.
+
+## Editorial Disclosure
+
+Resend is a commercial email platform, but this listing is not sponsored, paid,
+affiliate-backed, or submitted by Resend. Use Resend's current docs, package
+metadata, account permissions, API-key scopes, deliverability rules, and email
+policy as the source of truth before connecting real email workflows to any AI
+client.

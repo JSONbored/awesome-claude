@@ -1,0 +1,270 @@
+---
+title: AI-Generated Frontend Accessibility Review Rules
+slug: ai-generated-frontend-accessibility-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing AI-generated frontend UI changes for
+  accessibility before merge, with semantic HTML, keyboard paths, focus
+  management, labels, automated scan limits, manual checks, and privacy-safe
+  evidence.
+cardDescription: >-
+  Review AI-generated UI changes for semantic HTML, keyboard access, focus,
+  labels, scan limits, manual checks, and privacy-safe evidence.
+seoTitle: AI-Generated Frontend Accessibility Review Rules
+seoDescription: >-
+  Practical frontend accessibility review rules for AI-generated UI work:
+  semantic controls, ARIA restraint, keyboard navigation, focus management,
+  labels, axe and Playwright checks, manual review, and privacy-safe evidence.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://playwright.dev/docs/accessibility-testing"
+sourceUrls:
+  - "https://playwright.dev/docs/accessibility-testing"
+  - "https://github.com/dequelabs/axe-core"
+  - "https://www.w3.org/WAI/fundamentals/accessibility-intro/"
+  - "https://www.w3.org/WAI/WCAG22/Understanding/"
+  - "https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/"
+  - "https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA"
+installable: false
+usageSnippet: >-
+  Apply these rules before merging an AI-generated frontend change that edits
+  components, forms, navigation, dialogs, menus, visual states, copy, icons,
+  routes, responsive layout, or test snapshots.
+copySnippet: |-
+  You are reviewing an AI-generated frontend UI change for accessibility.
+
+  Rules:
+  1. Map every generated UI change to the user flow, interactive states, and
+     assistive-technology path it can affect.
+  2. Prefer native semantic HTML over custom controls; use ARIA only when the
+     required interaction pattern is understood and tested.
+  3. Require keyboard navigation, visible focus, predictable focus movement,
+     labels, error messaging, text alternatives, contrast, and reduced-motion
+     behavior for changed surfaces.
+  4. Treat axe, Playwright, lint, and Storybook checks as useful evidence, not
+     as proof that the UI is accessible.
+  5. Block merge when generated markup, CSS, copy, or component wiring removes
+     names, roles, states, keyboard behavior, focus order, or readable text.
+  6. Keep screenshots, traces, DOM snapshots, test data, and issue examples
+     privacy-safe before sharing review evidence.
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - A frontend pull request, patch, generated component, route, story, or visual diff with enough context to identify changed user flows.
+  - Access to the project's accessibility target, component library conventions, design tokens, browser test command, and review environment.
+  - A local, preview, or staging URL where keyboard checks and automated accessibility scans can run without touching production data.
+  - Permission to block merge when generated UI removes accessibility semantics or when verification evidence is incomplete.
+safetyNotes:
+  - "AI-generated UI can silently replace semantic controls with divs, remove labels, hide focus indicators, break keyboard order, change error messaging, or add motion that affects users."
+  - "Automated scans catch important classes of issues but do not prove that custom widgets, focus restoration, reading order, copy meaning, or assistive-technology behavior are correct."
+  - "Browser automation and accessibility checks should run against local, preview, or staging environments with test accounts so forms, payments, messages, and destructive actions are not triggered in production."
+privacyNotes:
+  - "Accessibility evidence can include screenshots, DOM text, accessible names, form values, labels, user content, network traces, browser storage, cookies, and test account data."
+  - "Do not paste raw screenshots, traces, accessibility trees, DOM snapshots, customer names, private routes, or production form data into public PR comments without redaction."
+  - "Use synthetic content and test accounts for accessibility examples, especially when reviewing auth, billing, dashboards, healthcare, education, or support flows."
+tags:
+  - accessibility
+  - frontend
+  - ai-generated-ui
+  - code-review
+  - keyboard-navigation
+  - wcag
+keywords:
+  - AI-generated frontend accessibility review rules
+  - accessible AI UI review checklist
+  - frontend keyboard focus merge gate
+  - semantic HTML ARIA review rules
+  - Playwright axe accessibility evidence
+readingTime: 6
+difficultyScore: 43
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when an AI coding assistant creates or edits frontend UI. The
+goal is to stop generated markup, styling, copy, and component wiring from
+shipping inaccessible behavior just because the page looks correct in a visual
+diff.
+
+This is a review policy, not a full WCAG tutorial and not an automated scanner.
+It tells reviewers what evidence must exist before an AI-generated UI change is
+safe to merge.
+
+## Review Inputs
+
+Collect enough context to know what changed.
+
+1. **Changed surfaces.** Components, forms, navigation, dialogs, menus,
+   popovers, route transitions, tables, charts, empty states, errors, loading
+   states, responsive layouts, and icons.
+2. **Interaction paths.** Mouse, keyboard, touch, screen reader, zoom,
+   high-contrast, reduced-motion, and narrow viewport use.
+3. **State inventory.** Default, hover, focus, active, disabled, invalid,
+   expanded, selected, loading, success, warning, error, and empty states.
+4. **Evidence path.** Unit or component tests, Storybook states, Playwright
+   flows, axe results, manual keyboard checks, screenshots, and design tokens.
+5. **Privacy boundary.** Whether test evidence can expose user content, private
+   route names, accessible names, screenshots, traces, or browser state.
+
+If the PR cannot name the changed surfaces and interaction paths, require that
+inventory before reviewing style or visual polish.
+
+## Semantic Markup Rules
+
+- Prefer native controls such as `button`, `a`, `input`, `select`, `textarea`,
+  `label`, `fieldset`, `legend`, `details`, and heading elements before custom
+  ARIA widgets.
+- Do not turn buttons, links, tabs, menus, checkboxes, or dialogs into generic
+  containers unless the full keyboard and ARIA pattern is implemented.
+- Keep accessible names stable when generated copy changes visible labels,
+  icons, tooltips, placeholders, or `aria-label` values.
+- Preserve heading order, landmarks, form labels, error descriptions, table
+  headers, image alternatives, and live-region meaning when refactoring markup.
+- Remove unnecessary ARIA when native semantics already provide the role,
+  state, name, and keyboard behavior.
+
+ARIA can repair some custom patterns, but it can also create a false role or
+state that conflicts with actual behavior. Review the rendered interaction, not
+only the JSX or template.
+
+## Keyboard And Focus Rules
+
+- Every changed interactive element must be reachable and operable by keyboard.
+- Focus indicators must remain visible after generated CSS, reset rules,
+  animations, or design-token changes.
+- Opening dialogs, menus, popovers, drawers, and route overlays must move focus
+  predictably and restore focus when closed.
+- Tab order should follow the visual and logical reading order without hidden
+  traps, skipped controls, or offscreen focus targets.
+- Escape, Enter, Space, arrow keys, and Tab behavior must match the widget
+  pattern being used.
+- Disabled, loading, and pending states must not strand keyboard users or hide
+  the control's purpose.
+
+Do not accept a screenshot as evidence for keyboard accessibility. The reviewer
+needs a manual check, a browser test, or a component story that exercises the
+interaction.
+
+## Visual And Content Rules
+
+- Text must remain readable at responsive breakpoints, zoomed views, and long
+  localized strings.
+- Color must not be the only way to convey errors, success, selection, or
+  required fields.
+- Contrast, focus ring visibility, target size, spacing, and touch affordances
+  must survive generated theme or CSS changes.
+- Motion, auto-advance, skeletons, shimmer effects, and animated transitions
+  should respect reduced-motion expectations and avoid interfering with input.
+- Error messages should be connected to the field or region they describe, and
+  users should know how to recover.
+- Icons, images, charts, and generated decorative assets need intentional text
+  alternatives or explicit decorative treatment.
+
+Generated UI often changes copy and visual hierarchy while leaving tests green.
+Review content meaning as part of accessibility, not as a separate polish pass.
+
+## Evidence Rules
+
+Automated checks are useful, but they are not the whole review.
+
+- Run an automated accessibility scan for changed pages, stories, or key flows
+  when the project has one.
+- Use Playwright, Storybook, component tests, or a local browser to cover the
+  changed interactive states.
+- Pair axe results with manual keyboard checks for dialogs, menus, custom
+  selects, tabs, drag-and-drop, form validation, and route transitions.
+- Tie evidence to the latest commit after rebases, force pushes, generated CSS,
+  snapshot updates, or final copy edits.
+- Record skipped checks and explain whether the gap is accepted by a frontend
+  owner, design-system owner, or accessibility reviewer.
+
+Passing axe output does not guarantee that the UI is usable. It is evidence for
+known rule classes, not a replacement for user-flow review.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- generated markup replaces a native control with a custom widget that lacks
+  keyboard behavior or the required role, state, and name;
+- labels, accessible names, alt text, error descriptions, headings, landmarks,
+  table headers, or live announcements are missing or stale;
+- focus order, focus visibility, focus restoration, or Escape/Enter/Space
+  behavior is broken for changed interactions;
+- color, animation, icon-only UI, placeholder text, or visual placement is the
+  only way to understand the state;
+- automated scan output is treated as complete proof for a custom interaction;
+- screenshots, traces, DOM snapshots, or accessibility trees expose private
+  user content or internal routes in public review comments;
+- accessibility evidence ran before the latest generated UI, CSS, copy, or
+  snapshot update.
+
+## Review Checklist
+
+- [ ] {"task": "Surfaces mapped", "description": "The PR identifies changed components, routes, states, and interaction paths"}
+- [ ] {"task": "Semantics preserved", "description": "Native controls, headings, labels, names, roles, states, and descriptions remain correct"}
+- [ ] {"task": "Keyboard works", "description": "Changed interactions are reachable, operable, visibly focused, and have predictable focus movement"}
+- [ ] {"task": "Visual cues accessible", "description": "Contrast, motion, target size, responsive text, and non-color cues are reviewed"}
+- [ ] {"task": "Evidence current", "description": "Automated scans and manual or browser checks ran after the latest UI change"}
+- [ ] {"task": "Privacy safe", "description": "Screenshots, traces, DOM output, and examples avoid private user data and internal details"}
+
+## AI Review Rules
+
+AI assistants can help find accessibility risk, but they should show their
+evidence.
+
+- Ask the assistant to list changed UI surfaces before asking for a verdict.
+- Require selectors, component names, routes, or stories for every accessibility
+  concern.
+- Have the assistant separate confirmed issues from checks it could not run.
+- Do not let the assistant claim screen-reader compatibility from source code
+  alone.
+- Re-run review after generated markup, styling, copy, snapshot, or test
+  changes.
+
+## Troubleshooting
+
+- **The UI looks fine but keyboard fails:** restore native controls or implement
+  the documented widget pattern, then retest focus order and key behavior.
+- **A scan passes but users cannot complete the flow:** add manual keyboard
+  and state coverage for the actual interaction.
+- **The design uses icon-only controls:** provide visible or accessible names
+  and test that tooltips are not the only label path.
+- **A modal traps focus forever:** ensure close controls, Escape behavior, and
+  focus restoration are covered by test or manual review.
+- **Evidence contains private data:** rerun with synthetic data or redact the
+  public artifact before posting.
+
+## Duplicate And History Check
+
+Checked existing rules, hooks, statuslines, guides, collections, skills, open
+PRs, and closed PRs for WCAG accessibility auditor, frontend accessibility
+workflow, accessibility checker hook, accessibility-first statusline, keyboard
+focus rules, ARIA guidance, axe testing, Playwright accessibility testing, and
+AI-generated UI review.
+
+Adjacent content includes the WCAG accessibility auditor rule, the accessibility
+checker hook, the frontend QA accessibility collection, and the accessibility
+statusline. This entry is distinct because it is a portable pre-merge review
+policy for AI-generated frontend diffs: it decides what changed surfaces,
+keyboard/focus evidence, semantic HTML review, automated-scan limits, and
+privacy-safe evidence must exist before a generated UI change can merge.
+
+No prior closed PR for `Closes #735` was found during the duplicate/history
+check.
+
+## Sources
+
+- Playwright accessibility testing: https://playwright.dev/docs/accessibility-testing
+- axe-core repository: https://github.com/dequelabs/axe-core
+- W3C WAI accessibility introduction: https://www.w3.org/WAI/fundamentals/accessibility-intro/
+- W3C WCAG 2.2 Understanding documents: https://www.w3.org/WAI/WCAG22/Understanding/
+- WAI-ARIA Authoring Practices read-me-first: https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/
+- MDN ARIA documentation: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA

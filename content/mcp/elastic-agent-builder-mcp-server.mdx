@@ -1,0 +1,329 @@
+---
+title: Elastic Agent Builder MCP Server for Claude
+slug: elastic-agent-builder-mcp-server
+category: mcp
+description: >-
+  Official Elastic Agent Builder MCP server endpoint for connecting Claude,
+  Cursor, VS Code, and other MCP clients to Elastic Agent Builder tools through
+  Kibana with API-key scoped access to Elasticsearch indices and Agent Builder
+  privileges.
+cardDescription: >-
+  Connect Claude to Elastic Agent Builder tools through Kibana with API-key
+  scoped access to selected Elasticsearch indices and spaces.
+seoTitle: Elastic Agent Builder MCP Server for Claude
+seoDescription: >-
+  Use Elastic Agent Builder MCP Server with Claude and other MCP clients to
+  access Elastic Agent Builder tools through Kibana, configure API-key
+  privileges, and limit index access by space and index pattern.
+author: Elastic
+authorProfileUrl: "https://www.elastic.co/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.elastic.co/"
+documentationUrl: "https://www.elastic.co/docs/explore-analyze/ai-features/agent-builder/mcp-server"
+installable: true
+installCommand: "npx mcp-remote ${KIBANA_URL}/api/agent_builder/mcp --header 'Authorization:ApiKey ${API_KEY}'"
+usageSnippet: "Ask Claude to use Elastic Agent Builder MCP to inspect only the approved logs, metrics, or security indices exposed by the configured API key."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "elastic-agent-builder": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "${KIBANA_URL}/api/agent_builder/mcp",
+          "--header",
+          "Authorization:${AUTH_HEADER}"
+        ],
+        "env": {
+          "KIBANA_URL": "${KIBANA_URL}",
+          "AUTH_HEADER": "ApiKey ${API_KEY}"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "elastic-agent-builder": {
+        "command": "npx",
+        "args": [
+          "mcp-remote",
+          "${KIBANA_URL}/s/${SPACE_NAME}/api/agent_builder/mcp",
+          "--header",
+          "Authorization:${AUTH_HEADER}"
+        ],
+        "env": {
+          "KIBANA_URL": "${KIBANA_URL}",
+          "SPACE_NAME": "default",
+          "AUTH_HEADER": "ApiKey ${API_KEY}"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: intermediate
+prerequisites:
+  - Elastic deployment with Kibana and Elastic Agent Builder available.
+  - Kibana URL for the target deployment; custom Kibana spaces use `/s/{SPACE_NAME}/api/agent_builder/mcp`.
+  - MCP-capable client such as Claude Desktop, Claude Code, Cursor, VS Code, or another client that can run `npx mcp-remote`.
+  - Node.js and npm available for the documented `npx mcp-remote` bridge.
+  - Elastic API key with Kibana application privileges for Agent Builder and only the Elasticsearch index privileges the assistant should use.
+  - Index patterns, Kibana space, and Agent Builder tools reviewed before exposing them to an external AI client.
+safetyNotes:
+  - >-
+    Elastic Agent Builder MCP executes with the scope assigned to the API key.
+    Treat the API key as the effective permission boundary for every index,
+    space, inference endpoint, and Agent Builder tool exposed to Claude.
+  - >-
+    Do not use a broad administrator API key for exploratory chats. Elastic's
+    docs recommend setting API key expiration dates and limiting access to only
+    the indices the tools need to query.
+  - >-
+    The example API key privileges include `read` and `view_index_metadata` for
+    selected indices plus Kibana application privileges such as
+    `feature_agentBuilder.read` and `feature_actions.read`. Keep those
+    permissions as narrow as the workflow allows.
+  - >-
+    Agent Builder tools can route AI clients into Elastic data exploration
+    workflows. Require human review before using assistant-generated findings
+    to change detections, alerts, response processes, dashboards, workflows, or
+    production investigation decisions.
+  - >-
+    If your Kibana deployment uses multiple spaces, verify the MCP URL includes
+    the intended space path before connecting the client. A wrong space can
+    expose the wrong tools, saved objects, or index access assumptions.
+  - >-
+    `npx mcp-remote` is a local bridge process. Pin or review runtime
+    dependencies when reproducibility or endpoint trust is required, and avoid
+    running the bridge from untrusted project directories.
+privacyNotes:
+  - >-
+    Elastic Agent Builder MCP can expose log events, metrics, traces, security
+    alerts, documents, index mappings, inference context, saved tool behavior,
+    and Agent Builder outputs to the connected AI client.
+  - >-
+    Index names, field names, mappings, document samples, query results, and
+    investigation prompts can reveal internal service names, user identifiers,
+    customer data, infrastructure details, secrets accidentally present in
+    logs, or security investigation context.
+  - >-
+    Store Elastic API keys outside prompts, shell history, committed MCP config,
+    screenshots, tickets, and shared chat transcripts. Rotate keys after
+    exposure and prefer short-lived keys for development.
+  - >-
+    Claude transcripts, IDE logs, MCP client logs, terminal history, support
+    bundles, and generated investigation notes may retain Elastic-derived data
+    outside Elastic's normal access controls and retention policies.
+  - >-
+    The MCP endpoint runs through Kibana. Review Elastic deployment access,
+    Kibana space membership, API key scopes, and any external AI-client data
+    retention policy before connecting regulated or customer-sensitive indices.
+tags:
+  - elastic
+  - elasticsearch
+  - kibana
+  - mcp
+  - agent-builder
+keywords:
+  - Elastic Agent Builder MCP Server
+  - Elastic MCP Server
+  - Elasticsearch MCP
+  - Kibana MCP
+  - Elastic Claude MCP
+  - Elastic Agent Builder tools
+  - Elastic API key MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Elastic Agent Builder MCP Server is Elastic's official MCP endpoint for
+connecting external AI clients to Elastic Agent Builder tools. Instead of
+running a standalone Elasticsearch MCP package, you connect the client to the
+Kibana endpoint for the deployment and authenticate with an Elastic API key
+scoped to the exact indices, Kibana space, and Agent Builder privileges the
+assistant should use.
+
+Use it when Claude needs a governed bridge into Elastic Agent Builder workflows
+for logs, metrics, search, observability, security, or document exploration.
+The useful part is also the risky part: the assistant sees whatever the API key
+and configured Agent Builder tools can access, so the right default is a
+short-lived, least-privilege API key tied to a narrow space and index pattern.
+
+## Features
+
+- Official Elastic Agent Builder MCP endpoint documented by Elastic.
+- Standard endpoint at `{KIBANA_URL}/api/agent_builder/mcp`.
+- Custom Kibana space endpoint at
+  `{KIBANA_URL}/s/{SPACE_NAME}/api/agent_builder/mcp`.
+- Setup pattern for MCP clients such as Claude Desktop, Cursor, VS Code, and
+  similar clients.
+- Uses `mcp-remote` to bridge local MCP clients to the Kibana HTTP endpoint.
+- API key authentication through an `Authorization: ApiKey ...` header.
+- Kibana application privilege requirements for Elastic Agent Builder.
+- Elasticsearch index privilege scoping through role descriptors.
+- Support for narrow production API keys that expose only selected index
+  patterns such as `logs-*` or `metrics-*`.
+- Explicit docs guidance to set API key expiration dates and rotate keys.
+- Works with the Agent Builder tools configured in the target Elastic
+  deployment and Kibana space.
+
+## Use Cases
+
+- Let Claude inspect approved Elastic logs or metrics indexes during incident
+  triage without giving it broad cluster access.
+- Expose a narrow Agent Builder toolset for support investigations in one
+  Kibana space.
+- Query selected observability indices and summarize recurring errors,
+  affected services, or recent patterns.
+- Use an API key scoped to `logs-*` and `metrics-*` while keeping sensitive
+  security or customer-data indices out of the assistant's reach.
+- Test Agent Builder tools from Claude Desktop, Cursor, or VS Code before
+  publishing them to a wider team.
+- Reproduce a 403 by checking whether the API key includes the required Kibana
+  Agent Builder application privileges.
+
+## Installation
+
+### Default Kibana space
+
+Set the Kibana URL and API key:
+
+```bash
+export KIBANA_URL="https://your-deployment.kb.us-central1.gcp.cloud.es.io"
+export API_KEY="your-api-key"
+```
+
+Then configure the MCP client with `mcp-remote`:
+
+```json
+{
+  "mcpServers": {
+    "elastic-agent-builder": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "${KIBANA_URL}/api/agent_builder/mcp",
+        "--header",
+        "Authorization:${AUTH_HEADER}"
+      ],
+      "env": {
+        "KIBANA_URL": "${KIBANA_URL}",
+        "AUTH_HEADER": "ApiKey ${API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### Custom Kibana space
+
+For a non-default Kibana space, include the space segment:
+
+```json
+{
+  "mcpServers": {
+    "elastic-agent-builder": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "${KIBANA_URL}/s/${SPACE_NAME}/api/agent_builder/mcp",
+        "--header",
+        "Authorization:${AUTH_HEADER}"
+      ],
+      "env": {
+        "KIBANA_URL": "${KIBANA_URL}",
+        "SPACE_NAME": "default",
+        "AUTH_HEADER": "ApiKey ${API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### API key shape
+
+Elastic's docs show an API key role descriptor with cluster access for
+inference monitoring, index-level `read` and `view_index_metadata`, and Kibana
+application privileges for Agent Builder. For production, restrict index names
+to the smallest useful patterns:
+
+```json
+{
+  "indices": [
+    {
+      "names": ["logs-*", "metrics-*"],
+      "privileges": ["read", "view_index_metadata"]
+    }
+  ],
+  "applications": [
+    {
+      "application": "kibana-.kibana",
+      "privileges": ["feature_agentBuilder.read", "feature_actions.read"],
+      "resources": ["space:default"]
+    }
+  ]
+}
+```
+
+## Examples
+
+### Inspect approved logs
+
+```plaintext
+Use Elastic Agent Builder MCP to summarize recurring errors in the approved logs-* indices from the last 30 minutes. Do not change detections, dashboards, or workflows.
+```
+
+### Verify MCP permissions
+
+```plaintext
+Before querying data, confirm which Kibana space and index patterns this Elastic MCP connection can access.
+```
+
+### Debug 403 access
+
+```plaintext
+Use the Elastic MCP setup context to explain why the current API key might receive 403 Forbidden when connecting to the Agent Builder endpoint.
+```
+
+### Keep scope narrow
+
+```plaintext
+Only use Elastic Agent Builder MCP tools that read logs and metrics. Avoid security, customer-data, or broad wildcard index queries.
+```
+
+## Source Notes
+
+- Elastic's official docs describe the MCP server as a standardized interface
+  for external clients to access Elastic Agent Builder tools.
+- Elastic documents the endpoint as `{KIBANA_URL}/api/agent_builder/mcp` and
+  the custom-space variant as `{KIBANA_URL}/s/{SPACE_NAME}/api/agent_builder/mcp`.
+- Elastic's client example uses `npx mcp-remote` with an API key authorization
+  header.
+- Elastic documents required Kibana application privileges for Agent Builder
+  and notes that missing `feature_agentBuilder.read` causes a 403 Forbidden
+  connection failure.
+- Elastic's best practices recommend API key expiration dates and limiting API
+  keys to only the indices the tools need to access.
+
+## Duplicate Check
+
+Checked current `upstream/main`, open PR titles, open PR changed files, source
+URLs, and content files for `Elastic Agent Builder MCP`, `Elastic MCP`,
+`Elasticsearch MCP`, `elastic-agent-builder-mcp-server`,
+`/api/agent_builder/mcp`, and
+`elastic.co/docs/explore-analyze/ai-features/agent-builder/mcp-server`.
+Existing content mentions Elastic only in broad infrastructure, search, or
+observability examples; there is no dedicated Elastic Agent Builder MCP Server
+entry, source URL duplicate, or open content PR for this server.
+
+## Editorial Disclosure
+
+Elastic is a commercial search, observability, and security platform with
+open-source components, but this listing is not sponsored, paid,
+affiliate-backed, or submitted by Elastic. Use Elastic's current Agent Builder
+docs, Kibana space model, API key privileges, and deployment policies as the
+source of truth before connecting sensitive indices to any AI client.

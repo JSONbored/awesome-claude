@@ -1,0 +1,326 @@
+---
+title: Snyk MCP Server for Claude
+slug: snyk-mcp-server
+category: mcp
+description: >-
+  Official Snyk Studio MCP Server for connecting Claude Code, Codex CLI,
+  Cursor, Gemini CLI, and other local MCP clients to Snyk Code, Open Source,
+  IaC, container, SBOM, AI-BOM, package-health, authentication, and
+  secure-at-inception workflows.
+cardDescription: >-
+  Connect Claude to Snyk Studio security scans for source code, dependencies,
+  IaC, containers, SBOMs, AI-BOMs, and package-health checks.
+seoTitle: Snyk MCP Server for Claude
+seoDescription: >-
+  Use Snyk MCP Server with Claude Code, Codex CLI, Cursor, Gemini CLI, and
+  other MCP clients to run local Snyk security scans, trust projects,
+  authenticate, and apply secure-at-inception workflows.
+author: Snyk
+authorProfileUrl: "https://snyk.io/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://snyk.io/"
+documentationUrl: "https://docs.snyk.io/evo-by-snyk/agentic-security-with-snyk-studio/agentic-security-with-snyk-studio"
+repoUrl: "https://github.com/snyk/cli"
+packageUrl: "https://www.npmjs.com/package/snyk"
+installable: true
+installCommand: "npx -y snyk@1.1305.1 mcp -t stdio --profile=lite"
+usageSnippet: "Ask Claude to use Snyk MCP for a read-only scan of the current project before marking generated code complete."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "Snyk": {
+        "command": "npx",
+        "args": ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio", "--profile=lite"],
+        "env": {}
+      }
+    }
+  }
+configSnippet: |-
+  [mcp_servers.snyk-security]
+  command = "npx"
+  args = ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio", "--profile=lite"]
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Snyk account and approval to connect the local project to Snyk security scanning.
+  - Node.js and `npx`, or a locally installed Snyk CLI executable available to the MCP client.
+  - MCP-capable client such as Claude Code, Codex CLI, Cursor, Gemini CLI, or another local stdio-compatible client.
+  - Browser-based Snyk authentication, or an approved token-based authentication flow for the target organization.
+  - Project directory trust decision before scans run against local source, dependency manifests, IaC files, container inputs, SBOMs, or AI-related project metadata.
+  - >-
+    Profile choice: `lite` for the smallest useful toolset, `full` for the
+    default stable toolset, or `experimental` for preview tools.
+safetyNotes:
+  - >-
+    Snyk documents this as a local MCP server that runs through the Snyk CLI
+    so it can access local project files. Do not treat it like a hosted remote
+    endpoint or expose it to untrusted clients.
+  - >-
+    The official examples use `snyk@latest`; this listing pins the currently
+    observed npm package version for reproducibility. Re-check Snyk's docs and
+    npm package metadata before updating the pinned runner.
+  - >-
+    Authenticate with the least-privilege Snyk account that can inspect the
+    target project. Do not commit Snyk tokens, generated MCP configs, CLI
+    auth state, Claude configs, Codex configs, or copied scan output that
+    contains sensitive findings.
+  - >-
+    Snyk requires trusting the current project directory before scanning. Treat
+    that trust step as a real access decision, especially for monorepos,
+    regulated codebases, customer projects, and worktrees containing secrets.
+  - >-
+    The `snyk_sca_scan` tool can execute third-party ecosystem tools such as
+    Gradle or Maven to build dependency trees. Run scans only in projects where
+    dependency resolution commands are acceptable.
+  - >-
+    Container, IaC, SBOM, AI-BOM, and package-health tools may require extra
+    local files, network access, preview feature access, or container image
+    references. Review each tool call before letting the assistant expand the
+    scan surface.
+  - >-
+    Treat generated remediation guidance as advisory. A human should review
+    code changes, dependency upgrades, IaC edits, Dockerfile changes, and
+    suppressions before they are committed or deployed.
+privacyNotes:
+  - >-
+    Snyk MCP can read local source code, dependency manifests, package lock
+    files, IaC definitions, Dockerfiles, container image references, SBOM
+    files, AI project metadata, and scanner results from the connected project.
+  - >-
+    Scans can send project metadata, dependency information, vulnerability
+    context, code-analysis data, organization identifiers, authentication
+    state, and package-health requests to Snyk services according to the
+    configured product and account.
+  - >-
+    Claude, Codex, IDE logs, MCP client transcripts, screenshots, shell
+    history, and tickets can retain Snyk findings outside Snyk's normal access
+    controls and retention settings.
+  - >-
+    Security findings may reveal vulnerable dependencies, vulnerable code
+    paths, internal package names, container base images, cloud resources,
+    application structure, and remediation priorities. Avoid pasting raw
+    findings into public issues or unaudited chat systems.
+  - >-
+    The `snyk_send_feedback` tool can send issue-fix feedback to Snyk. Use it
+    only when that feedback path is approved for the project and organization.
+tags:
+  - snyk
+  - security
+  - mcp
+  - sast
+  - sca
+keywords:
+  - Snyk MCP Server
+  - Snyk Studio Claude
+  - Snyk Codex MCP
+  - Snyk Claude Code MCP
+  - snyk_code_scan
+  - snyk_sca_scan
+  - secure at inception
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Snyk MCP Server is the official local MCP bridge for Snyk Studio. It lets AI
+development environments call Snyk security tools while working inside a local
+project, so Claude Code, Codex CLI, Cursor, Gemini CLI, and other MCP-capable
+clients can scan generated code, dependencies, IaC, containers, SBOM files, and
+package choices from the assistant workflow.
+
+The strongest fit is secure-at-inception review: ask the assistant to run
+Snyk scans before declaring generated code complete, use Snyk context to draft
+fixes, rescan after changes, and keep a human in the loop before committing
+remediation. Start with the `lite` profile when you only need source-code and
+dependency checks, then move to `full` or `experimental` only after reviewing
+the additional tool surface.
+
+## Features
+
+- Official Snyk Studio MCP Server documented by Snyk.
+- Local stdio MCP server run by the Snyk CLI.
+- Claude Code quickstart with installer, `npx`, direct MCP config, and SSE
+  options.
+- Codex CLI quickstart through `.codex/config.toml`.
+- General MCP configuration for clients that do not support the default
+  hooks-based Snyk Studio setup.
+- Snyk Studio installer path for Claude Code, Cursor, Codex CLI, and Gemini CLI
+  hooks-based workflows.
+- Tool profiles: `lite`, `full`, and `experimental`.
+- Stable tools for authentication, logout, version checks, project trust,
+  source-code scanning, open-source dependency scanning, and feedback.
+- Full-profile tools for container scanning, IaC scanning, SBOM scanning,
+  AI-BOM creation, and package-health checks.
+- Secure-at-inception directives for scanning newly generated first-party code
+  and rescanning after fixes.
+
+## Use Cases
+
+- Ask Claude to scan generated source code before marking a task complete.
+- Run Snyk Open Source scans against dependency manifests while reviewing a
+  package upgrade or newly added library.
+- Review Terraform, Kubernetes, CloudFormation, ARM, or Serverless Framework
+  files with Snyk IaC checks before opening an infrastructure PR.
+- Scan a container image or Dockerfile-related dependency surface before
+  release review.
+- Analyze an SBOM for known vulnerabilities when validating a supply-chain
+  artifact.
+- Ask for package-health context before selecting a new dependency.
+- Generate an AI-BOM for a supported Python project when AI model, dataset, and
+  tool inventory is needed.
+
+## Installation
+
+### Claude Code
+
+Snyk documents an installer-style command for Claude Code:
+
+```bash
+npx -y snyk@latest mcp configure --tool=claude-cli
+```
+
+For reproducible project configuration, pin the Snyk package version after
+checking the current Snyk docs and package metadata:
+
+```json
+{
+  "mcpServers": {
+    "Snyk": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio", "--profile=lite"],
+      "env": {}
+    }
+  }
+}
+```
+
+Run `/mcp` in Claude Code to confirm the server and tools are visible, then
+authenticate the Snyk account and trust the current project directory when
+prompted.
+
+### Codex CLI
+
+Add Snyk to `.codex/config.toml`:
+
+```toml
+[mcp_servers.snyk-security]
+command = "npx"
+args = ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio", "--profile=lite"]
+```
+
+Restart Codex and ask the agent to authenticate the Snyk account or scan the
+current directory. Snyk notes that the workflow may open a browser confirmation
+dialog during setup.
+
+### Generic MCP config
+
+Snyk's general MCP setup uses `npx` and stdio:
+
+```json
+{
+  "mcpServers": {
+    "Snyk": {
+      "command": "npx",
+      "args": ["-y", "snyk@1.1305.1", "mcp", "-t", "stdio"],
+      "env": {
+        "SNYK_MCP_PROFILE": "lite"
+      }
+    }
+  }
+}
+```
+
+If the Snyk CLI is already installed locally, configure the MCP client to run
+that executable with:
+
+```plaintext
+snyk mcp -t stdio
+```
+
+Use the official docs for the exact client-specific config location and keep
+real authentication material out of committed files.
+
+## Tool Profiles
+
+Use profiles to keep the tool surface aligned with the task:
+
+- `lite`: essential authentication, trust, code scan, dependency scan, version,
+  logout, and feedback tools.
+- `full`: the default stable toolset, adding container, IaC, SBOM, AI-BOM, and
+  package-health tools.
+- `experimental`: full profile plus tools still under evaluation.
+
+Example:
+
+```bash
+npx -y snyk@1.1305.1 mcp -t stdio --profile=lite
+```
+
+## Examples
+
+### Secure generated code
+
+```plaintext
+Use Snyk MCP to scan the first-party code changed in this task before you mark it complete. Show findings and proposed fixes before editing.
+```
+
+### Dependency review
+
+```plaintext
+Run a Snyk Open Source scan for this package manifest and summarize dependency vulnerabilities, license issues, and the safest upgrade path.
+```
+
+### IaC review
+
+```plaintext
+Use Snyk MCP to scan the Terraform and Kubernetes files changed in this branch. Keep the result read-only and list each finding with file context.
+```
+
+### Package selection
+
+```plaintext
+Before adding this dependency, use Snyk package health checks and explain the security and maintenance tradeoffs.
+```
+
+## Source Notes
+
+- Snyk's Agentic security with Snyk Studio overview describes Snyk Studio as a
+  connection between the Snyk platform, development environment, AI tools,
+  directives, and a local Snyk MCP Server.
+- Snyk's getting-started guide states that the Snyk MCP Server is designed as a
+  local server that runs through the Snyk CLI, and that Snyk does not offer a
+  hosted remote MCP server.
+- Snyk's Codex CLI guide documents `.codex/config.toml` setup using `npx -y
+  snyk@latest mcp -t stdio`.
+- Snyk's Claude Code guide documents `npx -y snyk@latest mcp configure
+  --tool=claude-cli`, alternate MCP configuration, authentication, project
+  trust, and secure-at-inception directives.
+- Snyk's docs list MCP tools including `snyk_sca_scan`, `snyk_code_scan`,
+  `snyk_iac_scan`, `snyk_container_scan`, `snyk_sbom_scan`, `snyk_aibom`,
+  `snyk_trust`, `snyk_auth`, `snyk_logout`, `snyk_version`,
+  `snyk_send_feedback`, and `snyk_package_health_check`.
+- The npm package metadata checked at submission time showed `snyk@1.1305.1`
+  with MCP package name `io.snyk/mcp` and repository redirect target
+  `https://github.com/snyk/cli`.
+
+## Duplicate Check
+
+Checked current `upstream/main`, open PR titles, open PR changed files, source
+URLs, and content files for `Snyk MCP`, `Snyk Studio`, `snyk-mcp-server`,
+`snyk@latest mcp`, `snyk_code_scan`, `snyk_sca_scan`,
+`docs.snyk.io/evo-by-snyk/agentic-security-with-snyk-studio`, and related
+title variants. Existing security hooks, rules, and scanner entries mention
+Snyk only as a possible security tool or dependency scanner. No dedicated Snyk
+MCP Server entry, Snyk Studio source URL duplicate, or open content PR for this
+server was found.
+
+## Editorial Disclosure
+
+Snyk is a commercial security platform, but this listing is not sponsored,
+paid, affiliate-backed, or submitted by Snyk. Use Snyk's current docs, package
+metadata, account permissions, privacy terms, and organization policies as the
+source of truth before connecting a local codebase to any AI client.

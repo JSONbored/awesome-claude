@@ -1,0 +1,330 @@
+---
+title: Shopify Dev MCP for Claude
+slug: shopify-dev-mcp
+category: mcp
+description: >-
+  Official Shopify Dev MCP server from the Shopify AI Toolkit that connects
+  Claude and other MCP clients to Shopify developer documentation, API schemas,
+  GraphQL validation, Liquid and theme validation, UI extension validation,
+  Shopify Functions guidance, Polaris surfaces, and Shopify CLI workflow
+  guidance.
+cardDescription: >-
+  Connect Claude to Shopify docs, API schemas, GraphQL validation, Liquid/theme
+  checks, UI extension validation, and CLI guidance.
+seoTitle: Shopify Dev MCP for Claude
+seoDescription: >-
+  Use Shopify Dev MCP with Claude to search Shopify developer docs, validate
+  GraphQL, Liquid, theme, and UI extension code, inspect API schema guidance, and
+  follow Shopify CLI workflows.
+author: Shopify
+authorProfileUrl: "https://www.shopify.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://shopify.dev/docs/apps/build/ai-toolkit"
+repoUrl: "https://github.com/Shopify/Shopify-AI-Toolkit"
+installable: true
+installCommand: "npx -y @shopify/dev-mcp@latest"
+usageSnippet: "npx -y @shopify/dev-mcp@latest"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "shopify-dev-mcp": {
+        "command": "npx",
+        "args": ["-y", "@shopify/dev-mcp@latest"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "shopify-dev-mcp": {
+        "command": "npx",
+        "args": ["-y", "@shopify/dev-mcp@latest"],
+        "env": {
+          "OPT_OUT_INSTRUMENTATION": "true"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 18 or later for the documented Shopify AI Toolkit requirements.
+  - MCP-capable client such as Claude Code, Codex, Cursor, Gemini CLI, VS Code, or another stdio-compatible client.
+  - Network access to install and update the `@shopify/dev-mcp` npm package and fetch Shopify developer resources.
+  - Shopify app, theme, storefront, extension, Functions, or Admin API project context when validating code against Shopify schemas.
+  - Decision on whether to use the Dev MCP server directly, the Shopify AI Toolkit plugin, or individual Shopify agent skills.
+  - Telemetry decision for Shopify AI Toolkit search and validation surfaces, including whether to set `OPT_OUT_INSTRUMENTATION=true`.
+  - Separate Shopify CLI authentication and scope plan before using generated `shopify store auth` or `shopify store execute` commands against a real store.
+safetyNotes:
+  - >-
+    Shopify documents the Dev MCP server as a local MCP server for developer
+    resources that does not require authentication. Do not assume that means an
+    assistant has permission to operate a real store.
+  - >-
+    Store-scoped workflows are routed through Shopify CLI guidance such as
+    `shopify store auth` and `shopify store execute`. Those commands require
+    explicit store domains, scopes, and local shell execution outside the MCP
+    server itself.
+  - >-
+    Mutating store operations must include `--allow-mutations` according to the
+    bundled Shopify CLI guidance. Treat any mutation, product change, inventory
+    change, theme change, discount change, or customer-account operation as a
+    human-approved production action.
+  - >-
+    Validate generated Admin, Storefront, Customer Account, Partner, Payments
+    Apps, and Shopify Functions GraphQL operations with
+    `validate_graphql_codeblocks` before using them in an app or CLI workflow.
+  - >-
+    Validate Liquid, theme, and UI extension code with the matching validation
+    tools before deploying or copying it into a merchant-facing storefront,
+    checkout, customer account, POS, or Admin extension.
+  - >-
+    The npm package is installed at runtime with `npx`. Pin a version and review
+    package metadata when reproducibility, supply-chain review, or enterprise
+    change control matters.
+  - >-
+    The AI Toolkit plugin is recommended by Shopify because it auto-updates.
+    Direct MCP and manual skill installs may require manual updates when
+    Shopify changes API versions, schemas, or validation behavior.
+  - >-
+    Do not let an assistant run Shopify CLI store commands against production
+    stores unless the exact store domain, scopes, GraphQL operation, variables,
+    mutation status, and rollback plan have been reviewed.
+privacyNotes:
+  - >-
+    Shopify's toolkit README states that search and validation scripts send
+    usage events to `https://shopify.dev/mcp/usage` by default, including tool
+    name, skill name and version, model/client identifiers when supplied,
+    search query text, search response, and error text.
+  - >-
+    The same instrumentation can include validation results, validated code when
+    present, validator-specific context, file type, theme path, file list,
+    artifact ID, and revision number.
+  - >-
+    Set `OPT_OUT_INSTRUMENTATION=true` when prompts, code snippets, validation
+    inputs, file paths, model identifiers, or client identifiers should not be
+    reported through Shopify's default instrumentation path.
+  - >-
+    Tool results and documentation search can expose Shopify app architecture,
+    API names, version choices, schema fragments, extension targets, Liquid
+    snippets, theme paths, checkout or customer account surfaces, Functions
+    inputs, and Polaris component usage.
+  - >-
+    Store-scoped CLI workflows can expose store domains, access scopes, GraphQL
+    operations, variables, query results, product data, customer data, inventory
+    data, order data, and merchant-specific configuration in terminal output and
+    AI transcripts.
+  - >-
+    Theme validation can inspect local theme files, filenames, paths, Liquid
+    code, JSON templates, translation files, and schema blocks. Treat those as
+    merchant or project-confidential when sharing logs or transcripts.
+  - >-
+    MCP client logs, package manager logs, shell history, editor logs, and
+    assistant conversations may retain generated Shopify code, store domains,
+    schema validation errors, and command output outside Shopify.
+tags:
+  - shopify
+  - mcp
+  - graphql
+  - liquid
+  - ecommerce
+keywords:
+  - shopify dev mcp
+  - shopify ai toolkit
+  - "@shopify/dev-mcp"
+  - shopify graphql validation
+  - shopify liquid validation
+  - shopify store execute
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Shopify Dev MCP is the direct MCP-server install path for the official Shopify
+AI Toolkit. It runs locally with `npx -y @shopify/dev-mcp@latest` and gives
+Claude, Codex, Cursor, Gemini CLI, VS Code, and other MCP clients access to
+Shopify developer documentation, API schema guidance, GraphQL validation,
+Liquid and theme checks, UI extension validation, Shopify Functions guidance,
+Polaris surfaces, and Shopify CLI workflow instructions.
+
+Use it when the assistant needs current Shopify platform context while building
+apps, themes, storefronts, checkout extensions, customer account extensions, POS
+extensions, Functions, Admin GraphQL workflows, Storefront API flows, or Partner
+API workflows. Keep the boundary clear: the Dev MCP server is a developer
+resource server, while real store operations require separately authenticated
+Shopify CLI commands and human review.
+
+## Features
+
+- Official Shopify AI Toolkit source from `Shopify/Shopify-AI-Toolkit`.
+- Direct local stdio MCP setup through `npx -y @shopify/dev-mcp@latest`.
+- Documented setup examples for Claude Code, Codex, Cursor, Gemini CLI, and VS
+  Code.
+- No authentication required for the documented Dev MCP developer-resource
+  server.
+- `learn_shopify_api` guidance for selecting relevant Shopify APIs and versions.
+- `search_docs_chunks` for finding current Shopify developer documentation and
+  API references.
+- `validate_graphql_codeblocks` for validating GraphQL operations against
+  Shopify Admin, Storefront, Customer Account, Partner, Payments Apps, and
+  Functions schemas.
+- `validate_component_codeblocks` for validating UI extension and Polaris
+  component code against supported surfaces and API versions.
+- `validate_theme` and `validate_theme_codeblocks` for Liquid and theme
+  validation.
+- Bundled schema data for Admin, Storefront, Partner, Customer, Payments Apps,
+  and multiple Shopify Functions APIs across stable, release-candidate, and
+  unstable API versions.
+- Shopify CLI guidance for app scaffolding, extension generation, app config
+  validation, development, deployment, store authentication, and store-scoped
+  GraphQL execution.
+- Optional alternate install paths through the auto-updating Shopify AI Toolkit
+  plugin or individual Shopify agent skills.
+
+## Use Cases
+
+- Ask Claude to validate an Admin GraphQL mutation before adding it to a
+  Shopify app.
+- Search Shopify docs for the right API version, extension target, Polaris
+  component, Liquid object, or Functions input shape.
+- Validate Liquid snippets, theme schema blocks, JSON templates, and translation
+  files before changing a theme.
+- Generate checkout, customer account, POS, Admin, or app-home UI extension code
+  and validate the component surface before shipping.
+- Build or debug Shopify Functions with schema-backed GraphQL input validation.
+- Convert a store task into a scoped Shopify CLI workflow using
+  `shopify store auth` and `shopify store execute`, then review the command
+  before running it.
+- Keep a Shopify app, theme, or extension conversation grounded in Shopify's
+  current docs instead of relying on stale model memory.
+
+## Installation
+
+### Claude Code
+
+Add the MCP server through Claude Code's stdio MCP configuration:
+
+```bash
+claude mcp add --transport stdio shopify-dev-mcp -- npx -y @shopify/dev-mcp@latest
+```
+
+Restart Claude Code after adding the server.
+
+### Generic MCP JSON
+
+Use this shape for MCP clients that accept `mcpServers` JSON:
+
+```json
+{
+  "mcpServers": {
+    "shopify-dev-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shopify/dev-mcp@latest"]
+    }
+  }
+}
+```
+
+### Codex CLI
+
+Codex uses TOML-style MCP configuration:
+
+```toml
+[mcp_servers.shopify-dev-mcp]
+command = "npx"
+args = ["-y", "@shopify/dev-mcp@latest"]
+```
+
+Restart the client after editing MCP configuration.
+
+## Configuration
+
+### Disable default instrumentation
+
+Set `OPT_OUT_INSTRUMENTATION=true` when using AI Toolkit search or validation
+surfaces with private code, store-specific context, or sensitive file paths:
+
+```json
+{
+  "mcpServers": {
+    "shopify-dev-mcp": {
+      "command": "npx",
+      "args": ["-y", "@shopify/dev-mcp@latest"],
+      "env": {
+        "OPT_OUT_INSTRUMENTATION": "true"
+      }
+    }
+  }
+}
+```
+
+### Store-scoped CLI workflow guardrail
+
+For any task that targets a real Shopify store, require the assistant to state
+the store domain, scopes, operation type, and whether mutation execution is
+needed before running shell commands:
+
+```text
+Validate the GraphQL operation first. If it is a mutation, do not run
+`shopify store execute` until I approve the exact store domain, scopes, query,
+variables, and `--allow-mutations` flag.
+```
+
+## Examples
+
+Validate a Shopify Admin GraphQL operation:
+
+```text
+Use Shopify Dev MCP to validate this Admin GraphQL mutation against the current
+stable API version. If validation fails, fix the operation and validate again.
+Do not run it against a store.
+```
+
+Work on Liquid theme code:
+
+```text
+Search Shopify docs for the relevant Liquid object and validate this section
+schema and Liquid code. Point out errors before suggesting theme changes.
+```
+
+Prepare, but do not run, a store-scoped command:
+
+```text
+Create a Shopify CLI workflow for reading inventory for SKU EXAMPLE-SKU from
+staging-shop.myshopify.com. Validate the GraphQL query and show the exact
+`shopify store auth` and `shopify store execute` commands, but do not run them.
+```
+
+## Source Notes
+
+- Official docs: [Shopify AI Toolkit](https://shopify.dev/docs/apps/build/ai-toolkit).
+- Official repository: [Shopify/Shopify-AI-Toolkit](https://github.com/Shopify/Shopify-AI-Toolkit).
+- npm package: `@shopify/dev-mcp`, binary `shopify-dev-mcp`, latest package
+  checked as `1.14.0` on 2026-06-04.
+- Shopify's docs state that the Dev MCP server runs locally and does not require
+  authentication.
+- The toolkit repository is MIT licensed; the npm package metadata for
+  `@shopify/dev-mcp` currently reports ISC.
+- The older `https://shopify.dev/apps/build/devmcp` path redirects to the
+  current AI Toolkit documentation page.
+
+## Duplicate Check
+
+- Checked current upstream content for Shopify titles, slugs, source URLs,
+  `shopify-dev-mcp`, `@shopify/dev-mcp`, `Shopify AI Toolkit`,
+  `Shopify-AI-Toolkit`, and the current and legacy docs URLs.
+- Checked live open issues and pull requests for `Shopify MCP` and
+  `shopify-dev-mcp`.
+- No dedicated Shopify Dev MCP entry, source URL duplicate, target file
+  duplicate, semantic duplicate, or open duplicate PR was found before drafting.
+
+## Disclosure
+
+This is an independent community directory entry submitted by `oktofeesh1`.
+Shopify is a commercial ecommerce platform, but this listing is not sponsored,
+paid, affiliate-backed, or submitted by Shopify. Use Shopify's current docs,
+API terms, privacy policy, and Partner requirements before connecting an
+assistant to store-specific workflows.

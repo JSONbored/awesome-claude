@@ -1,0 +1,358 @@
+---
+title: Heroku MCP Server for Claude
+slug: heroku-mcp-server
+category: mcp
+description: >-
+  Official Heroku Platform MCP server that connects Claude and other MCP
+  clients to Heroku apps, dynos, add-ons, pipelines, Private Spaces,
+  maintenance mode, logs, deployments, one-off dynos, Heroku Postgres, and
+  optional Heroku AI tools through the Heroku CLI.
+cardDescription: >-
+  Connect Claude to Heroku apps, dynos, add-ons, pipelines, logs, deployments,
+  one-off dynos, and Heroku Postgres.
+seoTitle: Heroku MCP Server for Claude
+seoDescription: >-
+  Use the Heroku MCP Server with Claude to inspect and manage Heroku apps,
+  dynos, add-ons, pipelines, logs, deployments, one-off dynos, Heroku Postgres,
+  and optional Heroku AI tools.
+author: Heroku
+authorProfileUrl: "https://www.heroku.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://devcenter.heroku.com/articles/heroku-mcp-server"
+repoUrl: "https://github.com/heroku/heroku-mcp-server"
+installable: true
+installCommand: "heroku mcp:start"
+usageSnippet: "heroku mcp:start"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "heroku": {
+        "command": "heroku mcp:start"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "heroku": {
+        "command": "npx",
+        "args": ["-y", "@heroku/mcp-server"],
+        "env": {
+          "HEROKU_API_KEY": "<YOUR_HEROKU_AUTH_TOKEN>",
+          "MCP_SERVER_REQUEST_TIMEOUT": "30000"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: advanced
+prerequisites:
+  - Heroku account with access to the apps, teams, pipelines, Private Spaces, add-ons, Heroku Postgres databases, or AI resources Claude should inspect or manage.
+  - Heroku CLI 10.8.1 or later installed globally and authenticated with the intended Heroku account.
+  - Node.js 20 or later when running the npm package directly with `npx -y @heroku/mcp-server`.
+  - MCP-capable client configuration for Claude Desktop, Cursor, VS Code, Zed, Windsurf, Cline, Trae, or another stdio-compatible client.
+  - Authorization plan for using the current Heroku CLI session through `heroku mcp:start` or a Heroku authorization token in `HEROKU_API_KEY`.
+  - Deployment and database safety plan for app creation, renaming, transfer, dyno scaling, restarts, add-on provisioning, maintenance mode, pipeline promotion, SQL execution, Postgres credentials, backups, and upgrades.
+  - Review process for any agent action that can create billable resources, deploy code, execute one-off dynos, change production traffic, or modify a Heroku Postgres database.
+safetyNotes:
+  - >-
+    Heroku documents the server as early development, and the available
+    functionality and tools may evolve. Re-check the Dev Center page and repo
+    before using it for production-sensitive workflows.
+  - >-
+    Prefer `heroku mcp:start` because it uses the current Heroku CLI
+    authentication context and avoids placing a Heroku API token directly in
+    MCP client configuration.
+  - >-
+    The server can perform account-write and production-impacting operations:
+    creating and renaming apps, transferring apps, deploying projects, running
+    one-off dynos, scaling and restarting dynos, provisioning add-ons, toggling
+    maintenance mode, creating and promoting pipelines, and managing Private
+    Space resources.
+  - >-
+    Heroku Postgres tools can execute SQL, inspect active queries and locks,
+    manage credentials, terminate database processes, manage backups, and start
+    upgrades. Treat those tools as database administration capabilities, not
+    read-only observability.
+  - >-
+    `deploy_one_off_dyno` can execute generated code or commands on a Heroku
+    one-off dyno with file creation, network access, environment variables, and
+    automatic cleanup. Do not run unreviewed code from prompts, issues, pull
+    requests, or third-party repositories.
+  - >-
+    The server does not document a global read-only mode. Limit the Heroku
+    account, team, app, pipeline, and database permissions available to the MCP
+    client before connecting it to an assistant.
+  - >-
+    Cost-bearing operations such as app creation, dyno scaling, add-on
+    provisioning, one-off dynos, AI model provisioning, database backups, and
+    database upgrades should require explicit human approval and a clear target
+    app or team.
+  - >-
+    Use staging apps, disposable review apps, narrow Heroku teams, and
+    short-lived authorization tokens before allowing an agent near production
+    apps, production databases, Shield Spaces, or regulated workloads.
+privacyNotes:
+  - >-
+    Tool results can expose Heroku account context, team names, app names,
+    regions, stack and runtime details, dyno names, process types, add-ons,
+    pipeline names, Private Space names, database identifiers, logs, SQL text,
+    query output, query plans, credentials metadata, backup metadata, and
+    deployment details.
+  - >-
+    `HEROKU_API_KEY` is an authorization token for the Heroku account context
+    that created it. Keep it out of prompts, screenshots, shell history,
+    repository files, shared MCP configs, and client logs.
+  - >-
+    The preferred CLI-auth flow still grants the MCP server whatever access the
+    local Heroku CLI session has. Review the active Heroku account before
+    connecting the server to a client.
+  - >-
+    App logs and deployment output can include request data, error traces,
+    customer identifiers, webhook payloads, add-on connection hints, and secrets
+    accidentally printed by application code.
+  - >-
+    Postgres query results, backup output, locks, active queries, credential
+    metadata, and upgrade output can contain sensitive schema names, tenant
+    records, operational metadata, and personally identifiable information.
+  - >-
+    Client-side transcripts, MCP debug logs, Heroku CLI output, VS Code debug
+    settings, and assistant conversations may retain Heroku account and database
+    details outside Heroku.
+tags:
+  - heroku
+  - mcp
+  - deployment
+  - postgres
+  - paas
+keywords:
+  - heroku mcp
+  - heroku mcp:start
+  - heroku platform mcp server
+  - heroku claude
+  - heroku postgres mcp
+  - "@heroku/mcp-server"
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Heroku MCP Server connects Claude and other MCP-capable clients to the Heroku
+Platform through a local stdio server backed by the Heroku CLI. It gives an
+assistant tools for listing and inspecting apps, managing dynos, reading logs,
+provisioning add-ons, creating pipelines, promoting releases, toggling
+maintenance mode, deploying projects, running one-off dynos, operating Heroku
+Postgres, and optionally using Heroku AI tools when the Heroku AI CLI plugin is
+installed.
+
+The safest setup is Heroku's recommended `heroku mcp:start` command, because it
+uses the active Heroku CLI session instead of storing a raw Heroku API token in
+MCP client configuration. Treat the connected client as an operator with the
+same Heroku access as the authenticated CLI session.
+
+## Features
+
+- Official Heroku Platform MCP server maintained in the `heroku/heroku-mcp-server`
+  repository.
+- Stdio MCP server that runs through Heroku CLI 10.8.1 or later.
+- Recommended `heroku mcp:start` launch path that reuses existing Heroku CLI
+  authentication.
+- Alternate npm launch path with `npx -y @heroku/mcp-server` and
+  `HEROKU_API_KEY`.
+- Client examples for Claude Desktop, Cursor, VS Code, Zed, Windsurf, Cline,
+  and Trae.
+- App management tools for listing apps, inspecting app details, creating apps,
+  renaming apps, transferring apps, deploying projects, and running one-off
+  dynos.
+- Dyno and process tools for listing, scaling, resizing, and restarting dynos.
+- Add-on tools for listing add-ons, inspecting add-ons, provisioning add-ons,
+  and listing add-on services and plans.
+- Maintenance and logs tools for enabling or disabling maintenance mode and
+  reading application logs.
+- Pipeline tools for creating, listing, inspecting, and promoting Heroku
+  pipelines.
+- Team and space tools for listing teams and Private Spaces.
+- Heroku Postgres tools for SQL execution, database details, active queries,
+  locks, outliers, credentials, process termination, maintenance, backups, and
+  upgrades.
+- Optional Heroku AI tools for listing available models, provisioning model
+  access, and making inference requests when the `@heroku/plugin-ai` CLI plugin
+  is installed.
+- Dev Center resource support for bringing Heroku documentation into compatible
+  MCP clients.
+
+## Use Cases
+
+- Ask Claude to inventory Heroku apps, dynos, add-ons, teams, spaces, and
+  pipelines before a migration or cleanup.
+- Inspect app metadata and logs while debugging a failed deploy or runtime
+  incident.
+- Scale or restart dynos during a supervised staging incident-response drill.
+- Create a disposable app or pipeline from an `app.json` project definition.
+- Run a short-lived one-off dyno to test a script after reviewing the generated
+  code and target app.
+- Inspect Heroku Postgres locks, outliers, active queries, backup state, or
+  maintenance windows.
+- Execute SQL in development or staging databases while keeping production
+  databases out of the MCP client's credentials.
+- Pull Heroku Dev Center context into a Claude workflow while building or
+  operating Heroku apps.
+
+## Installation
+
+### Preferred Heroku CLI setup
+
+Install or upgrade the Heroku CLI, authenticate with the intended account, and
+confirm version 10.8.1 or later:
+
+```bash
+heroku --version
+heroku auth:whoami
+```
+
+Then configure the MCP client to launch the server through the Heroku CLI:
+
+```json
+{
+  "mcpServers": {
+    "heroku": {
+      "command": "heroku mcp:start"
+    }
+  }
+}
+```
+
+### VS Code stdio setup
+
+VS Code's MCP config can split the command and arguments:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "heroku": {
+        "type": "stdio",
+        "command": "heroku",
+        "args": ["mcp:start"]
+      }
+    }
+  }
+}
+```
+
+### npm setup with API token
+
+Use the npm package only when you intentionally want to pass a Heroku
+authorization token through `HEROKU_API_KEY`:
+
+```json
+{
+  "mcpServers": {
+    "heroku": {
+      "command": "npx",
+      "args": ["-y", "@heroku/mcp-server"],
+      "env": {
+        "HEROKU_API_KEY": "<YOUR_HEROKU_AUTH_TOKEN>"
+      }
+    }
+  }
+}
+```
+
+Generate a token with `heroku authorizations:create`, `heroku auth:token`, or
+the Heroku Dashboard's account applications page. Rotate and revoke tokens when
+they are no longer needed.
+
+## Configuration
+
+### Request timeout
+
+The npm server supports `MCP_SERVER_REQUEST_TIMEOUT`, defaulting to 15000
+milliseconds when unset:
+
+```json
+{
+  "mcpServers": {
+    "heroku": {
+      "command": "npx",
+      "args": ["-y", "@heroku/mcp-server"],
+      "env": {
+        "HEROKU_API_KEY": "<YOUR_HEROKU_AUTH_TOKEN>",
+        "MCP_SERVER_REQUEST_TIMEOUT": "30000"
+      }
+    }
+  }
+}
+```
+
+Use longer timeouts for operations that regularly wait on Heroku CLI output, but
+avoid masking hung or ambiguous deployment/database operations.
+
+### Heroku account scoping
+
+Before connecting the server, run:
+
+```bash
+heroku auth:whoami
+heroku apps --team YOUR_TEAM
+```
+
+Confirm the authenticated account, team, and target apps are the ones you want
+the assistant to see. If the workflow only needs staging access, authenticate a
+dedicated Heroku account or team role with staging-only permissions.
+
+## Examples
+
+Ask Claude to inspect app and pipeline state:
+
+```text
+Use the Heroku MCP server to list apps for the staging team, summarize dyno
+formation and add-ons for APP_NAME, and do not change anything.
+```
+
+Ask for a supervised logs review:
+
+```text
+Read the latest Heroku logs for APP_NAME, identify likely startup failures, and
+propose fixes. Do not restart dynos or change config.
+```
+
+Run a database investigation only after scoping the target:
+
+```text
+Use pg_info, pg_locks, and pg_outliers on the staging database for APP_NAME.
+Do not run pg_psql, pg_kill, pg_credentials, pg_backups, or pg_upgrade unless I
+approve the exact command and target.
+```
+
+## Source Notes
+
+- Official docs: [Heroku MCP Server STDIO Mode](https://devcenter.heroku.com/articles/heroku-mcp-server).
+- Official repository: [heroku/heroku-mcp-server](https://github.com/heroku/heroku-mcp-server).
+- npm package: `@heroku/mcp-server`, Apache-2.0, Node.js `>=20`.
+- The Dev Center page says the server is early development and currently
+  supports Heroku CLI 10.8.1 or later.
+- The README and manifest list app, dyno, add-on, maintenance, log, pipeline,
+  team, space, Postgres, deployment, one-off dyno, optional AI, and Dev Center
+  resource capabilities.
+
+## Duplicate Check
+
+- Checked current upstream content for Heroku titles, slugs, source URLs,
+  `heroku-mcp-server`, `@heroku/mcp-server`, `heroku mcp:start`, and Dev Center
+  MCP docs.
+- Checked live open issues and pull requests for `Heroku MCP` and
+  `heroku-mcp-server`.
+- No dedicated Heroku MCP entry, source URL duplicate, target file duplicate, or
+  open duplicate PR was found before drafting.
+
+## Disclosure
+
+This is an independent community directory entry submitted by `oktofeesh1`.
+Heroku is a Salesforce platform, but this listing is not sponsored, paid,
+affiliate-backed, or submitted by Heroku. Use Heroku's current pricing,
+security, compliance, and support documentation when deciding whether to connect
+an AI assistant to real Heroku resources.

@@ -1,0 +1,207 @@
+---
+title: Add Observability to LLM and Agent Applications
+slug: llm-agent-application-observability
+category: guides
+description: >-
+  A practical guide to instrumenting LLM and agent applications with traces,
+  metrics, logs, GenAI semantic attributes, sampling, and privacy-aware
+  redaction so teams can debug model calls, tool use, retries, and cost.
+cardDescription: Instrument LLM and agent apps with traces, metrics, logs, and redaction.
+seoTitle: Add Observability to LLM and Agent Applications
+seoDescription: >-
+  Learn how to add observability to LLM and agent applications using
+  OpenTelemetry traces, metrics, logs, GenAI semantic conventions, sampling,
+  and privacy-aware telemetry boundaries.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Trace every request across retrieval, model calls, tools, retries, and final
+  response; emit metrics for latency, errors, token usage, and cost; log
+  structured events with redaction; and sample high-volume paths without losing
+  incidents.
+prerequisites:
+  - An LLM or agent application with identifiable request, model-call, retrieval, and tool-execution boundaries.
+  - An observability backend or collector that can receive OpenTelemetry traces, metrics, and logs.
+  - A policy for which prompt, completion, retrieval, and tool data may be retained.
+  - Test traffic that exercises normal responses, model failures, retries, and tool errors.
+safetyNotes:
+  - Observability data is production evidence, not proof that an LLM answer or agent action is correct.
+  - Do not let tracing wrappers change request ordering, retry behavior, timeout handling, or user-visible agent decisions.
+  - Keep alerting focused on actionable symptoms such as latency, error rate, failed tool calls, and budget anomalies.
+privacyNotes:
+  - Prompts, completions, retrieved documents, tool arguments, tool outputs, embeddings metadata, user ids, and file names may appear in telemetry.
+  - Redact or hash sensitive fields before export, and store raw prompt/response content only when the team has an explicit retention policy.
+  - Use sampling and field-level controls so debug detail can increase during incidents without retaining every user conversation forever.
+sourceUrls:
+  - "https://opentelemetry.io/docs/concepts/signals/traces/"
+  - "https://opentelemetry.io/docs/concepts/signals/metrics/"
+  - "https://opentelemetry.io/docs/concepts/signals/logs/"
+  - "https://opentelemetry.io/docs/specs/semconv/gen-ai/"
+  - "https://opentelemetry.io/docs/concepts/sampling/"
+  - "https://opentelemetry.io/docs/languages/js/instrumentation/"
+  - "https://opentelemetry.io/docs/languages/python/instrumentation/"
+tags:
+  - observability
+  - llm
+  - agents
+  - opentelemetry
+  - tracing
+  - metrics
+  - logs
+keywords:
+  - llm observability
+  - agent observability
+  - opentelemetry gen ai
+  - ai application tracing
+  - llm metrics logs traces
+readingTime: 8
+difficultyScore: 60
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+LLM and agent observability starts with one trace per user request. Inside that
+trace, record the retrieval steps, model calls, tool calls, retries, fallbacks,
+and final response path. Add metrics for latency, errors, token usage, cost, and
+tool outcomes. Use structured logs for decisions that need human debugging.
+
+The hard part is not adding more telemetry. The hard part is deciding what to
+keep, what to redact, and which signals actually help maintainers debug a
+production incident.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Request boundaries", "description": "The app can identify one user request, task, job, or conversation turn"}
+- [ ] {"task": "Telemetry backend", "description": "Traces, metrics, and logs can be exported to a collector or observability service"}
+- [ ] {"task": "Privacy policy", "description": "Prompt, completion, retrieval, and tool data retention is defined before export"}
+- [ ] {"task": "Failure fixtures", "description": "Tests or staging traffic cover model errors, tool errors, retries, and timeouts"}
+
+## Core Concepts Explained
+
+### Traces show the agent path
+
+Traces explain what happened during one request. For an LLM app, the trace should
+connect the incoming request, retrieval, prompt assembly, model call, tool calls,
+retry decisions, and final response.
+
+### Metrics show system health
+
+Metrics answer operational questions across many requests: latency, error rate,
+model-call volume, token usage, cost, queue depth, retry count, fallback rate,
+and tool success rate.
+
+### Logs explain individual decisions
+
+Logs should be structured, redacted, and tied to trace ids. Use them for events
+that need narrative detail: chosen tool, rejected tool output, fallback reason,
+validation failure, policy decision, or user-visible error.
+
+### GenAI attributes make traces comparable
+
+OpenTelemetry's GenAI semantic conventions define common attributes for
+generative AI systems. Using shared names for provider, model, operation, usage,
+and request metadata makes traces easier to query across providers and tools.
+
+## Step-by-Step Implementation Guide
+
+1. **Pick the root span.** Create one root span for each user request,
+   conversation turn, background job, or agent task. Put the request id,
+   environment, route, tenant or workspace hash, and app version on that span.
+
+2. **Trace the model boundary.** Add child spans around each model call. Capture
+   model provider, model name, operation name, prompt version, latency, status,
+   retry count, fallback use, and token usage when available.
+
+3. **Trace retrieval and context assembly.** Add spans for vector search,
+   database lookups, document fetches, reranking, and prompt assembly. Store
+   counts, ids, and scores rather than raw documents unless your privacy policy
+   explicitly allows content capture.
+
+4. **Trace tool calls separately.** Each tool call should have its own span with
+   tool name, target system, status, latency, retry count, and error class. Link
+   the tool span to the model decision that requested it.
+
+5. **Emit operational metrics.** Track request latency, model latency, tool
+   latency, error counts, token usage, cost estimates, timeout counts, retry
+   counts, fallback counts, and queue depth for async agents.
+
+6. **Use structured logs for decisions.** Log compact events such as
+   `tool_selected`, `tool_rejected`, `schema_validation_failed`,
+   `retrieval_empty`, `fallback_model_used`, and `human_review_required`. Include
+   trace ids so logs and traces can be joined.
+
+7. **Redact before export.** Remove or hash emails, access tokens, file names,
+   account ids, raw documents, prompt text, completions, and tool outputs unless
+   the team has approved retention for that field.
+
+8. **Sample deliberately.** Keep full traces for errors, timeouts, high-latency
+   requests, new releases, and expensive model calls. Sample routine successful
+   traffic if volume or privacy risk is high.
+
+9. **Build an incident view.** A useful dashboard answers: which model failed,
+   which tool failed, where latency grew, whether retries helped, whether cost
+   spiked, and whether a release changed behavior.
+
+## Observability Checklist
+
+- [ ] {"task": "Trace coverage", "description": "Requests include model, retrieval, tool, retry, fallback, and response spans"}
+- [ ] {"task": "Metrics coverage", "description": "Latency, errors, token usage, cost, retry, and tool outcome metrics exist"}
+- [ ] {"task": "Log joins", "description": "Structured logs carry trace ids or request ids"}
+- [ ] {"task": "GenAI attributes", "description": "Provider, model, operation, status, and usage fields follow shared semantic names where possible"}
+- [ ] {"task": "Redaction boundary", "description": "Sensitive prompt, completion, retrieval, and tool data is removed or explicitly retained"}
+- [ ] {"task": "Sampling policy", "description": "Errors and high-risk paths keep enough detail while routine traffic is sampled"}
+- [ ] {"task": "Incident dashboard", "description": "Maintainers can diagnose model, retrieval, tool, latency, and cost failures quickly"}
+
+## What to Alert On
+
+Alert on symptoms that a maintainer can act on:
+
+- Model error rate or timeout rate above normal.
+- Tool failure rate, validation failures, or repeated retries.
+- Retrieval returning empty or low-confidence context for important routes.
+- Token usage or cost estimates rising sharply after a release.
+- Queue depth, job age, or agent task duration crossing a service target.
+- Fallback model usage increasing unexpectedly.
+
+Avoid alerting on every individual model refusal, low-confidence answer, or
+sampled trace gap unless it maps to a clear action.
+
+## Troubleshooting
+
+- **Traces are too noisy**: keep the request, model, retrieval, and tool spans,
+  then drop internal helper spans that do not explain behavior.
+- **Telemetry contains too much user data**: export ids, counts, hashes, scores,
+  and prompt versions by default; capture raw content only in approved debug
+  paths.
+- **Costs are hard to explain**: record model name, token usage, retry count,
+  fallback model, and request route on model spans.
+- **Tool failures are invisible**: put every external action in its own span and
+  log the validation or error class.
+- **Sampling hides incidents**: always keep error, timeout, high-cost, and
+  high-latency traces, then sample ordinary successful requests.
+
+## Duplicate Check
+
+This guide is vendor-neutral and focuses on the observability architecture for
+LLM and agent applications. Existing entries cover specific observability,
+evaluation, and tracing tools; this guide is distinct because it explains the
+signals, spans, metrics, logs, redaction, and sampling strategy that can be used
+with those tools.
+
+## References
+
+- OpenTelemetry traces - https://opentelemetry.io/docs/concepts/signals/traces/
+- OpenTelemetry metrics - https://opentelemetry.io/docs/concepts/signals/metrics/
+- OpenTelemetry logs - https://opentelemetry.io/docs/concepts/signals/logs/
+- OpenTelemetry GenAI semantic conventions - https://opentelemetry.io/docs/specs/semconv/gen-ai/
+- OpenTelemetry sampling - https://opentelemetry.io/docs/concepts/sampling/
+- OpenTelemetry JavaScript instrumentation - https://opentelemetry.io/docs/languages/js/instrumentation/
+- OpenTelemetry Python instrumentation - https://opentelemetry.io/docs/languages/python/instrumentation/

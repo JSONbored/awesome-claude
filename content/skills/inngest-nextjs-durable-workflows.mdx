@@ -1,0 +1,276 @@
+---
+title: Inngest Next.js Durable Workflows Skill
+slug: inngest-nextjs-durable-workflows
+category: skills
+description: >-
+  Build Inngest-backed Next.js workflows with event triggers, durable steps,
+  local Dev Server testing, API route serving, retries, concurrency, and
+  production deployment review.
+cardDescription: >-
+  Add Inngest durable workflows to Next.js with events, step functions, Dev
+  Server testing, and deployment checks.
+seoTitle: Inngest Next.js Durable Workflows Skill
+seoDescription: >-
+  Reusable AI skill for integrating Inngest with Next.js App Router using
+  inngest, inngest/next, /api/inngest, event triggers, step.run, retries,
+  concurrency controls, Dev Server testing, and production safety checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/inngest/inngest-js"
+documentationUrl: "https://www.inngest.com/docs/getting-started/nextjs-quick-start"
+downloadUrl: "https://github.com/inngest/inngest-js/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add inngest"
+usageSnippet: >-
+  Use this skill when a Next.js App Router project needs background jobs,
+  event-driven workflows, durable AI steps, scheduled work, retries,
+  concurrency limits, or local Inngest Dev Server review.
+copySnippet: |-
+  # Trigger
+  "Apply the Inngest Next.js durable workflows skill to this app."
+
+  # Required output
+  1) Current Next.js, route, webhook, job, and event inventory
+  2) Inngest client, function, trigger, serve-route, and Dev Server plan
+  3) Retry, concurrency, idempotency, deployment, and observability checklist
+  4) Safety, privacy, event payload, secret, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://www.inngest.com/docs/getting-started/nextjs-quick-start"
+  - "https://www.inngest.com/docs/reference/typescript/intro"
+  - "https://www.inngest.com/docs/learn/serving-inngest-functions"
+  - "https://www.inngest.com/docs/learn/inngest-functions"
+  - "https://github.com/inngest/inngest-js"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js App Router project or migration branch with a known package manager."
+  - "Inngest account or local-only Dev Server plan, plus permission to create or connect the target Inngest app."
+  - "Decision on stable SDK usage versus any beta SDK documentation path before pinning package versions."
+  - "`INNGEST_DEV`, signing keys, event keys, and deployment environment variables managed through local, preview, staging, and production secret configuration."
+  - "Inventory of existing API routes, webhooks, cron jobs, queue workers, server actions, form submissions, and background jobs that may send events."
+  - "Event naming, payload shape, idempotency key, retry, concurrency, and failure-handling plan for each workflow."
+  - "Deployment-provider limits for route runtime, request duration, background execution, and webhook reachability."
+safetyNotes:
+  - "The download URL is Inngest's external JavaScript SDK source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "The official quickstart documents both package installation and a CLI install path for the Dev Server; review shell installers before piping remote scripts into a shell."
+  - "Inngest functions can send email, charge billing systems, call LLMs, write databases, enqueue follow-up work, and retry failed steps; design idempotency before production use."
+  - "Do not commit Inngest signing keys, event keys, dashboard tokens, API keys used inside steps, webhook secrets, or copied dashboard values."
+  - "Confirm the target Inngest environment before syncing functions, sending events, replaying runs, testing webhooks, or invoking workflows from the Dev Server UI."
+  - "Keep event names and schemas explicit. Broad catch-all events, copied production payloads, and unvalidated event data can trigger unintended work."
+  - "Review retry policies, concurrency, rate limits, cancellation, durable step behavior, and deployment timeouts before moving request work into asynchronous functions."
+  - "For AI workflows, document model calls, human approval points, tool side effects, token cost controls, and what happens when a step retries after partial completion."
+privacyNotes:
+  - "Inngest events, function inputs, step outputs, errors, logs, traces, Dev Server runs, and dashboard history can contain user IDs, emails, order IDs, file metadata, prompts, or webhook payloads."
+  - "Use synthetic payloads for Dev Server invokes, examples, issue reports, screenshots, demos, and AI-assisted troubleshooting."
+  - "Avoid sending raw payment data, authentication secrets, access tokens, private documents, or full customer records as event payloads; pass stable IDs and fetch data inside authorized server code when possible."
+  - "Review Inngest, deployment-provider, observability, LLM-provider, email-provider, payment-provider, and AI-assistant retention policies before using real customer data."
+  - "If workflows call LLMs or third-party APIs, document which event fields leave the app, where outputs are retained, and how retries affect duplicate external requests."
+tags:
+  - inngest
+  - nextjs
+  - workflows
+  - background-jobs
+  - durable-execution
+keywords:
+  - "Inngest Next.js workflows"
+  - "inngest next app router"
+  - "inngest/next serve"
+  - "Inngest Dev Server"
+  - "Next.js background jobs"
+  - "durable step functions"
+  - "Inngest event triggers"
+readingTime: 8
+difficultyScore: 78
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Inngest's official Next.js quickstart, TypeScript SDK
+reference, serving-functions docs, Inngest functions docs, and
+`inngest/inngest-js` repository reviewed on **2026-06-04**. The current Next.js
+quickstart installs `inngest`, can run local development with `INNGEST_DEV=1`,
+uses the Inngest Dev Server at `localhost:8288`, creates an `Inngest` client,
+serves functions through a Next.js App Router route with `serve` from
+`inngest/next`, registers functions on `/api/inngest`, and sends events with
+`inngest.send()`.
+
+## Retrieval Sources
+
+- https://www.inngest.com/docs/getting-started/nextjs-quick-start
+- https://www.inngest.com/docs/reference/typescript/intro
+- https://www.inngest.com/docs/learn/serving-inngest-functions
+- https://www.inngest.com/docs/learn/inngest-functions
+- https://github.com/inngest/inngest-js
+
+Prefer the live Inngest docs and official JavaScript SDK repository over model
+memory for package versions, SDK v3/v4 differences, `serve` handler signatures,
+Dev Server behavior, event schemas, retry controls, concurrency controls,
+checkpointing, and deployment guidance.
+
+## Scope Note
+
+Use this skill for event-driven Inngest workflows in Next.js applications. It is
+not a generic queue architecture guide, not a replacement for product-specific
+workflow design, and not permission to replay production events or migrate
+critical background jobs without an explicit rollout plan.
+
+## Core Workflow
+
+1. Inventory the current Next.js version, router mode, package manager, `/src`
+   usage, API routes, server actions, route handlers, webhooks, cron jobs,
+   background workers, queue libraries, and deployment provider.
+2. Identify work that should move out of request/response paths: email sends,
+   file processing, AI model calls, enrichment jobs, webhook fan-out, imports,
+   notifications, scheduled tasks, long-running retries, or human approval
+   workflows.
+3. Choose the SDK path deliberately. Confirm whether the project will use the
+   stable package path from the quickstart or a beta TypeScript SDK path before
+   pinning versions, imports, and migration steps.
+4. Add `inngest` with the project package manager and document local, preview,
+   staging, and production environment variables, including `INNGEST_DEV`,
+   event keys, signing keys, and any provider secrets used inside steps.
+5. Create a server-side Inngest client module with a stable app ID, environment
+   naming plan, logging expectations, and shared event type definitions.
+6. Create the App Router serve endpoint at the intended `/api/inngest` route
+   using `serve` from `inngest/next`, and register only reviewed functions in
+   the `functions` array.
+7. Model each event with a name, versioning policy, payload schema, producer,
+   consumer function, idempotency key, authorization boundary, and retention
+   notes.
+8. Write functions with small durable steps. Use `step.run()` for side effects,
+   make step names stable, and avoid hidden work that cannot be retried or
+   observed cleanly.
+9. Add failure behavior deliberately: retries, cancellation, rate limits,
+   concurrency, debouncing, singleton behavior, priority, or manual intervention
+   where the workflow requires it.
+10. Run the Inngest Dev Server locally, invoke functions with synthetic
+    payloads, inspect the Runs view, and confirm step outputs, logs, retries,
+    and event history before connecting production sources.
+11. Wire producers with `inngest.send()` from route handlers, server actions,
+    webhook handlers, cron triggers, or domain-service code after validating
+    payloads and authorization.
+12. Review deployment settings for route runtime, duration limits,
+    checkpointing, webhook reachability, environment sync, observability,
+    rollback, and replay safety.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, deployment provider, and
+  whether the project uses a `/src` directory.
+- Existing background-job, queue, cron, webhook, event-bus, and async task
+  patterns.
+- Target Inngest account, app, environment, local Dev Server strategy, and
+  function sync path.
+- Event catalog with names, producers, payload fields, schema validation,
+  idempotency keys, and expected consumers.
+- Side-effect inventory for every function, including databases, emails,
+  payments, LLMs, webhooks, file storage, notifications, and third-party APIs.
+- Retry, cancellation, concurrency, rate-limit, timeout, and failure-routing
+  expectations for each workflow.
+- Observability, logging, alerting, replay, rollback, and incident-response
+  expectations for production functions.
+
+## Production Rules
+
+- Keep Inngest keys, signing secrets, API keys, provider tokens, and database
+  credentials in server-only secret stores. Never expose them through client
+  bundles, screenshots, issue comments, or AI prompts.
+- Treat event payloads as public-to-the-workflow data. Prefer compact IDs and
+  server-side lookups over raw customer records, access tokens, payment data,
+  private documents, or full webhook bodies.
+- Make side-effecting steps idempotent before enabling retries or replay.
+  Emails, billing changes, external tickets, LLM calls, and database writes need
+  duplicate protection.
+- Validate event payloads before work begins. Do not trust producers,
+  user-controlled API routes, webhook bodies, or Dev Server test payloads.
+- Keep function registration explicit. A serve route with stale, missing, or
+  accidental functions can hide production work or expose workflows that should
+  not be callable.
+- Separate local, preview, staging, and production Inngest environments. Do not
+  send test events into production or sync experimental functions without a
+  rollback path.
+- Review deployment timeouts and route runtime limits before depending on
+  checkpointing or multi-step functions on serverless platforms.
+- Add monitoring for failed runs, stuck retries, high event volume, rate-limit
+  pressure, external API errors, and unexpectedly expensive AI workflow steps.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for designing,
+  implementing, reviewing, and operating Inngest workflows in Next.js apps.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js codebases that add Inngest functions, event producers, or
+  deployment-readiness checks.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for background-job and event-driven workflow work.
+
+## Output Contract
+
+1. Source evidence: Inngest docs and repository URLs reviewed, with date.
+2. Inventory: Next.js routes, async work, webhooks, queues, cron, current
+   background jobs, deployment constraints, and data sensitivity.
+3. Implementation plan: package install, SDK version decision, client module,
+   serve route, function files, event producers, schemas, steps, and tests.
+4. Safety and privacy review: event payloads, secrets, retries, idempotency,
+   replay risk, logs, third-party calls, AI calls, and retention.
+5. Validation plan: local Dev Server invocation, synthetic payloads, route
+   smoke tests, failed-run behavior, retry behavior, and production sync checks.
+6. Rollout plan: environment separation, function sync, monitoring, alerting,
+   rollback, replay policy, and owner sign-off.
+
+## Troubleshooting
+
+- **No functions appear in the Dev Server**: confirm `INNGEST_DEV=1`, the
+  Next.js dev server is running, `/api/inngest` is reachable, and the serve
+  handler registers the intended functions.
+- **Events send but runs do not start**: check event names, trigger names,
+  function registration, signing/environment config, and whether the event went
+  to the expected local, preview, staging, or production environment.
+- **Function retries duplicate side effects**: add idempotency checks around
+  email sends, external API writes, payments, ticket creation, and database
+  mutations before enabling broad retry or replay behavior.
+- **Serverless route times out**: review deployment-provider limits, `maxRuntime`
+  or route duration settings where supported, function step structure, and
+  whether long work belongs in durable steps instead of one large request.
+- **Logs expose sensitive payloads**: redact event data, step outputs, errors,
+  traces, and prompt snippets before sharing logs with AI assistants, issues,
+  screenshots, or observability vendors.
+
+## Duplicate Check
+
+- No existing upstream content file uses the `inngest-nextjs-durable-workflows`
+  slug or official Inngest documentation/repository URLs.
+- Generic background-job, workflow, and Next.js entries remain distinct because
+  this skill is specifically scoped to Inngest's Next.js App Router serve route,
+  event triggers, durable steps, Dev Server review, and production Inngest
+  deployment safety.
+
+## Editorial Disclosure
+
+This is a source-backed community content entry submitted by `oktofeesh1`.
+There is no paid placement, affiliate link, sponsorship, or maintainer-verified
+package artifact attached to this listing.

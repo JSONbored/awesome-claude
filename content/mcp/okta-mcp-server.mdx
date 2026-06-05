@@ -1,0 +1,289 @@
+---
+title: Okta MCP Server for Claude
+slug: okta-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Okta's official self-hosted MCP server for scoped identity
+  administration, users, groups, applications, policies, logs, brands, and
+  tenant management workflows.
+cardDescription: >-
+  Official Okta self-hosted MCP server for administering Okta orgs from Claude
+  through OAuth-scoped tools and explicit destructive-operation checks.
+seoTitle: Okta MCP Server for Claude
+seoDescription: >-
+  Use Okta MCP Server with Claude to inspect and manage Okta users, groups,
+  applications, policies, System Logs, brands, custom domains, and templates
+  through a self-hosted MCP server with scope-based tool loading.
+author: Okta
+authorProfileUrl: "https://www.okta.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://www.okta.com/"
+documentationUrl: "https://developer.okta.com/docs/concepts/mcp-server/"
+repoUrl: "https://github.com/okta/okta-mcp-server"
+installable: true
+installCommand: "git clone https://github.com/okta/okta-mcp-server.git"
+usageSnippet: "Ask Claude to use Okta MCP to list recent failed sign-ins before drafting a security follow-up."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "okta-mcp-server": {
+        "command": "uv",
+        "args": [
+          "run",
+          "--directory",
+          "/path/to/okta-mcp-server",
+          "okta-mcp-server"
+        ],
+        "env": {
+          "OKTA_ORG_URL": "https://your-org.okta.com",
+          "OKTA_CLIENT_ID": "your-client-id",
+          "OKTA_SCOPES": "okta.users.read okta.groups.read okta.logs.read"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "okta-mcp-server": {
+        "command": "uv",
+        "args": [
+          "run",
+          "--directory",
+          "/path/to/okta-mcp-server",
+          "okta-mcp-server"
+        ],
+        "env": {
+          "OKTA_ORG_URL": "https://your-org.okta.com",
+          "OKTA_CLIENT_ID": "your-client-id",
+          "OKTA_SCOPES": "okta.users.read okta.groups.read okta.logs.read"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 20 minutes
+difficulty: advanced
+prerequisites:
+  - Okta org, such as an Okta Integrator Free Plan org, with admin permissions for the resources Claude should access.
+  - Okta admin role assignment that matches the intended workflow, not a broad super-admin grant by default.
+  - Okta app integration created for the MCP server with either Device Authorization Grant for interactive use or Private Key JWT for browserless automation.
+  - Okta API scopes granted to the app and repeated in `OKTA_SCOPES`, starting with read-only scopes such as `okta.users.read`, `okta.groups.read`, and `okta.logs.read`.
+  - Local copy of `okta/okta-mcp-server` plus `uv`, or Docker if you prefer the repository's Docker path.
+  - Python runtime compatible with the current repository when using `uv`; check `pyproject.toml` because the docs and repo requirements can change independently.
+  - MCP-capable client such as Claude Desktop, VS Code with GitHub Copilot, Claude Code, or another stdio-compatible client.
+safetyNotes:
+  - >-
+    Okta MCP Server connects to Okta Admin Management APIs. Even ordinary
+    natural-language prompts can translate into identity administration actions,
+    so use a dedicated app integration and the smallest useful API scope set.
+  - >-
+    The server uses scope-based tool loading. Tools whose required OAuth scope
+    is not present in `OKTA_SCOPES` are removed from the tool list, and runtime
+    scope guards provide another permission check before API calls.
+  - >-
+    Prefer read scopes such as `okta.users.read`, `okta.groups.read`, and
+    `okta.logs.read` for investigation. Add `okta.<resource>.manage` scopes
+    only for an approved change window and an explicit task.
+  - >-
+    Manage scopes can create, update, activate, deactivate, delete, assign, or
+    otherwise change users, groups, applications, policies, brands, templates,
+    custom domains, email domains, and device assurance policies.
+  - >-
+    Destructive operations use MCP elicitation when the client supports it and
+    return a fallback confirmation payload for clients that do not. Keep MCP
+    client approval prompts enabled and manually review every mutating action.
+  - >-
+    Private Key JWT is intended for browserless automation, but it introduces a
+    long-lived private key. Store the key outside source control, rotate it on
+    schedule, and restrict the app's admin role and scopes.
+  - >-
+    Device Authorization Grant is convenient for interactive use, but Docker
+    setups may persist tokens in a mounted keyring volume. Treat that volume as
+    sensitive and remove it when the temporary workflow ends.
+  - >-
+    MCP usage consumes Okta Management API rate limits. Avoid broad loops,
+    unbounded list operations, or repeated audit-report prompts against a
+    production org.
+privacyNotes:
+  - >-
+    Okta MCP can return user profiles, group memberships, application metadata,
+    assignments, policy settings, sign-in failures, System Log events, IP
+    addresses, device context, brand assets, email templates, custom domains,
+    and other tenant administration data into the model conversation.
+  - >-
+    Prompts, tool results, MCP client logs, screenshots, debug files, and
+    generated reports can retain Okta identifiers and security event details
+    outside the Okta System Log and normal tenant retention controls.
+  - >-
+    Do not paste API tokens, private keys, client secrets, session cookies,
+    recovery links, full user exports, raw System Log dumps, customer
+    identifiers, or production incident data into prompts, issue comments, or
+    PR descriptions.
+  - >-
+    If you enable `OKTA_LOG_LEVEL=DEBUG` or `OKTA_LOG_FILE`, store logs in an
+    approved location and scrub them before sharing because troubleshooting
+    output can include tenant URLs, resource identifiers, request context, and
+    authentication details.
+tags:
+  - okta
+  - identity
+  - iam
+  - security
+  - mcp
+keywords:
+  - Okta MCP Server
+  - Okta Claude MCP
+  - okta-mcp-server
+  - Okta Admin Management API MCP
+  - Okta System Log MCP
+  - Okta identity MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Okta MCP Server is Okta's official self-hosted Model Context Protocol server
+for connecting Claude and other MCP-capable clients to Okta Admin Management
+APIs. It runs locally through the `okta/okta-mcp-server` Python project, uses
+Okta's Python SDK, and authenticates to an Okta org with either Device
+Authorization Grant for interactive use or Private Key JWT for browserless
+automation.
+
+Use it when an identity, IT, security, or platform team wants Claude to inspect
+or administer Okta resources with explicit API scopes: users, groups,
+applications, policies, System Logs, brands, email templates, custom domains,
+email domains, and device assurance policies. Because the tool surface can be
+read-only or mutating depending on the granted scopes, start with read scopes
+and add manage scopes only for a reviewed workflow.
+
+## Features
+
+- Official Okta Developer concept page and setup guides for the MCP server.
+- Public `okta/okta-mcp-server` source repository under Apache-2.0.
+- Self-hosted stdio MCP server that can run with `uv`, Docker, or Docker
+  Compose.
+- Device Authorization Grant for interactive browser-based authentication.
+- Private Key JWT for headless or automation use cases.
+- Scope-based tool loading through `OKTA_SCOPES`.
+- Runtime scope guard checks before API calls.
+- Integration with Okta System Log for auditing and security investigation.
+- MCP elicitation prompts for destructive operations when supported by the
+  client, with fallback confirmation payloads for other clients.
+- Tools for users, groups, applications, policies, logs, brands, templates,
+  custom domains, email domains, and device assurance policy workflows.
+- Troubleshooting support through debug logging and Okta System Log review.
+
+## Tool Surface
+
+Okta's docs summarize the core capabilities as user management, group
+administration, application management, policy and security management, System
+Log monitoring, and brand customization. The source repository documents more
+specific scope-to-tool mappings.
+
+Examples include read tools for users, groups, applications, policies, device
+assurance policies, logs, brands, email templates, custom domains, and email
+domains. Manage scopes unlock mutating tools such as creating users, updating
+groups, activating or deactivating applications, changing policies, replacing
+brand themes, deleting custom pages, sending test emails, and verifying
+domains.
+
+The visible tools depend on the scopes granted in the Okta Admin Console and
+listed in `OKTA_SCOPES`. If a scope is missing, the corresponding tools should
+not appear to the model.
+
+## Installation
+
+### Clone and Install
+
+Clone the official repository and install dependencies:
+
+```bash
+git clone https://github.com/okta/okta-mcp-server.git
+cd okta-mcp-server
+uv sync
+```
+
+Create the Okta app integration first, grant only the required Okta API scopes,
+and copy the resulting values into your MCP client configuration.
+
+### Read-Only Starter Config
+
+Use a narrow configuration for first-time inspection. This example exposes user,
+group, and log read tools only:
+
+```json
+{
+  "mcpServers": {
+    "okta-mcp-server": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "/path/to/okta-mcp-server",
+        "okta-mcp-server"
+      ],
+      "env": {
+        "OKTA_ORG_URL": "https://your-org.okta.com",
+        "OKTA_CLIENT_ID": "your-client-id",
+        "OKTA_SCOPES": "okta.users.read okta.groups.read okta.logs.read"
+      }
+    }
+  }
+}
+```
+
+When the server starts with Device Authorization Grant, complete the browser
+authorization prompt with an Okta admin account that has the intended admin
+role.
+
+### Browserless Automation
+
+For headless or CI/CD environments, configure an API Services app integration
+with Private Key JWT as described in Okta's authentication guide. Add
+`OKTA_PRIVATE_KEY` and `OKTA_KEY_ID` to the client environment only after the
+private key is stored securely and the app role and scopes have been reviewed.
+
+## Use Cases
+
+- Ask Claude to list users matching a department or status filter before
+  drafting an access cleanup plan.
+- Review failed sign-in attempts or recent System Log events during incident
+  triage.
+- Inspect group membership and application assignments before a role or access
+  change.
+- Compare application configuration and inactive app usage before preparing an
+  admin-console change.
+- Generate a security audit summary from scoped System Log data.
+- Draft user or group provisioning steps for manual approval.
+- Manage brands, email templates, custom domains, or email domains in a
+  non-production org after the relevant manage scopes are intentionally granted.
+- Run a browserless automation workflow with Private Key JWT when interactive
+  device authorization is not possible.
+
+## Safety Checklist
+
+- Use a dedicated Okta app integration for MCP rather than reusing a broad
+  admin app.
+- Assign the smallest admin role and API scope set required for the task.
+- Start with read scopes and add manage scopes only after approval.
+- Keep `OKTA_SCOPES` in sync with the scopes granted on the app integration.
+- Confirm the active Okta org before approving any tool call.
+- Keep client approval prompts enabled for creates, updates, deletes,
+  activations, deactivations, assignments, policy changes, domain changes, and
+  email-template changes.
+- Store Private Key JWT material in an approved secret manager or protected
+  local secret store, never in the repository.
+- Remove temporary Docker token volumes, debug logs, and local `.env` files
+  when the workflow is complete.
+
+## Source Links
+
+- Okta MCP concept docs: https://developer.okta.com/docs/concepts/mcp-server/
+- Install guide: https://developer.okta.com/docs/guides/mcp-server/main/
+- Authentication guide: https://developer.okta.com/docs/guides/configure-mcp-authentication/main/
+- Start and test guide: https://developer.okta.com/docs/guides/start-mcp-server/main/
+- Source repository: https://github.com/okta/okta-mcp-server
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/

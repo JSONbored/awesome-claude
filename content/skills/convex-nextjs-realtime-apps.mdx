@@ -1,0 +1,267 @@
+---
+title: Convex Next.js Realtime Apps Skill
+slug: convex-nextjs-realtime-apps
+category: skills
+description: >-
+  Build Convex-backed Next.js App Router applications with typed backend
+  functions, reactive queries, client providers, realtime UI, data imports, and
+  production deployment review.
+cardDescription: >-
+  Build Convex-backed Next.js apps with typed backend functions, reactive
+  queries, realtime UI, and deployment checks.
+seoTitle: Convex Next.js Realtime Apps Skill
+seoDescription: >-
+  Reusable AI skill for building Convex and Next.js realtime apps with
+  ConvexReactClient, ConvexProvider, generated APIs, useQuery, backend functions,
+  data imports, auth planning, and production safety checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/get-convex/convex-js"
+documentationUrl: "https://docs.convex.dev/quickstart/nextjs"
+downloadUrl: "https://github.com/get-convex/convex-js/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add convex"
+usageSnippet: >-
+  Use this skill when a Next.js App Router project needs Convex reactive data,
+  typed backend functions, realtime UI updates, data imports, auth integration,
+  or production deployment review.
+copySnippet: |-
+  # Trigger
+  "Apply the Convex Next.js realtime apps skill to this project."
+
+  # Required output
+  1) Current Next.js, data model, auth, and realtime inventory
+  2) Convex package, deployment, provider, schema, query, and mutation plan
+  3) Client/server boundary and production deployment checklist
+  4) Safety, privacy, data import, secret, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://docs.convex.dev/quickstart/nextjs"
+  - "https://docs.convex.dev/"
+  - "https://www.convex.dev/"
+  - "https://github.com/get-convex/convex-js"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js App Router project or migration branch with a known package manager."
+  - "Convex account access and permission to create or use the target Convex project and deployment."
+  - "`NEXT_PUBLIC_CONVEX_URL` and any Convex deployment environment variables managed through local, preview, staging, and production secret configuration."
+  - "Data model plan for Convex tables, indexes, generated API functions, and client query/mutation usage."
+  - "Auth integration decision, such as Clerk, Auth0, custom JWT, or unauthenticated prototype."
+  - "Realtime UX plan covering loading states, optimistic UI, offline behavior, and conflict handling."
+safetyNotes:
+  - "The download URL is Convex's external JavaScript SDK source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "`convex dev` logs in, creates or connects a cloud dev deployment, writes deployment URLs, and syncs backend functions; confirm the target account and project first."
+  - "Treat `convex import`, migrations, table rewrites, backfills, deletes, and scheduled functions as data-mutating operations that need environment confirmation."
+  - "Do not commit Convex deployment secrets, auth provider secrets, API keys for actions, webhook secrets, or copied dashboard values."
+  - "Keep client-exposed values such as `NEXT_PUBLIC_CONVEX_URL` separate from server-only secrets used by actions, auth providers, integrations, or external APIs."
+  - "Review generated APIs, table indexes, pagination, and query fan-out before shipping realtime screens that could overload clients or expose broad datasets."
+  - "When actions call external services or LLM APIs, add timeout, retry, logging, rate-limit, and secret-handling guidance before production use."
+privacyNotes:
+  - "Convex can store user records, app data, realtime query results, auth identifiers, scheduled job state, file metadata, logs, and action inputs or outputs."
+  - "Client queries, browser traces, app logs, error trackers, screenshots, and AI prompts can expose document IDs, user IDs, table names, deployment URLs, or sampled records."
+  - "Use synthetic seed data for examples, imports, demos, issue reports, screenshots, and AI-assisted troubleshooting."
+  - "Review Convex, auth-provider, deployment-provider, analytics, external API, and AI-assistant retention policies before using real customer data."
+  - "If Convex actions call LLMs, payment systems, email providers, or webhooks, document what user data leaves Convex and where it is retained."
+tags:
+  - convex
+  - nextjs
+  - realtime
+  - app-router
+  - database
+keywords:
+  - "Convex Next.js realtime apps"
+  - "ConvexReactClient"
+  - "ConvexProvider"
+  - "convex react useQuery"
+  - "Next.js App Router Convex"
+  - "Convex backend functions"
+  - "Convex generated API"
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on Convex's official Next.js quickstart, documentation hub,
+website, and `get-convex/convex-js` repository reviewed on **2026-06-04**. The
+current Next.js quickstart installs the `convex` package, runs `npx convex dev`
+to create or connect a deployment, writes backend functions in a `convex/`
+folder, wraps App Router UI with `ConvexProvider` and `ConvexReactClient`, and
+reads data from generated APIs with `useQuery()`.
+
+## Retrieval Sources
+
+- https://docs.convex.dev/quickstart/nextjs
+- https://docs.convex.dev/
+- https://www.convex.dev/
+- https://github.com/get-convex/convex-js
+
+Prefer the live Convex docs and official JavaScript repository over model memory
+for package names, generated API paths, provider setup, CLI behavior, auth
+integration, hosting guidance, schema APIs, and production deployment steps.
+
+## Scope Note
+
+Use this skill for Convex-backed Next.js App Router applications that need typed
+backend functions and reactive data. It is not a generic database guide, not a
+Supabase/Postgres/RLS workflow, and not a replacement for application-specific
+authorization, data modeling, or production capacity review.
+
+## Core Workflow
+
+1. Inventory the current Next.js version, router mode, package manager, `/src`
+   usage, client components, server components, route handlers, auth provider,
+   realtime screens, and current data layer.
+2. Confirm whether this is a new Convex project, an existing Convex deployment,
+   or a migration from another backend, and record the target local, preview,
+   staging, and production environments.
+3. Add `convex` with the project package manager and document how the team will
+   run or replace the interactive `npx convex dev` flow in local development.
+4. Create or review the `convex/` directory, generated API files, backend
+   function naming, schema definitions, validators, indexes, queries,
+   mutations, and actions.
+5. Wire the App Router provider with a client component that creates
+   `ConvexReactClient` from `NEXT_PUBLIC_CONVEX_URL` and wraps the app in
+   `ConvexProvider`.
+6. Keep client components that call `useQuery()` or mutations explicit, and keep
+   server-only logic out of client bundles.
+7. Model read patterns first. Add indexes, pagination, and narrow query
+   arguments before building realtime lists, dashboards, notifications, or
+   collaborative UI.
+8. Add mutations with validation, ownership checks, idempotency where needed,
+   and clear optimistic UI or reconciliation behavior.
+9. If importing seed or migrated data, verify the target deployment, table,
+   sample data shape, and rollback plan before running `convex import`.
+10. Integrate auth deliberately. Map provider identity to Convex user records,
+    enforce authorization in backend functions, and test unauthenticated and
+    wrong-tenant access.
+11. Review actions, scheduled jobs, external APIs, file storage, webhooks, and
+    LLM calls for secrets, retries, rate limits, timeouts, and observability.
+12. Produce a deployment checklist covering environment URLs, generated files,
+    codegen, auth config, data import state, realtime smoke tests, and rollback.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, and whether the app uses a
+  `/src` directory.
+- Current data layer, table/document model, realtime requirements, and migration
+  constraints.
+- Convex project, team, deployment, dashboard access, and environment names.
+- Auth provider and authorization model, including tenants, organizations,
+  roles, user ownership, anonymous access, and public data.
+- List of client components, server components, API routes, background jobs,
+  webhooks, scheduled jobs, and external integrations that will touch Convex.
+- Seed data, import files, backfills, or migration scripts that may mutate a
+  Convex deployment.
+- Deployment provider, preview environment policy, generated-file policy, and
+  rollback plan.
+
+## Production Rules
+
+- Treat `convex dev`, `convex deploy`, imports, backfills, scheduled jobs, and
+  data deletes as environment-specific operations. Confirm the target deployment
+  before running them.
+- Do not rely on client-side filtering for authorization. Enforce access rules
+  in Convex queries, mutations, actions, or shared backend helpers.
+- Keep public environment variables and server-only secrets separate. Only
+  client-safe deployment URLs belong in `NEXT_PUBLIC_*` configuration.
+- Use validators and narrow function arguments for every public query and
+  mutation. Avoid broad "return all documents" queries in production screens.
+- Add indexes and pagination before large realtime lists, activity feeds,
+  notifications, search screens, or multi-tenant dashboards.
+- Use synthetic data for examples and AI prompts. Do not paste real Convex table
+  exports, logs, dashboard screenshots, auth tokens, or user documents into
+  chat, issues, or PRs.
+- Record how generated Convex API files are created and validated so agents do
+  not hand-edit generated output.
+- For actions that call LLMs, payment processors, email services, or webhooks,
+  document outbound data, timeout behavior, retries, and failure handling.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for Convex app
+  planning, realtime UI implementation, migration review, and production
+  readiness checks.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js apps that use Convex.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for Convex work.
+
+## Output Contract
+
+1. Source evidence: Convex docs, website, and repository URLs reviewed, with
+   date.
+2. App inventory: Next.js router, current data layer, auth provider, realtime
+   surfaces, backend functions, imports, and deployment environments.
+3. Implementation plan: package install, Convex dev/deploy flow, provider setup,
+   generated APIs, schema, queries, mutations, actions, indexes, auth checks,
+   and client/server boundaries.
+4. Safety and privacy review: deployment targeting, secrets, data imports,
+   generated files, broad queries, logs, prompts, external APIs, and real-user
+   data handling.
+5. Validation checklist: local Convex dev connection, generated API refresh,
+   unauthenticated access, wrong-tenant access, realtime update, mutation, data
+   import dry run, preview deploy, production smoke test, and rollback.
+
+## Duplicate And Source Review
+
+Current HeyClaude content includes a Supabase realtime database skill, but that
+entry is Postgres/RLS/Supabase-specific. There is no dedicated Convex,
+`convex-js`, `ConvexReactClient`, `ConvexProvider`, or `docs.convex.dev` content
+entry. This skill is specifically scoped to Convex's official Next.js App
+Router workflow and source-backed by current Convex docs, website, and the
+official JavaScript SDK repository.
+
+## Troubleshooting
+
+**Issue:** The app cannot connect to Convex from the browser
+
+**Fix:** Confirm `NEXT_PUBLIC_CONVEX_URL` is present for the current environment
+and that `ConvexReactClient` is created only in a client component.
+
+**Issue:** Generated API imports fail
+
+**Fix:** Re-run the documented Convex codegen/dev flow, confirm the `convex/`
+function file exports are valid, and avoid hand-editing generated API files.
+
+**Issue:** Realtime UI renders too much data or exposes another tenant's data
+
+**Fix:** Move filtering and authorization into the Convex backend function, add
+indexes and pagination, and test wrong-user or wrong-organization access by
+calling the generated API directly.
+
+**Issue:** A data import writes to the wrong deployment
+
+**Fix:** Stop additional imports, identify the target deployment and table, take
+a snapshot of current state if available, and use the rollback or cleanup plan
+before retrying against the intended environment.
+
+**Issue:** An action works locally but fails in production
+
+**Fix:** Check production environment variables, external API secrets, action
+timeouts, rate limits, retry behavior, and logs. Do not expose service tokens to
+client components while debugging.

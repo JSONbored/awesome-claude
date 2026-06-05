@@ -1,0 +1,193 @@
+---
+title: Write High-Quality Source-Backed Content PRs
+slug: source-backed-content-prs
+category: guides
+description: >-
+  A practical guide for preparing source-backed HeyClaude content pull requests
+  that stay focused, cite verifiable sources, avoid generated artifacts, and
+  pass content validation.
+cardDescription: Prepare focused, source-backed content PRs for HeyClaude.
+seoTitle: Write High-Quality Source-Backed Content PRs
+seoDescription: >-
+  Learn how to prepare high-quality source-backed content PRs for HeyClaude
+  directories with duplicate checks, frontmatter, safety/privacy notes,
+  validation commands, and generated-artifact boundaries.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Add exactly one raw content file, cite reachable source URLs, document the
+  duplicate check, include safety and privacy notes, run focused validation, and
+  leave README and generated artifacts to maintainer automation.
+prerequisites:
+  - A selected content category and entry idea that fits the repository scope.
+  - Canonical source URLs that prove the entry exists and support the claims in the file.
+  - A duplicate-search pass across existing content, open pull requests, aliases, source domains, and relevant package or docs URLs.
+  - A local checkout where the focused content validators can run before the PR is opened.
+safetyNotes:
+  - Source-backed content PRs are usually low runtime risk, but entries about tools, packages, hooks, MCP servers, or install commands still need specific safety disclosure.
+  - Do not turn a content PR into a platform change by editing workflows, scripts, generated files, package metadata, or README output.
+  - Treat source provenance as part of review. Broken links, unverifiable claims, or copied promotional text can cause the submission to close.
+privacyNotes:
+  - Source URLs, screenshots, examples, and issue links can expose private repositories, customer names, internal project paths, or account identifiers.
+  - Safety and privacy notes should describe what the listed tool or workflow can read, write, transmit, store, or log.
+  - Do not include credentials, private tokens, private docs, or unreleased customer data as evidence in a public content PR.
+sourceUrls:
+  - "https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/README.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/examples/content/guide.example.mdx"
+  - "https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs"
+tags:
+  - contributions
+  - content-prs
+  - source-backed
+  - validation
+  - provenance
+  - duplicate-checks
+keywords:
+  - source-backed content PR
+  - HeyClaude content submission
+  - awesome claude contribution guide
+  - content validation
+  - duplicate check PR body
+readingTime: 8
+difficultyScore: 49
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+A strong source-backed content PR is small, verifiable, and boring to review.
+Add exactly one raw `content/<category>/<slug>.mdx` file, cite canonical source
+URLs, explain why the entry is not a duplicate, include practical safety and
+privacy notes, run focused validation, and avoid generated files. The maintainer
+automation can regenerate README and registry artifacts later.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Category chosen", "description": "The entry belongs in one repository content directory"}
+- [ ] {"task": "Sources verified", "description": "Canonical source URLs load successfully and support the claims"}
+- [ ] {"task": "Duplicate search done", "description": "Existing content, aliases, source domains, and open PRs were checked"}
+- [ ] {"task": "One source file only", "description": "The PR changes one raw MDX content file and no generated output"}
+- [ ] {"task": "Validation ready", "description": "Focused content validation and policy checks can run locally"}
+
+## Core Concepts Explained
+
+### Source-backed means reviewable
+
+Source-backed content is not just a list of links. The sources should prove that
+the resource exists, explain what it does, and support the practical claims in
+the entry. Prefer official docs, package pages, repositories, release notes, and
+primary project pages over blog summaries or copied marketing text.
+
+### One-file PRs are easier to merge
+
+The contribution docs describe direct content PRs as focused, single-entry
+changes. Keeping the PR to one raw content file reduces review surface and
+prevents generated artifacts from drifting out of sync with maintainer
+automation.
+
+### Duplicate checks are part of the content
+
+A duplicate check should cover title, slug, source URL, package URL, provider
+name, aliases, and source domain. If similar entries exist, explain the
+difference in the PR body and, when useful, in the entry itself.
+
+### Safety and privacy are not boilerplate
+
+Safety and privacy notes should be specific to the entry. A CLI that runs local
+commands, a hook that executes automatically, an MCP server that reads external
+systems, and a static guide do not have the same risk profile.
+
+## Step-by-Step Workflow
+
+1. **Confirm the slot and category.** Read the issue or repository docs and make
+   sure the entry belongs in the requested category.
+
+2. **Pick canonical sources.** Use official documentation, package registries,
+   repository URLs, or primary product pages. Verify that each source URL
+   resolves before adding it to frontmatter.
+
+3. **Search for duplicates.** Check existing `content/` directories, open PRs,
+   aliases, package names, docs URLs, and provider domains. Record what you
+   searched.
+
+4. **Create one raw MDX file.** Use the matching category structure and
+   frontmatter shape. Keep the slug stable, lowercase, and descriptive.
+
+5. **Write for verification.** Include enough context for a maintainer to see
+   why the resource fits, where the claims came from, and how the entry differs
+   from nearby content.
+
+6. **Make safety and privacy concrete.** Describe real behavior such as file
+   reads, shell execution, external API calls, telemetry, credentials, logs, or
+   generated outputs. If a concern is not applicable, say why.
+
+7. **Avoid generated artifacts.** Do not edit README output, generated indexes,
+   route files, package downloads, workflows, scripts, or unrelated content in a
+   direct content PR.
+
+8. **Run focused validation.** Use the repository validators for the category
+   and content policy before opening the PR. Also check whitespace with a git
+   diff check.
+
+9. **Write a reviewable PR body.** Include the issue closure line, summary,
+   duplicate check, validation commands, and source URL verification.
+
+10. **Watch the gate.** Public checks and private maintainer review decide
+   whether the PR merges, requests changes, or closes.
+
+## PR Body Checklist
+
+- [ ] {"task": "Closure line", "description": "The body includes the exact issue closure reference when required"}
+- [ ] {"task": "Scope summary", "description": "The summary names the entry and states that it is one content file"}
+- [ ] {"task": "Duplicate check", "description": "The checked paths, aliases, source domains, and open PRs are documented"}
+- [ ] {"task": "Validation", "description": "The local validation commands are listed"}
+- [ ] {"task": "Source verification", "description": "The body says source URLs were verified as reachable"}
+- [ ] {"task": "No artifacts", "description": "The body confirms generated files were not edited"}
+
+## Common Close Risks
+
+| Risk | Why it closes | Safer pattern |
+| --- | --- | --- |
+| Multiple content files | Scope is no longer a single entry | One PR per entry |
+| README or generated changes | Maintainer automation owns artifacts | Raw MDX source only |
+| Broken source URL | Provenance cannot be verified | Check redirects and final URLs |
+| Thin promotional copy | Entry does not add editorial value | Explain use case, limits, and risks |
+| Duplicate source | Existing entry already covers it | Pick a different candidate |
+| Generic safety notes | Risk is unclear to users | Describe concrete read/write/network behavior |
+
+## Troubleshooting
+
+- **Validation says a field is missing**: compare the file with the category
+  example and add the required frontmatter.
+- **A YAML list item becomes an object**: quote list items that contain a colon.
+- **The entry looks like a duplicate**: narrow the scope, cite a different
+  source, or choose a new candidate.
+- **The PR contains generated files**: remove generated output from the branch
+  and keep only the raw content file.
+- **The source URL redirects**: cite the final canonical URL when that is what
+  the maintainer will verify.
+
+## Duplicate Check
+
+This guide focuses on writing source-backed content PRs for repository content
+directories. Existing contribution docs and examples define the rules and
+schemas, and existing content entries use duplicate-check sections, but there is
+not a dedicated guide entry that turns those requirements into a practical
+source-backed PR workflow for contributors.
+
+## References
+
+- Contribution guide - https://github.com/JSONbored/awesome-claude/blob/main/CONTRIBUTING.md
+- README contributor rules - https://github.com/JSONbored/awesome-claude/blob/main/README.md
+- Content schema examples - https://github.com/JSONbored/awesome-claude/blob/main/examples/content/SCHEMA.md
+- Guide example entry - https://github.com/JSONbored/awesome-claude/blob/main/examples/content/guide.example.mdx
+- Content policy validator - https://github.com/JSONbored/awesome-claude/blob/main/scripts/ci/validate-content-policy.mjs

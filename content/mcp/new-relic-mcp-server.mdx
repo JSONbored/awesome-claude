@@ -1,0 +1,327 @@
+---
+title: New Relic MCP Server for Claude
+slug: new-relic-mcp-server
+category: mcp
+description: >-
+  Official New Relic AI MCP Server for connecting Claude, Codex, VS Code,
+  Windsurf, Gemini CLI, and other MCP clients to New Relic observability data,
+  NRQL, alerts, incidents, entities, logs, performance analysis, and deployment
+  impact context.
+cardDescription: >-
+  Connect Claude to New Relic entities, alerts, NRQL, incidents, logs,
+  dashboards, performance analytics, and deployment impact tools.
+seoTitle: New Relic MCP Server for Claude
+seoDescription: >-
+  Use New Relic MCP Server with Claude and other MCP clients to investigate
+  observability data, run NRQL-backed queries, inspect alerts and incidents,
+  analyze logs, and filter tools with include-tags.
+author: New Relic
+authorProfileUrl: "https://newrelic.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://newrelic.com/"
+documentationUrl: "https://docs.newrelic.com/docs/agentic-ai/mcp/overview/"
+installable: true
+installCommand: "claude mcp add newrelic --transport http https://mcp.newrelic.com/mcp/"
+usageSnippet: "Ask Claude to use New Relic MCP for read-only incident triage, alert review, entity discovery, NRQL analysis, or deployment impact investigation."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "newrelic": {
+        "type": "http",
+        "url": "https://mcp.newrelic.com/mcp/",
+        "headers": {
+          "include-tags": "discovery,alerting"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  [mcp_servers.new-relic]
+  url = "https://mcp.newrelic.com/mcp/"
+  env_http_headers = { "api-key" = "NEW_RELIC_API_KEY" }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - New Relic account with API access and the New Relic AI MCP Server public preview enabled.
+  - New Relic group membership with an organizational role documented for MCP access, such as Organization Read Only, Organization Manager, or Organization Product Admin.
+  - OAuth authentication, or a New Relic user API key approved for the target account and stored outside committed project files.
+  - MCP-capable client such as Claude Code, Claude Desktop, Codex CLI, VS Code, Windsurf, Gemini CLI, or another compatible environment.
+  - Decision on which accounts, entities, alert policies, dashboards, logs, NRQL queries, and incident data the assistant is allowed to inspect.
+  - Tool-scope plan using `include-tags` when the task only needs discovery, data-access, alerting, incident-response, performance-analytics, or advanced-analysis tools.
+safetyNotes:
+  - >-
+    New Relic documents the MCP Server as a preview feature. Re-check the
+    official overview, setup guide, and tool reference before relying on a
+    remembered endpoint, role requirement, authentication flow, tool tag, or
+    tool name.
+  - >-
+    New Relic warns that using AI tools with its MCP servers means the AI can
+    take action on the user's behalf. Use a least-privilege New Relic account
+    and keep assistant work read-only unless a human has explicitly approved
+    the operation.
+  - >-
+    Tool calls are governed by the permissions of the configured New Relic user
+    API key or OAuth profile. RBAC failures are safer than over-broad access;
+    do not use admin-like credentials just to make the assistant easier to use.
+  - >-
+    The tool reference includes NRQL execution, natural-language-to-NRQL,
+    alert and incident queries, entity discovery, dashboard access, logs, and
+    deployment impact analysis. Treat generated queries and summaries as drafts
+    until an operator checks the account, time window, filters, and service.
+  - >-
+    Use `include-tags` to reduce the tool corpus when the task is narrow. For
+    example, an alert triage session may only need `discovery,alerting` rather
+    than every data-access, incident-response, performance, and advanced
+    analysis tool.
+  - >-
+    Do not commit API keys, OAuth tokens, `mcp.json`, Claude Desktop configs,
+    Codex configs, or copied New Relic headers that contain real credentials.
+privacyNotes:
+  - >-
+    Tool results can expose New Relic account IDs, entity GUIDs, dashboard
+    names, alert policy details, issue and incident state, NRQL query text,
+    NRDB results, logs, error groups, change events, deployment markers,
+    service names, tags, thread metrics, Kafka metrics, and other production
+    observability data.
+  - >-
+    Natural-language prompts can be converted into NRQL and executed against
+    New Relic data. Review prompts, generated queries, and query results before
+    pasting them into tickets, chat systems, public issues, or vendor support
+    threads.
+  - >-
+    Claude, Codex, IDE transcripts, MCP client logs, screenshots, exported
+    incident reports, and shell history may retain New Relic-derived context
+    outside New Relic's normal access controls.
+  - >-
+    OAuth tokens and user API keys connect the assistant to a real New Relic
+    identity. Rotate exposed keys, remove stale client configs, and audit
+    account membership when a project or teammate no longer needs access.
+tags:
+  - new-relic
+  - observability
+  - mcp
+  - incidents
+  - nrql
+keywords:
+  - New Relic MCP Server
+  - New Relic Claude MCP
+  - New Relic Codex MCP
+  - New Relic NRQL MCP
+  - New Relic incident response MCP
+  - New Relic include-tags MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+New Relic MCP Server is New Relic's official Model Context Protocol bridge for
+giving AI development tools controlled access to New Relic observability
+context. It is useful when Claude, Codex, VS Code, Windsurf, Gemini CLI, or
+another MCP-capable client needs to inspect live telemetry, alerts, incidents,
+entities, dashboards, logs, or NRQL-backed analysis during debugging and
+operations work.
+
+The fit is strongest for read-only investigation: entity discovery, alert
+triage, recent issue review, performance analysis, deployment impact review,
+and natural-language queries over New Relic data. Keep permissions narrow, use
+`include-tags` to limit the available tool categories, and require a human to
+review any query, report, or operational conclusion before it changes an
+incident response plan.
+
+## Features
+
+- Official New Relic AI MCP Server documented by New Relic.
+- Public preview setup flow with prerequisites, organizational role
+  requirements, and preview enablement in New Relic.
+- Remote HTTP endpoint at `https://mcp.newrelic.com/mcp/`.
+- OAuth and user API key authentication options.
+- Claude Code setup with OAuth or API key authentication.
+- Codex CLI setup with OAuth command-line registration or config-based API key
+  headers.
+- Claude Desktop setup through `mcp-remote` when OAuth is needed.
+- VS Code workspace setup through `.vscode/mcp.json`.
+- Tool filtering with the `include-tags` HTTP header.
+- Tool categories for discovery, data access, alerting, incident response,
+  performance analytics, and advanced analysis.
+- New Relic RBAC enforcement based on the configured user API key or OAuth
+  profile.
+
+## Use Cases
+
+- Ask Claude to list available New Relic accounts, entities, dashboards, and
+  related entities before an incident review.
+- Pull recent alerts, open issues, alert policies, and synthetic monitor
+  context for a service without leaving the coding assistant session.
+- Convert a plain-English performance question into an NRQL-backed analysis,
+  then have an operator review the query and result before acting on it.
+- Analyze recent logs, golden metrics, transactions, Kafka metrics, garbage
+  collection metrics, or thread metrics while debugging an application issue.
+- Review deployment impact and change events for an affected New Relic entity
+  during release triage.
+- Generate a draft alert insight or user-impact summary for an incident handoff
+  while preserving a clear source trail back to New Relic data.
+
+## Installation
+
+### Claude Code
+
+For OAuth, add the remote MCP endpoint:
+
+```bash
+claude mcp add newrelic --transport http https://mcp.newrelic.com/mcp/
+```
+
+Start Claude Code, run `/mcp`, select the New Relic server, and complete the
+browser-based OAuth flow.
+
+For API key authentication, use a New Relic user API key and keep the real key
+out of committed configuration:
+
+```bash
+claude mcp add newrelic https://mcp.newrelic.com/mcp/ --transport http --header "Api-Key: NRAK-YOUR-KEY-HERE"
+```
+
+### Codex CLI
+
+New Relic documents a config-based API key path for Codex:
+
+```toml
+[mcp_servers.new-relic]
+url = "https://mcp.newrelic.com/mcp/"
+env_http_headers = { "api-key" = "NEW_RELIC_API_KEY" }
+```
+
+For OAuth, New Relic documents the Codex command-line setup:
+
+```bash
+codex mcp add new-relic-mcp-server --url "https://mcp.newrelic.com/mcp/"
+```
+
+Then start Codex, run `/mcp`, and complete the authentication flow.
+
+### Claude Desktop
+
+Claude Desktop can use `mcp-remote` for the New Relic remote MCP endpoint:
+
+```json
+{
+  "mcpServers": {
+    "new-relic-mcp": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.newrelic.com/mcp/"]
+    }
+  }
+}
+```
+
+### VS Code
+
+Use a workspace `.vscode/mcp.json` file:
+
+```json
+{
+  "servers": {
+    "new-relic-mcp": {
+      "url": "https://mcp.newrelic.com/mcp/",
+      "type": "http"
+    }
+  }
+}
+```
+
+Add headers only when the workspace is private and the credential handling is
+approved.
+
+## Tool Scope
+
+Use `include-tags` to narrow the tools exposed to the model:
+
+```json
+{
+  "servers": {
+    "new-relic-mcp-server": {
+      "url": "https://mcp.newrelic.com/mcp/",
+      "type": "http",
+      "headers": {
+        "include-tags": "discovery,alerting"
+      }
+    }
+  }
+}
+```
+
+Useful starting scopes:
+
+- `discovery`: account, dashboard, entity, relationship, and entity-type
+  discovery.
+- `data-access`: NRQL execution and natural-language-to-NRQL query workflows.
+- `alerting`: alert conditions, alert policies, recent issues, incidents, and
+  synthetic monitors.
+- `incident-response`: deployment impact, alert insight reports, user-impact
+  reports, error groups, and change events.
+- `performance-analytics`: logs, golden metrics, Kafka metrics, threads,
+  transactions, garbage collection metrics, recent logs, and performance risk
+  groups.
+- `advanced-analysis`: combined analysis workflows such as deployment impact,
+  log analysis, alert insights, user impact, and natural-language NRQL.
+
+## Examples
+
+### Incident triage
+
+```plaintext
+Use New Relic MCP to list open issues, recent alerts, related entities, recent change events, and the most relevant dashboards for this service. Do not change anything.
+```
+
+### NRQL review
+
+```plaintext
+Draft the NRQL query needed to compare request latency and error rate for the last 60 minutes. Show the query before executing it.
+```
+
+### Deployment impact
+
+```plaintext
+Analyze deployment impact for this entity GUID over the last two hours and summarize evidence, time windows, and confidence. Keep this read-only.
+```
+
+### Tool inventory
+
+```plaintext
+Before calling any New Relic tool, list which New Relic MCP tags and tool categories are available in this session.
+```
+
+## Source Notes
+
+- New Relic's MCP overview describes the New Relic AI MCP Server as a centralized
+  bridge for connecting supported AI development tools to New Relic
+  observability context.
+- The overview documents the preview status, supported clients, prerequisites,
+  required New Relic organizational roles, authentication options, and public
+  preview enablement.
+- The setup guide documents Claude Code, Codex CLI, Claude Desktop, VS Code,
+  Windsurf, and Gemini CLI setup paths.
+- The tool reference documents natural-language use, `include-tags`, RBAC
+  enforcement, and tool categories for discovery, data access, alerting,
+  incident response, performance analytics, and advanced analysis.
+- The documented MCP endpoint is `https://mcp.newrelic.com/mcp/`.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and live open PRs
+were checked for `New Relic`, `newrelic`, `new-relic-mcp-server`,
+`mcp.newrelic.com`, `docs.newrelic.com/docs/agentic-ai/mcp`, and related title
+variants. Existing generic SRE and MCP setup entries only mention New Relic as
+an example observability product. Existing Datadog, Grafana, and Sentry MCP
+entries cover different observability providers. No dedicated New Relic MCP
+Server entry, New Relic MCP source URL duplicate, or open duplicate PR was
+found.
+
+## Editorial Disclosure
+
+Submitted as a community MCP entry by `oktofeesh1`. This listing is based on
+New Relic's official MCP overview, setup guide, and tool reference, with no
+paid placement or affiliate relationship.

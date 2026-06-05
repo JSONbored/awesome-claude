@@ -1,0 +1,281 @@
+---
+title: TypeScript API Client Compatibility Review Rules
+slug: typescript-api-client-compatibility-review-rules
+category: rules
+description: >-
+  Source-backed rules for reviewing TypeScript API client compatibility before
+  merge, with exported type-surface diffs, inferred router inputs and outputs,
+  runtime validator alignment, downstream compile checks, and privacy-safe
+  evidence.
+cardDescription: >-
+  Review TypeScript API client changes for exported type surfaces, inferred
+  router contracts, validators, downstream compile evidence, and safe rollout.
+seoTitle: TypeScript API Client Compatibility Review Rules
+seoDescription: >-
+  Practical TypeScript API client compatibility rules for typed web apps:
+  exported declaration review, API Extractor reports, tRPC inferred inputs and
+  outputs, Zod validator alignment, downstream compile checks, and merge
+  blockers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html"
+sourceUrls:
+  - "https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html"
+  - "https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html"
+  - "https://api-extractor.com/pages/overview/intro/"
+  - "https://api-extractor.com/pages/overview/demo_api_report/"
+  - "https://trpc.io/docs/client/vanilla/infer-types"
+  - "https://trpc.io/docs/server/routers"
+  - "https://zod.dev/basics"
+installable: false
+usageSnippet: >-
+  Apply these rules before merging a TypeScript web app change that alters an
+  exported API client, typed SDK, tRPC router, generated declaration file,
+  request or response type, runtime validator, or client-visible error shape.
+copySnippet: |-
+  You are reviewing a TypeScript API client compatibility change for a typed
+  web app.
+
+  Rules:
+  1. Identify the client-visible contract: exported functions, hooks, router
+     paths, procedure names, request types, response types, error unions,
+     cache keys, auth headers, and generated declarations.
+  2. Require a reviewer-readable type-surface diff, such as an API Extractor
+     report, declaration diff, type-test diff, or generated client diff.
+  3. Treat renamed fields, removed exports, narrower inputs, wider nullable
+     outputs, changed error shapes, and route/procedure moves as compatibility
+     changes until downstream clients compile and tests pass.
+  4. Keep runtime validators aligned with exported TypeScript types; do not
+     hide breakage with any, unsafe casts, stale generated files, or skipped
+     type checks.
+  5. Record downstream compile and runtime evidence on the reviewed commit, and
+     redact request examples, route names, schemas, and payloads when needed.
+estimatedSetupTime: 25 minutes
+difficulty: intermediate
+prerequisites:
+  - A TypeScript web app, package, SDK, typed API client, tRPC router, generated client, or shared types package whose public surface is consumed outside the edited module.
+  - Access to the relevant type-check command, package build, generated declaration output, API report, type tests, and at least one downstream consumer or fixture.
+  - A named owner for client compatibility, deprecation policy, generated artifacts, runtime validators, and release notes.
+  - Permission to block merge when a type-surface change has no downstream compile evidence or safe migration path.
+safetyNotes:
+  - "A TypeScript API change can compile in the edited package while breaking frontend consumers, generated clients, cache invalidation, form validation, or error handling in another workspace."
+  - "Generated declaration files, SDK clients, and API reports should be regenerated from reviewed source and inspected before commit; stale generated output can make reviewers approve the wrong contract."
+  - "Runtime validators and inferred types must be reviewed together because a type-only change can still accept or reject different data at runtime."
+privacyNotes:
+  - "API client types, API reports, router names, procedure names, schemas, examples, error unions, and generated clients can expose internal routes, unreleased features, auth models, tenant fields, and private payload shapes."
+  - "Do not paste raw production request bodies, response examples, validation errors, API reports, or downstream compile logs into public comments without redacting private fields and internal identifiers."
+  - "Use synthetic fixtures for compatibility examples when the client surface includes customer data, billing fields, healthcare data, education records, support tickets, or private workspace metadata."
+tags:
+  - typescript
+  - api-clients
+  - compatibility
+  - trpc
+  - zod
+  - code-review
+keywords:
+  - TypeScript API client compatibility rules
+  - typed web app contract review
+  - tRPC inferred types review
+  - API Extractor report merge gate
+  - TypeScript SDK breaking change checklist
+readingTime: 6
+difficultyScore: 45
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when a TypeScript web app change can alter what frontend code,
+typed SDKs, or downstream packages see as the API client contract. The goal is
+to catch compile-time and runtime compatibility breaks before a rename, narrowed
+input, changed response shape, or stale generated declaration reaches users.
+
+This is a TypeScript client-surface review policy. It is not an OpenAPI,
+JSON Schema, GraphQL, or Pact validation collection, and it does not replace a
+full API contract review gate. It tells reviewers how to decide whether a typed
+client surface is still safe for its consumers.
+
+## Review Inputs
+
+Collect evidence for the client-visible surface before judging the patch.
+
+1. **Public surface.** Exported functions, classes, hooks, route helpers,
+   client factories, inferred router types, generated declarations, cache keys,
+   auth header helpers, error types, and package entry points.
+2. **Consumer map.** Frontend routes, apps, packages, examples, tests, SDKs, or
+   external users that import the changed client or type.
+3. **Type evidence.** API Extractor report, `.d.ts` diff, generated SDK diff,
+   type tests, `tsc --noEmit`, package build, or downstream fixture compile.
+4. **Runtime evidence.** Zod or other validator behavior, request examples,
+   response fixtures, error mapping, cache invalidation, and end-to-end tests.
+5. **Release path.** Deprecation period, adapter layer, feature flag, migration
+   note, version boundary, and owner approval for breaking changes.
+
+If the PR cannot name what downstream code imports, require that map before
+accepting type-check output from only the edited package.
+
+## Compatibility Rules
+
+- Treat removed exports, renamed procedures, moved client paths, changed hook
+  names, altered package entry points, and deleted generated declarations as
+  breaking until consumers compile.
+- Treat input changes as breaking when they remove accepted fields, require new
+  fields, narrow unions, change enum values, alter date or decimal formats, or
+  move values between path, query, header, and body shapes.
+- Treat output changes as breaking when they remove fields, change nullability,
+  widen optionality without consumer review, rename discriminants, or change the
+  error union that callers branch on.
+- Keep compatibility shims or deprecated aliases when consumers cannot migrate
+  in the same release.
+- Review route and procedure names as part of the contract in typed clients
+  such as tRPC, even when no OpenAPI document exists.
+- Require release notes or migration guidance when a consumer must update code,
+  fixtures, generated clients, or cached data assumptions.
+
+The reviewer should ask: would an existing consumer still compile and still
+handle the data shape at runtime after this change?
+
+## Type Surface Rules
+
+Use TypeScript evidence that is readable to a reviewer.
+
+- Prefer an API Extractor report, declaration diff, generated SDK diff, or type
+  test that highlights changed exported signatures.
+- Run type checks after generated clients, declaration files, routers, schema
+  inference, and package exports have been refreshed.
+- Do not approve changes that hide incompatibility with `any`, `unknown` casts,
+  broad index signatures, weakened generics, disabled strictness, or skipped
+  library checks.
+- Keep exported declaration files aligned with the package entry points that
+  consumers import.
+- For inferred clients, review both the source router or schema and the inferred
+  client type that consumers actually use.
+- When a package publishes declaration files, inspect changes to public names,
+  overloads, generic parameters, optional fields, discriminated unions, and
+  documented release status.
+
+Passing `tsc` in one package is useful, but it is not enough when the changed
+contract is consumed by another package, app, or SDK.
+
+## Runtime Validator Rules
+
+Type changes and runtime validation changes must stay aligned.
+
+- Update validators and inferred types together when a field is added, removed,
+  renamed, narrowed, widened, made optional, or made nullable.
+- Keep parse, transform, default, coercion, and refinement behavior visible in
+  tests or fixtures when it affects request or response compatibility.
+- Do not use a type-only edit to imply that runtime payloads changed, or a
+  validator-only edit to imply that clients received an updated type.
+- Re-run consumer flows that depend on validation errors, error codes, cache
+  keys, retries, optimistic updates, or form field mapping.
+- Confirm that generated clients and declarations reflect the reviewed source
+  after validator, router, or schema changes.
+
+Runtime validators are part of the contract when they decide what clients may
+send and what data the app accepts from the server.
+
+## Consumer Evidence Rules
+
+Require evidence on the reviewed commit.
+
+- Compile the packages or fixture apps that import the changed client surface.
+- Run focused tests for changed request inputs, response mapping, errors,
+  loading states, cache invalidation, retries, and form validation.
+- Compare generated declaration or API report diffs with the intended change.
+- Record exact commands, workspaces, commit SHA, generated artifacts, and any
+  downstream consumers that were not checked.
+- If compatibility is intentionally broken, require owner approval, migration
+  notes, and a plan for stale clients.
+
+Do not rely on source-code review alone when a typed client is shared across
+workspace boundaries.
+
+## Merge Blockers
+
+Block merge until resolved when:
+
+- the PR changes a typed client, router, package export, declaration, validator,
+  generated SDK, or shared DTO without naming downstream consumers;
+- type checks ran only in the edited package while known consumers were not
+  compiled;
+- generated declarations, API reports, or SDK clients are stale, missing, or
+  inconsistent with source;
+- compatibility is hidden with `any`, unsafe casts, disabled strictness, broad
+  object types, or skipped checks;
+- validators accept or reject a different runtime shape than the exported type
+  describes;
+- renamed fields, removed exports, changed nullability, or altered error unions
+  lack an adapter, migration note, or owner-approved breaking-change path;
+- logs, fixtures, API reports, request examples, or validation output expose
+  private payloads or internal routes in public review comments.
+
+## Review Checklist
+
+- [ ] {"task": "Surface mapped", "description": "Exported clients, types, routers, validators, generated declarations, and consumers are identified"}
+- [ ] {"task": "Type diff reviewed", "description": "API report, declaration diff, generated client diff, or type-test evidence shows the public surface change"}
+- [ ] {"task": "Consumers compile", "description": "Downstream packages, examples, or fixtures compile against the reviewed commit"}
+- [ ] {"task": "Runtime aligned", "description": "Validators, examples, errors, and response mapping match the exported TypeScript types"}
+- [ ] {"task": "Migration covered", "description": "Breaking changes have an adapter, deprecation path, migration note, or owner approval"}
+- [ ] {"task": "Evidence safe", "description": "Logs, reports, examples, route names, and payloads avoid private data and unreleased details"}
+
+## AI Review Rules
+
+AI assistants can help find compatibility risk, but they need to show evidence.
+
+- Ask the assistant to list exported and inferred client surfaces before asking
+  for a merge verdict.
+- Require file paths, package names, import paths, and commands for every
+  compatibility claim.
+- Have the assistant separate confirmed consumer breaks from possible breaks it
+  could not compile.
+- Do not let the assistant conclude compatibility from server code alone when
+  consumers import generated or inferred client types.
+- Re-run review after generated files, declaration output, validators, router
+  definitions, or package exports change.
+
+## Troubleshooting
+
+- **Only the server package compiles:** add a fixture or workspace check that
+  imports the published client surface the same way consumers do.
+- **The API report changed unexpectedly:** inspect the exported signature diff,
+  decide whether the change is intentional, and regenerate the report from the
+  reviewed source.
+- **The type got looser to avoid compile errors:** restore a precise type and
+  fix consumers or provide a migration path instead of hiding the breakage.
+- **Runtime accepts data the type rejects:** align the validator and exported
+  type, then add a fixture that proves the intended behavior.
+- **A tRPC procedure moved:** treat the procedure path, input, output, and error
+  shape as the client contract; keep an alias or migration note when consumers
+  cannot update immediately.
+
+## Duplicate And History Check
+
+Checked existing rules, collections, commands, hooks, skills, open PRs, closed
+PR history, and issue #736 for API contract review, OpenAPI drift, JSON Schema,
+GraphQL schema validation, Pact checks, API-first architecture, tRPC skills,
+TypeScript strict mode, generated clients, and typed web app compatibility.
+
+PR #1139 was closed because it repeated the existing
+`api-contract-review-gate` collection with the same OpenAPI, JSON Schema, Pact,
+Spectral, and SemVer-centered release gate. This entry intentionally avoids
+that lane. It focuses on TypeScript client compatibility: exported declaration
+surfaces, API Extractor reports, inferred router inputs and outputs, runtime
+validator alignment, downstream compilation, and privacy-safe review evidence
+for typed web app consumers.
+
+## Sources
+
+- TypeScript declaration publishing: https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html
+- TypeScript declaration file do's and don'ts: https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html
+- API Extractor overview: https://api-extractor.com/pages/overview/intro/
+- API Extractor API report workflow: https://api-extractor.com/pages/overview/demo_api_report/
+- tRPC inferred types: https://trpc.io/docs/client/vanilla/infer-types
+- tRPC routers: https://trpc.io/docs/server/routers
+- Zod basics: https://zod.dev/basics

@@ -1,0 +1,192 @@
+---
+title: Self-Hosted AI Operator Stack
+slug: self-hosted-ai-operator-stack
+category: collections
+description: >-
+  A source-backed collection for operators running AI services on infrastructure
+  they control: local model runtime, CPU and GPU inference, model gateway,
+  self-hosted MCP access, retrieval storage, model API packaging, container
+  rebuilds, and image security checks.
+cardDescription: >-
+  Operator bundle for local models, self-hosted MCP, model routing, retrieval,
+  model APIs, container rebuilds, and image security scans.
+seoTitle: Self-Hosted AI Operator Stack Collection
+seoDescription: >-
+  Run a self-hosted AI operator stack with Ollama, llama.cpp, vLLM, LiteLLM,
+  MCP Supergateway Hub, Chroma, BentoML, Docker rebuild hooks, and image
+  security scanning.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://docs.ollama.com/"
+sourceUrls:
+  - "https://docs.ollama.com/"
+  - "https://github.com/ggml-org/llama.cpp/tree/master/docs"
+  - "https://docs.vllm.ai/en/stable/"
+  - "https://docs.litellm.ai/docs/"
+  - "https://modelcontextprotocol.io/docs/getting-started/intro"
+  - "https://github.com/dpdanpittman/mcp-supergateway-hub"
+  - "https://docs.trychroma.com/docs/overview/introduction"
+  - "https://docs.bentoml.com/en/latest/"
+  - "https://docs.docker.com/compose/"
+  - "https://aquasecurity.github.io/trivy/"
+installable: false
+usageSnippet: >-
+  Start from a local-first architecture, choose the right model runtime, put a
+  gateway in front of model and MCP access, add retrieval and model API
+  packaging, then automate container rebuilds and image scans.
+items:
+  - slug: local-first-ai-dev-stack
+    category: guides
+  - slug: ollama
+    category: tools
+  - slug: llama-cpp
+    category: tools
+  - slug: vllm
+    category: tools
+  - slug: litellm
+    category: tools
+  - slug: mcp-supergateway-hub
+    category: tools
+  - slug: chroma
+    category: tools
+  - slug: bentoml
+    category: tools
+  - slug: docker-container-auto-rebuild
+    category: hooks
+  - slug: docker-image-security-scanner
+    category: hooks
+installationOrder:
+  - local-first-ai-dev-stack
+  - ollama
+  - llama-cpp
+  - vllm
+  - litellm
+  - mcp-supergateway-hub
+  - chroma
+  - bentoml
+  - docker-container-auto-rebuild
+  - docker-image-security-scanner
+estimatedSetupTime: 95 minutes
+difficulty: advanced
+prerequisites:
+  - A host or small cluster with enough CPU, RAM, disk, and optional GPU/VRAM for the selected local or open model workloads.
+  - A private network, firewall, TLS/auth plan, and operator-owned secrets store before exposing model, MCP, retrieval, or app endpoints.
+  - Model license, weight source, quantization, context-length, embedding, and safety-policy decisions for the workloads you intend to run.
+  - Container runtime and registry policy for Docker Compose services, rebuild triggers, image scanning, log retention, backups, and rollback.
+  - Clear boundaries for what stays self-hosted and what may still call external model providers, registries, package indexes, or telemetry endpoints.
+safetyNotes:
+  - Self-hosted AI endpoints can execute expensive inference, tool calls, retrieval, uploads, and container rebuilds; require authentication, rate limits, resource limits, and audit logs before network exposure.
+  - Model runtimes and OpenAI-compatible gateways can be swapped into agent stacks quickly, so verify route policy, model capability, tool-call handling, and fallback behavior before production use.
+  - Container rebuild and image scan hooks can read Docker state, pull images, start builds, and fail workflows; pin versions, bound permissions, and keep rollback commands tested.
+  - Local or self-hosted models do not provide a safety layer by themselves; prompts, outputs, embeddings, tool inputs, and generated code still need abuse, correctness, and data-handling review.
+privacyNotes:
+  - Self-hosting reduces third-party model-provider exposure, but prompts, files, embeddings, retrieved documents, model outputs, logs, traces, and admin actions can still persist on operator infrastructure.
+  - Gateways, MCP servers, retrieval databases, model API servers, Docker logs, scanner reports, and backup jobs can duplicate sensitive data across disks, containers, volumes, and observability systems.
+  - Pulling models, images, packages, vulnerability data, or provider fallbacks can disclose model names, image names, IP addresses, repository names, and timing metadata to external services.
+tags:
+  - self-hosted
+  - local-models
+  - inference
+  - mcp
+  - model-gateway
+  - vector-database
+  - docker
+keywords:
+  - self-hosted AI operator stack
+  - local model runtime and gateway collection
+  - private AI inference operations
+  - self-hosted MCP and retrieval workflow
+  - Docker AI operator collection
+---
+
+## What this collection sets up
+
+This collection is for the operator side of a self-hosted AI stack. It starts
+with the local-first architecture, then separates responsibilities into model
+runtime selection, OpenAI-compatible routing, self-hosted MCP access, retrieval
+storage, model API packaging, container rebuilds, and image security checks.
+
+The goal is not to make every workload fully offline. It is to make data paths,
+runtime choices, network exposure, credentials, logs, and rebuild behavior
+visible before agents or users depend on the stack.
+
+## Layers
+
+### 1. Architecture and model runtime
+
+- **local-first-ai-dev-stack** frames what stays on owned infrastructure and
+  what may still call an external orchestrator or provider.
+- **ollama** is the simplest local model runner for developer machines,
+  delegation tasks, and offline fallback.
+- **llama-cpp** covers lightweight GGUF-based inference for CPU, edge, and
+  memory-constrained hosts.
+- **vllm** covers higher-throughput GPU serving with OpenAI-compatible APIs,
+  batching, structured outputs, and tool-calling support.
+
+### 2. Gateway, tools, and retrieval
+
+- **litellm** puts a model gateway in front of local and external providers so
+  operators can manage routes, virtual keys, spending, and fallbacks.
+- **mcp-supergateway-hub** exposes a fleet of stdio MCP servers over HTTP for
+  private-network access from approved clients.
+- **chroma** stores documents, embeddings, metadata, and retrieval indexes for
+  local or self-hosted RAG and memory workflows.
+- **bentoml** packages model inference code into model APIs and deployable
+  service artifacts when the stack needs a production API surface.
+
+### 3. Container operations
+
+- **docker-container-auto-rebuild** helps rebuild affected containers after
+  source or configuration changes.
+- **docker-image-security-scanner** checks container images before they become
+  part of the self-hosted AI environment.
+
+## Suggested order
+
+Start by writing the local-first boundary and choosing the runtime for each
+workload: Ollama for simple local use, llama.cpp for compact GGUF serving, and
+vLLM for GPU-backed throughput. Add LiteLLM only after route and credential
+rules are clear. Bring up MCP Supergateway Hub and Chroma on a private network,
+then package production inference services with BentoML. Finish by adding
+container rebuild and image scanning hooks so stack changes are repeatable and
+reviewed.
+
+## Operator checklist
+
+- [ ] {"task": "Boundary is written", "description": "Operators know which prompts, tools, models, embeddings, logs, and fallbacks are allowed to leave owned infrastructure"}
+- [ ] {"task": "Runtime fits hardware", "description": "CPU, RAM, GPU, VRAM, disk, context length, and concurrency match the selected model runtimes"}
+- [ ] {"task": "Endpoints are private", "description": "Model, MCP, retrieval, and API services have authentication, TLS or private-network controls, and rate limits"}
+- [ ] {"task": "Credentials are scoped", "description": "Model gateway keys, registry tokens, provider fallbacks, and MCP secrets are rotated and least-privilege"}
+- [ ] {"task": "Containers are reviewable", "description": "Rebuilds, image scans, logs, and rollbacks are part of the normal operator workflow"}
+- [ ] {"task": "Retention is explicit", "description": "Prompts, outputs, embeddings, traces, scanner reports, and backups have an owner and deletion policy"}
+
+## Source and references
+
+- Ollama documentation: https://docs.ollama.com/
+- llama.cpp documentation: https://github.com/ggml-org/llama.cpp/tree/master/docs
+- vLLM documentation: https://docs.vllm.ai/en/stable/
+- LiteLLM documentation: https://docs.litellm.ai/docs/
+- Model Context Protocol documentation: https://modelcontextprotocol.io/docs/getting-started/intro
+- MCP Supergateway Hub repository: https://github.com/dpdanpittman/mcp-supergateway-hub
+- Chroma documentation: https://docs.trychroma.com/docs/overview/introduction
+- BentoML documentation: https://docs.bentoml.com/en/latest/
+- Docker Compose documentation: https://docs.docker.com/compose/
+- Trivy documentation: https://aquasecurity.github.io/trivy/
+
+## Duplicate check
+
+Checked existing collections, guides, tools, skills, hooks, open PRs, closed
+PRs, and issue history for `self-hosted-ai-operator-stack`, self-hosted AI
+operator, local-first AI stack, Ollama, llama.cpp, vLLM, LiteLLM, MCP
+Supergateway Hub, Chroma, BentoML, Docker rebuild hooks, and image security
+scanning. `local-first-ai-dev-stack` is a guide for one local-first developer
+architecture. `agent-operator-growth-master-pack` is a broad product-operator
+bundle covering review, release, growth, and automation. This collection is
+narrower and operational: it bundles the runtime, gateway, MCP, retrieval, model
+API, rebuild, and scan entries needed to run self-hosted AI services.
+
+## Disclosure
+
+Editorial collection. No paid placement or affiliate link is used.

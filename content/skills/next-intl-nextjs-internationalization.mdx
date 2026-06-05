@@ -1,0 +1,302 @@
+---
+title: next-intl Next.js Internationalization Skill
+slug: next-intl-nextjs-internationalization
+category: skills
+description: >-
+  Add or maintain next-intl internationalization in a Next.js App Router project
+  with messages, request configuration, locale-based routing, proxy or
+  middleware behavior, Server and Client Components, typed message keys,
+  localized navigation, SEO review, testing, and rollout planning.
+cardDescription: >-
+  Add next-intl to Next.js with messages, locale routing, request config,
+  localized navigation, type safety, SEO, and rollout checks.
+seoTitle: next-intl Next.js Internationalization Skill
+seoDescription: >-
+  Reusable AI skill for integrating next-intl in Next.js apps with App Router
+  messages, i18n request configuration, NextIntlClientProvider, locale routing,
+  proxy or middleware, typed message keys, localized navigation, static
+  rendering, metadata, testing, SEO, safety, and privacy checks.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+websiteUrl: "https://next-intl.dev"
+repoUrl: "https://github.com/amannn/next-intl"
+documentationUrl: "https://next-intl.dev/docs/getting-started/app-router"
+downloadUrl: "https://github.com/amannn/next-intl/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add next-intl"
+usageSnippet: >-
+  Use this skill when a Next.js App Router project needs next-intl setup,
+  locale routing, translated messages, typed keys, localized metadata, or an
+  i18n rollout review.
+copySnippet: |-
+  # Trigger
+  "Apply the next-intl Next.js internationalization skill to this app."
+
+  # Required output
+  1) Next.js router, locale, message, routing, SEO, and cache inventory
+  2) next-intl install, request config, provider, routing/proxy, and navigation plan
+  3) Translation, type-safety, metadata, testing, and rollout checklist
+  4) Safety, privacy, SEO, fallback, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://next-intl.dev/docs/getting-started/app-router"
+  - "https://next-intl.dev/docs/routing/setup"
+  - "https://next-intl.dev/docs/usage/translations"
+  - "https://next-intl.dev/docs/workflows/typescript"
+  - "https://github.com/amannn/next-intl"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js project with App Router, Pages Router, or a known migration plan; App Router should be identified explicitly before applying current next-intl setup guidance."
+  - "Locale strategy covering supported locales, default locale, locale prefixes, domain routing, fallback behavior, and whether routes should use a top-level `[locale]` segment."
+  - "Message source plan covering local JSON files, remote CMS or translation management system, namespace structure, review workflow, and missing-key behavior."
+  - "Decision for where `i18n/request.ts`, routing config, navigation helpers, and proxy or middleware files belong in the repository layout."
+  - "SEO and analytics requirements for localized paths, canonical URLs, alternate links, metadata, sitemap behavior, redirects, and locale switch tracking."
+  - "Privacy policy for locale cookies, Accept-Language handling, geolocation, translated content, user-generated content, and any AI-assisted translation workflow."
+safetyNotes:
+  - "The download URL is the external `amannn/next-intl` source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Locale routing can change public URLs, redirects, cache keys, static rendering behavior, metadata, sitemap output, canonical URLs, and analytics attribution."
+  - "Proxy or middleware rules can run for broad request sets. Review matchers, excluded assets, API routes, auth routes, preview mode, and static files before shipping."
+  - "Do not put secrets, unreleased product copy, private customer examples, support transcripts, or regulated data into translation messages, examples, screenshots, or AI prompts."
+  - "AI-assisted translation output needs human review for product accuracy, legal terms, accessibility labels, cultural fit, pluralization, and formatting placeholders."
+  - "TypeScript message-key augmentation can expose missing keys and route type errors at build time. Treat new type failures as content or routing defects, not noise to suppress."
+  - "Static rendering with locale params can affect build size, revalidation, and deployment time. Review generated paths, `generateStaticParams`, and fallback strategy before broad locale rollout."
+  - "Locale switchers and redirects can lock users into the wrong locale or loop if cookies, domains, prefixes, and auth redirects are not tested together."
+privacyNotes:
+  - "next-intl projects can process locale preferences, route locale params, locale cookies, Accept-Language headers, localized content, user-facing copy, CMS payloads, and analytics events."
+  - "Translation files, CMS exports, screenshots, prompts, pull requests, and issue reports can reveal unreleased messaging, pricing, product plans, legal text, user examples, or internal route names."
+  - "Locale detection, domain routing, redirects, and analytics can combine language preference with IP-derived geography, logged-in user identifiers, or marketing attribution."
+  - "Use synthetic content, placeholder brands, redacted examples, and non-production locales for demos, screenshots, validation, and AI-assisted troubleshooting."
+  - "Review Next.js, next-intl, translation-management, CMS, analytics, logging, hosting, and AI-assistant retention behavior before using real customer content or support text in localization workflows."
+tags:
+  - next-intl
+  - nextjs
+  - i18n
+  - localization
+  - app-router
+keywords:
+  - "next-intl Next.js internationalization"
+  - "next-intl App Router"
+  - "Next.js i18n routing"
+  - "next-intl locale routing"
+  - "next-intl TypeScript messages"
+  - "NextIntlClientProvider"
+  - "Next.js localized metadata"
+readingTime: 8
+difficultyScore: 76
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on the next-intl App Router getting-started guide, routing
+setup guide, translations usage guide, TypeScript augmentation guide, official
+`amannn/next-intl` repository, and current npm metadata reviewed on
+**2026-06-04**. The current App Router docs install `next-intl`, create message
+files, wire `i18n/request.ts`, wrap the app with `NextIntlClientProvider`, and
+use `useTranslations` or `getTranslations` depending on component shape.
+
+The current routing setup docs use a central routing config, localized
+navigation helpers, a top-level `[locale]` segment for locale-based routing,
+and proxy or middleware behavior for locale negotiation depending on the
+project's Next.js version and file naming conventions.
+
+## Retrieval Sources
+
+- https://next-intl.dev/docs/getting-started/app-router
+- https://next-intl.dev/docs/routing/setup
+- https://next-intl.dev/docs/usage/translations
+- https://next-intl.dev/docs/workflows/typescript
+- https://github.com/amannn/next-intl
+
+Prefer the live next-intl docs and official repository over model memory for
+current package versions, App Router setup, proxy or middleware filenames,
+routing helpers, static rendering guidance, message typing, and integration
+patterns.
+
+## Scope Note
+
+Use this skill for Next.js projects that need next-intl setup, migration,
+localized routing, message organization, typed translation keys, metadata,
+locale switchers, or localization rollout review. It is not a generic
+translation-file hook, not a Mintlify docs workflow, not a CMS-localization
+strategy by itself, and not a replacement for product/legal review of
+translated content.
+
+## Core Workflow
+
+1. Inventory the app: Next.js version, App Router or Pages Router usage,
+   package manager, `/src` layout, current locale files, routing strategy,
+   middleware or proxy files, metadata, sitemaps, analytics, and deployment
+   provider.
+2. Confirm the target localization architecture: prefix-based routing,
+   domain-based routing, cookie-selected locale without unique pathnames, or a
+   phased migration from a single-language app.
+3. Add `next-intl` with the project package manager and record the exact
+   package version used by the repository.
+4. Create or update message files with namespaces that match the app's page,
+   feature, or design-system boundaries.
+5. Add or review `i18n/request.ts` so Server Components receive the correct
+   request-scoped locale, messages, time zone, and formatting defaults.
+6. Wire the next-intl plugin through Next.js config without breaking existing
+   Next.js plugins, bundle analyzer setup, redirects, rewrites, or experimental
+   flags.
+7. Wrap the app with `NextIntlClientProvider` only where Client Components need
+   translations, and avoid shipping unnecessary message namespaces to the
+   browser.
+8. For locale-based routing, define central routing config, localized
+   navigation helpers, route prefixes or domains, and top-level `[locale]`
+   layout behavior.
+9. Review proxy or middleware matchers. Exclude static assets, images, API
+   routes, auth callbacks, webhooks, and any paths that should not be localized.
+10. Use `useTranslations` in Client Components and `getTranslations` or other
+    server APIs in async Server Components, metadata, route handlers, and
+    server actions as documented.
+11. Add TypeScript augmentation only after message and routing structure are
+    stable enough that typed keys will help rather than create churn.
+12. Localize metadata, alternate links, canonical URLs, sitemaps, not-found
+    pages, error files, forms, emails, and accessibility labels where
+    applicable.
+13. Add tests and checks for locale redirects, missing messages, wrong-locale
+    URLs, locale switchers, metadata, static rendering, auth redirects, and
+    language-specific formatting.
+14. Produce a rollout plan covering preview validation, translator review,
+    SEO review, cache behavior, analytics changes, rollback, and missing-key
+    policy.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, `/src` layout, deployment
+  provider, and proxy or middleware naming convention.
+- Current localization state: supported locales, default locale, message files,
+  route structure, language switcher, URL policy, and missing-message behavior.
+- Public URL strategy: locale prefixes, custom pathnames, domain routing,
+  redirects, canonical URLs, alternate links, sitemap behavior, and SEO owner.
+- Translation workflow: local JSON, CMS, Crowdin or another translation
+  platform, review owners, AI translation policy, and release cadence.
+- Data sensitivity policy for product copy, legal text, customer examples,
+  user-generated content, analytics, and locale preferences.
+- Test matrix covering locales, route groups, auth flows, forms, metadata,
+  static pages, dynamic pages, and deployment environments.
+
+## Production Rules
+
+- Treat locale routing as a public URL migration. Review SEO, analytics,
+  redirects, canonical tags, alternate links, and sitemap output before launch.
+- Do not use proxy or middleware matchers that accidentally localize API routes,
+  auth callbacks, static assets, images, webhooks, or health checks.
+- Keep translated messages free of secrets, customer data, internal incident
+  details, unreleased legal copy, private roadmap text, and production support
+  examples.
+- Review pluralization, interpolation, rich text, dates, numbers, currencies,
+  time zones, right-to-left languages, and accessibility text with real locale
+  examples.
+- Avoid sending every message namespace to every Client Component. Keep
+  client-visible messages scoped to what the UI needs.
+- Use typed message keys and route helpers to catch missing keys and invalid
+  navigation paths once the message structure is stable.
+- Add rollback notes for URL changes, locale cookies, domain routing,
+  redirects, cache keys, and analytics dashboards.
+- Use synthetic or redacted content for prompts, screenshots, fixtures, and
+  issue reports.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for adding,
+  migrating, reviewing, and operating next-intl in Next.js apps.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  App Router i18n configuration, route files, message files, metadata, and
+  localized navigation.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for next-intl localization work.
+
+## Output Contract
+
+1. Source evidence: next-intl docs, package metadata, and repository URLs
+   reviewed, with date.
+2. App inventory: Next.js version, router mode, locales, messages, routes,
+   proxy or middleware, metadata, sitemap, analytics, and deployment target.
+3. Implementation plan: package install, request config, provider, routing
+   config, navigation helpers, message namespaces, TypeScript augmentation,
+   tests, and rollout path.
+4. Safety and privacy review: secrets, user data, translation review, locale
+   cookies, URL migration, SEO, analytics, logs, and AI translation risks.
+5. Validation plan: unit checks, route smoke tests, locale switch tests,
+   metadata checks, static rendering checks, preview deployment, and rollback.
+
+## Troubleshooting
+
+### Translations Work In One Component But Not Another
+
+Check whether the component is a Server Component or Client Component, whether
+the namespace is loaded for that request, and whether `NextIntlClientProvider`
+wraps the part of the tree that needs client-side translations.
+
+### Locale Routing Redirects Unexpectedly
+
+Inspect routing config, default locale, locale cookie, domain settings, proxy
+or middleware matcher, auth redirects, and whether static assets or API routes
+are being matched accidentally.
+
+### Static Rendering Stops Working
+
+Review locale params, generated static params, request-locale handling,
+metadata usage, dynamic APIs, and whether a layout or page forces dynamic
+rendering for all locales.
+
+### TypeScript Message Keys Fail The Build
+
+Confirm the message augmentation path, generated or declared message types,
+namespace names, deleted keys, moved keys, and whether a stale build cache is
+using old message definitions.
+
+### Localized SEO Looks Wrong
+
+Check canonical URLs, alternate links, route prefixes, domain routing,
+metadata, sitemap output, locale-specific slugs, and redirects from old URLs.
+
+## Prompt Starters
+
+- "Add next-intl to this Next.js App Router app with locale routing, typed
+  messages, and a safe rollout plan."
+- "Review this next-intl setup for routing, proxy matchers, message loading,
+  static rendering, SEO, and privacy risks."
+- "Migrate these hardcoded strings into next-intl namespaces and produce a
+  translator review checklist."
+- "Add localized metadata and navigation helpers for these locales without
+  breaking existing URLs."
+
+## Duplicate Check
+
+This entry is scoped to next-intl's official Next.js internationalization
+workflow. It is distinct from the existing i18n translation validator hook,
+Mintlify documentation automation, generic frontend agents, and broad
+translation-file validation content.
+
+## Editorial Disclosure
+
+This catalog entry was drafted from official next-intl documentation, official
+repository metadata, and current npm package metadata. It is not an affiliate
+listing, paid placement, or maintainer-verified package bundle.

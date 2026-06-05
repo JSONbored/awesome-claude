@@ -1,0 +1,303 @@
+---
+title: Datadog MCP Server for Claude
+slug: datadog-mcp-server
+category: mcp
+description: >-
+  Official Datadog MCP Server for connecting Claude, Codex, Cursor, and other
+  MCP clients to Datadog observability, incidents, logs, metrics, traces,
+  dashboards, monitors, notebooks, services, and security signals.
+cardDescription: >-
+  Connect Claude to Datadog telemetry, incidents, monitors, dashboards, logs,
+  traces, metrics, services, and tool-call audit data.
+seoTitle: Datadog MCP Server for Claude
+seoDescription: >-
+  Use Datadog MCP Server with Claude and other MCP clients to query Datadog
+  observability data, investigate incidents, inspect logs and traces, review
+  monitors, and constrain toolsets by product area.
+author: Datadog
+authorProfileUrl: "https://www.datadoghq.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+websiteUrl: "https://www.datadoghq.com/product/ai/mcp-server/"
+documentationUrl: "https://docs.datadoghq.com/mcp_server/"
+installable: true
+installCommand: "claude mcp add --transport http datadog-mcp <YOUR_MCP_SERVER_ENDPOINT>"
+usageSnippet: "claude mcp add --transport http datadog-mcp <YOUR_MCP_SERVER_ENDPOINT>?toolsets=apm,llmobs"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "datadog": {
+        "type": "http",
+        "url": "<YOUR_MCP_SERVER_ENDPOINT>?toolsets=apm,llmobs"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "datadog": {
+        "type": "http",
+        "url": "<YOUR_MCP_SERVER_ENDPOINT>",
+        "headers": {}
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Datadog account on a supported commercial Datadog site; Datadog documents that the MCP Server is not GovCloud compatible.
+  - MCP-capable client such as Claude, Claude Code, Codex, Cursor, Gemini CLI, Devin, Goose, OpenCode, VS Code, or another compatible client.
+  - Correct regional Datadog MCP endpoint for the account's Datadog site.
+  - OAuth access, or an approved API key and application key fallback when OAuth is not available.
+  - Datadog user role permissions for MCP Server access plus the underlying resources each enabled tool can read or write.
+  - Decision on which product toolsets to enable with the `toolsets` query parameter and which tools to exclude with `omit_tools`.
+  - Organization approval for sending selected observability context, prompts, and MCP tool-call metadata through the connected AI client.
+safetyNotes:
+  - >-
+    Treat Datadog MCP Server as a production observability and operations
+    interface. It can expose live incidents, monitors, logs, metrics, traces,
+    dashboards, notebooks, services, RUM events, hosts, SLOs, and security
+    context to the connected assistant.
+  - >-
+    Datadog separates the main remote MCP Server from the narrower local Code
+    Security MCP Server. Use this entry for Datadog telemetry and platform
+    tools; use the Code Security MCP Server only when the task is explicitly
+    local SAST, SCA, IaC, secrets, or SBOM scanning.
+  - >-
+    Enable the smallest useful toolsets first. Use `toolsets` and `omit_tools`
+    to keep context, permissions, and accidental action surface smaller than
+    `toolsets=all`.
+  - >-
+    Some tools can create or edit Datadog resources such as monitors and
+    notebooks. Require human review for generated monitor definitions, alerting
+    changes, incident updates, notebook edits, workflow actions, or any
+    operation that could page a team or change production observability state.
+  - >-
+    Datadog documents MCP-specific RBAC permissions as well as normal
+    underlying resource permissions. A user who can connect the MCP Server may
+    still need separate read or write permissions for monitors, logs, APM,
+    dashboards, notebooks, incidents, services, and other products.
+  - >-
+    The MCP Server has fair-use limits documented as 50 requests per 10 seconds
+    for tool-call bursts and 50,000 monthly tool calls, and Datadog notes that
+    those limits are subject to change.
+  - >-
+    Datadog states that the MCP Server is under significant development. Review
+    the official docs and available tool list before relying on a remembered
+    tool name, permission, limit, or behavior.
+privacyNotes:
+  - >-
+    Datadog says all MCP Server tool calls are recorded in Audit Trail with MCP
+    metadata including tool name, arguments, user identity, and MCP client.
+  - >-
+    Datadog also emits MCP usage metrics such as
+    `datadog.mcp.session.starts` and `datadog.mcp.tool.usage`, tagged with
+    values including user ID, user email, client name, and tool name.
+  - >-
+    Remote Datadog MCP Server usage can include prompts, transitions to and
+    from the Datadog login page, errors, user identifiers, and context leading
+    to MCP tool usage; Datadog documents that this data is stored for 120 days.
+  - >-
+    Tool results can include production logs, traces, metric values, monitor
+    states, dashboard names, notebook contents, incidents, service catalog
+    metadata, host data, security findings, RUM events, team ownership, and
+    operational timelines.
+  - >-
+    Claude transcripts, Codex logs, IDE logs, screenshots, exported notebooks,
+    support bundles, and incident summaries can retain Datadog-derived data
+    outside Datadog's normal access controls and retention policies.
+  - >-
+    Datadog describes the MCP Server as HIPAA-eligible, but users remain
+    responsible for confirming that any connected AI tool, client, workflow,
+    and retention path meets their compliance requirements.
+tags:
+  - datadog
+  - observability
+  - incidents
+  - mcp
+  - monitoring
+keywords:
+  - datadog mcp server
+  - datadog claude mcp
+  - datadog codex mcp
+  - datadog toolsets
+  - datadog mcp audit trail
+  - datadog llm observability mcp
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Datadog MCP Server is Datadog's official MCP interface for connecting AI
+agents to Datadog observability and operations context. It lets MCP clients such
+as Claude, Claude Code, Codex, Cursor, Gemini CLI, Devin, Goose, OpenCode, VS
+Code, and custom agents query and work with Datadog data through documented MCP
+tools.
+
+Use it when the assistant needs current Datadog telemetry during debugging,
+incident response, service review, alert triage, or production-readiness work.
+Keep the scope tight: start with read-only investigation, enable only the
+needed toolsets, and require human review before any assistant creates,
+modifies, publishes, or escalates operational state.
+
+## Features
+
+- Official Datadog MCP Server documented under Datadog's MCP Server docs.
+- Remote MCP setup for clients that support HTTP transport and OAuth.
+- Recommended Datadog Connector path for Claude.
+- Recommended Datadog plugin path for Claude Code, with bundled skills and
+  Datadog slash commands.
+- Codex setup through `~/.codex/config.toml` plus `codex mcp login datadog`.
+- Toolset selection through the `toolsets` query parameter.
+- Tool exclusion through the `omit_tools` query parameter.
+- Core tools for logs, metrics, traces, dashboards, monitors, incidents, hosts,
+  services, events, notebooks, RUM events, and service dependencies.
+- Product-specific toolsets for areas such as APM, LLM Observability, alerting,
+  RUM, dashboards, incidents, notebooks, cloud cost, and other Datadog product
+  surfaces as documented by Datadog.
+- Context controls such as response truncation and `max_tokens` parameters for
+  many tools.
+- Datadog Audit Trail events and MCP usage metrics for tracking tool calls.
+
+## Use Cases
+
+- Ask Claude to summarize active incidents, related monitors, recent deploy
+  events, service dependencies, and likely next read-only checks.
+- Investigate production errors by searching Datadog logs, traces, spans,
+  services, dashboards, and relevant metrics from one MCP client conversation.
+- Review an alert by pulling monitor context, metric history, service ownership,
+  and linked notebooks before proposing a change.
+- Use the APM and LLM Observability toolsets for focused service or model
+  workflow debugging without exposing every Datadog tool.
+- Generate a draft monitor or notebook section, then review it in Datadog before
+  publishing or using it in an incident.
+- Audit MCP usage through Datadog Audit Trail and MCP usage metrics after a
+  debugging session.
+
+## Installation
+
+### Claude
+
+Datadog recommends installing the Datadog Connector from the Claude Connectors
+Directory when it is available. Complete the OAuth flow and verify Datadog
+permissions for the resources the assistant should access.
+
+### Claude Code
+
+Datadog recommends the official Claude Code plugin when available:
+
+```plaintext
+/plugin install datadog@claude-plugins-official
+```
+
+For first-time setup, run `/ddsetup` or enter a Datadog-related prompt, then
+select the Datadog site, complete OAuth, and use `/ddtoolsets` to enable or
+disable product-specific tool groups.
+
+If the plugin is not available, add the remote MCP endpoint directly:
+
+```bash
+claude mcp add --transport http datadog-mcp <YOUR_MCP_SERVER_ENDPOINT>
+```
+
+### Codex
+
+Add the Datadog endpoint for the account's regional Datadog site to Codex:
+
+```toml
+[mcp_servers.datadog]
+url = "<YOUR_MCP_SERVER_ENDPOINT>"
+```
+
+Then authenticate:
+
+```bash
+codex mcp login datadog
+```
+
+### Toolsets
+
+Limit tool access at connection time. For example, this enables only APM and
+LLM Observability tools:
+
+```plaintext
+<YOUR_MCP_SERVER_ENDPOINT>?toolsets=apm,llmobs
+```
+
+Use `toolsets=all` only after reviewing permissions, client behavior, and
+context impact. Use `omit_tools` when a narrower allowlist is not practical.
+
+## Configuration
+
+```json
+{
+  "mcpServers": {
+    "datadog": {
+      "type": "http",
+      "url": "<YOUR_MCP_SERVER_ENDPOINT>?toolsets=apm,llmobs"
+    }
+  }
+}
+```
+
+## Examples
+
+### Investigate an incident
+
+```plaintext
+Use Datadog MCP to list active incidents, related alerting monitors, recent deployment events, and affected services. Do not make changes.
+```
+
+### Scope toolsets before debugging
+
+```plaintext
+Show which Datadog MCP tools are enabled in this client and what each can read or change before calling any production-impacting tool.
+```
+
+### Review observability coverage
+
+```plaintext
+Use Datadog MCP to review monitor and SLO coverage for service:checkout. Summarize gaps and propose draft monitor changes without publishing them.
+```
+
+### Audit tool usage
+
+```plaintext
+Find Datadog Audit Trail entries for MCP Server tool calls from the last debugging session and group them by user, client, and tool name.
+```
+
+## Source Notes
+
+- Datadog's MCP Server overview describes the server as a bridge between
+  Datadog observability data and AI agents that support MCP.
+- Datadog's AI-agent note says this is the main Datadog MCP Server for most
+  setup questions and distinguishes it from the local Code Security MCP Server.
+- Datadog setup docs describe Claude Connector, Claude Code plugin, direct
+  Claude Code HTTP setup, Codex config, OAuth, API/application key fallback,
+  role permissions, `toolsets`, and `omit_tools`.
+- Datadog tools docs list core tools for events, incidents, metrics, monitors,
+  traces, dashboards, notebooks, hosts, services, logs, RUM events, and related
+  product-specific toolsets.
+- Datadog documents MCP Audit Trail records, MCP usage metrics, fair-use rate
+  limits, HIPAA eligibility, no GovCloud compatibility, and 120-day retention
+  for certain remote MCP usage data.
+
+## Duplicate Check
+
+Checked current `upstream/main`, open PR titles, open PR changed files, source
+URLs, and content files for `Datadog MCP`, `datadog-mcp-server`,
+`docs.datadoghq.com/mcp_server`, `mcp.datadoghq`, `datadog.mcp`, and
+Datadog Code Security MCP overlap. Existing content mentions Datadog only as an
+example integration in broad observability or security entries; there is no
+dedicated Datadog MCP Server entry, source URL duplicate, or open content PR
+for this server.
+
+## Editorial Disclosure
+
+Datadog is a commercial observability and security platform, but this listing
+is not sponsored, paid, affiliate-backed, or submitted by Datadog. Use
+Datadog's current documentation, account permissions, regional site selector,
+privacy terms, and compliance requirements as the source of truth before
+connecting production data to any AI client.

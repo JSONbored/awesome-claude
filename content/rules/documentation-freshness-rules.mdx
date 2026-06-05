@@ -1,0 +1,213 @@
+---
+title: Documentation Freshness Rules
+slug: documentation-freshness-rules
+category: rules
+description: >-
+  Source-backed rules for public AI workflow registries that need to keep
+  directory entries, source links, version claims, examples, install guidance,
+  compatibility notes, and last-reviewed metadata fresh enough to trust.
+cardDescription: >-
+  Keep public registry documentation fresh by tracking source dates, reviewed
+  versions, stable URLs, stale claims, redirects, and update triggers.
+seoTitle: Documentation Freshness Rules for Public Registries
+seoDescription: >-
+  Practical documentation freshness rules for public AI workflow registries:
+  review dates, stable URLs, version claims, stale source links, redirects,
+  examples, and update triggers.
+author: MkDev11
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.w3.org/TR/dwbp/"
+sourceUrls:
+  - "https://www.w3.org/TR/dwbp/"
+  - "https://www.w3.org/TR/cooluris/"
+  - "https://www.rfc-editor.org/rfc/rfc9110.html"
+  - "https://schema.org/dateModified"
+  - "https://schema.org/datePublished"
+  - "https://schema.org/softwareVersion"
+installable: false
+usageSnippet: >-
+  Apply these rules before merging or refreshing a public registry entry whose
+  source docs, install commands, version claims, examples, compatibility notes,
+  pricing statements, or safety guidance may go stale.
+copySnippet: |-
+  You are reviewing documentation freshness for a public AI workflow registry.
+
+  Rules:
+  1. Record when the entry was reviewed and which source version or docs page it
+     reflects.
+  2. Prefer stable canonical URLs over release notes, redirects, short links, or
+     campaign URLs.
+  3. Treat install commands, compatibility claims, pricing, hosted-service
+     behavior, and safety notes as stale until source-backed.
+  4. Do not merge entries with broken source links or unverifiable current-state
+     claims.
+  5. Update examples when source docs, package versions, API behavior, or
+     platform requirements change.
+  6. Keep generated registry artifacts out of contributor PRs unless the
+     repository explicitly asks for them.
+estimatedSetupTime: 10 minutes
+difficulty: beginner
+prerequisites:
+  - A public registry entry, submission, or refresh PR with source URLs that users can inspect.
+  - Permission to request source updates, remove stale claims, or block merge when current behavior cannot be verified.
+  - Access to canonical docs, repository releases, package pages, changelogs, or standards pages for the listed workflow.
+  - A place to record last-reviewed date, reviewed version, known unknowns, and update triggers.
+safetyNotes:
+  - "Stale install commands, API examples, permissions, and compatibility notes can lead users to run unsafe, unsupported, or wrong commands."
+  - "Do not infer current safety behavior from old screenshots, generated summaries, marketing copy, or cached search snippets."
+  - "Escalate stale claims about security, privacy, pricing, licenses, support status, or production readiness before merge."
+privacyNotes:
+  - "Freshness review can expose private package names, internal docs, customer examples, local paths, account IDs, or vendor plan details if copied into public notes."
+  - "Use public source URLs and synthetic examples when documenting freshness; do not paste private changelogs or internal support replies."
+  - "Record uncertainty plainly rather than guessing retention, telemetry, hosted-service, or data-sharing behavior."
+tags:
+  - documentation-freshness
+  - public-registries
+  - source-review
+  - stale-docs
+  - metadata
+  - registry-quality
+keywords:
+  - documentation freshness rules
+  - public registry source freshness
+  - stale AI workflow documentation
+  - last reviewed metadata rules
+  - source-backed registry updates
+readingTime: 6
+difficultyScore: 35
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Purpose
+
+Use these rules when reviewing or refreshing documentation for a public AI
+workflow registry. The goal is to stop stale docs, stale examples, broken source
+links, and old compatibility claims from looking current just because they still
+render.
+
+Freshness is not only about dates. A source can be old but stable, or new but
+unverified. Review whether the registry entry still matches the source of truth
+users will rely on today.
+
+## Freshness Metadata
+
+Every public registry entry should make current-state claims reviewable.
+
+1. **Reviewed date.** Record when the entry or source claim was last checked.
+2. **Reviewed version.** Record package, app, API, spec, framework, model, or
+   docs version when the source provides one.
+3. **Canonical source URL.** Prefer stable docs, repo, package, release, or
+   standard URLs over blog posts, announcement pages, short links, and redirects.
+4. **Source type.** Distinguish docs, README, package metadata, changelog,
+   release note, standard, policy page, or maintainer review.
+5. **Update trigger.** Say what should cause a refresh: new major version,
+   package deprecation, API change, pricing change, policy update, broken link,
+   or safety/privacy change.
+6. **Known unknowns.** If current behavior cannot be verified, say so instead of
+   presenting the entry as current.
+
+## Review Rules
+
+- Verify every source URL still resolves to the expected canonical page.
+- Remove tracking parameters, campaign fragments, and stale redirect targets.
+- Re-check install commands against the current package manager, runtime, and
+  platform requirements.
+- Re-check examples when APIs, auth flows, command flags, environment variables,
+  model names, hosted plans, or file paths change.
+- Treat pricing, plan names, privacy behavior, telemetry, support level, license,
+  and production readiness as volatile claims.
+- Keep old release notes as history, not as evidence of current behavior.
+- Do not edit generated registry artifacts unless the repository explicitly asks
+  contributors to do so.
+
+## Stable Source Rules
+
+Stable URLs make future review easier.
+
+- Prefer documentation pages that remain valid across versions.
+- Use versioned pages when the entry depends on version-specific behavior.
+- Prefer canonical repository, package, or standard pages over search result
+  pages, CDN mirrors, screenshots, social posts, and copied snippets.
+- Keep one source of truth for each claim; do not cite multiple weak pages when
+  one canonical source is available.
+- If a URL redirects, verify the destination still supports the claim.
+- If a source page is removed, archive status can explain history, but a current
+  registry entry needs a current source or a clear stale/deprecated label.
+
+## Stale Claim Rules
+
+Request edits or block merge when an entry:
+
+- says "latest," "current," "new," "official," "production-ready," "secure,"
+  "free," "open source," or "supported" without current source evidence;
+- names an old package version but describes current behavior;
+- copies install commands from a README that changed runtime or permission
+  requirements;
+- links to examples that no longer match source docs;
+- describes hosted retention, telemetry, pricing, or account behavior from an
+  old plan page;
+- keeps a safety or privacy note after the underlying tool changed execution
+  surface, permissions, or data movement.
+
+## Reviewer Checklist
+
+- [ ] {"task": "Sources resolve", "description": "All source URLs resolve to expected canonical pages without unwanted redirects or tracking parameters"}
+- [ ] {"task": "Reviewed date", "description": "The entry records when the source-backed claims were last checked"}
+- [ ] {"task": "Version known", "description": "Package, API, framework, spec, model, or docs version is recorded when relevant"}
+- [ ] {"task": "Volatile claims checked", "description": "Install, pricing, support, privacy, safety, compatibility, and production-readiness claims have current evidence"}
+- [ ] {"task": "Examples match", "description": "Commands, config snippets, screenshots, and examples still match current source behavior"}
+- [ ] {"task": "Update trigger noted", "description": "Future reviewers can tell what event should cause the entry to be refreshed"}
+
+## Do Not Merge When
+
+- source URLs are broken, redirect to unrelated pages, or only work through a
+  private account;
+- freshness depends on screenshots, copied terminal output, AI summaries, or old
+  announcement posts instead of canonical source pages;
+- volatile claims are written as timeless facts;
+- examples use deprecated commands, old package names, removed APIs, or
+  unsupported runtime versions;
+- privacy, safety, license, pricing, or support claims are stale or unsourced;
+- the PR refreshes generated registry artifacts instead of the raw source entry.
+
+## Troubleshooting
+
+- **A source URL works but redirects:** update the entry to the canonical
+  destination if it still supports the claim.
+- **The docs have no visible date:** record the date you reviewed the page and
+  the version or release context you could verify.
+- **The package changed but docs did not:** mark the claim as uncertain and ask
+  for maintainer evidence or a safer wording.
+- **The current docs conflict with an old entry:** trust the current canonical
+  docs, then preserve history only when it matters to migration.
+- **The entry needs generated output:** update the raw source file and leave
+  generated artifacts to the maintainer workflow.
+
+## Duplicate Check
+
+Checked existing rules, guides, collections, hooks, skills, MCP entries,
+statuslines, registry quality code, submission validation code, and recent PRs
+for documentation freshness rules, stale source review, source freshness,
+last-reviewed metadata, registry freshness, versioned docs, and public registry
+update policy.
+
+Adjacent content includes a documentation coverage hook and registry quality
+code that tracks source freshness. This rules entry is distinct because it gives
+portable do/don't behavior for contributors and reviewers deciding whether a
+public registry entry's documentation and source claims are fresh enough to
+merge.
+
+## References
+
+- W3C Data on the Web Best Practices: https://www.w3.org/TR/dwbp/
+- W3C Cool URIs for the Semantic Web: https://www.w3.org/TR/cooluris/
+- RFC 9110 HTTP Semantics: https://www.rfc-editor.org/rfc/rfc9110.html
+- Schema.org dateModified property: https://schema.org/dateModified
+- Schema.org datePublished property: https://schema.org/datePublished
+- Schema.org softwareVersion property: https://schema.org/softwareVersion

@@ -1,0 +1,302 @@
+---
+title: PostHog Next.js Product Analytics Skill
+slug: posthog-nextjs-product-analytics
+category: skills
+description: >-
+  Add PostHog to a Next.js app with client and server event capture,
+  user identification, feature flags, session replay privacy controls,
+  reverse-proxy planning, and production analytics validation.
+cardDescription: >-
+  Add PostHog to Next.js with analytics, feature flags, replay privacy controls,
+  server events, and production checks.
+seoTitle: PostHog Next.js Product Analytics Skill
+seoDescription: >-
+  Reusable AI skill for integrating PostHog into Next.js apps using posthog-js,
+  posthog-node, instrumentation-client, feature flags, session replay privacy
+  controls, reverse proxies, event taxonomies, and analytics rollout review.
+author: oktofeesh1
+authorProfileUrl: "https://github.com/oktofeesh1"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+submittedAt: "2026-06-04"
+repoUrl: "https://github.com/PostHog/posthog-js"
+documentationUrl: "https://posthog.com/docs/libraries/next-js"
+downloadUrl: "https://github.com/PostHog/posthog-js/archive/refs/heads/main.zip"
+installable: true
+installCommand: "pnpm add posthog-js posthog-node @posthog/react"
+usageSnippet: >-
+  Use this skill when a Next.js project needs PostHog product analytics,
+  feature flags, session replay, event capture, server-side events, or a privacy
+  review before shipping analytics to production.
+copySnippet: |-
+  # Trigger
+  "Apply the PostHog Next.js product analytics skill to this app."
+
+  # Required output
+  1) Current analytics, routing, auth, consent, and data-classification inventory
+  2) PostHog client, server, feature flag, replay, proxy, and environment plan
+  3) Event taxonomy, identify/group, privacy masking, and validation checklist
+  4) Safety, privacy, retention, access-control, and rollback notes
+skillType: general
+skillLevel: advanced
+verificationStatus: validated
+verifiedAt: "2026-06-04"
+retrievalSources:
+  - "https://posthog.com/docs/libraries/next-js"
+  - "https://posthog.com/docs/libraries/js"
+  - "https://posthog.com/docs/session-replay"
+  - "https://posthog.com/docs/session-replay/privacy"
+  - "https://posthog.com/docs/feature-flags"
+  - "https://posthog.com/docs/feature-flags/bootstrapping"
+  - "https://github.com/PostHog/posthog-js"
+testedPlatforms:
+  - Claude
+  - Codex
+  - Windsurf
+  - Gemini
+  - Cursor
+  - Generic AGENTS
+prerequisites:
+  - "Next.js application with known App Router or Pages Router structure, package manager, deployment provider, and environment-variable path."
+  - "PostHog Cloud or self-hosted PostHog project, project token, region or host URL, and environment separation for local, preview, staging, and production."
+  - "Consent, cookie, retention, and data-classification requirements for the jurisdictions, customers, and product surfaces being tracked."
+  - "Inventory of public routes, authenticated routes, admin routes, checkout/payment screens, support screens, account settings, and any pages that display sensitive data."
+  - "Event taxonomy plan covering page views, user actions, conversion funnels, account or organization identifiers, feature flags, experiments, and server-side events."
+  - "Decision on session replay, autocapture, rageclicks, heatmaps, network capture, feature flags, reverse proxy, and whether PostHog should run in preview deployments."
+  - "Access-control plan for who can view PostHog dashboards, persons, recordings, feature flags, experiments, cohorts, and exported analytics data."
+safetyNotes:
+  - "The download URL is PostHog's external source archive, not a HeyClaude-packaged skill archive; review source provenance before using it in automated workflows."
+  - "Do not commit PostHog personal API keys, project API keys, write keys for other services, session cookies, OAuth credentials, data warehouse credentials, or copied dashboard values."
+  - "A PostHog project token is normally exposed to client-side code, but it still must be scoped to the intended project and environment; do not confuse it with private API credentials."
+  - "Analytics code can change route behavior, client bundle size, network requests, cookies, local storage, feature-flag rollout behavior, and server-side request timing."
+  - "Feature flags and experiments can alter production behavior for real users. Add owner, rollout, fallback, kill-switch, and cache/bootstrapping review before shipping."
+  - "Session replay, autocapture, heatmaps, and network capture can record sensitive product screens if masking and exclusion rules are incomplete."
+  - "Do not enable replay or autocapture on auth, payment, healthcare, education, finance, admin, internal tooling, or support-data screens without explicit privacy review."
+  - "If using a reverse proxy to improve event delivery, review CDN, middleware, rewrite, cache, rate-limit, WAF, and data-routing implications before deploying."
+privacyNotes:
+  - "PostHog can process user identifiers, account or organization IDs, event names, event properties, page URLs, referrers, device data, IP-derived context, cookies, local storage values, feature-flag evaluations, experiment assignments, and session recordings."
+  - "Session replay can capture rendered text, URLs, form states, clicks, scrolls, console context, and optional network metadata depending on configuration."
+  - "Mask inputs, sensitive text, query strings, authentication tokens, email addresses, IDs, payment fields, admin data, and support/customer content before enabling replay in production."
+  - "Use `ph-no-capture`, `maskTextSelector`, input masking, URL redaction, and recording start/stop controls for sensitive views instead of assuming defaults cover every custom component."
+  - "Use synthetic users and non-production PostHog projects for examples, screenshots, demos, issue reports, and AI-assisted debugging."
+  - "Avoid pasting raw recordings, person profiles, event exports, feature-flag targeting lists, customer identifiers, or dashboard screenshots into prompts or public issues."
+  - "Review PostHog Cloud/self-hosted retention, regional hosting, data-processing, team access, export, and deletion behavior before sending real customer data."
+tags:
+  - posthog
+  - nextjs
+  - product-analytics
+  - feature-flags
+  - session-replay
+keywords:
+  - "PostHog Next.js analytics"
+  - "posthog-js"
+  - "posthog-node"
+  - "Next.js product analytics"
+  - "PostHog feature flags"
+  - "PostHog session replay privacy"
+  - "PostHog reverse proxy"
+readingTime: 8
+difficultyScore: 72
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Knowledge Freshness
+
+This skill is based on PostHog's official Next.js guide, JavaScript SDK docs,
+session replay docs, session replay privacy controls, feature flag docs,
+feature flag bootstrapping guide, and `PostHog/posthog-js` repository reviewed
+on **2026-06-04**. The current Next.js guide covers `posthog-js`,
+`posthog-node`, client initialization through `instrumentation-client.js` or
+`instrumentation-client.ts`, `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`,
+`NEXT_PUBLIC_POSTHOG_HOST`, user identification, server-side analytics,
+feature flag access, and reverse-proxy options.
+
+## Retrieval Sources
+
+- https://posthog.com/docs/libraries/next-js
+- https://posthog.com/docs/libraries/js
+- https://posthog.com/docs/session-replay
+- https://posthog.com/docs/session-replay/privacy
+- https://posthog.com/docs/feature-flags
+- https://posthog.com/docs/feature-flags/bootstrapping
+- https://github.com/PostHog/posthog-js
+
+Prefer the live PostHog docs and official repository over model memory for
+package names, initialization files, SDK options, feature-flag APIs, replay
+masking behavior, reverse-proxy guidance, and privacy-control defaults.
+
+## Scope Note
+
+Use this skill for PostHog-backed product analytics in a Next.js application.
+It is not a generic analytics comparison, not a legal compliance checklist, and
+not permission to record real user sessions without consent, retention, access,
+and masking review.
+
+## Core Workflow
+
+1. Inventory the current Next.js version, App Router or Pages Router usage,
+   package manager, `/src` layout, server/client component boundaries,
+   middleware, rewrites, analytics code, auth provider, and deployment platform.
+2. Identify existing analytics, session replay, tag manager, feature flag,
+   error tracking, experiment, customer-data, and consent-management code before
+   adding PostHog.
+3. Confirm the PostHog project, region or host, project token, environment
+   separation, team access, data retention, and whether local or preview
+   deployments should send events.
+4. Add `posthog-js` for browser capture and `posthog-node` for server-side
+   capture only where both are needed. Add `@posthog/react` only when React
+   feature flag hooks are part of the implementation.
+5. Initialize the browser SDK from the documented Next.js client
+   instrumentation file and keep `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` and
+   `NEXT_PUBLIC_POSTHOG_HOST` environment-specific.
+6. Decide whether to enable autocapture, page views, session replay, heatmaps,
+   network capture, surveys, error tracking, and feature flags deliberately.
+   Do not accept broad capture defaults without route and data review.
+7. Build an event taxonomy before instrumenting. Name events consistently,
+   keep properties low-cardinality where possible, and avoid storing raw
+   secrets, prompts, emails, payment data, addresses, or support messages.
+8. Map identity behavior. Decide when to call `identify`, how to handle
+   anonymous users, how to reset on logout, how to represent organizations or
+   workspaces, and how backend events use the same stable IDs.
+9. For server-side events and feature flags, initialize a server-only PostHog
+   client, keep private environment variables out of the browser, flush or
+   shut down clients correctly in short-lived server contexts, and avoid
+   caching stale flag decisions accidentally.
+10. For feature flags, decide bootstrap strategy, fallback behavior, rollout
+    owner, kill switch, cache behavior, experiment exposure events, and how to
+    avoid client/server flicker.
+11. For session replay, review input masking, text masking, URL redaction,
+    `ph-no-capture`, sensitive third-party widgets, and recording controls
+    before enabling production recordings.
+12. If a reverse proxy is used, review Next.js rewrites or middleware, CDN
+    caching, WAF behavior, request headers, rate limits, region routing, and
+    failure behavior.
+13. Produce a validation plan that checks local opt-out behavior, preview
+    isolation, production event delivery, feature-flag decisions, replay
+    masking, consent behavior, dashboard access, and rollback.
+
+## Required Inputs
+
+- Next.js version, router mode, package manager, deployment provider, and
+  whether the app uses `instrumentation-client`.
+- Existing analytics, logging, replay, feature flag, A/B testing, tag manager,
+  and consent-management stack.
+- PostHog project token, host URL, region, environment mapping, retention
+  policy, and team access model.
+- Route inventory covering marketing, app, auth, checkout, billing, admin,
+  support, account settings, internal tools, and embedded third-party widgets.
+- Data-classification rules for event names, properties, URLs, user IDs,
+  organization IDs, recordings, exports, and dashboard screenshots.
+- Event taxonomy, funnels, conversion goals, feature flags, experiments,
+  cohorts, and server-side capture requirements.
+- Consent, opt-out, cookie, DNT, privacy-policy, and data-processing
+  requirements owned by the product or legal team.
+
+## Production Rules
+
+- Keep private PostHog API keys and account-level credentials out of browser
+  bundles. Client project tokens should still be scoped to the intended
+  PostHog project and environment.
+- Do not send raw passwords, auth tokens, session cookies, API keys, OAuth
+  codes, payment data, health records, education records, support transcripts,
+  private prompts, or customer content as event properties.
+- Treat session replay as sensitive user data. Review every tracked route,
+  form, modal, command palette, checkout surface, and admin/support view before
+  turning it on in production.
+- Mask or exclude sensitive content with code-level controls. Do not rely on a
+  screenshot review of a happy path to prove that all user data is protected.
+- Keep feature flag reads and writes deterministic enough for product
+  behavior. Server-rendered pages should avoid visible flicker and stale cached
+  flags.
+- Give every production flag or experiment an owner, rollout target, fallback,
+  monitoring plan, and removal plan. Remove stale flags after rollout.
+- Validate logout and account-switching behavior. Anonymous and identified
+  events should not leak one user's identity into another user's session.
+- Keep analytics dashboards, recordings, cohorts, and exports restricted to
+  the minimum team that needs them.
+- Use non-production projects and synthetic users for demos, public examples,
+  issue reports, and AI-assisted troubleshooting.
+
+## Compatibility
+
+### Native
+
+- **Claude Code / Claude**: use as a reusable Agent Skill for planning,
+  implementing, reviewing, and operating PostHog analytics in Next.js apps.
+- **Codex/OpenAI workflows**: use as `SKILL.md`-style instructions when editing
+  Next.js projects that add PostHog SDKs, feature flags, replay, or analytics
+  validation.
+
+### Manual Adaptation
+
+- **Cursor, Windsurf, Gemini, and Generic AGENTS files**: adapt the trigger,
+  workflow, safety notes, privacy notes, and output contract into repository
+  rules for analytics and feature flag work.
+
+## Output Contract
+
+1. Source evidence: PostHog docs and repository URLs reviewed, with date.
+2. App inventory: router, routes, auth, consent, existing analytics, feature
+   flags, replay surfaces, deployment environments, and sensitive data zones.
+3. Implementation plan: packages, client initialization, server client,
+   environment variables, event taxonomy, identify/group behavior, flags,
+   replay controls, reverse proxy, and dashboard access.
+4. Safety and privacy review: tokens, private API keys, event properties,
+   recordings, URLs, masking, retention, access control, exports, prompts, and
+   real-user data handling.
+5. Validation checklist: local no-send behavior, preview isolation, event
+   delivery, identify/reset, server capture, flag bootstrap, replay masking,
+   consent/opt-out, dashboard access, and rollback.
+
+## Troubleshooting
+
+**Issue:** Events appear locally but not in the intended PostHog project
+
+**Fix:** Check `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN`, `NEXT_PUBLIC_POSTHOG_HOST`,
+environment-specific build variables, ad blockers, reverse-proxy rewrites, and
+whether preview deployments are intentionally disabled.
+
+**Issue:** Feature flags flicker between server and client
+
+**Fix:** Review server-side evaluation, bootstrapping, distinct ID consistency,
+client hydration order, cache settings, and fallback behavior. Avoid rendering
+user-visible decisions before the intended flag value is available.
+
+**Issue:** Recordings show sensitive text, URLs, or account details
+
+**Fix:** Disable recording for the affected route until masking is fixed. Add
+input masking, text masking, URL redaction, `ph-no-capture`, and explicit
+recording controls, then validate with synthetic data.
+
+**Issue:** Server-side events are missing from route handlers or server actions
+
+**Fix:** Confirm the server client is initialized with server-only values, the
+runtime can reach the PostHog host, event capture is awaited where needed, and
+short-lived contexts flush or shut down the client before returning.
+
+**Issue:** Logout or account switching links events to the wrong user
+
+**Fix:** Review `identify`, anonymous ID handling, reset behavior, cookies,
+local storage, organization IDs, and backend distinct IDs. Test switching
+between two synthetic accounts in the same browser.
+
+## Duplicate And Source Review
+
+Current HeyClaude content has incidental PostHog mentions in Mintlify
+documentation automation and telemetry notes, plus generic product-management
+analytics content. There is no dedicated PostHog, `posthog-js`, `posthog-node`,
+PostHog Next.js, session replay privacy, or PostHog feature flag skill entry.
+This entry is specifically scoped to official PostHog integration work for
+Next.js apps and is source-backed by PostHog docs and the `PostHog/posthog-js`
+repository.
+
+## Editorial Disclosure
+
+This is a source-backed community content entry submitted by `oktofeesh1`.
+There is no paid placement, affiliate link, sponsorship, or maintainer-verified
+package artifact attached to this listing.

@@ -12,6 +12,7 @@ import {
   createGitHubAppJwt,
   getCommitValidationState,
   listPullRequestFiles,
+  upsertMarkerComment,
 } from "../apps/submission-gate/src/github";
 import {
   decryptText,
@@ -28,7 +29,12 @@ import {
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
 import {
+  approvalReviewBody,
+  enforceAutoMergeConfidenceFloor,
   markerComment,
+  normalizePrivateGateDecisionPayload,
+  retryingReviewComment,
+  supersededReviewComment,
   validationFailedDecision,
 } from "../apps/submission-gate/src/review";
 import {
@@ -401,7 +407,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("target.headSha = pullForNotification.head.sha");
     expect(source).toContain("target: {");
     expect(source).toContain("installationId: target.installationId");
-    expect(source).toContain("isRetryablePrivateReviewerDecision(decision)");
+    expect(source).toContain("normalizePrivateGateDecisionPayload(raw)");
+    expect(source).toContain("isRetryableGateDecision(decision)");
+    expect(source).toContain('"invalid_private_response"');
+    expect(source).toContain('"private_reviewer_unavailable"');
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
@@ -410,6 +419,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("strictDuplicatePolicy:");
     expect(source).toContain("relatedContentPolicy:");
     expect(source).toContain("collectionPolicy:");
+    expect(source).toContain("defensiveSecurityPolicy:");
+    expect(source).toContain(
+      "Do not close a submission merely because it defensively discusses OAuth",
+    );
     expect(source).toContain("deterministicDuplicateReview");
     expect(source).toContain('eventType: "duplicate_shadow_review"');
     expect(source).toContain('decision: "related_not_strict_duplicate"');
@@ -476,12 +489,20 @@ describe("Cloudflare submission gate helpers", () => {
       close: true,
     });
 
-    expect(body).toContain(
-      "<!-- heyclaude-submission-gate -->\nVerdict: Request changes\n\nSummary:",
-    );
-    expect(body).toContain("Source Review:");
-    expect(body).toContain("Recommended Action:");
+    expect(body).toContain("<!-- heyclaude-submission-gate -->\n> [!WARNING]");
+    expect(body).toContain("> ## ❌ Needs changes");
+    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v5`");
+    expect(body).toContain("> **Summary**");
+    expect(body).toContain("<summary><strong>ℹ️ info · Source Review</strong>");
+    expect(body).toContain("> **Recommended action**");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
     expect(body).toContain("single-shot submission review");
+    expect(body).toContain("Thanks for using [HeyClaude](https://heyclau.de)");
+    expect(body).toContain("<summary><strong>❤️ Share</strong></summary>");
+    expect(body).toContain("https://twitter.com/intent/tweet");
+    expect(body).toContain("https://www.reddit.com/submit");
+    expect(body).toContain("https://www.linkedin.com/sharing/share-offsite/");
+    expect(body).toContain("https://github.com/JSONbored/awesome-claude/fork");
   });
 
   it("renders accepted submissions as direct merge decisions", () => {
@@ -490,13 +511,292 @@ describe("Cloudflare submission gate helpers", () => {
       summary:
         "Summary:\n- Accepted after duplicate/history and source review.",
       labels: ["submission-merged-by-gate"],
+      confidence: 0.92,
+      scope: {
+        filePath: "content/mcp/example.mdx",
+        category: "mcp",
+        slug: "example",
+        status: "added",
+      },
     });
 
-    expect(body).toContain("Verdict: Accepted and merged");
+    expect(body).toContain("> [!TIP]");
+    expect(body).toContain("> ## ✅ Accepted and merged");
+    expect(body).toContain("> ✅ **Confidence:** 92%");
+    expect(body).toContain("`content/mcp/example.mdx`");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
     expect(body).toContain(
       "passed content validation, Superagent, and private review",
     );
     expect(body).toContain("merges accepted source PRs directly");
+    expect(body).toContain("JSONbored/awesome-claude");
+    expect(body).toContain("Fork HeyClaude");
+  });
+
+  it("renders deterministic closures without confidence noise or duplicate summary text", () => {
+    const body = markerComment({
+      verdict: "close",
+      summary: [
+        "Summary:",
+        "- This PR edits protected content identity, provenance, review, disclosure, source, or verification metadata.",
+        "- HeyClaude allows one-file content edits through this gate only when they avoid protected fields and keep the entry identity intact.",
+        "- Protected fields changed:",
+        "- `dateAdded`",
+        "- `packageVerified`",
+        "",
+        "Recommended Action:",
+        "- Close this PR.",
+      ].join("\n"),
+      labels: ["submission-closed-by-gate"],
+      close: true,
+      scope: {
+        filePath: "content/mcp/example.mdx",
+        category: "mcp",
+        slug: "example",
+        status: "modified",
+      },
+      checks: [
+        { name: "validate-content", status: "passed" },
+        { name: "Superagent Security Scan", status: "passed" },
+      ],
+    });
+
+    expect(body).toContain("> ℹ️ **Confidence:** rule-based");
+    expect(body).not.toContain("Confidence:** not provided");
+    const visibleBody = body.slice(0, body.indexOf("<details>"));
+    expect(visibleBody).not.toContain("Protected fields changed");
+    expect(visibleBody).not.toContain("`dateAdded`");
+    expect(body).toContain(
+      "<summary><strong>ℹ️ info · More Summary Detail</strong>",
+    );
+    expect(body).toContain("> - `dateAdded`");
+    expect(body).toContain("> - `packageVerified`");
+    expect(body).not.toContain("<summary><strong>Review metadata</strong>");
+    expect((body.match(/This PR edits protected/g) || []).length).toBe(1);
+    expect((body.match(/✅ `passed` validate-content/g) || []).length).toBe(1);
+  });
+
+  it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
+    expect(markerComment()).toContain("> ## ℹ️ Public validation running");
+    expect(markerComment()).toContain(
+      "> - ⏳ **Public validation:** `running`",
+    );
+    expect(markerComment()).toContain(
+      "> - ⏸️ **Private maintainer gate:** `waiting`",
+    );
+    expect(retryingReviewComment()).toContain("> ## ⚠️ Review retrying");
+    expect(retryingReviewComment()).toContain(
+      "> - ⚠️ **Private maintainer gate:** `retrying`",
+    );
+    expect(
+      supersededReviewComment(
+        "<!-- heyclaude-submission-gate -->",
+        "https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ),
+    ).toContain("> ## ℹ️ Superseded gate report");
+  });
+
+  it("keeps clean default-confidence merge verdicts on the merge path", () => {
+    const decision = enforceAutoMergeConfidenceFloor({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.76,
+      summary:
+        "Summary:\n- No blocking issues detected.\n- The PR meets all repository policies and can be merged directly.\nRecommended Action:\n- Recommend direct merge.",
+      labels: ["submission-merged-by-gate"],
+      checks: [{ name: "validate-content", status: "passed" }],
+      sections: [
+        {
+          id: "source_review",
+          status: "pass",
+          bullets: ["Primary source is reachable."],
+        },
+      ],
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "merge",
+      confidence: 0.76,
+      labels: ["submission-merged-by-gate"],
+    });
+    expect(decision.errors).toBeUndefined();
+  });
+
+  it("routes ambiguous low-confidence private merge verdicts to manual review", () => {
+    const decision = enforceAutoMergeConfidenceFloor({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.7,
+      summary:
+        "Summary:\n- Content appears useful, but evidence is not strong enough and the source claims could not be verified.",
+      labels: ["submission-merged-by-gate"],
+      checks: [{ name: "validate-content", status: "passed" }],
+      sections: [
+        {
+          id: "source_review",
+          status: "warn",
+          bullets: ["Source evidence is ambiguous."],
+        },
+      ],
+    });
+
+    expect(decision).toMatchObject({
+      verdict: "manual",
+      confidence: 0.7,
+      labels: ["submission-manual-review"],
+      errors: [
+        {
+          code: "low_private_review_confidence",
+          retryable: false,
+        },
+      ],
+    });
+    expect(decision.summary).toContain("unattended merge floor is 85%");
+    expect(markerComment(decision)).toContain("> [!IMPORTANT]");
+    expect(markerComment(decision)).toContain("Confidence Review");
+    expect(markerComment(decision)).toContain(
+      "needs maintainer judgment before automation continues",
+    );
+  });
+
+  it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "merge",
+        confidence: 0.91,
+        summary: ["Summary:", "- Looks good."],
+        labels: ["submission-merged-by-gate"],
+        scope: {
+          filePath: "content/mcp/example.mdx",
+          category: "mcp",
+          slug: "example",
+          status: "added",
+        },
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "recommended_action",
+            status: "pass",
+            bullets: ["Merge this PR."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.91,
+      checks: [{ name: "validate-content", status: "passed" }],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "request_changes",
+        confidence: 0.5,
+        summary: "No longer valid in V2.",
+        labels: [],
+        checks: [],
+        sections: [],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        verdict: "request_changes",
+        summary: "Temporary V1 fallback.",
+        labels: ["submission-closed-by-gate"],
+      }).decision,
+    ).toMatchObject({
+      verdict: "request_changes",
+      summary: "Temporary V1 fallback.",
+    });
+  });
+
+  it("keeps approval reviews short and links to the canonical report", () => {
+    expect(
+      approvalReviewBody(
+        "https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ),
+    ).toBe(
+      [
+        "Approved by HeyClaude Maintainer Agent.",
+        "",
+        "Full gate report: https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ].join("\n"),
+    );
+  });
+
+  it("updates the newest bot marker comment and supersedes older bot reports", async () => {
+    const fetchMock = vi.fn(
+      async (url: URL | RequestInfo, init?: RequestInit) => {
+        const value = String(url);
+        if (value.includes("/issues/42/comments?")) {
+          return Response.json([
+            {
+              id: 1,
+              body: "<!-- heyclaude-submission-gate -->\nOld report",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-1",
+              user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+            },
+            {
+              id: 2,
+              body: "<!-- heyclaude-submission-gate -->\nCurrent report",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+              user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+            },
+            {
+              id: 3,
+              body: "<!-- heyclaude-submission-gate -->\nPasted marker",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-3",
+              user: { login: "contributor", type: "User" },
+            },
+          ]);
+        }
+        const body = JSON.parse(String(init?.body || "{}")) as {
+          body?: string;
+        };
+        if (value.endsWith("/issues/comments/2")) {
+          expect(init?.method).toBe("PATCH");
+          expect(body.body).toBe("new canonical report");
+          return Response.json({
+            id: 2,
+            html_url:
+              "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+            user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+          });
+        }
+        if (value.endsWith("/issues/comments/1")) {
+          expect(init?.method).toBe("PATCH");
+          expect(body.body).toContain("Superseded gate report");
+          return Response.json({ id: 1 });
+        }
+        throw new Error(`Unexpected URL ${value}`);
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      upsertMarkerComment({
+        token: "ghs_test",
+        repo: { owner: "JSONbored", repo: "awesome-claude" },
+        issueNumber: 42,
+        marker: "<!-- heyclaude-submission-gate -->",
+        body: "new canonical report",
+      }),
+    ).resolves.toEqual({
+      id: 2,
+      url: "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+      supersededIds: [1],
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
   it("formats Discord decision notifications without marker or secret text", () => {
@@ -733,6 +1033,8 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("labels: [LABELS.merged, ...categoryLabels]");
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
+    expect(source).toContain("approvalReviewBody(params.reportCommentUrl)");
+    expect(source).toContain("reportCommentUrl: acceptedReport.url");
     expect(source).toContain("        const mergedSummary = [");
     expect(source).not.toContain(
       [
@@ -746,6 +1048,14 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('status: "merge_pending"');
     expect(source).toContain('decision: "merge_pending"');
     expect(source).toContain("message.retry({ delaySeconds: 30 })");
+    expect(source).toContain("AUTO_MERGE_CONFIDENCE_FLOOR");
+    expect(source).toContain("enforceAutoMergeConfidenceFloor(");
+    expect(source.indexOf("normalizeOneShotDecision(decision)")).toBeLessThan(
+      source.indexOf("enforceAutoMergeConfidenceFloor("),
+    );
+    expect(source.indexOf("enforceAutoMergeConfidenceFloor(")).toBeLessThan(
+      source.indexOf("const status = decisionStatus(decision.verdict)"),
+    );
   });
 
   it("closes direct content PRs when required validation fails", () => {
@@ -813,6 +1123,14 @@ describe("Cloudflare submission gate helpers", () => {
       terminalSetIndex,
       terminalSetEndIndex,
     );
+    const reconcileIndex = source.indexOf(
+      "async function reconcileTerminalPullRequest",
+    );
+    const reconcileEndIndex = source.indexOf(
+      "async function ignoreOutOfScopeReviewTarget",
+      reconcileIndex,
+    );
+    const reconcileBlock = source.slice(reconcileIndex, reconcileEndIndex);
 
     expect(source).toContain("const TERMINAL_GATE_VERDICTS = new Set");
     expect(source).toContain("const TERMINAL_PR_STATUSES = new Set");
@@ -856,6 +1174,7 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain('decision: "github_terminal_reconciled"');
     expect(source).toContain("clearVerdict: true");
     expect(source).toContain("clearTerminal: true");
+    expect(reconcileBlock).not.toContain("clearVerdict");
     expect(storageSource).toContain(
       "COALESCE(last_error, '') != 'GitHub terminal state verified.'",
     );
@@ -892,6 +1211,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listOpenPullRequests({");
     expect(source).toContain("scheduled-discovery-");
     expect(source).toContain(
+      'const closedTerminalButOpen = String(state?.status || "") === "closed"',
+    );
+    expect(source).toContain("!closedTerminalButOpen");
+    expect(source).toContain(
       "await applyUnderReviewToTarget(env, target, reviewScope)",
     );
     expect(source).toContain('"validation_pending"');
@@ -919,6 +1242,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
+    expect(source).toContain("retryReasons");
+    expect(source).toContain("staleStates");
+    expect(source).toContain("recentTerminal");
+    expect(source).toContain("deadLetterQueue");
+    expect(source).toContain("commentUrl");
+    expect(source).toContain("formatterVersion");
+    expect(readStorageSource()).toContain("comment_id AS commentId");
+    expect(readStorageSource()).toContain(
+      "formatter_version AS formatterVersion",
+    );
   });
 
   it("records pull request inspection failures before returning from webhooks", () => {
@@ -1343,6 +1676,87 @@ repoUrl: "https://github.com/microsoft/playwright-mcp.git?utm_source=heyclaude"
         expect.stringContaining("same canonical source URL"),
       ]),
     });
+  });
+
+  it("treats shared multi-entry MCP catalogs as related context", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/mcp/azure-mcp-server.mdx",
+      content: `---
+title: Azure MCP Server
+slug: azure-mcp-server
+category: mcp
+description: Official Microsoft Azure MCP server for Azure resource workflows.
+documentationUrl: "https://learn.microsoft.com/en-us/azure/developer/azure-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+packageUrl: "https://www.npmjs.com/package/@azure/mcp"
+---
+`,
+      label: "accepted entry content/mcp/azure-mcp-server.mdx",
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/mcp/microsoft-learn-mcp-server.mdx",
+      content: `---
+title: Microsoft Learn MCP Server
+slug: microsoft-learn-mcp-server
+category: mcp
+description: Official Microsoft Learn remote MCP server for documentation search.
+documentationUrl: "https://devblogs.microsoft.com/engineering-at-microsoft/how-we-built-the-microsoft-learn-mcp-server/"
+repoUrl: "https://github.com/microsoft/mcp"
+sourceUrl: "https://learn.microsoft.com/api/mcp"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://github.com/microsoft/mcp in mcp",
+            ),
+          ]),
+        }),
+      ]),
+    );
+  });
+
+  it("treats generic Claude docs pages as related context for statuslines", () => {
+    const existing = extractContentDuplicateSignals({
+      filePath: "content/statuslines/context-pressure-statusline.mdx",
+      content: `---
+title: Context Pressure Statusline
+slug: context-pressure-statusline
+category: statuslines
+description: Claude Code statusline for context pressure.
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+---
+`,
+    });
+    const candidate = extractContentDuplicateSignals({
+      filePath: "content/statuslines/mcp-auth-surface-statusline.mdx",
+      content: `---
+title: MCP Auth Surface Statusline
+slug: mcp-auth-surface-statusline
+category: statuslines
+description: Claude Code statusline for MCP authorization surface hints.
+documentationUrl: "https://code.claude.com/docs/en/statusline"
+---
+`,
+    });
+
+    expect(findStrictContentDuplicateMatch(candidate, [existing])).toBeNull();
+    expect(findRelatedContentMatches(candidate, [existing])).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          reasons: expect.arrayContaining([
+            expect.stringContaining(
+              "same multi-entry catalog source URL https://code.claude.com/docs/en/statusline in statuslines",
+            ),
+          ]),
+        }),
+      ]),
+    );
   });
 
   it("treats repeated same-scope collections as strict duplicates", () => {

@@ -1,0 +1,186 @@
+---
+title: Amplitude MCP Server for Claude
+slug: amplitude-mcp-server
+category: mcp
+description: >-
+  Official remote MCP server for querying and creating Amplitude analytics,
+  dashboards, experiments, cohorts, session replay insights, and product data
+  from Claude and other MCP clients.
+cardDescription: Connect Claude to Amplitude analytics, dashboards, experiments, and cohorts through OAuth.
+seoTitle: Amplitude MCP Server for Claude
+seoDescription: >-
+  Use Amplitude MCP Server with Claude Code, Cursor, ChatGPT, Codex CLI, and
+  other MCP clients to analyze product data, query dashboards, inspect
+  experiments, and create Amplitude content with OAuth-based access controls.
+author: Amplitude
+authorProfileUrl: "https://amplitude.com/"
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+websiteUrl: "https://amplitude.com/mcp-server"
+documentationUrl: "https://amplitude.com/docs/mcp"
+repoUrl: "https://github.com/amplitude/mcp-server-guide"
+installable: true
+installCommand: "claude mcp add -t http -s user amplitude https://mcp.amplitude.com/mcp"
+usageSnippet: "Use Amplitude MCP to inspect product analytics, then require human confirmation before creating or editing charts, dashboards, experiments, cohorts, metrics, or feature flags."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "amplitude": {
+        "url": "https://mcp.amplitude.com/mcp"
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "amplitude": {
+        "url": "https://mcp.amplitude.com/mcp"
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Existing Amplitude customer account with access to the projects you want Claude to analyze.
+  - MCP-capable client that supports remote Streamable HTTP servers, such as Claude Code, Cursor, ChatGPT, Codex CLI, Lovable, Kiro, or another compatible client.
+  - OAuth authorization through Amplitude for the user and organization being queried.
+  - Organization-level MCP access left enabled by an Amplitude administrator.
+  - Clear policy for whether AI tools may create or edit Amplitude charts, dashboards, notebooks, experiments, cohorts, metrics, feature flags, or annotations.
+safetyNotes:
+  - The authenticated Amplitude MCP server can expose tools that create and edit analytics content, not just read existing dashboards.
+  - Use the existing Amplitude permission model and keep users scoped to the projects and organizations they are allowed to inspect.
+  - Require human confirmation before Claude creates dashboards, edits notebooks, changes experiments, creates cohorts, updates metrics, or touches feature-flag workflows.
+  - Use the EU MCP endpoint only when the Amplitude data resides in the EU region; otherwise use the standard US endpoint.
+  - Consider progressive discovery to reduce tool-list size and force the assistant to describe a tool schema before calling higher-impact tools.
+  - Organization administrators can restrict or disable MCP access in Amplitude content access settings; use that control if AI access is not approved.
+privacyNotes:
+  - Amplitude MCP can expose product analytics, event data, user cohorts, experiment results, dashboard definitions, session replay context, feedback summaries, AI agent analytics, and account health signals to the connected AI client.
+  - AI providers may process the Amplitude data returned through MCP; review internal AI, privacy, GDPR, CCPA, and customer-data policies before connecting production projects.
+  - Assistant transcripts, MCP client logs, screenshots, support tickets, and exported chats can retain user identifiers, cohort definitions, behavioral data, experiment details, and roadmap-sensitive product insights.
+  - OAuth ties access to the current Amplitude user, but it does not make downstream model transcripts private by itself.
+sourceUrls:
+  - "https://amplitude.com/docs/mcp"
+  - "https://amplitude.com/docs/amplitude-ai/docs-mcp-server"
+  - "https://amplitude.com/mcp-server"
+  - "https://github.com/amplitude/mcp-server-guide"
+tags:
+  - amplitude
+  - mcp
+  - analytics
+  - experiments
+  - dashboards
+  - oauth
+keywords:
+  - Amplitude MCP Server
+  - Amplitude MCP Claude
+  - Amplitude Claude Code
+  - product analytics MCP
+  - remote MCP analytics server
+  - Amplitude OAuth MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Amplitude MCP Server is Amplitude's official remote Model Context Protocol
+server for bringing product analytics into AI clients. It lets Claude Code and
+other MCP-capable tools query Amplitude content, inspect product behavior, work
+with experiments, and create or edit Amplitude resources through natural
+language.
+
+The server is useful for teams that already rely on Amplitude dashboards,
+experiments, cohorts, session replay, and feedback workflows. Instead of asking
+Claude to reason from pasted screenshots or stale exports, users can connect
+the assistant to live Amplitude context through OAuth and the existing
+Amplitude permission model.
+
+Amplitude documents two product-data endpoints:
+
+- US/default: `https://mcp.amplitude.com/mcp`
+- EU residency: `https://mcp.eu.amplitude.com/mcp`
+
+Use the EU endpoint only when the relevant Amplitude data is in the EU region.
+
+## Features
+
+- Remote Streamable HTTP MCP server with OAuth authentication.
+- Product analytics questions over Amplitude projects the user can already
+  access.
+- Chart, dashboard, and notebook search, retrieval, analysis, creation, and
+  editing workflows.
+- Experiment and feature-flag workflows for setup, monitoring, stale-test
+  checks, and result interpretation.
+- Session Replay and debugging workflows for finding replay examples and
+  summarizing user friction.
+- Feedback and opportunity analysis across product signals.
+- AI agent analytics workflows for monitoring topics, quality, cost, errors,
+  and low-quality sessions.
+- Cohort, metric, account health, and journey-comparison workflows.
+- Progressive tool discovery with `?discovery=progressive` to keep the initial
+  tool list small and discover schemas on demand.
+- Organization admin controls for allowing or blocking MCP access.
+
+## Use Cases
+
+- Ask Claude why a weekly active user metric dropped and have it search
+  related charts, experiments, dashboards, and session replays.
+- Build or update an executive product dashboard from a concise set of goals.
+- Investigate signup, activation, checkout, onboarding, or retention funnels
+  without manually copying Amplitude screenshots into a prompt.
+- Monitor running experiments and flag stale tests, missing metrics, or risky
+  rollout decisions.
+- Create a cohort of high-value users, churn-risk users, or users who completed
+  a specific behavior in the last 30 days.
+- Summarize dashboard or notebook context before a product, growth, support, or
+  executive meeting.
+- Review AI agent quality, cost, performance, topics, and error trends when
+  those signals are tracked in Amplitude.
+
+## Installation
+
+### Claude Code
+
+Add the standard Amplitude MCP endpoint as a remote HTTP server:
+
+```sh
+claude mcp add -t http -s user amplitude https://mcp.amplitude.com/mcp
+```
+
+Open the MCP connection in Claude Code and complete the Amplitude OAuth flow.
+Make sure you authenticate with the right Amplitude organization and project.
+
+For EU-resident Amplitude data, use the EU endpoint instead:
+
+```sh
+claude mcp add -t http -s user amplitude-eu https://mcp.eu.amplitude.com/mcp
+```
+
+### Progressive discovery
+
+For large organizations or token-sensitive workflows, use progressive
+discovery:
+
+```sh
+claude mcp add -t http -s user amplitude https://mcp.amplitude.com/mcp?discovery=progressive
+```
+
+Then ask Claude to call `get_context`, `list_tool_categories`,
+`get_category_tools`, and `describe_tool` before using a specific analytics,
+dashboard, experiment, cohort, or replay tool.
+
+## Security Notes
+
+Amplitude MCP uses the current user's Amplitude permissions, but the data it
+returns still enters the connected AI client and model session. Treat it as a
+production data integration. Keep access limited to approved users, use admin
+controls when AI access is not allowed, and require confirmation before any
+write-capable tool creates or changes Amplitude content.
+
+## Related Resources
+
+- Amplitude MCP documentation - https://amplitude.com/docs/mcp
+- Amplitude Docs MCP server - https://amplitude.com/docs/amplitude-ai/docs-mcp-server
+- Amplitude MCP product page - https://amplitude.com/mcp-server
+- Amplitude MCP server guide - https://github.com/amplitude/mcp-server-guide

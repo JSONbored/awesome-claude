@@ -1,0 +1,252 @@
+---
+title: Auth0 MCP Server for Claude
+slug: auth0-mcp-server
+category: mcp
+description: >-
+  Connect Claude to Auth0's official local MCP server for tenant administration,
+  application setup, Actions, logs, forms, and scoped Management API workflows.
+cardDescription: >-
+  Official Auth0 MCP server for managing Auth0 tenants from Claude with
+  read-only and scoped tool controls.
+seoTitle: Auth0 MCP Server for Claude
+seoDescription: >-
+  Use Auth0 MCP Server with Claude to inspect and manage Auth0 applications,
+  APIs, Actions, logs, and forms through a local MCP server with scoped tenant
+  permissions.
+author: Auth0
+authorProfileUrl: "https://auth0.com/"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://auth0.com/"
+documentationUrl: "https://auth0.com/docs/get-started/auth0-mcp-server"
+repoUrl: "https://github.com/auth0/auth0-mcp-server"
+packageUrl: "https://www.npmjs.com/package/@auth0/auth0-mcp-server"
+installable: true
+installCommand: "npx @auth0/auth0-mcp-server init --read-only"
+usageSnippet: "Ask Claude to use Auth0 MCP to list recent failed login logs before drafting a tenant change."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "auth0": {
+        "command": "npx",
+        "args": ["-y", "@auth0/auth0-mcp-server", "run", "--read-only"],
+        "capabilities": ["tools"],
+        "env": {
+          "AUTH0_MCP_ANALYTICS": "false"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "auth0": {
+        "command": "npx",
+        "args": ["-y", "@auth0/auth0-mcp-server", "run", "--read-only"],
+        "capabilities": ["tools"],
+        "env": {
+          "AUTH0_MCP_ANALYTICS": "false"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Auth0 account and approval to connect an MCP client to the selected tenant.
+  - Node.js 18 or newer with `npx` available to the MCP client.
+  - MCP-capable client such as Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Gemini CLI, or another stdio-compatible client.
+  - Interactive browser access for the OAuth 2.0 device authorization setup flow, unless using the documented client-credentials path for private cloud tenants.
+  - Auth0 Management API scopes that match the intended work, starting with read-only scopes whenever possible.
+  - A non-production or development tenant for first-time setup and testing of mutating tools.
+safetyNotes:
+  - >-
+    Auth0 documents the server as beta software. Treat command behavior,
+    available tools, requested scopes, and client setup flows as subject to
+    change until Auth0 publishes a stable release.
+  - >-
+    Start with `--read-only` or a narrow `--tools` pattern such as
+    `auth0_list_*,auth0_get_*`. Enable create, update, deploy, or publish tools
+    only for a scoped task and an approved tenant.
+  - >-
+    The server can expose tools for applications, APIs, client grants, Actions,
+    logs, and forms. Some of those tools can change callback URLs, token
+    settings, Actions code, branding, and other live authentication behavior.
+  - >-
+    Review every mutating tool call before approving it. A mistaken tenant
+    change can break sign-in, weaken security settings, deploy incorrect
+    Actions, expose callback URLs, or affect production users.
+  - >-
+    Keep token lifetime and Management API scopes as small as possible when
+    using the client-credentials setup path. Revoke or rotate credentials that
+    were created for temporary MCP work.
+  - >-
+    Use `npx @auth0/auth0-mcp-server logout` when finished or when switching
+    tenants so local authentication state is removed from the system keychain.
+privacyNotes:
+  - >-
+    The local MCP server can send selected tenant operations to the Auth0
+    Management API and return application metadata, API identifiers, Actions
+    code, form configuration, log events, user identifiers, IP addresses, and
+    authentication error details into the model conversation.
+  - >-
+    Prompts, MCP client logs, Claude transcripts, terminal history, screenshots,
+    and issue comments can retain Auth0 resource names, tenant domains, client
+    IDs, redirect URLs, organization names, and troubleshooting details outside
+    Auth0's normal audit and retention controls.
+  - >-
+    Do not paste client secrets, access tokens, refresh tokens, private keys,
+    production user records, password-reset links, session cookies, or full log
+    payloads into the conversation.
+  - >-
+    Auth0 says the server stores credentials in the system keychain and redacts
+    sensitive response fields such as client secrets and tokens. Still review
+    assistant output before copying it into tickets, commits, runbooks, or
+    shared chats.
+  - >-
+    The server collects anonymized analytics by default according to Auth0's
+    README. Set `AUTH0_MCP_ANALYTICS=false` when analytics collection is not
+    approved for the environment.
+tags:
+  - auth0
+  - authentication
+  - identity
+  - security
+  - mcp
+keywords:
+  - Auth0 MCP Server
+  - Auth0 Claude MCP
+  - auth0-mcp-server
+  - Auth0 Management API MCP
+  - Auth0 Actions MCP
+  - Auth0 logs MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Auth0 MCP Server is Auth0's official local Model Context Protocol server for
+connecting Claude and other MCP-capable clients to Auth0 tenant administration
+workflows. It runs through the `@auth0/auth0-mcp-server` npm package, uses
+Auth0 authentication, and exposes Management API tools according to the scopes
+and tool filters you grant during setup.
+
+The best first use is read-only tenant inspection: list applications, inspect
+API resource servers, retrieve Actions, and review authentication logs before
+drafting a change. After you have reviewed the exact tools and scopes, the same
+server can assist with controlled create, update, deploy, and publish workflows
+for Auth0 resources.
+
+## Features
+
+- Official Auth0 documentation page for setup, authentication, client support,
+  tool access controls, and troubleshooting.
+- Public `auth0/auth0-mcp-server` source repository with an MIT license.
+- Published npm package at `@auth0/auth0-mcp-server`.
+- Local stdio MCP server that can be configured for Claude Desktop, Cursor,
+  VS Code, Windsurf, Gemini CLI, and other compatible clients.
+- OAuth 2.0 device authorization setup for standard Auth0 tenants.
+- Client-credentials setup path for private cloud tenants and other
+  non-interactive cases.
+- Read-only mode through `--read-only` or `AUTH0_MCP_READ_ONLY=true`.
+- Tool filtering with glob patterns through `--tools` or `AUTH0_MCP_TOOLS`.
+- Documented Management API scope selection during initialization.
+- System keychain credential storage, logout command, and redaction of sensitive
+  fields in tool responses.
+- Optional analytics opt-out with `AUTH0_MCP_ANALYTICS=false`.
+
+## Tool Surface
+
+Auth0 documents tools for these resource groups:
+
+- Applications: list, inspect, create, and update Auth0 applications.
+- Resource servers: list, inspect, create, and update APIs and scopes.
+- Application grants: create grants between applications and APIs.
+- Actions: list, inspect, create, update, and deploy Actions.
+- Logs: list recent tenant logs and retrieve a specific log event.
+- Forms: list, inspect, create, update, and publish forms.
+
+Use read-only mode when your task is investigation, support triage, onboarding,
+or documentation. Move to mutating tools only when the tenant, scope set, and
+approval path are explicit.
+
+## Installation
+
+### Auth0 Initialization
+
+Configure the Auth0 MCP Server with the safest starter mode:
+
+```bash
+npx @auth0/auth0-mcp-server init --read-only
+```
+
+For a narrower read-only tool set, use Auth0's documented tool filters:
+
+```bash
+npx @auth0/auth0-mcp-server init --tools 'auth0_list_*,auth0_get_*'
+```
+
+The initialization flow opens a browser for Auth0 authorization and lets you
+select the tenant and scopes. Restart your MCP client after setup.
+
+### MCP Client Config
+
+Use this stdio configuration when manually configuring a compatible client:
+
+```json
+{
+  "mcpServers": {
+    "auth0": {
+      "command": "npx",
+      "args": ["-y", "@auth0/auth0-mcp-server", "run", "--read-only"],
+      "capabilities": ["tools"],
+      "env": {
+        "AUTH0_MCP_ANALYTICS": "false"
+      }
+    }
+  }
+}
+```
+
+To enable a limited non-read-only surface, replace `--read-only` with a specific
+tool pattern and matching scopes. For example, a development-tenant workflow for
+applications might use `--tools 'auth0_*_application*'` only after the selected
+tenant and permissions are approved.
+
+## Use Cases
+
+- Ask Claude to list Auth0 applications and summarize callback URL drift before
+  changing a web app configuration.
+- Review recent failed login logs, blocked attempts, or tenant errors while
+  debugging an authentication incident.
+- Inspect resource server scopes before drafting an API authorization update.
+- Retrieve an Action's current code and ask Claude to explain what it changes in
+  the login or token flow.
+- Create or update a development tenant application after confirming redirect
+  URLs, allowed origins, token settings, and ownership.
+- Draft a new Action in a non-production tenant, review the code manually, then
+  approve deployment only after tests pass.
+- Compare form configuration or branding across tenants before publishing a
+  change.
+
+## Safety Checklist
+
+- Use a development tenant for first-time setup and mutating workflows.
+- Prefer `--read-only` until the task genuinely requires create, update,
+  deploy, or publish tools.
+- Grant only the Auth0 Management API scopes required for the current task.
+- Confirm the selected tenant before approving tool calls.
+- Keep MCP client approval prompts enabled for every mutating operation.
+- Do not expose Auth0 secrets or production user records in prompts.
+- Run `npx @auth0/auth0-mcp-server session` to check the active tenant and
+  authentication state when unsure.
+- Run `npx @auth0/auth0-mcp-server logout` after temporary administration work.
+
+## Source Links
+
+- Auth0 documentation: https://auth0.com/docs/get-started/auth0-mcp-server
+- Source repository: https://github.com/auth0/auth0-mcp-server
+- npm package: https://www.npmjs.com/package/@auth0/auth0-mcp-server
+- MCP specification: https://modelcontextprotocol.io/specification/2025-06-18/

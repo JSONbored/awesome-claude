@@ -1,0 +1,366 @@
+---
+title: MongoDB MCP Server for Claude
+slug: mongodb-mcp-server
+category: mcp
+description: >-
+  Official MongoDB MCP server that connects Claude and other MCP clients to
+  MongoDB databases and MongoDB Atlas for read-only analysis, schema metadata,
+  aggregation, Atlas project operations, performance advisor data, exports, and
+  MongoDB Assistant knowledge search.
+cardDescription: >-
+  Connect Claude to MongoDB databases, Atlas clusters, schemas, aggregations,
+  exports, and MongoDB Assistant knowledge search.
+seoTitle: MongoDB MCP Server for Claude
+seoDescription: >-
+  Use MongoDB MCP Server with Claude to inspect MongoDB databases and Atlas
+  clusters, query collections, analyze schemas, run aggregations, export data,
+  and search MongoDB Assistant knowledge.
+author: MongoDB
+authorProfileUrl: "https://www.mongodb.com/"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-04"
+documentationUrl: "https://www.mongodb.com/docs/mcp-server/overview/"
+repoUrl: "https://github.com/mongodb-js/mongodb-mcp-server"
+installable: true
+installCommand: "npx -y mongodb-mcp-server@latest --readOnly"
+usageSnippet: "npx -y mongodb-mcp-server@latest --readOnly"
+copySnippet: |-
+  {
+    "mcpServers": {
+      "MongoDB": {
+        "command": "npx",
+        "args": ["-y", "mongodb-mcp-server@latest", "--readOnly"],
+        "env": {
+          "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/myDatabase"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "MongoDB": {
+        "command": "npx",
+        "args": ["-y", "mongodb-mcp-server@latest", "--readOnly", "--indexCheck"],
+        "env": {
+          "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/myDatabase",
+          "MDB_MCP_TELEMETRY": "disabled"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 15 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 20.19 or later, Node.js 22.12 or later, or a supported newer Node.js version for running the npm package.
+  - MongoDB connection string for a local, self-hosted, or Atlas cluster, or MongoDB Atlas service account credentials for Atlas tools.
+  - MCP client configuration for Claude Desktop, Claude Code, Cursor, VS Code, GitHub Copilot CLI, OpenCode, Windsurf, or another compatible client.
+  - Least-privilege Atlas service account roles and API access-list configuration when enabling Atlas operations.
+  - Decision on read-only mode, disabled tool categories, confirmation-required tools, index-check enforcement, maximum documents or bytes per query, export location, logging, and telemetry.
+  - Review process for any write-capable database, collection, index, Atlas cluster, database user, access-list, stream processing, or Atlas Local operation.
+safetyNotes:
+  - >-
+    MongoDB's README uses `--readOnly` in examples by default. Keep read-only
+    mode enabled for analysis so create, update, and delete operation types are
+    not registered with the server.
+  - >-
+    Without read-only mode, the server can create collections and indexes,
+    insert documents, update many documents, delete many documents, drop
+    indexes, drop collections, drop databases, create Atlas projects and
+    clusters, manage access lists, create database users, and manage stream
+    processing resources.
+  - >-
+    Use `disabledTools` to remove tool names, operation types, or categories
+    such as `create`, `update`, `delete`, `atlas`, or `mongodb` when a client
+    should only perform a narrow workflow.
+  - >-
+    Confirmation-required tools depend on MCP client elicitation support. If a
+    client does not support elicitation, review whether the server still
+    executes those tools without a confirmation prompt.
+  - >-
+    Use `indexCheck` and bounded query limits when letting an agent run find or
+    aggregation operations against shared, large, or production-like datasets.
+  - >-
+    HTTP transport is not recommended for production without authentication,
+    HTTPS, firewalls or private networking, rate limiting, and a review of
+    request headers, externally managed sessions, host binding, and port
+    exposure.
+  - >-
+    Atlas service account credentials should use the minimum required
+    project-level roles. Avoid Organization Owner unless full organization
+    administration is explicitly required.
+  - >-
+    Connection strings and Atlas API credentials should be passed through
+    environment variables or protected config files rather than command-line
+    arguments, which can appear in process lists and logs.
+privacyNotes:
+  - >-
+    Tool results can expose database names, collection names, index metadata,
+    schemas, document samples, aggregation results, exports, logs, Atlas
+    organization and project metadata, cluster names, alerts, users, access
+    lists, slow query samples, and performance advisor recommendations.
+  - >-
+    Connection strings can include usernames, passwords, hosts, database names,
+    auth sources, TLS options, and replica set details; keep them out of
+    prompts, screenshots, shell history, command-line arguments, and shared MCP
+    config files.
+  - >-
+    Atlas API client IDs and client secrets grant Atlas access according to
+    service account roles and should be short-lived, scoped, rotated, and kept
+    out of logs and transcripts.
+  - >-
+    Exported data is stored temporarily on the machine running the MCP server
+    until cleanup, and export directories require restrictive filesystem
+    permissions because exported documents may contain sensitive data.
+  - >-
+    The default logger configuration can write logs to disk and send logs to
+    the MCP client, so log paths, terminal output, AI transcripts, and client
+    logs should be treated as sensitive.
+  - >-
+    Telemetry is enabled by default according to the README and can be disabled
+    with `MDB_MCP_TELEMETRY=disabled`, `--telemetry disabled`, or
+    `DO_NOT_TRACK=1`.
+tags:
+  - mongodb
+  - atlas
+  - databases
+  - mcp
+  - sql
+keywords:
+  - mongodb mcp
+  - mongodb atlas mcp
+  - mongodb-mcp-server
+  - mdb mcp connection string
+  - atlas service account
+  - mongodb assistant
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+MongoDB MCP Server connects Claude and other MCP-capable clients to MongoDB
+databases and MongoDB Atlas through a local stdio server, Docker container, or
+HTTP transport. It gives an assistant tools for database inspection, find and
+aggregation queries, schema and index metadata, Atlas project and cluster
+operations, performance advisor data, exports, Atlas Local deployments, and
+MongoDB Assistant knowledge search.
+
+The safest default is to run it with `--readOnly`, pass credentials through
+environment variables, and disable tool categories that are not needed for the
+current task. MongoDB's own examples include read-only mode by default, and the
+server exposes additional guardrails for disabled tools, confirmation-required
+tools, index checking, query limits, export cleanup, logging, and telemetry.
+
+## Features
+
+- Local stdio MCP server through `npx -y mongodb-mcp-server@latest`.
+- Docker-based setup with the official `mongodb/mongodb-mcp-server` image.
+- Optional Streamable HTTP transport with configurable host, port, request
+  headers, response type, session handling, and monitoring endpoints.
+- Connection through MongoDB connection strings or MongoDB Atlas service account
+  credentials.
+- Read-only mode that restricts the server to read, connect, and metadata
+  operation types.
+- Disabled tool configuration by tool name, operation type, or category.
+- Confirmation-required tool configuration for destructive or sensitive tools
+  when the MCP client supports elicitation.
+- MongoDB database tools for finding documents, running aggregations, listing
+  databases and collections, inspecting schema and indexes, explaining queries,
+  exporting results, and reading logs.
+- Atlas tools for organizations, projects, clusters, database users, access
+  lists, alerts, performance advisor recommendations, Atlas Stream Processing,
+  and Atlas Local deployments.
+- MongoDB Assistant tools for searching official documentation and curated
+  MongoDB guidance.
+- Resources for redacted configuration, MongoDB debug information, and exported
+  data.
+
+## Use Cases
+
+- Ask Claude to list MongoDB databases and collections before touching
+  application data.
+- Inspect collection schemas, indexes, and storage size while planning a model
+  or API change.
+- Run bounded read-only find or aggregation queries against development or
+  staging data.
+- Use Atlas Performance Advisor and slow query samples to investigate query
+  performance.
+- Search MongoDB Assistant knowledge while implementing a driver, Atlas, or
+  schema-design workflow.
+- Export query results for short-lived local analysis with explicit cleanup and
+  access controls.
+- Manage Atlas projects, clusters, access lists, database users, or stream
+  processing resources only after narrowing roles and requiring human approval.
+
+## Installation
+
+### Read-only stdio setup
+
+Pass the MongoDB connection string through an environment variable and keep
+read-only mode enabled:
+
+```json
+{
+  "mcpServers": {
+    "MongoDB": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest", "--readOnly"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/myDatabase"
+      }
+    }
+  }
+}
+```
+
+### Read-only Atlas setup
+
+Use Atlas service account credentials when Atlas tools are required:
+
+```json
+{
+  "mcpServers": {
+    "MongoDB": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest", "--readOnly"],
+      "env": {
+        "MDB_MCP_API_CLIENT_ID": "ATLAS_SERVICE_ACCOUNT_CLIENT_ID",
+        "MDB_MCP_API_CLIENT_SECRET": "ATLAS_SERVICE_ACCOUNT_CLIENT_SECRET"
+      }
+    }
+  }
+}
+```
+
+### Docker setup
+
+Run the official Docker image with read-only mode and credentials supplied as
+environment variables:
+
+```json
+{
+  "mcpServers": {
+    "MongoDB": {
+      "command": "docker",
+      "args": [
+        "run",
+        "--rm",
+        "-i",
+        "-e",
+        "MDB_MCP_CONNECTION_STRING",
+        "-e",
+        "MDB_MCP_READ_ONLY=true",
+        "mongodb/mongodb-mcp-server:latest"
+      ],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/myDatabase"
+      }
+    }
+  }
+}
+```
+
+## Configuration
+
+### Disable writes and expensive query patterns
+
+```bash
+export MDB_MCP_READ_ONLY=true
+export MDB_MCP_DISABLED_TOOLS="create,update,delete"
+export MDB_MCP_INDEX_CHECK=true
+export MDB_MCP_MAX_DOCUMENTS_PER_QUERY=100
+export MDB_MCP_TELEMETRY=disabled
+```
+
+### Protect logs and exports
+
+```bash
+export MDB_MCP_LOGGERS="mcp,stderr"
+export MDB_MCP_EXPORTS_PATH="/path/to/restricted/mongodb-mcp-exports"
+```
+
+## Examples
+
+### Inspect collections safely
+
+```plaintext
+Using MongoDB MCP in read-only mode, list databases and collections, then summarize likely application data boundaries without modifying anything.
+```
+
+### Review schema and indexes
+
+```plaintext
+Describe the schema and indexes for the orders collection, then identify queries that may need a supporting index.
+```
+
+### Run a bounded aggregation
+
+```plaintext
+Run a read-only aggregation that counts orders by status and returns only aggregate totals, not raw customer documents.
+```
+
+### Check Atlas performance recommendations
+
+```plaintext
+Use Atlas Performance Advisor for the selected project and summarize suggested indexes and slow query samples without creating resources.
+```
+
+### Search MongoDB guidance
+
+```plaintext
+Search MongoDB Assistant knowledge for schema design guidance related to time-series data and summarize the official recommendations.
+```
+
+## Source notes
+
+- The official repository describes MongoDB MCP Server as a Model Context
+  Protocol server for interacting with MongoDB databases and MongoDB Atlas.
+- The README says the server will not start unless configured with either a
+  MongoDB connection string or Atlas API credentials.
+- The README lists Node.js requirements and documents setup for MCP clients,
+  `npx`, Docker, HTTP transport, Copilot CLI, and OpenCode.
+- The README states that examples include `--readOnly` by default and says to
+  remove it only when write operations are needed.
+- The README recommends environment variables for sensitive configuration such
+  as connection strings and Atlas API credentials instead of command-line
+  arguments because command-line arguments can appear in process lists and
+  logs.
+- The README lists MongoDB database tools such as `find`, `aggregate`,
+  `collection-schema`, `collection-indexes`, `explain`, `export`, `insert-many`,
+  `update-many`, `delete-many`, `drop-collection`, and `drop-database`.
+- The README lists Atlas tools for organizations, projects, clusters, alerts,
+  access lists, database users, performance advisor, stream processing, and
+  Atlas Local deployments.
+- The README documents `MDB_MCP_READ_ONLY` and `--readOnly`, saying read-only
+  mode allows only read, connect, and metadata operation types.
+- The README documents `disabledTools`, operation-type categories, default
+  confirmation-required tools, `indexCheck`, max document and byte limits,
+  export cleanup, loggers, and telemetry opt-out.
+- The README warns that HTTP transport is not recommended for production use
+  without authentication, HTTPS or TLS, private networking or firewalls, rate
+  limiting, and not exposing it directly to the internet.
+- The README's Atlas API permissions section recommends least-privilege service
+  account roles and warns that Organization Owner is rarely necessary.
+- The repository is `mongodb-js/mongodb-mcp-server`, is Apache-2.0 licensed,
+  active, and maintained by MongoDB.
+
+## Duplicate check
+
+Checked current `content/mcp/`, `content/tools/`, guides, skills, agents, hooks,
+open pull requests, live issue state, and repository-wide content for `MongoDB
+MCP`, `mongodb-js/mongodb-mcp-server`, `mongodb-mcp-server`,
+`www.mongodb.com/docs/mcp-server`, `MDB_MCP_CONNECTION_STRING`,
+`MDB_MCP_READ_ONLY`, `Atlas service account`, `MongoDB Atlas MCP`, and
+`MongoDB Assistant`. No dedicated MongoDB MCP entry, target file, exact source
+URL duplicate, issue duplicate, semantic duplicate, or open duplicate PR was
+found.
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate link is used. MongoDB MCP
+Server is Apache-2.0 open-source software maintained by MongoDB; MongoDB Atlas,
+MongoDB databases, cloud providers, Docker, MCP clients, API credentials,
+telemetry, logs, exports, and downstream storage or analysis systems may have
+separate licenses, billing, terms, privacy obligations, and access controls.

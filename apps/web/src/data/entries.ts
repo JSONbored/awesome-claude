@@ -113,21 +113,26 @@ const BEST_LIST_SEEDS: BestListSeed[] = seoClusterDefinitions.map((definition) =
   intro: definition.description,
 }));
 
+export function hasBestListInstallTrust(entry: Entry) {
+  const hasInstallSurface = Boolean(
+    entry.installCommand ||
+    entry.configSnippet ||
+    entry.downloadUrl ||
+    entry.copySnippet ||
+    entry.usageSnippet,
+  );
+  const hasTrustedInstall = Boolean(
+    entry.packageVerified || entry.trust === "trusted" || entry.source === "first-party",
+  );
+
+  return hasInstallSurface && hasTrustedInstall;
+}
+
 function matchesBestListSeed(entry: Entry, seed: BestListSeed) {
   if (!seed.categories.includes(entry.category)) return false;
   if (seed.requireSource && entry.source === "unverified") return false;
 
-  if (seed.requireInstallTrust) {
-    const hasInstallSurface = Boolean(
-      entry.installCommand || entry.configSnippet || entry.downloadUrl || entry.fullCopy,
-    );
-    const hasTrustedInstall =
-      entry.packageVerified ||
-      entry.trust === "trusted" ||
-      entry.source === "first-party" ||
-      entry.source === "source-backed";
-    if (!hasInstallSurface || !hasTrustedInstall) return false;
-  }
+  if (seed.requireInstallTrust && !hasBestListInstallTrust(entry)) return false;
 
   return true;
 }

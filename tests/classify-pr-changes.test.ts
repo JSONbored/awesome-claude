@@ -56,6 +56,9 @@ function runClassifier(
       cwd,
       env: {
         ...process.env,
+        BASE_REF: "",
+        GITHUB_BASE_REF: "",
+        HEAD_SHA: "",
         GITHUB_HEAD_REF: "contributor/source-entry",
         HEAD_REF: "contributor/source-entry",
         ...extraEnv,
@@ -122,6 +125,45 @@ describe("PR change classifier", () => {
       web: "false",
       raycast: "false",
     });
+  });
+
+  it("uses the current base ref and PR head SHA instead of stale merge refs", () => {
+    const { cwd, baseSha } = createFixtureRepo();
+
+    git(cwd, ["switch", "-c", "feature"]);
+    const registryDir = path.join(cwd, "packages", "registry", "src");
+    fs.mkdirSync(registryDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(registryDir, "package-spec.js"),
+      "export const packageSpec = {};\n",
+    );
+    git(cwd, ["add", "packages/registry/src/package-spec.js"]);
+    git(cwd, ["commit", "-m", "update registry package spec"]);
+    const headSha = git(cwd, ["rev-parse", "HEAD"]);
+
+    git(cwd, ["switch", "main"]);
+    const contentDir = path.join(cwd, "content", "mcp");
+    fs.mkdirSync(contentDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(contentDir, "already-merged.mdx"),
+      "---\ntitle: Already Merged\n---\n",
+    );
+    git(cwd, ["add", "content/mcp/already-merged.mdx"]);
+    git(cwd, ["commit", "-m", "add unrelated base content"]);
+
+    const outputs = runClassifier(cwd, baseSha, {
+      BASE_REF: "main",
+      HEAD_SHA: headSha,
+    });
+    expect(outputs).toMatchObject({
+      content: "false",
+      registry: "true",
+      web: "false",
+      raycast: "false",
+    });
+    expect(JSON.parse(outputs.changed_files_json)).toEqual([
+      "packages/registry/src/package-spec.js",
+    ]);
   });
 
   it("routes direct PR submission automation changes through full owned validation lanes", () => {

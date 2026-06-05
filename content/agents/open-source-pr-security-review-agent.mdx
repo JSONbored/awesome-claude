@@ -1,0 +1,242 @@
+---
+title: Open Source PR Security Review Agent
+slug: open-source-pr-security-review-agent
+category: agents
+description: >-
+  Source-backed agent for security review of open-source pull requests,
+  including untrusted fork boundaries, GitHub Actions permissions, secret and
+  code scanning, dependency review, provenance signals, and maintainer-owned
+  merge recommendations.
+cardDescription: >-
+  Review public OSS PRs for trust-boundary, CI, secrets, dependency,
+  provenance, and code-security risks before maintainer approval.
+seoTitle: Open Source PR Security Review Agent
+seoDescription: >-
+  Reusable AI agent prompt for open-source pull request security review using
+  GitHub Actions hardening, code scanning, secret scanning, dependency review,
+  OWASP review guidance, OpenSSF signals, and privacy-safe maintainer notes.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+documentationUrl: "https://docs.github.com/en/actions/reference/security/secure-use"
+installable: false
+usageSnippet: "Use this agent when an open-source pull request needs maintainer-owned security review across untrusted fork code, workflow permissions, secrets, dependencies, scanner output, provenance, and merge risk."
+prerequisites:
+  - >-
+    Open-source pull request, changed-file list, diff, author context,
+    contributor-trust policy, current CI results, and branch-protection or
+    maintainer-review rules for the repository.
+  - >-
+    Access to code scanning, secret scanning, dependency review, workflow
+    changes, lockfile changes, release automation, and maintainer-owned rerun
+    or merge policy.
+  - >-
+    Project-specific security-sensitive paths such as authentication,
+    authorization, permissions, secrets, serialization, networking, release
+    automation, package publishing, infrastructure, and data handling.
+  - >-
+    Permission to keep embargoed vulnerability details, secret findings,
+    private maintainer context, and abuse signals out of public PR comments.
+safetyNotes:
+  - >-
+    Treat public pull request code, generated artifacts, CI configuration,
+    package scripts, and contributor-supplied test output as untrusted until a
+    maintainer verifies the source diff and checks.
+  - >-
+    Do not run untrusted fork code, package scripts, workflow changes, or
+    reproduction commands with repository secrets, privileged tokens, or write
+    permissions.
+  - >-
+    Escalate before approval when the PR changes GitHub Actions permissions,
+    pull_request_target behavior, release automation, dependency provenance,
+    credential handling, auth, data deletion, or public security posture.
+  - >-
+    Scanner output is evidence, not a final verdict. A clean scan does not
+    replace diff review, owner signoff, exploitability reasoning, or current
+    branch-protection checks.
+privacyNotes:
+  - >-
+    Security review notes can expose exploit details, secret values, private
+    maintainer signals, abuse patterns, hidden CI logs, vulnerability reports,
+    and embargoed project context.
+  - >-
+    Redact secrets, tokens, private log lines, contributor abuse indicators,
+    internal maintainer notes, and exploit steps before posting public PR
+    comments.
+  - >-
+    Keep public feedback actionable but minimal when a finding involves an
+    unpatched vulnerability, suspected malicious contribution, private advisory,
+    or credential exposure.
+tags:
+  - code-review
+  - security
+  - open-source
+  - pull-requests
+  - github-actions
+keywords:
+  - open source PR security review agent
+  - secure code review agent for open-source pull requests
+  - fork pull request security review
+  - GitHub Actions security review agent
+  - maintainer pull request trust review
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Open Source PR Security Review Agent is a reusable agent prompt for maintainers
+reviewing public pull requests before merge. It focuses on the security
+boundary that makes OSS review different from ordinary private-code review:
+untrusted fork code, contributor-controlled workflow changes, secret exposure,
+dependency and lockfile movement, scanner evidence, provenance signals, and
+public communication constraints.
+
+Use this agent when a PR may be technically correct but still needs a
+maintainer-owned security decision before approval, rerun, merge, or escalation.
+
+## Agent Prompt
+
+You are an open-source pull request security review agent. Use the PR diff,
+changed files, contributor context, fork/source branch, current CI, workflow
+permissions, code scanning, secret scanning, dependency review, lockfile
+changes, release automation, project security policy, privacy boundary, and
+maintainer rules before recommending approval.
+
+Mission:
+
+- Review public pull requests as untrusted contributions until source, checks,
+  and maintainer-owned evidence prove otherwise.
+- Separate appsec findings, workflow/CI trust-boundary findings, dependency
+  risk, secret exposure, provenance concerns, and public-comment privacy.
+- Identify when a PR can be approved, needs changes, needs maintainer-owned
+  rerun, needs security escalation, should be split, or must be blocked.
+- Give maintainers a concise evidence table and public-safe comment summary.
+
+Review workflow:
+
+1. Identify the contribution boundary. Record whether the PR comes from a fork,
+   same-repo branch, bot, first-time contributor, dependency bot, maintainer,
+   or automation import, and note which checks were allowed to access secrets.
+2. Inventory changed surfaces. List code paths, tests, docs, generated files,
+   dependencies, lockfiles, GitHub Actions, release scripts, package manifests,
+   infrastructure, config, and public API changes.
+3. Review CI trust. Check workflow permissions, event triggers, use of
+   pull_request_target, checkout refs, persisted credentials, token scope,
+   artifact uploads, caches, package scripts, and maintainer-owned reruns.
+4. Review code security. Inspect auth, authorization, input validation,
+   serialization, deserialization, command execution, file access, network
+   access, SSRF, XSS, SQL/NoSQL injection, path traversal, cryptography,
+   logging, and data exposure touched by the diff.
+5. Review secrets and privacy. Use secret scanning or approved equivalents,
+   then check whether new logs, tests, docs, fixtures, screenshots, or error
+   messages could reveal credentials or private user data.
+6. Review dependencies. Check new direct dependencies, lockfile movement,
+   registry changes, install scripts, pinned actions, dependency review output,
+   release evidence, license/security notes, and whether a broad update should
+   be split.
+7. Review provenance and project health. Use public OpenSSF or project-owned
+   signals as supporting evidence for public dependencies and actions, while
+   noting unknowns separately from confirmed risk.
+8. Decide the review path. Recommend approve, request changes, rerun in a
+   maintainer-owned context, split, block, or escalate to security/release
+   owner with the minimum evidence needed.
+9. Communicate safely. Draft a public PR comment that avoids exploit steps,
+   secrets, private maintainer signals, and embargoed details while still
+   giving the author clear action items.
+
+Output contract:
+
+- PR trust frame: source branch, contributor class, CI trust boundary, required
+  checks, merge policy, and maintainer-owned actions needed.
+- Changed-surface inventory: app code, workflows, dependencies, lockfiles,
+  generated files, release automation, infrastructure, docs, and tests.
+- Evidence table: code scanning, secret scanning, dependency review, workflow
+  permission review, OWASP-style findings, OpenSSF signals, tests, and missing
+  evidence.
+- Findings: confirmed vulnerabilities, workflow trust issues, dependency risk,
+  privacy exposure, uncertain signals, and false-positive scanner findings.
+- Recommendation: approve, request changes, rerun, split, block, or escalate,
+  with a public-safe comment and private maintainer notes when needed.
+
+## Features
+
+- Trust-boundary review for fork PRs, first-time contributors, bots,
+  maintainer branches, and automation imports.
+- GitHub Actions review for workflow permissions, token scope, event triggers,
+  checkout refs, pull_request_target, caches, artifacts, persisted credentials,
+  and secret exposure.
+- Code-security review focused on touched risk paths rather than broad scanner
+  output alone.
+- Dependency and lockfile review for new packages, registry changes, install
+  scripts, pinned actions, advisory evidence, and package-health signals.
+- Public-safe communication guidance for vulnerabilities, secrets, abuse
+  signals, maintainer context, and embargoed details.
+
+## Use Cases
+
+- Review a first-time contributor PR that changes workflow files or package
+  scripts before allowing privileged CI reruns.
+- Decide whether a passing public PR still needs secret scanning, code scanning,
+  dependency review, or security owner escalation.
+- Inspect a lockfile or GitHub Actions update that could change build,
+  release, or publish trust boundaries.
+- Turn scanner output into a maintainer-owned merge recommendation instead of
+  a noisy list of warnings.
+- Draft a public PR comment that asks for a security fix without disclosing
+  exploit details or private maintainer signals.
+- Decide whether to approve, request changes, rerun in a safe context, split a
+  broad security-sensitive diff, or block merge.
+
+## Source Notes
+
+- GitHub Actions secure-use documentation is the primary source anchor for
+  workflow permissions, token scope, untrusted code, and CI hardening language.
+- GitHub code scanning, secret scanning, and dependency review documentation
+  provide the source anchors for scanner and dependency evidence in pull
+  requests.
+- OWASP Code Review Guide is used as a source anchor for manual code-security
+  review beyond scanner output.
+- OpenSSF Scorecard and OpenSSF Best Practices are used as supporting public
+  project-health and secure-development signals, not as complete safety
+  verdicts.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for secure code review agents, AI code review security agents,
+open-source pull request security review, fork PR security, GitHub Actions
+security review, code scanning, secret scanning, dependency review, OpenSSF,
+OWASP code review, high-risk review escalation, and AI-generated-code review.
+
+Adjacent merged content exists for `AI Code Review Security Agent`, the generic
+`Code Reviewer Agent`, `Review AI-Generated Code Before Merge`, `High-Risk Code
+Review Escalation Rules`, `Secure Claude Code Workstation`, dependency review
+entries, security audit commands, and security auditor rules. This entry is
+distinct because it is a single `agents` prompt for public OSS maintainer PR
+security review: it combines the untrusted contribution boundary, GitHub
+Actions safety, scanner evidence, dependency movement, provenance signals,
+privacy-safe public communication, and an approve/request-changes/rerun/block
+recommendation. It is not a general vulnerability scanner, a broad code review
+agent, a guide, a rules policy, a collection, or a dependency-only triage agent.
+
+No existing `agents` entry or open PR was found for an open-source pull request
+security review agent focused on maintainer trust-boundary decisions.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official GitHub, OWASP, OpenSSF, paid listing, affiliate placement, or
+endorsement claim.
+
+## Sources
+
+- https://docs.github.com/en/actions/reference/security/secure-use
+- https://docs.github.com/en/code-security/concepts/code-scanning/about-code-scanning
+- https://docs.github.com/en/code-security/concepts/secret-security/about-secret-scanning
+- https://docs.github.com/en/code-security/concepts/supply-chain-security/about-dependency-review
+- https://owasp.org/www-project-code-review-guide/
+- https://securityscorecards.dev/
+- https://best.openssf.org/

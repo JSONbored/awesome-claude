@@ -1,0 +1,210 @@
+---
+title: Build Cloudflare Workers AI Agents With Durable State
+slug: cloudflare-workers-ai-agents-durable-state
+category: guides
+description: >-
+  A practical architecture guide for building AI agents on Cloudflare Workers
+  with Workers AI inference and durable per-agent state. Use the Agents API,
+  Durable Objects, bindings, and Workers observability to keep agent sessions
+  reliable across requests.
+cardDescription: Build Workers AI agents with durable session and workflow state.
+seoTitle: Build Cloudflare Workers AI Agents With Durable State
+seoDescription: >-
+  Learn how to design Cloudflare Workers AI agents with durable state using the
+  Agents API, Durable Objects, Workers AI bindings, storage boundaries, and
+  observability.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-04"
+usageSnippet: >-
+  Put model calls behind Workers AI, keep long-lived agent memory and workflow
+  state in a Durable Object or Agent instance, bind services through Wrangler,
+  and log enough request, state, and model metadata to debug behavior after
+  deploy.
+prerequisites:
+  - A Cloudflare account with Workers, Workers AI, and Durable Objects available for the target environment.
+  - Wrangler and a Worker project configured for TypeScript or JavaScript.
+  - A clear state boundary, such as one agent per user, workspace, conversation, job, or document.
+  - Test prompts, expected model responses, and sample state transitions for local or staging validation.
+safetyNotes:
+  - Keep model output reviewable before it triggers irreversible product actions, external messages, or billing-sensitive work.
+  - Store only the durable state the agent needs; avoid persisting full prompts, files, or transcripts when summaries or structured state are enough.
+  - Add idempotency and replay handling for events that may retry, arrive out of order, or resume after an agent instance restarts.
+privacyNotes:
+  - Workers logs, Durable Object storage, Workers AI prompts, model outputs, request headers, and bound service data may contain user or business context.
+  - Redact sensitive fields before logging and define retention for prompts, intermediate reasoning, tool results, and conversation state.
+  - Separate staging and production state so test prompts and generated outputs cannot leak into live sessions.
+sourceUrls:
+  - "https://developers.cloudflare.com/agents/"
+  - "https://developers.cloudflare.com/agents/runtime/agents-api/"
+  - "https://developers.cloudflare.com/workers-ai/"
+  - "https://developers.cloudflare.com/durable-objects/"
+  - "https://developers.cloudflare.com/durable-objects/api/state/"
+  - "https://developers.cloudflare.com/workers/runtime-apis/bindings/"
+  - "https://developers.cloudflare.com/workers/observability/logs/workers-logs/"
+tags:
+  - cloudflare
+  - workers-ai
+  - agents
+  - durable-objects
+  - edge
+  - observability
+  - state-management
+keywords:
+  - cloudflare workers ai agents
+  - durable state ai agents
+  - cloudflare agents api
+  - workers ai durable objects
+  - edge ai agent architecture
+readingTime: 8
+difficultyScore: 63
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## TL;DR
+
+Cloudflare Workers can handle the request path, Workers AI can run model
+inference, and Durable Objects or the Agents runtime can hold the state that
+needs to survive between requests. The design trick is to keep the model call
+stateless and make the agent state explicit: session facts, workflow progress,
+tool results, retry markers, and user-visible decisions.
+
+Use this guide when you want an edge-deployed agent that can remember where it
+is in a task without turning every prompt into a large, fragile transcript.
+
+## Prerequisites & Requirements
+
+- [ ] {"task": "Cloudflare project", "description": "Workers, Workers AI, and Durable Objects are available in the account/environment"}
+- [ ] {"task": "Wrangler config", "description": "Bindings for Workers AI, Durable Objects, and any storage services are configured per environment"}
+- [ ] {"task": "State model", "description": "You know whether state is scoped by user, workspace, conversation, job, or document"}
+- [ ] {"task": "Evaluation data", "description": "Sample prompts and expected state transitions exist for local or staging checks"}
+
+## Core Concepts Explained
+
+### Workers handle the edge request path
+
+Workers are the HTTP entry point for your agent. They route requests, validate
+input, call the right Agent or Durable Object instance, and return a response to
+the client.
+
+### Workers AI handles inference
+
+Workers AI is the model execution layer. Keep calls to the model explicit and
+record the metadata you need to debug outputs later, such as model name, prompt
+version, request id, latency, and outcome category.
+
+### Durable state belongs outside the prompt
+
+Prompts are context, not a database. Durable Objects and the Agents runtime give
+you a place to store state that must survive a request: workflow step, compact
+memory, preferences, pending tool results, retry markers, and approval status.
+
+### Bindings make dependencies visible
+
+Cloudflare bindings connect a Worker to platform resources such as Workers AI,
+Durable Objects, D1, KV, R2, Queues, or environment-specific configuration.
+Keeping those dependencies in bindings makes deployments easier to review than
+hidden service URLs scattered through code.
+
+## Step-by-Step Implementation Guide
+
+1. **Choose the agent identity.** Decide what one durable agent represents: a
+   user, conversation, workspace, document, long-running job, or external
+   workflow. This identity determines the Durable Object key or Agent instance
+   you route to.
+
+2. **Define the state schema.** Start with structured fields instead of a raw
+   transcript. Useful fields include `status`, `summary`, `pendingAction`,
+   `lastModel`, `promptVersion`, `lastError`, `retryCount`, and a compact list
+   of facts the agent must remember.
+
+3. **Configure bindings per environment.** Bind Workers AI for inference and the
+   Durable Object or Agents runtime for state. Keep staging and production
+   bindings separate so test runs cannot touch live state.
+
+4. **Route requests through the state owner.** The Worker should validate input,
+   identify the agent instance, load or update state, call Workers AI when
+   needed, and write back the resulting state transition.
+
+5. **Keep model prompts small and sourced from state.** Build each model prompt
+   from the current request, compact durable state, and any retrieved facts. Do
+   not rely on a growing conversation transcript as the only memory layer.
+
+6. **Make tool and event handling idempotent.** Store request ids, step ids, or
+   external event ids so retries do not duplicate user-visible work. If a model
+   response proposes an action, save the proposal and require a separate
+   confirmation path for important actions.
+
+7. **Log operational metadata.** Use Workers logs to capture request ids, agent
+   ids, state version, model, latency, outcome, and error class. Redact prompt
+   content and user data unless your team has a clear retention policy.
+
+8. **Test state transitions, not just responses.** A good test checks that the
+   agent moves from one durable state to the next after a prompt, retry, timeout,
+   or invalid model output.
+
+9. **Add migration and reset paths.** Durable state lives beyond one deploy.
+   Keep versioned state readers, a migration plan for schema changes, and a
+   reset path for broken or abandoned agent instances.
+
+## Architecture Checklist
+
+- [ ] {"task": "Agent identity is stable", "description": "Every request routes to the intended user, conversation, job, or workspace instance"}
+- [ ] {"task": "State is structured", "description": "Durable memory uses fields and compact summaries instead of unbounded transcripts"}
+- [ ] {"task": "Bindings are explicit", "description": "Workers AI, Durable Objects, and storage services are configured through environment bindings"}
+- [ ] {"task": "Model calls are observable", "description": "Model name, prompt version, latency, outcome, and error class are logged without sensitive prompt text"}
+- [ ] {"task": "Retries are safe", "description": "Events and tool proposals include ids so duplicate delivery does not duplicate work"}
+- [ ] {"task": "State versions are handled", "description": "The app can read old state and migrate or reset it safely"}
+- [ ] {"task": "Staging is isolated", "description": "Test prompts, state, and logs stay separate from production sessions"}
+
+## When to Use This Pattern
+
+Use Workers AI plus durable state when:
+
+- The agent must remember progress across HTTP requests or WebSocket messages.
+- A user may close the client and return to the same task later.
+- The model call can be stateless, but the workflow cannot.
+- You need an edge-hosted runtime with platform bindings and deployable
+  observability.
+
+Choose a simpler stateless Worker when:
+
+- Each request can be answered from the request body alone.
+- There is no need to resume, retry, compact, or inspect agent state.
+- Logs and analytics are enough to understand behavior after the response.
+
+## Troubleshooting
+
+- **The agent forgets previous work**: check that state is written after each
+  transition and that requests route to the same durable identity.
+- **State grows too quickly**: replace raw transcripts with summaries, facts,
+  counters, and links to external records.
+- **Retries duplicate actions**: store request or event ids before performing
+  user-visible work.
+- **A deploy breaks old sessions**: add state-version handling and migrate old
+  records lazily when the agent loads them.
+- **Logs are too noisy or sensitive**: log ids, versions, timings, and outcome
+  classes, then keep prompt content out of default logs.
+
+## Duplicate Check
+
+This guide is distinct from existing Cloudflare tool and skill entries. Those
+entries describe Cloudflare Agents SDK, Workers AI, deploy readiness, or general
+Cloudflare capability packs; this entry is a guide for designing the durable
+state boundary of a Workers AI agent and validating the resulting architecture.
+
+## References
+
+- Cloudflare Agents documentation - https://developers.cloudflare.com/agents/
+- Cloudflare Agents API - https://developers.cloudflare.com/agents/runtime/agents-api/
+- Cloudflare Workers AI - https://developers.cloudflare.com/workers-ai/
+- Cloudflare Durable Objects - https://developers.cloudflare.com/durable-objects/
+- Durable Object state API - https://developers.cloudflare.com/durable-objects/api/state/
+- Workers bindings - https://developers.cloudflare.com/workers/runtime-apis/bindings/
+- Workers Logs - https://developers.cloudflare.com/workers/observability/logs/workers-logs/

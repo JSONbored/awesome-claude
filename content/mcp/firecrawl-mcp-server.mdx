@@ -1,0 +1,137 @@
+---
+title: Firecrawl MCP Server
+slug: firecrawl-mcp-server
+category: mcp
+description: >-
+  Official Firecrawl MCP server for scraping, crawling, mapping, searching, and
+  extracting web content through Claude Code, Claude Desktop, Cursor, VS Code,
+  Windsurf, and other MCP clients.
+cardDescription: Use Firecrawl web scraping and extraction tools through an official MCP server.
+seoTitle: Firecrawl MCP Server for Claude, Cursor, VS Code, and Windsurf
+seoDescription: >-
+  Configure Firecrawl MCP with a hosted HTTP endpoint or local npx server to add
+  web scraping, crawl, map, search, and extraction tools to Claude and other MCP
+  clients.
+author: Firecrawl
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://github.com/firecrawl/firecrawl-docs/blob/main/mcp-server.mdx"
+repoUrl: "https://github.com/firecrawl/firecrawl-mcp-server"
+installable: true
+installCommand: "claude mcp add firecrawl -e FIRECRAWL_API_KEY=your-api-key -- npx -y firecrawl-mcp"
+usageSnippet: "Use Firecrawl MCP when Claude needs controlled web scrape, crawl, map, search, or extraction tools with a Firecrawl API key."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "firecrawl": {
+        "command": "npx",
+        "args": ["-y", "firecrawl-mcp"],
+        "env": {
+          "FIRECRAWL_API_KEY": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "firecrawl": {
+        "command": "npx",
+        "args": ["-y", "firecrawl-mcp"],
+        "env": {
+          "FIRECRAWL_API_KEY": "YOUR_API_KEY"
+        }
+      }
+    }
+  }
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - A Firecrawl API key.
+  - Node.js and npx for local stdio use, or a client that supports hosted HTTP MCP endpoints.
+  - Clear rules for what sites the agent is allowed to crawl or scrape.
+safetyNotes:
+  - Crawling and scraping can trigger rate limits, terms-of-service issues, or accidental collection of sensitive pages.
+  - Use selected tools and narrow prompts instead of exposing broad scrape/crawl behavior to every agent task.
+privacyNotes:
+  - Scraped pages, extraction outputs, and search results can include personal data, tokens in URLs, or private content if the agent is pointed at authenticated pages.
+  - Keep the Firecrawl API key out of repository config and shared screenshots.
+sourceUrls:
+  - "https://github.com/firecrawl/firecrawl-docs/blob/main/mcp-server.mdx"
+  - "https://firecrawl.dev/app/api-keys"
+  - "https://mcp.firecrawl.dev/v2/mcp"
+tags:
+  - firecrawl
+  - scraping
+  - crawling
+  - extraction
+  - web-search
+keywords:
+  - Firecrawl MCP server
+  - firecrawl-mcp Claude config
+  - web scraping MCP
+  - crawl extract MCP
+  - Firecrawl Claude Code MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Firecrawl MCP exposes Firecrawl web data tools through Model Context Protocol.
+The official documentation covers a hosted endpoint and local `npx` setup for
+Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Google Antigravity, and
+n8n. Typical tools include scraping, crawling, mapping, searching, and structured
+extraction.
+
+## Installation
+
+For Claude Code local stdio setup:
+
+```sh
+claude mcp add firecrawl -e FIRECRAWL_API_KEY=your-api-key -- npx -y firecrawl-mcp
+```
+
+For hosted HTTP setup, use Firecrawl's documented endpoint pattern and pass the
+API key through the client-supported auth mechanism. For local JSON config:
+
+```json
+{
+  "mcpServers": {
+    "firecrawl": {
+      "command": "npx",
+      "args": ["-y", "firecrawl-mcp"],
+      "env": {
+        "FIRECRAWL_API_KEY": "YOUR_API_KEY"
+      }
+    }
+  }
+}
+```
+
+## Use Cases
+
+- Scrape a public documentation page and summarize key implementation details.
+- Crawl a small website section before drafting migration notes.
+- Map available URLs before deciding what to fetch.
+- Extract structured fields from pages where a normal browser search is too shallow.
+- Give an agent web research tools while keeping API credentials in local config.
+
+## Safety and Privacy
+
+Firecrawl is powerful enough to collect more data than intended. Use it with
+explicit domains, bounded page counts, and prompts that forbid authenticated or
+private pages unless that access is intentional. Keep API keys in environment
+variables or client secret storage.
+
+## Duplicate Check
+
+`content/tools/firecrawl.mdx` lists Firecrawl as a tool. This MCP entry is a
+separate installable integration for MCP clients and belongs in `content/mcp`.
+
+## References
+
+- Firecrawl MCP docs - https://github.com/firecrawl/firecrawl-docs/blob/main/mcp-server.mdx
+- Firecrawl API keys - https://firecrawl.dev/app/api-keys
+- Firecrawl hosted MCP endpoint - https://mcp.firecrawl.dev/v2/mcp
