@@ -1,0 +1,336 @@
+---
+title: Environment Variable Leak Warning - Claude Code Hook
+slug: environment-variable-leak-warning-hook
+category: hooks
+description: >-
+  PreToolUse Bash hook that warns or blocks before commands dump the environment,
+  print sensitive variable values, read `.env` files to the terminal, or enable
+  shell tracing that can expose secrets in transcripts.
+cardDescription: >-
+  Catch Bash commands that would print environment secrets into terminal output,
+  Claude transcripts, or CI logs.
+seoTitle: Environment Variable Leak Warning Hook for Claude Code
+seoDescription: >-
+  Source-backed Claude Code PreToolUse hook that warns before Bash commands leak
+  environment variables or `.env` file contents into logs and transcripts.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+repoUrl: "https://github.com/OWASP/CheatSheetSeries"
+installable: true
+installCommand: >-
+  mkdir -p .claude/hooks && touch
+  .claude/hooks/environment-variable-leak-warning.sh && chmod +x
+  .claude/hooks/environment-variable-leak-warning.sh
+usageSnippet: >-
+  Environment variable leak warning: Bash command may print sensitive
+  environment data.
+copySnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-variable-leak-warning.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+configSnippet: |-
+  {
+    "hooks": {
+      "PreToolUse": [
+        {
+          "matcher": "Bash",
+          "hooks": [
+            {
+              "type": "command",
+              "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-variable-leak-warning.sh"
+            }
+          ]
+        }
+      ]
+    }
+  }
+scriptLanguage: bash
+scriptBody: |-
+  #!/usr/bin/env bash
+  set -u
+
+  # Claude Code PreToolUse hook for Bash. It reviews the proposed command text
+  # for common ways environment values are printed into terminal output,
+  # transcripts, and CI logs. It never expands variables itself.
+
+  if ! command -v jq >/dev/null 2>&1; then
+    exit 0
+  fi
+
+  input=$(cat)
+  tool_name=$(printf '%s' "$input" | jq -r '.tool_name // .toolName // empty')
+  command_text=$(printf '%s' "$input" | jq -r '.tool_input.command // .toolInput.command // empty')
+
+  case "$tool_name" in
+    Bash|bash) ;;
+    *) exit 0 ;;
+  esac
+
+  if [ -z "$command_text" ]; then
+    exit 0
+  fi
+
+  if [ -n "${ENV_LEAK_WARNING_ALLOWLIST:-}" ]; then
+    if printf '%s\n' "$command_text" | grep -Eq -- "$ENV_LEAK_WARNING_ALLOWLIST"; then
+      exit 0
+    fi
+  fi
+
+  sep='(^|[;&|[:space:]])'
+  end='([[:space:]]*$|[[:space:]]*[|>;])'
+  secret_name='(TOKEN|SECRET|PASSWORD|PASS|API[_-]?KEY|ACCESS[_-]?KEY|PRIVATE[_-]?KEY|CLIENT[_-]?SECRET|SESSION|COOKIE|AUTH|CREDENTIAL|DATABASE_URL|DB_URL|DSN|WEBHOOK|BEARER|AWS_SECRET_ACCESS_KEY|GITHUB_TOKEN|NPM_TOKEN)'
+  bulk_env_re="${sep}(env|printenv|set|export)${end}"
+  print_secret_re="${sep}(echo|printf)[^;&|]*\\$\\{?[A-Z0-9_]*${secret_name}[A-Z0-9_]*\\}?"
+  printenv_secret_re="${sep}printenv[[:space:]]+[A-Z0-9_]*${secret_name}[A-Z0-9_]*([[:space:]]|$)"
+  env_file_re="${sep}(cat|less|more|head|tail|sed|awk|grep|rg|tee)[^;&|]*([[:space:]]|^)([A-Za-z0-9_./-]*/)?\\.env([.A-Za-z0-9_-]*)?([[:space:]|;&>]|$)"
+  xtrace_re="${sep}(set[[:space:]]+-x|bash[[:space:]]+-x|sh[[:space:]]+-x)([[:space:]]|$)"
+
+  findings=""
+  add_finding() {
+    findings="${findings}${1}"$'\n'
+  }
+
+  if printf '%s\n' "$command_text" | grep -Eq -- "$bulk_env_re"; then
+    add_finding "bulk environment dump"
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eiq -- "$print_secret_re"; then
+    add_finding "sensitive variable printed with echo or printf"
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eiq -- "$printenv_secret_re"; then
+    add_finding "sensitive variable printed with printenv"
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eiq -- "$env_file_re"; then
+    add_finding ".env file content sent to terminal output"
+  fi
+
+  if printf '%s\n' "$command_text" | grep -Eiq -- "$xtrace_re"; then
+    add_finding "shell xtrace can echo expanded commands and secrets"
+  fi
+
+  if [ -z "$findings" ]; then
+    exit 0
+  fi
+
+  echo "Environment variable leak warning: Bash command may print sensitive environment data." >&2
+  printf '%s' "$findings" | sort -u | while IFS= read -r finding; do
+    [ -n "$finding" ] || continue
+    echo "  - $finding" >&2
+  done
+  echo "Prefer printing only variable names, redacted values, or command-specific diagnostics that do not expose secret contents." >&2
+  echo "Set ENV_LEAK_WARNING_MODE=advisory to warn without blocking, or ENV_LEAK_WARNING_ALLOWLIST for a reviewed local exception." >&2
+
+  if [ "${ENV_LEAK_WARNING_MODE:-block}" = "advisory" ]; then
+    exit 0
+  fi
+
+  exit 2
+trigger: PreToolUse
+estimatedSetupTime: 5 minutes
+difficulty: beginner
+prerequisites:
+  - "Claude Code CLI with hooks enabled."
+  - "bash, jq, grep, sort, and a reviewed `.claude/settings.json` or user-level hook configuration."
+  - "A team policy for when environment diagnostics may reveal secret values in terminal output, transcripts, or CI logs."
+safetyNotes:
+  - "Runs before Bash tool calls and reads only the proposed command string from Claude Code hook input."
+  - "Blocks with exit code 2 when the proposed command looks like it will dump all environment values, print sensitive variable values, read `.env` files to output, or enable shell tracing."
+  - "Does not expand variables, read `.env` files, inspect the live process environment, execute the command, or write files."
+  - "Heuristics can flag benign diagnostics or miss unusual shell syntax; use advisory mode while tuning the policy."
+  - "Set `ENV_LEAK_WARNING_ALLOWLIST` only for documented, reviewed local exceptions."
+privacyNotes:
+  - "Runs locally and makes no network calls."
+  - "Does not print the full command or any environment value; it reports only finding categories."
+  - "The warning text, finding categories, mode variable, and allowlist pattern can still appear in terminal output, Claude Code transcripts, CI logs, or screenshots."
+  - "Even variable names can disclose service choices or infrastructure shape; avoid echoing sensitive names unless needed for debugging."
+sourceUrls:
+  - "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+  - "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets"
+  - "https://12factor.net/config"
+  - "https://code.claude.com/docs/en/hooks"
+  - "https://github.com/OWASP/CheatSheetSeries"
+tags:
+  - security
+  - secrets
+  - environment-variables
+  - bash
+  - hooks
+keywords:
+  - "environment variable leak warning hook"
+  - "Claude Code env leak hook"
+  - "Bash environment dump guard"
+  - ".env file leak warning"
+  - "printenv secret warning hook"
+readingTime: 6
+difficultyScore: 34
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Overview
+
+Environment variables are a normal place to reference credentials and runtime
+configuration. The leak risk appears when a troubleshooting command prints those
+values into a terminal, Claude Code transcript, CI log, support bundle, or
+screen share.
+
+This hook runs before Claude Code executes Bash. It scans the proposed command
+for common leak shapes: bulk environment dumps, printing sensitive variable
+names, reading `.env` files to stdout, and shell xtrace. When it finds a match,
+it blocks by default and reports only the category, not the command or value.
+
+## Features
+
+- Detects bulk environment output from commands such as `env`, `printenv`,
+  `set`, or `export` when they are used as dumps.
+- Detects `echo`, `printf`, and `printenv` attempts that target
+  secret-looking environment variable names.
+- Detects `.env` file reads through common terminal-output tools.
+- Detects shell tracing modes that can echo expanded commands and values.
+- Makes no network calls and never expands or reads environment variables.
+- Supports `ENV_LEAK_WARNING_MODE=advisory` for warning-only rollout.
+- Supports `ENV_LEAK_WARNING_ALLOWLIST` for reviewed local exceptions.
+
+## How It Works
+
+Claude Code passes the pending Bash tool call to the hook on stdin. The script
+extracts `.tool_input.command`, applies a handful of shell-text patterns, and
+exits `2` when a risky leak shape appears. The hook does not execute the
+proposed command, inspect live environment values, or read files.
+
+The intent is narrower than an environment-file validator. It does not check
+whether required variables exist or whether `.env` formats are correct. It only
+looks for commands that are likely to print environment data into surfaces that
+humans and AI tools may retain.
+
+## Use Cases
+
+- Stop an agent from running a bulk environment dump during debugging.
+- Prevent `.env` contents from being pasted into a transcript by a read command.
+- Catch accidental `echo` or `printf` calls that reveal a secret-looking
+  variable value.
+- Block shell xtrace before it echoes expanded commands that include
+  credentials.
+
+## Installation
+
+1. Create the hooks directory: `mkdir -p .claude/hooks`
+2. Create the hook file:
+   `touch .claude/hooks/environment-variable-leak-warning.sh`
+3. Paste the script body into that file and make it executable:
+   `chmod +x .claude/hooks/environment-variable-leak-warning.sh`
+4. Add the configuration below to `.claude/settings.json` for a project hook or
+   `~/.claude/settings.json` for a user hook.
+
+## Hook Configuration
+
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/environment-variable-leak-warning.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+## Script
+
+```bash
+#!/usr/bin/env bash
+# Paste the scriptBody from this entry into:
+# .claude/hooks/environment-variable-leak-warning.sh
+```
+
+## Configuration Options
+
+- `ENV_LEAK_WARNING_MODE=advisory` prints warnings but exits `0`.
+- `ENV_LEAK_WARNING_ALLOWLIST` is an extended grep pattern checked against the
+  proposed Bash command. Use it only for documented, reviewed exceptions.
+
+## Expected Behavior
+
+- **Allowed:** Checking whether a variable name is set without printing its
+  value.
+- **Allowed:** Tool-specific diagnostics that do not print secret contents.
+- **Blocked:** Bulk environment dumps.
+- **Blocked:** Printing secret-looking environment variable values.
+- **Blocked:** Reading `.env` files to terminal output.
+- **Blocked:** Enabling shell xtrace before commands that may contain secrets.
+
+## Limitations
+
+- The scanner is text-based and can miss obfuscated shell syntax, aliases,
+  functions, or commands assembled across multiple steps.
+- It does not know whether a variable is actually sensitive; it uses
+  secret-looking names as a conservative signal.
+- It does not validate `.env` file format, required variables, or variable
+  strength.
+- It only reviews Claude Code Bash tool calls, not commands typed manually in a
+  separate terminal.
+
+## Troubleshooting
+
+### A safe diagnostic was blocked
+
+Print the variable name or a redacted placeholder instead of the value. If a
+team-approved diagnostic truly needs the value, add a narrow
+`ENV_LEAK_WARNING_ALLOWLIST` pattern for that command.
+
+### The hook is too strict during onboarding
+
+Set `ENV_LEAK_WARNING_MODE=advisory` while the team tunes the policy. Switch
+back to blocking mode once common false positives have documented exceptions.
+
+### The hook missed a project-specific secret name
+
+Extend the `secret_name` pattern in the script with the project's naming
+convention, then test it against representative commands before enabling block
+mode.
+
+## Duplicate Check
+
+Checked `content/hooks/` for `environment variable leak`, `env var`,
+`printenv`, `.env`, `secret scanner`, and `environment variables`. Existing
+entries include an environment-variable validator that checks environment files
+and a pre-write secret scanner that checks content before writes. This entry is
+different: it is a Bash PreToolUse leak warning for commands that would print
+environment values into terminal output, Claude transcripts, or CI logs.
+
+## Sources
+
+- [OWASP Secrets Management Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
+- [GitHub Actions secrets documentation](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)
+- [The Twelve-Factor App: Config](https://12factor.net/config)
+- [Claude Code hooks documentation](https://code.claude.com/docs/en/hooks)
+- [OWASP Cheat Sheet Series repository](https://github.com/OWASP/CheatSheetSeries)
