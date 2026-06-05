@@ -211,6 +211,12 @@ describe("submission automation workflows", () => {
     expect(source).not.toContain("playwright install");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    expect(source).toContain(
+      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    );
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
     expect(source).not.toContain("pnpm --filter web run deploy:dev");
@@ -358,8 +364,15 @@ describe("submission automation workflows", () => {
     expect(source).toContain("trunk check --ci --all");
     expect(source).toContain("validate-pr-preview:");
     expect(source).toContain("github.event_name == 'pull_request'");
+    expect(source).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    expect(source).toContain(
+      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    );
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
+    expect(source).not.toContain("--allow-missing");
     expect(source).toContain("pnpm validate:deployment-artifacts");
     expect(source).toContain("pnpm validate:mcp-endpoint");
     expect(source).not.toContain("Deploy same-repo PR preview to dev Worker");

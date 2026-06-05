@@ -59,14 +59,20 @@ describe("PR preview artifact validation flow", () => {
     });
   });
 
-  it("uses resolved PR preview URLs instead of a manual merge-gate variable", () => {
+  it("uses resolved same-repo PR preview URLs instead of a manual merge-gate variable", () => {
     const workflow = readContentValidationWorkflow();
     expect(workflow).toContain("Resolve PR preview URL");
-    expect(workflow).toContain("REQUIRE_PR_PREVIEW");
+    expect(workflow).toContain(
+      "github.event.pull_request.head.repo.full_name == github.repository",
+    );
+    expect(workflow).toContain(
+      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    );
     expect(workflow).toContain("ALLOW_SHARED_DEV_WORKER_PREVIEW");
     expect(workflow).toContain("https://heyclaude-dev.zeronode.workers.dev");
-    expect(workflow).toContain('[ "$REQUIRE_PR_PREVIEW" != "true" ]');
     expect(workflow).toContain("--wait-seconds 600");
+    expect(workflow).not.toContain("REQUIRE_PR_PREVIEW");
+    expect(workflow).not.toContain("--allow-missing");
     expect(workflow).toContain("pnpm validate:deployment-artifacts");
     expect(workflow).toContain(
       "Deployed preview did not satisfy the artifact contract before timeout.",
