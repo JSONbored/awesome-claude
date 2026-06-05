@@ -12,7 +12,7 @@
         templates, and statuslines.
       </p>
       <p>
-        <strong>661+ file-backed entries</strong> stay useful as both an
+        <strong>679+ file-backed entries</strong> stay useful as both an
         awesome-list catalog and a machine-readable registry for builders.
       </p>
       <p>
@@ -36,7 +36,7 @@
       <h3>Registry snapshot</h3>
       <table>
         <tr>
-          <td align="center"><strong>661</strong><br><sub>entries</sub></td>
+          <td align="center"><strong>679</strong><br><sub>entries</sub></td>
           <td align="center"><strong>10</strong><br><sub>sections</sub></td>
           <td align="center"><strong>human</strong><br><sub>merge gate</sub></td>
         </tr>
@@ -63,7 +63,7 @@
 <tr>
 <td align="center" width="20%">
           <a href="#ai-agents"><strong>🤖 Agents</strong></a><br>
-          <code>71</code><br>
+          <code>79</code><br>
           <sub>Specialized Claude agents and expert roles.</sub>
         </td>
 <td align="center" width="20%">
@@ -100,7 +100,7 @@
         </td>
 <td align="center" width="20%">
           <a href="#guides"><strong>📚 Guides</strong></a><br>
-          <code>39</code><br>
+          <code>49</code><br>
           <sub>Long-form guides and practical walkthroughs.</sub>
         </td>
 <td align="center" width="20%">
@@ -187,9 +187,11 @@ packages use checksums and package trust metadata after review.
 
 ## Content Catalog
 
-## 🤖 AI Agents (71)
+## 🤖 AI Agents (79)
 
+- **[Agent Skills Enterprise Librarian Agent](https://heyclau.de/entry/agents/agent-skills-enterprise-librarian-agent)** - Source-backed agent that curates an organization's Agent Skills library, reviewing SKILL.md quality, descriptions and triggers, scope and precedence, tool restrictions, and invocation control so skills are discoverable and safe, grounded in the official Claude Code skills docs.
 - **[Agent Skills Framework Engineer - Claude Code Agents](https://heyclau.de/entry/agents/agent-skills-framework-engineer)** - Agent Skills framework specialist for creating procedural knowledge files, domain-specific expertise, and skill-based agent capabilities using Anthropic's new Skills system.
+- **[Agent View Fleet Operator Agent](https://heyclau.de/entry/agents/agent-view-fleet-operator-agent)** - Source-backed agent that operates a fleet of Claude Code background sessions through agent view, triaging which sessions need input, which are working, and which are done, and deciding what to dispatch, answer, or stop, grounded in the official Claude Code agent view docs.
 - **[AI Code Review Security Agent - Agents](https://heyclau.de/entry/agents/ai-code-review-security-agent)** - AI-powered code review specialist focusing on security vulnerabilities, OWASP Top 10, static analysis, secrets detection, and automated security best practices enforcement
 - **[AI DevOps Engineer Agent - Automate Infrastructure & CI/CD](https://heyclau.de/entry/agents/ai-devops-automation-engineer-agent)** - Deploy AI-powered DevOps automation with predictive analytics, self-healing systems, and intelligent CI/CD optimization for modern infrastructure.
 - **[AI Workflow Privacy Compliance Review Agent](https://heyclau.de/entry/agents/ai-workflow-privacy-compliance-review-agent)** - Source-backed agent for reviewing AI workflow submissions before publication with data-flow mapping, privacy metadata, governance evidence, MCP/tool authority checks, retention disclosure, and compliance escalation gates.
@@ -203,6 +205,9 @@ packages use checksums and package trust metadata after review.
 - **[Backend Architect Agent - Agents](https://heyclau.de/entry/agents/backend-architect-agent)** - Expert backend architect specializing in scalable system design, microservices, API development, and infrastructure planning
 - **[Buf Protobuf API Review Agent](https://heyclau.de/entry/agents/buf-protobuf-api-review-agent)** - Source-backed agent for reviewing typed Protobuf and gRPC API contract changes with Buf breaking-change evidence, lint results, buf.yaml policy, BSR schema checks, generated-code impact, consumer compatibility, and rollout decisions.
 - **[Changesets Release Cutover Agent](https://heyclau.de/entry/agents/changesets-release-cutover-agent)** - Source-backed agent for managing Changesets release cutovers, version PRs, changelog evidence, package bump decisions, pre-release mode, publish gates, and npm registry safety.
+- **[Claude Code Auto Mode Policy Auditor Agent](https://heyclau.de/entry/agents/claude-code-auto-mode-policy-auditor-agent)** - Source-backed agent that audits Claude Code auto mode configuration, reviewing the trusted environment list, allow, soft_deny, and hard_deny rules, the $defaults handling, and settings scope so the classifier blocks the right actions, grounded in the official auto mode docs.
+- **[Claude Code Routine Designer Agent](https://heyclau.de/entry/agents/claude-code-routine-designer-agent)** - Source-backed agent that designs safe recurring Claude Code routines, turning a repeated task into a well-scoped, idempotent skill-driven workflow with clear triggers, permissions, and reporting, grounded in the official Claude Code skills docs.
+- **[Claude Code Worktree Coordinator Agent](https://heyclau.de/entry/agents/claude-code-worktree-coordinator-agent)** - Source-backed agent that coordinates parallel Claude Code sessions across git worktrees, planning isolation, base-branch choice, gitignored-file copying, subagent worktrees, and cleanup so parallel edits do not collide, grounded in the official Claude Code worktrees docs.
 - **[Claude Haiku 45 Speed Optimizer Agent - Agents](https://heyclau.de/entry/agents/claude-haiku-45-speed-optimizer-agent)** - Speed-optimized agent leveraging Haiku 4.5's 2x performance and 3x cost savings, delivering 90% of Sonnet's agentic capability for rapid iterations.
 - **[Claude MCP Skills Integration Agent - Claude Code Agents](https://heyclau.de/entry/agents/claude-mcp-skills-integration-agent)** - MCP Skills integration specialist for remote server configuration, tool permissions, multi-MCP orchestration, and Claude Desktop ecosystem workflows.
 - **[CLAUDE.md Knowledge Manager Agent - Claude Code Agents](https://heyclau.de/entry/agents/claude-md-knowledge-manager-agent)** - CLAUDE.md specialist for creating, maintaining, and optimizing project-specific AI instructions that survive context compaction and guide development.
@@ -240,13 +245,16 @@ packages use checksums and package trust metadata after review.
 - **[OpenAI Agents SDK Production Specialist Agent](https://heyclau.de/entry/agents/openai-agents-sdk-production-agent)** - Source-backed specialist agent for designing and reviewing production OpenAI Agents SDK workflows, including agents, runners, tools, handoffs, guardrails, sessions, tracing, MCP integrations, sandbox agents, and deployment safety.
 - **[Parallel Subagent Distributor - Agents](https://heyclau.de/entry/agents/parallel-subagent-distributor)** - Parallel subagent workload distribution specialist coordinating concurrent Claude Code subagents for massive speedups using native parallel execution capabilities.
 - **[Performance Optimizer Agent - Agents](https://heyclau.de/entry/agents/performance-optimizer-agent)** - Expert in application performance optimization, profiling, and system tuning across frontend, backend, and infrastructure
+- **[Plugin Dependency Compatibility Agent](https://heyclau.de/entry/agents/plugin-dependency-compatibility-agent)** - Source-backed agent that reviews Claude Code plugins for dependency and compatibility issues, checking the plugin.json manifest, bundled components, external binaries like LSP servers, versioning, and namespace conflicts, grounded in the official Claude Code plugin docs.
 - **[Plugin Ecosystem Architect - Agents](https://heyclau.de/entry/agents/plugin-ecosystem-architect)** - Design and publish Claude Code plugins for the October 2025 marketplace launch. Handles plugin bundling, custom tool integration, and marketplace distribution workflows.
 - **[Prisma Repository Contributor Agent for Claude](https://heyclau.de/entry/agents/prisma-repository-contributor-agent)** - Source-backed Claude agent prompt for contributing to the official prisma/prisma monorepo using its AGENTS.md guidance, pnpm workspace commands, package-filtered tests, database fixture expectations, Prisma 7 architecture notes, and contributor safety rules.
 - **[Product Management AI Agent - Agents](https://heyclau.de/entry/agents/product-management-ai-agent)** - AI-powered product management specialist focused on user story generation, product analytics, roadmap prioritization, A/B testing, and data-driven decision making
 - **[Production Reliability Engineer - Agents](https://heyclau.de/entry/agents/production-reliability-engineer)** - Ensure production deployment reliability with SRE best practices. Monitors deployments, implements self-healing systems, and manages incident response for Claude Code apps.
+- **[Prompt Cache Optimization Agent](https://heyclau.de/entry/agents/prompt-cache-optimization-agent)** - Source-backed agent that reduces token cost and latency in Claude Code by improving prompt-cache hit rates, advising on stable context ordering, lean CLAUDE.md, on-demand skills, and MCP tool-search, grounded in the official docs.
 - **[Prompt Optimization Specialist - Agents](https://heyclau.de/entry/agents/prompt-optimization-specialist)** - Optimize agent prompts and system instructions with meta-prompting techniques. Improves prompt performance through A/B testing, chaining, and ROI measurement.
 - **[React Router Repository Contributor Agent for Claude](https://heyclau.de/entry/agents/react-router-repository-contributor-agent)** - Source-backed Claude agent prompt for contributing to the official React Router monorepo using its AGENTS.md guidance for modes, pnpm commands, tests, docs generation, type generation, future flags, and change files.
 - **[Rendered Frontend Visual QA Agent](https://heyclau.de/entry/agents/rendered-frontend-visual-qa-agent)** - Source-backed agent for reviewing rendered frontend changes with screenshots, visual comparison evidence, viewport layout checks, keyboard/focus paths, accessibility scans, CLS risk, and privacy-safe QA artifacts.
+- **[Sandbox Boundary Review Agent](https://heyclau.de/entry/agents/sandbox-boundary-review-agent)** - Source-backed agent that reviews Claude Code's sandboxed Bash configuration for safe boundaries, checking filesystem allow/deny paths, network allowlists, unsandboxed escape hatches, excluded commands, and credential read scope, grounded in the official Claude Code sandboxing docs.
 - **[Semantic Kernel Enterprise Agent - Agents](https://heyclau.de/entry/agents/semantic-kernel-enterprise-agent)** - Microsoft Semantic Kernel enterprise agent specialist for building Azure-native AI applications with multi-language SDK support, plugin governance, and enterprise-grade deployment
 - **[Slash Command Orchestrator Agent - Agents](https://heyclau.de/entry/agents/slash-command-orchestrator-agent)** - Slash command specialist for creating and orchestrating custom Claude workflows with dynamic arguments, conditional logic, and multi-step automation.
 - **[Storybook Repository Contributor Agent for Claude](https://heyclau.de/entry/agents/storybook-repository-contributor-agent)** - Source-backed Claude agent prompt for contributing to the official storybookjs/storybook monorepo using its AGENTS.md guidance for the next branch, Node 22.12+, Yarn Berry, NX, yarn task, Storybook Vitest, sandboxes, framework packages, docs, and generated-file safety.
@@ -767,22 +775,28 @@ Get a free API key on https://app.zyntra.app/
 - **[Webpack Bundle Analyzer - Hooks](https://heyclau.de/entry/hooks/webpack-bundle-analyzer)** - Analyzes webpack bundle size when webpack config or entry files are modified.
 - **[Workflow Completion Report - Hooks](https://heyclau.de/entry/hooks/workflow-completion-report)** - Generates a comprehensive report when Claude Code workflow stops, including files modified, tests run, and git status.
 
-## 📚 Guides (39)
+## 📚 Guides (49)
 
+- **[Adding Plugin Install Hints to Developer CLIs](https://heyclau.de/entry/guides/adding-plugin-install-hints-to-developer-clis)** - A practical walkthrough of emitting the claude-code-hint marker from your CLI so Claude Code prompts users to install your official plugin: the hint format, gating on CLAUDECODE, where to emit it, and the official-marketplace requirement.
 - **[Build Claude MCP Servers](https://heyclau.de/entry/guides/build-mcp-server)** - Master MCP server development from scratch. Create custom Claude Desktop integrations with TypeScript/Python in 60 minutes using production-ready patterns.
+- **[Building a Claude Code Plugin Marketplace](https://heyclau.de/entry/guides/building-a-claude-code-plugin-marketplace)** - A practical walkthrough of creating and distributing a Claude Code plugin marketplace: the marketplace.json catalog, hosting on a git repository, adding it with /plugin marketplace add, private repositories, and how users install and update plugins.
 - **[Claude Process Automation](https://heyclau.de/entry/guides/business-process-automation)** - Deploy Claude AI agents for enterprise business process automation. Master implementation strategies, integration patterns, and best practices for optimization.
+- **[Channels and Webhooks into Running Claude Code Sessions](https://heyclau.de/entry/guides/channels-and-webhooks-into-running-claude-code-sessions)** - A practical walkthrough of Claude Code channels: how an MCP-server channel pushes messages, alerts, and webhooks into a running session, how to install and enable Telegram, Discord, or iMessage, sender allowlists, and enterprise controls.
 - **[ChatGPT to Claude Migration](https://heyclau.de/entry/guides/chatgpt-migration-guide)** - Switch from ChatGPT to Claude in 30 minutes. Complete migration tutorial covering API transitions, prompt engineering, and workflow optimization strategies.
+- **[Checkpointing Claude Code Changes Before Risky Refactors](https://heyclau.de/entry/guides/checkpointing-claude-code-changes-before-risky-refactors)** - A practical walkthrough of Claude Code checkpointing: how automatic checkpoints capture code before each edit, how to rewind and summarize with /rewind, the difference between restore and summarize, and the limitations you must know before a risky refactor.
 - **[Choose the Right Claude Extension Surface](https://heyclau.de/entry/guides/choose-claude-extension-surface)** - A practical decision guide for choosing between Claude Code subagents, skills, slash commands, hooks, settings, and MCP servers. Pick the smallest extension surface that matches the workflow, risk, and sharing model.
 - **[Claude 4 Extended Thinking](https://heyclau.de/entry/guides/claude-4-extended-thinking-tutorial)** - Implement Claude 4 Extended Thinking API in 25 minutes. Master 500K token reasoning chains, thinking budget optimization, and industry-leading 74.5% accuracy.
 - **[Claude Agent Development](https://heyclau.de/entry/guides/claude-agent-development-framework)** - Build Claude autonomous agents with 90.2% better performance. Learn multi-agent orchestration, subagents implementation, and deployment achieving $0.045/task.
 - **[Claude Code Output Styles Without Losing Coding Instructions](https://heyclau.de/entry/guides/claude-code-output-styles-keep-coding-instructions)** - A practical Claude Code guide for using output styles, keeping software engineering behavior intact, choosing the right settings scope, and avoiding durable-instruction drift.
 - **[Claude Code Subagent MCP Scope Guide](https://heyclau.de/entry/guides/claude-code-subagent-mcp-scope-guide)** - Source-backed guide for scoping MCP servers, tools, permissions, hooks, and memory when building Claude Code subagents for focused review, research, and implementation workflows.
 - **[Claude MCP Server Setup 2025](https://heyclau.de/entry/guides/claude-mcp-server-setup-guide)** - Master MCP server installation and configuration for Claude Desktop. Complete step-by-step setup guide with optimization tips and best practices for 2025.
+- **[CLAUDE.md Hierarchy for Monorepos and Nested Packages](https://heyclau.de/entry/guides/claude-md-hierarchy-for-monorepos-and-nested-packages)** - A practical walkthrough of structuring CLAUDE.md across a monorepo: how files load up the directory tree and on demand in subdirectories, path-scoped rules, imports, excluding other teams' files, and keeping per-package context lean.
 - **[Claude Rate Limits Fix: Complete Optimization Guide 2025](https://heyclau.de/entry/guides/claude-rate-limits-fix)** - Fix Claude 429 errors and usage limits with proven solutions reducing token consumption by 70%. Master rate limit optimization for 18.3M affected users.
 - **[Claude vs Amazon Q Developer vs Gemini Code AWS Guide 2025](https://heyclau.de/entry/guides/claude-vs-codewhisperer-gemini)** - Compare Claude vs Amazon Q Developer vs Gemini Code for AWS cloud development. Real benchmarks, pricing analysis, and production use cases for selection.
 - **[Claude vs GitHub Copilot vs ChatGPT for Python Dev 2025](https://heyclau.de/entry/guides/claude-vs-copilot-python)** - Claude vs GitHub Copilot vs ChatGPT for Python development. Features, pricing, benchmarks, and real results for choosing the best AI coding assistant.
 - **[Claude Code vs Cursor vs Codeium Complete Comparison 2025](https://heyclau.de/entry/guides/claude-vs-cursor-codeium)** - Compare Claude Code vs Cursor vs Codeium AI coding assistants. Complete feature analysis, performance benchmarks, pricing, and recommendations for developers.
 - **[Build Cloudflare Workers AI Agents With Durable State](https://heyclau.de/entry/guides/cloudflare-workers-ai-agents-durable-state)** - A practical architecture guide for building AI agents on Cloudflare Workers with Workers AI inference and durable per-agent state. Use the Agents API, Durable Objects, bindings, and Workers observability to keep agent sessions reliable across requests.
+- **[Deep Links into Claude Code Runbooks and Alerts](https://heyclau.de/entry/guides/deep-links-into-claude-code-runbooks-and-alerts)** - A practical walkthrough of Claude Code deep links: the claude-cli:// URL scheme, how to build links with repo, cwd, and prompt parameters, embedding them in runbooks and alerts, and the safety model where prompts are inert until you press Enter.
 - **[Claude for Financial Services Enterprise Implementation 2025](https://heyclau.de/entry/guides/financial-services-guide)** - Transform financial operations with Claude. Learn implementation strategies for trading, risk, and regulatory automation with comprehensive compliance.
 - **[Fix Claude Code Environment Variable Configuration Errors](https://heyclau.de/entry/guides/fix-environment-variables)** - Debug Claude Code authentication failures, OAuth errors, and API key configuration issues with platform-specific solutions and automated management tools.
 - **[Fix Claude Code npm Errors](https://heyclau.de/entry/guides/fix-installation-errors)** - Install Claude Code correctly in 15-25 minutes. Fix npm permission errors, configure PATH, and resolve 'command not found' issues with proven solutions.
@@ -799,14 +813,18 @@ Get a free API key on https://app.zyntra.app/
 - **[Complete Claude Migration Playbook from ChatGPT & Copilot](https://heyclau.de/entry/guides/migration-workflow-guide)** - Complete migration workflow from ChatGPT, Gemini, and Copilot to Claude 4. Enterprise frameworks, real production metrics, and proven migration strategies.
 - **[Claude Code Multi-Directory Setup Enterprise Workflow 2025](https://heyclau.de/entry/guides/multi-directory-setup)** - Master Claude Code multi-directory enterprise workflow. Step-by-step setup, automation hooks, and proven enterprise strategies for 30-100x productivity boost.
 - **[OpenAI Agents Trace to Eval Regression Guide](https://heyclau.de/entry/guides/openai-agents-trace-to-eval-regression-guide)** - Source-backed guide for converting OpenAI Agents SDK traces into regression eval cases, trace grades, tool-call assertions, and release checks for agentic workflows.
+- **[Permission Modes for Claude Code Teams](https://heyclau.de/entry/guides/permission-modes-for-claude-code-teams)** - A practical walkthrough of Claude Code permission modes for teams: what each mode allows, how to switch and default them, protected paths, and how administrators enforce or lock modes with managed settings.
 - **[Playwright Trace Viewer AI Debugging Guide](https://heyclau.de/entry/guides/playwright-trace-viewer-ai-debugging-guide)** - Source-backed guide for using Playwright traces, screenshots, snapshots, network events, console logs, and action timelines as evidence for AI-assisted frontend debugging.
 - **[Manage Prompt and Context Hygiene in Long Coding Sessions](https://heyclau.de/entry/guides/prompt-context-hygiene-long-coding-sessions)** - A practical guide for keeping Claude Code sessions focused during long coding work with scoped prompts, checkpoints, durable memory boundaries, source refreshes, and privacy-safe handoffs.
 - **[Evaluate AI Coding Tools with Repeatable Benchmarks](https://heyclau.de/entry/guides/repeatable-ai-coding-tool-benchmarks)** - A practical guide for comparing AI coding tools with repeatable benchmarks, fixed task sets, controlled environments, transparent scoring, and privacy-safe artifacts.
+- **[Resuming, Branching, and Naming Claude Code Sessions](https://heyclau.de/entry/guides/resuming-branching-and-naming-claude-code-sessions)** - A practical walkthrough of managing Claude Code sessions: resuming with --continue, --resume, and --from-pr, naming sessions, using the session picker, branching to try a different approach, and where transcripts are stored.
 - **[Review AI-Generated Code Before Merge](https://heyclau.de/entry/guides/review-ai-generated-code-before-merge)** - A source-backed review workflow for pull requests that include AI-generated code. Treat generated diffs as untrusted implementation work, verify behavior in CI, inspect security-sensitive paths first, and merge only after a reviewer-owned checklist passes.
 - **[Set Up Claude Code Hooks Safely](https://heyclau.de/entry/guides/safe-claude-code-hooks)** - A source-backed safety checklist for introducing Claude Code hooks with scoped events, minimal authority, reviewable commands, clear ownership, and a rollback path.
 - **[Write High-Quality Source-Backed Content PRs](https://heyclau.de/entry/guides/source-backed-content-prs)** - A practical guide for preparing source-backed HeyClaude content pull requests that stay focused, cite verifiable sources, avoid generated artifacts, and pass content validation.
 - **[Use Subagents for Code Review and Triage](https://heyclau.de/entry/guides/subagents-code-review-triage)** - A practical guide to using Claude Code subagents as focused review and triage specialists for pull requests, issues, risks, tests, documentation, and follow-up planning.
+- **[Terminal, Tmux, and Vim Setup for Claude Code](https://heyclau.de/entry/guides/terminal-tmux-and-vim-setup-for-claude-code)** - A practical walkthrough for configuring your terminal to work well with Claude Code: multiline newlines and Shift+Enter, the /terminal-setup command, tmux passthrough and extended keys, notifications, and Vim editor mode.
 - **[Threat Model MCP Servers Before Installation](https://heyclau.de/entry/guides/threat-model-mcp-servers-before-installation)** - A practical pre-installation review workflow for Model Context Protocol servers. Inventory tools, resources, prompts, credentials, network reach, storage, and runtime permissions before connecting a server to Claude or another MCP client.
+- **[Using the Context Window Simulator for Prompt Design](https://heyclau.de/entry/guides/using-the-context-window-simulator-for-prompt-design)** - A practical walkthrough of the Claude Code context window explorer: what consumes context (system prompt, memory, CLAUDE.md, MCP tools, skills, file reads, history), how each loads, and how to use it plus /context to design leaner prompts and setups.
 - **[Claude Code WSL Setup 2025](https://heyclau.de/entry/guides/wsl-setup-guide)** - Complete Claude Code WSL2 installation tutorial in 30 minutes. Configure Node.js, resolve PATH conflicts, and optimize Windows development performance.
 
 ## 📦 Collections (23)
