@@ -1,4 +1,5 @@
 import { base64UrlEncode } from "./security";
+import { supersededReviewComment } from "./review";
 
 const encoder = new TextEncoder();
 const PKCS8_PEM_HEADER = ["-----BEGIN", "PRIVATE", "KEY-----"].join(" ");
@@ -783,9 +784,21 @@ export async function upsertMarkerComment(params: {
   body: string;
   apiVersion?: string;
 }) {
-  const comments: Array<{ id: number; body?: string }> = [];
+  const comments: Array<{
+    id: number;
+    body?: string;
+    html_url?: string;
+    user?: { login?: string; type?: string };
+  }> = [];
   for (let page = 1; page <= 20; page += 1) {
-    const pageComments = await githubJson<Array<{ id: number; body?: string }>>(
+    const pageComments = await githubJson<
+      Array<{
+        id: number;
+        body?: string;
+        html_url?: string;
+        user?: { login?: string; type?: string };
+      }>
+    >(
       `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/comments?per_page=100&page=${page}`,
       {
         token: params.token,
@@ -795,19 +808,52 @@ export async function upsertMarkerComment(params: {
     comments.push(...pageComments);
     if (pageComments.length < 100) break;
   }
-  const existing = comments.find((comment) =>
+  const markerComments = comments.filter((comment) =>
     comment.body?.includes(params.marker),
   );
+  const botMarkerComments = markerComments.filter(
+    (comment) => comment.user?.type === "Bot",
+  );
+  const existing = botMarkerComments.at(-1);
   const endpoint = existing
     ? `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/comments/${existing.id}`
     : `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/${params.issueNumber}/comments`;
-  await githubJson(endpoint, {
+  const canonical = await githubJson<{
+    id: number;
+    html_url?: string;
+    user?: { login?: string; type?: string };
+  }>(endpoint, {
     method: existing ? "PATCH" : "POST",
     token: params.token,
     apiVersion: params.apiVersion,
     headers: { "content-type": "application/json" },
     body: JSON.stringify({ body: params.body }),
   });
+  const supersededIds: number[] = [];
+  for (const comment of botMarkerComments) {
+    if (comment.id === canonical.id) continue;
+    await githubJson(
+      `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/issues/comments/${comment.id}`,
+      {
+        method: "PATCH",
+        token: params.token,
+        apiVersion: params.apiVersion,
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          body: supersededReviewComment(
+            params.marker,
+            canonical.html_url || existing?.html_url,
+          ),
+        }),
+      },
+    );
+    supersededIds.push(comment.id);
+  }
+  return {
+    id: canonical.id,
+    url: canonical.html_url || existing?.html_url || "",
+    supersededIds,
+  };
 }
 
 export async function closeIssueOrPullRequest(params: {
@@ -835,7 +881,7 @@ export async function approvePullRequest(params: {
   body: string;
   apiVersion?: string;
 }) {
-  await githubJson(
+  return githubJson<{ id?: number; html_url?: string }>(
     `https://api.github.com/repos/${params.repo.owner}/${params.repo.repo}/pulls/${params.number}/reviews`,
     {
       method: "POST",

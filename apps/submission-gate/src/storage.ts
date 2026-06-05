@@ -229,6 +229,14 @@ export async function upsertPrState(
     clearVerdict?: boolean;
     clearTerminal?: boolean;
     lastReviewKey?: string | null;
+    commentId?: number | null;
+    commentUrl?: string | null;
+    reviewId?: number | null;
+    schemaVersion?: number | null;
+    formatterVersion?: number | null;
+    decisionId?: string | null;
+    confidence?: number | null;
+    sourceEvidenceHash?: string | null;
   },
 ) {
   const timestamp = now();
@@ -241,8 +249,8 @@ export async function upsertPrState(
   await db
     .prepare(
       `INSERT INTO submission_prs
-        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, last_review_key, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (repo, number, head_repo, head_ref, head_sha, base_ref, installation_id, status, verdict, verdict_summary, last_delivery_id, last_review_key, next_review_at, attempt_count, last_error, last_check_summary, terminal_at, comment_id, comment_url, review_id, schema_version, formatter_version, decision_id, confidence, source_evidence_hash, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
        ON CONFLICT(repo, number) DO UPDATE SET
         head_repo = COALESCE(excluded.head_repo, submission_prs.head_repo),
         head_ref = COALESCE(excluded.head_ref, submission_prs.head_ref),
@@ -276,6 +284,14 @@ export async function upsertPrState(
           WHEN excluded.terminal_at IS NOT NULL THEN excluded.terminal_at
           ELSE submission_prs.terminal_at
         END,
+        comment_id = COALESCE(excluded.comment_id, submission_prs.comment_id),
+        comment_url = COALESCE(excluded.comment_url, submission_prs.comment_url),
+        review_id = COALESCE(excluded.review_id, submission_prs.review_id),
+        schema_version = COALESCE(excluded.schema_version, submission_prs.schema_version),
+        formatter_version = COALESCE(excluded.formatter_version, submission_prs.formatter_version),
+        decision_id = COALESCE(excluded.decision_id, submission_prs.decision_id),
+        confidence = COALESCE(excluded.confidence, submission_prs.confidence),
+        source_evidence_hash = COALESCE(excluded.source_evidence_hash, submission_prs.source_evidence_hash),
         updated_at = excluded.updated_at`,
     )
     .bind(
@@ -296,6 +312,14 @@ export async function upsertPrState(
       params.lastError ?? null,
       params.lastCheckSummary ?? null,
       terminalAt,
+      params.commentId ?? null,
+      params.commentUrl ?? null,
+      params.reviewId ?? null,
+      params.schemaVersion ?? null,
+      params.formatterVersion ?? null,
+      params.decisionId ?? null,
+      params.confidence ?? null,
+      params.sourceEvidenceHash ?? null,
       timestamp,
       timestamp,
       params.clearVerdict ? 1 : 0,
@@ -320,6 +344,10 @@ export async function getPrState(
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,
+        comment_id AS commentId, comment_url AS commentUrl,
+        review_id AS reviewId, schema_version AS schemaVersion,
+        formatter_version AS formatterVersion, decision_id AS decisionId,
+        confidence, source_evidence_hash AS sourceEvidenceHash,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE repo = ? AND number = ?`,
@@ -348,6 +376,10 @@ export async function listDuePrStates(
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,
+        comment_id AS commentId, comment_url AS commentUrl,
+        review_id AS reviewId, schema_version AS schemaVersion,
+        formatter_version AS formatterVersion, decision_id AS decisionId,
+        confidence, source_evidence_hash AS sourceEvidenceHash,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        WHERE (
@@ -403,6 +435,10 @@ export async function listRecentPrStates(
         attempt_count AS attemptCount, last_error AS lastError,
         last_check_summary AS lastCheckSummary, terminal_at AS terminalAt,
         last_notification_key AS lastNotificationKey,
+        comment_id AS commentId, comment_url AS commentUrl,
+        review_id AS reviewId, schema_version AS schemaVersion,
+        formatter_version AS formatterVersion, decision_id AS decisionId,
+        confidence, source_evidence_hash AS sourceEvidenceHash,
         created_at AS createdAt, updated_at AS updatedAt
        FROM submission_prs
        ORDER BY updated_at DESC

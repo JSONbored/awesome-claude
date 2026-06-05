@@ -12,6 +12,7 @@ import {
   createGitHubAppJwt,
   getCommitValidationState,
   listPullRequestFiles,
+  upsertMarkerComment,
 } from "../apps/submission-gate/src/github";
 import {
   decryptText,
@@ -28,7 +29,11 @@ import {
   protectedFrontmatterChanges,
 } from "../apps/submission-gate/src/duplicates";
 import {
+  approvalReviewBody,
   markerComment,
+  normalizePrivateGateDecisionPayload,
+  retryingReviewComment,
+  supersededReviewComment,
   validationFailedDecision,
 } from "../apps/submission-gate/src/review";
 import {
@@ -401,10 +406,10 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("target.headSha = pullForNotification.head.sha");
     expect(source).toContain("target: {");
     expect(source).toContain("installationId: target.installationId");
-    expect(source).toContain("isRetryablePrivateReviewerDecision(decision)");
-    expect(source).toContain(
-      "ai maintainer review returned an unexpected payload",
-    );
+    expect(source).toContain("normalizePrivateGateDecisionPayload(raw)");
+    expect(source).toContain("isRetryableGateDecision(decision)");
+    expect(source).toContain('"invalid_private_response"');
+    expect(source).toContain('"private_reviewer_unavailable"');
     expect(source).toContain('status: "error_retryable"');
     expect(source).toContain("retryingReviewComment(");
     expect(source).toContain("validation: validationForPrivateReview");
@@ -479,11 +484,12 @@ describe("Cloudflare submission gate helpers", () => {
       close: true,
     });
 
-    expect(body).toContain(
-      "<!-- heyclaude-submission-gate -->\nVerdict: Request changes\n\nSummary:",
-    );
-    expect(body).toContain("Source Review:");
-    expect(body).toContain("Recommended Action:");
+    expect(body).toContain("<!-- heyclaude-submission-gate -->\n> [!WARNING]");
+    expect(body).toContain("**Needs changes**");
+    expect(body).toContain("| Formatter | `gate-comment-v2` |");
+    expect(body).toContain("## Summary");
+    expect(body).toContain("<summary><strong>Source Review</strong>");
+    expect(body).toContain("## Recommended Action");
     expect(body).toContain("single-shot submission review");
   });
 
@@ -493,13 +499,180 @@ describe("Cloudflare submission gate helpers", () => {
       summary:
         "Summary:\n- Accepted after duplicate/history and source review.",
       labels: ["submission-merged-by-gate"],
+      confidence: 0.92,
+      scope: {
+        filePath: "content/mcp/example.mdx",
+        category: "mcp",
+        slug: "example",
+        status: "added",
+      },
     });
 
-    expect(body).toContain("Verdict: Accepted and merged");
+    expect(body).toContain("> [!TIP]");
+    expect(body).toContain("**Accepted and merged**");
+    expect(body).toContain("| Confidence | 92% |");
+    expect(body).toContain("`content/mcp/example.mdx`");
     expect(body).toContain(
       "passed content validation, Superagent, and private review",
     );
     expect(body).toContain("merges accepted source PRs directly");
+  });
+
+  it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
+    expect(markerComment()).toContain("**Public validation running**");
+    expect(markerComment()).toContain(
+      "| Private maintainer gate | `waiting` |",
+    );
+    expect(retryingReviewComment()).toContain("**Review retrying**");
+    expect(retryingReviewComment()).toContain(
+      "| Private maintainer gate | `retrying` |",
+    );
+    expect(
+      supersededReviewComment(
+        "<!-- heyclaude-submission-gate -->",
+        "https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ),
+    ).toContain("**Superseded gate report**");
+  });
+
+  it("normalizes GateDecisionV2 and rejects malformed private review payloads", () => {
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "merge",
+        confidence: 0.91,
+        summary: ["Summary:", "- Looks good."],
+        labels: ["submission-merged-by-gate"],
+        scope: {
+          filePath: "content/mcp/example.mdx",
+          category: "mcp",
+          slug: "example",
+          status: "added",
+        },
+        checks: [{ name: "validate-content", status: "passed" }],
+        sections: [
+          {
+            id: "recommended_action",
+            status: "pass",
+            bullets: ["Merge this PR."],
+          },
+        ],
+      }).decision,
+    ).toMatchObject({
+      schemaVersion: 2,
+      verdict: "merge",
+      confidence: 0.91,
+      checks: [{ name: "validate-content", status: "passed" }],
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        schemaVersion: 2,
+        verdict: "request_changes",
+        confidence: 0.5,
+        summary: "No longer valid in V2.",
+        labels: [],
+        checks: [],
+        sections: [],
+      }).error,
+    ).toMatchObject({
+      code: "invalid_private_response",
+      retryable: true,
+    });
+
+    expect(
+      normalizePrivateGateDecisionPayload({
+        verdict: "request_changes",
+        summary: "Temporary V1 fallback.",
+        labels: ["submission-closed-by-gate"],
+      }).decision,
+    ).toMatchObject({
+      verdict: "request_changes",
+      summary: "Temporary V1 fallback.",
+    });
+  });
+
+  it("keeps approval reviews short and links to the canonical report", () => {
+    expect(
+      approvalReviewBody(
+        "https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ),
+    ).toBe(
+      [
+        "Approved by HeyClaude Maintainer Agent.",
+        "",
+        "Full gate report: https://github.com/JSONbored/awesome-claude/pull/1#issuecomment-2",
+      ].join("\n"),
+    );
+  });
+
+  it("updates the newest bot marker comment and supersedes older bot reports", async () => {
+    const fetchMock = vi.fn(
+      async (url: URL | RequestInfo, init?: RequestInit) => {
+        const value = String(url);
+        if (value.includes("/issues/42/comments?")) {
+          return Response.json([
+            {
+              id: 1,
+              body: "<!-- heyclaude-submission-gate -->\nOld report",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-1",
+              user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+            },
+            {
+              id: 2,
+              body: "<!-- heyclaude-submission-gate -->\nCurrent report",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+              user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+            },
+            {
+              id: 3,
+              body: "<!-- heyclaude-submission-gate -->\nPasted marker",
+              html_url:
+                "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-3",
+              user: { login: "contributor", type: "User" },
+            },
+          ]);
+        }
+        const body = JSON.parse(String(init?.body || "{}")) as {
+          body?: string;
+        };
+        if (value.endsWith("/issues/comments/2")) {
+          expect(init?.method).toBe("PATCH");
+          expect(body.body).toBe("new canonical report");
+          return Response.json({
+            id: 2,
+            html_url:
+              "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+            user: { login: "heyclaude-submission-agent[bot]", type: "Bot" },
+          });
+        }
+        if (value.endsWith("/issues/comments/1")) {
+          expect(init?.method).toBe("PATCH");
+          expect(body.body).toContain("Superseded gate report");
+          return Response.json({ id: 1 });
+        }
+        throw new Error(`Unexpected URL ${value}`);
+      },
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    await expect(
+      upsertMarkerComment({
+        token: "ghs_test",
+        repo: { owner: "JSONbored", repo: "awesome-claude" },
+        issueNumber: 42,
+        marker: "<!-- heyclaude-submission-gate -->",
+        body: "new canonical report",
+      }),
+    ).resolves.toEqual({
+      id: 2,
+      url: "https://github.com/JSONbored/awesome-claude/pull/42#issuecomment-2",
+      supersededIds: [1],
+    });
+
+    expect(fetchMock).toHaveBeenCalledTimes(3);
   });
 
   it("formats Discord decision notifications without marker or secret text", () => {
@@ -736,6 +909,8 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("labels: [LABELS.merged, ...categoryLabels]");
     expect(source).toContain('status: "merged"');
     expect(source).toContain("await mergeAcceptedPullRequest({");
+    expect(source).toContain("approvalReviewBody(params.reportCommentUrl)");
+    expect(source).toContain("reportCommentUrl: acceptedReport.url");
     expect(source).toContain("        const mergedSummary = [");
     expect(source).not.toContain(
       [
@@ -935,6 +1110,16 @@ describe("Cloudflare submission gate helpers", () => {
     expect(source).toContain("listRecentPrStates(env.SUBMISSION_GATE_DB");
     expect(source).toContain("lastCheckSummary");
     expect(source).toContain("attemptCount");
+    expect(source).toContain("retryReasons");
+    expect(source).toContain("staleStates");
+    expect(source).toContain("recentTerminal");
+    expect(source).toContain("deadLetterQueue");
+    expect(source).toContain("commentUrl");
+    expect(source).toContain("formatterVersion");
+    expect(readStorageSource()).toContain("comment_id AS commentId");
+    expect(readStorageSource()).toContain(
+      "formatter_version AS formatterVersion",
+    );
   });
 
   it("records pull request inspection failures before returning from webhooks", () => {
