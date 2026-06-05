@@ -123,18 +123,20 @@ function deriveSeoDescription(value) {
 }
 
 function keywordFromValue(value) {
+  // Keep +, #, and . so tech keywords (c++, c#, .net, node.js) survive intact.
   return compactText(value)
     .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s-]/gu, " ")
+    .replace(/[^\p{L}\p{N}+#.\s-]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
 
 function keywordKey(value) {
+  // Keep +, #, and . so distinct tech keywords don't collapse to the same key.
   return compactText(value)
     .toLowerCase()
     .replace(/&/g, " and ")
-    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/[^a-z0-9+#.]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .replace(/-{2,}/g, "-");
 }
