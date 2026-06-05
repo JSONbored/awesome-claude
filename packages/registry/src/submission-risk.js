@@ -53,8 +53,12 @@ const IDENTITY_ATTESTATION_PATTERN =
   /\battestations?\b[\s\S]{0,120}\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b/i;
 const IDENTITY_ATTESTATION_REVERSE_PATTERN =
   /\b(wallet|kyc|payment|crypto|on-chain identity|identity proof|identity verification|proof of personhood|verifiable credential)\b[\s\S]{0,120}\battestations?\b/i;
-const DEFENSIVE_SECURITY_CONTEXT_PATTERN =
-  /\b(prevent|protect|warn|warning|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
+const DEFENSIVE_SECURITY_MITIGATION_PATTERN =
+  /\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b[\s\S]{0,160}\b(?:(?:credential|password|cookie|session|token|wallet|secret|leak)s?|expos(?:e|ing|ure))\b|\b(?:credential|password|cookie|session|token|wallet|secret)s?\b[\s\S]{0,160}\b(prevent|protect|warn(?:s|ing)? before|block|detect|detection|redact|sanitize|audit|review|remediate|remediation|hardening|least privilege|safe configuration|avoid (?:pasting|exposing|leaking)|leak warning)\b/i;
+const RESOURCE_THEFT_CAPABILITY_PATTERN =
+  /\b(?:this|the|our)?\s*(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b[\s\S]{0,40}\b(?:can|will|does|advertises?|offers?|enables?|designed to|built to)\b[\s\S]{0,80}\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b|\b(steals?|exfiltrates?|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(?:with|using|through|by)\b[\s\S]{0,40}\b(?:agent|command|hook|mcp|server|skill|statusline|tool|workflow)\b/i;
+const CREDENTIAL_THEFT_PATTERN =
+  /\b(credential|password|cookie|session|token|wallet)s?\b[\s\S]{0,80}\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b|\b(steals?|exfiltrat(?:e|es|ing|ion)|harvests?|dumps?)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)s?\b/i;
 const ABUSE_ENABLEMENT_PATTERN =
   /\b(build|create|generate|run|deploy|use|ship)\b[\s\S]{0,80}\b(credential stealer|password stealer|cookie stealer|keylogger|steal credentials|exfiltrat(?:e|ion)|harvest cookies|dump tokens?)\b/i;
 
@@ -111,7 +115,8 @@ function hasFinancialOrIdentitySensitiveSignal(text) {
 
 function hasDefensiveSecuritySafeHarbor(text) {
   return (
-    DEFENSIVE_SECURITY_CONTEXT_PATTERN.test(text) &&
+    DEFENSIVE_SECURITY_MITIGATION_PATTERN.test(text) &&
+    !RESOURCE_THEFT_CAPABILITY_PATTERN.test(text) &&
     !ABUSE_ENABLEMENT_PATTERN.test(text)
   );
 }
@@ -883,12 +888,7 @@ function addContentRiskSignals(report, fields, text) {
 
   if (
     !hasDefensiveSecuritySafeHarbor(text) &&
-    (/\b(credential|password|cookie|session|token|wallet)\b[\s\S]{0,80}\b(steal|exfiltrat|harvest|dump)\b/i.test(
-      text,
-    ) ||
-      /\b(steal|exfiltrat|harvest|dump)\b[\s\S]{0,80}\b(credential|password|cookie|session|token|wallet)\b/i.test(
-        text,
-      ))
+    CREDENTIAL_THEFT_PATTERN.test(text)
   ) {
     addFlag(
       report,
