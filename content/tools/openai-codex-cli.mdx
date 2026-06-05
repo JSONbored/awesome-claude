@@ -1,0 +1,96 @@
+---
+title: OpenAI Codex CLI
+slug: openai-codex-cli
+category: tools
+description: >-
+  Lightweight, open-source coding agent from OpenAI that runs in your terminal,
+  edits and runs code locally with configurable sandbox and approval modes, and
+  authenticates with a ChatGPT plan or API key.
+cardDescription: >-
+  OpenAI's open-source terminal coding agent that edits and runs code locally
+  with sandbox and approval modes.
+seoTitle: OpenAI Codex CLI — Local Terminal Coding Agent
+seoDescription: >-
+  OpenAI Codex CLI is an Apache-2.0 coding agent that runs in your terminal,
+  edits and runs code locally with configurable sandbox and approval modes, and
+  authenticates with a ChatGPT plan or API key.
+author: OpenAI
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://developers.openai.com/codex"
+repoUrl: "https://github.com/openai/codex"
+documentationUrl: "https://developers.openai.com/codex"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "A ChatGPT plan (Plus, Pro, Business, Edu, or Enterprise) for plan-based sign-in, or an OpenAI API key."
+  - "Node.js and npm for the npm install, or Homebrew for the cask install."
+  - "A terminal on macOS, Linux, or Windows."
+safetyNotes:
+  - "Codex CLI runs as a local agent that can edit files and execute commands on your machine."
+  - "It supports configurable sandbox and approval modes; keep approvals enabled and review proposed actions before allowing them."
+  - "Lowering approval or sandbox restrictions lets the agent act more autonomously, increasing the risk of unintended changes."
+  - "Review generated code and commands before running them against important repositories or systems."
+privacyNotes:
+  - "Code and prompts are sent to OpenAI to power the agent under your ChatGPT plan or API key."
+  - "Data handling follows OpenAI's policies for the plan or API you authenticate with; review them before processing sensitive code."
+  - "API keys and account credentials should be stored securely and never committed to source control."
+tags:
+  - ai-coding
+  - cli
+  - terminal
+  - openai
+  - open-source
+  - developer-tools
+keywords:
+  - openai codex cli
+  - codex cli
+  - terminal coding agent
+  - openai coding agent
+  - local ai coding agent
+  - codex terminal
+---
+
+## Overview
+
+OpenAI Codex CLI is a lightweight coding agent that runs in your terminal. It is
+a local agent from OpenAI that helps with coding tasks on your computer across
+macOS, Linux, and Windows, and is also available as an IDE integration and a web
+experience.
+
+It is released under the Apache-2.0 license and written primarily in Rust. The
+CLI itself is free and open source; inference is billed through your ChatGPT
+plan or OpenAI API usage.
+
+## Features
+
+- Runs locally in the terminal as a coding agent.
+- Configurable sandbox and approval modes for controlling autonomy.
+- Authenticates with a ChatGPT plan or an OpenAI API key.
+- Also available as IDE integrations (VS Code, Cursor, Windsurf) and on the web.
+
+## Use Cases
+
+- Drive an AI coding agent from the terminal on a local repository.
+- Use an existing ChatGPT plan for coding assistance without separate billing.
+- Run code edits and commands under explicit approval and sandbox controls.
+
+## Installation
+
+```bash
+# npm
+npm install -g @openai/codex
+
+# Homebrew
+brew install --cask codex
+```
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. Codex CLI is
+open source under Apache-2.0; using it requires a paid ChatGPT plan or OpenAI
+API usage.

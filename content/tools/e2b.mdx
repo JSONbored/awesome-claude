@@ -1,0 +1,107 @@
+---
+title: E2B
+slug: e2b
+category: tools
+description: >-
+  Open-source infrastructure for running AI-generated code in secure, isolated
+  cloud sandboxes, with Python and JavaScript SDKs, a Code Interpreter package,
+  and self-hosting options.
+cardDescription: >-
+  Open-source cloud sandboxes for executing AI-generated code, with Python and
+  JavaScript SDKs and a Code Interpreter package.
+seoTitle: E2B — Secure Cloud Sandboxes for AI-Generated Code
+seoDescription: >-
+  E2B is Apache-2.0 infrastructure for running AI-generated code in secure,
+  isolated cloud sandboxes. Python and JavaScript SDKs, a Code Interpreter
+  package, self-hosting, and an optional managed cloud.
+author: E2B
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://www.e2b.dev"
+repoUrl: "https://github.com/e2b-dev/E2B"
+documentationUrl: "https://e2b.dev/docs"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "An E2B account and API key from the dashboard, set as the `E2B_API_KEY` environment variable, for the managed cloud."
+  - "Python 3.8+ for the `e2b` / `e2b-code-interpreter` SDK, or Node.js 18+ for the `e2b` / `@e2b/code-interpreter` SDK."
+  - "Self-hosting requires Terraform and a supported cloud provider to deploy the sandbox infrastructure."
+safetyNotes:
+  - "E2B is built to execute arbitrary, AI-generated code; run such code only inside its isolated cloud sandboxes, never directly on a developer machine."
+  - "Sandbox network and filesystem access depend on configuration; review and restrict sandbox capabilities before running untrusted code."
+  - "Generated code can still perform destructive or unexpected actions within a sandbox, so treat sandbox outputs and side effects with caution."
+  - "Self-hosting deploys cloud infrastructure via Terraform that you are responsible for securing, patching, and isolating from production systems."
+privacyNotes:
+  - "On the managed cloud, your code and execution data are sent to and run on E2B-operated infrastructure; review their privacy terms before processing sensitive data."
+  - "API keys grant access to your sandboxes; store them in environment variables or a secrets manager and never commit them to source control."
+  - "Data passed into a sandbox (files, inputs, environment variables) lives in that sandbox for its lifetime; avoid sending secrets you do not need there."
+  - "Self-hosting keeps execution data on your own infrastructure, making log retention, access control, and isolation your responsibility."
+tags:
+  - sandbox
+  - code-execution
+  - ai-agents
+  - code-interpreter
+  - open-source
+  - developer-tools
+keywords:
+  - e2b
+  - ai code sandbox
+  - code interpreter
+  - secure code execution
+  - agent sandbox
+  - e2b sdk
+  - isolated code execution
+---
+
+## Overview
+
+E2B is open-source infrastructure for running AI-generated code in secure,
+isolated sandboxes in the cloud. It targets developers building AI agents and
+LLM applications that need a safe place to execute model-generated code without
+exposing local machines or production systems.
+
+You control sandbox lifecycle programmatically through SDKs while E2B manages
+the underlying infrastructure. The project is released under Apache-2.0, can be
+self-hosted via Terraform, and also offers a managed cloud that requires an API
+key.
+
+## Features
+
+- Secure execution of AI-generated code in isolated cloud sandboxes.
+- Python and JavaScript/TypeScript SDKs for sandbox lifecycle control.
+- A Code Interpreter package (`e2b-code-interpreter`, `@e2b/code-interpreter`)
+  for executing and interpreting code.
+- Self-hosting support deployable with Terraform.
+- Integration with AI agents and LLM workflows.
+
+## Use Cases
+
+- Give an AI agent a safe sandbox to run and verify generated code.
+- Add a code-interpreter capability to an LLM application.
+- Execute untrusted user-submitted code without touching host systems.
+- Self-host execution infrastructure to keep code and data on your own cloud.
+
+## Installation
+
+```bash
+# Python
+pip install e2b-code-interpreter
+
+# JavaScript / TypeScript
+npm i @e2b/code-interpreter
+```
+
+Set your API key before connecting to the managed cloud:
+
+```bash
+export E2B_API_KEY=e2b_***
+```
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. E2B's core is
+open source (Apache-2.0); the managed cloud is a separate paid service.

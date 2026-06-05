@@ -1,0 +1,103 @@
+---
+title: NanoClaw
+slug: nanoclaw
+category: tools
+description: >-
+  Open-source platform that runs Claude agents in isolated per-session
+  containers, connects them to messaging channels, keeps per-agent memory and
+  scheduled tasks, and routes credentials through a vault so keys never enter
+  containers.
+cardDescription: >-
+  Open-source platform that runs Claude agents in isolated containers across
+  messaging channels, with per-agent memory and vaulted credentials.
+seoTitle: NanoClaw — Isolated Container Platform for Claude Agents
+seoDescription: >-
+  NanoClaw is an MIT-licensed platform that runs Claude agents in isolated
+  per-session containers, connects them to messaging channels, keeps per-agent
+  memory and scheduled tasks, and keeps API keys out of containers via a vault.
+author: nanocoai
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://nanoclaw.dev"
+repoUrl: "https://github.com/nanocoai/nanoclaw"
+documentationUrl: "https://docs.nanoclaw.dev"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "macOS or Linux, or Windows via WSL2."
+  - "Node.js 20+ and pnpm 10+."
+  - "Docker Desktop or Engine (or Apple Container on macOS) for container isolation."
+  - "Claude Code for skills and customization, plus Anthropic Agent SDK access."
+safetyNotes:
+  - "Agents run in OS-level container isolation (Docker or Apple Container) with explicit filesystem mounts; bash commands execute inside containers, not on the host."
+  - "Each agent group gets its own container, isolated CLAUDE.md memory, and selective mounts, limiting what a single agent can reach."
+  - "Scheduled tasks run Claude on a recurring basis and can message users automatically; review schedules and message permissions."
+  - "Messaging channels are installed on demand and can send outbound messages on your behalf, so scope which channels and agents are enabled."
+privacyNotes:
+  - "API keys never enter containers; outbound requests route through OneCLI's Agent Vault, which enforces per-agent policies and rate limits."
+  - "Messages flow through inbound/outbound SQLite databases rather than shared memory, and each agent group only accesses explicitly mounted directories."
+  - "Channels can be configured for full per-channel privacy, unified memory with separate conversations, or a single shared session; choose the mode that matches your privacy needs."
+  - "Running Claude through the Anthropic Agent SDK sends conversation context to Anthropic's API."
+tags:
+  - claude
+  - container-isolation
+  - messaging
+  - ai-agents
+  - open-source
+  - automation
+keywords:
+  - nanoclaw
+  - isolated claude agents
+  - container isolation ai agent
+  - claude messaging agent
+  - secure ai agent platform
+  - per-session agent containers
+---
+
+## Overview
+
+NanoClaw is a lightweight, open-source platform for running Claude agents safely.
+It orchestrates per-session agent containers that receive incoming messages, run
+Claude through Anthropic's Agent SDK, and deliver responses back through
+messaging channels. It is positioned as a security-focused alternative that
+gives agents only the access they explicitly need.
+
+It is released under the MIT license and is primarily TypeScript, running on
+Node.js with Docker (or Apple Container on macOS) for isolation and SQLite for
+message storage.
+
+## Features
+
+- Per-session agent containers with OS-level isolation and selective mounts.
+- Multi-channel messaging: WhatsApp, Telegram, Discord, Slack, Teams, iMessage,
+  Matrix, Gmail, and more, installed on demand.
+- Per-agent workspace with isolated CLAUDE.md memory.
+- Scheduled, recurring tasks that can run Claude and message users.
+- Web search and fetch from within agents.
+- Credential security: API keys never enter containers, routed via a vault.
+
+## Use Cases
+
+- Run Claude-powered assistants across messaging platforms with isolation.
+- Give each agent group its own sandboxed memory and filesystem scope.
+- Schedule recurring agent jobs that can notify users.
+- Keep credentials out of agent containers while still calling external APIs.
+
+## Installation
+
+Clone the repository and run the setup script:
+
+```bash
+git clone https://github.com/nanocoai/nanoclaw.git nanoclaw-v2
+cd nanoclaw-v2
+bash nanoclaw.sh
+```
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. NanoClaw is open
+source under the MIT license.

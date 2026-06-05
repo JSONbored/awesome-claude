@@ -1,0 +1,101 @@
+---
+title: SuperClaude Framework
+slug: superclaude-framework
+category: tools
+description: >-
+  Open-source configuration framework that enhances Claude Code with slash
+  commands, specialized agents, behavioral modes, and MCP server integrations
+  for a more structured development workflow.
+cardDescription: >-
+  Open-source framework that extends Claude Code with slash commands,
+  specialized agents, behavioral modes, and MCP integrations.
+seoTitle: SuperClaude Framework — Configuration Layer for Claude Code
+seoDescription: >-
+  SuperClaude Framework is an MIT-licensed configuration framework that adds 30
+  slash commands, 20 specialized agents, 7 behavioral modes, and 8 MCP server
+  integrations on top of Claude Code.
+author: SuperClaude-Org
+dateAdded: "2026-06-05"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+submittedAt: "2026-06-05"
+websiteUrl: "https://superclaude.netlify.app"
+repoUrl: "https://github.com/SuperClaude-Org/SuperClaude_Framework"
+documentationUrl: "https://github.com/SuperClaude-Org/SuperClaude_Framework"
+pricingModel: open-source
+disclosure: editorial
+applicationCategory: DeveloperApplication
+operatingSystem: macOS, Windows, Linux
+prerequisites:
+  - "A working Claude Code environment, which SuperClaude configures and extends."
+  - "Python installed, since the recommended install uses pipx."
+  - "Optional MCP servers for enhanced research, browser, and fast-apply capabilities."
+safetyNotes:
+  - "SuperClaude injects behavioral instructions and components into Claude Code, changing how the agent plans and executes work; review the installed configuration."
+  - "Its commands drive Claude Code to run tasks across the development lifecycle, which can edit files and run commands in your project."
+  - "Installing MCP servers (web research, browser automation, fast-apply) grants additional external and local capabilities; enable only the servers you need."
+  - "The project is not affiliated with or endorsed by Anthropic; Claude Code is a separate Anthropic product with its own safety behavior."
+privacyNotes:
+  - "Because it runs on Claude Code, your code and context are sent to Anthropic's API for inference."
+  - "Optional MCP servers such as web research and browser automation send queries and page data to their respective third-party services."
+  - "Any API keys for MCP servers should be stored as secrets and never committed to source control."
+tags:
+  - claude-code
+  - framework
+  - slash-commands
+  - mcp
+  - open-source
+  - developer-tools
+keywords:
+  - superclaude framework
+  - claude code framework
+  - claude code slash commands
+  - claude code agents
+  - claude code mcp integration
+  - claude code configuration
+---
+
+## Overview
+
+SuperClaude Framework is a configuration framework that enhances Claude Code
+with specialized commands, cognitive personas, and development methodologies. It
+turns Claude Code into a more structured development platform by injecting
+behavioral instructions and orchestrating reusable components.
+
+It is released under the MIT license and is primarily Python. It is community
+built and is not affiliated with or endorsed by Anthropic.
+
+## Features
+
+- 30 slash commands spanning planning, development, testing, documentation,
+  version control, and project management.
+- 20 specialized agents, including PM, deep research, and security roles.
+- 7 behavioral modes such as brainstorming, orchestration, token-efficiency,
+  and task management.
+- Integrations with 8 MCP servers (for example Context7, Sequential-Thinking,
+  Playwright, and web research).
+- Session management for saving and restoring working state.
+
+## Use Cases
+
+- Add a consistent command and agent layer on top of Claude Code.
+- Standardize multi-phase development workflows across a project.
+- Enable focused modes for research, planning, or token-efficient work.
+- Wire in MCP servers for browser automation and web research.
+
+## Installation
+
+```bash
+# Recommended (pipx)
+pipx install superclaude
+superclaude install
+
+# Install selected MCP servers
+superclaude mcp --servers tavily context7
+```
+
+## Disclosure
+
+Editorial listing. No paid placement or affiliate relationship. SuperClaude
+Framework is open source under the MIT license and is not affiliated with
+Anthropic.

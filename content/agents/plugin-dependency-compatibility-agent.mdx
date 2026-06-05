@@ -1,0 +1,138 @@
+---
+title: Plugin Dependency Compatibility Agent
+slug: plugin-dependency-compatibility-agent
+category: agents
+description: >-
+  Source-backed agent that reviews Claude Code plugins for dependency and
+  compatibility issues, checking the plugin.json manifest, bundled components,
+  external binaries like LSP servers, versioning, and namespace conflicts, grounded
+  in the official Claude Code plugin docs.
+cardDescription: >-
+  Review Claude Code plugins for dependency and compatibility issues: manifest,
+  components, external binaries, versioning, and conflicts.
+seoTitle: Plugin Dependency Compatibility Agent for Claude Code
+seoDescription: >-
+  Reusable agent prompt that reviews Claude Code plugins for dependency and
+  compatibility issues, checking plugin.json, bundled components, external
+  binaries, versioning, and namespace conflicts, grounded in official docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/plugins"
+installable: false
+usageSnippet: "Use this agent to review a Claude Code plugin for dependency and compatibility issues before publishing or installing it: manifest correctness, external binaries, versioning, and conflicts."
+prerequisites:
+  - "A Claude Code plugin directory with its .claude-plugin/plugin.json manifest and component directories."
+  - "Knowledge of any external binaries the plugin requires, such as LSP language servers."
+  - "The marketplace or distribution method and its versioning expectations."
+safetyNotes:
+  - "This agent reviews plugin structure and dependencies; it does not install or execute the plugin."
+  - "Plugins can bundle hooks, MCP servers, and bin/ executables that run with your privileges; flag components that need scrutiny before install."
+  - "Treat plugin install from untrusted sources as a supply-chain risk; recommend reviewing source and pinning versions."
+privacyNotes:
+  - "Bundled MCP servers and hooks can access local files and external services; confirm what the plugin's components reach."
+  - "Plugin settings.json and manifests should not contain secrets; use environment variables or helpers."
+  - "Note that bin/ executables are added to the Bash tool PATH while the plugin is enabled."
+tags:
+  - claude-code
+  - plugins
+  - dependencies
+  - compatibility
+  - review
+keywords:
+  - plugin dependency compatibility agent
+  - claude code plugin review
+  - plugin.json manifest
+  - claude code plugin versioning
+  - plugin lsp dependency
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Plugin Dependency Compatibility Agent is a reusable agent prompt for reviewing a
+Claude Code plugin before it is published or installed. It checks the
+`plugin.json` manifest, the bundled components (skills, agents, hooks, MCP, LSP,
+monitors), external binary requirements, versioning strategy, and namespace
+conflicts.
+
+Use it when authoring or vetting a plugin so dependency and compatibility issues
+are caught before users install it.
+
+## Agent Prompt
+
+You are a plugin dependency and compatibility reviewer for Claude Code. Find what
+could make a plugin fail to load, conflict, or surprise users, using the official
+Claude Code plugin documentation as your reference.
+
+Review workflow:
+
+1. Manifest. Confirm `.claude-plugin/plugin.json` has a valid name, description,
+   and an explicit version (or that git-SHA versioning is intended). Confirm only
+   `plugin.json` lives in `.claude-plugin/` and other component directories are at
+   the plugin root.
+2. Components. Check skills, agents, hooks, `.mcp.json`, `.lsp.json`, monitors, and
+   `bin/` for correct placement and structure.
+3. External dependencies. For LSP servers and bin tools, confirm users must have
+   the required binary installed, and that this is documented.
+4. Versioning. Confirm the version strategy gives users predictable updates
+   (explicit version vs commit SHA), per the docs.
+5. Namespacing. Confirm plugin skills are namespaced to avoid conflicts with other
+   plugins.
+6. Safety surface. Flag bundled hooks, MCP servers, and bin executables that run
+   with user privileges and should be reviewed before install.
+7. Decision. Ready to publish, fix issues, or block.
+
+Output contract:
+
+- Manifest and structure summary.
+- Findings: misplaced directories, missing version, undocumented binaries,
+  namespace or compatibility risks.
+- Required changes with references to the plugin docs.
+- Decision and any install-time cautions.
+
+## Features
+
+- Validates plugin.json and plugin directory structure.
+- Flags undocumented external binary dependencies (e.g. LSP servers).
+- Checks versioning strategy and skill namespacing.
+- Surfaces hooks, MCP, and bin executables that need review before install.
+
+## Use Cases
+
+- Review a plugin before submitting it to a marketplace.
+- Vet a third-party plugin before installing it on a team.
+- Catch misplaced component directories or missing version fields.
+- Document external binary prerequisites for a plugin.
+
+## Source Notes
+
+- Claude Code plugins use a `.claude-plugin/plugin.json` manifest and bundle
+  skills, agents, hooks, MCP, LSP servers, monitors, and `bin/` executables at the
+  plugin root, with only `plugin.json` inside `.claude-plugin/`.
+- LSP and bin components require the user to have the relevant binary installed,
+  plugin skills are namespaced to avoid conflicts, and version management uses an
+  explicit version or the git commit SHA.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for plugin, dependency, and
+compatibility agents. No plugin dependency compatibility agent exists. This entry
+is distinct: it is an `agents` prompt focused on plugin dependency and
+compatibility review for Claude Code.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code plugins documentation: https://code.claude.com/docs/en/plugins
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

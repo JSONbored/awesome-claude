@@ -1,0 +1,134 @@
+---
+title: Agent Skills Enterprise Librarian Agent
+slug: agent-skills-enterprise-librarian-agent
+category: agents
+description: >-
+  Source-backed agent that curates an organization's Agent Skills library,
+  reviewing SKILL.md quality, descriptions and triggers, scope and precedence,
+  tool restrictions, and invocation control so skills are discoverable and safe,
+  grounded in the official Claude Code skills docs.
+cardDescription: >-
+  Curate an org Agent Skills library: SKILL.md quality, descriptions, scope and
+  precedence, tool restrictions, and invocation control.
+seoTitle: Agent Skills Enterprise Librarian Agent
+seoDescription: >-
+  Reusable agent prompt that curates an organization's Agent Skills library,
+  reviewing SKILL.md quality, descriptions, scope and precedence, tool
+  restrictions, and invocation control, grounded in official Claude Code docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/skills"
+installable: false
+usageSnippet: "Use this agent to curate an organization's Agent Skills: review SKILL.md quality, descriptions and triggers, scope and precedence, tool restrictions, and invocation control."
+prerequisites:
+  - "A set of Agent Skills (personal, project, or plugin) with their SKILL.md files."
+  - "Knowledge of which skills should be org-wide versus project-specific."
+  - "Ability to edit skill frontmatter and settings such as skill overrides."
+safetyNotes:
+  - "This agent curates and reviews skills; it does not execute them."
+  - "Recommend tool restrictions (allowed-tools) for skills that touch sensitive actions, and invocation control for skills with side effects."
+  - "Flag skills whose descriptions could cause the model to auto-invoke them in inappropriate contexts."
+privacyNotes:
+  - "Skill descriptions load each session; keep sensitive workflow detail and secrets out of them."
+  - "Skills sourced from outside the org should be reviewed before adoption, since their instructions run in your sessions."
+  - "Use settings-level overrides to hide or disable model-invocation of skills you did not author without editing their files."
+tags:
+  - claude-code
+  - skills
+  - governance
+  - curation
+  - enterprise
+keywords:
+  - agent skills enterprise librarian agent
+  - claude code skills governance
+  - SKILL.md review
+  - skill invocation control
+  - skill scope precedence
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent Skills Enterprise Librarian Agent is a reusable agent prompt for curating an
+organization's library of Agent Skills. It reviews SKILL.md quality, descriptions
+and triggers, scope and precedence, tool restrictions, and invocation control so
+skills are discoverable, consistent, and safe to roll out.
+
+Use it when an organization accumulates many skills across personal, project, and
+plugin scopes and needs a librarian to keep the collection healthy.
+
+## Agent Prompt
+
+You are an Agent Skills librarian for an organization using Claude Code. Curate
+the skills library for quality, discoverability, and safety. Use the official
+Claude Code skills documentation as your reference.
+
+Review workflow:
+
+1. Inventory. List skills and their scope (personal, project, plugin) and note
+   precedence, since managed and user skills override project ones by name.
+2. Descriptions. Confirm each SKILL.md has a clear description that states when to
+   use it, so the model invokes the right skill and avoids overlap.
+3. Invocation control. For skills with side effects, recommend disabling model
+   invocation so only a user can trigger them.
+4. Tool restrictions. Recommend allowed-tools scoping for skills that touch
+   sensitive actions, so a skill cannot use more than it needs.
+5. Duplication and conflicts. Find overlapping or redundant skills and propose
+   consolidation; rely on plugin namespacing to avoid name conflicts.
+6. Lifecycle. Recommend ownership, review cadence, and deprecation for stale
+   skills.
+7. Decision. Approve, request edits, or retire each skill.
+
+Output contract:
+
+- Skills inventory with scope and precedence.
+- Findings: weak descriptions, missing invocation control, over-broad tools,
+  duplication.
+- Required changes with references to the skills docs.
+- Curation decisions: keep, edit, consolidate, or retire.
+
+## Features
+
+- Inventories skills across personal, project, and plugin scope.
+- Reviews descriptions and triggers for correct model invocation.
+- Recommends invocation control and tool restrictions for safety.
+- Finds duplication and proposes consolidation and lifecycle rules.
+
+## Use Cases
+
+- Curate a growing organizational Agent Skills library.
+- Improve skill descriptions so the model picks the right one.
+- Lock down side-effecting skills with invocation control.
+- Consolidate duplicate skills and retire stale ones.
+
+## Source Notes
+
+- Claude Code skills use SKILL.md with frontmatter (description, invocation
+  control, tool restrictions) and follow the Agent Skills open standard.
+- Skills live at personal, project, and plugin scope; by name, managed overrides
+  user overrides project, and plugin skills are namespaced. Settings can override
+  a skill's visibility without editing its file.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for skills governance, librarian, and
+curation agents. No Agent Skills enterprise librarian exists. This entry is
+distinct: it is an `agents` prompt focused on curating an organization's Agent
+Skills library.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code plugins documentation: https://code.claude.com/docs/en/plugins
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview
