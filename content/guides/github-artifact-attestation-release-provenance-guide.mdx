@@ -1,0 +1,104 @@
+---
+title: GitHub Artifact Attestation Release Provenance Guide
+slug: github-artifact-attestation-release-provenance-guide
+category: guides
+description: >-
+  Practical release guide for using GitHub artifact attestations, OIDC job
+  permissions, SBOM attestations, subject digests, and verification commands
+  before trusting AI-built release artifacts.
+cardDescription: Verify release artifacts with GitHub attestations, OIDC, and digest-bound provenance.
+seoTitle: GitHub Artifact Attestation Release Provenance Guide
+seoDescription: >-
+  Learn how to review GitHub artifact attestations for release provenance,
+  including OIDC permissions, subject digest matching, SBOM attestations, and
+  downstream verification commands.
+author: JSONbored
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+usageSnippet: >-
+  Use this before publishing build archives, containers, packages, or SBOMs from
+  GitHub Actions, especially when AI agents can modify release workflows.
+prerequisites:
+  - A GitHub Actions release workflow that builds artifacts.
+  - Expected artifact names, package coordinates, image tags, or archive paths.
+  - Permission to inspect workflow permissions, release assets, and verification commands.
+safetyNotes:
+  - Provenance is only useful when the attested subject digest matches the artifact users actually install.
+  - Do not grant `id-token: write` broadly across unrelated jobs.
+privacyNotes:
+  - Attestations, workflow logs, and SBOMs can reveal repository names, package names, build paths, and dependency metadata.
+sourceUrls:
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations"
+  - "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom"
+  - "https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers"
+tags:
+  - github-actions
+  - artifact-attestations
+  - provenance
+  - release-security
+  - sbom
+keywords:
+  - GitHub artifact attestation guide
+  - release provenance GitHub Actions
+  - verify artifact digest
+  - SBOM attestation workflow
+readingTime: 6
+difficultyScore: 64
+hasTroubleshooting: true
+hasPrerequisites: true
+hasBreakingChanges: false
+robotsIndex: true
+robotsFollow: true
+---
+
+## Release Review Flow
+
+GitHub artifact attestations connect a build artifact to the workflow identity
+that produced it. For AI-assisted projects, that matters because an agent can
+change build scripts, packaging paths, and release notes faster than a maintainer
+can manually audit every artifact.
+
+## Checklist
+
+1. **Identify the artifact subject.** Know whether the release publishes a tarball,
+   zip, container image, package, or SBOM.
+2. **Match the digest.** The attested digest must match the uploaded or installed
+   artifact, not an intermediate directory or pre-packaged build output.
+3. **Scope OIDC.** Only the attestation job should need identity-token issuance.
+4. **Review triggers.** Do not create trusted provenance from untrusted fork code.
+5. **Attest SBOMs separately.** The SBOM should describe the artifact users consume.
+6. **Document verification.** Release notes should include a copyable verification
+   command or downstream policy.
+
+## Common Problems
+
+| Problem                              | Why it matters                                   |
+| ------------------------------------ | ------------------------------------------------ |
+| Attesting a directory before zipping | The final archive has a different digest         |
+| Workflow-level `id-token: write`     | Unrelated jobs can mint identity tokens          |
+| No verification command              | Users cannot prove the provenance claim          |
+| SBOM not tied to artifact            | Dependency metadata may describe the wrong build |
+
+## Troubleshooting
+
+### Verification fails for a downloaded asset
+
+Compare the subject path and digest in the attestation against the exact release
+asset. Packaging after attestation is the usual cause.
+
+### The workflow publishes multiple artifacts
+
+Attest each artifact explicitly or generate a matrix that records every subject.
+Do not rely on a single generic build attestation.
+
+## Duplicate Check
+
+Existing skills cover secure CI/CD. This guide is a direct release-provenance
+walkthrough focused on GitHub artifact attestations and SBOM checks.
+
+## References
+
+- Artifact attestations - https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+- SBOM attestations - https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/generating-an-artifact-attestation-for-an-sbom
+- OIDC hardening - https://docs.github.com/en/actions/how-tos/security-for-github-actions/security-hardening-your-deployments/configuring-openid-connect-in-cloud-providers
