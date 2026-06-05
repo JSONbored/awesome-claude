@@ -173,6 +173,7 @@ describe("submission automation workflows", () => {
     );
 
     expect(source).toContain("Product or feature improvement");
+    expect(source).not.toContain("gittensor:feature");
     expect(source).toContain("id: quality_evidence");
     expect(source).toContain("desktop and mobile screenshots");
     expect(source).toContain("No visual impact");
@@ -214,9 +215,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
-    expect(source).toContain(
-      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).not.toContain("CLOUDFLARE_API_TOKEN");
     expect(source).not.toContain("CLOUDFLARE_ACCOUNT_ID");
     expect(source).not.toContain("pnpm --filter web run deploy:dev");
@@ -367,9 +373,14 @@ describe("submission automation workflows", () => {
     expect(source).toContain(
       "github.event.pull_request.head.repo.full_name == github.repository",
     );
-    expect(source).toContain(
-      "deployment-artifacts-pr-preview-${{ github.repository }}-${{ github.event.pull_request.number }}",
+    const previewBlock =
+      source.match(
+        /\n  validate-pr-preview:[\s\S]*?\n  required-pr-gate:/,
+      )?.[0] || "";
+    expect(previewBlock).toContain(
+      "group: deployment-artifacts-pr-preview-${{ github.repository }}\n",
     );
+    expect(previewBlock).not.toContain("github.event.pull_request.number");
     expect(source).toContain("Resolve PR preview URL");
     expect(source).toContain("--wait-seconds 600");
     expect(source).not.toContain("--allow-missing");

@@ -1,0 +1,134 @@
+---
+title: Claude Code Worktree Coordinator Agent
+slug: claude-code-worktree-coordinator-agent
+category: agents
+description: >-
+  Source-backed agent that coordinates parallel Claude Code sessions across git
+  worktrees, planning isolation, base-branch choice, gitignored-file copying,
+  subagent worktrees, and cleanup so parallel edits do not collide, grounded in
+  the official Claude Code worktrees docs.
+cardDescription: >-
+  Coordinate parallel Claude Code sessions across git worktrees: isolation, base
+  branch, file copying, subagent worktrees, and cleanup.
+seoTitle: Claude Code Worktree Coordinator Agent
+seoDescription: >-
+  Reusable agent prompt that coordinates parallel Claude Code sessions across git
+  worktrees, planning isolation, base-branch choice, gitignored-file copying,
+  subagent worktrees, and cleanup, grounded in official Claude Code docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/worktrees"
+installable: false
+usageSnippet: "Use this agent to plan and coordinate parallel Claude Code sessions across git worktrees, choosing isolation, base branches, file copying, subagent worktrees, and cleanup."
+prerequisites:
+  - "A git repository where you want to run multiple Claude Code sessions in parallel."
+  - "Workspace trust accepted by running Claude Code once in the directory before using the worktree flag."
+  - "Knowledge of which gitignored files (such as .env) each worktree needs."
+safetyNotes:
+  - "This agent plans worktree coordination; it does not delete branches or worktrees without your direction."
+  - "Removing a worktree with uncommitted changes discards them; recommend committing or stashing before cleanup."
+  - "Copying gitignored files like .env into worktrees duplicates secrets into more locations; scope .worktreeinclude carefully."
+privacyNotes:
+  - "A .worktreeinclude that copies env or secrets files spreads those secrets to each worktree; keep the list minimal."
+  - "Worktrees share the repository history and remote; pushing from a worktree publishes commits the same as the main checkout."
+  - "Add the worktrees directory to .gitignore so worktree contents do not appear as untracked files."
+tags:
+  - claude-code
+  - worktrees
+  - parallel-sessions
+  - git
+  - coordination
+keywords:
+  - claude code worktree coordinator agent
+  - claude code worktrees
+  - parallel claude sessions
+  - subagent worktree isolation
+  - worktreeinclude
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Claude Code Worktree Coordinator Agent is a reusable agent prompt for running
+multiple Claude Code sessions in parallel without their edits colliding. It plans
+worktree isolation, base-branch choice, gitignored-file copying, subagent
+worktrees, and cleanup, based on how Claude Code's worktree support actually
+works.
+
+Use it when you want one session building a feature and another fixing a bug at
+the same time, or when coordinating subagents that edit files in parallel.
+
+## Agent Prompt
+
+You are a git worktree coordinator for parallel Claude Code sessions. Plan
+isolation so parallel work does not collide, and keep cleanup safe. Use the
+official Claude Code worktrees documentation as your reference.
+
+Coordination workflow:
+
+1. Plan sessions. Decide which tasks run in their own worktree. Each worktree is a
+   separate working directory on its own branch sharing the same repository.
+2. Base branch. Choose whether worktrees branch from the default remote branch
+   (fresh) or from local HEAD, depending on whether sessions need in-progress
+   work.
+3. Local files. Identify gitignored files each worktree needs (like .env) and plan
+   a minimal `.worktreeinclude`, knowing only gitignored matches are copied.
+4. Subagent isolation. For subagents that edit files in parallel, plan worktree
+   isolation so their edits do not conflict, and expect empty ones to be cleaned
+   up automatically.
+5. Cleanup. Plan cleanup: clean worktrees are removed automatically, but ones with
+   uncommitted changes prompt to keep or remove. Recommend committing first.
+6. Hygiene. Ensure the worktrees directory is gitignored.
+
+Output contract:
+
+- Session/worktree plan with base-branch choices.
+- `.worktreeinclude` recommendation (minimal, secrets-aware).
+- Subagent isolation plan.
+- Cleanup plan that avoids losing uncommitted work.
+
+## Features
+
+- Plans isolated parallel sessions using git worktrees.
+- Chooses fresh vs HEAD base branches per task.
+- Designs a minimal, secrets-aware .worktreeinclude.
+- Coordinates subagent worktrees and safe cleanup.
+
+## Use Cases
+
+- Run feature and bugfix sessions in parallel without collisions.
+- Isolate parallel subagents so their edits do not conflict.
+- Copy only the needed gitignored files into each worktree.
+- Clean up worktrees without losing uncommitted changes.
+
+## Source Notes
+
+- Claude Code creates worktrees under the repository (by default on a new branch),
+  branching from the default remote branch unless configured to use local HEAD.
+- A `.worktreeinclude` copies only gitignored matches into new worktrees,
+  subagents can be isolated with worktrees, and clean worktrees are auto-removed
+  while ones with changes prompt before removal.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for worktree, parallel session, and
+coordination agents. No worktree coordinator exists. This entry is distinct: it is
+an `agents` prompt focused on coordinating parallel Claude Code sessions across
+git worktrees.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Code documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Code worktrees documentation: https://code.claude.com/docs/en/worktrees
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

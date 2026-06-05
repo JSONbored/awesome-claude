@@ -1,0 +1,127 @@
+---
+title: Deep Links into Claude Code Runbooks and Alerts
+slug: deep-links-into-claude-code-runbooks-and-alerts
+category: guides
+description: >-
+  A practical walkthrough of Claude Code deep links: the claude-cli:// URL
+  scheme, how to build links with repo, cwd, and prompt parameters, embedding
+  them in runbooks and alerts, and the safety model where prompts are inert until
+  you press Enter.
+cardDescription: >-
+  Build claude-cli:// deep links that open Claude Code in the right repo with a
+  prepared prompt, for runbooks, alerts, and dashboards.
+seoTitle: Deep Links into Claude Code Runbooks and Alerts
+seoDescription: >-
+  How to build Claude Code claude-cli:// deep links with repo, cwd, and prompt
+  parameters, embed them in runbooks and alerts, and rely on the safety model
+  where a linked prompt is inert until you press Enter.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/deep-links"
+usageSnippet: "Use this guide to add one-click claude-cli:// deep links to runbooks, alerts, and dashboards that open Claude Code in the right repo with a prepared prompt."
+prerequisites:
+  - "Claude Code v2.1.91 or later installed; the claude-cli:// handler registers on first interactive launch."
+  - "For the repo parameter, a local clone where you have run Claude Code at least once so its path is recorded."
+  - "A surface that allows custom URL schemes (note GitHub-rendered Markdown strips claude-cli://)."
+safetyNotes:
+  - "A deep link only chooses a directory and pre-fills the prompt box; nothing reaches the model until you read it and press Enter."
+  - "Treat links from untrusted sources with care: review the pre-filled prompt, especially long ones, before sending, since long prompts can scroll off screen."
+  - "Permission rules, CLAUDE.md, and directory trust prompts apply to a link-launched session the same as any other session."
+  - "Administrators can disable handler registration with disableDeepLinkRegistration in managed settings."
+privacyNotes:
+  - "The link itself can be hosted anywhere, but the session always opens locally on the machine where you click; no remote execution occurs."
+  - "Encode prompts carefully and avoid embedding secrets or sensitive identifiers in shared link URLs."
+  - "The cwd parameter rejects network and UNC paths; repo only resolves to clones Claude Code has already seen."
+tags:
+  - claude-code
+  - deep-links
+  - runbooks
+  - incident-response
+  - automation
+keywords:
+  - claude code deep links
+  - claude-cli url scheme
+  - claude code runbook link
+  - launch claude code from url
+  - incident runbook claude code
+---
+
+## Overview
+
+A deep link is a `claude-cli://` URL that opens Claude Code in a new terminal
+window, optionally in a specific repository and with a prompt already typed. It
+turns a runbook step, alert, or dashboard into a one-click starting point for a
+task. The prompt is pre-filled but never sent until you press Enter.
+
+## Build a link
+
+Every link starts with `claude-cli://open` and takes optional query parameters:
+
+| Parameter | Description |
+| --- | --- |
+| `q` | Prompt text to pre-fill. URL-encode it; use `%0A` for newlines. Max 5,000 chars. |
+| `cwd` | Absolute working directory. Network and UNC paths are rejected. |
+| `repo` | A GitHub `owner/name` slug resolved to a local clone you have used before. |
+
+If both `cwd` and `repo` are present, `cwd` wins. Example:
+
+```text
+claude-cli://open?repo=acme/payments&q=Investigate%20the%20failed%20deploy.%0ACheck%20recent%20commits%20to%20main.
+```
+
+Clicking it opens Claude Code in your local clone of `acme/payments` with the
+decoded two-line prompt ready to edit and send.
+
+## Embed in a runbook
+
+```markdown
+## High 5xx rate on web-gateway
+
+1. Acknowledge the page.
+2. [Open Claude Code in the gateway repo](claude-cli://open?repo=acme/web-gateway&q=5xx%20rate%20is%20elevated.%20Check%20recent%20deploys%20and%20error%20logs.)
+3. Post findings in the incident channel.
+```
+
+Note: GitHub-rendered Markdown strips `claude-cli://`, so on GitHub put the link
+in a code block for readers to copy. Use a wiki, dashboard, or chat tool that
+allows custom URL schemes for true one-click behavior.
+
+## Trigger from the shell
+
+```bash
+# macOS
+open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
+# Linux
+xdg-open "claude-cli://open?repo=acme/payments&q=review%20open%20PRs"
+```
+
+On Windows, `Start-Process "claude-cli://open?..."` in PowerShell.
+
+## cwd vs repo
+
+- Use `cwd` when everyone has the project at the same absolute path (for example
+  a standardized devcontainer).
+- Use `repo` when each person clones to a different location; Claude Code opens
+  the matching clone you used most recently. It only finds clones where you have
+  run Claude Code at least once, and the link does not change the checked-out
+  branch.
+
+## Safety model
+
+The launched session shows a `Prompt from an external link` warning until you
+send or clear it. For prompts over 1,000 characters, the warning includes the
+length and reminds you to scroll and review. Nothing runs until you press Enter,
+and normal permission rules, CLAUDE.md, and trust prompts still apply.
+
+## Tip
+
+Store long runbook prompts as a `/skill` in the repo so the link's `q` parameter
+only has to name the skill.
+
+## Source
+
+- Launch sessions from links: https://code.claude.com/docs/en/deep-links

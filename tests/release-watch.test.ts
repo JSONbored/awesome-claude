@@ -5,6 +5,7 @@ import {
   buildMcpReleaseReport,
   buildRaycastReleaseIssue,
   buildRaycastReleaseReport,
+  isTrustedReleaseWatchIssue,
   latestSemverTag,
   MCP_RELEASE_DUE_MARKER,
   RAYCAST_RELEASE_DUE_MARKER,
@@ -82,6 +83,39 @@ describe("release watch", () => {
     expect(issue.labels).toEqual(["release", "raycast"]);
     expect(issue.assignees).toEqual(["release-maintainer"]);
     expect(issue.body).toContain(RAYCAST_RELEASE_DUE_MARKER);
+  });
+
+  it("only trusts existing release-watch issues from automation or trusted labels", () => {
+    expect(
+      isTrustedReleaseWatchIssue(
+        {
+          body: MCP_RELEASE_DUE_MARKER,
+          user: { login: "contributor" },
+          labels: [],
+        },
+        ["release", "mcp"],
+      ),
+    ).toBe(false);
+    expect(
+      isTrustedReleaseWatchIssue(
+        {
+          body: MCP_RELEASE_DUE_MARKER,
+          user: { login: "github-actions[bot]" },
+          labels: [],
+        },
+        ["release", "mcp"],
+      ),
+    ).toBe(true);
+    expect(
+      isTrustedReleaseWatchIssue(
+        {
+          body: MCP_RELEASE_DUE_MARKER,
+          user: { login: "maintainer-triaged" },
+          labels: [{ name: "release" }, { name: "mcp" }],
+        },
+        ["release", "mcp"],
+      ),
+    ).toBe(true);
   });
 
   it("escapes backslashes and pipes in commit subjects before issue upserts", () => {

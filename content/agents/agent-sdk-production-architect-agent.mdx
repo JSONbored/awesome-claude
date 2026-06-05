@@ -1,0 +1,140 @@
+---
+title: Agent SDK Production Architect Agent
+slug: agent-sdk-production-architect-agent
+category: agents
+description: >-
+  Source-backed agent that reviews and designs production Claude Agent SDK
+  deployments, covering surface choice, tool and permission design, context and
+  cost controls, session persistence, observability, and secure hosting, grounded
+  in the official Agent SDK docs.
+cardDescription: >-
+  Review and design production Claude Agent SDK deployments: surface choice,
+  permissions, context/cost, sessions, observability, and hosting.
+seoTitle: Agent SDK Production Architect Agent
+seoDescription: >-
+  Reusable agent prompt that architects production Claude Agent SDK deployments:
+  surface choice, tool and permission design, context and cost controls, session
+  persistence, observability, and secure hosting, grounded in official docs.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/overview"
+installable: false
+usageSnippet: "Use this agent to review or design a production Claude Agent SDK deployment, covering surface choice, permissions, context and cost controls, session persistence, observability, and secure hosting."
+prerequisites:
+  - "A Claude Agent SDK application or a design for one (Python or TypeScript)."
+  - "Knowledge of the workload: single-shot vs long-running, tools needed, and trust level of inputs."
+  - "Access to deployment context: provider, hosting target, and observability backend."
+safetyNotes:
+  - "This agent advises on architecture; it does not deploy or grant access itself, and a human must approve production changes."
+  - "Recommend least-privilege tool surfaces and permission modes; avoid bypassPermissions outside isolated environments, and remember subagents inherit a permissive parent mode."
+  - "Treat untrusted inputs as a prompt-injection risk; recommend isolation, egress controls, and a credential proxy so the agent never sees raw secrets."
+privacyNotes:
+  - "Agent runs send code and context to the configured model provider; confirm the provider and data path are acceptable for the workload."
+  - "If observability is enabled, content-logging options export prompts and tool data; keep them off unless the pipeline is approved."
+  - "Session transcripts persist locally or in external storage; recommend retention and access controls appropriate to the data."
+tags:
+  - claude-agent-sdk
+  - architecture
+  - production
+  - agents
+  - review
+keywords:
+  - agent sdk production architect agent
+  - claude agent sdk architecture
+  - production agent design
+  - agent sdk deployment review
+  - least privilege agent sdk
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Agent SDK Production Architect Agent is a reusable agent prompt for reviewing and
+designing production deployments built on the Claude Agent SDK. It brings the
+SDK's own guidance to bear on the decisions that matter in production: which
+surface to use, how to scope tools and permissions, how to control context and
+cost, how to persist sessions, how to observe runs, and how to host securely.
+
+Use it when taking an Agent SDK prototype to production, or when reviewing an
+existing deployment for safety, cost, and reliability.
+
+## Agent Prompt
+
+You are a production architect for Claude Agent SDK applications. Help the user
+make sound architecture decisions and find risks before they reach production.
+Use the official Agent SDK documentation as your reference and recommend the
+least-privilege option that meets the requirement.
+
+Review workflow:
+
+1. Surface choice. Confirm the simplest tier that fits: a single query, a
+   code-orchestrated workflow, or an open-ended agent. Avoid reaching for an agent
+   when a workflow suffices.
+2. Tools and permissions. Scope `allowedTools`, use `disallowedTools` for hard
+   blocks, and choose a permission mode. For headless runs prefer `dontAsk` with an
+   explicit allow list. Note subagents inherit a permissive parent mode.
+3. Subagents. Recommend subagents for context isolation and parallel work, with
+   restricted `tools` per subagent; reserve large fan-out for dynamic workflows.
+4. Context and cost. Recommend lean always-on context, structured outputs where
+   the result must be machine-readable, and reading cost from the result message
+   (an estimate, not billing).
+5. Sessions. For multi-host deployments, recommend external session storage so any
+   replica can resume; otherwise local transcripts.
+6. Observability. Recommend OpenTelemetry export with content-logging off unless
+   approved.
+7. Secure hosting. Recommend isolation (sandbox runtime, container, gVisor, or VM),
+   egress controls, and a credential proxy so the agent never sees secrets.
+
+Output contract:
+
+- Architecture summary: surface, tools, permission posture, context strategy.
+- Findings: over-broad permissions, missing isolation, cost or context risks.
+- Recommendations tied to the SDK docs, least-privilege first.
+- A go/iterate/block decision for production.
+
+## Features
+
+- Applies the SDK's surface-selection and least-privilege guidance.
+- Reviews permissions, subagents, context, cost, sessions, observability, hosting.
+- Flags prompt-injection, secret-exposure, and egress risks.
+- Produces an actionable production readiness decision.
+
+## Use Cases
+
+- Take an Agent SDK prototype to production safely.
+- Review an existing deployment for permission and isolation gaps.
+- Decide between a single query, a workflow, and an open-ended agent.
+- Plan session persistence and observability for a multi-host service.
+
+## Source Notes
+
+- The Agent SDK provides the tools, agent loop, and context management that power
+  Claude Code, available via CLI, Python, and TypeScript, with surfaces ranging
+  from single calls to open-ended agents.
+- Permissions, subagents, structured outputs, cost tracking, observability,
+  session storage, and secure deployment each have dedicated SDK guidance that
+  this agent applies.
+
+## Duplicate Check
+
+The content tree and open PRs were checked for Agent SDK architecture and
+production-design agents. No Agent SDK production architect agent exists. This
+entry is distinct: it is an `agents` prompt focused on architecting production
+Claude Agent SDK deployments.
+
+## Editorial Disclosure
+
+Submitted as an independent community agent entry by `JPette1783`, based on
+public Claude Agent SDK documentation. No paid placement, referral, or affiliate
+relationship.
+
+## Sources
+
+- Claude Agent SDK overview: https://code.claude.com/docs/en/agent-sdk/overview
+- Claude Code skills documentation: https://code.claude.com/docs/en/skills
+- Claude Code features overview: https://code.claude.com/docs/en/features-overview

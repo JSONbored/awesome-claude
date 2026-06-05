@@ -1,0 +1,137 @@
+---
+title: CLAUDE.md Hierarchy for Monorepos and Nested Packages
+slug: claude-md-hierarchy-for-monorepos-and-nested-packages
+category: guides
+description: >-
+  A practical walkthrough of structuring CLAUDE.md across a monorepo: how files
+  load up the directory tree and on demand in subdirectories, path-scoped rules,
+  imports, excluding other teams' files, and keeping per-package context lean.
+cardDescription: >-
+  Structure CLAUDE.md across a monorepo: load order, nested files, path-scoped
+  rules, imports, and excluding other teams' files.
+seoTitle: CLAUDE.md Hierarchy for Monorepos and Nested Packages
+seoDescription: >-
+  How to structure Claude Code CLAUDE.md across a monorepo: directory-tree load
+  order, on-demand nested files, path-scoped .claude/rules/, @path imports, and
+  claudeMdExcludes for other teams' files.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/large-codebases"
+usageSnippet: "Use this guide to structure CLAUDE.md and rules across a monorepo so each package gets the right context without bloating every session."
+prerequisites:
+  - "A monorepo or multi-package repository where you use Claude Code."
+  - "Edit access to root and per-package CLAUDE.md files and .claude/rules/ directories."
+  - "An understanding of which instructions are repo-wide versus package-specific."
+safetyNotes:
+  - "CLAUDE.md is context, not enforcement; for rules that must always hold (block a path, run a check before commit), use a PreToolUse hook or managed settings, not prose."
+  - "Conflicting instructions across nested CLAUDE.md files cause Claude to pick one arbitrarily; review the hierarchy periodically to remove contradictions."
+  - "Managed-policy CLAUDE.md cannot be excluded by individual settings; keep organization-wide rules there when they must always apply."
+privacyNotes:
+  - "CLAUDE.md and loaded rules are sent to the model provider every session; keep secrets and sensitive data out of them, and use CLAUDE.local.md (gitignored) for personal notes."
+  - "@path imports load the referenced files into context at launch; do not import files containing credentials."
+  - "In large monorepos, other teams' CLAUDE.md may load unexpectedly; use claudeMdExcludes to avoid pulling in unrelated or sensitive context."
+tags:
+  - claude-code
+  - claude-md
+  - monorepo
+  - context-window
+  - configuration
+keywords:
+  - claude.md monorepo
+  - claude code nested claude.md
+  - claude code rules
+  - claudeMdExcludes
+  - claude code path-scoped rules
+---
+
+## Overview
+
+In a monorepo, a single root CLAUDE.md cannot capture every package's
+conventions without becoming huge and noisy. Claude Code loads CLAUDE.md files
+hierarchically, so you can place repo-wide rules at the root and package-specific
+rules deeper in the tree. This guide covers how that hierarchy loads and how to
+keep per-package context lean.
+
+## How files load
+
+Claude Code walks up the directory tree from the working directory, loading every
+`CLAUDE.md` and `CLAUDE.local.md` along the way. Content is concatenated from the
+filesystem root down to the working directory, so the most specific instructions
+are read last. Files in subdirectories below your working directory are not loaded
+at launch; they load on demand when Claude reads files in those directories.
+
+For `packages/api/`, that means `./CLAUDE.md`, `packages/CLAUDE.md`, and
+`packages/api/CLAUDE.md` all contribute, with the deepest read last.
+
+## Recommended monorepo structure
+
+```text
+monorepo/
+  CLAUDE.md                 # repo-wide: build, conventions, layout
+  .claude/rules/            # repo-wide topic rules (optionally path-scoped)
+  packages/
+    api/
+      CLAUDE.md             # API package conventions (loads on demand)
+    web/
+      CLAUDE.md             # web package conventions (loads on demand)
+```
+
+Keep the root CLAUDE.md under ~200 lines and focused on what every session needs.
+Push package-specific detail into nested CLAUDE.md files or path-scoped rules.
+
+## Path-scoped rules
+
+Instead of nesting many CLAUDE.md files, scope rules to file patterns with
+`.claude/rules/` frontmatter so they load only when Claude touches matching files:
+
+```markdown
+---
+paths:
+  - "packages/api/**/*.ts"
+---
+
+# API package rules
+- All endpoints validate input.
+- Use the standard error response format.
+```
+
+Rules without a `paths` field load every session at the same priority as
+`.claude/CLAUDE.md`.
+
+## Imports
+
+Pull shared context into a package CLAUDE.md with `@path` imports (relative or
+absolute, max four hops). Imported files load at launch, so use them for
+organization, not for reducing context.
+
+## Exclude other teams' files
+
+In a large monorepo, ancestor CLAUDE.md files from other teams may load. Skip them
+with `claudeMdExcludes` in `.claude/settings.local.json`:
+
+```json
+{
+  "claudeMdExcludes": [
+    "**/monorepo/other-team/CLAUDE.md",
+    "/abs/path/other-team/.claude/rules/**"
+  ]
+}
+```
+
+Managed-policy CLAUDE.md cannot be excluded.
+
+## Tips
+
+- Run `/memory` to confirm which CLAUDE.md and rules files loaded for the session.
+- Use `CLAUDE.local.md` (gitignored) for personal, per-package preferences.
+- After `/compact`, the project-root CLAUDE.md is re-injected; nested files reload
+  only when Claude next reads a file in that subdirectory.
+
+## Source
+
+- Monorepos and large repos: https://code.claude.com/docs/en/large-codebases
+- How Claude remembers your project: https://code.claude.com/docs/en/memory

@@ -1,0 +1,119 @@
+---
+title: Slash Commands in Claude Agent SDK Sessions
+slug: slash-commands-in-claude-agent-sdk-sessions
+category: guides
+description: >-
+  A practical walkthrough of using slash commands in the Claude Agent SDK:
+  discovering available commands from the init message, sending commands in the
+  prompt, built-in commands like compact and clear, and defining custom commands
+  on the filesystem.
+cardDescription: >-
+  Use slash commands in the Claude Agent SDK: discover them from the init
+  message, send them in the prompt, and define custom ones on disk.
+seoTitle: Slash Commands in Claude Agent SDK Sessions
+seoDescription: >-
+  How to use slash commands in the Claude Agent SDK: discover them via the
+  system init message, send a command in the prompt, use built-ins like /compact
+  and /clear, and define custom commands as filesystem files.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/slash-commands"
+usageSnippet: "Use this guide to discover and send slash commands in a Claude Agent SDK session, and to define custom commands on the filesystem."
+prerequisites:
+  - "The Claude Agent SDK installed for Python or TypeScript."
+  - "For custom commands, a .claude/skills/ or legacy .claude/commands/ directory."
+  - "Awareness that only commands that work without an interactive terminal are dispatchable through the SDK."
+safetyNotes:
+  - "Only non-interactive commands are dispatchable through the SDK; the system init message lists which are available in your session."
+  - "Custom commands can run bash and reference files; scope their allowed-tools frontmatter and review what each command does."
+  - "Commands that embed bash output or file contents send that data to the model; keep secrets out of referenced files."
+privacyNotes:
+  - "Slash command definitions and any embedded file or bash output are sent to the model provider as prompt content."
+  - "Custom command files live on disk in .claude/; avoid putting credentials in them or in files they reference with @."
+  - "Built-in /compact summarizes history; the summary still goes to the provider like the rest of the session."
+tags:
+  - claude-agent-sdk
+  - slash-commands
+  - agents
+  - developer-tools
+  - workflow
+keywords:
+  - claude agent sdk slash commands
+  - sdk slash_commands init
+  - custom slash command sdk
+  - /compact /clear sdk
+  - agent sdk commands
+---
+
+## Overview
+
+Slash commands control a Claude Agent SDK session with special `/` commands. Only
+commands that work without an interactive terminal are dispatchable through the
+SDK; the `system` `init` message lists the ones available in your session.
+
+## Discover available commands
+
+```typescript
+for await (const message of query({ prompt: "Hello", options: { maxTurns: 1 } })) {
+  if (message.type === "system" && message.subtype === "init") {
+    console.log("Available slash commands:", message.slash_commands);
+    // e.g. ["clear", "compact", "context", "usage"]
+  }
+}
+```
+
+## Send a command
+
+Send a slash command by putting it in the prompt string:
+
+```typescript
+for await (const message of query({ prompt: "/compact", options: { maxTurns: 1 } })) {
+  if (message.type === "result" && message.subtype === "success") {
+    console.log("Command executed:", message.result);
+  }
+}
+```
+
+Common built-ins include `/compact` (summarize history; emits a
+`compact_boundary` system message with `pre_tokens`) and `/clear` (reset context;
+useful in streaming-input mode, requires v2.1.117+). For one-shot `query()` calls
+`/clear` has no effect since each call starts empty.
+
+## Define custom commands
+
+Custom commands are markdown files; the filename becomes the command name. The
+recommended format is `.claude/skills/<name>/SKILL.md` (which also supports
+autonomous invocation); `.claude/commands/` is the legacy format and still works.
+
+```markdown
+---
+allowed-tools: Read, Grep, Glob
+description: Run security vulnerability scan
+---
+
+Analyze the codebase for security vulnerabilities including SQL injection,
+XSS, exposed credentials, and insecure configurations.
+```
+
+Custom commands support arguments (`$0`, `$1`, `$ARGUMENTS`), embedded bash output
+(`` !`git status` ``), and file references (`@package.json`). They appear in the
+`slash_commands` list and are invoked like built-ins:
+
+```typescript
+for await (const message of query({ prompt: "/security-check", options: { maxTurns: 3 } })) {
+  /* ... */
+}
+```
+
+## Organization
+
+Group commands in subdirectories (for example `.claude/commands/frontend/`); the
+subdirectory shows in the description but not the command name.
+
+## Source
+
+- Slash Commands in the SDK: https://code.claude.com/docs/en/agent-sdk/slash-commands

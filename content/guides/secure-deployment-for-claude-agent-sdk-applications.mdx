@@ -1,0 +1,118 @@
+---
+title: Secure Deployment for Claude Agent SDK Applications
+slug: secure-deployment-for-claude-agent-sdk-applications
+category: guides
+description: >-
+  A practical walkthrough of securely deploying Claude Agent SDK applications:
+  the prompt-injection threat model, isolation options (sandbox runtime,
+  containers, gVisor, VMs), least privilege, the proxy credential pattern, and
+  filesystem controls.
+cardDescription: >-
+  Securely deploy Claude Agent SDK apps: isolation choices, least privilege, the
+  proxy credential pattern, and filesystem controls.
+seoTitle: Secure Deployment for Claude Agent SDK Applications
+seoDescription: >-
+  How to securely deploy Claude Agent SDK applications: the prompt-injection
+  threat model, sandbox runtime, hardened containers, gVisor, VMs, least
+  privilege, the proxy credential pattern, and filesystem controls.
+author: JPette1783
+authorProfileUrl: "https://github.com/JPette1783"
+submittedBy: JPette1783
+submittedByUrl: "https://github.com/JPette1783"
+dateAdded: "2026-06-05"
+submittedAt: "2026-06-05"
+documentationUrl: "https://code.claude.com/docs/en/agent-sdk/secure-deployment"
+usageSnippet: "Use this guide to harden a Claude Agent SDK deployment with isolation, least-privilege tools, a credential proxy, and filesystem controls."
+prerequisites:
+  - "A Claude Agent SDK application you intend to run beyond a trusted local laptop."
+  - "Knowledge of which files, endpoints, and credentials the agent legitimately needs."
+  - "Container, sandbox, or VM tooling appropriate to your isolation choice."
+safetyNotes:
+  - "Agents generate actions dynamically and can be influenced by content they process (prompt injection); apply defense in depth, not a single control."
+  - "Use least privilege: mount only needed directories (prefer read-only), restrict network to specific endpoints, and drop Linux capabilities in containers."
+  - "Inject credentials via a proxy outside the agent boundary so the agent never sees secrets; do not mount ~/.ssh, ~/.aws, .env, or similar into the agent."
+privacyNotes:
+  - "Even read-only code mounts can expose credentials in .env, ~/.git-credentials, ~/.aws, .npmrc, and key files; exclude or sanitize them before mounting."
+  - "Route egress through a proxy that enforces a domain allowlist and logs requests, so a compromised agent cannot exfiltrate data to arbitrary hosts."
+  - "The built-in sandbox proxy does not inspect TLS; for stronger guarantees use a TLS-terminating proxy with its CA installed in the agent's trust store."
+tags:
+  - claude-agent-sdk
+  - security
+  - deployment
+  - isolation
+  - developer-tools
+keywords:
+  - claude agent sdk secure deployment
+  - agent sandboxing isolation
+  - credential proxy pattern
+  - least privilege agent
+  - prompt injection defense
+---
+
+## Overview
+
+Claude Code and the Agent SDK can execute code, access files, and call external
+services. Because they generate actions dynamically based on the content they
+process, their behavior can be influenced by files, web pages, or user input
+(prompt injection). Securing a deployment uses familiar principles: isolation,
+least privilege, and defense in depth.
+
+Not every deployment needs maximum security. A laptop differs from a multi-tenant
+service processing customer data. Choose controls that fit your threat model.
+
+## Built-in features
+
+Claude Code includes a permissions system (allow/block/prompt per tool and bash
+command, with org policies), AST-based command parsing for permission matching,
+web-search summarization (reduces injection from web content), and a sandbox mode
+that restricts filesystem and network access.
+
+## Isolation options
+
+| Technology | Isolation | Overhead | Complexity |
+| --- | --- | --- | --- |
+| Sandbox runtime | Good defaults | Very low | Low |
+| Containers (Docker) | Setup dependent | Low | Medium |
+| gVisor | Excellent | Medium/High | Medium |
+| VMs (Firecracker/QEMU) | Excellent | High | Medium/High |
+
+The agent always runs inside the boundary. `@anthropic-ai/sandbox-runtime`
+enforces filesystem and network restrictions at the OS level with minimal setup.
+A hardened container drops all capabilities, runs read-only with tmpfs, runs as a
+non-root user, sets `--network none`, and reaches the outside only through a
+mounted Unix socket to a host proxy. gVisor intercepts syscalls in userspace for a
+smaller kernel attack surface; VMs add hardware-level isolation.
+
+## Least privilege
+
+Restrict the agent to what its task needs: mount only required directories
+(prefer read-only), restrict network to specific endpoints via a proxy, inject
+credentials rather than exposing them, and drop Linux capabilities in containers.
+
+## The credential proxy pattern
+
+Run a proxy outside the agent boundary that injects credentials into outgoing
+requests. The agent sends requests without secrets; the proxy adds them, enforces
+an endpoint allowlist, and logs traffic. For Claude API calls, set
+`ANTHROPIC_BASE_URL` to your proxy (plaintext, can inject) or `HTTP_PROXY` /
+`HTTPS_PROXY` (system-wide; HTTPS needs a TLS-terminating proxy with a trusted CA
+to modify). For other services, prefer a custom tool/MCP server that performs the
+authenticated call outside the boundary.
+
+## Filesystem controls
+
+Mount code read-only when the agent only needs to analyze it, and exclude or
+sanitize credential files (`.env`, `~/.git-credentials`, `~/.aws/credentials`,
+`.npmrc`, `*.pem`) even from read-only mounts. For writable workspaces, use tmpfs
+(ephemeral) or a dedicated volume kept separate from sensitive directories; an
+overlay filesystem lets you review changes before persisting.
+
+## Cloud deployments
+
+Run agents in a private subnet with no internet gateway, block egress except to
+your proxy with cloud firewall rules, validate and log requests at the proxy, and
+assign minimal IAM to the agent's service account.
+
+## Source
+
+- Securely deploying AI agents: https://code.claude.com/docs/en/agent-sdk/secure-deployment
