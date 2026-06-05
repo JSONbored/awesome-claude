@@ -1,0 +1,101 @@
+---
+title: Atlassian Rovo MCP Server
+slug: atlassian-rovo-mcp-server
+category: mcp
+description: >-
+  Official Atlassian remote MCP server for connecting AI clients to Jira,
+  Confluence, Compass, and Atlassian Cloud data through OAuth-backed access.
+cardDescription: Connect Claude and AI clients to Jira, Confluence, Compass, and Atlassian Cloud through Atlassian's remote MCP server.
+seoTitle: Atlassian Rovo MCP Server for Claude and AI Clients
+seoDescription: >-
+  Configure Atlassian's official remote MCP server for Jira, Confluence, Compass,
+  and Atlassian Cloud workflows with OAuth 2.1, client setup notes, and privacy
+  guidance.
+author: Atlassian
+submittedBy: JSONbored
+submittedByUrl: "https://github.com/JSONbored"
+dateAdded: "2026-06-05"
+documentationUrl: "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+websiteUrl: "https://www.atlassian.com/platform/remote-mcp-server"
+installable: true
+installCommand: "npx -y mcp-remote https://mcp.atlassian.com/v1/mcp/authv2"
+usageSnippet: "Use Atlassian Rovo MCP when Claude needs permissioned Jira, Confluence, or Compass context from an Atlassian Cloud site."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "atlassian-rovo": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.atlassian.com/v1/mcp/authv2"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "atlassian-rovo": {
+        "command": "npx",
+        "args": ["-y", "mcp-remote", "https://mcp.atlassian.com/v1/mcp/authv2"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Atlassian Cloud site with Jira, Confluence, or Compass access.
+  - Admin policy allowing MCP access and OAuth/API-token settings as appropriate.
+  - Node.js 18+ for local client proxy usage.
+safetyNotes:
+  - Tools can read and potentially create or update Atlassian content based on user permissions.
+  - Keep write actions behind explicit approval and verify site/admin policy before enabling broad access.
+privacyNotes:
+  - Jira issues, Confluence pages, Compass data, comments, user names, and project metadata can enter model context.
+sourceUrls:
+  - "https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/"
+  - "https://www.atlassian.com/platform/remote-mcp-server"
+  - "https://www.atlassian.com/blog/announcements/remote-mcp-server"
+tags:
+  - atlassian
+  - jira
+  - confluence
+  - remote-mcp
+  - oauth
+keywords:
+  - Atlassian Rovo MCP server
+  - Atlassian remote MCP Claude
+  - Jira Confluence MCP
+  - mcp.atlassian.com authv2
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Atlassian Rovo MCP Server is Atlassian's official remote MCP surface for Jira,
+Confluence, Compass, and related Atlassian Cloud workflows. Atlassian documents a
+new `/mcp` endpoint and OAuth-backed setup for clients and local MCP-compatible
+IDEs through `mcp-remote`.
+
+## Use Cases
+
+- Search Jira and Confluence without leaving an AI client.
+- Summarize project context before drafting specs or tickets.
+- Create or update issues and pages when permissions and approval flow allow it.
+- Bring Atlassian Cloud knowledge into an IDE or local assistant workflow.
+
+## Safety and Privacy
+
+Atlassian content often contains customer names, incident details, roadmap notes,
+security work, and internal planning. Keep OAuth scopes narrow, use test spaces
+for early trials, and require human approval for write operations.
+
+## Duplicate Check
+
+Existing entries include Jira-specific MCP content. This entry covers Atlassian's
+official remote Rovo MCP server across Jira, Confluence, Compass, and Cloud site
+context.
+
+## References
+
+- Getting started - https://support.atlassian.com/atlassian-rovo-mcp-server/docs/getting-started-with-the-atlassian-remote-mcp-server/
+- Platform page - https://www.atlassian.com/platform/remote-mcp-server
+- Announcement - https://www.atlassian.com/blog/announcements/remote-mcp-server
