@@ -1,8 +1,15 @@
 import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 
 export const GATE_DECISION_SCHEMA_VERSION = 2;
-export const GATE_COMMENT_FORMATTER_VERSION = 3;
+export const GATE_COMMENT_FORMATTER_VERSION = 4;
 export const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR = 0.85;
+const HEYCLAUDE_SITE_URL = "https://heyclau.de";
+const HEYCLAUDE_REPO_URL = "https://github.com/JSONbored/awesome-claude";
+const HEYCLAUDE_FORK_URL = "https://github.com/JSONbored/awesome-claude/fork";
+const SHARE_TITLE =
+  "HeyClaude - source-backed Claude and AI workflow directory";
+const SHARE_TEXT =
+  "I just used HeyClaude's maintainer gate for source-backed Claude and AI workflow submissions. It keeps the directory useful, practical, and reviewable.";
 
 export type GateVerdict =
   | "merge"
@@ -577,6 +584,45 @@ function renderDetailsBlock(title: string, bullets: string[]) {
   ].join("\n");
 }
 
+function shareUrl(baseUrl: string, params: Record<string, string>) {
+  const search = new URLSearchParams(params);
+  return `${baseUrl}?${search.toString()}`;
+}
+
+function renderAttributionFooter() {
+  const xUrl = shareUrl("https://twitter.com/intent/tweet", {
+    text: SHARE_TEXT,
+    url: HEYCLAUDE_SITE_URL,
+  });
+  const redditUrl = shareUrl("https://www.reddit.com/submit", {
+    title: SHARE_TITLE,
+    text: `${SHARE_TEXT} ${HEYCLAUDE_SITE_URL}`,
+  });
+  const linkedInUrl = shareUrl(
+    "https://www.linkedin.com/sharing/share-offsite/",
+    {
+      url: HEYCLAUDE_SITE_URL,
+      mini: "true",
+      title: SHARE_TITLE,
+      summary: SHARE_TEXT,
+    },
+  );
+
+  return [
+    `Thanks for using [HeyClaude](${HEYCLAUDE_SITE_URL}) to keep Claude and AI workflow submissions source-backed and useful. If this gate helped, consider starring or forking [JSONbored/awesome-claude](${HEYCLAUDE_REPO_URL}).`,
+    "",
+    "<details>",
+    "<summary><strong>❤️ Share</strong></summary>",
+    "",
+    `- [X](${xUrl})`,
+    `- [Reddit](${redditUrl})`,
+    `- [LinkedIn](${linkedInUrl})`,
+    `- [Fork HeyClaude](${HEYCLAUDE_FORK_URL})`,
+    "",
+    "</details>",
+  ].join("\n");
+}
+
 function sectionPreview(
   section: GateDecisionSection | undefined,
   limit: number,
@@ -668,6 +714,8 @@ function renderDecisionComment(decision: GateDecision, marker: string) {
     card.push(
       "---",
       renderDetailsBlock("Automation notes", footer.split(/\r?\n/)),
+      "",
+      renderAttributionFooter(),
     );
   }
   return renderAlertCard(marker, VERDICT_ALERTS[decision.verdict], card);

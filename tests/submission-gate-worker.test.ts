@@ -487,11 +487,17 @@ describe("Cloudflare submission gate helpers", () => {
 
     expect(body).toContain("<!-- heyclaude-submission-gate -->\n> [!WARNING]");
     expect(body).toContain("> ## ❌ Needs changes");
-    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v3`");
+    expect(body).toContain("> ℹ️ **Formatter:** `gate-comment-v4`");
     expect(body).toContain("> **Summary**");
     expect(body).toContain("<summary><strong>ℹ️ info · Source Review</strong>");
     expect(body).toContain("> **Recommended action**");
     expect(body).toContain("single-shot submission review");
+    expect(body).toContain("Thanks for using [HeyClaude](https://heyclau.de)");
+    expect(body).toContain("<summary><strong>❤️ Share</strong></summary>");
+    expect(body).toContain("https://twitter.com/intent/tweet");
+    expect(body).toContain("https://www.reddit.com/submit");
+    expect(body).toContain("https://www.linkedin.com/sharing/share-offsite/");
+    expect(body).toContain("https://github.com/JSONbored/awesome-claude/fork");
   });
 
   it("renders accepted submissions as direct merge decisions", () => {
@@ -518,6 +524,8 @@ describe("Cloudflare submission gate helpers", () => {
       "passed content validation, Superagent, and private review",
     );
     expect(body).toContain("merges accepted source PRs directly");
+    expect(body).toContain("JSONbored/awesome-claude");
+    expect(body).toContain("Fork HeyClaude");
   });
 
   it("renders pending, retrying, and superseded gate comments as GitHub cards", () => {
