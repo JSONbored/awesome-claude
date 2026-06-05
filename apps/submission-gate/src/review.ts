@@ -3,7 +3,6 @@ import { DEFAULT_REVIEW_MARKER, LABELS } from "./constants";
 export const GATE_DECISION_SCHEMA_VERSION = 2;
 export const GATE_COMMENT_FORMATTER_VERSION = 5;
 export const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR = 0.85;
-const DEFAULT_CLEAN_MERGE_CONFIDENCE_FLOOR = 0.75;
 const HEYCLAUDE_SITE_URL = "https://heyclau.de";
 const HEYCLAUDE_REPO_URL = "https://github.com/JSONbored/awesome-claude";
 const HEYCLAUDE_FORK_URL = "https://github.com/JSONbored/awesome-claude/fork";
@@ -702,63 +701,6 @@ function normalizedConfidenceFloor(value: number) {
     : DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR;
 }
 
-function hasFailedChecks(decision: GateDecision) {
-  return (decision.checks || []).some((check) =>
-    ["failed", "error", "cancelled"].includes(check.status),
-  );
-}
-
-function hasBlockingOrAmbiguousSections(decision: GateDecision) {
-  return (decision.sections || []).some((section) =>
-    ["fail", "warn"].includes(section.status),
-  );
-}
-
-function mergeSummarySignalsAcceptance(summary: string) {
-  const value = summary.toLowerCase();
-  return (
-    value.includes("no blocking") ||
-    value.includes("none blocking") ||
-    value.includes("recommend direct merge") ||
-    value.includes("direct merge is recommended") ||
-    value.includes("can be merged directly") ||
-    value.includes("meets all repository policies")
-  );
-}
-
-function mergeSummarySignalsAmbiguity(summary: string) {
-  const value = summary.toLowerCase();
-  const nonBlocking =
-    value.includes("non-blocking") ||
-    value.includes("not a blocker") ||
-    value.includes("not blocking");
-  if (nonBlocking) return false;
-  return (
-    value.includes("unresolved") ||
-    value.includes("ambiguous") ||
-    value.includes("could not verify") ||
-    value.includes("contradictory") ||
-    value.includes("manual review")
-  );
-}
-
-function isCleanStructuredMergeDecision(
-  decision: GateDecision,
-  cleanFloor = DEFAULT_CLEAN_MERGE_CONFIDENCE_FLOOR,
-) {
-  return (
-    decision.verdict === "merge" &&
-    typeof decision.confidence === "number" &&
-    Number.isFinite(decision.confidence) &&
-    decision.confidence >= cleanFloor &&
-    !(decision.errors || []).length &&
-    !hasFailedChecks(decision) &&
-    !hasBlockingOrAmbiguousSections(decision) &&
-    mergeSummarySignalsAcceptance(decision.summary || "") &&
-    !mergeSummarySignalsAmbiguity(decision.summary || "")
-  );
-}
-
 function decisionConfidenceText(decision: GateDecision) {
   if (
     typeof decision.confidence === "number" &&
@@ -1255,9 +1197,6 @@ export function enforceAutoMergeConfidenceFloor(
     Number.isFinite(decision.confidence) &&
     decision.confidence >= normalizedFloor
   ) {
-    return decision;
-  }
-  if (isCleanStructuredMergeDecision(decision)) {
     return decision;
   }
 

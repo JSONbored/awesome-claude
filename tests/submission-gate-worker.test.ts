@@ -652,7 +652,7 @@ describe("Cloudflare submission gate helpers", () => {
     ).toContain("> ## ℹ️ Superseded gate report");
   });
 
-  it("keeps clean default-confidence merge verdicts on the merge path", () => {
+  it("routes low-confidence clean merge verdicts to manual review", () => {
     const decision = enforceAutoMergeConfidenceFloor({
       schemaVersion: 2,
       verdict: "merge",
@@ -671,11 +671,56 @@ describe("Cloudflare submission gate helpers", () => {
     });
 
     expect(decision).toMatchObject({
-      verdict: "merge",
+      verdict: "manual",
       confidence: 0.76,
-      labels: ["submission-merged-by-gate"],
+      labels: ["submission-manual-review"],
+      errors: [
+        {
+          code: "low_private_review_confidence",
+          retryable: false,
+        },
+      ],
     });
-    expect(decision.errors).toBeUndefined();
+    expect(decision.summary).toContain("unattended merge floor is 85%");
+    expect(markerComment(decision)).toContain("Confidence Review");
+  });
+
+  it("keeps the configured confidence floor authoritative", () => {
+    const cleanMergeDecision = {
+      schemaVersion: 2 as const,
+      verdict: "merge" as const,
+      confidence: 0.91,
+      summary:
+        "Summary:\n- No blocking issues detected.\n- The PR meets all repository policies and can be merged directly.\nRecommended Action:\n- Recommend direct merge.",
+      labels: ["submission-merged-by-gate"],
+      checks: [{ name: "validate-content", status: "passed" as const }],
+      sections: [
+        {
+          id: "source_review",
+          status: "pass" as const,
+          bullets: ["Primary source is reachable."],
+        },
+      ],
+    };
+
+    expect(
+      enforceAutoMergeConfidenceFloor(cleanMergeDecision, 0.9),
+    ).toMatchObject({
+      verdict: "merge",
+      confidence: 0.91,
+    });
+    expect(
+      enforceAutoMergeConfidenceFloor(cleanMergeDecision, 0.95),
+    ).toMatchObject({
+      verdict: "manual",
+      confidence: 0.91,
+      errors: [
+        {
+          code: "low_private_review_confidence",
+          retryable: false,
+        },
+      ],
+    });
   });
 
   it("routes ambiguous low-confidence private merge verdicts to manual review", () => {

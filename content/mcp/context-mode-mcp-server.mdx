@@ -1,0 +1,158 @@
+---
+title: Context Mode MCP Server
+slug: context-mode-mcp-server
+category: mcp
+description: >-
+  MCP server for context-window optimization that routes large tool outputs
+  through sandbox tools, indexes session state, and helps agents retrieve only
+  the context they need.
+cardDescription: >-
+  Reduce context pressure with Context Mode sandbox tools, search, indexing,
+  stats, and session-continuity helpers.
+seoTitle: Context Mode MCP Server for Claude
+seoDescription: >-
+  Use Context Mode with Claude Code, Gemini CLI, VS Code Copilot, Codex, and
+  other agent platforms to keep large tool outputs out of context and preserve
+  searchable session continuity.
+author: mksglu
+authorProfileUrl: "https://github.com/mksglu"
+submittedBy: oktofeesh1
+submittedByUrl: "https://github.com/oktofeesh1"
+dateAdded: "2026-06-05"
+brandName: Context Mode
+brandDomain: context-mode.com
+repoUrl: "https://github.com/mksglu/context-mode"
+documentationUrl: "https://context-mode.com"
+packageUrl: "https://www.npmjs.com/package/context-mode"
+installable: true
+installCommand: "claude mcp add context-mode -- npx -y context-mode"
+usageSnippet: "Use Context Mode MCP tools such as `ctx_execute`, `ctx_index`, `ctx_search`, `ctx_stats`, and `ctx_doctor` to keep raw outputs out of the model context."
+copySnippet: |-
+  {
+    "mcpServers": {
+      "context-mode": {
+        "command": "npx",
+        "args": ["-y", "context-mode"]
+      }
+    }
+  }
+configSnippet: |-
+  {
+    "mcpServers": {
+      "context-mode": {
+        "command": "npx",
+        "args": ["-y", "context-mode"]
+      }
+    }
+  }
+estimatedSetupTime: 10 minutes
+difficulty: intermediate
+prerequisites:
+  - Node.js 22.5 or newer, or Bun for supported installs.
+  - MCP client such as Claude Code, Gemini CLI, VS Code Copilot, Cursor, Codex, or another supported host.
+  - Optional Claude Code plugin marketplace support for automatic hooks and slash commands.
+  - Team agreement on what files, command outputs, and session events may be indexed locally.
+safetyNotes:
+  - Context Mode encourages agents to execute scripts and route large outputs through sandbox tools; review allowed commands and workspace boundaries.
+  - Hook-based installs can affect tool routing automatically. Verify the installed hooks and settings before using it in shared or sensitive workspaces.
+  - Indexed session state can influence future retrieval and continuity; purge state when switching projects, clients, or sensitivity levels.
+  - Do not rely on compressed or searched summaries for high-stakes decisions without inspecting original files or outputs.
+privacyNotes:
+  - Context Mode can index file edits, git operations, tasks, errors, user decisions, local files, and command output in SQLite/FTS5 stores.
+  - Indexed data may include source code, logs, secrets accidentally printed to terminal, customer data, repository paths, and private prompts.
+  - Local analytics and statusline data can reveal workflow patterns, tool usage, and project activity.
+sourceUrls:
+  - "https://github.com/mksglu/context-mode"
+  - "https://context-mode.com"
+  - "https://www.npmjs.com/package/context-mode"
+tags:
+  - context
+  - compression
+  - session-continuity
+  - indexing
+  - claude-code
+keywords:
+  - Context Mode MCP
+  - context-mode Claude Code
+  - context window optimization MCP
+  - ctx_execute MCP
+  - ctx_search MCP
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Context Mode is an MCP server and multi-platform context-management system for
+AI coding agents. It is designed to keep raw tool output out of the model
+context window, index useful session events locally, and retrieve only the
+context that matters for the current task.
+
+For Claude Code, the project documents a plugin marketplace install with hooks,
+slash commands, and routing enforcement. It also provides an MCP-only install
+for trying the server without automatic hooks.
+
+## Source Review
+
+- https://github.com/mksglu/context-mode
+- https://context-mode.com
+- https://www.npmjs.com/package/context-mode
+
+These sources were reviewed on **2026-06-05**. Prefer the live repository and
+site for current platform support, plugin instructions, hook behavior, command
+names, and license details.
+
+## Features
+
+- MCP sandbox tools for executing scripts and returning compact results.
+- Local indexing and search for files, session events, and prior context.
+- Session continuity through SQLite and FTS5 retrieval.
+- Diagnostics, stats, purge, upgrade, and insight tools.
+- Optional Claude Code plugin hooks and slash commands.
+- Support for multiple agent platforms, including Claude Code, Gemini CLI, VS
+  Code Copilot, Cursor, Codex, and others.
+
+## Installation
+
+For MCP-only Claude Code setup:
+
+```sh
+claude mcp add context-mode -- npx -y context-mode
+```
+
+For JSON-based MCP clients:
+
+```json
+{
+  "mcpServers": {
+    "context-mode": {
+      "command": "npx",
+      "args": ["-y", "context-mode"]
+    }
+  }
+}
+```
+
+For Claude Code plugin setup with hooks and slash commands, use the project
+README's marketplace instructions and run its doctor command after installation.
+
+## Use Cases
+
+- Run a compact script instead of reading many files into context.
+- Search indexed session state after compaction.
+- Track context savings and tool-output reductions.
+- Keep long coding sessions recoverable without dumping full transcripts back
+  into the model.
+- Use local search over previously indexed files or outputs.
+
+## Safety and Privacy
+
+Context Mode changes how agents route tool calls and store context. Review the
+installed MCP server, hooks, and local data stores before using it with
+sensitive projects. Purge indexed state when changing clients or projects, and
+inspect original files or outputs when exact evidence matters.
+
+## Duplicate Check
+
+Existing context and statusline entries cover related workflow ideas, but no
+`mksglu/context-mode` MCP entry or source URL was found in `content/mcp`.
