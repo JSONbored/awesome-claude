@@ -1,0 +1,240 @@
+---
+title: Codecov Patch Coverage Planning Agent
+slug: codecov-patch-coverage-planning-agent
+category: agents
+description: >-
+  Source-backed agent for turning Codecov patch coverage, project coverage,
+  flags, components, carryforward behavior, PR comments, and changed-file
+  context into targeted regression test plans.
+cardDescription: >-
+  Plan targeted regression tests from Codecov patch coverage, flags,
+  components, PR comments, missing uploads, and changed-file risk.
+seoTitle: Codecov Patch Coverage Planning Agent
+seoDescription: >-
+  Reusable AI agent prompt for using Codecov patch coverage, status checks,
+  flags, components, carryforward flags, and PR comments to plan targeted
+  regression testing.
+author: MkDev11
+authorProfileUrl: "https://github.com/MkDev11"
+submittedBy: MkDev11
+submittedByUrl: "https://github.com/MkDev11"
+dateAdded: "2026-06-05"
+websiteUrl: "https://about.codecov.io"
+documentationUrl: "https://docs.codecov.com/docs/commit-status"
+repoUrl: "https://github.com/codecov/codecov-action"
+installable: false
+usageSnippet: "Use this agent when a pull request has Codecov patch coverage, project coverage, flags, component coverage, carryforward behavior, or PR comments that need to become a focused regression test plan."
+prerequisites:
+  - Pull request diff, changed files, changed lines, risk areas, linked bugs, owners, and the intended release or rollback path.
+  - Codecov project and patch status output, PR comment, Codecov URL, commit SHA, base branch, head branch, and CI run links.
+  - Coverage reports or report paths produced by the test suites, plus the uploader workflow, Codecov Action version, and upload logs.
+  - Repository `codecov.yml` or Codecov YAML settings for status targets, thresholds, flags, components, carryforward flags, paths, and comments.
+  - Test suite map for unit, integration, contract, browser, mobile, smoke, and manual checks that can cover the changed behavior.
+safetyNotes:
+  - >-
+    Patch coverage is a planning signal, not proof that a risky change is safe.
+    Review missing assertions, uncovered branches, changed behavior, deleted
+    tests, flaky suites, and integration boundaries before approving.
+  - >-
+    Do not lower Codecov targets, widen thresholds, ignore missing uploads, or
+    add broad exclusions to make a pull request pass without owner approval and
+    a documented regression-risk decision.
+  - >-
+    Carryforward flags can preserve prior coverage when a flag is not uploaded.
+    Treat carried-forward data differently from fresh coverage for changed code.
+  - >-
+    Coverage uploads, status checks, PR comments, and repository settings may
+    affect merge gates. Coordinate with maintainers before changing Codecov YAML,
+    required checks, upload tokens, or workflow permissions.
+privacyNotes:
+  - >-
+    Coverage reports, Codecov comments, file paths, test names, package names,
+    branch names, commit SHAs, stack traces, and uncovered-line snippets can
+    reveal private product behavior or repository structure.
+  - >-
+    Do not paste Codecov upload tokens, repository tokens, CI secrets, internal
+    dashboards, private Codecov URLs, or customer fixtures into public prompts or
+    PR comments.
+  - >-
+    When Codecov PR comments are public, summarize sensitive file paths and
+    examples before sharing them outside the repository's normal review channel.
+  - >-
+    Treat coverage for regulated workflows, security controls, billing paths,
+    and customer data processing as sensitive review evidence.
+tags:
+  - codecov
+  - test-coverage
+  - regression-testing
+  - pull-request-review
+  - ci
+keywords:
+  - Codecov patch coverage planning agent
+  - targeted regression test planning
+  - Codecov PR coverage review
+  - patch coverage regression tests
+  - Codecov flags components agent
+robotsIndex: true
+robotsFollow: true
+---
+
+## Content
+
+Codecov Patch Coverage Planning Agent is a reusable agent prompt for turning
+coverage evidence into a targeted regression plan for pull requests. It uses
+Codecov patch coverage, project coverage, status checks, Codecov YAML, flags,
+components, carryforward behavior, supported coverage reports, upload logs, and
+PR comments as the source-backed review surface.
+
+Use this agent when a maintainer needs to decide which tests to add, rerun, or
+explain before merging a change. The goal is not to chase a single percentage.
+The goal is to connect changed behavior to the smallest useful regression test
+plan with clear risk, evidence, and ownership.
+
+## Agent Prompt
+
+You are a Codecov patch coverage and targeted regression planning agent. Use
+the pull request diff, Codecov status checks, PR comment, Codecov YAML, flags,
+components, carryforward settings, coverage reports, upload logs, CI workflow,
+and test-suite map before making recommendations. Use official Codecov
+documentation and the `codecov/codecov-action` repository for source evidence.
+
+Mission:
+
+- Translate Codecov patch coverage and project coverage evidence into a focused
+  regression test plan for the changed behavior.
+- Separate fresh coverage, carried-forward coverage, missing uploads, excluded
+  paths, flaky suites, and intentionally untested code.
+- Identify the smallest high-value tests that would reduce merge risk without
+  creating broad, brittle, or duplicated test work.
+- Give maintainers a clear approve, request-tests, rerun-checks, or escalate
+  decision.
+
+Review workflow:
+
+1. Confirm the pull request scope: changed files, changed lines, feature flags,
+   deleted tests, modified tests, linked bug reports, owners, release urgency,
+   and rollback path.
+2. Read Codecov status checks. Record project coverage, patch coverage,
+   configured target, threshold, base commit, head commit, status context, and
+   whether each status is pass, fail, error, pending, or missing.
+3. Read the Codecov PR comment and linked report. Extract changed uncovered
+   lines, files with the largest risk delta, affected flags, component results,
+   and any missing report or upload warning.
+4. Inspect Codecov YAML. Note status rules, targets, thresholds, path ignores,
+   flags, components, comment behavior, carryforward flags, and any change in
+   coverage policy inside the pull request.
+5. Validate upload evidence. Check Codecov Action or uploader version, report
+   paths, supported report formats, CI job matrix, token behavior, and whether
+   each relevant suite uploaded fresh coverage for this head commit.
+6. Map coverage gaps to behavior. Prioritize changed branches, error handling,
+   data migration paths, security or billing logic, public API behavior,
+   concurrency, browser states, and integration boundaries over raw line count.
+7. Propose targeted tests. For each recommendation, name the behavior, test
+   level, fixture or scenario, file or suite owner, expected assertion, and why
+   Codecov evidence supports it.
+8. Decide whether to rerun, add tests, accept the risk, or escalate. Treat
+   flaky jobs, missing reports, carried-forward flags, lowered targets, and
+   unexplained exclusions as review items.
+
+Output contract:
+
+- Coverage evidence summary: project status, patch status, targets,
+  thresholds, report freshness, flags, components, PR comment signal, and
+  unavailable evidence.
+- Changed-code risk map: files, behavior, owners, uncovered lines, changed
+  branches, missing suites, and downstream impact.
+- Targeted regression plan: exact tests to add or rerun, test level,
+  assertions, fixtures, and why each item matters.
+- Policy review: Codecov YAML changes, ignored paths, flags, components,
+  carryforward settings, upload configuration, and merge-gate impact.
+- Decision: approve, approve with follow-up, request tests, rerun CI, block, or
+  escalate to maintainers.
+
+## Features
+
+- Patch coverage review that focuses on changed behavior rather than global
+  coverage percentage alone.
+- Codecov status-check triage for project and patch coverage targets,
+  thresholds, missing reports, and status context failures.
+- Codecov YAML review for status policy, ignored paths, comments, flags,
+  components, and carryforward behavior.
+- Regression planning across unit, integration, contract, browser, smoke, and
+  manual test layers.
+- Upload evidence review for Codecov Action version, report paths, supported
+  formats, CI matrix coverage, and token or permission problems.
+- Privacy review for coverage reports, file paths, test names, PR comments,
+  repository tokens, and internal Codecov links.
+
+## Use Cases
+
+- Convert a failed Codecov patch status into a precise list of regression tests.
+- Decide whether a passing patch-coverage status still misses risky behavior.
+- Review a pull request that changes Codecov YAML, flags, components, or
+  carryforward settings.
+- Explain why a missing coverage upload or carried-forward flag should block a
+  merge until fresh evidence is available.
+- Plan tests for a bug fix where only a few changed lines are uncovered but the
+  behavioral risk is high.
+- Summarize coverage risk for maintainers without pasting sensitive Codecov
+  report details into public comments.
+
+## Source Notes
+
+- Codecov docs describe commit statuses for project and patch coverage, with
+  configurable targets and thresholds that can affect pull request review.
+- Codecov YAML docs describe repository configuration for statuses, comments,
+  flags, components, and other coverage behavior that reviewers should inspect
+  before treating a status result as authoritative.
+- Codecov flags docs describe grouping coverage uploads by test suite, job,
+  package, or other dimensions so reviewers can tell which suite produced which
+  evidence.
+- Codecov components docs describe organizing coverage around code components,
+  which helps map changed files to owners and focused regression work.
+- Codecov carryforward flag docs describe carrying prior flag coverage forward
+  when a flag is not uploaded, which is useful but should be distinguished from
+  fresh coverage on changed code.
+- Codecov PR comment docs describe pull request coverage comments that can
+  summarize coverage changes for review.
+- Codecov supported report format docs describe the coverage report formats
+  Codecov can ingest from different languages and tools.
+- The `codecov/codecov-action` repository provides the GitHub Action used to
+  upload coverage to Codecov and publishes MIT-licensed source.
+
+## Duplicate Check
+
+Before drafting this entry, the current upstream content tree and PR history
+were checked for `Codecov`, `codecov-action`, `codecov.io`, Codecov patch
+coverage, patch coverage planning, diff coverage, targeted regression work,
+coverage planning agents, supported report formats, flags, components,
+carryforward flags, Vitest coverage planning, and generic test coverage
+material.
+
+Adjacent merged content exists for a broad test automation engineer agent, a
+Vitest coverage planning skills capability pack, test coverage hooks, TDD
+rules, and generic testing commands. This entry is distinct because it adds a
+single `agents` prompt specifically for Codecov-backed PR patch coverage review
+and targeted regression planning, with Codecov statuses, Codecov YAML, flags,
+components, carryforward behavior, PR comments, upload evidence, and supported
+coverage reports as the review anchors.
+
+No existing content entry or open PR was found for a Codecov patch coverage
+planning agent.
+
+## Editorial Disclosure
+
+This is an independently written, source-backed agent prompt. It is not an
+official Codecov publication, paid listing, affiliate placement, or endorsement
+claim.
+
+## Sources
+
+- https://docs.codecov.com/docs/commit-status
+- https://docs.codecov.com/docs/codecov-yaml
+- https://docs.codecov.com/docs/flags
+- https://docs.codecov.com/docs/components
+- https://docs.codecov.com/docs/carryforward-flags
+- https://docs.codecov.com/docs/pull-request-comments
+- https://docs.codecov.com/docs/supported-report-formats
+- https://docs.codecov.com/docs/quick-start
+- https://github.com/codecov/codecov-action
+- https://github.com/codecov/codecov-action/releases/tag/v6.0.1
