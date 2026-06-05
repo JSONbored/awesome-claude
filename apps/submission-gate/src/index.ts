@@ -155,6 +155,7 @@ const MERGE_RETRY_SECONDS = 30;
 const RETRYABLE_ERROR_SECONDS = 60;
 const GITHUB_RATE_LIMIT_FALLBACK_SECONDS = 15 * 60;
 const PRIVATE_REVIEW_TIMEOUT_MS = 45_000;
+const INVALID_PRIVATE_RESPONSE_MAX_RETRIES = 3;
 const DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR_TEXT = String(
   DEFAULT_AUTO_MERGE_CONFIDENCE_FLOOR,
 );
@@ -477,6 +478,47 @@ function normalizeOneShotDecision(decision: GateDecision): GateDecision {
       "- Please resubmit a new focused one-file content PR after fixing the issue.",
     ].join("\n"),
   };
+}
+
+function hasPrivateReviewErrorCode(decision: GateDecision, code: string) {
+  return Boolean(decision.errors?.some((error) => error.code === code));
+}
+
+function invalidPrivateResponseAttempts(
+  existing: Record<string, unknown> | null,
+) {
+  const attempts = Number(existing?.attemptCount || 0);
+  return Number.isFinite(attempts) && attempts > 0 ? attempts : 0;
+}
+
+function shouldStopRetryingInvalidPrivateResponse(
+  decision: GateDecision,
+  existing: Record<string, unknown> | null,
+) {
+  return (
+    hasPrivateReviewErrorCode(decision, "invalid_private_response") &&
+    invalidPrivateResponseAttempts(existing) >=
+      INVALID_PRIVATE_RESPONSE_MAX_RETRIES
+  );
+}
+
+function invalidPrivateResponseExhaustedDecision(
+  decision: GateDecision,
+  existing: Record<string, unknown> | null,
+) {
+  const attempts = invalidPrivateResponseAttempts(existing);
+  return defaultManualDecision(
+    [
+      `Private corpus review returned invalid response payloads after ${attempts} automatic attempt(s).`,
+      `Last private reviewer error: ${decision.summary}`,
+      "Automatic retries are stopped for this head SHA so the queue cannot loop indefinitely.",
+    ].join(" "),
+    {
+      code: "private_review_contract_exhausted",
+      retryable: false,
+      message: decision.summary,
+    },
+  );
 }
 
 function allowedCorsOrigins(env: Env) {
@@ -3237,6 +3279,15 @@ async function handleReviewMessage(env: Env, message: QueueMessage) {
             },
           },
         });
+        if (
+          isRetryableGateDecision(decision) &&
+          shouldStopRetryingInvalidPrivateResponse(decision, existing)
+        ) {
+          decision = invalidPrivateResponseExhaustedDecision(
+            decision,
+            existing,
+          );
+        }
         if (isRetryableGateDecision(decision)) {
           await upsertPrState(env.SUBMISSION_GATE_DB, {
             repo: target.repoFullName,
